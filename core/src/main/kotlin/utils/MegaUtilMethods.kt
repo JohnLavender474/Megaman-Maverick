@@ -8,9 +8,9 @@ import kotlin.math.roundToInt
 
 object MegaUtilMethods {
 
-    fun pooledProps(vararg pairs: GamePair<Any, Any?>): Properties {
+    fun pooledProps(vararg entries: GamePair<Any, Any?>): Properties {
         val props = GameObjectPools.fetch(Properties::class)
-        pairs.forEach { props.put(it.first, it.second) }
+        entries.forEach { props.put(it.first, it.second) }
         return props
     }
 

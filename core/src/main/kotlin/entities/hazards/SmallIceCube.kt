@@ -10,6 +10,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.damage.IDamageable
@@ -45,7 +46,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 
@@ -126,7 +127,7 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         destroy()
         for (i in 0 until 5) {
             val iceShard = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.ICE_SHARD)!!
-            iceShard.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.INDEX pairTo i))
+            iceShard.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.INDEX pairTo i))
         }
     }
 

@@ -75,6 +75,7 @@ import com.megaman.maverick.game.spawns.Spawn
 import com.megaman.maverick.game.spawns.SpawnsManager
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toProps
+import com.megaman.maverick.game.utils.misc.HealthFillType
 import com.megaman.maverick.game.world.body.getCenter
 import java.util.*
 
@@ -321,8 +322,9 @@ class MegaLevelScreen(
     override fun getLayerBuilders() = MegaMapLayerBuilders(MegaMapLayerBuildersParams(game, spawnsMan))
 
     override fun buildLevel(result: Properties) {
-        backgrounds = result.get(ConstKeys.BACKGROUNDS) as Array<Background>
-        backgroundsToHide = result.get("${ConstKeys.HIDDEN}_${ConstKeys.BACKGROUNDS}") as ObjectSet<String>
+        backgrounds = result.get(ConstKeys.BACKGROUNDS) as Array<Background>? ?: Array()
+        backgroundsToHide =
+            result.get("${ConstKeys.HIDDEN}_${ConstKeys.BACKGROUNDS}") as ObjectSet<String>? ?: ObjectSet()
 
         val playerSpawns =
             result.get("${ConstKeys.PLAYER}_${ConstKeys.SPAWNS}") as Array<RectangleMapObject>? ?: Array()
@@ -485,12 +487,23 @@ class MegaLevelScreen(
                 val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
                 if (boss.mini) game.eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN))
                 else {
-                    val runOnFirstUpdate = { game.audioMan.pauseMusic() }
+                    val type = event.getOrDefaultProperty(
+                        ConstKeys.HEALTH_FILL_TYPE,
+                        HealthFillType.BIT_BY_BIT,
+                        HealthFillType::class
+                    )
+                    val runOnFirstUpdate: (() -> Unit)? = when (type) {
+                        HealthFillType.BIT_BY_BIT -> {
+                            { game.audioMan.pauseMusic() }
+                        }
+
+                        else -> null
+                    }
                     val runOnFinished = {
                         game.eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN))
-                        game.audioMan.playMusic()
+                        if (type == HealthFillType.BIT_BY_BIT) game.audioMan.playMusic()
                     }
-                    bossHealthHandler.set(boss, runOnFirstUpdate, runOnFinished)
+                    bossHealthHandler.set(boss, type, runOnFirstUpdate, runOnFinished)
 
                     game.engine.systems.forEach {
                         if (!it.isAny(SpritesSystem::class, AnimationsSystem::class)) it.on = false

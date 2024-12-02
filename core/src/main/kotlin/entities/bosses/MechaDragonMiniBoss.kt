@@ -53,6 +53,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.utils.GameObjectPools
+
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*

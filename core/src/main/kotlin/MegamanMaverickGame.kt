@@ -71,7 +71,6 @@ import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
-import com.megaman.maverick.game.entities.blocks.FeetRiseSinkBlock
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -118,7 +117,7 @@ class MegamanMaverickGame(
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(FeetRiseSinkBlock.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.TELEPORTER, FixtureType.TELEPORTER_LISTENER)
         }
@@ -340,12 +339,14 @@ class MegamanMaverickGame(
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         val delta = Gdx.graphics.deltaTime
+
         controllerPoller.run()
-        eventsMan.run()
-        audioMan.update(delta)
+        screenController?.update(delta)
 
         currentScreen?.render(delta)
-        screenController?.update(delta)
+
+        audioMan.update(delta)
+        eventsMan.run()
 
         if (params.debugFPS) {
             batch.projectionMatrix = getUiCamera().combined

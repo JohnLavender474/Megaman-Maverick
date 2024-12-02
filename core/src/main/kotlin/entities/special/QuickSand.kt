@@ -73,7 +73,7 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         val body = Body(BodyType.ABSTRACT)
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        val sandFixture = Fixture(body, FixtureType.SAND, GameRectangle())
+        val sandFixture = Fixture(body, FixtureType.SAND)
         body.addFixture(sandFixture)
         debugShapes.add { sandFixture}
 

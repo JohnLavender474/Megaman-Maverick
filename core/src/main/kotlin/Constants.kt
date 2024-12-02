@@ -35,7 +35,7 @@ object ConstVals {
     const val GAME_CAM_ROTATE_TIME = 0.75f
     const val DEFAULT_PARALLAX_X = 0.25f
     const val DEFAULT_PARALLAX_Y = 0f
-    const val DUR_PER_BIT = 0.1f
+    const val DUR_PER_BIT = 0.075f
 }
 
 object ConstKeys {
@@ -74,7 +74,6 @@ object ConstKeys {
     const val FREQUENCY = "frequency"
     const val BLACK = "black"
     const val CAM = "cam"
-    const val INVALID = "invalid"
     const val SENSE = "sense"
     const val NOT = "not"
     const val TAG = "tag"
@@ -136,7 +135,6 @@ object ConstKeys {
     const val FALL = "fall"
     const val ELAPSE = "elapse"
     const val PRIORITY = "priority"
-    const val CURRENT = "current"
     const val SECTION = "section"
     const val PASSWORD = "password"
     const val LINES = "lines"
@@ -150,7 +148,6 @@ object ConstKeys {
     const val ENTTIY_KILLED_BY_DEATH_FIXTURE = "entity_killed_by_death_fixture"
     const val DEATH_LISTENER = "death_listener"
     const val GREEN = "green"
-    const val ORANGE = "orange"
     const val GRAVITY_CHANGEABLE = "gravity_changeable"
     const val INTERVAL = "interval"
     const val MIDDLE = "middle"
@@ -302,7 +299,8 @@ object ConstKeys {
     const val VELOCITY_ALTERATION = "velocity_alteration"
     const val LADDER = "ladder"
     const val HEALTH = "health"
-    const val COLLIDE_BODY = "${COLLIDE}_${BODY}"
+    const val FILL = "fill"
+    const val HEALTH_FILL_TYPE = "${HEALTH}_${FILL}_${TYPE}"
 }
 
 object ConstFuncs {

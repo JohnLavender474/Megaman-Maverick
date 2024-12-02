@@ -40,7 +40,8 @@ enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {
     TEST4("Test4.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
     TEST5("Test5.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
     TEST6("Test6.tmx", MusicAsset.MMX3_INTRO_STAGE_MUSIC),
-    TEST7("Test7.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC);
+    TEST7("Test7.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
+    TEST8("Test8.tmx", MusicAsset.MMX5_VOLT_KRAKEN_MUSIC);
 
     val tmxSourceFile = "tiled_maps/tmx/$tmxSourceFile"
 }

@@ -167,7 +167,7 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
             body.physics.velocity.setZero()
             gravity = WATER_GRAVITY
             velClamp = WATER_VEL_CLAMP
-            Splash.splashOnWaterSurface(body.getBounds(), it.body.getBounds())
+            Splash.splashOnWaterSurface(body.getBounds(), it.body.getBounds(), true)
         }
         body.addFixture(waterListenerFixture)
 

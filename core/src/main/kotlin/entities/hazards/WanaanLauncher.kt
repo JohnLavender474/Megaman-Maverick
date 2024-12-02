@@ -48,7 +48,7 @@ import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getObjectProps
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
@@ -115,7 +115,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
         sensors.clear()
 
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
-        explosion.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter()))
+        explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
 
         requestToPlaySound(SoundAsset.EXPLOSION_2_SOUND, false)
     }

@@ -62,6 +62,7 @@ import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
+
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
@@ -492,10 +493,13 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
     private fun activateGravityChange() {
         currentGravityChangeDir = currentGravityChangeDir.getOpposite()
-        megaman().direction = currentGravityChangeDir
+        if (!megaman().dead) megaman().direction = currentGravityChangeDir
+
         gravityChangeChance = 0f
         timers["gravity_change_delay"].reset()
+
         requestToPlaySound(SoundAsset.TIME_STOPPER_SOUND, false)
+
         GameLogger.debug(TAG, "activateGravityChange(): gravity=$currentGravityChangeDir")
     }
 

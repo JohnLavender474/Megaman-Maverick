@@ -22,6 +22,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.utils.GameObjectPools
+
 import com.megaman.maverick.game.utils.extensions.getSize
 import com.megaman.maverick.game.world.body.getCenter
 

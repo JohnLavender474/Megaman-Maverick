@@ -11,8 +11,6 @@ import com.badlogic.gdx.utils.Queue
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.objects.IntPair
 import com.mega.game.engine.common.objects.Pool
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameLine
 import com.mega.game.engine.common.shapes.GamePolygon
@@ -106,22 +104,22 @@ object GameObjectPools {
         put(BoundingBox::class, supplier = { BoundingBox() })
 
         put(IntPair::class, supplier = { IntPair(0, 0) }, onFetch = { it.set(0, 0) })
-
-        put(Properties::class, supplier = { props() }, onFetchAndFree = { it.clear() })
     }
 
     fun <T : Any> put(
         clazz: KClass<T>,
         supplier: () -> T,
         onFetchAndFree: (T) -> Unit,
-    ) = put(clazz, supplier, onFetchAndFree, onFetchAndFree)
+        callsToWait: Int = GameObjectPool.DEFAULT_CALLS_TO_WAIT
+    ) = put(clazz, supplier, onFetchAndFree, onFetchAndFree, callsToWait)
 
     fun <T : Any> put(
         clazz: KClass<T>,
         supplier: () -> T,
         onFetch: ((T) -> Unit)? = null,
-        onFree: ((T) -> Unit)? = null
-    ) = put(clazz, GameObjectPool<T>(supplier, onFetch, onFree))
+        onFree: ((T) -> Unit)? = null,
+        callsToWait: Int = GameObjectPool.DEFAULT_CALLS_TO_WAIT
+    ) = put(clazz, GameObjectPool<T>(supplier, onFetch, onFree, callsToWait))
 
     fun <T : Any> put(clazz: KClass<T>, pool: GameObjectPool<T>) {
         GameLogger.debug(TAG, "put(): clazz=${clazz.simpleName}")

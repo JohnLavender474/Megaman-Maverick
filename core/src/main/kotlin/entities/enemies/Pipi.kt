@@ -43,7 +43,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
@@ -102,7 +102,7 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
 
     private fun dropEgg() {
         val egg = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.PIPI_EGG)!!
-        egg.spawn(pooledProps(ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)))
+        egg.spawn(props(ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)))
         hasEgg = false
     }
 

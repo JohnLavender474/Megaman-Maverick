@@ -15,8 +15,10 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
         key
     }
 
-    !ready -> "stand"
+    !ready -> "spawn"
+
     game.isCameraRotating() -> amendKey("jump")
+
     else -> when {
         isBehaviorActive(BehaviorType.JETPACKING) -> amendKey("jetpack")
         isBehaviorActive(BehaviorType.RIDING_CART) -> {
@@ -24,18 +26,18 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
                 damaged -> "cartin_damaged"
                 isBehaviorActive(BehaviorType.JUMPING) || !body.isSensing(BodySense.FEET_ON_GROUND) ->
                     amendKey("cartin_jump")
-
                 else -> amendKey("cartin")
             }
         }
 
         damaged || stunned -> "damaged"
 
-        isBehaviorActive(BehaviorType.CLIMBING) -> {
-            if (!body.isSensing(BodySense.HEAD_TOUCHING_LADDER)) amendKey("climb_finish")
-            else {
+        isBehaviorActive(BehaviorType.CLIMBING) -> when {
+            !body.isSensing(BodySense.HEAD_TOUCHING_LADDER) && !shooting -> amendKey("climb_finish")
+            else -> {
                 val movement = if (direction.isHorizontal()) body.physics.velocity.x else body.physics.velocity.y
-                if (movement != 0f) amendKey("climb") else amendKey("climb_still")
+                val key = if (movement != 0f) "climb" else "climb_still"
+                amendKey(key)
             }
         }
 

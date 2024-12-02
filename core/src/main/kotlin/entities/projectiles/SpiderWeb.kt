@@ -73,7 +73,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_JUST_DIED)
 
     private val blinkWhiteTimer = Timer(BLINK_WHITE_DUR)
-    private lateinit var trajectory: Vector2
+    private val trajectory = Vector2()
     private var stuckToMegaman = false
     private var presses = 0
 
@@ -93,13 +93,15 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         game.eventsMan.addListener(this)
 
         body.setSize(START_SIZE * ConstVals.PPM)
-        val spawn =
-            if (spawnProps.containsKey(ConstKeys.POSITION)) spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-            else spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
+        val spawn = when {
+            spawnProps.containsKey(ConstKeys.POSITION) -> spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+            else -> spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
+        }
         body.setCenter(spawn)
 
+        trajectory.set(spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2.Zero, Vector2::class))
+
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
-        trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2.Zero, Vector2::class)
         stuckToMegaman = false
         presses = 0
 
@@ -173,16 +175,18 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
         blinkWhiteTimer.update(it)
-        if (!stuckToMegaman && !megaman().dead &&
-            body.getBounds().overlaps(megaman().body.getBounds())
-        ) stickToMegaman()
-        else if (stuckToMegaman) {
-            body.setCenter(megaman().body.getCenter())
-            if (game.controllerPoller.isAnyJustReleased(BUTTONS_TO_GET_UNSTUCK)) {
-                presses++
-                blinkWhiteTimer.reset()
-                if (overlapsGameCamera()) requestToPlaySound(SoundAsset.THUMP_SOUND, false)
-                if (presses >= PRESSES_TO_GET_UNSTUCK) destroy()
+        when {
+            !stuckToMegaman && !megaman().dead && body.getBounds().overlaps(megaman().body.getBounds()) ->
+                stickToMegaman()
+
+            stuckToMegaman -> {
+                body.setCenter(megaman().body.getCenter())
+                if (game.controllerPoller.isAnyJustReleased(BUTTONS_TO_GET_UNSTUCK)) {
+                    presses++
+                    blinkWhiteTimer.reset()
+                    if (overlapsGameCamera()) requestToPlaySound(SoundAsset.THUMP_SOUND, false)
+                    if (presses >= PRESSES_TO_GET_UNSTUCK) destroy()
+                }
             }
         }
     })

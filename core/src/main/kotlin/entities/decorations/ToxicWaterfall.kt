@@ -106,7 +106,8 @@ class ToxicWaterfall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
                         ConstKeys.TYPE pairTo SplashType.TOXIC,
                         ConstKeys.POSITION pairTo overlap.getPositionPoint(Position.TOP_CENTER),
                         ConstKeys.PRIORITY pairTo DrawingPriority(DrawingSection.FOREGROUND, 15),
-                        ConstKeys.ALPHA pairTo SPLASH_ALPHA
+                        ConstKeys.ALPHA pairTo SPLASH_ALPHA,
+                        ConstKeys.SOUND pairTo false
                     )
                 )
 

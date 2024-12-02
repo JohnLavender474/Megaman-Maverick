@@ -44,7 +44,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.SigmaRatElectricBall
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -264,7 +264,7 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
                 for (i in 0 until ELECTRIC_BALL_ANGLES.size) {
                     val electricBall =
                         EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SIGMA_RAT_ELECTRIC_BALL)!!
-                    electricBall.spawn(pooledProps(ConstKeys.POSITION pairTo headPosition))
+                    electricBall.spawn(props(ConstKeys.POSITION pairTo headPosition))
                     electricBalls.addLast(electricBall as SigmaRatElectricBall)
                 }
                 electricBallsClockwise = getRandomBool()

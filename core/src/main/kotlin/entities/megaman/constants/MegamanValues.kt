@@ -69,5 +69,5 @@ object MegamanValues {
     const val FLAME_TOSS_X_VEL = 10f
     const val FLAME_TOSS_GRAVITY = -0.25f
 
-    const val SPAWN_HIDDEN_DUR = 0.1f
+    const val SPAWN_HIDDEN_DUR = 0.05f
 }

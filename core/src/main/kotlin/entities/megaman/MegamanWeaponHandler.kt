@@ -7,7 +7,7 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
-import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.time.Timer
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -22,6 +22,8 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.GameObjectPools
+
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.isSensing
@@ -52,59 +54,50 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
 
     private val engine = megaman.game.engine
     private val weapons = ObjectMap<MegamanWeapon, MegaWeaponEntry>()
-    private val spawnCenter: Vector2
+    private val spawn: Vector2
         get() {
-            val spawnCenter = Vector2(megaman.body.getCenter())
+            val spawn = megaman.body.getCenter()
 
-            val xOffset = ConstVals.PPM * megaman.facing.value *
-                if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) {
+            val xOffset = megaman.facing.value * when {
+                megaman.isBehaviorActive(BehaviorType.RIDING_CART) ->
                     if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 1.25f else 1f
-                } else if (!megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.75f
-                else if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) 0.25f
-                else if (megaman.slipSliding) 0.65f
-                else 1f
+                !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> 0.5f
+                megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.25f
+                megaman.slipSliding -> 0.65f
+                else -> 0.75f
+            }
 
-            var yOffset = 0f // ConstVals.PPM / 24f
-
-            /*
-            if (!megaman.body.isSensing(BodySense.FEET_ON_GROUND) &&
-                !megaman.isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING, BehaviorType.RIDING_CART)
-            ) yOffset += 0.15f * ConstVals.PPM
-             */
-
-            yOffset += if (megaman.isAnyBehaviorActive(BehaviorType.JETPACKING, BehaviorType.WALL_SLIDING))
-                0.3f * ConstVals.PPM
-            else if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) -0.05f * ConstVals.PPM
-            else if (megaman.isBehaviorActive(BehaviorType.RIDING_CART)) {
-                if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.6f * ConstVals.PPM else 0.3f * ConstVals.PPM
-            } // else if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.4f * ConstVals.PPM
-            else if (megaman.direction == Direction.DOWN) {
-                (if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.15f else 0.25f) * ConstVals.PPM
-            } else 0.135f * ConstVals.PPM
-            /*
-            else if (megaman.isBehaviorActive(BehaviorType.CLIMBING)) 0.15f * ConstVals.PPM
-            else if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.15f * ConstVals.PPM
-            else 0.15f * ConstVals.PPM
-             */
+            var yOffset = when {
+                megaman.isAnyBehaviorActive(BehaviorType.JETPACKING, BehaviorType.WALL_SLIDING) -> 0.35f
+                megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> -0.05f
+                megaman.isBehaviorActive(BehaviorType.RIDING_CART) ->
+                    if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.6f else 0.3f
+                megaman.isBehaviorActive(BehaviorType.CLIMBING) -> 0.2f
+                megaman.direction == Direction.DOWN ->
+                    if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.05f else 0.15f
+                megaman.direction == Direction.UP && !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> 0f
+                else -> 0.135f
+            }
 
             if (megaman.direction.isVertical()) {
-                spawnCenter.x += xOffset
-                spawnCenter.y += if (megaman.direction == Direction.DOWN) (-yOffset + 0.1f * ConstVals.PPM) else yOffset
+                spawn.x += xOffset * ConstVals.PPM
+                spawn.y += (if (megaman.direction == Direction.DOWN) -yOffset else yOffset) * ConstVals.PPM
 
                 if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) {
                     var groundSlideOffset = GROUND_SLIDE_SPRITE_OFFSET_Y * ConstVals.PPM
-                    if (megaman.direction == Direction.UP) spawnCenter.y -= groundSlideOffset
-                    else spawnCenter.y += groundSlideOffset
+                    spawn.y += if (megaman.direction == Direction.UP) -groundSlideOffset else groundSlideOffset
                 }
             } else {
-                yOffset += if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) -0.075f * ConstVals.PPM
-                else if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) -0.1f * ConstVals.PPM
-                else 0.05f * ConstVals.PPM
-                spawnCenter.x += if (megaman.direction == Direction.LEFT) -yOffset else yOffset
-                spawnCenter.y += xOffset
+                yOffset += when {
+                    megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> -0.075f
+                    megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> -0.1f
+                    else -> 0.05f
+                }
+                spawn.x += (if (megaman.direction == Direction.LEFT) -yOffset else yOffset) * ConstVals.PPM
+                spawn.y += xOffset * ConstVals.PPM
             }
 
-            return spawnCenter
+            return spawn
         }
 
     override fun reset() = weapons.values().forEach { it.cooldownTimer.setToEnd() }
@@ -125,13 +118,18 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         val e = weapons[weapon]
         if (!e.cooldownTimer.isFinished() || !e.canFireWeapon()) return false
 
-        val cost = if (e.chargeable()) (if (weapon === MegamanWeapon.BUSTER) 0
-        else when (stat) {
-            MegaChargeStatus.FULLY_CHARGED -> e.fullyChargedCost()
-            MegaChargeStatus.HALF_CHARGED -> e.halfChargedCost()
-            MegaChargeStatus.NOT_CHARGED -> e.normalCost()
-        })
-        else e.normalCost()
+        val cost = when {
+            e.chargeable() -> (when {
+                weapon === MegamanWeapon.BUSTER -> 0
+                else -> when (stat) {
+                    MegaChargeStatus.FULLY_CHARGED -> e.fullyChargedCost()
+                    MegaChargeStatus.HALF_CHARGED -> e.halfChargedCost()
+                    MegaChargeStatus.NOT_CHARGED -> e.normalCost()
+                }
+            })
+
+            else -> e.normalCost()
+        }
 
         return cost <= e.ammo
     }
@@ -144,8 +142,10 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
         val weaponEntry = weapons[weapon]
         weaponEntry.ammo += delta
 
-        if (weaponEntry.ammo >= MegamanValues.MAX_WEAPON_AMMO) weaponEntry.ammo = MegamanValues.MAX_WEAPON_AMMO
-        else if (weaponEntry.ammo < 0) weaponEntry.ammo = 0
+        when {
+            weaponEntry.ammo >= MegamanValues.MAX_WEAPON_AMMO -> weaponEntry.ammo = MegamanValues.MAX_WEAPON_AMMO
+            weaponEntry.ammo < 0 -> weaponEntry.ammo = 0
+        }
     }
 
     fun setAllToMaxAmmo() = weapons.keys().forEach { setToMaxAmmo(it) }
@@ -165,16 +165,21 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
 
     fun fireWeapon(weapon: MegamanWeapon, stat: MegaChargeStatus): Boolean {
         var _stat: MegaChargeStatus = stat
+
         if (!canFireWeapon(weapon, _stat)) return false
         if (!isChargeable(weapon)) _stat = MegaChargeStatus.NOT_CHARGED
 
         val weaponEntry = weapons[weapon]
-        val cost = if (weapon.equalsAny(MegamanWeapon.BUSTER, MegamanWeapon.RUSH_JETPACK)) 0
-        else when (_stat) {
-            MegaChargeStatus.FULLY_CHARGED -> weaponEntry.fullyChargedCost()
-            MegaChargeStatus.HALF_CHARGED -> weaponEntry.halfChargedCost()
-            MegaChargeStatus.NOT_CHARGED -> weaponEntry.normalCost()
+
+        val cost = when {
+            weapon.equalsAny(MegamanWeapon.BUSTER, MegamanWeapon.RUSH_JETPACK) -> 0
+            else -> when (_stat) {
+                MegaChargeStatus.FULLY_CHARGED -> weaponEntry.fullyChargedCost()
+                MegaChargeStatus.HALF_CHARGED -> weaponEntry.halfChargedCost()
+                MegaChargeStatus.NOT_CHARGED -> weaponEntry.normalCost()
+            }
         }
+
         if (cost > getAmmo(weapon)) return false
 
         val projectile = when (weapon) {
@@ -184,6 +189,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
 
         weaponEntry.spawned.add(projectile)
         weaponEntry.cooldownTimer.reset()
+
         translateAmmo(weapon, -cost)
 
         return true
@@ -206,14 +212,16 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
     }
 
     private fun fireMegaBuster(stat: MegaChargeStatus): AbstractProjectile {
-        val trajectory = Vector2()
-        if (megaman.direction.isVertical()) trajectory.x = MEGA_BUSTER_BULLET_VEL * megaman.facing.value
-        else trajectory.y = MEGA_BUSTER_BULLET_VEL * megaman.facing.value
+        val trajectory = GameObjectPools.fetch(Vector2::class)
+        when {
+            megaman.direction.isVertical() -> trajectory.x = MEGA_BUSTER_BULLET_VEL * megaman.facing.value
+            else -> trajectory.y = MEGA_BUSTER_BULLET_VEL * megaman.facing.value
+        }
         trajectory.scl(ConstVals.PPM.toFloat())
 
         if (megaman.applyMovementScalarToBullet) trajectory.scl(megaman.movementScalar)
 
-        val props = Properties()
+        val props = props()
         props.put(ConstKeys.OWNER, megaman)
         props.put(ConstKeys.TRAJECTORY, trajectory)
         props.put(ConstKeys.DIRECTION, megaman.direction)
@@ -227,15 +235,14 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
             }
         } ?: throw IllegalStateException("MegaBusterShot is null")
 
-        if (stat === MegaChargeStatus.NOT_CHARGED) megaman.requestToPlaySound(
-            SoundAsset.MEGA_BUSTER_BULLET_SHOT_SOUND, false
-        )
+        if (stat == MegaChargeStatus.NOT_CHARGED)
+            megaman.requestToPlaySound(SoundAsset.MEGA_BUSTER_BULLET_SHOT_SOUND, false)
         else {
             megaman.requestToPlaySound(SoundAsset.MEGA_BUSTER_CHARGED_SHOT_SOUND, false)
             megaman.stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
         }
 
-        val s = spawnCenter
+        val s = spawn
         props.put(ConstKeys.POSITION, s)
         engine.spawn(megaBusterShot, props)
 
@@ -243,8 +250,9 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
     }
 
     private fun fireFlameToss(stat: MegaChargeStatus): AbstractProjectile {
-        val props = Properties()
+        val props = props()
         props.put(ConstKeys.OWNER, megaman)
+
         val fireball = when (stat) {
             MegaChargeStatus.NOT_CHARGED, MegaChargeStatus.HALF_CHARGED, MegaChargeStatus.FULLY_CHARGED -> {
                 props.put(
@@ -258,9 +266,11 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
                 EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIREBALL) as Fireball
             }
         }
-        props.put(ConstKeys.POSITION, spawnCenter)
+        props.put(ConstKeys.POSITION, spawn)
         engine.spawn(fireball, props)
+
         megaman.requestToPlaySound(SoundAsset.CRASH_BOMBER_SOUND, false)
+
         return fireball
     }
 }

@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.megaman.sprites
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.ObjectMap
+import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.time.Timer
@@ -27,10 +28,10 @@ class MegamanTrailSprite(game: MegamanMaverickGame) : MegaGameEntity(game), ISpr
 
     companion object {
         const val TAG = "MegamanTrailingSprite"
-        const val AIR_DASH = "air_dash"
-        const val GROUND_SLIDE = "ground_slide"
-        const val GROUND_SLIDE_SHOOT = "ground_slide_shoot"
-        private const val FADE_DUR = 0.1f
+        const val AIR_DASH = "airdash"
+        const val GROUND_SLIDE = "groundslide"
+        const val GROUND_SLIDE_SHOOT = "groundslide_shoot"
+        private const val FADE_DUR = 0.25f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -39,9 +40,7 @@ class MegamanTrailSprite(game: MegamanMaverickGame) : MegaGameEntity(game), ISpr
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.MEGAMAN_TRAIL_SPRITE.source)
-            regions.put(AIR_DASH, atlas.findRegion(AIR_DASH))
-            regions.put(GROUND_SLIDE, atlas.findRegion(GROUND_SLIDE))
-            regions.put(GROUND_SLIDE_SHOOT, atlas.findRegion(GROUND_SLIDE_SHOOT))
+            gdxArrayOf(AIR_DASH, GROUND_SLIDE, GROUND_SLIDE_SHOOT).forEach { regions.put(it, atlas.findRegion(it)) }
         }
         super.init()
         addComponent(defineUpdatablesComponent())
@@ -51,21 +50,19 @@ class MegamanTrailSprite(game: MegamanMaverickGame) : MegaGameEntity(game), ISpr
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        fadeTimer.reset()
-
         val type = spawnProps.get(ConstKeys.TYPE, String::class)!!
         defaultSprite.setRegion(regions[type])
 
         defaultSprite.setFlip(megaman().shouldFlipSpriteX(), megaman().shouldFlipSpriteY())
-
         defaultSprite.setOriginCenter()
         defaultSprite.rotation = megaman().getSpriteRotation()
 
         val position = DirectionPositionMapper.getInvertedPosition(megaman().getSpriteDirection())
         defaultSprite.setPosition(megaman().body.getPositionPoint(position), position)
-
         defaultSprite.translateX(megaman().getSpriteXTranslation() * ConstVals.PPM)
         defaultSprite.translateY(megaman().getSpriteYTranslation() * ConstVals.PPM)
+
+        fadeTimer.reset()
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -77,10 +74,7 @@ class MegamanTrailSprite(game: MegamanMaverickGame) : MegaGameEntity(game), ISpr
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
         sprite.setSize(2.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
-            val alpha = 1f - fadeTimer.getRatio()
-            sprite.setAlpha(alpha)
-        }
+        spritesComponent.putUpdateFunction { _, _ -> sprite.setAlpha(1f - fadeTimer.getRatio()) }
         return spritesComponent
     }
 

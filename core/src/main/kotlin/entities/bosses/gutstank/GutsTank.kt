@@ -17,7 +17,8 @@ import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
-import com.mega.game.engine.common.shapes.*
+import com.mega.game.engine.common.shapes.GameCircle
+import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
@@ -57,16 +58,11 @@ import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.PurpleBlast
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureLabel
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getBounds
-import com.megaman.maverick.game.world.body.getCenter
-import com.megaman.maverick.game.world.body.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity {
@@ -204,7 +200,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
         tankBlockOffset = tankBlockBounds.getCenter().sub(body.getCenter())
 
         fist = GutsTankFist(game)
-        fist!!.spawn(pooledProps(ConstKeys.PARENT pairTo this))
+        fist!!.spawn(props(ConstKeys.PARENT pairTo this))
 
         frontPoint = spawnProps.get(
             ConstKeys.FRONT,

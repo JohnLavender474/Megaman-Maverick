@@ -33,7 +33,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+
 import com.megaman.maverick.game.utils.VelocityAlterator
 import com.megaman.maverick.game.world.body.*
 
@@ -129,7 +129,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
-        disintegration!!.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter()))
+        disintegration!!.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     override fun defineBodyComponent(): BodyComponent {

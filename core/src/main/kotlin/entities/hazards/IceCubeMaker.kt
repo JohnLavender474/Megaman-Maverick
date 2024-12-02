@@ -9,6 +9,7 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.overlaps
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -32,7 +33,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
@@ -78,7 +79,7 @@ class IceCubeMaker(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val spawn = body.getPositionPoint(Position.BOTTOM_CENTER).sub(0f, -0.15f * ConstVals.PPM)
 
         val icecube = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.SMALL_ICE_CUBE)!!
-        icecube.spawn(pooledProps(ConstKeys.POSITION pairTo spawn))
+        icecube.spawn(props(ConstKeys.POSITION pairTo spawn))
 
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
     }

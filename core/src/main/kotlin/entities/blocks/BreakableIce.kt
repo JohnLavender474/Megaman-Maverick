@@ -26,7 +26,7 @@ import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.TeardropBlast
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
 
@@ -83,7 +83,7 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
     private fun explodeAndDie() {
         for (i in 0 until 5) {
             val iceShard = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.ICE_SHARD)!!
-            iceShard.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.INDEX pairTo i))
+            iceShard.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.INDEX pairTo i))
         }
         destroy()
     }

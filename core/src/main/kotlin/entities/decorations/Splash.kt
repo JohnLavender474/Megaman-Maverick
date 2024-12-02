@@ -7,6 +7,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
@@ -21,20 +22,23 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+import com.megaman.maverick.game.utils.GameObjectPools
+
 import kotlin.math.ceil
 
-class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
+class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAudioEntity {
 
     enum class SplashType(
         val defaultAlpha: Float,
@@ -43,10 +47,20 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
         val defaultSize: Float,
         val regionkey: String
     ) {
-        BLUE(0.5f, DrawingSection.PLAYGROUND, -1, ConstVals.PPM.toFloat(), "Water/Splash"),
-        WHITE(0.5f, DrawingSection.PLAYGROUND, -1, ConstVals.PPM.toFloat(), "Water/WhiteSplash"),
-        TOXIC(0.5f, DrawingSection.PLAYGROUND, -1, ConstVals.PPM.toFloat(), "Water/ToxicSplash"),
-        SAND(1f, DrawingSection.FOREGROUND, 15, 1.5f * ConstVals.PPM, "SandSplash")
+        BLUE(0.5f, DrawingSection.PLAYGROUND, -1, ConstVals.PPM.toFloat(), "Water/Splash"), WHITE(
+            0.5f,
+            DrawingSection.PLAYGROUND,
+            -1,
+            ConstVals.PPM.toFloat(),
+            "Water/WhiteSplash"
+        ),
+        TOXIC(0.5f, DrawingSection.PLAYGROUND, -1, ConstVals.PPM.toFloat(), "Water/ToxicSplash"), SAND(
+            1f,
+            DrawingSection.FOREGROUND,
+            15,
+            1.5f * ConstVals.PPM,
+            "SandSplash"
+        )
     }
 
     companion object {
@@ -54,14 +68,22 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
         private const val CULL_TIME = 0.375f
         private val regions = ObjectMap<String, TextureRegion>()
 
-        fun splashOnWaterSurface(splasher: GameRectangle, water: GameRectangle) {
-            GameLogger.debug(TAG, "Generating splash for splasher [$splasher] and water [$water]")
+        fun splashOnWaterSurface(splasher: GameRectangle, water: GameRectangle, makeSound: Boolean = true) {
+            GameLogger.debug(TAG, "splashOnWaterSurface(): splasher=$splasher, water=$water, makeSound=$makeSound")
             val numSplashes = ceil(splasher.getWidth() / ConstVals.PPM).toInt()
             for (i in 0 until numSplashes) {
                 val splash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)!!
-                val spawn =
-                    Vector2(splasher.getX() + ConstVals.PPM / 2f + i * ConstVals.PPM, water.getY() + water.getHeight())
-                splash.spawn(pooledProps(ConstKeys.POSITION pairTo spawn))
+                val spawn = GameObjectPools.fetch(Vector2::class).set(
+                    splasher.getX() + ConstVals.PPM / 2f + i * ConstVals.PPM,
+                    water.getY() + water.getHeight()
+                )
+                splash.spawn(
+                    props(
+                        ConstKeys.POSITION pairTo spawn,
+                        ConstKeys.SOUND pairTo makeSound,
+                        ConstKeys.TYPE pairTo SplashType.BLUE
+                    )
+                )
             }
         }
     }
@@ -80,6 +102,7 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
         addComponent(SpritesComponent(GameSprite()))
         addComponent(defineAnimationsComponent())
         addComponent(defineUpdatablesComponent())
+        addComponent(AudioComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -96,9 +119,7 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
         val rotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f, Float::class)
         val alpha = spawnProps.getOrDefault(ConstKeys.ALPHA, type.defaultAlpha, Float::class)
         val priority = spawnProps.getOrDefault(
-            ConstKeys.PRIORITY,
-            DrawingPriority(type.defaultSection, type.defaultPriority),
-            DrawingPriority::class
+            ConstKeys.PRIORITY, DrawingPriority(type.defaultSection, type.defaultPriority), DrawingPriority::class
         )
 
         defaultSprite.let { sprite ->
@@ -115,6 +136,15 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
         }
 
         cullTimer.reset()
+
+        val makeSound = spawnProps.getOrDefault(ConstKeys.SOUND, true, Boolean::class)
+        if (makeSound) {
+            val sound = when (type) {
+                SplashType.BLUE, SplashType.WHITE, SplashType.TOXIC -> SoundAsset.SPLASH_SOUND
+                SplashType.SAND -> SoundAsset.BRUSH_SOUND
+            }
+            requestToPlaySound(sound, false)
+        }
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -131,4 +161,6 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
     }
 
     override fun getEntityType() = EntityType.DECORATION
+
+    override fun getTag() = TAG
 }

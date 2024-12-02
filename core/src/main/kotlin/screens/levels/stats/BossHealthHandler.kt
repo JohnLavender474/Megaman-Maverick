@@ -11,6 +11,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.drawables.ui.BitsBar
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
+import com.megaman.maverick.game.utils.misc.HealthFillType
 
 class BossHealthHandler(private val game: MegamanMaverickGame) : IDrawable<Batch>, Updatable {
 
@@ -33,26 +34,14 @@ class BossHealthHandler(private val game: MegamanMaverickGame) : IDrawable<Batch
         timer?.update(delta)
     }
 
-    fun set(entity: IHealthEntity, runOnFirstUpdate: (() -> Unit)? = null, runOnFinished: (() -> Unit)? = null) {
+    fun set(
+        entity: IHealthEntity,
+        type: HealthFillType,
+        runOnFirstUpdate: (() -> Unit)? = null,
+        runOnFinished: (() -> Unit)? = null
+    ) {
         this.entity = entity
         temp = 0
-
-        val bits = entity.getMaxHealth()
-        val timer = Timer(ConstVals.DUR_PER_BIT * bits)
-
-        val runnables = Array<TimeMarkedRunnable>()
-        for (i in 0 until bits) {
-            val timeToRun = i * ConstVals.DUR_PER_BIT
-            runnables.add(TimeMarkedRunnable(timeToRun) {
-                temp = i + 1
-                game.audioMan.playSound(SoundAsset.ENERGY_FILL_SOUND)
-            })
-        }
-        timer.setRunnables(runnables)
-        timer.runOnFirstUpdate = runOnFirstUpdate
-        timer.runOnFinished = runOnFinished
-
-        this.timer = timer
 
         bar = BitsBar(
             game.assMan,
@@ -62,6 +51,34 @@ class BossHealthHandler(private val game: MegamanMaverickGame) : IDrawable<Batch
             { health },
             { entity.getMaxHealth() })
         bar!!.init()
+
+        when (type) {
+            HealthFillType.BIT_BY_BIT -> {
+                val bits = entity.getMaxHealth()
+                val timer = Timer(ConstVals.DUR_PER_BIT * bits)
+
+                val runnables = Array<TimeMarkedRunnable>()
+                for (i in 0 until bits) {
+                    val timeToRun = i * ConstVals.DUR_PER_BIT
+                    runnables.add(TimeMarkedRunnable(timeToRun) {
+                        temp = i + 1
+                        game.audioMan.playSound(SoundAsset.ENERGY_FILL_SOUND)
+                    })
+                }
+                timer.setRunnables(runnables)
+                timer.runOnFirstUpdate = runOnFirstUpdate
+                timer.runOnFinished = runOnFinished
+
+                this.timer = timer
+            }
+
+            HealthFillType.ALL_AT_ONCE -> {
+                runOnFirstUpdate?.invoke()
+                runOnFinished?.invoke()
+                this.timer = null
+            }
+        }
+
     }
 
     fun unset() {

@@ -28,7 +28,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+
 import com.megaman.maverick.game.world.body.*
 
 class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
@@ -110,6 +110,6 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
         destroy()
         val caveRockExplosion =
             EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CAVE_ROCK_EXPLOSION)!!
-        caveRockExplosion.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter()))
+        caveRockExplosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 }

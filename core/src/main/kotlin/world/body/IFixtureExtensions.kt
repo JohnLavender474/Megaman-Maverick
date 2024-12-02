@@ -8,9 +8,9 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
+import com.megaman.maverick.game.entities.contracts.IWater
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.special.Water
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterator
 
@@ -60,10 +60,6 @@ fun IFixture.setConsumer(consumer: (ProcessState, IFixture) -> Unit): IFixture {
 
 fun IFixture.getConsumer() = properties.get(ConstKeys.CONSUMER) as ((ProcessState, IFixture) -> Unit)?
 
-fun IFixture.setHitWaterByReceiver(receiver: (Water) -> Unit) {
-    putProperty(ConstKeys.HIT_WATER, receiver)
-}
-
 fun IFixture.hasForceAlterationForState(processState: ProcessState) =
     hasProperty("${processState.name.lowercase()}_${ConstKeys.FORCE}_${ConstKeys.VELOCITY_ALTERATION}")
 
@@ -80,10 +76,14 @@ fun IFixture.applyForceAlteration(processState: ProcessState, alteration: Veloci
     } else VelocityAlterator.alterate(getBody(), alteration)
 }
 
+fun IFixture.setHitWaterByReceiver(receiver: (IWater) -> Unit) {
+    putProperty(ConstKeys.HIT_WATER, receiver)
+}
+
 fun IFixture.hasHitByWaterByReceiver() = hasProperty(ConstKeys.HIT_WATER)
 
-fun IFixture.getHitByWater(water: Water) =
-    (getProperty(ConstKeys.HIT_WATER) as (Water) -> Unit).invoke(water)
+fun IFixture.getHitByWater(water: IWater) =
+    (getProperty(ConstKeys.HIT_WATER) as (IWater) -> Unit).invoke(water)
 
 fun IFixture.setHitByBodyReceiver(receiver: (IBodyEntity) -> Unit) {
     putProperty(ConstKeys.HIT_BY_BODY, receiver)

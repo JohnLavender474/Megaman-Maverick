@@ -39,6 +39,7 @@ import com.megaman.maverick.game.entities.megaman.components.rightSideFixture
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
+
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 

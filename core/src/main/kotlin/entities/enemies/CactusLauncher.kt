@@ -48,7 +48,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -117,7 +117,7 @@ class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game), IParentEn
 
     private fun launchMissile() {
         val missile = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.CACTUS_MISSILE)!!
-        missile.spawn(pooledProps(ConstKeys.POSITION pairTo body.getPositionPoint(Position.TOP_CENTER)))
+        missile.spawn(props(ConstKeys.POSITION pairTo body.getPositionPoint(Position.TOP_CENTER)))
         children.add(missile)
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
     }

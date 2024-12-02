@@ -43,7 +43,7 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+
 import com.megaman.maverick.game.world.body.*
 
 class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
@@ -135,7 +135,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         destroy()
         val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
         val spawn = Vector2(body.getCenter().x, waterFixture.getShape().getMaxY())
-        smokePuff.spawn(pooledProps(ConstKeys.POSITION pairTo spawn, ConstKeys.OWNER pairTo owner))
+        smokePuff.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.OWNER pairTo owner))
         playSoundNow(SoundAsset.WHOOSH_SOUND, false)
     }
 

@@ -39,6 +39,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.GameObjectPools
+
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.world.body.*

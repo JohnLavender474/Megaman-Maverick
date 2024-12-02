@@ -39,7 +39,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.utils.MegaUtilMethods.pooledProps
+
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
@@ -127,7 +127,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
         destroy()
         if (overlapsGameCamera()) playSoundNow(SoundAsset.CHILL_SHOOT_SOUND, false)
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SNOWBALL_EXPLOSION)!!
-        explosion.spawn(pooledProps(ConstKeys.POSITION pairTo body.getCenter()))
+        explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
