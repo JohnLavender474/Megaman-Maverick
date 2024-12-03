@@ -45,6 +45,8 @@ object ConstKeys {
     const val A = "a"
     const val B = "b"
     const val FADE = "fade"
+    const val AMPLITUDE = "amplitude"
+    const val DRIFT = "drift"
     const val SELECT = "select"
     const val COLLIDE = "collide"
     const val DESTROY = "destroy"

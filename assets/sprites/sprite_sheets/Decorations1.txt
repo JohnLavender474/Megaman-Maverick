@@ -5,56 +5,56 @@ filter: Nearest,Nearest
 repeat: none
 BlinkingArrow
   rotate: false
-  xy: 26, 0
+  xy: 30, 0
   size: 26, 52
   orig: 26, 52
   offset: 0, 0
   index: -1
 BreathBubbles
   rotate: false
-  xy: 10, 0
+  xy: 14, 0
   size: 16, 48
   orig: 16, 48
   offset: 0, 0
   index: -1
 Candle
   rotate: false
-  xy: 510, 0
+  xy: 514, 0
   size: 126, 42
   orig: 126, 42
   offset: 0, 0
   index: -1
 ChargedShot_Residual_Half
   rotate: false
-  xy: 78, 0
+  xy: 82, 0
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 DrippingToxicGoop
   rotate: false
-  xy: 110, 0
+  xy: 114, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 FullChargedShotResidual
   rotate: false
-  xy: 350, 0
+  xy: 354, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 JetpackFlame
   rotate: false
-  xy: 414, 0
+  xy: 418, 0
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 Lantern
   rotate: false
-  xy: 142, 0
+  xy: 146, 0
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
@@ -68,70 +68,77 @@ Lava
   index: -1
 MegamanDamageBurst
   rotate: false
-  xy: 174, 0
+  xy: 178, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 MuzzleFlash
   rotate: false
-  xy: 302, 0
+  xy: 306, 0
   size: 48, 16
   orig: 48, 16
   offset: 0, 0
   index: -1
 RainDrop
   rotate: false
-  xy: 0, 0
+  xy: 4, 0
   size: 10, 9
   orig: 10, 9
   offset: 0, 0
   index: -1
 SandSplash
   rotate: false
-  xy: 636, 0
+  xy: 640, 0
   size: 160, 32
   orig: 160, 32
   offset: 0, 0
   index: -1
+Snow
+  rotate: false
+  xy: 0, 0
+  size: 4, 4
+  orig: 4, 4
+  offset: 0, 0
+  index: -1
 SpaceSatellite
   rotate: false
-  xy: 956, 0
+  xy: 960, 0
   size: 400, 200
   orig: 400, 200
   offset: 0, 0
   index: -1
 Thread
   rotate: false
-  xy: 206, 0
+  xy: 210, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ToxicWaterfall
   rotate: false
-  xy: 238, 0
+  xy: 242, 0
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ToxicWaterSplash
   rotate: false
-  xy: 796, 0
+  xy: 800, 0
   size: 160, 32
   orig: 160, 32
   offset: 0, 0
   index: -1
 UnderWaterBubble
   rotate: false
-  xy: 270, 0
+  xy: 274, 0
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 WhiteArrow
   rotate: false
-  xy: 52, 0
+  xy: 56, 0
   size: 26, 26
   orig: 26, 26
   offset: 0, 0

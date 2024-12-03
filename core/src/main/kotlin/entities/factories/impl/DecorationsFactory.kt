@@ -31,6 +31,8 @@ class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory(
         const val BRICK_PIECE = "BrickPiece"
         const val MEGAMAN_TRAIL_SPRITE = "MegamanTrailSprite"
         const val CHARGED_SHOT_RESIDUAL = "ChargedShotResidual"
+        const val SNOW = "Snow"
+        const val SNOW_FALL = "Snowfall"
     }
 
     override fun init() {
@@ -56,6 +58,8 @@ class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory(
         pools.put(BRICK_PIECE, GameEntityPoolCreator.create { BrickPiece(game) })
         pools.put(MEGAMAN_TRAIL_SPRITE, GameEntityPoolCreator.create { MegamanTrailSprite(game) })
         pools.put(CHARGED_SHOT_RESIDUAL, GameEntityPoolCreator.create { ChargedShotResidual(game) })
+        pools.put(SNOW, GameEntityPoolCreator.create { Snow(game) })
+        pools.put(SNOW_FALL, GameEntityPoolCreator.create { Snowfall(game) })
     }
 
     override fun fetch(key: Any) = pools.get(key)?.fetch()

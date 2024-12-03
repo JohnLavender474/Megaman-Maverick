@@ -67,7 +67,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         const val TAG = "GlacierMan"
 
         private const val INIT_DUR = 1f
-        private const val STAND_DUR = 0.75f
+        private const val STAND_DUR = 1f
         private const val DUCK_DUR = 0.75f
         private const val SLED_DUR = 1.5f
         private const val STOP_DUR = 0.8f
@@ -75,9 +75,9 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val SHOOT_ANIM_DUR = 0.25f
         private const val SHOOT_UP_CHANCE = 0.4f
 
-        private const val ICE_BLAST_ATTACK_DUR = 3.5f
-        private const val ICE_BLAST_ATTACK_COUNT = 8
-        private const val ICE_BLAST_VEL = 12f
+        private const val ICE_BLAST_ATTACK_DUR = 4f
+        private const val ICE_BLAST_ATTACK_COUNT = 6
+        private const val ICE_BLAST_VEL = 10f
         private const val CHUNK_ICE_BLAST_VEL_Y = 8f
 
         private const val MEGAMAN_OFFSET_X = 2.5f
@@ -89,14 +89,14 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.01f
 
-        private const val SLED_SPEED = 10f
+        private const val SLED_SPEED = 8f
         private const val BRAKE_FRICTION_X = 1.25f
         private const val MAX_BRAKE_DUR = 0.75f
 
         private const val SNOWBALL_SIZE = 0.5f
-        private const val SNOWBALL_VEL_UP_X = 10f
-        private const val SNOWBALL_VEL_UP_Y = 16f
-        private const val SNOWBALL_VEL_STRAIGHT_X = 16f
+        private const val SNOWBALL_VEL_UP_X = 9f
+        private const val SNOWBALL_VEL_UP_Y = 15f
+        private const val SNOWBALL_VEL_STRAIGHT_X = 15f
         private const val SNOWBALL_VEL_STRAIGHT_Y = 6f
 
         private val regions = ObjectMap<String, TextureRegion>()
