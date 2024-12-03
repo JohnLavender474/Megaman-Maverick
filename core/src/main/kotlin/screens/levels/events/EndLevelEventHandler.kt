@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.interfaces.Resettable
@@ -12,7 +13,7 @@ import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.IDrawable
 import com.mega.game.engine.drawables.sprites.GameSprite
-import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.events.Event
 import com.megaman.maverick.game.ConstKeys
@@ -22,7 +23,8 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_SIZE
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
+import com.megaman.maverick.game.world.body.getPositionPoint
 
 class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializable, Updatable, IDrawable<Batch>,
     Resettable {
@@ -140,7 +142,9 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
 
             beamSprite.setOriginCenter()
             beamSprite.rotation = megaman.direction.rotation
-            beamSprite.setCenter(megaman.body.getCenter())
+            val position = DirectionPositionMapper.getInvertedPosition(megaman.direction)
+            beamSprite.setPosition(megaman.body.getPositionPoint(position), position)
+            beamSprite.setFlip(megaman.isFacing(Facing.LEFT), false)
 
             beamTransitionTimer.reset()
 
@@ -152,6 +156,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         beamTransitionTimer.update(delta)
         beamTransAnim.update(delta)
         beamSprite.setRegion(beamTransAnim.getCurrentRegion())
+        beamSprite.setFlip(megaman.isFacing(Facing.LEFT), false)
 
         if (beamTransitionTimer.isFinished()) {
             GameLogger.debug(TAG, "beam transition timer just finished")
@@ -162,7 +167,10 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
     private fun beamUp(delta: Float) {
         beamUpTimer.update(delta)
 
-        beamSprite.setCenter(megaman.body.getCenter())
+        val position = DirectionPositionMapper.getInvertedPosition(megaman.direction)
+        beamSprite.setPosition(megaman.body.getPositionPoint(position), position)
+        beamSprite.setFlip(megaman.isFacing(Facing.LEFT), false)
+
         when (megaman.direction) {
             Direction.UP -> beamSprite.y += ConstVals.VIEW_HEIGHT * ConstVals.PPM * beamUpTimer.getRatio()
             Direction.DOWN -> beamSprite.y -= ConstVals.VIEW_HEIGHT * ConstVals.PPM * beamUpTimer.getRatio()

@@ -97,9 +97,9 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         private const val SPRITE_SIZE = 2.25f
 
         private const val INIT_DUR = 0.3f
-        private const val STAND_DUR = 0.5f
-        private const val SPAWN_ASTEROID_DELAY = 1f
-        private const val THROW_ASTEROID_DELAY = 0.75f
+        private const val STAND_DUR = 0.75f
+        private const val SPAWN_ASTEROID_DELAY = 1.25f
+        private const val THROW_ASTEROID_DELAY = 1f
         private const val ASTEROIDS_END_DUR = 1f
 
         private const val GRAVITY_CHANGE_BEGIN_DUR = 0.3f
@@ -111,9 +111,9 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         private const val GRAVITY_CHANGE_CHANGE_DELTA = 0.1f
 
         private const val ASTEROIDS_TO_SPAWN = 3
-        private const val ASTEROID_SPEED = 7.5f
+        private const val ASTEROID_SPEED = 6f
 
-        private const val SHARP_STAR_SPEED = 10f
+        private const val SHARP_STAR_SPEED = 8f
         private const val SHARP_STAR_MOVEMENT_SCALAR = 0.75f
 
         private const val MOON_SCYTHE_SPEED = 8f
