@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
+import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.swapped
@@ -27,6 +28,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.*
 
@@ -63,8 +65,6 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps, megamanPos=${megaman().body.getCenter()}")
-
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -85,11 +85,22 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
         minY = spawnProps.get("${ConstKeys.MIN}_${ConstKeys.Y}", Float::class)!!
 
         timer.reset()
+
+        val size = MegaGameEntities.getEntitiesOfTag(getTag()).size
+        GameLogger.debug(
+            TAG,
+            "onSpawn(): snowAmount=$size spawnProps=$spawnProps, megamanPos=${megaman().body.getCenter()}"
+        )
     }
 
     override fun onDestroy() {
-        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        val size = MegaGameEntities.getEntitiesOfTag(getTag()).size
+        GameLogger.debug(
+            TAG,
+            "onDestroy(): snowAmount=$size"
+        )
+
     }
 
     private fun adjust() {
@@ -112,7 +123,7 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
         val position = sine.getMotionValue(out).swapped()
         body.setPosition(position).translate(drift * delta, 0f)
 
-        if (body.getY() < minY || body.getBounds().overlaps(megaman().body.getBounds())) destroy()
+        if (body.getY() < minY) destroy()
     })
 
     private fun defineBodyComponent(): BodyComponent {
@@ -121,8 +132,8 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
 
         val bodyRect = GameRectangle()
         val bodyFixture = Fixture(body, FixtureType.BODY, bodyRect)
-        bodyFixture.setHitByBlockReceiver {
-            GameLogger.debug(TAG, "hitByBlock(): mapObjId=${(it as MegaGameEntity).mapObjectId}")
+        bodyFixture.setHitByBlockReceiver(ProcessState.BEGIN) { block, _ ->
+            GameLogger.debug(TAG, "hitByBlock(): mapObjId=${block.mapObjectId}")
             destroy()
         }
         bodyFixture.setHitByBodyReceiver {
@@ -133,11 +144,16 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
             GameLogger.debug(TAG, "hitByProjectile(): projectile=$it")
             destroy()
         }
-        bodyFixture.setHitWaterByReceiver {
+        bodyFixture.setHitByWaterReceiver {
             GameLogger.debug(TAG, "hitByWater(): water=$it")
             destroy()
         }
         body.addFixture(bodyFixture)
+
+        val waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle(body))
+        waterListenerFixture.setHitByWaterReceiver { destroy() }
+        waterListenerFixture.putProperty(ConstKeys.SPLASH, false)
+        body.addFixture(waterListenerFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) { bodyRect.set(body) }
 

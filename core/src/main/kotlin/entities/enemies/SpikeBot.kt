@@ -38,6 +38,7 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
@@ -51,6 +52,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.entities.projectiles.Needle.NeedleType
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
@@ -59,6 +61,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     companion object {
         const val TAG = "SpikeBot"
+
         private const val STAND_DUR = 0.25f
 
         private const val SHOOT_DUR = 0.5f
@@ -84,6 +87,8 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
+    enum class SpikeBotType(val append: String) { DEFAULT(""), SNOW("_snow") }
+
     private enum class SpikeBotState { STAND, WALK, SHOOT }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -93,6 +98,8 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
     )
     override lateinit var facing: Facing
+
+    lateinit var type: SpikeBotType
 
     private val loop = Loop(SpikeBotState.entries.toTypedArray().toGdxArray())
     private val timers = objectMapOf(
@@ -105,10 +112,12 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            regions.put("jump", atlas.findRegion("$TAG/jump"))
-            regions.put("walk", atlas.findRegion("$TAG/walk"))
-            regions.put("shoot", atlas.findRegion("$TAG/shoot"))
-            regions.put("stand", atlas.findRegion("$TAG/stand"))
+            gdxArrayOf("jump", "walk", "shoot", "stand").forEach { key ->
+                SpikeBotType.entries.forEach { type ->
+                    val amendedKey = "${key}${type.append}"
+                    regions.put(amendedKey, atlas.findRegion("${TAG}/${amendedKey}"))
+                }
+            }
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -126,6 +135,13 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
         val frameDuration = 0.1f / movementScalar
         animations.values().forEach { it.setFrameDuration(frameDuration) }
+
+        type = if (spawnProps.containsKey(ConstKeys.TYPE)) {
+            val rawType = spawnProps.get(ConstKeys.TYPE)
+            rawType as? SpikeBotType
+                ?: if (rawType is String) SpikeBotType.valueOf(rawType.uppercase())
+                else throw IllegalArgumentException("Illegal value for type: $rawType")
+        } else SpikeBotType.DEFAULT
     }
 
     private fun shoot() {
@@ -137,13 +153,19 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             val angle = angles[i]
             val impulse = Vector2(0f, NEEDLE_IMPULSE * ConstVals.PPM).rotateDeg(angle).scl(movementScalar)
 
+            val needleType = when (type) {
+                SpikeBotType.DEFAULT -> NeedleType.DEFAULT
+                SpikeBotType.SNOW -> NeedleType.ICE
+            }
+
             val needle = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.NEEDLE)!!
             needle.spawn(
                 props(
                     ConstKeys.OWNER pairTo this,
                     ConstKeys.POSITION pairTo position,
                     ConstKeys.IMPULSE pairTo impulse,
-                    ConstKeys.GRAVITY pairTo NEEDLE_GRAV * ConstVals.PPM
+                    ConstKeys.GRAVITY pairTo NEEDLE_GRAV * ConstVals.PPM,
+                    ConstKeys.TYPE pairTo needleType
                 )
             )
         }
@@ -215,6 +237,13 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         feetFixture.drawingColor = Color.GREEN
         debugShapes.add { feetFixture }
 
+        val headFixture =
+            Fixture(body, FixtureType.HEAD,  GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
+        headFixture.offsetFromBodyAttachment.y = 0.375f * ConstVals.PPM
+        body.addFixture(headFixture)
+        headFixture.drawingColor = Color.ORANGE
+        debugShapes.add { headFixture }
+
         val leftSideFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftSideFixture.offsetFromBodyAttachment.x = -0.375f * ConstVals.PPM
         leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
@@ -253,6 +282,9 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
             val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
             body.physics.gravity.y = gravity * ConstVals.PPM * movementScalar
+
+            if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) && body.physics.velocity.y > 0)
+                body.physics.velocity.y = 0f
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -274,19 +306,29 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String = {
-            if (!body.isSensing(BodySense.FEET_ON_GROUND)) "jump"
-            else when (loop.getCurrent()) {
-                SpikeBotState.STAND -> "stand"
-                SpikeBotState.WALK -> "walk"
-                SpikeBotState.SHOOT -> "shoot"
+            val key = when {
+                !body.isSensing(BodySense.FEET_ON_GROUND) -> "jump"
+                else -> when (loop.getCurrent()) {
+                    SpikeBotState.STAND -> "stand"
+                    SpikeBotState.WALK -> "walk"
+                    SpikeBotState.SHOOT -> "shoot"
+                }
+            }
+            "${key}${type.append}"
+        }
+        animations = ObjectMap<String, IAnimation>()
+        gdxArrayOf(
+            "jump" pairTo AnimationDef(),
+            "stand" pairTo AnimationDef(),
+            "walk" pairTo AnimationDef(2, 2, 0.1f, true),
+            "shoot" pairTo AnimationDef(5, 1, 0.1f, true)
+        ).forEach { (key, def) ->
+            SpikeBotType.entries.forEach { type ->
+                val amendedKey = "${key}${type.append}"
+                val animation = Animation(regions[amendedKey], def.rows, def.cols, def.durations, def.loop)
+                animations.put(amendedKey, animation)
             }
         }
-        animations = objectMapOf(
-            "jump" pairTo Animation(regions["jump"]),
-            "stand" pairTo Animation(regions["stand"]),
-            "walk" pairTo Animation(regions["walk"], 2, 2, 0.1f, true),
-            "shoot" pairTo Animation(regions["shoot"], 5, 1, 0.1f, false)
-        )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }

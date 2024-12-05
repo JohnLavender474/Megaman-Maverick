@@ -7,6 +7,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
@@ -88,7 +89,7 @@ class UnderWaterBubble(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyE
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.125f * ConstVals.PPM))
         bodyFixture.setHitByProjectileReceiver { pop("Hit projectile") }
-        bodyFixture.setHitByBlockReceiver { pop("Hit block") }
+        bodyFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ -> pop("Hit block") }
         body.addFixture(bodyFixture)
         debugShapes.add { bodyFixture}
 

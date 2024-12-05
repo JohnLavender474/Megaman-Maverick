@@ -88,7 +88,9 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
+        val spawn = spawnProps
+            .get(ConstKeys.BOUNDS, GameRectangle::class)!!
+            .getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         slideTimer.setToEnd()
         standTimer.reset()
@@ -97,7 +99,10 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.physics.defaultFrictionOnSelf.set(MegaContactListener.ICE_FRICTION, MegaContactListener.ICE_FRICTION)
+        body.physics.defaultFrictionOnSelf.set(
+            MegaContactListener.ICE_FRICTION,
+            MegaContactListener.ICE_FRICTION
+        ).scl(ConstVals.PPM.toFloat())
         body.physics.applyFrictionX = true
         body.physics.applyFrictionY = false
 
@@ -146,10 +151,10 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val sprite = GameSprite()
         sprite.setSize(1.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
-            _sprite.setFlip(facing == Facing.LEFT, false)
-            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
+            sprite.setFlip(facing == Facing.LEFT, false)
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             if (sliding) sprite.translateY(-0.25f * ConstVals.PPM)
         }
         return spritesComponent

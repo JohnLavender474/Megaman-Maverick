@@ -12,6 +12,7 @@ import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -189,7 +190,7 @@ class FloorButton(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
         debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
-        bodyFixture.setHitByBlockReceiver { block ->
+        bodyFixture.setHitByBlockReceiver(ProcessState.BEGIN) { block, _ ->
             val owner = block.getProperty(ConstKeys.OWNER, IGameEntity::class)
             if (owner != null && owner is PushableBlock) enterPushableBlock(owner)
         }

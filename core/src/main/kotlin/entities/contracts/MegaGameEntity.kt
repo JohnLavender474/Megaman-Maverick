@@ -34,7 +34,8 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
         MegaGameEntities.remove(this)
     }
 
-    override fun getTag(): String = this::class.simpleName ?: ""
+    override fun getTag() = this::class.simpleName ?: "?"
 
-    override fun toString() = "${this::class.simpleName}: dead=$dead"
+    override fun toString() = "${this::class.simpleName}: " +
+        "mapObjId=$mapObjectId, dead=$dead, components=$components, hashCode=${hashCode()}"
 }

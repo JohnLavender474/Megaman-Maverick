@@ -83,10 +83,10 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 columns = 30,
                 animRows = 2,
                 animColumns = 2,
-                duration = 0.25f,
+                duration = 0.2f,
                 priority = DrawingPriority(DrawingSection.BACKGROUND, 1),
                 initPos = Vector2(it.rectangle.getCenter().x, it.rectangle.getCenter().y - 2f * ConstVals.PPM),
-                parallaxX = 0.05f,
+                parallaxX = 0.075f,
                 parallaxY = 0f
             )
         },

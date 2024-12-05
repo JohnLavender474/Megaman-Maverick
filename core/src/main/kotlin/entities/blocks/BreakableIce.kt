@@ -26,7 +26,6 @@ import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.TeardropBlast
-
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
 
@@ -41,6 +40,7 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
     }
 
     private var index = 1
+    private var hit = false
 
     override fun init() {
         if (region1 == null || region2 == null || region3 == null) {
@@ -56,6 +56,7 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+        hit = false
         index = 1
     }
 
@@ -76,8 +77,10 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
 
     private fun hit(increment: Int = 1) {
         index += increment
-        if (index >= BREAK_INDEX) explodeAndDie()
-        else if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ICE_SHARD_1_SOUND, false)
+        when {
+            index >= BREAK_INDEX -> explodeAndDie()
+            overlapsGameCamera() -> requestToPlaySound(SoundAsset.ICE_SHARD_1_SOUND, false)
+        }
     }
 
     private fun explodeAndDie() {

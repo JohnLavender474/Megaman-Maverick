@@ -54,7 +54,7 @@ class SnowheadThrower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
 
     companion object {
         const val TAG = "SnowheadThrower"
-        private const val STAND_DUR = 1f
+        private const val STAND_DUR = 1.25f
         private const val THROW_DUR = 0.6f
         private const val THROW_DELAY = 0.1f
         private const val SNOW_HEAD_X_VEL = 8f

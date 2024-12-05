@@ -12,7 +12,7 @@ import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 class MegaFontHandle(
     textSupplier: () -> String,
     fontSize: Int = getDefaultFontSize(),
-    positionX: Float = (ConstVals.VIEW_WIDTH - 3) * ConstVals.PPM,
+    positionX: Float = (ConstVals.VIEW_WIDTH - 5) * ConstVals.PPM,
     positionY: Float = (ConstVals.VIEW_HEIGHT - 1) * ConstVals.PPM,
     centerX: Boolean = true,
     centerY: Boolean = true,

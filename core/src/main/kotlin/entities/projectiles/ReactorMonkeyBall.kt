@@ -9,6 +9,7 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.objects.Properties
@@ -144,14 +145,14 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         headFixture.offsetFromBodyAttachment.y = 1.25f * ConstVals.PPM
-        headFixture.setHitByBlockReceiver { bounce(Direction.DOWN) }
+        headFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ -> bounce(Direction.DOWN) }
         body.addFixture(headFixture)
         debugShapes.add { headFixture}
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -1.25f * ConstVals.PPM
-        feetFixture.setHitByBlockReceiver { bounce(Direction.UP) }
+        feetFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ -> bounce(Direction.UP) }
         body.addFixture(feetFixture)
         debugShapes.add { feetFixture}
 
@@ -159,14 +160,14 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 1.5f * ConstVals.PPM))
         leftFixture.offsetFromBodyAttachment.x = -1.25f * ConstVals.PPM
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftFixture.setHitByBlockReceiver { bounce(Direction.RIGHT) }
+        leftFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ -> bounce(Direction.RIGHT) }
         body.addFixture(leftFixture)
         debugShapes.add { leftFixture}
 
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 1.5f * ConstVals.PPM))
         rightFixture.offsetFromBodyAttachment.x = 1.25f * ConstVals.PPM
-        rightFixture.setHitByBlockReceiver { bounce(Direction.LEFT) }
+        rightFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ -> bounce(Direction.LEFT) }
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
         debugShapes.add { rightFixture}

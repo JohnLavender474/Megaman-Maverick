@@ -10,6 +10,7 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IDirectional
@@ -193,7 +194,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
-        feetFixture.setHitByBlockReceiver {
+        feetFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ ->
             facing = if (megaman().body.getX() < body.getX()) Facing.RIGHT else Facing.LEFT
             if (direction == Direction.UP) swapFacing()
         }

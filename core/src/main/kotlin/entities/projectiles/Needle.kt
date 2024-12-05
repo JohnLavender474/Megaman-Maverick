@@ -3,8 +3,10 @@ package com.megaman.maverick.game.entities.projectiles
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -37,7 +39,6 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
-
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
@@ -55,19 +56,25 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
             ChargedShot::class pairTo ConstVals.MAX_HEALTH,
             ChargedShotExplosion::class pairTo ConstVals.MAX_HEALTH
         )
-        private var region: TextureRegion? = null
+        private val regions = ObjectMap<String, TextureRegion>()
     }
+
+    enum class NeedleType { DEFAULT, ICE }
 
     override val invincible: Boolean
         get() = !damageTimer.isFinished()
 
+    lateinit var type: NeedleType
     lateinit var damagerFixture: Fixture
 
     private val damageTimer = Timer(DAMAGE_DURATION)
     private var blink = false
 
     override fun init() {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
+        if (regions.isEmpty) {
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
+            gdxArrayOf("default", "ice").forEach { regions.put(it, atlas.findRegion("${TAG}/${it}")) }
+        }
         super.init()
         addComponent(defineUpdatablesComponent())
         addComponent(definePointsComponent())
@@ -94,6 +101,12 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
 
         damageTimer.setToEnd()
         blink = false
+
+        type = if (spawnProps.containsKey(ConstKeys.TYPE)) {
+            val rawType = spawnProps.get(ConstKeys.TYPE)
+            rawType as? NeedleType ?: if (rawType is String) NeedleType.valueOf(rawType.uppercase())
+            else throw IllegalArgumentException("Illegal value for type: $rawType")
+        } else NeedleType.DEFAULT
     }
 
     override fun onDestroy() {
@@ -152,7 +165,7 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.25f * ConstVals.PPM))
         body.addFixture(projectileFixture)
-        debugShapes.add { projectileFixture}
+        debugShapes.add { projectileFixture }
 
         damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.25f * ConstVals.PPM))
         body.addFixture(damagerFixture)
@@ -166,10 +179,12 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 1))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         sprite.setSize(0.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
+            val region = regions[type.name.lowercase()]
+            sprite.setRegion(region)
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
             sprite.rotation = body.physics.velocity.angleDeg() + 270f

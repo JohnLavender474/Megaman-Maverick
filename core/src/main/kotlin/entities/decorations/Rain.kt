@@ -8,6 +8,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
 import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.isAny
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -102,9 +103,9 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         body.physics.applyFrictionX = false
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
-        bodyFixture.setHitByBlockReceiver {
-            GameLogger.debug(TAG, "hit block $it")
-            val direction = getOverlapPushDirection(bodyFixture.getShape(), it.body.getBounds())
+        bodyFixture.setHitByBlockReceiver(ProcessState.BEGIN) { block, _ ->
+            GameLogger.debug(TAG, "hit block $block")
+            val direction = getOverlapPushDirection(bodyFixture.getShape(), block.body.getBounds())
             splash(direction?.rotation ?: 0f)
         }
         bodyFixture.setHitByBodyReceiver {

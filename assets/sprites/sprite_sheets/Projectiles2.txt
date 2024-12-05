@@ -47,14 +47,14 @@ DeathBomb/wait
   index: -1
 FallingIcicle/shake
   rotate: false
-  xy: 68, 0
+  xy: 84, 0
   size: 24, 32
   orig: 24, 32
   offset: 0, 0
   index: -1
 FallingIcicle/shatter
   rotate: false
-  xy: 92, 0
+  xy: 0, 32
   size: 24, 32
   orig: 24, 32
   offset: 0, 0
@@ -75,7 +75,7 @@ Harpoon
   index: -1
 MagmaGoop
   rotate: false
-  xy: 0, 32
+  xy: 24, 32
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
@@ -143,16 +143,23 @@ MoonScythe
   orig: 48, 96
   offset: 0, 0
   index: -1
-Needle
+Needle/default
   rotate: false
   xy: 52, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
+Needle/ice
+  rotate: false
+  xy: 68, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
 Pebble
   rotate: false
-  xy: 32, 32
+  xy: 56, 32
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
@@ -166,7 +173,7 @@ SharpStar
   index: -1
 SmallGreenMissile
   rotate: false
-  xy: 68, 32
+  xy: 92, 32
   size: 35, 42
   orig: 35, 42
   offset: 0, 0
@@ -194,7 +201,7 @@ SpitFireball
   index: -1
 TeardropBlast
   rotate: false
-  xy: 16, 32
+  xy: 40, 32
   size: 16, 32
   orig: 16, 32
   offset: 0, 0

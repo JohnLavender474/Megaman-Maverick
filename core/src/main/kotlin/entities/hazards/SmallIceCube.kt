@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
@@ -149,7 +150,9 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         bodyFixture.setHitByBodyReceiver { entity -> if (entity is SmallIceCube) shatterAndDie() }
         bodyFixture.setHitByPlayerReceiver { getHit(it) }
         bodyFixture.setHitByProjectileReceiver { getHit(it) }
-        bodyFixture.setHitByBlockReceiver { if (destroyOnHitBlock) shatterAndDie() else getHit(it) }
+        bodyFixture.setHitByBlockReceiver(ProcessState.BEGIN) { block, _ ->
+            if (destroyOnHitBlock) shatterAndDie() else getHit(block)
+        }
         body.addFixture(bodyFixture)
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.55f * ConstVals.PPM))

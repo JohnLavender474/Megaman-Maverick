@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.world.body
 
-import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.IBody
 import com.megaman.maverick.game.ConstKeys
 
@@ -11,6 +10,7 @@ enum class BodySense {
     FEET_ON_GROUND,
     FEET_ON_ICE,
     FEET_ON_SAND,
+    FEET_ON_SNOW,
     HEAD_TOUCHING_BLOCK,
     SIDE_TOUCHING_BLOCK_LEFT,
     SIDE_TOUCHING_BLOCK_RIGHT,

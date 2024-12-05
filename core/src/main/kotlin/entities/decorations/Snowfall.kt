@@ -17,6 +17,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
+import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 
@@ -42,6 +43,7 @@ class Snowfall(game: MegamanMaverickGame) : MegaGameEntity(game) {
 
     private val bounds = GameRectangle()
     private val spawnDelay = Timer()
+    private lateinit var spawnRoom: String
     private var left = false
     private var minY = 0f
 
@@ -54,8 +56,9 @@ class Snowfall(game: MegamanMaverickGame) : MegaGameEntity(game) {
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+        spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
         bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
-        left = spawnProps.get(ConstKeys.LEFT, Boolean::class)!!
+        left = spawnProps.getOrDefault(ConstKeys.LEFT, true, Boolean::class)
         minY = spawnProps
             .get("${ConstKeys.MIN}_${ConstKeys.Y}", RectangleMapObject::class)!!
             .rectangle.toGameRectangle().getY()
@@ -68,6 +71,8 @@ class Snowfall(game: MegamanMaverickGame) : MegaGameEntity(game) {
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        if (game.getCurrentRoom()?.name != spawnRoom) return@UpdatablesComponent
+
         spawnDelay.update(delta)
         if (spawnDelay.isFinished()) {
             spawnSnow()
