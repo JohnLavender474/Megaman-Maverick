@@ -33,7 +33,7 @@ object MegamanDamageNegotations{
         Explosion.TAG pairTo dmgNeg(2),
         JoeBall.TAG pairTo dmgNeg(3),
         Snowball.TAG pairTo dmgNeg(1),
-        SnowballExplosion.TAG pairTo dmgNeg(1),
+        // SnowballExplosion.TAG pairTo dmgNeg(1),
         SwinginJoe.TAG pairTo dmgNeg(2),
         SniperJoe.TAG pairTo dmgNeg(3),
         ShieldAttacker.TAG pairTo dmgNeg(4),

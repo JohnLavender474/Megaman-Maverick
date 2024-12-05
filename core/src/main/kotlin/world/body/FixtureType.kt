@@ -10,6 +10,7 @@ enum class FixtureType {
     ITEM,
     ICE,
     SAND,
+    SNOW,
     GATE,
     LASER,
     WATER,

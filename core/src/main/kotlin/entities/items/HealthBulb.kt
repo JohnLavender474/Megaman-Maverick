@@ -163,7 +163,7 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
         debugShapes.add { feetFixture}
 
         waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle())
-        waterListenerFixture.setHitWaterByReceiver {
+        waterListenerFixture.setHitByWaterReceiver {
             body.physics.velocity.setZero()
             gravity = WATER_GRAVITY
             velClamp = WATER_VEL_CLAMP

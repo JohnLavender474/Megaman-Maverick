@@ -76,7 +76,7 @@ fun IFixture.applyForceAlteration(processState: ProcessState, alteration: Veloci
     } else VelocityAlterator.alterate(getBody(), alteration)
 }
 
-fun IFixture.setHitWaterByReceiver(receiver: (IWater) -> Unit) {
+fun IFixture.setHitByWaterReceiver(receiver: (IWater) -> Unit) {
     putProperty(ConstKeys.HIT_WATER, receiver)
 }
 
@@ -94,13 +94,15 @@ fun IFixture.hasHitByBodyReceiver() = hasProperty(ConstKeys.HIT_BY_BODY)
 fun IFixture.getHitByBody(body: IBodyEntity) =
     (getProperty(ConstKeys.HIT_BY_BODY) as (IBodyEntity) -> Unit).invoke(body)
 
-fun IFixture.setHitByBlockReceiver(receiver: (Block) -> Unit) {
-    putProperty(ConstKeys.HIT_BY_BLOCK, receiver)
+fun IFixture.setHitByBlockReceiver(state: ProcessState, receiver: (Block, Float) -> Unit) {
+    putProperty("${ConstKeys.HIT_BY_BLOCK}_${state.name}", receiver)
 }
 
-fun IFixture.hasHitByBlockReceiver() = hasProperty(ConstKeys.HIT_BY_BLOCK)
+fun IFixture.hasHitByBlockReceiver(state: ProcessState) =
+    hasProperty("${ConstKeys.HIT_BY_BLOCK}_${state.name}")
 
-fun IFixture.getHitByBlock(block: Block) = (getProperty(ConstKeys.HIT_BY_BLOCK) as (Block) -> Unit).invoke(block)
+fun IFixture.getHitByBlock(state: ProcessState, block: Block, delta: Float) =
+    (getProperty("${ConstKeys.HIT_BY_BLOCK}_${state.name}") as (Block, Float) -> Unit).invoke(block, delta)
 
 fun IFixture.setHitByPlayerReceiver(receiver: (Megaman) -> Unit) {
     putProperty(ConstKeys.HIT_BY_PLAYER, receiver)
@@ -119,3 +121,12 @@ fun IFixture.hasHitByProjectileReceiver() = hasProperty(ConstKeys.HIT_BY_PROJECT
 
 fun IFixture.getHitByProjectile(projectile: IProjectileEntity) =
     (getProperty(ConstKeys.HIT_BY_PROJECTILE) as (IProjectileEntity) -> Unit).invoke(projectile)
+
+fun IFixture.setHitByFeetReceiver(state: ProcessState, receiver: (IFixture, Float) -> Unit) {
+    putProperty("${ConstKeys.HIT_BY_FEET}_${state.name}", receiver)
+}
+
+fun IFixture.hasHitByFeetReceiver(state: ProcessState) = hasProperty("${ConstKeys.HIT_BY_FEET}_${state.name}")
+
+fun IFixture.getHitByFeet(state: ProcessState, feet: IFixture, delta: Float) =
+    (getProperty("${ConstKeys.HIT_BY_FEET}_${state.name}") as (IFixture, Float) -> Unit).invoke(feet, delta)

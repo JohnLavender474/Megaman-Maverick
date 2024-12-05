@@ -285,7 +285,8 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Projectiles2/MagmaPellet.png</key>
-            <key type="filename">../frames/Projectiles2/Needle.png</key>
+            <key type="filename">../frames/Projectiles2/Needle/default.png</key>
+            <key type="filename">../frames/Projectiles2/Needle/ice.png</key>
             <key type="filename">../frames/Projectiles2/TeardropBlast.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

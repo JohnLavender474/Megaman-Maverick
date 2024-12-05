@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
@@ -8,10 +7,10 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -44,7 +43,6 @@ import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
-
 import kotlin.reflect.KClass
 
 class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
@@ -113,11 +111,8 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         debugShapes.add { bodyFixture}
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM * 0.5f))
-        feetFixture.setHitByBlockReceiver {
-            if (overlapsGameCamera()) requestToPlaySound(
-                SoundAsset.MARIO_FIREBALL_SOUND,
-                false
-            )
+        feetFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ ->
+            if (overlapsGameCamera()) requestToPlaySound(SoundAsset.MARIO_FIREBALL_SOUND, false)
         }
         feetFixture.offsetFromBodyAttachment.y = -ConstVals.PPM.toFloat()
         body.addFixture(feetFixture)

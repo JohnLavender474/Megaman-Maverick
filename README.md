@@ -23,6 +23,145 @@ View my YouTube channel for demos and more! https://youtube.com/playlist?list=PL
 
 ---
 
+## THE STORY
+
+### The year is 20XX
+ 
+Humanity’s dreams of a utopian future have been overshadowed by greed, corruption, and
+inequality. Advanced robots, designed to serve humanity, have displaced countless workers.
+Tensions simmer as human activist groups lash out against robots, accusing them of ruining
+livelihoods. The global government is locked in a bitter debate: one faction demands the destruction
+of all robots, while the other advocates for peaceful coexistence.
+
+Amid this turmoil, a radical group of robots calling themselves The Mavericks launches a
+coordinated attack on Mega City, proclaiming the superiority of robots and demanding that humans
+bow to their will.
+
+### Prologue: The Spark of Revolution
+
+The camera pans to Dr. Light’s lab, where Megaman watches the destruction unfold on a nearby
+monitor. Explosions rock the city. Mavericks swarm through the streets. People flee in terror.
+
+Roll: "Mega, the city’s under siege! The police can’t hold them off!"
+
+Megaman: "I can’t stand by while innocent people are suffering. Roll, tell Dr. Light I’m heading
+out!"
+
+Roll: "Be careful, Mega. These robots… They aren’t like anything we’ve seen before."
+
+Megaman: "I’ll stop them. I always do."
+
+### Stage 1: The City Under Siege
+
+Megaman battles through waves of rogue robots in the ruins of Mega City, dodging collapsing
+buildings and rescuing civilians. At the stage’s climax, he discovers a group of unconscious humans
+being held captive in a warehouse. As he begins to free them, a shadowy figure steps forward, his
+eyes glowing red.
+
+???: "How noble of you, ‘hero.’ But you’re too late. Your time is over."
+
+Megaman: "Who are you?!"
+
+???: "Call me Z. The age of humanity’s dominance ends today."
+
+Z triggers an explosion, leveling the building. Megaman narrowly escapes, but the captives are
+critically injured. Before Megaman can recover, police robots arrive, accusing him of leading the
+Maverick attack.
+
+Officer: "Megaman, you’re under arrest for crimes against humanity!"
+
+Megaman: "What? That’s not true!"
+
+Officer: "Save it for the courts. We’ve got witnesses and evidence linking you to the attack."
+
+An officer wheels in a monitor which shows camera footage of Megaman keeping the crying
+humans hostage and laughing menacing. In the recording, he sets off a bomb that levels the
+building, and then runs out all the while continuing to laugh hysterically like a madman.
+On closer scrutiny, Megaman notices that the footage is obviously fake and AI-generated
+considering that his face is upside down, some humans have shoes on their feet, and the building
+signs in the background have what appears to be AI-generated gobbledy-gook text.
+
+When Megaman tries to tell the police that the footage is fake, they double down, with one officer
+exclaiming, “If you continue to resist like this, we’ll be compelled to use excessive brutal force on
+you!”
+
+Megaman fights his way out of the city, now branded a fugitive.
+
+### Scene: The Debate
+
+The narrative shifts to the global government chamber. Politicians argue heatedly about the
+Maverick attacks and Megaman’s alleged betrayal.
+
+Senator 1: "Megaman’s always been one of us! There’s no way he’s behind this!"
+
+Senator 2: "Open your eyes! He’s a robot—just like the Mavericks!"
+
+Suddenly, Dr. Wily bursts into the chamber, grinning maniacally.
+
+Dr. Wily: "Oh, how the mighty have fallen! Your precious Megaman… nothing but a Maverick in
+disguise! But don’t worry, I’ll save you from him."
+
+With a theatrical flourish, Wily unveils eight towering robots.
+
+Dr. Wily: "Behold, the Maverick Hunters! These robots are loyal only to me and will restore
+order. Give me your support, and I’ll eliminate every Maverick—including Megaman!"
+
+Despite protests, the government grants Wily full authority. The Maverick Hunters are unleashed to
+track down Megaman.
+
+### Act 1: The Hunt Begins
+
+In hiding, Megaman receives a call from Roll.
+
+Roll: "Mega, it’s worse than we thought. Wily’s got the government eating out of his hand. He’s
+blaming everything on you!"
+
+Megaman: "Wily… This has his fingerprints all over it. He’s using this chaos to seize power."
+
+Roll: "What are you going to do?"
+
+Megaman: "Fight back. If Wily wants to send his Maverick Hunters after me, I’ll take them down
+one by one. And when I’m done, I’ll make him pay for what he’s done."
+
+Megaman sets out to face Wily’s eight Maverick Hunters.
+
+### Final Act: The Wily Tower
+
+After defeating the Maverick Hunters, Megaman storms Wily Tower, a gleaming skyscraper
+erected in Wily’s honor. Battling through elaborate levels and waves of enemies, Megaman finally
+confronts Wily in his command center.
+
+Dr. Wily: "Well done, Megaman. You’ve ruined my plans—again! But you’ll never stop my
+ultimate creation. Behold! The sigma of my life’s work! It has all amounted to… Zero.”
+
+Suddenly, a hidden capsule opens, revealing Zero, an advanced combat robot who looks a lot like
+the “Z” that Megaman saw at the end of the first stage.
+
+Zero: "I am Zero, the ultimate Maverick Hunter. My purpose is to eliminate Mavericks. You,
+Megaman, are a Maverick."
+
+A climactic battle ensues. Megaman defeats Zero, but just barely. The tower begins to collapse.
+Despite everything, Megaman carries the unconscious Wily to safety. Zero is buried under the
+rubble, his fate uncertain.
+
+### Epilogue
+
+Wily is imprisoned, but his words haunt Megaman.
+
+Dr. Wily: "You think you’ve won, but the seeds of destruction are already sown. Zero is
+unstoppable. You’ll see…"
+
+Later, Megaman delivers a heartfelt speech to the people of Mega City.
+
+Megaman: "Humans and robots were meant to work together. Not as masters and servants, but as equals. We
+must learn from this tragedy and build a future where no one is left behind—robot or human.
+Together, we can create a better world."
+
+As the credits roll, the camera pans to the rubble of Wily Tower. A red, armored hand bursts from
+the debris.
+
+---
+
 ## CREDITS
 
 The artwork, sounds, and music used in this game are sourced from Capcom and fan works from the community. Below is a

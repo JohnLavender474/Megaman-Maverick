@@ -9,7 +9,7 @@ import com.megaman.maverick.game.screens.ScreenEnum
 enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {
     // Boss levels
     DESERT_MAN("DesertMan_16x12.tmx", MusicAsset.MMX7_VANISHING_GUNGAROO_MUSIC),
-    GLACIER_MAN("GlacierMan_16x12.tmx", MusicAsset.MM8_FROST_MAN_ALT_MUSIC),
+    GLACIER_MAN("GlacierMan_16x12_v2.tmx", MusicAsset.MMX_CHILL_PENGUIN_MUSIC),
     REACTOR_MAN("ReactorMan_16x12.tmx", MusicAsset.MMX8_BURN_ROOSTER_MUSIC),
     TIMBER_WOMAN("TimberWoman.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
     INFERNO_MAN("InfernoMan_16x12.tmx", MusicAsset.MMX6_BLAZE_HEATNIX_MUSIC),
