@@ -72,8 +72,6 @@ import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.decorations.Snow
-import com.megaman.maverick.game.entities.decorations.Snowfall
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
@@ -148,7 +146,7 @@ class MegamanMaverickGame(
 
     var paused = false
 
-    private lateinit var debugFPSText: MegaFontHandle
+    private lateinit var debugText: MegaFontHandle
     private var currentScreenKey: String? = null
     private var screenController: ScreenController? = null
 
@@ -197,7 +195,8 @@ class MegamanMaverickGame(
 
     fun getRooms(out: Array<RectangleMapObject>): Array<RectangleMapObject> {
         if (properties.containsKey("${ConstKeys.ROOMS}_${ConstKeys.SUPPLIER}")) {
-            val supplier = properties.get("${ConstKeys.ROOMS}_${ConstKeys.SUPPLIER}") as () -> Array<RectangleMapObject>?
+            val supplier =
+                properties.get("${ConstKeys.ROOMS}_${ConstKeys.SUPPLIER}") as () -> Array<RectangleMapObject>?
             val rooms = supplier.invoke()
             if (rooms != null) out.addAll(rooms)
         }
@@ -258,7 +257,16 @@ class MegamanMaverickGame(
         val uiViewport = FitViewport(screenWidth, screenHeight)
         viewports.put(ConstKeys.UI, uiViewport)
 
-        debugFPSText = MegaFontHandle({ "FPS: ${Gdx.graphics.framesPerSecond}" })
+        val fpsTextSupplier: () -> String = { "FPS: ${Gdx.graphics.framesPerSecond}" }
+        /*
+        val megamanPosTextSupplier: () -> String = {
+            val pos = megaman.body.getCenter()
+            val x = pos.x.toInt() / ConstVals.PPM
+            val y = pos.y.toInt() / ConstVals.PPM
+            "MM POS: $x,$y"
+        }
+         */
+        debugText = MegaFontHandle(fpsTextSupplier)
 
         val sounds = OrderedMap<SoundAsset, Sound>()
         val music = OrderedMap<MusicAsset, Music>()
@@ -353,7 +361,7 @@ class MegamanMaverickGame(
         if (params.debugFPS) {
             batch.projectionMatrix = getUiCamera().combined
             batch.begin()
-            debugFPSText.draw(batch)
+            debugText.draw(batch)
             batch.end()
         }
 
@@ -474,7 +482,12 @@ class MegamanMaverickGame(
                             FixtureType.ICE, FixtureType.GATE, FixtureType.BLOCK, FixtureType.BOUNCER
                         ),
                         FixtureType.FEET pairTo objectSetOf(
-                            FixtureType.ICE, FixtureType.BLOCK, FixtureType.BOUNCER, FixtureType.SAND, FixtureType.CART
+                            FixtureType.ICE,
+                            FixtureType.BLOCK,
+                            FixtureType.BOUNCER,
+                            FixtureType.SAND,
+                            FixtureType.SNOW,
+                            FixtureType.CART
                         ),
                         FixtureType.HEAD pairTo objectSetOf(FixtureType.BLOCK, FixtureType.BOUNCER),
                         FixtureType.PROJECTILE pairTo objectSetOf(
