@@ -59,15 +59,17 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
             val spawn = megaman.body.getCenter()
 
             val xOffset = megaman.facing.value * when {
+                megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 1f
                 megaman.isBehaviorActive(BehaviorType.RIDING_CART) ->
                     if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 1.25f else 1f
                 !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> 0.5f
-                megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.25f
+                megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.75f
                 megaman.slipSliding -> 0.65f
                 else -> 0.75f
             }
 
             var yOffset = when {
+                megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> -0.1f
                 megaman.isAnyBehaviorActive(BehaviorType.JETPACKING, BehaviorType.WALL_SLIDING) -> 0.35f
                 megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> -0.05f
                 megaman.isBehaviorActive(BehaviorType.RIDING_CART) ->
