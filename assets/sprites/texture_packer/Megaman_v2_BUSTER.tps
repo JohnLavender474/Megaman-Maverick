@@ -174,6 +174,7 @@
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">../frames/Megaman_v2/airdash.png</key>
+            <key type="filename">../frames/Megaman_v2/airdash_shoot.png</key>
             <key type="filename">../frames/Megaman_v2/beam.png</key>
             <key type="filename">../frames/Megaman_v2/climb_finish.png</key>
             <key type="filename">../frames/Megaman_v2/climb_still.png</key>
