@@ -713,14 +713,12 @@ class MegaLevelScreen(
 
         game.viewports.get(ConstKeys.UI).apply()
         batch.projectionMatrix = uiCamera.combined
+        playerSpawnEventHandler.draw(batch)
         bossHealthHandler.draw(batch)
         playerStatsHandler.draw(batch)
         batch.end()
 
-        when {
-            !playerSpawnEventHandler.finished -> playerSpawnEventHandler.draw(batch)
-            !endLevelEventHandler.finished -> endLevelEventHandler.draw(batch)
-        }
+        if (!endLevelEventHandler.finished) endLevelEventHandler.draw(batch)
 
         val shapeRenderer = game.shapeRenderer
         shapeRenderer.projectionMatrix = gameCamera.combined

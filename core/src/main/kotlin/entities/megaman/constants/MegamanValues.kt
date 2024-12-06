@@ -49,7 +49,7 @@ object MegamanValues {
     const val WATER_GROUND_SLIDE_VEL = 6f
     const val MAX_GROUND_SLIDE_TIME = 0.35f
 
-    const val CLIMB_VEL = 2.5f
+    const val CLIMB_VEL = 3.25f
 
     const val DAMAGE_DURATION = .75f
     const val DAMAGE_RECOVERY_TIME = 1.5f
