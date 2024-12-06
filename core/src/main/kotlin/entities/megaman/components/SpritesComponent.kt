@@ -85,6 +85,12 @@ fun Megaman.getSpriteYTranslation() = when (getSpriteDirection()) {
     Direction.LEFT, Direction.RIGHT -> 0f
 }
 
+fun Megaman.getSpritePriority(out: DrawingPriority): DrawingPriority {
+    out.section = DrawingSection.FOREGROUND
+    out.value = 1
+    return out
+}
+
 fun Megaman.shouldHideSprite() = !ready || teleporting // || !spawnHiddenTimer.isFinished()
 
 internal fun Megaman.defineSpritesComponent(): SpritesComponent {
@@ -96,7 +102,8 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
 }
 
 private fun Megaman.defineMegamanSprite(component: SpritesComponent) {
-    val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
+    val priority = DrawingPriority()
+    val sprite = GameSprite(getSpritePriority(priority))
     sprite.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
     component.putSprite(MEGAMAN_SPRITE_KEY, sprite)
     component.putUpdateFunction(MEGAMAN_SPRITE_KEY) { delta, player ->

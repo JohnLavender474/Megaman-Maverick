@@ -362,17 +362,25 @@ class MegaContactListener(
             body.setBodySense(BodySense.IN_WATER, true)
 
             val water = waterFixture.getEntity() as IWater
-
             if (listenerFixture.hasHitByWaterByReceiver()) listenerFixture.getHitByWater(water)
 
-            val splash = listenerFixture.getOrDefaultProperty(ConstKeys.SPLASH, true, Boolean::class)
-            if (splash) {
-                Splash.splashOnWaterSurface(listenerFixture.getBody().getBounds(), waterFixture.getBody().getBounds())
-                if (water.doMakeSplashSound()) game.audioMan.playSound(SoundAsset.SPLASH_SOUND, false)
+            val entity = listenerFixture.getEntity()
+            val isMegaman = entity is Megaman
+
+            if (isMegaman || entity is AbstractEnemy) {
+                val splash = listenerFixture.getOrDefaultProperty(ConstKeys.SPLASH, true, Boolean::class)
+
+                if (splash) {
+                    Splash.splashOnWaterSurface(
+                        listenerFixture.getBody().getBounds(),
+                        waterFixture.getBody().getBounds()
+                    )
+
+                    if (water.doMakeSplashSound()) game.audioMan.playSound(SoundAsset.SPLASH_SOUND, false)
+                }
             }
 
-            val entity = listenerFixture.getEntity()
-            if (entity is Megaman) {
+            if (isMegaman) {
                 if (!entity.body.isSensing(BodySense.FEET_ON_GROUND) &&
                     !entity.isBehaviorActive(BehaviorType.WALL_SLIDING)
                 ) entity.aButtonTask = AButtonTask.SWIM

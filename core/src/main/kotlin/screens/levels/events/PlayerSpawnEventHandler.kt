@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.screens.levels.events
 
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.animations.Animation
@@ -13,7 +12,9 @@ import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.IDrawable
-import com.mega.game.engine.drawables.fonts.BitmapFontHandle
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.events.Event
 import com.megaman.maverick.game.ConstKeys
@@ -21,15 +22,16 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_SIZE
+import com.megaman.maverick.game.entities.megaman.components.getSpritePriority
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.getCenter
-import java.util.*
 
-class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializable, Updatable, IDrawable<Batch>,
-    Resettable {
+class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializable, Updatable, Resettable,
+    IDrawable<Batch> {
 
     companion object {
         const val TAG = "PlayerSpawnEventHandler"
@@ -52,46 +54,44 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
     private val beamTransitionTimer = Timer(BEAM_TRANS_DUR).setToEnd()
 
     private lateinit var beamRegion: TextureRegion
-    private lateinit var beamSprite: Sprite
+    private lateinit var beamSprite: GameSprite
     private lateinit var beamLandAnimation: Animation
-    private lateinit var ready: BitmapFontHandle
+    private lateinit var ready: MegaFontHandle
 
     private var initialized = false
-    private var blinkReady = false
+    private var showReadyText = false
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
+
         if (!initialized) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.MEGAMAN_V2_BUSTER.source)
 
             beamRegion = atlas.findRegion(ConstKeys.BEAM)
-            beamSprite = Sprite(beamRegion)
+            val priority = DrawingPriority()
+            beamSprite = GameSprite(beamRegion, megaman.getSpritePriority(priority))
             beamSprite.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
 
             beamLandAnimation = Animation(atlas.findRegion(ConstKeys.SPAWN), 1, 7, 0.05f, false)
 
-            ready =
-                BitmapFontHandle(
-                    { ConstKeys.READY.uppercase(Locale.getDefault()) },
-                    (ConstVals.PPM / 2f).toInt(),
-                    Vector2(
-                        ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f,
-                        ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f
-                    ),
-                    fontSource = "Megaman10Font.ttf"
-                )
-            ready.init()
+            ready = MegaFontHandle(
+                { ConstKeys.READY.uppercase() },
+                positionX = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f,
+                positionY = ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f,
+                priority = DrawingPriority(DrawingSection.FOREGROUND, 15)
+            )
 
             initialized = true
         }
 
-        blinkReady = false
+        showReadyText = false
 
         blinkTimer.reset()
         preBeamTimer.reset()
         beamDownTimer.reset()
         beamTransitionTimer.reset()
         beamLandAnimation.reset()
+
         beamSprite.setPosition(-ConstVals.PPM.toFloat(), -ConstVals.PPM.toFloat())
 
         megaman.ready = false
@@ -106,25 +106,6 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
         game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)
     }
 
-    override fun draw(drawer: Batch) {
-        val drawing = drawer.isDrawing
-        if (!drawing) drawer.begin()
-
-        if (blinkReady) {
-            drawer.projectionMatrix = game.getUiCamera().combined
-            ready.draw(drawer)
-        }
-
-        if (preBeamTimer.isFinished() &&
-            (!beamDownTimer.isFinished() || !beamTransitionTimer.isFinished())
-        ) {
-            drawer.projectionMatrix = game.getGameCamera().combined
-            beamSprite.draw(drawer)
-        }
-
-        if (!drawing) drawer.end()
-    }
-
     override fun update(delta: Float) {
         game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}_${ConstKeys.CENTER}", beamCenter)
 
@@ -134,9 +115,12 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
 
         blinkTimer.update(delta)
         if (blinkTimer.isFinished()) {
-            blinkReady = !blinkReady
+            showReadyText = !showReadyText
             blinkTimer.reset()
         }
+
+        if (preBeamTimer.isFinished() && (!beamDownTimer.isFinished() || !beamTransitionTimer.isFinished()))
+            game.addDrawable(beamSprite)
     }
 
     override fun reset() {
@@ -166,6 +150,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
     private fun beamTrans(delta: Float) {
         beamTransitionTimer.update(delta)
         beamLandAnimation.update(delta)
+
         beamSprite.setRegion(beamLandAnimation.getCurrentRegion())
         beamSprite.setFlip(megaman.isFacing(Facing.LEFT), false)
 
@@ -182,6 +167,12 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
             game.audioMan.playSound(SoundAsset.BEAM_SOUND, false)
 
             game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", false)
+
+            showReadyText = false
         }
+    }
+
+    override fun draw(drawer: Batch) {
+        if (showReadyText) ready.draw(drawer)
     }
 }

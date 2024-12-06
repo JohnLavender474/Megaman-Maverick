@@ -188,6 +188,11 @@ class MegamanMaverickGame(
     fun getDrawables() =
         properties.get(ConstKeys.DRAWABLES) as ObjectMap<DrawingSection, PriorityQueue<IComparableDrawable<Batch>>>
 
+    fun addDrawable(drawable: IComparableDrawable<Batch>) {
+        val section = drawable.priority.section
+        getDrawables().get(section).add(drawable)
+    }
+
     fun getShapes() = properties.get(ConstKeys.SHAPES) as Array<IDrawableShape>
 
     fun getSystems(): ObjectMap<String, GameSystem> =
@@ -558,8 +563,8 @@ class MegamanMaverickGame(
                 ),
                 PointsSystem(),
                 UpdatablesSystem(),
-                FontsSystem { font -> drawables.get(font.priority.section).add(font) },
-                SpritesSystem { sprite -> drawables.get(sprite.priority.section).add(sprite) },
+                FontsSystem(this::addDrawable),
+                SpritesSystem(this::addDrawable),
                 DrawableShapesSystem({ shapes.add(it) }, params.debugShapes),
                 AudioSystem(
                     { audioMan.playSound(it.source, it.loop) },
