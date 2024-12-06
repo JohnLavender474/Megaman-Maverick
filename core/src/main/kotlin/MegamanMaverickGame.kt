@@ -121,7 +121,7 @@ class MegamanMaverickGame(
     companion object {
         const val TAG = "MegamanMaverickGame"
         const val LEVELS_JSON = "json/levels.json"
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.TELEPORTER, FixtureType.TELEPORTER_LISTENER)
         }

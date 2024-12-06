@@ -85,7 +85,7 @@ fun Megaman.getSpriteYTranslation() = when (getSpriteDirection()) {
     Direction.LEFT, Direction.RIGHT -> 0f
 }
 
-fun Megaman.shouldHideSprite() = !ready || teleporting || !spawnHiddenTimer.isFinished()
+fun Megaman.shouldHideSprite() = !ready || teleporting // || !spawnHiddenTimer.isFinished()
 
 internal fun Megaman.defineSpritesComponent(): SpritesComponent {
     val component = SpritesComponent()

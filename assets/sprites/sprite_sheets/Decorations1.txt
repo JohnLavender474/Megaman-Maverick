@@ -3,6 +3,13 @@ size: 1560, 460
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+AirConditioner
+  rotate: false
+  xy: 418, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
 BlinkingArrow
   rotate: false
   xy: 94, 0
@@ -19,7 +26,7 @@ BreathBubbles
   index: -1
 Candle
   rotate: false
-  xy: 578, 0
+  xy: 642, 0
   size: 126, 42
   orig: 126, 42
   offset: 0, 0
@@ -40,7 +47,7 @@ DrippingToxicGoop
   index: -1
 FullChargedShotResidual
   rotate: false
-  xy: 418, 0
+  xy: 482, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -75,7 +82,7 @@ GroundSnow/right
   index: -1
 JetpackFlame
   rotate: false
-  xy: 482, 0
+  xy: 546, 0
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
@@ -117,7 +124,7 @@ RainDrop
   index: -1
 SandSplash
   rotate: false
-  xy: 704, 0
+  xy: 768, 0
   size: 160, 32
   orig: 160, 32
   offset: 0, 0
@@ -131,7 +138,7 @@ Snow
   index: -1
 SpaceSatellite
   rotate: false
-  xy: 1024, 0
+  xy: 1088, 0
   size: 400, 200
   orig: 400, 200
   offset: 0, 0
@@ -152,7 +159,7 @@ ToxicWaterfall
   index: -1
 ToxicWaterSplash
   rotate: false
-  xy: 864, 0
+  xy: 928, 0
   size: 160, 32
   orig: 160, 32
   offset: 0, 0
