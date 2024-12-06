@@ -9,6 +9,7 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
@@ -158,17 +159,21 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER)
         body.addFixture(damagerFixture)
-        debugShapes.add { damagerFixture}
+        debugShapes.add { damagerFixture }
 
         val damageableRect = GameRectangle(body)
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, damageableRect)
         body.addFixture(damageableFixture)
-        debugShapes.add { damageableFixture}
+        debugShapes.add { damageableFixture }
 
         val shieldRect = GameRectangle(body)
         val shieldFixture = Fixture(body, FixtureType.SHIELD, shieldRect)
         body.addFixture(shieldFixture)
-        debugShapes.add { shieldFixture}
+        debugShapes.add { shieldFixture }
+
+        val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
+        feetFixture.bodyAttachmentPosition = Position.BOTTOM_CENTER
+        body.addFixture(feetFixture)
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

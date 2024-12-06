@@ -22,7 +22,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
 
-const val PROJECTILE_DEFAULT_CULL_TIME = 0.1f
+const val PROJECTILE_DEFAULT_CULL_TIME = 0.05f
 
 interface IProjectileEntity : IMegaGameEntity, IBodyEntity, IAudioEntity, ICullableEntity, IOwnable, IDamager {
 
