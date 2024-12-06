@@ -53,7 +53,8 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         private var surfaceReg: TextureRegion? = null
         private var underReg: TextureRegion? = null
 
-        private const val WATER_ALPHA = 0.2f
+        private const val BLUE_ALPHA = 0.25f
+        private const val WATER_ALPHA = 0.1f
     }
 
     private var splashSound = true
@@ -124,7 +125,7 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
         val waterSprite = GameSprite(waterReg!!, DrawingPriority(DrawingSection.FOREGROUND, 10))
         waterSprite.setBounds(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight())
-        waterSprite.setAlpha(WATER_ALPHA)
+        waterSprite.setAlpha(BLUE_ALPHA)
         sprites.put("water", waterSprite)
 
         val rows = (bounds.getHeight() / ConstVals.PPM).toInt()

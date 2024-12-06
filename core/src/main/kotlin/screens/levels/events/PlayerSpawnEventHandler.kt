@@ -173,6 +173,6 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
     }
 
     override fun draw(drawer: Batch) {
-        if (showReadyText) ready.draw(drawer)
+        if (!finished && showReadyText) ready.draw(drawer)
     }
 }

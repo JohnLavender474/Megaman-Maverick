@@ -39,13 +39,8 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
-
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getBounds
-import com.megaman.maverick.game.world.body.getCenter
-import com.megaman.maverick.game.world.body.getEntity
-import com.megaman.maverick.game.world.body.getPositionPoint
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.world.body.*
 
 class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable {
 
@@ -73,7 +68,11 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        val size = spawnProps.getOrDefault(ConstKeys.SIZE, Vector2().set(0.75f * ConstVals.PPM), Vector2::class)
+        val size = spawnProps.getOrDefault(
+            ConstKeys.SIZE,
+            GameObjectPools.fetch(Vector2::class).set(0.8f * ConstVals.PPM),
+            Vector2::class
+        )
         body.setSize(size.x, size.y)
         defaultSprite.setSize(size.cpy().scl(2f))
 

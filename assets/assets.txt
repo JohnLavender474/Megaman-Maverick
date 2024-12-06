@@ -1,0 +1,2199 @@
+Megaman10Font.ttf
+json/levels.json
+temp/MegaRed225/random-enemies-5.jpg
+temp/MegaRed225/Random Enemy Sprites Set 9/Link
+temp/MegaRed225/Random Enemy Sprites Set 9/random-enemy-sprites-9.jpg
+temp/MegaRed225/random-enemies-4.jpg
+temp/MegaRed225/Random Enemy Sprites Set 10/enemies.jpg
+temp/MegaRed225/Random Enemy Sprites Set 10/Link
+temp/MegaRed225/Killers - Byte Bros. [Mega Man OCs]/killers___byte_bros___mega_man_ocs__by_megared225_db3ay7w.gif
+temp/MegaRed225/Killers - Byte Bros. [Mega Man OCs]/Link
+temp/MegaRed225/KillerDocBot/Link
+temp/MegaRed225/KillerDocBot/KillerDocBot.jpg
+temp/Anonymous - Reddit Post/vxqfoyzcvlj51.webp
+temp/Anonymous - Reddit Post/3mc8cuzbrzm51.webp
+temp/Anonymous - Reddit Post/8nnup868rlm51.webp
+temp/Anonymous - Reddit Post/h9l4a645ot461.webp
+temp/Anonymous - Reddit Post/j7ol58aqnfz51.webp
+temp/Anonymous - Reddit Post/Link
+temp/Anonymous - Reddit Post/r0zv2o4ah0y71.webp
+temp/Anonymous - Reddit Post/scbz1cgcxbz61.webp
+temp/Anonymous - Reddit Post/w7shlqs9xbz61.webp
+temp/Anonymous - Reddit Post/o9ufvkjkcjz61.webp
+temp/Anonymous - Reddit Post/txvtb9j8fn161.webp
+temp/Anonymous - Reddit Post/c4h1gdyaxbz61.webp
+temp/Aburtos/megaman_spritesheet.png
+temp/Aburtos/Link
+temp/PixelBoy127/MegamanWeaponGet.png
+temp/PixelBoy127/Link
+temp/boberatu/Moon Man/Link
+temp/boberatu/Moon Man/moon_man_v2.png
+temp/boberatu/Naval Man/Link
+temp/boberatu/Naval Man/naval_man.jpg
+temp/boberatu/Cooler Woman/cooler_woman.jpg
+temp/boberatu/Cooler Woman/Link
+temp/boberatu/Forgotten Bosses/Link
+temp/boberatu/Forgotten Bosses/forgotten_bosses.png
+temp/boberatu/Inferno Man/inferno_man.png
+temp/boberatu/Inferno Man/Link
+temp/boberatu/Fox Man/Link
+temp/boberatu/Fox Man/fox_man.png
+temp/ansimuz-Mega Bot Collection/Mega Bot Music/Pipes Forest Music/pipes-forest.mp3
+temp/ansimuz-Mega Bot Collection/Mega Bot Music/Pipes Forest Music/pipes-forest.ogg
+temp/ansimuz-Mega Bot Collection/Mega Bot Music/Pipes Forest Music/pipes-forest.wav
+temp/ansimuz-Mega Bot Collection/Mega Bot Music/megabot theme/megabot.ogg
+temp/ansimuz-Mega Bot Collection/Mega Bot Music/megabot theme/megabot.mp3
+temp/ansimuz-Mega Bot Collection/Mega Bot Music/megabot theme/megabot.wav
+temp/ansimuz-Mega Bot Collection/Mega Bot Music/Pipes Under Music/pipes under.wav
+temp/ansimuz-Mega Bot Collection/Mega Bot Music/Pipes Under Music/pipes under.mp3
+temp/ansimuz-Mega Bot Collection/Mega Bot Music/Pipes Under Music/pipes under.ogg
+temp/ansimuz-Mega Bot Collection/Mega Bot Music/Mega Bot Bay Music/Mega Bot Bay.ogg
+temp/ansimuz-Mega Bot Collection/Mega Bot Music/Mega Bot Bay Music/Mega Bot Bay.mp3
+temp/ansimuz-Mega Bot Collection/Mega Bot Music/Mega Bot Bay Music/Mega Bot Bay.wav
+temp/ansimuz-Mega Bot Collection/Mega Bot Music/public-license.txt
+temp/ansimuz-Mega Bot Collection/link
+temp/ansimuz-Mega Bot Collection/megabot assets files/ase files/baysarea.ase
+temp/ansimuz-Mega Bot Collection/megabot assets files/ase files/under-pipes.ase
+temp/ansimuz-Mega Bot Collection/megabot assets files/ase files/explosion.ase
+temp/ansimuz-Mega Bot Collection/megabot assets files/ase files/player.ase
+temp/ansimuz-Mega Bot Collection/megabot assets files/ase files/enemy.ase
+temp/ansimuz-Mega Bot Collection/megabot assets files/ase files/pipe forest.ase
+temp/ansimuz-Mega Bot Collection/megabot assets files/ase files/shot.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/ase files/area-1.ase
+temp/ansimuz-Mega Bot Collection/megabot assets files/Sprites/player/player-shoot2.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Sprites/player/run1.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Sprites/player/jump.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Sprites/player/player-shoot1.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Sprites/player/run2.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Sprites/player/player-shoot3.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Sprites/player/player-shoot4.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Sprites/player/run4.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Sprites/player/run3.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Sprites/player/shoot.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Sprites/player/idle.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Sprites/player.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Sprites/enemy/enemy1.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Sprites/enemy/enemy2.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Sprites/explosion/explosion3.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Sprites/explosion/explosion1.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Sprites/explosion/explosion2.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/public-license.txt
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/twilight area/bg.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/twilight area/tileset.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Under Pipes Area/layers/tileset.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Under Pipes Area/layers/background.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Under Pipes Area/previews/bg.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Under Pipes Area/previews/under-pipespreview-big.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Under Pipes Area/previews/under-pipes-preview.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Bay area/anims/water-anim-tank-orange.ase
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Bay area/anims/water-orange-frames/water-anim-tank-orange1.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Bay area/anims/water-orange-frames/water-anim-tank-orange2.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Bay area/anims/water-orange-frames/water-anim-tank-orange3.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Bay area/anims/water-anim-tank-purple.ase
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Bay area/anims/water-anim-tank-orange.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Bay area/anims/water-anim.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Bay area/anims/water-frames/water-anim2.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Bay area/anims/water-frames/water-anim3.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Bay area/anims/water-frames/water-anim1.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Bay area/anims/water-anim.ase
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Bay area/anims/water-purple-frames/water-anim-tank-purple3.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Bay area/anims/water-purple-frames/water-anim-tank-purple2.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Bay area/anims/water-purple-frames/water-anim-tank-purple1.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Bay area/anims/water-anim-tower.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Bay area/anims/water-tower-frames/water-anim-tower2.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Bay area/anims/water-tower-frames/water-anim-tower1.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Bay area/anims/water-tower-frames/water-anim-tower3.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Bay area/anims/water-anim-tower.ase
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Bay area/anims/water-anim-tank-purple.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Bay area/layers/tileset.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Bay area/layers/background.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Bay area/previews/baysarea-preview.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Bay area/previews/baysarea-preview-big.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/layers/tileset.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/layers/background.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/previews/pipe forest preview-big.png
+temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/previews/pipe forest preview.png
+sounds/conveyor_lift.wav
+sounds/thump.mp3
+sounds/air_shooter.wav
+sounds/blast1.wav
+sounds/atomic_fire.wav
+sounds/crash_bomber.wav
+sounds/explosion1.mp3
+sounds/disappearing_block.wav
+sounds/shake.wav
+sounds/liftoff.wav
+sounds/bassy_blast.wav
+sounds/boss_door.wav
+sounds/SE [140].wav
+sounds/beam_in.wav
+sounds/teleport.wav
+sounds/whip.wav
+sounds/enemy_damage.mp3
+sounds/brush.wav
+sounds/time_stopper.wav
+sounds/energy_fill_mm9.mp3
+sounds/buster_bullet_shot.mp3
+sounds/chill_shoot.mp3
+sounds/mecha_dragon.wav
+sounds/chomp.wav
+sounds/conveyor_lift.mp3
+sounds/cursor_move_bloop.mp3
+sounds/megaman_defeat.mp3
+sounds/enemy_shoot.mp3
+sounds/blast2.wav
+sounds/mm2_victory.mp3
+sounds/buster_charging_fadeout.wav
+sounds/error.mp3
+sounds/quake.wav
+sounds/solar_blaze.wav
+sounds/energy_fill_mm9.wav
+sounds/swim.mp3
+sounds/teleport_out.mp3
+sounds/megaman_land.mp3
+sounds/jetpack.wav
+sounds/pause_menu.mp3
+sounds/1up.mp3
+sounds/wind_1.wav
+sounds/alarm.wav
+sounds/flamethrower.wav
+sounds/explosion2.wav
+sounds/mm1_victory.mp3
+sounds/disappearing_block.mp3
+sounds/megaman_damage.mp3
+sounds/water_splash.wav
+sounds/buster_charging.mp3
+sounds/jetpack.mp3
+sounds/mecha_dragon.mp3
+sounds/buster_charged_shot.mp3
+sounds/electric_pulse.mp3
+sounds/bloopity.wav
+sounds/electric_shock.wav
+sounds/select_ping.mp3
+sounds/ice_shard_2.wav
+sounds/dink.mp3
+sounds/asteroid_explode.wav
+sounds/ice_shard_1.wav
+sounds/electric_saw.wav
+sounds/mario_fireball.mp3
+sounds/whee.wav
+sounds/energy_fill.mp3
+sounds/jump.mp3
+sounds/burst.wav
+sounds/quake.mp3
+sounds/floating_portal.wav
+sounds/whoosh.mp3
+badlogic.jpg
+sprites/frames/MegamanTrailSprite/airdash.png
+sprites/frames/MegamanTrailSprite/groundslide_shoot.png
+sprites/frames/MegamanTrailSprite/groundslide.png
+sprites/frames/Colors/White.png
+sprites/frames/Colors/DarkBlue.png
+sprites/frames/Colors/Black.png
+sprites/frames/Colors/Blue.png
+sprites/frames/Enemies2/Peat.png
+sprites/frames/Enemies2/Imorm.png
+sprites/frames/Enemies2/Elecn/Elecn2.png
+sprites/frames/Enemies2/Elecn/Elecn1.png
+sprites/frames/Enemies2/Elecn/Elecn3.png
+sprites/frames/Enemies2/Hanabiran/4PetalsSpin.png
+sprites/frames/Enemies2/Hanabiran/3PetalsSpin.png
+sprites/frames/Enemies2/Hanabiran/Drop.png
+sprites/frames/Enemies2/Hanabiran/2PetalsStand.png
+sprites/frames/Enemies2/Hanabiran/2PetalsSpin.png
+sprites/frames/Enemies2/Hanabiran/NoPetalsSpin.png
+sprites/frames/Enemies2/Hanabiran/1PetalStand.png
+sprites/frames/Enemies2/Hanabiran/Rise.png
+sprites/frames/Enemies2/Hanabiran/3PetalsStand.png
+sprites/frames/Enemies2/Hanabiran/1PetalSpin.png
+sprites/frames/Enemies2/Hanabiran/4PetalsStand.png
+sprites/frames/Enemies2/YellowTiggerSquirt.png
+sprites/frames/Enemies2/BigJumpingJoe/Stand.png
+sprites/frames/Enemies2/BigJumpingJoe/Jump.png
+sprites/frames/Enemies2/BunbyTank/Shoot.png
+sprites/frames/Enemies2/BunbyTank/Still.png
+sprites/frames/Enemies2/BunbyTank/Roll.png
+sprites/frames/Enemies2/UpNDown/Red.png
+sprites/frames/Enemies2/UpNDown/Blue.png
+sprites/frames/Enemies2/SnowheadThrower/Stand.png
+sprites/frames/Enemies2/SnowheadThrower/Throw.png
+sprites/frames/Enemies2/SnowheadThrower/NoFace.png
+sprites/frames/Enemies2/SnowheadThrower/Snowhead.png
+sprites/frames/Enemies2/BabySpider/Run.png
+sprites/frames/Enemies2/BabySpider/Still.png
+sprites/frames/Enemies2/BigFishNeo/swim.png
+sprites/frames/Enemies2/BigFishNeo/laugh.png
+sprites/frames/Enemies2/Robbit/Stand.png
+sprites/frames/Enemies2/Robbit/Jump.png
+sprites/frames/Enemies2/Robbit/Crouch.png
+sprites/frames/Enemies2/Taketenko/Spin.png
+sprites/frames/Enemies2/Taketenko/Fly.png
+sprites/frames/Enemies2/Taketenko/Propeller.png
+sprites/frames/Enemies2/BulbBlaster/Dark.png
+sprites/frames/Enemies2/BulbBlaster/Light.png
+sprites/frames/Enemies2/Adamski/Orange.png
+sprites/frames/Enemies2/Adamski/Purple.png
+sprites/frames/Enemies2/Adamski/Blue.png
+sprites/frames/Enemies2/OmniDirectionalBlasterBot.png
+sprites/frames/Enemies2/Wanaan.png
+sprites/frames/Enemies2/Shotman/Launch.png
+sprites/frames/Enemies2/Shotman/Shoot.png
+sprites/frames/Enemies2/Gachappan/Shoot.png
+sprites/frames/Enemies2/Gachappan/Wait.png
+sprites/frames/Enemies2/Gachappan/Open.png
+sprites/frames/Enemies2/Tropish/swim.png
+sprites/frames/Enemies2/Tropish/bent.png
+sprites/frames/Enemies2/CartinJoe/Shoot.png
+sprites/frames/Enemies2/CartinJoe/Move.png
+sprites/frames/Enemies2/WallTeck/still.png
+sprites/frames/Enemies2/WallTeck/angry.png
+sprites/frames/Enemies2/WallTeck/walk.png
+sprites/frames/Enemies2/AngryFlameBall.png
+sprites/frames/Enemies2/SpikeBot/shoot_snow.png
+sprites/frames/Enemies2/SpikeBot/stand_snow.png
+sprites/frames/Enemies2/SpikeBot/stand.png
+sprites/frames/Enemies2/SpikeBot/jump.png
+sprites/frames/Enemies2/SpikeBot/jump_snow.png
+sprites/frames/Enemies2/SpikeBot/walk_snow.png
+sprites/frames/Enemies2/SpikeBot/shoot.png
+sprites/frames/Enemies2/SpikeBot/walk.png
+sprites/frames/Enemies2/ToxicBarrelBot/OpenTop.png
+sprites/frames/Enemies2/ToxicBarrelBot/Closed.png
+sprites/frames/Enemies2/ToxicBarrelBot/OpenCenter.png
+sprites/frames/Enemies2/ColtonJoe/stand.png
+sprites/frames/Enemies2/ColtonJoe/shoot.png
+sprites/frames/Enemies2/RatRobot/still.png
+sprites/frames/Enemies2/RatRobot/run.png
+sprites/frames/Enemies2/JetpackIceBlaster/under_fall.png
+sprites/frames/Enemies2/JetpackIceBlaster/mid_fall.png
+sprites/frames/Enemies2/JetpackIceBlaster/under_thrust.png
+sprites/frames/Enemies2/JetpackIceBlaster/mid_thrust.png
+sprites/frames/Enemies2/JetpackIceBlaster/far_thrust.png
+sprites/frames/Enemies2/JetpackIceBlaster/far_fall.png
+sprites/frames/Enemies2/JetpackIceBlaster/straight_thrust.png
+sprites/frames/Enemies2/TankBot/roll.png
+sprites/frames/Enemies2/TankBot/stop.png
+sprites/frames/Enemies2/TankBot/turn.png
+sprites/frames/Enemies2/CarriCarry/shake.png
+sprites/frames/Enemies2/CarriCarry/ride.png
+sprites/frames/Enemies2/UFOBombBot/Dropping.png
+sprites/frames/Enemies2/UFOBombBot/Closed.png
+sprites/frames/Enemies2/Togglee/Left.png
+sprites/frames/Enemies2/Togglee/Right.png
+sprites/frames/Enemies2/Togglee/SwitchToRight.png
+sprites/frames/Enemies2/Togglee/SwitchToLeft.png
+sprites/frames/Enemies2/DemonMet/stand.png
+sprites/frames/Enemies2/DemonMet/fly.png
+sprites/frames/Enemies2/DemonMet/angel.png
+sprites/frames/Enemies2/UnderwaterPenguinBot.png
+sprites/frames/Enemies2/FireDispensenator/close.png
+sprites/frames/Enemies2/FireDispensenator/open.png
+sprites/frames/Enemies2/FireDispensenator/fire.png
+sprites/frames/Enemies2/FireDispensenator/sleep.png
+sprites/frames/Enemies2/UnderwaterPenguinBot/swim.png
+sprites/frames/Enemies2/UnderwaterPenguinBot/bent.png
+sprites/frames/Enemies2/WalrusBot/stand.png
+sprites/frames/Enemies2/WalrusBot/jet.png
+sprites/frames/Enemies2/WalrusBot/slide.png
+sprites/frames/Enemies2/WalrusBot/shoot.png
+sprites/frames/Enemies2/RingRing/Red.png
+sprites/frames/Enemies2/RingRing/Pink.png
+sprites/frames/Enemies2/TotemPolem/eyes_open.png
+sprites/frames/Enemies2/TotemPolem/shoot4.png
+sprites/frames/Enemies2/TotemPolem/shoot2.png
+sprites/frames/Enemies2/TotemPolem/eyes_closed.png
+sprites/frames/Enemies2/TotemPolem/eyes_closing.png
+sprites/frames/Enemies2/TotemPolem/shoot1.png
+sprites/frames/Enemies2/TotemPolem/shoot3.png
+sprites/frames/Enemies2/Eyee/OpeningEyes.png
+sprites/frames/Enemies2/Eyee/Blink.png
+sprites/frames/Enemies2/Eyee/Open.png
+sprites/frames/Enemies2/RedTiggerSquirt.png
+sprites/frames/Enemies2/CactusLauncher/reload.png
+sprites/frames/Enemies2/CactusLauncher/wait.png
+sprites/frames/Enemies2/CactusLauncher/fire.png
+sprites/frames/Enemies2/BombChute/up.png
+sprites/frames/Enemies2/BombChute/down.png
+sprites/frames/Enemies2/BombChute/turn.png
+sprites/frames/Enemies2/CaveRocker/Stand.png
+sprites/frames/Enemies2/CaveRocker/Throw.png
+sprites/frames/Enemies2/PenguinBot/throw_bomb.png
+sprites/frames/Enemies2/PenguinBot/stand.png
+sprites/frames/Enemies2/PenguinBot/fly.png
+sprites/frames/Enemies2/PenguinBot/wait.png
+sprites/frames/Enemies2/PenguinBot/rise.png
+sprites/frames/Enemies2/PenguinBot/waddle.png
+sprites/frames/Enemies2/BombPotton.png
+sprites/frames/Enemies2/JetMet/Stand.png
+sprites/frames/Enemies2/JetMet/Jet.png
+sprites/frames/Enemies2/JetMet/TakeOff.png
+sprites/frames/Gates/opening.png
+sprites/frames/Gates/closed.png
+sprites/frames/MegamanFire/Stand.png
+sprites/frames/MegamanFire/Swim.png
+sprites/frames/MegamanFire/JumpShoot.png
+sprites/frames/MegamanFire/ClimbShoot.png
+sprites/frames/MegamanFire/InitRunCharging.png
+sprites/frames/MegamanFire/Damaged.png
+sprites/frames/MegamanFire/Jump.png
+sprites/frames/MegamanFire/WallSlideHalfCharging.png
+sprites/frames/MegamanFire/AirDash.png
+sprites/frames/MegamanFire/WallSlideCharging.png
+sprites/frames/MegamanFire/WallSlide.png
+sprites/frames/MegamanFire/SwimCharging.png
+sprites/frames/MegamanFire/FinishClimbHalfCharging.png
+sprites/frames/MegamanFire/Climb.png
+sprites/frames/MegamanFire/StillClimbCharging.png
+sprites/frames/MegamanFire/StillClimb.png
+sprites/frames/MegamanFire/FinishClimb.png
+sprites/frames/MegamanFire/SlipSlide.png
+sprites/frames/MegamanFire/Run.png
+sprites/frames/MegamanFire/StandShoot.png
+sprites/frames/MegamanFire/JumpCharging.png
+sprites/frames/MegamanFire/SlipSlideShoot.png
+sprites/frames/MegamanFire/SwimAttack.png
+sprites/frames/MegamanFire/RunHalfCharging.png
+sprites/frames/MegamanFire/SlipSlideHalfCharging.png
+sprites/frames/MegamanFire/GroundSlideCharging.png
+sprites/frames/MegamanFire/AirDashShoot.png
+sprites/frames/MegamanFire/LayDownDamaged.png
+sprites/frames/MegamanFire/WallSlideShoot.png
+sprites/frames/MegamanFire/FinishClimbCharging.png
+sprites/frames/MegamanFire/SwimHalfCharging.png
+sprites/frames/MegamanFire/InitRunHalfCharging.png
+sprites/frames/MegamanFire/InitRun.png
+sprites/frames/MegamanFire/BeamLand.png
+sprites/frames/MegamanFire/StillClimbHalfCharging.png
+sprites/frames/MegamanFire/GroundSlideHalfCharging.png
+sprites/frames/MegamanFire/ClimbHalfCharging.png
+sprites/frames/MegamanFire/RunShoot.png
+sprites/frames/MegamanFire/SlipSlideCharging.png
+sprites/frames/MegamanFire/ClimbCharging.png
+sprites/frames/MegamanFire/StandCharging.png
+sprites/frames/MegamanFire/AirDashHalfCharging.png
+sprites/frames/MegamanFire/StandHalfCharging.png
+sprites/frames/MegamanFire/RunCharging.png
+sprites/frames/MegamanFire/JumpHalfCharging.png
+sprites/frames/MegamanFire/Beam.png
+sprites/frames/MegamanFire/AirDashCharging.png
+sprites/frames/MegamanFire/GroundSlide.png
+sprites/frames/Explosions1/ToxicGoopSplash.png
+sprites/frames/Explosions1/AsteroidExplosion.png
+sprites/frames/Explosions1/SmokePuff.png
+sprites/frames/Explosions1/MagmaGoopExplosion.png
+sprites/frames/Explosions1/Explosion.png
+sprites/frames/Explosions1/Disintegration.png
+sprites/frames/Explosions1/ExplosionOrbs.png
+sprites/frames/Explosions1/ChargedShot_half.png
+sprites/frames/Explosions1/PreciousExplosion.png
+sprites/frames/Explosions1/IcicleShards.png
+sprites/frames/Explosions1/ChargedShotExplosion.png
+sprites/frames/Explosions1/MagmaExplosion.png
+sprites/frames/Explosions1/SnowballExplode.png
+sprites/frames/Explosions1/HalfChargedShotExplosion.png
+sprites/frames/Explosions1/GreenExplosion.png
+sprites/frames/Explosions1/StarExplosion.png
+sprites/frames/Explosions1/DeathBombExplosion.png
+sprites/frames/Decorations1/Candle.png
+sprites/frames/Decorations1/ToxicWaterfall.png
+sprites/frames/Decorations1/Thread.png
+sprites/frames/Decorations1/SandSplash.png
+sprites/frames/Decorations1/BreathBubbles.png
+sprites/frames/Decorations1/UnderWaterBubble.png
+sprites/frames/Decorations1/RainDrop.png
+sprites/frames/Decorations1/JetpackFlame.png
+sprites/frames/Decorations1/BlinkingArrow.png
+sprites/frames/Decorations1/FullChargedShotResidual.png
+sprites/frames/Decorations1/WhiteArrow.png
+sprites/frames/Decorations1/Lava.png
+sprites/frames/Decorations1/DrippingToxicGoop.png
+sprites/frames/Decorations1/MuzzleFlash.png
+sprites/frames/Decorations1/AirConditioner.png
+sprites/frames/Decorations1/ToxicWaterSplash.png
+sprites/frames/Decorations1/Lantern.png
+sprites/frames/Decorations1/ChargedShot_Residual_Half.png
+sprites/frames/Decorations1/Snow.png
+sprites/frames/Decorations1/MegamanDamageBurst.png
+sprites/frames/Decorations1/SpaceSatellite.png
+sprites/frames/Decorations1/GroundSnow/middle.png
+sprites/frames/Decorations1/GroundSnow/left.png
+sprites/frames/Decorations1/GroundSnow/right.png
+sprites/frames/Decorations1/GroundSnow/back.png
+sprites/frames/Megaman_v2/climb_still_shoot.png
+sprites/frames/Megaman_v2/climb_charge_half.png
+sprites/frames/Megaman_v2/airdash_shoot.png
+sprites/frames/Megaman_v2/swim_charge_full.png
+sprites/frames/Megaman_v2/wallslide.png
+sprites/frames/Megaman_v2/stand_shoot.png
+sprites/frames/Megaman_v2/wallslide_shoot.png
+sprites/frames/Megaman_v2/airdash_charge_full.png
+sprites/frames/Megaman_v2/climb_still_charge_full.png
+sprites/frames/Megaman_v2/climb.png
+sprites/frames/Megaman_v2/airdash_charge_half.png
+sprites/frames/Megaman_v2/damaged.png
+sprites/frames/Megaman_v2/climb_finish.png
+sprites/frames/Megaman_v2/stand_charge_half.png
+sprites/frames/Megaman_v2/swim_shoot.png
+sprites/frames/Megaman_v2/stand_charge_full.png
+sprites/frames/Megaman_v2/stand.png
+sprites/frames/Megaman_v2/jump.png
+sprites/frames/Megaman_v2/airdash.png
+sprites/frames/Megaman_v2/slip_shoot.png
+sprites/frames/Megaman_v2/jump_charge_full.png
+sprites/frames/Megaman_v2/swim.png
+sprites/frames/Megaman_v2/groundslide_charge_half.png
+sprites/frames/Megaman_v2/jump_shoot.png
+sprites/frames/Megaman_v2/wallslide_charge_half.png
+sprites/frames/Megaman_v2/beam.png
+sprites/frames/Megaman_v2/climb_still_charge_half.png
+sprites/frames/Megaman_v2/wallslide_charge_full.png
+sprites/frames/Megaman_v2/slip_charge_half.png
+sprites/frames/Megaman_v2/run_charge_half.png
+sprites/frames/Megaman_v2/groundslide_charge_full.png
+sprites/frames/Megaman_v2/run_charge_full.png
+sprites/frames/Megaman_v2/climb_finish_charge_half.png
+sprites/frames/Megaman_v2/climb_charge_full.png
+sprites/frames/Megaman_v2/run_shoot.png
+sprites/frames/Megaman_v2/climb_finish_charge_full.png
+sprites/frames/Megaman_v2/jump_charge_half.png
+sprites/frames/Megaman_v2/climb_still.png
+sprites/frames/Megaman_v2/run_start.png
+sprites/frames/Megaman_v2/run_start_shoot.png
+sprites/frames/Megaman_v2/slip.png
+sprites/frames/Megaman_v2/run.png
+sprites/frames/Megaman_v2/groundslide_shoot.png
+sprites/frames/Megaman_v2/spawn.png
+sprites/frames/Megaman_v2/swim_charge_half.png
+sprites/frames/Megaman_v2/slip_charge_full.png
+sprites/frames/Megaman_v2/groundslide.png
+sprites/frames/Test/PenguinMiniBoss.png
+sprites/frames/Rejects/BluntMan/Stand.png
+sprites/frames/Rejects/BluntMan/Slide.png
+sprites/frames/Rejects/BluntMan/Flex.png
+sprites/frames/Rejects/BluntMan/Damaged.png
+sprites/frames/Rejects/BluntMan/Jump.png
+sprites/frames/Rejects/BluntMan/Flaming.png
+sprites/frames/Rejects/RoasterMan/Stand.png
+sprites/frames/Rejects/RoasterMan/FallingWithStyle.png
+sprites/frames/Rejects/RoasterMan/RetractWings.png
+sprites/frames/Rejects/RoasterMan/StandFlap.png
+sprites/frames/Rejects/RoasterMan/SuaveCombSweep.png
+sprites/frames/Rejects/RoasterMan/Aim.png
+sprites/frames/Rejects/RoasterMan/FlyFlap.png
+sprites/frames/Rejects/RoasterMan/CoolPose.png
+sprites/frames/Rejects/RoasterMan/Wet.png
+sprites/frames/Rejects/MisterMan/Stand.png
+sprites/frames/Rejects/MisterMan/Squirt.png
+sprites/frames/Rejects/MisterMan/Flex.png
+sprites/frames/Rejects/MisterMan/Jump.png
+sprites/frames/Rejects/MisterMan/Electrocuted.png
+sprites/frames/Rejects/DistributorMan/Stand.png
+sprites/frames/Rejects/DistributorMan/JustLand.png
+sprites/frames/Rejects/DistributorMan/Damaged.png
+sprites/frames/Rejects/DistributorMan/Jump.png
+sprites/frames/Rejects/DistributorMan/Shock.png
+sprites/frames/Rejects/DistributorMan/JumpShock.png
+sprites/frames/Rejects/WintryMan/Stand.png
+sprites/frames/Rejects/WintryMan/StandFreeze.png
+sprites/frames/Rejects/WintryMan/Jump.png
+sprites/frames/Rejects/WintryMan/AirFreeze.png
+sprites/frames/Rejects/WintryMan/Run.png
+sprites/frames/Rejects/WintryMan/StandShoot.png
+sprites/frames/Rejects/WintryMan/AboutToJump.png
+sprites/frames/Rejects/NavalMan/stand_shoot_two_harpoons_up.png
+sprites/frames/Rejects/NavalMan/stand_shoot_two_harpoons.png
+sprites/frames/Rejects/NavalMan/jump.png
+sprites/frames/Rejects/NavalMan/stand_shoot_anchor.png
+sprites/frames/Rejects/NavalMan/jump_shoot_harpoon.png
+sprites/frames/Rejects/NavalMan/stand_two_harpoons.png
+sprites/frames/Rejects/NavalMan/stand_shoot_harpoon.png
+sprites/frames/Rejects/NavalMan/stand_empty.png
+sprites/frames/Rejects/MicrowaveMan/OpenDoor.png
+sprites/frames/Rejects/MicrowaveMan/Stand.png
+sprites/frames/Rejects/MicrowaveMan/HeadlessShoot.png
+sprites/frames/Rejects/MicrowaveMan/HeadlessJump.png
+sprites/frames/Rejects/MicrowaveMan/Jump.png
+sprites/frames/Rejects/MicrowaveMan/Shoot.png
+sprites/frames/Rejects/MicrowaveMan/Head.png
+sprites/frames/Rejects/MicrowaveMan/HeadlessOpenDoor.png
+sprites/frames/Rejects/MicrowaveMan/HeadlessStand.png
+sprites/frames/Rejects/MicrowaveMan/HeadBounce.png
+sprites/frames/Rejects/MoonMan/stand_shoot.png
+sprites/frames/Rejects/MoonMan/damaged.png
+sprites/frames/Rejects/MoonMan/chest_throw.png
+sprites/frames/Rejects/MoonMan/stand.png
+sprites/frames/Rejects/MoonMan/jump.png
+sprites/frames/Rejects/MoonMan/jump_shoot.png
+sprites/frames/Rejects/MoonMan/taunt.png
+sprites/frames/Rejects/PenguinMiniBoss/PenguinMiniBoss.png
+sprites/frames/Rejects/CrewMan/Stand.png
+sprites/frames/Rejects/CrewMan/Throw.png
+sprites/frames/Rejects/CrewMan/Jump.png
+sprites/frames/Rejects/CrewMan/StandMouthOpen.png
+sprites/frames/Rejects/CrewMan/StandHoldBlock.png
+sprites/frames/Rejects/FreezerMan/GiveTheHand.png
+sprites/frames/Rejects/FreezerMan/Jump.png
+sprites/frames/Rejects/FreezerMan/StandOpenFridge.png
+sprites/frames/Rejects/FreezerMan/Opening.png
+sprites/frames/Rejects/FreezerMan/JumpOpenFreezer.png
+sprites/frames/Rejects/FreezerMan/StandLookDown.png
+sprites/frames/Rejects/FreezerMan/StandLookUp.png
+sprites/frames/Backgrounds4/GlacierBKG_v2.png
+sprites/frames/Backgrounds4/BGNeedle.png
+sprites/frames/Hazards1/LavaBeamer.png
+sprites/frames/Hazards1/LavaBeamer/Off.png
+sprites/frames/Hazards1/LavaBeamer/SwitchingOn.png
+sprites/frames/Hazards1/LavaBeamer/On.png
+sprites/frames/Hazards1/IceCubeMaker.png
+sprites/frames/Hazards1/Flame.png
+sprites/frames/Hazards1/Cactus/big.png
+sprites/frames/Hazards1/Cactus/small.png
+sprites/frames/Hazards1/SpikeBall/Chain.png
+sprites/frames/Hazards1/SpikeBall/SpikeBall.png
+sprites/frames/Hazards1/CactusSpike.png
+sprites/frames/Hazards1/Spike2.png
+sprites/frames/Hazards1/Spike4.png
+sprites/frames/Hazards1/SwingingAxe.png
+sprites/frames/Hazards1/FlameColumn.png
+sprites/frames/Hazards1/LavaBeam.png
+sprites/frames/Hazards1/LavaDrop/Falling.png
+sprites/frames/Hazards1/LavaDrop/Landed.png
+sprites/frames/Hazards1/Spike1.png
+sprites/frames/Hazards1/Saw/saw.png
+sprites/frames/Hazards1/Saw/ring.png
+sprites/frames/Hazards1/Flame3/Whoosh.png
+sprites/frames/Hazards1/Flame3/Still.png
+sprites/frames/Hazards1/SwingingAxe_UpsideDown.png
+sprites/frames/Hazards1/Spike3.png
+sprites/frames/Hazards1/SwingingAxe_HandleEndCentered.png
+sprites/frames/Hazards1/Bolt.png
+sprites/frames/Hazards1/Lava/TopFlow3.png
+sprites/frames/Hazards1/Lava/Fall.png
+sprites/frames/Hazards1/Lava/FallBlack.png
+sprites/frames/Hazards1/Lava/Flow1.png
+sprites/frames/Hazards1/Lava/Flow2.png
+sprites/frames/Hazards1/Lava/TopFlow1.png
+sprites/frames/Hazards1/Lava/Flow.png
+sprites/frames/Hazards1/Lava/TopFlow2.png
+sprites/frames/Hazards1/Lava/Flow3.png
+sprites/frames/Hazards1/CeilingCrusher/Bar.png
+sprites/frames/Hazards1/CeilingCrusher/Crusher.png
+sprites/frames/Hazards1/Spike7.png
+sprites/frames/Hazards1/Flame2.png
+sprites/frames/Hazards1/UnderwaterFan.png
+sprites/frames/Hazards1/GreenSpikeBall.piskel
+sprites/frames/Hazards1/WanaanLauncher/launcher.png
+sprites/frames/Hazards1/WanaanLauncher/bust.png
+sprites/frames/Hazards1/AcidGoop/Falling.png
+sprites/frames/Hazards1/AcidGoop/Landed.png
+sprites/frames/Hazards1/SeaMine/blow.png
+sprites/frames/Hazards1/SeaMine/wait.png
+sprites/frames/Hazards1/Spike6.png
+sprites/frames/Hazards1/LaserBeamer.png
+sprites/frames/Hazards1/Spike5.png
+sprites/frames/Hazards1/MagmaFlame.png
+sprites/frames/Hazards1/FlameThrower/Blink.png
+sprites/frames/Hazards1/FlameThrower/Cool.png
+sprites/frames/Hazards1/FlameThrower/Hot.png
+sprites/frames/Hazards1/Electrocutie/Charge.png
+sprites/frames/Hazards1/Electrocutie/Shock.png
+sprites/frames/Hazards1/Electrocutie/Move.png
+sprites/frames/Projectiles2/CactusMissile/fly.png
+sprites/frames/Projectiles2/CactusMissile/blink.png
+sprites/frames/Projectiles2/TeardropBlast.png
+sprites/frames/Projectiles2/MagmaGoop.png
+sprites/frames/Projectiles2/SphinxBall.png
+sprites/frames/Projectiles2/SharpStar.png
+sprites/frames/Projectiles2/MagmaWave/wave.png
+sprites/frames/Projectiles2/MagmaWave/disintegrate.png
+sprites/frames/Projectiles2/Needle/default.png
+sprites/frames/Projectiles2/Needle/ice.png
+sprites/frames/Projectiles2/MoonScythe.png
+sprites/frames/Projectiles2/SmallPurpleMissile.png
+sprites/frames/Projectiles2/BunbyRedRocket.png
+sprites/frames/Projectiles2/ArigockBall.png
+sprites/frames/Projectiles2/SmallGreenMissile.png
+sprites/frames/Projectiles2/UFOBomb.png
+sprites/frames/Projectiles2/Harpoon.png
+sprites/frames/Projectiles2/FallingIcicle/still.png
+sprites/frames/Projectiles2/FallingIcicle/shake.png
+sprites/frames/Projectiles2/FallingIcicle/shatter.png
+sprites/frames/Projectiles2/DeathBomb/wait.png
+sprites/frames/Projectiles2/DeathBomb/tick.png
+sprites/frames/Projectiles2/Pebble.png
+sprites/frames/Projectiles2/MagmaWave.png
+sprites/frames/Projectiles2/MoonMan/crescent.png
+sprites/frames/Projectiles2/MoonMan/star.png
+sprites/frames/Projectiles2/MagmaOrb.png
+sprites/frames/Projectiles2/MagmaPellet.png
+sprites/frames/Projectiles2/MagmaMeteor.png
+sprites/frames/Projectiles2/SpitFireball.png
+sprites/frames/Specials1/SwitcharooArrow.png
+sprites/frames/Specials1/SpringBounce.png
+sprites/frames/Specials1/Cart/move.png
+sprites/frames/Specials1/Cart/idle.png
+sprites/frames/Specials1/PortalHopper/Launch.png
+sprites/frames/Specials1/PortalHopper/Wait.png
+sprites/frames/Specials1/CapsuleTeleporter/Frame.png
+sprites/frames/Specials1/CapsuleTeleporter/Inactive.png
+sprites/frames/Specials1/CapsuleTeleporter/Active.png
+sprites/frames/Specials1/Force.png
+sprites/frames/Specials1/FloorButton/up.png
+sprites/frames/Specials1/FloorButton/switch.png
+sprites/frames/Specials1/FloorButton/down.png
+sprites/frames/Specials1/LightSwitch/Off.png
+sprites/frames/Specials1/LightSwitch/On.png
+sprites/frames/Specials1/LightSwitch/SwitchOff.png
+sprites/frames/Specials1/SpringBounceStill.png
+sprites/frames/Specials1/RailTrack/Left.png
+sprites/frames/Specials1/RailTrack/Right.png
+sprites/frames/Specials1/RailTrack/PlatformDrop.png
+sprites/frames/Specials1/RailTrack/Drop.png
+sprites/frames/Specials1/RailTrack/Platform.png
+sprites/frames/Specials1/RailTrack/Middle.png
+sprites/frames/Specials1/Togglee/Left.png
+sprites/frames/Specials1/Togglee/Right.png
+sprites/frames/Specials1/ToxicWater/water.png
+sprites/frames/Specials1/ToxicWater/waves.png
+sprites/frames/Specials1/Cart.png
+sprites/frames/Backgrounds5/GlacierCloudsBKG.png
+sprites/frames/Environs1/QuickSand/TopRight.png
+sprites/frames/Environs1/QuickSand/Left.png
+sprites/frames/Environs1/QuickSand/Right.png
+sprites/frames/Environs1/QuickSand/TopLeft.png
+sprites/frames/Environs1/QuickSand/TopCenter.png
+sprites/frames/Environs1/QuickSand/Center.png
+sprites/frames/Environs1/Wood/Stump.png
+sprites/frames/Environs1/Wood/Leaf.png
+sprites/frames/Environs1/Wood/FallingLeaf.png
+sprites/frames/Environs1/Wood/DeadBranch.png
+sprites/frames/Environs1/SandSplash.png
+sprites/frames/Environs1/Trees/TreeStump.png
+sprites/frames/Environs1/Trees/Tree1.png
+sprites/frames/Environs1/Water/WhiteSplash.png
+sprites/frames/Environs1/Water/Surface.png
+sprites/frames/Environs1/Water/Water.png
+sprites/frames/Environs1/Water/Splash.png
+sprites/frames/Environs1/Water/ToxicSplash.png
+sprites/frames/Environs1/Water/Under.png
+sprites/frames/Environs1/Leaves/SpringLeaf.png
+sprites/frames/Environs1/WindyGrass/Left.png
+sprites/frames/Environs1/WindyGrass/Right.png
+sprites/frames/Environs1/WindyGrass/Middle.png
+sprites/frames/MegamanRushJet/Stand.png
+sprites/frames/MegamanRushJet/Swim.png
+sprites/frames/MegamanRushJet/JumpShoot.png
+sprites/frames/MegamanRushJet/Jetpack.png
+sprites/frames/MegamanRushJet/ClimbShoot.png
+sprites/frames/MegamanRushJet/Damaged.png
+sprites/frames/MegamanRushJet/Jump.png
+sprites/frames/MegamanRushJet/AirDash.png
+sprites/frames/MegamanRushJet/WallSlide.png
+sprites/frames/MegamanRushJet/Climb.png
+sprites/frames/MegamanRushJet/FinishClimb.png
+sprites/frames/MegamanRushJet/SlipSlide.png
+sprites/frames/MegamanRushJet/Run.png
+sprites/frames/MegamanRushJet/StandShoot.png
+sprites/frames/MegamanRushJet/JetpackShoot.png
+sprites/frames/MegamanRushJet/SlipSlideShoot.png
+sprites/frames/MegamanRushJet/GroundSlideShoot.png
+sprites/frames/MegamanRushJet/WallSlideShoot.png
+sprites/frames/MegamanRushJet/SwimShoot.png
+sprites/frames/MegamanRushJet/RunShoot.png
+sprites/frames/MegamanRushJet/GroundSlide.png
+sprites/frames/Backgrounds1/AnimatedStarsBG.png
+sprites/frames/Backgrounds1/StarFieldBG.png
+sprites/frames/Backgrounds1/SnowMountains.png
+sprites/frames/Bosses2/InfernoMan/stand_shoot_straight.png
+sprites/frames/Bosses2/InfernoMan/charging.png
+sprites/frames/Bosses2/InfernoMan/init.png
+sprites/frames/Bosses2/InfernoMan/stand.png
+sprites/frames/Bosses2/InfernoMan/jump.png
+sprites/frames/Bosses2/InfernoMan/jump_shoot_up.png
+sprites/frames/Bosses2/InfernoMan/jump_shoot_down.png
+sprites/frames/Bosses2/InfernoMan/flame_head.png
+sprites/frames/Bosses2/InfernoMan/wall_slide.png
+sprites/frames/Bosses2/InfernoMan/slide.png
+sprites/frames/Bosses2/InfernoMan/stand_shoot_mega.png
+sprites/frames/Bosses2/InfernoMan/jump_shoot_straight.png
+sprites/frames/Bosses2/InfernoMan/stand_shoot_straight_akimbo.png
+sprites/frames/Bosses2/InfernoMan/stand_shoot_up.png
+sprites/frames/Bosses2/InfernoMan/defeated.png
+sprites/frames/Bosses2/DesertMan/dance_flash.png
+sprites/frames/Bosses2/DesertMan/arm_extension.png
+sprites/frames/Bosses2/DesertMan/stand.png
+sprites/frames/Bosses2/DesertMan/jump.png
+sprites/frames/Bosses2/DesertMan/punch.png
+sprites/frames/Bosses2/DesertMan/wall_slide.png
+sprites/frames/Bosses2/DesertMan/punch_short.png
+sprites/frames/Bosses2/DesertMan/tornado_punch.png
+sprites/frames/Bosses2/DesertMan/tornado.png
+sprites/frames/Bosses2/DesertMan/arm_extension_punch.png
+sprites/frames/Bosses2/DesertMan/tornado_start.png
+sprites/frames/Bosses2/DesertMan/dance.png
+sprites/frames/Bosses2/DesertMan/defeated.png
+sprites/frames/Bosses2/MoonMan/throw.png
+sprites/frames/Bosses2/MoonMan/shoot_1.png
+sprites/frames/Bosses2/MoonMan/gravity_change_begin.png
+sprites/frames/Bosses2/MoonMan/jump_shoot_0.png
+sprites/frames/Bosses2/MoonMan/shoot_6.png
+sprites/frames/Bosses2/MoonMan/jump_shoot_2.png
+sprites/frames/Bosses2/MoonMan/stand.png
+sprites/frames/Bosses2/MoonMan/jump.png
+sprites/frames/Bosses2/MoonMan/shoot_3.png
+sprites/frames/Bosses2/MoonMan/shoot_5.png
+sprites/frames/Bosses2/MoonMan/gravity_change_end.png
+sprites/frames/Bosses2/MoonMan/shoot_0.png
+sprites/frames/Bosses2/MoonMan/throw_asteroids.png
+sprites/frames/Bosses2/MoonMan/jump_shoot_1.png
+sprites/frames/Bosses2/MoonMan/shoot_2.png
+sprites/frames/Bosses2/MoonMan/shoot_4.png
+sprites/frames/Bosses2/MoonMan/gravity_change_continue.png
+sprites/frames/Bosses2/MoonMan/defeated.png
+sprites/frames/Megaman/Stand.png
+sprites/frames/Megaman/Frozen.png
+sprites/frames/Megaman/Cartin_JumpShoot.png
+sprites/frames/Megaman/Cartin_HalfCharged.png
+sprites/frames/Megaman/Swim.png
+sprites/frames/Megaman/JumpShoot.png
+sprites/frames/Megaman/ClimbShoot.png
+sprites/frames/Megaman/InitRunCharging.png
+sprites/frames/Megaman/Damaged.png
+sprites/frames/Megaman/Jump.png
+sprites/frames/Megaman/WallSlideHalfCharging.png
+sprites/frames/Megaman/AirDash.png
+sprites/frames/Megaman/WallSlideCharging.png
+sprites/frames/Megaman/WallSlide.png
+sprites/frames/Megaman/SwimCharging.png
+sprites/frames/Megaman/FinishClimbHalfCharging.png
+sprites/frames/Megaman/Climb.png
+sprites/frames/Megaman/StillClimbCharging.png
+sprites/frames/Megaman/StillClimb.png
+sprites/frames/Megaman/FinishClimb.png
+sprites/frames/Megaman/SlipSlide.png
+sprites/frames/Megaman/Cartin_Shoot.png
+sprites/frames/Megaman/OnFire.png
+sprites/frames/Megaman/Run.png
+sprites/frames/Megaman/StandShoot.png
+sprites/frames/Megaman/JumpCharging.png
+sprites/frames/Megaman/Cartin_JumpHalfCharged.png
+sprites/frames/Megaman/SlipSlideShoot.png
+sprites/frames/Megaman/SwimAttack.png
+sprites/frames/Megaman/RunHalfCharging.png
+sprites/frames/Megaman/GroundSlideShoot.png
+sprites/frames/Megaman/SlipSlideHalfCharging.png
+sprites/frames/Megaman/GroundSlideCharging.png
+sprites/frames/Megaman/WallSlideShoot.png
+sprites/frames/Megaman/FinishClimbCharging.png
+sprites/frames/Megaman/SwimHalfCharging.png
+sprites/frames/Megaman/Cartin.png
+sprites/frames/Megaman/InitRunHalfCharging.png
+sprites/frames/Megaman/InitRun.png
+sprites/frames/Megaman/Cartin_Damaged.png
+sprites/frames/Megaman/Cartin_JumpFullyCharged.png
+sprites/frames/Megaman/StillClimbHalfCharging.png
+sprites/frames/Megaman/GroundSlideHalfCharging.png
+sprites/frames/Megaman/SwimShoot.png
+sprites/frames/Megaman/Cartin_Jump.png
+sprites/frames/Megaman/ClimbHalfCharging.png
+sprites/frames/Megaman/RunShoot.png
+sprites/frames/Megaman/SlipSlideCharging.png
+sprites/frames/Megaman/Cartin_FullyCharged.png
+sprites/frames/Megaman/ClimbCharging.png
+sprites/frames/Megaman/StandCharging.png
+sprites/frames/Megaman/AirDashHalfCharging.png
+sprites/frames/Megaman/StandHalfCharging.png
+sprites/frames/Megaman/RunCharging.png
+sprites/frames/Megaman/JumpHalfCharging.png
+sprites/frames/Megaman/Beam.png
+sprites/frames/Megaman/AirDashCharging.png
+sprites/frames/Megaman/StandThrow.png
+sprites/frames/Megaman/GroundSlide.png
+sprites/frames/Megaman/Spawn.png
+sprites/frames/Bosses1/RodentMan/Stand.png
+sprites/frames/Bosses1/RodentMan/Jump.png
+sprites/frames/Bosses1/RodentMan/WallSlide.png
+sprites/frames/Bosses1/RodentMan/Slash.png
+sprites/frames/Bosses1/RodentMan/Run.png
+sprites/frames/Bosses1/RodentMan/Shoot.png
+sprites/frames/Bosses1/RodentMan/StandStill.png
+sprites/frames/Bosses1/MoonHeadMiniBoss/Dark.png
+sprites/frames/Bosses1/MoonHeadMiniBoss/Damaged.png
+sprites/frames/Bosses1/MoonHeadMiniBoss/Crumble.png
+sprites/frames/Bosses1/MoonHeadMiniBoss/Awaken.png
+sprites/frames/Bosses1/MoonHeadMiniBoss/Shoot.png
+sprites/frames/Bosses1/MoonHeadMiniBoss/Angry.png
+sprites/frames/Bosses1/PreciousMan/Stand.png
+sprites/frames/Bosses1/PreciousMan/StandFreeze.png
+sprites/frames/Bosses1/PreciousMan/Jump.png
+sprites/frames/Bosses1/PreciousMan/Run.png
+sprites/frames/Bosses1/PreciousMan/StandShoot.png
+sprites/frames/Bosses1/PreciousMan/JumpFreeze.png
+sprites/frames/Bosses1/ReactMan/Stand.png
+sprites/frames/Bosses1/ReactMan/Throw.png
+sprites/frames/Bosses1/ReactMan/Jump.png
+sprites/frames/Bosses1/ReactMan/Defeated.png
+sprites/frames/Bosses1/ReactMan/Run.png
+sprites/frames/Bosses1/Bospider/Climb.png
+sprites/frames/Bosses1/Bospider/Still.png
+sprites/frames/Bosses1/Bospider/OpenEye.png
+sprites/frames/Bosses1/SigmaRat/ElectricDissipate.png
+sprites/frames/Bosses1/SigmaRat/ElectricBall.png
+sprites/frames/Bosses1/SigmaRat/ElectricPulse.png
+sprites/frames/Bosses1/SigmaRat/ClawFlash.png
+sprites/frames/Bosses1/SigmaRat/BodyTittyShoot.png
+sprites/frames/Bosses1/SigmaRat/ElectricBallDissipate.png
+sprites/frames/Bosses1/SigmaRat/BodyTittyShootDamaged.png
+sprites/frames/Bosses1/SigmaRat/ElectricBallForm.png
+sprites/frames/Bosses1/SigmaRat/Body.png
+sprites/frames/Bosses1/SigmaRat/BodyDamaged.png
+sprites/frames/Bosses1/SigmaRat/ClawClosed.png
+sprites/frames/Bosses1/SigmaRat/ClawOpen.png
+sprites/frames/Bosses1/TimberWoman/damaged.png
+sprites/frames/Bosses1/TimberWoman/stand.png
+sprites/frames/Bosses1/TimberWoman/jump.png
+sprites/frames/Bosses1/TimberWoman/jump_swing.png
+sprites/frames/Bosses1/TimberWoman/just_land.png
+sprites/frames/Bosses1/TimberWoman/on_fire.png
+sprites/frames/Bosses1/TimberWoman/stand_swing.png
+sprites/frames/Bosses1/GlacierMan/fall.png
+sprites/frames/Bosses1/GlacierMan/fall_shoot_up.png
+sprites/frames/Bosses1/GlacierMan/duck.png
+sprites/frames/Bosses1/GlacierMan/stand_shoot.png
+sprites/frames/Bosses1/GlacierMan/stand.png
+sprites/frames/Bosses1/GlacierMan/jump.png
+sprites/frames/Bosses1/GlacierMan/sled.png
+sprites/frames/Bosses1/GlacierMan/sled_shoot.png
+sprites/frames/Bosses1/GlacierMan/brake_shoot.png
+sprites/frames/Bosses1/GlacierMan/stop.png
+sprites/frames/Bosses1/GlacierMan/brake.png
+sprites/frames/Bosses1/GlacierMan/brake_shoot_up.png
+sprites/frames/Bosses1/GlacierMan/ice_blast_attack.png
+sprites/frames/Bosses1/GlacierMan/duck_shoot_up.png
+sprites/frames/Bosses1/GlacierMan/duck_shoot.png
+sprites/frames/Bosses1/GlacierMan/stand_shoot_up.png
+sprites/frames/Bosses1/GlacierMan/defeated.png
+sprites/frames/Bosses1/ReactorMonkeyMiniBoss/Stand.png
+sprites/frames/Bosses1/ReactorMonkeyMiniBoss/Throw.png
+sprites/frames/Bosses1/ReactorMonkeyMiniBoss/StandDamaged.png
+sprites/frames/Bosses1/ReactorMonkeyMiniBoss/Jump.png
+sprites/frames/Bosses1/ReactorMonkeyMiniBoss/ThrowDamaged.png
+sprites/frames/Bosses1/ReactorMonkeyMiniBoss/Nuclear_Monkey_Ball.png
+sprites/frames/Bosses1/GutsTank/Laughing.png
+sprites/frames/Bosses1/GutsTank/FistLaunched.png
+sprites/frames/Bosses1/GutsTank/MouthOpen.png
+sprites/frames/Bosses1/GutsTank/Fist.png
+sprites/frames/Bosses1/GutsTank/MouthClosed.png
+sprites/frames/Bosses1/MechaDragonMiniBoss/fly.png
+sprites/frames/Bosses1/MechaDragonMiniBoss/shoot.png
+sprites/frames/Bosses1/MechaDragonMiniBoss/defeated.png
+sprites/frames/Bosses1/SphinxMiniBoss/open.png
+sprites/frames/Bosses1/SphinxMiniBoss/wait.png
+sprites/frames/Bosses1/SphinxMiniBoss/laugh.png
+sprites/frames/Bosses1/SphinxMiniBoss/defeated.png
+sprites/frames/Backgrounds2/BKG08.png
+sprites/frames/Backgrounds2/BKG01.png
+sprites/frames/Backgrounds2/BKG14.png
+sprites/frames/Backgrounds2/BKG05.png
+sprites/frames/Backgrounds2/BKG16.png
+sprites/frames/Backgrounds2/BKG13.png
+sprites/frames/Backgrounds2/BKG06.png
+sprites/frames/Backgrounds2/BKG07.png
+sprites/frames/Backgrounds2/BKG12.png
+sprites/frames/Backgrounds2/BKG11.png
+sprites/frames/Backgrounds2/BKG03.png
+sprites/frames/Backgrounds2/BKG15.png
+sprites/frames/Backgrounds2/BKG02.png
+sprites/frames/Backgrounds2/BKG09.png
+sprites/frames/Backgrounds2/BKG04.png
+sprites/frames/Backgrounds2/BKG10.png
+sprites/frames/Projectiles1/Asteroid/Regular.png
+sprites/frames/Projectiles1/Asteroid/Blue.png
+sprites/frames/Projectiles1/Snowball.png
+sprites/frames/Projectiles1/SnowballForm.png
+sprites/frames/Projectiles1/RocketBomb.png
+sprites/frames/Projectiles1/Petal.png
+sprites/frames/Projectiles1/RollingBotShot.png
+sprites/frames/Projectiles1/TubeBeam.png
+sprites/frames/Projectiles1/PurpleBlast/Charge.png
+sprites/frames/Projectiles1/PurpleBlast/Blast.png
+sprites/frames/Projectiles1/SnowJoeball.png
+sprites/frames/Projectiles1/Joeball.png
+sprites/frames/Projectiles1/CannonBall.png
+sprites/frames/Projectiles1/Monkey_Ball.png
+sprites/frames/Projectiles1/SpiderWeb/White.png
+sprites/frames/Projectiles1/SpiderWeb/BlinkWhite.png
+sprites/frames/Projectiles1/SpiderWeb/Gray.png
+sprites/frames/Projectiles1/Bullet.png
+sprites/frames/Projectiles1/GachappanBall.png
+sprites/frames/Projectiles1/Snowball2.png
+sprites/frames/Projectiles1/UFOBomb.png
+sprites/frames/Projectiles1/Picket.png
+sprites/frames/Projectiles1/Fire/Fireball.png
+sprites/frames/Projectiles1/ToxicGoopShot.png
+sprites/frames/Projectiles1/Prickly.png
+sprites/frames/Projectiles1/Nuclear_Monkey_Ball.png
+sprites/frames/Projectiles1/PreciousShot/Form.png
+sprites/frames/Projectiles1/PreciousShot/Shoot.png
+sprites/frames/Projectiles1/FireWall/disintegrate.png
+sprites/frames/Projectiles1/FireWall/fire.png
+sprites/frames/Projectiles1/FirePellet.png
+sprites/frames/Projectiles1/Electric/Zap.png
+sprites/frames/Projectiles1/Electric/PurpleShockBalls.png
+sprites/frames/Projectiles1/Electric/BigElectric.png
+sprites/frames/Projectiles1/Electric/ElectricBallPulse.png
+sprites/frames/Projectiles1/Electric/SmallElectric.png
+sprites/frames/Projectiles1/ReactorMonkeyBall/3.png
+sprites/frames/Projectiles1/ReactorMonkeyBall/0.png
+sprites/frames/Projectiles1/ReactorMonkeyBall/1.png
+sprites/frames/Projectiles1/ReactorMonkeyBall/2.png
+sprites/frames/Projectiles1/HalfChargedShot.png
+sprites/frames/Projectiles1/Asteroid.png
+sprites/frames/Projectiles1/ReactManProjectile/Big.png
+sprites/frames/Projectiles1/ReactManProjectile/Die.png
+sprites/frames/Projectiles1/ReactManProjectile/Small.png
+sprites/frames/Projectiles1/ChargedShot.png
+sprites/frames/Projectiles1/CaveRock/Rock.png
+sprites/frames/Projectiles1/CaveRock/Burst.png
+sprites/frames/Projectiles1/SealionBall.png
+sprites/frames/Faces1/Distributor Man.png
+sprites/frames/Faces1/Blunt Man.png
+sprites/frames/Faces1/Precious Man.png
+sprites/frames/Faces1/Rodent Man.png
+sprites/frames/Faces1/Glacier Man.png
+sprites/frames/Faces1/Nuke Man.png
+sprites/frames/Faces1/Roaster Man.png
+sprites/frames/Faces1/Megaman/TOP_CENTER.png
+sprites/frames/Faces1/Megaman/CENTER.png
+sprites/frames/Faces1/Megaman/TOP_RIGHT.png
+sprites/frames/Faces1/Megaman/BOTTOM_LEFT.png
+sprites/frames/Faces1/Megaman/BOTTOM_RIGHT.png
+sprites/frames/Faces1/Megaman/TOP_LEFT.png
+sprites/frames/Faces1/Megaman/CENTER_LEFT.png
+sprites/frames/Faces1/Megaman/CENTER_RIGHT.png
+sprites/frames/Faces1/Megaman/BOTTOM_CENTER.png
+sprites/frames/Faces1/Maverick/TOP_CENTER.png
+sprites/frames/Faces1/Maverick/CENTER.png
+sprites/frames/Faces1/Maverick/TOP_RIGHT.png
+sprites/frames/Faces1/Maverick/BOTTOM_LEFT.png
+sprites/frames/Faces1/Maverick/BOTTOM_RIGHT.png
+sprites/frames/Faces1/Maverick/TOP_LEFT.png
+sprites/frames/Faces1/Maverick/CENTER_LEFT.png
+sprites/frames/Faces1/Maverick/CENTER_RIGHT.png
+sprites/frames/Faces1/Maverick/BOTTOM_CENTER.png
+sprites/frames/Faces1/Reactor Man.png
+sprites/frames/Faces1/Microwave Man.png
+sprites/frames/Faces1/Unknown.png
+sprites/frames/Faces1/Freezer Man.png
+sprites/frames/Faces1/Moon Man.png
+sprites/frames/Faces1/Desert Man.png
+sprites/frames/Faces1/Mister Man.png
+sprites/frames/Faces1/Timber Woman.png
+sprites/frames/Faces1/Inferno Man.png
+sprites/frames/Backgrounds6/UndergroundPipes.png
+sprites/frames/Backgrounds6/Desert/NoSunSky.png
+sprites/frames/Backgrounds6/Desert/Canyon.png
+sprites/frames/Backgrounds6/Desert/SunSky.png
+sprites/frames/Backgrounds6/EarthBackdrop.png
+sprites/frames/Backgrounds6/Space.png
+sprites/frames/Backgrounds3/BKG19.png
+sprites/frames/Backgrounds3/BKG22.png
+sprites/frames/Backgrounds3/SprBGTomahawk.png
+sprites/frames/Backgrounds3/BKG18.png
+sprites/frames/Backgrounds3/ForestBKG.png
+sprites/frames/Backgrounds3/BKG20.png
+sprites/frames/Backgrounds3/GlacierBKG.png
+sprites/frames/Backgrounds3/BKG21.png
+sprites/frames/Backgrounds3/BKG17.png
+sprites/frames/Backgrounds3/BKG23.png
+sprites/frames/MegaMixEngine/Teleporters/bgteleporter2.png
+sprites/frames/MegaMixEngine/Teleporters/bgTeleporter.png
+sprites/frames/Items1/SmallHealthBulb.png
+sprites/frames/Items1/HeartTank.png
+sprites/frames/Items1/SniperJoeShield/Orange.png
+sprites/frames/Items1/SniperJoeShield/Blue.png
+sprites/frames/Items1/HealthTank.png
+sprites/frames/Items1/WeaponBulb.png
+sprites/frames/Items1/SmallWeaponBulb.png
+sprites/frames/Items1/Key.png
+sprites/frames/Items1/EmptyHealthTank.png
+sprites/frames/Items1/HealthBulb.png
+sprites/frames/Platforms1/SwingingPlatform/other_small_platform.png
+sprites/frames/Platforms1/SwingingPlatform/ring.png
+sprites/frames/Platforms1/SwingingPlatform/small_platform.png
+sprites/frames/Platforms1/SwingingPlatform/platform.png
+sprites/frames/Platforms1/WoodPlank.png
+sprites/frames/Platforms1/GearTrolleyPlatform.png
+sprites/frames/Platforms1/PropellerPlatform.png
+sprites/frames/Platforms1/Platform1_64x8.png
+sprites/frames/Platforms1/DropperLift/Closed.png
+sprites/frames/Platforms1/DropperLift/Opening.png
+sprites/frames/Platforms1/DropperLift/Open.png
+sprites/frames/Platforms1/BreakableIce/Shards.png
+sprites/frames/Platforms1/BreakableIce/3.png
+sprites/frames/Platforms1/BreakableIce/1.png
+sprites/frames/Platforms1/BreakableIce/2.png
+sprites/frames/Platforms1/Brick.png
+sprites/frames/Platforms1/8bitBlueBlockNoBorder.png
+sprites/frames/Platforms1/MetalCrate.png
+sprites/frames/Platforms1/ConveyorBelt/RightPart-MoveRight-Green.png
+sprites/frames/Platforms1/ConveyorBelt/MiddlePart-MoveLeft-Green.png
+sprites/frames/Platforms1/ConveyorBelt/LeftPart-MoveLeft-Green.png
+sprites/frames/Platforms1/ConveyorBelt/LeftPart-MoveRight-Green.png
+sprites/frames/Platforms1/ConveyorBelt/RightPart-MoveLeft.png
+sprites/frames/Platforms1/ConveyorBelt/LeftPart-MoveRight.png
+sprites/frames/Platforms1/ConveyorBelt/LeftPart-MoveLeft.png
+sprites/frames/Platforms1/ConveyorBelt/MiddlePart.png
+sprites/frames/Platforms1/ConveyorBelt/RightPart-MoveLeft-Green.png
+sprites/frames/Platforms1/ConveyorBelt/MiddlePart-MoveRight-Green.png
+sprites/frames/Platforms1/TrackBlock.png
+sprites/frames/Platforms1/JeffBezosLittleDickRocket.png
+sprites/frames/Platforms1/AppearingBrick.png
+sprites/frames/Platforms1/BrickPiece.png
+sprites/frames/Platforms1/DestroyableWoodPlank/flash.png
+sprites/frames/Platforms1/Platform2.png
+sprites/frames/Platforms1/8bitBlueBlock.png
+sprites/frames/Platforms1/8bitBlueBlockTransBorder.png
+sprites/frames/Platforms1/Lift.png
+sprites/frames/Platforms1/WoodBlock1.png
+sprites/frames/Platforms1/Boulder/Small.png
+sprites/frames/Platforms1/Boulder/Medium.png
+sprites/frames/Platforms1/Boulder/Large.png
+sprites/frames/Platforms1/FlipperPlatform/RightDelay.png
+sprites/frames/Platforms1/FlipperPlatform/FlipToRight.png
+sprites/frames/Platforms1/FlipperPlatform/Left.png
+sprites/frames/Platforms1/FlipperPlatform/Right.png
+sprites/frames/Platforms1/FlipperPlatform/FlipToLeft.png
+sprites/frames/Platforms1/FlipperPlatform/LeftDelay.png
+sprites/frames/Enemies1/PicketJoe/Stand.png
+sprites/frames/Enemies1/PicketJoe/Throw.png
+sprites/frames/Enemies1/Popoheli.png
+sprites/frames/Enemies1/FlyBoy/Stand.png
+sprites/frames/Enemies1/FlyBoy/Fly.png
+sprites/frames/Enemies1/RedScrewie/Down.png
+sprites/frames/Enemies1/RedScrewie/Drop.png
+sprites/frames/Enemies1/RedScrewie/Shoot.png
+sprites/frames/Enemies1/RedScrewie/Rise.png
+sprites/frames/Enemies1/UFOhNoBot/no_bomb.png
+sprites/frames/Enemies1/UFOhNoBot/with_bomb.png
+sprites/frames/Enemies1/PetitDevil/SmallOrange.png
+sprites/frames/Enemies1/PetitDevil/LargeGreen.png
+sprites/frames/Enemies1/PetitDevil/LargeOrange.png
+sprites/frames/Enemies1/PetitDevil/SmallGreen.png
+sprites/frames/Enemies1/Matasaburo.png
+sprites/frames/Enemies1/FlyPincher/Pinch.png
+sprites/frames/Enemies1/FlyPincher/Open.png
+sprites/frames/Enemies1/DragonFly.png
+sprites/frames/Enemies1/GapingFish/Chomping.png
+sprites/frames/Enemies1/GapingFish/Swimming.png
+sprites/frames/Enemies1/GapingFish/Gaping.png
+sprites/frames/Enemies1/Penguin/Slippin.png
+sprites/frames/Enemies1/Penguin/Stand.png
+sprites/frames/Enemies1/Penguin/Slide.png
+sprites/frames/Enemies1/Penguin/Jump.png
+sprites/frames/Enemies1/SniperJoe/Orange/ShootingNoShield.png
+sprites/frames/Enemies1/SniperJoe/Orange/StandNoShield.png
+sprites/frames/Enemies1/SniperJoe/Orange/StandShielded.png
+sprites/frames/Enemies1/SniperJoe/Orange/JumpWithShield.png
+sprites/frames/Enemies1/SniperJoe/Orange/ShootingWithShield.png
+sprites/frames/Enemies1/SniperJoe/Orange/JumpNoShield.png
+sprites/frames/Enemies1/SniperJoe/Orange/ThrowShield.png
+sprites/frames/Enemies1/SniperJoe/Lava/ShootingNoShield.png
+sprites/frames/Enemies1/SniperJoe/Lava/StandNoShield.png
+sprites/frames/Enemies1/SniperJoe/Lava/StandShielded.png
+sprites/frames/Enemies1/SniperJoe/Lava/JumpWithShield.png
+sprites/frames/Enemies1/SniperJoe/Lava/ShootingWithShield.png
+sprites/frames/Enemies1/SniperJoe/Lava/JumpNoShield.png
+sprites/frames/Enemies1/SniperJoe/Lava/ThrowShield.png
+sprites/frames/Enemies1/SniperJoe/Snow/ShootingNoShield.png
+sprites/frames/Enemies1/SniperJoe/Snow/StandNoShield.png
+sprites/frames/Enemies1/SniperJoe/Snow/StandShielded.png
+sprites/frames/Enemies1/SniperJoe/Snow/JumpWithShield.png
+sprites/frames/Enemies1/SniperJoe/Snow/ShootingWithShield.png
+sprites/frames/Enemies1/SniperJoe/Snow/JumpNoShield.png
+sprites/frames/Enemies1/SniperJoe/Snow/ThrowShield.png
+sprites/frames/Enemies1/MagFly.png
+sprites/frames/Enemies1/CloudedTorpedo/UncloudedTorpedo.png
+sprites/frames/Enemies1/CloudedTorpedo/CloudyTorpedo.png
+sprites/frames/Enemies1/CloudedTorpedo/TorpedoFire.png
+sprites/frames/Enemies1/PreciousJoe/Stand.png
+sprites/frames/Enemies1/PreciousJoe/Charge.png
+sprites/frames/Enemies1/PreciousJoe/Shoot.png
+sprites/frames/Enemies1/SwinginJoe/SnowThrowBall.png
+sprites/frames/Enemies1/SwinginJoe/SwingBall1.png
+sprites/frames/Enemies1/SwinginJoe/SnowSwingBall1.png
+sprites/frames/Enemies1/SwinginJoe/SwingBall2.png
+sprites/frames/Enemies1/SwinginJoe/ThrowBall.png
+sprites/frames/Enemies1/SwinginJoe/SnowSwingBall2.png
+sprites/frames/Enemies1/FlameHeadThrower/Stand.png
+sprites/frames/Enemies1/FlameHeadThrower/Throw.png
+sprites/frames/Enemies1/SnowBat/OpenEyes.png
+sprites/frames/Enemies1/SnowBat/Hang.png
+sprites/frames/Enemies1/SnowBat/OpenWings.png
+sprites/frames/Enemies1/SnowBat/Fly.png
+sprites/frames/Enemies1/FireMetSpawner/Closed.png
+sprites/frames/Enemies1/FireMetSpawner/Opening.png
+sprites/frames/Enemies1/FireMetSpawner/Open.png
+sprites/frames/Enemies1/SwimmingMet/Swim.png
+sprites/frames/Enemies1/SwimmingMet/LayDown.png
+sprites/frames/Enemies1/Sealion/wait_no_ball.png
+sprites/frames/Enemies1/Sealion/pout.png
+sprites/frames/Enemies1/Sealion/after_throw_ball.png
+sprites/frames/Enemies1/Sealion/wait_with_ball.png
+sprites/frames/Enemies1/Sealion/taunt_with_ball.png
+sprites/frames/Enemies1/Sealion/before_throw_ball.png
+sprites/frames/Enemies1/Sealion/taunt_no_ball.png
+sprites/frames/Enemies1/SuicideBummer/Jump.png
+sprites/frames/Enemies1/SuicideBummer/Run.png
+sprites/frames/Enemies1/PopupCanon/Down.png
+sprites/frames/Enemies1/PopupCanon/Up.png
+sprites/frames/Enemies1/PopupCanon/Rise.png
+sprites/frames/Enemies1/FireMet/Jump.png
+sprites/frames/Enemies1/FireMet/Walk.png
+sprites/frames/Enemies1/FireMet/Shoot.png
+sprites/frames/Enemies1/BabyPenguin.png
+sprites/frames/Enemies1/SuctionRoller.png
+sprites/frames/Enemies1/RollerBot/Close.png
+sprites/frames/Enemies1/RollerBot/Shoot.png
+sprites/frames/Enemies1/RollerBot/Roll.png
+sprites/frames/Enemies1/RollerBot/Open.png
+sprites/frames/Enemies1/SnowSeal/Stand.png
+sprites/frames/Enemies1/SnowSeal/FormSnowball.png
+sprites/frames/Enemies1/SnowSeal/SlapTail.png
+sprites/frames/Enemies1/SnowMet/LayDown.png
+sprites/frames/Enemies1/SnowMet/GetUp.png
+sprites/frames/Enemies1/SnowMet/Run.png
+sprites/frames/Enemies1/SnowMet/PopUp.png
+sprites/frames/Enemies1/ShieldAttacker/Attack.png
+sprites/frames/Enemies1/ShieldAttacker/TurnAround.png
+sprites/frames/Enemies1/Bat/OpenEyes.png
+sprites/frames/Enemies1/Bat/Hang.png
+sprites/frames/Enemies1/Bat/OpenWings.png
+sprites/frames/Enemies1/Bat/Fly.png
+sprites/frames/Enemies1/Ratton/stand.png
+sprites/frames/Enemies1/Ratton/jump.png
+sprites/frames/Enemies1/Pipi/Copipi.png
+sprites/frames/Enemies1/Pipi/Pipi.png
+sprites/frames/Enemies1/Pipi/Egg.png
+sprites/frames/Enemies1/Pipi/EggShatter.png
+sprites/frames/Enemies1/Pipi/PipiWithEgg.png
+sprites/frames/Enemies1/WispyWasp/FlyWithNest.png
+sprites/frames/Enemies1/WispyWasp/Nest.png
+sprites/frames/Enemies1/WispyWasp/Fly.png
+sprites/frames/Enemies1/WispyWasp/BabyWasp.png
+sprites/frames/Enemies1/BlueScrewie/Down.png
+sprites/frames/Enemies1/BlueScrewie/Drop.png
+sprites/frames/Enemies1/BlueScrewie/Shoot.png
+sprites/frames/Enemies1/BlueScrewie/Rise.png
+sprites/frames/Enemies1/Arigock/shooting.png
+sprites/frames/Enemies1/Arigock/closed.png
+sprites/frames/Enemies1/SpringHead/Unleashed.png
+sprites/frames/Enemies1/SpringHead/Compressed.png
+sprites/frames/Enemies1/Spiky.png
+sprites/frames/Enemies1/LaserBeamer.png
+sprites/frames/Enemies1/FloatingCan.png
+sprites/frames/Enemies1/TurnBlaster/tube.png
+sprites/frames/Enemies1/TurnBlaster/dial.png
+sprites/frames/Enemies1/TurnBlaster/base.png
+sprites/frames/Enemies1/Darspider/jump.png
+sprites/frames/Enemies1/Darspider/still.png
+sprites/frames/Enemies1/Darspider/frozen.png
+sprites/frames/Enemies1/Darspider/crawl.png
+sprites/frames/Enemies1/Met/LayDown.png
+sprites/frames/Enemies1/Met/GetUp.png
+sprites/frames/Enemies1/Met/Run.png
+sprites/frames/Enemies1/Met/PopUp.png
+sprites/frames/Enemies1/HeliMet/Shield.png
+sprites/frames/Enemies1/HeliMet/Fly.png
+sprites/frames/Enemies1/HeliMet/PopUp.png
+sprites/frames/Ui1/PaneHighlighted.png
+sprites/frames/Ui1/Subtitle8bit.png
+sprites/frames/Ui1/Arrow.png
+sprites/frames/Ui1/RedDot.png
+sprites/frames/Ui1/PaneBlinking.png
+sprites/frames/Ui1/MegamanSubtitle.png
+sprites/frames/Ui1/Bar.png
+sprites/frames/Ui1/StageSelectBox_Unhighlighted.png
+sprites/frames/Ui1/WhiteFrameBlackPane.png
+sprites/frames/Ui1/Stars.png
+sprites/frames/Ui1/EmptyBit.png
+sprites/frames/Ui1/Z8bit.png
+sprites/frames/Ui1/BorderBlock.png
+sprites/frames/Ui1/MegamanHelmet.png
+sprites/frames/Ui1/BlackBar.png
+sprites/frames/Ui1/ScreenController/b.png
+sprites/frames/Ui1/ScreenController/a.png
+sprites/frames/Ui1/ScreenController/start.png
+sprites/frames/Ui1/ScreenController/arrow.png
+sprites/frames/Ui1/ScreenController/command_pressed.png
+sprites/frames/Ui1/ScreenController/command.png
+sprites/frames/Ui1/ScreenController/button.png
+sprites/frames/Ui1/ScreenController/select.png
+sprites/frames/Ui1/ScreenController/arrow_pressed.png
+sprites/frames/Ui1/ScreenController/button_pressed.png
+sprites/frames/Ui1/Stars1.png
+sprites/frames/Ui1/MegamanPose.png
+sprites/frames/Ui1/Stars2.png
+sprites/frames/Ui1/Z.png
+sprites/frames/Ui1/Stars3.png
+sprites/frames/Ui1/OrangeBit.png
+sprites/frames/Ui1/Bit.png
+sprites/frames/Ui1/MegamanMaverick.png
+sprites/frames/Ui1/RedBit.png
+sprites/frames/Ui1/Canvas.png
+sprites/frames/Ui1/MegamanTitle.png
+sprites/frames/Ui1/StageSelectBox_Blinking.png
+sprites/frames/Ui1/Background.png
+sprites/frames/Ui1/Stars4.png
+sprites/frames/Ui1/StageSelectBox_Highlighted.png
+sprites/frames/Ui1/PaneShattered.png
+sprites/frames/Ui1/StandardBit.png
+sprites/frames/Ui1/Pane.png
+sprites/frames/Ui1/TitleScreenBackground.png
+sprites/frames/Ui1/BlackBit.png
+sprites/frames/Ui1/ZeroSilhouette.png
+sprites/frames/Buddies/RushJet.png
+sprites/frames/Buddies/RushSpring.png
+sprites/frames/Buddies/RushStand.png
+sprites/frames/Buddies/RushTransformToJet.png
+sprites/frames/MegamanMaverick/Stand.png
+sprites/frames/MegamanMaverick/Frozen.png
+sprites/frames/MegamanMaverick/StandShoot_Left.png
+sprites/frames/MegamanMaverick/Swim.png
+sprites/frames/MegamanMaverick/JumpShoot.png
+sprites/frames/MegamanMaverick/Frozen_Left.png
+sprites/frames/MegamanMaverick/ClimbShoot.png
+sprites/frames/MegamanMaverick/InitRunCharging.png
+sprites/frames/MegamanMaverick/SlipSlideCharging_Left.png
+sprites/frames/MegamanMaverick/Damaged.png
+sprites/frames/MegamanMaverick/GroundSlide_Left.png
+sprites/frames/MegamanMaverick/Jump.png
+sprites/frames/MegamanMaverick/WallSlideHalfCharging.png
+sprites/frames/MegamanMaverick/StandHalfCharging_Left.png
+sprites/frames/MegamanMaverick/AirDash.png
+sprites/frames/MegamanMaverick/WallSlideCharging.png
+sprites/frames/MegamanMaverick/WallSlide.png
+sprites/frames/MegamanMaverick/StillClimbCharging_Left.png
+sprites/frames/MegamanMaverick/SwimCharging.png
+sprites/frames/MegamanMaverick/FinishClimbHalfCharging.png
+sprites/frames/MegamanMaverick/SlipSlideShoot_Left.png
+sprites/frames/MegamanMaverick/Swim_Left.png
+sprites/frames/MegamanMaverick/ClimbCharging_Left.png
+sprites/frames/MegamanMaverick/SwimAttack_Left.png
+sprites/frames/MegamanMaverick/Climb.png
+sprites/frames/MegamanMaverick/Damaged_Left.png
+sprites/frames/MegamanMaverick/AirDashHalfCharging_Left.png
+sprites/frames/MegamanMaverick/StillClimbCharging.png
+sprites/frames/MegamanMaverick/StillClimb.png
+sprites/frames/MegamanMaverick/JumpHalfCharging_Left.png
+sprites/frames/MegamanMaverick/RunCharging_Left.png
+sprites/frames/MegamanMaverick/AirDashCharging_Left.png
+sprites/frames/MegamanMaverick/FinishClimb.png
+sprites/frames/MegamanMaverick/SlipSlide.png
+sprites/frames/MegamanMaverick/SwimHalfCharging_Left.png
+sprites/frames/MegamanMaverick/OnFire.png
+sprites/frames/MegamanMaverick/WallSlideHalfCharging_Left.png
+sprites/frames/MegamanMaverick/GroundSlideCharging_Left.png
+sprites/frames/MegamanMaverick/Run.png
+sprites/frames/MegamanMaverick/RunShoot_Left.png
+sprites/frames/MegamanMaverick/GroundSlideShoot_Left.png
+sprites/frames/MegamanMaverick/InitRun_Left.png
+sprites/frames/MegamanMaverick/StandShoot.png
+sprites/frames/MegamanMaverick/SwimCharging_Left.png
+sprites/frames/MegamanMaverick/JumpCharging.png
+sprites/frames/MegamanMaverick/SlipSlideShoot.png
+sprites/frames/MegamanMaverick/SwimAttack.png
+sprites/frames/MegamanMaverick/JumpCharging_Left.png
+sprites/frames/MegamanMaverick/AirDash_Left.png
+sprites/frames/MegamanMaverick/StandCharging_Left.png
+sprites/frames/MegamanMaverick/RunHalfCharging.png
+sprites/frames/MegamanMaverick/Jump_Left.png
+sprites/frames/MegamanMaverick/GroundSlideShoot.png
+sprites/frames/MegamanMaverick/InitRunCharging_Left.png
+sprites/frames/MegamanMaverick/SlipSlideHalfCharging.png
+sprites/frames/MegamanMaverick/GroundSlideCharging.png
+sprites/frames/MegamanMaverick/SwimShoot_Left.png
+sprites/frames/MegamanMaverick/GroundSlideHalfCharging_Left.png
+sprites/frames/MegamanMaverick/InitRunHalfCharging_Left.png
+sprites/frames/MegamanMaverick/ClimbHalfCharging_Left.png
+sprites/frames/MegamanMaverick/FinishClimbCharging_Left.png
+sprites/frames/MegamanMaverick/JumpShoot_Left.png
+sprites/frames/MegamanMaverick/WallSlideShoot.png
+sprites/frames/MegamanMaverick/OnFire_Left.png
+sprites/frames/MegamanMaverick/WallSlideShoot_Left.png
+sprites/frames/MegamanMaverick/FinishClimbCharging.png
+sprites/frames/MegamanMaverick/SwimHalfCharging.png
+sprites/frames/MegamanMaverick/InitRunHalfCharging.png
+sprites/frames/MegamanMaverick/InitRun.png
+sprites/frames/MegamanMaverick/StillClimb_Left.png
+sprites/frames/MegamanMaverick/FinishClimb_Left.png
+sprites/frames/MegamanMaverick/BeamLand.png
+sprites/frames/MegamanMaverick/SlipSlideHalfCharging_Left.png
+sprites/frames/MegamanMaverick/ClimbShoot_Left.png
+sprites/frames/MegamanMaverick/StillClimbHalfCharging.png
+sprites/frames/MegamanMaverick/Climb_Left.png
+sprites/frames/MegamanMaverick/SlipSlide_Left.png
+sprites/frames/MegamanMaverick/GroundSlideHalfCharging.png
+sprites/frames/MegamanMaverick/SwimShoot.png
+sprites/frames/MegamanMaverick/Run_Left.png
+sprites/frames/MegamanMaverick/ClimbHalfCharging.png
+sprites/frames/MegamanMaverick/Stand_Left.png
+sprites/frames/MegamanMaverick/RunShoot.png
+sprites/frames/MegamanMaverick/SlipSlideCharging.png
+sprites/frames/MegamanMaverick/BeamLand_Left.png
+sprites/frames/MegamanMaverick/FinishClimbHalfCharging_Left.png
+sprites/frames/MegamanMaverick/ClimbCharging.png
+sprites/frames/MegamanMaverick/StandCharging.png
+sprites/frames/MegamanMaverick/Beam_Left.png
+sprites/frames/MegamanMaverick/RunHalfCharging_Left.png
+sprites/frames/MegamanMaverick/AirDashHalfCharging.png
+sprites/frames/MegamanMaverick/StandHalfCharging.png
+sprites/frames/MegamanMaverick/RunCharging.png
+sprites/frames/MegamanMaverick/StillClimbHalfCharging_Left.png
+sprites/frames/MegamanMaverick/JumpHalfCharging.png
+sprites/frames/MegamanMaverick/WallSlide_Left.png
+sprites/frames/MegamanMaverick/Beam.png
+sprites/frames/MegamanMaverick/AirDashCharging.png
+sprites/frames/MegamanMaverick/StandThrow.png
+sprites/frames/MegamanMaverick/GroundSlide.png
+sprites/frames/MegamanMaverick/WallSlideCharging_Left.png
+sprites/frames/MegamanCart/Megaman_Cart_FullyCharged.png
+sprites/frames/MegamanCart/Megaman_Cart.png
+sprites/frames/MegamanCart/Megaman_Cart_Damaged.png
+sprites/frames/MegamanCart/Megaman_Cart_Shoot.png
+sprites/frames/MegamanCart/Megaman_Cart_HalfCharge.png
+sprites/frames/Megaman_Old/ClimbCharging_old.png
+sprites/frames/Megaman_Old/RunCharging_old.png
+sprites/frames/Megaman_Old/ClimbHalfCharging_old.png
+sprites/frames/Megaman_Old/AirDashCharging_old.png
+sprites/frames/Megaman_Old/Beam_old.png
+sprites/frames/Megaman_Old/AirDash_old.png
+sprites/frames/Megaman_Old/BeamLand_old.png
+sprites/frames/Megaman_Old/AirDashHalfCharging_old.png
+sprites/frames/Megaman_Old/RunHalfCharging_old.png
+sprites/sprite_sheets/MicrowaveMan.txt
+sprites/sprite_sheets/Backgrounds4.png
+sprites/sprite_sheets/Buddies.txt
+sprites/sprite_sheets/RodentMan.png
+sprites/sprite_sheets/Megaman_BUSTER.txt
+sprites/sprite_sheets/Enemies2.txt
+sprites/sprite_sheets/Buddies.png
+sprites/sprite_sheets/Enemies2.png
+sprites/sprite_sheets/MisterMan.txt
+sprites/sprite_sheets/Backgrounds3.png
+sprites/sprite_sheets/Backgrounds6.txt
+sprites/sprite_sheets/Projectiles2.txt
+sprites/sprite_sheets/Items1.png
+sprites/sprite_sheets/Megaman_FLAME_TOSS.png
+sprites/sprite_sheets/MicrowaveMan.png
+sprites/sprite_sheets/GutsTank.txt
+sprites/sprite_sheets/Backgrounds2.txt
+sprites/sprite_sheets/Projectiles2.png
+sprites/sprite_sheets/Bosses2.txt
+sprites/sprite_sheets/Decorations1.txt
+sprites/sprite_sheets/BluntMan.png
+sprites/sprite_sheets/Test.png
+sprites/sprite_sheets/RoasterMan.txt
+sprites/sprite_sheets/Bosses.txt
+sprites/sprite_sheets/Backgrounds1.png
+sprites/sprite_sheets/Bosses2.png
+sprites/sprite_sheets/FridgeMan.png
+sprites/sprite_sheets/Gates.png
+sprites/sprite_sheets/Backgrounds3.txt
+sprites/sprite_sheets/Bosses.png
+sprites/sprite_sheets/PreciousMan.txt
+sprites/sprite_sheets/Platforms1.png
+sprites/sprite_sheets/NukeMan.txt
+sprites/sprite_sheets/Test.txt
+sprites/sprite_sheets/Backgrounds2.png
+sprites/sprite_sheets/Colors.png
+sprites/sprite_sheets/FridgeMan.txt
+sprites/sprite_sheets/Backgrounds6.png
+sprites/sprite_sheets/MegamanTrailSprite.png
+sprites/sprite_sheets/NukeMan.png
+sprites/sprite_sheets/Explosions1.png
+sprites/sprite_sheets/Projectiles1.png
+sprites/sprite_sheets/DistributorMan.txt
+sprites/sprite_sheets/Ui1.png
+sprites/sprite_sheets/BluntMan.txt
+sprites/sprite_sheets/FreezerMan.txt
+sprites/sprite_sheets/Gates.txt
+sprites/sprite_sheets/Backgrounds5.txt
+sprites/sprite_sheets/Megaman_RUSH_JETPACK.txt
+sprites/sprite_sheets/FreezerMan.png
+sprites/sprite_sheets/TimberWoman.png
+sprites/sprite_sheets/Explosions1.txt
+sprites/sprite_sheets/MegamanMaverick_BUSTER.txt
+sprites/sprite_sheets/MegamanCart.png
+sprites/sprite_sheets/MegamanChargedShot.txt
+sprites/sprite_sheets/Backgrounds4.txt
+sprites/sprite_sheets/Enemies1.png
+sprites/sprite_sheets/Ui1.txt
+sprites/sprite_sheets/Megaman_BUSTER.png
+sprites/sprite_sheets/RodentMan.txt
+sprites/sprite_sheets/Environs1.txt
+sprites/sprite_sheets/Hazards1.txt
+sprites/sprite_sheets/RoasterMan.png
+sprites/sprite_sheets/MisterMan.png
+sprites/sprite_sheets/Items1.txt
+sprites/sprite_sheets/Decorations1.png
+sprites/sprite_sheets/PreciousMan.png
+sprites/sprite_sheets/MegamanMaverick_BUSTER.png
+sprites/sprite_sheets/Backgrounds5.png
+sprites/sprite_sheets/Projectiles1.txt
+sprites/sprite_sheets/Colors.txt
+sprites/sprite_sheets/MegamanChargedShot.png
+sprites/sprite_sheets/MegamanCart.txt
+sprites/sprite_sheets/Platforms1.txt
+sprites/sprite_sheets/Megaman_FLAME_TOSS.txt
+sprites/sprite_sheets/Backgrounds1.txt
+sprites/sprite_sheets/Faces1.txt
+sprites/sprite_sheets/Megaman_RUSH_JETPACK.png
+sprites/sprite_sheets/TimberWoman.txt
+sprites/sprite_sheets/Megaman_v2_BUSTER.txt
+sprites/sprite_sheets/Specials1.txt
+sprites/sprite_sheets/Faces1.png
+sprites/sprite_sheets/Bosses1.png
+sprites/sprite_sheets/GutsTank.png
+sprites/sprite_sheets/Bosses1.txt
+sprites/sprite_sheets/WintryMan.png
+sprites/sprite_sheets/MegamanTrailSprite.txt
+sprites/sprite_sheets/DistributorMan.png
+sprites/sprite_sheets/WintryMan.txt
+sprites/sprite_sheets/Enemies1.txt
+sprites/sprite_sheets/Megaman_v2_BUSTER.png
+sprites/sprite_sheets/Hazards1.png
+sprites/sprite_sheets/Environs1.png
+sprites/sprite_sheets/Specials1.png
+sprites/texture_packer/Platforms1.tps
+sprites/texture_packer/Enemies2.tps
+sprites/texture_packer/NukeMan.tps
+sprites/texture_packer/MegamanTrailSprite.tps
+sprites/texture_packer/Test.tps
+sprites/texture_packer/BluntMan.tps
+sprites/texture_packer/Bosses2.tps
+sprites/texture_packer/MicrowaveMan.tps
+sprites/texture_packer/Buddies.tps
+sprites/texture_packer/Explosions1.tps
+sprites/texture_packer/RoasterMan.tps
+sprites/texture_packer/MegamanRushJet.tps
+sprites/texture_packer/Colors.tps
+sprites/texture_packer/GutsTank.tps
+sprites/texture_packer/FreezerMan.tps
+sprites/texture_packer/IcicleMan.tps
+sprites/texture_packer/Megaman_v2_BUSTER.tps
+sprites/texture_packer/Megaman.tps
+sprites/texture_packer/PreciousMan.tps
+sprites/texture_packer/RodentMan.tps
+sprites/texture_packer/Hazards1.tps
+sprites/texture_packer/MegamanMaverick.tps
+sprites/texture_packer/Gates.tps
+sprites/texture_packer/Backgrounds3.tps
+sprites/texture_packer/HugeEnemies1.tps
+sprites/texture_packer/Environs1.tps
+sprites/texture_packer/Items1.tps
+sprites/texture_packer/Decorations1.tps
+sprites/texture_packer/Bosses.tps
+sprites/texture_packer/Ui1.tps
+sprites/texture_packer/Backgrounds1.tps
+sprites/texture_packer/WintryMan.tps
+sprites/texture_packer/Projectiles2.tps
+sprites/texture_packer/Backgrounds2.tps
+sprites/texture_packer/Enemies1.tps
+sprites/texture_packer/MegamanMainMenu.tps
+sprites/texture_packer/TimberWoman.tps
+sprites/texture_packer/MisterMan.tps
+sprites/texture_packer/Specials1.tps
+sprites/texture_packer/Projectiles1.tps
+sprites/texture_packer/MegamanFire.tps
+sprites/texture_packer/Bosses1.tps
+sprites/texture_packer/Backgrounds6.tps
+sprites/texture_packer/Faces1.tps
+sprites/texture_packer/DistributorMan.tps
+sprites/texture_packer/Backgrounds5.tps
+sprites/texture_packer/Backgrounds4.tps
+sprites/texture_packer/AstroPlayer.tps
+sprites/texture_packer/MegamanCart.tps
+sprites/piskel/GlacierBKG.piskel
+sprites/piskel/Cannon_Ball.piskel
+sprites/piskel/Underwater_Penguin_Bot.piskel
+sprites/piskel/CrewMan.piskel
+sprites/piskel/MMX_Sigma2_Claw_Electric_Explosion.piskel
+sprites/piskel/PortalHopper.piskel
+sprites/piskel/CeilingCrusher.piskel
+sprites/piskel/FlameColumn.piskel
+sprites/piskel/ColorsTileset.piskel
+sprites/piskel/Flame.piskel
+sprites/piskel/Megaman_v2.piskel
+sprites/piskel/BlinkingArrow.piskel
+sprites/piskel/GroundSnow.piskel
+sprites/piskel/BigJumpingJoe.piskel
+sprites/piskel/MegamanSpawn.piskel
+sprites/piskel/PreciousShot.piskel
+sprites/piskel/Sphinx_Miniboss.piskel
+sprites/piskel/Imorm.piskel
+sprites/piskel/BigFishNeo.piskel
+sprites/piskel/WintryMan.piskel
+sprites/piskel/Glacier_Man_AirConditioner.piskel
+sprites/piskel/Cactus.piskel
+sprites/piskel/Faces.piskel
+sprites/piskel/MoonManProjectiles.piskel
+sprites/piskel/CornMan.piskel
+sprites/piskel/large_swing_ring.piskel
+sprites/piskel/MoonHead.piskel
+sprites/piskel/Spiky.piskel
+sprites/piskel/MegamanMaverick_Left.piskel
+sprites/piskel/Megaman_Color_Palettes.piskel
+sprites/piskel/Lava2.piskel
+sprites/piskel/Walrus_Bot.piskel
+sprites/piskel/WallTeck.piskel
+sprites/piskel/TubeBeam.piskel
+sprites/piskel/Jetpack_Ice_Blaster_Bot_Projectile.piskel
+sprites/piskel/Ring Ring.piskel
+sprites/piskel/Toxic_Barrel_Bot.piskel
+sprites/piskel/NavalManFace.piskel
+sprites/piskel/RoasterMan.piskel
+sprites/piskel/Enemies3.piskel
+sprites/piskel/BreakableIce.piskel
+sprites/piskel/ChargedShot_Residual_Half.piskel
+sprites/piskel/Nuclear_Monkey_Ball.piskel
+sprites/piskel/JetMet.piskel
+sprites/piskel/Bunby Tank DX.piskel
+sprites/piskel/ColtonJoe.piskel
+sprites/piskel/Items.piskel
+sprites/piskel/Togglee.piskel
+sprites/piskel/Taketento.piskel
+sprites/piskel/Falling_Icicle.piskel
+sprites/piskel/SpitFireball.piskel
+sprites/piskel/FirePellet.piskel
+sprites/piskel/FlipperPlatform.piskel
+sprites/piskel/MagmaGoop.piskel
+sprites/piskel/DesertMan.piskel
+sprites/piskel/CartinJoe.piskel
+sprites/piskel/Flame2.piskel
+sprites/piskel/MagmaWave.piskel
+sprites/piskel/Boulder.piskel
+sprites/piskel/Hanibiran.piskel
+sprites/piskel/FireMet.piskel
+sprites/piskel/RatRobot.piskel
+sprites/piskel/LavaDrop.piskel
+sprites/piskel/Jetpack_Ice_Blaster_Bot.piskel
+sprites/piskel/BulletCollision.piskel
+sprites/piskel/FloorButton.piskel
+sprites/piskel/All_Terrain_Missile_Bot.piskel
+sprites/piskel/Petit Devil.piskel
+sprites/piskel/MoonMan.piskel
+sprites/piskel/MediumPlatforms.piskel
+sprites/piskel/GreenExplosion.piskel
+sprites/piskel/LightSwitch.piskel
+sprites/piskel/SpaceSatellite.piskel
+sprites/piskel/LavaBeamer.piskel
+sprites/piskel/EnemyPlatforms1.piskel
+sprites/piskel/InfernoManProjectiles.piskel
+sprites/piskel/MechaDragon.piskel
+sprites/piskel/Lava.piskel
+sprites/piskel/DesertMan_v2.piskel
+sprites/piskel/Grass.piskel
+sprites/piskel/Toxic_Water.piskel
+sprites/piskel/Reactor_Man_Boss.piskel
+sprites/piskel/Electric.piskel
+sprites/piskel/GreenCeilingFan.piskel
+sprites/piskel/Lift.piskel
+sprites/piskel/PasswordScreen.piskel
+sprites/piskel/Reactor_Man_Projectile.piskel
+sprites/piskel/SniperJoe.piskel
+sprites/piskel/Nuclear_Monkey_Boss.piskel
+sprites/piskel/GlacierCloudsBKG.piskel
+sprites/piskel/SprBGTomahawk.piskel
+sprites/piskel/Totem Polem.piskel
+sprites/piskel/SiliconSilkie.piskel
+sprites/piskel/Spikes.piskel
+sprites/piskel/GreenConveyorBelt.piskel
+sprites/piskel/SniperJoeShield.piskel
+sprites/piskel/Bullet.piskel
+sprites/piskel/Breath_Bubbles.piskel
+sprites/piskel/CapsuleTeleporter.piskel
+sprites/piskel/TurnBlaster.piskel
+sprites/piskel/SeaMine.piskel
+sprites/piskel/WhiteShards.piskel
+sprites/piskel/Asteroid.piskel
+sprites/piskel/AcidGoop.piskel
+sprites/piskel/Nuclear_Monkey_Boss_Jump.piskel
+sprites/piskel/Explosion.piskel
+sprites/piskel/ChargeOrbs.piskel
+sprites/piskel/Toxic_Waterfall.piskel
+sprites/piskel/ReactMan.piskel
+sprites/piskel/Dripping_Toxic_Goop.piskel
+sprites/piskel/MegamanChargedShot.piskel
+sprites/piskel/PurpleBlast.piskel
+sprites/piskel/Megaman_Cart.piskel
+sprites/piskel/Tropish.piskel
+sprites/piskel/BombPotton.piskel
+sprites/piskel/Bulb Blaster.piskel
+sprites/piskel/GlacierBKG_v2.piskel
+sprites/piskel/SpiderWeb.piskel
+sprites/piskel/BluntMan.piskel
+sprites/piskel/8bitCustomTiles.piskel
+sprites/piskel/MediumEnemies1.piskel
+sprites/piskel/GutsTankFist.piskel
+sprites/piskel/NavalMan.piskel
+sprites/piskel/PolarityMan.piskel
+sprites/piskel/FridgeMan.piskel
+sprites/piskel/NavalMan_raw.piskel
+sprites/piskel/MoonManMugshot.piskel
+sprites/piskel/MagmaOrb.piskel
+sprites/piskel/BombChute.piskel
+sprites/piskel/Pipi & Copipi.piskel
+sprites/piskel/SmallGreenMissile.piskel
+sprites/piskel/MegamanMaverick.piskel
+sprites/piskel/HibernalMan.piskel
+sprites/piskel/WanaanLauncher.piskel
+sprites/piskel/MagmaExplosion.piskel
+sprites/piskel/CactusLauncher.piskel
+sprites/piskel/Wanaan.piskel
+sprites/piskel/ToxicGoopShot.piskel
+sprites/piskel/MMX_Sigma2_Claw_Electric_Shot.piskel
+sprites/piskel/Enemies2.piskel
+sprites/piskel/MagmaGoopExplosion.piskel
+sprites/piskel/TeardropBlast.piskel
+sprites/piskel/Toxic_Splash.piskel
+sprites/piskel/RodentMan.piskel
+sprites/piskel/Bunby Red Rocket.piskel
+sprites/piskel/GutsTank.piskel
+sprites/piskel/SandSplash.piskel
+sprites/piskel/SwitcharooArrow.piskel
+sprites/piskel/EarthBackdrop.piskel
+sprites/piskel/PauseMenu.piskel
+sprites/piskel/Electrocutie.piskel
+sprites/piskel/MaverickFaces.piskel
+sprites/piskel/Arigock.piskel
+sprites/piskel/RocketBomb.piskel
+sprites/piskel/FireDispensenator.piskel
+sprites/piskel/temp.piskel
+sprites/piskel/UFO_Bomb.piskel
+sprites/piskel/RollerBot.piskel
+sprites/piskel/MagmaPellet&Flame.piskel
+sprites/piskel/UFOBomb.piskel
+sprites/piskel/Gates.piskel
+sprites/piskel/Spike_Bot.piskel
+sprites/piskel/PreciousMan.piskel
+sprites/piskel/Snow.piskel
+sprites/piskel/AngryFlameBall.piskel
+sprites/piskel/Dropper Lift.piskel
+sprites/piskel/SpikeBall.piskel
+sprites/piskel/Popup Canon.piskel
+sprites/piskel/Megaman_RUSH_JET.piskel
+sprites/piskel/InfernoManFace.piskel
+sprites/piskel/BossFaces.piskel
+sprites/piskel/WoodPlank.piskel
+sprites/piskel/SprBGTomahawk_v2.piskel
+sprites/piskel/UF_Oh_No_Bot_1.piskel
+sprites/piskel/Death_Bomb.piskel
+sprites/piskel/MegamanFire.piskel
+sprites/piskel/Bits.piskel
+sprites/piskel/large_swing.piskel
+sprites/piskel/Up n Down.piskel
+sprites/piskel/Darspider.piskel
+sprites/piskel/MMX_Sigma2.piskel
+sprites/piskel/IcecubeMaker.piskel
+sprites/piskel/Water.piskel
+sprites/piskel/PolarityManFace.piskel
+sprites/piskel/Bospider.piskel
+sprites/piskel/Penguin_Bot.piskel
+sprites/piskel/ScreenController.piskel
+sprites/piskel/MMX_Sigma2_ElectricBall.piskel
+sprites/piskel/PenguinMiniBoss.piskel
+sprites/piskel/GlacierMan.piskel
+sprites/piskel/Sealion.piskel
+sprites/piskel/MMX_Sigma2_Claw.piskel
+sprites/piskel/MicrowaveMan.piskel
+sprites/piskel/Adamski.piskel
+sprites/piskel/RailTrack.piskel
+sprites/piskel/MegamanElectric.piskel
+sprites/piskel/SmallEnemies1.piskel
+sprites/piskel/DemonAngelMet.piskel
+sprites/piskel/MisterMan.piskel
+sprites/piskel/TimberStuff.piskel
+sprites/piskel/Megaman.piskel
+sprites/piskel/Bubble.piskel
+sprites/piskel/Zero.piskel
+sprites/piskel/Popoheli.piskel
+sprites/piskel/DrLight.piskel
+sprites/piskel/SinkSand.piskel
+sprites/piskel/UFOBombBot.piskel
+sprites/piskel/Robbit.piskel
+sprites/piskel/TimberWoman.piskel
+sprites/piskel/MegamanFaces.piskel
+sprites/piskel/ChargedShot_Residual.piskel
+sprites/piskel/PiercingMan.piskel
+sprites/piskel/Candle.piskel
+sprites/piskel/Lantern.piskel
+sprites/piskel/Trees.piskel
+sprites/piskel/SnowSniperJoe.piskel
+sprites/piskel/SawBeam.piskel
+sprites/piskel/Colors.piskel
+sprites/piskel/Shotman.piskel
+sprites/piskel/CarriCarry.piskel
+sprites/piskel/Gachappan.piskel
+sprites/piskel/LargeSpikes.piskel
+sprites/piskel/MegamanHalfChargedShot.piskel
+sprites/piskel/DistributorMan.piskel
+sprites/piskel/LavaBeam.piskel
+sprites/piskel/Big_Propeller_Bot.piskel
+sprites/piskel/TitleScreen_v2.piskel
+sprites/piskel/SpringHead.piskel
+sprites/piskel/Platforms1.piskel
+sprites/piskel/LargePlatforms.piskel
+sprites/piskel/SwingingAxe.piskel
+sprites/piskel/Blocks.piskel
+sprites/piskel/MagmaMeteor.piskel
+sprites/piskel/MegamanMainMenu.piskel
+sprites/piskel/Elecn.piskel
+sprites/piskel/StageSelect.piskel
+sprites/piskel/InfernoMan.piskel
+sprites/piskel/SmokePuff.piskel
+sprites/piskel/NukeMan.piskel
+sprites/piskel/Buddies.piskel
+sprites/piskel/CaveRocker.piskel
+sprites/piskel/Cart.piskel
+sprites/piskel/SnowheadThrower.piskel
+tiled_maps/tsx/mm10-final-stage-tileset.tsx
+tiled_maps/tsx/Tileset1.tsx
+tiled_maps/tsx/Reactor_Man_No_Black.tsx
+tiled_maps/tsx/Needleman.tsx
+tiled_maps/tsx/Elecman.tsx
+tiled_maps/tsx/GearTrolley.tsx
+tiled_maps/tsx/ForestTiles.tsx
+tiled_maps/tsx/GlacierManTileset.tsx
+tiled_maps/tsx/ShadowMan.tsx
+tiled_maps/tsx/pipe forest.tsx
+tiled_maps/tsx/ColorsTileset.tsx
+tiled_maps/tsx/MagnetMan2.tsx
+tiled_maps/tsx/tomahawk_man_stage_tileset.tsx
+tiled_maps/tsx/MM3Wily4.tsx
+tiled_maps/tsx/mm9plug.tsx
+tiled_maps/tsx/Magnetman.tsx
+tiled_maps/tsx/mm9endless.tsx
+tiled_maps/tsx/mm9galaxy.tsx
+tiled_maps/tsx/MM10Lab.tsx
+tiled_maps/tsx/React_Man_2.tsx
+tiled_maps/tsx/SkyMan.tsx
+tiled_maps/tsx/MM10Endless.tsx
+tiled_maps/tsx/mm9tornado.tsx
+tiled_maps/tsx/MM10Wily2.tsx
+tiled_maps/tsx/StarManTileset.tsx
+tiled_maps/tsx/Reactor_Man_3.tsx
+tiled_maps/tsx/mm10blade.tsx
+tiled_maps/tsx/mm9magma.tsx
+tiled_maps/tsx/MM10Punk.tsx
+tiled_maps/tsx/MM3Wily2.tsx
+tiled_maps/tsx/CentaurMan.tsx
+tiled_maps/tsx/Reactor_Man_1.tsx
+tiled_maps/tsx/BKG01.tsx
+tiled_maps/tsx/mm9jewel.tsx
+tiled_maps/tsx/Cave.tsx
+tiled_maps/tsx/MM3Wily3.tsx
+tiled_maps/tsx/ChillMan.tsx
+tiled_maps/tsx/mm9splash.tsx
+tiled_maps/tsx/Hornetman.tsx
+tiled_maps/tsx/MagmaMan.tsx
+tiled_maps/tsx/BKG01 copy.tsx
+tiled_maps/tsx/MM3Wily1.tsx
+tiled_maps/tsx/commando_man_tileset.tsx
+tiled_maps/tsx/sandy_pipes.tsx
+tiled_maps/tsx/MagmaManMap.tsx
+tiled_maps/tsx/PurpleStuff.tsx
+tiled_maps/tsx/Gravity Man Stage.tsx
+tiled_maps/tsx/ReactorManCondensed.tsx
+tiled_maps/tsx/StarManTileset-NoBlack.tsx
+tiled_maps/tsx/MM10Enker.tsx
+tiled_maps/tsx/pump_man.tsx
+tiled_maps/tsx/Reactor_Man_4.tsx
+tiled_maps/tsx/Hardman.tsx
+tiled_maps/tsx/Blizzardman.tsx
+tiled_maps/tsx/MM10Wily1.tsx
+tiled_maps/tsx/mm9concrete.tsx
+tiled_maps/png/tstMM10Wily1.png
+tiled_maps/png/star-man-stage-no-black.png
+tiled_maps/png/MMM mega man 11 background/non animated backgrounds/sprBGTorch2.png
+tiled_maps/png/MMM mega man 11 background/non animated backgrounds/sprBGBounce.png
+tiled_maps/png/MMM mega man 11 background/non animated backgrounds/sprBGMM11Wily1.png
+tiled_maps/png/MMM mega man 11 background/non animated backgrounds/sprBGImpact.png
+tiled_maps/png/MMM mega man 11 background/non animated backgrounds/sprBGTorch.png
+tiled_maps/png/MMM mega man 11 background/non animated backgrounds/sprBGTundra.png
+tiled_maps/png/MMM mega man 11 background/non animated backgrounds/sprBGBlock3.png
+tiled_maps/png/MMM mega man 11 background/non animated backgrounds/sprBGBlast.png
+tiled_maps/png/MMM mega man 11 background/non animated backgrounds/sprBGFuse.png
+tiled_maps/png/MMM mega man 11 background/README.txt
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock4/sprBGBlock4 frame 2.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock4/sprBGBlock4 frame 1.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock4/sprBGBlock4 frame 6.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock4/sprBGBlock4 frame 4.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock4/sprBGBlock4 frame 8.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock4/sprBGBlock4 frame 7.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock4/sprBGBlock4 frame 3.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock4/sprBGBlock4 frame 5.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGTorch4/sprBGTorch4 frame 4.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGTorch4/sprBGTorch4 frame 5.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGTorch4/sprBGTorch4 frame 2.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGTorch4/sprBGTorch4 frame 1.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGTorch4/sprBGTorch4 frame 7.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGTorch4/sprBGTorch4 frame 6.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGTorch4/sprBGTorch4 frame 8.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGTorch4/sprBGTorch4 frame 3.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGAcidAlt/sprBGAcidAlt frame 1.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGAcidAlt/sprBGAcidAlt frame 2.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGAcidAlt/sprBGAcidAlt frame 3.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGMM11Wily1_2/sprBGMM11Wily1_2 frame 1.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGMM11Wily1_2/sprBGMM11Wily1_2 frame 2.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGMM11Wily1_2/sprBGMM11Wily1_2 frame 3.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock2/sprBGBlock2 frame 1.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock2/sprBGBlock2 frame 5.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock2/sprBGBlock2 frame 4.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock2/sprBGBlock2 frame 2.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock2/sprBGBlock2 frame 8.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock2/sprBGBlock2 frame 6.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock2/sprBGBlock2 frame 3.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock2/sprBGBlock2 frame 7.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGMM11Wily2_2/sprBGMM11Wily2_2 frame 2.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGMM11Wily2_2/sprBGMM11Wily2_2 frame 3.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGMM11Wily2_2/sprBGMM11Wily2_2 frame 5.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGMM11Wily2_2/sprBGMM11Wily2_2 frame 7.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGMM11Wily2_2/sprBGMM11Wily2_2 frame 4.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGMM11Wily2_2/sprBGMM11Wily2_2 frame 1.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGMM11Wily2_2/sprBGMM11Wily2_2 frame 6.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGMM11Wily2_2/sprBGMM11Wily2_2 frame 8.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGAcidAlt2/sprBGAcidAlt2 frame 3.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGAcidAlt2/sprBGAcidAlt2 frame 2.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGAcidAlt2/sprBGAcidAlt2 frame 1.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGMM11Wily2/sprBGMM11Wily2 frame 7.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGMM11Wily2/sprBGMM11Wily2 frame 5.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGMM11Wily2/sprBGMM11Wily2 frame 6.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGMM11Wily2/sprBGMM11Wily2 frame 3.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGMM11Wily2/sprBGMM11Wily2 frame 8.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGMM11Wily2/sprBGMM11Wily2 frame 1.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGMM11Wily2/sprBGMM11Wily2 frame 4.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGMM11Wily2/sprBGMM11Wily2 frame 2.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGAcid/sprBGAcid frame 2.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGAcid/sprBGAcid frame 1.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGAcid/sprBGAcid frame 3.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGTorch3/sprBGTorch3 frame 8.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGTorch3/sprBGTorch3 frame 7.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGTorch3/sprBGTorch3 frame 1.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGTorch3/sprBGTorch3 frame 4.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGTorch3/sprBGTorch3 frame 3.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGTorch3/sprBGTorch3 frame 6.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGTorch3/sprBGTorch3 frame 5.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGTorch3/sprBGTorch3 frame 2.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock/sprBGBlock frame 2.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock/sprBGBlock frame 5 and 6.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock/sprBGBlock frame 3.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock/sprBGBlock frame 4.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock/sprBGBlock frame 7.png
+tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock/sprBGBlock frame 1.png
+tiled_maps/png/tstKnightMan.png
+tiled_maps/png/mm10blade.png
+tiled_maps/png/tstCentaurManAlt-resize.png
+tiled_maps/png/mm9galaxy.png
+tiled_maps/png/mm9tornado.png
+tiled_maps/png/mm9magma.png
+tiled_maps/png/sandy_pipes.png
+tiled_maps/png/BKG01.png
+tiled_maps/png/ForestTiles 32x32.png
+tiled_maps/png/pipe forest.png
+tiled_maps/png/tstNeedleman.png
+tiled_maps/png/tstMM3Wily3.png
+tiled_maps/png/Tileset1_Full_32x32.png
+tiled_maps/png/star-man-stage.png
+tiled_maps/png/tomahawk_man_stage_tileset.png
+tiled_maps/png/Mega Man 7 Backgrounds.png
+tiled_maps/png/BKG01 copy.png
+tiled_maps/png/tstMM10Wily2.png
+tiled_maps/png/GlacierMan.png
+tiled_maps/png/mm9concrete.png
+tiled_maps/png/ForestTiles.png
+tiled_maps/png/mm10wily1.png
+tiled_maps/png/tstMM10Endless.png
+tiled_maps/png/mm10-final-stage.png
+tiled_maps/png/SprBGTomahawk.png
+tiled_maps/png/React_Man_2.png
+tiled_maps/png/SkyMan.png
+tiled_maps/png/tstElecman.png
+tiled_maps/png/tstMM10Enker.png
+tiled_maps/png/tstChillMan.png
+tiled_maps/png/tstFlashmanAnimated3.png
+tiled_maps/png/tstFlashmanAnimated.png
+tiled_maps/png/tstHardman.png
+tiled_maps/png/mm9endless.png
+tiled_maps/png/tstMM3Wily4.png
+tiled_maps/png/pump_man.png
+tiled_maps/png/ColorsTileset.png
+tiled_maps/png/magnetman.png
+tiled_maps/png/tstFlashmanAnimated1.png
+tiled_maps/png/Reactor_Man_No_Black.png
+tiled_maps/png/Reactor_Man_4.png
+tiled_maps/png/tstMM10Lab.png
+tiled_maps/png/tstFlashmanAnimated2.png
+tiled_maps/png/ReactorManCondensed.png
+tiled_maps/png/NES - Mega Man 5 - Gravity Man Stage(1).png
+tiled_maps/png/React_Man_1.png
+tiled_maps/png/GearTrolley.png
+tiled_maps/png/tstCave.png
+tiled_maps/png/mm9splash.png
+tiled_maps/png/Mega Man 3 Backgrounds/Gemini Man/sprBGGemini.png
+tiled_maps/png/Mega Man 3 Backgrounds/Gemini Man/sprBGGemini2.png
+tiled_maps/png/Mega Man 3 Backgrounds/Gemini Man/sprBGGemini2Alt.png
+tiled_maps/png/Mega Man 3 Backgrounds/Needle Man/sprBGNeedle4.png
+tiled_maps/png/Mega Man 3 Backgrounds/Needle Man/sprBGNeedle4Alt.png
+tiled_maps/png/Mega Man 3 Backgrounds/Needle Man/sprBGNeedle.png
+tiled_maps/png/Mega Man 3 Backgrounds/Needle Man/sprBGNeedle2.png
+tiled_maps/png/Mega Man 3 Backgrounds/Needle Man/sprBGNeedle5.png
+tiled_maps/png/Mega Man 3 Backgrounds/Needle Man/sprBGNeedle3Alt.png
+tiled_maps/png/Mega Man 3 Backgrounds/Needle Man/sprBGNeedle3.png
+tiled_maps/png/Mega Man 3 Backgrounds/Magnet Man/sprBGMagnet2.png
+tiled_maps/png/Mega Man 3 Backgrounds/Magnet Man/sprBGMagnet.png
+tiled_maps/png/Mega Man 3 Backgrounds/Magnet Man/sprBGMagnet3.png
+tiled_maps/png/Mega Man 3 Backgrounds/Spark Man/sprBGSpark1.png
+tiled_maps/png/Mega Man 3 Backgrounds/Spark Man/sprBGSpark3.png
+tiled_maps/png/Mega Man 3 Backgrounds/Spark Man/sprBGSpark2.png
+tiled_maps/png/Mega Man 3 Backgrounds/README.txt
+tiled_maps/png/Mega Man 3 Backgrounds/Shadow Man/sprBGShadow3/sprBGShadow3_3.png
+tiled_maps/png/Mega Man 3 Backgrounds/Shadow Man/sprBGShadow3/sprBGShadow3_2.png
+tiled_maps/png/Mega Man 3 Backgrounds/Shadow Man/sprBGShadow3/sprBGShadow3.png
+tiled_maps/png/Mega Man 3 Backgrounds/Shadow Man/sprBGShadow.png
+tiled_maps/png/Mega Man 3 Backgrounds/Shadow Man/sprBGShadow4/sprBGShadow4_3.png
+tiled_maps/png/Mega Man 3 Backgrounds/Shadow Man/sprBGShadow4/sprBGShadow4_2.png
+tiled_maps/png/Mega Man 3 Backgrounds/Shadow Man/sprBGShadow4/sprBGShadow4.png
+tiled_maps/png/Mega Man 3 Backgrounds/Shadow Man/sprBGShadow2/sprBGShadow2_2.png
+tiled_maps/png/Mega Man 3 Backgrounds/Shadow Man/sprBGShadow2/sprBGShadow2.png
+tiled_maps/png/Mega Man 3 Backgrounds/Shadow Man/sprBGShadow2/sprBGShadow2_3.png
+tiled_maps/png/Mega Man 3 Backgrounds/Shadow Man/sprBGShadow5/0.png
+tiled_maps/png/Mega Man 3 Backgrounds/Shadow Man/sprBGShadow5/1.png
+tiled_maps/png/Mega Man 3 Backgrounds/Shadow Man/sprBGShadow5/2.png
+tiled_maps/png/Mega Man 3 Backgrounds/sprBGMM3Credits1.png
+tiled_maps/png/Mega Man 3 Backgrounds/Dr. Wily/sprBGMM3Wily4.png
+tiled_maps/png/Mega Man 3 Backgrounds/Dr. Wily/sprBGMM3Wily4_3.png
+tiled_maps/png/Mega Man 3 Backgrounds/Dr. Wily/sprBGMM3Wily3.png
+tiled_maps/png/Mega Man 3 Backgrounds/Dr. Wily/sprBGMM3Wily2_3.png
+tiled_maps/png/Mega Man 3 Backgrounds/Dr. Wily/sprBGMM3Wily4_2/sprBGMM3Wily4_2.png
+tiled_maps/png/Mega Man 3 Backgrounds/Dr. Wily/sprBGMM3Wily4_2/sprBGMM3Wily4_2_4.png
+tiled_maps/png/Mega Man 3 Backgrounds/Dr. Wily/sprBGMM3Wily4_2/sprBGMM3Wily4_2_5.png
+tiled_maps/png/Mega Man 3 Backgrounds/Dr. Wily/sprBGMM3Wily4_2/sprBGMM3Wily4_2_2.png
+tiled_maps/png/Mega Man 3 Backgrounds/Dr. Wily/sprBGMM3Wily4_2/sprBGMM3Wily4_2_3.png
+tiled_maps/png/Mega Man 3 Backgrounds/Dr. Wily/sprBGMM3Wily4_4.png
+tiled_maps/png/Mega Man 3 Backgrounds/Dr. Wily/sprBGMM3Wily2_2.png
+tiled_maps/png/Mega Man 3 Backgrounds/Dr. Wily/sprBGMM3Wily1_3.png
+tiled_maps/png/Mega Man 3 Backgrounds/Dr. Wily/sprBGMM3Wily2.png
+tiled_maps/png/Mega Man 3 Backgrounds/Dr. Wily/sprBGMM3Wily3_2.png
+tiled_maps/png/Mega Man 3 Backgrounds/Dr. Wily/sprBGMM3Wily1.png
+tiled_maps/png/Mega Man 3 Backgrounds/Dr. Wily/sprBGMM3Wily1_2.png
+tiled_maps/png/Mega Man 3 Backgrounds/Hard Man/sprBGHard3.png
+tiled_maps/png/Mega Man 3 Backgrounds/Hard Man/sprBGHard2.png
+tiled_maps/png/Mega Man 3 Backgrounds/Hard Man/sprBGHard.png
+tiled_maps/png/Mega Man 3 Backgrounds/Top Man/sprBGTop5.png
+tiled_maps/png/Mega Man 3 Backgrounds/Top Man/sprBGTop1.png
+tiled_maps/png/Mega Man 3 Backgrounds/Top Man/sprBGTop3.png
+tiled_maps/png/Mega Man 3 Backgrounds/Top Man/sprBGTop4.png
+tiled_maps/png/Mega Man 3 Backgrounds/Top Man/sprBGTop2.png
+tiled_maps/png/Mega Man 3 Backgrounds/sprBGSnake.png
+tiled_maps/png/shadowman.png
+tiled_maps/png/tstHornetman.png
+tiled_maps/png/tstMM3Wily1.png
+tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstFrost.png
+tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstClown.png
+tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstIntro_1.png
+tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstWily3_1.png
+tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstWily4.png
+tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstWily2_Alt.png
+tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstSearch.png
+tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstFrostAlt.png
+tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstWilly3_2.png
+tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstAstro_2AltII.png
+tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstAstro_1.png
+tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstGrenade.png
+tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstWily2.png
+tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstAstro_2Alt.png
+tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstAqua.png
+tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstIntro_2.png
+tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstIntro_2Alt.png
+tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstWily1.png
+tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstSword_Alt.png
+tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstSword.png
+tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstWilly3_2Alt.png
+tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstAstro_2.png
+tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstTengu.png
+tiled_maps/png/MMM MegaMan 8 tille sets/credits.txt
+tiled_maps/png/tstMagnetman.png
+tiled_maps/png/mm9jewel.png
+tiled_maps/png/Reactor_Man_3.png
+tiled_maps/png/1 - Main Menu Backgrounds.png
+tiled_maps/png/background_pipes_cavern.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/README.txt
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man 1 Backgrounds/sprBGCut.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man 1 Backgrounds/sprBGFire2.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man 1 Backgrounds/sprBGElec2.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man 1 Backgrounds/sprBGIceAlt.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man 1 Backgrounds/sprBGMM1Wily2.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man 1 Backgrounds/sprBGMM1Wily1_2.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man 1 Backgrounds/sprBGGuts2.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man 1 Backgrounds/sprBGIce.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man 1 Backgrounds/sprBGIce2.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man 1 Backgrounds/sprBGMM1Wily3_2.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man 1 Backgrounds/sprBGMM1Wily3.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man 1 Backgrounds/sprBGMM1Wily1.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man 1 Backgrounds/sprBGMM1Wily4.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man 1 Backgrounds/sprBGCut2.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man 1 Backgrounds/sprBGBomb2.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man 1 Backgrounds/sprBGElec.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man 1 Backgrounds/sprBGFire.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man 1 Backgrounds/sprBGMM1Wily3_2Alt.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man 1 Backgrounds/sprBGElec3.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man 1 Backgrounds/sprBGBomb.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man 1 Backgrounds/sprBGMM1Wily3Alt.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man 1 Backgrounds/sprBGGuts.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man 1 Backgrounds/sprBGGutsAlt.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGOil.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGGuts2PU/0.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGGuts2PU/1.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGGuts2PU/2.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGElec1PU/4.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGElec1PU/3.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGElec1PU/0.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGElec1PU/1.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGElec1PU/2.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGElec2PU/4.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGElec2PU/3.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGElec2PU/0.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGElec2PU/1.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGElec2PU/2.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGIce1PU/0.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGIce1PU/1.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGIce1PU/2.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGBomb1PU/3.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGBomb1PU/0.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGBomb1PU/1.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGBomb1PU/2.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGGuts3PU.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGCut1PU.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGTimeAlt.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGFire1PU/0.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGFire1PU/1.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGFire1PU/2.png
+tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGTime.png
+tiled_maps/png/mm9plug.png
+tiled_maps/png/tstBlizzardman.png
+tiled_maps/png/tstMM10Punk.png
+tiled_maps/png/purple_stuff.png
+tiled_maps/png/PC Computer - Mega Man Maker - Wily Fortress.png
+tiled_maps/png/commando_man_tileset.png
+tiled_maps/png/tstMM3Wily2.png
+tiled_maps/tmx/DesertMan_16x12.tmx
+tiled_maps/tmx/GlacierMan_16x12_test_groundsnow_boss.tmx
+tiled_maps/tmx/ReactMan.tmx
+tiled_maps/tmx/TimberWoman.tmx
+tiled_maps/tmx/MagnetMan.tmx
+tiled_maps/tmx/WilyStage3.tmx
+tiled_maps/tmx/ReactorMan_16x12.tmx
+tiled_maps/tmx/ReactorMan.tmx
+tiled_maps/tmx/MoonMan_v2.tmx
+tiled_maps/tmx/Test8.tmx
+tiled_maps/tmx/GlacierMan_v3.tmx
+tiled_maps/tmx/GlacierMan_16x12_v2.tmx
+tiled_maps/tmx/MoonMan_v3.tmx
+tiled_maps/tmx/DesertMan_v2.tmx
+tiled_maps/tmx/Test3.tmx
+tiled_maps/tmx/NavalMan.tmx
+tiled_maps/tmx/Test4.tmx
+tiled_maps/tmx/SkyMan.tmx
+tiled_maps/tmx/WilyStage2.tmx
+tiled_maps/tmx/Test5.tmx
+tiled_maps/tmx/DesertMan_v4.tmx
+tiled_maps/tmx/CaveMan.tmx
+tiled_maps/tmx/OLD_TimberWoman.tmx
+tiled_maps/tmx/WilyStage1.tmx
+tiled_maps/tmx/RodentMan_v2.tmx
+tiled_maps/tmx/SparkMan.tmx
+tiled_maps/tmx/TimberWoman.tiled-session
+tiled_maps/tmx/InfernoMan_v2.tmx
+tiled_maps/tmx/Test1.tmx
+tiled_maps/tmx/InfernoMan.tmx
+tiled_maps/tmx/DesertMan.tmx
+tiled_maps/tmx/Test7.tmx
+tiled_maps/tmx/InfernoMan_16x12.tmx
+tiled_maps/tmx/GlacierMan_v2.tmx
+tiled_maps/tmx/MoonMan_16x12.tmx
+tiled_maps/tmx/FreezeMan.tmx
+tiled_maps/tmx/Test6.tmx
+tiled_maps/tmx/DesertMan_v3.tmx
+tiled_maps/tmx/RodentMan.tmx
+tiled_maps/tmx/MagnetMan_OLD.tmx
+tiled_maps/tmx/MoonMan.tmx
+tiled_maps/tmx/CrewMan.tmx
+tiled_maps/tmx/WilyStage3_v3.tmx
+tiled_maps/tmx/GalaxyMan.tmx
+tiled_maps/tmx/GlacierMan_16x12.tmx
+tiled_maps/tmx/ReactMan_v2.tmx
+tiled_maps/tmx/WilyStage3_v2.tmx
+tiled_maps/tmx/GlacierMan.tmx
+tiled_maps/tmx/Test2.tmx
+diagrams/Guts Tank - Design.drawio
+diagrams/Inferno Man - Design.drawio
+diagrams/Desert Man - Design.drawio
+diagrams/Glacier Man - Design.drawio
+diagrams/.$Inferno Man - Design.drawio.bkp
+diagrams/.$Desert Man - Design.drawio.bkp
+libgdx.png
+credits.txt
+music/MMX5_DarkDizzy.txt
+music/MMX6_BossFight.txt
+music/MMZ_EnemyHall.txt
+music/MMX_Sigma_2_Stage.mp3
+music/MMX_ChillPenguin_Famitard.mp3
+music/MMX_Sigma1st.mp3
+music/MM8_FrostMan_Alt.mp3
+music/MMX2_X-Hunter.mp3
+music/MMX7_VanishingGungaroo.txt
+music/MMX2_MorphMoth.txt
+music/MMX6_Gate_Stage.mp3
+music/MM2_PasswordScreen.mp3
+music/MM7_Final_Boss_Loop.mp3
+music/MMX8_BurnRooster.mp3
+music/MMX7_VanishingGungaroo.mp3
+music/MMX6_BlazeHeatnix.mp3
+music/MMX2_X-Hunter.txt
+music/MMX_StormEagle.txt
+music/MM7_Final_Boss_Intro.mp3
+music/MMX_ChillPenguin_Bulby.rtfd/TXT.rtf
+music/MMX_Vile.mp3
+music/MMX5_VoltKraken.mp3
+music/MMX5_DarkDizzy.mp3
+music/MMX2_MorphMoth.mp3
+music/MMZ_EnemyHall.mp3
+music/MM7_SlashMan.mp3
+music/StageSelectMM3.mp3
+music/MM6_WilyBattle.mp3
+music/MMX5_IzzyGlow.mp3
+music/MMX6_BlazeHeatnix.txt
+music/MMX_Sigma1st.txt
+music/MMX5_IzzyGlow.txt
+music/SnakeManMM3.mp3
+music/MMX3_IntroStage.ogg
+music/MMX3_IntroStage.txt
+music/MMX_ChillPenguin_Famitard.rtf
+music/MMX7_SoldierStonekong.mp3
+music/MMX6_Gate_Stage.txt
+music/MMX6_Sigma.txt
+music/MM2_Credits.mp3
+music/MMX_Sigma_2_Stage.txt
+music/MM8_FrostMan.mp3
+music/MMX_LevelSelectScreen.mp3
+music/MM2_Boss_Intro.mp3
+music/MM8_FrostMan_Alt.txt
+music/MM9_GalaxyMan.mp3
+music/MMX5_VoltKraken.txt
+music/MM10_Wily1.mp3
+music/MMX6_Sigma.mp3
+music/MM3_Magnet_Man.mp3
+music/MMX8_BurnRooster.txt
+music/MMX6_BossFight.mp3
+notes.txt

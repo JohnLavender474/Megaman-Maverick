@@ -10,6 +10,7 @@ import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.objects.Pool
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -59,6 +60,7 @@ class GroundSnow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         private const val FLUFF_MOVE_X_THRESHOLD = 0.05f
         private const val FLUFF_DEFAULT_CONTINUE_SPAWN_DELAY = 0.5f
         private const val FLUFF_MEGAMAN_GROUNDSLIDE_SPAWN_DELAY = 0.1f
+        private val TIMER_POOL = Pool<Timer>(supplier = { Timer() }, startAmount = 3)
         private val FLUFF_OFFSET_SCALARS = gdxArrayOf(-2, -1, 1, 2)
         private val FLUFF_ANGLES = gdxArrayOf(60f, 30f, 330f, 300f)
         private val regions = ObjectMap<String, TextureRegion>()
@@ -151,7 +153,9 @@ class GroundSnow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
                 .getPositionPoint(Position.BOTTOM_CENTER)
             spawnSnowFluff(pos.x, pos.y)
 
-            feetTimers.put(feet.getEntity(), Timer(FLUFF_DEFAULT_CONTINUE_SPAWN_DELAY))
+            val timer = TIMER_POOL.fetch()
+            timer.resetDuration(FLUFF_DEFAULT_CONTINUE_SPAWN_DELAY)
+            feetTimers.put(feet.getEntity(), timer)
         }
         snowFixture.setHitByFeetReceiver(ProcessState.CONTINUE) { feet, delta ->
             val entity = feet.getEntity()
@@ -180,21 +184,35 @@ class GroundSnow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
             val body = feet.getBody()
             if (abs(body.physics.velocity.x) < FLUFF_MOVE_X_THRESHOLD * ConstVals.PPM) return@setHitByFeetReceiver
 
+            val feetBounds = feet.getShape().getBoundingRectangle()
+
             timer.update(delta)
             if (timer.isFinished()) {
-                val x = feet.getShape().getBoundingRectangle().getCenter().x
-                val y = body.getCenter().y
+                val x = feetBounds.getCenter().x
+                val y = when {
+                    entity is Megaman -> body.getCenter().y
+                    else -> feetBounds.getCenter().y
+                }
+
                 spawnSnowFluff(x, y)
 
                 timer.reset()
             }
         }
         snowFixture.setHitByFeetReceiver(ProcessState.END) { feet, _ ->
-            val x = feet.getShape().getBoundingRectangle().getCenter().x
-            val y = body.getCenter().y
+            val entity = feet.getEntity()
+            val feetBounds = feet.getShape().getBoundingRectangle()
+
+            val x = feetBounds.getCenter().x
+            val y = when {
+                entity is Megaman -> body.getCenter().y
+                else -> feetBounds.getCenter().y
+            }
+
             spawnSnowFluff(x, y)
 
-            feetTimers.remove(feet.getEntity())
+            val timer = feetTimers.remove(entity)
+            if (timer != null) TIMER_POOL.free(timer)
         }
         body.addFixture(snowFixture)
 

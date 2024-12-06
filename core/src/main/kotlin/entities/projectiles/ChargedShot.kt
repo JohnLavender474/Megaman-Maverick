@@ -49,8 +49,7 @@ import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFaceable,
-    IDirectional {
+class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFaceable, IDirectional {
 
     companion object {
         const val TAG = "ChargedShot"
@@ -113,6 +112,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         val position = when (direction) {
             Direction.UP, Direction.DOWN ->
                 if (isFacing(Facing.LEFT)) Position.CENTER_RIGHT else Position.CENTER_LEFT
+
             Direction.LEFT, Direction.RIGHT ->
                 if (isFacing(Facing.LEFT)) Position.BOTTOM_CENTER else Position.TOP_CENTER
         }
