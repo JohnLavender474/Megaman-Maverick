@@ -52,8 +52,6 @@ class IceCubeMaker(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private val delayTimer = Timer(DELAY_TIME)
     private var runBounds: GameRectangle? = null
 
-    override fun getEntityType() = EntityType.HAZARD
-
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
         addComponent(defineUpdatablesComponent())
@@ -76,7 +74,7 @@ class IceCubeMaker(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     }
 
     private fun dropIceCube() {
-        val spawn = body.getPositionPoint(Position.BOTTOM_CENTER).sub(0f, -0.15f * ConstVals.PPM)
+        val spawn = body.getPositionPoint(Position.BOTTOM_CENTER).add(0f, 0.1f * ConstVals.PPM)
 
         val icecube = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.SMALL_ICE_CUBE)!!
         icecube.spawn(props(ConstKeys.POSITION pairTo spawn))
@@ -100,8 +98,8 @@ class IceCubeMaker(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val sprite = GameSprite(region!!)
         sprite.setSize(4f * ConstVals.PPM, 2.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getPositionPoint(Position.TOP_CENTER), Position.TOP_CENTER)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(body.getPositionPoint(Position.TOP_CENTER), Position.TOP_CENTER)
         }
         return spritesComponent
     }
@@ -111,4 +109,6 @@ class IceCubeMaker(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         body.setSize(1.5f * ConstVals.PPM, 2.5f * ConstVals.PPM)
         return BodyComponentCreator.create(this, body)
     }
+
+    override fun getEntityType() = EntityType.HAZARD
 }

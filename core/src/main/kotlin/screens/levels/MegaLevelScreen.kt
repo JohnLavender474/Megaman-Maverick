@@ -639,7 +639,7 @@ class MegaLevelScreen(
         if (!game.paused) {
             spawnsMan.update(delta / 2f)
 
-            if (playerSpawnEventHandler.finished && !cameraManagerForRooms.transitioning) {
+            if (/*playerSpawnEventHandler.finished && */!cameraManagerForRooms.transitioning) {
                 val spawnsIter = spawns.iterator()
                 while (spawnsIter.hasNext()) {
                     val spawn = spawnsIter.next()
@@ -654,7 +654,7 @@ class MegaLevelScreen(
         if (!game.paused) {
             spawnsMan.update(delta / 2f)
 
-            if (playerSpawnEventHandler.finished && !cameraManagerForRooms.transitioning) {
+            if (/*playerSpawnEventHandler.finished && */!cameraManagerForRooms.transitioning) {
                 playerSpawnsMan.run()
 
                 val spawnsIter = spawns.iterator()
