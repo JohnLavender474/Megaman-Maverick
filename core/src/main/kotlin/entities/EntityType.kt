@@ -1,10 +1,5 @@
 package com.megaman.maverick.game.entities
 
-import com.mega.game.engine.world.body.*;
-import com.mega.game.engine.world.collisions.*;
-import com.mega.game.engine.world.contacts.*;
-import com.mega.game.engine.world.pathfinding.*;
-
 enum class EntityType {
     BLOCK,
     DECORATION,
@@ -13,10 +8,9 @@ enum class EntityType {
     BOSS,
     HAZARD,
     ITEM,
-    TEST,
-    INTERACTIVE,
     MEGAMAN,
     PROJECTILE,
     SENSOR,
-    SPECIAL
+    SPECIAL,
+    ANIMATED_MOCK
 }

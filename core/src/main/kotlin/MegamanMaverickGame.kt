@@ -77,6 +77,9 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.levels.LevelMap
+import com.megaman.maverick.game.levels.RobotMasterLevelDefinition
+import com.megaman.maverick.game.levels.WilyLevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -117,7 +120,8 @@ class MegamanMaverickGame(
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
+        const val LEVELS_JSON = "json/levels.json"
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.TELEPORTER, FixtureType.TELEPORTER_LISTENER)
         }
@@ -143,6 +147,7 @@ class MegamanMaverickGame(
     lateinit var megaman: Megaman
     lateinit var megamanUpgradeHandler: MegamanUpgradeHandler
     lateinit var audioMan: MegaAudioManager
+    lateinit var levelMap: LevelMap
 
     var paused = false
 
@@ -242,6 +247,8 @@ class MegamanMaverickGame(
         eventsMan.addListener(this)
 
         engine = createGameEngine()
+
+        levelMap = buildLevelMap()
 
         val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
         val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
@@ -569,5 +576,50 @@ class MegamanMaverickGame(
         properties.put(ConstKeys.SYSTEMS, systems)
 
         return engine
+    }
+
+    private fun buildLevelMap(): LevelMap {
+        val levelsJson = Gdx.files.internal(LEVELS_JSON).readString()
+        val root = JsonReader().parse(levelsJson)
+
+        val bossLevels = OrderedMap<String, RobotMasterLevelDefinition>()
+        val wilyLevels = OrderedMap<String, WilyLevelDefinition>()
+
+        root.get("robot_master_levels").forEach { level ->
+            val entry = level.child
+            val key = entry.getString("key", null) ?: entry.name
+            val definition = RobotMasterLevelDefinition(
+                name = entry.getString("name"),
+                atlas = entry.getString("atlas"),
+                region = entry.getString("region"),
+                level = entry.getString("level"),
+                music = entry.getString("music"),
+                screenOnCompletion = entry.getString("screen_on_completion")
+            )
+            bossLevels.put(key, definition)
+        }
+
+        root.get("wily_levels").forEach { level ->
+            val entry = level.child
+            val key = entry.name
+            val definition = WilyLevelDefinition(
+                level = entry.getString("level"),
+                screenOnCompletion = entry.getString("screen_on_completion")
+            )
+            wilyLevels.put(key, definition)
+        }
+
+        val levelMap = LevelMap(bossLevels = bossLevels, wilyLevels = wilyLevels)
+
+        val json = Json().apply {
+            setOutputType(JsonWriter.OutputType.json)
+            setElementType(LevelMap::class.java, "bossLevels", RobotMasterLevelDefinition::class.java)
+            setElementType(LevelMap::class.java, "wilyLevels", WilyLevelDefinition::class.java)
+        }
+
+        val prettyPrintedJson = json.prettyPrint(levelMap)
+        GameLogger.debug(TAG, "\n$prettyPrintedJson")
+
+        return levelMap
     }
 }
