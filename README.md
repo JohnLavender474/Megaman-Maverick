@@ -31,142 +31,188 @@ Written by _oldlavygenes_ (me) and _PJCosta5_
 
     In the year 20XX…
 
-    Three years after the Roboenza Incident, 
-    the world still bears lasting scars.
+    Three years have passed since the Roboenza Incident
+    where a virus created at the hands of Dr. Wily
+    caused robots to rise against humanity.
+
+    The effects of that event are still felt in Mega City.
+    The robot economy has been shattered, and so has 
+    the trust between humans and robots.
     
-    To prevent another robot uprising, the human government 
-    imposes new laws: robots are to bemonitored, 
-    their every thought and action under surveillance.
+    In an effort to prevent future robot uprisings, 
+    the human government has imposed a new law: 
+    robots are to be implanted with a security chip which
+    will surveil their every action, thought, and emotion.
+
+    Many robots, programmed for subservience, submit
+    themselves to be implanted. However, not all go
+    willingly. Some robots resist, but their efforts
+    are futile, and their lives are decommissioned.
+
+    Even Megaman, once hailed as the hero of the world,
+    falls under scrutiny of the human government
+    as many leaders and politicians demand that he
+    too be subjected to the security chip implant.
     
-    This fragile peace comes at a steep price. 
-    With robots restricted, their costs have soared.
-    Only the wealthy can afford them, while others 
-    must compete against the robots for meager wages.
+    Dr. Light and Megaman stand before the parliament, 
+    and in an exclamation of desperation pleas,
+    "The robots must not be subjected to this impetuous
+    dystopian madness! You must cease this at once!"
+
+    His pleas, however, fall on deaf ears. A sudden vote
+    is held to determine whether Dr. Light's robots
+    should be exempt from the security chip implant.
+    The majority vote against any form of exemption. 
     
-    Divisions grow deeper. Some humans champion coexistence 
-    while others demand the destruction of the robots.
-    Even Mega Man, once a beacon of hope, faces harsh scrutiny — 
-    once hailed as a hero, now the humans distrust him too.
+    Suddenly, chaos ensues Mega City. A rogue faction 
+    of robots calling themselves The Mavericks has
+    risen in opposition of the laws to seize control.
     
-    Suddenly, chaos ensues to Mega City. A rogue faction of robots,
-    calling themselves The Mavericks and led by the enigmatic Schisma,
-    has risen to challenge humanity's laws and seize control.
+    Mega Man rises and exclaims to the trembling
+    parliament, "Don't worry, I'll stop these rogue
+    robots and protect the people of Mega City!"
+
+    Some of the politicians whose support of Megaman
+    never once wavered begin to clap and cheer for him.
+    Meanwhile, many others begin to wonder if the riot
+    was planned all along by Megaman and Dr. Light as 
+    a performative stunt to show how much the world
+    needs Megaman in order to keep the peace.
     
-    Mega Man must rise to protect the world against certain doom,
-    as uncertainty and evil fester in the shadows...
+    At once, Megaman jumps to the rescue, ready
+    as ever to sacrifice himself for the greater
+    good. But will it be enough? Or is this
+    only the beginning of worse yet to come?
 
 ### Intro Stage: Mega City's Ruins
 
 Objective: Save civilians, stop the Maverick attack, and gather intelligence on their leader.
 
 Mega City is under siege. Robots rampage through the streets, structures burn, and humans flee in
-terror. Mega Man arrives, pushing through waves of rogue machines. Along the way, he helps the
-police rescue trapped civilians, avoids collapsing buildings, and neutralizes rogue robots.
-At the stage's climax, Mega Man confronts the Maverick leader: Schisma, a menacing robot who
-mocks humanity's weakness.
+terror. As Megaman arrives, he receives a communication from Dr. Light who explains the new power-ups
+he's designed for Megaman: the air-dash and wall-jump moves. With these movesets, he says, Megaman will
+be quicker and stronger than ever. Before ending the comm, Dr. Light says to Megaman, "Good luck, my son." 
 
-Schisma reveals to Megaman that he has incubated a variant strain of the Roboenza virus. 
-This strain does not control the minds of the robots, but rather it magnifies feelings of 
-desperation and revolt in the minds of the robots. In other words, the robots are “radicalized” 
-rather than “controlled” by the the new virus.
+Megaman pushes through waves of mad fighting robots, cars and structures on fire, and rubble.
 
-Mega Man's weapons barely scratch him as he flies around Megaman in an impenetrable purple cloud 
-of Roboenza. Before he can finish Mega Man off, however, Proto Man quickly arrives, shielding his 
-brother, but not without taking damage himself, and teleports them both to safety.
+At the end of the stage, Megaman is confronted by Dr. Wily who explains that he is the leader of this
+impestuous riot. He exclaims to Megaman, "Ah, here he is, again. Megaman, the ultimate hero! Come to quell 
+civil dissent among the populace, have we?"
 
-Schisma laughs and declares, "This world belongs to us now. Humanity's reign is over!" before 
-vanishing into the chaos.
+Megaman shouts, "You call this civil! What are you up to, this time, Dr. Wily?!"
 
-### Explanation of the Name `Schisma`
+"Just showing these poor, dissatisfied, and belittled robots how to fight back against tyranny!"
 
-Schisma’s name is a play on meanings.
+Megaman replies back, "Dr. Wily, I'm starting to get really fed up with your antics! If I
+can't keep you locked away in jail, then I guess I'll have to put you in the nursing home!"
 
-The word schism is defined as “a split or division between strongly opposed sections or parties,
-caused by differences in opinion or belief”. The word schismatic is a synonym of the word
-maverick.
+"Gah! Hush your mouth, you little blue brat!" barks Wily. "We'll see who here is the real hero!"
 
-Meanwhile, the word schisma (not to be confused with schism) is a term in music theory which is
-defined as “the interval between an acoustical pure and an equally tempered fifth”.
+The fight between Megaman and Dr. Wily ensues. Wily is soon defeated by Megaman, but he escapes 
+Megaman's grasp. Before escaping, he says to Megaman, "Ha ha ha! You think you'll be remembered
+as the hero for this? You'll see soon enough, Megaman! You'll rue the day you ever defied me!"
 
-Although the meaning of schisma isn’t directly relevant to his character, the reasons for the choice
-of this name is twofold: (1) the name is invocative of schism which is in fact directly relevant to the
-character’s personality and (2) the name continues the long-held tradition of Megaman characters’
-names being tied to musical terms, e.g. Rock, Roll, Bass, etc.
+As Dr. Wily flies away in his saucer, a bird soars overhead and drops a white poop which splatters 
+on his head. Wily's face is red and fuming as he vanishes into the distance.
+
+The police robots arrive, and Megaman prepares to give a statement when all of a sudden, they shout at
+him, "Remain where you are, Megaman! You're under arrest!" When Megaman asks for what, he gets this 
+reply from the police captain, "You're under arrest for planning and organizing this riot. We know the 
+truth, Megaman. You organized this riot so that you could "stop it" and display your so-called heroism 
+to the whole world. We know you want to avoid the security chip law since you think you're so much 
+better than everyone else, and we know you'd even go so far as to put others in harms way to do it!"
+
+Megaman, shocked by the words he's hearing, can't find the words to say. All of a sudden, the police
+captain gives a brazen command, "You know what, boys! To hell with our mandates! Let's shoot him!"
+
+The police begin to fire on Megaman. Megaman is struck by a few bullets before Proto Man appears, 
+using his shield to block the incoming bullets, though Proto Man himself is struck too by some of 
+the bullets. He teleports the both of them out of Mega City to the temporary safety of Dr. Light's 
+laboratory.
 
 ### Dr. Light’s Lab Cutscene
 
-Dr. Light restores Mega Man. Proto Man meanwhile refuses help from Dr. Light, preferring to leave and
-repair himself on his own. Before leaving, Proto Man reveals that Schisma is rallying robots who feel 
-oppressed, radicalizing them and promising a society where robots will destroy the wealthy humans and
-rule over the ones who remain. Worse yet, the Mavericks have seized and imprisoned Wily, forcing him 
-against his will to build new Robot Masters to serve their cause!
+Dr. Light hastily repairs Mega Man as he knows there's little time before the authorities arrive. 
+Proto Man, however, refuses help from Dr. Light, preferring to leave to repair himself 
+on his own. 
 
-Mega Man vows to stop the Mavericks, rescue Wily (despite their history), and prove that
-coexistence between humans and robots is still possible.
+Before leaving, Proto Man reveals that he's been tracking the Mavericks for a while and that their
+goal is to rally as many robots as possible against the humans, radicalizing them and promising a 
+society where robots will destroy the humans with government positions and rule over the ones who 
+remain. 
+
+Mega Man vows to stop the Mavericks and prove that coexistence between humans and robots is still 
+possible.
+
+Proto Man, as he leaves, shakes his head and whispers to himself, "Always the optimist, Mega..."
 
 ### Dr. Light’s Training Room
 
-Dr. Light equips Mega Man with a few new power-ups along with the protective immunization system 
-(*from Super Adventure Rockman), an upgrade allowing him to neutralize infected robots without 
-destroying them. The system also provides limited immunity to low-level infection and the ability 
-to absorb purified virus clouds for temporary boosts.
-
-With Dr. Light's medical upgrade, Megaman's gameplay has leveled up! Now, our heroic blue bomber...
-• Can execute the new moves 'walljump' and ‘airdash’. These abilities persist limitless for the remaining duration of the game.
-• Can withstand virus clouds up to a certain amount using the PIS. After being by three Roboenza clouds, Megaman will glow purple, lose the ability to use all weapons except the Mega Buster, lose the ability to charge his Mega Buster, and will take double damage.
-• Can upgrade his internal abilities, but only if he buys them as Auto's Shop (examples: Virus/Roboenza Cloud Immunity LVL2, Charge Shot LVL3, Sliding Speed LVL2, etc).
+Dr. Light equips Mega Man equips Megaman with two new power-ups: the air-dash and wall-jump moves.
 
 Once Megaman finishes his training session, he thanks Dr. Light for the upgrades and
 start his main mission once again. 
 
-It's time to fight The Mavericks and save the world again!
+Dr. Light warns Megaman, "Don't come back here, son. The authorities will surely capture you if you
+do. Stay hidden, and stay safe. You were made to bring peace to this world. You can't fail."
 
-### Core Gameplay and Story Progression
+"Don't worry, Dr. Light! I'll bring all this to a close soon enough! It's time for me to fight 
+and save the world again!"
 
-Mega Man must take down eight Maverick Robot Masters.
+### Mid-Game Cutscene (after Megaman defeats two robot masters)
 
-If Megaman defeats any Robot Master without using that Robot Master's weakness, then the Robot Master
-is spared, and the Robot Master becomes un-radicalized, vowing to help Megaman. In this case, Megaman
-will earn a trophy along with a minor upgrade provided by the Robot Master. (In a later version of the 
-game, the Robot Master will be playable.) In this case, the first Robot Master that Megaman fights will
-be "saved" (since Megaman will not have any special weapons by that point), and it is in this instance
-that the mechanic will be revealed and explained to the player.
+Roll calls Megaman to warn him that things are only getting worse. She transmits to him the following
+televised news report on the Robot News channel:
 
-However, if Megaman uses the boss's special weapon, then the boss will explode and will have to be
-re-beaten in the final stages of the game.
+"We come at you live from Mega City where it appears that Megaman is targeting and destroying 
+peaceful robots across the world! Two high-profile robots have been slain. Who knows how much
+more violence he plans to perpetuate. It appears that Dr. Wily is our only hope to bring peace
+and protection to our kind."
 
-### Final Stages: Schisma’s Fortress
+Roll then changes the channel to the Human News channel where the following is reported:
 
-Mega Man infiltrates Schisma's fortress which is built in the middle of Mega City, battling 
-advanced defenses. 
+"The evil Megaman strikes again! Our sources tell us that two high-profile robots, enlisted by the
+government to bring the dangerous wily Megaman to justice, have been ruthlessly slain. What more
+terror will the blue bomber bring to our world? Police have already captured his creator, Dr.
+Light, and plan to interrogate him."
 
-In one of the latter stages, Megaman confronts the eight Robot Masters. Each one lied to him about 
-being remorseful and leaving the Mavericks. Not only that, but each one is stronger this time, 
-with more health and dealing more damage to Megaman.
+"I don't get it, Mega!" exclaims Roll. "Why are the stories being spun out of reality?! I'm scared,
+Mega. I don't know how much longer I can hide before I'm caught and possbly decommissioned. I want
+to help you."
 
-After defeating the eight Robot Masters, he discovers Wily, imprisoned and remorseful.
+"No, Roll. I know you're a strong fighting robot, too, but you need to stay out of this one. I don't
+want to see you branded and tarnished like this, too."
 
-Wily admits, “For once, I didn’t want this! That... thing turned my genius against me!”
+"What will reputation matter when we're decommissioned, anyways, huh?!" Roll shouts back.
 
-In the final showdown, Mega Man confronts Schisma. During the battle, Schisma reveals he was
-Wily's prototype for a new age of robots—designed to question and rebel. He embodies the very
-conflict between human control and robotic freedom.
+"Stay calm, Roll. I'll resolve this. I always do."
 
-Mega Man ultimately defeats Schisma but not before the fortress begins to collapse. A piece of
-rubble falls onto Megaman, and he is pinned to the ground. Wily turns to Megaman and says,
-"Haha! So I guess it IS by my own hand after all that you shall be destroyed! See you later,
-Megaman... NOT!" Wily then runs away, leaving Megaman helpless among the explosions.
+Megaman ends the communication, takes a heavy deep breath, and runs. 
 
-Suddenly, Proto Man appears and lifts the rubble off of Megaman and then teleports them both
-out (again) before the building totally collapses.
+### Final Stages: Wily's Fortress
+
+Wily has taken over a sector of Mega City and built a fortress there. 
+
+Mega Man infiltrates the fortress, battling advanced defenses.
+
+At the end of the final stage, Megaman confronts Wily yet again.
+
+TODO: dialogue here
+
+Mega Man ultimately defeats Wily but not before the fortress begins to collapse in a 
+self-destruct mode. A piece of rubble falls onto Megaman which pins him to the ground. 
+Wily then runs away, leaving Megaman helpless within the collapsing fortress.
+
+Suddenly, Proto Man appears, lifts the rubble off of Megaman, and teleports them both out 
+(again) before the fortress entirely collapses.
 
 They both teleport to a nearby cliff and watch as the fortress collapses and explodes.
 
 ### Ending Cutscene
 
-Megaman's victory is bittersweet. While many rejoice in the defeat of Schisma, many robots
-who had been silently in agreement with Schisma's motives begin to voice their opinions against
-humanity's tyrannical new laws against them.
+Megaman's victory is bittersweet. Many humans rejoice in the defeat of Wily. Howver, many robots
+who had been silently in agreement with Wily begin to voice their opinions against humanity's 
+tyrannical new laws against them.
 
 Seeing the divide grow ever wider between humans and robots, Megaman delivers a speech to the world.
 "These events have shown us how far we've fallen. We cannot live in fear of each other. Robots and
@@ -174,7 +220,7 @@ humanity must live in peace. Each must learn to trust and strive to be trustwort
 as one, we will fall divided. Together, we can build a better future."
 
 After the speech, Proto Man mockingly says, "Heh... You really think you can fix society with your
-fluffy words and your Mega Buster? Evil will always perpetuate itself. It's a never-ending cycle.
+fluffy words and your Buster, Mega? Evil will always perpetuate itself. It's a never-ending cycle.
 Face it, Megaman. You're a cog in the grand machine of chaos and corruption."
 
 Megaman, aghast at Proto Man's remarks, exclaims, "Maybe I can't solve all the world's issues, but
