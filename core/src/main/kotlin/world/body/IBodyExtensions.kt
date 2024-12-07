@@ -2,11 +2,14 @@ package com.megaman.maverick.game.world.body
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.world.body.IBody
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.entities.blocks.Block
+import com.megaman.maverick.game.entities.contracts.IWater
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.GameObjectPools
 
@@ -62,3 +65,31 @@ fun IBody.addBlockFilter(filter: (dynamic: MegaGameEntity, static: MegaGameEntit
 }
 
 fun IBody.clearBlockFilters() = removeProperty(ConstKeys.BLOCK_FILTERS)
+
+fun IBody.getFeetBlocks(): ObjectSet<Block> {
+    if (!hasProperty(ConstKeys.FEET_BLOCKS)) putProperty(ConstKeys.FEET_BLOCKS, ObjectSet<Block>())
+    return getProperty(ConstKeys.FEET_BLOCKS) as ObjectSet<Block>
+}
+
+fun IBody.clearFeetBlocks() = getFeetBlocks().clear()
+
+fun IBody.addFeetBlock(block: Block) = getFeetBlocks().add(block)
+
+fun IBody.removeFeetBlock(block: Block) = getFeetBlocks().remove(block)
+
+fun IBody.getFeetBlocksCount() = getFeetBlocks().size
+
+fun IBody.hasAnyFeetBlock() = getFeetBlocksCount() > 0
+
+fun IBody.getContactWater(): ObjectSet<IWater> {
+    if (!hasProperty(ConstKeys.CONTACT_WATER)) putProperty(ConstKeys.CONTACT_WATER, ObjectSet<IWater>())
+    return getProperty(ConstKeys.CONTACT_WATER) as ObjectSet<IWater>
+}
+
+fun IBody.addContactWater(water: IWater) = getContactWater().add(water)
+
+fun IBody.removeContactWater(water: IWater) = getContactWater().remove(water)
+
+fun IBody.getWaterContactsCount() = getContactWater().size
+
+fun IBody.hasAnyContactWater() = getWaterContactsCount() > 0

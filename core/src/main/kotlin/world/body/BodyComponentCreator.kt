@@ -15,6 +15,7 @@ import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
 object BodyComponentCreator {
 
@@ -26,6 +27,7 @@ object BodyComponentCreator {
     ): BodyComponent {
         bodyFixtureDefs.forEach { t ->
             val shape = t.shape ?: GameRectangle(body)
+
             val fixture = Fixture(
                 body = body,
                 type = t.type,
@@ -37,15 +39,23 @@ object BodyComponentCreator {
                 properties = t.props
             )
             fixture.addFixtureLabels(t.labels)
+
             body.addFixture(fixture)
-            if (debugShapes != null) t.drawingColor.let { color ->
+
+            if (debugShapes != null) {
+                t.drawingColor?.let { color -> fixture.drawingColor = color }
                 debugShapes.add { fixture }
             }
         }
-        body.fixtures.forEach { (_, fixture) -> fixture.setEntity(entity) }
+
         body.setEntity(entity)
-        body.preProcess.put(ConstKeys.DELTA) { body.putProperty(ConstKeys.PRIOR, body.getPosition()) }
+        body.fixtures.forEach { (_, fixture) -> fixture.setEntity(entity) }
+        body.preProcess.put(ConstKeys.PRIOR) { body.putProperty(ConstKeys.PRIOR, body.getPosition()) }
         body.onReset = { body.resetBodySenses() }
+
+        if (entity is MegaGameEntity)
+            entity.runnablesOnDestroy.put(ConstKeys.CLEAR_FEET_BLOCKS) { body.clearFeetBlocks() }
+
         return BodyComponent(body)
     }
 }
