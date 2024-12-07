@@ -42,9 +42,6 @@ import com.megaman.maverick.game.entities.items.HeartTank
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.extensions.addFeetBlock
-import com.megaman.maverick.game.entities.megaman.extensions.hasAnyFeetBlock
-import com.megaman.maverick.game.entities.megaman.extensions.removeFeetBlock
 import com.megaman.maverick.game.entities.sensors.Gate
 import com.megaman.maverick.game.entities.sensors.Gate.GateState
 import com.megaman.maverick.game.entities.special.Cart
@@ -222,6 +219,9 @@ class MegaContactListener(
                 return
             }
 
+            val block = blockFixture.getEntity() as Block
+            body.addFeetBlock(block)
+
             val stickToBlock = feetFixture.getOrDefaultProperty(ConstKeys.STICK_TO_BLOCK, true, Boolean::class)
             if (stickToBlock) {
                 val posDelta = blockFixture.getBody().getPositionDelta()
@@ -229,10 +229,7 @@ class MegaContactListener(
             }
 
             val entity = feetFixture.getEntity()
-            val block = blockFixture.getEntity() as Block
-
             if (entity is Megaman) {
-                entity.addFeetBlock(block)
                 entity.aButtonTask = AButtonTask.JUMP
 
                 val blockMakesSound =
@@ -358,18 +355,20 @@ class MegaContactListener(
                 "endContact(): WaterListener-Water. Contact = $contact. Water shape = ${waterFixture.getShape()}"
             )
 
-            val body = listenerFixture.getBody()
-            body.setBodySense(BodySense.IN_WATER, true)
-
-            val water = waterFixture.getEntity() as IWater
-            if (listenerFixture.hasHitByWaterByReceiver()) listenerFixture.getHitByWater(water)
-
             val entity = listenerFixture.getEntity()
             val isMegaman = entity is Megaman
 
-            if (isMegaman || entity is AbstractEnemy) {
-                val splash = listenerFixture.getOrDefaultProperty(ConstKeys.SPLASH, true, Boolean::class)
+            val body = listenerFixture.getBody()
+            val wasInWater = body.hasAnyContactWater()
 
+            val water = waterFixture.getEntity() as IWater
+            body.setBodySense(BodySense.IN_WATER, true)
+            body.addContactWater(water)
+
+            if (listenerFixture.hasHitByWaterByReceiver()) listenerFixture.getHitByWater(water)
+
+            if (!wasInWater && (isMegaman || entity is AbstractEnemy)) {
+                val splash = listenerFixture.getOrDefaultProperty(ConstKeys.SPLASH, true, Boolean::class)
                 if (splash) {
                     Splash.splashOnWaterSurface(
                         listenerFixture.getBody().getBounds(),
@@ -705,6 +704,9 @@ class MegaContactListener(
                 return
             }
 
+            val block = blockFixture.getEntity() as Block
+            body.addFeetBlock(block)
+
             val stickToBlock = feetFixture.getOrDefaultProperty(ConstKeys.STICK_TO_BLOCK, true, Boolean::class)
             if (stickToBlock) {
                 val posDelta = blockFixture.getBody().getPositionDelta()
@@ -712,10 +714,7 @@ class MegaContactListener(
             }
 
             val entity = feetFixture.getEntity()
-            if (entity is Megaman) {
-                entity.aButtonTask = AButtonTask.JUMP
-                entity.addFeetBlock(blockFixture.getEntity() as Block)
-            }
+            if (entity is Megaman) entity.aButtonTask = AButtonTask.JUMP
 
             body.setBodySense(BodySense.FEET_ON_GROUND, true)
         }
@@ -825,10 +824,17 @@ class MegaContactListener(
 
         // water listener, water
         else if (contact.fixturesMatch(FixtureType.WATER_LISTENER, FixtureType.WATER)) {
-            val (listenerFixture, _) = contact.getFixturesInOrder(FixtureType.WATER_LISTENER, FixtureType.WATER, out)!!
+            val (listenerFixture, waterFixture) = contact.getFixturesInOrder(
+                FixtureType.WATER_LISTENER,
+                FixtureType.WATER,
+                out
+            )!!
+
+            val water = waterFixture.getEntity() as IWater
 
             val body = listenerFixture.getBody()
             body.setBodySense(BodySense.IN_WATER, true)
+            body.addContactWater(water)
 
             val entity = listenerFixture.getEntity()
             if (entity is Megaman && !entity.body.isSensing(BodySense.FEET_ON_GROUND) &&
@@ -988,16 +994,17 @@ class MegaContactListener(
             printDebugLog(contact, "End Contact: Feet-Block, contact = $contact")
             val (feetFixture, blockFixture) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.BLOCK, out)!!
 
+            val block = blockFixture.getEntity() as Block
             val body = feetFixture.getBody()
+            body.removeFeetBlock(block)
+            if (!body.hasAnyFeetBlock()) body.setBodySense(BodySense.FEET_ON_GROUND, false)
+
             val entity = feetFixture.getEntity()
             if (entity is Megaman) {
                 entity.aButtonTask =
                     if (entity.body.isSensing(BodySense.IN_WATER)) AButtonTask.SWIM else AButtonTask.AIR_DASH
-                entity.removeFeetBlock(blockFixture.getEntity() as Block)
-                if (!entity.hasAnyFeetBlock()) {
-                    body.setBodySense(BodySense.FEET_ON_GROUND, false)
-                    entity.canMakeLandSound = true
-                }
+
+                if (!body.hasAnyFeetBlock()) entity.canMakeLandSound = true
             } else body.setBodySense(BodySense.FEET_ON_GROUND, false)
         }
 
@@ -1078,20 +1085,25 @@ class MegaContactListener(
             forceFixture.getRunnable()?.invoke()
         }
 
-        // water-listener, water
+        // water listener, water
         else if (contact.fixturesMatch(FixtureType.WATER_LISTENER, FixtureType.WATER)) {
             printDebugLog(contact, "End contact: Water-Listener, Water. Contact = $contact")
             val (listenerFixture, waterFixture) = contact.getFixturesInOrder(
                 FixtureType.WATER_LISTENER, FixtureType.WATER, out
             )!!
 
-            listenerFixture.getBody().setBodySense(BodySense.IN_WATER, false)
-            val listenerEntity = listenerFixture.getEntity()
+            val water = waterFixture.getEntity() as IWater
 
-            if (listenerEntity is Megaman) {
+            val body = listenerFixture.getBody()
+            body.removeContactWater(water)
+            if (!body.hasAnyContactWater()) body.setBodySense(BodySense.IN_WATER, false)
+
+            val listener = listenerFixture.getEntity()
+
+            if (!body.isSensing(BodySense.IN_WATER) && listener is Megaman) {
                 Splash.splashOnWaterSurface(listenerFixture.getBody().getBounds(), waterFixture.getBody().getBounds())
-                listenerEntity.aButtonTask = AButtonTask.AIR_DASH
-                listenerEntity.gravityScalar = 1f
+                listener.aButtonTask = AButtonTask.AIR_DASH
+                listener.gravityScalar = 1f
                 game.audioMan.playSound(SoundAsset.SPLASH_SOUND, false)
             }
         }

@@ -42,7 +42,7 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
         private const val PLAYGROUND_SIZE = 0.1f
         private const val BACKGROUND_SIZE = 0.05f
         private const val FADE_DUR = 0.5f
-        private const val MAX_SPAWNED_ALLOWED = 15
+        private const val MAX_SPAWNED_ALLOWED = 25
         private var region: TextureRegion? = null
     }
 
@@ -113,9 +113,15 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
          */
 
         if (setOfAllSnow.size > MAX_SPAWNED_ALLOWED) {
-            val snowToFadeOut = setOfAllSnow.first() as Snow
+            val iter = setOfAllSnow.iterator()
+            while (iter.hasNext) {
+                val snow = iter.next()
+                if (snow is Snow && !snow.isFadingOut()) {
+                    snow.fadeOutToDestroy()
+                    break
+                }
+            }
             // GameLogger.debug(TAG, "onSpawn(): killing snow=$snowToFadeOut")
-            snowToFadeOut.fadeOutToDestroy()
         }
     }
 
@@ -130,8 +136,14 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
          */
     }
 
+    fun isFadingOut() = fadingOut
+
     fun fadeOutToDestroy() {
         GameLogger.debug(TAG, "fadeOutToDestroy()")
+        if (isFadingOut()) {
+            GameLogger.debug(TAG, "fadeOutToDestroy(): already fading out, doing nothing")
+            return
+        }
         fadingOut = true
         fadeTimer.reset()
     }

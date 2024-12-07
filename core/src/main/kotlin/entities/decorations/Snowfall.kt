@@ -20,6 +20,7 @@ import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.overlaps
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 
 class Snowfall(game: MegamanMaverickGame) : MegaGameEntity(game) {
@@ -42,9 +43,11 @@ class Snowfall(game: MegamanMaverickGame) : MegaGameEntity(game) {
         private const val MAX_FALL_SPEED = 4f
 
         private const val BACKGROUND_SCALAR = 0.5f
+        private const val TRIGGER_BOUNDS_SCALAR = 1.5f
     }
 
     private val bounds = GameRectangle()
+    private val trigger = GameRectangle()
     private val spawnDelay = Timer()
     private lateinit var spawnRoom: String
     private var background = false
@@ -60,14 +63,22 @@ class Snowfall(game: MegamanMaverickGame) : MegaGameEntity(game) {
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
-        spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
+
         bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
+
+        val triggerWidth = bounds.getWidth() * TRIGGER_BOUNDS_SCALAR
+        val triggerHeight = bounds.getHeight() * TRIGGER_BOUNDS_SCALAR
+        trigger.setSize(triggerWidth, triggerHeight).setCenter(bounds.getCenter())
+
+        spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
         left = spawnProps.getOrDefault(ConstKeys.LEFT, true, Boolean::class)
         minY = spawnProps
             .get("${ConstKeys.MIN}_${ConstKeys.Y}", RectangleMapObject::class)!!
             .rectangle.toGameRectangle().getY()
         background = spawnProps.getOrDefault(ConstKeys.BACKGROUND, false, Boolean::class)
+
         resetSpawnDelay()
+
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.INIT)) {
                 val spawn = (value as RectangleMapObject).rectangle.getCenter()
@@ -82,7 +93,8 @@ class Snowfall(game: MegamanMaverickGame) : MegaGameEntity(game) {
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (game.getCurrentRoom()?.name != spawnRoom) return@UpdatablesComponent
+        if (game.getCurrentRoom()?.name != spawnRoom || !game.getGameCamera().overlaps(trigger))
+            return@UpdatablesComponent
 
         spawnDelay.update(delta)
         if (spawnDelay.isFinished()) {
