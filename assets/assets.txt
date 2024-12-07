@@ -394,6 +394,8 @@ sprites/frames/Explosions1/HalfChargedShotExplosion.png
 sprites/frames/Explosions1/GreenExplosion.png
 sprites/frames/Explosions1/StarExplosion.png
 sprites/frames/Explosions1/DeathBombExplosion.png
+sprites/frames/Decorations1/AirConditioner/pipe.png
+sprites/frames/Decorations1/AirConditioner/machine.png
 sprites/frames/Decorations1/Candle.png
 sprites/frames/Decorations1/ToxicWaterfall.png
 sprites/frames/Decorations1/Thread.png
@@ -408,7 +410,6 @@ sprites/frames/Decorations1/WhiteArrow.png
 sprites/frames/Decorations1/Lava.png
 sprites/frames/Decorations1/DrippingToxicGoop.png
 sprites/frames/Decorations1/MuzzleFlash.png
-sprites/frames/Decorations1/AirConditioner.png
 sprites/frames/Decorations1/ToxicWaterSplash.png
 sprites/frames/Decorations1/Lantern.png
 sprites/frames/Decorations1/ChargedShot_Residual_Half.png
@@ -1680,6 +1681,7 @@ sprites/piskel/PreciousMan.piskel
 sprites/piskel/Snow.piskel
 sprites/piskel/AngryFlameBall.piskel
 sprites/piskel/Dropper Lift.piskel
+sprites/piskel/AirConditioner.piskel
 sprites/piskel/SpikeBall.piskel
 sprites/piskel/Popup Canon.piskel
 sprites/piskel/Megaman_RUSH_JET.piskel
