@@ -70,7 +70,7 @@ off, however, Proto Man quickly arrives, shielding his brother, but not without 
 and teleports them both to safety. Schisma laughs and declares, "This world belongs to us now. 
 Humanity's reign is over!" before vanishing into the chaos.
 
-### The naming of Schisma
+### Explanation of the Name `Schisma`
 
 Schisma’s name is a play on meanings.
 
