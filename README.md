@@ -27,31 +27,31 @@ View my YouTube channel for demos and more! https://youtube.com/playlist?list=PL
 
 ### Opening Text
 
-“In the year 20XX…
-
-The world still bears the scars of the Roboenza Incident.
-
-To prevent another disaster, humanity imposed strict laws:
-
-robots are now monitored constantly, their every thought and action under watch.
-
-This peace came at a cost.
-
-Only the wealthy can afford robots now, while the rest are made to compete.
-
-Divisions grow deeper—some humans advocate for coexistence,
-
-others demand robots' destruction.
-
-Even Mega Man, once a hero, faces controversy:
-
-a symbol of hope to some, an enabler of injustice to others.
-
-But now, chaos returns. A rogue group of robots, The Mavericks,
-
-rises to challenge humanity. Mega Man must once again
-
-fight to protect the city, even as doubts about his role linger…"
+    In the year 20XX…
+    
+    The world still bears the scars of the Roboenza Incident.
+    
+    To prevent another disaster, humanity imposed strict laws:
+    
+    robots are now monitored constantly, their every thought and action under watch.
+    
+    This peace came at a cost.
+    
+    Only the wealthy can afford robots now, while the rest are made to compete.
+    
+    Divisions grow deeper—some humans advocate for coexistence,
+    
+    others demand robots' destruction.
+    
+    Even Mega Man, once a hero, faces controversy:
+    
+    a symbol of hope to some, an enabler of injustice to others.
+    
+    But now, chaos returns. A rogue group of robots, The Mavericks,
+    
+    rises to challenge humanity. Mega Man must once again
+    
+    fight to protect the city, even as doubts about his role linger…
 
 ### Intro Stage: Mega City's Ruins
 
