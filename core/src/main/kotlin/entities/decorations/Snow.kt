@@ -12,6 +12,7 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setBounds
@@ -30,6 +31,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
 class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity {
@@ -37,26 +39,32 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
     companion object {
         const val TAG = "Snow"
         private const val SWITCH_DELAY = 0.5f
+        private const val PLAYGROUND_SIZE = 0.1f
+        private const val BACKGROUND_SIZE = 0.05f
+        private const val FADE_DUR = 0.5f
+        private const val MAX_SPAWNED_ALLOWED = 15
         private var region: TextureRegion? = null
     }
 
     private lateinit var sine: SineWave
 
-    private val timer = Timer(SWITCH_DELAY)
+    private val switchTimer = Timer(SWITCH_DELAY)
+    private val fadeTimer = Timer(FADE_DUR)
 
     private var minAmplitude = 0f
     private var maxAmplitude = 0f
-
     private var minFrequency = 0f
     private var maxFrequency = 0f
     private var drift = 0f
-
     private var minY = 0f
+
+    private var background = false
+    private var fadingOut = false
 
     private val out = Vector2()
 
     override fun init() {
-        GameLogger.debug(TAG, "init()")
+        // GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()
         addComponent(defineUpdatablesComponent())
@@ -65,10 +73,15 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        // GameLogger.debug(TAG, "onSpawn()=$spawnProps")
         super.onSpawn(spawnProps)
 
-        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        val spawn =
+            if (spawnProps.containsKey(ConstKeys.POSITION)) spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+            else spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
+
+        background = spawnProps.getOrDefault(ConstKeys.BACKGROUND, false, Boolean::class)
 
         minFrequency = spawnProps.get("${ConstKeys.MIN}_${ConstKeys.FREQUENCY}", Float::class)!!
         maxFrequency = spawnProps.get("${ConstKeys.MAX}_${ConstKeys.FREQUENCY}", Float::class)!!
@@ -84,39 +97,70 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
         drift = spawnProps.getOrDefault(ConstKeys.DRIFT, 0f, Float::class)
         minY = spawnProps.get("${ConstKeys.MIN}_${ConstKeys.Y}", Float::class)!!
 
-        timer.reset()
+        switchTimer.reset()
 
-        val size = MegaGameEntities.getEntitiesOfTag(getTag()).size
+        fadingOut = false
+        fadeTimer.reset()
+
+        val setOfAllSnow = MegaGameEntities.getEntitiesOfTag(getTag())
+        /*
         GameLogger.debug(
             TAG,
-            "onSpawn(): snowAmount=$size spawnProps=$spawnProps, megamanPos=${megaman().body.getCenter()}"
+            "onSpawn(): " +
+                "setOfAllSnowSize=${setOfAllSnow.size}, " +
+                "megamanPos=${megaman().body.getCenter()}"
         )
+         */
+
+        if (setOfAllSnow.size > MAX_SPAWNED_ALLOWED) {
+            val snowToFadeOut = setOfAllSnow.first() as Snow
+            // GameLogger.debug(TAG, "onSpawn(): killing snow=$snowToFadeOut")
+            snowToFadeOut.fadeOutToDestroy()
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        /*
         val size = MegaGameEntities.getEntitiesOfTag(getTag()).size
         GameLogger.debug(
             TAG,
             "onDestroy(): snowAmount=$size"
         )
+         */
+    }
 
+    fun fadeOutToDestroy() {
+        GameLogger.debug(TAG, "fadeOutToDestroy()")
+        fadingOut = true
+        fadeTimer.reset()
     }
 
     private fun adjust() {
         sine.amplitude = UtilMethods.getRandom(minAmplitude, maxAmplitude)
+        /*
         GameLogger.debug(
             TAG,
             "adjust(): hashcode=${hashCode()}, sine.amplitude=${sine.amplitude}, sine.frequency=${sine.frequency}, " +
                 "drift=$drift, position=${body.getCenter()}"
         )
+         */
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        timer.update(delta)
-        if (timer.isFinished()) {
+        if (fadingOut) {
+            fadeTimer.update(delta)
+            if (fadeTimer.isFinished()) {
+                GameLogger.debug(TAG, "update(): faded out, now destroying")
+                destroy()
+                return@UpdatablesComponent
+            }
+        }
+
+        switchTimer.update(delta)
+        if (switchTimer.isFinished()) {
             adjust()
-            timer.reset()
+            switchTimer.reset()
         }
 
         sine.update(delta)
@@ -128,25 +172,25 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.1f * ConstVals.PPM)
 
         val bodyRect = GameRectangle()
         val bodyFixture = Fixture(body, FixtureType.BODY, bodyRect)
         bodyFixture.setHitByBlockReceiver(ProcessState.BEGIN) { block, _ ->
-            GameLogger.debug(TAG, "hitByBlock(): mapObjId=${block.mapObjectId}")
-            destroy()
+            // GameLogger.debug(TAG, "hitByBlock(): background=$background, mapObjId=${block.mapObjectId}")
+            if (!background) destroy()
         }
         bodyFixture.setHitByBodyReceiver {
             if ((it as MegaGameEntity).getTag() == getTag()) return@setHitByBodyReceiver
-            GameLogger.debug(TAG, "hitByBody(): body=$it")
+            // GameLogger.debug(TAG, "hitByBody(): background=$background, body=$it")
+            if (!background) destroy()
         }
         bodyFixture.setHitByProjectileReceiver {
-            GameLogger.debug(TAG, "hitByProjectile(): projectile=$it")
-            destroy()
+            // GameLogger.debug(TAG, "hitByProjectile(): background=$background, projectile=$it")
+            if (!background) destroy()
         }
         bodyFixture.setHitByWaterReceiver {
-            GameLogger.debug(TAG, "hitByWater(): water=$it")
-            destroy()
+            // GameLogger.debug(TAG, "hitByWater(): background=$background, water=$it")
+            if (!background) destroy()
         }
         body.addFixture(bodyFixture)
 
@@ -155,7 +199,11 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
         waterListenerFixture.putProperty(ConstKeys.SPLASH, false)
         body.addFixture(waterListenerFixture)
 
-        body.preProcess.put(ConstKeys.DEFAULT) { bodyRect.set(body) }
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            val size = if (background) BACKGROUND_SIZE else PLAYGROUND_SIZE
+            body.setSize(size * ConstVals.PPM)
+            bodyRect.set(body)
+        }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
 
@@ -164,8 +212,12 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(GameSprite(region!!))
-        .updatable { _, sprite -> sprite.setBounds(body.getBounds()) }
-        .build()
+        .updatable { _, sprite ->
+            sprite.setBounds(body.getBounds())
+            val alpha = if (fadingOut) 1f - fadeTimer.getRatio() else 1f
+            sprite.setAlpha(alpha)
+            sprite.priority.section = if (background) DrawingSection.BACKGROUND else DrawingSection.PLAYGROUND
+        }.build()
 
     override fun getEntityType() = EntityType.DECORATION
 

@@ -19,6 +19,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 
 class Snowfall(game: MegamanMaverickGame) : MegaGameEntity(game) {
@@ -26,7 +27,7 @@ class Snowfall(game: MegamanMaverickGame) : MegaGameEntity(game) {
     companion object {
         const val TAG = "Snowfall"
 
-        private const val MIN_SPAWN_DELAY = 0.1f
+        private const val MIN_SPAWN_DELAY = 0.25f
         private const val MAX_SPAWN_DELAY = 0.5f
 
         private const val MIN_FREQUENCY = 0.05f
@@ -37,13 +38,16 @@ class Snowfall(game: MegamanMaverickGame) : MegaGameEntity(game) {
 
         private const val ABS_DRIFT = 0.1f
 
-        private const val MIN_FALL_SPEED = 2f
-        private const val MAX_FALL_SPEED = 3f
+        private const val MIN_FALL_SPEED = 3f
+        private const val MAX_FALL_SPEED = 4f
+
+        private const val BACKGROUND_SCALAR = 0.5f
     }
 
     private val bounds = GameRectangle()
     private val spawnDelay = Timer()
     private lateinit var spawnRoom: String
+    private var background = false
     private var left = false
     private var minY = 0f
 
@@ -62,7 +66,14 @@ class Snowfall(game: MegamanMaverickGame) : MegaGameEntity(game) {
         minY = spawnProps
             .get("${ConstKeys.MIN}_${ConstKeys.Y}", RectangleMapObject::class)!!
             .rectangle.toGameRectangle().getY()
+        background = spawnProps.getOrDefault(ConstKeys.BACKGROUND, false, Boolean::class)
         resetSpawnDelay()
+        spawnProps.forEach { key, value ->
+            if (key.toString().contains(ConstKeys.INIT)) {
+                val spawn = (value as RectangleMapObject).rectangle.getCenter()
+                spawnSnow(spawn)
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -80,28 +91,43 @@ class Snowfall(game: MegamanMaverickGame) : MegaGameEntity(game) {
         }
     })
 
-    private fun spawnSnow() {
-        val position = GameObjectPools.fetch(Vector2::class).set(
+    private fun spawnSnow(position: Vector2? = null) {
+        val spawnPos = position ?: GameObjectPools.fetch(Vector2::class).set(
             UtilMethods.getRandom(bounds.getX(), bounds.getMaxX()),
             bounds.getMaxY()
         )
 
-        val speed = UtilMethods.getRandom(-MIN_FALL_SPEED, -MAX_FALL_SPEED) * ConstVals.PPM
+        var speed = UtilMethods.getRandom(-MIN_FALL_SPEED, -MAX_FALL_SPEED) * ConstVals.PPM
+        if (background) speed *= BACKGROUND_SCALAR
 
         var drift = UtilMethods.getRandom(0f, ABS_DRIFT) * ConstVals.PPM
         if (left) drift *= -1f
+        if (background) drift *= BACKGROUND_SCALAR
+
+        var minFreq = MIN_FREQUENCY * ConstVals.PPM
+        if (background) minFreq *= BACKGROUND_SCALAR
+
+        var maxFreq = MAX_FREQUENCY * ConstVals.PPM
+        if (background) maxFreq *= BACKGROUND_SCALAR
+
+        var minAmpl = MIN_AMPLITUDE * ConstVals.PPM
+        if (background) minAmpl *= BACKGROUND_SCALAR
+
+        var maxAmpl = MAX_AMPLITUDE * ConstVals.PPM
+        if (background) maxAmpl *= BACKGROUND_SCALAR
 
         val snow = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SNOW)!!
         snow.spawn(
             props(
-                ConstKeys.POSITION pairTo position,
+                ConstKeys.POSITION pairTo spawnPos,
+                ConstKeys.BACKGROUND pairTo background,
                 ConstKeys.SPEED pairTo speed,
                 ConstKeys.DRIFT pairTo drift,
                 "${ConstKeys.MIN}_${ConstKeys.Y}" pairTo minY,
-                "${ConstKeys.MIN}_${ConstKeys.FREQUENCY}" pairTo MIN_FREQUENCY * ConstVals.PPM,
-                "${ConstKeys.MAX}_${ConstKeys.FREQUENCY}" pairTo MAX_FREQUENCY * ConstVals.PPM,
-                "${ConstKeys.MIN}_${ConstKeys.AMPLITUDE}" pairTo MIN_AMPLITUDE * ConstVals.PPM,
-                "${ConstKeys.MAX}_${ConstKeys.AMPLITUDE}" pairTo MAX_AMPLITUDE * ConstVals.PPM,
+                "${ConstKeys.MIN}_${ConstKeys.FREQUENCY}" pairTo minFreq,
+                "${ConstKeys.MAX}_${ConstKeys.FREQUENCY}" pairTo maxFreq,
+                "${ConstKeys.MIN}_${ConstKeys.AMPLITUDE}" pairTo minAmpl,
+                "${ConstKeys.MAX}_${ConstKeys.AMPLITUDE}" pairTo maxAmpl,
             )
         )
     }

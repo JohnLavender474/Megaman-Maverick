@@ -78,7 +78,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val ICE_BLAST_ATTACK_DUR = 4f
         private const val ICE_BLAST_ATTACK_COUNT = 6
         private const val ICE_BLAST_VEL = 10f
-        private const val CHUNK_ICE_BLAST_VEL_Y = 8f
+        private const val CHUNK_ICE_BLAST_VEL_Y = 10f
 
         private const val MEGAMAN_OFFSET_X = 2.5f
         private const val MEGAMAN_ABOVE_OFFSET_Y = 1.5f
