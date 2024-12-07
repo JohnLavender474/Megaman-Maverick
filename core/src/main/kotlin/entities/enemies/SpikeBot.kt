@@ -185,16 +185,19 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             when (loop.getCurrent()) {
                 SpikeBotState.STAND, SpikeBotState.SHOOT -> body.physics.velocity.x = 0f
                 SpikeBotState.WALK -> {
-                    if ((isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
-                        (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
-                    ) swapFacing()
-                    else if (isFacing(Facing.LEFT) && !body.isProperty(LEFT_FOOT, true)) {
-                        if (megaman().body.getX() < body.getX()) jump() else swapFacing()
-                    } else if (isFacing(Facing.RIGHT) && !body.isProperty(RIGHT_FOOT, true)) {
-                        if (megaman().body.getX() > body.getX()) jump() else swapFacing()
-                    }
+                    when {
+                        (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
+                            (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) ->
+                            swapFacing()
 
-                    body.physics.velocity.x = WALK_SPEED * ConstVals.PPM * facing.value * movementScalar
+                        isFacing(Facing.LEFT) && !body.isProperty(LEFT_FOOT, true) ->
+                            if (megaman().body.getX() < body.getX()) jump() else swapFacing()
+
+                        isFacing(Facing.RIGHT) && !body.isProperty(RIGHT_FOOT, true) ->
+                            if (megaman().body.getX() > body.getX()) jump() else swapFacing()
+
+                        else -> body.physics.velocity.x = WALK_SPEED * ConstVals.PPM * facing.value * movementScalar
+                    }
                 }
             }
 
@@ -221,15 +224,6 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
-        body.addFixture(bodyFixture)
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        body.addFixture(damagerFixture)
-
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
-        body.addFixture(damageableFixture)
-
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
@@ -238,7 +232,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         debugShapes.add { feetFixture }
 
         val headFixture =
-            Fixture(body, FixtureType.HEAD,  GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
+            Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         headFixture.offsetFromBodyAttachment.y = 0.375f * ConstVals.PPM
         body.addFixture(headFixture)
         headFixture.drawingColor = Color.ORANGE
@@ -289,7 +283,9 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(
+            this, body, BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
+        )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {

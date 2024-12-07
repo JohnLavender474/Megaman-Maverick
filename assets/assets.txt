@@ -870,6 +870,7 @@ sprites/frames/Bosses1/GlacierMan/stop.png
 sprites/frames/Bosses1/GlacierMan/brake.png
 sprites/frames/Bosses1/GlacierMan/brake_shoot_up.png
 sprites/frames/Bosses1/GlacierMan/ice_blast_attack.png
+sprites/frames/Bosses1/GlacierMan/sled_shoot_up.png
 sprites/frames/Bosses1/GlacierMan/duck_shoot_up.png
 sprites/frames/Bosses1/GlacierMan/duck_shoot.png
 sprites/frames/Bosses1/GlacierMan/stand_shoot_up.png
