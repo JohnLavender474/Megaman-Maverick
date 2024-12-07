@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.bosses
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -44,19 +45,19 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.MegaGameEntities
-import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
-
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 import kotlin.reflect.KClass
@@ -123,7 +124,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private val timers = ObjectMap<String, Timer>()
     private lateinit var animator: Animator
     private lateinit var stateMachine: StateMachine<GlacierManState>
-    private val walls = Array<Block>()
+    private val walls = Array<GameRectangle>()
     private var shootUp = false
     private var firstUpdate = true
     private var iceBlastLeftHand = false
@@ -142,6 +143,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             regions.put("fall_shoot_up", atlas.findRegion("$TAG/fall_shoot_up"))
             regions.put("sled", atlas.findRegion("$TAG/sled"))
             regions.put("sled_shoot", atlas.findRegion("$TAG/sled_shoot"))
+            regions.put("sled_shoot_up", atlas.findRegion("$TAG/sled_shoot_up"))
             regions.put("brake", atlas.findRegion("$TAG/brake"))
             regions.put("brake_shoot", atlas.findRegion("$TAG/brake_shoot"))
             regions.put("brake_shoot_up", atlas.findRegion("$TAG/brake_shoot_up"))
@@ -174,15 +176,12 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         firstUpdate = true
         iceBlastLeftHand = false
 
-        val wall1Id = spawnProps.get("${ConstKeys.WALL}_1", Int::class)!!
-        val wall1 = MegaGameEntities.getEntitiesOfMapObjectId(wall1Id).firstOrNull()
-        if (wall1 != null && wall1 is Block) walls.add(wall1)
-        else GameLogger.error(TAG, "onSpawn(): no wall block 1 found for id $wall1Id; wall 1 = $wall1")
-
-        val wall2Id = spawnProps.get("${ConstKeys.WALL}_2", Int::class)!!
-        val wall2 = MegaGameEntities.getEntitiesOfMapObjectId(wall2Id).firstOrNull()
-        if (wall2 != null && wall2 is Block) walls.add(wall2)
-        else GameLogger.error(TAG, "onSpawn(): no wall block 2 found for id $wall2Id; wall 2 = $wall2")
+        spawnProps.forEach { key, value ->
+            if (key.toString().contains(ConstKeys.WALL)) {
+                val wall = (value as RectangleMapObject).rectangle.toGameRectangle(false)
+                walls.add(wall)
+            }
+        }
 
         previousState = null
     }
@@ -289,7 +288,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             )
         feetFixture.offsetFromBodyAttachment.y = -0.875f * ConstVals.PPM
         body.addFixture(feetFixture)
-        debugShapes.add { feetFixture}
+        debugShapes.add { feetFixture }
 
         val headFixture =
             Fixture(
@@ -299,7 +298,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             )
         headFixture.offsetFromBodyAttachment.y = 0.875f * ConstVals.PPM
         body.addFixture(headFixture)
-        debugShapes.add { headFixture}
+        debugShapes.add { headFixture }
 
         val leftFixture =
             Fixture(
@@ -310,7 +309,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         leftFixture.offsetFromBodyAttachment.x = -0.625f * ConstVals.PPM
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
-        debugShapes.add { leftFixture}
+        debugShapes.add { leftFixture }
 
         val rightFixture =
             Fixture(
@@ -321,7 +320,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         rightFixture.offsetFromBodyAttachment.x = 0.625f * ConstVals.PPM
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
-        debugShapes.add { rightFixture}
+        debugShapes.add { rightFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.gravity.y =
@@ -369,6 +368,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             "jump" pairTo Animation(regions["jump"], 4, 2, 0.1f, true),
             "sled" pairTo Animation(regions["sled"], 2, 2, 0.1f, true),
             "sled_shoot" pairTo Animation(regions["sled_shoot"], 2, 2, 0.1f, true),
+            "sled_shoot_up" pairTo Animation(regions["sled_shoot_up"], 2, 2, 0.1f, true),
             "stop" pairTo Animation(regions["stop"], 3, 3, 0.075f, false),
             "ice_blast_attack" pairTo Animation(regions["ice_blast_attack"], 2, 1, 0.1f, true)
         )
@@ -377,11 +377,11 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             else {
                 val state = stateMachine.getCurrent()
 
-                val key = if (state == GlacierManState.INIT) {
-                    if (body.isSensing(BodySense.FEET_ON_GROUND)) "stop" else "fall"
-                } else if (state == GlacierManState.JUMP) {
-                    if (body.physics.velocity.y > 0f) "jump" else "fall"
-                } else state.name.lowercase()
+                val key = when (state) {
+                    GlacierManState.INIT -> if (body.isSensing(BodySense.FEET_ON_GROUND)) "stop" else "fall"
+                    GlacierManState.JUMP -> if (body.physics.velocity.y > 0f) "jump" else "fall"
+                    else -> state.name.lowercase()
+                }
 
                 if (!timers["shoot_anim"].isFinished()) {
                     val shootKey = if (shootUp) "${key}_shoot_up" else "${key}_shoot"
@@ -391,7 +391,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         }
         val onChangeKey: (String?, String?) -> Unit = { oldKey, newKey ->
             if (newKey != null && oldKey != null && newKey.contains("_shoot") && !oldKey.contains("_shoot")) {
-                val newKeyRaw = newKey.removeSuffix("_shoot")
+                val newKeyRaw = newKey.removeSuffix("_up").removeSuffix("_shoot")
                 if (newKeyRaw == oldKey) {
                     val oldAnimation = animations[oldKey]
                     val currentAnimation = animations[newKey]
@@ -537,24 +537,28 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         timers.put("stop", stopTimer)
     }
 
-
     private fun getIceBlastLeftPos() = body.getCenter().add(-0.75f * ConstVals.PPM, 0.2f * ConstVals.PPM)
 
     private fun getIceBlastRightPos() = body.getCenter().add(0.75f * ConstVals.PPM, 0.2f * ConstVals.PPM)
 
     private fun getCurrentIceBlastPos(): Vector2 {
-        val preferredPos = if (iceBlastLeftHand) getIceBlastLeftPos() else getIceBlastRightPos()
-        if (walls.any { block -> block.body.getBounds().contains(preferredPos) }) {
-            val otherPos = if (iceBlastLeftHand) getIceBlastRightPos() else getIceBlastLeftPos()
-            return otherPos
-        }
+        var preferredPos = if (iceBlastLeftHand) getIceBlastLeftPos() else getIceBlastRightPos()
+
+        val mockIceCubeBounds = GameObjectPools.fetch(GameRectangle::class)
+            .setSize(SmallIceCube.BODY_SIZE * ConstVals.PPM)
+            .setCenter(preferredPos)
+
+        val contactWithWall = walls.any { it.overlaps(mockIceCubeBounds) }
+        if (contactWithWall)
+            preferredPos = if (iceBlastLeftHand) getIceBlastRightPos() else getIceBlastLeftPos()
+
         return preferredPos
     }
 
     private fun canIceBlast(): Boolean {
         if (!body.isSensing(BodySense.FEET_ON_GROUND)) return false
         val iceBlastPositions = gdxArrayOf(getIceBlastLeftPos(), getIceBlastRightPos())
-        return iceBlastPositions.any { pos -> !walls.any { block -> block.body.getBounds().contains(pos) } }
+        return iceBlastPositions.any { pos -> !walls.any { it.contains(pos) } }
     }
 
     private fun iceBlast() {
@@ -599,13 +603,17 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private fun shoot() {
         GameLogger.debug(TAG, "shoot()")
 
-        shootUp = isFalling() || (canShootUp() && isMegamanAboveOffsetY()) || getRandom(0f, 1f) <= SHOOT_UP_CHANCE
+        shootUp = canShootUp() && (isFalling() || isMegamanAboveOffsetY() || getRandom(0f, 1f) <= SHOOT_UP_CHANCE)
 
         val spawn = body.getCenter()
         val trajectory = Vector2()
         if (body.isSensing(BodySense.FEET_ON_GROUND)) {
-            if (shootUp) spawn.add(0.4f * facing.value * ConstVals.PPM, 0.1f * ConstVals.PPM)
-            else spawn.add(0.5f * facing.value * ConstVals.PPM, 0f)
+            when {
+                stateMachine.getCurrent() == GlacierManState.SLED ->
+                    spawn.add(0.75f * facing.value * ConstVals.PPM, 0.1f * ConstVals.PPM)
+                shootUp -> spawn.add(0.4f * facing.value * ConstVals.PPM, 0.1f * ConstVals.PPM)
+                else -> spawn.add(0.5f * facing.value * ConstVals.PPM, 0f)
+            }
 
             trajectory.set(
                 (if (shootUp) SNOWBALL_VEL_UP_X else SNOWBALL_VEL_STRAIGHT_X) * facing.value,
@@ -649,12 +657,14 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 GameLogger.debug(TAG, "onChangeState(): jump")
                 jump()
             }
+
             GlacierManState.BRAKE -> {
                 GameLogger.debug(TAG, "onChangeState(): start brake, apply brake friction")
                 body.physics.defaultFrictionOnSelf.x = BRAKE_FRICTION_X
                 body.putProperty("${ConstKeys.ICE}_${ConstKeys.FRICTION_X}", false)
                 body.physics.applyFrictionX = true
             }
+
             else -> GameLogger.debug(TAG, "onChangeState(): no change when current=$current")
         }
 
@@ -678,7 +688,6 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         abs(megaman().body.getX() - body.getX()) > MEGAMAN_OFFSET_X * ConstVals.PPM
 
     private fun shouldStopSledding() =
-        (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) || (isFacing(Facing.RIGHT) && body.isSensing(
-            BodySense.SIDE_TOUCHING_BLOCK_RIGHT
-        ))
+        (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
+            (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
 }

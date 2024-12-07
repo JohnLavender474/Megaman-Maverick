@@ -56,6 +56,7 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     companion object {
         const val TAG = "FragileIceCube"
+        const val BODY_SIZE = 0.4f
         private const val DEFAULT_GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.01f
         private const val CLAMP = 10f
@@ -144,7 +145,7 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(0.4f * ConstVals.PPM)
+        body.setSize(BODY_SIZE * ConstVals.PPM)
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.55f * ConstVals.PPM))
         bodyFixture.setHitByBodyReceiver { entity -> if (entity is SmallIceCube) shatterAndDie() }

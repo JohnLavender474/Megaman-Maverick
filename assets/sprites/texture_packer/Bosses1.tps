@@ -291,6 +291,7 @@
             </struct>
             <key type="filename">../frames/Bosses1/GlacierMan/sled.png</key>
             <key type="filename">../frames/Bosses1/GlacierMan/sled_shoot.png</key>
+            <key type="filename">../frames/Bosses1/GlacierMan/sled_shoot_up.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
