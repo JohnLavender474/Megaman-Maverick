@@ -87,6 +87,7 @@ character’s personality and (2) the name continues the long-held tradition of 
 names being tied to musical terms, e.g. Rock, Roll, Bass, etc.
 
 ### Dr. Light’s Lab Cutscene
+
 Dr. Light restores Mega Man. However, he is unable to fully repair Proto Man since he is not
 familiar with his design. Proto Man reveals that Schisma is rallying robots who feel oppressed,
 radicalizing them and promising a society where robots will destroy the wealthy humans and
