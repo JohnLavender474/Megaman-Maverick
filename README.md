@@ -31,29 +31,29 @@ Written by _oldlavygenes_ (me) and _PJCosta5_
 
     In the year 20XX…
     
-    The world still bears the scars of the Roboenza Incident.
-    
-    To prevent another disaster, humanity imposed strict laws:
+    After many incidents of robots uprising, humanity imposed strict laws:
     
     robots are now monitored constantly, their every thought and action under watch.
     
-    This peace came at a cost.
+    This peace came at a cost, however. Only the wealthy can afford robots now, 
+
+    while the rest are made to compete with the robots for lowly wages.
     
-    Only the wealthy can afford robots now, while the rest are made to compete.
+    Divisions grow deeper — some humans continue to advocate for coexistence,
     
-    Divisions grow deeper—some humans advocate for coexistence,
-    
-    others demand robots' destruction.
+    while others demand robots' total destruction.
     
     Even Mega Man, once a hero, faces controversy:
     
-    a symbol of hope to some, an enabler of injustice to others.
+    a symbol of hope to some, he's seen by others now as an enabler of inequality.
     
-    But now, chaos returns. A rogue group of robots, The Mavericks,
+    But now, chaos returns. A rogue group of robots, calling themselves The Mavericks
+
+    and lead by the mysterious robot named Schisma, rises to challenge
     
-    rises to challenge humanity. Mega Man must once again
-    
-    fight to protect the city, even as doubts about his role linger…
+    humanity's strict laws. Mega Man must once again fight to protect the city, 
+
+    even as doubts about his role linger…
 
 ### Intro Stage: Mega City's Ruins
 
@@ -65,16 +65,10 @@ police rescue trapped civilians, avoids collapsing buildings, and neutralizes ro
 At the stage's climax, Mega Man confronts the Maverick leader: Schisma, a menacing robot who
 mocks humanity's weakness.
 
-Schisma reveals to Megaman that he has incubated a variant strain of the Roboenza virus. This
-strain does not control the minds of the robots, but rather it magnifies feelings of desperation and
-revolt in the minds of the robots. In other words, the robots are “radicalized” rather than
-“controlled” by the the new virus.
-
-Mega Man's weapons barely scratch him as he flies around Megaman in an impenetrable purple
-cloud of Roboenza. Before he can finish Mega Man off, however, Proto Man quickly arrives,
-shielding his brother, but not without taking damage himself, and teleports them both to safety.
-Schisma laughs and declares, "This world belongs to us now. Humanity's reign is over!" before
-vanishing into the chaos.
+In the fight against Schisma, Mega Man's weapons barely scratch him. Before he can finish Mega Man 
+off, however, Proto Man quickly arrives, shielding his brother, but not without taking damage himself, 
+and teleports them both to safety. Schisma laughs and declares, "This world belongs to us now. 
+Humanity's reign is over!" before vanishing into the chaos.
 
 ### The naming of Schisma
 
@@ -94,55 +88,41 @@ names being tied to musical terms, e.g. Rock, Roll, Bass, etc.
 
 ### Dr. Light’s Lab Cutscene
 Dr. Light restores Mega Man. However, he is unable to fully repair Proto Man since he is not
-familiar with his design. Dr. Light expresses concern over the return of Roboenza in a mutated
-form. Proto Man reveals that Schisma is rallying robots who feel oppressed, using the virus as both
-a weapon and a tool of radicalization and loyalty. Worse, the Mavericks have seized and imprisoned
-Wily, forcing him against his will to build new Robot Masters to serve their cause.
-
-Dr. Light equips Mega Man with a few new power-ups along with the protective immunization
-system (*from Super Adventure Rockman), an upgrade allowing him to neutralize infected robots
-without destroying them. The system also provides limited immunity to low-level infection and the
-ability to absorb purified virus clouds for temporary boosts.
+familiar with his design. Proto Man reveals that Schisma is rallying robots who feel oppressed,
+radicalizing them and promising a society where robots will destroy the wealthy humans and
+rule over the ones who remain. Worse, the Mavericks have seized and imprisoned Wily, forcing him 
+against his will to build new Robot Masters to serve their cause.
 
 Mega Man vows to stop the Mavericks, rescue Wily (despite their history), and prove that
 coexistence between humans and robots is still possible.
 
 ### Dr. Light’s Training Room
 
-With Dr. Light's medical upgrade, Megaman's gameplay has leveled up! Now, our heroic blue
-bomber...
+Dr. Light provides Megaman with new upgrades. Now, our heroic blue
+bomber can air dash and wall jump.
 
-• Can execute the new moves 'walljump' and ‘airdash’. These abilities persist limitless for the
-remaining duration of the game.
+Once Megaman finishes his training session, he thanks Dr. Light for the upgrades and
+start his main mission once again. 
 
-• Can withstand virus clouds up to a certain amount using the PIS. After being by three
-Roboenza clouds, Megaman will glow purple, lose the ability to use all weapons except the
-Mega Buster, lose the ability to charge his Mega Buster, and will take double damage.
-
-• Can upgrade his internal abilities, but only if he buys them as Auto's Shop (examples:
-Virus/Roboenza Cloud Immunity LVL2, Charge Shot LVL3, Sliding Speed LVL2, etc).
-
-Now that Megaman has finished his new training session, he thanks Dr. Light for the upgrades and
-start his main mission once again. It's time to fight The Mavericks and save the world again!
+It's time to fight The Mavericks and save the world again!
 
 ### Core Gameplay and Story Progression
 
 Mega Man must take down eight Maverick Robot Masters.
 
-When Megaman defeats a Robot Master, he spares the robot’s life in exchange for their super
-power. Each Robot Master flees, promising in one manner or another to leave the Mavericks.
+When Megaman defeats a Robot Master, he spares their life in exchange for their superpower. 
 
 ### Final Stages: Schisma’s Fortress
 
-Mega Man infiltrates Schisma's stronghold, battling advanced defenses. In one of the latter stages,
-Megaman confronts the eight Robot Masters. Each one lied to him about being remorseful and
-leaving the Mavericks. Not only that, but each one is stronger this time, with more health and
-dealing more damage to Megaman.
+Mega Man infiltrates Schisma's stronghold, battling advanced defenses. 
+
+In one of the latter stages, Megaman confronts the eight Robot Masters. Each one lied to him about 
+being remorseful and leaving the Mavericks. Not only that, but each one is stronger this time, 
+with more health and dealing more damage to Megaman.
 
 After defeating the eight Robot Masters, he discovers Wily, imprisoned and remorseful.
-Wily admits, “For once, I didn’t want this! That... thing turned my genius against me!” He warns
-Mega Man of Schisma’s endgame: spreading the virus to control every robot worldwide and
-obliterate humanity’s ability to resist.
+
+Wily admits, “For once, I didn’t want this! That... thing turned my genius against me!”
 
 In the final showdown, Mega Man confronts Schisma. During the battle, Schisma reveals he was
 Wily's prototype for a new age of robots—designed to question and rebel. He embodies the very
@@ -153,10 +133,27 @@ Man escape, though Schisma is seemingly destroyed.
 
 ### Ending Cutscene
 
-Wily is imprisoned once again. Mega Man addresses humanity and robots alike:
+Wily is imprisoned once again for recklessly building Schisma.
+
+Megaman's victory is bittersweet, however. While many rejoice in the defeat of Schisma, many robots
+who had been silently in agreement with Schisma's motives begin to voice their opinions against
+humanity's tyrannical new laws against them.
+
+Seeing the divide grow ever wider between humans and robots, Megaman delivers a speech to the world.
 "These events have shown us how far we've fallen. We cannot live in fear of each other. Robots and
 humanity must live in peace. Each must learn to trust and strive to be trustworthy. If we do not act
 as one, we will fall divided. Together, we can build a better future."
+
+After the speech, Proto Man mockingly says, "Heh... You really think you can fix society with your
+fluffy words and your Mega Buster? Evil will always perpetuate itself. It's a never-ending cycle.
+Face it, Megaman. You're a cog in the grand machine of chaos and corruption."
+
+Megaman, aghast at Proto Man's remarks, exclaims, "Maybe I can't solve all the world's issues, but
+I have to try! This is what I was made for, to bring peace and goodness to this world. It might be
+vain and hopeless, but I'll never stop trying!"
+
+Megaman marches off while Proto Man continues to stand there, his head slightly lowered and his mind
+lost in reflection.
 
 ---
 
