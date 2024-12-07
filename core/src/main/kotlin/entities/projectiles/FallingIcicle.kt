@@ -71,18 +71,23 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+
+        val spawn = spawnProps
+            .get(ConstKeys.BOUNDS, GameRectangle::class)!!
             .getPositionPoint(Position.TOP_CENTER)
         body.setTopCenterToPoint(spawn)
+
         body.physics.gravityOn = false
         fallingIcicleState = FallingIcicleState.STILL
+
         shakeTimer.reset()
         shatterTimer.reset()
     }
 
     override fun onDestroy() {
-        GameLogger.debug(TAG, "Falling icicle destroyed")
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
     }
 
@@ -96,8 +101,10 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
-        GameLogger.debug(TAG, "Explode and die")
+        GameLogger.debug(TAG, "explodeAndDie(): params=$params")
+
         destroy()
+
         for (i in 0 until 5) {
             val iceShard = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.ICE_SHARD)!!
             iceShard.spawn(
@@ -139,12 +146,13 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
+        val bodyFixture =
+            Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.25f * ConstVals.PPM, ConstVals.PPM.toFloat()))
         body.addFixture(bodyFixture)
 
         val projectileFixture =
             Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.75f * ConstVals.PPM))
-        projectileFixture.offsetFromBodyAttachment.y = -0.125f * ConstVals.PPM
+        projectileFixture.offsetFromBodyAttachment.y = -0.1f * ConstVals.PPM
         body.addFixture(projectileFixture)
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
