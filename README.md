@@ -30,30 +30,25 @@ Written by _oldlavygenes_ (me) and _PJCosta5_
 ### Opening Text
 
     In the year 20XX…
-    
-    After many incidents of robots uprising, humanity imposed strict laws:
-    
-    robots are now monitored constantly, their every thought and action under watch.
-    
-    This peace came at a cost, however. Only the wealthy can afford robots now, 
 
-    while the rest are made to compete with the robots for lowly wages.
+    After years of chaos and robot uprisings, the world bears lasting scars.
     
-    Divisions grow deeper — some humans continue to advocate for coexistence,
+    To prevent further disasters, humanity enacts harsh laws:
+    robots are now constantly monitored, their every thought and action under surveillance.
     
-    while others demand robots' total destruction.
+    This fragile peace comes at a steep price. With robots heavily restricted, their costs have soared.
+    Only the wealthy can afford them, while others are left to compete against robots for meager wages.
     
-    Even Mega Man, once a hero, faces controversy:
+    Society is fractured. Some humans champion coexistence; others demand robots' destruction.
+    Even Mega Man, once a beacon of hope, faces harsh scrutiny — hailed as a hero by some,
+    blamed as a symbol of injustice by others.
     
-    a symbol of hope to some, he's seen by others now as an enabler of inequality.
+    Now, chaos returns to Mega City. A rogue faction of robots,
+    calling themselves The Mavericks and led by the enigmatic Schisma,
+    has risen to challenge humanity's laws and seize control.
     
-    But now, chaos returns. A rogue group of robots, calling themselves The Mavericks
-
-    and lead by the mysterious robot named Schisma, rises to challenge
-    
-    humanity's strict laws. Mega Man must once again fight to protect the city, 
-
-    even as doubts about his role linger…
+    Mega Man must once again rise to protect the world against certain doom,
+    even as uncertainty lingers about his purpose and legacy...
 
 ### Intro Stage: Mega City's Ruins
 
