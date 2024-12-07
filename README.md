@@ -25,7 +25,7 @@ View my YouTube channel for demos and more! https://youtube.com/playlist?list=PL
 
 ## THE STORY
 
-_Written by oldlavygenes and PJCosta5_
+Written by _oldlavygenes_ (me) and _PJCosta5_
 
 ### Opening Text
 
