@@ -69,8 +69,10 @@ object LevelCompletionMap {
         when (gameType) {
             StartScreenOption.MAIN -> prodMap[level]
             StartScreenOption.SIMPLE -> ScreenEnum.SIMPLE_INIT_GAME_SCREEN
+            /*
             StartScreenOption.LEVEL -> throw IllegalStateException(
                 "Cannot continue after level has completed when playing in \"level\" mode"
             )
+             */
         }
 }

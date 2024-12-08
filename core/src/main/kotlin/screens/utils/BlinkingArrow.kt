@@ -12,7 +12,7 @@ import com.mega.game.engine.drawables.sprites.setSize
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TextureAsset
 
-class BlinkingArrow(assMan: AssetManager, _center: Vector2 = Vector2(), _rotation: Float = 0f) : Updatable,
+class BlinkingArrow(assMan: AssetManager, center: Vector2 = Vector2(), rotation: Float = 0f) : Updatable,
     IDrawable<Batch> {
 
     companion object {
@@ -44,9 +44,9 @@ class BlinkingArrow(assMan: AssetManager, _center: Vector2 = Vector2(), _rotatio
 
     init {
         arrowSprite.setSize(ConstVals.PPM / 2f)
-        arrowSprite.setCenter(_center.x, _center.y)
+        arrowSprite.setCenter(center.x, center.y)
         arrowSprite.setOriginCenter()
-        rotation = _rotation
+        this@BlinkingArrow.rotation = rotation
     }
 
     override fun update(delta: Float) {

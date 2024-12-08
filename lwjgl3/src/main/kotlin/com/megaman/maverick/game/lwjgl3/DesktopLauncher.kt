@@ -11,7 +11,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.MegamanMaverickGameParams
 import com.megaman.maverick.game.StartScreenOption
-import com.megaman.maverick.game.screens.levels.Level
 import kotlin.system.exitProcess
 
 // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument
@@ -27,7 +26,6 @@ object DesktopLauncher {
     private const val DEFAULT_MUSIC_VOLUME = 0.5f
     private const val DEFAULT_SOUND_VOLUME = 0.5f
     private const val DEFAULT_START_SCREEN = "simple"
-    private const val DEFAULT_LEVEL = "null"
     private const val DEFAULT_SHOW_SCREEN_CONTROLLER = false
     private const val TITLE = "Megaman Maverick"
 
@@ -54,7 +52,6 @@ object DesktopLauncher {
         println("- Debug FPS: " + appArgs.debugFPS)
         println("- Log Level: " + appArgs.logLevel)
         println("- Start Screen: " + appArgs.startScreen)
-        println("- Level: " + appArgs.level)
         println("- Fixed Step Scalar: " + appArgs.fixedStepScalar)
         println("- Music volume: " + appArgs.musicVolume)
         println("- Sound volume: " + appArgs.soundVolume)
@@ -64,9 +61,7 @@ object DesktopLauncher {
         config.setIdleFPS(ConstVals.FPS)
         config.setForegroundFPS(ConstVals.FPS)
         config.setWindowedMode(appArgs.width, appArgs.height)
-        if (appArgs.fullScreen) {
-            config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode())
-        }
+        if (appArgs.fullScreen) config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode())
 
         val params = MegamanMaverickGameParams()
         params.debugShapes = appArgs.debugShapes
@@ -82,7 +77,6 @@ object DesktopLauncher {
         }
         val startScreenOption = when {
             appArgs.startScreen.isBlank() || appArgs.startScreen.lowercase() == "main" -> StartScreenOption.MAIN
-            appArgs.startScreen.lowercase() == "level" -> StartScreenOption.LEVEL
             appArgs.startScreen.lowercase() == "simple" -> StartScreenOption.SIMPLE
             else -> {
                 System.err.println("Invalid start screen option: " + appArgs.startScreen)
@@ -91,10 +85,6 @@ object DesktopLauncher {
             }
         }
         params.startScreen = startScreenOption
-        if (startScreenOption == StartScreenOption.LEVEL) {
-            val level = Level.valueOf(appArgs.level.uppercase())
-            params.startLevel = level
-        }
 
         val game = MegamanMaverickGame(params)
 
@@ -165,47 +155,33 @@ object DesktopLauncher {
 
         @Parameter(
             names = ["--startScreen"],
-            description = ("The screen to start the game app on. Options: \"main\", " +
-                "\"level\", \"simple\". Options not case sensitive. Default value = " + DEFAULT_START_SCREEN + ".")
+            description = ("The screen to start the game app on. Options: \"main\" and " +
+                "\"simple\". Options not case sensitive. Default value = $DEFAULT_START_SCREEN.")
         )
         var startScreen = DEFAULT_START_SCREEN
 
         @Parameter(
-            names = ["--level"],
-            description =
-                ("The level to start the game app on. This option only works if " +
-                    "\"level\" has been selected as the start screen. Choose the name of the level from the Level " +
-                    "enum class (not case sensitive). No default value. If the level is not found, an exception is " +
-                    "thrown.")
-        )
-        var level = DEFAULT_LEVEL
-
-        @Parameter(
             names = ["--fixedStepScalar"],
-            description = ("Sets the world fixed step scalar, useful for " +
-                "debugging. Default value is " + DEFAULT_FIXED_STEP_SCALAR + ". Should be default value if not " +
-                "debugging")
+            description = ("Sets the world fixed step scalar, useful for debugging. Default value is " +
+                "$DEFAULT_FIXED_STEP_SCALAR. Should be default value if not debugging")
         )
         var fixedStepScalar = DEFAULT_FIXED_STEP_SCALAR
 
         @Parameter(
             names = ["--musicVolume"],
-            description = ("Sets the music volume. Must be between 0 and 1. Default " +
-                "value is " + DEFAULT_MUSIC_VOLUME)
+            description = ("Sets the music volume. Must be between 0 and 1. Default value is $DEFAULT_MUSIC_VOLUME")
         )
         var musicVolume = DEFAULT_MUSIC_VOLUME
 
         @Parameter(
             names = ["--soundVolume"],
-            description = ("Sets the sound volume. Must be between 0 and 1. Default " +
-                "value is " + DEFAULT_SOUND_VOLUME)
+            description = ("Sets the sound volume. Must be between 0 and 1. Default value is $DEFAULT_SOUND_VOLUME")
         )
         var soundVolume = DEFAULT_SOUND_VOLUME
 
         @Parameter(
             names = ["--showScreenController"],
-            description = ("Sets if the screen controller UI should be shown. Default " +
-                "value is " + DEFAULT_SHOW_SCREEN_CONTROLLER)
+            description = ("Sets if the screen controller UI should be shown. Default value is $DEFAULT_SHOW_SCREEN_CONTROLLER")
         )
         var showScreenController = DEFAULT_SHOW_SCREEN_CONTROLLER
     }

@@ -14,22 +14,17 @@ abstract class MegaMenuScreen(
     buttons: ObjectMap<String, IMenuButton> = ObjectMap()
 ) : AbstractMenuScreen(buttons, { game.paused }, firstButtonKey) {
 
-    override fun getNavigationDirection() =
-        if (game.controllerPoller.isJustPressed(MegaControllerButton.UP)) Direction.UP
-        else if (game.controllerPoller.isJustPressed(MegaControllerButton.DOWN))
-            Direction.DOWN
-        else if (game.controllerPoller.isJustPressed(MegaControllerButton.LEFT))
-            Direction.LEFT
-        else if (game.controllerPoller.isJustPressed(MegaControllerButton.RIGHT))
-            Direction.RIGHT
-        else null
+    protected val selectionButtons = gdxArrayOf<Any>(MegaControllerButton.START, MegaControllerButton.A)
 
-    override fun selectionRequested() = game.controllerPoller.isAnyJustPressed(
-        gdxArrayOf(
-            MegaControllerButton.START,
-            MegaControllerButton.A
-        )
-    )
+    override fun getNavigationDirection() = when {
+        game.controllerPoller.isJustPressed(MegaControllerButton.UP) -> Direction.UP
+        game.controllerPoller.isJustPressed(MegaControllerButton.DOWN) -> Direction.DOWN
+        game.controllerPoller.isJustPressed(MegaControllerButton.LEFT) -> Direction.LEFT
+        game.controllerPoller.isJustPressed(MegaControllerButton.RIGHT) -> Direction.RIGHT
+        else -> null
+    }
+
+    override fun selectionRequested() = game.controllerPoller.isAnyJustPressed(selectionButtons)
 
     protected open fun undoSelection() {
         selectionMade = false

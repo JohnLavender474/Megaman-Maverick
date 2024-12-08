@@ -18,6 +18,7 @@ import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.fonts.BitmapFontHandle
 import com.mega.game.engine.screens.menus.IMenuButton
+import com.megaman.maverick.game.ConstFuncs
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
@@ -56,7 +57,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
     private val white = Sprite()
     private val outTimer = Timer(1.05f)
     private val t = Array<BitmapFontHandle>()
-    private val bp = Array<BossPane>()
+    private val bp = Array<Mugshot>()
     private val bkgd = Array<Sprite>()
     private val bars = ObjectMap<Sprite, Animation>()
     private val bArrs = ObjectMap<String, BlinkingArrow>()
@@ -140,9 +141,9 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
             val boss = BossType.findByName(currentButtonKey!!) ?: return@Supplier megamanFaces[Position.CENTER]
             megamanFaces[boss.position]
         }
-        val megamanPane = BossPane(game, megamanFaceSupplier, MEGA_MAN, Position.CENTER)
+        val megamanPane = Mugshot(game, megamanFaceSupplier, MEGA_MAN, Position.CENTER)
         bp.add(megamanPane)
-        for (boss in BossType.values()) bp.add(BossPane(game, boss))
+        for (boss in BossType.values()) bp.add(Mugshot(game, boss))
         t.add(
             BitmapFontHandle(
                 "PRESS START",
@@ -197,7 +198,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
         bar2.setRegion(black)
         bar2.setBounds(0f, 0f, 0.25f * ConstVals.PPM, (ConstVals.VIEW_HEIGHT + 1) * ConstVals.PPM)
         val tilesAtlas = game.assMan.get(TextureAsset.PLATFORMS_1.source, TextureAtlas::class.java)
-        val blueBlockRegion: TextureRegion = tilesAtlas.findRegion("8bitBlueBlockTransBorder")
+        val blueBlockRegion: TextureRegion = tilesAtlas.findRegion("8bitBlueBlockNoBorder")
         val halfPPM = ConstVals.PPM / 2f
         var i = 0
         while (i < ConstVals.VIEW_WIDTH) {
@@ -229,7 +230,8 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
             initialized = true
         }
         super.show()
-        slide.init()
+        // slide.init()
+        game.getUiCamera().position.set(ConstFuncs.getCamInitPos())
         outro = false
         outTimer.reset()
         game.audioMan.playMusic(MusicAsset.MM3_SNAKE_MAN_MUSIC, true)
@@ -242,7 +244,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
         super.render(delta)
         val batch: Batch = game.batch
         if (!game.paused) {
-            slide.update(delta)
+            // slide.update(delta)
             if (outro) outTimer.update(delta)
             if (outTimer.isFinished()) {
                 /*
@@ -259,9 +261,9 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
                 e.key.setRegion(e.value.getCurrentRegion())
             }
             for (b in bp) {
-                b.bossPaneStat =
-                    if (b.bossName == currentButtonKey) (if (selectionMade) BossPaneStat.HIGHLIGHTED else BossPaneStat.BLINKING)
-                    else BossPaneStat.UNHIGHLIGHTED
+                b.state =
+                    if (b.name == currentButtonKey) (if (selectionMade) MugshotState.HIGHLIGHTED else MugshotState.BLINKING)
+                    else MugshotState.NONE
                 b.update(delta)
             }
             if (bArrs.containsKey(currentButtonKey)) bArrs.get(currentButtonKey).update(delta)

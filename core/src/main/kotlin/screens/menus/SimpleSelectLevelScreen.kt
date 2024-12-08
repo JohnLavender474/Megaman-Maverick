@@ -56,8 +56,10 @@ class SimpleSelectLevelScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, 
 
     private val sections = Array<MegaFontHandle>()
     private val levelArrows = Array<BlinkingArrow>()
+
     private lateinit var sectionArrow: BlinkingArrow
-    private lateinit var level: MegaFontHandle
+    private lateinit var levelText: MegaFontHandle
+
     private var initialized = false
     private var index = 0
 
@@ -141,7 +143,7 @@ class SimpleSelectLevelScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, 
             )
         )
 
-        level = MegaFontHandle(
+        levelText = MegaFontHandle(
             { LEVELS.get(currentButtonKey)?.get(index)?.name ?: "NULL" },
             positionX = LEVEL_X * ConstVals.PPM,
             positionY = LEVEL_Y * ConstVals.PPM
@@ -197,7 +199,7 @@ class SimpleSelectLevelScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, 
         sections.forEach { it.draw(batch) }
         levelArrows.forEach { it.draw(batch) }
         sectionArrow.draw(batch)
-        level.draw(batch)
+        levelText.draw(batch)
         batch.end()
     }
 
