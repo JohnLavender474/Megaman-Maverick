@@ -1,105 +1,112 @@
-{
-  "robot_master_levels": [
-    {
-      "TimberWoman": {
-        "key": "TimberWoman",
-        "name": "TIMBER WOMAN",
-        "atlas": "Faces1.txt",
-        "region": "Timber Woman",
-        "level": "TimberWoman.tmx",
-        "music": "MM3_SNAKE_MAN_MUSIC",
-        "screen_on_completion": "SAVE_GAME_SCREEN"
-      }
-    },
-    {
-      "GlacierMan": {
-        "name": "GLACIER MAN",
-        "atlas": "Faces1.txt",
-        "region": "Glacier Man",
-        "level": "GlacierMan_16x12_v2.tmx",
-        "music": "MMX_CHILL_PENGUIN_MUSIC",
-        "screen_on_completion": "SAVE_GAME_SCREEN"
-      }
-    },
-    {
-      "InfernoMan": {
-        "name": "INFERNO MAN",
-        "atlas": "Faces1.txt",
-        "region": "Inferno Man",
-        "level": "InfernoMan_16x12.tmx",
-        "music": "MMX6_BLAZE_HEATNIX_MUSIC",
-        "screen_on_completion": "SAVE_GAME_SCREEN"
-      }
-    },
-    {
-      "DesertMan": {
-        "name": "DESERT MAN",
-        "atlas": "Faces1.txt",
-        "region": "Desert Man",
-        "level": "DesertMan_16x12.tmx",
-        "music": "MMX7_VANISHING_GUNGAROO_MUSIC",
-        "screen_on_completion": "SAVE_GAME_SCREEN"
-      }
-    },
-    {
-      "ReactorMan": {
-        "name": "REACTOR MAN",
-        "atlas": "Faces1.txt",
-        "region": "Reactor Man",
-        "level": "ReactorMan_16x12.tmx",
-        "music": "MMX8_BURN_ROOSTER_MUSIC",
-        "screen_on_completion": "SAVE_GAME_SCREEN"
-      }
-    },
-    {
-      "MoonMan": {
-        "name": "MOON MAN",
-        "atlas": "Faces1.txt",
-        "region": "Moon Man",
-        "level": "MoonMan_16x12.tmx",
-        "music": "MMX5_DARK_DIZZY_MUSIC",
-        "screen_on_completion": "SAVE_GAME_SCREEN"
-      }
-    },
-    {
-      "PreciousMan": {
-        "name": "PRECIOUS MAN",
-        "atlas": "Faces1.txt",
-        "region": "Precious Man",
-        "level": "PreciousMan_16x12.tmx",
-        "music": "MM3_SNAKE_MAN_MUSIC",
-        "screen_on_completion": "SAVE_GAME_SCREEN"
-      }
-    },
-    {
-      "RodentMan": {
-        "name": "RODENT MAN",
-        "atlas": "Faces1.txt",
-        "region": "Rodent Man",
-        "level": "RodentMan_16x12.tmx",
-        "music": "MM7_SLASH_MAN_MUSIC",
-        "screen_on_completion": "SAVE_GAME_SCREEN"
-      }
+[
+  {
+    "TIMBER_WOMAN": {
+      "type": "RM",
+      "mugshot_atlas": "FACES_1",
+      "mugshot_region": "Timber Woman",
+      "tmx_map_source": "TimberWoman.tmx",
+      "music": "MM3_SNAKE_MAN_MUSIC",
+      "screen_on_completion": "SAVE_GAME_SCREEN"
     }
-  ],
-  "wily_levels": [
-    {
-      "WilyStage1": {
-        "level": "WilyStage1.tmx",
-        "screen_on_completion": "WILY_CASTLE_SCREEN"
-      }
-    },
-    {
-      "WilyStage2": {
-        "level": "WilyStage2.tmx",
-        "screen_on_completion": "WILY_CASTLE_SCREEN"
-      }
-    },
-    {
-      "WilyStage3": {
-        "level": "WilyStage3_v2.tmx",
-        "screen_on_completion": "WILY_CASTLE_SCREEN"
-      }
+  },
+  {
+    "GLACIER_MAN": {
+      "type": "RM",
+      "mugshot_atlas": "FACES_1",
+      "mugshot_region": "Glacier Man",
+      "tmx_map_source": "GlacierMan_16x12_v2.tmx",
+      "music": "MMX_CHILL_PENGUIN_MUSIC",
+      "screen_on_completion": "SAVE_GAME_SCREEN"
     }
-  ]
-}
+  },
+  {
+    "INFERNO_MAN": {
+      "type": "RM",
+      "mugshot_atlas": "FACES_1",
+      "mugshot_region": "Inferno Man",
+      "tmx_map_source": "InfernoMan_16x12.tmx",
+      "music": "MMX6_BLAZE_HEATNIX_MUSIC",
+      "screen_on_completion": "SAVE_GAME_SCREEN"
+    }
+  },
+  {
+    "DESERT_MAN": {
+      "type": "RM",
+      "mugshot_atlas": "FACES_1",
+      "mugshot_region": "Desert Man",
+      "tmx_map_source": "DesertMan_16x12.tmx",
+      "music": "MMX7_VANISHING_GUNGAROO_MUSIC",
+      "screen_on_completion": "SAVE_GAME_SCREEN"
+    }
+  },
+  {
+    "REACTOR_MAN": {
+      "type": "RM",
+      "mugshot_atlas": "FACES_1",
+      "mugshot_region": "Reactor Man",
+      "tmx_map_source": "ReactorMan_16x12.tmx",
+      "music": "MMX8_BURN_ROOSTER_MUSIC",
+      "screen_on_completion": "SAVE_GAME_SCREEN"
+    }
+  },
+  {
+    "MOON_MAN": {
+      "type": "RM",
+      "mugshot_atlas": "FACES_1",
+      "mugshot_region": "Moon Man",
+      "tmx_map_source": "MoonMan_16x12.tmx",
+      "music": "MMX5_DARK_DIZZY_MUSIC",
+      "screen_on_completion": "SAVE_GAME_SCREEN"
+    }
+  },
+  {
+    "PRECIOUS_MAN": {
+      "type": "RM",
+      "mugshot_atlas": "FACES_1",
+      "mugshot_region": "Precious Man",
+      "tmx_map_source": "PreciousMan_16x12.tmx",
+      "music": "MM3_SNAKE_MAN_MUSIC",
+      "screen_on_completion": "SAVE_GAME_SCREEN"
+    }
+  },
+  {
+    "RODENT_MAN": {
+      "type": "RM",
+      "mugshot_atlas": "FACES_1",
+      "mugshot_region": "Rodent Man",
+      "tmx_map_source": "RodentMan_16x12.tmx",
+      "music": "MM7_SLASH_MAN_MUSIC",
+      "screen_on_completion": "SAVE_GAME_SCREEN"
+    }
+  },
+  {
+    "WILY_STAGE_1": {
+      "type": "FINAL",
+      "mugshot_atlas": "FACES_1",
+      "mugshot_region": "Rodent Man",
+      "tmx_map_source": "WilyStage1.tmx",
+      "music": "MM3_SNAKE_MAN_MUSIC",
+      "screen_on_completion": "WILY_CASTLE_SCREEN"
+    }
+  },
+  {
+    "WILY_STAGE_2": {
+      "type": "FINAL",
+      "mugshot_atlas": "FACES_1",
+      "mugshot_region": "Rodent Man",
+      "tmx_map_source": "WilyStage2.tmx",
+      "music": "MM3_SNAKE_MAN_MUSIC",
+      "screen_on_completion": "WILY_CASTLE_SCREEN"
+    }
+  },
+  {
+    "WILY_STAGE_3": {
+      "type": "FINAL",
+      "mugshot_atlas": "FACES_1",
+      "mugshot_region": "Rodent Man",
+      "tmx_map_source": "WilyStage3_v2.tmx",
+      "music": "MM3_SNAKE_MAN_MUSIC",
+      "screen_on_completion": "WILY_CASTLE_SCREEN"
+    }
+  }
+]

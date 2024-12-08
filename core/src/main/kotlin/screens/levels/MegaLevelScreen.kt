@@ -58,6 +58,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.camera.CameraManagerForRooms
 import com.megaman.maverick.game.screens.levels.camera.CameraShaker
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
@@ -138,8 +139,10 @@ class MegaLevelScreen(
         get() = game.audioMan
     val controllerPoller: IControllerPoller
         get() = game.controllerPoller
+
     var level: Level? = null
     var music: MusicAsset? = null
+    var screenOnCompletion: ScreenEnum? = null
 
     private lateinit var spawnsMan: SpawnsManager
     private lateinit var playerSpawnsMan: PlayerSpawnsManager
@@ -580,7 +583,8 @@ class MegaLevelScreen(
             EventType.END_LEVEL -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): End level")
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
-                val nextScreen = LevelCompletionMap.getNextScreen(level!!, game.params.startScreen)
+                val nextScreen = screenOnCompletion ?:
+                    throw IllegalStateException("Level must have a defined screen on completion value")
                 game.setCurrentScreen(nextScreen.name)
             }
 

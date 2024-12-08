@@ -32,5 +32,27 @@ class MegaFontHandle(
         priority
     )
 
+    constructor(
+        text: String,
+        fontSize: Int = getDefaultFontSize(),
+        positionX: Float = (ConstVals.VIEW_WIDTH - 5) * ConstVals.PPM,
+        positionY: Float = (ConstVals.VIEW_HEIGHT - 1) * ConstVals.PPM,
+        centerX: Boolean = true,
+        centerY: Boolean = true,
+        hidden: Boolean = false,
+        fontSource: String = ConstVals.MEGAMAN_MAVERICK_FONT,
+        priority: DrawingPriority = DrawingPriority(DrawingSection.FOREGROUND, 10)
+    ) : this(
+        { text },
+        fontSize = fontSize,
+        positionX = positionX,
+        positionY = positionY,
+        centerX = centerX,
+        centerY = centerY,
+        hidden = hidden,
+        fontSource = fontSource,
+        priority = priority
+    )
+
     override fun draw(drawer: Batch) = font.draw(drawer)
 }

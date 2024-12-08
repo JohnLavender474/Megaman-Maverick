@@ -23,6 +23,7 @@ import com.mega.game.engine.behaviors.BehaviorsSystem
 import com.mega.game.engine.common.GameLogLevel
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IPropertizable
@@ -77,16 +78,16 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.levels.LevelMap
-import com.megaman.maverick.game.levels.RobotMasterLevelDefinition
-import com.megaman.maverick.game.levels.WilyLevelDefinition
+import com.megaman.maverick.game.levels.LevelDefMap
+import com.megaman.maverick.game.levels.LevelDefinition
+import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 import com.megaman.maverick.game.screens.menus.*
 import com.megaman.maverick.game.screens.menus.bosses.BossIntroScreen
-import com.megaman.maverick.game.screens.menus.bosses.BossSelectScreen
+import com.megaman.maverick.game.screens.menus.temp.LevelSelectScreen
 import com.megaman.maverick.game.screens.other.CreditsScreen
 import com.megaman.maverick.game.screens.other.SimpleEndLevelScreen
 import com.megaman.maverick.game.screens.other.SimpleInitGameScreen
@@ -100,14 +101,13 @@ import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
 
-enum class StartScreenOption { MAIN, SIMPLE, LEVEL }
+enum class StartScreenOption { MAIN, SIMPLE }
 
 class MegamanMaverickGameParams {
     var debugShapes: Boolean = false
     var debugFPS: Boolean = false
     var logLevel: GameLogLevel = GameLogLevel.LOG
     var startScreen: StartScreenOption = StartScreenOption.MAIN
-    var startLevel: Level? = null
     var fixedStepScalar: Float = 1f
     var musicVolume: Float = 0.5f
     var soundVolume: Float = 0.5f
@@ -121,6 +121,7 @@ class MegamanMaverickGame(
     companion object {
         const val TAG = "MegamanMaverickGame"
         const val LEVELS_JSON = "json/levels.json"
+        const val TMX_SOURCE_PREFIX = "tiled_maps/tmx/"
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.TELEPORTER, FixtureType.TELEPORTER_LISTENER)
@@ -134,20 +135,26 @@ class MegamanMaverickGame(
     val screens = ObjectMap<String, IScreen>()
     val currentScreen: IScreen?
         get() = currentScreenKey?.let { screens[it] }
+
     val disposables = OrderedMap<String, Disposable>()
 
     lateinit var batch: SpriteBatch
     lateinit var shapeRenderer: ShapeRenderer
+
     lateinit var buttons: ControllerButtons
     lateinit var controllerPoller: IControllerPoller
+
     lateinit var assMan: AssetManager
     lateinit var eventsMan: EventsManager
+    lateinit var audioMan: MegaAudioManager
+
     lateinit var engine: GameEngine
     lateinit var state: GameState
+
     lateinit var megaman: Megaman
     lateinit var megamanUpgradeHandler: MegamanUpgradeHandler
-    lateinit var audioMan: MegaAudioManager
-    lateinit var levelMap: LevelMap
+
+    lateinit var levelDefs: LevelDefMap
 
     var paused = false
 
@@ -167,6 +174,17 @@ class MegamanMaverickGame(
             it.resize(Gdx.graphics.width, Gdx.graphics.height)
         }
         if (paused) resume()
+    }
+
+    fun startLevelScreen(key: String) {
+        val levelScreen =  screens.get(ScreenEnum.LEVEL_SCREEN.name) as MegaLevelScreen
+
+        val levelDef = levelDefs.getLevelDef(key)
+        levelScreen.music = levelDef.music
+        levelScreen.tmxMapSource = levelDef.tmxMapSource
+        levelScreen.screenOnCompletion = levelDef.screenOnCompletion
+
+        setCurrentScreen(ScreenEnum.LEVEL_SCREEN.name)
     }
 
     fun startLevelScreen(level: Level) {
@@ -244,16 +262,19 @@ class MegamanMaverickGame(
         shapeRenderer = ShapeRenderer()
         shapeRenderer.setAutoShapeType(true)
         batch = SpriteBatch()
+
         controllerPoller = defineControllerPoller()
+
         assMan = AssetManager()
         loadAssets(assMan)
         assMan.finishLoading()
+
         eventsMan = EventsManager()
         eventsMan.addListener(this)
 
         engine = createGameEngine()
 
-        levelMap = buildLevelMap()
+        levelDefs = buildLevelMap()
 
         val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
         val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
@@ -287,18 +308,18 @@ class MegamanMaverickGame(
         audioMan.soundVolume = params.soundVolume
 
         EntityFactories.initialize(this)
+
         state = GameState()
 
         megaman = Megaman(this)
-        // manually call init and set initialized to true before megaman is set to be spawned in the game engine
+        // manually call init and set initialized to true before megaman is spawned
         megaman.init()
         megaman.initialized = true
 
         megamanUpgradeHandler = MegamanUpgradeHandler(state, megaman)
-
         // Megaman should have all upgrades at the start of the game.
-        // This can be changed so that Megaman must earn each ability,
-        // but doing so will require reworking level designs and certains parts of the codebase
+        // This can be changed so that Megaman must earn each of these ability (or never attains any of them),
+        // but doing so will require reworking level designs and certain parts of the codebase
         megamanUpgradeHandler.add(MegaAbility.CHARGE_WEAPONS)
         megamanUpgradeHandler.add(MegaAbility.AIR_DASH)
         megamanUpgradeHandler.add(MegaAbility.GROUND_SLIDE)
@@ -308,7 +329,7 @@ class MegamanMaverickGame(
             ScreenEnum.LEVEL_SCREEN.name,
             MegaLevelScreen(this) {
                 when (params.startScreen) {
-                    StartScreenOption.MAIN, StartScreenOption.LEVEL -> Gdx.app.exit()
+                    StartScreenOption.MAIN -> Gdx.app.exit()
                     StartScreenOption.SIMPLE -> setCurrentScreen(ScreenEnum.SIMPLE_SELECT_LEVEL_SCREEN.name)
                 }
             })
@@ -317,18 +338,20 @@ class MegamanMaverickGame(
         screens.put(ScreenEnum.LOAD_PASSWORD_SCREEN.name, LoadPasswordScreen(this))
         screens.put(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, true))
         screens.put(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, false))
-        screens.put(ScreenEnum.BOSS_SELECT_SCREEN.name, BossSelectScreen(this))
+        screens.put(ScreenEnum.BOSS_SELECT_SCREEN.name, LevelSelectScreen(this) /* BossSelectScreen(this) */)
         screens.put(ScreenEnum.BOSS_INTRO_SCREEN.name, BossIntroScreen(this))
         screens.put(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name, SimpleInitGameScreen(this))
         screens.put(ScreenEnum.SIMPLE_SELECT_LEVEL_SCREEN.name, SimpleSelectLevelScreen(this))
         screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY_SCREEN.name, SimpleEndLevelScreen(this))
         screens.put(ScreenEnum.CREDITS_SCREEN.name, CreditsScreen(this))
 
+        setCurrentScreen(ScreenEnum.BOSS_SELECT_SCREEN.name)
+        /*
         when (params.startScreen) {
-            StartScreenOption.LEVEL -> startLevelScreen(params.startLevel!!)
             StartScreenOption.SIMPLE -> setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
             else -> setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
         }
+         */
 
         if (Gdx.app.type == ApplicationType.Android || params.showScreenController)
             screenController = ScreenController(this)
@@ -583,48 +606,36 @@ class MegamanMaverickGame(
         return engine
     }
 
-    private fun buildLevelMap(): LevelMap {
+    private fun buildLevelMap(): LevelDefMap {
+        levelDefs = LevelDefMap()
+
         val levelsJson = Gdx.files.internal(LEVELS_JSON).readString()
         val root = JsonReader().parse(levelsJson)
 
-        val bossLevels = OrderedMap<String, RobotMasterLevelDefinition>()
-        val wilyLevels = OrderedMap<String, WilyLevelDefinition>()
-
-        root.get("robot_master_levels").forEach { level ->
+        root.forEach { level ->
             val entry = level.child
-            val key = entry.getString("key", null) ?: entry.name
-            val definition = RobotMasterLevelDefinition(
-                name = entry.getString("name"),
-                atlas = entry.getString("atlas"),
-                region = entry.getString("region"),
-                level = entry.getString("level"),
-                music = entry.getString("music"),
-                screenOnCompletion = entry.getString("screen_on_completion")
+
+            val type = LevelType.valueOf(entry.getString("type"))
+            val mugshotAtlas = TextureAsset.valueOf(entry.getString("mugshot_atlas").uppercase()).source
+            val mugshotRegion = assMan.getTextureRegion(mugshotAtlas, entry.getString("mugshot_region"))
+            val music = MusicAsset.valueOf(entry.getString("music"))
+            val tmxMapSource = "${TMX_SOURCE_PREFIX}${entry.getString("tmx_map_source")}"
+            val screenOnCompletion = ScreenEnum.valueOf(entry.getString("screen_on_completion"))
+
+            val levelDef = LevelDefinition(
+                type = type,
+                music = music,
+                tmxMapSource = tmxMapSource,
+                mugshotRegion = mugshotRegion,
+                screenOnCompletion = screenOnCompletion
             )
-            bossLevels.put(key, definition)
-        }
 
-        root.get("wily_levels").forEach { level ->
-            val entry = level.child
             val key = entry.name
-            val definition = WilyLevelDefinition(
-                level = entry.getString("level"),
-                screenOnCompletion = entry.getString("screen_on_completion")
-            )
-            wilyLevels.put(key, definition)
+            levelDefs.putLevelDef(key, levelDef)
+
+            GameLogger.debug(TAG, "buildLevelMap(): key=$key, levelDef=$levelDef")
         }
 
-        val levelMap = LevelMap(bossLevels = bossLevels, wilyLevels = wilyLevels)
-
-        val json = Json().apply {
-            setOutputType(JsonWriter.OutputType.json)
-            setElementType(LevelMap::class.java, "bossLevels", RobotMasterLevelDefinition::class.java)
-            setElementType(LevelMap::class.java, "wilyLevels", WilyLevelDefinition::class.java)
-        }
-
-        val prettyPrintedJson = json.prettyPrint(levelMap)
-        GameLogger.debug(TAG, "\n$prettyPrintedJson")
-
-        return levelMap
+        return levelDefs
     }
 }

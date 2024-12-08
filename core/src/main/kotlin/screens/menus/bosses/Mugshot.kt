@@ -15,25 +15,29 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.bosses.BossType
 import java.util.function.Supplier
 
-class BossPane(
+class Mugshot(
     private val game: MegamanMaverickGame,
-    private val bossRegSupplier: Supplier<TextureRegion?>,
-    val bossName: String?,
+    private val mugshotRegionSupplier: Supplier<TextureRegion?>,
+    val name: String?,
     private val x: Int,
-    private val y: Int
+    private val y: Int,
+    private val mugshotWidth: Float = DEFAULT_MUGSHOT_WIDTH * ConstVals.PPM,
+    private val mugshotHeight: Float = DEFAULT_MUGSHOT_HEIGHT * ConstVals.PPM,
+    private val paneWidth: Float = DEFAULT_PANE_WIDTH * ConstVals.PPM,
+    private val paneHeight: Float = DEFAULT_PANE_HEIGHT * ConstVals.PPM
 ) : Initializable, Updatable, IDrawable<Batch> {
 
     companion object {
-        const val PANE_BOUNDS_WIDTH = 5.33f
-        const val PANE_BOUNDS_HEIGHT = 4f
-        const val BOTTOM_OFFSET = 1.05f
-        const val DEFAULT_SPRITE_HEIGHT = 2f
-        const val DEFAULT_SPRITE_WIDTH = 2.5f
+        const val DEFAULT_PANE_WIDTH = 5.33f
+        const val DEFAULT_PANE_HEIGHT = 4f
+        const val DEFAULT_MUGSHOT_HEIGHT = 2f
+        const val DEFAULT_MUGSHOT_WIDTH = 2.5f
+        const val BOTTOM_OFFSET = 0f
         const val PANE_HEIGHT = 3f
         const val PANE_WIDTH = 4f
     }
 
-    var bossPaneStat = BossPaneStat.UNHIGHLIGHTED
+    var state = MugshotState.NONE
 
     private lateinit var bossSprite: Sprite
     private lateinit var paneSprite: Sprite
@@ -67,21 +71,21 @@ class BossPane(
         if (initialized) return
         initialized = true
 
-        val width = when (bossName) {
-            "Moon Man" -> 5f
-            else -> DEFAULT_SPRITE_WIDTH
+        val width = when (name) {
+            "MOON MAN" -> 5f
+            else -> DEFAULT_MUGSHOT_WIDTH
         }
-        val height = when (bossName) {
-            "Moon Man" -> 3.75f
-            else -> DEFAULT_SPRITE_HEIGHT
+        val height = when (name) {
+            "MOON MAN" -> 3.75f
+            else -> DEFAULT_MUGSHOT_HEIGHT
         }
 
         bossSprite = Sprite()
         bossSprite.setSize(width * ConstVals.PPM, height * ConstVals.PPM)
         val centerX =
-            (x * PANE_BOUNDS_WIDTH * ConstVals.PPM) + (PANE_BOUNDS_WIDTH * ConstVals.PPM / 2f)
-        val centerY = (BOTTOM_OFFSET * ConstVals.PPM + y * PANE_BOUNDS_HEIGHT * ConstVals.PPM) +
-                (PANE_BOUNDS_HEIGHT * ConstVals.PPM / 2f)
+            (x * DEFAULT_PANE_WIDTH * ConstVals.PPM) + (DEFAULT_PANE_WIDTH * ConstVals.PPM / 2f)
+        val centerY = (BOTTOM_OFFSET * ConstVals.PPM + y * DEFAULT_PANE_HEIGHT * ConstVals.PPM) +
+                (DEFAULT_PANE_HEIGHT * ConstVals.PPM / 2f)
         bossSprite.setCenter(centerX, centerY)
 
         paneSprite = Sprite()
@@ -93,7 +97,7 @@ class BossPane(
         this.paneUnhighlightedAnim = Animation(paneUnhighlighted)
 
         val paneBlinking: TextureRegion = decorationAtlas.findRegion("PaneBlinking")
-        this.paneBlinkingAnim = Animation(paneBlinking, 1, 2, .125f, true)
+        this.paneBlinkingAnim = Animation(paneBlinking, 1, 2, 0.125f, true)
 
         val paneHighlighted: TextureRegion = decorationAtlas.findRegion("PaneHighlighted")
         this.paneHighlightedAnim = Animation(paneHighlighted)
@@ -102,10 +106,10 @@ class BossPane(
     override fun update(delta: Float) {
         if (!initialized) init()
 
-        val timedAnimation = when (bossPaneStat) {
-            BossPaneStat.BLINKING -> paneBlinkingAnim
-            BossPaneStat.HIGHLIGHTED -> paneHighlightedAnim
-            BossPaneStat.UNHIGHLIGHTED -> paneUnhighlightedAnim
+        val timedAnimation = when (state) {
+            MugshotState.BLINKING -> paneBlinkingAnim
+            MugshotState.HIGHLIGHTED -> paneHighlightedAnim
+            MugshotState.NONE -> paneUnhighlightedAnim
         }
         timedAnimation.update(delta)
 
@@ -114,7 +118,7 @@ class BossPane(
 
     override fun draw(drawer: Batch) {
         paneSprite.draw(drawer)
-        val bossRegion = bossRegSupplier.get()
+        val bossRegion = mugshotRegionSupplier.get()
         if (bossRegion != null) {
             bossSprite.setRegion(bossRegion)
             bossSprite.draw(drawer)
