@@ -87,13 +87,18 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
 
     private val launchPauseTimer = Timer(LAUNCH_PAUSE_DUR)
     private val shockPauseTimer = Timer(SHOCK_PAUSE_DUR)
+
     private lateinit var rotatingLine: RotatingLine
-    private lateinit var launchTarget: Vector2
-    private lateinit var returnTarget: Vector2
+
+    private val launchTarget = Vector2()
+    private val returnTarget = Vector2()
+
     private var block: Block? = null
     private var shockBall: SigmaRatElectricBall? = null
+
     private var shocked = false
     private var reachedLaunchTarget = false
+
     private var maxY = 0f
 
     override fun init() {
@@ -114,7 +119,9 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         val speed = spawnProps.get(ConstKeys.SPEED, Float::class)!!
+
         rotatingLine = RotatingLine(spawn, ConstVals.PPM.toFloat(), speed * ConstVals.PPM, DEGREES_ON_RESET)
+
         val center = rotatingLine.getMotionValue()!!
         body.setCenter(center.x, center.y)
 
@@ -144,19 +151,22 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
         clawState = SigmaRatClawState.LAUNCH
         launchPauseTimer.reset()
         reachedLaunchTarget = false
-        launchTarget = megaman().body.getCenter()
+        launchTarget.set(megaman().body.getCenter())
         GameLogger.debug(TAG, "Launch target: $launchTarget")
-        returnTarget = body.getCenter()
+        returnTarget.set(body.getCenter())
         GameLogger.debug(TAG, "Return target: $returnTarget")
     }
 
     internal fun enterShockState() {
         clawState = SigmaRatClawState.SHOCK
+
         shockPauseTimer.reset()
         shocked = false
+
         shockBall = EntityFactories.fetch(
             EntityType.PROJECTILE, ProjectilesFactory.SIGMA_RAT_ELECTRIC_BALL
         ) as SigmaRatElectricBall
+
         shockBall!!.spawn(
             props(
                 ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo body.getCenter().sub(0f, 0.15f * ConstVals.PPM)
@@ -166,6 +176,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
 
     private fun shock() {
         val shocks = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.BOLT, 2)
+
         shocks[0].spawn(
             props(
                 ConstKeys.PARENT pairTo this,
@@ -175,6 +186,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
                 ConstKeys.SCALE pairTo SHOCK_BOLT_SCALE
             )
         )
+
         shocks[1].spawn(
             props(
                 ConstKeys.PARENT pairTo this,
@@ -184,12 +196,14 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
                 ConstKeys.SCALE pairTo SHOCK_BOLT_SCALE
             )
         )
+
         requestToPlaySound(SoundAsset.BURST_SOUND, false)
 
         shockBall!!.launch(
             megaman().body.getCenter().sub(body.getCenter()).nor().scl(SHOCK_VELOCITY_Y * ConstVals.PPM)
         )
         shockBall = null
+
         requestToPlaySound(SoundAsset.BLAST_1_SOUND, false)
     }
 
@@ -217,34 +231,38 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
 
                 SigmaRatClawState.LAUNCH -> {
                     launchPauseTimer.update(delta)
-                    if (!launchPauseTimer.isFinished()) body.physics.velocity.setZero()
-                    else if (reachedLaunchTarget) {
-                        val trajectory = GameObjectPools.fetch(Vector2::class)
-                            .set(returnTarget)
-                            .sub(body.getCenter())
-                            .nor()
-                            .scl(RETURN_SPEED * ConstVals.PPM)
-                        body.physics.velocity.set(trajectory)
+                    when {
+                        !launchPauseTimer.isFinished() -> body.physics.velocity.setZero()
+                        reachedLaunchTarget -> {
+                            val trajectory = GameObjectPools.fetch(Vector2::class)
+                                .set(returnTarget)
+                                .sub(body.getCenter())
+                                .nor()
+                                .scl(RETURN_SPEED * ConstVals.PPM)
+                            body.physics.velocity.set(trajectory)
 
-                        if (body.getCenter().epsilonEquals(returnTarget, EPSILON * ConstVals.PPM)) {
-                            clawState = SigmaRatClawState.ROTATE
-                            body.physics.velocity.setZero()
+                            if (body.getCenter().epsilonEquals(returnTarget, EPSILON * ConstVals.PPM)) {
+                                clawState = SigmaRatClawState.ROTATE
+                                body.physics.velocity.setZero()
+                            }
                         }
-                    } else {
-                        val trajectory = GameObjectPools.fetch(Vector2::class)
-                            .set(launchTarget)
-                            .sub(body.getCenter())
-                            .nor()
-                            .scl(LAUNCH_SPEED * ConstVals.PPM)
-                        body.physics.velocity.set(trajectory)
 
-                        if (body.getCenter().epsilonEquals(launchTarget, EPSILON * ConstVals.PPM) ||
-                            megaman().body.getBounds().contains(body.getCenter()) ||
-                            body.getMaxY() >= maxY
-                        ) {
-                            launchPauseTimer.reset()
-                            reachedLaunchTarget = true
-                            body.physics.velocity.setZero()
+                        else -> {
+                            val trajectory = GameObjectPools.fetch(Vector2::class)
+                                .set(launchTarget)
+                                .sub(body.getCenter())
+                                .nor()
+                                .scl(LAUNCH_SPEED * ConstVals.PPM)
+                            body.physics.velocity.set(trajectory)
+
+                            if (body.getCenter().epsilonEquals(launchTarget, EPSILON * ConstVals.PPM) ||
+                                megaman().body.getBounds().contains(body.getCenter()) ||
+                                body.getMaxY() >= maxY
+                            ) {
+                                launchPauseTimer.reset()
+                                reachedLaunchTarget = true
+                                body.physics.velocity.setZero()
+                            }
                         }
                     }
 
@@ -265,7 +283,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture}
+        debugShapes.add { bodyFixture }
 
         val damagerFixture = Fixture(
             body, FixtureType.DAMAGER, GameRectangle().setSize(
@@ -274,11 +292,11 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
         )
         damagerFixture.offsetFromBodyAttachment.y = -0.35f * ConstVals.PPM
         body.addFixture(damagerFixture)
-        debugShapes.add { damagerFixture}
+        debugShapes.add { damagerFixture }
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().set(body))
         body.addFixture(damageableFixture)
-        debugShapes.add { damageableFixture}
+        debugShapes.add { damageableFixture }
 
         /*
         TODO: should this have a shield fixture?
