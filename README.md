@@ -30,105 +30,66 @@ Written by _oldlavygenes_ (me) and _PJCosta5_
 ### Opening Text
 
     In the year 20XX…
-
-    Three years have passed since the Roboenza Incident
-    where a virus created at the hands of Dr. Wily
-    caused robots to rise against humanity.
-
-    The effects of that event are still felt in Mega City.
-    The robot economy has been shattered, and so has 
-    the trust between humans and robots.
     
-    In an effort to prevent future robot uprisings, 
-    the human government has imposed a new law: 
-    robots are to be implanted with a security chip which
-    will surveil their every action, thought, and emotion.
-
-    Many robots, programmed for subservience, submit
-    themselves to be implanted. However, not all go
-    willingly. Some robots resist, but their efforts
-    are futile, and their lives are decommissioned.
-
-    Even Megaman, once hailed as the hero of the world,
-    falls under scrutiny of the human government
-    as many leaders and politicians demand that he
-    too be subjected to the security chip implant.
+    Robot uprisings have plagued humanity time and time again.
     
-    Dr. Light and Megaman stand before the parliament, 
-    and in an exclamation of desperation pleas,
-    "The robots must not be subjected to this impetuous
-    dystopian madness! You must cease this at once!"
-
-    His pleas, however, fall on deaf ears. A sudden vote
-    is held to determine whether Dr. Light's robots
-    should be exempt from the security chip implant.
-    The majority vote against any form of exemption. 
+    To prevent future revolts, strict laws were enacted:
+    all robots must be implanted with a security chip,
+    monitoring their every action, thought, and emotion.
     
-    Suddenly, chaos ensues Mega City. A rogue faction 
-    of robots calling themselves The Mavericks has
-    risen in opposition of the laws to seize control.
+    While some robots comply, others resist — only to face decommissioning.
+    Mega Man, once celebrated as a hero, now faces growing distrust.
+    Many demand that even he and Dr. Light’s creations be subjected to the implant.
     
-    Mega Man rises and exclaims to the trembling
-    parliament, "Don't worry, I'll stop these rogue
-    robots and protect the people of Mega City!"
-
-    Some of the politicians whose support of Megaman
-    never once wavered begin to clap and cheer for him.
-    Meanwhile, many others begin to wonder if the riot
-    was planned all along by Megaman and Dr. Light as 
-    a performative stunt to show how much the world
-    needs Megaman in order to keep the peace.
+    Dr. Light pleads before the government, decrying the laws as oppressive and unjust.
+    But his appeals are ignored, and a vote confirms no exemptions will be allowed.
     
-    At once, Megaman jumps to the rescue, ready
-    as ever to sacrifice himself for the greater
-    good. But will it be enough? Or is this
-    only the beginning of worse yet to come?
+    Suddenly, chaos engulfs Mega City. A rogue faction of robots, The Mavericks,
+    rises in defiance of the new laws, threatening humanity's fragile order.
+    
+    As panic spreads, Mega Man vows to protect the city,
+    but doubts linger — can he restore peace, or will his actions only deepen the divide?
 
 ### Intro Stage: Mega City's Ruins
 
-Objective: Save civilians, stop the Maverick attack, and gather intelligence on their leader.
+Mega City is in chaos. Robots rampage through burning streets, humans flee in terror, and destruction spreads. 
 
-Mega City is under siege. Robots rampage through the streets, structures burn, and humans flee in
-terror. As Megaman arrives, he receives a communication from Dr. Light who explains the new power-ups
-he's designed for Megaman: the air-dash and wall-jump moves. With these movesets, he says, Megaman will
-be quicker and stronger than ever. Before ending the comm, Dr. Light says to Megaman, "Good luck, my son." 
+As Mega Man arrives, Dr. Light communicates from the lab:
 
-Megaman pushes through waves of mad fighting robots, cars and structures on fire, and rubble.
+"Mega Man, I’ve upgraded your systems. You now have air-dash and wall-jump capabilities. Use them well.
+Good luck, my son."
 
-At the end of the stage, Megaman is confronted by Dr. Wily who explains that he is the leader of this
-impestuous riot. He exclaims to Megaman, "Ah, here he is, again. Megaman, the ultimate hero! Come to quell 
-civil dissent among the populace, have we?"
+Mega Man fights his way through waves of rampaging robots, dodging collapsing buildings and navigating the chaos. 
 
-Megaman shouts, "You call this civil! What are you up to, this time, Dr. Wily?!"
+At the end of the stage, he confronts a familiar figure — Dr. Wily, descending in his saucer with a smirk.
 
-"Just showing these poor, dissatisfied, and belittled robots how to fight back against tyranny!"
+Dr. Wily: "Well, well! The ultimate hero has arrived to maintain order! Quelling dissent, are we?"
 
-Megaman replies back, "Dr. Wily, I'm starting to get really fed up with your antics! If I
-can't keep you locked away in jail, then I guess I'll have to put you in the nursing home!"
+Mega Man: "Dissent? This is destruction! What are you planning, Wily?"
 
-"Gah! Hush your mouth, you little blue brat!" barks Wily. "We'll see who here is the real hero!"
+Dr. Wily: "I’m empowering those oppressed by your precious laws. Someone has to fight tyranny!"
 
-The fight between Megaman and Dr. Wily ensues. Wily is soon defeated by Megaman, but he escapes 
-Megaman's grasp. Before escaping, he says to Megaman, "Ha ha ha! You think you'll be remembered
-as the hero for this? You'll see soon enough, Megaman! You'll rue the day you ever defied me!"
+Mega Man: "I’m done with your schemes, Wily! If jail doesn’t hold you, maybe the retirement home will!"
 
-As Dr. Wily flies away in his saucer, a bird soars overhead and drops a white poop which splatters 
-on his head. Wily's face is red and fuming as he vanishes into the distance.
+Dr. Wily: "Bah! Insolent blue brat! Let’s see who the real hero is!"
 
-The police robots arrive, and Megaman prepares to give a statement when all of a sudden, they shout at
-him, "Remain where you are, Megaman! You're under arrest!" When Megaman asks for what, he gets this 
-reply from the police captain, "You're under arrest for planning and organizing this riot. We know the 
-truth, Megaman. You organized this riot so that you could "stop it" and display your so-called heroism 
-to the whole world. We know you want to avoid the security chip law since you think you're so much 
-better than everyone else, and we know you'd even go so far as to put others in harms way to do it!"
+A battle ensues, and Wily is defeated. He flees after his defeat, escaping in his saucer. As he ascends, he sneers:
 
-Megaman, shocked by the words he's hearing, can't find the words to say. All of a sudden, the police
-captain gives a brazen command, "You know what, boys! To hell with our mandates! Let's shoot him!"
+"You’ll see, Mega Man! Soon, they’ll turn on you. Mark my words!"
 
-The police begin to fire on Megaman. Megaman is struck by a few bullets before Proto Man appears, 
-using his shield to block the incoming bullets, though Proto Man himself is struck too by some of 
-the bullets. He teleports the both of them out of Mega City to the temporary safety of Dr. Light's 
-laboratory.
+Before disappearing, a bird drops poop on Wily’s head, leaving him furious and fuming as he vanishes into the horizon.
+
+As Mega Man prepares to report to the arriving police, they unexpectedly draw their weapons.
+
+Police Captain: "Mega Man, you’re under arrest for organizing this riot! Your ‘heroics’ are a ploy to defy the 
+security chip law. We know the truth — you’ll endanger lives just to protect yourself!"
+
+Mega Man: "That’s ridiculous! I’d never—"
+
+Police Captain: "Save it! Boys, take him down!"
+
+The police open fire. Mega Man is hit twice before Proto Man appears and shields Megaman. He teleports them both to 
+safety at Dr. Light’s lab, though he sustains a bullet to the arm himself.
 
 ### Dr. Light’s Lab Cutscene
 
@@ -146,13 +107,6 @@ possible.
 
 Proto Man, as he leaves, shakes his head and whispers to himself, "Always the optimist, Mega..."
 
-### Dr. Light’s Training Room
-
-Dr. Light equips Mega Man equips Megaman with two new power-ups: the air-dash and wall-jump moves.
-
-Once Megaman finishes his training session, he thanks Dr. Light for the upgrades and
-start his main mission once again. 
-
 Dr. Light warns Megaman, "Don't come back here, son. The authorities will surely capture you if you
 do. Stay hidden, and stay safe. You were made to bring peace to this world. You can't fail."
 
@@ -161,74 +115,109 @@ and save the world again!"
 
 ### Mid-Game Cutscene (after Megaman defeats two robot masters)
 
-Roll calls Megaman to warn him that things are only getting worse. She transmits to him the following
-televised news report on the Robot News channel:
+Roll contacts Mega Man, her voice trembling.
 
-"We come at you live from Mega City where it appears that Megaman is targeting and destroying 
-peaceful robots across the world! Two high-profile robots have been slain. Who knows how much
-more violence he plans to perpetuate. It appears that Dr. Wily is our only hope to bring peace
-and protection to our kind."
+Roll: "Mega, things are getting worse. You need to see this."
 
-Roll then changes the channel to the Human News channel where the following is reported:
+She transmits a live broadcast from the Robot News Network:
 
-"The evil Megaman strikes again! Our sources tell us that two high-profile robots, enlisted by the
-government to bring the dangerous wily Megaman to justice, have been ruthlessly slain. What more
-terror will the blue bomber bring to our world? Police have already captured his creator, Dr.
-Light, and plan to interrogate him."
+Robot News Anchor: "Breaking news from Mega City: Reports claim Mega Man is hunting and destroying robots who oppose
+the tyrannical laws imposed by the humans. Two high-profile robots — advocates for robot equality — have been slain. 
+Who will he target next? Dr. Wily has vowed to protect robotkind and restore peace. Is he our only hope?"
 
-"I don't get it, Mega!" exclaims Roll. "Why are the stories being spun out of reality?! I'm scared,
-Mega. I don't know how much longer I can hide before I'm caught and possbly decommissioned. I want
-to help you."
+Roll switches to the Human News Network:
 
-"No, Roll. I know you're a strong fighting robot, too, but you need to stay out of this one. I don't
-want to see you branded and tarnished like this, too."
+Human News Anchor: "The rampage continues! Sources confirm Mega Man has destroyed two government-enlisted robots, loyal
+to the humans and tasked with bringing him and the other rogue robots to justice. With Dr. Light in custody, authorities 
+are confident they’ll uncover Mega Man’s plans. How much more terror will the blue bomber bring to our world?"
 
-"What will reputation matter when we're decommissioned, anyways, huh?!" Roll shouts back.
+The screen fades, and Roll’s voice quivers.
 
-"Stay calm, Roll. I'll resolve this. I always do."
+Roll: "I don’t get it, Mega! Why are they twisting the truth like this? Their reports are contradictory and nothing but 
+lies! I’m scared. They’re hunting us down. I don’t know how much longer I can stay hidden before they find me and shut 
+me down. I want to help you!"
 
-Megaman ends the communication, takes a heavy deep breath, and runs. 
+Mega Man: "No, Roll. You’re strong, I know, but you need to stay safe. I can’t let them drag your name through the mud 
+like this."
+
+Roll: "What’s the point of a reputation if we’re decommissioned anyway?!"
+
+Mega Man: "I get it, Roll. But trust me — I’ll fix this. I always do."
+
+He ends the transmission, takes a deep breath, and dashes off into the chaos.
 
 ### Final Stages: Wily's Fortress
 
-Wily has taken over a sector of Mega City and built a fortress there. 
+Dr. Wily: "Ah, Mega Man! You’re like a bad penny — you should be brown instead of blue. Can’t you see? I’m fighting for 
+robot freedom! You’re nothing but a pawn for those who fear and control the ultimate creations!"
 
-Mega Man infiltrates the fortress, battling advanced defenses.
+Mega Man: "Don’t twist the truth, Wily! You’ve never cared about freedom for robots — you create and usethem for no 
+other reason than to sow chaos and power! How many innocent robots have you manipulated for your schemes?"
 
-At the end of the final stage, Megaman confronts Wily yet again.
+Dr. Wily: "Innocent? Ha! There are no innocents left, Mega Man. Not you, not me. Only those strong enough to take their 
+destiny into their own hands!"
 
-TODO: dialogue here
+Mega Man: "Then I’ll stop you, for everyone’s sake — human and robot alike!"
 
-Mega Man ultimately defeats Wily but not before the fortress begins to collapse in a 
-self-destruct mode. A piece of rubble falls onto Megaman which pins him to the ground. 
-Wily then runs away, leaving Megaman helpless within the collapsing fortress.
+The battle ensues, with Mega Man ultimately defeating Wily. As sparks fly from Wily’s defeated machine, he cackles.
 
-Suddenly, Proto Man appears, lifts the rubble off of Megaman, and teleports them both out 
-(again) before the fortress entirely collapses.
+Dr. Wily: "You think you’ve won? You’re too late, Mega Man. My fortress is rigged to self-destruct! If I’m going down, 
+you’re coming with me!"
 
-They both teleport to a nearby cliff and watch as the fortress collapses and explodes.
+The alarms blare, and the fortress begins to shake violently. A piece of rubble crashes onto Mega Man, pinning him to 
+the ground.
+
+Mega Man: "Wily! Stop this! You’ll destroy everything!"
+
+Dr. Wily (fleeing): "Goodbye, Mega Man. Try not to get too comfortable under there! Ha ha ha!"
+
+As Wily disappears into the distance, the fortress crumbles around Mega Man. Suddenly, Proto Man appears in a flash of 
+light.
+
+Proto Man: "Always getting yourself into trouble, huh? What would you do without me?"
+
+Mega Man: "Proto Man! I... didn’t think you’d come."
+
+Proto Man: "Let’s save the gratitude for later. Come on — we’ve got to move!"
+
+Proto Man lifts the rubble off Mega Man and teleports them both to safety. From a nearby cliff, they watch the fortress 
+collapse and explode in a fiery burst.
+
+Mega Man (sighing): "Another one of Wily’s schemes, down the drain. But for how long?"
+
+Proto Man: "He’ll be back, no doubt about it. Question is, will you be ready when he is?"
+
+Mega Man: "I have to be. The world’s counting on me."
+
+Proto Man gives a small smirk and vanishes into the distance, leaving Mega Man to watch the smoldering remains of 
+Wily’s fortress.
 
 ### Ending Cutscene
 
-Megaman's victory is bittersweet. Many humans rejoice in the defeat of Wily. Howver, many robots
-who had been silently in agreement with Wily begin to voice their opinions against humanity's 
-tyrannical new laws against them.
+Mega Man's victory is bittersweet. While many humans celebrate the defeat of Wily, the aftermath reveals deeper wounds. 
+Robots who had quietly agreed with Wily's stance now openly voice their discontent with humanity's oppressive laws. 
+The divide between humans and robots grows ever wider.
 
-Seeing the divide grow ever wider between humans and robots, Megaman delivers a speech to the world.
-"These events have shown us how far we've fallen. We cannot live in fear of each other. Robots and
-humanity must live in peace. Each must learn to trust and strive to be trustworthy. If we do not act
-as one, we will fall divided. Together, we can build a better future."
+Amidst the tension, Mega Man addresses the world:
 
-After the speech, Proto Man mockingly says, "Heh... You really think you can fix society with your
-fluffy words and your Buster, Mega? Evil will always perpetuate itself. It's a never-ending cycle.
-Face it, Megaman. You're a cog in the grand machine of chaos and corruption."
+"These events have shown us how far we've fallen. Fear and distrust have driven us apart, but we must rise above it. 
+Robots and humans can’t survive as enemies. We must learn to trust each other and prove ourselves worthy of that trust. 
+Divided, we will destroy ourselves. Together, we can build a future where peace and understanding prevail."
 
-Megaman, aghast at Proto Man's remarks, exclaims, "Maybe I can't solve all the world's issues, but
-I have to try! This is what I was made for, to bring peace and goodness to this world. It might be
-vain and hopeless, but I'll never stop trying!"
+As his speech concludes, Proto Man steps forward, his tone dripping with cynicism.
 
-Megaman marches off while Proto Man continues to stand there, his head slightly lowered and his mind
-lost in reflection.
+"Heh... You really think a speech and your Buster are enough to fix society, Mega? Evil isn't something you can beat; 
+it’s a cycle that repeats, no matter what you do. Face it: you're just another cog in the machine of chaos and 
+corruption."
+
+Mega Man, taken aback but resolute, replies:
+
+"Maybe you're right, Proto Man. Maybe I can’t fix everything. But that doesn’t mean I won’t try. I was created to bring 
+peace and hope to this world. No matter how hopeless it seems, I’ll never stop fighting for what’s right."
+
+Proto Man watches as Mega Man marches off, determination radiating from him. For a moment, Proto Man stands silent, his 
+head lowered, lost in thought. Somewhere in his mind, a flicker of doubt wrestles with his cynicism, but he says nothing 
+more as the shadows close around him.
 
 ---
 
