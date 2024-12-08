@@ -2,21 +2,19 @@
 
 ---
 
-**Megaman Maverick** is a fan game based on the [classic Megaman series by Capcom](https://megaman.fandom.com/wiki/Mega_Man_(original_series)).
-All rights to the "Megaman" franchise are owned by Capcom. This game is developed solely for non-commercial purposes, 
-in line with Capcom's lenient approach towards fan projects that do not seek to profit.
+Megaman Maverick is a non-commercial fan game based on the [classic Megaman series by Capcom](https://megaman.fandom.com/wiki/Mega_Man_(original_series)). 
+All rights to "Megaman" are owned by Capcom, and this project aligns with their lenient stance on fan works.
 
-The game is currently under active development and is in a **pre-alpha** stage.
+Currently in pre-alpha, the game features assets from official Capcom titles and the community (see [Credits](#Credits)). 
+Special thanks to these creators for helping make this dream project a reality!
 
-The game uses assets from the official Capcom games as well as from the community. See the [Credits](#Credits) section
-below for attributions to the creators. Special thanks to these creators for helping to make my dream of creating
-a Megaman game become a reality!
+- Engine: [Mega 2D Game Engine](https://github.com/JohnLavender474/Mega-2D-Game-Engine)
+- Framework: [LibGDX](https://libgdx.com/)
+- Language: [Kotlin](https://kotlinlang.org/)
 
-The game is built using the [Mega 2D Game Engine](https://github.com/JohnLavender474/Mega-2D-Game-Engine), an engine
-built on top of the popular open-source [LibGDX game library](https://libgdx.com/). This game is programmed primarily in
-Kotlin, with few parts written in Java.
+Check out my [YouTube channel](https://youtube.com/playlist?list=PL4ZszXL-HC0r0E6Eb5NCFGhsi93AXoDZj&si=IITydzhhTSKmxc5-) for demos!
 
-View my YouTube channel for demos and more! https://youtube.com/playlist?list=PL4ZszXL-HC0r0E6Eb5NCFGhsi93AXoDZj&si=IITydzhhTSKmxc5-
+Join the [Discord server](https://discord.gg/Cab2XMKs) for updates!
 
 <img src="img/MainScreen.png" width="600px"/>
 <img src="img/BossSelectScreen.png" width="600px"/>
