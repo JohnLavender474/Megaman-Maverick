@@ -218,23 +218,22 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
 
     private fun defineSpritesComponent(): SpritesComponent {
         val spritesComponent = SpritesComponent()
-
         val platformSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
         platformSprite.setRegion(regions["platform"])
         spritesComponent.sprites.put("platform", platformSprite)
-        spritesComponent.putUpdateFunction("platform") { _, _sprite ->
-            _sprite.setSize(body.getSize())
-            _sprite.setCenter(body.getCenter())
+        spritesComponent.putUpdateFunction("platform") { _, sprite ->
+            sprite.setSize(body.getSize())
+            sprite.setCenter(body.getCenter())
         }
 
         for (i in 0..RING_COUNT) {
             val ringSprite = GameSprite(regions["ring"], DrawingPriority(DrawingSection.FOREGROUND, 2))
             ringSprite.setSize(0.25f * ConstVals.PPM)
             spritesComponent.sprites.put("ring_$i", ringSprite)
-            spritesComponent.putUpdateFunction("ring_$i") { _, _sprite ->
+            spritesComponent.putUpdateFunction("ring_$i") { _, sprite ->
                 val distance = (i.toFloat() / RING_COUNT.toFloat()) * pendulum.length
                 val center = pendulum.getPointFromAnchor(distance)
-                _sprite.setPosition(center, Position.BOTTOM_CENTER)
+                sprite.setPosition(center, Position.BOTTOM_CENTER)
             }
         }
 

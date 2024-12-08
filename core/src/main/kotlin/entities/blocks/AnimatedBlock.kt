@@ -22,8 +22,6 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.utils.GameObjectPools
-
-import com.megaman.maverick.game.utils.extensions.getSize
 import com.megaman.maverick.game.world.body.getCenter
 
 open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity {
@@ -33,8 +31,9 @@ open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntit
     }
 
     lateinit var region: TextureRegion
-    lateinit var trajectory: Vector2
-    lateinit var spriteSize: Vector2
+
+    val trajectory = Vector2()
+    val spriteSize = Vector2()
 
     var deathPredicate: ArgsPredicate<Properties>? = null
     var hidden = false
@@ -51,13 +50,13 @@ open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntit
         GameLogger.debug(TAG, "spawn(): spawnProps = $spawnProps")
         super.onSpawn(spawnProps)
 
-        trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2.Zero, Vector2::class).cpy()
+        trajectory.set(spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2.Zero, Vector2::class))
         deathPredicate = spawnProps.get(ConstKeys.DEATH) as ArgsPredicate<Properties>?
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
 
-        spriteSize = spawnProps.getOrDefault(ConstKeys.SIZE, bounds.getSize(), Vector2::class)
+        spriteSize.set(spawnProps.getOrDefault(ConstKeys.SIZE, bounds.getSize(spriteSize), Vector2::class))
         spriteSize.x = spawnProps.getOrDefault(ConstKeys.WIDTH, bounds.getWidth(), Float::class)
         spriteSize.y = spawnProps.getOrDefault(ConstKeys.HEIGHT, bounds.getHeight(), Float::class)
 

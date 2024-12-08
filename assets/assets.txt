@@ -1689,6 +1689,7 @@ sprites/piskel/Megaman_RUSH_JET.piskel
 sprites/piskel/InfernoManFace.piskel
 sprites/piskel/BossFaces.piskel
 sprites/piskel/WoodPlank.piskel
+sprites/piskel/DarkSamus993-FireManTileset.piskel
 sprites/piskel/SprBGTomahawk_v2.piskel
 sprites/piskel/UF_Oh_No_Bot_1.piskel
 sprites/piskel/Death_Bomb.piskel
@@ -1797,6 +1798,7 @@ tiled_maps/tsx/mm9jewel.tsx
 tiled_maps/tsx/Cave.tsx
 tiled_maps/tsx/MM3Wily3.tsx
 tiled_maps/tsx/ChillMan.tsx
+tiled_maps/tsx/DarkSamus993-FireManTileset.tsx
 tiled_maps/tsx/mm9splash.tsx
 tiled_maps/tsx/Hornetman.tsx
 tiled_maps/tsx/MagmaMan.tsx
@@ -1918,6 +1920,7 @@ tiled_maps/png/ForestTiles.png
 tiled_maps/png/mm10wily1.png
 tiled_maps/png/tstMM10Endless.png
 tiled_maps/png/mm10-final-stage.png
+tiled_maps/png/DarkSamus993-FireManTileset.png
 tiled_maps/png/SprBGTomahawk.png
 tiled_maps/png/React_Man_2.png
 tiled_maps/png/SkyMan.png
@@ -2129,6 +2132,7 @@ tiled_maps/tmx/FreezeMan.tmx
 tiled_maps/tmx/Test6.tmx
 tiled_maps/tmx/DesertMan_v3.tmx
 tiled_maps/tmx/RodentMan.tmx
+tiled_maps/tmx/InfernoMan_16x12_v2.tmx
 tiled_maps/tmx/MagnetMan_OLD.tmx
 tiled_maps/tmx/MoonMan.tmx
 tiled_maps/tmx/CrewMan.tmx
