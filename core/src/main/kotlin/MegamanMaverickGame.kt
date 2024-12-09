@@ -23,7 +23,6 @@ import com.mega.game.engine.behaviors.BehaviorsSystem
 import com.mega.game.engine.common.GameLogLevel
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IPropertizable
@@ -78,16 +77,14 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.levels.LevelDefMap
 import com.megaman.maverick.game.levels.LevelDefinition
-import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 import com.megaman.maverick.game.screens.menus.*
-import com.megaman.maverick.game.screens.menus.bosses.BossIntroScreen
-import com.megaman.maverick.game.screens.menus.temp.LevelSelectScreen
+import com.megaman.maverick.game.screens.menus.bosses.LevelSelectScreen
+import com.megaman.maverick.game.screens.menus.temp.BossIntroScreen
 import com.megaman.maverick.game.screens.other.CreditsScreen
 import com.megaman.maverick.game.screens.other.SimpleEndLevelScreen
 import com.megaman.maverick.game.screens.other.SimpleInitGameScreen
@@ -120,7 +117,6 @@ class MegamanMaverickGame(
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        const val LEVELS_JSON = "json/levels.json"
         const val TMX_SOURCE_PREFIX = "tiled_maps/tmx/"
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
@@ -154,8 +150,6 @@ class MegamanMaverickGame(
     lateinit var megaman: Megaman
     lateinit var megamanUpgradeHandler: MegamanUpgradeHandler
 
-    lateinit var levelDefs: LevelDefMap
-
     var paused = false
 
     private lateinit var debugText: MegaFontHandle
@@ -176,13 +170,12 @@ class MegamanMaverickGame(
         if (paused) resume()
     }
 
-    fun startLevelScreen(key: String) {
-        val levelScreen =  screens.get(ScreenEnum.LEVEL_SCREEN.name) as MegaLevelScreen
+    fun startLevelScreen(levelDef: LevelDefinition) {
+        val levelScreen = screens.get(ScreenEnum.LEVEL_SCREEN.name) as MegaLevelScreen
 
-        val levelDef = levelDefs.getLevelDef(key)
-        levelScreen.music = levelDef.music
-        levelScreen.tmxMapSource = levelDef.tmxMapSource
-        levelScreen.screenOnCompletion = levelDef.screenOnCompletion
+        levelScreen.screenOnCompletion = ScreenEnum.valueOf(levelDef.screenOnCompletion)
+        levelScreen.tmxMapSource = "${TMX_SOURCE_PREFIX}${levelDef.tmxMapSource}"
+        levelScreen.music = MusicAsset.valueOf(levelDef.music)
 
         setCurrentScreen(ScreenEnum.LEVEL_SCREEN.name)
     }
@@ -274,20 +267,19 @@ class MegamanMaverickGame(
 
         engine = createGameEngine()
 
-        levelDefs = buildLevelMap()
-
-        val screenWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
-        val screenHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
-
+        val gameWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
+        val gameHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
         val gameCamera =
             RotatableCamera(onJustFinishedRotating = {
                 setCameraRotating(false)
                 eventsMan.submitEvent(Event(EventType.END_GAME_CAM_ROTATION))
             })
-        val gameViewport = FitViewport(screenWidth, screenHeight, gameCamera)
+        val gameViewport = FitViewport(gameWidth, gameHeight, gameCamera)
         viewports.put(ConstKeys.GAME, gameViewport)
 
-        val uiViewport = FitViewport(screenWidth, screenHeight)
+        val uiWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
+        val uiHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
+        val uiViewport = FitViewport(uiWidth, uiHeight)
         viewports.put(ConstKeys.UI, uiViewport)
 
         val fpsTextSupplier: () -> String = { "FPS: ${Gdx.graphics.framesPerSecond}" }
@@ -338,7 +330,7 @@ class MegamanMaverickGame(
         screens.put(ScreenEnum.LOAD_PASSWORD_SCREEN.name, LoadPasswordScreen(this))
         screens.put(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, true))
         screens.put(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, false))
-        screens.put(ScreenEnum.BOSS_SELECT_SCREEN.name, LevelSelectScreen(this) /* BossSelectScreen(this) */)
+        screens.put(ScreenEnum.BOSS_SELECT_SCREEN.name, LevelSelectScreen(this))
         screens.put(ScreenEnum.BOSS_INTRO_SCREEN.name, BossIntroScreen(this))
         screens.put(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name, SimpleInitGameScreen(this))
         screens.put(ScreenEnum.SIMPLE_SELECT_LEVEL_SCREEN.name, SimpleSelectLevelScreen(this))
@@ -604,38 +596,5 @@ class MegamanMaverickGame(
         properties.put(ConstKeys.SYSTEMS, systems)
 
         return engine
-    }
-
-    private fun buildLevelMap(): LevelDefMap {
-        levelDefs = LevelDefMap()
-
-        val levelsJson = Gdx.files.internal(LEVELS_JSON).readString()
-        val root = JsonReader().parse(levelsJson)
-
-        root.forEach { level ->
-            val entry = level.child
-
-            val type = LevelType.valueOf(entry.getString("type"))
-            val mugshotAtlas = TextureAsset.valueOf(entry.getString("mugshot_atlas").uppercase()).source
-            val mugshotRegion = assMan.getTextureRegion(mugshotAtlas, entry.getString("mugshot_region"))
-            val music = MusicAsset.valueOf(entry.getString("music"))
-            val tmxMapSource = "${TMX_SOURCE_PREFIX}${entry.getString("tmx_map_source")}"
-            val screenOnCompletion = ScreenEnum.valueOf(entry.getString("screen_on_completion"))
-
-            val levelDef = LevelDefinition(
-                type = type,
-                music = music,
-                tmxMapSource = tmxMapSource,
-                mugshotRegion = mugshotRegion,
-                screenOnCompletion = screenOnCompletion
-            )
-
-            val key = entry.name
-            levelDefs.putLevelDef(key, levelDef)
-
-            GameLogger.debug(TAG, "buildLevelMap(): key=$key, levelDef=$levelDef")
-        }
-
-        return levelDefs
     }
 }

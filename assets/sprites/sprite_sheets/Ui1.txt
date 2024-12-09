@@ -1,48 +1,62 @@
 Ui1.png
-size: 1990, 1790
+size: 1982, 1714
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 Arrow
   rotate: false
-  xy: 168, 0
+  xy: 232, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Background
   rotate: false
-  xy: 360, 0
+  xy: 392, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Bar
   rotate: false
-  xy: 1000, 0
+  xy: 456, 0
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 Bit
   rotate: false
-  xy: 290, 128
+  xy: 720, 64
   size: 292, 76
   orig: 292, 76
   offset: 0, 0
   index: -1
+black
+  rotate: false
+  xy: 264, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 BlackBar
   rotate: false
-  xy: 424, 0
+  xy: 712, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 BlackBit
   rotate: false
-  xy: 200, 0
+  xy: 296, 0
   size: 32, 32
   orig: 32, 32
+  offset: 0, 0
+  index: -1
+blue
+  rotate: false
+  xy: 776, 0
+  size: 80, 64
+  orig: 80, 64
   offset: 0, 0
   index: -1
 BorderBlock
@@ -54,273 +68,371 @@ BorderBlock
   index: -1
 Canvas
   rotate: false
-  xy: 400, 720
+  xy: 800, 644
   size: 512, 480
   orig: 512, 480
   offset: 0, 0
   index: -1
 EmptyBit
   rotate: false
-  xy: 582, 128
+  xy: 1012, 64
   size: 388, 102
   orig: 388, 102
   offset: 0, 0
   index: -1
 MegamanHelmet
   rotate: false
-  xy: 1222, 320
+  xy: 1584, 360
   size: 300, 284
   orig: 300, 284
   offset: 0, 0
   index: -1
 MegamanMaverick
   rotate: false
-  xy: 488, 0
+  xy: 856, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 MegamanPose
   rotate: false
-  xy: 1256, 0
+  xy: 460, 168
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 MegamanSubtitle
   rotate: false
-  xy: 912, 720
+  xy: 506, 360
   size: 1078, 270
   orig: 1078, 270
   offset: 0, 0
   index: -1
 MegamanTitle
   rotate: false
-  xy: 0, 1200
+  xy: 0, 1124
   size: 1982, 590
   orig: 1982, 590
   offset: 0, 0
   index: -1
+MugshotPane/blinking
+  rotate: false
+  xy: 588, 168
+  size: 80, 128
+  orig: 80, 128
+  offset: 0, 0
+  index: -1
+MugshotPane/highlighted
+  rotate: false
+  xy: 920, 0
+  size: 80, 64
+  orig: 80, 64
+  offset: 0, 0
+  index: -1
+MugshotPane/left
+  rotate: false
+  xy: 1000, 0
+  size: 80, 64
+  orig: 80, 64
+  offset: 0, 0
+  index: -1
+MugshotPane/none
+  rotate: false
+  xy: 1080, 0
+  size: 80, 64
+  orig: 80, 64
+  offset: 0, 0
+  index: -1
+MugshotPane/right
+  rotate: false
+  xy: 1160, 0
+  size: 80, 64
+  orig: 80, 64
+  offset: 0, 0
+  index: -1
+MugshotPane/Text/DESERT_MAN
+  rotate: false
+  xy: 1240, 0
+  size: 80, 64
+  orig: 80, 64
+  offset: 0, 0
+  index: -1
+MugshotPane/Text/GLACIER_MAN
+  rotate: false
+  xy: 1320, 0
+  size: 80, 64
+  orig: 80, 64
+  offset: 0, 0
+  index: -1
+MugshotPane/Text/INFERNO_MAN
+  rotate: false
+  xy: 1400, 0
+  size: 80, 64
+  orig: 80, 64
+  offset: 0, 0
+  index: -1
+MugshotPane/Text/MOON_MAN
+  rotate: false
+  xy: 1480, 0
+  size: 80, 64
+  orig: 80, 64
+  offset: 0, 0
+  index: -1
+MugshotPane/Text/PRECIOUS_MAN
+  rotate: false
+  xy: 1560, 0
+  size: 80, 64
+  orig: 80, 64
+  offset: 0, 0
+  index: -1
+MugshotPane/Text/REACTOR_MAN
+  rotate: false
+  xy: 1640, 0
+  size: 80, 64
+  orig: 80, 64
+  offset: 0, 0
+  index: -1
+MugshotPane/Text/RODENT_MAN
+  rotate: false
+  xy: 1720, 0
+  size: 80, 64
+  orig: 80, 64
+  offset: 0, 0
+  index: -1
+MugshotPane/Text/TIMBER_WOMAN
+  rotate: false
+  xy: 1800, 0
+  size: 80, 64
+  orig: 80, 64
+  offset: 0, 0
+  index: -1
 OrangeBit
   rotate: false
-  xy: 232, 0
+  xy: 8, 0
   size: 64, 16
   orig: 64, 16
   offset: 0, 0
   index: -1
 Pane
   rotate: false
-  xy: 552, 0
+  xy: 1880, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 PaneBlinking
   rotate: false
-  xy: 744, 0
+  xy: 0, 64
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 PaneHighlighted
   rotate: false
-  xy: 616, 0
+  xy: 128, 64
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 PaneShattered
   rotate: false
-  xy: 680, 0
+  xy: 192, 64
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 RedBit
   rotate: false
-  xy: 512, 320
+  xy: 0, 168
   size: 460, 118
   orig: 460, 118
   offset: 0, 0
   index: -1
 RedDot
   rotate: false
-  xy: 296, 0
+  xy: 328, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ScreenController/a
   rotate: false
-  xy: 8, 0
+  xy: 72, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ScreenController/arrow
   rotate: false
-  xy: 24, 0
+  xy: 88, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ScreenController/arrow_pressed
   rotate: false
-  xy: 40, 0
+  xy: 104, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ScreenController/b
   rotate: false
-  xy: 56, 0
+  xy: 120, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ScreenController/button
   rotate: false
-  xy: 72, 0
+  xy: 136, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ScreenController/button_pressed
   rotate: false
-  xy: 88, 0
+  xy: 152, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ScreenController/command
   rotate: false
-  xy: 104, 0
+  xy: 168, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ScreenController/command_pressed
   rotate: false
-  xy: 120, 0
+  xy: 184, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ScreenController/select
   rotate: false
-  xy: 136, 0
+  xy: 200, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 ScreenController/start
   rotate: false
-  xy: 152, 0
+  xy: 216, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 StageSelectBox_Blinking
   rotate: false
-  xy: 872, 0
+  xy: 256, 64
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 StageSelectBox_Highlighted
   rotate: false
-  xy: 1522, 320
+  xy: 0, 644
   size: 400, 400
   orig: 400, 400
   offset: 0, 0
   index: -1
 StageSelectBox_Unhighlighted
   rotate: false
-  xy: 0, 720
+  xy: 400, 644
   size: 400, 400
   orig: 400, 400
   offset: 0, 0
   index: -1
 StandardBit
   rotate: false
-  xy: 970, 128
+  xy: 1400, 64
   size: 386, 104
   orig: 386, 104
   offset: 0, 0
   index: -1
 Stars
   rotate: false
-  xy: 1384, 0
+  xy: 384, 64
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 Stars1
   rotate: false
-  xy: 1356, 128
+  xy: 1214, 168
   size: 256, 192
   orig: 256, 192
   offset: 0, 0
   index: -1
 Stars2
   rotate: false
-  xy: 1612, 128
+  xy: 1470, 168
   size: 256, 192
   orig: 256, 192
   offset: 0, 0
   index: -1
 Stars3
   rotate: false
-  xy: 0, 320
+  xy: 1726, 168
   size: 256, 192
   orig: 256, 192
   offset: 0, 0
   index: -1
 Stars4
   rotate: false
-  xy: 256, 320
+  xy: 0, 360
   size: 256, 192
   orig: 256, 192
   offset: 0, 0
   index: -1
 Subtitle8bit
   rotate: false
-  xy: 0, 128
+  xy: 924, 168
   size: 145, 145
   orig: 145, 145
   offset: 0, 0
   index: -1
 TitleScreenBackground
   rotate: false
-  xy: 972, 320
+  xy: 256, 360
   size: 250, 262
   orig: 250, 262
   offset: 0, 0
   index: -1
+white
+  rotate: false
+  xy: 640, 64
+  size: 80, 64
+  orig: 80, 64
+  offset: 0, 0
+  index: -1
 WhiteFrameBlackPane
   rotate: false
-  xy: 328, 0
+  xy: 360, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Z
   rotate: false
-  xy: 1640, 0
+  xy: 668, 168
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 Z8bit
   rotate: false
-  xy: 145, 128
+  xy: 1069, 168
   size: 145, 145
   orig: 145, 145
   offset: 0, 0
   index: -1
 ZeroSilhouette
   rotate: false
-  xy: 1768, 0
+  xy: 796, 168
   size: 128, 128
   orig: 128, 128
   offset: 0, 0

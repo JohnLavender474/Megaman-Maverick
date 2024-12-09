@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.screens.menus.bosses
+package com.megaman.maverick.game.screens.menus.temp
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
@@ -231,7 +231,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
         }
         super.show()
         // slide.init()
-        game.getUiCamera().position.set(ConstFuncs.getCamInitPos())
+        game.getUiCamera().position.set(ConstFuncs.getGameCamInitPos())
         outro = false
         outTimer.reset()
         game.audioMan.playMusic(MusicAsset.MM3_SNAKE_MAN_MUSIC, true)

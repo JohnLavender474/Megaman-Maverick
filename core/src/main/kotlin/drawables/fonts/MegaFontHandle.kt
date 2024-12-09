@@ -55,4 +55,12 @@ class MegaFontHandle(
     )
 
     override fun draw(drawer: Batch) = font.draw(drawer)
+
+    fun setText(text: String) {
+        font.textSupplier = { text }
+    }
+
+    fun setTextSupplier(supplier: () -> String) {
+        font.textSupplier = supplier
+    }
 }

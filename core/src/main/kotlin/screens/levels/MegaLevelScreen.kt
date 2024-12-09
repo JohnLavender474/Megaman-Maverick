@@ -318,8 +318,8 @@ class MegaLevelScreen(
 
         camerasSetToGameCamera = false
         gameCameraPriorPosition.setZero()
-        gameCamera.position.set(ConstFuncs.getCamInitPos())
-        uiCamera.position.set(ConstFuncs.getCamInitPos())
+        gameCamera.position.set(ConstFuncs.getGameCamInitPos())
+        uiCamera.position.set(ConstFuncs.getGameCamInitPos())
     }
 
     override fun getLayerBuilders() = MegaMapLayerBuilders(MegaMapLayerBuildersParams(game, spawnsMan))
@@ -690,14 +690,15 @@ class MegaLevelScreen(
         backgrounds.forEach { it.move(gameCamDeltaX, gameCamDeltaY) }
         gameCameraPriorPosition.set(gameCamera.position)
 
-        val batch = game.batch
-        batch.begin()
-
         backgrounds.sort()
-        backgrounds.forEach { if (!backgroundsToHide.contains(it.key)) it.draw(batch) }
 
         game.viewports.get(ConstKeys.GAME).apply()
         batch.projectionMatrix = gameCamera.combined
+
+        batch.begin()
+
+        backgrounds.forEach { if (!backgroundsToHide.contains(it.key)) it.draw(batch) }
+
         val backgroundSprites = drawables.get(DrawingSection.BACKGROUND)
         while (!backgroundSprites.isEmpty()) {
             val backgroundSprite = backgroundSprites.poll()
@@ -717,11 +718,14 @@ class MegaLevelScreen(
 
         game.viewports.get(ConstKeys.UI).apply()
         batch.projectionMatrix = uiCamera.combined
+
         playerSpawnEventHandler.draw(batch)
         bossHealthHandler.draw(batch)
         playerStatsHandler.draw(batch)
+
         batch.end()
 
+        game.viewports.get(ConstKeys.GAME).apply()
         if (!endLevelEventHandler.finished) endLevelEventHandler.draw(batch)
 
         val shapeRenderer = game.shapeRenderer

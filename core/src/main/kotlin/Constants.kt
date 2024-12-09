@@ -262,6 +262,8 @@ object ConstKeys {
     const val READY = "ready"
     const val TYPE = "type"
     const val COLLECTION = "collection"
+    const val WHITE = "white"
+    const val BLUE = "blue"
     const val RUNNABLE = "runnable"
     const val ENTITY = "entity"
     const val CONSUMER = "consumer"
@@ -315,10 +317,15 @@ object ConstKeys {
 
 object ConstFuncs {
 
-    fun getCamInitPos(): Vector3 {
-        val v = Vector3()
-        v.x = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f
-        v.y = ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f
-        return v
+    fun getGameCamInitPos(out: Vector3 = Vector3()): Vector3 {
+        out.x = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f
+        out.y = ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f
+        return out
+    }
+
+    fun getUiCamInitPos(out: Vector3 = Vector3()): Vector3 {
+        out.x = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f
+        out.y = ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f
+        return out
     }
 }
