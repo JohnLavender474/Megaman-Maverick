@@ -6,6 +6,7 @@ import com.mega.game.engine.common.objects.MultiCollectionIterable
 import com.megaman.maverick.game.entities.bosses.BossType
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
+import com.megaman.maverick.game.levels.LevelDefinition
 
 object GamePasswords {
 
@@ -25,7 +26,7 @@ object GamePasswords {
         multiCollectionIterable.forEach { outerIndex, _, value ->
             val index = indices[outerIndex]
             val digit = when (value) {
-                is BossType -> if (state.bossesDefeated.contains(value)) 1 else 0
+                is LevelDefinition -> if (state.levelsDefeated.contains(value)) 1 else 0
                 is MegaHeartTank -> if (state.heartTanksCollected.contains(value)) 1 else 0
                 is MegaHealthTank -> if (state.healthTanksCollected.containsKey(value)) 1 else 0
                 // is MegaAbility -> if (state.abilitiesAttained.contains(value)) 1 else 0
@@ -52,7 +53,7 @@ object GamePasswords {
         multiCollectionIterable.forEach { outerIndex, _, value ->
             val index = indices[outerIndex]
             when (value) {
-                is BossType -> if (passwordArray[index] == 1) bossesDefeated.add(value)
+                is LevelDefinition-> if (passwordArray[index] == 1) bossesDefeated.add(value)
                 is MegaHeartTank -> if (passwordArray[index] == 1) heartTanksCollected.add(value)
                 is MegaHealthTank -> if (passwordArray[index] == 1) healthTanksCollected.put(value, 0)
                 // is MegaAbility -> if (passwordArray[index] == 1) state.abilitiesAttained.add(value)

@@ -1,5 +1,4 @@
 Megaman10Font.ttf
-json/levels.json
 temp/MegaRed225/random-enemies-5.jpg
 temp/MegaRed225/Random Enemy Sprites Set 9/Link
 temp/MegaRed225/Random Enemy Sprites Set 9/random-enemy-sprites-9.jpg
@@ -963,7 +962,6 @@ sprites/frames/Faces1/Blunt Man.png
 sprites/frames/Faces1/Precious Man.png
 sprites/frames/Faces1/Rodent Man.png
 sprites/frames/Faces1/Glacier Man.png
-sprites/frames/Faces1/Nuke Man.png
 sprites/frames/Faces1/Roaster Man.png
 sprites/frames/Faces1/Megaman/TOP_CENTER.png
 sprites/frames/Faces1/Megaman/CENTER.png
@@ -1211,10 +1209,25 @@ sprites/frames/Enemies1/HeliMet/PopUp.png
 sprites/frames/Ui1/PaneHighlighted.png
 sprites/frames/Ui1/Subtitle8bit.png
 sprites/frames/Ui1/Arrow.png
+sprites/frames/Ui1/black.png
+sprites/frames/Ui1/MugshotPane/left.png
+sprites/frames/Ui1/MugshotPane/right.png
+sprites/frames/Ui1/MugshotPane/none.png
+sprites/frames/Ui1/MugshotPane/blinking.png
+sprites/frames/Ui1/MugshotPane/Text/PRECIOUS_MAN.png
+sprites/frames/Ui1/MugshotPane/Text/GLACIER_MAN.png
+sprites/frames/Ui1/MugshotPane/Text/DESERT_MAN.png
+sprites/frames/Ui1/MugshotPane/Text/REACTOR_MAN.png
+sprites/frames/Ui1/MugshotPane/Text/TIMBER_WOMAN.png
+sprites/frames/Ui1/MugshotPane/Text/RODENT_MAN.png
+sprites/frames/Ui1/MugshotPane/Text/INFERNO_MAN.png
+sprites/frames/Ui1/MugshotPane/Text/MOON_MAN.png
+sprites/frames/Ui1/MugshotPane/highlighted.png
 sprites/frames/Ui1/RedDot.png
 sprites/frames/Ui1/PaneBlinking.png
 sprites/frames/Ui1/MegamanSubtitle.png
 sprites/frames/Ui1/Bar.png
+sprites/frames/Ui1/white.png
 sprites/frames/Ui1/StageSelectBox_Unhighlighted.png
 sprites/frames/Ui1/WhiteFrameBlackPane.png
 sprites/frames/Ui1/Stars.png
@@ -1252,6 +1265,7 @@ sprites/frames/Ui1/PaneShattered.png
 sprites/frames/Ui1/StandardBit.png
 sprites/frames/Ui1/Pane.png
 sprites/frames/Ui1/TitleScreenBackground.png
+sprites/frames/Ui1/blue.png
 sprites/frames/Ui1/BlackBit.png
 sprites/frames/Ui1/ZeroSilhouette.png
 sprites/frames/Buddies/RushJet.png
@@ -1603,6 +1617,7 @@ sprites/piskel/GreenCeilingFan.piskel
 sprites/piskel/Lift.piskel
 sprites/piskel/PasswordScreen.piskel
 sprites/piskel/Reactor_Man_Projectile.piskel
+sprites/piskel/MugshotPane.piskel
 sprites/piskel/SniperJoe.piskel
 sprites/piskel/Nuclear_Monkey_Boss.piskel
 sprites/piskel/GlacierCloudsBKG.piskel
@@ -1665,6 +1680,7 @@ sprites/piskel/GutsTank.piskel
 sprites/piskel/SandSplash.piskel
 sprites/piskel/SwitcharooArrow.piskel
 sprites/piskel/EarthBackdrop.piskel
+sprites/piskel/StageSelectScreen.piskel
 sprites/piskel/PauseMenu.piskel
 sprites/piskel/Electrocutie.piskel
 sprites/piskel/MaverickFaces.piskel

@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.4.0</string>
+        <string>7.5.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -177,6 +177,7 @@
             <key type="filename">../frames/Ui1/BlackBit.png</key>
             <key type="filename">../frames/Ui1/RedDot.png</key>
             <key type="filename">../frames/Ui1/WhiteFrameBlackPane.png</key>
+            <key type="filename">../frames/Ui1/black.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -346,6 +347,49 @@
                 <rect>496,148,991,295</rect>
                 <key>scale9Paddings</key>
                 <rect>496,148,991,295</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Ui1/MugshotPane/Text/DESERT_MAN.png</key>
+            <key type="filename">../frames/Ui1/MugshotPane/Text/GLACIER_MAN.png</key>
+            <key type="filename">../frames/Ui1/MugshotPane/Text/INFERNO_MAN.png</key>
+            <key type="filename">../frames/Ui1/MugshotPane/Text/MOON_MAN.png</key>
+            <key type="filename">../frames/Ui1/MugshotPane/Text/PRECIOUS_MAN.png</key>
+            <key type="filename">../frames/Ui1/MugshotPane/Text/REACTOR_MAN.png</key>
+            <key type="filename">../frames/Ui1/MugshotPane/Text/RODENT_MAN.png</key>
+            <key type="filename">../frames/Ui1/MugshotPane/Text/TIMBER_WOMAN.png</key>
+            <key type="filename">../frames/Ui1/MugshotPane/highlighted.png</key>
+            <key type="filename">../frames/Ui1/MugshotPane/left.png</key>
+            <key type="filename">../frames/Ui1/MugshotPane/none.png</key>
+            <key type="filename">../frames/Ui1/MugshotPane/right.png</key>
+            <key type="filename">../frames/Ui1/blue.png</key>
+            <key type="filename">../frames/Ui1/white.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>20,16,40,32</rect>
+                <key>scale9Paddings</key>
+                <rect>20,16,40,32</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Ui1/MugshotPane/blinking.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>20,32,40,64</rect>
+                <key>scale9Paddings</key>
+                <rect>20,32,40,64</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

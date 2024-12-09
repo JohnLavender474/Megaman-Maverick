@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.screens.menus.bosses
+package com.megaman.maverick.game.screens.menus.temp
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
