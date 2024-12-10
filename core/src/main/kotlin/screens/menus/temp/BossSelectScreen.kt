@@ -169,7 +169,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
             )
         )
         val stageSelectAtlas = game.assMan.get(TextureAsset.UI_1.source, TextureAtlas::class.java)
-        val bar: TextureRegion = stageSelectAtlas.findRegion("Bar")
+        val bar: TextureRegion = stageSelectAtlas.findRegion("bar")
         for (i in 0..5) {
             for (j in 0..2) {
                 val sprite = Sprite(bar)

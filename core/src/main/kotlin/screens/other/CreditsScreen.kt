@@ -6,11 +6,11 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Queue
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.drawables.fonts.BitmapFontHandle
 import com.mega.game.engine.screens.BaseScreen
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
+import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
@@ -19,8 +19,8 @@ object CreditsLoader {
 
     const val CREDITS_SOURCE = "credits.txt"
 
-    fun load(): Queue<BitmapFontHandle> {
-        val credits = Queue<BitmapFontHandle>()
+    fun load(): Queue<MegaFontHandle> {
+        val credits = Queue<MegaFontHandle>()
         val inputStream = InternalFileHandleResolver().resolve(CREDITS_SOURCE).read()
         val reader = inputStream.reader()
         reader.forEachLine { line ->
@@ -30,8 +30,10 @@ object CreditsLoader {
                 else -> MegaUtilMethods.getSmallFontSize()
             }
             credits.addLast(
-                BitmapFontHandle(
-                    line.replace("#", "").uppercase(), fontSize, fontSource = ConstVals.MEGAMAN_MAVERICK_FONT
+                MegaFontHandle(
+                    text = line.replace("#", "").uppercase(),
+                    fontSize = fontSize,
+                    fontSource = ConstVals.MEGAMAN_MAVERICK_FONT
                 )
             )
         }
@@ -53,8 +55,8 @@ class CreditsScreen(
 
     private val delayTimer = Timer(DELAY_TIME)
     private val fadeOutTimer = Timer(FADE_OUT_TIME)
-    private val activeFonts = Array<BitmapFontHandle>()
-    private lateinit var creditsQueue: Queue<BitmapFontHandle>
+    private val activeFonts = Array<MegaFontHandle>()
+    private lateinit var creditsQueue: Queue<MegaFontHandle>
     private var creditsComplete = false
 
     override fun show() {
@@ -94,9 +96,9 @@ class CreditsScreen(
         val iter = activeFonts.iterator()
         while (iter.hasNext()) {
             val font = iter.next()
-            font.position.x = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f
-            font.position.y += SPEED * delta * ConstVals.PPM
-            if (font.position.y >= (ConstVals.VIEW_HEIGHT + 1) * ConstVals.PPM) iter.remove()
+            font.positionX = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f
+            font.positionY += SPEED * delta * ConstVals.PPM
+            if (font.positionY >= (ConstVals.VIEW_HEIGHT + 1) * ConstVals.PPM) iter.remove()
         }
         if (creditsQueue.isEmpty && activeFonts.isEmpty) {
             creditsComplete = true
@@ -107,7 +109,7 @@ class CreditsScreen(
 
     private fun spawnNextFont() {
         val nextFont = creditsQueue.removeFirst()
-        nextFont.position.y = 0f
+        nextFont.positionY = 0f
         activeFonts.add(nextFont)
     }
 

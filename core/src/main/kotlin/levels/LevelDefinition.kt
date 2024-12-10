@@ -32,7 +32,7 @@ enum class LevelDefinition(
         type = LevelType.ROBOT_MASTER_LEVEL,
         mugshotAtlas = "FACES_1",
         mugshotRegion = "Rodent Man",
-        tmxMapSource = "RodentMan_16x12.tmx",
+        tmxMapSource = "RodentMan_v2.tmx",
         music = "MM7_SLASH_MAN_MUSIC",
         screenOnCompletion = "SAVE_GAME_SCREEN"
     ),
@@ -101,10 +101,7 @@ enum class LevelDefinition(
         screenOnCompletion = "WILY_CASTLE_SCREEN"
     );
 
-    companion object {
-        private val levelTypeToKeys = OrderedMap<LevelType, OrderedSet<String>>()
-        private val keyToLevelType = OrderedMap<String, LevelType>()
-    }
+    fun getFormattedName() = name.replace("_", " ")
 }
 
 object LevelDefMap {

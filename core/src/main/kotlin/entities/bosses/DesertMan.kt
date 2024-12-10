@@ -481,7 +481,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         }
 
         for (i in 1..ARM_EXTENSIONS_COUNT) {
-            val armExtensionSprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 10))
+            val armExtensionSprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
             armExtensionSprite.setSize(SPRITE_SIZE * ConstVals.PPM)
             sprites.put("arm_$i", armExtensionSprite)
 

@@ -212,22 +212,6 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Ui1/Bar.png</key>
-            <key type="filename">../frames/Ui1/Stars.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>64,16,128,32</rect>
-                <key>scale9Paddings</key>
-                <rect>64,16,128,32</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
             <key type="filename">../frames/Ui1/Bit.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -393,6 +377,70 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Ui1/MugshotPane/blinking_48x48.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,24,24,48</rect>
+                <key>scale9Paddings</key>
+                <rect>12,24,24,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Ui1/MugshotPane/blinking_80x48.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>20,24,40,48</rect>
+                <key>scale9Paddings</key>
+                <rect>20,24,40,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Ui1/MugshotPane/highlighted_48x48.png</key>
+            <key type="filename">../frames/Ui1/MugshotPane/none_48x48.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,12,24,24</rect>
+                <key>scale9Paddings</key>
+                <rect>12,12,24,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Ui1/MugshotPane/highlighted_80x48.png</key>
+            <key type="filename">../frames/Ui1/MugshotPane/left_80x48.png</key>
+            <key type="filename">../frames/Ui1/MugshotPane/none_80x48.png</key>
+            <key type="filename">../frames/Ui1/MugshotPane/right_80x48.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>20,12,40,24</rect>
+                <key>scale9Paddings</key>
+                <rect>20,12,40,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Ui1/OrangeBit.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -491,6 +539,22 @@
                 <rect>97,26,193,52</rect>
                 <key>scale9Paddings</key>
                 <rect>97,26,193,52</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Ui1/Stars.png</key>
+            <key type="filename">../frames/Ui1/bar.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>64,16,128,32</rect>
+                <key>scale9Paddings</key>
+                <rect>64,16,128,32</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

@@ -26,7 +26,8 @@ object MegaUtilMethods {
         target.y,
         horizontalScalar,
         verticalBaseImpulse,
-        verticalScalar
+        verticalScalar,
+        out
     )
 
     fun calculateJumpImpulse(
