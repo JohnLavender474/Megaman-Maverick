@@ -46,7 +46,6 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
     private val bNameSet = ObjectSet<String>()
     private val slide = ScreenSlide(
         game.getUiCamera(),
-        INTRO_BLOCKS_TRANS,
         CAM_POS.cpy().sub(INTRO_BLOCKS_TRANS),
         CAM_POS,
         0.5f,

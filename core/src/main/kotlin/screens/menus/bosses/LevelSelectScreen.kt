@@ -3,6 +3,7 @@ package com.megaman.maverick.game.screens.menus.bosses
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
@@ -36,6 +37,7 @@ import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.menus.MegaMenuScreen
 import com.megaman.maverick.game.screens.menus.bosses.MugshotPane.MugshotPaneState
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
+import com.megaman.maverick.game.utils.extensions.getDefaultCameraPosition
 
 class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Position.CENTER.name), Initializable {
 
@@ -88,6 +90,9 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
 
         private const val OUTRO_DUR = 1f
         private const val OUTRO_BLINKS = 10
+
+        private val CAM_POS = getDefaultCameraPosition().add(0f, 0.55f * ConstVals.PPM, 0f)
+        private val SLIDE_TRANS = Vector3(15f * ConstVals.PPM, 0f, 0f)
 
         private val regions = ObjectMap<String, TextureRegion>()
         private var unknownRegion: TextureRegion? = null
@@ -447,9 +452,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
                     else -> MugshotPaneState.NONE
                 }
             }
-
             blinkingArrows.get(currentButtonKey)?.update(delta)
-
             barsBackground.values().forEach { it.update(delta) }
         }
 

@@ -88,6 +88,7 @@ import com.megaman.maverick.game.screens.menus.temp.BossIntroScreen
 import com.megaman.maverick.game.screens.other.CreditsScreen
 import com.megaman.maverick.game.screens.other.SimpleEndLevelScreen
 import com.megaman.maverick.game.screens.other.SimpleInitGameScreen
+import com.megaman.maverick.game.screens.utils.ScreenSlide
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getMusics
 import com.megaman.maverick.game.utils.extensions.getSounds
@@ -118,7 +119,7 @@ class MegamanMaverickGame(
     companion object {
         const val TAG = "MegamanMaverickGame"
         const val TMX_SOURCE_PREFIX = "tiled_maps/tmx/"
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(ScreenSlide.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.TELEPORTER, FixtureType.TELEPORTER_LISTENER)
         }
