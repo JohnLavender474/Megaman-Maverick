@@ -7,7 +7,6 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.interfaces.Initializable
-import com.mega.game.engine.drawables.fonts.BitmapFontHandle
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.SpriteMatrix
@@ -18,9 +17,9 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
-import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
 
 class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), Initializable {
@@ -36,12 +35,14 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
         private var dotRegion: TextureRegion? = null
     }
 
-    private val fontHandles = Array<BitmapFontHandle>()
+    private val fontHandles = Array<MegaFontHandle>()
     private lateinit var password: IntArray
     private lateinit var arrow: BlinkingArrow
     private lateinit var frames: SpriteMatrix
     private lateinit var dots: SpriteMatrix
     private var initialized = false
+
+    private val out = Vector2()
 
     override fun init() {
         if (initialized) return
@@ -57,36 +58,30 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
 
         password = GamePasswords.getGamePassword(game.state)
 
-        val saveFont = BitmapFontHandle(
-            SAVE,
-            getDefaultFontSize(),
-            Vector2(1f * ConstVals.PPM, 3f * ConstVals.PPM),
+        val saveFont = MegaFontHandle(
+            text = SAVE,
+            positionX = ConstVals.PPM.toFloat(),
+            positionY = 3f * ConstVals.PPM,
             centerX = true,
             centerY = true,
-            hidden = false,
-            ConstVals.MEGAMAN_MAVERICK_FONT,
         )
         fontHandles.add(saveFont)
 
-        val continueFont = BitmapFontHandle(
-            CONTINUE,
-            getDefaultFontSize(),
-            Vector2(1f * ConstVals.PPM, 2f * ConstVals.PPM),
+        val continueFont = MegaFontHandle(
+            text = CONTINUE,
+            positionX = ConstVals.PPM.toFloat(),
+            positionY = 2f * ConstVals.PPM,
             centerX = true,
-            centerY = true,
-            hidden = false,
-            ConstVals.MEGAMAN_MAVERICK_FONT,
+            centerY = true
         )
         fontHandles.add(continueFont)
 
-        val mainMenuFont = BitmapFontHandle(
-            MAIN_MENU,
-            getDefaultFontSize(),
-            Vector2(3f * ConstVals.PPM, 1f * ConstVals.PPM),
+        val mainMenuFont = MegaFontHandle(
+            text = MAIN_MENU,
+            positionX = 3f * ConstVals.PPM,
+            positionY = ConstVals.PPM.toFloat(),
             centerX = true,
-            centerY = true,
-            hidden = false,
-            ConstVals.MEGAMAN_MAVERICK_FONT,
+            centerY = true
         )
         fontHandles.add(mainMenuFont)
 
@@ -175,8 +170,9 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
             }
         }
 
-        val arrowPosition = if (currentButtonKey == CONTINUE) fontHandles[0].position else fontHandles[1].position
-        arrowPosition.x -= 1f * ConstVals.PPM
+        val font = if (currentButtonKey == CONTINUE) fontHandles[0] else fontHandles[1]
+        val arrowPosition = font.getPosition(out)
+        arrowPosition.x -= ConstVals.PPM.toFloat()
         arrow.position = arrowPosition
         arrow.update(delta)
 

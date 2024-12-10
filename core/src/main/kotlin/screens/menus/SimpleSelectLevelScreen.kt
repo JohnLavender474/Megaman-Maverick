@@ -63,6 +63,8 @@ class SimpleSelectLevelScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, 
     private var initialized = false
     private var index = 0
 
+    private val out = Vector2()
+
     override fun init() {
         if (initialized) return
         initialized = true
@@ -182,9 +184,9 @@ class SimpleSelectLevelScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, 
         super.render(delta)
 
         sectionArrow.centerX = when (currentButtonKey) {
-            BETA -> sections[0].font.position.x - 1.5f * ConstVals.PPM.toFloat()
-            ALPHA -> sections[1].font.position.x - 1.75f * ConstVals.PPM.toFloat()
-            TEST -> sections[2].font.position.x - 1.5f * ConstVals.PPM.toFloat()
+            BETA -> sections[0].getX() - 1.5f * ConstVals.PPM
+            ALPHA -> sections[1].getX() - 1.75f * ConstVals.PPM
+            TEST -> sections[2].getX() - 1.5f * ConstVals.PPM
             else -> throw IllegalStateException("Invalid current button key: $currentButtonKey")
         }
         sectionArrow.centerY = (SECTION_Y - 0.45f) * ConstVals.PPM

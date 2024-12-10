@@ -1210,9 +1210,16 @@ sprites/frames/Ui1/PaneHighlighted.png
 sprites/frames/Ui1/Subtitle8bit.png
 sprites/frames/Ui1/Arrow.png
 sprites/frames/Ui1/black.png
+sprites/frames/Ui1/MugshotPane/blinking_48x48.png
+sprites/frames/Ui1/MugshotPane/blinking_80x48.png
 sprites/frames/Ui1/MugshotPane/left.png
+sprites/frames/Ui1/MugshotPane/highlighted_80x48.png
+sprites/frames/Ui1/MugshotPane/highlighted_48x48.png
 sprites/frames/Ui1/MugshotPane/right.png
+sprites/frames/Ui1/MugshotPane/left_80x48.png
 sprites/frames/Ui1/MugshotPane/none.png
+sprites/frames/Ui1/MugshotPane/right_80x48.png
+sprites/frames/Ui1/MugshotPane/none_80x48.png
 sprites/frames/Ui1/MugshotPane/blinking.png
 sprites/frames/Ui1/MugshotPane/Text/PRECIOUS_MAN.png
 sprites/frames/Ui1/MugshotPane/Text/GLACIER_MAN.png
@@ -1223,10 +1230,10 @@ sprites/frames/Ui1/MugshotPane/Text/RODENT_MAN.png
 sprites/frames/Ui1/MugshotPane/Text/INFERNO_MAN.png
 sprites/frames/Ui1/MugshotPane/Text/MOON_MAN.png
 sprites/frames/Ui1/MugshotPane/highlighted.png
+sprites/frames/Ui1/MugshotPane/none_48x48.png
 sprites/frames/Ui1/RedDot.png
 sprites/frames/Ui1/PaneBlinking.png
 sprites/frames/Ui1/MegamanSubtitle.png
-sprites/frames/Ui1/Bar.png
 sprites/frames/Ui1/white.png
 sprites/frames/Ui1/StageSelectBox_Unhighlighted.png
 sprites/frames/Ui1/WhiteFrameBlackPane.png
@@ -1261,6 +1268,7 @@ sprites/frames/Ui1/StageSelectBox_Blinking.png
 sprites/frames/Ui1/Background.png
 sprites/frames/Ui1/Stars4.png
 sprites/frames/Ui1/StageSelectBox_Highlighted.png
+sprites/frames/Ui1/bar.png
 sprites/frames/Ui1/PaneShattered.png
 sprites/frames/Ui1/StandardBit.png
 sprites/frames/Ui1/Pane.png
@@ -1558,6 +1566,7 @@ sprites/piskel/CornMan.piskel
 sprites/piskel/large_swing_ring.piskel
 sprites/piskel/MoonHead.piskel
 sprites/piskel/Spiky.piskel
+sprites/piskel/MugshotPane_80x48.piskel
 sprites/piskel/MegamanMaverick_Left.piskel
 sprites/piskel/Megaman_Color_Palettes.piskel
 sprites/piskel/Lava2.piskel
@@ -1744,6 +1753,7 @@ sprites/piskel/UFOBombBot.piskel
 sprites/piskel/Robbit.piskel
 sprites/piskel/TimberWoman.piskel
 sprites/piskel/MegamanFaces.piskel
+sprites/piskel/MugshotPane_48x48.piskel
 sprites/piskel/ChargedShot_Residual.piskel
 sprites/piskel/PiercingMan.piskel
 sprites/piskel/Candle.piskel

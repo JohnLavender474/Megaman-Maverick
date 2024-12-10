@@ -704,12 +704,15 @@ class MegaLevelScreen(
             val backgroundSprite = backgroundSprites.poll()
             backgroundSprite.draw(batch)
         }
+
         tiledMapLevelRenderer?.render(gameCamera)
+
         val gameGroundSprites = drawables.get(DrawingSection.PLAYGROUND)
         while (!gameGroundSprites.isEmpty()) {
             val gameGroundSprite = gameGroundSprites.poll()
             gameGroundSprite.draw(batch)
         }
+
         val foregroundSprites = drawables.get(DrawingSection.FOREGROUND)
         while (!foregroundSprites.isEmpty()) {
             val foregroundSprite = foregroundSprites.poll()
@@ -723,18 +726,21 @@ class MegaLevelScreen(
         bossHealthHandler.draw(batch)
         playerStatsHandler.draw(batch)
 
-        batch.end()
-
         game.viewports.get(ConstKeys.GAME).apply()
         if (!endLevelEventHandler.finished) endLevelEventHandler.draw(batch)
 
+        batch.end()
+
         val shapeRenderer = game.shapeRenderer
         shapeRenderer.projectionMatrix = gameCamera.combined
+
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
+
         while (!shapes.isEmpty) {
             val shape = shapes.pop()
             shape.draw(shapeRenderer)
         }
+
         if (game.params.debugShapes) {
             val gameCamBounds = gameCamera.getRotatedBounds()
             gameCamBounds.translate(0.1f * ConstVals.PPM, 0.1f * ConstVals.PPM)
@@ -748,6 +754,7 @@ class MegaLevelScreen(
                 gameCamBounds.getHeight()
             )
         }
+
         shapeRenderer.end()
 
         debugPrintTimer.update(delta)
