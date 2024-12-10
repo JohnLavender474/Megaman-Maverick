@@ -115,7 +115,8 @@ fun Camera.toGameRectangle(out: GameRectangle = GameObjectPools.fetch(GameRectan
     return out
 }
 
-fun getDefaultCameraPosition() = getDefaultCameraPosition(GameObjectPools.fetch(Vector3::class))
+fun getDefaultCameraPosition(reclaim: Boolean = true) =
+    getDefaultCameraPosition(GameObjectPools.fetch(Vector3::class, reclaim))
 
 fun getDefaultCameraPosition(out: Vector3): Vector3 {
     out.x = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f

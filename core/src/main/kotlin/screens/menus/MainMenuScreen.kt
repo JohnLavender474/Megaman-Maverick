@@ -17,6 +17,7 @@ import com.mega.game.engine.controller.ControllerUtils
 import com.mega.game.engine.drawables.fonts.BitmapFontHandle
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.screens.menus.IMenuButton
+import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.ConstVals.UI_ARROW_BLINK_DUR
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -62,21 +63,14 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
     }
 
     private lateinit var background: Sprite
-    /*
-    private val pose = Sprite()
-    private val title = Sprite()
-    private val subtitle = Sprite()
-     */
 
-    private var screenSlide =
-        ScreenSlide(
-            game.getUiCamera(),
-            SETTINGS_TRAJ,
-            getDefaultCameraPosition(),
-            getDefaultCameraPosition().add(SETTINGS_TRAJ),
-            SETTINGS_TRANS_DUR,
-            true
-        )
+    private var screenSlide = ScreenSlide(
+        game.getUiCamera(),
+        getDefaultCameraPosition(false),
+        getDefaultCameraPosition(false).add(SETTINGS_TRAJ),
+        SETTINGS_TRANS_DUR,
+        true
+    )
 
     private val fontHandles = Array<BitmapFontHandle>()
     private val settingsArrows = Array<Sprite>()
@@ -95,7 +89,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
         var row = MAIN_MENU_TEXT_START_ROW
 
-        MainScreenButton.values().forEach {
+        MainScreenButton.entries.forEach {
             val fontHandle =
                 BitmapFontHandle(
                     it.text,
@@ -113,7 +107,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
         row = SETTINGS_TEXT_START_ROW
 
-        MainScreenSettingsButton.values().forEach {
+        MainScreenSettingsButton.entries.forEach {
             val fontHandle =
                 BitmapFontHandle(
                     it.text,
@@ -181,19 +175,6 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         background = Sprite(atlas.findRegion("TitleScreenBackground"))
         background.setSize(ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         background.setCenter(ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f, ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f)
-        /*
-        title.setRegion(atlas.findRegion("MegamanTitle"))
-        title.setBounds(
-            ConstVals.PPM.toFloat(), 6.25f * ConstVals.PPM, 13.25f * ConstVals.PPM, 5f * ConstVals.PPM
-        )
-        subtitle.setRegion(atlas.findRegion("Subtitle8bit"))
-        subtitle.setSize(8f * ConstVals.PPM, 8f * ConstVals.PPM)
-        subtitle.setCenter(
-            ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f, (ConstVals.VIEW_HEIGHT - 0.5f) * ConstVals.PPM / 2f
-        )
-        pose.setRegion(atlas.findRegion("MegamanMaverick"))
-        pose.setBounds(9f * ConstVals.PPM, -ConstVals.PPM / 12f, 6f * ConstVals.PPM, 6f * ConstVals.PPM)
-         */
 
         buttons.put(
             MainScreenButton.START_NEW_GAME.text,
@@ -399,7 +380,8 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                 }
             })
 
-        buttons.put(MainScreenSettingsButton.CAMERA_SETTINGS.text,
+        buttons.put(
+            MainScreenSettingsButton.CAMERA_SETTINGS.text,
             object : IMenuButton {
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                     Direction.UP -> MainScreenSettingsButton.CONTROLLER_SETTINGS.text
@@ -417,15 +399,19 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
     override fun show() {
         if (!initialized) init()
         super.show()
+
         screenSlide.reset()
+
         game.getUiCamera().setToDefaultPosition()
         game.audioMan.playMusic(MusicAsset.MM3_SNAKE_MAN_MUSIC)
+
         GameLogger.debug(TAG, "Current button key: $currentButtonKey")
         GameLogger.debug(TAG, "Blinking arrows keys: ${blinkArrows.keys().toGdxArray()}")
     }
 
     override fun render(delta: Float) {
         super.render(delta)
+
         if (!game.paused) {
             screenSlide.update(delta)
             if (screenSlide.justFinished) screenSlide.reverse()
@@ -439,20 +425,24 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
             }
         }
 
+        game.viewports.get(ConstKeys.UI).apply()
+
         val batch = game.batch
         batch.projectionMatrix = game.getUiCamera().combined
         batch.begin()
+
         blinkArrows.get(currentButtonKey).draw(batch)
         background.draw(batch)
-        /*
-        title.draw(batch)
-        pose.draw(batch)
-        subtitle.draw(batch)
-         */
         fontHandles.forEach { it.draw(batch) }
+
         if (settingsArrowBlink) settingsArrows.forEach { it.draw(batch) }
+
         batch.end()
     }
+
+    override fun getNavigationDirection() = if (screenSlide.finished) super.getNavigationDirection() else null
+
+    override fun selectionRequested() = screenSlide.finished && super.selectionRequested()
 
     override fun onAnyMovement(direction: Direction) {
         GameLogger.debug(TAG, "Current button: $currentButtonKey")

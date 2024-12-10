@@ -16,7 +16,7 @@ class BlinkingArrow(assMan: AssetManager, center: Vector2 = Vector2(), rotation:
     IDrawable<Batch> {
 
     companion object {
-        private const val BLINK_DUR = 0.2f
+        private const val BLINK_DUR = 0.1f
     }
 
     var position: Vector2
