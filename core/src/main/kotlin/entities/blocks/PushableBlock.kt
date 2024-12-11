@@ -39,6 +39,7 @@ import com.megaman.maverick.game.entities.megaman.components.rightSideFixture
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
+import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -61,9 +62,11 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     private inner class InnerBlock(game: MegamanMaverickGame, private val pushableBody: Body) : Block(game) {
 
         override fun hitByProjectile(projectileFixture: IFixture) {
-            val projectileX = projectileFixture.getShape().getX()
+            val projectileX = projectileFixture.getShape().getBoundingRectangle().getX()
+
             var impulse = PROJECTILE_IMPULSE * ConstVals.PPM
-            if (projectileX > pushableBody.getX()) impulse *= -1f
+            if (projectileX > pushableBody.getCenter().x) impulse *= -1f
+
             pushableBody.physics.velocity.x += impulse
         }
     }
@@ -171,7 +174,7 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(BODY_WIDTH * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -ConstVals.PPM.toFloat()
         body.addFixture(feetFixture)
-        debugShapes.add { feetFixture}
+        debugShapes.add { feetFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY

@@ -10,10 +10,12 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.time.Timer
@@ -40,7 +42,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
 class SwitchGate(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity, IEventListener,
-    IAudioEntity {
+    IAudioEntity, IDirectional {
 
     companion object {
         const val TAG = "SwitchGate"
@@ -51,6 +53,7 @@ class SwitchGate(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnim
     private enum class SwitchGateState { OPENING, OPEN, CLOSING, CLOSED }
 
     override val eventKeyMask = objectSetOf<Any>(EventType.ACTIVATE_SWITCH, EventType.DEACTIVATE_SWITCH)
+    override lateinit var direction: Direction
 
     private val switchTimer = Timer(SWITCH_DUR)
     private lateinit var state: SwitchGateState
@@ -82,6 +85,9 @@ class SwitchGate(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnim
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         super.onSpawn(spawnProps)
+
+        direction =
+            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
 
         game.eventsMan.addListener(this)
 
@@ -158,8 +164,10 @@ class SwitchGate(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnim
         sprite.setSize(2f * ConstVals.PPM, 3f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
-            sprite.hidden = state.equalsAny(SwitchGateState.OPEN)
+            sprite.setOriginCenter()
+            sprite.rotation = direction.rotation
             sprite.setCenter(body.getCenter())
+            sprite.hidden = state == SwitchGateState.OPEN
         }
         return spritesComponent
     }

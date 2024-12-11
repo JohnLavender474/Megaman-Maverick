@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
@@ -52,6 +53,7 @@ import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
 import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toGridCoordinate
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
@@ -109,6 +111,9 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
     private var flyToAttackSpeed = DEFAULT_FLY_TO_ATTACK_SPEED
     private var flyToRetreatSpeed = DEFAULT_FLY_TO_RETREAT_SPEED
 
+    private var trigger: GameRectangle? = null
+    private var triggered = false
+
     @Volatile
     private var printDebugFilter = false
 
@@ -120,6 +125,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         hangTimer.reset()
@@ -147,6 +153,9 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
 
         debugPathfindingTimer.reset()
         printDebugFilter = DEBUG_PATHFINDING
+
+        trigger = spawnProps.get(ConstKeys.TRIGGER, RectangleMapObject::class)?.rectangle?.toGameRectangle(false)
+        triggered = trigger == null
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
@@ -179,9 +188,18 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
 
             when (status) {
                 BatStatus.HANGING -> {
+                    if (!triggered) trigger?.let {
+                        if (megaman().body.getBounds().overlaps(it)) {
+                            GameLogger.debug(TAG, "update(): Megaman touched trigger")
+                            triggered = true
+                        }
+                    }
+
                     hangTimer.update(delta)
-                    if (hangTimer.isFinished() || !body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) {
+                    if (triggered && (hangTimer.isFinished() || !body.isSensing(BodySense.HEAD_TOUCHING_BLOCK))) {
                         status = BatStatus.OPEN_EYES
+                        GameLogger.debug(TAG, "update(): set status to $status")
+
                         hangTimer.reset()
                     }
                 }

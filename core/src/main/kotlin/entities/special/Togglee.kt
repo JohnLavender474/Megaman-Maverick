@@ -157,7 +157,8 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
 
         text = spawnProps.getOrDefault(ConstKeys.TEXT, "", String::class)
         val position = body.getCenter().add(0f, 1.75f * ConstVals.PPM)
-        getFont(ConstKeys.DEFAULT).setPosition(position.x, position.y)
+        // getFont(ConstKeys.DEFAULT).setPosition(position.x, position.y)
+        // TODO: Togglee does not yet support displaying text
 
         spawnRoom = spawnProps.get(SPAWN_ROOM, String::class)!!
 

@@ -692,12 +692,14 @@ class MegaLevelScreen(
 
         backgrounds.sort()
 
-        game.viewports.get(ConstKeys.GAME).apply()
-        batch.projectionMatrix = gameCamera.combined
-
         batch.begin()
 
+        // each background has its own viewport instance which is applied when the background is drawn,
+        // so wait until after all backgrounds are drawn before applying the game viewport
         backgrounds.forEach { if (!backgroundsToHide.contains(it.key)) it.draw(batch) }
+
+        game.viewports.get(ConstKeys.GAME).apply()
+        batch.projectionMatrix = gameCamera.combined
 
         val backgroundSprites = drawables.get(DrawingSection.BACKGROUND)
         while (!backgroundSprites.isEmpty()) {
