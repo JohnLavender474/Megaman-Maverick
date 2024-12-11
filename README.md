@@ -75,7 +75,7 @@ A battle ensues, and Wily is defeated. He flees after his defeat, escaping in hi
 
 "You’ll see, Mega Man! Soon, they’ll turn on you. Mark my words!"
 
-Before disappearing, a bird drops poop on Wily’s head, leaving him furious and fuming as he vanishes into the horizon.
+Before disappearing, a gleeful bird drops poop on Wily’s head, leaving him furious and fuming as he vanishes into the horizon.
 
 As Mega Man prepares to report to the arriving police, they unexpectedly draw their weapons.
 
@@ -92,8 +92,11 @@ safety at Dr. Light’s lab, though he sustains a bullet to the arm himself.
 ### Dr. Light’s Lab Cutscene
 
 Dr. Light hastily repairs Mega Man as he knows there's little time before the authorities arrive. 
-Proto Man, however, refuses help from Dr. Light, preferring to leave to repair himself 
-on his own. 
+Proto Man, however, refuses help from Dr. Light, preferring to leave to repair himself on his own.
+
+Megaman: "Why did the authorities turn on me so suddenly?"
+
+Proto Man: "Megaman, you're naive as ever."
 
 Before leaving, Proto Man reveals that he's been tracking the Mavericks for a while and that their
 goal is to rally as many robots as possible against the humans, radicalizing them and promising a 

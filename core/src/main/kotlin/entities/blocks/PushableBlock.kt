@@ -48,6 +48,7 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
     companion object {
         const val TAG = "PushableBlock"
+        private const val METAL_CRATE = "MetalCrate"
         private const val DEFAULT_FRICTION_X = 5f
         private const val X_VEL_CLAMP = 8f
         private const val PUSH_IMPULSE = 10f
@@ -78,9 +79,7 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
-            gdxArrayOf("MetalCrate").forEach {
-                regions.put(it, atlas.findRegion(it))
-            }
+            gdxArrayOf(METAL_CRATE).forEach { regions.put(it, atlas.findRegion(it)) }
         }
         super.init()
         addComponent(defineCullablesComponent())
@@ -190,7 +189,7 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setRegion(regions["MetalCrate"])
+            sprite.setRegion(regions[METAL_CRATE])
             sprite.setBounds(body.getBounds())
         }
         return spritesComponent
