@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="600" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="656">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="600" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="660">
  <tileset firstgid="1" source="../tsx/Blizzardman.tsx"/>
  <tileset firstgid="225" source="../tsx/GlacierManTileset.tsx"/>
  <layer id="12" name="tiles2" width="600" height="100">
@@ -1016,7 +1016,7 @@
   </object>
   <object id="592" name="AirConditioner" x="5568" y="1536" width="128" height="160"/>
   <object id="593" name="AirConditioner" x="5952" y="1536" width="128" height="160"/>
-  <object id="598" name="Snowfall" x="888" y="2640" width="544" height="32">
+  <object id="598" name="Snowfall" x="992" y="2640" width="448" height="32">
    <properties>
     <property name="background" type="bool" value="true"/>
     <property name="min_y" type="object" value="127"/>
@@ -1024,7 +1024,7 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="599" name="Snowfall" x="1432" y="2640" width="512" height="32">
+  <object id="599" name="Snowfall" x="1440" y="2640" width="504" height="32">
    <properties>
     <property name="background" type="bool" value="true"/>
     <property name="min_y" type="object" value="127"/>
@@ -1056,7 +1056,7 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="603" name="Snowfall" x="512" y="2688" width="384" height="32">
+  <object id="603" name="Snowfall" x="576" y="2760" width="256" height="32">
    <properties>
     <property name="background" type="bool" value="true"/>
     <property name="min_y" type="object" value="127"/>
@@ -1064,7 +1064,7 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="604" name="Snowfall" x="32" y="2688" width="480" height="32">
+  <object id="604" name="Snowfall" x="96" y="2728" width="480" height="32">
    <properties>
     <property name="background" type="bool" value="true"/>
     <property name="init_1" type="object" value="608"/>
@@ -1079,7 +1079,7 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="624" name="Snowfall" x="3264" y="2656" width="416" height="32">
+  <object id="624" name="Snowfall" x="3360" y="2728" width="320" height="32">
    <properties>
     <property name="background" type="bool" value="true"/>
     <property name="min_y" type="object" value="127"/>
@@ -1087,7 +1087,7 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="625" name="Snowfall" x="3680" y="2656" width="416" height="32">
+  <object id="625" name="Snowfall" x="3680" y="2728" width="416" height="32">
    <properties>
     <property name="background" type="bool" value="true"/>
     <property name="min_y" type="object" value="127"/>
@@ -1095,7 +1095,7 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="626" name="Snowfall" x="4096" y="2656" width="416" height="32">
+  <object id="626" name="Snowfall" x="4096" y="2728" width="416" height="32">
    <properties>
     <property name="background" type="bool" value="true"/>
     <property name="min_y" type="object" value="127"/>
@@ -1103,7 +1103,7 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="627" name="Snowfall" x="4512" y="2656" width="288" height="32">
+  <object id="627" name="Snowfall" x="4512" y="2728" width="192" height="32">
    <properties>
     <property name="background" type="bool" value="true"/>
     <property name="min_y" type="object" value="127"/>
@@ -1111,7 +1111,7 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="628" name="Snowfall" x="4800" y="2656" width="224" height="32">
+  <object id="628" name="Snowfall" x="4704" y="2792" width="320" height="32">
    <properties>
     <property name="background" type="bool" value="true"/>
     <property name="min_y" type="object" value="127"/>
@@ -1119,7 +1119,7 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="629" name="Snowfall" x="14880" y="1488" width="256" height="32">
+  <object id="629" name="Snowfall" x="14880" y="1544" width="256" height="32">
    <properties>
     <property name="background" type="bool" value="true"/>
     <property name="min_y" type="object" value="574"/>
@@ -1175,7 +1175,7 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="637" name="Snowfall" x="16672" y="1488" width="352" height="32">
+  <object id="637" name="Snowfall" x="16672" y="1488" width="128" height="32">
    <properties>
     <property name="background" type="bool" value="true"/>
     <property name="min_y" type="object" value="574"/>
@@ -1183,7 +1183,7 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="638" name="Snowfall" x="17024" y="1488" width="256" height="32">
+  <object id="638" name="Snowfall" x="17056" y="1544" width="208" height="32">
    <properties>
     <property name="background" type="bool" value="true"/>
     <property name="min_y" type="object" value="574"/>
@@ -1191,7 +1191,7 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="639" name="Snowfall" x="17280" y="1488" width="256" height="32">
+  <object id="639" name="Snowfall" x="17264" y="1544" width="208" height="32">
    <properties>
     <property name="background" type="bool" value="true"/>
     <property name="init_1" type="object" value="646"/>
@@ -1205,7 +1205,7 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="640" name="Snowfall" x="17536" y="1488" width="240" height="32">
+  <object id="640" name="Snowfall" x="17632" y="1544" width="160" height="32">
    <properties>
     <property name="background" type="bool" value="true"/>
     <property name="min_y" type="object" value="574"/>
@@ -1213,7 +1213,7 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="641" name="Snowfall" x="17776" y="1488" width="272" height="32">
+  <object id="641" name="Snowfall" x="17792" y="1544" width="160" height="32">
    <properties>
     <property name="background" type="bool" value="true"/>
     <property name="init_1" type="object" value="652"/>
@@ -1223,6 +1223,30 @@
     <property name="init_5" type="object" value="649"/>
     <property name="min_y" type="object" value="574"/>
     <property name="spawn_room" value="boss_room"/>
+    <property name="spawn_type" value="spawn_room"/>
+   </properties>
+  </object>
+  <object id="656" name="Snowfall" x="896" y="2696" width="96" height="32">
+   <properties>
+    <property name="background" type="bool" value="true"/>
+    <property name="min_y" type="object" value="127"/>
+    <property name="spawn_room" value="room1"/>
+    <property name="spawn_type" value="spawn_room"/>
+   </properties>
+  </object>
+  <object id="657" name="Snowfall" x="832" y="2728" width="64" height="32">
+   <properties>
+    <property name="background" type="bool" value="true"/>
+    <property name="min_y" type="object" value="127"/>
+    <property name="spawn_room" value="room1"/>
+    <property name="spawn_type" value="spawn_room"/>
+   </properties>
+  </object>
+  <object id="658" name="Snowfall" x="16800" y="1576" width="160" height="32">
+   <properties>
+    <property name="background" type="bool" value="true"/>
+    <property name="min_y" type="object" value="574"/>
+    <property name="spawn_room" value="room10"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>

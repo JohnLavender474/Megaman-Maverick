@@ -419,7 +419,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         outroTimer.reset()
 
         game.getUiCamera().position.set(ConstFuncs.getUiCamInitPos())
-        game.audioMan.playMusic(MusicAsset.MM3_SNAKE_MAN_MUSIC, true)
+        game.audioMan.playMusic(MusicAsset.STAGE_SELECT_MM3_MUSIC, true)
     }
 
     override fun onAnyMovement(direction: Direction) =

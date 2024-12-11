@@ -1,8 +1,10 @@
 package com.megaman.maverick.game.levels
 
+import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.common.extensions.putIfAbsentAndGet
+import com.megaman.maverick.game.assets.IAsset
 
 enum class LevelDefinition(
     val type: LevelType,
@@ -11,7 +13,7 @@ enum class LevelDefinition(
     val tmxMapSource: String,
     val music: String,
     val screenOnCompletion: String
-) {
+) : IAsset {
     TIMBER_WOMAN(
         type = LevelType.ROBOT_MASTER_LEVEL,
         mugshotAtlas = "FACES_1",
@@ -32,7 +34,7 @@ enum class LevelDefinition(
         type = LevelType.ROBOT_MASTER_LEVEL,
         mugshotAtlas = "FACES_1",
         mugshotRegion = "Rodent Man",
-        tmxMapSource = "RodentMan_v2.tmx",
+        tmxMapSource = "RodentMan.tmx",
         music = "MM7_SLASH_MAN_MUSIC",
         screenOnCompletion = "SAVE_GAME_SCREEN"
     ),
@@ -72,7 +74,7 @@ enum class LevelDefinition(
         type = LevelType.ROBOT_MASTER_LEVEL,
         mugshotAtlas = "FACES_1",
         mugshotRegion = "Precious Man",
-        tmxMapSource = "PreciousMan_16x12.tmx",
+        tmxMapSource = "Test1.tmx",
         music = "MM3_SNAKE_MAN_MUSIC",
         screenOnCompletion = "SAVE_GAME_SCREEN"
     ),
@@ -100,6 +102,15 @@ enum class LevelDefinition(
         music = "MM3_SNAKE_MAN_MUSIC",
         screenOnCompletion = "WILY_CASTLE_SCREEN"
     );
+
+    companion object {
+        const val TMX_SOURCE_PREFIX = "tiled_maps/tmx/"
+    }
+
+    override val source: String
+        get() = "${TMX_SOURCE_PREFIX}${tmxMapSource}"
+    override val assClass: Class<*>
+        get() = TiledMap::class.java
 
     fun getFormattedName() = name.replace("_", " ")
 }

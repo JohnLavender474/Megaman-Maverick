@@ -40,6 +40,7 @@ import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.motion.MotionSystem
 import com.mega.game.engine.pathfinding.SimplePathfindingSystem
 import com.mega.game.engine.screens.levels.tiledmap.TiledMapLevelScreen
+import com.mega.game.engine.screens.levels.tiledmap.TiledMapLoader
 import com.mega.game.engine.world.WorldSystem
 import com.mega.game.engine.world.container.SimpleGridWorldContainer
 import com.megaman.maverick.game.ConstFuncs
@@ -66,11 +67,11 @@ import com.megaman.maverick.game.screens.levels.events.BossSpawnEventHandler
 import com.megaman.maverick.game.screens.levels.events.EndLevelEventHandler
 import com.megaman.maverick.game.screens.levels.events.PlayerDeathEventHandler
 import com.megaman.maverick.game.screens.levels.events.PlayerSpawnEventHandler
-import com.megaman.maverick.game.screens.levels.map.layers.MegaMapLayerBuilders
-import com.megaman.maverick.game.screens.levels.map.layers.MegaMapLayerBuildersParams
 import com.megaman.maverick.game.screens.levels.spawns.PlayerSpawnsManager
 import com.megaman.maverick.game.screens.levels.stats.BossHealthHandler
 import com.megaman.maverick.game.screens.levels.stats.PlayerStatsHandler
+import com.megaman.maverick.game.screens.levels.tiled.layers.MegaMapLayerBuilders
+import com.megaman.maverick.game.screens.levels.tiled.layers.MegaMapLayerBuildersParams
 import com.megaman.maverick.game.spawns.ISpawner
 import com.megaman.maverick.game.spawns.Spawn
 import com.megaman.maverick.game.spawns.SpawnsManager
@@ -83,7 +84,7 @@ import java.util.*
 class MegaLevelScreen(
     private val game: MegamanMaverickGame,
     private val onEscapePressed: () -> Unit = {},
-) : TiledMapLevelScreen(game.batch), Initializable, IEventListener, Resettable {
+) : TiledMapLevelScreen(game.batch, TiledMapLoader(game.assMan)), Initializable, IEventListener, Resettable {
 
     companion object {
         const val TAG = "MegaLevelScreen"
@@ -368,7 +369,6 @@ class MegaLevelScreen(
 
                 backgrounds.forEach { background -> background.immediateRotation(Direction.UP) }
                 cameraManagerForRooms.reset()
-                // gameCamera.immediateRotation(Direction.UP)
 
                 bossHealthHandler.unset()
 
@@ -583,15 +583,15 @@ class MegaLevelScreen(
             EventType.END_LEVEL -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): End level")
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
-                val nextScreen = screenOnCompletion ?:
-                    throw IllegalStateException("Level must have a defined screen on completion value")
+                val nextScreen = screenOnCompletion
+                    ?: throw IllegalStateException("Level must have a defined screen on completion value")
                 game.setCurrentScreen(nextScreen.name)
             }
 
             EventType.EDIT_TILED_MAP -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Edit tiled map")
                 val editor = event.getProperty(ConstKeys.EDIT)!! as (TiledMap) -> Unit
-                tiledMap?.let {
+                tiledMapLoadResult?.map?.let {
                     GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Invoking editor")
                     editor.invoke(it)
                 }
@@ -658,7 +658,7 @@ class MegaLevelScreen(
         if (!game.paused) {
             spawnsMan.update(delta / 2f)
 
-            if (/*playerSpawnEventHandler.finished && */!cameraManagerForRooms.transitioning) {
+            if (!cameraManagerForRooms.transitioning) {
                 playerSpawnsMan.run()
 
                 val spawnsIter = spawns.iterator()

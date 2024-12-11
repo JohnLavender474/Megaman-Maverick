@@ -131,7 +131,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
                 }
 
             override fun onSelect(delta: Float): Boolean {
-                game.setCurrentScreen(ScreenEnum.BOSS_SELECT_SCREEN.name)
+                game.setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name)
                 return true
             }
         })

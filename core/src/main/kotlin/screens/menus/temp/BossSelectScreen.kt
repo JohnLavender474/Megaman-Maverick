@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
@@ -16,7 +15,6 @@ import com.mega.game.engine.common.enums.Position.Companion.get
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.drawables.fonts.BitmapFontHandle
 import com.mega.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstFuncs
 import com.megaman.maverick.game.ConstVals
@@ -24,43 +22,32 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.bosses.BossType
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.menus.MegaMenuScreen
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
-import com.megaman.maverick.game.screens.utils.ScreenSlide
-import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
-import com.megaman.maverick.game.utils.extensions.getDefaultCameraPosition
 import java.util.*
 import java.util.function.Supplier
 
 class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MAN), Initializable {
 
     companion object {
-        private val INTRO_BLOCKS_TRANS = Vector3(15f * ConstVals.PPM, 0f, 0f)
-        private val CAM_POS = getDefaultCameraPosition().add(0f, 0.55f * ConstVals.PPM, 0f)
         private const val MEGA_MAN = "MEGA MAN"
         private const val BACK = "BACK"
     }
 
     private val bNameSet = ObjectSet<String>()
-    private val slide = ScreenSlide(
-        game.getUiCamera(),
-        CAM_POS.cpy().sub(INTRO_BLOCKS_TRANS),
-        CAM_POS,
-        0.5f,
-        false
-    )
     private val bar1 = Sprite()
     private val bar2 = Sprite()
     private val white = Sprite()
     private val outTimer = Timer(1.05f)
-    private val t = Array<BitmapFontHandle>()
+    private val t = Array<MegaFontHandle>()
     private val bp = Array<Mugshot>()
     private val bkgd = Array<Sprite>()
     private val bars = ObjectMap<Sprite, Animation>()
     private val bArrs = ObjectMap<String, BlinkingArrow>()
-    private lateinit var bName: BitmapFontHandle
+    private lateinit var bName: MegaFontHandle
     private var outro = false
     private var blink = false
     private var bSelect: BossType? = null
@@ -144,20 +131,20 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
         bp.add(megamanPane)
         for (boss in BossType.values()) bp.add(Mugshot(game, boss))
         t.add(
-            BitmapFontHandle(
-                "PRESS START",
-                getDefaultFontSize(),
-                Vector2(5.35f * ConstVals.PPM, 13.85f * ConstVals.PPM),
+            MegaFontHandle(
+                text = "PRESS START",
+                positionX = 5.35f * ConstVals.PPM,
+                positionY = 13.85f * ConstVals.PPM,
                 centerX = false,
-                centerY = false,
-                fontSource = "Megaman10Font.ttf"
+                centerY = false
             )
         )
         t.add(
-            BitmapFontHandle(
-                BACK, getDefaultFontSize(), Vector2(
-                    12.35f * ConstVals.PPM, ConstVals.PPM.toFloat()
-                ), false, centerY = false, fontSource = "Megaman10Font.ttf"
+            MegaFontHandle(
+                text = BACK,
+                positionX = 12.35f * ConstVals.PPM,
+                positionY = ConstVals.PPM.toFloat(),
+                centerX = false, centerY = false
             )
         )
         bArrs.put(
@@ -216,10 +203,11 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
             }
             i++
         }
-        bName = BitmapFontHandle(
-            { "" }, getDefaultFontSize(), Vector2(
-                ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat()
-            ), false, centerY = false, fontSource = "Megaman10Font.ttf"
+        bName = MegaFontHandle(
+            text = "",
+            positionX = ConstVals.PPM.toFloat(),
+            positionY = ConstVals.PPM.toFloat(),
+            centerX = false, centerY = false,
         )
     }
 
@@ -278,7 +266,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
         if (bArrs.containsKey(currentButtonKey)) bArrs.get(currentButtonKey).draw(batch)
         for (text in t) text.draw(batch)
         if (MEGA_MAN == currentButtonKey || bNameSet.contains(currentButtonKey)) {
-            bName.textSupplier = { currentButtonKey!!.uppercase(Locale.getDefault()) }
+            bName.setTextSupplier { currentButtonKey!!.uppercase(Locale.getDefault()) }
             bName.draw(batch)
         }
         batch.end()

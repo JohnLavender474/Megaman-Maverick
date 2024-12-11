@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.screens.levels.map.layers
+package com.megaman.maverick.game.screens.levels.tiled.layers
 
 import com.badlogic.gdx.maps.MapLayer
 import com.badlogic.gdx.utils.Array

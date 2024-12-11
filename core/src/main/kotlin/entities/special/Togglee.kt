@@ -19,12 +19,10 @@ import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
-import com.mega.game.engine.drawables.fonts.BitmapFontHandle
 import com.mega.game.engine.drawables.fonts.FontsComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -47,6 +45,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
@@ -55,7 +54,6 @@ import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppli
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType.SPAWN_ROOM
 import com.megaman.maverick.game.utils.GameObjectPools
-import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
@@ -354,10 +352,9 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
     }
 
     private fun defineFontsComponent(): FontsComponent {
-        val font = BitmapFontHandle(
-            { text }, MegaUtilMethods.getDefaultFontSize(), fontSource = ConstVals.MEGAMAN_MAVERICK_FONT
-        )
-        return FontsComponent(ConstKeys.DEFAULT pairTo font)
+        val font = MegaFontHandle(text = text)
+        return FontsComponent(/*ConstKeys.DEFAULT pairTo font*/)
+        // TODO: fonts component should accept mega font, or should sprites component be used instead?
     }
 
     override fun getEntityType() = EntityType.SPECIAL

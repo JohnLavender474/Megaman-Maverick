@@ -29,13 +29,7 @@ object CreditsLoader {
                 line.startsWith("##") -> MegaUtilMethods.getDefaultFontSize()
                 else -> MegaUtilMethods.getSmallFontSize()
             }
-            credits.addLast(
-                MegaFontHandle(
-                    text = line.replace("#", "").uppercase(),
-                    fontSize = fontSize,
-                    fontSource = ConstVals.MEGAMAN_MAVERICK_FONT
-                )
-            )
+            credits.addLast(MegaFontHandle(text = line.replace("#", "").uppercase()))
         }
         return credits
     }

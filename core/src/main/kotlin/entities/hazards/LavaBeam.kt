@@ -93,7 +93,7 @@ class LavaBeam(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 0))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
         sprite.setSize(2f * ConstVals.PPM, 5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
