@@ -9,7 +9,6 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.drawables.fonts.BitmapFontHandle
 import com.mega.game.engine.screens.BaseScreen
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -17,8 +16,8 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.backgrounds.ScrollingStars
+import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.bosses.BossType
-import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.extensions.getDefaultCameraPosition
 import java.util.*
 
@@ -45,7 +44,7 @@ class BossIntroScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
     private lateinit var durTimer: Timer
     private lateinit var bDropTimer: Timer
     private lateinit var barAnim: Animation
-    private lateinit var bText: BitmapFontHandle
+    private lateinit var bText: MegaFontHandle
 
     private var b: BossType? = null
     private var currBAnim: GamePair<Sprite, Queue<GamePair<Animation, Timer>>>? = null
@@ -76,10 +75,11 @@ class BossIntroScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
         durTimer = Timer(DUR)
         bDropTimer = Timer(B_DROP)
 
-        bText = BitmapFontHandle(
-            { "" }, getDefaultFontSize(), Vector2(
-                ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f, ConstVals.VIEW_HEIGHT * ConstVals.PPM / 4f
-            ), centerX = true, centerY = true, fontSource = ConstVals.MEGAMAN_MAVERICK_FONT
+        bText = MegaFontHandle(
+            text = "",
+            positionX = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f,
+            positionY = ConstVals.VIEW_HEIGHT * ConstVals.PPM / 4f,
+            centerX = true, centerY = true,
         )
     }
 
@@ -100,7 +100,7 @@ class BossIntroScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
 
         for (i in 0 until b.bossName.length) {
             bLettersAnimQ.add(Runnable {
-                bText.textSupplier = { b.bossName.substring(0, i + 1).uppercase() }
+                bText.setText(b.bossName.substring(0, i + 1).uppercase())
                 if (Character.isWhitespace(b.bossName[i])) return@Runnable
                 audioMan.playSound(SoundAsset.THUMP_SOUND, false)
             })
@@ -111,7 +111,7 @@ class BossIntroScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
         if (!initialized) init()
         super.show()
 
-        bText.textSupplier = { "" }
+        bText.setText("")
 
         durTimer.reset()
         bDropTimer.reset()
@@ -150,7 +150,7 @@ class BossIntroScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
             bDropTimer.update(delta)
             if (!bDropTimer.isFinished()) bSprite.y =
                 ConstVals.VIEW_HEIGHT * ConstVals.PPM -
-                        (((ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f) + 0.85f * ConstVals.PPM) * bDropTimer.getRatio())
+                    (((ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f) + 0.85f * ConstVals.PPM) * bDropTimer.getRatio())
             if (bDropTimer.isJustFinished()) bSprite.y =
                 ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f - 0.85f * ConstVals.PPM
 

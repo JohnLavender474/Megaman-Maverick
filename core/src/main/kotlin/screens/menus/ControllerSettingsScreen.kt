@@ -14,7 +14,6 @@ import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.controller.ControllerUtils
 import com.mega.game.engine.controller.buttons.ControllerButton
 import com.mega.game.engine.controller.buttons.ControllerButtons
-import com.mega.game.engine.drawables.fonts.BitmapFontHandle
 import com.mega.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -26,7 +25,6 @@ import com.megaman.maverick.game.controllers.resetToDefaults
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
-import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
 
 class ControllerSettingsScreen(
@@ -53,7 +51,7 @@ class ControllerSettingsScreen(
 
     private lateinit var keyboardListener: InputAdapter
     private lateinit var buttonListener: ControllerAdapter
-    private lateinit var hintFontHandle: BitmapFontHandle
+    private lateinit var hintFontHandle: MegaFontHandle
     private lateinit var blinkingArrow: BlinkingArrow
 
     private var selectedMegaButton: MegaControllerButton? = null
@@ -131,16 +129,14 @@ class ControllerSettingsScreen(
             }
         }
 
-        hintFontHandle = BitmapFontHandle(
+        hintFontHandle = MegaFontHandle(
             {
                 "Press any ${if (isKeyboardSettings) "keyboard key" else "controller button"} to set \na new code for" +
                     " the button: \n$selectedMegaButton"
             },
-            getDefaultFontSize(),
-            Vector2(
-                ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f, ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f
-            ),
-            fontSource = "Megaman10Font.ttf",
+            positionX =
+                ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f,
+            positionY = ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f,
             centerX = true,
             centerY = true,
         )

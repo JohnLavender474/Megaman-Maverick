@@ -94,7 +94,7 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         start = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(start)
         for (i in 1 until height) {
-            val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 0))
+            val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
             sprite.setRegion(barRegion!!)
             sprite.setSize(2.25f * ConstVals.PPM)
             sprites.put("bar_$i", sprite)
@@ -238,7 +238,7 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     })
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 0))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
         sprite.setRegion(crusherRegion!!)
         sprite.setSize(2.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)

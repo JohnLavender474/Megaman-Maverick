@@ -14,7 +14,6 @@ import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.controller.ControllerUtils
-import com.mega.game.engine.drawables.fonts.BitmapFontHandle
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstKeys
@@ -24,10 +23,10 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
 import com.megaman.maverick.game.screens.utils.ScreenSlide
-import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 import com.megaman.maverick.game.utils.extensions.getDefaultCameraPosition
 import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
 
@@ -72,7 +71,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         true
     )
 
-    private val fontHandles = Array<BitmapFontHandle>()
+    private val fontHandles = Array<MegaFontHandle>()
     private val settingsArrows = Array<Sprite>()
 
     private val settingsArrowBlinkTimer = Timer(UI_ARROW_BLINK_DUR)
@@ -91,13 +90,12 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
         MainScreenButton.entries.forEach {
             val fontHandle =
-                BitmapFontHandle(
+                MegaFontHandle(
                     it.text,
-                    getDefaultFontSize(),
-                    Vector2(2f * ConstVals.PPM, row * ConstVals.PPM),
+                    positionX = 2f * ConstVals.PPM,
+                    positionY = row * ConstVals.PPM,
                     centerX = false,
-                    centerY = false,
-                    fontSource = "Megaman10Font.ttf"
+                    centerY = false
                 )
             fontHandles.add(fontHandle)
             val arrowCenter = Vector2(1.5f * ConstVals.PPM, (row - ARROW_CENTER_ROW_DECREMENT) * ConstVals.PPM)
@@ -109,13 +107,12 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
         MainScreenSettingsButton.entries.forEach {
             val fontHandle =
-                BitmapFontHandle(
+                MegaFontHandle(
                     it.text,
-                    getDefaultFontSize(),
-                    Vector2(17f * ConstVals.PPM, row * ConstVals.PPM),
+                    positionX = 17f * ConstVals.PPM,
+                    positionY = row * ConstVals.PPM,
                     centerX = false,
-                    centerY = false,
-                    fontSource = "Megaman10Font.ttf"
+                    centerY = false
                 )
             fontHandles.add(fontHandle)
             val arrowCenter = Vector2(16.5f * ConstVals.PPM, (row - ARROW_CENTER_ROW_DECREMENT) * ConstVals.PPM)
@@ -124,35 +121,32 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         }
 
         fontHandles.add(
-            BitmapFontHandle(
+            MegaFontHandle(
                 "© OLDLAVYGENES 20XX",
-                getDefaultFontSize(),
-                Vector2(5f * ConstVals.PPM, 0.5f * ConstVals.PPM),
+                positionX = 5f * ConstVals.PPM,
+                positionY = 0.5f * ConstVals.PPM,
                 centerX = false,
-                centerY = false,
-                fontSource = "Megaman10Font.ttf"
+                centerY = false
             )
         )
 
         fontHandles.add(
-            BitmapFontHandle(
+            MegaFontHandle(
                 { (game.audioMan.musicVolume * 10f).toInt().toString() },
-                getDefaultFontSize(),
-                Vector2(25.2f * ConstVals.PPM, 10.45f * ConstVals.PPM),
+                positionX = 25.2f * ConstVals.PPM,
+                positionY = 10.45f * ConstVals.PPM,
                 centerX = true,
                 centerY = true,
-                fontSource = "Megaman10Font.ttf"
             )
         )
 
         fontHandles.add(
-            BitmapFontHandle(
+            MegaFontHandle(
                 { (game.audioMan.soundVolume * 10f).toInt().toString() },
-                getDefaultFontSize(),
-                Vector2(25.2f * ConstVals.PPM, 9.625f * ConstVals.PPM),
+                positionX = 25.2f * ConstVals.PPM,
+                positionY = 9.625f * ConstVals.PPM,
                 centerX = true,
-                centerY = true,
-                fontSource = "Megaman10Font.ttf"
+                centerY = true
             )
         )
 
@@ -181,7 +175,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
                     game.state.reset()
-                    game.setCurrentScreen(ScreenEnum.BOSS_SELECT_SCREEN.name)
+                    game.setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name)
                     return true
                 }
 
@@ -213,7 +207,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                 override fun onSelect(delta: Float): Boolean {
                     if (game.hasSavedState() && game.loadSavedState()) {
                         GameLogger.debug(TAG, "Loaded saved state")
-                        game.setCurrentScreen(ScreenEnum.BOSS_SELECT_SCREEN.name)
+                        game.setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name)
                         game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
                         return true
                     } else {
@@ -403,7 +397,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         screenSlide.reset()
 
         game.getUiCamera().setToDefaultPosition()
-        game.audioMan.playMusic(MusicAsset.MM3_SNAKE_MAN_MUSIC)
+        game.audioMan.playMusic(MusicAsset.MMX3_INTRO_STAGE_MUSIC)
 
         GameLogger.debug(TAG, "Current button key: $currentButtonKey")
         GameLogger.debug(TAG, "Blinking arrows keys: ${blinkArrows.keys().toGdxArray()}")

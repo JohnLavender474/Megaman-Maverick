@@ -4,6 +4,7 @@ import com.badlogic.gdx.Application.ApplicationType
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.assets.AssetManager
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.GL20
@@ -12,6 +13,8 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.maps.tiled.TiledMap
+import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.utils.*
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.viewport.FitViewport
@@ -26,7 +29,6 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IPropertizable
-import com.mega.game.engine.common.objects.MultiCollectionIterable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.controller.ControllerSystem
@@ -92,6 +94,7 @@ import com.megaman.maverick.game.screens.utils.ScreenSlide
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getMusics
 import com.megaman.maverick.game.utils.extensions.getSounds
+import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.collisions.MegaCollisionHandler
 import com.megaman.maverick.game.world.contacts.MegaContactListener
@@ -118,7 +121,8 @@ class MegamanMaverickGame(
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        const val TMX_SOURCE_PREFIX = "tiled_maps/tmx/"
+        private const val ASSET_MILLIS = 17
+        private const val LOADING = "LOADING"
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(ScreenSlide.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.TELEPORTER, FixtureType.TELEPORTER_LISTENER)
@@ -157,6 +161,9 @@ class MegamanMaverickGame(
     private var currentScreenKey: String? = null
     private var screenController: ScreenController? = null
 
+    private lateinit var loadingText: MegaFontHandle
+    private var finishedLoadingAssets = false
+
     fun setCurrentScreen(key: String) {
         GameLogger.debug(TAG, "setCurrentScreen: set to screen with key = $key")
         currentScreen?.let {
@@ -175,8 +182,8 @@ class MegamanMaverickGame(
         val levelScreen = screens.get(ScreenEnum.LEVEL_SCREEN.name) as MegaLevelScreen
 
         levelScreen.screenOnCompletion = ScreenEnum.valueOf(levelDef.screenOnCompletion)
-        levelScreen.tmxMapSource = "${TMX_SOURCE_PREFIX}${levelDef.tmxMapSource}"
         levelScreen.music = MusicAsset.valueOf(levelDef.music)
+        levelScreen.tmxMapSource = levelDef.source
 
         setCurrentScreen(ScreenEnum.LEVEL_SCREEN.name)
     }
@@ -259,14 +266,13 @@ class MegamanMaverickGame(
 
         controllerPoller = defineControllerPoller()
 
-        assMan = AssetManager()
-        loadAssets(assMan)
-        assMan.finishLoading()
-
         eventsMan = EventsManager()
         eventsMan.addListener(this)
 
         engine = createGameEngine()
+
+        state = GameState()
+        EntityFactories.initialize(this)
 
         val gameWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
         val gameHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
@@ -275,13 +281,26 @@ class MegamanMaverickGame(
                 setCameraRotating(false)
                 eventsMan.submitEvent(Event(EventType.END_GAME_CAM_ROTATION))
             })
+        gameCamera.setToDefaultPosition()
+
         val gameViewport = FitViewport(gameWidth, gameHeight, gameCamera)
         viewports.put(ConstKeys.GAME, gameViewport)
 
         val uiWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
         val uiHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
-        val uiViewport = FitViewport(uiWidth, uiHeight)
+        val uiCamera = OrthographicCamera(uiWidth, uiHeight)
+        uiCamera.setToDefaultPosition()
+
+        val uiViewport = FitViewport(uiWidth, uiHeight, uiCamera)
         viewports.put(ConstKeys.UI, uiViewport)
+
+        loadingText = MegaFontHandle(
+            "${LOADING}: 0%",
+            positionX = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f,
+            positionY = ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f,
+            centerX = true,
+            centerY = true
+        )
 
         val fpsTextSupplier: () -> String = { "FPS: ${Gdx.graphics.framesPerSecond}" }
         /*
@@ -294,15 +313,16 @@ class MegamanMaverickGame(
          */
         debugText = MegaFontHandle(fpsTextSupplier)
 
+        assMan = AssetManager()
+        queueAssets()
+    }
+
+    private fun postCreate() {
         val sounds = OrderedMap<SoundAsset, Sound>()
         val music = OrderedMap<MusicAsset, Music>()
         audioMan = MegaAudioManager(assMan.getSounds(sounds), assMan.getMusics(music))
         audioMan.musicVolume = params.musicVolume
         audioMan.soundVolume = params.soundVolume
-
-        EntityFactories.initialize(this)
-
-        state = GameState()
 
         megaman = Megaman(this)
         // manually call init and set initialized to true before megaman is spawned
@@ -323,7 +343,7 @@ class MegamanMaverickGame(
             MegaLevelScreen(this) {
                 when (params.startScreen) {
                     StartScreenOption.MAIN -> Gdx.app.exit()
-                    StartScreenOption.SIMPLE -> setCurrentScreen(ScreenEnum.SIMPLE_SELECT_LEVEL_SCREEN.name)
+                    StartScreenOption.SIMPLE -> setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name)
                 }
             })
         screens.put(ScreenEnum.MAIN_MENU_SCREEN.name, MainMenuScreen(this))
@@ -331,23 +351,62 @@ class MegamanMaverickGame(
         screens.put(ScreenEnum.LOAD_PASSWORD_SCREEN.name, LoadPasswordScreen(this))
         screens.put(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, true))
         screens.put(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, false))
-        screens.put(ScreenEnum.BOSS_SELECT_SCREEN.name, LevelSelectScreen(this))
+        screens.put(ScreenEnum.LEVEL_SELECT_SCREEN.name, LevelSelectScreen(this))
         screens.put(ScreenEnum.BOSS_INTRO_SCREEN.name, BossIntroScreen(this))
         screens.put(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name, SimpleInitGameScreen(this))
         screens.put(ScreenEnum.SIMPLE_SELECT_LEVEL_SCREEN.name, SimpleSelectLevelScreen(this))
         screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY_SCREEN.name, SimpleEndLevelScreen(this))
         screens.put(ScreenEnum.CREDITS_SCREEN.name, CreditsScreen(this))
 
-        setCurrentScreen(ScreenEnum.BOSS_SELECT_SCREEN.name)
-        /*
-        when (params.startScreen) {
-            StartScreenOption.SIMPLE -> setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
-            else -> setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
-        }
-         */
+        setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
 
         if (Gdx.app.type == ApplicationType.Android || params.showScreenController)
             screenController = ScreenController(this)
+    }
+
+    override fun render() {
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
+        Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT)
+
+        if (!finishedLoadingAssets) {
+            val finished = assMan.update(ASSET_MILLIS)
+
+            if (finished) {
+                finishedLoadingAssets = true
+                postCreate()
+            } else {
+                val progress = (assMan.progress * 100).toInt()
+                loadingText.setText("${LOADING}: $progress%")
+
+                viewports.get(ConstKeys.UI).apply()
+
+                batch.projectionMatrix = getUiCamera().combined
+                batch.begin()
+                loadingText.draw(batch)
+                batch.end()
+            }
+        } else {
+            val delta = Gdx.graphics.deltaTime
+
+            controllerPoller.run()
+            screenController?.update(delta)
+
+            currentScreen?.render(delta)
+
+            audioMan.update(delta)
+            eventsMan.run()
+        }
+
+        if (params.debugFPS) {
+            viewports.get(ConstKeys.GAME).apply()
+
+            batch.projectionMatrix = getUiCamera().combined
+            batch.begin()
+            debugText.draw(batch)
+            batch.end()
+        }
+
+        GameObjectPools.performNextReclaim()
     }
 
     override fun onEvent(event: Event) {
@@ -370,30 +429,6 @@ class MegamanMaverickGame(
                 if (turnSystemOn) getSystem(ControllerSystem::class).on = true
             }
         }
-    }
-
-    override fun render() {
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
-        Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT)
-
-        val delta = Gdx.graphics.deltaTime
-
-        controllerPoller.run()
-        screenController?.update(delta)
-
-        currentScreen?.render(delta)
-
-        audioMan.update(delta)
-        eventsMan.run()
-
-        if (params.debugFPS) {
-            batch.projectionMatrix = getUiCamera().combined
-            batch.begin()
-            debugText.draw(batch)
-            batch.end()
-        }
-
-        GameObjectPools.performNextReclaim()
     }
 
     override fun resize(width: Int, height: Int) {
@@ -460,17 +495,20 @@ class MegamanMaverickGame(
         return MegaControllerPoller(buttons)
     }
 
-    private fun loadAssets(assMan: AssetManager) =
-        MultiCollectionIterable<IAsset>(
-            gdxArrayOf(
-                MusicAsset.valuesAsIAssetArray(),
-                SoundAsset.valuesAsIAssetArray(),
-                TextureAsset.valuesAsIAssetArray()
-            )
-        ).forEach {
+    private fun queueAssets() {
+        val assets = Array<IAsset>()
+        assets.addAll(MusicAsset.valuesAsIAssetArray())
+        assets.addAll(SoundAsset.valuesAsIAssetArray())
+        assets.addAll(TextureAsset.valuesAsIAssetArray())
+
+        assMan.setLoader(TiledMap::class.java, TmxMapLoader(InternalFileHandleResolver()));
+        LevelDefinition.entries.forEach { assets.add(it) }
+
+        assets.forEach {
             GameLogger.debug(TAG, "loadAssets(): Loading ${it.assClass.simpleName} asset: ${it.source}")
             assMan.load(it.source, it.assClass)
         }
+    }
 
     private fun createGameEngine(): GameEngine {
         val drawables = ObjectMap<DrawingSection, PriorityQueue<IComparableDrawable<Batch>>>()
