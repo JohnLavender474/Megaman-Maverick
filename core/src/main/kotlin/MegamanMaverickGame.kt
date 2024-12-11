@@ -74,6 +74,7 @@ import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.enemies.Bat
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
@@ -90,7 +91,6 @@ import com.megaman.maverick.game.screens.menus.temp.BossIntroScreen
 import com.megaman.maverick.game.screens.other.CreditsScreen
 import com.megaman.maverick.game.screens.other.SimpleEndLevelScreen
 import com.megaman.maverick.game.screens.other.SimpleInitGameScreen
-import com.megaman.maverick.game.screens.utils.ScreenSlide
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getMusics
 import com.megaman.maverick.game.utils.extensions.getSounds
@@ -123,7 +123,7 @@ class MegamanMaverickGame(
         const val TAG = "MegamanMaverickGame"
         private const val ASSET_MILLIS = 17
         private const val LOADING = "LOADING"
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(ScreenSlide.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(Bat.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.TELEPORTER, FixtureType.TELEPORTER_LISTENER)
         }
@@ -181,7 +181,8 @@ class MegamanMaverickGame(
     fun startLevelScreen(levelDef: LevelDefinition) {
         val levelScreen = screens.get(ScreenEnum.LEVEL_SCREEN.name) as MegaLevelScreen
 
-        levelScreen.screenOnCompletion = ScreenEnum.valueOf(levelDef.screenOnCompletion)
+        levelScreen.screenOnCompletion =
+            ScreenEnum.LEVEL_SELECT_SCREEN // TODO: ScreenEnum.valueOf(levelDef.screenOnCompletion)
         levelScreen.music = MusicAsset.valueOf(levelDef.music)
         levelScreen.tmxMapSource = levelDef.source
 

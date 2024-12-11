@@ -12,6 +12,7 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setBounds
@@ -142,15 +143,12 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
         fadeTimer.reset()
     }
 
+    private fun handleHit() {
+        if (!background) destroy()
+    }
+
     private fun adjust() {
         sine.amplitude = UtilMethods.getRandom(minAmplitude, maxAmplitude)
-        /*
-        GameLogger.debug(
-            TAG,
-            "adjust(): hashcode=${hashCode()}, sine.amplitude=${sine.amplitude}, sine.frequency=${sine.frequency}, " +
-                "drift=$drift, position=${body.getCenter()}"
-        )
-         */
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -183,20 +181,20 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
         val bodyFixture = Fixture(body, FixtureType.BODY, bodyRect)
         bodyFixture.setHitByBlockReceiver(ProcessState.BEGIN) { block, _ ->
             GameLogger.debug(TAG, "hitByBlock(): background=$background, mapObjId=${block.mapObjectId}")
-            destroy()
+            handleHit()
         }
         bodyFixture.setHitByBodyReceiver {
             if ((it as MegaGameEntity).getTag() == getTag()) return@setHitByBodyReceiver
             GameLogger.debug(TAG, "hitByBody(): background=$background, body=$it")
-            destroy()
+            handleHit()
         }
         bodyFixture.setHitByProjectileReceiver {
             GameLogger.debug(TAG, "hitByProjectile(): background=$background, projectile=$it")
-            destroy()
+            handleHit()
         }
         bodyFixture.setHitByWaterReceiver {
             GameLogger.debug(TAG, "hitByWater(): background=$background, water=$it")
-            destroy()
+            handleHit()
         }
         body.addFixture(bodyFixture)
 
@@ -222,6 +220,7 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
             sprite.setBounds(body.getBounds())
             val alpha = if (fadingOut) 1f - fadeTimer.getRatio() else 1f
             sprite.setAlpha(alpha)
+            sprite.priority.section = if (background) DrawingSection.BACKGROUND else DrawingSection.PLAYGROUND
         }.build()
 
     override fun getEntityType() = EntityType.DECORATION

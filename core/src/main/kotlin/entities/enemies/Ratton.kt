@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -53,7 +52,7 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         private const val G_GRAV = -0.01f
         private const val GRAV = -0.15f
         private const val JUMP_X = 5f
-        private const val JUMP_Y = 7.5f
+        private const val JUMP_Y = 8f
         private const val DEFAULT_FRICTION_X = 1f
         private const val GROUND_FRICTION_X = 5f
         private val regions = ObjectMap<String, TextureRegion>()
