@@ -774,10 +774,10 @@
   </object>
  </objectgroup>
  <objectgroup id="3" name="items"/>
- <objectgroup id="13" name="player">
+ <objectgroup id="13" name="temp">
   <object id="335" name="0" x="3552" y="1632" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="11" name="temp">
+ <objectgroup id="11" name="player">
   <object id="14" name="0" x="96" y="1344" width="32" height="32"/>
   <object id="71" name="1" x="1728" y="544" width="32" height="32"/>
   <object id="227" name="2" x="3872" y="1632" width="32" height="32">

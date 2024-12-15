@@ -153,11 +153,11 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         debugShapes.add { body.getBounds() }
 
         val bodyFixture =
-            Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.25f * ConstVals.PPM, ConstVals.PPM.toFloat()))
+            Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.75f * ConstVals.PPM))
         body.addFixture(bodyFixture)
 
         val projectileFixture =
-            Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.75f * ConstVals.PPM))
+            Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(0.25f * ConstVals.PPM, ConstVals.PPM.toFloat()))
         projectileFixture.offsetFromBodyAttachment.y = -0.1f * ConstVals.PPM
         body.addFixture(projectileFixture)
 
