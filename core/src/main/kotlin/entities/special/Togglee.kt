@@ -45,7 +45,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
@@ -91,8 +90,10 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
     lateinit var type: String
     lateinit var state: ToggleeState
         private set
+    /*
     lateinit var text: String
         private set
+     */
 
     private val offEntitySuppliers = Array<GamePair<() -> GameEntity, Properties>>()
     private val onEntitySuppliers = Array<GamePair<() -> GameEntity, Properties>>()
@@ -155,7 +156,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         val directionString = spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class)
         direction = Direction.valueOf(directionString.uppercase())
 
-        text = spawnProps.getOrDefault(ConstKeys.TEXT, "", String::class)
+        // text = spawnProps.getOrDefault(ConstKeys.TEXT, "", String::class)
         val position = body.getCenter().add(0f, 1.75f * ConstVals.PPM)
         // getFont(ConstKeys.DEFAULT).setPosition(position.x, position.y)
         // TODO: Togglee does not yet support displaying text
@@ -353,7 +354,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
     }
 
     private fun defineFontsComponent(): FontsComponent {
-        val font = MegaFontHandle(text = text)
+        // val font = MegaFontHandle(text = text)
         return FontsComponent(/*ConstKeys.DEFAULT pairTo font*/)
         // TODO: fonts component should accept mega font, or should sprites component be used instead?
     }

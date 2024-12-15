@@ -35,7 +35,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
     enum class MainScreenButton(val text: String) {
         START_NEW_GAME("START NEW GAME"),
-        LOAD_PASSWORD("LOAD PASSWORD"),
+        // TODO: LOAD_PASSWORD("LOAD PASSWORD"),
         LOAD_SAVE_FILE("LOAD SAVE FILE"),
         SETTINGS("SETTINGS"),
         CREDITS("CREDITS"),
@@ -47,8 +47,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         MUSIC_VOLUME("MUSIC VOLUME"),
         EFFECTS_VOLUME("SFX VOLUME"),
         KEYBOARD_SETTINGS("KEYBOARD SETTINGS"),
-        CONTROLLER_SETTINGS("CONTROLLER SETTINGS"),
-        CAMERA_SETTINGS("CAMERA SETTINGS")
+        CONTROLLER_SETTINGS("CONTROLLER SETTINGS")
     }
 
     companion object {
@@ -181,17 +180,19 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                     Direction.UP -> MainScreenButton.EXIT.text
-                    Direction.DOWN -> MainScreenButton.LOAD_PASSWORD.text
+                    Direction.DOWN -> MainScreenButton.LOAD_SAVE_FILE.text // TODO: MainScreenButton.LOAD_PASSWORD.text
                     else -> currentButtonKey
                 }
             })
 
+        // TODO:
+        /*
         buttons.put(
             MainScreenButton.LOAD_PASSWORD.text,
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
                     game.setCurrentScreen(ScreenEnum.LOAD_PASSWORD_SCREEN.name)
-                    return false
+                    return true
                 }
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
@@ -200,6 +201,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                     else -> currentButtonKey
                 }
             })
+         */
 
         buttons.put(
             MainScreenButton.LOAD_SAVE_FILE.text,
@@ -219,7 +221,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                 }
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                    Direction.UP -> MainScreenButton.LOAD_PASSWORD.text
+                    Direction.UP -> MainScreenButton.START_NEW_GAME.text // TODO: MainScreenButton.LOAD_PASSWORD.text
                     Direction.DOWN -> MainScreenButton.SETTINGS.text
                     else -> currentButtonKey
                 }
@@ -369,23 +371,8 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                     Direction.UP -> MainScreenSettingsButton.KEYBOARD_SETTINGS.text
-                    Direction.DOWN -> MainScreenSettingsButton.CAMERA_SETTINGS.text
-                    else -> currentButtonKey
-                }
-            })
-
-        buttons.put(
-            MainScreenSettingsButton.CAMERA_SETTINGS.text,
-            object : IMenuButton {
-                override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                    Direction.UP -> MainScreenSettingsButton.CONTROLLER_SETTINGS.text
                     Direction.DOWN -> MainScreenSettingsButton.BACK.text
                     else -> currentButtonKey
-                }
-
-                override fun onSelect(delta: Float): Boolean {
-                    game.setCurrentScreen(ScreenEnum.CAMERA_SETTINGS_SCREEN.name)
-                    return true
                 }
             })
     }

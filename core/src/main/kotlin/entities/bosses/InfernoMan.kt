@@ -58,7 +58,9 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
+import com.megaman.maverick.game.utils.extensions.getCenter
 
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
@@ -112,6 +114,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     }
 
     private enum class InfernoManState { INIT, STAND, JUMP, WALL_SLIDE, FLAME_HEAD }
+
     private enum class ShootMethod { STRAIGHT, UP, DOWN, MEGA }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -133,7 +136,10 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         get() = !timers["shoot"].isFinished()
     private val meteorSpawnDelays = Array<Timer>()
 
-    private val meteorSpawner = GameRectangle()
+    private val meteorSpawnBounds = GameRectangle()
+    private val meteorSpawners = ObjectMap<Int, GameRectangle>()
+    private val poppedMeteorSpawners = ObjectMap<Int, GameRectangle>()
+    private val randomMeteorKeys = Array<Int>()
     private var meteorCollideBlockId = 0
 
     private var shootMethod = ShootMethod.STRAIGHT
@@ -192,7 +198,23 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             else it.value.reset()
         }
 
-        meteorSpawner.set(spawnProps.get(ConstKeys.SPAWNER, RectangleMapObject::class)!!.rectangle.toGameRectangle())
+        meteorSpawnBounds.set(
+            spawnProps.get(
+                ConstKeys.SPAWNER,
+                RectangleMapObject::class
+            )!!.rectangle.toGameRectangle()
+        )
+        val max = meteorSpawnBounds.getWidth().div(ConstVals.PPM.toFloat()).toInt()
+        for (i in 0 until max) {
+            val x = meteorSpawnBounds.getX() + i * ConstVals.PPM
+            val y = meteorSpawnBounds.getY()
+
+            val spawner = GameRectangle(x, y, ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
+            meteorSpawners.put(i, spawner)
+
+            randomMeteorKeys.add(i)
+        }
+
         meteorCollideBlockId =
             spawnProps.get(ConstKeys.COLLIDE, RectangleMapObject::class)!!.properties.get(ConstKeys.ID, Int::class.java)
     }
@@ -200,6 +222,9 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        meteorSpawners.clear()
+        poppedMeteorSpawners.clear()
+        randomMeteorKeys.clear()
         meteorSpawnDelays.clear()
     }
 
@@ -415,6 +440,21 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             }
 
             InfernoManState.WALL_SLIDE -> body.physics.defaultFrictionOnSelf.y = DEFAULT_FRICTION_Y
+            InfernoManState.FLAME_HEAD -> {
+                val iter = poppedMeteorSpawners.iterator()
+                while (iter.hasNext) {
+                    val entry = iter.next()
+
+                    val key = entry.key
+                    val value = entry.value
+
+                    meteorSpawners.put(key, value)
+                    randomMeteorKeys.add(key)
+
+                    iter.remove()
+                }
+            }
+
             else -> GameLogger.debug(TAG, "onChangeState(): no action when previous=$previous")
         }
 
@@ -431,7 +471,11 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 resetShootTimer()
             }
 
-            InfernoManState.FLAME_HEAD -> timers["flame_head"].reset()
+            InfernoManState.FLAME_HEAD -> {
+                timers["flame_head"].reset()
+                randomMeteorKeys.shuffle()
+            }
+
             InfernoManState.WALL_SLIDE -> {
                 timers["wall_slide"].reset()
                 body.physics.defaultFrictionOnSelf.y = WALL_SLIDE_FRICTION_Y
@@ -441,35 +485,36 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         }
     }
 
-    private fun getShootMethod() =
-        when (currentState) {
-            InfernoManState.STAND -> {
-                val random = getRandom(0f, 1f)
-                when {
-                    isMegamanStraightAhead() -> when {
-                        random <= 0.75f || !timers["shoot"].isFinished() -> ShootMethod.STRAIGHT
-                        else -> ShootMethod.MEGA
-                    }
-
-                    random <= 0.25f -> ShootMethod.MEGA
-                    else -> ShootMethod.UP
+    private fun getShootMethod() = when (currentState) {
+        InfernoManState.STAND -> {
+            val random = getRandom(0f, 1f)
+            when {
+                isMegamanStraightAhead() -> when {
+                    random <= 0.75f || !timers["shoot"].isFinished() -> ShootMethod.STRAIGHT
+                    else -> ShootMethod.MEGA
                 }
-            }
 
-            InfernoManState.JUMP -> when {
-                megaman().body.getMaxY() < body.getY() -> ShootMethod.DOWN
-                isMegamanStraightAhead() -> ShootMethod.STRAIGHT
+                random <= 0.25f -> ShootMethod.MEGA
                 else -> ShootMethod.UP
             }
-
-            else -> throw IllegalStateException("Cannot set shoot method when state=$currentState")
         }
+
+        InfernoManState.JUMP -> when {
+            megaman().body.getMaxY() < body.getY() -> ShootMethod.DOWN
+            isMegamanStraightAhead() -> ShootMethod.STRAIGHT
+            else -> ShootMethod.UP
+        }
+
+        else -> throw IllegalStateException("Cannot set shoot method when state=$currentState")
+    }
 
     private fun resetShootTimer() {
         val timer = timers["shoot"]
         timer.clearRunnables()
         timer.runOnFirstUpdate = null
+
         shootMethod = getShootMethod()
+
         when (shootMethod) {
             ShootMethod.MEGA -> {
                 timer.resetDuration(MEGA_SHOOT_DUR)
@@ -487,6 +532,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     private fun shootWave() {
         val spawn = body.getPositionPoint(Position.BOTTOM_CENTER).add(0.75f * ConstVals.PPM * facing.value, 0f)
+
         val wave = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_WAVE)!!
         wave.spawn(
             props(
@@ -494,6 +540,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 ConstKeys.TRAJECTORY pairTo Vector2(WAVE_SPEED * ConstVals.PPM * facing.value, 0f)
             )
         )
+
         requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
     }
 
@@ -501,7 +548,9 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         val offsetX: Float
         val offsetY: Float
         val rotation: Float
+
         shootMethod = getShootMethod()
+
         when (shootMethod) {
             ShootMethod.UP -> {
                 offsetX = 0.65f * ConstVals.PPM * facing.value
@@ -521,6 +570,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 rotation = if (isFacing(Facing.LEFT)) 90f else 270f
             }
         }
+
         val trajectory = Vector2(0f, GOOP_SPEED * ConstVals.PPM).rotateDeg(rotation)
         val spawn = body.getCenter().add(offsetX, offsetY)
 
@@ -542,7 +592,8 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
         val spawn =
             body.getPositionPoint(Position.TOP_CENTER).add(0.1f * ConstVals.PPM * facing.value, 0.1f * ConstVals.PPM)
-        val trajectory = Vector2(0f, ORB_SPEED * ConstVals.PPM)
+        val trajectory = GameObjectPools.fetch(Vector2::class).set(0f, ORB_SPEED * ConstVals.PPM)
+
         val orb = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_ORB)!!
         orb.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.TRAJECTORY pairTo trajectory))
 
@@ -558,12 +609,19 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private fun spawnMeteor(targetMegaman: Boolean) {
         var x = when {
             targetMegaman -> megaman().body.getCenter().x
-            else -> getRandom(meteorSpawner.getX(), meteorSpawner.getMaxX())
+            else -> {
+                val poppedKey = randomMeteorKeys.pop()
+                val popped = meteorSpawners.remove(poppedKey)
+                poppedMeteorSpawners.put(poppedKey, popped)
+                popped.getCenter().x
+            }
         }
-        x = x.coerceIn(meteorSpawner.getX(), meteorSpawner.getMaxX())
-        val spawn = Vector2(x, meteorSpawner.getY())
+        val spawn = Vector2(x, meteorSpawnBounds.getY())
+
         val trajectory = Vector2(0f, -METEOR_SPEED * ConstVals.PPM)
+
         val floor = MegaGameEntities.getEntitiesOfMapObjectId(meteorCollideBlockId).first() as Block
+
         val meteor = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_METEOR)!!
         meteor.spawn(
             props(
