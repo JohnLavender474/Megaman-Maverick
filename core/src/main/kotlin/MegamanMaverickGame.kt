@@ -74,11 +74,11 @@ import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.enemies.Bat
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
+import com.megaman.maverick.game.entities.special.DisappearingBlocks
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -123,7 +123,7 @@ class MegamanMaverickGame(
         const val TAG = "MegamanMaverickGame"
         private const val ASSET_MILLIS = 17
         private const val LOADING = "LOADING"
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(Bat.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(DisappearingBlocks.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.TELEPORTER, FixtureType.TELEPORTER_LISTENER)
         }
