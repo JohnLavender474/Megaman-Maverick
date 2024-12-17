@@ -36,9 +36,10 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
     override var children = Array<IGameEntity>()
 
     private val keysToRender = LinkedList<String>()
-    private lateinit var bounds: GameRectangle
+    private val bounds = GameRectangle()
+    private val timer = Timer()
+
     private lateinit var loop: Loop<String>
-    private lateinit var timer: Timer
 
     override fun init() {
         addComponent(defineUpdatablesComponent())
@@ -50,11 +51,11 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
 
         val duration = spawnProps.getOrDefault(ConstKeys.DURATION, DEFAULT_DURATION, Float::class)
         GameLogger.debug(TAG, "onSpawn(): duration = $duration")
-        timer = Timer(duration)
+        timer.resetDuration(duration)
 
         val childrenPropsArray = convertObjectPropsToEntitySuppliers(spawnProps)
         childrenPropsArray.sort { o1, o2 ->
@@ -62,25 +63,31 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
             val key2 = o2.second.get(ConstKeys.KEY, String::class)!!
             key1.compareTo(key2)
         }
+
         GameLogger.debug(TAG, "onSpawn(): sorted childrenPropsArray = $childrenPropsArray")
 
         val keyArray = Array<String>()
         var currentKey: String? = null
+
         childrenPropsArray.forEach { (childSupplier, props) ->
             val child = childSupplier() as AnimatedBlock
             children.add(child)
+
             props.put(ConstKeys.RUN_ON_SPAWN, Runnable {
                 child.body.physics.collisionOn = false
                 child.body.fixtures.forEach { it.second.setActive(false) }
                 child.hidden = true
             })
+
             child.spawn(props)
 
             val thisKey = props.get(ConstKeys.KEY, String::class)!!
             GameLogger.debug(TAG, "onSpawn(): thisKey = $thisKey")
+
             if (currentKey == null || currentKey != thisKey) {
                 currentKey = thisKey
                 keyArray.add(currentKey)
+
                 GameLogger.debug(TAG, "onSpawn(): keyArray.add($currentKey)")
             }
         }
@@ -98,25 +105,30 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
         timer.update(it)
         if (timer.isFinished()) {
             val next = loop.next()
+
             GameLogger.debug(TAG, "defineUpdatablesComponent(): next = $next")
 
             keysToRender.add(next)
             if (keysToRender.size > 2) keysToRender.poll()
+
             GameLogger.debug(TAG, "defineUpdatablesComponent(): keysToRender = $keysToRender")
 
             var soundRequested = false
-            children.forEach { spriteBlock ->
-                spriteBlock as AnimatedBlock
+            children.forEach { block ->
+                block as AnimatedBlock
 
-                val blockKey = spriteBlock.properties.get(ConstKeys.KEY, String::class)!!
+                val blockKey = block.properties.get(ConstKeys.KEY, String::class)!!
+
                 val on = keysToRender.contains(blockKey)
 
-                spriteBlock.body.physics.collisionOn = on
-                spriteBlock.body.fixtures.forEach { it.second.setActive(on) }
-                spriteBlock.hidden = !on
+                block.body.physics.collisionOn = on
+                block.body.fixtures.forEach { it.second.setActive(on) }
+                block.hidden = !on
+
+                if (on && blockKey == next) block.animators.values().forEach { it.reset() }
 
                 val gameCamera = game.getGameCamera()
-                if (!soundRequested && gameCamera.toGameRectangle().overlaps(spriteBlock.body.getBounds())) {
+                if (!soundRequested && gameCamera.toGameRectangle().overlaps(block.body.getBounds())) {
                     requestToPlaySound(SoundAsset.DISAPPEARING_BLOCK_SOUND, false)
                     soundRequested = true
                 }

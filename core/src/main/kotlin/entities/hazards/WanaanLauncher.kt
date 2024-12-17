@@ -144,6 +144,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
             }
 
             newWanaanDelay.update(delta)
+
             if (wanaan == null &&
                 !this.hasDepletedHealth() &&
                 newWanaanDelay.isFinished() &&
@@ -184,13 +185,15 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
 
     private fun spawnWanaan() {
         GameLogger.debug(TAG, "launchWanaan()")
-        wanaan = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.WANAAN) as Wanaan
+
         val spawn = when (direction) {
             Direction.UP -> body.getPositionPoint(Position.TOP_CENTER).sub(0f, 0.5f * ConstVals.PPM)
             Direction.DOWN -> body.getPositionPoint(Position.BOTTOM_CENTER).add(0f, 0.5f * ConstVals.PPM)
             Direction.LEFT -> body.getPositionPoint(Position.CENTER_LEFT).add(0.5f * ConstVals.PPM, 0f)
             Direction.RIGHT -> body.getPositionPoint(Position.CENTER_RIGHT).sub(0.5f * ConstVals.PPM, 0f)
         }
+
+        wanaan = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.WANAAN) as Wanaan
         wanaan!!.spawn(
             props(
                 ConstKeys.POSITION pairTo spawn,
@@ -201,6 +204,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
 
     private fun launchWanaan() {
         if (wanaan == null) throw IllegalStateException("Wanaan cannot be null when launching")
+
         val impulse = GameObjectPools.fetch(Vector2::class)
         when (direction) {
             Direction.UP -> impulse.set(0f, IMPULSE)
@@ -208,6 +212,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
             Direction.LEFT -> impulse.set(-IMPULSE, 0f)
             Direction.RIGHT -> impulse.set(IMPULSE, 0f)
         }.scl(ConstVals.PPM.toFloat())
+
         wanaan!!.body.physics.velocity.set(impulse)
         wanaan!!.body.physics.gravityOn = true
 

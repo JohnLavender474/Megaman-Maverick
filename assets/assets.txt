@@ -1059,6 +1059,7 @@ sprites/frames/Platforms1/WoodBlock1.png
 sprites/frames/Platforms1/Boulder/Small.png
 sprites/frames/Platforms1/Boulder/Medium.png
 sprites/frames/Platforms1/Boulder/Large.png
+sprites/frames/Platforms1/AppearingBrick2.png
 sprites/frames/Platforms1/FlipperPlatform/RightDelay.png
 sprites/frames/Platforms1/FlipperPlatform/FlipToRight.png
 sprites/frames/Platforms1/FlipperPlatform/Left.png
@@ -1577,6 +1578,7 @@ sprites/piskel/Jetpack_Ice_Blaster_Bot_Projectile.piskel
 sprites/piskel/Ring Ring.piskel
 sprites/piskel/Toxic_Barrel_Bot.piskel
 sprites/piskel/NavalManFace.piskel
+sprites/piskel/AppearingBrick2.piskel
 sprites/piskel/RoasterMan.piskel
 sprites/piskel/Enemies3.piskel
 sprites/piskel/BreakableIce.piskel
