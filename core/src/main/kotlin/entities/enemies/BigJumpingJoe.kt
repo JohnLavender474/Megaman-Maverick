@@ -63,8 +63,8 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
         private const val WAIT_DURATION = 1.5f
         private const val JUMP_DELAY = 0.2f
         private const val SHOOT_DURATION = 0.75f
-        private const val X_VEL = 7f
-        private const val Y_VEL = 13f
+        private const val X_VEL = 8f
+        private const val Y_VEL = 20f
         private const val GROUND_GRAVITY = -0.001f
         private const val GRAVITY = -0.5f
         private const val BULLET_X_VEL = 10f
@@ -92,7 +92,8 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
     private val waitTimer = Timer(WAIT_DURATION)
     private val jumpDelayTimer = Timer(JUMP_DELAY)
     private val shootTimer = Timer(
-        SHOOT_DURATION, gdxArrayOf(TimeMarkedRunnable(0.25f) { shoot(FIRST_BULLET_Y_VEL) },
+        SHOOT_DURATION, gdxArrayOf(
+            TimeMarkedRunnable(0.25f) { shoot(FIRST_BULLET_Y_VEL) },
             TimeMarkedRunnable(0.5f) { shoot(SECOND_BULLET_Y_VEL) },
             TimeMarkedRunnable(0.75f) { shoot(THIRD_BULLET_Y_VEL) })
     )
@@ -105,8 +106,8 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
         super.init()
         if (standRegion == null || jumpRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            standRegion = atlas.findRegion("BigJumpingJoe/Stand")
-            jumpRegion = atlas.findRegion("BigJumpingJoe/Jump")
+            standRegion = atlas.findRegion("$TAG/Stand")
+            jumpRegion = atlas.findRegion("$TAG/Jump")
         }
         addComponent(defineAnimationsComponent())
         runnablesOnDestroy.put(ConstKeys.CHILD) {
@@ -190,35 +191,23 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(ConstVals.PPM.toFloat(), ConstVals.PPM * 2.15f)
+        body.setSize(1.25f * ConstVals.PPM, 2.75f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
-
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
-        body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture}
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
-        body.addFixture(damagerFixture)
-        debugShapes.add { damagerFixture}
-
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().set(body))
-        body.addFixture(damageableFixture)
-        debugShapes.add { damageableFixture}
 
         val feetFixture = Fixture(
             body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.2f * ConstVals.PPM)
         )
-        feetFixture.offsetFromBodyAttachment.y = -ConstVals.PPM.toFloat()
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         body.addFixture(feetFixture)
-        debugShapes.add { feetFixture}
+        debugShapes.add { feetFixture }
 
         val headFixture = Fixture(
             body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.2f * ConstVals.PPM)
         )
-        headFixture.offsetFromBodyAttachment.y = ConstVals.PPM.toFloat()
+        headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
         body.addFixture(headFixture)
-        debugShapes.add { headFixture}
+        debugShapes.add { headFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.gravity.y =
@@ -227,12 +216,14 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(
+            this, body, BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
+        )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(2.75f * ConstVals.PPM)
+        sprite.setSize(3.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.hidden = damageBlink
@@ -254,15 +245,19 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
     }
 
     private fun shoot(y: Float) {
-        val trajectory = Vector2(BULLET_X_VEL * facing.value, y).scl(ConstVals.PPM.toFloat())
+        val trajectory =
+            GameObjectPools.fetch(Vector2::class).set(BULLET_X_VEL * facing.value, y).scl(ConstVals.PPM.toFloat())
         if (scaleBullet) trajectory.x *= gravityScalar
-        val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
+
         val props = props(
-            ConstKeys.POSITION pairTo body.getCenter().add(0.15f * ConstVals.PPM * facing.value, 0.2f * ConstVals.PPM),
+            ConstKeys.POSITION pairTo body.getCenter().add(0.25f * ConstVals.PPM * facing.value, 0.5f * ConstVals.PPM),
             ConstKeys.TRAJECTORY pairTo trajectory,
             ConstKeys.OWNER pairTo this
         )
+
+        val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
         bullet.spawn(props)
+
         requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
     }
 }

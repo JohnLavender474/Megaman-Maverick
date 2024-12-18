@@ -78,7 +78,6 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
-import com.megaman.maverick.game.entities.special.DisappearingBlocks
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -123,7 +122,7 @@ class MegamanMaverickGame(
         const val TAG = "MegamanMaverickGame"
         private const val ASSET_MILLIS = 17
         private const val LOADING = "LOADING"
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(DisappearingBlocks.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.TELEPORTER, FixtureType.TELEPORTER_LISTENER)
         }
@@ -181,9 +180,8 @@ class MegamanMaverickGame(
     fun startLevelScreen(levelDef: LevelDefinition) {
         val levelScreen = screens.get(ScreenEnum.LEVEL_SCREEN.name) as MegaLevelScreen
 
-        levelScreen.screenOnCompletion =
-            ScreenEnum.LEVEL_SELECT_SCREEN // TODO: ScreenEnum.valueOf(levelDef.screenOnCompletion)
-        levelScreen.music = MusicAsset.valueOf(levelDef.music)
+        levelScreen.screenOnCompletion = ScreenEnum.LEVEL_SELECT_SCREEN // TODO: levelDef.screenOnCompletion
+        levelScreen.music = levelDef.music
         levelScreen.tmxMapSource = levelDef.source
 
         setCurrentScreen(ScreenEnum.LEVEL_SCREEN.name)
