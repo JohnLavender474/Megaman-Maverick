@@ -5,12 +5,13 @@ Heart Locations
 - C: Desert Man
 - D: Inferno Man
 - E: Reactor Man
+- F: Rodent Man
+- G: Timber Woman
+- H: Precious Man
 
 Energy Tank Locations
 
 - A: Glacier Man
 - B: Inferno Man
-
-Sound Effects
-
-- Megaman 6: https://www.sounds-resource.com/nes/megaman6/sound/3619/
+- C: Timber Woman
+- D: Precious Man

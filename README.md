@@ -292,10 +292,11 @@ comprehensive listing of the credits for the artwork used in this game.
 - MMX6 Blaze Heatnix - [Famitard](https://youtu.be/QpbMwCnJDSo) - used in Inferno Man stage
 - MMX5 Dark Necrobat - [Famitard](https://youtu.be/RosxPCxVOyk) - used in Moon Man stage
 - MMX7 Vanish. Gung. - [Famitard](https://youtu.be/MFfZ-LEwcMo) - used in Desert Man stage
-- MM8 Frost Man Alt - [Famitard](https://youtu.be/pQvwU4BavFI) - used in Glacier Man stage
+- MMX1 Chill Penguin - [Famitard](https://youtu.be/QWmsNV18S1g) - used in Glacier Man stage
 - MMX8 Burn Rooster - [Famitard](https://youtu.be/DHh-QSWvb-o) - used in Reactor Man stage
 - MMX6 Blaze Heatnix - [Famitard](https://youtu.be/QpbMwCnJDSo) - used in Inferno Man stage
 - MM7 Slash Man - [Famitard](https://youtu.be/24ECwWnh6Es) - used in Rodent Man stage
+- MMX3 Neon Tiger - [Famitard](https://youtu.be/cXiyGW0ulIY) - used in Timber Woman stage
 - MMX6 Boss - [Famitard](https://youtu.be/IeySHEF5U_8) - used in Robot Master boss fights
 - MMX6 Gate's Laboratory- [Famitard](https://youtu.be/Zdtp6f57E_c) - used in Wily stage 3
 - MMX6 Sigma Final Boss - [Famitard](https://youtu.be/FVdYxfEo4lI) - used in Wily stage 3 boss fight
@@ -307,6 +308,7 @@ comprehensive listing of the credits for the artwork used in this game.
 ### Sounds
 
 - Megaman 5 Sounds: https://www.sounds-resource.com/nes/megaman5/sound/3618/
+- Megaman 6 Sounds: https://www.sounds-resource.com/nes/megaman6/sound/3619/
 - Megaman 9 Sounds: https://www.sounds-resource.com/xbox_360/megaman9/sound/33185/
 
 Sounds belong to Capcom (Megaman-ripped sound effects) and Nintendo (Mario-ripped sound effects)

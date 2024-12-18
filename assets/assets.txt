@@ -1798,7 +1798,6 @@ tiled_maps/tsx/GearTrolley.tsx
 tiled_maps/tsx/ForestTiles.tsx
 tiled_maps/tsx/GlacierManTileset.tsx
 tiled_maps/tsx/ShadowMan.tsx
-tiled_maps/tsx/pipe forest.tsx
 tiled_maps/tsx/ColorsTileset.tsx
 tiled_maps/tsx/MagnetMan2.tsx
 tiled_maps/tsx/tomahawk_man_stage_tileset.tsx
@@ -1806,6 +1805,7 @@ tiled_maps/tsx/MM3Wily4.tsx
 tiled_maps/tsx/mm9plug.tsx
 tiled_maps/tsx/Magnetman.tsx
 tiled_maps/tsx/mm9endless.tsx
+tiled_maps/tsx/pipe_forest.tsx
 tiled_maps/tsx/mm9galaxy.tsx
 tiled_maps/tsx/MM10Lab.tsx
 tiled_maps/tsx/React_Man_2.tsx
@@ -1837,6 +1837,7 @@ tiled_maps/tsx/sandy_pipes.tsx
 tiled_maps/tsx/MagmaManMap.tsx
 tiled_maps/tsx/PurpleStuff.tsx
 tiled_maps/tsx/Gravity Man Stage.tsx
+tiled_maps/tsx/pipe_forest_bkg.tsx
 tiled_maps/tsx/ReactorManCondensed.tsx
 tiled_maps/tsx/StarManTileset-NoBlack.tsx
 tiled_maps/tsx/MM10Enker.tsx
@@ -1928,12 +1929,12 @@ tiled_maps/png/tstKnightMan.png
 tiled_maps/png/mm10blade.png
 tiled_maps/png/tstCentaurManAlt-resize.png
 tiled_maps/png/mm9galaxy.png
+tiled_maps/png/pipe_forest.png
 tiled_maps/png/mm9tornado.png
 tiled_maps/png/mm9magma.png
 tiled_maps/png/sandy_pipes.png
 tiled_maps/png/BKG01.png
 tiled_maps/png/ForestTiles 32x32.png
-tiled_maps/png/pipe forest.png
 tiled_maps/png/tstNeedleman.png
 tiled_maps/png/tstMM3Wily3.png
 tiled_maps/png/Tileset1_Full_32x32.png
@@ -1951,6 +1952,7 @@ tiled_maps/png/mm10-final-stage.png
 tiled_maps/png/DarkSamus993-FireManTileset.png
 tiled_maps/png/SprBGTomahawk.png
 tiled_maps/png/React_Man_2.png
+tiled_maps/png/pipe_forest_bkg.png
 tiled_maps/png/SkyMan.png
 tiled_maps/png/tstElecman.png
 tiled_maps/png/tstMM10Enker.png
@@ -2126,6 +2128,7 @@ tiled_maps/tmx/GlacierMan_16x12_test_groundsnow_boss.tmx
 tiled_maps/tmx/ReactMan.tmx
 tiled_maps/tmx/TimberWoman.tmx
 tiled_maps/tmx/MagnetMan.tmx
+tiled_maps/tmx/TimberWoman_v2.tmx
 tiled_maps/tmx/WilyStage3.tmx
 tiled_maps/tmx/ReactorMan_16x12.tmx
 tiled_maps/tmx/ReactorMan.tmx
@@ -2229,6 +2232,7 @@ music/MMX5_VoltKraken.txt
 music/MM10_Wily1.mp3
 music/MMX6_Sigma.mp3
 music/MM3_Magnet_Man.mp3
+music/MMX3_NeonTiger.mp3
 music/MMX8_BurnRooster.txt
 music/MMX6_BossFight.mp3
 notes.txt

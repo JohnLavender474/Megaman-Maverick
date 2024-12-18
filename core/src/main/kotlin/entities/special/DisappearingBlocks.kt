@@ -97,8 +97,11 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
 
     override fun onDestroy() {
         super.onDestroy()
+
         children.forEach { (it as MegaGameEntity).destroy() }
         children.clear()
+
+        keysToRender.clear()
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({

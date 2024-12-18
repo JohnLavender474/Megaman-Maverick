@@ -47,7 +47,7 @@ class HeartTank(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, I
 
     companion object {
         const val TAG = "HeartTank"
-        private var textureRegion: TextureRegion? = null
+        private var region: TextureRegion? = null
     }
 
     override var direction: Direction
@@ -60,7 +60,7 @@ class HeartTank(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, I
         private set
 
     override fun init() {
-        if (textureRegion == null) textureRegion = game.assMan.getTextureRegion(TextureAsset.ITEMS_1.source, TAG)
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ITEMS_1.source, TAG)
         addComponent(defineBodyComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
@@ -72,11 +72,12 @@ class HeartTank(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, I
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        super.onSpawn(spawnProps)
         if (!this::heartTank.isInitialized) throw IllegalStateException("Heart tank value is not initialized")
 
+        super.onSpawn(spawnProps)
+
         direction =
-            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
+            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
 
         val position = DirectionPositionMapper.getInvertedPosition(direction)
         val spawn = when {
@@ -114,10 +115,12 @@ class HeartTank(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, I
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(textureRegion!!, 1, 2, 0.15f, true)
+        val animation = Animation(region!!, 1, 2, 0.15f, true)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
 
     override fun getEntityType() = EntityType.ITEM
+
+    override fun getTag() = TAG
 }

@@ -188,8 +188,10 @@ class CameraManagerForRooms(
 
         if (focus == null) return
 
-        if (currentGameRoom != null && !currentGameRoom!!.rectangle.toGameRectangle().overlaps(focus!!.getBounds()))
+        if (currentGameRoom != null && !currentGameRoom!!.rectangle.toGameRectangle().overlaps(focus!!.getBounds())) {
+            priorGameRoom = currentGameRoom
             currentGameRoom = null
+        }
 
         val currentRoomBounds = currentGameRoom?.rectangle?.toGameRectangle()
 
@@ -200,7 +202,8 @@ class CameraManagerForRooms(
             }
 
             priorGameRoom != null -> {
-                setCameraToFocusable()
+                setCameraToFocusable(focusY = false)
+
                 val priorRoomBounds = priorGameRoom!!.rectangle.toGameRectangle()
                 camera.coerceIntoBounds(priorRoomBounds)
             }
@@ -259,13 +262,12 @@ class CameraManagerForRooms(
                 if (!delayTimer.isFinished()) return
                 transTimer.update(delta)
 
-                val pos =
-                    interpolate(
-                        transitionStart,
-                        transitionTarget,
-                        transitionTimerRatio,
-                        GameObjectPools.fetch(Vector2::class)
-                    )
+                val pos = interpolate(
+                    transitionStart,
+                    transitionTarget,
+                    transitionTimerRatio,
+                    GameObjectPools.fetch(Vector2::class)
+                )
                 camera.position.x = pos.x
                 camera.position.y = pos.y
 
@@ -292,11 +294,11 @@ class CameraManagerForRooms(
         return nextGameRoom
     }
 
-    private fun setCameraToFocusable() {
+    private fun setCameraToFocusable(focusY: Boolean = true) {
         focus?.let {
             val focusPos = it.getBounds().getCenter()
             camera.position.x = focusPos.x
-            camera.position.y = focusPos.y
+            if (focusY) camera.position.y = focusPos.y
         }
     }
 }

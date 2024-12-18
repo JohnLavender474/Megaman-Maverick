@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="600" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="660">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="600" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="661">
  <tileset firstgid="1" source="../tsx/Blizzardman.tsx"/>
  <tileset firstgid="225" source="../tsx/GlacierManTileset.tsx"/>
  <layer id="12" name="tiles2" width="600" height="100">
@@ -225,7 +225,7 @@
   <object id="441" name="room8" x="10848" y="1888" width="512" height="384"/>
   <object id="480" name="room9" x="10848" y="1504" width="3968" height="384"/>
   <object id="481" name="room10" x="14816" y="1504" width="2208" height="384"/>
-  <object id="482" name="room11" x="16688" y="1496" width="512" height="384"/>
+  <object id="482" name="room11" x="17024" y="1504" width="512" height="384"/>
   <object id="483" name="boss_room" x="17536" y="1504" width="512" height="384">
    <properties>
     <property name="event" value="boss"/>
@@ -736,7 +736,11 @@
    </properties>
   </object>
   <object id="523" name="Matasaburo" x="12104" y="1680" width="16" height="16"/>
-  <object id="530" name="SpikeBot" x="13256" y="1760" width="16" height="16"/>
+  <object id="530" name="SpikeBot" x="13256" y="1760" width="16" height="16">
+   <properties>
+    <property name="type" value="snow"/>
+   </properties>
+  </object>
   <object id="538" name="ShieldAttacker" x="13768" y="1656" width="16" height="16">
    <properties>
     <property name="value" type="float" value="-4"/>
@@ -1282,6 +1286,11 @@
   <object id="558" name="Gate" x="17504" y="1728" width="64" height="96">
    <properties>
     <property name="room" value="boss_room"/>
+   </properties>
+  </object>
+  <object id="660" name="Death" x="6272" y="1936" width="128" height="112">
+   <properties>
+    <property name="instant" type="bool" value="true"/>
    </properties>
   </object>
  </objectgroup>
