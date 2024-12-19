@@ -173,7 +173,8 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
         val font = if (currentButtonKey == CONTINUE) fontHandles[0] else fontHandles[1]
         val arrowPosition = font.getPosition(out)
         arrowPosition.x -= ConstVals.PPM.toFloat()
-        arrow.position = arrowPosition
+        arrow.x = arrowPosition.x
+        arrow.y = arrowPosition.y
         arrow.update(delta)
 
         val batch = game.batch

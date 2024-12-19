@@ -1,5 +1,5 @@
 Hazards1.png
-size: 509, 597
+size: 512, 597
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -57,6 +57,13 @@ CeilingCrusher/Crusher
   xy: 413, 0
   size: 32, 32
   orig: 32, 32
+  offset: 0, 0
+  index: -1
+CrystalSpikes
+  rotate: false
+  xy: 320, 233
+  size: 64, 128
+  orig: 64, 128
   offset: 0, 0
   index: -1
 Electrocutie/Charge
@@ -369,7 +376,7 @@ SwingingAxe
   index: -1
 SwingingAxe_HandleEndCentered
   rotate: false
-  xy: 320, 233
+  xy: 384, 233
   size: 128, 128
   orig: 128, 128
   offset: 0, 0

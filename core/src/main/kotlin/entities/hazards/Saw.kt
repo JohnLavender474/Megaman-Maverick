@@ -65,6 +65,8 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
 
     override lateinit var facing: Facing
 
+    private val out = Vector2()
+
     override fun init() {
         if (sawRegion == null || ringRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
@@ -152,7 +154,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         val debugShapes = Array<() -> IDrawableShape?>()
 
         debugShapes.add {
-            val line = GameLine(rotation.getOrigin(), body.getCenter())
+            val line = GameLine(rotation.getOrigin(out), body.getCenter())
             line.drawingColor = Color.DARK_GRAY
             line.drawingShapeType = ShapeRenderer.ShapeType.Filled
             line
@@ -162,7 +164,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         circle1.setRadius(ConstVals.PPM / 8f)
         circle1.drawingColor = Color.DARK_GRAY
         circle1.drawingShapeType = ShapeRenderer.ShapeType.Filled
-        debugShapes.add { circle1.setCenter(rotation.getOrigin()) }
+        debugShapes.add { circle1.setCenter(rotation.getOrigin(out)) }
 
         val circle2 = GameCircle()
         circle2.setRadius(ConstVals.PPM / 4f)

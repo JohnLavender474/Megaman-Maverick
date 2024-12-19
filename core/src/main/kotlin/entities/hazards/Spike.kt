@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
+import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.toObjectSet
 import com.mega.game.engine.common.interfaces.IDirectional
@@ -19,13 +21,9 @@ import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
-import com.mega.game.engine.drawables.sprites.setCenter
-import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.entities.IGameEntity
-import com.mega.game.engine.entities.contracts.IBodyEntity
-import com.mega.game.engine.entities.contracts.IChildEntity
-import com.mega.game.engine.entities.contracts.ICullableEntity
-import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.entities.contracts.*
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
@@ -43,11 +41,10 @@ import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.GameObjectPools
-import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
 class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBodyEntity, ISpritesEntity,
-    ICullableEntity, IDirectional {
+    IAnimatedEntity, ICullableEntity, IDirectional {
 
     companion object {
         const val TAG = "Spike"
@@ -65,6 +62,9 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
 
     private val offset = Vector2()
     private var block: Block? = null
+    private var spriteWidth: Float? = null
+    private var spriteHeight: Float? = null
+    private var animation: Animation? = null
     private lateinit var region: TextureRegion
 
     override fun init() {
@@ -77,8 +77,11 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
-        body.setCenter(spawn)
+        val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        body.set(bounds)
+
+        spriteWidth = spawnProps.get(ConstKeys.SPRITE_WIDTH, Float::class)
+        spriteHeight = spawnProps.get(ConstKeys.SPRITE_HEIGHT, Float::class)
 
         val gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, false, Boolean::class)
         body.physics.gravityOn = gravityOn
@@ -86,26 +89,40 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
         if (!gravityOn) parent?.let { if (it is IBodyEntity) offset.set(body.getCenter().sub(it.body.getCenter())) }
 
         direction =
-            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
+            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
 
         val regionKey = spawnProps.get(ConstKeys.REGION, String::class)!!
         region = atlas!!.findRegion(regionKey)
 
-        val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
-        if (cullOutOfBounds) putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(this))
-        else removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
+        animation = if (spawnProps.isProperty(ConstKeys.ANIMATION, true)) {
+            val animRows = spawnProps.get("${ConstKeys.ANIMATION}_${ConstKeys.ROWS}", Int::class)!!
+            val animCols = spawnProps.get("${ConstKeys.ANIMATION}_${ConstKeys.COLUMNS}", Int::class)!!
+            val animDuration = spawnProps.get("${ConstKeys.ANIMATION}_${ConstKeys.DURATION}", Float::class)!!
+            Animation(region, animRows, animCols, animDuration)
+        } else null
 
-        if (!cullOutOfBounds && spawnProps.containsKey(ConstKeys.CULL_EVENTS)) {
-            val cullEvents: ObjectSet<Any> =
-                spawnProps.get(ConstKeys.CULL_EVENTS, String::class)!!
-                    .split(",")
-                    .map { EventType.valueOf(it.uppercase()) }
-                    .toObjectSet()
-            val cullOnEvents =
-                if (cullEvents.isEmpty) getStandardEventCullingLogic(this)
-                else getStandardEventCullingLogic(this, cullEvents)
-            putCullable(ConstKeys.CULL_EVENTS, cullOnEvents)
-        } else removeCullable(ConstKeys.CULL_EVENTS)
+        val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
+        when {
+            cullOutOfBounds -> putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(this))
+            else -> removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
+        }
+
+        when {
+            !cullOutOfBounds && spawnProps.containsKey(ConstKeys.CULL_EVENTS) -> {
+                val cullEvents: ObjectSet<Any> =
+                    spawnProps.get(ConstKeys.CULL_EVENTS, String::class)!!
+                        .split(",")
+                        .map { EventType.valueOf(it.uppercase()) }
+                        .toObjectSet()
+                val cullOnEvents = when {
+                    cullEvents.isEmpty -> getStandardEventCullingLogic(this)
+                    else -> getStandardEventCullingLogic(this, cullEvents)
+                }
+                putCullable(ConstKeys.CULL_EVENTS, cullOnEvents)
+            }
+
+            else -> removeCullable(ConstKeys.CULL_EVENTS)
+        }
 
         block = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD)!! as Block
         val blockProps = spawnProps.copy()
@@ -123,7 +140,6 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(ConstVals.PPM.toFloat())
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
 
@@ -131,16 +147,18 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
         debugShapes.add { body.getBounds() }
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyAttachment.y = -0.5f * ConstVals.PPM
         body.addFixture(feetFixture)
         feetFixture.drawingColor = Color.GREEN
-        debugShapes.add { feetFixture}
+        debugShapes.add { feetFixture }
 
-        val deathFixture = Fixture(body, FixtureType.DEATH, GameRectangle(body))
+        val deathFixture = Fixture(body, FixtureType.DEATH, GameRectangle())
         deathFixture.putProperty(ConstKeys.INSTANT, false)
         body.addFixture(deathFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
+            feetFixture.offsetFromBodyAttachment.y = -body.getHeight() * ConstVals.PPM
+            (deathFixture.rawShape as GameRectangle).set(body)
+
             val instant = !body.isSensing(BodySense.FEET_ON_GROUND)
             deathFixture.putProperty(ConstKeys.INSTANT, instant)
 
@@ -175,11 +193,19 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
-        sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setRegion(region)
-            sprite.setCenter(body.getCenter())
+        spritesComponent.putUpdateFunction { delta, _ ->
+            sprite.setRegion(animation?.let {
+                it.update(delta)
+                it.getCurrentRegion()
+            } ?: region)
+
+            val width = if (spriteWidth != null) spriteWidth!! * ConstVals.PPM else body.getWidth()
+            val height = if (spriteHeight != null) spriteHeight!! * ConstVals.PPM else body.getHeight()
+            sprite.setSize(width, height)
+
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
         }

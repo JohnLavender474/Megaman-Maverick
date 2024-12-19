@@ -1,46 +1,53 @@
 Backgrounds6.png
-size: 1024, 1072
+size: 1024, 1136
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-Desert/Canyon
+CrystalBKG
   rotate: false
   xy: 0, 0
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-Desert/NoSunSky
+Desert/Canyon
   rotate: false
   xy: 256, 0
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-Desert/SunSky
+Desert/NoSunSky
   rotate: false
   xy: 512, 0
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+Desert/SunSky
+  rotate: false
+  xy: 768, 224
   size: 256, 672
   orig: 256, 672
   offset: 0, 0
   index: -1
 EarthBackdrop
   rotate: false
-  xy: 0, 672
+  xy: 0, 224
   size: 512, 160
   orig: 512, 160
   offset: 0, 0
   index: -1
 Space
   rotate: false
-  xy: 768, 0
+  xy: 512, 224
   size: 256, 448
   orig: 256, 448
   offset: 0, 0
   index: -1
 UndergroundPipes
   rotate: false
-  xy: 0, 832
+  xy: 0, 896
   size: 944, 240
   orig: 944, 240
   offset: 0, 0

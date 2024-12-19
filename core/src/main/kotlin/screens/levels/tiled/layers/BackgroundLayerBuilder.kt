@@ -58,6 +58,19 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 it.rectangle.getPosition(GameObjectPools.fetch(Vector2::class))
             )
         },
+        "CrystalBKG" pairTo {
+            Background(
+                it.name,
+                it.rectangle.x,
+                it.rectangle.y,
+                params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "CrystalBKG"),
+                it.rectangle.width,
+                it.rectangle.height,
+                it.properties.get(ConstKeys.ROWS) as Int,
+                it.properties.get(ConstKeys.COLUMNS) as Int,
+                DrawingPriority(DrawingSection.BACKGROUND, 1)
+            )
+        },
         "ForestBKG" pairTo {
             Background(
                 it.name,

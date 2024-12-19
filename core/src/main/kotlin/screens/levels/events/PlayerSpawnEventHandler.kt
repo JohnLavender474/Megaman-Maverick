@@ -43,8 +43,6 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
 
     val finished: Boolean
         get() = preBeamTimer.isFinished() && beamDownTimer.isFinished() && beamTransitionTimer.isFinished()
-    val beamCenter: Vector2
-        get() = beamSprite.boundingRectangle.getCenter()
 
     private val megaman = game.megaman
 
@@ -52,6 +50,8 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
     private val preBeamTimer = Timer(PRE_BEAM_DUR).setToEnd()
     private val beamDownTimer = Timer(BEAM_DOWN_DUR).setToEnd()
     private val beamTransitionTimer = Timer(BEAM_TRANS_DUR).setToEnd()
+
+    private val beamCenter = Vector2()
 
     private lateinit var beamRegion: TextureRegion
     private lateinit var beamSprite: GameSprite
@@ -107,6 +107,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
     }
 
     override fun update(delta: Float) {
+        beamCenter.set(beamSprite.boundingRectangle.getCenter())
         game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}_${ConstKeys.CENTER}", beamCenter)
 
         if (!preBeamTimer.isFinished()) preBeam(delta)
@@ -140,8 +141,8 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
     private fun beamDown(delta: Float) {
         beamDownTimer.update(delta)
 
-        val startY: Float = game.megaman.body.getY() + (ConstVals.VIEW_HEIGHT * ConstVals.PPM)
-        val offsetY: Float = (ConstVals.VIEW_HEIGHT * ConstVals.PPM) * beamDownTimer.getRatio()
+        val startY = game.megaman.body.getY() + (ConstVals.VIEW_HEIGHT * ConstVals.PPM)
+        val offsetY = (ConstVals.VIEW_HEIGHT * ConstVals.PPM) * beamDownTimer.getRatio()
 
         beamSprite.setCenterX(game.megaman.body.getCenter().x)
         beamSprite.y = startY - offsetY

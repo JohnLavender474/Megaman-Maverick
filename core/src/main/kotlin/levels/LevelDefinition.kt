@@ -76,8 +76,8 @@ enum class LevelDefinition(
         type = LevelType.ROBOT_MASTER_LEVEL,
         mugshotAtlas = "FACES_1",
         mugshotRegion = "Precious Man",
-        tmxMapSource = "Test1.tmx",
-        music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
+        tmxMapSource = "PreciousMan.tmx",
+        music = MusicAsset.MMX2_CRYSTAL_SNAIL_MUSIC,
         screenOnCompletion = ScreenEnum.SAVE_GAME_SCREEN
     ),
     WILY_STAGE_1(

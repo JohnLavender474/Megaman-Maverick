@@ -261,7 +261,6 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
         }
 
         addComponent(DrawableShapesComponent())
-        addDebugShapeSupplier { rotatingLine.line }
 
         super.init()
         addComponent(defineAnimationsComponent())
