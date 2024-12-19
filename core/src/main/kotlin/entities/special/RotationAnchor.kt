@@ -80,10 +80,6 @@ open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
                         "degreesOnReset=$degreesOnReset"
             )
             val rotation = RotatingLine(spawn, length, speed * ConstVals.PPM, degreesOnReset)
-            if (childProps.get(ConstKeys.DRAW_LINE) == true) {
-                val color = childProps.get(ConstKeys.COLOR, String::class)!!
-                addProdShapeSupplier { rotation.line }
-            }
 
             val childKey = childProps.get(ConstKeys.CHILD_KEY)!!
             putMotionDefinition(

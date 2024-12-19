@@ -173,6 +173,7 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">../frames/Backgrounds6/CrystalBKG.png</key>
             <key type="filename">../frames/Backgrounds6/Desert/Canyon.png</key>
             <key type="filename">../frames/Backgrounds6/Desert/NoSunSky.png</key>
             <struct type="IndividualSpriteSettings">

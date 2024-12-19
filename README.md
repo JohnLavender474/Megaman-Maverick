@@ -265,12 +265,17 @@ comprehensive listing of the credits for the artwork used in this game.
 
 #### Enemies
 - Sprites by [MegaRed225](https://www.deviantart.com/megared225/gallery):
+  - [Random Enemies Set 3](https://www.deviantart.com/megared225/art/Random-Enemies-Set-3-517312719)
+    - Canno-Honey
+    - Beezees
   - [Random Enemies Set 4](https://www.deviantart.com/megared225/art/Random-Enemies-Set-4-517313170)
     - Demon Met
   - [Random Enemies Set 5](https://www.deviantart.com/megared225/art/Random-Enemies-Set-5-517418497):
     - Big Fish Neo
-  - [Random Enemies Set 9](https://www.deviantart.com/megared225/art/Random-Enemy-Sprites-Set-9-557171615)
+  - [Random Enemies Set 9](https://www.deviantart.com/megared225/art/Random-Enemy-Sprites-Set-9-557171615):
     - Fire Dispensenator
+  - [Random Enemies Set 10](https://www.deviantart.com/megared225/art/Random-Enemy-Sprites-Set-10-571128501):
+    - Nutt Glider
 - All other enemy sprites sourced from https://www.spriters-resource.com/
 /
 #### Tilesets
@@ -286,6 +291,10 @@ comprehensive listing of the credits for the artwork used in this game.
   - [Megaman 9 - Endless Attack Tileset](https://www.spriters-resource.com/wii/mm9/sheet/166545/)
 - Rabbid4240:
   - [Megaman 9 - Magma Man Tileset](https://www.spriters-resource.com/wii/mm9/sheet/197901/)
+- Bongwater-bandit:
+  - [MM6 Plant Man edit](https://www.deviantart.com/bongwater-bandit/art/MM6-Plant-Man-edit-875037908)
+- Megaman Maker:
+  - [Crystal Cave Background](https://wiki.megamanmaker.com/index.php/File:SprBGCrystal5_0.png)
 
 ### Music
 
@@ -297,12 +306,11 @@ comprehensive listing of the credits for the artwork used in this game.
 - MMX6 Blaze Heatnix - [Famitard](https://youtu.be/QpbMwCnJDSo) - used in Inferno Man stage
 - MM7 Slash Man - [Famitard](https://youtu.be/24ECwWnh6Es) - used in Rodent Man stage
 - MMX3 Neon Tiger - [Famitard](https://youtu.be/cXiyGW0ulIY) - used in Timber Woman stage
+- MMX2 Crystal Snail - [Famitard](https://youtu.be/1qrbYy9qQdE) - used in Precious Man stage
 - MMX6 Boss - [Famitard](https://youtu.be/IeySHEF5U_8) - used in Robot Master boss fights
 - MMX6 Gate's Laboratory- [Famitard](https://youtu.be/Zdtp6f57E_c) - used in Wily stage 3
 - MMX6 Sigma Final Boss - [Famitard](https://youtu.be/FVdYxfEo4lI) - used in Wily stage 3 boss fight
 - MMX Vile Fight - [Famitard](https://youtu.be/iIcvnpYVTKc) - used in Wily stages 1 & 2 boss fights
-- MMX5 Volt Kraken - [Famitard](https://www.youtube.com/watch?v=xi7Odov_rek&ab_channel=FamiTard) - not yet used
-- MM7 Wily Boss - [MyNewSoundtrack](https://youtu.be/-CJlMksbypE) - not yet used
 - TODO: Other music tracks are saved in the `assets` dir but not yet used in the game. These will be added here as they're added to the game.
 
 ### Sounds

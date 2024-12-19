@@ -54,14 +54,16 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
         private const val MIN_DEGREES = 200f
         private const val MAX_DEGREES = 340f
         private const val INIT_DEGREES = 270f
-        private const val THICKNESS = ConstVals.PPM / 32f
     }
 
     private val contactTimer = Timer(CONTACT_TIME)
     private val switchTimer = Timer(SWITCH_TIME)
 
-    private lateinit var laser: GameLine
-    private lateinit var contactGlow: GameCircle
+    private val laser = GameLine()
+    private val contactGlow = GameCircle()
+
+    private val outVec = Vector2()
+
     private lateinit var rotatingLine: RotatingLine
     private lateinit var laserFixture: Fixture
     private lateinit var contacts: PriorityQueue<Vector2>
@@ -69,19 +71,11 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
     private var clockwise = false
     private var contactIndex = 0
 
-    override fun getEntityType() = EntityType.HAZARD
-
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
-
-        laser = GameLine()
-        contactGlow = GameCircle()
-
         addComponent(
             DrawableShapesComponent(
-                prodShapeSuppliers = gdxArrayOf({ contactGlow }),
-                debugShapeSuppliers = gdxArrayOf({ rotatingLine.line }),
-                debug = true
+                prodShapeSuppliers = gdxArrayOf({ contactGlow }, { laser }), debug = true
             )
         )
         addComponent(defineBodyComponent())
@@ -97,9 +91,10 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
         body.setCenter(spawn)
 
         rotatingLine = RotatingLine(spawn, RADIUS * ConstVals.PPM, SPEED * ConstVals.PPM, INIT_DEGREES)
+
         contacts = PriorityQueue { p1: Vector2, p2: Vector2 ->
-            val d1 = p1.dst2(rotatingLine.getOrigin())
-            val d2 = p2.dst2(rotatingLine.getOrigin())
+            val d1 = p1.dst2(rotatingLine.getOrigin(outVec))
+            val d2 = p2.dst2(rotatingLine.getOrigin(outVec))
             d1.compareTo(d2)
         }
         laserFixture.putProperty(ConstKeys.COLLECTION, contacts)
@@ -107,8 +102,6 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
         contactTimer.reset()
         switchTimer.reset()
     }
-
-    override fun getTag() = TAG
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
@@ -122,7 +115,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameLine())
         damagerFixture.attachedToBody = false
         body.addFixture(damagerFixture)
-        // addProdShapeSupplier { damagerFixture}
+        addProdShapeSupplier { damagerFixture }
 
         val shieldFixture = Fixture(
             body, FixtureType.SHIELD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.85f * ConstVals.PPM)
@@ -137,21 +130,17 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
         }
 
         body.postProcess.put(ConstKeys.DEFAULT) {
-            /*
-            laser.set(rotatingLine.line)
+            laser.setFirstLocalPoint(rotatingLine.line.getFirstLocalPoint(outVec))
 
-            val end = if (contacts.isEmpty()) rotatingLine.getEndPoint() else contacts.first()
+            val end = if (contacts.isEmpty()) rotatingLine.getEndPoint(outVec) else contacts.first()
             laser.setSecondLocalPoint(end)
 
-            laser.rotation = rotatingLine.degrees
+            GameLogger.debug(TAG, "body.postProcess(): laser=$laser, end=$end, contacts=$contacts")
 
-            GameLogger.debug(TAG, "[postProcess] Laser = $laser. End point = $end. Contacts = $contacts")
-
-            laserFixture.getShape() = laser
-            damagerFixture.getShape() = laser
+            laserFixture.rawShape = laser
+            damagerFixture.rawShape = laser
 
             contactGlow.setCenter(end.x, end.y)
-             */
         }
 
         return BodyComponentCreator.create(this, body)
@@ -162,7 +151,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setPosition(rotatingLine.getOrigin(), Position.BOTTOM_CENTER)
+            sprite.setPosition(rotatingLine.getOrigin(outVec), Position.BOTTOM_CENTER)
             sprite.translateY(-0.06f * ConstVals.PPM)
         }
         return spritesComponent
@@ -186,7 +175,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
             if (clockwise) speed *= -1f
             rotatingLine.speed = speed
 
-            GameLogger.debug(TAG, "update: switchTimer.isJustFinished(), clockwise = $clockwise")
+            // GameLogger.debug(TAG, "update(): switchTimer.isJustFinished(), clockwise=$clockwise")
         }
 
         rotatingLine.update(it)
@@ -194,11 +183,17 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
         if (clockwise && rotatingLine.degrees <= MIN_DEGREES) {
             rotatingLine.degrees = MIN_DEGREES
             switchTimer.reset()
-            GameLogger.debug(TAG, "update: clockwise && rotatingLine.degrees <= MIN_DEGREES")
+            // GameLogger.debug(TAG, "update(): clockwise && rotatingLine.degrees <= MIN_DEGREES")
         } else if (!clockwise && rotatingLine.degrees >= MAX_DEGREES) {
             rotatingLine.degrees = MAX_DEGREES
             switchTimer.reset()
-            GameLogger.debug(TAG, "update: !clockwise && rotatingLine.degrees >= MAX_DEGREES")
+            // GameLogger.debug(TAG, "update(): !clockwise && rotatingLine.degrees >= MAX_DEGREES")
         }
+
+        GameLogger.debug(TAG, "update(): rawLine=${rotatingLine.line}, gameLine=$laser")
     })
+
+    override fun getTag() = TAG
+
+    override fun getEntityType() = EntityType.HAZARD
 }

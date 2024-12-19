@@ -11,6 +11,7 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.setSize
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.utils.extensions.getCenter
 
 class BlinkingArrow(assMan: AssetManager, center: Vector2 = Vector2(), rotation: Float = 0f) : Updatable,
     IDrawable<Batch> {
@@ -19,16 +20,23 @@ class BlinkingArrow(assMan: AssetManager, center: Vector2 = Vector2(), rotation:
         private const val BLINK_DUR = 0.1f
     }
 
-    var position: Vector2
-        get() = arrowSprite.getPosition()
-        set(value) = arrowSprite.setPosition(value.x, value.y)
+    var x: Float
+        get() = arrowSprite.x
+        set(value) {
+            arrowSprite.x = value
+        }
+    var y: Float
+        get() = arrowSprite.y
+        set(value) {
+            arrowSprite.y = value
+        }
     var centerX: Float
-        get() = arrowSprite.getCenter().x
+        get() = arrowSprite.boundingRectangle.getCenter().x
         set(value) {
             arrowSprite.setCenterX(value)
         }
     var centerY: Float
-        get() = arrowSprite.getCenter().y
+        get() = arrowSprite.boundingRectangle.getCenter().y
         set(value) {
             arrowSprite.setCenterY(value)
         }

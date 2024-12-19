@@ -110,7 +110,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "Spawn props = $spawnProps")
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
 
         super.onSpawn(spawnProps)
         behavior = MetBehavior.SHIELDING
@@ -134,12 +134,12 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
     }
 
     override fun onDestroy() {
-        GameLogger.debug(TAG, "Destroying Met")
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
     }
 
     private fun shoot() {
-        GameLogger.debug(TAG, "Met is shooting")
+        GameLogger.debug(TAG, "shoot()")
 
         val trajectory = (when (direction) {
             Direction.UP -> Vector2(BULLET_TRAJECTORY_X * facing.value, BULLET_TRAJECTORY_Y)

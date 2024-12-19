@@ -399,6 +399,7 @@ sprites/frames/Decorations1/Candle.png
 sprites/frames/Decorations1/ToxicWaterfall.png
 sprites/frames/Decorations1/Thread.png
 sprites/frames/Decorations1/SandSplash.png
+sprites/frames/Decorations1/CrystalConveyorBKG.png
 sprites/frames/Decorations1/BreathBubbles.png
 sprites/frames/Decorations1/UnderWaterBubble.png
 sprites/frames/Decorations1/RainDrop.png
@@ -409,6 +410,8 @@ sprites/frames/Decorations1/WhiteArrow.png
 sprites/frames/Decorations1/Lava.png
 sprites/frames/Decorations1/DrippingToxicGoop.png
 sprites/frames/Decorations1/MuzzleFlash.png
+sprites/frames/Decorations1/SmallGrass/brush.png
+sprites/frames/Decorations1/SmallGrass/still.png
 sprites/frames/Decorations1/ToxicWaterSplash.png
 sprites/frames/Decorations1/Lantern.png
 sprites/frames/Decorations1/ChargedShot_Residual_Half.png
@@ -548,6 +551,7 @@ sprites/frames/Hazards1/IceCubeMaker.png
 sprites/frames/Hazards1/Flame.png
 sprites/frames/Hazards1/Cactus/big.png
 sprites/frames/Hazards1/Cactus/small.png
+sprites/frames/Hazards1/CrystalSpikes.png
 sprites/frames/Hazards1/SpikeBall/Chain.png
 sprites/frames/Hazards1/SpikeBall/SpikeBall.png
 sprites/frames/Hazards1/CactusSpike.png
@@ -627,6 +631,7 @@ sprites/frames/Projectiles2/MoonMan/star.png
 sprites/frames/Projectiles2/MagmaOrb.png
 sprites/frames/Projectiles2/MagmaPellet.png
 sprites/frames/Projectiles2/MagmaMeteor.png
+sprites/frames/Projectiles2/Nutt.png
 sprites/frames/Projectiles2/SpitFireball.png
 sprites/frames/Specials1/SwitcharooArrow.png
 sprites/frames/Specials1/SpringBounce.png
@@ -991,6 +996,7 @@ sprites/frames/Faces1/Mister Man.png
 sprites/frames/Faces1/Timber Woman.png
 sprites/frames/Faces1/Inferno Man.png
 sprites/frames/Backgrounds6/UndergroundPipes.png
+sprites/frames/Backgrounds6/CrystalBKG.png
 sprites/frames/Backgrounds6/Desert/NoSunSky.png
 sprites/frames/Backgrounds6/Desert/Canyon.png
 sprites/frames/Backgrounds6/Desert/SunSky.png
@@ -1128,6 +1134,12 @@ sprites/frames/Enemies1/SwinginJoe/ThrowBall.png
 sprites/frames/Enemies1/SwinginJoe/SnowSwingBall2.png
 sprites/frames/Enemies1/FlameHeadThrower/Stand.png
 sprites/frames/Enemies1/FlameHeadThrower/Throw.png
+sprites/frames/Enemies1/NuttGlider/glide_nutt.png
+sprites/frames/Enemies1/NuttGlider/jump_nutt.png
+sprites/frames/Enemies1/NuttGlider/stand.png
+sprites/frames/Enemies1/NuttGlider/jump.png
+sprites/frames/Enemies1/NuttGlider/stand_nutt.png
+sprites/frames/Enemies1/NuttGlider/glide.png
 sprites/frames/Enemies1/SnowBat/OpenEyes.png
 sprites/frames/Enemies1/SnowBat/Hang.png
 sprites/frames/Enemies1/SnowBat/OpenWings.png
@@ -1610,6 +1622,7 @@ sprites/piskel/FloorButton.piskel
 sprites/piskel/All_Terrain_Missile_Bot.piskel
 sprites/piskel/Petit Devil.piskel
 sprites/piskel/MoonMan.piskel
+sprites/piskel/NuttGlider.piskel
 sprites/piskel/MediumPlatforms.piskel
 sprites/piskel/GreenExplosion.piskel
 sprites/piskel/LightSwitch.piskel
@@ -1636,6 +1649,7 @@ sprites/piskel/SprBGTomahawk.piskel
 sprites/piskel/Totem Polem.piskel
 sprites/piskel/SiliconSilkie.piskel
 sprites/piskel/Spikes.piskel
+sprites/piskel/CrystalConveyorBKG.piskel
 sprites/piskel/GreenConveyorBelt.piskel
 sprites/piskel/SniperJoeShield.piskel
 sprites/piskel/Bullet.piskel
@@ -1782,6 +1796,7 @@ sprites/piskel/MagmaMeteor.piskel
 sprites/piskel/MegamanMainMenu.piskel
 sprites/piskel/Elecn.piskel
 sprites/piskel/StageSelect.piskel
+sprites/piskel/CrystalSpikes.piskel
 sprites/piskel/InfernoMan.piskel
 sprites/piskel/SmokePuff.piskel
 sprites/piskel/NukeMan.piskel
@@ -1830,12 +1845,14 @@ tiled_maps/tsx/DarkSamus993-FireManTileset.tsx
 tiled_maps/tsx/mm9splash.tsx
 tiled_maps/tsx/Hornetman.tsx
 tiled_maps/tsx/MagmaMan.tsx
+tiled_maps/tsx/CrystalManTileset.tsx
 tiled_maps/tsx/BKG01 copy.tsx
 tiled_maps/tsx/MM3Wily1.tsx
 tiled_maps/tsx/commando_man_tileset.tsx
 tiled_maps/tsx/sandy_pipes.tsx
 tiled_maps/tsx/MagmaManMap.tsx
 tiled_maps/tsx/PurpleStuff.tsx
+tiled_maps/tsx/PlantManTileset.tsx
 tiled_maps/tsx/Gravity Man Stage.tsx
 tiled_maps/tsx/pipe_forest_bkg.tsx
 tiled_maps/tsx/ReactorManCondensed.tsx
@@ -1971,7 +1988,9 @@ tiled_maps/png/Reactor_Man_4.png
 tiled_maps/png/tstMM10Lab.png
 tiled_maps/png/tstFlashmanAnimated2.png
 tiled_maps/png/ReactorManCondensed.png
+tiled_maps/png/PlantManTileset.png
 tiled_maps/png/NES - Mega Man 5 - Gravity Man Stage(1).png
+tiled_maps/png/CrystalManTileset.png
 tiled_maps/png/React_Man_1.png
 tiled_maps/png/GearTrolley.png
 tiled_maps/png/tstCave.png
@@ -2163,6 +2182,7 @@ tiled_maps/tmx/FreezeMan.tmx
 tiled_maps/tmx/Test6.tmx
 tiled_maps/tmx/DesertMan_v3.tmx
 tiled_maps/tmx/RodentMan.tmx
+tiled_maps/tmx/PreciousMan.tmx
 tiled_maps/tmx/InfernoMan_16x12_v2.tmx
 tiled_maps/tmx/MagnetMan_OLD.tmx
 tiled_maps/tmx/MoonMan.tmx
@@ -2198,10 +2218,10 @@ music/MM7_Final_Boss_Loop.mp3
 music/MMX8_BurnRooster.mp3
 music/MMX7_VanishingGungaroo.mp3
 music/MMX6_BlazeHeatnix.mp3
+music/MMX2_CrystalSnail.mp3
 music/MMX2_X-Hunter.txt
 music/MMX_StormEagle.txt
 music/MM7_Final_Boss_Intro.mp3
-music/MMX_ChillPenguin_Bulby.rtfd/TXT.rtf
 music/MMX_Vile.mp3
 music/MMX5_VoltKraken.mp3
 music/MMX5_DarkDizzy.mp3

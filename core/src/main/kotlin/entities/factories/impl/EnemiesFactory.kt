@@ -4,6 +4,7 @@ import com.mega.game.engine.common.GameLogger
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.enemies.*
+import com.megaman.maverick.game.entities.explosions.NuttGlider
 import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.GameEntityPoolCreator
 
@@ -87,6 +88,7 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val FIRE_DISPENSENATOR = "FireDispensenator"
         const val DEMON_MET = "DemonMet"
         const val RAT_ROBOT = "RatRobot"
+        const val NUTT_GLIDER = "NuttGlider"
     }
 
     override fun init() {
@@ -166,6 +168,7 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(FIRE_DISPENSENATOR, GameEntityPoolCreator.create { FireDispensenator(game) })
         pools.put(DEMON_MET, GameEntityPoolCreator.create { DemonMet(game) })
         pools.put(RAT_ROBOT, GameEntityPoolCreator.create { RatRobot(game) })
+        pools.put(NUTT_GLIDER, GameEntityPoolCreator.create { NuttGlider(game) })
     }
 
     override fun fetch(key: Any): MegaGameEntity? {

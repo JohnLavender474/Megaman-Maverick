@@ -75,6 +75,7 @@ import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.hazards.LaserBeamer
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
@@ -122,7 +123,7 @@ class MegamanMaverickGame(
         const val TAG = "MegamanMaverickGame"
         private const val ASSET_MILLIS = 17
         private const val LOADING = "LOADING"
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(LaserBeamer.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.TELEPORTER, FixtureType.TELEPORTER_LISTENER)
         }
@@ -296,9 +297,7 @@ class MegamanMaverickGame(
         loadingText = MegaFontHandle(
             "${LOADING}: 0%",
             positionX = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f,
-            positionY = ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f,
-            centerX = true,
-            centerY = true
+            positionY = ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f
         )
 
         val fpsTextSupplier: () -> String = { "FPS: ${Gdx.graphics.framesPerSecond}" }
@@ -534,6 +533,7 @@ class MegamanMaverickGame(
                         FixtureType.DAMAGEABLE pairTo objectSetOf(FixtureType.DAMAGER),
                         FixtureType.BODY pairTo objectSetOf(
                             FixtureType.BODY,
+                            FixtureType.FEET,
                             FixtureType.BLOCK,
                             FixtureType.FORCE,
                             FixtureType.GRAVITY_CHANGE

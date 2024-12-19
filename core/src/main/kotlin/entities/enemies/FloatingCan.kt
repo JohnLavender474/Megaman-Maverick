@@ -41,16 +41,18 @@ import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
 import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
 import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.utils.extensions.isNeighborOf
 import com.megaman.maverick.game.utils.extensions.toGridCoordinate
-import com.megaman.maverick.game.world.body.*
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.getEntity
 import kotlin.reflect.KClass
 
 class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
     companion object {
         const val TAG = "FloatingCan"
-        private var textureRegion: TextureRegion? = null
+        private var region: TextureRegion? = null
         private const val SPAWN_DELAY = 1f
         private const val SPAWN_BLINK = 0.1f
         private const val FLY_SPEED = 1.5f
@@ -74,8 +76,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
     private var spawnDelayBlink = false
 
     override fun init() {
-        if (textureRegion == null) textureRegion =
-            game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source).findRegion("FloatingCan")
+        if (region == null) region = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source).findRegion(TAG)
         super.init()
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
@@ -85,12 +86,18 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val spawn = if (spawnProps.containsKey(ConstKeys.BOUNDS)) (spawnProps.get(
-            ConstKeys.BOUNDS, GameRectangle::class
-        ))!!.getCenter() else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+
+        val spawn = when {
+            spawnProps.containsKey(ConstKeys.BOUNDS) ->
+                (spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class))!!.getCenter()
+
+            else -> spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        }
         body.setCenter(spawn)
+
         spawnDelayTimer.reset()
         spawningBlinkTimer.reset()
+
         spawnDelayBlink = false
     }
 
@@ -102,6 +109,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
             spawnDelayTimer.update(delta)
             if (!spawnDelayTimer.isFinished()) {
                 spawningBlinkTimer.update(delta)
+
                 if (spawningBlinkTimer.isFinished()) {
                     spawnDelayBlink = !spawnDelayBlink
                     spawningBlinkTimer.reset()
@@ -124,7 +132,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.75f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        shapes.add { damageableFixture}
+        shapes.add { damageableFixture }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true))
 
@@ -135,17 +143,18 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
         val sprite = GameSprite()
         sprite.setSize(1.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
-            _sprite.setPosition(body.getCenter(), Position.CENTER)
-            if (!spawnDelayTimer.isFinished()) _sprite.hidden = spawnDelayBlink
-            else if (spawnDelayTimer.isJustFinished()) _sprite.hidden = if (invincible) damageBlink else false
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(body.getCenter(), Position.CENTER)
+            when {
+                !spawnDelayTimer.isFinished() -> sprite.hidden = spawnDelayBlink
+                else -> sprite.hidden = damageBlink
+            }
         }
         return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(textureRegion!!, 1, 4, 0.15f, true)
+        val animation = Animation(region!!, 1, 4, 0.15f, true)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
@@ -166,16 +175,14 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
                     break
                 }
 
-                if (!passable && coordinate.isNeighborOf(body.getCenter(false).toGridCoordinate()))
-                    blockingBody?.let { passable = !body.getBounds(false).overlaps(it.getBounds(false)) }
-
                 passable
             },
             properties = props(ConstKeys.HEURISTIC pairTo DynamicBodyHeuristic(game))
         )
+
         val pathfindingComponent = PathfindingComponent(params, {
-            if (spawnDelayTimer.isFinished())
-                StandardPathfinderResultConsumer.consume(
+            when {
+                spawnDelayTimer.isFinished() -> StandardPathfinderResultConsumer.consume(
                     result = it,
                     body = body,
                     start = body.getCenter(),
@@ -183,8 +190,11 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game) {
                     stopOnTargetReached = false,
                     stopOnTargetNull = false
                 )
-            else body.physics.velocity.setZero()
+
+                else -> body.physics.velocity.setZero()
+            }
         }, { spawnDelayTimer.isFinished() })
+
         return pathfindingComponent
     }
 }

@@ -331,11 +331,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
                     break
                 }
 
-                /*
-                if (!passable && coordinate.isNeighborOf(body.getCenter().toGridCoordinate()))
-                    blockingBody?.let { passable = !body.overlaps(it as Rectangle) }
-                 */
-
                 if (printDebugFilter) {
                     GameLogger.debug(TAG, "Can pass $coordinate: $passable")
                     printDebugFilter = false
