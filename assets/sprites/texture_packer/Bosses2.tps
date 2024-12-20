@@ -343,6 +343,11 @@
             </struct>
             <key type="filename">../frames/Bosses2/MoonMan/defeated.png</key>
             <key type="filename">../frames/Bosses2/MoonMan/gravity_change_continue.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan_v2/defeated.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan_v2/gravity_change_continue.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan_v2/shoot_0.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan_v2/shoot_6.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan_v2/throw_asteroids.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -362,6 +367,11 @@
             <key type="filename">../frames/Bosses2/MoonMan/shoot_0.png</key>
             <key type="filename">../frames/Bosses2/MoonMan/shoot_1.png</key>
             <key type="filename">../frames/Bosses2/MoonMan/shoot_2.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan_v2/gravity_change_begin.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan_v2/jump_shoot_1.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan_v2/shoot_1.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan_v2/shoot_2.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan_v2/shoot_4.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -383,6 +393,12 @@
             <key type="filename">../frames/Bosses2/MoonMan/shoot_3.png</key>
             <key type="filename">../frames/Bosses2/MoonMan/shoot_5.png</key>
             <key type="filename">../frames/Bosses2/MoonMan/throw.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan_v2/gravity_change_end.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan_v2/jump.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan_v2/jump_shoot_0.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan_v2/jump_shoot_2.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan_v2/shoot_5.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan_v2/throw.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -400,6 +416,9 @@
             <key type="filename">../frames/Bosses2/MoonMan/shoot_4.png</key>
             <key type="filename">../frames/Bosses2/MoonMan/stand.png</key>
             <key type="filename">../frames/Bosses2/MoonMan/throw_asteroids.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan_v2/jump_land.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan_v2/shoot_3.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan_v2/stand.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

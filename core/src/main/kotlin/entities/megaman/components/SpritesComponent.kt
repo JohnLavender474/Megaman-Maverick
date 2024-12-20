@@ -23,7 +23,7 @@ import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.isSensing
 
 const val MEGAMAN_SPRITE_KEY = "megaman"
-const val MEGAMAN_SPRITE_SIZE = 2.5f
+const val MEGAMAN_SPRITE_SIZE = 3f
 
 const val JETPACK_FLAME_SPRITE_KEY = "jetpackFlame"
 const val JETPACK_FLAME_SPRITE_SIZE = 1f

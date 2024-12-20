@@ -356,6 +356,7 @@ class MegamanMaverickGame(
         screens.put(ScreenEnum.CREDITS_SCREEN.name, CreditsScreen(this))
 
         setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
+        // startLevelScreen(LevelDefinition.TEST_TILESET_SIZE)
 
         if (Gdx.app.type == ApplicationType.Android || params.showScreenController)
             screenController = ScreenController(this)

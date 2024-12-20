@@ -239,7 +239,9 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     private var neverSpawnedBefore = true
 
     override fun init() {
-        GameLogger.debug(TAG, "init")
+        GameLogger.debug(TAG, "init()")
+        aButtonTask = AButtonTask.JUMP
+        currentWeapon = MegamanWeapon.BUSTER
         addComponent(AudioComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(definePointsComponent())
@@ -265,11 +267,11 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
 
-        setHealth(getMaxHealth())
-        weaponHandler.setAllToMaxAmmo()
-
         aButtonTask = AButtonTask.JUMP
         currentWeapon = MegamanWeapon.BUSTER
+
+        setHealth(getMaxHealth())
+        weaponHandler.setAllToMaxAmmo()
 
         running = false
         damageFlash = false

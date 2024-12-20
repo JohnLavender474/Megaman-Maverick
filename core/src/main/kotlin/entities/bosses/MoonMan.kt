@@ -18,6 +18,7 @@ import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.GamePair
@@ -46,6 +47,7 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
@@ -75,6 +77,8 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
     companion object {
         const val TAG = "MoonMan"
+
+        private const val TAG_SUFFIX_FOR_ATLAS = "_v2"
 
         // if false, Gravity Man's direction rotation will never change
         private const val CHANGE_GRAVITY = false
@@ -120,7 +124,25 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         private const val MOON_SCYTHE_MOVEMENT_SCALAR = 0.75f
         private val MOON_SCYTHE_DEG_OFFSETS = gdxArrayOf(7.5f, 35f, 62.5f)
 
-        private val STAND_SHOOT_DURS = gdxArrayOf(0.6f, 0.5f, 1f, 0.5f, 1f, 0.5f, 0.6f)
+        private val STAND_SHOOT_DURS = gdxArrayOf(0.5f, 0.5f, 1f, 0.5f, 1f, 0.5f, 0.6f)
+
+        private val ANIM_DEFS = orderedMapOf<String, AnimationDef>(
+            "defeated" pairTo AnimationDef(2, 2, 0.1f),
+            "gravity_change_begin" pairTo AnimationDef(3, duration = 0.1f, loop = false),
+            "gravity_change_continue" pairTo AnimationDef(2, 2, 0.1f),
+            "gravity_change_end" pairTo AnimationDef(),
+            "jump" pairTo AnimationDef(),
+            "jump_land" pairTo AnimationDef(2, duration = 0.1f, loop = false),
+            "shoot_0" pairTo AnimationDef(2, 2, 0.1f, false),
+            "shoot_1" pairTo AnimationDef(3, duration = 0.1f, loop = false),
+            "shoot_2" pairTo AnimationDef(3, duration = 0.1f),
+            "shoot_3" pairTo AnimationDef(2, duration = 0.1f, loop = false),
+            "shoot_4" pairTo AnimationDef(3, duration = 0.1f),
+            "shoot_5" pairTo AnimationDef(),
+            "shoot_6" pairTo AnimationDef(2, 2, 0.1f, false),
+            "throw_asteroids" pairTo AnimationDef(2, 2, duration = 0.1f),
+            "stand" pairTo AnimationDef(2, 1, gdxArrayOf(0.3f, 0.1f))
+        )
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -169,21 +191,14 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_2.source)
-            gdxArrayOf(
-                "stand",
-                "defeated",
-                "gravity_change_begin",
-                "gravity_change_continue",
-                "gravity_change_end",
-                "jump",
-                "shoot",
-                "throw_asteroids"
-            ).forEach { key ->
-                val atlasKey = "$TAG/$key"
-                when (key) {
-                    "shoot" -> for (i in 0 until STAND_SHOOT_DURS.size) {
-                        val region = atlas.findRegion(atlasKey, i)
-                        regions.put("${key}_$i", region)
+            ANIM_DEFS.keys().forEach { key ->
+                val atlasKey = "${TAG}${TAG_SUFFIX_FOR_ATLAS}/${key}"
+                when {
+                    key.contains("shoot") -> {
+                        val index = key.split("_")[1].toInt()
+                        val shootKey = "${TAG}${TAG_SUFFIX_FOR_ATLAS}/shoot"
+                        val region = atlas.findRegion(shootKey, index)
+                        regions.put(key, region)
                     }
 
                     else -> {
@@ -458,35 +473,27 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = {
-            if (defeated) "defeated"
-            else when (currentState) {
+            if (defeated) "defeated" else when (currentState) {
                 MoonManState.INIT -> if (body.isSensing(BodySense.FEET_ON_GROUND)) "gravity_change_begin" else "jump"
-                MoonManState.STAND -> {
-                    if (body.isSensing(BodySense.FEET_ON_GROUND)) {
+                MoonManState.STAND -> when {
+                    body.isSensing(BodySense.FEET_ON_GROUND) ->
                         if (canShootInStandState()) "shoot_$shootIndex" else "stand"
-                    } else "jump"
+
+                    else -> "jump"
                 }
 
                 MoonManState.GRAVITY_CHANGE -> "gravity_change_${gravityChangeState.name.lowercase()}"
                 else -> currentState.name.lowercase()
             }
         }
-        val animations = objectMapOf<String, IAnimation>(
-            "defeated" pairTo Animation(regions["defeated"], 2, 2, 0.1f, true),
-            "gravity_change_begin" pairTo Animation(regions["gravity_change_begin"], 3, 1, 0.1f, false),
-            "gravity_change_continue" pairTo Animation(regions["gravity_change_continue"], 2, 2, 0.1f, true),
-            "gravity_change_end" pairTo Animation(regions["gravity_change_end"]),
-            "jump" pairTo Animation(regions["jump"]),
-            "shoot_0" pairTo Animation(regions["shoot_0"], 3, 2, 0.1f, false),
-            "shoot_1" pairTo Animation(regions["shoot_1"], 3, 1, 0.1f, false),
-            "shoot_2" pairTo Animation(regions["shoot_2"], 3, 1, 0.1f, true),
-            "shoot_3" pairTo Animation(regions["shoot_3"]),
-            "shoot_4" pairTo Animation(regions["shoot_4"], 2, 1, 0.1f, true),
-            "shoot_5" pairTo Animation(regions["shoot_5"]),
-            "shoot_6" pairTo Animation(regions["shoot_6"], 3, 2, 0.1f, false),
-            "throw_asteroids" pairTo Animation(regions["throw_asteroids"], 2, 1, 0.1f, true),
-            "stand" pairTo Animation(regions["stand"], 2, 1, gdxArrayOf(0.3f, 0.1f), true)
-        )
+        val animations = ObjectMap<String, IAnimation>()
+        ANIM_DEFS.forEach {
+            val key = it.key
+            val def = it.value
+            val region = regions[key]
+            if (region == null) throw IllegalStateException("Region with key=$key is null")
+            animations.put(key, Animation(region, def.rows, def.cols, def.durations, def.loop))
+        }
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }

@@ -225,7 +225,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.85f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat())
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
 
@@ -235,30 +235,18 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
         val headFixture = Fixture(
             body, FixtureType.HEAD, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.175f * ConstVals.PPM)
         )
-        headFixture.offsetFromBodyAttachment.y = 0.375f * ConstVals.PPM
+        headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
         body.addFixture(headFixture)
 
-        val model = GameRectangle().setSize(0.75f * ConstVals.PPM)
-
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, model.copy())
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
         body.addFixture(damageableFixture)
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, model.copy())
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)
 
-        val shieldFixture = Fixture(body, FixtureType.SHIELD, model.copy())
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle(body))
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
-
-        /*
-        val scannerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.7f * ConstVals.PPM))
-        val consumer: (IFixture) -> Unit = {
-            if (it.getType() == FixtureType.DAMAGEABLE && it.getEntity() == getMegaman())
-                status = BatStatus.FLYING_TO_RETREAT
-        }
-        scannerFixture.setConsumer { _, it -> consumer(it) }
-        body.addFixture(scannerFixture)
-         */
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             shieldFixture.setActive(status == BatStatus.HANGING)
@@ -288,7 +276,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setOriginCenter()
