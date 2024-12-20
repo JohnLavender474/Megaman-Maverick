@@ -338,8 +338,8 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
         debugShapes.add { damageableFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.fixtures.forEach {
-                it.second.setActive(
+            body.forEachFixture {
+                it.setActive(
                     !loop.getCurrent().equalsAny(MoonHeadState.DELAY, MoonHeadState.DARK, MoonHeadState.CRUMBLE)
                 )
             }

@@ -260,8 +260,9 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
             )
             body.setBottomCenterToPoint(position)
 
-            body.fixtures.forEach { entry ->
-                val fixture = entry.second as Fixture
+            body.forEachFixture { fixture ->
+                fixture as Fixture
+
                 val bounds = fixture.rawShape as GameRectangle
 
                 when (fixture.getType()) {

@@ -144,7 +144,7 @@ class SwitchGate(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnim
         val bodyComponent = super.defineBodyComponent()
         bodyComponent.body.preProcess.put(ConstKeys.ON) {
             body.physics.collisionOn = closed
-            body.fixtures.forEach { it.second.setActive(closed) }
+            body.forEachFixture { it.setActive(closed) }
         }
         return bodyComponent
     }

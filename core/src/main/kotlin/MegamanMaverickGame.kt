@@ -75,7 +75,6 @@ import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.hazards.LaserBeamer
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
@@ -123,7 +122,7 @@ class MegamanMaverickGame(
         const val TAG = "MegamanMaverickGame"
         private const val ASSET_MILLIS = 17
         private const val LOADING = "LOADING"
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(LaserBeamer.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.TELEPORTER, FixtureType.TELEPORTER_LISTENER)
         }

@@ -131,7 +131,7 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
             body.physics.gravity.y =
                 if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY * ConstVals.PPM else GRAVITY * ConstVals.PPM
         }
-        body.fixtures.forEach { it.second.putProperty(ConstKeys.DEATH_LISTENER, false) }
+        body.forEachFixture { fixture -> fixture.putProperty(ConstKeys.DEATH_LISTENER, false) }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

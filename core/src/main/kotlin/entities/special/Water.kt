@@ -80,7 +80,7 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
 
-        body.fixtures.forEach { (_, fixture) ->
+        body.forEachFixture { fixture ->
             val shape = (fixture as Fixture).rawShape
             if (shape is GameRectangle) shape.set(bounds)
         }

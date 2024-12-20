@@ -52,11 +52,14 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
 
     companion object {
         const val TAG = "Saw"
+
         const val PENDULUM_TYPE = "p"
         const val ROTATION_TYPE = "r"
         const val TRAJECTORY_TYPE = "t"
+
         private var sawRegion: TextureRegion? = null
         private var ringRegion: TextureRegion? = null
+
         private const val LENGTH = 3f
         private const val ROTATION_SPEED = 2f
         private const val PENDULUM_GRAVITY = 10f
@@ -81,9 +84,12 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         clearMotionDefinitions()
-        val bounds = spawnProps.get(ConstKeys.BOUNDS) as GameRectangle
-        val type = spawnProps.get(ConstKeys.TYPE) as String
+
+        val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+
+        val type = spawnProps.get(ConstKeys.TYPE, String::class)!!
         when (type.lowercase()) {
             PENDULUM_TYPE -> setToPendulum(bounds, spawnProps)
             ROTATION_TYPE -> setToRotation(bounds, spawnProps)
@@ -92,13 +98,15 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
                 setToTrajectory(bounds, trajectory)
             }
         }
-        facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "left", String::class).uppercase())
+
+        facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, ConstKeys.LEFT, String::class).uppercase())
     }
 
     private fun setToPendulum(bounds: GameRectangle, spawnProps: Properties) {
         val length = spawnProps.getOrDefault(ConstKeys.LENGTH, LENGTH, Float::class)
         val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, PENDULUM_GRAVITY, Float::class)
         val pendulum = Pendulum(length * ConstVals.PPM, gravity * ConstVals.PPM, bounds.getCenter(false), 1 / 60f)
+
         putMotionDefinition(
             ConstKeys.PENDULUM, MotionDefinition(motion = pendulum, function = { value, _ -> body.setCenter(value) })
         )

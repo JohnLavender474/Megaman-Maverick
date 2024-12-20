@@ -211,7 +211,7 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.fixtures.forEach { it.second.setActive(state != DemonMetState.ANGEL) }
+            body.forEachFixture { it.setActive(state != DemonMetState.ANGEL) }
         }
         val debugShapes = Array<() -> IDrawableShape?>()
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

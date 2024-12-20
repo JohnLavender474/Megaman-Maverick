@@ -107,10 +107,11 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         super.onSpawn(spawnProps)
 
         onCeiling = spawnProps.getOrDefault(ConstKeys.ON, true, Boolean::class)
-        direction =
-            Direction.valueOf(
-                spawnProps.getOrDefault(ConstKeys.DIRECTION, if (onCeiling) "down" else "up", String::class).uppercase()
-            )
+        direction = Direction.valueOf(
+            spawnProps.getOrDefault(
+                ConstKeys.DIRECTION, if (onCeiling) ConstKeys.DOWN else ConstKeys.UP, String::class
+            ).uppercase()
+        )
         facing = when (direction) {
             Direction.DOWN -> if (megaman().body.getX() < body.getX()) Facing.RIGHT else Facing.LEFT
             else -> if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT

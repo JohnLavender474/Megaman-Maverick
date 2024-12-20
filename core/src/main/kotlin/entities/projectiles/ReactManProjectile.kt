@@ -175,8 +175,8 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
         body.preProcess.put(ConstKeys.DEFAULT) {
             val size = if (big) 0.65f else 0.35f
             body.setSize(size * ConstVals.PPM)
-            body.fixtures.forEach {
-                val shape = (it.second as Fixture).rawShape as GameRectangle
+            body.forEachFixture {
+                val shape = (it as Fixture).rawShape as GameRectangle
                 shape.setSize(size * ConstVals.PPM)
             }
         }

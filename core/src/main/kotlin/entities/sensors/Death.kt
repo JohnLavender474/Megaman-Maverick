@@ -22,12 +22,18 @@ class Death(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val bounds = spawnProps.get(ConstKeys.BOUNDS) as GameRectangle
+
+        val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
-        val deathFixture = body.fixtures.first().second
-        ((deathFixture as Fixture).rawShape as GameRectangle).set(bounds)
+
         val instant = spawnProps.getOrDefault(ConstKeys.INSTANT, false, Boolean::class)
-        deathFixture.putProperty(ConstKeys.INSTANT, instant)
+        body.forEachFixture { fixture ->
+            fixture as Fixture
+
+            (fixture.rawShape as GameRectangle).set(bounds)
+
+            if (fixture.getType() == FixtureType.DEATH) fixture.putProperty(ConstKeys.INSTANT, instant)
+        }
     }
 
     private fun defineBodyComponent(): BodyComponent {

@@ -110,7 +110,7 @@ class ElectrocutieChild(game: MegamanMaverickGame) : MegaGameEntity(game), IHaza
             else Vector2(0.35f * ConstVals.PPM, 0.85f * ConstVals.PPM)
 
             body.setSize(size)
-            body.fixtures.forEach { ((it.second as Fixture).rawShape as GameRectangle).setSize(size) }
+            body.forEachFixture { ((it as Fixture).rawShape as GameRectangle).setSize(size) }
 
             if (resetBodyPosition) {
                 when (direction) {

@@ -174,7 +174,9 @@ object MegamanDamageNegotations{
         SharpStar.TAG pairTo dmgNeg(3),
         StarExplosion.TAG pairTo dmgNeg(3),
         Wanaan.TAG pairTo dmgNeg(3),
-        RatRobot.TAG pairTo dmgNeg(3)
+        RatRobot.TAG pairTo dmgNeg(3),
+        NuttGlider.TAG pairTo dmgNeg(3),
+        Nutt.TAG pairTo dmgNeg(3),
     )
 
     fun contains(tag: String) = dmgNegotiations.containsKey(tag)

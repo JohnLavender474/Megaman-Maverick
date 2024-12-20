@@ -121,7 +121,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
         fontHandles.add(
             MegaFontHandle(
-                "© OLDLAVYGENES 20XX",
+                "OLDLAVYGENES 20XX",
                 positionX = 5f * ConstVals.PPM,
                 positionY = 0.5f * ConstVals.PPM,
                 centerX = false,
@@ -143,9 +143,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
             MegaFontHandle(
                 { (game.audioMan.soundVolume * 10f).toInt().toString() },
                 positionX = 25.2f * ConstVals.PPM,
-                positionY = 9.625f * ConstVals.PPM,
-                centerX = true,
-                centerY = true
+                positionY = 9.625f * ConstVals.PPM
             )
         )
 

@@ -71,23 +71,27 @@ class Peat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
     private var moving = false
 
     override fun init() {
-        if (region == null)
-            region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "Peat")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
+
         val gravityX = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.X}", 0f, Float::class)
         val gravityY = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.Y}", 0f, Float::class)
         body.physics.gravity.set(gravityX * ConstVals.PPM, gravityY * ConstVals.PPM)
+
         delayTimer.reset()
+
         startPosition = null
         targetPosition = null
         midPoint = null
+
         moving = false
     }
 
@@ -95,13 +99,17 @@ class Peat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+
             if (!moving) {
                 body.physics.velocity.setZero()
+
                 delayTimer.update(delta)
                 if (delayTimer.isFinished()) {
                     moving = true
-                    startPosition = body.getCenter()
-                    targetPosition = megaman().body.getCenter()
+
+                    startPosition = body.getCenter(false)
+                    targetPosition = megaman().body.getCenter(false)
+
                     val midX = (startPosition!!.x + targetPosition!!.x) / 2f
                     val midY = (startPosition!!.y + targetPosition!!.y) / 2f
                     midPoint = Vector2(midX, midY)
@@ -117,7 +125,9 @@ class Peat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
         if (body.getBounds().contains(targetPosition!!)) {
             startPosition = null
             targetPosition = null
+
             moving = false
+
             delayTimer.reset()
         } else {
             val currentPos = body.getCenter()
@@ -159,7 +169,7 @@ class Peat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.25f * ConstVals.PPM)
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.hidden = damageBlink
@@ -174,5 +184,4 @@ class Peat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
-
 }
