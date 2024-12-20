@@ -34,9 +34,12 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
     private val assMan = megaman.game.assMan
     private val eventsMan = megaman.game.eventsMan
     private val audioMan = megaman.game.audioMan
+
     private val timerQueue = Queue<Timer>()
+
     private lateinit var healthBar: BitsBar
     private lateinit var weaponBarSupplier: () -> BitsBar?
+
     private var initialized = false
 
     val finished: Boolean

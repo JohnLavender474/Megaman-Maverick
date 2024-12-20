@@ -183,15 +183,15 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
 
             when {
                 vertical -> {
-                    body.setSize(1.75f * ConstVals.PPM, 0.85f * ConstVals.PPM)
+                    body.setSize(2f * ConstVals.PPM, ConstVals.PPM.toFloat())
                     damageableRect.setWidth(body.getWidth())
-                    shieldRect.setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM)
+                    shieldRect.setSize(1.75f * ConstVals.PPM, 0.85f * ConstVals.PPM)
                 }
 
                 else -> {
-                    body.setSize(0.85f * ConstVals.PPM, 1.75f * ConstVals.PPM)
+                    body.setSize(ConstVals.PPM.toFloat(), 2f * ConstVals.PPM)
                     damageableRect.setHeight(body.getHeight())
-                    shieldRect.setSize(0.75f * ConstVals.PPM, 1.25f * ConstVals.PPM)
+                    shieldRect.setSize(0.85f * ConstVals.PPM, 1.75f * ConstVals.PPM)
                 }
             }
 
@@ -200,8 +200,8 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
                     shieldFixture.setActive(false)
                     damageableFixture.offsetFromBodyAttachment.x = 0f
                     when {
-                        vertical -> damageableRect.setHeight(0.5f * ConstVals.PPM)
-                        else -> damageableRect.setWidth(0.5f * ConstVals.PPM)
+                        vertical -> damageableRect.setHeight(0.85f * ConstVals.PPM)
+                        else -> damageableRect.setWidth(0.85f * ConstVals.PPM)
                     }
                 }
 
@@ -273,7 +273,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.hidden = damageBlink

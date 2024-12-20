@@ -88,7 +88,7 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.15f * ConstVals.PPM)
+        body.setSize(0.25f * ConstVals.PPM)
         body.physics.velocityClamp.set(CLAMP * ConstVals.PPM.toFloat(), CLAMP * ConstVals.PPM.toFloat())
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
@@ -108,7 +108,7 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
-        sprite.setSize(0.5f * ConstVals.PPM)
+        sprite.setSize(0.75f * ConstVals.PPM)
         sprite.setRegion(region!!)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }

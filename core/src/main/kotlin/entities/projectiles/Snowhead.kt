@@ -70,7 +70,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
 
         val size = spawnProps.getOrDefault(
             ConstKeys.SIZE,
-            GameObjectPools.fetch(Vector2::class).set(0.8f * ConstVals.PPM),
+            GameObjectPools.fetch(Vector2::class).set(ConstVals.PPM.toFloat()),
             Vector2::class
         )
         body.setSize(size.x, size.y)

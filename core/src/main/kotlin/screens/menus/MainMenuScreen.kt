@@ -52,7 +52,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
     companion object {
         const val TAG = "MainScreen"
-        private const val DEBUG_SHAPES = true
+        private const val DEBUG_SHAPES = false
         private const val MAIN_MENU_TEXT_START_ROW = 6f
         private const val SETTINGS_TEXT_START_ROW = 11f
         private const val TEXT_ROW_DECREMENT = 0.025f
@@ -135,8 +135,6 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                 { (game.audioMan.musicVolume * 10f).toInt().toString() },
                 positionX = 25.2f * ConstVals.PPM,
                 positionY = 10.45f * ConstVals.PPM,
-                centerX = true,
-                centerY = true,
             )
         )
 

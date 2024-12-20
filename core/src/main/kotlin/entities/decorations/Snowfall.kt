@@ -48,10 +48,14 @@ class Snowfall(game: MegamanMaverickGame) : MegaGameEntity(game) {
 
     private val bounds = GameRectangle()
     private val trigger = GameRectangle()
+
     private val spawnDelay = Timer()
+
     private lateinit var spawnRoom: String
+
     private var background = false
     private var left = false
+
     private var minY = 0f
 
     override fun init() {

@@ -29,6 +29,7 @@ import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
@@ -184,20 +185,18 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
             when (loop.getCurrent()) {
                 SpikeBotState.STAND, SpikeBotState.SHOOT -> body.physics.velocity.x = 0f
-                SpikeBotState.WALK -> {
-                    when {
-                        (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
-                            (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) ->
-                            swapFacing()
+                SpikeBotState.WALK -> when {
+                    (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
+                        (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) ->
+                        swapFacing()
 
-                        isFacing(Facing.LEFT) && !body.isProperty(LEFT_FOOT, true) ->
-                            if (megaman().body.getX() < body.getX()) jump() else swapFacing()
+                    isFacing(Facing.LEFT) && !body.isProperty(LEFT_FOOT, true) ->
+                        if (megaman().body.getX() < body.getX()) jump() else swapFacing()
 
-                        isFacing(Facing.RIGHT) && !body.isProperty(RIGHT_FOOT, true) ->
-                            if (megaman().body.getX() > body.getX()) jump() else swapFacing()
+                    isFacing(Facing.RIGHT) && !body.isProperty(RIGHT_FOOT, true) ->
+                        if (megaman().body.getX() > body.getX()) jump() else swapFacing()
 
-                        else -> body.physics.velocity.x = WALK_SPEED * ConstVals.PPM * facing.value * movementScalar
-                    }
+                    else -> body.physics.velocity.x = WALK_SPEED * ConstVals.PPM * facing.value * movementScalar
                 }
             }
 
@@ -215,7 +214,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(0.75f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat())
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         body.putProperty(LEFT_FOOT, false)
@@ -226,27 +225,27 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         body.addFixture(feetFixture)
         feetFixture.drawingColor = Color.GREEN
         debugShapes.add { feetFixture }
 
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        headFixture.offsetFromBodyAttachment.y = 0.375f * ConstVals.PPM
+        headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
         body.addFixture(headFixture)
         headFixture.drawingColor = Color.ORANGE
         debugShapes.add { headFixture }
 
         val leftSideFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        leftSideFixture.offsetFromBodyAttachment.x = -0.375f * ConstVals.PPM
+        leftSideFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
         leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftSideFixture)
         leftSideFixture.drawingColor = Color.YELLOW
         debugShapes.add { leftSideFixture }
 
         val rightSideFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        rightSideFixture.offsetFromBodyAttachment.x = 0.375f * ConstVals.PPM
+        rightSideFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
         rightSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightSideFixture)
         rightSideFixture.drawingColor = Color.YELLOW
@@ -256,7 +255,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         leftFootFixture.setConsumer { _, fixture ->
             if (fixture.getType() == FixtureType.BLOCK) body.putProperty(LEFT_FOOT, true)
         }
-        leftFootFixture.offsetFromBodyAttachment.set(-0.375f, -0.375f).scl(ConstVals.PPM.toFloat())
+        leftFootFixture.offsetFromBodyAttachment.set(-body.getWidth() / 2f, -body.getHeight() / 2f)
         body.addFixture(leftFootFixture)
         leftFootFixture.drawingColor = Color.ORANGE
         debugShapes.add { leftFootFixture }
@@ -265,7 +264,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         rightFootFixture.setConsumer { _, fixture ->
             if (fixture.getType() == FixtureType.BLOCK) body.putProperty(RIGHT_FOOT, true)
         }
-        rightFootFixture.offsetFromBodyAttachment.set(0.375f, -0.375f).scl(ConstVals.PPM.toFloat())
+        rightFootFixture.offsetFromBodyAttachment.set(body.getWidth() / 2f, -body.getHeight() / 2f)
         body.addFixture(rightFootFixture)
         rightFootFixture.drawingColor = Color.ORANGE
         debugShapes.add { rightFootFixture }
@@ -290,7 +289,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.15f * ConstVals.PPM, 1.25f * ConstVals.PPM)
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
@@ -316,8 +315,8 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         gdxArrayOf(
             "jump" pairTo AnimationDef(),
             "stand" pairTo AnimationDef(),
-            "walk" pairTo AnimationDef(2, 2, 0.1f, true),
-            "shoot" pairTo AnimationDef(5, 1, 0.1f, true)
+            "walk" pairTo AnimationDef(2, 2, 0.1f),
+            "shoot" pairTo AnimationDef(5, duration = 0.1f)
         ).forEach { (key, def) ->
             SpikeBotType.entries.forEach { type ->
                 val amendedKey = "${key}${type.append}"

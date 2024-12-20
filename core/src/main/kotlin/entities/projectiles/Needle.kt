@@ -156,7 +156,7 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.5f * ConstVals.PPM)
+        body.setSize(0.75f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
 
@@ -180,7 +180,7 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
-        sprite.setSize(0.75f * ConstVals.PPM)
+        sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             val region = regions[type.name.lowercase()]

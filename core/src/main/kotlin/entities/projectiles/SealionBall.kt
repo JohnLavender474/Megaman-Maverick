@@ -119,7 +119,7 @@ class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(1.05f * ConstVals.PPM)
+        body.setSize(1.25f * ConstVals.PPM)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
 
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -142,7 +142,7 @@ class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(region!!)
-        sprite.setSize(2.25f * ConstVals.PPM, 1.4f * ConstVals.PPM)
+        sprite.setSize(3f * ConstVals.PPM, 1.875f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setCenter(body.getCenter())

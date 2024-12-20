@@ -36,7 +36,7 @@ enum class LevelDefinition(
         type = LevelType.ROBOT_MASTER_LEVEL,
         mugshotAtlas = "FACES_1",
         mugshotRegion = "Rodent Man",
-        tmxMapSource = "RodentMan.tmx",
+        tmxMapSource = "RodentMan_16x12.tmx",
         music = MusicAsset.MM7_SLASH_MAN_MUSIC,
         screenOnCompletion = ScreenEnum.SAVE_GAME_SCREEN
     ),
@@ -68,7 +68,7 @@ enum class LevelDefinition(
         type = LevelType.ROBOT_MASTER_LEVEL,
         mugshotAtlas = "FACES_1",
         mugshotRegion = "Glacier Man",
-        tmxMapSource = "GlacierMan_16x12_v2.tmx",
+        tmxMapSource = "GlacierMan_16x14.tmx",
         music = MusicAsset.MMX_CHILL_PENGUIN_MUSIC,
         screenOnCompletion = ScreenEnum.SAVE_GAME_SCREEN
     ),
