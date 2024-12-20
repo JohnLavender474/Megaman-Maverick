@@ -169,11 +169,11 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         super.onSpawn(spawnProps)
 
         direction =
-            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
+            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
 
         val spawn =
-            if (spawnProps.containsKey(ConstKeys.BOUNDS)) spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-                .getPositionPoint(Position.BOTTOM_CENTER)
+            if (spawnProps.containsKey(ConstKeys.BOUNDS))
+                spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
             else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         val position = DirectionPositionMapper.getInvertedPosition(direction)
         body.positionOnPoint(spawn, position)
@@ -218,7 +218,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(ConstVals.PPM.toFloat(), 1.5f * ConstVals.PPM)
+        body.setSize(1.5f * ConstVals.PPM, 2f * ConstVals.PPM)
 
         val shapes = Array<() -> IDrawableShape?>()
 
@@ -226,12 +226,12 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         body.addFixture(bodyFixture)
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyAttachment.y = -0.75f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         body.addFixture(feetFixture)
         // shapes.add { feetFixture}
 
         val headFixture = Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        headFixture.offsetFromBodyAttachment.y = 0.75f * ConstVals.PPM
+        headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
         body.addFixture(headFixture)
         // shapes.add { headFixture}
 
@@ -299,7 +299,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.575f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.hidden = damageBlink
@@ -502,12 +502,14 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
     }
 
     private fun shoot() {
-        val spawn = (when (direction) {
-            Direction.UP -> Vector2(0.35f * facing.value, -0.2f)
-            Direction.DOWN -> Vector2(0.35f * facing.value, 0.2f)
-            Direction.LEFT -> Vector2(0.15f, 0.35f * facing.value)
-            Direction.RIGHT -> Vector2(-0.15f, 0.35f * -facing.value)
-        }).scl(ConstVals.PPM.toFloat()).add(body.getCenter())
+        val spawn = GameObjectPools.fetch(Vector2::class)
+        when (direction) {
+            Direction.UP -> spawn.set(0.35f * facing.value, -0.35f)
+            Direction.DOWN -> spawn.set(0.35f * facing.value, 0.35f)
+            Direction.LEFT -> spawn.set(0.35f, 0.35f * facing.value)
+            Direction.RIGHT -> spawn.set(-0.35f, 0.35f * -facing.value)
+        }
+        spawn.scl(ConstVals.PPM.toFloat()).add(body.getCenter())
 
         val trajectory = Vector2()
 

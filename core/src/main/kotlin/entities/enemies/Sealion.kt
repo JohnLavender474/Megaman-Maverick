@@ -62,7 +62,7 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         private const val POUT_SINK_DELAY = 1f
         private const val POUT_FADE_OUT_DUR = 2.5f
         private const val SINK_VELOCITY_Y = -0.75f
-        private const val BALL_CATCH_BOUNDS_OFFSET_X = -0.125f
+        private const val BALL_CATCH_BOUNDS_OFFSET_X = -0.25f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -222,7 +222,7 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(1.6875f * ConstVals.PPM, 1.0325f * ConstVals.PPM)
+        body.setSize(2f * ConstVals.PPM, 1.5f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
@@ -243,7 +243,7 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
-        sprite.setSize(2.25f * ConstVals.PPM, 1.4f * ConstVals.PPM)
+        sprite.setSize(3f * ConstVals.PPM, 1.875f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)

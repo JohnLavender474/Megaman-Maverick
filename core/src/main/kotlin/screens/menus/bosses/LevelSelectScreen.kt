@@ -3,7 +3,6 @@ package com.megaman.maverick.game.screens.menus.bosses
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
@@ -37,7 +36,6 @@ import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.menus.MegaMenuScreen
 import com.megaman.maverick.game.screens.menus.bosses.MugshotPane.MugshotPaneState
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
-import com.megaman.maverick.game.utils.extensions.getDefaultCameraPosition
 
 class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Position.CENTER.name), Initializable {
 
@@ -68,21 +66,21 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
 
         // the offsets of the panes as a collective from the left x and bottom y
         private const val PANES_X_OFFSET = 2f
-        private const val PANES_Y_OFFSET = 1f
+        private const val PANES_Y_OFFSET = 2f
 
-        private const val PANE_WIDTH = 3f // 5f
+        private const val PANE_WIDTH = 3f
         private const val PANE_HEIGHT = 3f
         private const val PANE_X_PADDING = 1.5f
-        private const val PANE_Y_PADDING = 0.5f // 1f
+        private const val PANE_Y_PADDING = 1f
 
         private const val BARS_ROWS = 3
         private const val BARS_COLUMNS = 6
-        private const val BARS_OFFSET_Y = 0.5f
+        private const val BARS_OFFSET_Y = 1.5f
 
         private const val BAR_WIDTH = 5.33f
         private const val BAR_HEIGHT = 4f
         private const val BAR_PADDING_X = 3f
-        private const val BAR_PADDING_Y = 3.5f
+        private const val BAR_PADDING_Y = 4f
 
         private const val MOON_MAN_WIDTH = 4f
         private const val MOON_MAN_HEIGHT = 4f
@@ -90,9 +88,6 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
 
         private const val OUTRO_DUR = 1f
         private const val OUTRO_BLINKS = 10
-
-        private val CAM_POS = getDefaultCameraPosition().add(0f, 0.55f * ConstVals.PPM, 0f)
-        private val SLIDE_TRANS = Vector3(15f * ConstVals.PPM, 0f, 0f)
 
         private val regions = ObjectMap<String, TextureRegion>()
         private var unknownRegion: TextureRegion? = null

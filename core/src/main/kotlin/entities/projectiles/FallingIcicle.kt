@@ -146,7 +146,7 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.25f * ConstVals.PPM, 1.15f * ConstVals.PPM)
+        body.setSize(0.5f * ConstVals.PPM, 1.25f * ConstVals.PPM)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
 
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -179,7 +179,7 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
-        sprite.setSize(1.25f * ConstVals.PPM)
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.TOP_CENTER), Position.TOP_CENTER)

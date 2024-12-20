@@ -77,7 +77,7 @@ class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(ConstVals.PPM.toFloat())
+        body.setSize(1.5f * ConstVals.PPM)
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)
@@ -89,7 +89,7 @@ class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(2f * ConstVals.PPM)
+        sprite.setSize(2.5f * ConstVals.PPM)
         val spriteComponent = SpritesComponent(sprite)
         spriteComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
         return spriteComponent

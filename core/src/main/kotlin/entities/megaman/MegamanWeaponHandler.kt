@@ -65,8 +65,8 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
                 megaman.isBehaviorActive(BehaviorType.RIDING_CART) ->
                     if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 1.5f else 1.25f
 
-                megaman.slipSliding || !megaman.running || !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> 1f
-                else -> 1.25f
+                megaman.slipSliding || !megaman.running || !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> 0.85f
+                else -> 1f
             }
 
             var yOffset = when {
