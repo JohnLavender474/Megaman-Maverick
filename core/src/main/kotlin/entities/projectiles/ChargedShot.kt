@@ -114,8 +114,9 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
                 if (isFacing(Facing.LEFT)) Position.CENTER_RIGHT else Position.CENTER_LEFT
 
             Direction.LEFT, Direction.RIGHT ->
-                if (isFacing(Facing.LEFT)) Position.BOTTOM_CENTER else Position.TOP_CENTER
+                if (isFacing(Facing.LEFT)) Position.TOP_CENTER else Position.BOTTOM_CENTER
         }
+
         val residual = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.CHARGED_SHOT_RESIDUAL)!!
         residual.spawn(
             props(

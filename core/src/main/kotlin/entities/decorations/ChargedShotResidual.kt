@@ -109,7 +109,10 @@ class ChargedShotResidual(game: MegamanMaverickGame) : MegaGameEntity(game), ISp
                 false
             )
             sprite.setPosition(spawn, position)
-            sprite.translate(0.25f * ConstVals.PPM * facing.value, 0f)
+            when {
+                direction.isVertical() -> sprite.translateX(0.25f * ConstVals.PPM * facing.value)
+                else -> sprite.translateY(0.25f * ConstVals.PPM * facing.value)
+            }
         }
         return spritesComponent
     }

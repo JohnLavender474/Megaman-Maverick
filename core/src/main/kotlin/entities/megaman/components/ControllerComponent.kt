@@ -85,11 +85,13 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             if (isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.RIDING_CART)) return@ButtonActuator
             running = !isBehaviorActive(BehaviorType.WALL_SLIDING)
 
-            val threshold = (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_RUN_SPEED
-            else MegamanValues.RUN_SPEED) * ConstVals.PPM
+            val threshold =
+                (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_RUN_SPEED
+                else MegamanValues.RUN_SPEED) * ConstVals.PPM
 
-            val rawImpulse = if (body.isSensing(BodySense.FEET_ON_ICE)) MegamanValues.ICE_RUN_IMPULSE
-            else MegamanValues.RUN_IMPULSE
+            val rawImpulse =
+                if (body.isSensing(BodySense.FEET_ON_ICE)) MegamanValues.ICE_RUN_IMPULSE
+                else MegamanValues.RUN_IMPULSE
 
             val impulse = rawImpulse * delta * movementScalar * ConstVals.PPM * facing.value *
                 if (isBehaviorActive(BehaviorType.WALL_SLIDING)) -1f else 1f
@@ -110,7 +112,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
 
     val attack = ButtonActuator(
         onPressContinued = { _, delta ->
-            if (!ready || damaged || game.isCameraRotating() || teleporting ||
+            if (!ready || damaged /* TODO: || game.isCameraRotating() */ || teleporting ||
                 currentWeapon == MegamanWeapon.RUSH_JETPACK ||
                 (!charging && !weaponHandler.canFireWeapon(currentWeapon, MegaChargeStatus.HALF_CHARGED)) ||
                 (charging && !weaponHandler.canFireWeapon(currentWeapon, MegaChargeStatus.FULLY_CHARGED) ||

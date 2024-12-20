@@ -156,7 +156,7 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
         body.addFixture(deathFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            feetFixture.offsetFromBodyAttachment.y = -body.getHeight() * ConstVals.PPM
+            feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
             (deathFixture.rawShape as GameRectangle).set(body)
 
             val instant = !body.isSensing(BodySense.FEET_ON_GROUND)

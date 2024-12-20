@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
@@ -78,9 +77,9 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     override fun init() {
         if (purpleRegion == null || blueRegion == null || orangeRegion == null) {
-            purpleRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "Adamski/Purple")
-            blueRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "Adamski/Blue")
-            orangeRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "Adamski/Orange")
+            purpleRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "$TAG/Purple")
+            blueRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "$TAG/Blue")
+            orangeRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "$TAG/Orange")
         }
         super.init()
         addComponent(MotionComponent())
@@ -99,14 +98,12 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         val left = spawnProps.getOrDefault(ConstKeys.LEFT, megaman().body.getX() <= body.getX(), Boolean::class)
         val flip = spawnProps.getOrDefault(ConstKeys.FLIP, false, Boolean::class)
         val motion = SineWave(
-            body.getCenter(),
+            body.getCenter(false),
             (if (left) -SPEED else SPEED) * ConstVals.PPM,
             AMPLITUDE * ConstVals.PPM * if (flip) -1f else 1f,
             FREQUENCY
         )
-        putMotionDefinition("sineWave", MotionDefinition(motion, { position, _ ->
-            body.setCenter(position)
-        }))
+        putMotionDefinition("sineWave", MotionDefinition(motion, { position, _ -> body.setCenter(position) }))
 
         requestToPlaySound(SoundAsset.ALARM_SOUND, false)
     }
@@ -124,15 +121,15 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture}
+        debugShapes.add { bodyFixture }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
         body.addFixture(damagerFixture)
-        debugShapes.add { damagerFixture}
+        debugShapes.add { damagerFixture }
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().set(body))
         body.addFixture(damageableFixture)
-        debugShapes.add { damageableFixture}
+        debugShapes.add { damageableFixture }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
