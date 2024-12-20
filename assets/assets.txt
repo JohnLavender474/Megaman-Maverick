@@ -724,6 +724,25 @@ sprites/frames/Bosses2/InfernoMan/jump_shoot_straight.png
 sprites/frames/Bosses2/InfernoMan/stand_shoot_straight_akimbo.png
 sprites/frames/Bosses2/InfernoMan/stand_shoot_up.png
 sprites/frames/Bosses2/InfernoMan/defeated.png
+sprites/frames/Bosses2/MoonMan_v2/throw.png
+sprites/frames/Bosses2/MoonMan_v2/shoot_1.png
+sprites/frames/Bosses2/MoonMan_v2/gravity_change_begin.png
+sprites/frames/Bosses2/MoonMan_v2/jump_shoot_0.png
+sprites/frames/Bosses2/MoonMan_v2/shoot_6.png
+sprites/frames/Bosses2/MoonMan_v2/jump_land.png
+sprites/frames/Bosses2/MoonMan_v2/jump_shoot_2.png
+sprites/frames/Bosses2/MoonMan_v2/stand.png
+sprites/frames/Bosses2/MoonMan_v2/jump.png
+sprites/frames/Bosses2/MoonMan_v2/shoot_3.png
+sprites/frames/Bosses2/MoonMan_v2/shoot_5.png
+sprites/frames/Bosses2/MoonMan_v2/gravity_change_end.png
+sprites/frames/Bosses2/MoonMan_v2/shoot_0.png
+sprites/frames/Bosses2/MoonMan_v2/throw_asteroids.png
+sprites/frames/Bosses2/MoonMan_v2/jump_shoot_1.png
+sprites/frames/Bosses2/MoonMan_v2/shoot_2.png
+sprites/frames/Bosses2/MoonMan_v2/shoot_4.png
+sprites/frames/Bosses2/MoonMan_v2/gravity_change_continue.png
+sprites/frames/Bosses2/MoonMan_v2/defeated.png
 sprites/frames/Bosses2/DesertMan/dance_flash.png
 sprites/frames/Bosses2/DesertMan/arm_extension.png
 sprites/frames/Bosses2/DesertMan/stand.png
@@ -1603,6 +1622,7 @@ sprites/piskel/Items.piskel
 sprites/piskel/Togglee.piskel
 sprites/piskel/Taketento.piskel
 sprites/piskel/Falling_Icicle.piskel
+sprites/piskel/MoonMan_v2.piskel
 sprites/piskel/SpitFireball.piskel
 sprites/piskel/FirePellet.piskel
 sprites/piskel/FlipperPlatform.piskel
@@ -1828,6 +1848,7 @@ tiled_maps/tsx/React_Man_2.tsx
 tiled_maps/tsx/SkyMan.tsx
 tiled_maps/tsx/MM10Endless.tsx
 tiled_maps/tsx/mm9tornado.tsx
+tiled_maps/tsx/MM2wood_01.tsx
 tiled_maps/tsx/MM10Wily2.tsx
 tiled_maps/tsx/StarManTileset.tsx
 tiled_maps/tsx/Reactor_Man_3.tsx
@@ -1981,6 +2002,7 @@ tiled_maps/png/tstFlashmanAnimated3.png
 tiled_maps/png/tstFlashmanAnimated.png
 tiled_maps/png/tstHardman.png
 tiled_maps/png/mm9endless.png
+tiled_maps/png/MM2wood_01.png
 tiled_maps/png/tstMM3Wily4.png
 tiled_maps/png/pump_man.png
 tiled_maps/png/ColorsTileset.png
@@ -2165,6 +2187,7 @@ tiled_maps/tmx/NavalMan.tmx
 tiled_maps/tmx/Test4.tmx
 tiled_maps/tmx/SkyMan.tmx
 tiled_maps/tmx/WilyStage2.tmx
+tiled_maps/tmx/TilesetSizeTest.tmx
 tiled_maps/tmx/Test5.tmx
 tiled_maps/tmx/DesertMan_v4.tmx
 tiled_maps/tmx/CaveMan.tmx

@@ -40,7 +40,7 @@ class ChargedShotResidual(game: MegamanMaverickGame) : MegaGameEntity(game), ISp
 
     companion object {
         const val TAG = "ChargedShotResidual"
-        private const val FULL_CHARGED_DUR = 0.1f
+        private const val FULL_CHARGED_DUR = 0.2f
         private const val HALF_CHARGED_DUR = FULL_CHARGED_DUR / 2f
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -120,8 +120,8 @@ class ChargedShotResidual(game: MegamanMaverickGame) : MegaGameEntity(game), ISp
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String = { if (fullyCharged) "full" else "half" }
         val animations = objectMapOf<String, IAnimation>(
-            "full" pairTo Animation(regions["full"], 2, 2, 0.025f, false),
-            "half" pairTo Animation(regions["half"], 2, 1, 0.025f, false)
+            "full" pairTo Animation(regions["full"], 2, 2, 0.05f, false),
+            "half" pairTo Animation(regions["half"], 2, 1, 0.05f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

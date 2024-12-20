@@ -103,6 +103,14 @@ enum class LevelDefinition(
         tmxMapSource = "WilyStage3_v2.tmx",
         music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
         screenOnCompletion = ScreenEnum.WILY_CASTLE_SCREEN
+    ),
+    TEST_TILESET_SIZE(
+        type = LevelType.TEST_LEVEL,
+        mugshotAtlas = "FACES_1",
+        mugshotRegion = "Rodent Man",
+        tmxMapSource = "TilesetSizeTest.tmx",
+        music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
+        screenOnCompletion = ScreenEnum.WILY_CASTLE_SCREEN
     );
 
     companion object {

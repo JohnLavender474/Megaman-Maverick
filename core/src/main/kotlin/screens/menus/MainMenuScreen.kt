@@ -52,6 +52,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
     companion object {
         const val TAG = "MainScreen"
+        private const val DEBUG_SHAPES = true
         private const val MAIN_MENU_TEXT_START_ROW = 6f
         private const val SETTINGS_TEXT_START_ROW = 11f
         private const val TEXT_ROW_DECREMENT = 0.025f
@@ -410,13 +411,21 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         batch.projectionMatrix = game.getUiCamera().combined
         batch.begin()
 
-        blinkArrows.get(currentButtonKey).draw(batch)
         background.draw(batch)
         fontHandles.forEach { it.draw(batch) }
+        blinkArrows.get(currentButtonKey).draw(batch)
 
         if (settingsArrowBlink) settingsArrows.forEach { it.draw(batch) }
 
         batch.end()
+
+        if (DEBUG_SHAPES) {
+            val renderer = game.shapeRenderer
+            renderer.projectionMatrix = game.getUiCamera().combined
+            renderer.begin()
+            blinkArrows.values().forEach { it.draw(renderer) }
+            renderer.end()
+        }
     }
 
     override fun getNavigationDirection() = if (screenSlide.finished) super.getNavigationDirection() else null

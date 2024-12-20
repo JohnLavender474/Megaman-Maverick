@@ -32,6 +32,8 @@ const val MEGAMAN_AIR_DASH_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: AirDashB
 const val MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: GroundSlideBehavior"
 const val MEGAMAN_CLIMB_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: ClimbBehavior"
 
+const val MEGAMAN_LADDER_MOVE_OFFSET = 0.5f
+
 internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
     val behaviorsComponent = BehaviorsComponent()
 
@@ -382,31 +384,49 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             val center = body.getCenter()
 
             if (isBehaviorActive(BehaviorType.CLIMBING)) {
-                if (direction.isVertical()) {
-                    if (!body.isSensing(BodySense.HEAD_TOUCHING_LADDER)) {
-                        if (direction == Direction.DOWN && center.y + 0.25f * ConstVals.PPM < ladder.body.getY()) return false
-                        else if (center.y - 0.25f * ConstVals.PPM > ladder.body.getMaxY()) return false
+                when {
+                    direction.isVertical() -> {
+                        if (!body.isSensing(BodySense.HEAD_TOUCHING_LADDER)) when {
+                            direction == Direction.DOWN &&
+                                center.y + MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM < ladder.body.getY() ->
+                                return false
+
+                            center.y - MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM > ladder.body.getMaxY() ->
+                                return false
+                        }
+
+                        if (!body.isSensing(BodySense.FEET_TOUCHING_LADDER)) when {
+                            direction == Direction.DOWN &&
+                                center.y - MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM > ladder.body.getMaxY() ->
+                                return false
+
+                            center.y + MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM < ladder.body.getY() ->
+                                return false
+                        }
                     }
 
-                    if (!body.isSensing(BodySense.FEET_TOUCHING_LADDER)) {
-                        if (direction == Direction.DOWN && center.y - 0.25f * ConstVals.PPM > ladder.body.getMaxY()) return false
-                        else if (center.y + 0.25f * ConstVals.PPM < ladder.body.getY()) return false
-                    }
-                } else {
-                    if (!body.isSensing(BodySense.HEAD_TOUCHING_LADDER)) {
-                        if (direction == Direction.LEFT && center.x + 0.25f * ConstVals.PPM < ladder.body.getX()) return false
-                        else if (center.x - 0.25f * ConstVals.PPM > ladder.body.getMaxX()) return false
-                    }
+                    else -> {
+                        if (!body.isSensing(BodySense.HEAD_TOUCHING_LADDER)) when {
+                            direction == Direction.LEFT &&
+                                center.x + MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM < ladder.body.getX() ->
+                                return false
 
-                    if (!body.isSensing(BodySense.FEET_TOUCHING_LADDER)) {
-                        if (direction == Direction.LEFT && center.x + 0.25f * ConstVals.PPM > ladder.body.getMaxX()) return false
-                        else if (center.x - 0.25f * ConstVals.PPM < ladder.body.getX()) return false
+                            center.x - MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM > ladder.body.getMaxX() ->
+                                return false
+                        }
+
+                        if (!body.isSensing(BodySense.FEET_TOUCHING_LADDER)) when {
+                            direction == Direction.LEFT &&
+                                center.x + MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM > ladder.body.getMaxX() ->
+                                return false
+
+                            center.x - MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM < ladder.body.getX() ->
+                                return false
+                        }
                     }
                 }
 
-                if (game.controllerPoller.isJustPressed(MegaControllerButton.A)) return false
-
-                return true
+                return !game.controllerPoller.isJustPressed(MegaControllerButton.A)
             }
 
             if (body.isSensing(BodySense.FEET_TOUCHING_LADDER) &&

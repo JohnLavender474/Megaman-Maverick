@@ -23,6 +23,9 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
+const val MEGAMAN_BODY_WIDTH = 1f
+const val MEGAMAN_BODY_HEIGHT = 1.5f
+
 val Megaman.feetFixture: Fixture
     get() = body.getProperty(ConstKeys.FEET) as Fixture
 
@@ -43,7 +46,7 @@ val Megaman.damageableFixture: Fixture
 
 internal fun Megaman.defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.DYNAMIC)
-    body.setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
+    body.setSize(MEGAMAN_BODY_WIDTH * ConstVals.PPM, MEGAMAN_BODY_HEIGHT * ConstVals.PPM)
     body.putProperty("${ConstKeys.ICE}_${ConstKeys.FRICTION_Y}", false)
     body.physics.applyFrictionX = true
     body.physics.applyFrictionY = true
@@ -63,16 +66,16 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     }
 
     val feetFixture =
-        Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.55f * ConstVals.PPM, 0.15f * ConstVals.PPM))
-    feetFixture.offsetFromBodyAttachment.y = -0.5f * ConstVals.PPM
+        Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.35f * ConstVals.PPM))
+    feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
     feetFixture.setRunnable(onBounce)
     body.addFixture(feetFixture)
     // debugShapes.add { feetFixture}
     body.putProperty(ConstKeys.FEET, feetFixture)
 
     val headFixture =
-        Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.55f * ConstVals.PPM, 0.15f * ConstVals.PPM))
-    headFixture.offsetFromBodyAttachment.y = 0.5f * ConstVals.PPM
+        Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.35f * ConstVals.PPM))
+    headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
     headFixture.setRunnable(onBounce)
     body.addFixture(headFixture)
     // debugShapes.add { headFixture}
@@ -80,7 +83,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 
     val leftFixture =
         Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.2f * ConstVals.PPM, 0.6f * ConstVals.PPM))
-    leftFixture.offsetFromBodyAttachment.x = -0.5f * ConstVals.PPM
+    leftFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
     leftFixture.offsetFromBodyAttachment.y = 0.1f * ConstVals.PPM
     leftFixture.setRunnable(onBounce)
     leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
@@ -90,7 +93,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 
     val rightFixture =
         Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.2f * ConstVals.PPM, 0.6f * ConstVals.PPM))
-    rightFixture.offsetFromBodyAttachment.x = 0.5f * ConstVals.PPM
+    rightFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
     rightFixture.offsetFromBodyAttachment.y = 0.1f * ConstVals.PPM
     rightFixture.setRunnable(onBounce)
     rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
@@ -115,8 +118,8 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         damagableRect.let {
             val size = GameObjectPools.fetch(Vector2::class)
             when {
-                isBehaviorActive(BehaviorType.GROUND_SLIDING) -> size.set(1.25f, 0.75f)
-                else -> size.set(0.75f, 1.25f)
+                isBehaviorActive(BehaviorType.GROUND_SLIDING) -> size.set(MEGAMAN_BODY_HEIGHT, MEGAMAN_BODY_WIDTH)
+                else -> size.set(MEGAMAN_BODY_WIDTH, MEGAMAN_BODY_HEIGHT)
             }
             it.setSize(size.scl(ConstVals.PPM.toFloat()))
 
