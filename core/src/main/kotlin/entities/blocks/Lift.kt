@@ -24,12 +24,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getBounds
-import com.megaman.maverick.game.world.body.getCenter
-import com.megaman.maverick.game.world.body.isSensing
-import com.megaman.maverick.game.world.body.setEntity
+import com.megaman.maverick.game.world.body.*
 
 class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectional {
 
@@ -82,7 +77,7 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectiona
         headFixture.setEntity(this)
         headFixture.offsetFromBodyAttachment.y = 0.5f * ConstVals.PPM
         body.addFixture(headFixture)
-        debugShapeSuppliers.add { headFixture}
+        debugShapeSuppliers.add { headFixture }
 
         /*
         body.preProcess.put(ConstKeys.HEAD) {
@@ -118,11 +113,11 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectiona
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        val megaman = game.megaman
-        val megamanOverlapping = !megaman.dead && megaman().body.fixtures.any {
-            it.second.getType().equalsAny(
-                FixtureType.SIDE, FixtureType.FEET
-            ) && it.second.getShape().overlaps(body.getBounds())
+        var megamanOverlapping = !megaman().dead && megaman().body.fixtures.values().any { set ->
+            set.any { fixture ->
+                fixture.getType().equalsAny(FixtureType.SIDE, FixtureType.FEET) &&
+                    fixture.getShape().overlaps(body.getBounds())
+            }
         }
 
         currentState = if (megamanOverlapping && !body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) LiftState.LIFTING

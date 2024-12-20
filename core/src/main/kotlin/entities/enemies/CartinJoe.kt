@@ -199,7 +199,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
             body.physics.velocity.x = VEL_X * ConstVals.PPM * facing.value
         }
 
-        body.fixtures.forEach { it.second.putProperty(ConstKeys.DEATH_LISTENER, false) }
+        body.forEachFixture { it.putProperty(ConstKeys.DEATH_LISTENER, false) }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

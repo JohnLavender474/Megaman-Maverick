@@ -75,7 +75,7 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
 
             props.put(ConstKeys.RUN_ON_SPAWN, Runnable {
                 child.body.physics.collisionOn = false
-                child.body.fixtures.forEach { it.second.setActive(false) }
+                child.body.forEachFixture { it.setActive(false) }
                 child.hidden = true
             })
 
@@ -125,7 +125,7 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
                 val on = keysToRender.contains(blockKey)
 
                 block.body.physics.collisionOn = on
-                block.body.fixtures.forEach { it.second.setActive(on) }
+                block.body.forEachFixture { it.setActive(on) }
                 block.hidden = !on
 
                 if (on && blockKey == next) block.animators.values().forEach { it.reset() }

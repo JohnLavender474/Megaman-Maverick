@@ -84,8 +84,11 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                             val shouldSpawn = currentRoom == roomName
                             GameLogger.debug(
                                 TAG,
-                                "build(): entity=${it.name}, shouldSpawn=$shouldSpawn, " +
-                                    "entityRoom=$roomName, megamanRoom=$currentRoom"
+                                "build(): " +
+                                    "entity=${it.name}, " +
+                                    "shouldSpawn=$shouldSpawn, " +
+                                    "entityRoom=$roomName, " +
+                                    "megamanRoom=$currentRoom"
                             )
                             shouldSpawn
                         },

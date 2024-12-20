@@ -138,7 +138,7 @@ class Cactus(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntit
         val body = Body(BodyType.ABSTRACT)
         body.setWidth(ConstVals.PPM.toFloat())
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.fixtures.forEach { ((it.second as Fixture).rawShape as GameRectangle).set(body) }
+            body.forEachFixture { ((it as Fixture).rawShape as GameRectangle).set(body) }
         }
 
         val debugShapes = Array<() -> IDrawableShape?>()

@@ -641,6 +641,27 @@ class MegaContactListener(
             val teleporterEntity = teleporterFixture.getEntity() as ITeleporterEntity
             teleporterEntity.teleportEntity(teleporterListener)
         }
+
+        // laser, block
+        else if (contact.fixturesMatch(FixtureType.LASER, FixtureType.BLOCK)) {
+            printDebugLog(contact, "continueContact(): Laser-Block, contact = $contact")
+            val (laserFixture, blockFixture) = contact.getFixturesInOrder(FixtureType.LASER, FixtureType.BLOCK, out)!!
+
+            val laserEntity = laserFixture.getEntity()
+            val blockEntity = blockFixture.getEntity()
+
+            if (laserEntity != blockEntity) {
+                val blockRectangle = blockFixture.getShape() as GameRectangle
+                val laserLine = laserFixture.getProperty(ConstKeys.LINE, GameLine::class)!!
+
+                val intersections = laserFixture.getProperty(ConstKeys.COLLECTION) as MutableCollection<Vector2>
+
+                if (ShapeUtils.intersectRectangleAndLine(blockRectangle, laserLine, tempVec2Arr))
+                    intersections.addAll(tempVec2Arr)
+
+                tempVec2Arr.clear()
+            }
+        }
     }
 
     override fun continueContact(contact: Contact, delta: Float) {
@@ -948,13 +969,13 @@ class MegaContactListener(
             if (laserEntity != blockEntity) {
                 val blockRectangle = blockFixture.getShape() as GameRectangle
                 val laserLine = laserFixture.getProperty(ConstKeys.LINE, GameLine::class)!!
-                val intersections = laserFixture.getProperty(ConstKeys.COLLECTION) as MutableCollection<Vector2>?
-                intersections?.let {
-                    if (ShapeUtils.intersectRectangleAndLine(blockRectangle, laserLine, tempVec2Arr))
-                        it.addAll(tempVec2Arr)
 
-                    tempVec2Arr.clear()
-                }
+                val intersections = laserFixture.getProperty(ConstKeys.COLLECTION) as MutableCollection<Vector2>
+
+                if (ShapeUtils.intersectRectangleAndLine(blockRectangle, laserLine, tempVec2Arr))
+                    intersections.addAll(tempVec2Arr)
+
+                tempVec2Arr.clear()
             }
         }
 
@@ -1204,9 +1225,6 @@ class MegaContactListener(
 
         override fun getType() =
             throw IllegalStateException("The `getType` method should never be called on a DummyFixture instance")
-
-        override fun setType(type: Any) =
-            throw IllegalStateException("The `setType` method should never be called on a DummyFixture instance")
 
         override val properties: Properties
             get() = throw IllegalStateException("The `getType` method should never be called on a DummyFixture instance")

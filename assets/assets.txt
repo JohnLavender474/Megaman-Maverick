@@ -1783,6 +1783,7 @@ sprites/piskel/CarriCarry.piskel
 sprites/piskel/Gachappan.piskel
 sprites/piskel/LargeSpikes.piskel
 sprites/piskel/MegamanHalfChargedShot.piskel
+sprites/piskel/LeafCanopy.piskel
 sprites/piskel/DistributorMan.piskel
 sprites/piskel/LavaBeam.piskel
 sprites/piskel/Big_Propeller_Bot.piskel
@@ -1839,6 +1840,7 @@ tiled_maps/tsx/Reactor_Man_1.tsx
 tiled_maps/tsx/BKG01.tsx
 tiled_maps/tsx/mm9jewel.tsx
 tiled_maps/tsx/Cave.tsx
+tiled_maps/tsx/LeafCanopy.tsx
 tiled_maps/tsx/MM3Wily3.tsx
 tiled_maps/tsx/ChillMan.tsx
 tiled_maps/tsx/DarkSamus993-FireManTileset.tsx
@@ -1971,6 +1973,7 @@ tiled_maps/png/SprBGTomahawk.png
 tiled_maps/png/React_Man_2.png
 tiled_maps/png/pipe_forest_bkg.png
 tiled_maps/png/SkyMan.png
+tiled_maps/png/LeafCanopy.png
 tiled_maps/png/tstElecman.png
 tiled_maps/png/tstMM10Enker.png
 tiled_maps/png/tstChillMan.png

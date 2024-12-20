@@ -105,7 +105,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
 
         val active = delayTimer == null
         body.physics.collisionOn = active
-        body.fixtures.forEach { it.second.setActive(delayTimer == null) }
+        body.forEachFixture { it.setActive(delayTimer == null) }
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -116,13 +116,13 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
                 delayTimer = null
 
                 body.physics.collisionOn = true
-                body.fixtures.forEach { it.second.setActive(true) }
+                body.forEachFixture { it.setActive(true) }
 
                 return@let
             }
 
             body.physics.collisionOn = false
-            body.fixtures.forEach { it.second.setActive(false) }
+            body.forEachFixture { it.setActive(false) }
 
             blinkTimer.update(delta)
             if (blinkTimer.isFinished()) {

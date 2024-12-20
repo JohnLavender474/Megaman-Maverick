@@ -166,13 +166,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-
-        val fixtureIter = body.fixtures.iterator()
-        while (fixtureIter.hasNext()) {
-            val (_, fixture) = fixtureIter.next()
-            if (fixturesToRemove.contains(fixture)) fixtureIter.remove()
-        }
-
+        fixturesToRemove.forEach { body.removeFixture(it) }
         fixturesToRemove.clear()
     }
 

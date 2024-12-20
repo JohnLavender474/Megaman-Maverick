@@ -1,6 +1,8 @@
 package com.megaman.maverick.game.entities.hazards
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
@@ -73,6 +75,16 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
+
+        contacts = PriorityQueue { p1: Vector2, p2: Vector2 ->
+            val d1 = p1.dst2(rotatingLine.getOrigin(outVec))
+            val d2 = p2.dst2(rotatingLine.getOrigin(outVec))
+            d1.compareTo(d2)
+        }
+
+        contactGlow.drawingColor = Color.WHITE
+        contactGlow.drawingShapeType = ShapeType.Filled
+
         addComponent(
             DrawableShapesComponent(
                 prodShapeSuppliers = gdxArrayOf({ contactGlow }, { laser }), debug = true
@@ -92,13 +104,6 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
 
         rotatingLine = RotatingLine(spawn, RADIUS * ConstVals.PPM, SPEED * ConstVals.PPM, INIT_DEGREES)
 
-        contacts = PriorityQueue { p1: Vector2, p2: Vector2 ->
-            val d1 = p1.dst2(rotatingLine.getOrigin(outVec))
-            val d2 = p2.dst2(rotatingLine.getOrigin(outVec))
-            d1.compareTo(d2)
-        }
-        laserFixture.putProperty(ConstKeys.COLLECTION, contacts)
-
         contactTimer.reset()
         switchTimer.reset()
     }
@@ -108,14 +113,13 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
         body.setSize(ConstVals.PPM.toFloat())
 
         laserFixture = Fixture(body, FixtureType.LASER, GameLine())
+        laserFixture.putProperty(ConstKeys.COLLECTION, contacts)
         laserFixture.attachedToBody = false
-        laserFixture.setShape(laser)
         body.addFixture(laserFixture)
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameLine())
         damagerFixture.attachedToBody = false
         body.addFixture(damagerFixture)
-        addProdShapeSupplier { damagerFixture }
 
         val shieldFixture = Fixture(
             body, FixtureType.SHIELD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.85f * ConstVals.PPM)
@@ -130,15 +134,21 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
         }
 
         body.postProcess.put(ConstKeys.DEFAULT) {
-            laser.setFirstLocalPoint(rotatingLine.line.getFirstLocalPoint(outVec))
+            val start = rotatingLine.getStartPoint(outVec)
+            laser.setFirstLocalPoint(start)
 
             val end = if (contacts.isEmpty()) rotatingLine.getEndPoint(outVec) else contacts.first()
             laser.setSecondLocalPoint(end)
 
-            GameLogger.debug(TAG, "body.postProcess(): laser=$laser, end=$end, contacts=$contacts")
+            if (!contacts.isEmpty()) {
+                GameLogger.debug(
+                    TAG,
+                    "body.postProcess(): laser=$laser, line=${rotatingLine.line}, end=$end, contacts=$contacts"
+                )
+            }
 
-            laserFixture.rawShape = laser
-            damagerFixture.rawShape = laser
+            laserFixture.setShape(laser)
+            damagerFixture.setShape(laser)
 
             contactGlow.setCenter(end.x, end.y)
         }
@@ -190,7 +200,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
             // GameLogger.debug(TAG, "update(): !clockwise && rotatingLine.degrees >= MAX_DEGREES")
         }
 
-        GameLogger.debug(TAG, "update(): rawLine=${rotatingLine.line}, gameLine=$laser")
+        // GameLogger.debug(TAG, "update(): rawLine=${rotatingLine.line}, gameLine=$laser")
     })
 
     override fun getTag() = TAG

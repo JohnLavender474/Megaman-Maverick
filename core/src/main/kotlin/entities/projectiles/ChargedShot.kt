@@ -90,7 +90,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         defaultSprite.setSize(spriteDimension)
 
         body.setSize(bodyDimension)
-        body.fixtures.forEach { ((it.second as Fixture).rawShape as GameRectangle).setSize(bodyDimension) }
+        body.forEachFixture { ((it as Fixture).rawShape as GameRectangle).setSize(bodyDimension) }
 
         trajectory.set(spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!)
 

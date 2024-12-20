@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.enemies
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
@@ -42,45 +41,44 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getBounds
-import com.megaman.maverick.game.world.body.getPositionPoint
-import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     companion object {
         const val TAG = "Robbit"
+
         private var atlas: TextureAtlas? = null
+
         private const val STAND_DUR = 0.75f
         private const val CROUCH_DUR = 0.25f
         private const val JUMP_DUR = 0.25f
+
         private const val G_GRAV = -0.001f
         private const val GRAV = -0.15f
-        private const val JUMP_X = 5f
-        private const val JUMP_Y = 8f
+
+        private const val JUMP_X = 6f
+        private const val JUMP_Y = 10f
     }
 
     private enum class RobbitState { STANDING, CROUCHING, JUMPING }
 
     override var facing = Facing.RIGHT
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class pairTo dmgNeg(10),
+        Bullet::class pairTo dmgNeg(5),
         Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
         ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
-            if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
+            if (it.fullyCharged) 15 else 10
         },
         ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
-            if (it.fullyCharged) 15 else 10
+            if (it.fullyCharged) 5 else 3
         }
     )
 
-    private val robbitLoop = Loop(RobbitState.values().toGdxArray())
+    private val robbitLoop = Loop(RobbitState.entries.toTypedArray().toGdxArray())
     private val robbitTimers =
         objectMapOf(
             RobbitState.STANDING pairTo Timer(STAND_DUR),
@@ -89,8 +87,6 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         )
     private val robbitTimer: Timer
         get() = robbitTimers[robbitLoop.getCurrent()]!!
-
-    override fun getTag() = TAG
 
     override fun init() {
         super.init()
@@ -115,13 +111,18 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(1.5f * ConstVals.PPM))
         body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture}
+        debugShapes.add { bodyFixture }
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(1.35f * ConstVals.PPM, 0.2f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -0.75f * ConstVals.PPM
         body.addFixture(feetFixture)
-        debugShapes.add { feetFixture}
+        debugShapes.add { feetFixture }
+
+        val headFixture =
+            Fixture(body, FixtureType.HEAD, GameRectangle().setSize(1.35f * ConstVals.PPM, 0.2f * ConstVals.PPM))
+        headFixture.offsetFromBodyAttachment.y = 0.75f * ConstVals.PPM
+        body.addFixture(headFixture)
 
         val damageableFixture =
             Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(1.5f * ConstVals.PPM))
@@ -133,6 +134,11 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         body.preProcess.put(ConstKeys.DEFAULT) {
+            if (!body.isSensing(BodySense.FEET_ON_GROUND) &&
+                body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) &&
+                body.physics.velocity.y > 0f
+            ) body.physics.velocity.y = 0f
+
             body.physics.gravity.y =
                 ConstVals.PPM * (if (body.isSensing(BodySense.FEET_ON_GROUND)) G_GRAV else GRAV)
         }
@@ -194,4 +200,6 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
+
+    override fun getTag() = TAG
 }

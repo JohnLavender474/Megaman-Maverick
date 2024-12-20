@@ -117,7 +117,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         },
         ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
-            if (it.fullyCharged) 10 else 5
+            if (it.fullyCharged) 5 else 3
         }
     )
     override var direction: Direction

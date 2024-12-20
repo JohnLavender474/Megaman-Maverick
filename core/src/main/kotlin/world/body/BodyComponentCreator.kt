@@ -49,7 +49,7 @@ object BodyComponentCreator {
         }
 
         body.setEntity(entity)
-        body.fixtures.forEach { (_, fixture) -> fixture.setEntity(entity) }
+        body.forEachFixture{ fixture -> fixture.setEntity(entity) }
         body.preProcess.put(ConstKeys.PRIOR) { body.putProperty(ConstKeys.PRIOR, body.getPosition()) }
         body.onReset = { body.resetBodySenses() }
 

@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.explosions
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
@@ -15,28 +16,36 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.body.Body
-import com.mega.game.engine.world.body.BodyComponent
-import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
@@ -47,7 +56,7 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         const val TAG = "NuttGlider"
 
         private const val HAS_NUTT = "has_nutt"
-        private const val DEFAULT_HAS_NUTT = false
+        private const val DEFAULT_HAS_NUTT = true
 
         private const val NO_NUTT_SUFFIX = ""
         private const val NUTT_SUFFIX = "_nutt"
@@ -55,18 +64,21 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         private const val STAND_DUR = 1f
         private const val GLIDE_DUR = 1f
 
-        private const val JUMP_IMPULSE_X = 5f
-        private const val JUMP_IMPULSE_Y = 16f
+        private const val JUMP_IMPULSE_X = 6f
+        private const val JUMP_IMPULSE_Y = 14f
 
         private const val GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.01f
 
-        private const val DEFAULT_FRICTION_X = 1.05f
+        private const val DEFAULT_FRICTION_X = 1.25f
         private const val GROUND_FRICTION_X = 5f
 
         private const val GLIDE_VEL_MAX_X = 7.5f
         private const val GLIDE_IMPULSE_X = 15f
         private const val GLIDE_VEL_Y = -2.5f
+
+        private const val NUTT_DROP_OFFSET_X = 0.5f
+        private const val NUTT_DROP_OFFSET_Y = -0.25f
 
         private val ANIM_DEFS = objectMapOf<NuttGliderState, AnimationDef>(
             NuttGliderState.GLIDE pairTo AnimationDef(rows = 2, duration = 0.1f),
@@ -78,7 +90,12 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     private enum class NuttGliderState { GLIDE, JUMP, STAND }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>()
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        Bullet::class pairTo dmgNeg(15),
+        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+        ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
+    )
     override lateinit var facing: Facing
 
     private val timers = objectMapOf(
@@ -132,10 +149,22 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                         return@add
                     }
 
+                    if ((isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
+                        (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
+                    ) {
+                        state = NuttGliderState.STAND
+                        return@add
+                    }
+
+                    if (hasNutt && shouldDropNutt()) {
+                        dropNutt()
+                        hasNutt = false
+                    }
+
                     body.physics.velocity.let { velocity ->
-                        var impulseX = GLIDE_IMPULSE_X * ConstVals.PPM * delta
-                        if (megaman().body.getCenter().x < body.getCenter().x) impulseX *= -1f
+                        var impulseX = GLIDE_IMPULSE_X * ConstVals.PPM * delta * facing.value
                         velocity.x += impulseX
+
                         velocity.x =
                             velocity.x.coerceIn(-GLIDE_VEL_MAX_X * ConstVals.PPM, GLIDE_VEL_MAX_X * ConstVals.PPM)
 
@@ -154,6 +183,8 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                 }
 
                 NuttGliderState.STAND -> {
+                    body.physics.velocity.x = 0f
+
                     val timer = timers[state]
                     timer.update(delta)
 
@@ -167,46 +198,94 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         }
     }
 
-    private fun jump() = body.physics.velocity.add(
+    private fun shouldDropNutt(): Boolean {
+        val x = body.getCenter().x + NUTT_DROP_OFFSET_X * ConstVals.PPM * facing.value
+        return x >= megaman().body.getX() && x <= megaman().body.getMaxX()
+    }
+
+    private fun dropNutt() {
+        val nutt = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.NUTT)!!
+        val spawn =
+            body.getCenter().add(NUTT_DROP_OFFSET_X * ConstVals.PPM * facing.value, NUTT_DROP_OFFSET_Y * ConstVals.PPM)
+        nutt.spawn(props(ConstKeys.POSITION pairTo spawn))
+    }
+
+    private fun jump() = body.physics.velocity.set(
         JUMP_IMPULSE_X * facing.value * ConstVals.PPM,
         JUMP_IMPULSE_Y * ConstVals.PPM
     )
 
     private fun updateFacing() {
-        facing = when {
-            megaman().body.getCenter().x < body.getCenter().x -> Facing.LEFT
-            else -> Facing.RIGHT
+        when {
+            megaman().body.getX() > body.getMaxX() -> facing = Facing.RIGHT
+            megaman().body.getMaxX() < body.getX() -> facing = Facing.LEFT
         }
     }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.physics.applyFrictionY = false
-        body.setHeight(0.75f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        val feetFixture =
-            Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
+        val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setHeight(0.1f * ConstVals.PPM))
         body.addFixture(feetFixture)
-        feetFixture.rawShape.drawingColor = Color.GREEN
+        feetFixture.drawingColor = Color.GREEN
         debugShapes.add { feetFixture }
 
-        val headFixture =
-            Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        headFixture.offsetFromBodyAttachment.y = 0.375f * ConstVals.PPM
+        val headFixture = Fixture(body, FixtureType.HEAD, GameRectangle().setHeight(0.1f * ConstVals.PPM))
         body.addFixture(headFixture)
-        headFixture.rawShape.drawingColor = Color.ORANGE
+        headFixture.drawingColor = Color.ORANGE
         debugShapes.add { headFixture }
 
+        val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
+        leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
+        body.addFixture(leftFixture)
+        leftFixture.drawingColor = Color.YELLOW
+        debugShapes.add { leftFixture }
+
+        val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
+        rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
+        body.addFixture(rightFixture)
+        rightFixture.drawingColor = Color.YELLOW
+        debugShapes.add { rightFixture }
+
+        val outFixtures = Array<IFixture>()
         body.preProcess.put(ConstKeys.DEFAULT) {
-            val width = when (state) {
-                NuttGliderState.GLIDE -> 1.5f
-                else -> 1f
+            val bodySize = GameObjectPools.fetch(Vector2::class)
+            val feetWidth: Float
+            val headWidth: Float
+
+            when (state) {
+                NuttGliderState.GLIDE -> {
+                    bodySize.set(1.5f, 0.75f)
+                    feetWidth = 1.25f
+                    headWidth = 0.75f
+                }
+
+                else -> {
+                    bodySize.set(0.75f, 1f)
+                    feetWidth = 0.75f
+                    headWidth = 0.25f
+                }
             }
-            body.setWidth(width * ConstVals.PPM)
+
+            body.setSize(bodySize.scl(ConstVals.PPM.toFloat()))
+
+            (feetFixture.rawShape as GameRectangle).setWidth(feetWidth * ConstVals.PPM)
+            (headFixture.rawShape as GameRectangle).setWidth(headWidth * ConstVals.PPM)
+
+            feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
+            headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
+            leftFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
+            rightFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
+
+            body.getFixtures(outFixtures, FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE).forEach {
+                val bounds = (it as Fixture).rawShape as GameRectangle
+                bounds.setSize(bodySize)
+            }
+            outFixtures.clear()
 
             val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
             body.physics.gravity.y = gravity * ConstVals.PPM
@@ -226,11 +305,12 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     }
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
-        .sprite(TAG, GameSprite())
+        .sprite(TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1)))
         .updatable { _, sprite ->
             val position = Position.BOTTOM_CENTER
             sprite.setSize(2.5f * ConstVals.PPM)
             sprite.setPosition(body.getPositionPoint(position), position)
+            if (state == NuttGliderState.GLIDE) sprite.translateY(-0.25f * ConstVals.PPM)
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.hidden = damageBlink
         }
@@ -240,7 +320,18 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { "${state.name.lowercase()}${if (hasNutt) NUTT_SUFFIX else NO_NUTT_SUFFIX}" }
+                .setKeySupplier {
+                    val prefix = when (state) {
+                        NuttGliderState.STAND -> when {
+                            body.isSensing(BodySense.FEET_ON_GROUND) -> NuttGliderState.STAND.name.lowercase()
+                            else -> NuttGliderState.JUMP.name.lowercase()
+                        }
+
+                        else -> state.name.lowercase()
+                    }
+                    val suffix = if (hasNutt) NUTT_SUFFIX else NO_NUTT_SUFFIX
+                    "${prefix}${suffix}"
+                }
                 .applyToAnimations { animations ->
                     NuttGliderState.entries.forEach { state ->
                         gdxArrayOf(NO_NUTT_SUFFIX, NUTT_SUFFIX).forEach { suffix ->

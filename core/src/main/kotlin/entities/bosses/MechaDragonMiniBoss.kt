@@ -431,11 +431,17 @@ class MechaDragonMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
             neckDamageableFixture,
             headDamageableFixture
         ).forEach { t ->
-            val bodyFixture1 = t.copy()
+            val bodyFixture1 = Fixture(
+                body = body,
+                type = FixtureType.BODY,
+                rawShape = t.rawShape.copy(),
+                offsetFromBodyAttachment = t.offsetFromBodyAttachment.cpy()
+            )
+
             val width = bodyFixture1.getShape().getBoundingRectangle().getWidth() * 0.9f
             val height = bodyFixture1.getShape().getBoundingRectangle().getHeight() * 0.9f
             bodyFixture1.rawShape.setWithProps(props("width" pairTo width, "height" pairTo height))
-            bodyFixture1.setType(FixtureType.BODY)
+
             body.addFixture(bodyFixture1)
         }
 

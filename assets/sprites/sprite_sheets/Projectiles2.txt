@@ -47,7 +47,7 @@ DeathBomb/wait
   index: -1
 FallingIcicle/shake
   rotate: false
-  xy: 84, 0
+  xy: 100, 0
   size: 24, 32
   orig: 24, 32
   offset: 0, 0
@@ -153,6 +153,13 @@ Needle/default
 Needle/ice
   rotate: false
   xy: 68, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Nutt
+  rotate: false
+  xy: 84, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

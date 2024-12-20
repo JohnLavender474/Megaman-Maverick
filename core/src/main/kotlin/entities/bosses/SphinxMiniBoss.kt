@@ -274,10 +274,15 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
 
         // create copies of body fixtures for damager and shield fixture
         gdxArrayOf(FixtureType.DAMAGER, FixtureType.SHIELD).forEach { type ->
-            body.fixtures.map { it.second }.forEach { bodyFixture ->
-                val copy = (bodyFixture as Fixture).copy()
-                bodyFixture.setType(type)
-                body.addFixture(copy)
+            body.forEachFixture { fixture ->
+                fixture as Fixture
+                val newFixture = Fixture(
+                    body = body,
+                    type = type,
+                    rawShape = fixture.rawShape.copy(),
+                    offsetFromBodyAttachment = fixture.offsetFromBodyAttachment.cpy()
+                )
+                body.addFixture(newFixture)
             }
         }
 

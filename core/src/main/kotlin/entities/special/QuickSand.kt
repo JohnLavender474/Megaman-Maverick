@@ -65,7 +65,7 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         super.onSpawn(spawnProps)
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
-        body.fixtures.forEach { ((it.second as Fixture).rawShape as GameRectangle).set(bounds) }
+        body.forEachFixture { ((it as Fixture).rawShape as GameRectangle).set(bounds) }
         defineDrawables(bounds.splitByCellSize(ConstVals.PPM.toFloat(), matrix))
     }
 

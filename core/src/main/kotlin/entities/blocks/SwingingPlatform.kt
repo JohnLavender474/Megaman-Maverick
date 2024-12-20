@@ -29,6 +29,7 @@ import com.mega.game.engine.motion.MotionComponent
 import com.mega.game.engine.motion.Pendulum
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Fixture
+import com.mega.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -70,6 +71,8 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
     private var didOverlapMegaman = false
     private var doesOverlapMegaman = false
 
+    private val outFixtures = Array<IFixture>()
+
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
@@ -101,9 +104,10 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
             }
         }
         body.addBodyLabels(objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY))
-        body.fixtures.filter { it.second.getType() == FixtureType.BLOCK }.map { it.second as Fixture }.forEach {
+        body.getFixtures(outFixtures, FixtureType.BLOCK).map { it as Fixture }.forEach {
             it.addFixtureLabels(objectSetOf(FixtureLabel.NO_SIDE_TOUCHIE, FixtureLabel.NO_PROJECTILE_COLLISION))
         }
+        outFixtures.clear()
 
         // spawn the enemy onto the platform after the timer has finished so that the platform position has
         // been properly updated

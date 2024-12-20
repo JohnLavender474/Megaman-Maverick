@@ -140,8 +140,8 @@ class GreenExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         debugShapes.add { feetFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.fixtures.forEach { t ->
-                val fixture = t.second as Fixture
+            body.forEachFixture {
+                val fixture = it as Fixture
                 (fixture.rawShape as GameRectangle).setWidth(width * ConstVals.PPM)
             }
             damagerFixture1.offsetFromBodyAttachment.x = damagerOffset * ConstVals.PPM

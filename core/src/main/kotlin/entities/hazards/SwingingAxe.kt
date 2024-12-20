@@ -51,13 +51,11 @@ class SwingingAxe(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         private const val DEBUG_SWING_ROTATION_SPEED = 1f
     }
 
-    private lateinit var deathCircle: GameCircle
-    private lateinit var shieldCircle: GameCircle
+    private val deathCircle = GameCircle()
+    private val shieldCircle = GameCircle()
     private lateinit var pendulum: Pendulum
 
     private val debugSwingRotationTimer = Timer(DEBUG_SWING_ROTATION_SPEED)
-
-    override fun getEntityType() = EntityType.HAZARD
 
     override fun init() {
         if (textureRegion == null) textureRegion = game.assMan.getTextureRegion(
@@ -71,9 +69,12 @@ class SwingingAxe(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         clearMotionDefinitions()
+
         val bounds = spawnProps.get(ConstKeys.BOUNDS) as GameRectangle
         body.setCenter(bounds.getCenter())
+
         setPendulum(bounds)
     }
 
@@ -83,7 +84,6 @@ class SwingingAxe(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
         val shapesComponent = getComponent(DrawableShapesComponent::class)!!
 
-        deathCircle = GameCircle()
         deathCircle.setRadius(0.85f * ConstVals.PPM)
         val deathFixture = Fixture(body, FixtureType.DEATH, deathCircle)
         deathFixture.putProperty(ConstKeys.INSTANT, true)
@@ -91,7 +91,6 @@ class SwingingAxe(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         body.addFixture(deathFixture)
         shapesComponent.debugShapeSuppliers.add { deathCircle }
 
-        shieldCircle = GameCircle()
         shieldCircle.setRadius(0.85f * ConstVals.PPM)
         val shieldFixture = Fixture(body, FixtureType.SHIELD, shieldCircle)
         shieldFixture.attachedToBody = false
@@ -125,7 +124,7 @@ class SwingingAxe(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
     private fun setPendulum(bounds: GameRectangle) {
         pendulum = Pendulum(
-            LENGTH * ConstVals.PPM, PENDULUM_GRAVITY * ConstVals.PPM, bounds.getCenter(), 1 / 60f
+            LENGTH * ConstVals.PPM, PENDULUM_GRAVITY * ConstVals.PPM, bounds.getCenter(false), 1 / 60f
         )
         putMotionDefinition(
             ConstKeys.PENDULUM, MotionComponent.MotionDefinition(motion = pendulum, function = { value, _ ->
@@ -153,4 +152,6 @@ class SwingingAxe(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         circle2.drawingColor = Color.DARK_GRAY
         addDebugShapeSupplier { circle2.setCenter(pendulum.getMotionValue()!!) }
     }
+
+    override fun getEntityType() = EntityType.HAZARD
 }
