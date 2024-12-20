@@ -45,11 +45,7 @@ import com.megaman.maverick.game.entities.utils.standardOnTeleportStart
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.StunType
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.getBounds
-import com.megaman.maverick.game.world.body.getCenter
-import com.megaman.maverick.game.world.body.isSensing
-import com.megaman.maverick.game.world.body.isSensingAny
+import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
 class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable, IEventListener, IFaceable,
@@ -135,7 +131,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
                 if (game.getGameCamera().direction != direction) {
                     game.eventsMan.submitEvent(
                         Event(
-                            EventType.SET_GAME_CAM_ROTATION,
+                            EventType.START_GAME_CAM_ROTATION,
                             props(ConstKeys.DIRECTION pairTo direction)
                         )
                     )

@@ -126,7 +126,7 @@ class MegaLevelScreen(
         EventType.SHOW_BACKGROUNDS,
         EventType.HIDE_BACKGROUNDS,
 
-        EventType.SET_GAME_CAM_ROTATION,
+        EventType.START_GAME_CAM_ROTATION,
         EventType.SHAKE_CAM,
     )
 
@@ -609,7 +609,7 @@ class MegaLevelScreen(
                 backgroundKeys.forEach { backgroundsToHide.add(it) }
             }
 
-            EventType.SET_GAME_CAM_ROTATION -> {
+            EventType.START_GAME_CAM_ROTATION -> {
                 val direction = event.getProperty(ConstKeys.DIRECTION, Direction::class)!!
                 gameCamera.startRotation(direction, ConstVals.GAME_CAM_ROTATE_TIME)
                 backgrounds.forEach { background ->
