@@ -124,7 +124,7 @@ class PipiEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.35f * ConstVals.PPM)
+        body.setSize(0.75f * ConstVals.PPM)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
@@ -132,10 +132,10 @@ class PipiEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.175f * ConstVals.PPM))
+        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.375f * ConstVals.PPM))
         body.addFixture(projectileFixture)
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.175f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.375f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -145,7 +145,7 @@ class PipiEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(regions.get("egg"))
-        sprite.setSize(1.25f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
         return spritesComponent

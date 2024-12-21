@@ -90,7 +90,7 @@ class Copipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.25f * ConstVals.PPM)
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setCenter(body.getCenter())

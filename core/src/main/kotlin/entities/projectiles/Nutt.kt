@@ -67,7 +67,7 @@ class Nutt(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.75f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat())
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
         return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.PROJECTILE, FixtureType.DAMAGER))
     }
@@ -75,7 +75,7 @@ class Nutt(game: MegamanMaverickGame) : AbstractProjectile(game) {
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(GameSprite(region!!))
         .updatable { _, sprite ->
-            sprite.setSize(0.75f * ConstVals.PPM)
+            sprite.setSize(ConstVals.PPM.toFloat())
             sprite.setCenter(body.getCenter())
         }
         .build()

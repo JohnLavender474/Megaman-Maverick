@@ -2208,6 +2208,7 @@ tiled_maps/tmx/Test6.tmx
 tiled_maps/tmx/DesertMan_v3.tmx
 tiled_maps/tmx/PreciousMan.tmx
 tiled_maps/tmx/InfernoMan_16x12_v2.tmx
+tiled_maps/tmx/TimberWoman_16x14.tmx
 tiled_maps/tmx/MagnetMan_OLD.tmx
 tiled_maps/tmx/MoonMan.tmx
 tiled_maps/tmx/CrewMan.tmx

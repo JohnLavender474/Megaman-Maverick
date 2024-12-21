@@ -71,7 +71,7 @@ class PipiEggShatter(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.15f * ConstVals.PPM)
+        body.setSize(0.25f * ConstVals.PPM)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
 
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -84,7 +84,7 @@ class PipiEggShatter(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 15))
-        sprite.setSize(1.25f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setCenter(body.getCenter())

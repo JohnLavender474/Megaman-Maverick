@@ -183,7 +183,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(0.85f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat())
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         body.putProperty(LEFT_FOOT, false)
@@ -194,45 +194,49 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         feetFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ ->
             facing = if (megaman().body.getX() < body.getX()) Facing.RIGHT else Facing.LEFT
             if (direction == Direction.UP) swapFacing()
         }
         body.addFixture(feetFixture)
-        debugShapes.add { feetFixture}
+        debugShapes.add { feetFixture }
+
+        val headFixture =
+            Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
+        headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
+        body.addFixture(headFixture)
+        debugShapes.add { headFixture }
 
         val leftSideFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        leftSideFixture.offsetFromBodyAttachment.x = -0.375f * ConstVals.PPM
+        leftSideFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
         leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftSideFixture)
-        debugShapes.add { leftSideFixture}
+        debugShapes.add { leftSideFixture }
 
         val rightSideFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        rightSideFixture.offsetFromBodyAttachment.x = 0.375f * ConstVals.PPM
+        rightSideFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
         rightSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightSideFixture)
-        debugShapes.add { rightSideFixture}
+        debugShapes.add { rightSideFixture }
 
         val leftFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFootFixture.setConsumer { _, fixture ->
             if (fixture.getType() == FixtureType.BLOCK)
                 body.putProperty("${ConstKeys.LEFT}_${ConstKeys.FOOT}", true)
         }
-        leftFootFixture.offsetFromBodyAttachment =
-            GameObjectPools.fetch(Vector2::class).set(-0.375f * ConstVals.PPM, -0.375f * ConstVals.PPM)
+        leftFootFixture.offsetFromBodyAttachment.set(-body.getWidth() / 2f, -body.getHeight() / 2f)
         body.addFixture(leftFootFixture)
-        debugShapes.add { leftFootFixture}
+        debugShapes.add { leftFootFixture }
 
         val rightFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFootFixture.setConsumer { _, fixture ->
             if (fixture.getType() == FixtureType.BLOCK)
                 body.putProperty("${ConstKeys.RIGHT}_${ConstKeys.FOOT}", true)
         }
-        rightFootFixture.offsetFromBodyAttachment.x = 0.375f * ConstVals.PPM
-        rightFootFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
+        rightFootFixture.offsetFromBodyAttachment.set(body.getWidth() / 2f, -body.getHeight() / 2f)
         body.addFixture(rightFootFixture)
-        debugShapes.add { rightFootFixture}
+        debugShapes.add { rightFootFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.putProperty(LEFT_FOOT, false)
@@ -247,6 +251,11 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 Direction.RIGHT -> gravityVec.set(gravity, 0f)
             }.scl(ConstVals.PPM.toFloat())
             body.physics.gravity.set(gravityVec)
+
+            if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) &&
+                !body.isSensing(BodySense.FEET_ON_GROUND) &&
+                body.physics.velocity.y > 0f
+            ) body.physics.velocity.y = 0f
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -258,7 +267,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setOriginCenter()
@@ -272,9 +281,11 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = {
-            if (!stillTimer.isFinished()) "still"
-            else if (!body.isSensing(BodySense.FEET_ON_GROUND)) "jump"
-            else "crawl"
+            when {
+                !stillTimer.isFinished() -> "still"
+                !body.isSensing(BodySense.FEET_ON_GROUND) -> "jump"
+                else -> "crawl"
+            }
         }
         val animation = objectMapOf<String, IAnimation>(
             "still" pairTo Animation(regions["still"]),

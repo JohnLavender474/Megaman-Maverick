@@ -104,31 +104,30 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(1.5f * ConstVals.PPM)
+        body.setSize(2f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(1.5f * ConstVals.PPM))
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
         debugShapes.add { bodyFixture }
 
         val feetFixture =
-            Fixture(body, FixtureType.FEET, GameRectangle().setSize(1.35f * ConstVals.PPM, 0.2f * ConstVals.PPM))
-        feetFixture.offsetFromBodyAttachment.y = -0.75f * ConstVals.PPM
+            Fixture(body, FixtureType.FEET, GameRectangle().setSize(1.5f * ConstVals.PPM, 0.2f * ConstVals.PPM))
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         body.addFixture(feetFixture)
         debugShapes.add { feetFixture }
 
         val headFixture =
-            Fixture(body, FixtureType.HEAD, GameRectangle().setSize(1.35f * ConstVals.PPM, 0.2f * ConstVals.PPM))
-        headFixture.offsetFromBodyAttachment.y = 0.75f * ConstVals.PPM
+            Fixture(body, FixtureType.HEAD, GameRectangle().setSize(1.5f * ConstVals.PPM, 0.2f * ConstVals.PPM))
+        headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
         body.addFixture(headFixture)
 
-        val damageableFixture =
-            Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(1.5f * ConstVals.PPM))
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
         body.addFixture(damageableFixture)
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(1.5f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -172,7 +171,7 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(4f * ConstVals.PPM, 3.5f * ConstVals.PPM)
+        sprite.setSize(5f * ConstVals.PPM, 4.375f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.hidden = damageBlink
