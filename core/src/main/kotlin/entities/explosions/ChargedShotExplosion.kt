@@ -117,7 +117,7 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setOriginCenter()

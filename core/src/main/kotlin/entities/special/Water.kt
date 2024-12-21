@@ -3,14 +3,17 @@ package com.megaman.maverick.game.entities.special
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimator
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -40,35 +43,40 @@ import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import java.util.*
 
 class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ICullableEntity, IWater {
 
+    private class WaterSpriteDef(
+        val priority: DrawingPriority,
+        val alpha: Float
+    )
+
     companion object {
         const val TAG = "Water"
 
-        private const val WATER_REG = "Water/Water"
-        private const val SURFACE_REG = "Water/Surface"
-        private const val UNDER_REG = "Water/Under"
+        private val ATLAS_KEY = TextureAsset.SPECIALS_1.source
+        private const val REGION_KEY_PREFIX = "${TAG}_v2"
 
-        private var waterReg: TextureRegion? = null
-        private var surfaceReg: TextureRegion? = null
-        private var underReg: TextureRegion? = null
+        private val regions = ObjectMap<String, TextureRegion>()
 
-        private const val BLUE_ALPHA = 0.25f
-        private const val WATER_ALPHA = 0.1f
+        private val DEFS = gdxArrayOf(
+            WaterSpriteDef(DrawingPriority(DrawingSection.FOREGROUND, 10), 0.25f),
+            WaterSpriteDef(DrawingPriority(DrawingSection.FOREGROUND, 11), 0.1f)
+        )
     }
 
     private var splashSound = true
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-
-        val atlas = game.assMan.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
-        if (waterReg == null) waterReg = atlas.findRegion(WATER_REG)
-        if (surfaceReg == null) surfaceReg = atlas.findRegion(SURFACE_REG)
-        if (underReg == null) underReg = atlas.findRegion(UNDER_REG)
-
+        if (regions.isEmpty) {
+            val atlas = game.assMan.getTextureAtlas(ATLAS_KEY)
+            gdxArrayOf("surface_foreground", "surface_background", "under").forEach {
+                regions.put(it, atlas.findRegion("${REGION_KEY_PREFIX}/$it"))
+            }
+        }
         addComponent(defineBodyComponent())
         addComponent(defineCullablesComponent())
     }
@@ -76,6 +84,8 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        val hasSurface = spawnProps.getOrDefault(ConstKeys.SURFACE, true, Boolean::class)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
@@ -89,7 +99,7 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         if (hidden) {
             removeComponent(SpritesComponent::class)
             removeComponent(AnimationsComponent::class)
-        } else defineDrawables(bounds)
+        } else defineDrawables(bounds, hasSurface)
 
         splashSound = spawnProps.getOrDefault(ConstKeys.SPLASH, true, Boolean::class)
     }
@@ -121,33 +131,55 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullable))
     }
 
-    private fun defineDrawables(bounds: GameRectangle) {
+    private fun defineDrawables(bounds: GameRectangle, hasSurface: Boolean) {
         val sprites = OrderedMap<Any, GameSprite>()
         val animators = OrderedMap<Any, IAnimator>()
-
-        val waterSprite = GameSprite(waterReg!!, DrawingPriority(DrawingSection.FOREGROUND, 10))
-        waterSprite.setBounds(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight())
-        waterSprite.setAlpha(BLUE_ALPHA)
-        sprites.put("water", waterSprite)
 
         val rows = (bounds.getHeight() / ConstVals.PPM).toInt()
         val columns = (bounds.getWidth() / ConstVals.PPM).toInt()
 
+        val regionEntries = Array<GamePair<TextureRegion, WaterSpriteDef>>()
         for (x in 0 until columns) for (y in 0 until rows) {
             val pos = GameObjectPools.fetch(Vector2::class)
                 .set(bounds.getX() + x * ConstVals.PPM, bounds.getY() + y * ConstVals.PPM)
 
-            val region = if (y == rows - 1) surfaceReg!! else underReg!!
-            val animation = Animation(region, 1, 2, 0.15f, true)
+            val animRows: Int
+            val animCols: Int
+            when {
+                hasSurface && y == rows - 1 -> {
+                    regionEntries.addAll(
+                        regions["surface_background"] pairTo DEFS[0],
+                        regions["surface_foreground"] pairTo DEFS[0],
+                        regions["surface_foreground"] pairTo DEFS[1]
+                    )
+                    animRows = 2
+                    animCols = 2
+                }
 
-            val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 11))
-            sprite.setBounds(pos.x, pos.y, ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
-            sprite.setAlpha(WATER_ALPHA)
+                else -> {
+                    regionEntries.addAll(
+                        regions["under"] pairTo DEFS[0],
+                        regions["under"] pairTo DEFS[1]
+                    )
+                    animRows = 1
+                    animCols = 1
+                }
+            }
 
-            val key = "animated_water_${x}_${y}"
-            sprites.put(key, sprite)
-            val animator = Animator(animation)
-            animators.put(key, animator)
+            regionEntries.forEach { (region, def) ->
+                val animation = Animation(region, animRows, animCols, 0.1f, true)
+                val sprite = GameSprite(def.priority.copy())
+                sprite.setBounds(pos.x, pos.y, ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
+                sprite.setAlpha(def.alpha)
+
+                val key = UUID.randomUUID()
+                sprites.put(key, sprite)
+
+                val animator = Animator(animation)
+                animators.put(key, animator)
+            }
+
+            regionEntries.clear()
         }
 
         addComponent(SpritesComponent(sprites))

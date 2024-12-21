@@ -116,7 +116,7 @@
  </layer>
  <objectgroup id="3" name="game_rooms">
   <object id="2" name="room1" x="0" y="1056" width="3328" height="384"/>
-  <object id="241" name="room2" x="3328" y="1056" width="512" height="384"/>
+  <object id="241" name="room2" x="3328" y="992" width="512" height="384"/>
   <object id="272" name="room3" x="3328" y="672" width="512" height="384"/>
   <object id="285" name="room4" x="3840" y="672" width="1664" height="384"/>
  </objectgroup>

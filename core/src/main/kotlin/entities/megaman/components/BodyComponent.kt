@@ -66,7 +66,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     }
 
     val feetFixture =
-        Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.85f * ConstVals.PPM, 0.25f * ConstVals.PPM))
+        Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.8f * ConstVals.PPM, 0.1f * ConstVals.PPM))
     feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
     feetFixture.setRunnable(onBounce)
     body.addFixture(feetFixture)
@@ -74,11 +74,11 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.putProperty(ConstKeys.FEET, feetFixture)
 
     val headFixture =
-        Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.25f * ConstVals.PPM))
-    headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
+        Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.8f * ConstVals.PPM, 0.5f * ConstVals.PPM))
+    headFixture.offsetFromBodyAttachment.y = (body.getHeight() / 2f) - 0.2f * ConstVals.PPM
     headFixture.setRunnable(onBounce)
     body.addFixture(headFixture)
-    // debugShapes.add { headFixture}
+    debugShapes.add { headFixture}
     body.putProperty(ConstKeys.HEAD, headFixture)
 
     val leftFixture =

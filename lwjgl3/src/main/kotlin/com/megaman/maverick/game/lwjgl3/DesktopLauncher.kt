@@ -10,14 +10,13 @@ import com.mega.game.engine.common.GameLogLevel
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.MegamanMaverickGameParams
-import com.megaman.maverick.game.StartScreenOption
 import kotlin.system.exitProcess
 
 // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument
 object DesktopLauncher {
 
     private const val DEFAULT_WIDTH = 800
-    private const val DEFAULT_HEIGHT = 600
+    private const val DEFAULT_HEIGHT = 700
     private const val DEFAULT_FULLSCREEN = false
     private const val DEFAULT_DEBUG_SHAPES = false
     private const val DEFAULT_DEBUG_FPS = false
@@ -25,7 +24,6 @@ object DesktopLauncher {
     private const val DEFAULT_FIXED_STEP_SCALAR = 1.0f
     private const val DEFAULT_MUSIC_VOLUME = 0.5f
     private const val DEFAULT_SOUND_VOLUME = 0.5f
-    private const val DEFAULT_START_SCREEN = "simple"
     private const val DEFAULT_SHOW_SCREEN_CONTROLLER = false
     private const val TITLE = "Megaman Maverick"
 
@@ -51,7 +49,6 @@ object DesktopLauncher {
         println("- Debug Shapes: " + appArgs.debugShapes)
         println("- Debug FPS: " + appArgs.debugFPS)
         println("- Log Level: " + appArgs.logLevel)
-        println("- Start Screen: " + appArgs.startScreen)
         println("- Fixed Step Scalar: " + appArgs.fixedStepScalar)
         println("- Music volume: " + appArgs.musicVolume)
         println("- Sound volume: " + appArgs.soundVolume)
@@ -75,16 +72,6 @@ object DesktopLauncher {
         } catch (e: Exception) {
             System.err.println("Exception while setting log level: $e")
         }
-        val startScreenOption = when {
-            appArgs.startScreen.isBlank() || appArgs.startScreen.lowercase() == "main" -> StartScreenOption.MAIN
-            appArgs.startScreen.lowercase() == "simple" -> StartScreenOption.SIMPLE
-            else -> {
-                System.err.println("Invalid start screen option: " + appArgs.startScreen)
-                jCommander.usage()
-                exitProcess(1)
-            }
-        }
-        params.startScreen = startScreenOption
 
         val game = MegamanMaverickGame(params)
 
@@ -152,13 +139,6 @@ object DesktopLauncher {
             description = ("Set the log level of the game logger. Default value = $DEFAULT_LOG_LEVEL")
         )
         var logLevel = DEFAULT_LOG_LEVEL
-
-        @Parameter(
-            names = ["--startScreen"],
-            description = ("The screen to start the game app on. Options: \"main\" and " +
-                "\"simple\". Options not case sensitive. Default value = $DEFAULT_START_SCREEN.")
-        )
-        var startScreen = DEFAULT_START_SCREEN
 
         @Parameter(
             names = ["--fixedStepScalar"],

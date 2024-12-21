@@ -44,6 +44,7 @@ object ConstKeys {
     const val WALL = "wall"
     const val A = "a"
     const val B = "b"
+    const val SURFACE = "surface"
     const val INIT = "init"
     const val FADE = "fade"
     const val AMPLITUDE = "amplitude"

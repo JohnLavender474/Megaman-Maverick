@@ -4,6 +4,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -20,6 +21,7 @@ import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.overlaps
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 
@@ -43,7 +45,7 @@ class Snowfall(game: MegamanMaverickGame) : MegaGameEntity(game) {
         private const val MAX_FALL_SPEED = 4f
 
         private const val BACKGROUND_SCALAR = 0.5f
-        private const val TRIGGER_BOUNDS_SCALAR = 1.5f
+        private const val TRIGGER_BOUNDS_SCALAR = 3f
     }
 
     private val bounds = GameRectangle()
@@ -72,7 +74,7 @@ class Snowfall(game: MegamanMaverickGame) : MegaGameEntity(game) {
 
         val triggerWidth = bounds.getWidth() * TRIGGER_BOUNDS_SCALAR
         val triggerHeight = bounds.getHeight() * TRIGGER_BOUNDS_SCALAR
-        trigger.setSize(triggerWidth, triggerHeight).setCenter(bounds.getCenter())
+        trigger.setSize(triggerWidth, triggerHeight).setTopCenterToPoint(bounds.getPositionPoint(Position.TOP_CENTER))
 
         spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
         left = spawnProps.getOrDefault(ConstKeys.LEFT, true, Boolean::class)

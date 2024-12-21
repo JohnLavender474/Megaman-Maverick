@@ -123,21 +123,21 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.75f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat())
         body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body }
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.3f * ConstVals.PPM))
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.5f * ConstVals.PPM))
         bodyFixture.setHitByBodyReceiver { trigger() }
         debugShapes.add { bodyFixture}
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.375f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.55f * ConstVals.PPM))
         body.addFixture(damagerFixture)
         debugShapes.add { damagerFixture}
 
-        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(0.375f * ConstVals.PPM))
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(0.55f * ConstVals.PPM))
         shieldFixture.setHitByProjectileReceiver { trigger() }
         body.addFixture(shieldFixture)
 
@@ -152,7 +152,7 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
         val cullOnEvents = CullableOnEvent({ cullEvents.contains(it) }, cullEvents)
         runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
         runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
-        val cullOutOfBounds = getGameCameraCullingLogic(this, CULL_TIME)
+        val cullOutOfBounds = getGameCameraCullingLogic(this)
         return CullablesComponent(
             objectMapOf(
                 ConstKeys.CULL_EVENTS pairTo cullOnEvents, ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOutOfBounds
@@ -162,7 +162,7 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.25f * ConstVals.PPM)
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
         return spritesComponent

@@ -135,7 +135,7 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(ConstVals.PPM.toFloat())
+        body.setSize(1.5f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
@@ -192,7 +192,7 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.hidden = damageBlink

@@ -234,7 +234,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     internal var applyMovementScalarToBullet = false
 
     internal val roomTransPauseTimer = Timer(ConstVals.ROOM_TRANS_DELAY_DURATION)
-    internal val spawnHiddenTimer = Timer(MegamanValues.SPAWN_HIDDEN_DUR)
+    internal val spawningTimer = Timer(MegamanValues.SPAWNING_DUR)
 
     private var neverSpawnedBefore = true
 
@@ -292,7 +292,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         wallJumpTimer.reset()
         chargingTimer.reset()
         airDashTimer.reset()
-        spawnHiddenTimer.reset()
+        spawningTimer.reset()
         roomTransPauseTimer.setToEnd()
 
         putProperty(ConstKeys.ON_TELEPORT_START, {

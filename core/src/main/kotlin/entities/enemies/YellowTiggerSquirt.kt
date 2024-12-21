@@ -118,20 +118,20 @@ class YellowTiggerSquirt(game: MegamanMaverickGame) : AbstractEnemy(game), IAnim
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.75f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat())
         body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body }
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.375f * ConstVals.PPM))
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.5f * ConstVals.PPM))
         body.addFixture(bodyFixture)
         debugShapes.add { bodyFixture }
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.375f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.5f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(0.375f * ConstVals.PPM))
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(0.5f * ConstVals.PPM))
         body.addFixture(damageableFixture)
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -141,7 +141,7 @@ class YellowTiggerSquirt(game: MegamanMaverickGame) : AbstractEnemy(game), IAnim
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setCenter(body.getCenter())

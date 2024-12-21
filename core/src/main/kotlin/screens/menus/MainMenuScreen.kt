@@ -1,7 +1,9 @@
 package com.megaman.maverick.game.screens.menus
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Array
@@ -29,9 +31,10 @@ import com.megaman.maverick.game.screens.utils.BlinkingArrow
 import com.megaman.maverick.game.screens.utils.ScreenSlide
 import com.megaman.maverick.game.utils.extensions.getDefaultCameraPosition
 import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
+import com.megaman.maverick.game.utils.interfaces.IShapeDebuggable
 
 class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScreenButton.START_NEW_GAME.text),
-    Initializable {
+    Initializable, IShapeDebuggable {
 
     enum class MainScreenButton(val text: String) {
         START_NEW_GAME("START NEW GAME"),
@@ -402,21 +405,21 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                 settingsArrowBlinkTimer.reset()
             }
         }
+    }
 
+    override fun draw(drawer: Batch) {
         game.viewports.get(ConstKeys.UI).apply()
 
-        val batch = game.batch
-        batch.projectionMatrix = game.getUiCamera().combined
-        batch.begin()
+        drawer.projectionMatrix = game.getUiCamera().combined
 
-        background.draw(batch)
-        fontHandles.forEach { it.draw(batch) }
-        blinkArrows.get(currentButtonKey).draw(batch)
+        background.draw(drawer)
+        fontHandles.forEach { it.draw(drawer) }
+        blinkArrows.get(currentButtonKey).draw(drawer)
 
-        if (settingsArrowBlink) settingsArrows.forEach { it.draw(batch) }
+        if (settingsArrowBlink) settingsArrows.forEach { it.draw(drawer) }
+    }
 
-        batch.end()
-
+    override fun draw(renderer: ShapeRenderer) {
         if (DEBUG_SHAPES) {
             val renderer = game.shapeRenderer
             renderer.projectionMatrix = game.getUiCamera().combined

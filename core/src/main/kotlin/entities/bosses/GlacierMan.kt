@@ -273,7 +273,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(1.15f * ConstVals.PPM, 1.5f * ConstVals.PPM)
+        body.setSize(1.25f * ConstVals.PPM, 1.75f * ConstVals.PPM)
         body.physics.velocityClamp.set(10f * ConstVals.PPM, 25f * ConstVals.PPM)
         body.physics.applyFrictionX = false
 
@@ -286,7 +286,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 FixtureType.FEET,
                 GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM)
             )
-        feetFixture.offsetFromBodyAttachment.y = -0.875f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         body.addFixture(feetFixture)
         debugShapes.add { feetFixture }
 
@@ -296,7 +296,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 FixtureType.HEAD,
                 GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM)
             )
-        headFixture.offsetFromBodyAttachment.y = 0.875f * ConstVals.PPM
+        headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
         body.addFixture(headFixture)
         debugShapes.add { headFixture }
 
@@ -306,7 +306,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 FixtureType.SIDE,
                 GameRectangle().setSize(0.1f * ConstVals.PPM, ConstVals.PPM.toFloat())
             )
-        leftFixture.offsetFromBodyAttachment.x = -0.625f * ConstVals.PPM
+        leftFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
         debugShapes.add { leftFixture }
@@ -317,7 +317,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 FixtureType.SIDE,
                 GameRectangle().setSize(0.1f * ConstVals.PPM, ConstVals.PPM.toFloat())
             )
-        rightFixture.offsetFromBodyAttachment.x = 0.625f * ConstVals.PPM
+        rightFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
         debugShapes.add { rightFixture }
@@ -341,7 +341,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
-        sprite.setSize(3f * ConstVals.PPM, 2.25f * ConstVals.PPM)
+        sprite.setSize(3.5f * ConstVals.PPM, 2.625f * ConstVals.PPM) 
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)

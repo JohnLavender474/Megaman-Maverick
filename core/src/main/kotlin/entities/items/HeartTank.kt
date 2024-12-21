@@ -96,13 +96,13 @@ class HeartTank(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, I
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(ConstVals.PPM.toFloat())
+        body.setSize(1.5f * ConstVals.PPM)
         return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.ITEM))
     }
 
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             val position = DirectionPositionMapper.getInvertedPosition(direction)
