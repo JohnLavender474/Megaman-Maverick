@@ -258,6 +258,8 @@
             <key type="filename">../frames/Specials1/RailTrack/Left.png</key>
             <key type="filename">../frames/Specials1/RailTrack/Middle.png</key>
             <key type="filename">../frames/Specials1/RailTrack/Right.png</key>
+            <key type="filename">../frames/Specials1/Water_v2/surface_background.png</key>
+            <key type="filename">../frames/Specials1/Water_v2/surface_foreground.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -450,6 +452,21 @@
                 <rect>8,4,16,8</rect>
                 <key>scale9Paddings</key>
                 <rect>8,4,16,8</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Specials1/Water_v2/under.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>4,4,8,8</rect>
+                <key>scale9Paddings</key>
+                <rect>4,4,8,8</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

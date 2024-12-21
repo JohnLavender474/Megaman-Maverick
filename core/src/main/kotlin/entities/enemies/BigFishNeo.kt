@@ -108,7 +108,7 @@ class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(4.5f * ConstVals.PPM, 2.25f * ConstVals.PPM)
+        body.setSize(5f * ConstVals.PPM, 2.5f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
@@ -116,10 +116,9 @@ class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
 
-        val damagerFixture =
-            Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(3.75f * ConstVals.PPM, 2f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)
-        debugShapes.add { damagerFixture}
+        debugShapes.add { damagerFixture }
 
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle(body))
         body.addFixture(shieldFixture)
@@ -135,7 +134,7 @@ class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(6f * ConstVals.PPM, 3f * ConstVals.PPM)
+        sprite.setSize(7f * ConstVals.PPM, 3.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setCenter(body.getCenter())

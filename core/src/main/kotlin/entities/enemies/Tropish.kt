@@ -139,7 +139,7 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM)
+        body.setSize(1.5f * ConstVals.PPM, ConstVals.PPM.toFloat())
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
@@ -168,13 +168,13 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         debugShapes.add { noseFixture }
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         body.addFixture(feetFixture)
         feetFixture.drawingColor = Color.GREEN
         debugShapes.add { feetFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            noseFixture.offsetFromBodyAttachment.x = 0.625f * ConstVals.PPM * facing.value
+            noseFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f * facing.value
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -184,7 +184,7 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(2.5f * ConstVals.PPM, 2f * ConstVals.PPM)
+        sprite.setSize(3f * ConstVals.PPM, 2.4f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setFlip(isFacing(Facing.RIGHT), false)

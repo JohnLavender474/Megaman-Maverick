@@ -3,15 +3,19 @@ package com.megaman.maverick.game
 import com.badlogic.gdx.Application.ApplicationType
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.Pixmap
+import com.badlogic.gdx.graphics.PixmapIO
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
@@ -94,20 +98,20 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getMusics
 import com.megaman.maverick.game.utils.extensions.getSounds
 import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
+import com.megaman.maverick.game.utils.interfaces.IShapeDebuggable
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.collisions.MegaCollisionHandler
 import com.megaman.maverick.game.world.contacts.MegaContactListener
+import java.time.LocalDateTime
 import java.util.*
+import java.util.zip.Deflater
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
-
-enum class StartScreenOption { MAIN, SIMPLE }
 
 class MegamanMaverickGameParams {
     var debugShapes: Boolean = false
     var debugFPS: Boolean = false
     var logLevel: GameLogLevel = GameLogLevel.LOG
-    var startScreen: StartScreenOption = StartScreenOption.MAIN
     var fixedStepScalar: Float = 1f
     var musicVolume: Float = 0.5f
     var soundVolume: Float = 0.5f
@@ -122,6 +126,7 @@ class MegamanMaverickGame(
         const val TAG = "MegamanMaverickGame"
         private const val ASSET_MILLIS = 17
         private const val LOADING = "LOADING"
+        private const val SCREENSHOT_KEY = Input.Keys.P
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.TELEPORTER, FixtureType.TELEPORTER_LISTENER)
@@ -156,10 +161,10 @@ class MegamanMaverickGame(
 
     var paused = false
 
-    private lateinit var debugText: MegaFontHandle
     private var currentScreenKey: String? = null
     private var screenController: ScreenController? = null
 
+    private lateinit var debugText: MegaFontHandle
     private lateinit var loadingText: MegaFontHandle
     private var finishedLoadingAssets = false
 
@@ -337,12 +342,8 @@ class MegamanMaverickGame(
 
         screens.put(
             ScreenEnum.LEVEL_SCREEN.name,
-            MegaLevelScreen(this) {
-                when (params.startScreen) {
-                    StartScreenOption.MAIN -> Gdx.app.exit()
-                    StartScreenOption.SIMPLE -> setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name)
-                }
-            })
+            MegaLevelScreen(this) { setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name) }
+        )
         screens.put(ScreenEnum.MAIN_MENU_SCREEN.name, MainMenuScreen(this))
         screens.put(ScreenEnum.SAVE_GAME_SCREEN.name, SaveGameScreen(this))
         screens.put(ScreenEnum.LOAD_PASSWORD_SCREEN.name, LoadPasswordScreen(this))
@@ -389,7 +390,30 @@ class MegamanMaverickGame(
             controllerPoller.run()
             screenController?.update(delta)
 
-            currentScreen?.render(delta)
+            val screen = currentScreen
+            if (screen != null) {
+                screen.render(delta)
+
+                batch.begin()
+                screen.draw(batch)
+                batch.end()
+
+                if (screen is IShapeDebuggable) {
+                    shapeRenderer.begin(ShapeType.Line)
+                    screen.draw(shapeRenderer)
+                    shapeRenderer.end()
+                }
+            }
+
+            val takeScreenshot = Gdx.input.isKeyJustPressed(SCREENSHOT_KEY)
+            if (takeScreenshot) {
+                val currentTime = LocalDateTime.now().toString()
+                val filename = "screenshot_${currentTime}.png"
+
+                val pixmap = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.width, Gdx.graphics.height)
+                PixmapIO.writePNG(Gdx.files.external(filename), pixmap, Deflater.DEFAULT_COMPRESSION, true)
+                pixmap.dispose()
+            }
 
             audioMan.update(delta)
             eventsMan.run()

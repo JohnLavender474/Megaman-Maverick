@@ -86,7 +86,7 @@ fun Megaman.getSpriteYTranslation() = when (getSpriteDirection()) {
 }
 
 fun Megaman.getSpritePriority(out: DrawingPriority): DrawingPriority {
-    out.section = DrawingSection.FOREGROUND
+    out.section = DrawingSection.PLAYGROUND
     out.value = 1
     return out
 }
@@ -147,7 +147,8 @@ private fun Megaman.defineJetpackFlameSprite(component: SpritesComponent) {
 
 private fun Megaman.defineDamagedBurstSprite(component: SpritesComponent) {
     val region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, "MegamanDamageBurst")
-    val sprite = GameSprite(region, DrawingPriority(DrawingSection.FOREGROUND, 0))
+    val priority = getSpritePriority(DrawingPriority())
+    val sprite = GameSprite(region, DrawingPriority(priority.section, priority.value - 1))
     sprite.setSize(DAMAGE_BURST_SPRITE_SIZE * ConstVals.PPM)
     component.putSprite(DAMAGE_BURST_SPRITE_KEY, sprite)
     component.putUpdateFunction(DAMAGE_BURST_SPRITE_KEY) { _, burst ->

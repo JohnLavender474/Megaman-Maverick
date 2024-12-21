@@ -168,7 +168,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 5))
+        val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 10))
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->

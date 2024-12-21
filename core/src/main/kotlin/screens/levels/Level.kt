@@ -2,7 +2,6 @@ package com.megaman.maverick.game.screens.levels
 
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.pairTo
-import com.megaman.maverick.game.StartScreenOption
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.screens.ScreenEnum
 
@@ -31,7 +30,6 @@ enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {
     FREEZE_MAN("FreezeMan.tmx", MusicAsset.MMX_CHILL_PENGUIN_MUSIC),
     MICROWAVE_MAN("Test1.tmx", MusicAsset.MM3_SNAKE_MAN_MUSIC),
     GALAXY_MAN("GalaxyMan.tmx", MusicAsset.MM9_GALAXY_MAN_MUSIC),
-    NAVAL_MAN("NavalMan.tmx", MusicAsset.MMX_CHILL_PENGUIN_MUSIC),
 
     // Test levels
     TEST1("Test1.tmx", MusicAsset.MMX2_X_HUNTER_MUSIC),
@@ -64,15 +62,4 @@ object LevelCompletionMap {
         Level.WILY_STAGE_2 pairTo ScreenEnum.WILY_CASTLE_SCREEN,
         Level.WILY_STAGE_3 pairTo ScreenEnum.WILY_CASTLE_SCREEN
     )
-
-    fun getNextScreen(level: Level, gameType: StartScreenOption = StartScreenOption.MAIN): ScreenEnum =
-        when (gameType) {
-            StartScreenOption.MAIN -> prodMap[level]
-            StartScreenOption.SIMPLE -> ScreenEnum.SIMPLE_INIT_GAME_SCREEN
-            /*
-            StartScreenOption.LEVEL -> throw IllegalStateException(
-                "Cannot continue after level has completed when playing in \"level\" mode"
-            )
-             */
-        }
 }

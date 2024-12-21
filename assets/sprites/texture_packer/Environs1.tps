@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.4.0</string>
+        <string>7.5.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -176,6 +176,7 @@
             <key type="filename">../frames/Environs1/Leaves/SpringLeaf.png</key>
             <key type="filename">../frames/Environs1/SandSplash.png</key>
             <key type="filename">../frames/Environs1/Water/Splash.png</key>
+            <key type="filename">../frames/Environs1/Water/Splash_v2.png</key>
             <key type="filename">../frames/Environs1/Water/ToxicSplash.png</key>
             <key type="filename">../frames/Environs1/Water/WhiteSplash.png</key>
             <struct type="IndividualSpriteSettings">

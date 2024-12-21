@@ -2,6 +2,7 @@ package com.megaman.maverick.game.screens.menus.bosses
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -36,8 +37,10 @@ import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.menus.MegaMenuScreen
 import com.megaman.maverick.game.screens.menus.bosses.MugshotPane.MugshotPaneState
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
+import com.megaman.maverick.game.utils.interfaces.IShapeDebuggable
 
-class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Position.CENTER.name), Initializable {
+class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Position.CENTER.name), Initializable,
+    IShapeDebuggable {
 
     companion object {
         const val TAG = "LevelSelectScreen"
@@ -450,37 +453,33 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
             blinkingArrows.get(currentButtonKey)?.update(delta)
             barsBackground.values().forEach { it.update(delta) }
         }
+    }
 
-        val batch = game.batch
-
-        batch.projectionMatrix = game.getUiCamera().combined
-        batch.begin()
+    override fun draw(drawer: Batch) {
+        drawer.projectionMatrix = game.getUiCamera().combined
 
         background.setRegion(regions[if (outro && outroBlink) ConstKeys.WHITE else ConstKeys.BLACK])
-        background.draw(batch)
+        background.draw(drawer)
 
-        blocksBackground.forEach { it.draw(batch) }
+        blocksBackground.forEach { it.draw(drawer) }
         barsBackground.forEach {
             val sprite = it.key
             val animation = it.value
             val region = animation.getCurrentRegion()
             sprite.setRegion(region)
-            sprite.draw(batch)
+            sprite.draw(drawer)
         }
-        mugshotGrid.forEach { it.value.draw(batch) }
-        sideBars.forEach { it.draw(batch) }
+        mugshotGrid.forEach { it.value.draw(drawer) }
+        sideBars.forEach { it.draw(drawer) }
 
-        text.forEach { it.draw(batch) }
-        blinkingArrows.get(currentButtonKey)?.draw(batch)
+        text.forEach { it.draw(drawer) }
+        blinkingArrows.get(currentButtonKey)?.draw(drawer)
+    }
 
-        batch.end()
-
+    override fun draw(renderer: ShapeRenderer) {
         if (DEBUG_TEXT_BOUNDS) {
-            val shapeRenderer = game.shapeRenderer
-            shapeRenderer.begin()
-            shapeRenderer.projectionMatrix = game.getUiCamera().combined
-            text.forEach { it.draw(shapeRenderer) }
-            shapeRenderer.end()
+            renderer.projectionMatrix = game.getUiCamera().combined
+            text.forEach { it.draw(renderer) }
         }
     }
 }

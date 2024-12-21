@@ -56,7 +56,7 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     companion object {
         const val TAG = "FragileIceCube"
-        const val BODY_SIZE = 0.4f
+        const val BODY_SIZE = 0.5f
         private const val DEFAULT_GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.01f
         private const val CLAMP = 10f
@@ -115,7 +115,10 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         val doClamp = spawnProps.getOrDefault(ConstKeys.CLAMP, true, Boolean::class)
         val clamp = GameObjectPools.fetch(Vector2::class)
-        if (doClamp) clamp.set(CLAMP, CLAMP).scl(ConstVals.PPM.toFloat()) else clamp.set(Float.MAX_VALUE, Float.MAX_VALUE)
+        if (doClamp) clamp.set(CLAMP, CLAMP).scl(ConstVals.PPM.toFloat()) else clamp.set(
+            Float.MAX_VALUE,
+            Float.MAX_VALUE
+        )
         body.physics.velocityClamp.set(clamp)
 
         destroyOnHitBlock = spawnProps.getOrDefault(ConstKeys.HIT_BY_BLOCK, false, Boolean::class)
@@ -147,32 +150,32 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val body = Body(BodyType.DYNAMIC)
         body.setSize(BODY_SIZE * ConstVals.PPM)
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.55f * ConstVals.PPM))
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(body.getSize().scl(1.05f)))
         bodyFixture.setHitByBodyReceiver { entity -> if (entity is SmallIceCube) shatterAndDie() }
-        bodyFixture.setHitByPlayerReceiver { getHit(it) }
+        bodyFixture.setHitByPlayerReceiver { if (!it.canBeDamaged) getHit(it) }
         bodyFixture.setHitByProjectileReceiver { getHit(it) }
         bodyFixture.setHitByBlockReceiver(ProcessState.BEGIN) { block, _ ->
             if (destroyOnHitBlock) shatterAndDie() else getHit(block)
         }
         body.addFixture(bodyFixture)
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.55f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyAttachment.y = -0.225f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         body.addFixture(feetFixture)
 
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM))
-        leftFixture.offsetFromBodyAttachment.x = -0.2f * ConstVals.PPM
+        leftFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
 
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM))
-        rightFixture.offsetFromBodyAttachment.x = -0.2f * ConstVals.PPM
+        rightFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
 
@@ -181,12 +184,13 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             body.physics.gravity.y = gravity * ConstVals.PPM
             if (body.isSensing(BodySense.FEET_ON_GROUND)) body.physics.velocity.y = 0f
 
-            if (body.physics.velocity.x < -0.1f * ConstVals.PPM &&
-                body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)
-            ) body.physics.velocity.x = -0.1f * ConstVals.PPM
-            else if (body.physics.velocity.x > 0.1f * ConstVals.PPM &&
-                body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)
-            ) body.physics.velocity.x = 0.1f * ConstVals.PPM
+            when {
+                body.physics.velocity.x < -0.1f * ConstVals.PPM && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) ->
+                    body.physics.velocity.x = -0.1f * ConstVals.PPM
+
+                body.physics.velocity.x > 0.1f * ConstVals.PPM && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) ->
+                    body.physics.velocity.x = 0.1f * ConstVals.PPM
+            }
         }
 
         return BodyComponentCreator.create(this, body)
@@ -204,8 +208,8 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
-        sprite.setSize(0.5f * ConstVals.PPM)
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
+        sprite.setSize(BODY_SIZE * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             val region = if (hitTimes == 0) region1 else region2

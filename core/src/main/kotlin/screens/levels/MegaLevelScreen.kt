@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Vector2
@@ -77,6 +78,7 @@ import com.megaman.maverick.game.spawns.Spawn
 import com.megaman.maverick.game.spawns.SpawnsManager
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toProps
+import com.megaman.maverick.game.utils.interfaces.IShapeDebuggable
 import com.megaman.maverick.game.utils.misc.HealthFillType
 import com.megaman.maverick.game.world.body.getCenter
 import java.util.*
@@ -84,7 +86,8 @@ import java.util.*
 class MegaLevelScreen(
     private val game: MegamanMaverickGame,
     private val onEscapePressed: () -> Unit = {},
-) : TiledMapLevelScreen(game.batch, TiledMapLoader(game.assMan)), Initializable, IEventListener, Resettable {
+) : TiledMapLevelScreen(game.batch, TiledMapLoader(game.assMan)), Initializable, IEventListener, IShapeDebuggable,
+    Resettable {
 
     companion object {
         const val TAG = "MegaLevelScreen"
@@ -692,73 +695,6 @@ class MegaLevelScreen(
 
         backgrounds.sort()
 
-        batch.begin()
-
-        // each background has its own viewport instance which is applied when the background is drawn,
-        // so wait until after all backgrounds are drawn before applying the game viewport
-        backgrounds.forEach { if (!backgroundsToHide.contains(it.key)) it.draw(batch) }
-
-        game.viewports.get(ConstKeys.GAME).apply()
-        batch.projectionMatrix = gameCamera.combined
-
-        val backgroundSprites = drawables.get(DrawingSection.BACKGROUND)
-        while (!backgroundSprites.isEmpty()) {
-            val backgroundSprite = backgroundSprites.poll()
-            backgroundSprite.draw(batch)
-        }
-
-        tiledMapLevelRenderer?.render(gameCamera)
-
-        val gameGroundSprites = drawables.get(DrawingSection.PLAYGROUND)
-        while (!gameGroundSprites.isEmpty()) {
-            val gameGroundSprite = gameGroundSprites.poll()
-            gameGroundSprite.draw(batch)
-        }
-
-        val foregroundSprites = drawables.get(DrawingSection.FOREGROUND)
-        while (!foregroundSprites.isEmpty()) {
-            val foregroundSprite = foregroundSprites.poll()
-            foregroundSprite.draw(batch)
-        }
-
-        game.viewports.get(ConstKeys.UI).apply()
-        batch.projectionMatrix = uiCamera.combined
-
-        playerSpawnEventHandler.draw(batch)
-        bossHealthHandler.draw(batch)
-        playerStatsHandler.draw(batch)
-
-        game.viewports.get(ConstKeys.GAME).apply()
-        if (!endLevelEventHandler.finished) endLevelEventHandler.draw(batch)
-
-        batch.end()
-
-        val shapeRenderer = game.shapeRenderer
-        shapeRenderer.projectionMatrix = gameCamera.combined
-
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
-
-        while (!shapes.isEmpty) {
-            val shape = shapes.pop()
-            shape.draw(shapeRenderer)
-        }
-
-        if (game.params.debugShapes) {
-            val gameCamBounds = gameCamera.getRotatedBounds()
-            gameCamBounds.translate(0.1f * ConstVals.PPM, 0.1f * ConstVals.PPM)
-            gameCamBounds.translateSize(-0.2f * ConstVals.PPM, -0.2f * ConstVals.PPM)
-            shapeRenderer.color = Color.BLUE
-            shapeRenderer.set(ShapeRenderer.ShapeType.Line)
-            shapeRenderer.rect(
-                gameCamBounds.getX(),
-                gameCamBounds.getY(),
-                gameCamBounds.getWidth(),
-                gameCamBounds.getHeight()
-            )
-        }
-
-        shapeRenderer.end()
-
         debugPrintTimer.update(delta)
         if (debugPrintTimer.isFinished()) {
             debugPrintTimer.reset()
@@ -767,6 +703,68 @@ class MegaLevelScreen(
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) onEscapePressed.invoke()
+    }
+
+    override fun draw(drawer: Batch) {
+        // each background has its own viewport instance which is applied when the background is drawn,
+        // so wait until after all backgrounds are drawn before applying the game viewport
+        backgrounds.forEach { if (!backgroundsToHide.contains(it.key)) it.draw(batch) }
+
+        game.viewports.get(ConstKeys.GAME).apply()
+        drawer.projectionMatrix = gameCamera.combined
+
+        val backgroundSprites = drawables.get(DrawingSection.BACKGROUND)
+        while (!backgroundSprites.isEmpty()) {
+            val backgroundSprite = backgroundSprites.poll()
+            backgroundSprite.draw(drawer)
+        }
+
+        tiledMapLevelRenderer?.render(gameCamera)
+
+        val gameGroundSprites = drawables.get(DrawingSection.PLAYGROUND)
+        while (!gameGroundSprites.isEmpty()) {
+            val gameGroundSprite = gameGroundSprites.poll()
+            gameGroundSprite.draw(drawer)
+        }
+
+        val foregroundSprites = drawables.get(DrawingSection.FOREGROUND)
+        while (!foregroundSprites.isEmpty()) {
+            val foregroundSprite = foregroundSprites.poll()
+            foregroundSprite.draw(drawer)
+        }
+
+        game.viewports.get(ConstKeys.UI).apply()
+        drawer.projectionMatrix = uiCamera.combined
+
+        playerSpawnEventHandler.draw(drawer)
+        bossHealthHandler.draw(drawer)
+        playerStatsHandler.draw(drawer)
+
+        game.viewports.get(ConstKeys.GAME).apply()
+        if (!endLevelEventHandler.finished) endLevelEventHandler.draw(drawer)
+    }
+
+    override fun draw(renderer: ShapeRenderer) {
+        renderer.projectionMatrix = gameCamera.combined
+
+        while (!shapes.isEmpty) {
+            val shape = shapes.pop()
+            shape.draw(renderer)
+        }
+
+        if (game.params.debugShapes) {
+            val gameCamBounds = gameCamera.getRotatedBounds()
+            gameCamBounds.translate(0.1f * ConstVals.PPM, 0.1f * ConstVals.PPM)
+            gameCamBounds.translateSize(-0.2f * ConstVals.PPM, -0.2f * ConstVals.PPM)
+            renderer.color = Color.BLUE
+            renderer.set(ShapeType.Line)
+            renderer.rect(
+                gameCamBounds.getX(),
+                gameCamBounds.getY(),
+                gameCamBounds.getWidth(),
+                gameCamBounds.getHeight()
+            )
+        }
     }
 
     override fun reset() {

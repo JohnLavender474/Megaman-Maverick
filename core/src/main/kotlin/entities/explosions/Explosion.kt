@@ -48,7 +48,7 @@ class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwn
 
     companion object {
         const val TAG = "Explosion"
-        private var explosionRegion: TextureRegion? = null
+        private var region: TextureRegion? = null
         private const val DURATION = 0.275f
     }
 
@@ -57,8 +57,7 @@ class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwn
     private val durationTimer = Timer(DURATION)
 
     override fun init() {
-        if (explosionRegion == null) explosionRegion =
-            game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
         addComponent(defineSpritesCompoent())
         addComponent(defineBodyComponent())
         addComponent(defineAnimationsComponent())
@@ -90,7 +89,7 @@ class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwn
     })
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(explosionRegion!!, 1, 11, .025f, false)
+        val animation = Animation(region!!, 1, 11, .025f, false)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }

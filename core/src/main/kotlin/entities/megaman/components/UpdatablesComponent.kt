@@ -82,7 +82,7 @@ internal fun Megaman.defineUpdatablesComponent() = UpdatablesComponent({ delta -
         if (spawnTrailSprite) trailSpriteTimer.reset()
     }
 
-    if (ready) spawnHiddenTimer.update(delta)
+    if (ready) spawningTimer.update(delta)
 })
 
 private fun Megaman.spawnTrailSprite(type: String): Boolean {

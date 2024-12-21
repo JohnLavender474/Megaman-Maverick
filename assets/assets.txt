@@ -639,6 +639,9 @@ sprites/frames/Specials1/Cart/move.png
 sprites/frames/Specials1/Cart/idle.png
 sprites/frames/Specials1/PortalHopper/Launch.png
 sprites/frames/Specials1/PortalHopper/Wait.png
+sprites/frames/Specials1/Water_v2/surface_background.png
+sprites/frames/Specials1/Water_v2/under.png
+sprites/frames/Specials1/Water_v2/surface_foreground.png
 sprites/frames/Specials1/CapsuleTeleporter/Frame.png
 sprites/frames/Specials1/CapsuleTeleporter/Inactive.png
 sprites/frames/Specials1/CapsuleTeleporter/Active.png
@@ -677,6 +680,7 @@ sprites/frames/Environs1/Trees/TreeStump.png
 sprites/frames/Environs1/Trees/Tree1.png
 sprites/frames/Environs1/Water/WhiteSplash.png
 sprites/frames/Environs1/Water/Surface.png
+sprites/frames/Environs1/Water/Splash_v2.png
 sprites/frames/Environs1/Water/Water.png
 sprites/frames/Environs1/Water/Splash.png
 sprites/frames/Environs1/Water/ToxicSplash.png

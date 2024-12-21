@@ -47,20 +47,20 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
         val defaultSize: Float,
         val regionkey: String
     ) {
-        BLUE(0.5f, DrawingSection.PLAYGROUND, -1, ConstVals.PPM.toFloat(), "Water/Splash"),
+        BLUE(0.5f, DrawingSection.PLAYGROUND, -1, 1.5f * ConstVals.PPM, "Water/Splash_v2"),
         WHITE(
             0.5f,
             DrawingSection.PLAYGROUND,
             -1,
-            ConstVals.PPM.toFloat(),
+            1.5f * ConstVals.PPM,
             "Water/WhiteSplash"
         ),
-        TOXIC(0.5f, DrawingSection.PLAYGROUND, -1, ConstVals.PPM.toFloat(), "Water/ToxicSplash"),
+        TOXIC(0.5f, DrawingSection.PLAYGROUND, -1, 1.5f * ConstVals.PPM, "Water/ToxicSplash"),
         SAND(
             1f,
             DrawingSection.FOREGROUND,
             15,
-            1.5f * ConstVals.PPM,
+            2f * ConstVals.PPM,
             "SandSplash"
         )
     }

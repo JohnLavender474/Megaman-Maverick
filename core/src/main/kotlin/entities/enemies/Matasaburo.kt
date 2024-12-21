@@ -36,11 +36,7 @@ import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getEntity
-import com.megaman.maverick.game.world.body.getPositionPoint
-import com.megaman.maverick.game.world.body.setVelocityAlteration
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
@@ -81,7 +77,7 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(1.35f * ConstVals.PPM)
+        body.setSize(1.75f * ConstVals.PPM)
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
@@ -89,7 +85,7 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val blowFixture = Fixture(
             body,
             FixtureType.FORCE,
-            GameRectangle().setSize(10f * ConstVals.PPM, 1.15f * ConstVals.PPM)
+            GameRectangle().setSize(10f * ConstVals.PPM, 1.25f * ConstVals.PPM)
         )
         blowFixture.setVelocityAlteration { fixture, delta ->
             val entity = fixture.getEntity()
@@ -110,10 +106,10 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         }
         body.addFixture(blowFixture)
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.85f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)
 
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(ConstVals.PPM.toFloat()))
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
         body.addFixture(damageableFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
@@ -126,13 +122,13 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.75f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
             val position = body.getPositionPoint(Position.BOTTOM_CENTER)
-            _sprite.setPosition(position, Position.BOTTOM_CENTER)
-            _sprite.setFlip(facing == Facing.LEFT, false)
+            sprite.setPosition(position, Position.BOTTOM_CENTER)
+            sprite.setFlip(facing == Facing.LEFT, false)
         }
         return spritesComponent
     }
