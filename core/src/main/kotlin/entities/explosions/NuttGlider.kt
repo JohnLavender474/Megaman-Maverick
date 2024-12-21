@@ -259,14 +259,14 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
             when (state) {
                 NuttGliderState.GLIDE -> {
-                    bodySize.set(1.5f, 0.75f)
-                    feetWidth = 1.25f
+                    bodySize.set(1.75f, 0.75f)
+                    feetWidth = 1.5f
                     headWidth = 0.75f
                 }
 
                 else -> {
-                    bodySize.set(0.75f, 1f)
-                    feetWidth = 0.75f
+                    bodySize.set(1f, 1f)
+                    feetWidth = 1f
                     headWidth = 0.25f
                 }
             }
@@ -308,9 +308,9 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         .sprite(TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1)))
         .updatable { _, sprite ->
             val position = Position.BOTTOM_CENTER
-            sprite.setSize(2.5f * ConstVals.PPM)
+            sprite.setSize(3f * ConstVals.PPM)
             sprite.setPosition(body.getPositionPoint(position), position)
-            if (state == NuttGliderState.GLIDE) sprite.translateY(-0.25f * ConstVals.PPM)
+            if (state == NuttGliderState.GLIDE) sprite.translateY(-0.5f * ConstVals.PPM)
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.hidden = damageBlink
         }
