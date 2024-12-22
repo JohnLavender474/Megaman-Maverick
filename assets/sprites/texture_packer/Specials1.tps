@@ -260,6 +260,7 @@
             <key type="filename">../frames/Specials1/RailTrack/Right.png</key>
             <key type="filename">../frames/Specials1/Water_v2/surface_background.png</key>
             <key type="filename">../frames/Specials1/Water_v2/surface_foreground.png</key>
+            <key type="filename">../frames/Specials1/Water_v2/surface_waves_outline.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

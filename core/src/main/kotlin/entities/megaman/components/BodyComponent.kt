@@ -74,7 +74,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.putProperty(ConstKeys.FEET, feetFixture)
 
     val headFixture =
-        Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.8f * ConstVals.PPM, 0.5f * ConstVals.PPM))
+        Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.5f * ConstVals.PPM))
     headFixture.offsetFromBodyAttachment.y = (body.getHeight() / 2f) - 0.2f * ConstVals.PPM
     headFixture.setRunnable(onBounce)
     body.addFixture(headFixture)

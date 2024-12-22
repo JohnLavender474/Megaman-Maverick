@@ -28,6 +28,7 @@ abstract class AbstractHealthEntity(
         get() = !damageTimer.isFinished()
 
     protected abstract val damageNegotiations: ObjectMap<KClass<out IDamager>, DamageNegotiation>
+
     protected val damageTimer = Timer(dmgDuration)
     protected val damageBlinkTimer = Timer(dmgBlinkDur)
     protected var damageBlink = false
@@ -57,12 +58,16 @@ abstract class AbstractHealthEntity(
 
         damageTimer.reset()
 
-        val damage = damageNegotiations[damagerKey].get(damager)
-        if (damage <= 0) return false
-        translateHealth(-damage)
+        val baseDamage = damageNegotiations[damagerKey].get(damager)
+
+        val editedDamage = editDamageFrom(damager, baseDamage)
+        if (editedDamage <= 0) return false
+        translateHealth(-editedDamage)
 
         return true
     }
+
+    protected open fun editDamageFrom(damager: IDamager, baseDamage: Int) = baseDamage
 
     protected open fun onHealthDepleted() {
         destroy()

@@ -108,31 +108,35 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 Direction.DOWN -> body.physics.velocity.y < 0f
                 Direction.LEFT -> body.physics.velocity.x < 0f
                 Direction.RIGHT -> body.physics.velocity.x > 0f
-            }
-            else {
+            } else {
                 val aButtonJustPressed = game.controllerPoller.isJustPressed(MegaControllerButton.A)
                 val doSwim = aButtonJustPressed && aButtonTask == AButtonTask.SWIM
                 doSwim
             }
         },
         init = {
-            body.physics.velocity.add(
-                (when (direction) {
-                    Direction.UP -> Vector2(0f, swimVel)
-                    Direction.DOWN -> Vector2(0f, -swimVel)
-                    Direction.LEFT -> Vector2(swimVel, 0f)
-                    Direction.RIGHT -> Vector2(-swimVel, 0f)
-                }).scl(ConstVals.PPM.toFloat())
-            )
+            val impulse = GameObjectPools.fetch(Vector2::class)
+            when (direction) {
+                Direction.UP -> impulse.set(0f, swimVel)
+                Direction.DOWN -> impulse.set(0f, -swimVel)
+                Direction.LEFT -> impulse.set(swimVel, 0f)
+                Direction.RIGHT -> impulse.set(-swimVel, 0f)
+            }.scl(ConstVals.PPM.toFloat())
+            if (has(MegaEnhancement.JUMP_BOOST)) impulse.scl(MegaEnhancement.JUMP_BOOST_SCALAR)
+            body.physics.velocity.add(impulse)
+            // add instead of set because when Megaman jumps, he's grounded, but when he swims, the applied gravity
+            // should weigh down his swimming impulse
+
             requestToPlaySound(SoundAsset.SWIM_SOUND, false)
+
             GameLogger.debug(MEGAMAN_SWIM_BEHAVIOR_TAG, "Init method called")
         })
 
     val jump = FunctionalBehaviorImpl(
         evaluate = {
-            if (dead || !ready || !canMove || damaged || teleporting || isAnyBehaviorActive(
-                    BehaviorType.SWIMMING, BehaviorType.CLIMBING, BehaviorType.JETPACKING
-                ) || body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) ||
+            if (dead || !ready || !canMove || damaged || teleporting ||
+                isAnyBehaviorActive(BehaviorType.SWIMMING, BehaviorType.CLIMBING, BehaviorType.JETPACKING) ||
+                body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) ||
                 !game.controllerPoller.isPressed(MegaControllerButton.A) ||
                 game.controllerPoller.isPressed(MegaControllerButton.DOWN)
             ) return@FunctionalBehaviorImpl false
@@ -164,6 +168,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     ConstVals.PPM * when {
                         isBehaviorActive(BehaviorType.WALL_SLIDING) -> wallJumpVel
                         isBehaviorActive(BehaviorType.RIDING_CART) -> cartJumpVel
+                        has(MegaEnhancement.JUMP_BOOST) -> jumpVel * MegaEnhancement.JUMP_BOOST_SCALAR
                         else -> jumpVel
                     }
                 }
@@ -173,6 +178,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     ConstVals.PPM * when {
                         isBehaviorActive(BehaviorType.WALL_SLIDING) -> wallJumpVel
                         isBehaviorActive(BehaviorType.RIDING_CART) -> cartJumpVel
+                        has(MegaEnhancement.JUMP_BOOST) -> jumpVel * MegaEnhancement.JUMP_BOOST_SCALAR
                         else -> jumpVel
                     }
                 }
@@ -197,6 +203,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 direction.isVertical() -> body.physics.velocity.y = 0f
                 else -> body.physics.velocity.x = 0f
             }
+
             GameLogger.debug(MEGAMAN_JUMP_BEHAVIOR_TAG, "end(): velocity=${body.physics.velocity}")
         })
 
@@ -230,8 +237,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             if (direction.isVertical()) impulse.y = 0f else impulse.x = 0f
 
-            val impulseValue = facing.value * ConstVals.PPM * movementScalar *
+            var impulseValue = facing.value * ConstVals.PPM * movementScalar *
                 (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_AIR_DASH_VEL else MegamanValues.AIR_DASH_VEL)
+            if (has(MegaEnhancement.AIR_DASH_BOOST)) impulseValue *= MegaEnhancement.AIR_DASH_BOOST_SCALAR
+
             when (direction) {
                 Direction.UP, Direction.DOWN -> impulse.x = impulseValue
 
@@ -333,10 +342,11 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 return
             }
 
-            val impulse = (when {
+            var impulse = (when {
                 body.isSensing(BodySense.IN_WATER) -> MegamanValues.WATER_GROUND_SLIDE_VEL
                 else -> MegamanValues.GROUND_SLIDE_VEL
             }) * ConstVals.PPM * movementScalar * facing.value
+            if (has(MegaEnhancement.GROUND_SLIDE_BOOST)) impulse *= MegaEnhancement.GROUND_SLIDE_BOOST_SCALAR
 
             when (direction) {
                 Direction.UP, Direction.DOWN -> body.physics.velocity.x = impulse

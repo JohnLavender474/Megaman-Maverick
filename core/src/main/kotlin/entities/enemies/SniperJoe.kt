@@ -10,14 +10,10 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.UtilMethods.normalizedTrajectory
-import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.enums.Facing
-import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.enums.ProcessState
+import com.mega.game.engine.common.enums.*
 import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
@@ -26,7 +22,6 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -44,24 +39,18 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.DamageNegotiation
-import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.entities.projectiles.Bullet
-import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
-import kotlin.reflect.KClass
 
 class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravityEntity, IFaceable,
     IDirectional {
@@ -108,18 +97,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         WAITING_SHIELDED, WAITING_NO_SHIELD, SHOOTING_WITH_SHIELD, SHOOTING_NO_SHIELD, THROWING_SHIELD
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class pairTo dmgNeg(5),
-        Fireball::class pairTo dmgNeg(15),
-        ChargedShot::class pairTo dmgNeg {
-            it as ChargedShot
-            if (it.fullyCharged) 15 else 10
-        },
-        ChargedShotExplosion::class pairTo dmgNeg {
-            it as ChargedShotExplosion
-            if (it.fullyCharged) 5 else 3
-        }
-    )
+    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.LARGE)
     override var direction: Direction
         get() = body.direction
         set(value) {
@@ -504,10 +482,10 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
     private fun shoot() {
         val spawn = GameObjectPools.fetch(Vector2::class)
         when (direction) {
-            Direction.UP -> spawn.set(0.35f * facing.value, -0.35f)
-            Direction.DOWN -> spawn.set(0.35f * facing.value, 0.35f)
-            Direction.LEFT -> spawn.set(0.35f, 0.35f * facing.value)
-            Direction.RIGHT -> spawn.set(-0.35f, 0.35f * -facing.value)
+            Direction.UP -> spawn.set(0.35f * facing.value, -0.25f)
+            Direction.DOWN -> spawn.set(0.35f * facing.value, 0.25f)
+            Direction.LEFT -> spawn.set(0.25f, 0.35f * facing.value)
+            Direction.RIGHT -> spawn.set(-0.25f, 0.35f * -facing.value)
         }
         spawn.scl(ConstVals.PPM.toFloat()).add(body.getCenter())
 

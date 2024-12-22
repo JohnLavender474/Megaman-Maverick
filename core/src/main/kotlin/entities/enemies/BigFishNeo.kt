@@ -52,7 +52,9 @@ class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>()
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        // TODO: only one or two weapons can damage this enemy
+    )
     override lateinit var facing: Facing
 
     private val laughTimer = Timer(LAUGH_DUR)

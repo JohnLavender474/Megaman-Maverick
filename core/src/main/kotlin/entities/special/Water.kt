@@ -10,10 +10,8 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimator
 import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -35,6 +33,7 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IWater
@@ -48,7 +47,8 @@ import java.util.*
 class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ICullableEntity, IWater {
 
-    private class WaterSpriteDef(
+    private data class WaterSpriteDef(
+        val animDef: AnimationDef,
         val priority: DrawingPriority,
         val alpha: Float
     )
@@ -61,9 +61,19 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
         private val regions = ObjectMap<String, TextureRegion>()
 
-        private val DEFS = gdxArrayOf(
-            WaterSpriteDef(DrawingPriority(DrawingSection.FOREGROUND, 10), 0.25f),
-            WaterSpriteDef(DrawingPriority(DrawingSection.FOREGROUND, 11), 0.1f)
+        private val SPRITE_DEFS = objectMapOf(
+            "surface_waves_outline" pairTo WaterSpriteDef(
+                AnimationDef(2, 2, 0.1f), DrawingPriority(DrawingSection.FOREGROUND, 20), 1f
+            ),
+            "surface_background" pairTo WaterSpriteDef(
+                AnimationDef(2, 2, 0.1f), DrawingPriority(DrawingSection.PLAYGROUND, -10), 1f
+            ),
+            "surface_foreground" pairTo WaterSpriteDef(
+                AnimationDef(2, 2, 0.1f), DrawingPriority(DrawingSection.FOREGROUND, 10), 0.2f
+            ),
+            "under" pairTo WaterSpriteDef(
+                AnimationDef(), DrawingPriority(DrawingSection.FOREGROUND, 10), 0.2f
+            )
         )
     }
 
@@ -73,9 +83,7 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(ATLAS_KEY)
-            gdxArrayOf("surface_foreground", "surface_background", "under").forEach {
-                regions.put(it, atlas.findRegion("${REGION_KEY_PREFIX}/$it"))
-            }
+            SPRITE_DEFS.keys().forEach { key -> regions.put(key, atlas.findRegion("${REGION_KEY_PREFIX}/$key")) }
         }
         addComponent(defineBodyComponent())
         addComponent(defineCullablesComponent())
@@ -138,48 +146,37 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         val rows = (bounds.getHeight() / ConstVals.PPM).toInt()
         val columns = (bounds.getWidth() / ConstVals.PPM).toInt()
 
-        val regionEntries = Array<GamePair<TextureRegion, WaterSpriteDef>>()
+        val keys = Array<String>()
         for (x in 0 until columns) for (y in 0 until rows) {
             val pos = GameObjectPools.fetch(Vector2::class)
                 .set(bounds.getX() + x * ConstVals.PPM, bounds.getY() + y * ConstVals.PPM)
 
-            val animRows: Int
-            val animCols: Int
             when {
-                hasSurface && y == rows - 1 -> {
-                    regionEntries.addAll(
-                        regions["surface_background"] pairTo DEFS[0],
-                        regions["surface_foreground"] pairTo DEFS[0],
-                        regions["surface_foreground"] pairTo DEFS[1]
-                    )
-                    animRows = 2
-                    animCols = 2
-                }
+                hasSurface && y == rows - 1 -> keys.addAll(
+                    "surface_background",
+                    "surface_foreground",
+                    "surface_waves_outline"
+                )
 
-                else -> {
-                    regionEntries.addAll(
-                        regions["under"] pairTo DEFS[0],
-                        regions["under"] pairTo DEFS[1]
-                    )
-                    animRows = 1
-                    animCols = 1
-                }
+                else -> keys.addAll("under")
             }
 
-            regionEntries.forEach { (region, def) ->
-                val animation = Animation(region, animRows, animCols, 0.1f, true)
-                val sprite = GameSprite(def.priority.copy())
+            keys.forEach { key ->
+                val (animDef, priority, alpha) = SPRITE_DEFS[key]
+
+                val sprite = GameSprite(priority.copy())
                 sprite.setBounds(pos.x, pos.y, ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
-                sprite.setAlpha(def.alpha)
+                sprite.setAlpha(alpha)
 
-                val key = UUID.randomUUID()
-                sprites.put(key, sprite)
+                val id = UUID.randomUUID().toString()
+                sprites.put(id, sprite)
 
+                val animation = Animation(regions[key]!!, animDef.rows, animDef.cols, animDef.durations, animDef.loop)
                 val animator = Animator(animation)
-                animators.put(key, animator)
+                animators.put(id, animator)
             }
 
-            regionEntries.clear()
+            keys.clear()
         }
 
         addComponent(SpritesComponent(sprites))

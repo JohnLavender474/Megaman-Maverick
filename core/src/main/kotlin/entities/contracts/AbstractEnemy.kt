@@ -26,11 +26,14 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ItemsFactory
+import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportEndProp
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportStartProp
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.getCenter
+import kotlin.math.ceil
 
 abstract class AbstractEnemy(
     game: MegamanMaverickGame,
@@ -122,6 +125,18 @@ abstract class AbstractEnemy(
     protected abstract fun defineBodyComponent(): BodyComponent
 
     protected abstract fun defineSpritesComponent(): SpritesComponent
+
+    protected fun isDamagerOwnedByMegaman(damager: IDamager) =
+        damager is IOwnable && damager.owner is Megaman && (damager.owner as Megaman).has(MegaEnhancement.DAMAGE_INCREASE)
+
+    override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when {
+        isDamagerOwnedByMegaman(damager) -> MegaEnhancement.scaleDamage(
+            baseDamage,
+            MegaEnhancement.ENEMY_DAMAGE_INCREASE_SCALAR
+        )
+
+        else -> baseDamage
+    }
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
         val damaged = super.takeDamageFrom(damager)

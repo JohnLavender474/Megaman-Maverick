@@ -10,6 +10,7 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.points.PointsComponent
@@ -22,11 +23,12 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.misc.HealthFillType
-
 import com.megaman.maverick.game.world.body.getCenter
+import kotlin.math.ceil
 
 abstract class AbstractBoss(
     game: MegamanMaverickGame,
@@ -134,6 +136,15 @@ abstract class AbstractBoss(
             EventType.END_BOSS_SPAWN -> onEndBossSpawnEvent()
             EventType.PLAYER_SPAWN -> destroy()
         }
+    }
+
+    override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when {
+        isDamagerOwnedByMegaman(damager) -> MegaEnhancement.scaleDamage(
+            baseDamage,
+            MegaEnhancement.BOSS_DAMAGE_INCREASE_SCALAR
+        )
+
+        else -> baseDamage
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

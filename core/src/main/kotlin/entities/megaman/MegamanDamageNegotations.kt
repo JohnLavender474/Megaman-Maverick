@@ -16,7 +16,7 @@ import com.megaman.maverick.game.entities.hazards.*
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.special.Togglee
 
-object MegamanDamageNegotations{
+object MegamanDamageNegotations {
 
     private val dmgNegotiations = objectMapOf<String, DamageNegotiation>(
         Bullet.TAG pairTo dmgNeg(2),
