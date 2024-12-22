@@ -107,7 +107,7 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(0.75f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat())
         body.physics.applyFrictionX = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -115,19 +115,19 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         body.addFixture(feetFixture)
         debugShapes.add { feetFixture }
 
         val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftFixture.offsetFromBodyAttachment.x = -0.375f * ConstVals.PPM
+        leftFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
         body.addFixture(leftFixture)
         debugShapes.add { leftFixture }
 
         val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        rightFixture.offsetFromBodyAttachment.x = 0.375f * ConstVals.PPM
+        rightFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
         body.addFixture(rightFixture)
         debugShapes.add { rightFixture }
 
@@ -140,7 +140,8 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
             body.forEachFixture { it.setActive(triggered) }
 
-            if ((isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
+            if (body.isSensing(BodySense.FEET_ON_GROUND) &&
+                (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
                 (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
             ) swapFacing()
         }
@@ -154,7 +155,7 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)

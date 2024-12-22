@@ -86,8 +86,12 @@ internal fun Megaman.defineUpdatablesComponent() = UpdatablesComponent({ delta -
 })
 
 private fun Megaman.spawnTrailSprite(type: String): Boolean {
+    /*
     val trailSprite = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.MEGAMAN_TRAIL_SPRITE)!!
     return trailSprite.spawn(props(ConstKeys.TYPE pairTo type))
+     */
+    val trailSprite = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.MEGAMAN_TRAIL_SPRITE_V2)!!
+    return trailSprite.spawn(props())
 }
 
 private fun Megaman.spawnBubbles() {
