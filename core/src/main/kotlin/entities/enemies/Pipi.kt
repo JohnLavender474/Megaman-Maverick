@@ -9,6 +9,7 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
@@ -34,6 +35,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
@@ -56,18 +58,7 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class pairTo dmgNeg(15),
-        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class pairTo dmgNeg {
-            it as ChargedShot
-            if (it.fullyCharged) ConstVals.MAX_HEALTH else 20
-        },
-        ChargedShotExplosion::class pairTo dmgNeg {
-            it as ChargedShotExplosion
-            if (it.fullyCharged) ConstVals.MAX_HEALTH else 10
-        }
-    )
+    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.SMALL)
     override lateinit var facing: Facing
 
     private var hasEgg = true

@@ -36,17 +36,17 @@ object MegamanValues {
     const val WATER_GRAVITY = -0.25f
     const val WATER_ICE_GRAVITY = -0.4f
 
-    const val MAX_AIR_DASH_TIME = 0.2f
-    const val AIR_DASH_VEL = 10f
-    const val AIR_DASH_END_BUMP = 2.5f
-    const val WATER_AIR_DASH_VEL = 6f
-    const val WATER_AIR_DASH_END_BUMP = 2f
+    const val MAX_AIR_DASH_TIME = 0.25f
+    const val AIR_DASH_VEL = 8f
+    const val AIR_DASH_END_BUMP = 2f
+    const val WATER_AIR_DASH_VEL = 5f
+    const val WATER_AIR_DASH_END_BUMP = 1f
 
     const val JETPACK_Y_IMPULSE = 2f
     const val JETPACK_TIME_PER_BIT = 0.25f
 
-    const val GROUND_SLIDE_VEL = 12f
-    const val WATER_GROUND_SLIDE_VEL = 6f
+    const val GROUND_SLIDE_VEL = 10f
+    const val WATER_GROUND_SLIDE_VEL = 5f
     const val MAX_GROUND_SLIDE_TIME = 0.35f
 
     const val CLIMB_VEL = 3.25f
@@ -55,8 +55,8 @@ object MegamanValues {
     const val DAMAGE_RECOVERY_TIME = 1.5f
     const val DAMAGE_FLASH_DURATION = 0.05f
 
-    const val TIME_TO_HALFWAY_CHARGED = 0.5f
-    const val TIME_TO_FULLY_CHARGED = 1.25f
+    const val TIME_TO_HALFWAY_CHARGED = 0.75f
+    const val TIME_TO_FULLY_CHARGED = 1.5f
 
     const val SHOOT_ANIM_TIME = 0.3f
 

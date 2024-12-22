@@ -14,6 +14,7 @@ import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
+import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.megaman.extensions.shoot
@@ -122,7 +123,11 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
                 return@ButtonActuator
             }
 
-            chargingTimer.update(delta)
+            val scalar = when {
+                has(MegaEnhancement.FASTER_BUSTER_CHARGING) -> MegaEnhancement.FASTER_BUSTER_CHARGING_SCALAR
+                else -> 1f
+            }
+            chargingTimer.update(delta * scalar)
         },
         onJustReleased = {
             if (damaged || game.isCameraRotating() || teleporting || !ready ||

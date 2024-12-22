@@ -468,7 +468,9 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
             stunBounce(enemyBody)
         }
 
-        val damage = MegamanDamageNegotations.get((damager as MegaGameEntity).getTag()).get(damager)
+        var damage = MegamanDamageNegotations.get((damager as MegaGameEntity).getTag()).get(damager)
+        if (has(MegaEnhancement.DAMAGE_INCREASE))
+            damage = MegaEnhancement.scaleDamage(damage, MegaEnhancement.MEGAMAN_DAMAGE_INCREASE_SCALAR)
         translateHealth(-damage)
 
         damageTimer.reset()

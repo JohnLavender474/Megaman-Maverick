@@ -23,6 +23,7 @@ temp/Anonymous - Reddit Post/txvtb9j8fn161.webp
 temp/Anonymous - Reddit Post/c4h1gdyaxbz61.webp
 temp/Aburtos/megaman_spritesheet.png
 temp/Aburtos/Link
+temp/MegamanCrouch.piskel
 temp/PixelBoy127/MegamanWeaponGet.png
 temp/PixelBoy127/Link
 temp/boberatu/Moon Man/Link
@@ -640,6 +641,7 @@ sprites/frames/Specials1/Cart/idle.png
 sprites/frames/Specials1/PortalHopper/Launch.png
 sprites/frames/Specials1/PortalHopper/Wait.png
 sprites/frames/Specials1/Water_v2/surface_background.png
+sprites/frames/Specials1/Water_v2/surface_waves_outline.png
 sprites/frames/Specials1/Water_v2/under.png
 sprites/frames/Specials1/Water_v2/surface_foreground.png
 sprites/frames/Specials1/CapsuleTeleporter/Frame.png
@@ -1747,6 +1749,7 @@ sprites/piskel/Tropish.piskel
 sprites/piskel/BombPotton.piskel
 sprites/piskel/Bulb Blaster.piskel
 sprites/piskel/GlacierBKG_v2.piskel
+sprites/piskel/BreakableIceBlock.piskel
 sprites/piskel/SpiderWeb.piskel
 sprites/piskel/BluntMan.piskel
 sprites/piskel/8bitCustomTiles.piskel
@@ -2221,6 +2224,7 @@ tiled_maps/png/purple_stuff.png
 tiled_maps/png/PC Computer - Mega Man Maker - Wily Fortress.png
 tiled_maps/png/commando_man_tileset.png
 tiled_maps/png/tstMM3Wily2.png
+tiled_maps/png/GlacierMan_old.png
 tiled_maps/tmx/DesertMan_16x12.tmx
 tiled_maps/tmx/GlacierMan_16x12_test_groundsnow_boss.tmx
 tiled_maps/tmx/ReactMan.tmx

@@ -14,6 +14,8 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
@@ -98,8 +100,7 @@ class IceCubeMaker(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     })
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(region!!)
-        // sprite.setSize(4f * ConstVals.PPM, 2.5f * ConstVals.PPM)
+        val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, -1))
         sprite.setSize(5f * ConstVals.PPM, 3.125f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
@@ -110,7 +111,6 @@ class IceCubeMaker(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        // body.setSize(1.5f * ConstVals.PPM, 2.5f * ConstVals.PPM)
         body.setSize(1.875f * ConstVals.PPM, 3.125f * ConstVals.PPM)
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
         return BodyComponentCreator.create(this, body)

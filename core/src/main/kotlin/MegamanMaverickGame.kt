@@ -81,7 +81,9 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
+import com.megaman.maverick.game.entities.megaman.components.GROUND_SLIDE_SPRITE_OFFSET_Y
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
+import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -339,6 +341,13 @@ class MegamanMaverickGame(
         megamanUpgradeHandler.add(MegaAbility.AIR_DASH)
         megamanUpgradeHandler.add(MegaAbility.GROUND_SLIDE)
         megamanUpgradeHandler.add(MegaAbility.WALL_SLIDE)
+
+        // TODO: remove comment line to debug enhancements
+        // megamanUpgradeHandler.add(MegaEnhancement.DAMAGE_INCREASE)
+        // megamanUpgradeHandler.add(MegaEnhancement.JUMP_BOOST)
+        // megamanUpgradeHandler.add(MegaEnhancement.GROUND_SLIDE_BOOST)
+        // megamanUpgradeHandler.add(MegaEnhancement.AIR_DASH_BOOST)
+        // megamanUpgradeHandler.add(MegaEnhancement.FASTER_BUSTER_CHARGING)
 
         screens.put(
             ScreenEnum.LEVEL_SCREEN.name,
