@@ -13,7 +13,6 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -33,11 +32,12 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
+import com.megaman.maverick.game.world.body.getCenter
 
 class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity, ISpritesEntity, IAnimatedEntity {
 
@@ -48,11 +48,11 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
         private const val DEFAULT_MAX_TRAJECTORY_X = -3f
         private const val DEFAULT_MIN_TRAJECTORY_Y = -0.25f
         private const val DEFAULT_MAX_TRAJECTORY_Y = -3f
-        private const val DEFAULT_MIN_FALL_DURATION = 0.5f
-        private const val DEFAULT_MAX_FALL_DURATION = 2f
         private const val DEFAULT_MIN_ELAPSE_DURATION = 0.5f
         private const val DEFAULT_MAX_ELAPSE_DURATION = 2f
         private const val FADE_OUT_TIME = 1f
+        private const val MIN_Y_OFFSET = 20f
+        private const val MAX_SPAWNED_ALLOWED = 20
     }
 
     private val spawnPosition = Vector2()
@@ -62,15 +62,15 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
     private val minTrajectory = Vector2()
     private val maxTrajectory = Vector2()
 
-    private val fallTimer = Timer()
     private val elapseTimer = Timer()
 
-    private var minFallDuration = DEFAULT_MIN_FALL_DURATION
-    private var maxFallDuration = DEFAULT_MAX_FALL_DURATION
+    private val fadeTimer = Timer(FADE_OUT_TIME)
+    private var fading = false
+
     private var minElapseDuration = DEFAULT_MIN_ELAPSE_DURATION
     private var maxElapseDuration = DEFAULT_MAX_ELAPSE_DURATION
 
-    private var hidden = true
+    private var minY = 0f
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENVIRONS_1.source, "Wood/$TAG")
@@ -85,8 +85,11 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        spawnPosition.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter())
-        currentPosition.set(spawnPosition)
+        val x= spawnProps.get(ConstKeys.X, Float::class)!!
+        val y = spawnProps.get(ConstKeys.Y, Float::class)!!
+        currentPosition.set(spawnPosition.set(x, y))
+
+        minY = spawnPosition.y - MIN_Y_OFFSET * ConstVals.PPM
 
         val minTrajX = spawnProps.getOrDefault(
             "${ConstKeys.MIN}_${ConstKeys.TRAJECTORY}_${ConstKeys.X}",
@@ -110,20 +113,46 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
 
         currentTrajectory.set(getRandom(minTrajectory.x, maxTrajectory.x), getRandom(minTrajectory.y, maxTrajectory.y))
 
-        minFallDuration =
-            spawnProps.getOrDefault("${ConstKeys.MIN}_${ConstKeys.FALL}", DEFAULT_MIN_FALL_DURATION, Float::class)
-        maxFallDuration =
-            spawnProps.getOrDefault("${ConstKeys.MAX}_${ConstKeys.FALL}", DEFAULT_MAX_FALL_DURATION, Float::class)
-        fallTimer.resetDuration(getRandom(minFallDuration, maxFallDuration))
-
         minElapseDuration =
             spawnProps.getOrDefault("${ConstKeys.MIN}_${ConstKeys.ELAPSE}", DEFAULT_MIN_ELAPSE_DURATION, Float::class)
         maxElapseDuration =
             spawnProps.getOrDefault("${ConstKeys.MAX}_${ConstKeys.ELAPSE}", DEFAULT_MAX_ELAPSE_DURATION, Float::class)
         elapseTimer.resetDuration(getRandom(minElapseDuration, maxElapseDuration))
 
-        hidden = true
+        fadeTimer.reset()
+        fading = false
+
+        val setOfAllLeaves = MegaGameEntities.getEntitiesOfTag(getTag())
+        GameLogger.debug(
+            TAG,
+            "onSpawn(): " +
+                "setOfAllLeaves.size=${setOfAllLeaves.size}, " +
+                "megaman.body.center=${megaman().body.getCenter()}"
+        )
+
+        if (setOfAllLeaves.size > MAX_SPAWNED_ALLOWED) {
+            val iter = setOfAllLeaves.iterator()
+            while (iter.hasNext) {
+                val leaf = iter.next()
+                if (leaf is FallingLeaf && !leaf.isFadingOut()) {
+                    leaf.fadeOutToDestroy()
+                    break
+                }
+            }
+        }
     }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+    }
+
+    fun fadeOutToDestroy() {
+        fading = true
+        fadeTimer.reset()
+    }
+
+    fun isFadingOut() = fading
 
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
@@ -134,31 +163,24 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
     )
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (hidden) {
-            elapseTimer.update(delta)
-            if (elapseTimer.isFinished()) {
-                currentPosition.set(spawnPosition)
-                hidden = false
+        elapseTimer.update(delta)
+        if (elapseTimer.isFinished()) {
+            val duration = getRandom(minElapseDuration, maxElapseDuration)
+            elapseTimer.resetDuration(duration)
 
-                val duration = getRandom(minElapseDuration, maxElapseDuration)
-                elapseTimer.resetDuration(duration)
-
-                val trajX = getRandom(minTrajectory.x, maxTrajectory.x)
-                val trajY = getRandom(minTrajectory.y, maxTrajectory.y)
-                currentTrajectory.set(trajX, trajY)
-
-                GameLogger.debug(TAG, "update(): spawn: duration=$duration, trajectory=$currentTrajectory")
-            }
-            return@UpdatablesComponent
+            val trajX = getRandom(minTrajectory.x, maxTrajectory.x)
+            val trajY = getRandom(minTrajectory.y, maxTrajectory.y)
+            currentTrajectory.set(trajX, trajY)
         }
 
         currentPosition.add(currentTrajectory.cpy().scl(delta * ConstVals.PPM))
 
-        fallTimer.update(delta)
-        if (fallTimer.isFinished()) {
-            hidden = true
-            fallTimer.resetDuration(getRandom(minFallDuration, maxFallDuration))
+        if (fading) {
+            fadeTimer.update(delta)
+            if (fadeTimer.isFinished()) destroy()
         }
+
+        if (currentPosition.y < minY) destroy()
     })
 
     private fun defineSpritesComponent(): SpritesComponent {
@@ -167,10 +189,9 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setCenter(currentPosition)
-            sprite.hidden = hidden
             val alpha = when {
-                fallTimer.duration - fallTimer.time > FADE_OUT_TIME -> 1f
-                else -> fallTimer.duration - fallTimer.time
+                fading -> 1f - fadeTimer.getRatio()
+                else -> 1f
             }
             sprite.setAlpha(alpha)
         }

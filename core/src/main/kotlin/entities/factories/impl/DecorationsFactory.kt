@@ -14,6 +14,7 @@ class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory(
         const val FORCE_DECORATION = "ForceDecoration"
         const val WINDY_GRASS = "WindyGrass"
         const val FALLING_LEAF = "FallingLeaf"
+        const val FALLING_LEAVES = "FallingLeaves"
         const val TREE = "Tree"
         const val TREE_STUMP = "TreeStump"
         const val LAVA_FALL = "LavaFall"
@@ -46,6 +47,7 @@ class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory(
         pools.put(FORCE_DECORATION, GameEntityPoolCreator.create { ForceDecoration(game) })
         pools.put(WINDY_GRASS, GameEntityPoolCreator.create { WindyGrass(game) })
         pools.put(FALLING_LEAF, GameEntityPoolCreator.create { FallingLeaf(game) })
+        pools.put(FALLING_LEAVES, GameEntityPoolCreator.create { FallingLeaves(game) })
         pools.put(TREE, GameEntityPoolCreator.create { Tree(game) })
         pools.put(TREE_STUMP, GameEntityPoolCreator.create { TreeStump(game) })
         pools.put(LAVA_FALL, GameEntityPoolCreator.create { LavaFall(game) })
