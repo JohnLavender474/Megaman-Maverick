@@ -70,7 +70,6 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         }
     )
-
     override lateinit var facing: Facing
 
     private val standTimer = Timer(STAND_DUR)
@@ -97,24 +96,24 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(ConstVals.PPM.toFloat())
+        body.setSize(1.5f * ConstVals.PPM)
         body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(ConstVals.PPM.toFloat()))
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
         debugShapes.add { bodyFixture}
 
         val headFixture =
-            Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.2f * ConstVals.PPM))
-        headFixture.offsetFromBodyAttachment.y = 0.5f * ConstVals.PPM
+            Fixture(body, FixtureType.HEAD, GameRectangle().setSize(1.25f * ConstVals.PPM, 0.2f * ConstVals.PPM))
+        headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
         body.addFixture(headFixture)
         debugShapes.add { headFixture}
 
         val feetFixture =
-            Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.2f * ConstVals.PPM))
-        feetFixture.offsetFromBodyAttachment.y = -0.5f * ConstVals.PPM
+            Fixture(body, FixtureType.FEET, GameRectangle().setSize(1.25f * ConstVals.PPM, 0.2f * ConstVals.PPM))
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         body.addFixture(feetFixture)
         debugShapes.add { feetFixture}
 
@@ -151,7 +150,7 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(2.25f * ConstVals.PPM)
+        sprite.setSize(2.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.hidden = damageBlink

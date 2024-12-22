@@ -71,8 +71,10 @@ class FloorButton(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
 
     private val pushableBlocks = OrderedSet<PushableBlock>()
     private val switchTimer = Timer(SWITCH_DUR)
+
     private lateinit var state: FloorButtonState
     private lateinit var spawnRoom: String
+
     private var key = -1
 
     private val reusableArrayOfShapes = Array<IGameShape2D>()
@@ -184,7 +186,7 @@ class FloorButton(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(ConstVals.PPM.toFloat())
+        body.setSize(1.25f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
@@ -203,7 +205,7 @@ class FloorButton(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
-        sprite.setSize(ConstVals.PPM.toFloat())
+        sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
@@ -222,6 +224,8 @@ class FloorButton(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
+
+    override fun getTag() = TAG
 
     override fun getEntityType() = EntityType.SPECIAL
 }

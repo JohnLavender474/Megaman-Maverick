@@ -23,9 +23,9 @@ object ConstVals {
     const val UI_ARROW_BLINK_DUR = 0.3f
     const val ROOM_TRANS_DELAY_DURATION = 0.35f
     const val ROOM_TRANS_DURATION = 1f
-    const val HEALTH_BAR_X = 1f
-    const val WEAPON_BAR_X = 1.5f
-    const val STATS_BAR_Y = 8f
+    const val HEALTH_BAR_X = 1.5f
+    const val WEAPON_BAR_X = 2f
+    const val STATS_BAR_Y = 9f
     const val STANDARD_MAX_STAT_BITS = 30
     const val STAT_BIT_WIDTH = 0.5f
     const val STAT_BIT_HEIGHT = 0.125f

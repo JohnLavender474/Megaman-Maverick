@@ -31,7 +31,6 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
@@ -61,7 +60,7 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
             }
         }
     val cullPoint: Vector2
-        get() = body.getPositionPoint(DirectionPositionMapper.getPosition(direction))
+        get() = body.getCenter() // body.getPositionPoint(DirectionPositionMapper.getPosition(direction))
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, TAG)
@@ -83,7 +82,7 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.75f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat())
         body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -91,7 +90,7 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        headFixture.offsetFromBodyAttachment.y = 0.5f * ConstVals.PPM
+        headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
         body.addFixture(headFixture)
         headFixture.drawingColor = Color.YELLOW
         debugShapes.add { headFixture}
@@ -121,7 +120,7 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.hidden = damageBlink
