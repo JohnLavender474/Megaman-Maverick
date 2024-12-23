@@ -30,6 +30,7 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
+import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.levels.LevelDefMap
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelType
@@ -38,6 +39,7 @@ import com.megaman.maverick.game.screens.menus.MegaMenuScreen
 import com.megaman.maverick.game.screens.menus.bosses.MugshotPane.MugshotPaneState
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
 import com.megaman.maverick.game.utils.interfaces.IShapeDebuggable
+import javax.swing.Spring.height
 
 class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Position.CENTER.name), Initializable,
     IShapeDebuggable {
@@ -69,12 +71,12 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
 
         // the offsets of the panes as a collective from the left x and bottom y
         private const val PANES_X_OFFSET = 2f
-        private const val PANES_Y_OFFSET = 2f
+        private const val PANES_Y_OFFSET = 1.5f
 
-        private const val PANE_WIDTH = 3f
-        private const val PANE_HEIGHT = 3f
-        private const val PANE_X_PADDING = 1.5f
-        private const val PANE_Y_PADDING = 1f
+        private const val PANE_WIDTH = 3.5f
+        private const val PANE_HEIGHT = 3.5f
+        private const val PANE_X_PADDING = 0.75f
+        private const val PANE_Y_PADDING = 0.5f
 
         private const val BARS_ROWS = 3
         private const val BARS_COLUMNS = 6
@@ -85,9 +87,9 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         private const val BAR_PADDING_X = 3f
         private const val BAR_PADDING_Y = 4f
 
-        private const val MOON_MAN_WIDTH = 4f
-        private const val MOON_MAN_HEIGHT = 4f
-        private const val MOON_MAN_OFFSET_Y = -0.5f
+        private const val MOON_PIECES_REGION_KEY = "extras/MoonPieces"
+        private const val MOON_PIECES_WIDTH = MugshotPane.DEFAULT_FACE_WIDTH * 1.5f
+        private const val MOON_PIECES_HEIGHT = MugshotPane.DEFAULT_FACE_HEIGHT * 1.5f
 
         private const val OUTRO_DUR = 1f
         private const val OUTRO_BLINKS = 10
@@ -109,6 +111,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
     private val barsBackground = ObjectMap<GameSprite, Animation>()
     private val blinkingArrows = OrderedMap<String, BlinkingArrow>()
     private val sideBars = Array<GameSprite>()
+    private val foregroundSprites = OrderedMap<GameSprite, Updatable?>()
 
     private var selectedLevelDef: LevelDefinition? = null
     private var initialized = false
@@ -209,8 +212,10 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
                         putDefaultMugshot(pos)
                         return@forEach
                     }
+
                     val levelDef = levelDefIter.next()
                     levelDefGrid.put(pos, levelDef)
+
                     putBossMugshot(pos, levelDef)
                 }
             }
@@ -286,9 +291,11 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         val posX = (position.x * PANE_WIDTH * ConstVals.PPM)
             .plus(PANE_X_PADDING * position.x * ConstVals.PPM)
             .plus(PANES_X_OFFSET * ConstVals.PPM)
-        val posY = (position.y * PANE_HEIGHT * ConstVals.PPM)
+
+        var posY = (position.y * PANE_HEIGHT * ConstVals.PPM)
             .plus(PANE_Y_PADDING * position.y * ConstVals.PPM)
             .plus(PANES_Y_OFFSET * ConstVals.PPM)
+
         return out.set(posX, posY)
     }
 
@@ -324,7 +331,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
 
         val faces = ObjectMap<Position, TextureRegion>()
         Position.entries.forEach { pos ->
-            val region = atlas.findRegion("Megaman/${pos.name}")
+            val region = atlas.findRegion("${Megaman.TAG}/${pos.name.lowercase()}")
             faces.put(pos, region)
         }
 
@@ -360,33 +367,15 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         val text = game.assMan.getTextureRegion(TextureAsset.UI_1.source, "${MugshotPane.TAG}/Text/${levelDef.name}")
 
         val pos = getMugshotPosition(position, out)
-        val mugshot = when (levelDef) {
-            LevelDefinition.MOON_MAN -> {
-                MugshotPane(
-                    game,
-                    pos.x,
-                    pos.y,
-                    PANE_WIDTH * ConstVals.PPM,
-                    PANE_HEIGHT * ConstVals.PPM,
-                    faceSupplier,
-                    { text },
-                    faceWidth = MOON_MAN_WIDTH * ConstVals.PPM,
-                    faceHeight = MOON_MAN_HEIGHT * ConstVals.PPM,
-                    faceOffsetY = MOON_MAN_OFFSET_Y * ConstVals.PPM,
-                    underPane = false
-                )
-            }
-
-            else -> MugshotPane(
-                game,
-                pos.x,
-                pos.y,
-                PANE_WIDTH * ConstVals.PPM,
-                PANE_HEIGHT * ConstVals.PPM,
-                faceSupplier,
-                { text }
-            )
-        }
+        val mugshot = MugshotPane(
+            game,
+            pos.x,
+            pos.y,
+            PANE_WIDTH * ConstVals.PPM,
+            PANE_HEIGHT * ConstVals.PPM,
+            faceSupplier,
+            { text }
+        )
         mugshotGrid.put(position, mugshot)
 
         buttons.put(position.name, object : IMenuButton {
@@ -403,6 +392,23 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
 
             override fun onNavigate(direction: Direction, delta: Float) = navigate(position, direction)
         })
+
+        if (levelDef == LevelDefinition.MOON_MAN) {
+            GameLogger.debug(TAG, "putBossMugshot(): put moon pieces for Moon Man")
+
+            val region = game.assMan.getTextureRegion(TextureAsset.FACES_1.source, MOON_PIECES_REGION_KEY)
+
+            val moonPieces = GameSprite(region)
+            foregroundSprites.put(moonPieces) {
+                val x = mugshot.faceSprite.x
+                val y = mugshot.faceSprite.y
+                val width = MOON_PIECES_WIDTH * ConstVals.PPM
+                val height = MOON_PIECES_HEIGHT * ConstVals.PPM
+
+                moonPieces.setPosition(x, y)
+                moonPieces.setSize(width, height)
+            }
+        }
     }
 
     override fun show() {
@@ -450,8 +456,10 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
                     else -> MugshotPaneState.NONE
                 }
             }
+
             blinkingArrows.get(currentButtonKey)?.update(delta)
             barsBackground.values().forEach { it.update(delta) }
+            foregroundSprites.values().forEach { it?.update(delta) }
         }
     }
 
@@ -474,6 +482,8 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
 
         text.forEach { it.draw(drawer) }
         blinkingArrows.get(currentButtonKey)?.draw(drawer)
+
+        foregroundSprites.keys().forEach { it.draw(drawer) }
     }
 
     override fun draw(renderer: ShapeRenderer) {
@@ -494,6 +504,7 @@ internal class MugshotPane(
     private val textSupplier: (() -> TextureRegion)?,
     private val faceWidth: Float = DEFAULT_FACE_WIDTH * ConstVals.PPM,
     private val faceHeight: Float = DEFAULT_FACE_HEIGHT * ConstVals.PPM,
+    private val faceOffsetX: Float = DEFAULT_FACE_OFFSET_X * ConstVals.PPM,
     private val faceOffsetY: Float = DEFAULT_FACE_OFFSET_Y * ConstVals.PPM,
     private val underPane: Boolean = false,
     private val renderText: Boolean = false
@@ -502,11 +513,12 @@ internal class MugshotPane(
     companion object {
         const val TAG = "MugshotPane"
 
-        private const val DEFAULT_FACE_WIDTH = 2.125f
-        private const val DEFAULT_FACE_HEIGHT = 2.125f
-        private const val DEFAULT_FACE_OFFSET_Y = 0.5f // 1.35f
+        const val DEFAULT_FACE_WIDTH = 2.1f
+        const val DEFAULT_FACE_HEIGHT = 2.1f
+        const val DEFAULT_FACE_OFFSET_X = 0.7f
+        const val DEFAULT_FACE_OFFSET_Y = 0.7f
 
-        private const val KEY_SUFFIX = "_48x48"
+        private const val KEY_SUFFIX = "_50x50" // 48x48
         private const val NONE_REGION_KEY = "none$KEY_SUFFIX"
         private const val BLINKING_REGION_KEY = "blinking$KEY_SUFFIX"
         private const val HIGHLIGHTED_REGION_KEY = "highlighted$KEY_SUFFIX"
@@ -518,11 +530,11 @@ internal class MugshotPane(
 
     var state = MugshotPaneState.NONE
 
-    private val faceSprite = GameSprite()
-    private val paneSprite = GameSprite()
-    private val textSprite = GameSprite()
-    private val paneAnimations = ObjectMap<MugshotPaneState, IAnimation>()
-    private var initialized = false
+    val faceSprite = GameSprite()
+    val paneSprite = GameSprite()
+    val textSprite = GameSprite()
+    val paneAnimations = ObjectMap<MugshotPaneState, IAnimation>()
+    var initialized = false
 
     override fun init() {
         if (initialized) {
@@ -542,6 +554,7 @@ internal class MugshotPane(
 
         faceSprite.setSize(faceWidth, faceHeight)
         faceSprite.setCenterX(positionX + (paneWidth / 2f))
+        faceSprite.x = positionX + faceOffsetX
         faceSprite.y = positionY + faceOffsetY
 
         textSprite.setSize(paneWidth, paneHeight)

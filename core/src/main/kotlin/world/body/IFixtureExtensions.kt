@@ -85,6 +85,15 @@ fun IFixture.hasHitByWaterByReceiver() = hasProperty(ConstKeys.HIT_WATER)
 fun IFixture.getHitByWater(water: IWater) =
     (getProperty(ConstKeys.HIT_WATER) as (IWater) -> Unit).invoke(water)
 
+fun IFixture.setHitByExplosionReceiver(receiver: (IBodyEntity) -> Unit) {
+    putProperty(ConstKeys.HIT_BY_EXPLOSION, receiver)
+}
+
+fun IFixture.hasHitByExplosionReceiver() = hasProperty(ConstKeys.HIT_BY_EXPLOSION)
+
+fun IFixture.getHitByExplosion(explosion: IBodyEntity) =
+    (getProperty(ConstKeys.HIT_BY_EXPLOSION) as (IBodyEntity) -> Unit).invoke(explosion)
+
 fun IFixture.setHitByBodyReceiver(receiver: (IBodyEntity) -> Unit) {
     putProperty(ConstKeys.HIT_BY_BODY, receiver)
 }

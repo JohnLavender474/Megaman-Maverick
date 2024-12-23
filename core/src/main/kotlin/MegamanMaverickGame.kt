@@ -81,9 +81,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
-import com.megaman.maverick.game.entities.megaman.components.GROUND_SLIDE_SPRITE_OFFSET_Y
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
-import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -129,7 +127,7 @@ class MegamanMaverickGame(
         private const val ASSET_MILLIS = 17
         private const val LOADING = "LOADING"
         private const val SCREENSHOT_KEY = Input.Keys.P
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(LevelSelectScreen.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.TELEPORTER, FixtureType.TELEPORTER_LISTENER)
         }
@@ -171,7 +169,7 @@ class MegamanMaverickGame(
     private var finishedLoadingAssets = false
 
     fun setCurrentScreen(key: String) {
-        GameLogger.debug(TAG, "setCurrentScreen: set to screen with key = $key")
+        GameLogger.debug(TAG, "setCurrentScreen(): set to screen with key = $key")
         currentScreen?.let {
             it.hide()
             it.reset()
@@ -569,6 +567,7 @@ class MegamanMaverickGame(
                             FixtureType.FEET,
                             FixtureType.BLOCK,
                             FixtureType.FORCE,
+                            FixtureType.EXPLOSION,
                             FixtureType.GRAVITY_CHANGE
                         ),
                         FixtureType.DEATH pairTo objectSetOf(

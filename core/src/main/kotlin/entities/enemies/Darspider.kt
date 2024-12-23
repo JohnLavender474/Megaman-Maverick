@@ -12,6 +12,7 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.enums.Size
+import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IDirectional
@@ -67,7 +68,9 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     override lateinit var facing: Facing
 
     private val stillTimer = Timer(STILL_DUR)
+
     private var onCeiling = true
+
     private var minXOnCeiling = 0f
     private var maxXOnCeiling = 0f
     private var minXOffCeiling = 0f
@@ -76,10 +79,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            regions.put("crawl", atlas.findRegion("$TAG/crawl"))
-            regions.put("frozen", atlas.findRegion("$TAG/frozen"))
-            regions.put("jump", atlas.findRegion("$TAG/jump"))
-            regions.put("still", atlas.findRegion("$TAG/still"))
+            gdxArrayOf("crawl", "frozen", "jump", "still").forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -95,10 +95,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 ConstKeys.DIRECTION, if (onCeiling) ConstKeys.DOWN else ConstKeys.UP, String::class
             ).uppercase()
         )
-        facing = when (direction) {
-            Direction.DOWN -> if (megaman().body.getX() < body.getX()) Facing.RIGHT else Facing.LEFT
-            else -> if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
-        }
+        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
             .getPositionPoint(DirectionPositionMapper.getPosition(direction).opposite())
@@ -137,8 +134,10 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 return@add
             }
 
-            body.physics.velocity.x = if (body.isSensing(BodySense.FEET_ON_GROUND))
-                CRAWL_SPEED * ConstVals.PPM * facing.value else 0f
+            body.physics.velocity.x = when {
+                body.isSensing(BodySense.FEET_ON_GROUND) -> CRAWL_SPEED * ConstVals.PPM * facing.value
+                else -> 0f
+            }
 
             if (onCeiling &&
                 ((isFacing(Facing.RIGHT) && body.getCenter().x >= maxXOnCeiling) ||
@@ -179,8 +178,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         feetFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ ->
-            facing = if (megaman().body.getX() < body.getX()) Facing.RIGHT else Facing.LEFT
-            if (direction == Direction.UP) swapFacing()
+            facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         }
         body.addFixture(feetFixture)
         debugShapes.add { feetFixture }

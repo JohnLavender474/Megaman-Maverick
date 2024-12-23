@@ -93,8 +93,11 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         super.onDestroy()
     }
 
-    override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
+    override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        val projectile = projectileFixture.getEntity()
+        if (projectile.getTag() == Snowball.TAG) return
         explodeAndDie()
+    }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
@@ -157,7 +160,11 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         body.addFixture(bodyFixture)
 
         val projectileFixture =
-            Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(0.25f * ConstVals.PPM, ConstVals.PPM.toFloat()))
+            Fixture(
+                body,
+                FixtureType.PROJECTILE,
+                GameRectangle().setSize(0.25f * ConstVals.PPM, ConstVals.PPM.toFloat())
+            )
         projectileFixture.offsetFromBodyAttachment.y = -0.1f * ConstVals.PPM
         body.addFixture(projectileFixture)
 

@@ -49,7 +49,7 @@ object BodyComponentCreator {
         }
 
         body.setEntity(entity)
-        body.forEachFixture{ fixture -> fixture.setEntity(entity) }
+        body.forEachFixture { fixture -> fixture.setEntity(entity) }
         body.preProcess.put(ConstKeys.PRIOR) { body.putProperty(ConstKeys.PRIOR, body.getPosition()) }
         body.onReset = { body.resetBodySenses() }
 
@@ -79,5 +79,7 @@ data class BodyFixtureDef(
             types.forEach { type -> array.add(BodyFixtureDef(type)) }
             return array
         }
+
+        fun create(type: FixtureType, shape: IGameShape2D) = BodyFixtureDef(type = type, shape = shape)
     }
 }

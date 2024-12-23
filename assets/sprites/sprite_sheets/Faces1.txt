@@ -1,236 +1,131 @@
 Faces1.png
-size: 128, 368
+size: 64, 336
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-Blunt Man
+Desert Man
   rotate: false
   xy: 0, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-Desert Man
+extras/MoonPieces
   rotate: false
-  xy: 32, 0
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-Distributor Man
-  rotate: false
-  xy: 64, 0
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-Freezer Man
-  rotate: false
-  xy: 96, 0
-  size: 32, 32
-  orig: 32, 32
+  xy: 0, 32
+  size: 48, 48
+  orig: 48, 48
   offset: 0, 0
   index: -1
 Glacier Man
   rotate: false
-  xy: 0, 32
+  xy: 0, 80
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Inferno Man
   rotate: false
-  xy: 32, 32
+  xy: 32, 80
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-Maverick/BOTTOM_CENTER
+Megaman/bottom_center
   rotate: false
-  xy: 64, 160
-  size: 36, 36
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-Maverick/BOTTOM_LEFT
-  rotate: false
-  xy: 0, 196
-  size: 36, 36
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-Maverick/BOTTOM_RIGHT
-  rotate: false
-  xy: 36, 196
-  size: 36, 36
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-Maverick/CENTER
-  rotate: false
-  xy: 72, 196
-  size: 36, 36
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-Maverick/CENTER_LEFT
-  rotate: false
-  xy: 0, 232
-  size: 36, 36
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-Maverick/CENTER_RIGHT
-  rotate: false
-  xy: 36, 232
-  size: 36, 36
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-Maverick/TOP_CENTER
-  rotate: false
-  xy: 72, 232
-  size: 36, 36
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-Maverick/TOP_LEFT
-  rotate: false
-  xy: 0, 268
-  size: 36, 36
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-Maverick/TOP_RIGHT
-  rotate: false
-  xy: 36, 268
-  size: 36, 36
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-Megaman/BOTTOM_CENTER
-  rotate: false
-  xy: 64, 32
+  xy: 0, 112
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-Megaman/BOTTOM_LEFT
+Megaman/bottom_left
   rotate: false
-  xy: 96, 32
+  xy: 32, 112
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-Megaman/BOTTOM_RIGHT
+Megaman/bottom_right
   rotate: false
-  xy: 0, 64
+  xy: 0, 144
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-Megaman/CENTER
+Megaman/center
   rotate: false
-  xy: 32, 64
+  xy: 32, 144
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-Megaman/CENTER_LEFT
+Megaman/center_left
   rotate: false
-  xy: 64, 64
+  xy: 0, 176
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-Megaman/CENTER_RIGHT
+Megaman/center_right
   rotate: false
-  xy: 96, 64
+  xy: 32, 176
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-Megaman/TOP_CENTER
+Megaman/top_center
   rotate: false
-  xy: 0, 96
+  xy: 0, 208
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-Megaman/TOP_LEFT
+Megaman/top_left
   rotate: false
-  xy: 32, 96
+  xy: 32, 208
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-Megaman/TOP_RIGHT
+Megaman/top_right
   rotate: false
-  xy: 64, 96
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-Microwave Man
-  rotate: false
-  xy: 96, 96
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-Mister Man
-  rotate: false
-  xy: 0, 128
+  xy: 0, 240
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Moon Man
   rotate: false
-  xy: 0, 304
-  size: 60, 60
-  orig: 60, 60
+  xy: 32, 240
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
   index: -1
 Precious Man
   rotate: false
-  xy: 32, 128
+  xy: 0, 272
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Reactor Man
   rotate: false
-  xy: 64, 128
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-Roaster Man
-  rotate: false
-  xy: 96, 128
+  xy: 32, 272
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Rodent Man
   rotate: false
-  xy: 0, 160
+  xy: 0, 304
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Timber Woman
   rotate: false
-  xy: 32, 160
+  xy: 32, 304
   size: 32, 32
   orig: 32, 32
-  offset: 0, 0
-  index: -1
-Unknown
-  rotate: false
-  xy: 60, 304
-  size: 64, 64
-  orig: 64, 64
   offset: 0, 0
   index: -1

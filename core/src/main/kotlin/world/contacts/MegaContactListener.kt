@@ -164,6 +164,20 @@ class MegaContactListener(
             )
         }
 
+        // body, explosion
+        else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.EXPLOSION)) {
+            printDebugLog(contact, "beginContact(): Body-Feet, contact = $contact")
+            val (bodyFixture, explosionFixture) = contact.getFixturesInOrder(
+                FixtureType.BODY,
+                FixtureType.EXPLOSION,
+                out
+            )!!
+            if (bodyFixture.hasHitByExplosionReceiver()) {
+                val explosion = explosionFixture.getEntity() as IBodyEntity
+                bodyFixture.getHitByExplosion(explosion)
+            }
+        }
+
         // side, block
         else if (contact.fixturesMatch(FixtureType.BLOCK, FixtureType.SIDE)) {
             printDebugLog(contact, "beginContact(): Block-Side, contact = $contact")
@@ -895,6 +909,19 @@ class MegaContactListener(
 
             bodyFixture.getBody().setBodySense(BodySense.FORCE_APPLIED, true)
             forceFixture.getRunnable()?.invoke()
+        }
+
+        // body, explosion
+        else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.EXPLOSION)) {
+            val (bodyFixture, explosionFixture) = contact.getFixturesInOrder(
+                FixtureType.BODY,
+                FixtureType.EXPLOSION,
+                out
+            )!!
+            if (bodyFixture.hasHitByExplosionReceiver()) {
+                val explosion = explosionFixture.getEntity() as IBodyEntity
+                bodyFixture.getHitByExplosion(explosion)
+            }
         }
 
         // TODO: should this be in the continue contact phase?

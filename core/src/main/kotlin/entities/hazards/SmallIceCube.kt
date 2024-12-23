@@ -151,6 +151,7 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         body.setSize(BODY_SIZE * ConstVals.PPM)
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(body.getSize().scl(1.05f)))
+        bodyFixture.setHitByExplosionReceiver { shatterAndDie() }
         bodyFixture.setHitByBodyReceiver { entity -> if (entity is SmallIceCube) shatterAndDie() }
         bodyFixture.setHitByPlayerReceiver { if (!it.canBeDamaged) getHit(it) }
         bodyFixture.setHitByProjectileReceiver { getHit(it) }
