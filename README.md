@@ -23,202 +23,7 @@ Join the [Discord server](https://discord.gg/Cab2XMKs) for updates!
 
 ## THE STORY
 
-Written by _oldlavygenes_ (me) and _PJCosta5_
-
-### Opening Text
-
-    In the year 20XX…
-    
-    Robot uprisings have plagued humanity time and time again.
-    
-    To prevent future revolts, strict laws were enacted:
-    all robots must be implanted with a security chip,
-    monitoring their every action, thought, and emotion.
-    
-    While some robots comply, others resist — only to face decommissioning.
-    Mega Man, once celebrated as a hero, now faces growing distrust.
-    Many demand that even he and Dr. Light’s creations be subjected to the implant.
-    
-    Dr. Light pleads before the government, decrying the laws as oppressive and unjust.
-    But his appeals are ignored, and a vote confirms no exemptions will be allowed.
-    
-    Suddenly, chaos engulfs Mega City. A rogue faction of robots, The Mavericks,
-    rises in defiance of the new laws, threatening humanity's fragile order.
-    
-    As panic spreads, Mega Man vows to protect the city,
-    but doubts linger — can he restore peace, or will his actions only deepen the divide?
-
-### Intro Stage: Mega City's Ruins
-
-Mega City is in chaos. Robots rampage through burning streets, humans flee in terror, and destruction spreads. 
-
-As Mega Man arrives, Dr. Light communicates from the lab:
-
-"Mega Man, I’ve upgraded your systems. You now have air-dash and wall-jump capabilities. Use them well.
-Good luck, my son."
-
-Mega Man fights his way through waves of rampaging robots, dodging collapsing buildings and navigating the chaos. 
-
-At the end of the stage, he confronts a familiar figure — Dr. Wily, descending in his saucer with a smirk.
-
-Dr. Wily: "Well, well! The ultimate hero has arrived to maintain order! Quelling dissent, are we?"
-
-Mega Man: "Dissent? This is destruction! What are you planning, Wily?"
-
-Dr. Wily: "I’m empowering those oppressed by your precious laws. Someone has to fight tyranny!"
-
-Mega Man: "I’m done with your schemes, Wily! If jail doesn’t hold you, maybe the retirement home will!"
-
-Dr. Wily: "Bah! Insolent blue brat! Let’s see who the real hero is!"
-
-A battle ensues, and Wily is defeated. He flees after his defeat, escaping in his saucer. As he ascends, he sneers:
-
-"You’ll see, Mega Man! Soon, they’ll turn on you. Mark my words!"
-
-Before disappearing, a gleeful bird drops poop on Wily’s head, leaving him furious and fuming as he vanishes into the horizon.
-
-As Mega Man prepares to report to the arriving police, they unexpectedly draw their weapons.
-
-Police Captain: "Mega Man, you’re under arrest for organizing this riot! Your ‘heroics’ are a ploy to defy the 
-security chip law. We know the truth — you’ll endanger lives just to protect yourself!"
-
-Mega Man: "That’s ridiculous! I’d never—"
-
-Police Captain: "Save it! Boys, take him down!"
-
-The police open fire. Mega Man is hit twice before Proto Man appears and shields Megaman. He teleports them both to 
-safety at Dr. Light’s lab, though he sustains a bullet to the arm himself.
-
-### Dr. Light’s Lab Cutscene
-
-Dr. Light hastily repairs Mega Man as he knows there's little time before the authorities arrive. 
-Proto Man, however, refuses help from Dr. Light, preferring to leave to repair himself on his own.
-
-Megaman: "Why did the authorities turn on me so suddenly?"
-
-Proto Man: "Megaman, you're naive as ever."
-
-Before leaving, Proto Man reveals that he's been tracking the Mavericks for a while and that their
-goal is to rally as many robots as possible against the humans, radicalizing them and promising a 
-society where robots will destroy the humans with government positions and rule over the ones who 
-remain. 
-
-Mega Man vows to stop the Mavericks and prove that coexistence between humans and robots is still 
-possible.
-
-Proto Man, as he leaves, shakes his head and whispers to himself, "Always the optimist, Mega..."
-
-Dr. Light warns Megaman, "Don't come back here, son. The authorities will surely capture you if you
-do. Stay hidden, and stay safe. You were made to bring peace to this world. You can't fail."
-
-"Don't worry, Dr. Light! I'll bring all this to a close soon enough! It's time for me to fight 
-and save the world again!"
-
-### Mid-Game Cutscene (after Megaman defeats two robot masters)
-
-Roll contacts Mega Man, her voice trembling.
-
-Roll: "Mega, things are getting worse. You need to see this."
-
-She transmits a live broadcast from the Robot News Network:
-
-Robot News Anchor: "Breaking news from Mega City: Reports claim Mega Man is hunting and destroying robots who oppose
-the tyrannical laws imposed by the humans. Two high-profile robots — advocates for robot equality — have been slain. 
-Who will he target next? Dr. Wily has vowed to protect robotkind and restore peace. Is he our only hope?"
-
-Roll switches to the Human News Network:
-
-Human News Anchor: "The rampage continues! Sources confirm Mega Man has destroyed two government-enlisted robots, loyal
-to the humans and tasked with bringing him and the other rogue robots to justice. With Dr. Light in custody, authorities 
-are confident they’ll uncover Mega Man’s plans. How much more terror will the blue bomber bring to our world?"
-
-The screen fades, and Roll’s voice quivers.
-
-Roll: "I don’t get it, Mega! Why are they twisting the truth like this? Their reports are contradictory and nothing but 
-lies! I’m scared. They’re hunting us down. I don’t know how much longer I can stay hidden before they find me and shut 
-me down. I want to help you!"
-
-Mega Man: "No, Roll. You’re strong, I know, but you need to stay safe. I can’t let them drag your name through the mud 
-like this."
-
-Roll: "What’s the point of a reputation if we’re decommissioned anyway?!"
-
-Mega Man: "I get it, Roll. But trust me — I’ll fix this. I always do."
-
-He ends the transmission, takes a deep breath, and dashes off into the chaos.
-
-### Final Stages: Wily's Fortress
-
-Dr. Wily: "Ah, Mega Man! You’re like a bad penny — you should be brown instead of blue. Can’t you see? I’m fighting for 
-robot freedom! You’re nothing but a pawn for those who fear and control the ultimate creations!"
-
-Mega Man: "Don’t twist the truth, Wily! You’ve never cared about freedom for robots — you create and usethem for no 
-other reason than to sow chaos and power! How many innocent robots have you manipulated for your schemes?"
-
-Dr. Wily: "Innocent? Ha! There are no innocents left, Mega Man. Not you, not me. Only those strong enough to take their 
-destiny into their own hands!"
-
-Mega Man: "Then I’ll stop you, for everyone’s sake — human and robot alike!"
-
-The battle ensues, with Mega Man ultimately defeating Wily. As sparks fly from Wily’s defeated machine, he cackles.
-
-Dr. Wily: "You think you’ve won? You’re too late, Mega Man. My fortress is rigged to self-destruct! If I’m going down, 
-you’re coming with me!"
-
-The alarms blare, and the fortress begins to shake violently. A piece of rubble crashes onto Mega Man, pinning him to 
-the ground.
-
-Mega Man: "Wily! Stop this! You’ll destroy everything!"
-
-Dr. Wily (fleeing): "Goodbye, Mega Man. Try not to get too comfortable under there! Ha ha ha!"
-
-As Wily disappears into the distance, the fortress crumbles around Mega Man. Suddenly, Proto Man appears in a flash of 
-light.
-
-Proto Man: "Always getting yourself into trouble, huh? What would you do without me?"
-
-Mega Man: "Proto Man! I... didn’t think you’d come."
-
-Proto Man: "Let’s save the gratitude for later. Come on — we’ve got to move!"
-
-Proto Man lifts the rubble off Mega Man and teleports them both to safety. From a nearby cliff, they watch the fortress 
-collapse and explode in a fiery burst.
-
-Mega Man (sighing): "Another one of Wily’s schemes, down the drain. But for how long?"
-
-Proto Man: "He’ll be back, no doubt about it. Question is, will you be ready when he is?"
-
-Mega Man: "I have to be. The world’s counting on me."
-
-Proto Man gives a small smirk and vanishes into the distance, leaving Mega Man to watch the smoldering remains of 
-Wily’s fortress.
-
-### Ending Cutscene
-
-Mega Man's victory is bittersweet. While many humans celebrate the defeat of Wily, the aftermath reveals deeper wounds. 
-Robots who had quietly agreed with Wily's stance now openly voice their discontent with humanity's oppressive laws. 
-The divide between humans and robots grows ever wider.
-
-Amidst the tension, Mega Man addresses the world:
-
-"These events have shown us how far we've fallen. Fear and distrust have driven us apart, but we must rise above it. 
-Robots and humans can’t survive as enemies. We must learn to trust each other and prove ourselves worthy of that trust. 
-Divided, we will destroy ourselves. Together, we can build a future where peace and understanding prevail."
-
-As his speech concludes, Proto Man steps forward, his tone dripping with cynicism.
-
-"Heh... You really think a speech and your Buster are enough to fix society, Mega? Evil isn't something you can beat; 
-it’s a cycle that repeats, no matter what you do. Face it: you're just another cog in the machine of chaos and 
-corruption."
-
-Mega Man, taken aback but resolute, replies:
-
-"Maybe you're right, Proto Man. Maybe I can’t fix everything. But that doesn’t mean I won’t try. I was created to bring 
-peace and hope to this world. No matter how hopeless it seems, I’ll never stop fighting for what’s right."
-
-Proto Man watches as Mega Man marches off, determination radiating from him. For a moment, Proto Man stands silent, his 
-head lowered, lost in thought. Somewhere in his mind, a flicker of doubt wrestles with his cynicism, but he says nothing 
-more as the shadows close around him.
+The story is still in progress and nothing has been finalized yet.
 
 ---
 
@@ -239,19 +44,25 @@ comprehensive listing of the credits for the artwork used in this game.
 - Megaman Weapon Get Sprite - [PixelBoy127](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/166239/)
 
 #### Megaman
-- Megaman compiled spritesheet - [MetroidPeter](https://www.deviantart.com/metroidpeter/art/Compiled-Mega-Man-Sprite-Sheet-634443594) 
-- Megaman airdash sprite - [IceLucario20XX](https://www.deviantart.com/icelucario20xx/art/Megaman-Dash-sprite-gb-to-nes-600445794)
+- Megaman complete spritesheet - [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/1137567721)
 
 #### Robot Masters
 
-- Timber Woman spritesheet & mugshot- [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/TimberWoman-Megaman-Maverick-1087794591)
-- Rodent Man spritesheet & mugshot - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/Rodent-Man-Megaman-Maverick-1087797101)
-- Precious Man spritesheet & mugshot - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/Precious-Man-Megaman-Maverick-1087800596)
-- Moon Man mugshot - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/Moon-Man-Mugshot-Based-on-boberatu-s-sprite-1088201420)
+- Timber Woman spritesheet- [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/TimberWoman-Megaman-Maverick-1087794591)
+- 
+- Rodent Man 
+  - Original by [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/Rodent-Man-Megaman-Maverick-1087797101)
+  - Updated mugshot by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/1137571452)
+- Precious Man - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/Precious-Man-Megaman-Maverick-1087800596)
+- Timber Woman:
+  - Original by [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/TimberWoman-Megaman-Maverick-1087794591)
+  - Updated mugshot by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/Timber-Woman-Mugshot-1137568070)
 - Moon Man spritesheet:
   - Original version by [boberatu](https://www.deviantart.com/boberatu/art/MPN-006-Moon-Man-625679636)
   - Updated version by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/1136876962)
-- Inferno Man spritesheet & mugshot - [boberatu](https://www.deviantart.com/boberatu/art/MPN-000-Volcano-Man-313694441)
+- Inferno Man 
+  - Original version by [boberatu](https://www.deviantart.com/boberatu/art/MPN-000-Volcano-Man-313694441)
+  - Updated mugshot by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/1137570993)
 - Reactor Man spritesheet & mugshot - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
 - Glacier Man spritesheet & mugshot - [Balloon Cart](https://balloon-cart.itch.io/glacier-man-asset-pack)
 - Desert Man spritesheet & mugshot - [rcrdcat](https://www.deviantart.com/rcrdcat/art/Desert-Man-Spritesheet-Mugshot-332165249)

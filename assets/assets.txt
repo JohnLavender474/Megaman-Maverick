@@ -442,7 +442,6 @@ sprites/frames/Megaman_v2/stand_charge_full.png
 sprites/frames/Megaman_v2/stand.png
 sprites/frames/Megaman_v2/jump.png
 sprites/frames/Megaman_v2/airdash.png
-sprites/frames/Megaman_v2/slip_shoot.png
 sprites/frames/Megaman_v2/jump_charge_full.png
 sprites/frames/Megaman_v2/swim.png
 sprites/frames/Megaman_v2/groundslide_charge_half.png
@@ -667,6 +666,39 @@ sprites/frames/Specials1/ToxicWater/water.png
 sprites/frames/Specials1/ToxicWater/waves.png
 sprites/frames/Specials1/Cart.png
 sprites/frames/Backgrounds5/GlacierCloudsBKG.png
+sprites/frames/Faces_old/Distributor Man.png
+sprites/frames/Faces_old/Blunt Man.png
+sprites/frames/Faces_old/Precious Man.png
+sprites/frames/Faces_old/Rodent Man.png
+sprites/frames/Faces_old/Glacier Man.png
+sprites/frames/Faces_old/Roaster Man.png
+sprites/frames/Faces_old/Megaman/TOP_CENTER.png
+sprites/frames/Faces_old/Megaman/CENTER.png
+sprites/frames/Faces_old/Megaman/TOP_RIGHT.png
+sprites/frames/Faces_old/Megaman/BOTTOM_LEFT.png
+sprites/frames/Faces_old/Megaman/BOTTOM_RIGHT.png
+sprites/frames/Faces_old/Megaman/TOP_LEFT.png
+sprites/frames/Faces_old/Megaman/CENTER_LEFT.png
+sprites/frames/Faces_old/Megaman/CENTER_RIGHT.png
+sprites/frames/Faces_old/Megaman/BOTTOM_CENTER.png
+sprites/frames/Faces_old/Maverick/TOP_CENTER.png
+sprites/frames/Faces_old/Maverick/CENTER.png
+sprites/frames/Faces_old/Maverick/TOP_RIGHT.png
+sprites/frames/Faces_old/Maverick/BOTTOM_LEFT.png
+sprites/frames/Faces_old/Maverick/BOTTOM_RIGHT.png
+sprites/frames/Faces_old/Maverick/TOP_LEFT.png
+sprites/frames/Faces_old/Maverick/CENTER_LEFT.png
+sprites/frames/Faces_old/Maverick/CENTER_RIGHT.png
+sprites/frames/Faces_old/Maverick/BOTTOM_CENTER.png
+sprites/frames/Faces_old/Reactor Man.png
+sprites/frames/Faces_old/Microwave Man.png
+sprites/frames/Faces_old/Unknown.png
+sprites/frames/Faces_old/Freezer Man.png
+sprites/frames/Faces_old/Moon Man.png
+sprites/frames/Faces_old/Desert Man.png
+sprites/frames/Faces_old/Mister Man.png
+sprites/frames/Faces_old/Timber Woman.png
+sprites/frames/Faces_old/Inferno Man.png
 sprites/frames/Environs1/QuickSand/TopRight.png
 sprites/frames/Environs1/QuickSand/Left.png
 sprites/frames/Environs1/QuickSand/Right.png
@@ -1034,37 +1066,22 @@ sprites/frames/Projectiles1/ChargedShot.png
 sprites/frames/Projectiles1/CaveRock/Rock.png
 sprites/frames/Projectiles1/CaveRock/Burst.png
 sprites/frames/Projectiles1/SealionBall.png
-sprites/frames/Faces1/Distributor Man.png
-sprites/frames/Faces1/Blunt Man.png
 sprites/frames/Faces1/Precious Man.png
 sprites/frames/Faces1/Rodent Man.png
 sprites/frames/Faces1/Glacier Man.png
-sprites/frames/Faces1/Roaster Man.png
-sprites/frames/Faces1/Megaman/TOP_CENTER.png
-sprites/frames/Faces1/Megaman/CENTER.png
-sprites/frames/Faces1/Megaman/TOP_RIGHT.png
-sprites/frames/Faces1/Megaman/BOTTOM_LEFT.png
-sprites/frames/Faces1/Megaman/BOTTOM_RIGHT.png
-sprites/frames/Faces1/Megaman/TOP_LEFT.png
-sprites/frames/Faces1/Megaman/CENTER_LEFT.png
-sprites/frames/Faces1/Megaman/CENTER_RIGHT.png
-sprites/frames/Faces1/Megaman/BOTTOM_CENTER.png
-sprites/frames/Faces1/Maverick/TOP_CENTER.png
-sprites/frames/Faces1/Maverick/CENTER.png
-sprites/frames/Faces1/Maverick/TOP_RIGHT.png
-sprites/frames/Faces1/Maverick/BOTTOM_LEFT.png
-sprites/frames/Faces1/Maverick/BOTTOM_RIGHT.png
-sprites/frames/Faces1/Maverick/TOP_LEFT.png
-sprites/frames/Faces1/Maverick/CENTER_LEFT.png
-sprites/frames/Faces1/Maverick/CENTER_RIGHT.png
-sprites/frames/Faces1/Maverick/BOTTOM_CENTER.png
+sprites/frames/Faces1/Megaman/center.png
+sprites/frames/Faces1/Megaman/center_right.png
+sprites/frames/Faces1/Megaman/bottom_left.png
+sprites/frames/Faces1/Megaman/top_left.png
+sprites/frames/Faces1/Megaman/bottom_right.png
+sprites/frames/Faces1/Megaman/bottom_center.png
+sprites/frames/Faces1/Megaman/top_right.png
+sprites/frames/Faces1/Megaman/top_center.png
+sprites/frames/Faces1/Megaman/center_left.png
 sprites/frames/Faces1/Reactor Man.png
-sprites/frames/Faces1/Microwave Man.png
-sprites/frames/Faces1/Unknown.png
-sprites/frames/Faces1/Freezer Man.png
+sprites/frames/Faces1/extras/MoonPieces.png
 sprites/frames/Faces1/Moon Man.png
 sprites/frames/Faces1/Desert Man.png
-sprites/frames/Faces1/Mister Man.png
 sprites/frames/Faces1/Timber Woman.png
 sprites/frames/Faces1/Inferno Man.png
 sprites/frames/Backgrounds6/UndergroundPipes.png
@@ -1299,13 +1316,18 @@ sprites/frames/Ui1/MugshotPane/blinking_48x48.png
 sprites/frames/Ui1/MugshotPane/blinking_80x48.png
 sprites/frames/Ui1/MugshotPane/left.png
 sprites/frames/Ui1/MugshotPane/highlighted_80x48.png
+sprites/frames/Ui1/MugshotPane/none_52x52.png
 sprites/frames/Ui1/MugshotPane/highlighted_48x48.png
 sprites/frames/Ui1/MugshotPane/right.png
 sprites/frames/Ui1/MugshotPane/left_80x48.png
 sprites/frames/Ui1/MugshotPane/none.png
 sprites/frames/Ui1/MugshotPane/right_80x48.png
+sprites/frames/Ui1/MugshotPane/blinking_50x50.png
+sprites/frames/Ui1/MugshotPane/none_50x50.png
 sprites/frames/Ui1/MugshotPane/none_80x48.png
+sprites/frames/Ui1/MugshotPane/highlighted_52x52.png
 sprites/frames/Ui1/MugshotPane/blinking.png
+sprites/frames/Ui1/MugshotPane/highlighted_50x50.png
 sprites/frames/Ui1/MugshotPane/Text/PRECIOUS_MAN.png
 sprites/frames/Ui1/MugshotPane/Text/GLACIER_MAN.png
 sprites/frames/Ui1/MugshotPane/Text/DESERT_MAN.png
@@ -1314,6 +1336,7 @@ sprites/frames/Ui1/MugshotPane/Text/TIMBER_WOMAN.png
 sprites/frames/Ui1/MugshotPane/Text/RODENT_MAN.png
 sprites/frames/Ui1/MugshotPane/Text/INFERNO_MAN.png
 sprites/frames/Ui1/MugshotPane/Text/MOON_MAN.png
+sprites/frames/Ui1/MugshotPane/blinking_52x52.png
 sprites/frames/Ui1/MugshotPane/highlighted.png
 sprites/frames/Ui1/MugshotPane/none_48x48.png
 sprites/frames/Ui1/RedDot.png
@@ -1339,6 +1362,7 @@ sprites/frames/Ui1/ScreenController/select.png
 sprites/frames/Ui1/ScreenController/arrow_pressed.png
 sprites/frames/Ui1/ScreenController/button_pressed.png
 sprites/frames/Ui1/Stars1.png
+sprites/frames/Ui1/blinking_50x50.png
 sprites/frames/Ui1/MegamanPose.png
 sprites/frames/Ui1/Stars2.png
 sprites/frames/Ui1/Z.png
@@ -1662,6 +1686,7 @@ sprites/piskel/Walrus_Bot.piskel
 sprites/piskel/WallTeck.piskel
 sprites/piskel/TubeBeam.piskel
 sprites/piskel/Jetpack_Ice_Blaster_Bot_Projectile.piskel
+sprites/piskel/RodentMan_Mugshot_v2.piskel
 sprites/piskel/Ring Ring.piskel
 sprites/piskel/Toxic_Barrel_Bot.piskel
 sprites/piskel/NavalManFace.piskel
@@ -1758,6 +1783,7 @@ sprites/piskel/GutsTankFist.piskel
 sprites/piskel/NavalMan.piskel
 sprites/piskel/PolarityMan.piskel
 sprites/piskel/FridgeMan.piskel
+sprites/piskel/MoonMan_Mugshot_v2.piskel
 sprites/piskel/NavalMan_raw.piskel
 sprites/piskel/MoonManMugshot.piskel
 sprites/piskel/MagmaOrb.piskel
@@ -1815,6 +1841,7 @@ sprites/piskel/MegamanFire.piskel
 sprites/piskel/Bits.piskel
 sprites/piskel/large_swing.piskel
 sprites/piskel/Up n Down.piskel
+sprites/piskel/InfernoMan_Mugshot_v2.piskel
 sprites/piskel/Darspider.piskel
 sprites/piskel/MMX_Sigma2.piskel
 sprites/piskel/IcecubeMaker.piskel
@@ -1838,6 +1865,7 @@ sprites/piskel/MisterMan.piskel
 sprites/piskel/TimberStuff.piskel
 sprites/piskel/Megaman.piskel
 sprites/piskel/Bubble.piskel
+sprites/piskel/Megaman_Mugshot_v2.piskel
 sprites/piskel/Zero.piskel
 sprites/piskel/Popoheli.piskel
 sprites/piskel/DrLight.piskel

@@ -156,18 +156,13 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IFaceable 
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
 
-        val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBounds() }
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            body.forEachFixture { fixture -> ((fixture as Fixture).rawShape as GameRectangle).set(body) }
+        }
 
-        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle(body))
-        body.addFixture(projectileFixture)
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        body.addFixture(damagerFixture)
-
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
-
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.PROJECTILE, FixtureType.DAMAGER))
     }
 
     override fun defineSpritesComponent(): SpritesComponent {

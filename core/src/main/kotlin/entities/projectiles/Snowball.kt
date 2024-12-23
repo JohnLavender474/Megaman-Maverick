@@ -29,6 +29,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
@@ -92,18 +93,7 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         body.physics.velocityClamp.set(CLAMP * ConstVals.PPM.toFloat(), CLAMP * ConstVals.PPM.toFloat())
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
-
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
-        body.addFixture(bodyFixture)
-
-        val projectileFixture =
-            Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(0.2f * ConstVals.PPM))
-        body.addFixture(projectileFixture)
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.2f * ConstVals.PPM))
-        body.addFixture(damagerFixture)
-
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.PROJECTILE, FixtureType.DAMAGER))
     }
 
     override fun defineSpritesComponent(): SpritesComponent {

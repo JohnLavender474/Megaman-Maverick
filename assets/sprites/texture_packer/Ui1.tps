@@ -392,6 +392,37 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Ui1/MugshotPane/blinking_50x50.png</key>
+            <key type="filename">../frames/Ui1/blinking_50x50.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>13,25,25,50</rect>
+                <key>scale9Paddings</key>
+                <rect>13,25,25,50</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Ui1/MugshotPane/blinking_52x52.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>13,26,26,52</rect>
+                <key>scale9Paddings</key>
+                <rect>13,26,26,52</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Ui1/MugshotPane/blinking_80x48.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -420,6 +451,38 @@
                 <rect>12,12,24,24</rect>
                 <key>scale9Paddings</key>
                 <rect>12,12,24,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Ui1/MugshotPane/highlighted_50x50.png</key>
+            <key type="filename">../frames/Ui1/MugshotPane/none_50x50.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>13,13,25,25</rect>
+                <key>scale9Paddings</key>
+                <rect>13,13,25,25</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Ui1/MugshotPane/highlighted_52x52.png</key>
+            <key type="filename">../frames/Ui1/MugshotPane/none_52x52.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>13,13,26,26</rect>
+                <key>scale9Paddings</key>
+                <rect>13,13,26,26</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

@@ -17,6 +17,7 @@ enum class FixtureType {
     FORCE,
     LADDER,
     SHIELD,
+    EXPLOSION,
     BOUNCER,
     CONSUMER,
     CUSTOM,

@@ -99,6 +99,7 @@ object ConstKeys {
     const val ALLOW_OUT_OF_BOUNDS = "allow_out_of_bounds"
     const val TILED_MAP_LOAD_RESULT = "tiled_map_load_result"
     const val HIT_BY_BODY = "hit_by_body"
+    const val HIT_BY_EXPLOSION = "hit_by_explosion"
     const val FOOT = "foot"
     const val HIT_BY_BLOCK = "hit_by_block"
     const val DAMAGEABLE = "damageable"

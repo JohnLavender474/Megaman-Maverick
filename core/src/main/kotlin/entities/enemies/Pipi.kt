@@ -90,8 +90,11 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
     }
 
     private fun dropEgg() {
+        val spawn = body.getPositionPoint(Position.BOTTOM_CENTER).sub(0f, 0.25f * ConstVals.PPM)
+
         val egg = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.PIPI_EGG)!!
-        egg.spawn(props(ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)))
+        egg.spawn(props(ConstKeys.POSITION pairTo spawn))
+
         hasEgg = false
     }
 
@@ -117,13 +120,13 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
         leftSideFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
         leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftSideFixture)
-        debugShapes.add { leftSideFixture}
+        debugShapes.add { leftSideFixture }
 
         val rightSideFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightSideFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
         rightSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightSideFixture)
-        debugShapes.add { rightSideFixture}
+        debugShapes.add { rightSideFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             if ((isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||

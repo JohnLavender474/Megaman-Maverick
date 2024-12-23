@@ -13,6 +13,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -38,6 +39,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
 class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
@@ -54,7 +56,10 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
 
     private var durationTimer = Timer(FULLY_CHARGED_DURATION)
     private val soundTimer = Timer(SOUND_INTERVAL)
+
+    private lateinit var explosionFixture: Fixture
     private lateinit var damagerFixture: Fixture
+
     private lateinit var direction: Direction
 
     override fun init() {
@@ -83,6 +88,8 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
 
         val size = if (fullyCharged) 1.5f * ConstVals.PPM else ConstVals.PPM.toFloat()
         body.setSize(size)
+
+        (explosionFixture.rawShape as GameRectangle).setSize(size)
         (damagerFixture.rawShape as GameRectangle).setSize(size)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -108,16 +115,19 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
 
+        explosionFixture = Fixture(body, FixtureType.EXPLOSION, GameRectangle())
+        body.addFixture(explosionFixture)
+
         damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
 
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setOriginCenter()
