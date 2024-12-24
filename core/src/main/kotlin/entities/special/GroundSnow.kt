@@ -190,7 +190,7 @@ class GroundSnow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
             if (timer.isFinished()) {
                 val x = feetBounds.getCenter().x
                 val y = when {
-                    entity is Megaman -> body.getCenter().y
+                    entity is Megaman -> feetBounds.getPositionPoint(Position.TOP_CENTER).y + 0.4f * ConstVals.PPM
                     else -> feetBounds.getCenter().y
                 }
 

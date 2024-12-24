@@ -26,6 +26,7 @@ enum class TextureAsset(src: String) : IAsset {
     BACKGROUNDS_5("Backgrounds5.txt"),
     BACKGROUNDS_6("Backgrounds6.txt"),
     UI_1("Ui1.txt"),
+    UI_2("Ui2.txt"),
     FACES_1("Faces1.txt"),
     MEGAMAN_V2_BUSTER("Megaman_v2_BUSTER.txt"),
     MEGAMAN_BUSTER("Megaman_BUSTER.txt"),
@@ -55,7 +56,7 @@ enum class TextureAsset(src: String) : IAsset {
     companion object {
         fun valuesAsIAssetArray(): Array<IAsset> {
             val assets = Array<IAsset>()
-            values().forEach { assets.add(it) }
+            TextureAsset.entries.forEach { assets.add(it) }
             return assets
         }
     }

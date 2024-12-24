@@ -54,7 +54,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
     }
 
     companion object {
-        const val TAG = "MainScreen"
+        const val TAG = "MainMenuScreen"
         private const val DEBUG_SHAPES = false
         private const val MAIN_MENU_TEXT_START_ROW = 6f
         private const val SETTINGS_TEXT_START_ROW = 11f
@@ -164,7 +164,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
             settingsArrows.add(blinkArrow)
         }
 
-        val atlas = game.assMan.getTextureAtlas(TextureAsset.UI_1.source)
+        val atlas = game.assMan.getTextureAtlas(TextureAsset.UI_2.source)
         background = Sprite(atlas.findRegion("TitleScreenBackground"))
         background.setSize(ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         background.setCenter(ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f, ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f)

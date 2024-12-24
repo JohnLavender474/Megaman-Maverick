@@ -1,0 +1,26 @@
+Ui2.png
+size: 1982, 860
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+MegamanSubtitle
+  rotate: false
+  xy: 250, 0
+  size: 1078, 270
+  orig: 1078, 270
+  offset: 0, 0
+  index: -1
+MegamanTitle
+  rotate: false
+  xy: 0, 270
+  size: 1982, 590
+  orig: 1982, 590
+  offset: 0, 0
+  index: -1
+TitleScreenBackground
+  rotate: false
+  xy: 0, 0
+  size: 250, 262
+  orig: 250, 262
+  offset: 0, 0
+  index: -1

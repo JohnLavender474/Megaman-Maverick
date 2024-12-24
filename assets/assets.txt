@@ -1308,6 +1308,9 @@ sprites/frames/Enemies1/Met/PopUp.png
 sprites/frames/Enemies1/HeliMet/Shield.png
 sprites/frames/Enemies1/HeliMet/Fly.png
 sprites/frames/Enemies1/HeliMet/PopUp.png
+sprites/frames/Ui2/MegamanSubtitle.png
+sprites/frames/Ui2/MegamanTitle.png
+sprites/frames/Ui2/TitleScreenBackground.png
 sprites/frames/Ui1/PaneHighlighted.png
 sprites/frames/Ui1/Subtitle8bit.png
 sprites/frames/Ui1/Arrow.png
@@ -1340,8 +1343,18 @@ sprites/frames/Ui1/MugshotPane/blinking_52x52.png
 sprites/frames/Ui1/MugshotPane/highlighted.png
 sprites/frames/Ui1/MugshotPane/none_48x48.png
 sprites/frames/Ui1/RedDot.png
+sprites/frames/Ui1/LevelSelectScreen/center.png
+sprites/frames/Ui1/LevelSelectScreen/center_right.png
+sprites/frames/Ui1/LevelSelectScreen/selected.png
+sprites/frames/Ui1/LevelSelectScreen/bottom_left.png
+sprites/frames/Ui1/LevelSelectScreen/top_left.png
+sprites/frames/Ui1/LevelSelectScreen/bottom_right.png
+sprites/frames/Ui1/LevelSelectScreen/bottom_center.png
+sprites/frames/Ui1/LevelSelectScreen/none.png
+sprites/frames/Ui1/LevelSelectScreen/top_right.png
+sprites/frames/Ui1/LevelSelectScreen/top_center.png
+sprites/frames/Ui1/LevelSelectScreen/center_left.png
 sprites/frames/Ui1/PaneBlinking.png
-sprites/frames/Ui1/MegamanSubtitle.png
 sprites/frames/Ui1/white.png
 sprites/frames/Ui1/StageSelectBox_Unhighlighted.png
 sprites/frames/Ui1/WhiteFrameBlackPane.png
@@ -1372,7 +1385,6 @@ sprites/frames/Ui1/Bit.png
 sprites/frames/Ui1/MegamanMaverick.png
 sprites/frames/Ui1/RedBit.png
 sprites/frames/Ui1/Canvas.png
-sprites/frames/Ui1/MegamanTitle.png
 sprites/frames/Ui1/StageSelectBox_Blinking.png
 sprites/frames/Ui1/Background.png
 sprites/frames/Ui1/Stars4.png
@@ -1381,7 +1393,6 @@ sprites/frames/Ui1/bar.png
 sprites/frames/Ui1/PaneShattered.png
 sprites/frames/Ui1/StandardBit.png
 sprites/frames/Ui1/Pane.png
-sprites/frames/Ui1/TitleScreenBackground.png
 sprites/frames/Ui1/blue.png
 sprites/frames/Ui1/BlackBit.png
 sprites/frames/Ui1/ZeroSilhouette.png
@@ -1528,6 +1539,7 @@ sprites/sprite_sheets/BluntMan.png
 sprites/sprite_sheets/Test.png
 sprites/sprite_sheets/RoasterMan.txt
 sprites/sprite_sheets/Bosses.txt
+sprites/sprite_sheets/Ui2.txt
 sprites/sprite_sheets/Backgrounds1.png
 sprites/sprite_sheets/Bosses2.png
 sprites/sprite_sheets/FridgeMan.png
@@ -1594,6 +1606,7 @@ sprites/sprite_sheets/Bosses1.txt
 sprites/sprite_sheets/WintryMan.png
 sprites/sprite_sheets/MegamanTrailSprite.txt
 sprites/sprite_sheets/DistributorMan.png
+sprites/sprite_sheets/Ui2.png
 sprites/sprite_sheets/WintryMan.txt
 sprites/sprite_sheets/Enemies1.txt
 sprites/sprite_sheets/Megaman_v2_BUSTER.png
@@ -1644,6 +1657,7 @@ sprites/texture_packer/MegamanFire.tps
 sprites/texture_packer/Bosses1.tps
 sprites/texture_packer/Backgrounds6.tps
 sprites/texture_packer/Faces1.tps
+sprites/texture_packer/Ui2.tps
 sprites/texture_packer/MegamanTrailSprite_v2.tps
 sprites/texture_packer/DistributorMan.tps
 sprites/texture_packer/Backgrounds5.tps
@@ -1851,6 +1865,7 @@ sprites/piskel/Bospider.piskel
 sprites/piskel/Penguin_Bot.piskel
 sprites/piskel/ScreenController.piskel
 sprites/piskel/MMX_Sigma2_ElectricBall.piskel
+sprites/piskel/LevelSelectScreen.piskel
 sprites/piskel/PenguinMiniBoss.piskel
 sprites/piskel/GlacierMan.piskel
 sprites/piskel/Sealion.piskel

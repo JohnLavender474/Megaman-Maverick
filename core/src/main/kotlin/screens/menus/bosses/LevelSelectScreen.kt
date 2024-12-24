@@ -8,7 +8,6 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.animations.Animation
-import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
@@ -17,7 +16,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.interfaces.Updatable
-import com.mega.game.engine.common.time.TimeMarkedRunnable
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.IDrawable
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -36,10 +35,8 @@ import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.menus.MegaMenuScreen
-import com.megaman.maverick.game.screens.menus.bosses.MugshotPane.MugshotPaneState
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
 import com.megaman.maverick.game.utils.interfaces.IShapeDebuggable
-import javax.swing.Spring.height
 
 class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Position.CENTER.name), Initializable,
     IShapeDebuggable {
@@ -52,8 +49,6 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         private const val PRESS_START = "PRESS START"
         private const val MEGA_MAN = "MEGA MAN"
 
-        private const val SIDE_BAR_COLOR_KEY = ConstKeys.BLACK
-
         private const val BOSS_NAME_TEXT_X = 2f
         private const val BOSS_NAME_TEXT_Y = 1f
 
@@ -64,53 +59,40 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         private const val BACK_ARROW_X = ConstVals.VIEW_WIDTH - 4.5f
         private const val BACK_ARROW_Y = 0.55f
 
-        private const val BOTTOM_BLACK_BAR_WIDTH = ConstVals.VIEW_WIDTH
-        private const val BOTTOM_BLACK_BAR_HEIGHT = 1f
-        private const val SIDE_BLACK_BAR_WIDTH = 2f
-        private const val SIDE_BLACK_BAR_HEIGHT = ConstVals.VIEW_HEIGHT
-
-        // the offsets of the panes as a collective from the left x and bottom y
-        private const val PANES_X_OFFSET = 2f
-        private const val PANES_Y_OFFSET = 1.5f
-
-        private const val PANE_WIDTH = 3.5f
-        private const val PANE_HEIGHT = 3.5f
-        private const val PANE_X_PADDING = 0.75f
-        private const val PANE_Y_PADDING = 0.5f
-
-        private const val BARS_ROWS = 3
-        private const val BARS_COLUMNS = 6
-        private const val BARS_OFFSET_Y = 1.5f
-
-        private const val BAR_WIDTH = 5.33f
-        private const val BAR_HEIGHT = 4f
-        private const val BAR_PADDING_X = 3f
-        private const val BAR_PADDING_Y = 4f
+        private val MUGSHOT_X_COORDS = gdxArrayOf(40f, 112f, 184f)
+        private val MUGSHOT_Y_COORDS = gdxArrayOf(45f, 109f, 173f)
+        private const val MUGSHOT_WIDTH = 31f
+        private const val MUGSHOT_HEIGHT = 31f
 
         private const val MOON_PIECES_REGION_KEY = "extras/MoonPieces"
-        private const val MOON_PIECES_WIDTH = MugshotPane.DEFAULT_FACE_WIDTH * 1.5f
-        private const val MOON_PIECES_HEIGHT = MugshotPane.DEFAULT_FACE_HEIGHT * 1.5f
+        private const val MOON_PIECES_WIDTH = MUGSHOT_WIDTH * 1.5f
+        private const val MOON_PIECES_HEIGHT = MUGSHOT_HEIGHT * 1.5f
 
         private const val OUTRO_DUR = 1f
-        private const val OUTRO_BLINKS = 10
 
-        private val regions = ObjectMap<String, TextureRegion>()
-        private var unknownRegion: TextureRegion? = null
+        private val backgroundRegions = ObjectMap<String, TextureRegion>()
     }
 
     private val levelDefGrid = ObjectMap<Position, LevelDefinition>()
-    private val mugshotGrid = ObjectMap<Position, MugshotPane>()
+    private val mugshotGrid = ObjectMap<Position, Mugshot>()
 
     private val outroTimer = Timer(OUTRO_DUR)
-    private var outroBlink = false
     private var outro = false
 
+    private val backgroundAnims = ObjectMap<String, Animation>()
+    private val currentBkgAnim: Animation
+        get() {
+            val bkgKey = when {
+                currentButtonKey == null || currentButtonKey == BACK_BUTTON_KEY -> ConstKeys.NONE
+                selectionMade -> ConstKeys.SELECTED
+                else -> currentButtonKey!!
+            }
+            return backgroundAnims[bkgKey.lowercase()]
+        }
     private val background = GameSprite()
+
     private val text = Array<MegaFontHandle>()
-    private val blocksBackground = Array<GameSprite>()
-    private val barsBackground = ObjectMap<GameSprite, Animation>()
     private val blinkingArrows = OrderedMap<String, BlinkingArrow>()
-    private val sideBars = Array<GameSprite>()
     private val foregroundSprites = OrderedMap<GameSprite, Updatable?>()
 
     private var selectedLevelDef: LevelDefinition? = null
@@ -124,41 +106,29 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
             return
         }
 
-        if (regions.isEmpty) {
+        if (backgroundRegions.isEmpty) {
             val uiAtlas = game.assMan.getTextureAtlas(TextureAsset.UI_1.source)
-            gdxArrayOf("blue", "black", "white", "bar").forEach { regions.put(it, uiAtlas.findRegion(it)) }
-            gdxArrayOf("left", "left_80x48", "right", "right_80x48").forEach {
-                regions.put(it, uiAtlas.findRegion("${MugshotPane.TAG}/$it"))
+
+            val blankBackgroundRegion = uiAtlas.findRegion("$TAG/${ConstKeys.NONE}")
+            backgroundAnims.put(ConstKeys.NONE, Animation(blankBackgroundRegion))
+
+            val selectedBackgroundRegion = uiAtlas.findRegion("$TAG/${ConstKeys.SELECTED}")
+            val selectedAnim = Animation(selectedBackgroundRegion, 2, 1, 0.1f, true)
+            backgroundAnims.put(ConstKeys.SELECTED, selectedAnim)
+
+            Position.entries.forEach { position ->
+                val key = position.name.lowercase()
+                val backgroundRegion = uiAtlas.findRegion("$TAG/${key}")
+                val backgroundAnim =
+                    Animation.of(gdxArrayOf(blankBackgroundRegion pairTo 0.1f, backgroundRegion pairTo 0.1f), true)
+                backgroundAnims.put(key, backgroundAnim)
             }
-
-            val tilesAtlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
-            regions.put("block", tilesAtlas.findRegion("8bitBlueBlockTransBorder"))
         }
-
-        val blackRegion = regions[SIDE_BAR_COLOR_KEY]
-
-        val bottomBlackBar = GameSprite(blackRegion)
-        bottomBlackBar.setBounds(
-            0f,
-            0f,
-            BOTTOM_BLACK_BAR_WIDTH * ConstVals.PPM,
-            BOTTOM_BLACK_BAR_HEIGHT * ConstVals.PPM
-        )
-        sideBars.add(bottomBlackBar)
-
-        val leftBar = GameSprite(blackRegion)
-        leftBar.setBounds(0f, 0f, SIDE_BLACK_BAR_WIDTH * ConstVals.PPM, SIDE_BLACK_BAR_HEIGHT * ConstVals.PPM)
-        sideBars.add(leftBar)
-
-        val rightBar = GameSprite(blackRegion)
-        rightBar.setSize(SIDE_BLACK_BAR_WIDTH * ConstVals.PPM, SIDE_BLACK_BAR_HEIGHT * ConstVals.PPM)
-        rightBar.setPosition((ConstVals.VIEW_WIDTH - SIDE_BLACK_BAR_WIDTH) * ConstVals.PPM, 0f)
-        sideBars.add(rightBar)
 
         val pressStart = MegaFontHandle(
             text = PRESS_START,
             positionX = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f,
-            positionY = ConstVals.VIEW_HEIGHT * ConstVals.PPM,
+            positionY = (ConstVals.VIEW_HEIGHT + 0.3f) * ConstVals.PPM,
             attachment = Position.TOP_CENTER
         )
         text.add(pressStart)
@@ -204,30 +174,20 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         })
 
         val levelDefIter = LevelDefMap.getDefsOfLevelType(LevelType.ROBOT_MASTER_LEVEL).iterator()
-        Position.entries.forEach { pos ->
+        val posIter = Position.entries.iterator()
+        while (posIter.hasNext()) {
+            if (!levelDefIter.hasNext()) throw IllegalStateException("Not enough levels defined to fill eight mugshots")
+
+            val pos = posIter.next()
             when (pos) {
                 Position.CENTER -> putMegamanMugshot()
                 else -> {
-                    if (!levelDefIter.hasNext()) {
-                        putDefaultMugshot(pos)
-                        return@forEach
-                    }
-
                     val levelDef = levelDefIter.next()
                     levelDefGrid.put(pos, levelDef)
-
                     putBossMugshot(pos, levelDef)
                 }
             }
         }
-
-        val outroRunnables = Array<TimeMarkedRunnable>()
-        for (i in 1..OUTRO_BLINKS) {
-            val outroRunnableTime = i * (OUTRO_DUR / OUTRO_BLINKS)
-            val outroRunnable = TimeMarkedRunnable(outroRunnableTime) { outroBlink = !outroBlink }
-            outroRunnables.add(outroRunnable)
-        }
-        outroTimer.setRunnables(outroRunnables)
 
         background.setBounds(
             0f,
@@ -235,38 +195,6 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
             ConstVals.VIEW_WIDTH * ConstVals.PPM,
             ConstVals.VIEW_HEIGHT * ConstVals.PPM
         )
-
-        val barRegion = regions["bar"]
-        for (barCol in 0 until BARS_COLUMNS) for (barRow in 0 until BARS_ROWS) {
-            val sprite = GameSprite(barRegion)
-            sprite.setBounds(
-                barCol * BAR_PADDING_X * ConstVals.PPM,
-                (barRow * BAR_PADDING_Y * ConstVals.PPM).plus(BARS_OFFSET_Y * ConstVals.PPM),
-                BAR_WIDTH * ConstVals.PPM,
-                BAR_HEIGHT * ConstVals.PPM
-            )
-            val timedAnimation = Animation(barRegion, 1, 4, Array.with(0.3f, 0.15f, 0.15f, 0.15f), true)
-            barsBackground.put(sprite, timedAnimation)
-        }
-
-        val blockRegion = regions["block"]
-        val halfPPM = ConstVals.PPM / 2f
-        (0 until ConstVals.VIEW_WIDTH.toInt()).forEach { blockX ->
-            (0 until ConstVals.VIEW_HEIGHT.toInt() - 1).forEach { blockY ->
-                (0..1).forEach { offsetX ->
-                    (0..1).forEach { offsetY ->
-                        val blueBlock = GameSprite(blockRegion)
-                        blueBlock.setBounds(
-                            (blockX * ConstVals.PPM) + (offsetX * halfPPM),
-                            (blockY * ConstVals.PPM) + (offsetY * halfPPM),
-                            halfPPM,
-                            halfPPM
-                        )
-                        blocksBackground.add(blueBlock)
-                    }
-                }
-            }
-        }
     }
 
     private fun navigate(position: Position, direction: Direction): String {
@@ -288,42 +216,9 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
     }
 
     private fun getMugshotPosition(position: Position, out: Vector2): Vector2 {
-        val posX = (position.x * PANE_WIDTH * ConstVals.PPM)
-            .plus(PANE_X_PADDING * position.x * ConstVals.PPM)
-            .plus(PANES_X_OFFSET * ConstVals.PPM)
-
-        var posY = (position.y * PANE_HEIGHT * ConstVals.PPM)
-            .plus(PANE_Y_PADDING * position.y * ConstVals.PPM)
-            .plus(PANES_Y_OFFSET * ConstVals.PPM)
-
-        return out.set(posX, posY)
-    }
-
-    private fun putDefaultMugshot(position: Position) {
-        if (unknownRegion == null) unknownRegion = game.assMan.getTextureRegion(TextureAsset.FACES_1.source, "Unknown")
-
-        val pos = getMugshotPosition(position, out)
-        val mugshot =
-            MugshotPane(
-                game,
-                pos.x,
-                pos.y,
-                PANE_WIDTH * ConstVals.PPM,
-                PANE_HEIGHT * ConstVals.PPM,
-                { unknownRegion!! },
-                null
-            )
-        mugshotGrid.put(position, mugshot)
-
-        buttons.put(position.name, object : IMenuButton {
-
-            override fun onSelect(delta: Float): Boolean {
-                game.audioMan.playSound(SoundAsset.ERROR_SOUND, false)
-                return false
-            }
-
-            override fun onNavigate(direction: Direction, delta: Float) = navigate(position, direction)
-        })
+        val x = MUGSHOT_X_COORDS[position.x] * 2f
+        val y = MUGSHOT_Y_COORDS[position.y] * 2f
+        return out.set(x, y)
     }
 
     private fun putMegamanMugshot() {
@@ -341,8 +236,14 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         }
 
         val pos = getMugshotPosition(Position.CENTER, out)
-        val mugshot =
-            MugshotPane(game, pos.x, pos.y, PANE_WIDTH * ConstVals.PPM, PANE_HEIGHT * ConstVals.PPM, faceSupplier, null)
+        val mugshot = Mugshot(
+            game = game,
+            positionX = pos.x,
+            positionY = pos.y,
+            faceWidth = MUGSHOT_WIDTH * 2f,
+            faceHeight = MUGSHOT_HEIGHT * 2f,
+            faceSupplier = faceSupplier
+        )
         mugshotGrid.put(Position.CENTER, mugshot)
 
         buttons.put(Position.CENTER.name, object : IMenuButton {
@@ -360,21 +261,19 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         )
         val faceSupplier: () -> TextureRegion = {
             when {
-                game.state.levelsDefeated.contains(levelDef) -> regions["black"]
+                game.state.levelsDefeated.contains(levelDef) -> backgroundRegions["black"]
                 else -> mugshotRegion
             }
         }
-        val text = game.assMan.getTextureRegion(TextureAsset.UI_1.source, "${MugshotPane.TAG}/Text/${levelDef.name}")
 
         val pos = getMugshotPosition(position, out)
-        val mugshot = MugshotPane(
-            game,
-            pos.x,
-            pos.y,
-            PANE_WIDTH * ConstVals.PPM,
-            PANE_HEIGHT * ConstVals.PPM,
-            faceSupplier,
-            { text }
+        val mugshot = Mugshot(
+            game = game,
+            positionX = pos.x,
+            positionY = pos.y,
+            faceWidth = MUGSHOT_WIDTH * 2f,
+            faceHeight = MUGSHOT_HEIGHT * 2f,
+            faceSupplier = faceSupplier
         )
         mugshotGrid.put(position, mugshot)
 
@@ -402,8 +301,8 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
             foregroundSprites.put(moonPieces) {
                 val x = mugshot.faceSprite.x
                 val y = mugshot.faceSprite.y
-                val width = MOON_PIECES_WIDTH * ConstVals.PPM
-                val height = MOON_PIECES_HEIGHT * ConstVals.PPM
+                val width = MOON_PIECES_WIDTH * 2f
+                val height = MOON_PIECES_HEIGHT * 2f
 
                 moonPieces.setPosition(x, y)
                 moonPieces.setSize(width, height)
@@ -445,44 +344,20 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
             }
             if (outroTimer.isFinished()) return
 
-            mugshotGrid.forEach {
-                val key = it.key
-                val mugshot = it.value
-
-                mugshot.update(delta)
-
-                mugshot.state = when (currentButtonKey) {
-                    key.name -> if (selectionMade) MugshotPaneState.HIGHLIGHTED else MugshotPaneState.BLINKING
-                    else -> MugshotPaneState.NONE
-                }
-            }
+            currentBkgAnim.update(delta)
+            background.setRegion(currentBkgAnim.getCurrentRegion())
 
             blinkingArrows.get(currentButtonKey)?.update(delta)
-            barsBackground.values().forEach { it.update(delta) }
             foregroundSprites.values().forEach { it?.update(delta) }
         }
     }
 
     override fun draw(drawer: Batch) {
         drawer.projectionMatrix = game.getUiCamera().combined
-
-        background.setRegion(regions[if (outro && outroBlink) ConstKeys.WHITE else ConstKeys.BLACK])
         background.draw(drawer)
-
-        blocksBackground.forEach { it.draw(drawer) }
-        barsBackground.forEach {
-            val sprite = it.key
-            val animation = it.value
-            val region = animation.getCurrentRegion()
-            sprite.setRegion(region)
-            sprite.draw(drawer)
-        }
         mugshotGrid.forEach { it.value.draw(drawer) }
-        sideBars.forEach { it.draw(drawer) }
-
         text.forEach { it.draw(drawer) }
         blinkingArrows.get(currentButtonKey)?.draw(drawer)
-
         foregroundSprites.keys().forEach { it.draw(drawer) }
     }
 
@@ -494,29 +369,17 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
     }
 }
 
-internal class MugshotPane(
+internal class Mugshot(
     private val game: MegamanMaverickGame,
     private val positionX: Float,
     private val positionY: Float,
-    private val paneWidth: Float,
-    private val paneHeight: Float,
-    private val faceSupplier: () -> TextureRegion,
-    private val textSupplier: (() -> TextureRegion)?,
-    private val faceWidth: Float = DEFAULT_FACE_WIDTH * ConstVals.PPM,
-    private val faceHeight: Float = DEFAULT_FACE_HEIGHT * ConstVals.PPM,
-    private val faceOffsetX: Float = DEFAULT_FACE_OFFSET_X * ConstVals.PPM,
-    private val faceOffsetY: Float = DEFAULT_FACE_OFFSET_Y * ConstVals.PPM,
-    private val underPane: Boolean = false,
-    private val renderText: Boolean = false
-) : Initializable, Updatable, IDrawable<Batch> {
+    private val faceWidth: Float,
+    private val faceHeight: Float,
+    private val faceSupplier: () -> TextureRegion
+) : Initializable, IDrawable<Batch> {
 
     companion object {
         const val TAG = "MugshotPane"
-
-        const val DEFAULT_FACE_WIDTH = 2.1f
-        const val DEFAULT_FACE_HEIGHT = 2.1f
-        const val DEFAULT_FACE_OFFSET_X = 0.7f
-        const val DEFAULT_FACE_OFFSET_Y = 0.7f
 
         private const val KEY_SUFFIX = "_50x50" // 48x48
         private const val NONE_REGION_KEY = "none$KEY_SUFFIX"
@@ -526,14 +389,7 @@ internal class MugshotPane(
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    internal enum class MugshotPaneState { NONE, BLINKING, HIGHLIGHTED }
-
-    var state = MugshotPaneState.NONE
-
     val faceSprite = GameSprite()
-    val paneSprite = GameSprite()
-    val textSprite = GameSprite()
-    val paneAnimations = ObjectMap<MugshotPaneState, IAnimation>()
     var initialized = false
 
     override fun init() {
@@ -549,31 +405,10 @@ internal class MugshotPane(
             }
         }
 
-        paneSprite.setSize(paneWidth, paneHeight)
-        paneSprite.setPosition(positionX, positionY)
 
         faceSprite.setSize(faceWidth, faceHeight)
-        faceSprite.setCenterX(positionX + (paneWidth / 2f))
-        faceSprite.x = positionX + faceOffsetX
-        faceSprite.y = positionY + faceOffsetY
-
-        textSprite.setSize(paneWidth, paneHeight)
-        textSprite.setPosition(positionX, positionY)
-
-        paneAnimations.put(MugshotPaneState.NONE, Animation(regions[NONE_REGION_KEY]))
-        paneAnimations.put(MugshotPaneState.BLINKING, Animation(regions[BLINKING_REGION_KEY], 2, 1, 0.125f, true))
-        paneAnimations.put(MugshotPaneState.HIGHLIGHTED, Animation(regions[HIGHLIGHTED_REGION_KEY]))
-    }
-
-    override fun update(delta: Float) {
-        if (!initialized) {
-            init()
-            initialized = true
-        }
-
-        val paneAnimation = paneAnimations[state]
-        paneAnimation.update(delta)
-        paneSprite.setRegion(paneAnimation.getCurrentRegion())
+        faceSprite.x = positionX
+        faceSprite.y = positionY
     }
 
     private fun drawFace(drawer: Batch) {
@@ -583,18 +418,11 @@ internal class MugshotPane(
     }
 
     override fun draw(drawer: Batch) {
-        if (underPane) drawFace(drawer)
-
-        paneSprite.draw(drawer)
-
-        if (!underPane) drawFace(drawer)
-
-        if (renderText) {
-            val text = textSupplier?.invoke()
-            if (text != null) {
-                textSprite.setRegion(text)
-                textSprite.draw(drawer)
-            }
+        if (!initialized) {
+            init()
+            initialized = true
         }
+
+        drawFace(drawer)
     }
 }
