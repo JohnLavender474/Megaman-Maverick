@@ -78,7 +78,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     headFixture.offsetFromBodyAttachment.y = (body.getHeight() / 2f) - 0.2f * ConstVals.PPM
     headFixture.setRunnable(onBounce)
     body.addFixture(headFixture)
-    debugShapes.add { headFixture}
+    debugShapes.add { headFixture }
     body.putProperty(ConstKeys.HEAD, headFixture)
 
     val leftFixture =
@@ -103,6 +103,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 
     val damagableRect = GameRectangle()
     val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, damagableRect)
+    damageableFixture.attachedToBody = false
     body.addFixture(damageableFixture)
     body.putProperty(ConstKeys.DAMAGEABLE, damageableFixture)
     damageableFixture.drawingColor = Color.PURPLE
@@ -118,7 +119,9 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         damagableRect.let {
             val size = GameObjectPools.fetch(Vector2::class)
             when {
-                isBehaviorActive(BehaviorType.GROUND_SLIDING) -> size.set(MEGAMAN_BODY_HEIGHT, MEGAMAN_BODY_WIDTH)
+                isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) ->
+                    size.set(MEGAMAN_BODY_HEIGHT, MEGAMAN_BODY_WIDTH)
+
                 else -> size.set(MEGAMAN_BODY_WIDTH, MEGAMAN_BODY_HEIGHT)
             }
             it.setSize(size.scl(ConstVals.PPM.toFloat()))

@@ -42,6 +42,7 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
         }
 
         isBehaviorActive(BehaviorType.AIR_DASHING) -> amendKey("airdash")
+        isBehaviorActive(BehaviorType.CROUCHING) -> amendKey("crouch")
         isBehaviorActive(BehaviorType.GROUND_SLIDING) -> amendKey("groundslide")
         isBehaviorActive(BehaviorType.WALL_SLIDING) -> amendKey("wallslide")
         isBehaviorActive(BehaviorType.SWIMMING) -> amendKey("swim")

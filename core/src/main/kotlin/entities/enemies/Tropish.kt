@@ -54,7 +54,7 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     companion object {
         const val TAG = "Tropish"
-        private const val SWIM_SPEED = 8f
+        private const val SWIM_SPEED = 6f
         private const val GRAVITY = -0.1f
         private val regions = ObjectMap<String, TextureRegion>()
     }

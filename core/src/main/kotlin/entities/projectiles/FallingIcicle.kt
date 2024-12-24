@@ -103,7 +103,7 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = bodyFixture.getEntity()
-        if (BODIES_TO_IGNORE.contains(entity.getTag())) return
+        if ((entity is IDamageable && canDamage(entity)) || BODIES_TO_IGNORE.contains(entity.getTag())) return
         explodeAndDie()
     }
 

@@ -179,6 +179,8 @@
             <key type="filename">../frames/Megaman_v2/climb_finish.png</key>
             <key type="filename">../frames/Megaman_v2/climb_still.png</key>
             <key type="filename">../frames/Megaman_v2/climb_still_shoot.png</key>
+            <key type="filename">../frames/Megaman_v2/crouch.png</key>
+            <key type="filename">../frames/Megaman_v2/crouch_shoot.png</key>
             <key type="filename">../frames/Megaman_v2/groundslide.png</key>
             <key type="filename">../frames/Megaman_v2/groundslide_shoot.png</key>
             <key type="filename">../frames/Megaman_v2/jump.png</key>
@@ -210,6 +212,7 @@
             <key type="filename">../frames/Megaman_v2/airdash_charge_half.png</key>
             <key type="filename">../frames/Megaman_v2/climb_finish_charge_half.png</key>
             <key type="filename">../frames/Megaman_v2/climb_still_charge_half.png</key>
+            <key type="filename">../frames/Megaman_v2/crouch_charge_half.png</key>
             <key type="filename">../frames/Megaman_v2/damaged.png</key>
             <key type="filename">../frames/Megaman_v2/groundslide_charge_half.png</key>
             <key type="filename">../frames/Megaman_v2/jump_charge_half.png</key>
@@ -234,6 +237,7 @@
             <key type="filename">../frames/Megaman_v2/climb.png</key>
             <key type="filename">../frames/Megaman_v2/climb_finish_charge_full.png</key>
             <key type="filename">../frames/Megaman_v2/climb_still_charge_full.png</key>
+            <key type="filename">../frames/Megaman_v2/crouch_charge_full.png</key>
             <key type="filename">../frames/Megaman_v2/groundslide_charge_full.png</key>
             <key type="filename">../frames/Megaman_v2/jump_charge_full.png</key>
             <key type="filename">../frames/Megaman_v2/slip_charge_full.png</key>

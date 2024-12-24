@@ -168,6 +168,7 @@ sounds/jetpack.mp3
 sounds/mecha_dragon.mp3
 sounds/buster_charged_shot.mp3
 sounds/electric_pulse.mp3
+sounds/Mega Man 5 SFX (11).wav
 sounds/bloopity.wav
 sounds/electric_shock.wav
 sounds/select_ping.mp3
@@ -425,6 +426,7 @@ sprites/frames/Decorations1/GroundSnow/left.png
 sprites/frames/Decorations1/GroundSnow/right.png
 sprites/frames/Decorations1/GroundSnow/back.png
 sprites/frames/Megaman_v2/climb_still_shoot.png
+sprites/frames/Megaman_v2/crouch_charge_half.png
 sprites/frames/Megaman_v2/climb_charge_half.png
 sprites/frames/Megaman_v2/airdash_shoot.png
 sprites/frames/Megaman_v2/swim_charge_full.png
@@ -436,6 +438,7 @@ sprites/frames/Megaman_v2/climb_still_charge_full.png
 sprites/frames/Megaman_v2/climb.png
 sprites/frames/Megaman_v2/airdash_charge_half.png
 sprites/frames/Megaman_v2/damaged.png
+sprites/frames/Megaman_v2/crouch.png
 sprites/frames/Megaman_v2/climb_finish.png
 sprites/frames/Megaman_v2/stand_charge_half.png
 sprites/frames/Megaman_v2/swim_shoot.png
@@ -443,6 +446,7 @@ sprites/frames/Megaman_v2/stand_charge_full.png
 sprites/frames/Megaman_v2/stand.png
 sprites/frames/Megaman_v2/jump.png
 sprites/frames/Megaman_v2/airdash.png
+sprites/frames/Megaman_v2/slip_shoot.png
 sprites/frames/Megaman_v2/jump_charge_full.png
 sprites/frames/Megaman_v2/swim.png
 sprites/frames/Megaman_v2/groundslide_charge_half.png
@@ -453,10 +457,12 @@ sprites/frames/Megaman_v2/climb_still_charge_half.png
 sprites/frames/Megaman_v2/wallslide_charge_full.png
 sprites/frames/Megaman_v2/slip_charge_half.png
 sprites/frames/Megaman_v2/run_charge_half.png
+sprites/frames/Megaman_v2/crouch_shoot.png
 sprites/frames/Megaman_v2/groundslide_charge_full.png
 sprites/frames/Megaman_v2/run_charge_full.png
 sprites/frames/Megaman_v2/climb_finish_charge_half.png
 sprites/frames/Megaman_v2/climb_charge_full.png
+sprites/frames/Megaman_v2/crouch_charge_full.png
 sprites/frames/Megaman_v2/run_shoot.png
 sprites/frames/Megaman_v2/climb_finish_charge_full.png
 sprites/frames/Megaman_v2/jump_charge_half.png

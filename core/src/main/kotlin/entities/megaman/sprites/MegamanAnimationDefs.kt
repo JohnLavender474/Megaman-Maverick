@@ -11,6 +11,7 @@ object MegamanAnimationDefs {
     const val JETPACK_FRAME_DUR = 0.1f
     const val DEFAULT_FRAME_DUR = 0.125f
     const val CHARGING_FRAME_DUR = 0.0625f
+    const val CROUCH_FRAME_DUR = 0.05f
 
     private val defs = orderedMapOf(
         "jetpack" pairTo AnimationDef(1, 2, JETPACK_FRAME_DUR),
@@ -117,6 +118,11 @@ object MegamanAnimationDefs {
         "airdash_charge_full_left" pairTo AnimationDef(2, 1, CHARGING_FRAME_DUR),
         "airdash_charge_half" pairTo AnimationDef(3, 1, CHARGING_FRAME_DUR),
         "airdash_charge_half_left" pairTo AnimationDef(3, 1, CHARGING_FRAME_DUR),
+
+        "crouch" pairTo AnimationDef(),
+        "crouch_shoot" pairTo AnimationDef(),
+        "crouch_charge_half" pairTo AnimationDef(3, 1, CROUCH_FRAME_DUR, false),
+        "crouch_charge_full" pairTo AnimationDef(2, 1, CROUCH_FRAME_DUR, false),
 
         "slip" pairTo AnimationDef(),
         "slip_left" pairTo AnimationDef(),

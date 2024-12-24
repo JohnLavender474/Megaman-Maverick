@@ -249,8 +249,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             lastFacing = facing
             putProperty(MegamanKeys.DIRECTION_ON_AIR_DASH, direction)
-
-            // requestToPlaySound(SoundAsset.WHOOSH_SOUND, false)
         }
 
         override fun act(delta: Float) {
@@ -286,10 +284,37 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         }
     }
 
+    val crouch = object : AbstractBehaviorImpl() {
+
+        private val timer = Timer(MegamanValues.CROUCH_DELAY)
+
+        override fun evaluate(delta: Float): Boolean {
+            if (!has(MegaAbility.CROUCH)) {
+                timer.reset()
+                return false
+            }
+
+            // always update the timer if Megaman has the crouch ability, even when the `if` below returns false
+            when {
+                !game.controllerPoller.isPressed(MegaControllerButton.DOWN) ||
+                    isBehaviorActive(BehaviorType.GROUND_SLIDING) -> timer.reset()
+
+                else -> timer.update(delta)
+            }
+
+            if (dead || damaged || !ready || !canMove || slipSliding || game.isCameraRotating() ||
+                isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.RIDING_CART, BehaviorType.JETPACKING) ||
+                !body.isSensing(BodySense.FEET_ON_GROUND) || body.isSensing(BodySense.FEET_ON_SAND) ||
+                !game.controllerPoller.isPressed(MegaControllerButton.DOWN)
+            ) return false
+
+            return timer.isFinished()
+        }
+    }
+
     val groundSlide = object : AbstractBehaviorImpl() {
 
         private var directionOnInit: Direction? = null
-        private var timesBlocked = 0
 
         override fun evaluate(delta: Float): Boolean {
             if (dead || !ready || !canMove || game.isCameraRotating() || !has(MegaAbility.GROUND_SLIDE) ||
@@ -321,8 +346,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             GameLogger.debug(MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG, "init()")
 
             directionOnInit = direction
-
-            // requestToPlaySound(SoundAsset.WHOOSH_SOUND, false)
         }
 
         override fun act(delta: Float) {
@@ -330,15 +353,13 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             val facingBlockLeft = (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT))
             val facingBlockRight = (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
-            if (damaged /* || facingBlockLeft || facingBlockRight */) {
+            if (damaged) {
                 GameLogger.debug(
                     MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG, "blocked from act: " +
-                        "timesBlocked=$timesBlocked, " +
                         "damaged=$damaged, " +
                         "facingBlockLeft=$facingBlockLeft, " +
                         "facingBlockRight=$facingBlockRight"
                 )
-                timesBlocked++
                 return
             }
 
@@ -356,18 +377,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
         override fun end() {
             groundSlideTimer.reset()
-
-            /*
-            if (!game.isCameraRotating()) {
-                val endDash =
-                    (if (body.isSensing(BodySense.IN_WATER)) 2f else 5f) * ConstVals.PPM * facing.value * movementScalar
-                when (direction) {
-                    Direction.UP, Direction.DOWN -> body.physics.velocity.x = endDash
-                    Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y = endDash
-                }
-            }
-             */
-
             GameLogger.debug(MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG, "end()")
         }
     }
@@ -663,6 +672,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
     behaviorsComponent.addBehavior(BehaviorType.SWIMMING, swim)
     behaviorsComponent.addBehavior(BehaviorType.JUMPING, jump)
     behaviorsComponent.addBehavior(BehaviorType.AIR_DASHING, airDash)
+    behaviorsComponent.addBehavior(BehaviorType.CROUCHING, crouch)
     behaviorsComponent.addBehavior(BehaviorType.GROUND_SLIDING, groundSlide)
     behaviorsComponent.addBehavior(BehaviorType.CLIMBING, climb)
     behaviorsComponent.addBehavior(BehaviorType.RIDING_CART, ridingCart)
