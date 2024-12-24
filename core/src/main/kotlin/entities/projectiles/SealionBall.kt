@@ -94,20 +94,25 @@ class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         ballInHand = false
         body.physics.velocity.y = VELOCITY_Y * ConstVals.PPM
         body.physics.gravityOn = true
-        GameLogger.debug(TAG, "Throw ball")
+        GameLogger.debug(TAG, "throwBall()")
     }
 
     fun catchBall() {
         ballInHand = true
         body.physics.velocity.setZero()
         body.physics.gravityOn = false
-        GameLogger.debug(TAG, "Catch ball")
+        GameLogger.debug(TAG, "catchBall()")
+    }
+
+    override fun explodeAndDie(vararg params: Any?) {
+        destroy()
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
         if (overlapsGameCamera()) playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)!!
         disintegration.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
 

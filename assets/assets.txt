@@ -136,6 +136,7 @@ sounds/energy_fill_mm9.mp3
 sounds/buster_bullet_shot.mp3
 sounds/chill_shoot.mp3
 sounds/mecha_dragon.wav
+sounds/buster_charged_shot_v2.wav
 sounds/chomp.wav
 sounds/conveyor_lift.mp3
 sounds/cursor_move_bloop.mp3
