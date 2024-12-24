@@ -110,28 +110,34 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         timers.values().forEach { it.reset() }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        sealionBall?.explodeAndDie()
+        sealionBall = null
+    }
+
     override fun canDamage(damageable: IDamageable) = sealionState != SealionState.POUT
 
     fun onBallDamagedInflicted() {
-        GameLogger.debug(TAG, "On ball damaged inflicted")
+        GameLogger.debug(TAG, "OnBallDamagedInflicted()")
         sealionState = SealionState.TAUNT
     }
 
     fun onBallDestroyed() {
-        GameLogger.debug(TAG, "On ball destroyed")
+        GameLogger.debug(TAG, "onBallDestroyed()")
         sealionBall = null
         sealionState = SealionState.POUT
     }
 
     private fun throwBall() {
-        GameLogger.debug(TAG, "Throw ball")
+        GameLogger.debug(TAG, "throwBall()")
         sealionBall!!.body.setBottomCenterToPoint(ballCatchBounds.getPositionPoint(Position.TOP_CENTER))
         sealionBall!!.throwBall()
         ballInHands = false
     }
 
     private fun catchBall() {
-        GameLogger.debug(TAG, "Catch ball")
+        GameLogger.debug(TAG, "catchBall()")
         sealionBall!!.body.setBottomCenterToPoint(ballCatchBounds.getPositionPoint(Position.TOP_CENTER))
         sealionBall!!.catchBall()
         ballInHands = true
@@ -151,7 +157,7 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                     if (timer.isFinished()) {
                         timer.reset()
                         sealionState = SealionState.THROW
-                        GameLogger.debug(TAG, "Wait timer finished, set state pairTo THROW")
+                        GameLogger.debug(TAG, "update(): wait timer finished, set state pairTo THROW")
                     }
                 }
 
@@ -167,7 +173,7 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                     } else if (canCatchBall()) {
                         catchBall()
                         sealionState = SealionState.WAIT
-                        GameLogger.debug(TAG, "Catch ball, set state pairTo WAIT")
+                        GameLogger.debug(TAG, "update(): catch ball, set state pairTo WAIT")
                     }
                 }
 
@@ -178,7 +184,7 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                     if (timer.isFinished()) {
                         timer.reset()
                         sealionState = if (ballInHands) SealionState.WAIT else SealionState.THROW
-                        GameLogger.debug(TAG, "Taunt finished, setting state pairTo $sealionState")
+                        GameLogger.debug(TAG, "update(); taunt finished, setting state pairTo $sealionState")
                     }
                 }
 
@@ -189,14 +195,14 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                     if (delayTimer.isJustFinished()) {
                         body.physics.velocity.y = SINK_VELOCITY_Y * ConstVals.PPM
                         fadingOut = true
-                        GameLogger.debug(TAG, "Delay timer finished, start fading out")
+                        GameLogger.debug(TAG, "update(): delay timer finished, start fading out")
                     }
 
                     val fadeOutTimer = timers["pout_fade_out"]
                     fadeOutTimer.update(delta)
                     if (fadeOutTimer.isFinished()) {
                         destroy()
-                        GameLogger.debug(TAG, "Fade out timer finished, killing this sea lion :(")
+                        GameLogger.debug(TAG, "update(): fade out timer finished, killing this sea lion :(")
                     }
                 }
             }
@@ -209,19 +215,13 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
-
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
-        body.addFixture(bodyFixture)
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        body.addFixture(damagerFixture)
-
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
-        body.addFixture(damageableFixture)
-
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(
+            this,
+            body,
+            BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
+        )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
@@ -231,22 +231,27 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             sprite.hidden = damageBlink
-            if (fadingOut) {
-                val fadeOutTimer = timers["pout_fade_out"]
-                sprite.setAlpha(1f - fadeOutTimer.getRatio())
-            } else sprite.setAlpha(1f)
+            when {
+                fadingOut -> {
+                    val fadeOutTimer = timers["pout_fade_out"]
+                    sprite.setAlpha(1f - fadeOutTimer.getRatio())
+                }
+
+                else -> sprite.setAlpha(1f)
+            }
         }
         return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = {
-            if (sealionState == SealionState.THROW) {
-                if (ballInHands) "before_throw_ball" else "after_throw_ball"
-            } else when (sealionState) {
-                SealionState.WAIT -> "wait_${if (ballInHands) "with_ball" else "no_ball"}"
-                SealionState.TAUNT -> "taunt_${if (ballInHands) "with_ball" else "no_ball"}"
-                else -> "pout"
+            when (sealionState) {
+                SealionState.THROW -> if (ballInHands) "before_throw_ball" else "after_throw_ball"
+                else -> when (sealionState) {
+                    SealionState.WAIT -> "wait_${if (ballInHands) "with_ball" else "no_ball"}"
+                    SealionState.TAUNT -> "taunt_${if (ballInHands) "with_ball" else "no_ball"}"
+                    else -> "pout"
+                }
             }
         }
         val animations = objectMapOf<String, IAnimation>(
