@@ -70,4 +70,6 @@ object MegamanValues {
     const val FLAME_TOSS_GRAVITY = -0.25f
 
     const val SPAWNING_DUR = 0.05f
+
+    const val CROUCH_DELAY = 0.1f
 }

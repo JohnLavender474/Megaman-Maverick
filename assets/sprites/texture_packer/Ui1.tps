@@ -343,36 +343,6 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Ui1/MegamanSubtitle.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>270,68,539,135</rect>
-                <key>scale9Paddings</key>
-                <rect>270,68,539,135</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Ui1/MegamanTitle.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>496,148,991,295</rect>
-                <key>scale9Paddings</key>
-                <rect>496,148,991,295</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
             <key type="filename">../frames/Ui1/MugshotPane/Text/DESERT_MAN.png</key>
             <key type="filename">../frames/Ui1/MugshotPane/Text/GLACIER_MAN.png</key>
             <key type="filename">../frames/Ui1/MugshotPane/Text/INFERNO_MAN.png</key>

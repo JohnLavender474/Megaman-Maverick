@@ -338,6 +338,7 @@ class MegamanMaverickGame(
         // but doing so will require reworking level designs and certain parts of the codebase
         megamanUpgradeHandler.add(MegaAbility.CHARGE_WEAPONS)
         megamanUpgradeHandler.add(MegaAbility.AIR_DASH)
+        megamanUpgradeHandler.add(MegaAbility.CROUCH)
         megamanUpgradeHandler.add(MegaAbility.GROUND_SLIDE)
         megamanUpgradeHandler.add(MegaAbility.WALL_SLIDE)
 
