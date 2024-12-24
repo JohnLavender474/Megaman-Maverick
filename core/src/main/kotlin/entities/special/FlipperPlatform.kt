@@ -16,6 +16,8 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
@@ -45,8 +47,15 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
 
     companion object {
         const val TAG = "FlipperPlatform"
+
         private const val SWITCH_DELAY = 0.4f
         private const val SWITCH_DURATION = 0.25f
+
+        private const val BLOCK_WIDTH = 1.75f
+        private const val BLOCK_HEIGHT = 0.5f
+        private const val OFFSET_X = 0.25f
+        private const val OFFSET_Y = 0.5f
+
         private var leftRegion: TextureRegion? = null
         private var rightRegion: TextureRegion? = null
         private var leftDelayRegion: TextureRegion? = null
@@ -59,13 +68,11 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
 
     private val switchDelay = Timer(SWITCH_DELAY)
     private val switchTimer = Timer(SWITCH_DURATION)
+
     private lateinit var flipperPlatformState: FlipperPlatformState
-    private lateinit var bounds: GameRectangle
+
+    private val bounds = GameRectangle()
     private var block: Block? = null
-
-    override fun getEntityType() = EntityType.SPECIAL
-
-    override fun getTag() = TAG
 
     override fun init() {
         if (leftRegion == null || rightRegion == null || flipToRightRegion == null || flipToLeftRegion == null) {
@@ -91,13 +98,13 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         switchDelay.setToEnd()
 
         flipperPlatformState = FlipperPlatformState.LEFT
-        bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
 
         block = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD)!! as Block
         block!!.spawn(
             props(
                 ConstKeys.BOUNDS pairTo GameRectangle()
-                    .setSize(1.1875f * ConstVals.PPM, 0.25f * ConstVals.PPM)
+                    .setSize(1.25f * ConstVals.PPM, 0.5f * ConstVals.PPM)
                     .setX(-100f * ConstVals.PPM),
                 ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
                 ConstKeys.BODY_LABELS pairTo objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY),
@@ -116,7 +123,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        block!!.setSize(ConstVals.PPM.toFloat(), 0.25f * ConstVals.PPM)
+        block!!.setSize(BLOCK_WIDTH * ConstVals.PPM, BLOCK_HEIGHT * ConstVals.PPM)
 
         switchDelay.update(delta)
         if (switchDelay.isJustFinished()) {
@@ -131,6 +138,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         when (flipperPlatformState) {
             FlipperPlatformState.FLIP_TO_RIGHT -> {
                 block!!.body.setCenterX(-100f * ConstVals.PPM)
+
                 switchTimer.update(delta)
                 if (switchTimer.isFinished()) {
                     flipperPlatformState = FlipperPlatformState.RIGHT
@@ -140,6 +148,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
 
             FlipperPlatformState.FLIP_TO_LEFT -> {
                 block!!.body.setCenterX(-100f * ConstVals.PPM)
+
                 switchTimer.update(delta)
                 if (switchTimer.isFinished()) {
                     flipperPlatformState = FlipperPlatformState.LEFT
@@ -150,7 +159,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
             FlipperPlatformState.LEFT -> {
                 val position = bounds.getPositionPoint(Position.TOP_CENTER)
                 block!!.body.setTopRightToPoint(position)
-                block!!.body.translate(-0.25f * ConstVals.PPM, -0.4f * ConstVals.PPM)
+                block!!.body.translate(-OFFSET_X * ConstVals.PPM, -OFFSET_Y * ConstVals.PPM)
 
                 if (switchDelay.isFinished() &&
                     block!!.body.getBounds().overlaps(megaman().feetFixture.getShape())
@@ -164,8 +173,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
             FlipperPlatformState.RIGHT -> {
                 val position = bounds.getPositionPoint(Position.TOP_CENTER)
                 block!!.body.setTopLeftToPoint(position)
-                block!!.body.translate(0.25f * ConstVals.PPM, 0f)
-                block!!.body.translate(0f, -0.3f * ConstVals.PPM)
+                block!!.body.translate(OFFSET_X * ConstVals.PPM, -OFFSET_Y * ConstVals.PPM)
 
                 if (switchDelay.isFinished() &&
                     block!!.body.getBounds().overlaps(megaman().feetFixture.getShape())
@@ -184,11 +192,11 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
-        sprite.setSize(2.6875f * ConstVals.PPM, 1.875f * ConstVals.PPM)
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
+        sprite.setSize(/* 2.6875f */  4.03125f * ConstVals.PPM, /* 1.875f */ 2.8125f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(bounds.getPositionPoint(Position.TOP_CENTER), Position.TOP_CENTER)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setPosition(bounds.getPositionPoint(Position.TOP_CENTER), Position.TOP_CENTER)
         }
         return spritesComponent
     }
@@ -213,4 +221,8 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
+
+    override fun getEntityType() = EntityType.SPECIAL
+
+    override fun getTag() = TAG
 }

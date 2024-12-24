@@ -91,6 +91,8 @@ object ConstKeys {
     const val BALL = "ball"
     const val WAIT = "wait"
     const val S = "s"
+    const val SELECTED = "selected"
+    const val NONE = "none"
     const val DISTANCE = "distance"
     const val ITERATIONS = "iterations"
     const val HEURISTIC = "heuristic"
