@@ -54,6 +54,7 @@ import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
@@ -68,6 +69,8 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         private const val REST_DUR = 0.75f
         private const val TRANS_DUR = 0.6f
         private const val SHOOT_DUR = 0.25f
+        private const val SHOOT_OFFSET_X = 0.25f
+        private const val SHOOT_OFFSET_Y = 0.25f
         private const val BALL_GRAVITY = 0.15f
         private const val TRANS_DAMAGEABLE_CUTOFF = 0.5f
         private const val DEFAULT_BALL_GRAVITY_SCALAR = 1f
@@ -163,11 +166,12 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     private fun shoot() {
         val explodingBall = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.EXPLODING_BALL)!!
 
-        val offset = when (direction) {
-            Direction.UP -> Vector2(0.25f * facing.value, 0.125f)
-            Direction.DOWN -> Vector2(0.25f * facing.value, -0.125f)
-            Direction.LEFT -> Vector2(-0.125f, 0.25f * facing.value)
-            Direction.RIGHT -> Vector2(0.125f, 0.25f * facing.value)
+        val offset = GameObjectPools.fetch(Vector2::class)
+        when (direction) {
+            Direction.UP -> offset.set(SHOOT_OFFSET_X * facing.value, SHOOT_OFFSET_Y)
+            Direction.DOWN -> offset.set(SHOOT_OFFSET_X * facing.value, -SHOOT_OFFSET_Y)
+            Direction.LEFT -> offset.set(-SHOOT_OFFSET_Y, SHOOT_OFFSET_X * facing.value)
+            Direction.RIGHT -> offset.set(SHOOT_OFFSET_Y, SHOOT_OFFSET_X * facing.value)
         }.scl(ConstVals.PPM.toFloat())
 
         val spawn = body.getCenter().add(offset)
@@ -219,7 +223,7 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(1.15f * ConstVals.PPM, 1.5f * ConstVals.PPM)
+        body.setSize(1.25f * ConstVals.PPM, 1.75f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
@@ -260,19 +264,22 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.75f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setOriginCenter()
-            _sprite.rotation = direction.rotation
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setOriginCenter()
+            sprite.rotation = direction.rotation
+
             val position = DirectionPositionMapper.getPosition(direction).opposite()
-            _sprite.setPosition(body.getPositionPoint(position), position)
-            _sprite.hidden = damageBlink
+            sprite.setPosition(body.getPositionPoint(position), position)
+
+            sprite.hidden = damageBlink
+
             when (direction) {
-                Direction.UP -> _sprite.setFlip(isFacing(Facing.RIGHT), false)
-                Direction.DOWN -> _sprite.setFlip(isFacing(Facing.LEFT), false)
-                Direction.LEFT -> _sprite.setFlip(false, isFacing(Facing.RIGHT))
-                Direction.RIGHT -> _sprite.setFlip(false, isFacing(Facing.LEFT))
+                Direction.UP -> sprite.setFlip(isFacing(Facing.RIGHT), false)
+                Direction.DOWN -> sprite.setFlip(isFacing(Facing.LEFT), false)
+                Direction.LEFT -> sprite.setFlip(false, isFacing(Facing.RIGHT))
+                Direction.RIGHT -> sprite.setFlip(false, isFacing(Facing.LEFT))
             }
         }
         return spritesComponent

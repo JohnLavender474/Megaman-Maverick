@@ -83,8 +83,8 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         fullyCharged = spawnProps.get(ConstKeys.BOOLEAN, Boolean::class)!!
         direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
 
-        var bodyDimension = 0.75f * ConstVals.PPM
-        var spriteDimension = ConstVals.PPM.toFloat()
+        var bodyDimension = ConstVals.PPM.toFloat()
+        var spriteDimension = 1.5f * ConstVals.PPM
 
         if (fullyCharged) spriteDimension *= 1.5f else bodyDimension /= 2f
         defaultSprite.setSize(spriteDimension)

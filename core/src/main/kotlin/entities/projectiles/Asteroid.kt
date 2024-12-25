@@ -168,25 +168,25 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.75f * ConstVals.PPM)
+        body.setSize(1.25f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.3f * ConstVals.PPM))
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.625f * ConstVals.PPM))
         body.addFixture(bodyFixture)
         debugShapes.add { bodyFixture}
 
-        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.375f * ConstVals.PPM))
+        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.65f * ConstVals.PPM))
         body.addFixture(projectileFixture)
         debugShapes.add { projectileFixture}
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.375f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.65f * ConstVals.PPM))
         body.addFixture(damagerFixture)
         debugShapes.add { damagerFixture}
 
-        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(0.375f * ConstVals.PPM))
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(0.65f * ConstVals.PPM))
         body.addFixture(shieldFixture)
         debugShapes.add { shieldFixture}
 
@@ -197,7 +197,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
-        sprite.setSize(1.25f * ConstVals.PPM)
+        sprite.setSize(1.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { delta, _ ->
             val region = regions.get(type)

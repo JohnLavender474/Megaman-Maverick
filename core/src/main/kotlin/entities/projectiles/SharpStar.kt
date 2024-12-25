@@ -77,7 +77,7 @@ class SharpStar(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(0.8f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat())
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         body.preProcess.put(ConstKeys.DEFAULT) {
@@ -87,7 +87,7 @@ class SharpStar(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
         val debugShapes = gdxArrayOf<() -> IDrawableShape?>()
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.4f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.5f * ConstVals.PPM))
         body.addFixture(damagerFixture)
         debugShapes.add { damagerFixture}
 
@@ -100,7 +100,7 @@ class SharpStar(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
-        sprite.setSize(3f * ConstVals.PPM)
+        sprite.setSize(3.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setCenter(body.getCenter())

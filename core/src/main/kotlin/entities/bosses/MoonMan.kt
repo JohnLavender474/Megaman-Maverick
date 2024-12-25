@@ -83,8 +83,8 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         // if false, Gravity Man's direction rotation will never change
         private const val CHANGE_GRAVITY = false
 
-        private const val BODY_WIDTH = 1.15f
-        private const val BODY_HEIGHT = 1.5f
+        private const val BODY_WIDTH = 1.25f
+        private const val BODY_HEIGHT = 1.75f
 
         private const val JUMP_IMPULSE_Y = 6f
         private const val JUMP_MAX_IMPULSE_X = 8f
@@ -98,7 +98,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         private const val DEFAULT_FRICTION_X = 6f
         private const val DEFAULT_FRICTION_Y = 1.015f
 
-        private const val SPRITE_SIZE = 2.25f
+        private const val SPRITE_SIZE = 2.75f
 
         private const val INIT_DUR = 0.3f
         private const val STAND_DUR = 0.75f
@@ -121,8 +121,8 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         private const val SHARP_STAR_MOVEMENT_SCALAR = 0.75f
 
         private const val MOON_SCYTHE_SPEED = 8f
-        private const val MOON_SCYTHE_MOVEMENT_SCALAR = 0.75f
-        private val MOON_SCYTHE_DEG_OFFSETS = gdxArrayOf(7.5f, 35f, 62.5f)
+        private const val MOON_SCYTHE_MOVEMENT_SCALAR = 0.5f
+        private val MOON_SCYTHE_DEG_OFFSETS = gdxArrayOf(10f, 40f, 70f)
 
         private val STAND_SHOOT_DURS = gdxArrayOf(0.5f, 0.5f, 1f, 0.5f, 1f, 0.5f, 0.6f)
 

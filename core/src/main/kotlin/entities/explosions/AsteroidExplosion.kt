@@ -87,11 +87,11 @@ class AsteroidExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.8f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat())
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.4f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.5f * ConstVals.PPM))
         body.addFixture(damagerFixture)
         damagerFixture.drawingColor = Color.RED
         debugShapes.add { damagerFixture}
@@ -103,7 +103,7 @@ class AsteroidExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.15f * ConstVals.PPM)
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
         return spritesComponent

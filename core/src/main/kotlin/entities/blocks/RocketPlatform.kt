@@ -44,8 +44,8 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
 
     companion object {
         private var region: TextureRegion? = null
-        private const val WIDTH = 0.85f
-        private const val HEIGHT = 3f
+        private const val WIDTH = 1f
+        private const val HEIGHT = 3.5f
     }
 
     override val eventKeyMask = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS)
@@ -141,7 +141,7 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
 
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, -1))
-        sprite.setSize(4f * ConstVals.PPM)
+        sprite.setSize(4.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.hidden = hidden

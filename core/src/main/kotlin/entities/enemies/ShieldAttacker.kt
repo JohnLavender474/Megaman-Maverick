@@ -82,42 +82,46 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         vertical = spawnProps.getOrDefault(ConstKeys.VERTICAL, false, Boolean::class)
-        if (vertical) {
-            body.setSize(1.5f * ConstVals.PPM, 0.75f * ConstVals.PPM)
-            val targetY = spawn.y + spawnProps.get(ConstKeys.VALUE, Float::class)!! * ConstVals.PPM
-            when {
-                spawn.y < targetY -> {
-                    min = spawn.y
-                    max = targetY
-                    switch = false
-                }
+        when {
+            vertical -> {
+                body.setSize(1.5f * ConstVals.PPM, 0.75f * ConstVals.PPM)
+                val targetY = spawn.y + spawnProps.get(ConstKeys.VALUE, Float::class)!! * ConstVals.PPM
+                when {
+                    spawn.y < targetY -> {
+                        min = spawn.y
+                        max = targetY
+                        switch = false
+                    }
 
-                else -> {
-                    min = targetY
-                    max = spawn.y
-                    switch = true
+                    else -> {
+                        min = targetY
+                        max = spawn.y
+                        switch = true
+                    }
                 }
+                body.setCenter(spawn)
+                facing = if (megaman().body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
             }
-            body.setCenter(spawn)
-            facing = if (megaman().body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
-        } else {
-            body.setSize(0.75f * ConstVals.PPM, 1.5f * ConstVals.PPM)
-            val targetX = spawn.x + spawnProps.get(ConstKeys.VALUE, Float::class)!! * ConstVals.PPM
-            when {
-                spawn.x < targetX -> {
-                    min = spawn.x
-                    max = targetX
-                    switch = false
-                }
 
-                else -> {
-                    min = targetX
-                    max = spawn.x
-                    switch = true
+            else -> {
+                body.setSize(0.75f * ConstVals.PPM, 1.5f * ConstVals.PPM)
+                val targetX = spawn.x + spawnProps.get(ConstKeys.VALUE, Float::class)!! * ConstVals.PPM
+                when {
+                    spawn.x < targetX -> {
+                        min = spawn.x
+                        max = targetX
+                        switch = false
+                    }
+
+                    else -> {
+                        min = targetX
+                        max = spawn.x
+                        switch = true
+                    }
                 }
+                body.setCenter(spawn)
+                facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
             }
-            body.setCenter(spawn)
-            facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         }
 
         val frameDuration = spawnProps.getOrDefault(ConstKeys.FRAME, 0.1f, Float::class)
