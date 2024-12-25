@@ -204,7 +204,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
             .nor()
             .scl(BULLET_SPEED * ConstVals.PPM)
 
-        val offset = ConstVals.PPM / 64f
+        val offset = ConstVals.PPM / 48f
         val spawn = GameObjectPools.fetch(Vector2::class)
             .set(body.getCenter())
             .add(offset * facing.value, if (direction == Direction.DOWN) -offset else offset)
@@ -223,7 +223,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.85f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat())
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         bodyFixture.putProperty(ConstKeys.GRAVITY_ROTATABLE, false)
@@ -239,7 +239,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.hidden = damageBlink

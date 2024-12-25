@@ -353,12 +353,18 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
     }
 
     override fun draw(drawer: Batch) {
+        game.viewports.get(ConstKeys.UI).apply()
         drawer.projectionMatrix = game.getUiCamera().combined
+
+        drawer.begin()
+
         background.draw(drawer)
         mugshotGrid.forEach { it.value.draw(drawer) }
         text.forEach { it.draw(drawer) }
         blinkingArrows.get(currentButtonKey)?.draw(drawer)
         foregroundSprites.keys().forEach { it.draw(drawer) }
+
+        drawer.end()
     }
 
     override fun draw(renderer: ShapeRenderer) {

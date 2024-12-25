@@ -409,14 +409,17 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
     override fun draw(drawer: Batch) {
         game.viewports.get(ConstKeys.UI).apply()
-
         drawer.projectionMatrix = game.getUiCamera().combined
+
+        drawer.begin()
 
         background.draw(drawer)
         fontHandles.forEach { it.draw(drawer) }
         blinkArrows.get(currentButtonKey).draw(drawer)
 
         if (settingsArrowBlink) settingsArrows.forEach { it.draw(drawer) }
+
+        drawer.end()
     }
 
     override fun draw(renderer: ShapeRenderer) {

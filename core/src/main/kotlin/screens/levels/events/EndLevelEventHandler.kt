@@ -22,6 +22,8 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_SIZE
+import com.megaman.maverick.game.entities.megaman.components.shouldFlipSpriteX
+import com.megaman.maverick.game.entities.megaman.components.shouldFlipSpriteY
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getPositionPoint
@@ -144,7 +146,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
             beamSprite.rotation = megaman.direction.rotation
             val position = DirectionPositionMapper.getInvertedPosition(megaman.direction)
             beamSprite.setPosition(megaman.body.getPositionPoint(position), position)
-            beamSprite.setFlip(megaman.isFacing(Facing.LEFT), false)
+            beamSprite.setFlip(megaman.shouldFlipSpriteX(), megaman.shouldFlipSpriteY())
 
             beamTransitionTimer.reset()
 

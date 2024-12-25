@@ -45,7 +45,7 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game) {
         const val TAG = "MoonScythe"
         private const val ROTATIONS_PER_SEC = 2.5f
         private const val FADE_DUR = 0.25f
-        private const val MAX_BOUNCES = 5
+        private const val MAX_BOUNCES = 3
         private const val SPAWN_TRAIL_DELAY = 0.1f
         private const val DEBUG_FADING = false
         private var region: TextureRegion? = null
@@ -112,30 +112,34 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game) {
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         rotation += ROTATIONS_PER_SEC * 360f * delta * movementScalar
 
-        if (fade) {
-            fadeTimer.update(delta)
-            if (fadeTimer.isFinished()) destroy()
-        } else {
-            spawnTrailDelay.update(delta)
-            if (spawnTrailDelay.isFinished()) {
-                val trajectory = GameObjectPools.fetch(Vector2::class).setZero()
-                val moonScythe = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MOON_SCYTHE)!!
-                moonScythe.spawn(
-                    props(
-                        ConstKeys.POSITION pairTo body.getCenter(),
-                        ConstKeys.TRAJECTORY pairTo trajectory,
-                        ConstKeys.ROTATION pairTo rotation,
-                        ConstKeys.FADE pairTo true
+        when {
+            fade -> {
+                fadeTimer.update(delta)
+                if (fadeTimer.isFinished()) destroy()
+            }
+
+            else -> {
+                spawnTrailDelay.update(delta)
+                if (spawnTrailDelay.isFinished()) {
+                    val trajectory = GameObjectPools.fetch(Vector2::class).setZero()
+                    val moonScythe = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MOON_SCYTHE)!!
+                    moonScythe.spawn(
+                        props(
+                            ConstKeys.POSITION pairTo body.getCenter(),
+                            ConstKeys.TRAJECTORY pairTo trajectory,
+                            ConstKeys.ROTATION pairTo rotation,
+                            ConstKeys.FADE pairTo true
+                        )
                     )
-                )
-                spawnTrailDelay.reset()
+                    spawnTrailDelay.reset()
+                }
             }
         }
     })
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(0.8f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat())
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         body.preProcess.put(ConstKeys.DEFAULT) {
@@ -145,7 +149,7 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         val debugShapes = gdxArrayOf<() -> IDrawableShape?>()
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.4f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.5f * ConstVals.PPM))
         body.addFixture(damagerFixture)
         debugShapes.add { damagerFixture }
 
@@ -156,7 +160,7 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
-        sprite.setSize(3f * ConstVals.PPM)
+        sprite.setSize(3.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setCenter(body.getCenter())

@@ -706,6 +706,8 @@ class MegaLevelScreen(
     }
 
     override fun draw(drawer: Batch) {
+        drawer.begin()
+
         // each background has its own viewport instance which is applied when the background is drawn,
         // so wait until after all backgrounds are drawn before applying the game viewport
         backgrounds.forEach { if (!backgroundsToHide.contains(it.key)) it.draw(batch) }
@@ -742,6 +744,8 @@ class MegaLevelScreen(
 
         game.viewports.get(ConstKeys.GAME).apply()
         if (!endLevelEventHandler.finished) endLevelEventHandler.draw(drawer)
+
+        drawer.end()
     }
 
     override fun draw(renderer: ShapeRenderer) {

@@ -198,9 +198,9 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(ConstVals.PPM.toFloat())
+        body.setSize(1.5f * ConstVals.PPM)
 
-        val teleporterFixture = Fixture(body, FixtureType.TELEPORTER, GameRectangle().setSize(ConstVals.PPM.toFloat()))
+        val teleporterFixture = Fixture(body, FixtureType.TELEPORTER, GameRectangle(body))
         body.addFixture(teleporterFixture)
 
         return BodyComponentCreator.create(this, body)
@@ -208,7 +208,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(ConstVals.PPM.toFloat())
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setCenter(body.getCenter())

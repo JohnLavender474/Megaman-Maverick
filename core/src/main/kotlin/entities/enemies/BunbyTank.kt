@@ -137,20 +137,22 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     }
 
     private fun shoot() {
-        val spawn = body.getCenter().add(
-            (when (direction) {
-                Direction.UP -> Vector2(0.5f * facing.value, 0.125f)
-                Direction.DOWN -> Vector2(-0.5f * facing.value, 0.125f)
-                Direction.LEFT -> Vector2(0.175f, 0.5f * facing.value)
-                Direction.RIGHT -> Vector2(0.175f, -0.5f * facing.value)
-            }).scl(ConstVals.PPM.toFloat())
-        )
+        val offset = GameObjectPools.fetch(Vector2::class)
+        when (direction) {
+            Direction.UP -> offset.set(0.5f * facing.value, 0.25f)
+            Direction.DOWN -> offset.set(-0.5f * facing.value, 0.25f)
+            Direction.LEFT -> offset.set(0.275f, 0.5f * facing.value)
+            Direction.RIGHT -> offset.set(0.275f, -0.5f * facing.value)
+        }.scl(ConstVals.PPM.toFloat())
 
-        val trajectory = when (direction) {
-            Direction.UP -> Vector2(ROCKET_SPEED * facing.value, 0f)
-            Direction.DOWN -> Vector2(-ROCKET_SPEED * facing.value, 0f)
-            Direction.LEFT -> Vector2(0f, ROCKET_SPEED * facing.value)
-            Direction.RIGHT -> Vector2(0f, -ROCKET_SPEED * facing.value)
+        val spawn = body.getCenter().add(offset)
+
+        val trajectory = GameObjectPools.fetch(Vector2::class)
+        when (direction) {
+            Direction.UP -> trajectory.set(ROCKET_SPEED * facing.value, 0f)
+            Direction.DOWN -> trajectory.set(-ROCKET_SPEED * facing.value, 0f)
+            Direction.LEFT -> trajectory.set(0f, ROCKET_SPEED * facing.value)
+            Direction.RIGHT -> trajectory.set(0f, -ROCKET_SPEED * facing.value)
         }.scl(ConstVals.PPM.toFloat() * movementScalar)
 
         val rocket = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BUNBY_RED_ROCKET)!!
@@ -227,7 +229,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(0.75f * ConstVals.PPM, 1.25f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat(), 1.5f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
@@ -250,7 +252,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             )
         )
         leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftSideFixture.offsetFromBodyAttachment.x = -0.5f * ConstVals.PPM
+        leftSideFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
         body.addFixture(leftSideFixture)
         debugShapes.add { leftSideFixture}
 
@@ -260,7 +262,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             )
         )
         rightSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        rightSideFixture.offsetFromBodyAttachment.x = 0.5f * ConstVals.PPM
+        rightSideFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
         body.addFixture(rightSideFixture)
         debugShapes.add { rightSideFixture}
 
@@ -269,7 +271,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 0.1f * ConstVals.PPM, 0.1f * ConstVals.PPM
             )
         )
-        leftFootFixture.offsetFromBodyAttachment = Vector2(-0.75f * ConstVals.PPM, -0.625f * ConstVals.PPM)
+        leftFootFixture.offsetFromBodyAttachment.set(-ConstVals.PPM.toFloat(), -0.75f * ConstVals.PPM)
         leftFootFixture.setConsumer { _, fixture ->
             when (fixture.getType()) {
                 FixtureType.BLOCK -> leftFootFixture.putProperty(ConstKeys.BLOCK, true)
@@ -284,7 +286,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 0.1f * ConstVals.PPM, 0.1f * ConstVals.PPM
             )
         )
-        rightFootFixture.offsetFromBodyAttachment = Vector2(0.75f * ConstVals.PPM, -0.625f * ConstVals.PPM)
+        rightFootFixture.offsetFromBodyAttachment.set(ConstVals.PPM.toFloat(), -0.75f * ConstVals.PPM)
         rightFootFixture.setConsumer { _, fixture ->
             when (fixture.getType()) {
                 FixtureType.BLOCK -> rightFootFixture.putProperty(ConstKeys.BLOCK, true)
@@ -322,7 +324,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(2f * ConstVals.PPM)
+        sprite.setSize(2.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setFlip(isFacing(Facing.LEFT), false)

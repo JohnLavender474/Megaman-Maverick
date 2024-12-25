@@ -103,7 +103,8 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
         super.init()
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
         shootTimer.setRunnables(
-            gdxArrayOf(TimeMarkedRunnable(0.5f) { shoot() },
+            gdxArrayOf(
+                TimeMarkedRunnable(0.5f) { shoot() },
                 TimeMarkedRunnable(1.0f) { shoot() },
                 TimeMarkedRunnable(1.5f) { shoot() })
         )
@@ -134,30 +135,34 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.85f * ConstVals.PPM, 0.65f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat(), 0.75f * ConstVals.PPM)
 
         val shapes = Array<() -> IDrawableShape?>()
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.15f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        shapes.add { damagerFixture}
+        shapes.add { damagerFixture }
 
         val damageableFixture = Fixture(
             body,
             FixtureType.DAMAGEABLE,
-            GameRectangle().setSize(0.65f * ConstVals.PPM, 0.5f * ConstVals.PPM)
+            GameRectangle().setSize(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM)
         )
         body.addFixture(damageableFixture)
-        shapes.add { damageableFixture}
+        shapes.add { damageableFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             val damageableBounds = damageableFixture.rawShape as GameRectangle
-            if (down) {
-                damageableBounds.setHeight(0.2f * ConstVals.PPM)
-                damageableFixture.offsetFromBodyAttachment.y = (if (upsideDown) 0.15f else -0.15f) * ConstVals.PPM
-            } else {
-                damageableBounds.setHeight(0.65f * ConstVals.PPM)
-                damageableFixture.offsetFromBodyAttachment.y = 0f
+            when {
+                down -> {
+                    damageableBounds.setHeight(0.2f * ConstVals.PPM)
+                    damageableFixture.offsetFromBodyAttachment.y = (if (upsideDown) 0.15f else -0.15f) * ConstVals.PPM
+                }
+
+                else -> {
+                    damageableBounds.setHeight(0.65f * ConstVals.PPM)
+                    damageableFixture.offsetFromBodyAttachment.y = 0f
+                }
             }
         }
 
@@ -171,25 +176,33 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
         updatablesComponent.add {
             if (game.isCameraRotating()) return@add
 
-            if (!downTimer.isFinished()) {
-                downTimer.update(it)
-                if (downTimer.isFinished()) riseTimer.reset()
-            } else if (!riseTimer.isFinished()) {
-                riseTimer.update(it)
-                if (riseTimer.isFinished()) shootTimer.reset()
-            } else if (!shootTimer.isFinished()) {
-                shootTimer.update(it)
-                if (shootTimer.isFinished()) dropTimer.reset()
-            } else if (!dropTimer.isFinished()) {
-                dropTimer.update(it)
-                if (dropTimer.isFinished()) downTimer.reset()
+            when {
+                !downTimer.isFinished() -> {
+                    downTimer.update(it)
+                    if (downTimer.isFinished()) riseTimer.reset()
+                }
+
+                !riseTimer.isFinished() -> {
+                    riseTimer.update(it)
+                    if (riseTimer.isFinished()) shootTimer.reset()
+                }
+
+                !shootTimer.isFinished() -> {
+                    shootTimer.update(it)
+                    if (shootTimer.isFinished()) dropTimer.reset()
+                }
+
+                !dropTimer.isFinished() -> {
+                    dropTimer.update(it)
+                    if (dropTimer.isFinished()) downTimer.reset()
+                }
             }
         }
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.hidden = damageBlink
@@ -226,12 +239,13 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
         BULLET_TRAJECTORIES.forEach {
             val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
 
-            val spawn = Vector2(body.getCenter())
+            val spawn = body.getCenter()
             if (it.x > 0) spawn.x += 0.2f * ConstVals.PPM else if (it.x < 0) spawn.x -= 0.2f * ConstVals.PPM
-            spawn.y += (if (upsideDown) -0.215f else 0.215f) * ConstVals.PPM
+            spawn.y += (if (upsideDown) -0.25f else 0.25f) * ConstVals.PPM
 
-            val trajectory = Vector2(it).scl(movementScalar * ConstVals.PPM)
+            val trajectory = it.cpy().scl(movementScalar * ConstVals.PPM)
             if (upsideDown) trajectory.y *= -1f
+
             bullet.spawn(
                 props(
                     ConstKeys.TRAJECTORY pairTo trajectory,

@@ -82,7 +82,6 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
-import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -403,9 +402,7 @@ class MegamanMaverickGame(
             if (screen != null) {
                 screen.render(delta)
 
-                batch.begin()
                 screen.draw(batch)
-                batch.end()
 
                 if (screen is IShapeDebuggable) {
                     shapeRenderer.begin(ShapeType.Line)
