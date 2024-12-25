@@ -52,7 +52,7 @@ class MagmaOrb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(1.5f * ConstVals.PPM)
+        body.setSize(1.75f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -67,7 +67,7 @@ class MagmaOrb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
-        sprite.setSize(1.25f * ConstVals.PPM)
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
         return spritesComponent

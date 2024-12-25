@@ -98,8 +98,8 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         private const val LONG_PUNCH_X_THRESHOLD = 6f
         private const val LONG_PUNCH_EXTRA_WIDTH = 1.25f
 
-        private const val BODY_WIDTH = 1.15f
-        private const val BODY_HEIGHT = 1.5f
+        private const val BODY_WIDTH = 1.5f
+        private const val BODY_HEIGHT = 1.75f
         private const val VEL_CLAMP_X = 50f
         private const val VEL_CLAMP_Y = 25f
         private const val DEFAULT_FRICTION_X = 5f
@@ -111,8 +111,8 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         private const val ARM_OFFSET_Y = -0.25f
         private const val ARM_EXTENSIONS_COUNT = 2
 
-        private const val SPRITE_SIZE = 3f
-        private const val SPRITE_Y_OFFSET = -0.25f
+        private const val SPRITE_SIZE = 3.5f
+        private const val SPRITE_Y_OFFSET = -0.5f
 
         private const val NEEDLE_GRAV = -0.1f
         private const val NEEDLE_IMPULSE = 15f

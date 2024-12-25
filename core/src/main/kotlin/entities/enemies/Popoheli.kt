@@ -61,7 +61,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         private const val ATTACK_DELAY = 0.25f
         private const val ATTACK_DUR = 1f
         private const val FLAMES = 4
-        private const val FLAME_PADDING = 0.35f
+        private const val FLAME_PADDING = 0.5f
         private var heliRegion: TextureRegion? = null
         private var flameRegion: TextureRegion? = null
     }
@@ -113,30 +113,34 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         body.setCenter(spawn)
 
         val triggerable = spawnProps.getOrDefault(ConstKeys.TRIGGERABLE, false, Boolean::class)
-        if (triggerable) {
-            spawnProps.getAllMatching { it.toString().startsWith(ConstKeys.TRIGGER) }.forEach {
-                val value = it.second
-                if (value is RectangleMapObject) {
-                    val trigger = value.rectangle.toGameRectangle(false)
-                    val start =
-                        (value.properties.get(ConstKeys.START) as RectangleMapObject).rectangle.getCenter(false)
-                    val target =
-                        (value.properties.get(ConstKeys.TARGET) as RectangleMapObject).rectangle.getCenter(false)
-                    triggers.add(TriggerDef(trigger, start, target))
+        when {
+            triggerable -> {
+                spawnProps.getAllMatching { it.toString().startsWith(ConstKeys.TRIGGER) }.forEach {
+                    val value = it.second
+                    if (value is RectangleMapObject) {
+                        val trigger = value.rectangle.toGameRectangle(false)
+                        val start =
+                            (value.properties.get(ConstKeys.START) as RectangleMapObject).rectangle.getCenter(false)
+                        val target =
+                            (value.properties.get(ConstKeys.TARGET) as RectangleMapObject).rectangle.getCenter(false)
+                        triggers.add(TriggerDef(trigger, start, target))
+                    }
                 }
+                facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
             }
-            facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
-        } else {
-            val center = megaman().body.getCenter()
-            
-            val targets =
-                PriorityQueue<Vector2> { target1, target2 -> target1.dst2(center).compareTo(target2.dst2(center)) }
-            spawnProps.getAllMatching { it.toString().startsWith(ConstKeys.TARGET) }.forEach {
-                targets.add((it.second as RectangleMapObject).rectangle.getCenter())
-            }
-            target.set(targets.poll())
 
-            facing = if (target.x < body.getX()) Facing.LEFT else Facing.RIGHT
+            else -> {
+                val center = megaman().body.getCenter()
+
+                val targets =
+                    PriorityQueue<Vector2> { target1, target2 -> target1.dst2(center).compareTo(target2.dst2(center)) }
+                spawnProps.getAllMatching { it.toString().startsWith(ConstKeys.TARGET) }.forEach {
+                    targets.add((it.second as RectangleMapObject).rectangle.getCenter())
+                }
+                target.set(targets.poll())
+
+                facing = if (target.x < body.getX()) Facing.LEFT else Facing.RIGHT
+            }
         }
 
         state = if (triggerable) PopoheliState.WAITING else PopoheliState.APPROACHING
@@ -188,9 +192,8 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                 PopoheliState.ATTACKING -> {
                     attackDelayTimer.update(delta)
                     if (!attackDelayTimer.isFinished()) return@add
-                    if (attackDelayTimer.isJustFinished() && overlapsGameCamera()) requestToPlaySound(
-                        SoundAsset.ATOMIC_FIRE_SOUND, false
-                    )
+                    if (attackDelayTimer.isJustFinished() && overlapsGameCamera())
+                        requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
 
                     attackTimer.update(delta)
                     if (attackTimer.isFinished()) state = PopoheliState.FLEEING
@@ -205,7 +208,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.75f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat())
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
@@ -247,12 +250,12 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             if (waiting) return@put
 
             damagerFixture2.offsetFromBodyAttachment = Vector2(
-                FLAMES * FLAME_PADDING * facing.value * 0.65f * ConstVals.PPM, -0.5f * ConstVals.PPM
+                FLAMES * FLAME_PADDING * facing.value * 0.75f * ConstVals.PPM, -0.5f * ConstVals.PPM
             )
             damagerFixture2.setActive(attacking)
 
-            damageableFixture.offsetFromBodyAttachment.x = 0.4f * ConstVals.PPM * -facing.value
-            shieldFixture.offsetFromBodyAttachment.x = 0.3f * ConstVals.PPM * facing.value
+            damageableFixture.offsetFromBodyAttachment.x = 0.5f * ConstVals.PPM * -facing.value
+            shieldFixture.offsetFromBodyAttachment.x = 0.4f * ConstVals.PPM * facing.value
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -265,23 +268,23 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
         val updateFunctions = ObjectMap<Any, UpdateFunction<GameSprite>>()
 
         val heliSprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
-        heliSprite.setSize(1.5f * ConstVals.PPM)
+        heliSprite.setSize(2f * ConstVals.PPM)
         sprites.put("heli", heliSprite)
-        updateFunctions.put("heli") { _, _sprite ->
-            _sprite.setFlip(isFacing(Facing.RIGHT), false)
-            _sprite.setCenter(body.getCenter())
-            _sprite.hidden = waiting || damageBlink
+        updateFunctions.put("heli") { _, sprite ->
+            sprite.setFlip(isFacing(Facing.RIGHT), false)
+            sprite.setCenter(body.getCenter())
+            sprite.hidden = waiting || damageBlink
         }
 
         for (i in 0 until FLAMES) {
             val flameSprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
-            flameSprite.setSize(0.5f * ConstVals.PPM)
+            flameSprite.setSize(ConstVals.PPM.toFloat())
             sprites.put("flame_$i", flameSprite)
-            updateFunctions.put("flame_$i") { _, _sprite ->
-                _sprite.hidden = !attacking
-                _sprite.setPosition(
+            updateFunctions.put("flame_$i") { _, sprite ->
+                sprite.hidden = !attacking
+                sprite.setPosition(
                     body.getPositionPoint(Position.BOTTOM_CENTER).add(
-                        i * FLAME_PADDING * ConstVals.PPM * facing.value, -0.25f * ConstVals.PPM
+                        i * FLAME_PADDING * ConstVals.PPM * facing.value, -0.5f * ConstVals.PPM
                     ), if (isFacing(Facing.LEFT)) Position.BOTTOM_RIGHT else Position.BOTTOM_LEFT
                 )
             }

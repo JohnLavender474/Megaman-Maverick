@@ -193,11 +193,11 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val sprites = OrderedMap<Any, GameSprite>()
 
         val throwerSprite = GameSprite()
-        throwerSprite.setSize(1.15f * ConstVals.PPM)
+        throwerSprite.setSize(1.25f * ConstVals.PPM)
         sprites.put("thrower", throwerSprite)
 
         val flameColumnSprite = GameSprite()
-        flameColumnSprite.setSize(0.75f * ConstVals.PPM, 3.5f * ConstVals.PPM)
+        flameColumnSprite.setSize(ConstVals.PPM.toFloat(), 3.75f * ConstVals.PPM)
         sprites.put("flameColumn", flameColumnSprite)
 
         val spritesComponent = SpritesComponent(sprites)
@@ -212,10 +212,10 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             sprite.rotation = direction.rotation
             var position = DirectionPositionMapper.getInvertedPosition(direction)
             val offset = (when (direction) {
-                Direction.UP -> Vector2(0f, 1.15f)
-                Direction.DOWN -> Vector2(0f, -1.15f)
-                Direction.LEFT -> Vector2(-1.5f, 0f)
-                Direction.RIGHT -> Vector2(1.5f, 0f)
+                Direction.UP -> Vector2(0f, 1.25f)
+                Direction.DOWN -> Vector2(0f, -1.25f)
+                Direction.LEFT -> Vector2(-1.75f, 0f)
+                Direction.RIGHT -> Vector2(1.75f, 0f)
             }).scl(ConstVals.PPM.toFloat())
             val bodyPosition =
                 body.getPositionPoint(if (direction.isVertical()) position else position.opposite())
