@@ -1,5 +1,10 @@
 Megaman10Font.ttf
+hs_err_pid44915.log
+hs_err_pid59205.log
+hs_err_pid54984.log
 hs_err_pid36500.log
+hs_err_pid52134.log
+hs_err_pid58216.log
 temp/MegaRed225/random-enemies-5.jpg
 temp/MegaRed225/Random Enemy Sprites Set 9/Link
 temp/MegaRed225/Random Enemy Sprites Set 9/random-enemy-sprites-9.jpg
@@ -116,6 +121,7 @@ temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/
 temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/previews/pipe forest preview.png
 hs_err_pid37127.log
 hs_err_pid43548.log
+hs_err_pid52825.log
 hs_err_pid24840.log
 hs_err_pid37633.log
 sounds/conveyor_lift.wav
@@ -193,7 +199,10 @@ sounds/whoosh.mp3
 hs_err_pid41415.log
 hs_err_pid30460.log
 badlogic.jpg
+hs_err_pid58677.log
 hs_err_pid33803.log
+hs_err_pid53651.log
+hs_err_pid55634.log
 hs_err_pid26748.log
 hs_err_pid44444.log
 sprites/frames/MegamanTrailSprite/airdash.png
@@ -2302,6 +2311,7 @@ tiled_maps/tmx/MoonMan_v3.tmx
 tiled_maps/tmx/MoonMan_16x14.tmx
 tiled_maps/tmx/DesertMan_v2.tmx
 tiled_maps/tmx/Test3.tmx
+tiled_maps/tmx/InfernoMan_16x14.tmx
 tiled_maps/tmx/Test4.tmx
 tiled_maps/tmx/RodentMan_16x12.tmx
 tiled_maps/tmx/WilyStage2.tmx
@@ -2327,6 +2337,7 @@ tiled_maps/tmx/TimberWoman_16x14.tmx
 tiled_maps/tmx/MagnetMan_OLD.tmx
 tiled_maps/tmx/MoonMan.tmx
 tiled_maps/tmx/CrewMan.tmx
+tiled_maps/tmx/DesertMan_16x14.tmx
 tiled_maps/tmx/WilyStage3_v3.tmx
 tiled_maps/tmx/GlacierMan_16x12.tmx
 tiled_maps/tmx/RodentMan_16x14.tmx
@@ -2334,6 +2345,7 @@ tiled_maps/tmx/ReactMan_v2.tmx
 tiled_maps/tmx/WilyStage3_v2.tmx
 tiled_maps/tmx/Test2.tmx
 hs_err_pid33167.log
+hs_err_pid57324.log
 hs_err_pid42846.log
 diagrams/Guts Tank - Design.drawio
 diagrams/Inferno Man - Design.drawio
@@ -2341,13 +2353,18 @@ diagrams/Desert Man - Design.drawio
 diagrams/Glacier Man - Design.drawio
 diagrams/.$Inferno Man - Design.drawio.bkp
 diagrams/.$Desert Man - Design.drawio.bkp
+hs_err_pid50695.log
 hs_err_pid43896.log
 hs_err_pid26238.log
 hs_err_pid27397.log
 libgdx.png
+hs_err_pid56364.log
+hs_err_pid51618.log
 hs_err_pid35337.log
 hs_err_pid25305.log
 hs_err_pid38447.log
+hs_err_pid54331.log
+hs_err_pid51133.log
 credits.txt
 hs_err_pid42316.log
 music/MMX5_DarkDizzy.txt

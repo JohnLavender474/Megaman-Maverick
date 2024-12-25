@@ -101,7 +101,7 @@ class MagmaPellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.35f * ConstVals.PPM)
+        body.setSize(0.5f * ConstVals.PPM)
         body.physics.applyFrictionY = false
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -116,7 +116,7 @@ class MagmaPellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 1))
-        sprite.setSize(1.25f * ConstVals.PPM)
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
         return spritesComponent

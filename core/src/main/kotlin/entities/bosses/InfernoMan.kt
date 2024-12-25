@@ -73,7 +73,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     companion object {
         const val TAG = "InfernoMan"
 
-        private const val SPRITE_SIZE = 3f
+        private const val SPRITE_SIZE = 3.5f
 
         private const val INIT_DUR = 1f
         private const val STAND_DUR = 1.5f
@@ -88,8 +88,8 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val FLAME_HEAD_SHOTS = 4
         private const val FLAME_HEAD_SHOOT_DELAY = 0.2f
 
-        private const val BODY_WIDTH = 1.15f
-        private const val BODY_HEIGHT = 1.5f
+        private const val BODY_WIDTH = 1.5f
+        private const val BODY_HEIGHT = 1.75f
         private const val VEL_CLAMP_X = 50f
         private const val VEL_CLAMP_Y = 25f
         private const val GRAVITY = -0.15f
@@ -505,7 +505,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             else -> ShootMethod.UP
         }
 
-        else -> throw IllegalStateException("Cannot set shoot method when state=$currentState")
+        else -> ShootMethod.STRAIGHT
     }
 
     private fun resetShootTimer() {

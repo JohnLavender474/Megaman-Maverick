@@ -142,7 +142,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(1.5f * ConstVals.PPM)
+        body.setSize(2f * ConstVals.PPM)
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
         return BodyComponentCreator.create(
             this,
@@ -153,7 +153,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(2.75f * ConstVals.PPM)
+        sprite.setSize(3.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
@@ -198,7 +198,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     }
 
     private fun fire() {
-        val spawn = body.getPositionPoint(Position.BOTTOM_CENTER).add(0.5f * ConstVals.PPM * facing.value, 0.1f * ConstVals.PPM)
+        val spawn = body.getPositionPoint(Position.BOTTOM_CENTER).add(0.5f * ConstVals.PPM * facing.value, 0.25f * ConstVals.PPM)
         val fireWall = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIRE_WALL)!!
         fireWall.spawn(
             props(

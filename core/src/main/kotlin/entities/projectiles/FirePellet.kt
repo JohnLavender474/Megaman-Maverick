@@ -46,8 +46,10 @@ class FirePellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
+
         val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)!!
         body.physics.velocity.set(impulse)
     }
@@ -63,7 +65,7 @@ class FirePellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.25f * ConstVals.PPM)
+        body.setSize(0.5f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
@@ -72,7 +74,7 @@ class FirePellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 0))
-        sprite.setSize(0.5f * ConstVals.PPM)
+        sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setOriginCenter()

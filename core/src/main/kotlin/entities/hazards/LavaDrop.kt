@@ -75,9 +75,12 @@ class LavaDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IDamager, IHaz
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setTopCenterToPoint(spawn)
+
         body.physics.gravityOn = false
+
         dissipateTimer.reset()
         dissipating = false
     }
@@ -105,14 +108,14 @@ class LavaDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IDamager, IHaz
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(0.25f * ConstVals.PPM)
+        body.setSize(0.5f * ConstVals.PPM)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyAttachment.y = -0.125f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         body.addFixture(feetFixture)
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
@@ -125,7 +128,7 @@ class LavaDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IDamager, IHaz
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(0.5f * ConstVals.PPM)
+        sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)

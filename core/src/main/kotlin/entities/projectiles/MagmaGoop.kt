@@ -108,7 +108,7 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.5f * ConstVals.PPM)
+        body.setSize(0.75f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -123,7 +123,7 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
-        sprite.setSize(ConstVals.PPM.toFloat())
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setCenter(body.getCenter())

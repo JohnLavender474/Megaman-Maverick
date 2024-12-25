@@ -100,14 +100,14 @@ class FireWall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         val body = Body(BodyType.ABSTRACT)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
-        body.setSize(0.75f * ConstVals.PPM, ConstVals.PPM.toFloat())
+        body.setSize(ConstVals.PPM.toFloat())
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
         return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.PROJECTILE, FixtureType.DAMAGER))
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
-        sprite.setSize(1.75f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setCenter(body.getCenter())

@@ -207,7 +207,7 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.85f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat())
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         body.preProcess.put(ConstKeys.DEFAULT) {
@@ -222,7 +222,7 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { delta, _ ->
             sprite.setCenter(body.getCenter())
@@ -255,9 +255,11 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                 0 -> impulse.rotateDeg(-FIRE_PELLET_ANGLE_OFFSET)
                 2 -> impulse.rotateDeg(FIRE_PELLET_ANGLE_OFFSET)
             }
-            val firePellet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIRE_PELLET)!!
+
             val spawn = body.getPositionPoint(Position.BOTTOM_CENTER)
-                .add(0.1f * ConstVals.PPM * facing.value, 0.1f * ConstVals.PPM)
+                .add(0.1f * ConstVals.PPM * facing.value, 0.25f * ConstVals.PPM)
+
+            val firePellet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIRE_PELLET)!!
             firePellet.spawn(
                 props(
                     ConstKeys.POSITION pairTo spawn,

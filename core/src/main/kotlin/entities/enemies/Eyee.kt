@@ -165,7 +165,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.75f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat())
         val debugShapes = Array<() -> IDrawableShape?>()
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
         return BodyComponentCreator.create(
@@ -175,7 +175,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(0.75f * ConstVals.PPM)
+        sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _->
             sprite.setOriginCenter()

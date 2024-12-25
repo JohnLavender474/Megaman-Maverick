@@ -168,17 +168,17 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val body = Body(BodyType.ABSTRACT)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
-        body.setSize(0.6f * ConstVals.PPM)
+        body.setSize(0.75f *  ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
         val projectileFixture =
-            Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.25f * ConstVals.PPM))
+            Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.375f * ConstVals.PPM))
         body.addFixture(projectileFixture)
         debugShapes.add { projectileFixture}
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.25f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.375f * ConstVals.PPM))
         body.addFixture(damagerFixture)
         debugShapes.add { damagerFixture}
 
@@ -190,15 +190,16 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { delta, _sprite ->
-            _sprite.setOriginCenter()
-            _sprite.rotation = if (burst) burstDirection.rotation else _sprite.rotation + ROTATION * delta
+        spritesComponent.putUpdateFunction { delta, sprite ->
+            sprite.setOriginCenter()
+            sprite.rotation = if (burst) burstDirection.rotation else sprite.rotation + ROTATION * delta
 
-            val size = if (burst) 0.85f else 1.65f
-            _sprite.setSize(size * ConstVals.PPM)
+            val size = if (burst) 1f else 2f
+            sprite.setSize(size * ConstVals.PPM)
+
             val position = if (burst) Position.BOTTOM_CENTER else Position.CENTER
             val bodyPosition = body.getPositionPoint(position)
-            _sprite.setPosition(bodyPosition, position)
+            sprite.setPosition(bodyPosition, position)
         }
         return spritesComponent
     }
