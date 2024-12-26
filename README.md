@@ -8,7 +8,6 @@ All rights to "Megaman" are owned by Capcom, and this project aligns with their 
 Currently in pre-alpha, the game features assets from official Capcom titles and the community (see [Credits](#Credits)). 
 Special thanks to these creators for helping make this dream project a reality!
 
-- Engine: [Mega 2D Game Engine](https://github.com/JohnLavender474/Mega-2D-Game-Engine)
 - Framework: [LibGDX](https://libgdx.com/)
 - Language: [Kotlin](https://kotlinlang.org/)
 
