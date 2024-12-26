@@ -1,5 +1,7 @@
 package com.megaman.maverick.game.entities.megaman.constants
 
+import com.badlogic.gdx.graphics.Color
+
 object MegamanValues {
 
     const val START_HEALTH = 14
@@ -72,4 +74,6 @@ object MegamanValues {
     const val SPAWNING_DUR = 0.05f
 
     const val CROUCH_DELAY = 0.1f
+
+    val WEAPON_SPAWN_MAGIC_COLOR: Color = Color.valueOf("dd00ffff")
 }

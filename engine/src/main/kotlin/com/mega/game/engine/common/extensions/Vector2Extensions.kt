@@ -1,17 +1,25 @@
 package com.mega.game.engine.common.extensions
 
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.objects.IntPair
 
-fun Vector2.toIntPair(out: IntPair) = out.set(x.toInt(), y.toInt())
+fun Vector2.rotateAroundOrigin(degrees: Float, originX: Float, originY: Float): Vector2 {
+    val radians = degrees * MathUtils.degreesToRadians
+    val newX = (x - originX) * MathUtils.cos(radians) - (y - originY) * MathUtils.sin(radians) + originX
+    val newY = (x - originX) * MathUtils.sin(radians) + (y - originY) * MathUtils.cos(radians) + originY
+    return set(newX, newY)
+}
 
-fun Vector2.swapped() = set(y, x)
+fun Vector2.toIntPair(out: IntPair): IntPair = out.set(x.toInt(), y.toInt())
 
-fun Vector2.flipped() = set(-x, -y)
+fun Vector2.swapped(): Vector2 = set(y, x)
 
-fun Vector2.toVector3(out: Vector3, z: Float = 0f) = out.set(x, y, z)
+fun Vector2.flipped(): Vector2 = set(-x, -y)
+
+fun Vector2.toVector3(out: Vector3, z: Float = 0f): Vector3 = out.set(x, y, z)
 
 fun Vector2.set(value: Float): Vector2 = set(value, value)
 
