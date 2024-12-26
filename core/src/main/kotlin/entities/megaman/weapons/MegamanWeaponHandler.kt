@@ -1,13 +1,19 @@
-package com.megaman.maverick.game.entities.megaman
+package com.megaman.maverick.game.entities.megaman.weapons
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.OrderedMap
+import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.equalsAny
+import com.mega.game.engine.common.extensions.rotateAroundOrigin
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
+import com.mega.game.engine.common.objects.IntPair
 import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameLine
 import com.mega.game.engine.common.time.Timer
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -17,13 +23,19 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.GROUND_SLIDE_SPRITE_OFFSET_Y
+import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_KEY
+import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_SIZE
+import com.megaman.maverick.game.entities.megaman.components.shouldFlipSpriteX
+import com.megaman.maverick.game.entities.megaman.components.shouldFlipSpriteY
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.GameObjectPools
-
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.isSensing
@@ -46,87 +58,104 @@ class MegaWeaponEntry(
     }
 }
 
-class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable {
+class MegamanWeaponHandler(private val megaman: Megaman /*, private val weaponSpawns: OrderedMap<String, IntPair> */) :
+    Updatable, Resettable {
 
     companion object {
+        const val TAG = "MegamanWeaponHandler"
         private const val MEGA_BUSTER_BULLET_VEL = 10f
     }
 
     private val engine = megaman.game.engine
     private val weapons = ObjectMap<MegamanWeapon, MegaWeaponEntry>()
-    private val spawn: Vector2
-        get() {
-            val spawn = megaman.body.getCenter()
-
-            val xOffset = megaman.facing.value * when {
-                megaman.isBehaviorActive(BehaviorType.CROUCHING) -> 0.75f
-                megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 1f
-                megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> 0.75f
-                megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.85f
-                megaman.isBehaviorActive(BehaviorType.RIDING_CART) ->
-                    if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 1.5f else 1.25f
-
-                megaman.slipSliding || !megaman.running || !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> 0.85f
-                else -> 1f
-            }
-
-            var yOffset = when {
-                megaman.isBehaviorActive(BehaviorType.CROUCHING) -> 0.1f
-                megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> -0.25f
-                megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> 0.25f
-                megaman.isBehaviorActive(BehaviorType.JETPACKING) -> 0.1f
-                megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> -0.2f
-                megaman.isBehaviorActive(BehaviorType.CLIMBING) -> 0.15f
-                megaman.isBehaviorActive(BehaviorType.RIDING_CART) ->
-                    if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.5f else 0.2f
-
-                megaman.direction == Direction.DOWN ->
-                    if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) -0.1f else 0f
-
-                megaman.direction == Direction.UP && !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> -0.05f
-                else -> 0f
-            }
-
-            /*
-            var yOffset = when {
-                megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> -0.1f
-                megaman.isAnyBehaviorActive(BehaviorType.JETPACKING, BehaviorType.WALL_SLIDING) -> 0.35f
-                megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.125f
-                megaman.isBehaviorActive(BehaviorType.RIDING_CART) ->
-                    if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.6f else 0.3f
-                megaman.isBehaviorActive(BehaviorType.CLIMBING) -> 0.4f
-                megaman.direction == Direction.DOWN ->
-                    if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.05f else 0.15f
-                megaman.direction == Direction.UP && !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> 0.25f
-                else -> 0.25f
-            }
-             */
-
-            if (megaman.direction.isVertical()) {
-                spawn.x += xOffset * ConstVals.PPM
-                spawn.y += (if (megaman.direction == Direction.DOWN) -yOffset else yOffset) * ConstVals.PPM
-
-                if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) {
-                    var groundSlideOffset = GROUND_SLIDE_SPRITE_OFFSET_Y * ConstVals.PPM
-                    spawn.y += if (megaman.direction == Direction.UP) -groundSlideOffset else groundSlideOffset
-                }
-            } else {
-                yOffset += when {
-                    megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> -0.075f
-                    megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> -0.1f
-                    else -> 0.05f
-                }
-                spawn.x += (if (megaman.direction == Direction.LEFT) -yOffset else yOffset) * ConstVals.PPM
-                spawn.y += xOffset * ConstVals.PPM
-            }
-
-            return spawn
-        }
+    private val out = Vector2()
 
     override fun reset() = weapons.values().forEach { it.cooldownTimer.setToEnd() }
 
     override fun update(delta: Float) {
         weapons[megaman.currentWeapon]?.update(delta)
+    }
+
+    fun getSpawnPosition(out: Vector2): Vector2 {
+        /*
+        val rawKey = (megaman.animators[MEGAMAN_SPRITE_KEY] as Animator).currentKey
+        if (rawKey != null) {
+            val key = MegamanAnimations.splitFullKey(rawKey)[0]
+            if (weaponSpawns.containsKey(key)) {
+                GameLogger.debug(TAG, "getSpawnPosition(): has magic pixel weapon spawn for key=$key, rawKey=$rawKey")
+
+                val sprite = megaman.sprites[MEGAMAN_SPRITE_KEY]
+
+                val (rawRegionX, rawRegionY) = weaponSpawns[key]
+                GameLogger.debug(TAG, "getSpawnPosition(): rawRegionX=$rawRegionX, rawRegionY=$rawRegionY")
+
+                out.set(
+                    sprite.x + (rawRegionX * MEGAMAN_SPRITE_SIZE * ConstVals.PPM),
+                    sprite.y + (rawRegionY * MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
+                )
+                GameLogger.debug(TAG, "getSpawnPosition(): raw out = $out")
+
+                if (megaman.shouldFlipSpriteX()) out.x -= MEGAMAN_SPRITE_SIZE * ConstVals.PPM / 2f
+                if (megaman.shouldFlipSpriteY()) out.y -= MEGAMAN_SPRITE_SIZE * ConstVals.PPM / 2f
+                GameLogger.debug(TAG, "getSpawnPosition(): out after flip = $out")
+
+                val spriteCenter = sprite.boundingRectangle.getCenter()
+                out.rotateAroundOrigin(megaman.direction.rotation, spriteCenter.x, spriteCenter.y)
+                GameLogger.debug(TAG, "getSpawnPosition(): rotated out = $out")
+
+                GameLogger.debug(TAG, "getSpawnPosition(): final out = $out")
+                return out
+            }
+        }
+
+        GameLogger.debug(TAG, "getSpawnPosition(): no magic pixel weapon spawn for rawKey=$rawKey")
+         */
+
+        out.set(megaman.body.getCenter())
+
+        val xOffset = megaman.facing.value * when {
+            megaman.isBehaviorActive(BehaviorType.CROUCHING) -> 0.75f
+            megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 1f
+            megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> 0.75f
+            megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.85f
+            megaman.isBehaviorActive(BehaviorType.RIDING_CART) ->
+                if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 1.5f else 1.25f
+
+            megaman.slipSliding || !megaman.running || !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> 0.85f
+            else -> 1f
+        }
+
+        var yOffset = when {
+            megaman.isBehaviorActive(BehaviorType.CROUCHING) -> 0.1f
+            megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> -0.25f
+            megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> 0.25f
+            megaman.isBehaviorActive(BehaviorType.JETPACKING) -> 0.1f
+            megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> -0.2f
+            megaman.isBehaviorActive(BehaviorType.CLIMBING) -> 0.15f
+            megaman.isBehaviorActive(BehaviorType.RIDING_CART) ->
+                if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.5f else 0.2f
+
+            megaman.direction == Direction.DOWN ->
+                if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) -0.1f else 0f
+
+            megaman.direction == Direction.UP && !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> -0.05f
+            else -> 0f
+        }
+
+        if (megaman.direction.isVertical()) {
+            out.x += xOffset * ConstVals.PPM
+            out.y += (if (megaman.direction == Direction.DOWN) -yOffset else yOffset) * ConstVals.PPM
+
+            if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) {
+                var groundSlideOffset = GROUND_SLIDE_SPRITE_OFFSET_Y * ConstVals.PPM
+                out.y += if (megaman.direction == Direction.UP) -groundSlideOffset else groundSlideOffset
+            }
+        } else {
+            out.x += (if (megaman.direction == Direction.LEFT) -yOffset - 0.1f else yOffset + 0.1f) * ConstVals.PPM
+            out.y += xOffset * ConstVals.PPM
+        }
+
+        return out
     }
 
     fun getSpawned(weapon: MegamanWeapon) = weapons[weapon]?.spawned
@@ -265,7 +294,7 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
             megaman.stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
         }
 
-        val s = spawn
+        val s = getSpawnPosition(out)
         props.put(ConstKeys.POSITION, s)
         engine.spawn(megaBusterShot, props)
 
@@ -275,6 +304,9 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
     private fun fireFlameToss(stat: MegaChargeStatus): AbstractProjectile {
         val props = props()
         props.put(ConstKeys.OWNER, megaman)
+
+        val spawn = getSpawnPosition(out)
+        props.put(ConstKeys.POSITION, spawn)
 
         val fireball = when (stat) {
             MegaChargeStatus.NOT_CHARGED, MegaChargeStatus.HALF_CHARGED, MegaChargeStatus.FULLY_CHARGED -> {
@@ -289,7 +321,6 @@ class MegamanWeaponHandler(private val megaman: Megaman) : Updatable, Resettable
                 EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIREBALL) as Fireball
             }
         }
-        props.put(ConstKeys.POSITION, spawn)
         engine.spawn(fireball, props)
 
         megaman.requestToPlaySound(SoundAsset.CRASH_BOMBER_SOUND, false)

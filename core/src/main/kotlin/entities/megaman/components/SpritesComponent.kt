@@ -22,13 +22,13 @@ import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.isSensing
 
-const val MEGAMAN_SPRITE_KEY = "megaman"
+const val MEGAMAN_SPRITE_KEY = "Megaman"
 const val MEGAMAN_SPRITE_SIZE = 3f
 
-const val JETPACK_FLAME_SPRITE_KEY = "jetpackFlame"
+const val JETPACK_FLAME_SPRITE_KEY = "JetpackFlame"
 const val JETPACK_FLAME_SPRITE_SIZE = 1f
 
-const val DAMAGE_BURST_SPRITE_KEY = "damagedBurst"
+const val DAMAGE_BURST_SPRITE_KEY = "DamagedBurst"
 const val DAMAGE_BURST_SPRITE_SIZE = MEGAMAN_SPRITE_SIZE
 const val DAMAGE_BURST_OFFSET = 0.25f
 

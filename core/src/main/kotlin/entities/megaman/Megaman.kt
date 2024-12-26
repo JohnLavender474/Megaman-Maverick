@@ -1,6 +1,14 @@
 package com.megaman.maverick.game.entities.megaman
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.Pixmap
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectSet
+import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
@@ -12,6 +20,7 @@ import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IBoundsSupplier
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
+import com.mega.game.engine.common.objects.IntPair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -20,6 +29,8 @@ import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.MagicPixels
+import com.mega.game.engine.drawables.sprites.splitAndFlatten
 import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.contracts.*
 import com.mega.game.engine.events.Event
@@ -28,6 +39,7 @@ import com.mega.game.engine.world.body.BodyComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.EntityType
@@ -39,6 +51,8 @@ import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
 import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
+import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponHandler
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportContinueProp
 import com.megaman.maverick.game.entities.utils.standardOnTeleportEnd
 import com.megaman.maverick.game.entities.utils.standardOnTeleportStart
@@ -93,9 +107,12 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         EventType.STUN_PLAYER,
         EventType.END_GAME_CAM_ROTATION
     )
+
     override val upgradeHandler = MegamanUpgradeHandler(game.state, this)
 
-    val weaponHandler = MegamanWeaponHandler(this)
+    lateinit var weaponHandler: MegamanWeaponHandler
+    // val weaponHandler = MegamanWeaponHandler(this)
+
     val canChargeCurrentWeapon: Boolean
         get() = weaponHandler.isChargeable(currentWeapon)
     val chargeStatus: MegaChargeStatus
@@ -240,8 +257,10 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
+
         aButtonTask = AButtonTask.JUMP
         currentWeapon = MegamanWeapon.BUSTER
+
         addComponent(AudioComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(definePointsComponent())
@@ -249,9 +268,61 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         addComponent(defineBehaviorsComponent())
         addComponent(defineControllerComponent())
         addComponent(defineSpritesComponent())
-        addComponent(defineAnimationsComponent())
+
+        /*
+        val weaponSpawns = OrderedMap<String, IntPair>()
+
+        val weaponSpawnMagicColors = objectSetOf(MegamanValues.WEAPON_SPAWN_MAGIC_COLOR)
+        val magicColorsMap = OrderedMap<IntPair, Color>()
+        val regionProcessor: (TextureRegion, String, String, AnimationDef, Int) -> TextureRegion =
+            regionProcessor@{ frame, fullKey, defKey, def, index ->
+                GameLogger.debug(TAG, "init(): regionProcessor: defKey=$defKey")
+
+                // TODO: val magical = MagicPixels.get(frame, weaponSpawnMagicColors, magicColorsMap)
+                val file = Gdx.files.internal("sprites/frames/Megaman_v2/${defKey}.png")
+                val r = TextureRegion(Texture(file)).splitAndFlatten(def.rows, def.cols, Array())[index]
+                val magical = MagicPixels.get(Pixmap(file), weaponSpawnMagicColors, magicColorsMap)
+
+                val region = when {
+                    magical -> {
+                        GameLogger.debug(
+                            TAG,
+                            "init(): regionProcessor: magical region found: map=$magicColorsMap, index=$index"
+                        )
+
+                        val data = r.texture.textureData // TODO: frame.texture.textureData
+                        if (!data.isPrepared) data.prepare()
+
+                        val pixmap = data.consumePixmap()
+
+                        // there should only be at most one magic color pixel per frame, so we'll just pick the first one
+                        magicColorsMap.keys().forEach { position ->
+                            val key = MegamanAnimations.splitFullKey(fullKey)[0]
+                            weaponSpawns.put(key, position)
+
+                            val (x, y) = position
+                            pixmap.drawPixel(x, y, Color.rgba8888(0f, 0f, 0f, 0f))
+                        }
+
+                        TextureRegion(Texture(pixmap))
+                    }
+
+                    else -> frame
+                }
+
+                magicColorsMap.clear()
+
+                return@regionProcessor region
+            }
+         */
+
+        val animations = MegamanAnimations(game, /* regionProcessor */).get()
+        addComponent(defineAnimationsComponent(animations))
+
+        // GameLogger.debug(TAG, "init(): weaponSpawns=$weaponSpawns")
+
+        weaponHandler = MegamanWeaponHandler(this /* , weaponSpawns */)
         weaponHandler.putWeapon(MegamanWeapon.BUSTER)
-        weaponHandler.putWeapon(MegamanWeapon.RUSH_JETPACK)
     }
 
     override fun onSpawn(spawnProps: Properties) {

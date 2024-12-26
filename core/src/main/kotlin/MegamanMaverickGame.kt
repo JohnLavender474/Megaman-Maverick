@@ -30,6 +30,7 @@ import com.mega.game.engine.behaviors.BehaviorsSystem
 import com.mega.game.engine.common.GameLogLevel
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IPropertizable
@@ -82,6 +83,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponHandler
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -127,7 +129,7 @@ class MegamanMaverickGame(
         private const val ASSET_MILLIS = 17
         private const val LOADING = "LOADING"
         private const val SCREENSHOT_KEY = Input.Keys.P
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(LevelSelectScreen.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(Megaman.TAG, MegamanWeaponHandler.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.TELEPORTER, FixtureType.TELEPORTER_LISTENER)
         }
@@ -369,6 +371,17 @@ class MegamanMaverickGame(
 
         if (Gdx.app.type == ApplicationType.Android || params.showScreenController)
             screenController = ScreenController(this)
+
+        /*
+        val pixmap = Pixmap(Gdx.files.internal("sprites/frames/Megaman_v2/stand_shoot.png"));
+        println("Width: " + pixmap.width + " Height: " + pixmap.height)
+        for (x in 0 until pixmap.width) {
+            for (y in 0 until pixmap.height) {
+                val pixel = pixmap.getPixel(x, y)
+                println("Pixel at (" + x + ", " + y + "): " + Integer.toHexString(pixel))
+            }
+        }
+         */
     }
 
     override fun render() {

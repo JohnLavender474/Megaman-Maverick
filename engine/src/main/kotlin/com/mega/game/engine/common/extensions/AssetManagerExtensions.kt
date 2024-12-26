@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Queue
 
-
 fun <T> AssetManager.loadAssetsInDirectory(
     directory: String,
     type: Class<T>,
@@ -28,21 +27,13 @@ fun <T> AssetManager.loadAssetsInDirectory(
     }
 }
 
+fun AssetManager.getTextureAtlas(atlas: String) = get(atlas, TextureAtlas::class.java)!!
 
-fun AssetManager.getTextureAtlas(atlas: String): TextureAtlas {
-    return get(atlas, TextureAtlas::class.java)
-}
-
-
-fun AssetManager.getTextureRegion(atlas: String, region: String): TextureRegion {
-    return getTextureAtlas(atlas).findRegion(region)
-}
-
+fun AssetManager.getTextureRegion(atlas: String, region: String) = getTextureAtlas(atlas).findRegion(region)!!
 
 fun AssetManager.getSound(sound: String): Sound {
     return get(sound, Sound::class.java)
 }
-
 
 fun AssetManager.getMusic(music: String): Music {
     return get(music, Music::class.java)

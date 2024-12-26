@@ -1,5 +1,7 @@
 package com.megaman.maverick.game.entities.megaman.sprites
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.IAnimation
@@ -7,20 +9,29 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.drawables.sprites.containsRegion
+import com.mega.game.engine.drawables.sprites.splitAndFlatten
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import java.util.function.Supplier
 
-class MegamanAnimations(private val game: MegamanMaverickGame) : Initializable,
-    Supplier<OrderedMap<String, IAnimation>> {
+class MegamanAnimations(
+    private val game: MegamanMaverickGame,
+    private val regionProcessor: ((region: TextureRegion, fullKey: String, defKey: String, def: AnimationDef, index: Int) -> TextureRegion)? = null
+) : Initializable, Supplier<OrderedMap<String, IAnimation>> {
 
     companion object {
         const val TAG = "MegamanAnimations"
+
+        fun buildFullKey(regionKey: String, weapon: MegamanWeapon) =
+            "${regionKey}_${weapon.name.lowercase().replace("_", "")}"
+
+        fun splitFullKey(definitionKey: String) = definitionKey.split("_")
     }
 
-    private val animations = OrderedMap<String, IAnimation>()
     private var initialized = false
+    private val animations = OrderedMap<String, IAnimation>()
 
     override fun init() {
         MegamanWeapon.entries.forEach { weapon ->
@@ -34,11 +45,19 @@ class MegamanAnimations(private val game: MegamanMaverickGame) : Initializable,
             MegamanAnimationDefs.getKeys().forEach { defKey ->
                 if (!atlas.containsRegion(defKey)) return@forEach
 
+                val region = atlas.findRegion(defKey)
                 val def = MegamanAnimationDefs.get(defKey)
-                val key = "${defKey}_${weapon.name}"
-                animations.put(key, Animation(atlas.findRegion(defKey), def.rows, def.cols, def.durations))
+                val regions = region.splitAndFlatten(def.rows, def.cols, Array())
 
-                GameLogger.debug(TAG, "init(): put animation \'$defKey\' with key \'$key\'")
+                val fullKey = buildFullKey(defKey, weapon)
+
+                if (regionProcessor != null) for (i in 0 until regions.size)
+                    regions[i] = regionProcessor.invoke(regions[i], fullKey, defKey, def, i)
+
+                val animation = Animation(regions, def.durations)
+                animations.put(fullKey, animation)
+
+                GameLogger.debug(TAG, "init(): put animation \'$defKey\' with key \'$fullKey\'")
             }
         }
     }
@@ -48,6 +67,7 @@ class MegamanAnimations(private val game: MegamanMaverickGame) : Initializable,
             init()
             initialized = true
         }
+
         return animations
     }
 }
