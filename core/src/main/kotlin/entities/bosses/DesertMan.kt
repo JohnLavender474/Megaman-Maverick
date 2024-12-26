@@ -577,7 +577,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
             .transition(DesertManState.PUNCH.name, DesertManState.STAND.name) { true }
             // JUMP -> WALL_SLIDE, STAND
             .transition(DesertManState.JUMP.name, DesertManState.STAND.name) { shouldGoToStandState() }
-            .transition(DesertManState.JUMP.name, DesertManState.WALL_SLIDE.name) { isWallSliding() }
+            .transition(DesertManState.JUMP.name, DesertManState.WALL_SLIDE.name) { !megaman().dead && isWallSliding() }
             // WALL_SLIDE -> STAND, JUMP
             .transition(DesertManState.WALL_SLIDE.name, DesertManState.STAND.name) { shouldGoToStandState() }
             .transition(DesertManState.WALL_SLIDE.name, DesertManState.JUMP.name) { true }
