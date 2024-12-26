@@ -2,11 +2,13 @@
 eclipse.project.name = appName + '-core'
 
 dependencies {
+  implementation project(':engine')
+
   api "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllersVersion"
   api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
   api "com.badlogicgames.gdx:gdx:$gdxVersion"
   api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-  implementation "com.mega.2D.game.engine:Mega-2D-Game-Engine:$gameEngineVersion"
+
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
   }

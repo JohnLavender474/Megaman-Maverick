@@ -48,20 +48,20 @@ object EnemyDamageNegotiations {
         },
         ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
-            if (it.fullyCharged) 5 else 3
+            if (it.fullyCharged) 10 else 5
         }
     )
 
     private val SMALL_ENEMY_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class pairTo dmgNeg(10),
+        Bullet::class pairTo dmgNeg(15),
         Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
         ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
-            if (it.fullyCharged) 25 else 15
+            if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
         },
         ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
-            if (it.fullyCharged) 10 else 5
+            if (it.fullyCharged) 15 else 10
         }
     )
 

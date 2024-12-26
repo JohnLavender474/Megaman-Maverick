@@ -1,0 +1,18 @@
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+eclipse.project.name = appName + '-core'
+
+dependencies {
+  api "com.badlogicgames.gdx:gdx:$gdxVersion"
+  api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+  api "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+  api "com.badlogicgames.gdx:gdx-freetype:1.11.0"
+  api "com.badlogicgames.gdx:gdx-tools:1.6.3"
+  api "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllersVersion"
+  api "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllersVersion"
+  testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+  testImplementation "io.kotest:kotest-runner-junit5-jvm:4.6.0"
+  testImplementation "io.kotest:kotest-runner-junit5:4.0.2"
+  testImplementation "io.kotest:kotest-assertions-core:4.0.2"
+  testImplementation "io.kotest:kotest-property:4.0.2"
+  testImplementation "io.mockk:mockk:1.13.7"
+}

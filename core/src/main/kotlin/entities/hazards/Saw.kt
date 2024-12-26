@@ -200,13 +200,13 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(2f * ConstVals.PPM)
+        body.setSize(2.5f * ConstVals.PPM)
 
-        val deathFixture = Fixture(body, FixtureType.DEATH, GameCircle().setRadius(0.85f * ConstVals.PPM))
+        val deathFixture = Fixture(body, FixtureType.DEATH, GameCircle().setRadius(ConstVals.PPM.toFloat()))
         deathFixture.putProperty(ConstKeys.INSTANT, true)
         body.addFixture(deathFixture)
 
-        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(0.85f * ConstVals.PPM))
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(ConstVals.PPM.toFloat()))
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
 
@@ -217,7 +217,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         val spritesComponent = SpritesComponent()
 
         val sawSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
-        sawSprite.setSize(2f * ConstVals.PPM)
+        sawSprite.setSize(2.5f * ConstVals.PPM)
         spritesComponent.sprites.put("saw", sawSprite)
         spritesComponent.putUpdateFunction("saw") { _, sprite ->
             sprite.setPosition(body.getCenter(), Position.CENTER)
@@ -226,7 +226,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
 
         for (i in 0..RING_COUNT) {
             val ringSprite = GameSprite(ringRegion!!, DrawingPriority(DrawingSection.FOREGROUND, 2))
-            ringSprite.setSize(0.5f * ConstVals.PPM)
+            ringSprite.setSize(0.75f * ConstVals.PPM)
             spritesComponent.sprites.put("ring_$i", ringSprite)
         }
 
