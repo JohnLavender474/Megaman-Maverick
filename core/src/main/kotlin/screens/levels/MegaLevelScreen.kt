@@ -157,8 +157,10 @@ class MegaLevelScreen(
     private lateinit var levelStateHandler: LevelStateHandler
 
     private lateinit var endLevelEventHandler: EndLevelEventHandler
+
     private lateinit var playerSpawnEventHandler: PlayerSpawnEventHandler
     private lateinit var playerDeathEventHandler: PlayerDeathEventHandler
+
     private lateinit var bossSpawnEventHandler: BossSpawnEventHandler
 
     private lateinit var drawables: ObjectMap<DrawingSection, PriorityQueue<IComparableDrawable<Batch>>>
@@ -317,7 +319,8 @@ class MegaLevelScreen(
         game.setWorldContainer(worldContainer)
 
         playerSpawnEventHandler.init()
-        playerDeathEventHandler.reset()
+        playerDeathEventHandler.setToEnd()
+
         endLevelEventHandler.reset()
 
         camerasSetToGameCamera = false
@@ -410,6 +413,7 @@ class MegaLevelScreen(
                 music?.let { audioMan.playMusic(it, true) }
 
                 playerSpawnEventHandler.init()
+                playerDeathEventHandler.setToEnd()
             }
 
             EventType.ADD_PLAYER_HEALTH -> {
@@ -685,6 +689,8 @@ class MegaLevelScreen(
                 !endLevelEventHandler.finished -> endLevelEventHandler.update(delta)
             }
 
+            if (!megaman.dead) playerDeathEventHandler.setInactive()
+
             playerStatsHandler.update(delta)
         }
 
@@ -735,15 +741,17 @@ class MegaLevelScreen(
             foregroundSprite.draw(drawer)
         }
 
+        if (!endLevelEventHandler.finished) endLevelEventHandler.draw(drawer)
+
         game.viewports.get(ConstKeys.UI).apply()
         drawer.projectionMatrix = uiCamera.combined
 
-        playerSpawnEventHandler.draw(drawer)
         bossHealthHandler.draw(drawer)
         playerStatsHandler.draw(drawer)
 
-        game.viewports.get(ConstKeys.GAME).apply()
-        if (!endLevelEventHandler.finished) endLevelEventHandler.draw(drawer)
+        if (!playerSpawnEventHandler.finished) playerSpawnEventHandler.draw(drawer)
+
+        if (megaman.dead) playerDeathEventHandler.draw(drawer)
 
         drawer.end()
     }
@@ -760,8 +768,10 @@ class MegaLevelScreen(
             val gameCamBounds = gameCamera.getRotatedBounds()
             gameCamBounds.translate(0.1f * ConstVals.PPM, 0.1f * ConstVals.PPM)
             gameCamBounds.translateSize(-0.2f * ConstVals.PPM, -0.2f * ConstVals.PPM)
+
             renderer.color = Color.BLUE
             renderer.set(ShapeType.Line)
+
             renderer.rect(
                 gameCamBounds.getX(),
                 gameCamBounds.getY(),
@@ -784,7 +794,8 @@ class MegaLevelScreen(
         playerSpawnsMan.reset()
 
         playerSpawnEventHandler.reset()
-        playerDeathEventHandler.reset()
+        playerDeathEventHandler.setToEnd()
+
         endLevelEventHandler.reset()
 
         backgrounds.forEach { background -> background.reset() }

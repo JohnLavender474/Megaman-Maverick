@@ -4,7 +4,7 @@ import com.mega.game.engine.common.interfaces.IPropertizable
 import com.mega.game.engine.common.interfaces.ITypable
 import com.mega.game.engine.common.shapes.IGameShape2D
 
-interface IFixture : ITypable, IPropertizable {
+interface IFixture : ITypable<Any>, IPropertizable {
 
     fun getShape(): IGameShape2D
 
