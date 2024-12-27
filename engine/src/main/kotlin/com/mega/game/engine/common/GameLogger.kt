@@ -2,6 +2,8 @@ package com.mega.game.engine.common
 
 import com.badlogic.gdx.ApplicationLogger
 import com.badlogic.gdx.utils.ObjectSet
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 enum class GameLogLevel {
     OFF,
@@ -10,16 +12,11 @@ enum class GameLogLevel {
     ERROR
 }
 
-data class GameLogDef(
-    var filterByTag: Boolean = false,
-    val tagsToLog: ObjectSet<String> = ObjectSet()
-)
-
 object GameLogger : ApplicationLogger {
 
-    val DEFAULT_LOG_FORMATTER: (level: GameLogLevel, tag: String, message: String, throwable: Throwable?) -> String =
-        { level, tag, message, throwable ->
-            var log = "$level | $tag | $message"
+    val DEFAULT_LOG_FORMATTER: (time: String, level: GameLogLevel, tag: String, message: String, throwable: Throwable?) -> String =
+        { time, level, tag, message, throwable ->
+            var log = "$time | $level | $tag | $message"
             if (throwable != null) {
                 log += " | ${throwable.message}"
                 throwable.stackTrace.forEach { line -> log += "\n\t$line" }
@@ -30,8 +27,10 @@ object GameLogger : ApplicationLogger {
     val tagsToLog = ObjectSet<String>()
     var filterByTag = true
 
-    internal var formatter: (level: GameLogLevel, tag: String, message: String, throwable: Throwable?) -> String =
-        DEFAULT_LOG_FORMATTER
+    internal var formatter: (
+        time: String, level: GameLogLevel, tag: String, message: String, throwable: Throwable?
+    ) -> String = DEFAULT_LOG_FORMATTER
+
     internal var level = GameLogLevel.OFF
 
     fun setLogLevel(level: GameLogLevel) {
@@ -41,7 +40,7 @@ object GameLogger : ApplicationLogger {
     fun getLogLevel() = level
 
     fun setLogFormatter(
-        formatter: (level: GameLogLevel, tag: String, message: String, throwable: Throwable?) -> String
+        formatter: (time: String, level: GameLogLevel, tag: String, message: String, throwable: Throwable?) -> String
     ) {
         this.formatter = formatter
     }
@@ -67,7 +66,10 @@ object GameLogger : ApplicationLogger {
             (filterByTag && !tagsToLog.contains(tag))
         ) return
 
-        val string = formatter.invoke(level, tag, message, throwable)
+        val time = LocalTime.now()
+        val formattedTime = time.format(DateTimeFormatter.ofPattern("HH:mm:ss"))
+
+        val string = formatter.invoke(formattedTime, level, tag, message, throwable)
         println(string)
     }
 }

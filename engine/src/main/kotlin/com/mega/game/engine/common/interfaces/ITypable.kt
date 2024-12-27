@@ -1,6 +1,6 @@
 package com.mega.game.engine.common.interfaces
 
-interface ITypable {
+interface ITypable<T> {
 
-    fun getType(): Any
+    fun getType(): T
 }

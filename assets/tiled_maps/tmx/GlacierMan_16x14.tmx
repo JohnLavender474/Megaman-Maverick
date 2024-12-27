@@ -833,7 +833,7 @@
   <object id="564" x="320" y="2224" width="96" height="112"/>
   <object id="575" x="864" y="2208" width="64" height="64"/>
   <object id="577" x="1056" y="2208" width="64" height="352"/>
-  <object id="586" name="--" x="1728" y="2144" width="32" height="64"/>
+  <object id="586" x="1728" y="2144" width="32" height="64"/>
  </objectgroup>
  <objectgroup id="13" name="children">
   <object id="170" name="MinY" x="0" y="2400" width="32" height="32"/>

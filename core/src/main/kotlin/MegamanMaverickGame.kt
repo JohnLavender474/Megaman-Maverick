@@ -89,7 +89,10 @@ import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
+import com.megaman.maverick.game.screens.levels.MegaLevelScreen.Companion.MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
+import com.megaman.maverick.game.screens.levels.events.PlayerDeathEventHandler
+import com.megaman.maverick.game.screens.levels.events.PlayerSpawnEventHandler
 import com.megaman.maverick.game.screens.menus.*
 import com.megaman.maverick.game.screens.menus.bosses.LevelSelectScreen
 import com.megaman.maverick.game.screens.menus.temp.BossIntroScreen
@@ -129,7 +132,9 @@ class MegamanMaverickGame(
         private const val ASSET_MILLIS = 17
         private const val LOADING = "LOADING"
         private const val SCREENSHOT_KEY = Input.Keys.P
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(Megaman.TAG, MegamanWeaponHandler.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(
+            MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, PlayerSpawnEventHandler.TAG, PlayerDeathEventHandler.TAG
+        )
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.TELEPORTER, FixtureType.TELEPORTER_LISTENER)
         }

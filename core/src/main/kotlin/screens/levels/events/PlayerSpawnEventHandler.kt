@@ -7,6 +7,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
@@ -27,7 +28,10 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_SIZE
 import com.megaman.maverick.game.entities.megaman.components.getSpritePriority
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.screens.utils.Fade
+import com.megaman.maverick.game.screens.utils.Fade.*
 import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.getCenter
 
 class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializable, Updatable, Resettable,
@@ -39,10 +43,14 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
         private const val BEAM_DOWN_DUR = 0.5f
         private const val BEAM_TRANS_DUR = 0.35f
         private const val BLINK_READY_DUR = 0.125f
+        private const val FADE_IN_DUR = 0.25f
     }
 
     val finished: Boolean
-        get() = preBeamTimer.isFinished() && beamDownTimer.isFinished() && beamTransitionTimer.isFinished()
+        get() = fadein.isFinished() &&
+            preBeamTimer.isFinished() &&
+            beamDownTimer.isFinished() &&
+            beamTransitionTimer.isFinished()
 
     private val megaman = game.megaman
 
@@ -56,7 +64,10 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
     private lateinit var beamRegion: TextureRegion
     private lateinit var beamSprite: GameSprite
     private lateinit var beamLandAnimation: Animation
+
     private lateinit var ready: MegaFontHandle
+
+    private val fadein = Fade(FadeType.FADE_IN, FADE_IN_DUR)
 
     private var initialized = false
     private var showReadyText = false
@@ -81,6 +92,9 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
                 priority = DrawingPriority(DrawingSection.FOREGROUND, 15)
             )
 
+            val black = game.assMan.getTextureRegion(TextureAsset.UI_1.source, ConstKeys.BLACK)
+            fadein.setRegion(black)
+
             initialized = true
         }
 
@@ -99,20 +113,30 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
         megaman.body.physics.gravityOn = false
         megaman.setAllBehaviorsAllowed(false)
 
-        GameLogger.debug(TAG, "init(): submit PLAYER_SPAWN event")
         game.eventsMan.submitEvent(Event(EventType.PLAYER_SPAWN))
         game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
 
         game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)
+
+        fadein.init()
     }
 
     override fun update(delta: Float) {
         beamCenter.set(beamSprite.boundingRectangle.getCenter())
         game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}_${ConstKeys.CENTER}", beamCenter)
 
-        if (!preBeamTimer.isFinished()) preBeam(delta)
-        else if (!beamDownTimer.isFinished()) beamDown(delta)
-        else if (!beamTransitionTimer.isFinished()) beamTrans(delta)
+        when {
+            !fadein.isFinished() -> {
+                val bounds = game.getUiCamera().toGameRectangle()
+                fadein.setPosition(bounds.getX(), bounds.getY())
+                fadein.setSize(bounds.getWidth(), bounds.getHeight())
+                fadein.update(delta)
+            }
+
+            !preBeamTimer.isFinished() -> preBeam(delta)
+            !beamDownTimer.isFinished() -> beamDown(delta)
+            !beamTransitionTimer.isFinished() -> beamTrans(delta)
+        }
 
         blinkTimer.update(delta)
         if (blinkTimer.isFinished()) {
@@ -125,15 +149,17 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
     }
 
     override fun reset() {
+        GameLogger.debug(TAG, "reset()")
         preBeamTimer.setToEnd()
         beamDownTimer.setToEnd()
         beamTransitionTimer.setToEnd()
+        fadein.setToEnd()
     }
 
     private fun preBeam(delta: Float) {
         preBeamTimer.update(delta)
         if (preBeamTimer.isJustFinished()) {
-            GameLogger.debug(TAG, "preBeam(): pre-beam timer just finished")
+            GameLogger.debug(TAG, "preBeam(): just finished")
             beamSprite.setRegion(beamRegion)
         }
     }
@@ -156,7 +182,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
         beamSprite.setFlip(megaman.isFacing(Facing.LEFT), false)
 
         if (beamTransitionTimer.isJustFinished()) {
-            GameLogger.debug(TAG, "beamTrans(): beam transition timer just finished")
+            GameLogger.debug(TAG, "beamTrans(): just finished")
 
             megaman.body.physics.gravityOn = true
             megaman.canBeDamaged = true
@@ -165,7 +191,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
 
             game.eventsMan.submitEvent(Event(EventType.PLAYER_READY))
             game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
-            game.audioMan.playSound(SoundAsset.BEAM_SOUND, false)
+            game.audioMan.playSound(SoundAsset.BEAM_SOUND)
 
             game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", false)
 
@@ -174,6 +200,11 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
     }
 
     override fun draw(drawer: Batch) {
-        if (!finished && showReadyText) ready.draw(drawer)
+        if (finished) return
+
+        when {
+            fadein.isFinished() && showReadyText -> ready.draw(drawer)
+            else -> fadein.draw(drawer)
+        }
     }
 }
