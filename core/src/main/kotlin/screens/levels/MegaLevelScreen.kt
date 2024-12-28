@@ -650,7 +650,7 @@ class MegaLevelScreen(
         if (!game.paused) {
             spawnsMan.update(delta / 2f)
 
-            if (/*playerSpawnEventHandler.finished && */!cameraManagerForRooms.transitioning) {
+            if (!cameraManagerForRooms.transitioning) {
                 val spawnsIter = spawns.iterator()
                 while (spawnsIter.hasNext()) {
                     val spawn = spawnsIter.next()
@@ -682,11 +682,14 @@ class MegaLevelScreen(
 
             if (!gameCameraShaker.isFinished) gameCameraShaker.update(delta)
 
+            // because I'm not good at software design, there's a case tight coupling in this block
+            // essentially, the order in which these handlers are updated must not be modified or
+            // else the flow of events in the game might become broken
             when {
-                !playerSpawnEventHandler.finished -> playerSpawnEventHandler.update(delta)
-                !playerDeathEventHandler.finished -> playerDeathEventHandler.update(delta)
                 !bossHealthHandler.finished -> bossHealthHandler.update(delta)
                 !endLevelEventHandler.finished -> endLevelEventHandler.update(delta)
+                !playerSpawnEventHandler.finished -> playerSpawnEventHandler.update(delta)
+                !playerDeathEventHandler.finished -> playerDeathEventHandler.update(delta)
             }
 
             if (!megaman.dead) playerDeathEventHandler.setInactive()
