@@ -8,6 +8,7 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.damage.IDamager
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
+import com.megaman.maverick.game.entities.hazards.Saw
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
@@ -36,7 +37,8 @@ object EnemyDamageNegotiations {
         ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 3 else 1
-        }
+        },
+        Saw::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
     )
 
     private val MEDIUM_ENEMY_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -49,7 +51,8 @@ object EnemyDamageNegotiations {
         ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 10 else 5
-        }
+        },
+        Saw::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
     )
 
     private val SMALL_ENEMY_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -62,7 +65,8 @@ object EnemyDamageNegotiations {
         ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion
             if (it.fullyCharged) 15 else 10
-        }
+        },
+        Saw::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
     )
 
     fun getEnemyDmgNegs(
