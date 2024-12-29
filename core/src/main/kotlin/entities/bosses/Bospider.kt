@@ -74,8 +74,8 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         private const val INIT_DUR = 5f
         private const val SPAWN_DELAY = 2f
         private const val MAX_CHILDREN = 4
-        private const val MIN_SPEED = 8f
-        private const val MAX_SPEED = 16f
+        private const val MIN_SPEED = 7f
+        private const val MAX_SPEED = 14f
         private const val START_POINT_OFFSET = 2f
         private const val OPEN_EYE_MAX_DURATION = 2f
         private const val OPEN_EYE_MIN_DURATION = 0.75f
@@ -90,18 +90,9 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     private enum class BospiderState { SPAWN, CLIMB, OPEN_EYE, CLOSE_EYE, RETREAT }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class pairTo dmgNeg(1),
-        Fireball::class pairTo dmgNeg(2),
-        ChargedShot::class pairTo dmgNeg {
-            it as ChargedShot
-            if (it.fullyCharged) 2 else 1
-        },
-        ChargedShotExplosion::class pairTo dmgNeg {
-            it as ChargedShotExplosion
-            if (it.fullyCharged) 2 else 1
-        }
-    )
+    // set damage negotiations dynamically when spawning
+    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>()
+
     override var children = Array<IGameEntity>()
 
     private val paths = Array<Array<Vector2>>()
@@ -155,18 +146,56 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
         firstSpawn = true
 
-        initTimer.reset()
+        when {
+            mini -> {
+                initTimer.setToEnd()
+
+                damageNegotiations.putAll(
+                    objectMapOf(
+                        Bullet::class pairTo dmgNeg(3),
+                        Fireball::class pairTo dmgNeg(5),
+                        ChargedShot::class pairTo dmgNeg {
+                            it as ChargedShot
+                            if (it.fullyCharged) 5 else 3
+                        },
+                        ChargedShotExplosion::class pairTo dmgNeg {
+                            it as ChargedShotExplosion
+                            if (it.fullyCharged) 3 else 2
+                        })
+                )
+            }
+
+            else -> {
+                initTimer.reset()
+
+                damageNegotiations.putAll(
+                    objectMapOf(
+                        Bullet::class pairTo dmgNeg(1),
+                        Fireball::class pairTo dmgNeg(2),
+                        ChargedShot::class pairTo dmgNeg {
+                            it as ChargedShot
+                            if (it.fullyCharged) 2 else 1
+                        },
+                        ChargedShotExplosion::class pairTo dmgNeg {
+                            it as ChargedShotExplosion
+                            if (it.fullyCharged) 2 else 1
+                        }
+                    )
+                )
+            }
+        }
     }
 
-    override fun isReady(delta: Float) = initTimer.isFinished()
+    override fun isReady(delta: Float) = mini || initTimer.isFinished()
 
     override fun onReady() {
         super.onReady()
-        game.audioMan.playMusic(MusicAsset.MM7_FINAL_BOSS_LOOP_MUSIC, true)
+        if (!mini) game.audioMan.playMusic(MusicAsset.MM7_FINAL_BOSS_LOOP_MUSIC, true)
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        damageNegotiations.clear()
         children.forEach { (it as GameEntity).destroy() }
         children.clear()
         paths.clear()
@@ -295,13 +324,13 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(2f * ConstVals.PPM))
         body.addFixture(bodyFixture)
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(1.75f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(2f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(2f * ConstVals.PPM))
         body.addFixture(damageableFixture)
 
-        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(2f * ConstVals.PPM))
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(2.25f * ConstVals.PPM))
         body.addFixture(shieldFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
@@ -319,7 +348,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
-        sprite.setSize(4.75f * ConstVals.PPM)
+        sprite.setSize(5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setCenter(body.getCenter())
