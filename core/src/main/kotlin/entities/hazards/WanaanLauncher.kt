@@ -106,6 +106,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
         } else Direction.UP
 
         launchDelay.reset()
+        newWanaanDelay.reset()
     }
 
     override fun onHealthDepleted() {
@@ -132,6 +133,8 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            if (hasDepletedHealth()) return@add
+
             if (wanaan != null && wanaan!!.comingDown && body.getBounds().contains(wanaan!!.cullPoint)) {
                 wanaan!!.destroy()
                 wanaan = null
@@ -146,7 +149,6 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
             newWanaanDelay.update(delta)
 
             if (wanaan == null &&
-                !this.hasDepletedHealth() &&
                 newWanaanDelay.isFinished() &&
                 sensors.any { it.overlaps(megaman().body.getBounds()) }
             ) {
@@ -184,7 +186,8 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
     )
 
     private fun spawnWanaan() {
-        GameLogger.debug(TAG, "launchWanaan()")
+        if (wanaan != null) throw IllegalStateException("Wanaan ref must null when spawning a new one")
+        GameLogger.debug(TAG, "spawnWanaan()")
 
         val spawn = when (direction) {
             Direction.UP -> body.getPositionPoint(Position.TOP_CENTER).sub(0f, 0.5f * ConstVals.PPM)
@@ -203,7 +206,8 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
     }
 
     private fun launchWanaan() {
-        if (wanaan == null) throw IllegalStateException("Wanaan cannot be null when launching")
+        if (wanaan == null) throw IllegalStateException("Wanaan ref cannot be null when launching the Wanaan")
+        GameLogger.debug(TAG, "launchWanaan()")
 
         val impulse = GameObjectPools.fetch(Vector2::class)
         when (direction) {
@@ -213,8 +217,10 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
             Direction.RIGHT -> impulse.set(IMPULSE, 0f)
         }.scl(ConstVals.PPM.toFloat())
 
-        wanaan!!.body.physics.velocity.set(impulse)
-        wanaan!!.body.physics.gravityOn = true
+        wanaan!!.body.physics.let {
+            it.velocity.set(impulse)
+            it.gravityOn = true
+        }
 
         requestToPlaySound(SoundAsset.CHOMP_SOUND, false)
     }

@@ -55,6 +55,7 @@ import kotlin.reflect.KClass
 class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
     companion object {
+        const val TAG = "Screwie"
         private var atlas: TextureAtlas? = null
         private const val SHOOT_DUR = 2f
         private const val DOWN_DUR = 1f
@@ -146,7 +147,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
         val damageableFixture = Fixture(
             body,
             FixtureType.DAMAGEABLE,
-            GameRectangle().setSize(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM)
+            GameRectangle().setWidth(0.75f * ConstVals.PPM)
         )
         body.addFixture(damageableFixture)
         shapes.add { damageableFixture }
@@ -155,12 +156,12 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
             val damageableBounds = damageableFixture.rawShape as GameRectangle
             when {
                 down -> {
-                    damageableBounds.setHeight(0.2f * ConstVals.PPM)
+                    damageableBounds.setHeight(0.5f * ConstVals.PPM)
                     damageableFixture.offsetFromBodyAttachment.y = (if (upsideDown) 0.15f else -0.15f) * ConstVals.PPM
                 }
 
                 else -> {
-                    damageableBounds.setHeight(0.65f * ConstVals.PPM)
+                    damageableBounds.setHeight(0.75f * ConstVals.PPM)
                     damageableFixture.offsetFromBodyAttachment.y = 0f
                 }
             }
@@ -240,8 +241,14 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
             val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
 
             val spawn = body.getCenter()
-            if (it.x > 0) spawn.x += 0.2f * ConstVals.PPM else if (it.x < 0) spawn.x -= 0.2f * ConstVals.PPM
-            spawn.y += (if (upsideDown) -0.25f else 0.25f) * ConstVals.PPM
+            when {
+                it.x > 0 -> spawn.x += 0.2f * ConstVals.PPM
+                it.x < 0 -> spawn.x -= 0.2f * ConstVals.PPM
+            }
+            spawn.y += when {
+                upsideDown -> -0.35f
+                else -> 0.35f
+            } * ConstVals.PPM
 
             val trajectory = it.cpy().scl(movementScalar * ConstVals.PPM)
             if (upsideDown) trajectory.y *= -1f
