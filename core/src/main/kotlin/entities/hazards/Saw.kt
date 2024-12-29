@@ -17,6 +17,7 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameLine
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -40,6 +41,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -48,7 +50,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
 class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IMotionEntity,
-    ICullableEntity, IFaceable {
+    ICullableEntity, IDamager, IHazard, IFaceable {
 
     companion object {
         const val TAG = "Saw"
@@ -202,11 +204,10 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         val body = Body(BodyType.ABSTRACT)
         body.setSize(2.5f * ConstVals.PPM)
 
-        val deathFixture = Fixture(body, FixtureType.DEATH, GameCircle().setRadius(ConstVals.PPM.toFloat()))
-        deathFixture.putProperty(ConstKeys.INSTANT, true)
-        body.addFixture(deathFixture)
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(1.25f * ConstVals.PPM))
+        body.addFixture(damagerFixture)
 
-        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(ConstVals.PPM.toFloat()))
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(1.25f * ConstVals.PPM))
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
 
@@ -234,7 +235,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(sawRegion!!, 1, 2, 0.1f, true)
+        val animation = Animation(sawRegion!!, 1, 2, 0.1f)
         val animator = Animator(animation)
 
         val animationsComponent = AnimationsComponent()
