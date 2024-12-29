@@ -39,6 +39,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val OTHER = "other"
     const val NO = "no"
     const val ID = "id"
     const val WALL = "wall"
@@ -207,6 +208,8 @@ object ConstKeys {
     const val BACKGROUND = "background"
     const val ENTITY_TYPE = "entity_type"
     const val CULL = "cull"
+    const val CULL_TYPE = "cull_type"
+    const val CULL_ROOM = "cull_room"
     const val ON = "on"
     const val OFF = "off"
     const val TEXT = "text"
@@ -236,6 +239,7 @@ object ConstKeys {
     const val SUCCESS = "success"
     const val END = "end"
     const val SPLASH = "splash"
+    const val OFFSET = "offset"
     const val OFFSET_X = "offset_x"
     const val OFFSET_Y = "offset_y"
     const val WIDTH = "width"

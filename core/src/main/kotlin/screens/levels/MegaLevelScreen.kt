@@ -631,21 +631,36 @@ class MegaLevelScreen(
     }
 
     override fun render(delta: Float) {
-        if (controllerPoller.isJustPressed(MegaControllerButton.START) &&
+        if (controllerPoller.isJustPressed(MegaControllerButton.START)
+            /* &&
             playerStatsHandler.finished &&
             playerSpawnEventHandler.finished &&
             playerDeathEventHandler.finished
-        ) {
-            if (game.paused) game.resume() else game.pause()
+             */
+        ) when {
+            game.paused -> {
+                GameLogger.debug(TAG, "render(): resume game")
+                game.resume()
+            }
+
+            else -> {
+                GameLogger.debug(TAG, "render(): pause game")
+                game.pause()
+            }
         }
 
+        /*
         if (game.paused && (
                 !playerStatsHandler.finished ||
                     !playerSpawnEventHandler.finished ||
                     !playerDeathEventHandler.finished ||
                     !bossHealthHandler.finished
                 )
-        ) game.resume()
+        ) {
+            GameLogger.debug(TAG, "render(): for resume because one of the handles is not finished")
+            game.resume()
+        }
+         */
 
         if (!game.paused) {
             spawnsMan.update(delta / 2f)
@@ -704,12 +719,14 @@ class MegaLevelScreen(
 
         backgrounds.sort()
 
+        /*
         debugPrintTimer.update(delta)
         if (debugPrintTimer.isFinished()) {
             debugPrintTimer.reset()
             GameLogger.debug(TAG, "Game cam rotated bounds: ${gameCamera.getRotatedBounds()}")
             GameLogger.debug(TAG, "Megaman center: ${megaman.body.getCenter()}")
         }
+         */
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) onEscapePressed.invoke()
     }

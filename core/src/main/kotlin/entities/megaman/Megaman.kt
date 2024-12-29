@@ -232,7 +232,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     val slipSliding: Boolean
         get() = body.isSensing(BodySense.FEET_ON_GROUND) && abs(
             if (direction.isVertical()) body.physics.velocity.x else body.physics.velocity.y
-        ) > ConstVals.PPM / 16f
+        ) >= MegamanValues.SLIP_SLIDE_VEL_THRESHOLD * ConstVals.PPM
 
     override var gravityScalar = 1f
 
