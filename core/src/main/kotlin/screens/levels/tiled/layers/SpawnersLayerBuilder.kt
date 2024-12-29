@@ -50,7 +50,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
         layer.objects.forEach {
             val spawnProps = it.convertToProps()
 
-            val spawnType = spawnProps.get(ConstKeys.SPAWN_TYPE) as String?
+            val spawnType = spawnProps.get(ConstKeys.SPAWN_TYPE, String::class)
             if (spawnType == SpawnType.SPAWN_NOW) {
                 if (it.name == null) throw IllegalStateException("Entity name not found for spawn now")
 
@@ -97,7 +97,8 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                             EventType.SET_TO_ROOM_NO_TRANS,
                             EventType.END_ROOM_TRANS
                         ),
-                        spawnSupplier = spawnSupplier
+                        spawnSupplier = spawnSupplier,
+                        respawnable = respawnable
                     )
                     spawners.add(spawner)
 
@@ -124,6 +125,9 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                 }
 
                 else -> {
+                    val spawnRoomTrans =
+                        spawnProps.getOrDefault("${ConstKeys.SPAWN}_${ConstKeys.ROOM_TRANSITION}", false, Boolean::class)
+
                     val spawner = SpawnerFactory.spawnerForWhenInCamera(
                         game.getGameCamera(),
                         SpawnerShapeFactory.getSpawnShape(entityType, it),

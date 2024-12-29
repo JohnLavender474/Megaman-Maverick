@@ -83,7 +83,7 @@ abstract class AbstractBoss(
             String::class
         )
 
-        orbs = spawnProps.getOrDefault(ConstKeys.ORB, true, Boolean::class)
+        orbs = spawnProps.getOrDefault(ConstKeys.ORB, !mini, Boolean::class)
 
         if (playMusicOnSpawn()) {
             val musicStr =
