@@ -85,11 +85,13 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        val x= spawnProps.get(ConstKeys.X, Float::class)!!
+        val x = spawnProps.get(ConstKeys.X, Float::class)!!
         val y = spawnProps.get(ConstKeys.Y, Float::class)!!
         currentPosition.set(spawnPosition.set(x, y))
 
-        minY = spawnPosition.y - MIN_Y_OFFSET * ConstVals.PPM
+        val minYOffset =
+            spawnProps.getOrDefault("${ConstKeys.MIN}_${ConstKeys.Y}_${ConstKeys.OFFSET}", MIN_Y_OFFSET, Float::class)
+        minY = spawnPosition.y - minYOffset * ConstVals.PPM
 
         val minTrajX = spawnProps.getOrDefault(
             "${ConstKeys.MIN}_${ConstKeys.TRAJECTORY}_${ConstKeys.X}",

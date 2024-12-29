@@ -310,6 +310,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             return timer.isFinished()
         }
+
+        override fun act(delta: Float) {
+            body.physics.velocity.x = 0f
+        }
     }
 
     val groundSlide = object : AbstractBehaviorImpl() {

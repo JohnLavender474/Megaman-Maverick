@@ -105,13 +105,11 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     private val spawnDelayTimer = Timer(SPAWN_DELAY)
     private val closeEyeTimer = Timer(CLOSE_EYE_DURATION)
     private val debugTimer = Timer(DEBUG_TIMER)
-
-    private lateinit var openEyeTimer: Timer
-    private val spawn = Vector2()
-
-    private var firstSpawn = true
-
     private val initTimer = Timer(INIT_DUR)
+    private val openEyeTimer = Timer()
+
+    private val spawn = Vector2()
+    private var firstSpawn = true
 
     override fun init() {
         if (climbRegion == null || stillRegion == null || openEyeRegion == null) {
@@ -152,15 +150,15 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
                 damageNegotiations.putAll(
                     objectMapOf(
-                        Bullet::class pairTo dmgNeg(3),
+                        Bullet::class pairTo dmgNeg(2),
                         Fireball::class pairTo dmgNeg(5),
                         ChargedShot::class pairTo dmgNeg {
                             it as ChargedShot
-                            if (it.fullyCharged) 5 else 3
+                            if (it.fullyCharged) 3 else 2
                         },
                         ChargedShotExplosion::class pairTo dmgNeg {
                             it as ChargedShotExplosion
-                            if (it.fullyCharged) 3 else 2
+                            if (it.fullyCharged) 2 else 1
                         })
                 )
             }
@@ -214,13 +212,13 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
             debugTimer.update(delta)
             if (debugTimer.isFinished()) {
-                GameLogger.debug(TAG, "defineUpdatablesComponent(): state = ${stateLoop.getCurrent()}")
-                GameLogger.debug(TAG, "defineUpdatablesComponent(): position = ${body.getCenter()}")
-                GameLogger.debug(TAG, "defineUpdatablesComponent(): velocity = ${body.physics.velocity}")
-                GameLogger.debug(TAG, "defineUpdatablesComponent(): health = ${getCurrentHealth()}")
-                GameLogger.debug(TAG, "defineUpdatablesComponent(): health ratio = ${getHealthRatio()}")
-                GameLogger.debug(TAG, "defineUpdatablesComponent(): speed = ${getCurrentSpeed()}")
-                GameLogger.debug(TAG, "defineUpdatablesComponent(): current path = $currentPath")
+                GameLogger.debug(TAG, "defineUpdatablesComponent(): state=${stateLoop.getCurrent()}")
+                GameLogger.debug(TAG, "defineUpdatablesComponent(): position=${body.getCenter()}")
+                GameLogger.debug(TAG, "defineUpdatablesComponent(): velocity=${body.physics.velocity}")
+                GameLogger.debug(TAG, "defineUpdatablesComponent(): health=${getCurrentHealth()}")
+                GameLogger.debug(TAG, "defineUpdatablesComponent(): healthRatio=${getHealthRatio()}")
+                GameLogger.debug(TAG, "defineUpdatablesComponent(): speed=${getCurrentSpeed()}")
+                GameLogger.debug(TAG, "defineUpdatablesComponent(): currentPath=$currentPath")
                 debugTimer.reset()
             }
 
@@ -268,14 +266,18 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
                 BospiderState.CLIMB -> {
                     if (currentPath.isEmpty) {
                         body.physics.velocity.setZero()
+
                         val openEyeDuration =
                             OPEN_EYE_MIN_DURATION + (OPEN_EYE_MAX_DURATION - OPEN_EYE_MIN_DURATION) * getHealthRatio()
-                        openEyeTimer = Timer(openEyeDuration)
+                        openEyeTimer.resetDuration(openEyeDuration)
+
                         stateLoop.next()
+
                         return@add
                     }
 
                     moveToNextTarget()
+
                     if (body.getCenter().epsilonEquals(currentPath.first(), 0.1f * ConstVals.PPM))
                         currentPath.removeFirst()
                 }
@@ -399,17 +401,20 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     private fun shootWebs() {
         requestToPlaySound(SoundAsset.SPLASH_SOUND, false)
+
         val centerTrajectory = megaman().body.getCenter().sub(body.getCenter()).nor()
-        val leftTrajectory = centerTrajectory.cpy().rotateDeg(-ANGLE_X)
-        val rightTrajectory = centerTrajectory.cpy().rotateDeg(ANGLE_X)
         shootWeb(centerTrajectory)
+
+        val leftTrajectory = centerTrajectory.cpy().rotateDeg(-ANGLE_X)
         shootWeb(leftTrajectory)
+
+        val rightTrajectory = centerTrajectory.cpy().rotateDeg(ANGLE_X)
         shootWeb(rightTrajectory)
     }
 
     private fun shootWeb(trajectory: Vector2) {
         val web = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SPIDER_WEB)!!
-        val scaledTrajectory = trajectory.scl(WEB_SPEED * ConstVals.PPM)
+        val scaledTrajectory = trajectory.cpy().scl(WEB_SPEED * ConstVals.PPM)
         val props = props(
             ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER),
             ConstKeys.TRAJECTORY pairTo scaledTrajectory,

@@ -132,9 +132,7 @@ class MegamanMaverickGame(
         private const val ASSET_MILLIS = 17
         private const val LOADING = "LOADING"
         private const val SCREENSHOT_KEY = Input.Keys.P
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(
-            MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, PlayerSpawnEventHandler.TAG, PlayerDeathEventHandler.TAG
-        )
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(MegaLevelScreen.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.TELEPORTER, FixtureType.TELEPORTER_LISTENER)
         }
