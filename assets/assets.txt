@@ -1,5 +1,5 @@
 Megaman10Font.ttf
-hs_err_pid228762.log
+hs_err_pid270222.log
 temp/MegaRed225/random-enemies-5.jpg
 temp/MegaRed225/Random Enemy Sprites Set 9/Link
 temp/MegaRed225/Random Enemy Sprites Set 9/random-enemy-sprites-9.jpg
@@ -114,6 +114,8 @@ temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/
 temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/layers/background.png
 temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/previews/pipe forest preview-big.png
 temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/previews/pipe forest preview.png
+hs_err_pid269249.log
+hs_err_pid268535.log
 sounds/conveyor_lift.wav
 sounds/thump.mp3
 sounds/air_shooter.wav
@@ -187,7 +189,6 @@ sounds/quake.mp3
 sounds/floating_portal.wav
 sounds/whoosh.mp3
 badlogic.jpg
-hs_err_pid230787.log
 sprites/frames/MegamanTrailSprite/airdash.png
 sprites/frames/MegamanTrailSprite/groundslide_shoot.png
 sprites/frames/MegamanTrailSprite/groundslide.png
@@ -2284,6 +2285,7 @@ tiled_maps/tmx/TimberWoman.tmx
 tiled_maps/tmx/MagnetMan.tmx
 tiled_maps/tmx/TimberWoman_v2.tmx
 tiled_maps/tmx/WilyStage3.tmx
+tiled_maps/tmx/MoonMan_16x14_v2.tmx
 tiled_maps/tmx/ReactorMan_16x12.tmx
 tiled_maps/tmx/ReactorMan.tmx
 tiled_maps/tmx/MoonMan_v2.tmx
@@ -2327,16 +2329,14 @@ tiled_maps/tmx/RodentMan_16x14.tmx
 tiled_maps/tmx/ReactMan_v2.tmx
 tiled_maps/tmx/WilyStage3_v2.tmx
 tiled_maps/tmx/Test2.tmx
-hs_err_pid230410.log
 diagrams/Guts Tank - Design.drawio
 diagrams/Inferno Man - Design.drawio
 diagrams/Desert Man - Design.drawio
 diagrams/Glacier Man - Design.drawio
 diagrams/.$Inferno Man - Design.drawio.bkp
 diagrams/.$Desert Man - Design.drawio.bkp
-hs_err_pid228017.log
 libgdx.png
-hs_err_pid229675.log
+hs_err_pid267649.log
 credits.txt
 music/MMX5_DarkDizzy.txt
 music/MMX6_BossFight.txt
