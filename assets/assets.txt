@@ -2336,7 +2336,9 @@ diagrams/Desert Man - Design.drawio
 diagrams/Glacier Man - Design.drawio
 diagrams/.$Inferno Man - Design.drawio.bkp
 diagrams/.$Desert Man - Design.drawio.bkp
+hs_err_pid374972.log
 libgdx.png
+hs_err_pid373935.log
 credits.txt
 music/MMX5_DarkDizzy.txt
 music/MMX6_BossFight.txt
