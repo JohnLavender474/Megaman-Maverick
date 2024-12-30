@@ -26,6 +26,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
@@ -37,7 +38,6 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
 class PipiEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
-
 
     companion object {
         const val TAG = "PipiEgg"
@@ -97,7 +97,7 @@ class PipiEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
             val randomAngle = getRandom(BABY_BIRDIE_MIN_ANGLE, BABY_BIRDIE_MAX_ANGLE)
             val trajectory = Vector2(0f, BABY_BIRDIE_SPEED * ConstVals.PPM).rotateDeg(randomAngle)
 
-            if (megaman().body.getX() < body.getMaxX()) trajectory.x *= -1f
+            if (megaman.body.getX() < body.getMaxX()) trajectory.x *= -1f
 
             val babyBirdie = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.COPIPI)!!
             babyBirdie.spawn(

@@ -45,6 +45,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -92,8 +93,8 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
     private val target = Vector2()
     val targetPQ = PriorityQueue { o1: Vector2, o2: Vector2 ->
-        val d1 = o1.dst2(megaman().body.getCenter())
-        val d2 = o2.dst2(megaman().body.getCenter())
+        val d1 = o1.dst2(megaman.body.getCenter())
+        val d2 = o2.dst2(megaman.body.getCenter())
         d1.compareTo(d2)
     }
 
@@ -125,7 +126,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         targetPQ.clear()
 
         applyMovementScalarToBullet = spawnProps.getOrDefault(ConstKeys.APPLY_SCALAR_TO_CHILDREN, false, Boolean::class)
-        direction = megaman().direction
+        direction = megaman.direction
 
         standTimer.reset()
         liftoffTimer.reset()
@@ -133,10 +134,10 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
         jetMetState = JetMetState.STAND
         facing = when (direction) {
-            Direction.UP -> if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
-            Direction.DOWN -> if (megaman().body.getX() > body.getX()) Facing.LEFT else Facing.RIGHT
-            Direction.LEFT -> if (megaman().body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
-            Direction.RIGHT -> if (megaman().body.getY() > body.getY()) Facing.LEFT else Facing.RIGHT
+            Direction.UP -> if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+            Direction.DOWN -> if (megaman.body.getX() > body.getX()) Facing.LEFT else Facing.RIGHT
+            Direction.LEFT -> if (megaman.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
+            Direction.RIGHT -> if (megaman.body.getY() > body.getY()) Facing.LEFT else Facing.RIGHT
         }
 
         targetReached = false
@@ -148,7 +149,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            direction = megaman().direction
+            direction = megaman.direction
 
             if (!canMove) {
                 body.physics.velocity.setZero()
@@ -167,11 +168,11 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
                 }
 
                 JetMetState.JET -> {
-                    facing = when (megaman().direction) {
-                        Direction.UP -> if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
-                        Direction.DOWN -> if (megaman().body.getX() > body.getX()) Facing.LEFT else Facing.RIGHT
-                        Direction.LEFT -> if (megaman().body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
-                        Direction.RIGHT -> if (megaman().body.getY() > body.getY()) Facing.LEFT else Facing.RIGHT
+                    facing = when (megaman.direction) {
+                        Direction.UP -> if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                        Direction.DOWN -> if (megaman.body.getX() > body.getX()) Facing.LEFT else Facing.RIGHT
+                        Direction.LEFT -> if (megaman.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
+                        Direction.RIGHT -> if (megaman.body.getY() > body.getY()) Facing.LEFT else Facing.RIGHT
                     }
 
                     if (!targetReached) {
@@ -199,7 +200,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
 
         val trajectory = GameObjectPools.fetch(Vector2::class)
-            .set(megaman().body.getCenter())
+            .set(megaman.body.getCenter())
             .sub(body.getCenter())
             .nor()
             .scl(BULLET_SPEED * ConstVals.PPM)

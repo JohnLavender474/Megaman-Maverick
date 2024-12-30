@@ -41,6 +41,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -119,7 +120,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         openTimer.reset()
 
         toxicBarrelBotState = ToxicBarrelBotState.CLOSED
-        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         shot = false
     }
 
@@ -128,7 +129,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         updatablesComponent.add { delta ->
             when (toxicBarrelBotState) {
                 ToxicBarrelBotState.CLOSED -> {
-                    facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                    facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
                     closedTimer.update(delta)
                     if (closedTimer.isFinished()) {

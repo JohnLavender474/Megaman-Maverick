@@ -45,6 +45,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -104,7 +105,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         waiting = spawnProps.getOrDefault(ConstKeys.WAIT, true, Boolean::class)
 
         dropped = false
@@ -130,8 +131,8 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         triggers.clear()
     }
 
-    private fun isMegamanUnderMe() = megaman().body.getMaxY() <= body.getY() &&
-        megaman().body.getCenter().x >= body.getX() && megaman().body.getCenter().x <= body.getMaxX()
+    private fun isMegamanUnderMe() = megaman.body.getMaxY() <= body.getY() &&
+        megaman.body.getCenter().x >= body.getX() && megaman.body.getCenter().x <= body.getMaxX()
 
     private fun moveX() {
         val xVel = (if (dropped) X_VEL_NO_BOMB else X_VEL_WITH_BOMB) * ConstVals.PPM * facing.value
@@ -145,7 +146,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     }
 
     private fun setToHover() {
-        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         moveX()
     }
 
@@ -159,7 +160,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             if (waiting) {
-                if (triggers.any { trigger -> megaman().body.getBounds().overlaps(trigger) }) {
+                if (triggers.any { trigger -> megaman.body.getBounds().overlaps(trigger) }) {
                     waiting = false
                     rising = true
 
@@ -171,7 +172,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                     body.forEachFixture { it.setActive(true) }
 
                     facing = if (trajectory.x == 0f) {
-                        if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                        if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
                     } else if (trajectory.x < 0f) Facing.LEFT else Facing.RIGHT
                 } else return@add
             }

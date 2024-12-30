@@ -18,6 +18,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getPositionPoint
@@ -51,14 +52,14 @@ class MegamanTrailSprite(game: MegamanMaverickGame) : MegaGameEntity(game), ISpr
         val type = spawnProps.get(ConstKeys.TYPE, String::class)!!
         defaultSprite.setRegion(regions[type])
 
-        defaultSprite.setFlip(megaman().shouldFlipSpriteX(), megaman().shouldFlipSpriteY())
+        defaultSprite.setFlip(megaman.shouldFlipSpriteX(), megaman.shouldFlipSpriteY())
         defaultSprite.setOriginCenter()
-        defaultSprite.rotation = megaman().getSpriteRotation()
+        defaultSprite.rotation = megaman.getSpriteRotation()
 
-        val position = DirectionPositionMapper.getInvertedPosition(megaman().getSpriteDirection())
-        defaultSprite.setPosition(megaman().body.getPositionPoint(position), position)
-        defaultSprite.translateX(megaman().getSpriteXTranslation() * ConstVals.PPM)
-        defaultSprite.translateY(megaman().getSpriteYTranslation() * ConstVals.PPM)
+        val position = DirectionPositionMapper.getInvertedPosition(megaman.getSpriteDirection())
+        defaultSprite.setPosition(megaman.body.getPositionPoint(position), position)
+        defaultSprite.translateX(megaman.getSpriteXTranslation() * ConstVals.PPM)
+        defaultSprite.translateY(megaman.getSpriteYTranslation() * ConstVals.PPM)
 
         fadeTimer.reset()
     }

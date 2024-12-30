@@ -1,5 +1,3 @@
-@file:Suppress("DuplicatedCode")
-
 package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion

@@ -33,6 +33,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.Bullet
@@ -159,10 +160,10 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 forceFlashTimer.reset()
             }
 
-            val slow = megaman().body.getBounds().overlaps(forceFixture.getShape())
+            val slow = megaman.body.getBounds().overlaps(forceFixture.getShape())
 
-            if (!slow && megaman().body.getY() < body.getY() && !facingAndMMDirMatch()) facing =
-                if (megaman().body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
+            if (!slow && megaman.body.getY() < body.getY() && !facingAndMMDirMatch()) facing =
+                if (megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
 
             if ((facing == Facing.LEFT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) || (facing == Facing.RIGHT && body.isSensing(
                     BodySense.SIDE_TOUCHING_BLOCK_RIGHT

@@ -55,6 +55,7 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -241,7 +242,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
         gravityChangeState = ProcessState.BEGIN
 
-        val direction = megaman().direction
+        val direction = megaman.direction
         this.direction = direction
         currentGravityChangeDir = direction
 
@@ -305,7 +306,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                 val (asteroid, throwTimer) = iter.next()
                 throwTimer.update(delta)
                 if (throwTimer.isFinished()) {
-                    val impulse = megaman().body.getCenter()
+                    val impulse = megaman.body.getCenter()
                         .sub(asteroid.body.getCenter())
                         .nor().scl(ASTEROID_SPEED * ConstVals.PPM)
                     asteroid.body.physics.velocity.set(impulse)
@@ -500,7 +501,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
     private fun activateGravityChange() {
         currentGravityChangeDir = currentGravityChangeDir.getOpposite()
-        if (!megaman().dead) megaman().direction = currentGravityChangeDir
+        if (!megaman.dead) megaman.direction = currentGravityChangeDir
 
         gravityChangeChance = 0f
         timers["gravity_change_delay"].reset()
@@ -514,7 +515,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         var jumpImpulseY = JUMP_IMPULSE_Y * ConstVals.PPM
         if (direction == Direction.DOWN) jumpImpulseY *= -1f
 
-        val yDiff = abs(megaman().body.getY() - body.getY())
+        val yDiff = abs(megaman.body.getY() - body.getY())
         val horizontalScalar = (yDiff / (JUMP_HORIZONTAL_SCALAR_DENOMINATOR * ConstVals.PPM))
             .coerceIn(JUMP_MIN_HORIZONTAL_SCALAR, JUMP_MAX_HORIZONTAL_SCALAR)
         val impulse = MegaUtilMethods.calculateJumpImpulse(
@@ -550,7 +551,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             }
 
             MoonManState.JUMP -> {
-                jump(megaman().body.getCenter())
+                jump(megaman.body.getCenter())
                 if (canShootInJumpState()) shootIndex = 0
             }
 
@@ -613,8 +614,8 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
     private fun updateFacing() {
         when {
-            megaman().body.getMaxX() < body.getX() -> facing = Facing.LEFT
-            megaman().body.getX() > body.getMaxX() -> facing = Facing.RIGHT
+            megaman.body.getMaxX() < body.getX() -> facing = Facing.LEFT
+            megaman.body.getX() > body.getMaxX() -> facing = Facing.RIGHT
         }
     }
 
@@ -658,9 +659,9 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     }
 
     private fun shootStar() {
-        val position = if (megaman().direction == Direction.UP) Position.TOP_CENTER else Position.BOTTOM_CENTER
+        val position = if (megaman.direction == Direction.UP) Position.TOP_CENTER else Position.BOTTOM_CENTER
         val trajectory =
-            megaman().body.getPositionPoint(position).sub(body.getCenter()).nor().scl(SHARP_STAR_SPEED * ConstVals.PPM)
+            megaman.body.getPositionPoint(position).sub(body.getCenter()).nor().scl(SHARP_STAR_SPEED * ConstVals.PPM)
         val sharpStar = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SHARP_STAR)!!
         sharpStar.spawn(
             props(

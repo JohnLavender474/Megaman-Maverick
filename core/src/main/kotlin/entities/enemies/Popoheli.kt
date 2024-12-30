@@ -41,6 +41,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
@@ -126,11 +127,11 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                         triggers.add(TriggerDef(trigger, start, target))
                     }
                 }
-                facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
             }
 
             else -> {
-                val center = megaman().body.getCenter()
+                val center = megaman.body.getCenter()
 
                 val targets =
                     PriorityQueue<Vector2> { target1, target2 -> target1.dst2(center).compareTo(target2.dst2(center)) }
@@ -166,7 +167,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                 PopoheliState.WAITING -> {
                     body.physics.velocity.setZero()
                     triggers.forEach {
-                        if (megaman().body.getBounds().overlaps(it.trigger)) {
+                        if (megaman.body.getBounds().overlaps(it.trigger)) {
                             body.setCenter(it.start)
                             target.set(it.target)
                             state = PopoheliState.APPROACHING

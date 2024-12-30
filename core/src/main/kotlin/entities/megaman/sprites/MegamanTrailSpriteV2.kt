@@ -17,6 +17,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getPositionPoint
@@ -41,7 +42,7 @@ class MegamanTrailSpriteV2(game: MegamanMaverickGame) : MegaGameEntity(game), IS
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
 
-        val animKey = megaman().currentAnimKey
+        val animKey = megaman.currentAnimKey
         if (animKey == null) {
             GameLogger.error(TAG, "onSpawn(): destroying trail sprite because megaman anim key is null")
             destroy()
@@ -51,10 +52,10 @@ class MegamanTrailSpriteV2(game: MegamanMaverickGame) : MegaGameEntity(game), IS
 
         super.onSpawn(spawnProps)
 
-        val position = DirectionPositionMapper.getInvertedPosition(megaman().getSpriteDirection())
-        defaultSprite.setPosition(megaman().body.getPositionPoint(position), position)
-        defaultSprite.translateX(megaman().getSpriteXTranslation() * ConstVals.PPM)
-        defaultSprite.translateY(megaman().getSpriteYTranslation() * ConstVals.PPM)
+        val position = DirectionPositionMapper.getInvertedPosition(megaman.getSpriteDirection())
+        defaultSprite.setPosition(megaman.body.getPositionPoint(position), position)
+        defaultSprite.translateX(megaman.getSpriteXTranslation() * ConstVals.PPM)
+        defaultSprite.translateY(megaman.getSpriteYTranslation() * ConstVals.PPM)
 
         fadeTimer.reset()
     }
@@ -74,10 +75,10 @@ class MegamanTrailSpriteV2(game: MegamanMaverickGame) : MegaGameEntity(game), IS
         sprite.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setFlip(megaman().shouldFlipSpriteX(), megaman().shouldFlipSpriteY())
+            sprite.setFlip(megaman.shouldFlipSpriteX(), megaman.shouldFlipSpriteY())
 
             sprite.setOriginCenter()
-            sprite.rotation = megaman().getSpriteRotation()
+            sprite.rotation = megaman.getSpriteRotation()
 
             val alpha = 1f - fadeTimer.getRatio()
             sprite.setAlpha(alpha)

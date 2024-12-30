@@ -39,6 +39,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -166,7 +167,7 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         recalcTimer.update(delta)
         if (recalcTimer.isFinished()) {
             recalcTimer.reset()
-            val angle = megaman().body.getCenter().sub(body.getCenter()).angleDeg()
+            val angle = megaman.body.getCenter().sub(body.getCenter()).angleDeg()
             val roundedAngle45 = MathUtils.round(angle / 45f) * 45f
 
             val velocity = GameObjectPools.fetch(Vector2::class)

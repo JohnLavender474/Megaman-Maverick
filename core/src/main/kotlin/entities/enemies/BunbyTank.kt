@@ -46,6 +46,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -118,10 +119,10 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
         facing = when (direction) {
-            Direction.UP -> if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
-            Direction.DOWN -> if (megaman().body.getX() < body.getX()) Facing.RIGHT else Facing.LEFT
-            Direction.LEFT -> if (megaman().body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
-            Direction.RIGHT -> if (megaman().body.getY() < body.getY()) Facing.RIGHT else Facing.LEFT
+            Direction.UP -> if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+            Direction.DOWN -> if (megaman.body.getX() < body.getX()) Facing.RIGHT else Facing.LEFT
+            Direction.LEFT -> if (megaman.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
+            Direction.RIGHT -> if (megaman.body.getY() < body.getY()) Facing.RIGHT else Facing.LEFT
         }
 
         shootTimer.setToEnd()
@@ -199,12 +200,12 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             val turnAroundScannerPosition = body.getPositionPoint(position.opposite())
             turnAroundScanner.positionOnPoint(turnAroundScannerPosition, position.opposite())
 
-            if (!megaman().dead) {
-                if (megaman().body.getBounds().overlaps(shootScanner)) {
+            if (!megaman.dead) {
+                if (megaman.body.getBounds().overlaps(shootScanner)) {
                     body.physics.velocity.setZero()
                     shootTimer.reset()
                     return@add
-                } else if (megaman().body.getBounds().overlaps(turnAroundScanner)) swapFacing()
+                } else if (megaman.body.getBounds().overlaps(turnAroundScanner)) swapFacing()
             }
 
             val velocity = GameObjectPools.fetch(Vector2::class)

@@ -39,6 +39,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -258,7 +259,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
                     ConstKeys.TRAJECTORY pairTo trajectory,
                     ConstKeys.POSITION pairTo spawn,
                     ConstKeys.OWNER pairTo this,
-                    ConstKeys.DIRECTION pairTo megaman().direction
+                    ConstKeys.DIRECTION pairTo megaman.direction
                 )
             )
         }

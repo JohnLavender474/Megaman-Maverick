@@ -38,6 +38,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.hazards.UnderwaterFan
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.FallingIcicle
@@ -79,7 +80,7 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
         chompTimer.setToEnd()
-        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
     override fun onDestroy() {
@@ -104,7 +105,7 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
             chompTimer.update(it)
 
-            val megamanBody = megaman().body
+            val megamanBody = megaman.body
 
             if (body.getX() >= megamanBody.getMaxX()) facing = Facing.LEFT
             else if (body.getMaxX() <= megamanBody.getX()) facing = Facing.RIGHT

@@ -35,6 +35,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
@@ -82,7 +83,7 @@ class Spiky(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
 
         facing = if (spawnProps.containsKey(ConstKeys.FACING))
             Facing.valueOf(spawnProps.get(ConstKeys.FACING, String::class)!!.uppercase())
-        else if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        else if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
     override fun defineBodyComponent(): BodyComponent {

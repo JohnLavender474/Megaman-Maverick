@@ -22,6 +22,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -48,7 +49,7 @@ class TestEnemy(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
         arcMotion = ArcMotion(
             startPosition = spawn,
-            targetPosition = megaman().body.getCenter(),
+            targetPosition = megaman.body.getCenter(),
             speed = 8f * ConstVals.PPM,
             arcFactor = -0.5f
         )

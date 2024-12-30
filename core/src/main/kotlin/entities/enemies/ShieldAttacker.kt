@@ -35,6 +35,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
@@ -100,7 +101,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
                     }
                 }
                 body.setCenter(spawn)
-                facing = if (megaman().body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
+                facing = if (megaman.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
             }
 
             else -> {
@@ -120,7 +121,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
                     }
                 }
                 body.setCenter(spawn)
-                facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
             }
         }
 

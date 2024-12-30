@@ -30,6 +30,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 
 class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity,
@@ -58,7 +59,7 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         super.onSpawn(spawnProps)
 
         val rawDir = spawnProps.get(ConstKeys.DIRECTION, String::class)
-        direction = rawDir?.let { Direction.valueOf(it.uppercase()) } ?: megaman().direction
+        direction = rawDir?.let { Direction.valueOf(it.uppercase()) } ?: megaman.direction
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         defaultSprite.setPosition(spawn, Position.CENTER)

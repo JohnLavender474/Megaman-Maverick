@@ -42,6 +42,7 @@ import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -113,7 +114,7 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
-        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         waitTimer.reset()
         jumpDelayTimer.setToEnd()
@@ -158,7 +159,7 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
                 jumpDelayTimer.reset()
                 return@add
             } else if (!waitTimer.isFinished() && body.isSensing(BodySense.FEET_ON_GROUND)) facing =
-                if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
             jumpDelayTimer.update(it)
             if (jumpDelayTimer.isJustFinished()) {

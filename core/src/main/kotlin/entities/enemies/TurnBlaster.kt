@@ -36,6 +36,7 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -143,7 +144,7 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectional
                 } else return@add
             }
 
-            val desiredAngle = (megaman().body.getCenter().sub(body.getCenter()).angleDeg() - 90f) % 360f
+            val desiredAngle = (megaman.body.getCenter().sub(body.getCenter()).angleDeg() - 90f) % 360f
             if (debug) GameLogger.debug(TAG, "desired angle: $desiredAngle")
 
             val currentAngle = direction.rotation + angleOffset

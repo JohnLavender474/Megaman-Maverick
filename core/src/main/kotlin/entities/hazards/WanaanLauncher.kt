@@ -42,6 +42,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.enemies.Wanaan
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
@@ -150,7 +151,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
 
             if (wanaan == null &&
                 newWanaanDelay.isFinished() &&
-                sensors.any { it.overlaps(megaman().body.getBounds()) }
+                sensors.any { it.overlaps(megaman.body.getBounds()) }
             ) {
                 spawnWanaan()
                 launchDelay.reset()

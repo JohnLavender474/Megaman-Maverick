@@ -10,16 +10,16 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
-abstract class SwitchButton(game: MegamanMaverickGame) : MegaGameEntity(game) {
+abstract class Switch(game: MegamanMaverickGame) : MegaGameEntity(game) {
 
     companion object {
-        const val TAG = "SwitchButton"
+        const val TAG = "Switch"
         protected val regions = ObjectMap<String, TextureRegion>()
     }
 
-    protected enum class ButtonState { UP, SWITCH_TO_DOWN, SWITCH_TO_UP, DOWN }
+    enum class SwitchState { UP, SWITCH_TO_DOWN, SWITCH_TO_UP, DOWN }
 
-    protected lateinit var state: ButtonState
+    lateinit var state: SwitchState
         private set
 
     override fun init() {
@@ -35,31 +35,31 @@ abstract class SwitchButton(game: MegamanMaverickGame) : MegaGameEntity(game) {
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
-        state = getStateOnSpawn()
+        state = getStateOnSpawn(spawnProps)
     }
 
-    protected open fun getStateOnSpawn() = ButtonState.UP
+    protected open fun getStateOnSpawn(spawnProps: Properties) = SwitchState.UP
 
     protected open fun defineUpdatablesComponent(component: UpdatablesComponent) {
         component.put(ConstKeys.STATE) { delta ->
             when (state) {
-                ButtonState.UP -> if (shouldBeginSwitchToDown(delta)) {
-                    state = ButtonState.SWITCH_TO_DOWN
+                SwitchState.UP -> if (shouldBeginSwitchToDown(delta)) {
+                    state = SwitchState.SWITCH_TO_DOWN
                     onBeginSwitchToDown()
                 }
 
-                ButtonState.DOWN -> if (shouldBeginSwitchToUp(delta)) {
-                    state = ButtonState.SWITCH_TO_UP
+                SwitchState.DOWN -> if (shouldBeginSwitchToUp(delta)) {
+                    state = SwitchState.SWITCH_TO_UP
                     onBeginSwitchToUp()
                 }
 
-                ButtonState.SWITCH_TO_DOWN -> if (shouldFinishSwitchToDown(delta)) {
-                    state = ButtonState.DOWN
+                SwitchState.SWITCH_TO_DOWN -> if (shouldFinishSwitchToDown(delta)) {
+                    state = SwitchState.DOWN
                     onFinishSwitchToDown()
                 }
 
-                ButtonState.SWITCH_TO_UP -> if (shouldFinishSwitchToUp(delta)) {
-                    state = ButtonState.UP
+                SwitchState.SWITCH_TO_UP -> if (shouldFinishSwitchToUp(delta)) {
+                    state = SwitchState.UP
                     onFinishSwitchToUp()
                 }
             }

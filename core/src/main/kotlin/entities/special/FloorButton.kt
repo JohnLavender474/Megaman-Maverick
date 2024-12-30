@@ -45,8 +45,8 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.PushableBlock
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.entities.megaman.components.headFixture
 import com.megaman.maverick.game.entities.megaman.components.leftSideFixture
@@ -57,7 +57,7 @@ import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class FloorButton(game: MegamanMaverickGame) : SwitchButton(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class FloorButton(game: MegamanMaverickGame) : Switch(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ICullableEntity, IAudioEntity {
 
     companion object {
@@ -164,11 +164,11 @@ class FloorButton(game: MegamanMaverickGame) : SwitchButton(game), IBodyEntity, 
     override fun defineUpdatablesComponent(component: UpdatablesComponent) {
         component.put(ConstKeys.ARRAY) {
             reusableArrayOfShapes.clear()
-            reusableArrayOfShapes.add(megaman().body.getBounds())
-            reusableArrayOfShapes.add(megaman().leftSideFixture.getShape())
-            reusableArrayOfShapes.add(megaman().rightSideFixture.getShape())
-            reusableArrayOfShapes.add(megaman().feetFixture.getShape())
-            reusableArrayOfShapes.add(megaman().headFixture.getShape())
+            reusableArrayOfShapes.add(megaman.body.getBounds())
+            reusableArrayOfShapes.add(megaman.leftSideFixture.getShape())
+            reusableArrayOfShapes.add(megaman.rightSideFixture.getShape())
+            reusableArrayOfShapes.add(megaman.feetFixture.getShape())
+            reusableArrayOfShapes.add(megaman.headFixture.getShape())
         }
         super.defineUpdatablesComponent(component)
     }

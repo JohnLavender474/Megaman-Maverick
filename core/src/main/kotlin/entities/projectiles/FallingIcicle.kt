@@ -37,6 +37,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.Snow
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
@@ -129,9 +130,9 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         when (fallingIcicleState) {
             FallingIcicleState.STILL -> {
-                if (megaman().body.getY() < body.getMaxY() &&
-                    megaman().body.getMaxX() > body.getX() &&
-                    megaman().body.getX() < body.getMaxX()
+                if (megaman.body.getY() < body.getMaxY() &&
+                    megaman.body.getMaxX() > body.getX() &&
+                    megaman.body.getX() < body.getMaxX()
                 ) fallingIcicleState = FallingIcicleState.SHAKE
             }
 

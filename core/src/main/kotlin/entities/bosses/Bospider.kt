@@ -52,6 +52,7 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
@@ -63,7 +64,6 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toProps
-import com.megaman.maverick.game.utils.misc.HealthFillType
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
@@ -402,7 +402,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     private fun shootWebs() {
         requestToPlaySound(SoundAsset.SPLASH_SOUND, false)
 
-        val centerTrajectory = megaman().body.getCenter().sub(body.getCenter()).nor()
+        val centerTrajectory = megaman.body.getCenter().sub(body.getCenter()).nor()
         shootWeb(centerTrajectory)
 
         val leftTrajectory = centerTrajectory.cpy().rotateDeg(-ANGLE_X)

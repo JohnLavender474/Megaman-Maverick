@@ -44,6 +44,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -117,7 +118,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
 
         scanner.set(spawnProps.get(ConstKeys.SCANNER, RectangleMapObject::class)!!.rectangle.toGameRectangle())
 
-        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         timers.values().forEach { it.reset() }
         stateMachine.reset()
@@ -129,7 +130,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
             val state = stateMachine.getCurrent()
 
             if (!state.equalsAny(FireDispensenatorState.CLOSE, FireDispensenatorState.FIRE))
-                facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
             val timer = timers[state.name.lowercase()]
             timer.update(delta)
@@ -181,12 +182,12 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         builder.setOnChangeState(this::onChangeState)
         builder.initialState(FireDispensenatorState.SLEEP.name)
             .transition(FireDispensenatorState.SLEEP.name, FireDispensenatorState.OPEN.name) {
-                megaman().body.getBounds().overlaps(scanner)
+                megaman.body.getBounds().overlaps(scanner)
             }
             .transition(FireDispensenatorState.OPEN.name, FireDispensenatorState.FIRE.name) { true }
             .transition(FireDispensenatorState.FIRE.name, FireDispensenatorState.CLOSE.name) { true }
             .transition(FireDispensenatorState.CLOSE.name, FireDispensenatorState.OPEN.name) {
-                megaman().body.getBounds().overlaps(scanner)
+                megaman.body.getBounds().overlaps(scanner)
             }
             .transition(FireDispensenatorState.CLOSE.name, FireDispensenatorState.SLEEP.name) { true }
         return builder.build()

@@ -37,6 +37,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
@@ -179,7 +180,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _->
             sprite.setOriginCenter()
-            sprite.rotation = megaman().direction.rotation
+            sprite.rotation = megaman.direction.rotation
             sprite.setCenter(body.getCenter())
             sprite.hidden = damageBlink
         }

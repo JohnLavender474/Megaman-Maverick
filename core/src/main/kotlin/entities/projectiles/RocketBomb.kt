@@ -30,6 +30,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -64,7 +65,7 @@ class RocketBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        direction = getSingleMostDirectionFromStartToTarget(spawn, megaman().body.getCenter())
+        direction = getSingleMostDirectionFromStartToTarget(spawn, megaman.body.getCenter())
 
         val velocity = GameObjectPools.fetch(Vector2::class)
             .set(0f, SPEED * ConstVals.PPM)

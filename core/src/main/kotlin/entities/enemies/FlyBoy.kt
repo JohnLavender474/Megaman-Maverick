@@ -36,6 +36,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
@@ -160,7 +161,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (body.getX() > megaman().body.getX()) Facing.LEFT else Facing.RIGHT
+            facing = if (body.getX() > megaman.body.getX()) Facing.LEFT else Facing.RIGHT
             if (body.isSensing(BodySense.FEET_ON_GROUND)) body.physics.velocity.x = 0f
             if (standing && body.isSensing(BodySense.FEET_ON_GROUND)) {
                 standTimer.update(it)
@@ -192,7 +193,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     }
 
     private fun impulseToPlayer() {
-        body.physics.velocity.x = 1.85f * (megaman().body.getX() - body.getX())
+        body.physics.velocity.x = 1.85f * (megaman.body.getX() - body.getX())
         body.physics.velocity.y = 0f
     }
 }

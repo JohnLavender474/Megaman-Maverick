@@ -47,6 +47,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -140,7 +141,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         distanceType = DistanceType.FAR
 
         target =
@@ -151,7 +152,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
                     spawnProps.get("${ConstKeys.TARGET}_1", RectangleMapObject::class)!!.rectangle.getCenter(false)
                 val target2 =
                     spawnProps.get("${ConstKeys.TARGET}_2", RectangleMapObject::class)!!.rectangle.getCenter(false)
-                val megamanCenter = megaman().body.getCenter()
+                val megamanCenter = megaman.body.getCenter()
                 if (target1.dst2(megamanCenter) < target2.dst2(megamanCenter)) target1 else target2
             }
         setVelocityToTarget()
@@ -230,7 +231,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
                 TAG,
                 "Testing if $it is best fit with facing=$facing, angle=${line.rotation}, & line=$line"
             )
-            val distance = line.worldDistanceFromPoint(megaman().body.getCenter(), false)
+            val distance = line.worldDistanceFromPoint(megaman.body.getCenter(), false)
             if (distance < bestDistance) {
                 bestType = it
                 bestDistance = distance
@@ -244,19 +245,19 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     }
 
     private fun getVerticalAdjustment(): Float {
-        if (aimLine!!.overlaps(megaman().damageableFixture.getShape())) return 0f
+        if (aimLine!!.overlaps(megaman.damageableFixture.getShape())) return 0f
 
         val megamanLine = GameObjectPools.fetch(GameLine::class)
             .set(0f, 0f, 0f, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
-        megamanLine.setCenter(megaman().body.getCenter())
+        megamanLine.setCenter(megaman.body.getCenter())
 
-        GameLogger.debug(TAG, "Megaman center = ${megaman().body.getCenter()}")
+        GameLogger.debug(TAG, "Megaman center = ${megaman.body.getCenter()}")
         GameLogger.debug(TAG, "Drawing vertical line over Megaman = $megamanLine")
 
         val intersection = megamanLine.intersectionPoint(aimLine!!, GameObjectPools.fetch(Vector2::class)) ?: return 0f
         GameLogger.debug(TAG, "Intersection between aim line and Megaman line = $intersection")
 
-        var adjustment = megaman().body.getCenter().y - intersection.y
+        var adjustment = megaman.body.getCenter().y - intersection.y
 
         if ((adjustment > 0f && !canMoveUp) || (adjustment < 0f && !canMoveDown)) return 0f
 
@@ -280,7 +281,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (megaman().dead) {
+            if (megaman.dead) {
                 body.physics.velocity.setZero()
                 return@add
             }
@@ -292,8 +293,8 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
                         loop.next()
                         flyToTargetTimer.reset()
 
-                        if (megaman().body.getMaxX() < body.getX()) facing = Facing.LEFT
-                        else if (megaman().body.getX() > body.getMaxX()) facing = Facing.RIGHT
+                        if (megaman.body.getMaxX() < body.getX()) facing = Facing.LEFT
+                        else if (megaman.body.getX() > body.getMaxX()) facing = Facing.RIGHT
 
                         distanceType = getBestDistanceType()
                         aimLine = calculateAimLine(distanceType)

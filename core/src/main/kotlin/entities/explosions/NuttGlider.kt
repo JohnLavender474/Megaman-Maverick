@@ -39,6 +39,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -190,7 +191,7 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     private fun shouldDropNutt(): Boolean {
         val x = body.getCenter().x + NUTT_DROP_OFFSET_X * ConstVals.PPM * facing.value
-        return x >= megaman().body.getX() && x <= megaman().body.getMaxX()
+        return x >= megaman.body.getX() && x <= megaman.body.getMaxX()
     }
 
     private fun dropNutt() {
@@ -207,8 +208,8 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     private fun updateFacing() {
         when {
-            megaman().body.getX() > body.getMaxX() -> facing = Facing.RIGHT
-            megaman().body.getMaxX() < body.getX() -> facing = Facing.LEFT
+            megaman.body.getX() > body.getMaxX() -> facing = Facing.RIGHT
+            megaman.body.getMaxX() < body.getX() -> facing = Facing.LEFT
         }
     }
 

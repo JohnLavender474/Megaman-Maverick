@@ -17,7 +17,6 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -34,21 +33,14 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.EnemyDamageNegotiations
-import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.entities.projectiles.Bullet
-import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.entities.projectiles.Fireball
-
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
-import kotlin.reflect.KClass
 
 class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
 
@@ -77,7 +69,7 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
         super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
-        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         hasEgg = true
     }
 
@@ -85,7 +77,7 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IF
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
             body.physics.velocity.x = FLY_SPEED * ConstVals.PPM * facing.value
-            if (hasEgg && megaman().body.getX() <= body.getMaxX() && megaman().body.getMaxX() >= body.getX()) dropEgg()
+            if (hasEgg && megaman.body.getX() <= body.getMaxX() && megaman.body.getMaxX() >= body.getX()) dropEgg()
         }
     }
 
