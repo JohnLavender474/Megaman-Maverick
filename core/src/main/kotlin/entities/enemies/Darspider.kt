@@ -39,6 +39,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
@@ -95,7 +96,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 ConstKeys.DIRECTION, if (onCeiling) ConstKeys.DOWN else ConstKeys.UP, String::class
             ).uppercase()
         )
-        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
             .getPositionPoint(DirectionPositionMapper.getPosition(direction).opposite())
@@ -154,11 +155,11 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             }
 
             if (onCeiling) {
-                if (megaman().body.getMaxX() > body.getX() && megaman().body.getX() < body.getMaxX()) drop()
+                if (megaman.body.getMaxX() > body.getX() && megaman.body.getX() < body.getMaxX()) drop()
             } else if (body.isSensing(BodySense.FEET_ON_GROUND) &&
-                megaman().body.getMaxX() >= body.getX() &&
-                megaman().body.getX() <= body.getMaxX() &&
-                megaman().body.getY() >= body.getMaxY()
+                megaman.body.getMaxX() >= body.getX() &&
+                megaman.body.getX() <= body.getMaxX() &&
+                megaman.body.getY() >= body.getMaxY()
             ) jump()
         }
     }
@@ -178,7 +179,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         feetFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ ->
-            facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+            facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         }
         body.addFixture(feetFixture)
         debugShapes.add { feetFixture }

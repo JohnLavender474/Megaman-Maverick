@@ -65,7 +65,7 @@ abstract class AbstractEnemy(
             if (hasDepletedHealth()) {
                 disintegrate()
                 if (dropItemOnDeath) {
-                    val playerHealthModifier = 1f - megaman().getHealthRatio()
+                    val playerHealthModifier = 1f - megaman.getHealthRatio()
                     val dropChance = BASE_DROP_ITEM_CHANCE + (playerHealthModifier * MEGAMAN_HEALTH_INFLUENCE_FACTOR)
                     val rand = getRandom(0f, 1f)
                     GameLogger.debug(
@@ -163,9 +163,9 @@ abstract class AbstractEnemy(
     }
 
     open fun isMegamanShootingAtMe(): Boolean {
-        if (!megaman().shooting) return false
-        return body.getX() < megaman().body.getX() && megaman().facing == Facing.LEFT ||
-            body.getX() > megaman().body.getX() && megaman().facing == Facing.RIGHT
+        if (!megaman.shooting) return false
+        return body.getX() < megaman.body.getX() && megaman.facing == Facing.LEFT ||
+            body.getX() > megaman.body.getX() && megaman.facing == Facing.RIGHT
     }
 
     override fun getEntityType() = EntityType.ENEMY

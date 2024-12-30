@@ -45,6 +45,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -121,7 +122,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
         loop.reset()
         timers.values().forEach { it.reset() }
-        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         val frameDuration = 0.1f / movementScalar
         animations.values().forEach { it.setFrameDuration(frameDuration) }
@@ -180,10 +181,10 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                         swapFacing()
 
                     isFacing(Facing.LEFT) && !body.isProperty(LEFT_FOOT, true) ->
-                        if (megaman().body.getX() < body.getX()) jump() else swapFacing()
+                        if (megaman.body.getX() < body.getX()) jump() else swapFacing()
 
                     isFacing(Facing.RIGHT) && !body.isProperty(RIGHT_FOOT, true) ->
-                        if (megaman().body.getX() > body.getX()) jump() else swapFacing()
+                        if (megaman.body.getX() > body.getX()) jump() else swapFacing()
 
                     else -> body.physics.velocity.x = WALK_SPEED * ConstVals.PPM * facing.value * movementScalar
                 }
@@ -196,7 +197,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
                 loop.next()
                 if (loop.getCurrent() != SpikeBotState.WALK)
-                    facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                    facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
             }
         }
     }

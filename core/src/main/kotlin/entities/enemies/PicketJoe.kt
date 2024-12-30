@@ -41,6 +41,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -110,7 +111,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 (spawnProps.get(ConstKeys.POSITION_SUPPLIER) as () -> Vector2).invoke()
             else spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
-        facing = if (megaman().body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
+        facing = if (megaman.body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
         throwTimer.setToEnd()
         standTimer.reset()
     }
@@ -118,7 +119,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (megaman().body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
+            facing = if (megaman.body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
             if (standing) {
                 standTimer.update(it)
                 if (standTimer.isFinished()) setToThrowingPickets()
@@ -126,7 +127,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 throwTimer.update(it)
                 if (throwTimer.isFinished()) setToStanding()
             }
-            if (throwTimer.isFinished()) facing = if (megaman().body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
+            if (throwTimer.isFinished()) facing = if (megaman.body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
         }
     }
 
@@ -226,7 +227,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         spawn.y += 0.4f * ConstVals.PPM
 
         val impulse = MegaUtilMethods.calculateJumpImpulse(
-            spawn, megaman().body.getCenter(), PICKET_IMPULSE_Y * ConstVals.PPM
+            spawn, megaman.body.getCenter(), PICKET_IMPULSE_Y * ConstVals.PPM
         ).coerceX(-MAX_IMPULSE_X * ConstVals.PPM, MAX_IMPULSE_X * ConstVals.PPM)
 
         val picket = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.PICKET)!!

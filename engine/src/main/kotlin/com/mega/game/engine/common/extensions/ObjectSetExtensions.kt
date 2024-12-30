@@ -3,6 +3,15 @@ package com.mega.game.engine.common.extensions
 import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.OrderedSet
 
+fun <T> ObjectSet<T>.removeIf(predicate: (T) -> Boolean): ObjectSet<T> {
+    val iter = iterator()
+    while (iter.hasNext) {
+        val value = iter.next()
+        if (predicate.invoke(value)) iter.remove()
+    }
+    return this
+}
+
 fun <T> Array<T>.toObjectSet(): ObjectSet<T> {
     val set = ObjectSet<T>()
     forEach { set.add(it) }

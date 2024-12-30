@@ -41,6 +41,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -127,7 +128,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
 
         type = spawnProps.getOrDefault(ConstKeys.TYPE, "", String::class)
 
-        val right = spawnProps.getOrDefault(ConstKeys.RIGHT, megaman().body.getX() > body.getX(), Boolean::class)
+        val right = spawnProps.getOrDefault(ConstKeys.RIGHT, megaman.body.getX() > body.getX(), Boolean::class)
         facing = if (right) Facing.RIGHT else Facing.LEFT
 
         direction = Direction.UP
@@ -182,8 +183,8 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectio
                     }
 
                     facing = when (direction) {
-                        Direction.UP, Direction.DOWN -> if (megaman().body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
-                        Direction.LEFT, Direction.RIGHT -> if (megaman().body.getY() > body.getY()) Facing.RIGHT else Facing.LEFT
+                        Direction.UP, Direction.DOWN -> if (megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
+                        Direction.LEFT, Direction.RIGHT -> if (megaman.body.getY() > body.getY()) Facing.RIGHT else Facing.LEFT
                     }
 
                     val popUpTimer = metBehaviorTimers.get(MetBehavior.POP_UP)

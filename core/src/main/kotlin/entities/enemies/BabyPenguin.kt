@@ -35,6 +35,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
@@ -74,7 +75,7 @@ class BabyPenguin(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setBottomCenterToPoint(spawn)
-        val left = spawnProps.getOrDefault(ConstKeys.LEFT, megaman().body.getX() < body.getX(), Boolean::class)
+        val left = spawnProps.getOrDefault(ConstKeys.LEFT, megaman.body.getX() < body.getX(), Boolean::class)
         facing = if (left) Facing.LEFT else Facing.RIGHT
     }
 

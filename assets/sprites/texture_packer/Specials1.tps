@@ -251,6 +251,7 @@
             </struct>
             <key type="filename">../frames/Specials1/FloorButton/down.png</key>
             <key type="filename">../frames/Specials1/FloorButton/up.png</key>
+            <key type="filename">../frames/Specials1/GravitySwitcharoo/aura.png</key>
             <key type="filename">../frames/Specials1/LightSwitch/Off.png</key>
             <key type="filename">../frames/Specials1/LightSwitch/On.png</key>
             <key type="filename">../frames/Specials1/PortalHopper/Launch.png</key>
@@ -302,6 +303,21 @@
                 <rect>32,8,64,16</rect>
                 <key>scale9Paddings</key>
                 <rect>32,8,64,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Specials1/GravitySwitcharoo/arrow.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,24,16,48</rect>
+                <key>scale9Paddings</key>
+                <rect>8,24,16,48</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

@@ -32,6 +32,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -82,7 +83,7 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         body.physics.velocity.setZero()
-        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -148,7 +149,7 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             turnTimer.update(it)
 
             if (turnTimer.isJustFinished()) facing =
-                if (megaman().body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
+                if (megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
             if (turnTimer.isFinished() && facingWrongDirection) turnTimer.reset()
 
             bounceTimer.update(it)
@@ -161,7 +162,7 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 if ((isFacing(Facing.LEFT) && !body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
                     (isFacing(Facing.RIGHT) && !body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
                 ) 0f
-                else (if (megaman().body.getBounds().overlaps(speedUpScanner)
+                else (if (megaman.body.getBounds().overlaps(speedUpScanner)
                 ) SPEED_SUPER else SPEED_NORMAL) * ConstVals.PPM * facing.value
         }
     }

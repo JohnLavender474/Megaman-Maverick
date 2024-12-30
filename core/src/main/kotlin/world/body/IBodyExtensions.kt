@@ -67,9 +67,11 @@ fun IBody.addBlockFilter(filter: (dynamic: MegaGameEntity, static: MegaGameEntit
 fun IBody.clearBlockFilters() = removeProperty(ConstKeys.BLOCK_FILTERS)
 
 fun IBody.getFeetBlocks(): ObjectSet<Block> {
-    if (!hasProperty(ConstKeys.FEET_BLOCKS)) putProperty(ConstKeys.FEET_BLOCKS, ObjectSet<Block>())
+    if (!hasProperty(ConstKeys.FEET_BLOCKS)) setFeetBlocks(ObjectSet<Block>())
     return getProperty(ConstKeys.FEET_BLOCKS) as ObjectSet<Block>
 }
+
+fun IBody.setFeetBlocks(set: ObjectSet<Block>) = putProperty(ConstKeys.FEET_BLOCKS, set)
 
 fun IBody.clearFeetBlocks() = getFeetBlocks().clear()
 

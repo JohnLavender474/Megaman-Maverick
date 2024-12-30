@@ -41,10 +41,9 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.EnemyDamageNegotiations
-import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.hazards.Saw
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
 import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
@@ -175,7 +174,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
             when (status) {
                 BatStatus.HANGING -> {
                     if (!triggered) trigger?.let {
-                        if (megaman().body.getBounds().overlaps(it)) {
+                        if (megaman.body.getBounds().overlaps(it)) {
                             GameLogger.debug(TAG, "update(): Megaman touched trigger")
                             triggered = true
                         }
@@ -266,7 +265,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setOriginCenter()
-            sprite.rotation = megaman().direction.rotation
+            sprite.rotation = megaman.direction.rotation
             sprite.hidden = damageBlink
             sprite.setPosition(body.getCenter(), Position.CENTER)
         }
@@ -292,7 +291,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
     private fun definePathfindingComponent(): PathfindingComponent {
         val params = PathfinderParams(
             startCoordinateSupplier = { body.getCenter().toGridCoordinate() },
-            targetCoordinateSupplier = { megaman().body.getCenter().toGridCoordinate() },
+            targetCoordinateSupplier = { megaman.body.getCenter().toGridCoordinate() },
             allowDiagonal = { true },
             filter = { coordinate ->
                 val bodies = game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y)
@@ -335,7 +334,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
     }
 
     private fun directlyChaseMegaman() = body.physics.velocity.set(
-        megaman().body
+        megaman.body
             .getCenter()
             .sub(body.getCenter())
             .nor()

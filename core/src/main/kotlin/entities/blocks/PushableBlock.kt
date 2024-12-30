@@ -34,6 +34,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.components.leftSideFixture
 import com.megaman.maverick.game.entities.megaman.components.rightSideFixture
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
@@ -48,7 +49,7 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
     companion object {
         const val TAG = "PushableBlock"
-        private const val METAL_CRATE = "MetalCrate"
+        const val METAL_CRATE = "MetalCrate"
         private const val DEFAULT_FRICTION_X = 5f
         private const val X_VEL_CLAMP = 8f
         private const val PUSH_IMPULSE = 10f
@@ -143,16 +144,16 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         block!!.body.set(body)
 
         if (body.isSensing(BodySense.FEET_ON_GROUND)) when {
-            megaman().leftSideFixture.overlaps(body.getBounds()) &&
-                megaman().isFacing(Facing.LEFT) &&
-                megaman().body.physics.velocity.x < 0f -> {
+            megaman.leftSideFixture.overlaps(body.getBounds()) &&
+                megaman.isFacing(Facing.LEFT) &&
+                megaman.body.physics.velocity.x < 0f -> {
                 val impulse = PUSH_IMPULSE * ConstVals.PPM * delta
                 body.physics.velocity.x -= impulse
             }
 
-            megaman().rightSideFixture.overlaps(body.getBounds()) &&
-                megaman().isFacing(Facing.RIGHT) &&
-                megaman().body.physics.velocity.x > 0f -> {
+            megaman.rightSideFixture.overlaps(body.getBounds()) &&
+                megaman.isFacing(Facing.RIGHT) &&
+                megaman.body.physics.velocity.x > 0f -> {
                 val impulse = PUSH_IMPULSE * ConstVals.PPM * delta
                 body.physics.velocity.x += impulse
             }

@@ -41,6 +41,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -99,7 +100,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         body.positionOnPoint(spawn, Position.BOTTOM_CENTER)
         type = if (spawnProps.containsKey(ConstKeys.TYPE))
             spawnProps.get(ConstKeys.TYPE, String::class)!! else ""
-        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -170,7 +171,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (megaman().body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
+            facing = if (megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
             settingTimer.update(it)
             if (settingTimer.isJustFinished()) {
                 val index = (setting.ordinal + 1) % SwinginJoeSetting.values().size

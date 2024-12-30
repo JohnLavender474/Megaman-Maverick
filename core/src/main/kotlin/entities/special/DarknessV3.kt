@@ -35,6 +35,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.projectiles.*
@@ -364,12 +365,12 @@ class DarknessV3(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         MegaGameEntities.getEntitiesOfType(EntityType.PROJECTILE).forEach { t -> tryToLightUp(t) }
         MegaGameEntities.getEntitiesOfType(EntityType.EXPLOSION).forEach { t -> tryToLightUp(t) }
 
-        if (megaman().body.getBounds().overlaps(bounds) && megaman().charging) {
+        if (megaman.body.getBounds().overlaps(bounds) && megaman.charging) {
             val lightSourceDef = lightSourcePool.fetch()
-            lightSourceDef.center = megaman().body.getCenter()
+            lightSourceDef.center = megaman.body.getCenter()
             lightSourceDef.radius = MEGAMAN_CHARGING_RADIUS
             lightSourceDef.radiance = MEGAMAN_CHARGING_RADIANCE
-            queuedLightSourcesToAdd.addLast(megaman().mapObjectId pairTo lightSourceDef)
+            queuedLightSourcesToAdd.addLast(megaman.mapObjectId pairTo lightSourceDef)
         }
 
         while (!queuedLightSourcesToAdd.isEmpty) {

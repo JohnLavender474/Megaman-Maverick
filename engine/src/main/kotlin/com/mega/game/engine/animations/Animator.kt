@@ -65,8 +65,8 @@ class AnimatorBuilder {
         this.animations.put(key, animation)
     }
 
-    fun addAnimations(animationsMap: Map<String, IAnimation>) = apply {
-        animationsMap.forEach { (key, animation) -> this.animations.put(key, animation) }
+    fun addAnimations(animationsMap: ObjectMap<String, IAnimation>) = apply {
+        animationsMap.forEach { this.animations.put(it.key, it.value) }
     }
 
     fun setUpdateScalar(scalar: Float) = apply {

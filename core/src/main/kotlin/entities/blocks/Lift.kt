@@ -22,6 +22,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
@@ -113,7 +114,7 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectiona
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        var megamanOverlapping = !megaman().dead && megaman().body.fixtures.values().any { set ->
+        var megamanOverlapping = !megaman.dead && megaman.body.fixtures.values().any { set ->
             set.any { fixture ->
                 fixture.getType().equalsAny(FixtureType.SIDE, FixtureType.FEET) &&
                     fixture.getShape().overlaps(body.getBounds())

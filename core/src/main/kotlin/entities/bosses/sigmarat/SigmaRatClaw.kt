@@ -46,6 +46,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
@@ -151,7 +152,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
         clawState = SigmaRatClawState.LAUNCH
         launchPauseTimer.reset()
         reachedLaunchTarget = false
-        launchTarget.set(megaman().body.getCenter())
+        launchTarget.set(megaman.body.getCenter())
         GameLogger.debug(TAG, "Launch target: $launchTarget")
         returnTarget.set(body.getCenter())
         GameLogger.debug(TAG, "Return target: $returnTarget")
@@ -200,7 +201,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
         requestToPlaySound(SoundAsset.BURST_SOUND, false)
 
         shockBall!!.launch(
-            megaman().body.getCenter().sub(body.getCenter()).nor().scl(SHOCK_VELOCITY_Y * ConstVals.PPM)
+            megaman.body.getCenter().sub(body.getCenter()).nor().scl(SHOCK_VELOCITY_Y * ConstVals.PPM)
         )
         shockBall = null
 
@@ -256,7 +257,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
                             body.physics.velocity.set(trajectory)
 
                             if (body.getCenter().epsilonEquals(launchTarget, EPSILON * ConstVals.PPM) ||
-                                megaman().body.getBounds().contains(body.getCenter()) ||
+                                megaman.body.getBounds().contains(body.getCenter()) ||
                                 body.getMaxY() >= maxY
                             ) {
                                 launchPauseTimer.reset()

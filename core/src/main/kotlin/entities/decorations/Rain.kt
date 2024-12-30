@@ -38,6 +38,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
@@ -158,7 +159,7 @@ class RainFall(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntit
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-        GameLogger.debug(TAG, "onSpawn(): Megaman's position = ${megaman().body.getCenter()}")
+        GameLogger.debug(TAG, "onSpawn(): Megaman's position = ${megaman.body.getCenter()}")
         super.onSpawn(spawnProps)
         cullBounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         spawnProps.forEach { key, value ->

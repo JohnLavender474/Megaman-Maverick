@@ -48,6 +48,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.enemies.HeliMet
 import com.megaman.maverick.game.entities.enemies.Met
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
@@ -250,7 +251,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
 
     override fun playMusicOnSpawn() = false
 
-    override fun isReady(delta: Float) = megaman().body.isSensing(BodySense.FEET_ON_GROUND)
+    override fun isReady(delta: Float) = megaman.body.isSensing(BodySense.FEET_ON_GROUND)
 
     override fun onReady() {
         super.onReady()
@@ -353,7 +354,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
             if (fist?.fistState == GutsTankFist.GutsTankFistState.ATTACHED) {
                 launchFistDelayTimer.update(delta)
                 if (launchFistDelayTimer.isFinished() &&
-                    !fist!!.body.getBounds().overlaps(megaman().body.getBounds())
+                    !fist!!.body.getBounds().overlaps(megaman.body.getBounds())
                 ) {
                     launchFistDelayTimer.reset()
                     fist!!.launch()
@@ -370,7 +371,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity 
                         val spawn = body.getCenter().add(-1.65f * ConstVals.PPM, 1.85f * ConstVals.PPM)
                         val impulse = MegaUtilMethods.calculateJumpImpulse(
                             spawn,
-                            megaman().body.getCenter(),
+                            megaman.body.getCenter(),
                             CHUNKED_BULLET_VELOCITY_Y * ConstVals.PPM
                         )
                         val gravity =

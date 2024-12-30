@@ -35,6 +35,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
@@ -74,7 +75,7 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         standTimer.reset()
-        facing = if (megaman().body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
+        facing = if (megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -120,7 +121,7 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         updatablesComponent.add {
             if (body.isSensing(BodySense.FEET_ON_GROUND)) {
                 standTimer.update(it)
-                facing = if (megaman().body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
+                facing = if (megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
             }
 
             if (standTimer.isFinished()) {

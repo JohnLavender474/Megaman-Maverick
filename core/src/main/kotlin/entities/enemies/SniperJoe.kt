@@ -44,6 +44,7 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -318,9 +319,9 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             if (!shouldUpdate) return@add
 
             facing = when (direction) {
-                Direction.UP, Direction.DOWN -> if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
-                Direction.LEFT -> if (megaman().body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
-                Direction.RIGHT -> if (megaman().body.getY() < body.getY()) Facing.RIGHT else Facing.LEFT
+                Direction.UP, Direction.DOWN -> if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                Direction.LEFT -> if (megaman.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
+                Direction.RIGHT -> if (megaman.body.getY() < body.getY()) Facing.RIGHT else Facing.LEFT
             }
 
             if (canJump && shouldJump()) jump()
@@ -441,7 +442,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             props(
                 ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.TRAJECTORY pairTo normalizedTrajectory(
                     body.getCenter(),
-                    megaman().body.getCenter(),
+                    megaman.body.getCenter(),
                     SHIELD_VEL * ConstVals.PPM,
                     GameObjectPools.fetch(Vector2::class)
                 ), ConstKeys.OWNER pairTo this
@@ -452,21 +453,21 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
     private fun shouldJump(): Boolean {
         if (!body.isSensing(BodySense.FEET_ON_GROUND)) return false
         return when (direction) {
-            Direction.UP -> megaman().body.getY() > body.getMaxY() &&
-                megaman().body.getX() >= body.getX() &&
-                megaman().body.getMaxX() <= body.getMaxX()
+            Direction.UP -> megaman.body.getY() > body.getMaxY() &&
+                megaman.body.getX() >= body.getX() &&
+                megaman.body.getMaxX() <= body.getMaxX()
 
-            Direction.DOWN -> megaman().body.getMaxY() < body.getY() &&
-                megaman().body.getX() >= body.getX() &&
-                megaman().body.getMaxX() <= body.getMaxX()
+            Direction.DOWN -> megaman.body.getMaxY() < body.getY() &&
+                megaman.body.getX() >= body.getX() &&
+                megaman.body.getMaxX() <= body.getMaxX()
 
-            Direction.LEFT -> megaman().body.getMaxX() < body.getX() &&
-                megaman().body.getY() >= body.getY() &&
-                megaman().body.getMaxY() <= body.getMaxY()
+            Direction.LEFT -> megaman.body.getMaxX() < body.getX() &&
+                megaman.body.getY() >= body.getY() &&
+                megaman.body.getMaxY() <= body.getMaxY()
 
-            Direction.RIGHT -> megaman().body.getX() > body.getMaxX() &&
-                megaman().body.getY() >= body.getY() &&
-                megaman().body.getMaxY() <= body.getMaxY()
+            Direction.RIGHT -> megaman.body.getX() > body.getMaxX() &&
+                megaman.body.getY() >= body.getY() &&
+                megaman.body.getMaxY() <= body.getMaxY()
         }
     }
 

@@ -50,6 +50,7 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.Splash.SplashType
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -189,7 +190,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         stateMachine.reset()
         timers.forEach { t -> t.value.reset() }
 
-        facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         longPunchExtensionCount = 0
         longPunchingForward = false
         danceFlash = false
@@ -297,7 +298,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
                 }
 
                 DesertManState.JUMP -> {
-                    facing = if (megaman().body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                    facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
                     if (shouldFinishJumping()) stateMachine.next()
                 }
 
@@ -577,7 +578,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
             .transition(DesertManState.PUNCH.name, DesertManState.STAND.name) { true }
             // JUMP -> WALL_SLIDE, STAND
             .transition(DesertManState.JUMP.name, DesertManState.STAND.name) { shouldGoToStandState() }
-            .transition(DesertManState.JUMP.name, DesertManState.WALL_SLIDE.name) { !megaman().dead && isWallSliding() }
+            .transition(DesertManState.JUMP.name, DesertManState.WALL_SLIDE.name) { !megaman.dead && isWallSliding() }
             // WALL_SLIDE -> STAND, JUMP
             .transition(DesertManState.WALL_SLIDE.name, DesertManState.STAND.name) { shouldGoToStandState() }
             .transition(DesertManState.WALL_SLIDE.name, DesertManState.JUMP.name) { true }
@@ -631,7 +632,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
 
             DesertManState.JUMP -> {
                 body.physics.applyFrictionX = false
-                val impulse = jump(megaman().body.getCenter())
+                val impulse = jump(megaman.body.getCenter())
                 facing = if (impulse.x < 0f) Facing.LEFT else Facing.RIGHT
                 GameLogger.debug(
                     TAG, "onChangeState(): setting up JUMP state: " +
@@ -754,21 +755,21 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
     private fun shouldGoToStandState() = body.physics.velocity.y <= 0f && body.isSensing(BodySense.FEET_ON_SAND)
 
     private fun isMegamanInLongPunchXRange() =
-        abs(megaman().body.getX() - body.getX()) <= LONG_PUNCH_X_THRESHOLD * ConstVals.PPM
+        abs(megaman.body.getX() - body.getX()) <= LONG_PUNCH_X_THRESHOLD * ConstVals.PPM
 
-    private fun isMegamanInPunchYRange() = abs(megaman().body.getY() - body.getY()) <= PUNCH_Y_THRESHOLD * ConstVals.PPM
+    private fun isMegamanInPunchYRange() = abs(megaman.body.getY() - body.getY()) <= PUNCH_Y_THRESHOLD * ConstVals.PPM
 
     private fun isPunching() = currentState == DesertManState.PUNCH || isTornadoPunching()
 
     private fun isMegamanInTornadoYRange() =
-        abs(megaman().body.getY() - body.getY()) <= TORNADO_Y_THRESHOLD * ConstVals.PPM
+        abs(megaman.body.getY() - body.getY()) <= TORNADO_Y_THRESHOLD * ConstVals.PPM
 
     private fun isTornadoPunching() = currentState == DesertManState.TORNADO && !timers["tornado_punch"].isFinished()
 
     private fun updateFacing() {
         when {
-            megaman().body.getMaxX() < body.getX() -> facing = Facing.LEFT
-            megaman().body.getX() > body.getMaxX() -> facing = Facing.RIGHT
+            megaman.body.getMaxX() < body.getX() -> facing = Facing.LEFT
+            megaman.body.getX() > body.getMaxX() -> facing = Facing.RIGHT
         }
     }
 

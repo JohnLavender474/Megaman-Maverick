@@ -14,12 +14,13 @@ interface IMegaGameEntity : ITaggable {
 
     fun getGameCamera() = game.getGameCamera()
 
-    fun megaman() = game.megaman
-
     fun playSoundNow(soundKey: Any, loop: Boolean) = game.audioMan.playSound(soundKey, loop)
 
     fun stopSoundNow(soundKey: Any) = game.audioMan.stopSound(soundKey)
 }
+
+val IMegaGameEntity.megaman
+    get() = game.megaman
 
 fun IBodyEntity.overlapsGameCamera() =
     (this as MegaGameEntity).game.getGameCamera().getRotatedBounds().overlaps(body.getBounds())

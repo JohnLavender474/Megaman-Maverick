@@ -144,18 +144,19 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
 
                 body.direction = value
 
-                val direction = if (value.isVertical()) value else value.getOpposite()
-                if (game.getGameCamera().direction != direction) {
+                val camDir = if (value.isVertical()) value else value.getOpposite()
+                if (game.getGameCamera().direction != camDir) {
                     game.eventsMan.submitEvent(
                         Event(
                             EventType.START_GAME_CAM_ROTATION,
-                            props(ConstKeys.DIRECTION pairTo direction)
+                            props(ConstKeys.DIRECTION pairTo camDir)
                         )
                     )
 
                     canMove = false
                     body.physics.gravityOn = false
                     body.physics.velocity.setZero()
+
                     resetBehavior(BehaviorType.JETPACKING)
                 }
             } else GameLogger.debug(TAG, "direction-set(): value same as field")

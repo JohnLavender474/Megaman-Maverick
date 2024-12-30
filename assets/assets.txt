@@ -1,7 +1,4 @@
 Megaman10Font.ttf
-hs_err_pid365593.log
-hs_err_pid358943.log
-hs_err_pid373532.log
 temp/MegaRed225/random-enemies-5.jpg
 temp/MegaRed225/Random Enemy Sprites Set 9/Link
 temp/MegaRed225/Random Enemy Sprites Set 9/random-enemy-sprites-9.jpg
@@ -116,6 +113,7 @@ temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/
 temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/layers/background.png
 temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/previews/pipe forest preview-big.png
 temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/previews/pipe forest preview.png
+hs_err_pid395172.log
 sounds/conveyor_lift.wav
 sounds/thump.mp3
 sounds/air_shooter.wav
@@ -188,6 +186,7 @@ sounds/burst.wav
 sounds/quake.mp3
 sounds/floating_portal.wav
 sounds/whoosh.mp3
+hs_err_pid394838.log
 badlogic.jpg
 sprites/frames/MegamanTrailSprite/airdash.png
 sprites/frames/MegamanTrailSprite/groundslide_shoot.png
@@ -645,6 +644,8 @@ sprites/frames/Projectiles2/Nutt.png
 sprites/frames/Projectiles2/SpitFireball.png
 sprites/frames/Specials1/SwitcharooArrow.png
 sprites/frames/Specials1/SpringBounce.png
+sprites/frames/Specials1/GravitySwitcharoo/arrow.png
+sprites/frames/Specials1/GravitySwitcharoo/aura.png
 sprites/frames/Specials1/Cart/move.png
 sprites/frames/Specials1/Cart/idle.png
 sprites/frames/Specials1/PortalHopper/Launch.png
@@ -2336,9 +2337,8 @@ diagrams/Desert Man - Design.drawio
 diagrams/Glacier Man - Design.drawio
 diagrams/.$Inferno Man - Design.drawio.bkp
 diagrams/.$Desert Man - Design.drawio.bkp
-hs_err_pid374972.log
+hs_err_pid395556.log
 libgdx.png
-hs_err_pid373935.log
 credits.txt
 music/MMX5_DarkDizzy.txt
 music/MMX6_BossFight.txt
