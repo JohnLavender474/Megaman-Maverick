@@ -424,6 +424,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Platforms1/MetalCrate.png</key>
+            <key type="filename">../frames/Platforms1/MoonCrate.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

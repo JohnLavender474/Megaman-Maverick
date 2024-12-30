@@ -39,6 +39,8 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val ARRAY = "array"
+    const val STATE = "state"
     const val OTHER = "other"
     const val NO = "no"
     const val ID = "id"

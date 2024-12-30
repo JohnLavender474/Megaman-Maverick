@@ -47,7 +47,6 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.PushableBlock
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.entities.megaman.components.headFixture
 import com.megaman.maverick.game.entities.megaman.components.leftSideFixture
@@ -58,7 +57,7 @@ import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class FloorButton(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class FloorButton(game: MegamanMaverickGame) : SwitchButton(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ICullableEntity, IAudioEntity {
 
     companion object {
@@ -67,17 +66,11 @@ class FloorButton(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private enum class FloorButtonState { UP, SWITCH_TO_DOWN, SWITCH_TO_UP, DOWN }
-
-    private val pushableBlocks = OrderedSet<PushableBlock>()
     private val switchTimer = Timer(SWITCH_DUR)
-
-    private lateinit var state: FloorButtonState
-    private lateinit var spawnRoom: String
-
-    private var key = -1
-
+    private val pushableBlocks = OrderedSet<PushableBlock>()
     private val reusableArrayOfShapes = Array<IGameShape2D>()
+    private lateinit var spawnRoom: String
+    private var key = -1
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -87,7 +80,6 @@ class FloorButton(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
         }
         super.init()
         addComponent(defineCullablesComponent())
-        addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
@@ -104,34 +96,82 @@ class FloorButton(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
 
         spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
         key = spawnProps.get(ConstKeys.KEY, Int::class)!!
-        state = FloorButtonState.UP
         switchTimer.setToEnd()
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        deactivate()
+        onDeactivate()
         pushableBlocks.clear()
     }
 
-    private fun activate() {
-        GameLogger.debug(TAG, "activate()")
+    override fun shouldBeginSwitchToDown(delta: Float) =
+        reusableArrayOfShapes.any { it.overlaps(body.getBounds()) } || !pushableBlocks.isEmpty
+
+    override fun shouldBeginSwitchToUp(delta: Float): Boolean {
+        val iter = pushableBlocks.iterator()
+        while (iter.hasNext) {
+            val block = iter.next()
+            if (!block.body.getBounds().overlaps(body.getBounds())) pushableBlocks.remove(block)
+        }
+
+        return reusableArrayOfShapes.none { it.overlaps(body.getBounds()) } && pushableBlocks.isEmpty
+    }
+
+    override fun shouldFinishSwitchToDown(delta: Float): Boolean {
+        switchTimer.update(delta)
+        return switchTimer.isFinished()
+    }
+
+    override fun shouldFinishSwitchToUp(delta: Float): Boolean {
+        switchTimer.update(delta)
+        return switchTimer.isFinished()
+    }
+
+    override fun onBeginSwitchToDown() {
+        GameLogger.debug(TAG, "onBeginSwitchToDown()")
         switchTimer.reset()
-        state = FloorButtonState.SWITCH_TO_DOWN
+        onActivate()
+    }
+
+    private fun onActivate() {
+        GameLogger.debug(TAG, "onActivate()")
         game.eventsMan.submitEvent(Event(EventType.ACTIVATE_SWITCH, props(ConstKeys.KEY pairTo key)))
     }
 
-    private fun deactivate() {
-        GameLogger.debug(TAG, "deactivate()")
+    override fun onBeginSwitchToUp() {
+        GameLogger.debug(TAG, "onBeginSwitchToUp()")
         switchTimer.reset()
-        state = FloorButtonState.SWITCH_TO_UP
+        onDeactivate()
+    }
+
+    private fun onDeactivate() {
+        GameLogger.debug(TAG, "onDeactivate()")
         game.eventsMan.submitEvent(Event(EventType.DEACTIVATE_SWITCH, props(ConstKeys.KEY pairTo key)))
     }
 
-    private fun enterPushableBlock(block: PushableBlock) = pushableBlocks.add(block)
+    override fun onFinishSwitchToDown() {
+        GameLogger.debug(TAG, "onFinishSwitchToDown()")
+        requestToPlaySound(SoundAsset.SE_140, false)
+    }
 
-    private fun exitPushableBlock(block: PushableBlock) = pushableBlocks.remove(block)
+    override fun onFinishSwitchToUp() {
+        GameLogger.debug(TAG, "onFinishSwitchToUp()")
+        requestToPlaySound(SoundAsset.SE_140, false)
+    }
+
+    override fun defineUpdatablesComponent(component: UpdatablesComponent) {
+        component.put(ConstKeys.ARRAY) {
+            reusableArrayOfShapes.clear()
+            reusableArrayOfShapes.add(megaman().body.getBounds())
+            reusableArrayOfShapes.add(megaman().leftSideFixture.getShape())
+            reusableArrayOfShapes.add(megaman().rightSideFixture.getShape())
+            reusableArrayOfShapes.add(megaman().feetFixture.getShape())
+            reusableArrayOfShapes.add(megaman().headFixture.getShape())
+        }
+        super.defineUpdatablesComponent(component)
+    }
 
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
@@ -144,46 +184,6 @@ class FloorButton(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
         )
     )
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        reusableArrayOfShapes.clear()
-        reusableArrayOfShapes.add(megaman().body.getBounds())
-        reusableArrayOfShapes.add(megaman().leftSideFixture.getShape())
-        reusableArrayOfShapes.add(megaman().rightSideFixture.getShape())
-        reusableArrayOfShapes.add(megaman().feetFixture.getShape())
-        reusableArrayOfShapes.add(megaman().headFixture.getShape())
-
-        when (state) {
-            FloorButtonState.UP ->
-                if (reusableArrayOfShapes.any { it.overlaps(body.getBounds()) } || !pushableBlocks.isEmpty) activate()
-
-            FloorButtonState.DOWN -> {
-                val iter = pushableBlocks.iterator()
-                while (iter.hasNext) {
-                    val block = iter.next()
-                    if (!block.body.getBounds().overlaps(body.getBounds())) exitPushableBlock(block)
-                }
-
-                if (reusableArrayOfShapes.none { it.overlaps(body.getBounds()) } && pushableBlocks.isEmpty) deactivate()
-            }
-
-            FloorButtonState.SWITCH_TO_DOWN -> {
-                switchTimer.update(delta)
-                if (switchTimer.isFinished()) {
-                    state = FloorButtonState.DOWN
-                    requestToPlaySound(SoundAsset.SE_140, false)
-                }
-            }
-
-            FloorButtonState.SWITCH_TO_UP -> {
-                switchTimer.update(delta)
-                if (switchTimer.isFinished()) {
-                    state = FloorButtonState.UP
-                    requestToPlaySound(SoundAsset.SE_140, false)
-                }
-            }
-        }
-    })
-
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(1.25f * ConstVals.PPM)
@@ -194,7 +194,7 @@ class FloorButton(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         bodyFixture.setHitByBlockReceiver(ProcessState.BEGIN) { block, _ ->
             val owner = block.getProperty(ConstKeys.OWNER, IGameEntity::class)
-            if (owner != null && owner is PushableBlock) enterPushableBlock(owner)
+            if (owner != null && owner is PushableBlock) pushableBlocks.add(owner)
         }
         body.addFixture(bodyFixture)
 
@@ -226,6 +226,4 @@ class FloorButton(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
     }
 
     override fun getTag() = TAG
-
-    override fun getEntityType() = EntityType.SPECIAL
 }
