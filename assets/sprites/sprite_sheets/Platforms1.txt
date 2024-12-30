@@ -1,7 +1,7 @@
 Platforms1.png
 size: 448, 624
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 8bitBlueBlock
   rotate: false
