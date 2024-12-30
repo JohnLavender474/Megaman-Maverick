@@ -30,7 +30,6 @@ import com.mega.game.engine.behaviors.BehaviorsSystem
 import com.mega.game.engine.common.GameLogLevel
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IPropertizable
@@ -83,16 +82,12 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
-import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponHandler
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
-import com.megaman.maverick.game.screens.levels.MegaLevelScreen.Companion.MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
-import com.megaman.maverick.game.screens.levels.events.PlayerDeathEventHandler
-import com.megaman.maverick.game.screens.levels.events.PlayerSpawnEventHandler
 import com.megaman.maverick.game.screens.menus.*
 import com.megaman.maverick.game.screens.menus.bosses.LevelSelectScreen
 import com.megaman.maverick.game.screens.menus.temp.BossIntroScreen

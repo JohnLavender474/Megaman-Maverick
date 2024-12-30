@@ -76,7 +76,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
         private const val PATHFINDING_UPDATE_INTERVAL = 0.05f
     }
 
-    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.MEDIUM)
+    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.SMALL)
     override var direction: Direction
         get() = body.direction
         set(value) {

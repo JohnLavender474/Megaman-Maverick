@@ -1,4 +1,7 @@
 Megaman10Font.ttf
+hs_err_pid365593.log
+hs_err_pid358943.log
+hs_err_pid373532.log
 temp/MegaRed225/random-enemies-5.jpg
 temp/MegaRed225/Random Enemy Sprites Set 9/Link
 temp/MegaRed225/Random Enemy Sprites Set 9/random-enemy-sprites-9.jpg
@@ -186,7 +189,6 @@ sounds/quake.mp3
 sounds/floating_portal.wav
 sounds/whoosh.mp3
 badlogic.jpg
-hs_err_pid355580.log
 sprites/frames/MegamanTrailSprite/airdash.png
 sprites/frames/MegamanTrailSprite/groundslide_shoot.png
 sprites/frames/MegamanTrailSprite/groundslide.png
@@ -1128,6 +1130,7 @@ sprites/frames/Platforms1/SwingingPlatform/platform.png
 sprites/frames/Platforms1/WoodPlank.png
 sprites/frames/Platforms1/GearTrolleyPlatform.png
 sprites/frames/Platforms1/PropellerPlatform.png
+sprites/frames/Platforms1/MoonCrate.png
 sprites/frames/Platforms1/Platform1_64x8.png
 sprites/frames/Platforms1/DropperLift/Closed.png
 sprites/frames/Platforms1/DropperLift/Opening.png

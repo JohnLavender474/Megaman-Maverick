@@ -28,6 +28,7 @@ class BlocksFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val DESTROYABLE_WOOD_PLANK = "DestroyableWoodPlank"
         const val PUSHABLE_BLOCK = "PushableBlock"
         const val SWITCH_GATE = "SwitchGate"
+        const val MOON_CRATE = "MoonCrate"
     }
 
     override fun init() {
@@ -49,6 +50,7 @@ class BlocksFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(DESTROYABLE_WOOD_PLANK, GameEntityPoolCreator.create { DestroyableWoodPlank(game) })
         pools.put(PUSHABLE_BLOCK, GameEntityPoolCreator.create { PushableBlock(game) })
         pools.put(SWITCH_GATE, GameEntityPoolCreator.create { SwitchGate(game) })
+        pools.put(MOON_CRATE, GameEntityPoolCreator.create { MoonCrate(game) })
     }
 
     override fun fetch(key: Any) =
