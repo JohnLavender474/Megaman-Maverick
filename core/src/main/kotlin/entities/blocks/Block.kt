@@ -33,11 +33,8 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     lateinit var blockFixture: Fixture
         private set
-
     var draw = true
-
     protected val debugShapeSuppliers = Array<() -> IDrawableShape?>()
-
     private val fixturesToRemove = ObjectSet<Fixture>()
 
     override fun init() {
@@ -56,8 +53,10 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
         // TODO: if the bug where blocks do not always spawn persists, then the default value here can be set to false
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
-        if (cullOutOfBounds) putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(this))
-        else removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
+        when {
+            cullOutOfBounds -> putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(this))
+            else -> removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
+        }
 
         body.physics.frictionToApply.x =
             spawnProps.getOrDefault(ConstKeys.FRICTION_X, STANDARD_FRICTION_X, Float::class)

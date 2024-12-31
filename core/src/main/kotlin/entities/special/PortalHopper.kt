@@ -14,10 +14,8 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.objects.GamePair
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.interfaces.IDirectional
+import com.mega.game.engine.common.objects.*
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -66,7 +64,14 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private lateinit var thisDirection: Direction
     private lateinit var nextDirection: Direction
 
+    /** sets the entity's direction only when the entity implements [IDirectional] */
+    private var nextEntityDirection: Direction? = null
+
+    /** sets the entity's bodily direction; separate from [nextEntityDirection] */
+    private var nextBodyDirection: Direction? = null
+
     private val hopQueue = Array<GamePair<IBodyEntity, Timer>>()
+    private val timerPool = Pool<Timer>(supplier = { Timer() })
 
     private var thisKey = -1
     private var nextKey = -1
@@ -78,8 +83,8 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     override fun init() {
         if (waitRegion == null || launchRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
-            waitRegion = atlas.findRegion("PortalHopper/Wait")
-            launchRegion = atlas.findRegion("PortalHopper/Launch")
+            waitRegion = atlas.findRegion("$TAG/Wait")
+            launchRegion = atlas.findRegion("$TAG/Launch")
         }
         addComponent(AudioComponent())
         addComponent(defineUpdatablesComponent())
@@ -89,7 +94,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "onSpawn(): props = $spawnProps")
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         game.eventsMan.addListener(this)
@@ -97,8 +102,18 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        val directionString = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP.name, String::class)
+        val directionString = spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class)
         nextDirection = Direction.valueOf(directionString.uppercase())
+
+        val nextEntityDirString =
+            spawnProps.get("${ConstKeys.NEXT}_${ConstKeys.ENTITY}_${ConstKeys.DIRECTION}", String::class)
+        nextEntityDirection =
+            if (nextEntityDirString != null) Direction.valueOf(nextEntityDirString.uppercase()) else null
+
+        val nextBodyDirString =
+            spawnProps.get("${ConstKeys.NEXT}_${ConstKeys.BODY}_${ConstKeys.DIRECTION}", String::class)
+        nextBodyDirection =
+            if (nextBodyDirString != null) Direction.valueOf(nextBodyDirString.uppercase()) else null
 
         thisKey = spawnProps.get(ConstKeys.KEY, Int::class)!!
         nextKey = spawnProps.get(ConstKeys.NEXT, Int::class)!!
@@ -114,16 +129,31 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     }
 
     override fun onEvent(event: Event) {
-        GameLogger.debug(TAG, "thisKey=$thisKey, onEvent(): event=$event")
+        GameLogger.debug(TAG, "onEvent(): thisKey=$thisKey, event=$event")
         if (event.key == EventType.TELEPORT && event.isProperty(ConstKeys.KEY, thisKey)) {
             val entity = event.getProperty(ConstKeys.ENTITY, IBodyEntity::class)!!
             val direction = event.getProperty(ConstKeys.DIRECTION, Direction::class)!!
-            receiveEntity(entity, direction)
+            val bodyDirection = event.getProperty("${ConstKeys.BODY}_${ConstKeys.DIRECTION}", Direction::class)
+            val entityDirection = event.getProperty("${ConstKeys.ENTITY}_${ConstKeys.DIRECTION}", Direction::class)
+            receiveEntity(entity, direction, bodyDirection, entityDirection)
         }
     }
 
-    private fun receiveEntity(entity: IBodyEntity, direction: Direction) {
-        GameLogger.debug(TAG, "thisKey=$thisKey, receiveEntity(): entity=$entity")
+    private fun receiveEntity(
+        entity: IBodyEntity,
+        direction: Direction,
+        bodyDirection: Direction?,
+        entityDirection: Direction?
+    ) {
+        GameLogger.debug(
+            TAG,
+            "receiveEntity(): " +
+                "thisKey=$thisKey, " +
+                "entity=$entity, " +
+                "direction=$direction, " +
+                "bodyDirection=$bodyDirection, " +
+                "entityDirection=$entityDirection"
+        )
 
         thisDirection = direction
         launch = true
@@ -144,18 +174,26 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val onPortalStart = entity.getProperty(ConstKeys.ON_TELEPORT_START) as? () -> Unit
         onPortalStart?.invoke()
 
-        hopQueue.add(entity pairTo Timer(PORTAL_HOP_DELAY))
+        if (bodyDirection != null) entity.body.direction = bodyDirection
+        if (entityDirection != null && entity is IDirectional) entity.direction = entityDirection
+
+        val timer = timerPool.fetch()
+        timer.resetDuration(PORTAL_HOP_DELAY)
+        hopQueue.add(entity pairTo timer)
+
         GameLogger.debug(TAG, "teleportEntity(): thisKey=$thisKey, entity=$entity, hopPoint=$hopPoint")
     }
 
     override fun teleportEntity(entity: IBodyEntity) {
-        GameLogger.debug(TAG, "thisKey=$thisKey, teleportEntity(): entity=$entity")
+        GameLogger.debug(TAG, "teleportEntity(): thisKey=$thisKey, entity=$entity")
         game.eventsMan.submitEvent(
             Event(
                 EventType.TELEPORT, props(
                     ConstKeys.ENTITY pairTo entity,
                     ConstKeys.KEY pairTo nextKey,
-                    ConstKeys.DIRECTION pairTo nextDirection
+                    ConstKeys.DIRECTION pairTo nextDirection,
+                    "${ConstKeys.BODY}_${ConstKeys.DIRECTION}" pairTo nextBodyDirection,
+                    "${ConstKeys.ENTITY}_${ConstKeys.DIRECTION}" pairTo nextEntityDirection
                 )
             )
         )
@@ -176,7 +214,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             onPortalContinue?.invoke()
 
             if (timer.isFinished()) {
-                GameLogger.debug(TAG, "Timer finished: thisKey=$thisKey, entity=$entity, timer=$timer")
+                GameLogger.debug(TAG, "update(): thisKey=$thisKey, timer finished")
 
                 requestToPlaySound(SoundAsset.FLOATING_PORTAL_SOUND, false)
 
@@ -190,6 +228,8 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
                     Direction.RIGHT -> Vector2(PORTAL_HOP_IMPULSE, 0f)
                 }).scl(ConstVals.PPM.toFloat())
                 entity.body.physics.velocity.set(impulse)
+
+                timerPool.free(timer)
 
                 iter.remove()
             }

@@ -24,7 +24,7 @@ import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
 const val MEGAMAN_BODY_WIDTH = 1f
-const val MEGAMAN_BODY_HEIGHT = 1.5f
+const val MEGAMAN_BODY_HEIGHT = 1.35f
 
 val Megaman.feetFixture: Fixture
     get() = body.getProperty(ConstKeys.FEET) as Fixture
@@ -116,20 +116,6 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.addFixture(teleporterListenerFixture)
 
     body.preProcess.put(ConstKeys.DEFAULT) {
-        damagableRect.let {
-            val size = GameObjectPools.fetch(Vector2::class)
-            when {
-                isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) ->
-                    size.set(MEGAMAN_BODY_HEIGHT, MEGAMAN_BODY_WIDTH)
-
-                else -> size.set(MEGAMAN_BODY_WIDTH, MEGAMAN_BODY_HEIGHT)
-            }
-            it.setSize(size.scl(ConstVals.PPM.toFloat()))
-
-            val position = DirectionPositionMapper.getInvertedPosition(direction)
-            it.positionOnPoint(body.getBounds().getPositionPoint(position), position)
-        }
-
         if (!ready) {
             body.physics.velocity.setZero()
             body.physics.gravity.setZero()
@@ -159,6 +145,20 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                         clamp.set(MegamanValues.CART_RIDE_MAX_SPEED, MegamanValues.CLAMP_Y)
                     else clamp.set(MegamanValues.CLAMP_X, MegamanValues.CLAMP_Y)
                 ).scl(ConstVals.PPM.toFloat())
+
+                damagableRect.let {
+                    val size = GameObjectPools.fetch(Vector2::class)
+                    when {
+                        isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) ->
+                            size.set(MEGAMAN_BODY_HEIGHT, MEGAMAN_BODY_WIDTH)
+
+                        else -> size.set(MEGAMAN_BODY_WIDTH, MEGAMAN_BODY_HEIGHT)
+                    }
+                    it.setSize(size.scl(ConstVals.PPM.toFloat()))
+
+                    val position = DirectionPositionMapper.getInvertedPosition(direction)
+                    it.positionOnPoint(body.getBounds().getPositionPoint(position), position)
+                }
             }
 
             else -> {
@@ -171,6 +171,20 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                         clamp.set(MegamanValues.CLAMP_Y, MegamanValues.CART_RIDE_MAX_SPEED)
                     else clamp.set(MegamanValues.CLAMP_Y, MegamanValues.CLAMP_X)
                 ).scl(ConstVals.PPM.toFloat())
+
+                damagableRect.let {
+                    val size = GameObjectPools.fetch(Vector2::class)
+                    when {
+                        isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) ->
+                            size.set(MEGAMAN_BODY_WIDTH, MEGAMAN_BODY_HEIGHT)
+
+                        else -> size.set(MEGAMAN_BODY_HEIGHT, MEGAMAN_BODY_WIDTH)
+                    }
+                    it.setSize(size.scl(ConstVals.PPM.toFloat()))
+
+                    val position = DirectionPositionMapper.getInvertedPosition(direction)
+                    it.positionOnPoint(body.getBounds().getPositionPoint(position), position)
+                }
             }
         }
     }

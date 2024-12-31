@@ -24,5 +24,5 @@ class SensorsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(DEATH, GameEntityPoolCreator.create { Death(game) })
     }
 
-    override fun fetch(key: Any) = pools.get(key)?.fetch()
+    override fun fetch(key: Any?) = pools.get(key)?.fetch()
 }

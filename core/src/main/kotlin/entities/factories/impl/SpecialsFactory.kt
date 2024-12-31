@@ -62,5 +62,5 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(GROUND_SNOW, GameEntityPoolCreator.create { GroundSnow(game) })
     }
 
-    override fun fetch(key: Any) = pools.get(key)?.fetch()
+    override fun fetch(key: Any?) = pools.get(key)?.fetch()
 }

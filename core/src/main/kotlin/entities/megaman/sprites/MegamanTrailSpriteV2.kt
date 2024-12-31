@@ -66,6 +66,11 @@ class MegamanTrailSpriteV2(game: MegamanMaverickGame) : MegaGameEntity(game), IS
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        if (game.isCameraRotating()) {
+            destroy()
+            return@UpdatablesComponent
+        }
+
         fadeTimer.update(delta)
         if (fadeTimer.isFinished()) destroy()
     })
@@ -82,6 +87,8 @@ class MegamanTrailSpriteV2(game: MegamanMaverickGame) : MegaGameEntity(game), IS
 
             val alpha = 1f - fadeTimer.getRatio()
             sprite.setAlpha(alpha)
+
+            sprite.hidden = game.isCameraRotating()
         }
         return spritesComponent
     }

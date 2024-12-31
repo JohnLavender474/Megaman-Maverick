@@ -35,6 +35,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
@@ -46,7 +47,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
 
     companion object {
         const val TAG = "GravitySwitcharoo"
-        private const val BODY_SIZE = 1.5f
+        private const val BODY_SIZE = 2f
         private const val ARROW_SPRITE_SIZE = 2f
         private const val AURA_SPRITE_SIZE = 2.5f
         private const val ARROW_ALPHA = 0.75f
@@ -111,8 +112,14 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
     override fun shouldFinishSwitchToUp(delta: Float) = true
 
     override fun onFinishSwitchToDown() {
-        megaman.direction = direction
         GameLogger.debug(TAG, "onFinishSwitchToDown(): direction=$direction")
+        megaman.let {
+            it.direction = direction
+            it.aButtonTask = when {
+                it.body.isSensing(BodySense.FEET_ON_GROUND) -> AButtonTask.JUMP
+                else -> AButtonTask.AIR_DASH
+            }
+        }
     }
 
     private fun defineBodyComponent(): BodyComponent {
@@ -145,7 +152,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
             sprite.setCenter(body.getCenter())
 
             sprite.setOriginCenter()
-            sprite.rotation = direction.rotation
+            sprite.rotation = direction.getOpposite().rotation
         }
         .sprite(
             ConstKeys.AURA,

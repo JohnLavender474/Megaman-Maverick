@@ -113,7 +113,6 @@ temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/
 temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/layers/background.png
 temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/previews/pipe forest preview-big.png
 temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/previews/pipe forest preview.png
-hs_err_pid395172.log
 sounds/conveyor_lift.wav
 sounds/thump.mp3
 sounds/air_shooter.wav
@@ -186,8 +185,8 @@ sounds/burst.wav
 sounds/quake.mp3
 sounds/floating_portal.wav
 sounds/whoosh.mp3
-hs_err_pid394838.log
 badlogic.jpg
+hs_err_pid456913.log
 sprites/frames/MegamanTrailSprite/airdash.png
 sprites/frames/MegamanTrailSprite/groundslide_shoot.png
 sprites/frames/MegamanTrailSprite/groundslide.png
@@ -2337,7 +2336,6 @@ diagrams/Desert Man - Design.drawio
 diagrams/Glacier Man - Design.drawio
 diagrams/.$Inferno Man - Design.drawio.bkp
 diagrams/.$Desert Man - Design.drawio.bkp
-hs_err_pid395556.log
 libgdx.png
 credits.txt
 music/MMX5_DarkDizzy.txt
