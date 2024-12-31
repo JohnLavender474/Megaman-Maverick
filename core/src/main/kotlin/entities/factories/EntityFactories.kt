@@ -8,7 +8,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.impl.*
 
-object EntityFactories : Factories<MegaGameEntity>(), Initializable, IClearable {
+object EntityFactories : Factories<Any?, MegaGameEntity>(), Initializable, IClearable {
 
     fun initialize(game: MegamanMaverickGame) {
         factories.put(EntityType.BLOCK, BlocksFactory(game))

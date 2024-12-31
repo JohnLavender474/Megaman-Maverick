@@ -10,7 +10,7 @@ class AnimatedMocksFactory(private val game: MegamanMaverickGame) : EntityFactor
         // TODO
     }
 
-    override fun fetch(key: Any): MegaGameEntity? {
+    override fun fetch(key: Any?): MegaGameEntity? {
         // TODO
         return null
     }

@@ -171,7 +171,7 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(NUTT_GLIDER, GameEntityPoolCreator.create { NuttGlider(game) })
     }
 
-    override fun fetch(key: Any): MegaGameEntity? {
+    override fun fetch(key: Any?): MegaGameEntity? {
         GameLogger.debug(TAG, "Spawning Enemy: key = $key")
         return pools.get(key)?.fetch()
     }

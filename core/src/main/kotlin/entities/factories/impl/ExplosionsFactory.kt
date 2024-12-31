@@ -51,7 +51,7 @@ class ExplosionsFactory(private val game: MegamanMaverickGame) : EntityFactory()
         pools.put(STAR_EXPLOSION, GameEntityPoolCreator.create { StarExplosion(game) })
     }
 
-    override fun fetch(key: Any): MegaGameEntity? {
+    override fun fetch(key: Any?): MegaGameEntity? {
         GameLogger.debug(TAG, "Spawning Explosion: key = $key")
         return pools.get(if (key == "") EXPLOSION else key)?.fetch()
     }

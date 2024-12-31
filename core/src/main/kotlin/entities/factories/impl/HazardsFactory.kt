@@ -67,5 +67,5 @@ class HazardsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(MAGMA_FLAME, GameEntityPoolCreator.create { MagmaFlame(game) })
     }
 
-    override fun fetch(key: Any) = pools.get(key)?.fetch()
+    override fun fetch(key: Any?) = pools.get(key)?.fetch()
 }

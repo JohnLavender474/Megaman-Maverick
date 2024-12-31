@@ -53,6 +53,6 @@ class BlocksFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(GRAVITY_BLOCK, GameEntityPoolCreator.create { GravityBlock(game) })
     }
 
-    override fun fetch(key: Any) =
-        pools.get(if (key == "" || key.toString().lowercase() == "block") STANDARD else key)?.fetch()
+    override fun fetch(key: Any?) =
+        pools.get(if (key == null || key == "" || key.toString().lowercase() == "block") STANDARD else key)?.fetch()
 }

@@ -121,13 +121,20 @@ class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var prin
 
     private fun startRotation(degrees: Float, time: Float) {
         startRot = totRot
-        rotAmount = degrees
+        rotAmount = startRot + calculateShortestRotation(startRot, degrees)
         rotTime = time
         rotFinished = false
         GameLogger.debug(
             TAG,
             "startRotation(): startRot=$startRot, rotAmount=$rotAmount, rotTime=$rotTime"
         )
+    }
+
+    private fun calculateShortestRotation(current: Float, target: Float): Float {
+        var delta = (target - current) % 360
+        if (delta < -180) delta += 360
+        if (delta > 180) delta -= 360
+        return delta
     }
 
     private fun rotateTo(degrees: Float) = rotate(degrees - totRot)

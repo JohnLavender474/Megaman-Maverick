@@ -3,17 +3,11 @@ package com.megaman.maverick.game.entities.megaman.weapons
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.badlogic.gdx.utils.OrderedMap
-import com.mega.game.engine.animations.Animator
-import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.equalsAny
-import com.mega.game.engine.common.extensions.rotateAroundOrigin
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
-import com.mega.game.engine.common.objects.IntPair
 import com.mega.game.engine.common.objects.props
-import com.mega.game.engine.common.shapes.GameLine
 import com.mega.game.engine.common.time.Timer
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -25,17 +19,11 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.GROUND_SLIDE_SPRITE_OFFSET_Y
-import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_KEY
-import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_SIZE
-import com.megaman.maverick.game.entities.megaman.components.shouldFlipSpriteX
-import com.megaman.maverick.game.entities.megaman.components.shouldFlipSpriteY
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
-import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.GameObjectPools
-import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.isSensing
@@ -125,19 +113,19 @@ class MegamanWeaponHandler(private val megaman: Megaman /*, private val weaponSp
         }
 
         var yOffset = when {
-            megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> -0.25f
-            megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> 0.25f
-            megaman.isBehaviorActive(BehaviorType.JETPACKING) -> 0.1f
-            megaman.isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) -> -0.2f
-            megaman.isBehaviorActive(BehaviorType.CLIMBING) -> 0.15f
+            megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> -0.4f
+            megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> 0.35f
+            megaman.isBehaviorActive(BehaviorType.JETPACKING) -> 0.2f
+            megaman.isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) -> -0.1f
+            megaman.isBehaviorActive(BehaviorType.CLIMBING) -> 0.25f
             megaman.isBehaviorActive(BehaviorType.RIDING_CART) ->
-                if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.5f else 0.2f
+                if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.6f else 0.3f
 
             megaman.direction == Direction.DOWN ->
-                if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) -0.1f else 0f
+                if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0f else 0.1f
 
-            megaman.direction == Direction.UP && !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> -0.05f
-            else -> 0f
+            megaman.direction == Direction.UP && !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> 0.05f
+            else -> 0.1f
         }
 
         if (megaman.direction.isVertical()) {

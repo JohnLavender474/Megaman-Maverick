@@ -41,5 +41,5 @@ class BossesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(SPHINX_MINI_BOSS, GameEntityPoolCreator.create { SphinxMiniBoss(game) })
     }
 
-    override fun fetch(key: Any) = pools.get(key)?.fetch()
+    override fun fetch(key: Any?) = pools.get(key)?.fetch()
 }

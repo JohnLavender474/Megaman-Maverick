@@ -21,5 +21,5 @@ class ItemsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(HEART_TANK, GameEntityPoolCreator.create { HeartTank(game) })
     }
 
-    override fun fetch(key: Any) = pools.get(key)?.fetch()
+    override fun fetch(key: Any?) = pools.get(key)?.fetch()
 }

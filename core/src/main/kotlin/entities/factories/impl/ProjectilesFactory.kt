@@ -106,5 +106,5 @@ class ProjectilesFactory(private val game: MegamanMaverickGame) : EntityFactory(
         pools.put(NUTT, GameEntityPoolCreator.create { Nutt(game) })
     }
 
-    override fun fetch(key: Any) = pools.get(if (key == "") BULLET else key)?.fetch()
+    override fun fetch(key: Any?) = pools.get(if (key == "") BULLET else key)?.fetch()
 }

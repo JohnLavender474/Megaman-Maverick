@@ -75,5 +75,5 @@ class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory(
         pools.put(SMALL_GRASS, GameEntityPoolCreator.create { SmallGrass(game) })
     }
 
-    override fun fetch(key: Any) = pools.get(key)?.fetch()
+    override fun fetch(key: Any?) = pools.get(key)?.fetch()
 }

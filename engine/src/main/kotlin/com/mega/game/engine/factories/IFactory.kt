@@ -1,6 +1,6 @@
 package com.mega.game.engine.factories
 
-interface IFactory<T> {
+interface IFactory<K, V> {
 
-    fun fetch(key: Any): T?
+    fun fetch(key: K): V?
 }

@@ -95,6 +95,7 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             props(
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.BOUNDS pairTo bounds,
+                ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
                 ConstKeys.BLOCK_FILTERS pairTo { entity: MegaGameEntity, block: MegaGameEntity ->
                     blockFilter(entity, block)
                 },
@@ -131,10 +132,10 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(BODY_WIDTH * ConstVals.PPM, BODY_HEIGHT * ConstVals.PPM)
-        body.physics.applyFrictionY = false
+        body.physics.receiveFrictionX = false
+        body.physics.receiveFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBounds() }
 
         val feetFixture =
             Fixture(
@@ -148,6 +149,7 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         debugShapes.add { feetFixture }
 
         body.preProcess.put(ConstKeys.BLOCK) {
+
             innerBlock!!.let {
                 it.body.direction = direction
                 it.body.set(body)
@@ -171,11 +173,18 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             when (direction) {
                 Direction.UP -> gravity.set(0f, -value)
                 Direction.DOWN -> gravity.set(0f, value)
-                Direction.LEFT -> gravity.set(0f, value)
-                Direction.RIGHT -> gravity.set(0f, -value)
+                Direction.LEFT -> gravity.set(value, 0f)
+                Direction.RIGHT -> gravity.set(-value, 0f)
             }.scl(ConstVals.PPM.toFloat())
 
             body.physics.gravity.set(gravity)
+        }
+
+        body.preProcess.put(ConstKeys.MOVEMENT) {
+            when {
+                direction.isVertical() -> body.physics.velocity.x = 0f
+                else -> body.physics.velocity.y = 0f
+            }
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -184,7 +193,7 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     }
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
-        .sprite(GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1)))
+        .sprite(GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1)))
         .updatable { _, sprite ->
             sprite.setRegion(regions[regionKey])
             sprite.setBounds(body.getBounds())
