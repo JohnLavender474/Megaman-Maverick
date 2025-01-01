@@ -506,7 +506,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         gravityChangeChance = 0f
         timers["gravity_change_delay"].reset()
 
-        requestToPlaySound(SoundAsset.TIME_STOPPER_SOUND, false)
+        requestToPlaySound(SoundAsset.LIFT_OFF_SOUND, false)
 
         GameLogger.debug(TAG, "activateGravityChange(): gravity=$currentGravityChangeDir")
     }

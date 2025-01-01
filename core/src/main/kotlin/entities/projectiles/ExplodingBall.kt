@@ -10,6 +10,7 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.damage.IDamageable
@@ -74,6 +75,8 @@ class ExplodingBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
+        destroy()
+
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)
         val props = props(
             ConstKeys.POSITION pairTo body.getCenter(),
@@ -81,12 +84,11 @@ class ExplodingBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
             ConstKeys.OWNER pairTo owner
         )
         explosion!!.spawn(props)
-        destroy()
     }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.25f * ConstVals.PPM)
+        body.setSize(0.8f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         body.physics.velocityClamp.set(CLAMP * ConstVals.PPM, CLAMP * ConstVals.PPM)
@@ -95,10 +97,10 @@ class ExplodingBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         bodyFixture.putProperty(ConstKeys.GRAVITY_ROTATABLE, false)
         body.addFixture(bodyFixture)
 
-        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(0.275f * ConstVals.PPM))
+        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.4f * ConstVals.PPM))
         body.addFixture(projectileFixture)
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.275f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.4f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
@@ -119,4 +121,6 @@ class ExplodingBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
+
+    override fun getTag() = TAG
 }

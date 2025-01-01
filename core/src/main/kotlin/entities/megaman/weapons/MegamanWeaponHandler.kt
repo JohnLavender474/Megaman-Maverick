@@ -121,11 +121,15 @@ class MegamanWeaponHandler(private val megaman: Megaman /*, private val weaponSp
             megaman.isBehaviorActive(BehaviorType.RIDING_CART) ->
                 if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.6f else 0.3f
 
-            megaman.direction == Direction.DOWN ->
-                if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0f else 0.1f
+            !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> when (megaman.direction) {
+                Direction.UP -> 0.05f
+                else -> 0.2f
+            }
 
-            megaman.direction == Direction.UP && !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> 0.05f
-            else -> 0.1f
+            else -> when (megaman.direction) {
+                Direction.UP -> 0.1f
+                else -> 0f
+            }
         }
 
         if (megaman.direction.isVertical()) {

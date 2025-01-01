@@ -778,7 +778,7 @@
     <property name="direction" value="up"/>
    </properties>
   </object>
-  <object id="282" name="GravityChange" x="12448" y="2240" width="288" height="256">
+  <object id="282" name="GravityChange" x="12528" y="2248" width="288" height="256">
    <properties>
     <property name="direction" value="down"/>
    </properties>

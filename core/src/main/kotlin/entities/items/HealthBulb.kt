@@ -45,6 +45,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.ItemEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.Splash
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
@@ -129,7 +130,7 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
         blinkTimer.setToEnd()
         cullTimer.reset()
 
-        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+        direction = megaman.direction
         gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, GRAVITY, Float::class)
         velClamp = spawnProps.getOrDefault(ConstKeys.CLAMP, VEL_CLAMP, Float::class)
 
@@ -155,12 +156,12 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
         itemFixture = Fixture(body, FixtureType.ITEM, GameRectangle())
         body.addFixture(itemFixture)
         itemFixture.drawingColor = Color.PURPLE
-        debugShapes.add { itemFixture}
+        debugShapes.add { itemFixture }
 
         feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
         body.addFixture(feetFixture)
         feetFixture.drawingColor = Color.GREEN
-        debugShapes.add { feetFixture}
+        debugShapes.add { feetFixture }
 
         waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle())
         waterListenerFixture.setHitByWaterReceiver {
@@ -226,18 +227,20 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (!timeCull) return@UpdatablesComponent
+        direction = megaman.direction
 
-        if (warning) {
-            blinkTimer.update(delta)
-            if (blinkTimer.isFinished()) {
-                blinkTimer.reset()
-                blink = !blink
+        if (timeCull) {
+            if (warning) {
+                blinkTimer.update(delta)
+                if (blinkTimer.isFinished()) {
+                    blinkTimer.reset()
+                    blink = !blink
+                }
             }
-        }
 
-        cullTimer.update(delta)
-        if (cullTimer.isFinished()) destroy()
+            cullTimer.update(delta)
+            if (cullTimer.isFinished()) destroy()
+        }
     })
 
     override fun getEntityType() = EntityType.ITEM

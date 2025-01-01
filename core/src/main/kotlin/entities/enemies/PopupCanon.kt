@@ -25,7 +25,6 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -43,23 +42,16 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.DamageNegotiation
-import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.entities.projectiles.Asteroid
-import com.megaman.maverick.game.entities.projectiles.Bullet
-import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
-import kotlin.reflect.KClass
 
 class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable, IDirectional {
 
@@ -80,20 +72,8 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     private enum class PopupCanonState { REST, RISE, SHOOT, FALL }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class pairTo dmgNeg(10),
-        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class pairTo dmgNeg {
-            it as ChargedShot
-            if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
-        },
-        ChargedShotExplosion::class pairTo dmgNeg {
-            it as ChargedShotExplosion
-            if (it.fullyCharged) 10 else 5
-        },
-        Asteroid::class pairTo dmgNeg(15)
-    )
-    override var direction = Direction.UP
+    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.MEDIUM)
+    override lateinit var direction: Direction
     override lateinit var facing: Facing
 
     private val canMove: Boolean
@@ -101,16 +81,18 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     private val loop = Loop(PopupCanonState.entries.toTypedArray().toGdxArray())
     private val timers = objectMapOf(
         "rest" pairTo Timer(REST_DUR),
-        "rise" pairTo Timer(TRANS_DUR, gdxArrayOf(
-            TimeMarkedRunnable(0f) { transState = Size.SMALL },
-            TimeMarkedRunnable(0.25f) { transState = Size.MEDIUM },
-            TimeMarkedRunnable(0.5f) { transState = Size.LARGE }
-        )),
-        "fall" pairTo Timer(TRANS_DUR, gdxArrayOf(
-            TimeMarkedRunnable(0f) { transState = Size.LARGE },
-            TimeMarkedRunnable(0.25f) { transState = Size.MEDIUM },
-            TimeMarkedRunnable(0.5f) { transState = Size.SMALL }
-        )),
+        "rise" pairTo Timer(
+            TRANS_DUR, gdxArrayOf(
+                TimeMarkedRunnable(0f) { transState = Size.SMALL },
+                TimeMarkedRunnable(0.25f) { transState = Size.MEDIUM },
+                TimeMarkedRunnable(0.5f) { transState = Size.LARGE }
+            )),
+        "fall" pairTo Timer(
+            TRANS_DUR, gdxArrayOf(
+                TimeMarkedRunnable(0f) { transState = Size.LARGE },
+                TimeMarkedRunnable(0.25f) { transState = Size.MEDIUM },
+                TimeMarkedRunnable(0.5f) { transState = Size.SMALL }
+            )),
         "shoot" pairTo Timer(SHOOT_DUR, gdxArrayOf(TimeMarkedRunnable(0.25f) { shoot() }))
     )
     private var ballGravityScalar = DEFAULT_BALL_GRAVITY_SCALAR
@@ -140,7 +122,7 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         )
 
         direction =
-            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
+            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         when (direction) {
@@ -177,18 +159,20 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
         val spawn = body.getCenter().add(offset)
 
-        val impulse = when (direction) {
-            Direction.UP -> Vector2(SHOOT_X * facing.value, SHOOT_Y)
-            Direction.DOWN -> Vector2(SHOOT_X * facing.value, -SHOOT_Y)
-            Direction.LEFT -> Vector2(-SHOOT_Y, SHOOT_X * facing.value)
-            Direction.RIGHT -> Vector2(SHOOT_Y, SHOOT_X * facing.value)
+        val impulse = GameObjectPools.fetch(Vector2::class)
+        when (direction) {
+            Direction.UP -> impulse.set(SHOOT_X * facing.value, SHOOT_Y)
+            Direction.DOWN -> impulse.set(SHOOT_X * facing.value, -SHOOT_Y)
+            Direction.LEFT -> impulse.set(-SHOOT_Y, SHOOT_X * facing.value)
+            Direction.RIGHT -> impulse.set(SHOOT_Y, SHOOT_X * facing.value)
         }.scl(ConstVals.PPM.toFloat())
 
-        val gravity = when (direction) {
-            Direction.UP -> Vector2(0f, -BALL_GRAVITY)
-            Direction.DOWN -> Vector2(0f, BALL_GRAVITY)
-            Direction.LEFT -> Vector2(BALL_GRAVITY, 0f)
-            Direction.RIGHT -> Vector2(-BALL_GRAVITY, 0f)
+        val gravity = GameObjectPools.fetch(Vector2::class)
+        when (megaman.direction) {
+            Direction.UP -> gravity.set(0f, -BALL_GRAVITY)
+            Direction.DOWN -> gravity.set(0f, BALL_GRAVITY)
+            Direction.LEFT -> gravity.set(BALL_GRAVITY, 0f)
+            Direction.RIGHT -> gravity.set(-BALL_GRAVITY, 0f)
         }.scl(ballGravityScalar * ConstVals.PPM.toFloat())
 
         explodingBall.spawn(
@@ -234,7 +218,7 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setWidth(1.15f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        debugShapes.add { damagerFixture}
+        debugShapes.add { damagerFixture }
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
         body.addFixture(damageableFixture)
@@ -242,15 +226,17 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             val damageable = loop.getCurrent() == PopupCanonState.SHOOT ||
-                    (loop.getCurrent() == PopupCanonState.RISE && timers["rise"].getRatio() > TRANS_DAMAGEABLE_CUTOFF) ||
-                    (loop.getCurrent() == PopupCanonState.FALL && timers["fall"].getRatio() < TRANS_DAMAGEABLE_CUTOFF)
+                (loop.getCurrent() == PopupCanonState.RISE && timers["rise"].getRatio() > TRANS_DAMAGEABLE_CUTOFF) ||
+                (loop.getCurrent() == PopupCanonState.FALL && timers["fall"].getRatio() < TRANS_DAMAGEABLE_CUTOFF)
             damageableFixture.setActive(damageable)
 
-            (damagerFixture.rawShape as GameRectangle).setHeight(when (transState) {
-                Size.LARGE -> 1.5f
-                Size.MEDIUM -> 1f
-                Size.SMALL -> 0.25f
-            } * ConstVals.PPM)
+            (damagerFixture.rawShape as GameRectangle).setHeight(
+                when (transState) {
+                    Size.LARGE -> 1.5f
+                    Size.MEDIUM -> 1f
+                    Size.SMALL -> 0.25f
+                } * ConstVals.PPM
+            )
             damagerFixture.offsetFromBodyAttachment.y = (when (transState) {
                 Size.LARGE -> 0f
                 Size.MEDIUM -> -0.25f

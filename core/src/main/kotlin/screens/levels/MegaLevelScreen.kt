@@ -80,7 +80,6 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toProps
 import com.megaman.maverick.game.utils.interfaces.IShapeDebuggable
 import com.megaman.maverick.game.utils.misc.HealthFillType
-import com.megaman.maverick.game.world.body.getCenter
 import java.util.*
 
 class MegaLevelScreen(
@@ -96,6 +95,7 @@ class MegaLevelScreen(
         private const val TRANSITION_SCANNER_SIZE = 5f
         private const val FADE_OUT_MUSIC_ON_BOSS_SPAWN = 1f
         private const val DEBUG_PRINT_DELAY = 2f
+        private const val DISPLAY_ROOMS_DEBUG_TEXT = true
     }
 
     override val eventKeyMask = objectSetOf<Any>(
@@ -327,6 +327,14 @@ class MegaLevelScreen(
         gameCameraPriorPosition.setZero()
         gameCamera.position.set(ConstFuncs.getGameCamInitPos())
         uiCamera.position.set(ConstFuncs.getGameCamInitPos())
+
+        if (DISPLAY_ROOMS_DEBUG_TEXT) {
+            val roomsTextSupplier: () -> String = {
+                "current=${cameraManagerForRooms.currentGameRoom?.name} / " +
+                    "prior=${cameraManagerForRooms.priorGameRoom?.name}"
+            }
+            game.setDebugTextSupplier(roomsTextSupplier)
+        }
     }
 
     override fun getLayerBuilders() = MegaMapLayerBuilders(MegaMapLayerBuildersParams(game, spawnsMan))
@@ -632,11 +640,11 @@ class MegaLevelScreen(
 
     override fun render(delta: Float) {
         if (controllerPoller.isJustPressed(MegaControllerButton.START)
-            /* &&
-            playerStatsHandler.finished &&
-            playerSpawnEventHandler.finished &&
-            playerDeathEventHandler.finished
-             */
+        /* &&
+        playerStatsHandler.finished &&
+        playerSpawnEventHandler.finished &&
+        playerDeathEventHandler.finished
+         */
         ) when {
             game.paused -> {
                 GameLogger.debug(TAG, "render(): resume game")

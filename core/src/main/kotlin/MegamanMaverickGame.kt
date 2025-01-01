@@ -110,7 +110,7 @@ import kotlin.reflect.cast
 
 class MegamanMaverickGameParams {
     var debugShapes: Boolean = false
-    var debugFPS: Boolean = false
+    var debugText: Boolean = false
     var logLevel: GameLogLevel = GameLogLevel.LOG
     var fixedStepScalar: Float = 1f
     var musicVolume: Float = 0.5f
@@ -257,6 +257,10 @@ class MegamanMaverickGame(
 
     fun getTiledMapLoadResult() = properties.get(ConstKeys.TILED_MAP_LOAD_RESULT) as TiledMapLoadResult
 
+    fun setDebugText(text: String) = setDebugTextSupplier { text }
+
+    fun setDebugTextSupplier(supplier: () -> String) = debugText.setTextSupplier(supplier)
+
     override fun create() {
         GameLogger.setLogLevel(params.logLevel)
         GameLogger.filterByTag = true
@@ -304,7 +308,13 @@ class MegamanMaverickGame(
             positionY = ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f
         )
 
-        val fpsTextSupplier: () -> String = { "FPS: ${Gdx.graphics.framesPerSecond}" }
+        debugText = MegaFontHandle(
+            ConstVals.EMPTY_STRING,
+            positionX = ConstVals.PPM.toFloat(),
+            positionY = (ConstVals.VIEW_HEIGHT - 1) * ConstVals.PPM,
+            centerX = false
+        )
+        // val fpsTextSupplier: () -> String = { "FPS: ${Gdx.graphics.framesPerSecond}" }
         /*
         val megamanPosTextSupplier: () -> String = {
             val pos = megaman.body.getCenter()
@@ -313,7 +323,7 @@ class MegamanMaverickGame(
             "MM POS: $x,$y"
         }
          */
-        debugText = MegaFontHandle(fpsTextSupplier)
+        // setDebugTextSupplier(fpsTextSupplier)
 
         assMan = AssetManager()
         queueAssets()
@@ -436,7 +446,7 @@ class MegamanMaverickGame(
             eventsMan.run()
         }
 
-        if (params.debugFPS) {
+        if (params.debugText) {
             viewports.get(ConstKeys.GAME).apply()
 
             batch.projectionMatrix = getUiCamera().combined

@@ -162,6 +162,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
+
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.ASTEROID_EXPLOSION)!!
         explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
@@ -178,7 +179,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
         body.addFixture(bodyFixture)
         debugShapes.add { bodyFixture}
 
-        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.65f * ConstVals.PPM))
+        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.625f * ConstVals.PPM))
         body.addFixture(projectileFixture)
         debugShapes.add { projectileFixture}
 
@@ -186,7 +187,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
         body.addFixture(damagerFixture)
         debugShapes.add { damagerFixture}
 
-        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(0.65f * ConstVals.PPM))
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(0.6f * ConstVals.PPM))
         body.addFixture(shieldFixture)
         debugShapes.add { shieldFixture}
 

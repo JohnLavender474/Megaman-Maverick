@@ -21,6 +21,7 @@ import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.events.Event
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
@@ -62,6 +63,7 @@ class HeartTank(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, I
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ITEMS_1.source, TAG)
+        addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
@@ -77,8 +79,9 @@ class HeartTank(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, I
 
         super.onSpawn(spawnProps)
 
-        direction =
-            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
+        direction = Direction.valueOf(
+            spawnProps.getOrDefault(ConstKeys.DIRECTION, megaman.direction.name, String::class).uppercase()
+        )
 
         val position = DirectionPositionMapper.getInvertedPosition(direction)
         val spawn = when {
@@ -94,6 +97,10 @@ class HeartTank(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, I
         destroy()
         game.eventsMan.submitEvent(Event(EventType.ADD_HEART_TANK, props(ConstKeys.VALUE pairTo heartTank)))
     }
+
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
+        direction = megaman.direction
+    })
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)

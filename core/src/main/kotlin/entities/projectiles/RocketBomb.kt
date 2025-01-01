@@ -2,13 +2,13 @@ package com.megaman.maverick.game.entities.projectiles
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods.getSingleMostDirectionFromStartToTarget
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
@@ -16,13 +16,17 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
-import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
-import com.mega.game.engine.world.body.*
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -35,10 +39,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getBounds
-import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.*
 
 class RocketBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IDirectional {
 
@@ -48,7 +49,7 @@ class RocketBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         private var region: TextureRegion? = null
     }
 
-    override var direction = Direction.UP
+    override lateinit var direction: Direction
 
     override fun init() {
         if (region == null)
@@ -73,12 +74,19 @@ class RocketBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         body.physics.velocity.set(velocity)
     }
 
-    override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
+    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
+
+    override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        val entity = bodyFixture.getEntity()
+        if (entity is IDamageable && entity.canBeDamagedBy(this) and this.canDamage(entity)) return
+        explodeAndDie()
+    }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
+
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
         explosion.spawn(
             props(
@@ -95,19 +103,13 @@ class RocketBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
 
-        val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBounds() }
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
 
-        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle(body))
-        body.addFixture(projectileFixture)
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        body.addFixture(damagerFixture)
-
-        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle(body))
-        body.addFixture(shieldFixture)
-
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(
+            this,
+            body,
+            BodyFixtureDef.of(FixtureType.PROJECTILE, FixtureType.DAMAGER, FixtureType.SHIELD)
+        )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {

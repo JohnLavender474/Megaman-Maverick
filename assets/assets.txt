@@ -113,6 +113,7 @@ temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/
 temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/layers/background.png
 temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/previews/pipe forest preview-big.png
 temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/previews/pipe forest preview.png
+hs_err_pid48904.log
 sounds/conveyor_lift.wav
 sounds/thump.mp3
 sounds/air_shooter.wav

@@ -36,6 +36,7 @@ object ConstVals {
     const val DEFAULT_PARALLAX_X = 0.25f
     const val DEFAULT_PARALLAX_Y = 0f
     const val DUR_PER_BIT = 0.075f
+    const val EMPTY_STRING = ""
 }
 
 object ConstKeys {
