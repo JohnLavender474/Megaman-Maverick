@@ -19,7 +19,7 @@ object DesktopLauncher {
     private const val DEFAULT_HEIGHT = 700
     private const val DEFAULT_FULLSCREEN = false
     private const val DEFAULT_DEBUG_SHAPES = false
-    private const val DEFAULT_DEBUG_FPS = false
+    private const val DEFAULT_DEBUG_TEXT = false
     private const val DEFAULT_LOG_LEVEL = "off"
     private const val DEFAULT_FIXED_STEP_SCALAR = 1.0f
     private const val DEFAULT_MUSIC_VOLUME = 0.5f
@@ -47,7 +47,7 @@ object DesktopLauncher {
         println("- Height: " + appArgs.height)
         println("- Fullscreen: " + appArgs.fullScreen)
         println("- Debug Shapes: " + appArgs.debugShapes)
-        println("- Debug FPS: " + appArgs.debugFPS)
+        println("- Debug FPS: " + appArgs.debugText)
         println("- Log Level: " + appArgs.logLevel)
         println("- Fixed Step Scalar: " + appArgs.fixedStepScalar)
         println("- Music volume: " + appArgs.musicVolume)
@@ -62,7 +62,7 @@ object DesktopLauncher {
 
         val params = MegamanMaverickGameParams()
         params.debugShapes = appArgs.debugShapes
-        params.debugFPS = appArgs.debugFPS
+        params.debugText = appArgs.debugText
         params.fixedStepScalar = appArgs.fixedStepScalar
         params.musicVolume = appArgs.musicVolume
         params.soundVolume = appArgs.soundVolume
@@ -129,10 +129,10 @@ object DesktopLauncher {
         var debugShapes = DEFAULT_DEBUG_SHAPES
 
         @Parameter(
-            names = ["--debugFPS"],
-            description = ("Enable debugging FPS. Default value = $DEFAULT_DEBUG_FPS")
+            names = ["--debugText"],
+            description = ("Enable debug text to be displayed on the screen. Default value = $DEFAULT_DEBUG_TEXT")
         )
-        var debugFPS = DEFAULT_DEBUG_FPS
+        var debugText = DEFAULT_DEBUG_TEXT
 
         @Parameter(
             names = ["--logLevel"],

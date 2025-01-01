@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.blocks
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
@@ -181,11 +182,13 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     protected open fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.STATIC)
-        debugShapeSuppliers.add { body }
+        body.drawingColor = Color.GRAY
+        debugShapeSuppliers.add { body.getBounds() }
 
         val blockRect = GameRectangle()
         blockFixture = Fixture(body, FixtureType.BLOCK, blockRect)
         body.addFixture(blockFixture)
+        blockFixture.drawingColor = Color.GRAY
         debugShapeSuppliers.add { blockFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) { blockRect.set(body) }

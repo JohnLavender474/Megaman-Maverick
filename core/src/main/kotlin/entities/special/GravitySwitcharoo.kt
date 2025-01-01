@@ -33,6 +33,7 @@ import com.mega.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
@@ -47,7 +48,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
 
     companion object {
         const val TAG = "GravitySwitcharoo"
-        private const val BODY_SIZE = 2f
+        private const val BODY_SIZE = 1.75f
         private const val ARROW_SPRITE_SIZE = 2f
         private const val AURA_SPRITE_SIZE = 2.5f
         private const val ARROW_ALPHA = 0.75f
@@ -120,6 +121,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
                 else -> AButtonTask.AIR_DASH
             }
         }
+        requestToPlaySound(SoundAsset.LIFT_OFF_SOUND, false)
     }
 
     private fun defineBodyComponent(): BodyComponent {

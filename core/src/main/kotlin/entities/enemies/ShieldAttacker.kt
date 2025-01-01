@@ -232,7 +232,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
                     }
 
                     turnAroundTimer.update(it)
-                    if (turnAroundTimer.isJustFinished()) {
+                    if (turnAroundTimer.isFinished()) {
                         val y = X_VEL * ConstVals.PPM * (if (switch) -1 else 1) * movementScalar
                         body.physics.velocity.y = y
                         GameLogger.debug(TAG, "Turning around. New y vel: $y")
@@ -249,7 +249,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
                     }
 
                     turnAroundTimer.update(it)
-                    if (turnAroundTimer.isJustFinished()) {
+                    if (turnAroundTimer.isFinished()) {
                         val x = X_VEL * ConstVals.PPM * (if (switch) -1 else 1) * movementScalar
                         body.physics.velocity.x = x
                         GameLogger.debug(TAG, "Turning around. New x vel: $x")

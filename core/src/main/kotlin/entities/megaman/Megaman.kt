@@ -1,14 +1,6 @@
 package com.megaman.maverick.game.entities.megaman
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.Pixmap
-import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.Array
-import com.badlogic.gdx.utils.ObjectSet
-import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
@@ -20,7 +12,6 @@ import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IBoundsSupplier
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
-import com.mega.game.engine.common.objects.IntPair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -29,8 +20,6 @@ import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
-import com.mega.game.engine.drawables.MagicPixels
-import com.mega.game.engine.drawables.sprites.splitAndFlatten
 import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.contracts.*
 import com.mega.game.engine.events.Event
@@ -39,11 +28,13 @@ import com.mega.game.engine.world.body.BodyComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.*
+import com.megaman.maverick.game.entities.contracts.IHealthEntity
+import com.megaman.maverick.game.entities.contracts.IProjectileEntity
+import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.enemies.SpringHead
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
@@ -495,9 +486,16 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         }
     }
 
-    override fun canBeDamagedBy(damager: IDamager) =
-        !invincible && MegamanDamageNegotations.contains((damager as MegaGameEntity).getTag()) &&
-            (damager is AbstractEnemy || damager is IHazard || (damager is IProjectileEntity && damager.owner != this))
+    override fun canBeDamagedBy(damager: IDamager): Boolean {
+        if (invincible) return false
+
+        val tag = (damager as MegaGameEntity).getTag()
+        if (!MegamanDamageNegotations.contains(tag)) return false
+
+        if (damager is IProjectileEntity) return damager.owner != this
+
+        return true
+    }
 
     fun setToNextWeapon() {
         val index = currentWeapon.ordinal
