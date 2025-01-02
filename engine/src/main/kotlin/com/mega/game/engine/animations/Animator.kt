@@ -2,6 +2,7 @@ package com.mega.game.engine.animations
 
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.drawables.sprites.GameSprite
 
@@ -67,6 +68,10 @@ class AnimatorBuilder {
 
     fun addAnimations(animationsMap: ObjectMap<String, IAnimation>) = apply {
         animationsMap.forEach { this.animations.put(it.key, it.value) }
+    }
+
+    fun addAnimations(vararg animations: GamePair<String, IAnimation>) = apply {
+        animations.forEach { this.animations.put(it.first, it.second) }
     }
 
     fun setUpdateScalar(scalar: Float) = apply {
