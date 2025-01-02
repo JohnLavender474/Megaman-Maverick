@@ -20,6 +20,83 @@ Join the [Discord server](https://discord.gg/Cab2XMKs) for updates!
 
 ---
 
+## RUNNING THE GAME
+
+Currently, there is no "official" release of this game since it is still under active development. However, see the
+section below on how to run the game using the source code.
+
+### BUILDING THE GAME FROM SOURCE
+
+Since the game runs using gradle and JRE, you can build a JAR of the game yourself. Keep in mind that in order to run
+the generated JAR, you will need Java 17+ installed on your local machine.
+
+#### Pre-requisites:
+
+- Git
+- Java 17+
+
+##### Notes:
+- Download Git using the following link: https://git-scm.com/downloads
+- Download JDK 17+ (skip this step if running IntelliJ): https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html
+  - Set JDK Home on Windows: https://confluence.atlassian.com/doc/setting-the-java_home-variable-in-windows-8895.html
+  - Set JDK Home on Mac: https://stackoverflow.com/questions/22842743/how-to-set-java-home-environment-variable-on-mac-os-x-10-9
+  - Set JDK Home on Linux: https://access.redhat.com/solutions/1445833
+  - If running Mac/Linux, run the following command to see if Java is properly installed and configured
+    ```bash
+    which java
+    ```
+
+1. Use `git` to clone the project to a suitable location on your desktop using the following command
+   ```bash
+   git clone https://github.com/JohnLavender474/Megaman-Maverick.git
+   ```
+2. From the root directory of the game project, run one of the following:
+   1. Mac/Linux (edit the shell script to change settings):
+      ```bash
+      build-run-desktop-debug.sh
+      ```
+   2. Windows (will have to pass program args if you want to change any settings):
+      ```bash
+      ./gradlew lwjgl:run
+      ```
+- See the [GDX Liftoff](#GDX-Liftoff) section for more gradle commands and details.
+
+---
+
+## PLAYING THE GAME
+
+### CONTROLS
+
+By default, the keyboard controls for the game are the following whether the 1st value is the keyboard key and the 2nd
+value is the "in-game" action:
+- A: LEFT
+- D: RIGHT
+- S: DOWN
+- W: UP
+- J: B
+- K: A
+- ENTER: START
+
+These can be remapped through the keyboard settings screen accessed from the main menu. Use the keys for "UP" and "DOWN"
+(by default the "W" and "S" keys respectively) to navigate to the game button you wish to remap and press the key for
+"START" (by default the "ENTER" key). You will be prompted to press any key on the keyboard to assign that key's code
+to the in-game button action.
+
+<img src="img/KeyboardSettings.png" width="600px"/>
+<img src="img/PressToReassignKey.png" width="600px"/>
+
+The game supports controllers and should detect a controller as soon as it is plugged in. The keyboard controls continue
+to work even when a controller is connected. The game has been tested with the following controllers:
+- PS3 controller
+- Xbox 360 controller
+- NES-style USB controller
+
+When a controller is connected, default mappings are assigned. Most likely, you will want to configure these mappings.
+In the "Controller Settings" screen, you can reassign the mappings for the controller similarly to how the same is done
+for the keyboard mappings.
+
+---
+
 ## THE STORY
 
 The story is still in progress and nothing has been finalized yet.
@@ -152,88 +229,6 @@ Works by rcrdcat:
 Works by Famitard:
 
 <img src="./img/permissions/famitard.png" width="300">
-
----
-
-## RUNNING THE GAME
-
-Currently, there is no "official" release of this game since it is still under active development. However, see the
-section below on how to run the game using the source code.
-
-### BUILDING THE GAME FROM SOURCE
-
-Since the game runs using gradle and JRE, you can build a JAR of the game yourself. Keep in mind that in order to run
-the generated JAR, you will need Java 17+ installed on your local machine.
-
-#### Pre-requisites:
-
-- git
-- Java 17+
-
-1. Use `git` to clone the project to a suitable location on your desktop.
-2. From the root directory, run one of the following:
-
-- Run using gradle:
-    - Run the following command to start the desktop application: `./gradlew lwjgl:run`.
-    - Optionally, you can run the `build-run-desktop-alpha.sh` or `build-run-desktop-debug.sh` script instead. The former is
-      a shortcut for the above command. Meanwhile, the latter script includes configurable args for debugging purposes.
-    - See the [GDX Liftoff](#GDX-Liftoff) section for more gradle commands.
-
----
-
-## PLAYING THE GAME
-
-### CONTROLS
-
-By default, the keyboard controls for the game are the following whether the 1st value is the keyboard key and the 2nd
-value is the "in-game" action:
-- A: LEFT
-- D: RIGHT
-- S: DOWN
-- W: UP
-- J: B
-- K: A
-- ENTER: START
-
-These can be remapped through the Keyboard Settings screen. Use the keys for "UP" and "DOWN" (by default the "W" and "S"
-keys respectively) to navigate to the game button you wish to remap and press the key for "START" (by default the "ENTER"
-key). You will be prompted to press any key on the keyboard to assign that key's code to the in-game button action.
-
-<img src="img/KeyboardSettings.png" width="600px"/>
-<img src="img/PressToReassignKey.png" width="600px"/>
-
-The game supports controllers and should detect a controller as soon as it is plugged in. The keyboard controls continue
-to work even when a controller is connected. The game has been tested with the following controllers:
-- PS3 controller
-- Xbox 360 controller
-- NES-style USB controller
-
-When a controller is connected, default mappings are assigned. Most likely, you will want to configure these mappings.
-In the "Controller Settings" screen, you can reassign the mappings for the controller similarly to how the same is done
-for the keyboard mappings.
-
-### STARTING THE GAME (ALPHA)
-
-This section pertains to starting an alpha build of the game (which can be started via the `./build-run-desktop-alpha.sh`
-script), and it will be updated when beta and release versions are eventually released. To run an
-
-When launching an alpha build, the first screen you see should be something like the following.
-
-<img src="img/StartAlphaGame.png" width="600px"/>
-
-Press the key that corresponds to the command you wish to run. To quit the app, press the ESCAPE key.
-
-If you press ENTER, you will be taken to the "Select Level" screen. Here, you can select any level you want to play.
-Levels are separated into three categories:
-- Beta: Levels that are over halfway complete but may require some level of redesigning
-- Alpha: Levels that are less than halfway complete and require major redesigning
-- Test: Levels that are made purely for testing game functionality, and that will not be included in release versions of the game
-
-Navigate to the level you wish to play and press the key for START. This will launch the level. **NOTE: Due to the fact
-that this game is an alpha, don't be surprised if the game crashes or if you encounter any bugs!**
-
-To exit out of a level early, press the ESCAPE key. From the "Select Level" screen, you can return back to the start
-screen by pressing the ESCAPE key.
 
 ---
 

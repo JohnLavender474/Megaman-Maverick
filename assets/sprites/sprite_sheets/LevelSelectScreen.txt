@@ -1,0 +1,82 @@
+LevelSelectScreen.png
+size: 512, 1568
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bottom_center
+  rotate: false
+  xy: 0, 0
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+bottom_left
+  rotate: false
+  xy: 256, 0
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+bottom_right
+  rotate: false
+  xy: 0, 224
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+center
+  rotate: false
+  xy: 256, 224
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+center_left
+  rotate: false
+  xy: 0, 448
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+center_right
+  rotate: false
+  xy: 256, 448
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+none
+  rotate: false
+  xy: 0, 672
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+selected
+  rotate: false
+  xy: 256, 672
+  size: 256, 448
+  orig: 256, 448
+  offset: 0, 0
+  index: -1
+top_center
+  rotate: false
+  xy: 0, 1120
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+top_left
+  rotate: false
+  xy: 256, 1120
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+top_right
+  rotate: false
+  xy: 0, 1344
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1

@@ -97,7 +97,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        putProperty(ConstKeys.ENTTIY_KILLED_BY_DEATH_FIXTURE, false)
+        putProperty(ConstKeys.ENTITY_KILLED_BY_DEATH_FIXTURE, false)
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         super.onSpawn(spawnProps)
 
@@ -268,7 +268,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimate
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        putProperty(ConstKeys.ENTTIY_KILLED_BY_DEATH_FIXTURE, false)
+        putProperty(ConstKeys.ENTITY_KILLED_BY_DEATH_FIXTURE, false)
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         super.onSpawn(spawnProps)
 

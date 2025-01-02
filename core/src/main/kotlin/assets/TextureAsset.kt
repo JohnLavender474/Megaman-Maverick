@@ -2,7 +2,6 @@ package com.megaman.maverick.game.assets
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.utils.Array
-import com.megaman.maverick.game.assets.TextureAsset.values
 
 const val TEXTURE_ASSET_PREFIX = "sprites/sprite_sheets/"
 
@@ -28,6 +27,7 @@ enum class TextureAsset(src: String) : IAsset {
     UI_1("Ui1.txt"),
     UI_2("Ui2.txt"),
     FACES_1("Faces1.txt"),
+    LEVEL_SELECT_SCREEN("LevelSelectScreen.txt"),
     MEGAMAN_V2_BUSTER("Megaman_v2_BUSTER.txt"),
     MEGAMAN_BUSTER("Megaman_BUSTER.txt"),
     MEGAMAN_MAVERICK_BUSTER("MegamanMaverick_BUSTER.txt"),

@@ -117,7 +117,7 @@ class MegaContactListener(
             )!!
 
             val entity = otherFixture.getEntity()
-            val canDie = entity.getOrDefaultProperty(ConstKeys.ENTTIY_KILLED_BY_DEATH_FIXTURE, true, Boolean::class)
+            val canDie = entity.getOrDefaultProperty(ConstKeys.ENTITY_KILLED_BY_DEATH_FIXTURE, true, Boolean::class)
             if (!canDie) return
 
             val deathListener = otherFixture.getOrDefaultProperty(ConstKeys.DEATH_LISTENER, true, Boolean::class)
@@ -716,7 +716,7 @@ class MegaContactListener(
 
             val entity = otherFixture.getEntity()
 
-            val canDie = entity.getOrDefaultProperty(ConstKeys.ENTTIY_KILLED_BY_DEATH_FIXTURE, true, Boolean::class)
+            val canDie = entity.getOrDefaultProperty(ConstKeys.ENTITY_KILLED_BY_DEATH_FIXTURE, true, Boolean::class)
             if (!canDie) return
 
             val deathListener = otherFixture.getOrDefaultProperty(ConstKeys.DEATH_LISTENER, true, Boolean::class)

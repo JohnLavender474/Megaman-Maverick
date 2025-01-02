@@ -107,18 +107,18 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         }
 
         if (backgroundRegions.isEmpty) {
-            val uiAtlas = game.assMan.getTextureAtlas(TextureAsset.UI_1.source)
+            val levelSelectScreenAtlas = game.assMan.getTextureAtlas(TextureAsset.LEVEL_SELECT_SCREEN.source)
 
-            val blankBackgroundRegion = uiAtlas.findRegion("$TAG/${ConstKeys.NONE}")
+            val blankBackgroundRegion = levelSelectScreenAtlas.findRegion(ConstKeys.NONE)
             backgroundAnims.put(ConstKeys.NONE, Animation(blankBackgroundRegion))
 
-            val selectedBackgroundRegion = uiAtlas.findRegion("$TAG/${ConstKeys.SELECTED}")
+            val selectedBackgroundRegion = levelSelectScreenAtlas.findRegion(ConstKeys.SELECTED)
             val selectedAnim = Animation(selectedBackgroundRegion, 2, 1, 0.1f, true)
             backgroundAnims.put(ConstKeys.SELECTED, selectedAnim)
 
             Position.entries.forEach { position ->
                 val key = position.name.lowercase()
-                val backgroundRegion = uiAtlas.findRegion("$TAG/${key}")
+                val backgroundRegion = levelSelectScreenAtlas.findRegion(key)
                 val backgroundAnim =
                     Animation.of(gdxArrayOf(blankBackgroundRegion pairTo 0.1f, backgroundRegion pairTo 0.1f), true)
                 backgroundAnims.put(key, backgroundAnim)
