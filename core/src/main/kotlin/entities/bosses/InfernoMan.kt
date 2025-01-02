@@ -195,8 +195,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
         buildTimers()
         timers.forEach {
-            if (it.key.equalsAny("shoot_cooldown", "shoot_delay")) it.value.setToEnd()
-            else it.value.reset()
+            if (it.key.equalsAny("shoot_cooldown", "shoot_delay")) it.value.setToEnd() else it.value.reset()
         }
 
         meteorSpawnBounds.set(
@@ -345,7 +344,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(SPRITE_SIZE * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->

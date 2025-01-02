@@ -51,6 +51,8 @@ object ConstKeys {
     const val B = "b"
     const val SURFACE = "surface"
     const val INIT = "init"
+    const val DEFEATED = "defeated"
+    const val STAND = "stand"
     const val FADE = "fade"
     const val AMPLITUDE = "amplitude"
     const val DRIFT = "drift"
