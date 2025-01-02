@@ -133,11 +133,12 @@ comprehensive listing of the credits for the artwork used in this game.
 - Timber Woman:
   - Original by [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/TimberWoman-Megaman-Maverick-1087794591)
   - Updated mugshot by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/Timber-Woman-Mugshot-1137568070)
+  - Updated spritesheet by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/1141743410)
 - Moon Man spritesheet:
-  - Original version by [boberatu](https://www.deviantart.com/boberatu/art/MPN-006-Moon-Man-625679636)
-  - Updated version by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/1136876962)
+  - Original by [boberatu](https://www.deviantart.com/boberatu/art/MPN-006-Moon-Man-625679636)
+  - Updated by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/1136876962)
 - Inferno Man 
-  - Original version by [boberatu](https://www.deviantart.com/boberatu/art/MPN-000-Volcano-Man-313694441)
+  - Original by [boberatu](https://www.deviantart.com/boberatu/art/MPN-000-Volcano-Man-313694441)
   - Updated mugshot by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/1137570993)
 - Reactor Man spritesheet & mugshot - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
 - Glacier Man spritesheet & mugshot - [Balloon Cart](https://balloon-cart.itch.io/glacier-man-asset-pack)
