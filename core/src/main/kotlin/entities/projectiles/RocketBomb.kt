@@ -78,7 +78,7 @@ class RocketBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = bodyFixture.getEntity()
-        if (entity is IDamageable && entity.canBeDamagedBy(this) and this.canDamage(entity)) return
+        if (entity is IDamageable /* && entity.canBeDamagedBy(this) && this.canDamage(entity) */) return
         explodeAndDie()
     }
 

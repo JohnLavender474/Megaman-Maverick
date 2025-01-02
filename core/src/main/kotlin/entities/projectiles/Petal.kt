@@ -72,7 +72,7 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity
         addComponent(AudioComponent())
         addComponent(defineAnimationsComponent())
         addComponent(definePointsComponent())
-        putProperty(ConstKeys.ENTTIY_KILLED_BY_DEATH_FIXTURE, false)
+        putProperty(ConstKeys.ENTITY_KILLED_BY_DEATH_FIXTURE, false)
     }
 
     override fun onSpawn(spawnProps: Properties) {

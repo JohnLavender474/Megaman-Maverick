@@ -78,7 +78,7 @@ class AngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        putProperty(ConstKeys.ENTTIY_KILLED_BY_DEATH_FIXTURE, false)
+        putProperty(ConstKeys.ENTITY_KILLED_BY_DEATH_FIXTURE, false)
         super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
