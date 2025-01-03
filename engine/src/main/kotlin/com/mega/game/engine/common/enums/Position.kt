@@ -69,4 +69,22 @@ enum class Position(val x: Int, val y: Int) {
         }
         return get(newX, newY)
     }
+
+    fun flipHorizontally(): Position {
+        val newX = when (x) {
+            0 -> 2
+            1 -> 1
+            else -> 0
+        }
+        return get(newX, y)
+    }
+
+    fun flipVertically(): Position {
+        val newY = when (y) {
+            0 -> 2
+            1 -> 1
+            else -> 0
+        }
+        return get(x, newY)
+    }
 }

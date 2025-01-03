@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.90" orientation="orthogonal" renderorder="right-down" width="420" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="644">
+<map version="1.10" tiledversion="1.11.90" orientation="orthogonal" renderorder="right-down" width="420" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="646">
  <tileset firstgid="1" source="../tsx/pipe_forest.tsx"/>
  <tileset firstgid="22" source="../tsx/PlantManTileset.tsx"/>
  <tileset firstgid="772" source="../tsx/Tileset1.tsx"/>
@@ -131,7 +131,12 @@
   <object id="486" name="room7" x="10400" y="160" width="512" height="1344"/>
   <object id="544" name="room8" x="10912" y="160" width="896" height="448"/>
   <object id="586" name="room9" x="11808" y="160" width="512" height="448"/>
-  <object id="587" name="boss_room" x="12320" y="160" width="512" height="448"/>
+  <object id="587" name="boss_room" x="12320" y="160" width="512" height="448">
+   <properties>
+    <property name="event" value="boss"/>
+    <property name="object" type="object" value="644"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="15" name="decorations">
   <object id="25" name="SmallGrass" x="96" y="1280" width="32" height="32"/>
@@ -594,6 +599,7 @@
     <property name="slow" type="bool" value="true"/>
    </properties>
   </object>
+  <object id="644" name="TimberWoman" x="12736" y="224" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="11" name="specials">
   <object id="250" name="Ladder" x="3776" y="960" width="32" height="320"/>
@@ -676,7 +682,7 @@
   <object id="610" name="SniperJoe" x="10840" y="816" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="13" name="player">
-  <object id="643" name="0" x="5728" y="928" width="32" height="32"/>
+  <object id="645" name="0" x="12080" y="512" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="2" name="temp">
   <object id="5" name="0" x="128" y="1280" width="32" height="32"/>

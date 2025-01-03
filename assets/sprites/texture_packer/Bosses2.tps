@@ -179,8 +179,8 @@
             <key type="filename">../frames/Bosses2/InfernoMan/slide.png</key>
             <key type="filename">../frames/Bosses2/InfernoMan/stand.png</key>
             <key type="filename">../frames/Bosses2/InfernoMan/wall_slide.png</key>
-            <key type="filename">../frames/Bosses2/TimberWoman_v2/axe_swing_1.png</key>
-            <key type="filename">../frames/Bosses2/TimberWoman_v2/axe_swing_2.png</key>
+            <key type="filename">../frames/Bosses2/TimberWoman_v2/axe_swing1.png</key>
+            <key type="filename">../frames/Bosses2/TimberWoman_v2/axe_swing2.png</key>
             <key type="filename">../frames/Bosses2/TimberWoman_v2/axe_wallslide.png</key>
             <key type="filename">../frames/Bosses2/TimberWoman_v2/jump_spin.png</key>
             <key type="filename">../frames/Bosses2/TimberWoman_v2/wallslide.png</key>
@@ -335,6 +335,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Bosses2/InfernoMan/stand_shoot_mega.png</key>
+            <key type="filename">../frames/Bosses2/TimberWoman_v2/stand_pound.png</key>
             <key type="filename">../frames/Bosses2/TimberWoman_v2/stand_swing.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -422,6 +423,21 @@
                 <rect>12,24,24,48</rect>
                 <key>scale9Paddings</key>
                 <rect>12,24,24,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses2/TimberWoman_v2/init.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,112,32,224</rect>
+                <key>scale9Paddings</key>
+                <rect>16,112,32,224</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
