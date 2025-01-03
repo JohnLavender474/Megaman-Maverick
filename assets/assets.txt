@@ -1,5 +1,4 @@
 Megaman10Font.ttf
-hs_err_pid88400.log
 temp/MegaRed225/random-enemies-5.jpg
 temp/MegaRed225/Random Enemy Sprites Set 9/Link
 temp/MegaRed225/Random Enemy Sprites Set 9/random-enemy-sprites-9.jpg
@@ -114,7 +113,6 @@ temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/
 temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/layers/background.png
 temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/previews/pipe forest preview-big.png
 temp/ansimuz-Mega Bot Collection/megabot assets files/Environments/Pipes forest/previews/pipe forest preview.png
-hs_err_pid90831.log
 sounds/conveyor_lift.wav
 sounds/thump.mp3
 sounds/air_shooter.wav
@@ -188,8 +186,6 @@ sounds/quake.mp3
 sounds/floating_portal.wav
 sounds/whoosh.mp3
 badlogic.jpg
-hs_err_pid91704.log
-hs_err_pid90526.log
 sprites/frames/MegamanTrailSprite/airdash.png
 sprites/frames/MegamanTrailSprite/groundslide_shoot.png
 sprites/frames/MegamanTrailSprite/groundslide.png
@@ -874,9 +870,11 @@ sprites/frames/Bosses2/DesertMan/dance.png
 sprites/frames/Bosses2/DesertMan/defeated.png
 sprites/frames/Bosses2/TimberWoman_v2/wallslide.png
 sprites/frames/Bosses2/TimberWoman_v2/axe_wallslide.png
-sprites/frames/Bosses2/TimberWoman_v2/axe_swing_1.png
+sprites/frames/Bosses2/TimberWoman_v2/init.png
+sprites/frames/Bosses2/TimberWoman_v2/stand_pound.png
 sprites/frames/Bosses2/TimberWoman_v2/stand.png
-sprites/frames/Bosses2/TimberWoman_v2/axe_swing_2.png
+sprites/frames/Bosses2/TimberWoman_v2/axe_swing2.png
+sprites/frames/Bosses2/TimberWoman_v2/axe_swing1.png
 sprites/frames/Bosses2/TimberWoman_v2/jump_spin.png
 sprites/frames/Bosses2/TimberWoman_v2/jump_down.png
 sprites/frames/Bosses2/TimberWoman_v2/stand_swing.png
@@ -2355,16 +2353,13 @@ tiled_maps/tmx/RodentMan_16x14.tmx
 tiled_maps/tmx/ReactMan_v2.tmx
 tiled_maps/tmx/WilyStage3_v2.tmx
 tiled_maps/tmx/Test2.tmx
-hs_err_pid94539.log
 diagrams/Guts Tank - Design.drawio
 diagrams/Inferno Man - Design.drawio
 diagrams/Desert Man - Design.drawio
 diagrams/Glacier Man - Design.drawio
 diagrams/.$Inferno Man - Design.drawio.bkp
 diagrams/.$Desert Man - Design.drawio.bkp
-hs_err_pid91372.log
 libgdx.png
-hs_err_pid94061.log
 credits.txt
 music/MMX5_DarkDizzy.txt
 music/MMX6_BossFight.txt

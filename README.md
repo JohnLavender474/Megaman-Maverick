@@ -172,6 +172,7 @@ comprehensive listing of the credits for the artwork used in this game.
 
 - [Balloon Cart (Reactor Man)](https://balloon-cart.itch.io/reactor-man-asset-pack)
 - [Balloon Cart (Glacier Man)](https://balloon-cart.itch.io/glacier-man-asset-pack)
+- [Ansimuz (Rodent Man)](https://www.reddit.com/r/gamedev/comments/srefzp/megaman_style_tilesets_assets_collection_by/)
 - [MegaBot](https://ansimuz.itch.io/mega-bot)
 - [Mega 8-Bit](https://assetstore.unity.com/packages/2d/environments/mega-8-bit-pixel-pack-60158?srsltid=AfmBOordeWICo0KR-N3MKcw6iqd2TehrlFgQn6Hijzmk09-2eoq2Gid0)
 - Mister Mike:
