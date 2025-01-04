@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
+import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.Animator
@@ -52,16 +53,20 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.hazards.DeadlyLeaf
 import com.megaman.maverick.game.entities.megaman.components.damageableFixture
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.entities.projectiles.GroundPebble
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -72,6 +77,8 @@ import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 import kotlin.reflect.KClass
 
+// TODO:
+//  - if Timber Woman is within Y distance of ground, do not allow jump spin
 class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IDrawableShapesEntity, IFaceable {
 
     companion object {
@@ -101,27 +108,28 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         // When Timber Woman transitions to the stand state, she might be sliding on the floor due to
         // velocity applied in a previous state. When this amount of time has passed in the state state,
         // her X velocity should be set to zero to prevent further floor sliding.
-        private const val STAND_STILL_DELAY = 0.25f
+        private const val STAND_STILL_DELAY = 0.1f
         private const val STAND_STILL_DELAY_KEY = "stand_still_delay"
 
         private const val MAX_CYCLES_WITHOUT_JUMP = 3
-        private const val JUMP_CHANCE = 50
+
         private const val STAND_POUND_CHANCE = 25
+        private const val JUMP_CHANCE = 50
         private const val RUN_CHANCE = 65
 
         private const val STAND_SWING_GROUND_BURST_TIME = 0.35f
         private val STAND_POUND_GROUND_BURST_TIMES = gdxArrayOf(0.35f, 0.95f, 1.55f)
 
         private val GROUND_PEBBLE_IMPULSES = gdxArrayOf(
-            Vector2(-12f, 10f),
-            Vector2(-6f, 18f),
-            Vector2(-2f, 25f),
-            Vector2(2f, 25f),
-            Vector2(6f, 18f),
-            Vector2(12f, 10f)
+            Vector2(-15f, 10f),
+            Vector2(-9f, 18f),
+            Vector2(-3f, 26f),
+            Vector2(3f, 26f),
+            Vector2(9f, 18f),
+            Vector2(15f, 10f)
         )
         private const val GROUND_PEBBLES_AXE_SWING_OFFSET_X = 2f
-        private const val GROUND_PEBBLES_OFFSET_Y = 0.5f
+        private const val GROUND_PEBBLES_OFFSET_Y = 0.35f
 
         private const val GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.01f
@@ -134,8 +142,8 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
 
         private const val JUMP_MAX_IMPULSE_X = 10f
         private const val JUMP_IMPULSE_Y = 16f
-        private const val WALL_SLIDE_JUMP_IMPULSE_X = 3f
-        private const val JUMP_SPIN_RADIUS = 1.5f
+        private const val WALL_SLIDE_JUMP_IMPULSE_X = 5f
+        private const val JUMP_SPIN_RADIUS = 2f
         private const val JUMP_SPIN_SCANNER_RADIUS = 2.5f
 
         private const val ROOM_SHAKE_DUR = 0.5f
@@ -211,6 +219,9 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
     private val walls = Array<GameRectangle>()
 
     private var cyclesSinceLastJump = 0
+
+    // Used to collect entities that should be destroyed when Timber Woman is destroyed.
+    private val entitySet = OrderedSet<MegaGameEntity>()
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -322,7 +333,13 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
 
     override fun onDestroy() {
         super.onDestroy()
+
         walls.clear()
+
+        // Destroy all ground pebbles and deadly leaves when Timber Woman is destroyed
+        val entitiesToDestroy = MegaGameEntities.getEntitiesOfTags(entitySet, GroundPebble.TAG, DeadlyLeaf.TAG)
+        entitiesToDestroy.forEach { entity -> entity.destroy() }
+        entitiesToDestroy.clear()
     }
 
     private fun buildStateMachine(): StateMachine<TimberWomanState> {
@@ -441,6 +458,8 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
                     if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) impulseX *= -1f
 
                     body.physics.velocity.x = impulseX
+
+                    GameLogger.debug(TAG, "onChangeState(): set impulseX=$impulseX for wall jump")
                 }
 
                 cyclesSinceLastJump = 0
@@ -718,8 +737,6 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         val jumpSpinShieldFixture =
             Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(JUMP_SPIN_RADIUS * ConstVals.PPM))
         body.addFixture(jumpSpinShieldFixture)
-
-        // TODO: axe shield
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.defaultFrictionOnSelf.x =
