@@ -14,7 +14,6 @@ import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanTrailSprite
-
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.isSensing
@@ -41,10 +40,12 @@ internal fun Megaman.defineUpdatablesComponent() = UpdatablesComponent({ delta -
     if (!weaponHandler.isChargeable(currentWeapon)) stopCharging()
     weaponHandler.update(delta)
 
-    stunTimer.update(delta)
+    if (body.isSensing(BodySense.FEET_ON_GROUND)) stunTimer.update(delta)
+
     damageTimer.update(delta)
-    if (stunned || damaged) chargingTimer.reset()
     if (damageTimer.isJustFinished()) damageRecoveryTimer.reset()
+
+    if (stunned || damaged) chargingTimer.reset()
 
     if (damageTimer.isFinished() && !damageRecoveryTimer.isFinished()) {
         damageRecoveryTimer.update(delta)

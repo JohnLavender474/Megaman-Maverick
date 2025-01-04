@@ -179,9 +179,12 @@
             <key type="filename">../frames/Bosses2/InfernoMan/slide.png</key>
             <key type="filename">../frames/Bosses2/InfernoMan/stand.png</key>
             <key type="filename">../frames/Bosses2/InfernoMan/wall_slide.png</key>
+            <key type="filename">../frames/Bosses2/TimberWoman_v2/axe_pound1.png</key>
+            <key type="filename">../frames/Bosses2/TimberWoman_v2/axe_pound2.png</key>
             <key type="filename">../frames/Bosses2/TimberWoman_v2/axe_swing1.png</key>
             <key type="filename">../frames/Bosses2/TimberWoman_v2/axe_swing2.png</key>
             <key type="filename">../frames/Bosses2/TimberWoman_v2/axe_wallslide.png</key>
+            <key type="filename">../frames/Bosses2/TimberWoman_v2/defeated.png</key>
             <key type="filename">../frames/Bosses2/TimberWoman_v2/jump_spin.png</key>
             <key type="filename">../frames/Bosses2/TimberWoman_v2/wallslide.png</key>
             <struct type="IndividualSpriteSettings">

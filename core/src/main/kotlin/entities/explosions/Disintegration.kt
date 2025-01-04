@@ -64,9 +64,13 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         defaultSprite.setPosition(spawn, Position.CENTER)
 
-        reusableRect.setSize(ConstVals.PPM.toFloat()).setCenter(spawn)
-        if (reusableRect.overlaps(getGameCamera().toGameRectangle()))
-            requestToPlaySound(SoundAsset.THUMP_SOUND, false)
+        val sound = spawnProps.getOrDefault(ConstKeys.SOUND, true, Boolean::class)
+        if (sound) {
+            reusableRect.setSize(ConstVals.PPM.toFloat()).setCenter(spawn)
+
+            if (reusableRect.overlaps(getGameCamera().toGameRectangle()))
+                requestToPlaySound(SoundAsset.THUMP_SOUND, false)
+        }
 
         durationTimer.reset()
     }

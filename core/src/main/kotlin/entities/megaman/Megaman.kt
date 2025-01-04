@@ -35,6 +35,7 @@ import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.enemies.SpringHead
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
@@ -60,6 +61,17 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     companion object {
         const val TAG = "Megaman"
         const val MEGAMAN_EVENT_LISTENER_TAG = "MegamanEventListener"
+
+        private val explosionOrbTrajectories = gdxArrayOf(
+            Vector2(-EXPLOSION_ORB_SPEED, 0f),
+            Vector2(-EXPLOSION_ORB_SPEED, EXPLOSION_ORB_SPEED),
+            Vector2(0f, EXPLOSION_ORB_SPEED),
+            Vector2(EXPLOSION_ORB_SPEED, EXPLOSION_ORB_SPEED),
+            Vector2(EXPLOSION_ORB_SPEED, 0f),
+            Vector2(EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED),
+            Vector2(0f, -EXPLOSION_ORB_SPEED),
+            Vector2(-EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED)
+        )
     }
 
     val damaged: Boolean
@@ -74,7 +86,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     var canMove = true
         get() = field && !stunned && !damaged
 
-    internal val stunTimer = Timer()
+    internal val stunTimer = Timer(MegamanValues.STUN_DUR)
     internal val damageTimer = Timer(MegamanValues.DAMAGE_DURATION).setToEnd()
     internal val damageRecoveryTimer = Timer(MegamanValues.DAMAGE_RECOVERY_TIME).setToEnd()
     internal val damageFlashTimer = Timer(MegamanValues.DAMAGE_FLASH_DURATION)
@@ -308,7 +320,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
             }
          */
 
-        val animations = MegamanAnimations(game, /* regionProcessor */).get()
+        val animations = MegamanAnimations(game /* regionProcessor */).get()
         addComponent(defineAnimationsComponent(animations))
 
         // GameLogger.debug(TAG, "init(): weaponSpawns=$weaponSpawns")
@@ -357,6 +369,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         airDashTimer.reset()
         spawningTimer.reset()
         roomTransPauseTimer.setToEnd()
+        stunTimer.setToEnd()
 
         putProperty(ConstKeys.ON_TELEPORT_START, {
             standardOnTeleportStart(this)
@@ -380,24 +393,16 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+
         body.removeProperty(ConstKeys.VELOCITY)
+
         val eventsMan = game.eventsMan
         eventsMan.removeListener(this)
         eventsMan.submitEvent(Event(EventType.PLAYER_JUST_DIED))
-        stopSoundNow(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
-        if (getCurrentHealth() > 0) return
 
-        val explosionOrbTrajectories = gdxArrayOf(
-            Vector2(-EXPLOSION_ORB_SPEED, 0f),
-            Vector2(-EXPLOSION_ORB_SPEED, EXPLOSION_ORB_SPEED),
-            Vector2(0f, EXPLOSION_ORB_SPEED),
-            Vector2(EXPLOSION_ORB_SPEED, EXPLOSION_ORB_SPEED),
-            Vector2(EXPLOSION_ORB_SPEED, 0f),
-            Vector2(EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED),
-            Vector2(0f, -EXPLOSION_ORB_SPEED),
-            Vector2(-EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED)
-        )
-        explosionOrbTrajectories.forEach { trajectory ->
+        stopSoundNow(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
+
+        if (getCurrentHealth() <= 0) explosionOrbTrajectories.forEach { trajectory ->
             val explosionOrb = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION_ORB)
             explosionOrb?.spawn(
                 props(
@@ -458,25 +463,37 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
             }
 
             EventType.STUN_PLAYER -> {
-                GameLogger.debug(MEGAMAN_EVENT_LISTENER_TAG, "STUN_PLAYER_IF_ON_SURFACE")
-                when (val stunType = event.getProperty(ConstKeys.TYPE, StunType::class)!!) {
-                    StunType.STUN_BOUNCE_IF_ON_SURFACE,
-                    StunType.STUN_BOUNCE_ALWAYS -> {
-                        if (stunType == StunType.STUN_BOUNCE_IF_ON_SURFACE &&
-                            !body.isSensingAny(
-                                BodySense.FEET_ON_GROUND,
-                                BodySense.SIDE_TOUCHING_BLOCK_LEFT,
-                                BodySense.SIDE_TOUCHING_BLOCK_RIGHT
-                            )
-                        ) return
+                GameLogger.debug(MEGAMAN_EVENT_LISTENER_TAG, "STUN_PLAYER: called")
 
-                        val stunOriginX = event.getProperty(ConstKeys.X, Float::class)!!
-                        // TODO: replace with new stunBounds method which accepts rectangle
-                        // stunBounce(stunOriginX)
-                        val stunDuration = event.getProperty(ConstKeys.DURATION, Float::class)!!
-                        stunTimer.resetDuration(stunDuration)
-                    }
+                if (stunned) {
+                    GameLogger.debug(
+                        MEGAMAN_EVENT_LISTENER_TAG,
+                        "STUN_PLAYER: do not stun Megaman because he is already stunned: " +
+                            "stunTimer.getRatio()=${stunTimer.getRatio()}"
+                    )
+                    return
                 }
+
+                val stunType = event.getProperty(ConstKeys.TYPE, StunType::class)!!
+                if (stunType == StunType.STUN_BOUNCE_IF_ON_SURFACE &&
+                    !body.isSensing(BodySense.FEET_ON_GROUND) &&
+                    !isBehaviorActive(BehaviorType.WALL_SLIDING)
+                ) {
+                    GameLogger.debug(
+                        MEGAMAN_EVENT_LISTENER_TAG,
+                        "STUN_PLAYER: do not stun because stun type is ${stunType} and Megaman is not on a surface"
+                    )
+                    return
+                }
+
+                // TODO: This assumes that Megaman's body is rotated UP.
+                //    Refactor this to support directionally dynamic bouncing.
+                megaman.body.physics.velocity.let {
+                    it.x = MegamanValues.STUN_IMPULSE_X * ConstVals.PPM * movementScalar * -facing.value
+                    it.y = MegamanValues.STUM_IMPULSE_Y * ConstVals.PPM
+                }
+
+                stunTimer.reset()
             }
 
             EventType.END_GAME_CAM_ROTATION -> {
@@ -503,39 +520,36 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         currentWeapon = MegamanWeapon.entries.toTypedArray()[nextIndex]
     }
 
-    fun stunBounce(bounds: GameRectangle) =
-        when (direction) {
-            Direction.UP -> {
-                body.physics.velocity.x =
-                    (if (bounds.getX() > body.getX()) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
-                body.physics.velocity.y = MegamanValues.DMG_Y * ConstVals.PPM
-            }
-
-            Direction.DOWN -> {
-                body.physics.velocity.x =
-                    (if (bounds.getX() > body.getX()) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
-                body.physics.velocity.y = -MegamanValues.DMG_Y * ConstVals.PPM
-            }
-
-            Direction.LEFT -> {
-                body.physics.velocity.x = -MegamanValues.DMG_Y * ConstVals.PPM
-                body.physics.velocity.y =
-                    (if (bounds.getY() > body.getY()) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
-            }
-
-            Direction.RIGHT -> {
-                body.physics.velocity.x = MegamanValues.DMG_Y * ConstVals.PPM
-                body.physics.velocity.y =
-                    (if (bounds.getY() > body.getY()) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
-            }
-        }
-
     override fun takeDamageFrom(damager: IDamager): Boolean {
         if (canMove && !isBehaviorActive(BehaviorType.RIDING_CART) && !noDmgBounce.contains(damager::class) &&
             damager is GameEntity && damager.hasComponent(BodyComponent::class)
         ) {
-            val enemyBody = damager.getComponent(BodyComponent::class)!!.body.getBounds()
-            stunBounce(enemyBody)
+            val bounds = damager.getComponent(BodyComponent::class)!!.body.getBounds()
+            when (direction) {
+                Direction.UP -> {
+                    body.physics.velocity.x =
+                        (if (bounds.getX() > body.getX()) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
+                    body.physics.velocity.y = MegamanValues.DMG_Y * ConstVals.PPM
+                }
+
+                Direction.DOWN -> {
+                    body.physics.velocity.x =
+                        (if (bounds.getX() > body.getX()) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
+                    body.physics.velocity.y = -MegamanValues.DMG_Y * ConstVals.PPM
+                }
+
+                Direction.LEFT -> {
+                    body.physics.velocity.x = -MegamanValues.DMG_Y * ConstVals.PPM
+                    body.physics.velocity.y =
+                        (if (bounds.getY() > body.getY()) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
+                }
+
+                Direction.RIGHT -> {
+                    body.physics.velocity.x = MegamanValues.DMG_Y * ConstVals.PPM
+                    body.physics.velocity.y =
+                        (if (bounds.getY() > body.getY()) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
+                }
+            }
         }
 
         var damage = MegamanDamageNegotations.get((damager as MegaGameEntity).getTag()).get(damager)

@@ -168,7 +168,6 @@ sounds/jetpack.mp3
 sounds/mecha_dragon.mp3
 sounds/buster_charged_shot.mp3
 sounds/electric_pulse.mp3
-sounds/Mega Man 5 SFX (11).wav
 sounds/bloopity.wav
 sounds/electric_shock.wav
 sounds/select_ping.mp3
@@ -454,6 +453,7 @@ sprites/frames/Megaman_v2/climb_finish.png
 sprites/frames/Megaman_v2/stand_charge_half.png
 sprites/frames/Megaman_v2/swim_shoot.png
 sprites/frames/Megaman_v2/stand_charge_full.png
+sprites/frames/Megaman_v2/stunned.png
 sprites/frames/Megaman_v2/stand.png
 sprites/frames/Megaman_v2/jump.png
 sprites/frames/Megaman_v2/airdash.png
@@ -674,6 +674,7 @@ sprites/frames/Hazards1/FlameThrower/Hot.png
 sprites/frames/Hazards1/Electrocutie/Charge.png
 sprites/frames/Hazards1/Electrocutie/Shock.png
 sprites/frames/Hazards1/Electrocutie/Move.png
+sprites/frames/Projectiles2/GroundPebble.png
 sprites/frames/Projectiles2/CactusMissile/fly.png
 sprites/frames/Projectiles2/CactusMissile/blink.png
 sprites/frames/Projectiles2/TeardropBlast.png
@@ -876,10 +877,13 @@ sprites/frames/Bosses2/TimberWoman_v2/stand.png
 sprites/frames/Bosses2/TimberWoman_v2/axe_swing2.png
 sprites/frames/Bosses2/TimberWoman_v2/axe_swing1.png
 sprites/frames/Bosses2/TimberWoman_v2/jump_spin.png
+sprites/frames/Bosses2/TimberWoman_v2/axe_pound1.png
 sprites/frames/Bosses2/TimberWoman_v2/jump_down.png
+sprites/frames/Bosses2/TimberWoman_v2/axe_pound2.png
 sprites/frames/Bosses2/TimberWoman_v2/stand_swing.png
 sprites/frames/Bosses2/TimberWoman_v2/run.png
 sprites/frames/Bosses2/TimberWoman_v2/jump_up.png
+sprites/frames/Bosses2/TimberWoman_v2/defeated.png
 sprites/frames/Megaman/Stand.png
 sprites/frames/Megaman/Frozen.png
 sprites/frames/Megaman/Cartin_JumpShoot.png
