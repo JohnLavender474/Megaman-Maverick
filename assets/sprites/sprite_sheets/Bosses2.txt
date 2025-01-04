@@ -1,5 +1,5 @@
 Bosses2.png
-size: 512, 1520
+size: 512, 1568
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -12,7 +12,7 @@ DesertMan/arm_extension
   index: -1
 DesertMan/arm_extension_punch
   rotate: false
-  xy: 256, 1072
+  xy: 0, 1120
   size: 128, 256
   orig: 128, 256
   offset: 0, 0
@@ -33,7 +33,7 @@ DesertMan/dance_flash
   index: -1
 DesertMan/defeated
   rotate: false
-  xy: 0, 880
+  xy: 240, 736
   size: 64, 192
   orig: 64, 192
   offset: 0, 0
@@ -47,7 +47,7 @@ DesertMan/jump
   index: -1
 DesertMan/punch
   rotate: false
-  xy: 64, 880
+  xy: 304, 736
   size: 64, 192
   orig: 64, 192
   offset: 0, 0
@@ -96,14 +96,14 @@ DesertMan/wall_slide
   index: -1
 InfernoMan/charging
   rotate: false
-  xy: 128, 880
+  xy: 368, 736
   size: 64, 192
   orig: 64, 192
   offset: 0, 0
   index: -1
 InfernoMan/defeated
   rotate: false
-  xy: 192, 880
+  xy: 432, 736
   size: 64, 192
   orig: 64, 192
   offset: 0, 0
@@ -117,7 +117,7 @@ InfernoMan/flame_head
   index: -1
 InfernoMan/init
   rotate: false
-  xy: 256, 880
+  xy: 0, 928
   size: 192, 192
   orig: 192, 192
   offset: 0, 0
@@ -166,7 +166,7 @@ InfernoMan/stand
   index: -1
 InfernoMan/stand_shoot_mega
   rotate: false
-  xy: 0, 1072
+  xy: 192, 928
   size: 128, 192
   orig: 128, 192
   offset: 0, 0
@@ -208,7 +208,7 @@ MoonMan_v2/defeated
   index: -1
 MoonMan_v2/gravity_change_begin
   rotate: false
-  xy: 256, 736
+  xy: 0, 736
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -250,7 +250,7 @@ MoonMan_v2/jump_shoot
   index: 0
 MoonMan_v2/jump_shoot
   rotate: false
-  xy: 304, 736
+  xy: 48, 736
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -271,14 +271,14 @@ MoonMan_v2/shoot
   index: 0
 MoonMan_v2/shoot
   rotate: false
-  xy: 352, 736
+  xy: 96, 736
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
   index: 1
 MoonMan_v2/shoot
   rotate: false
-  xy: 400, 736
+  xy: 144, 736
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -292,7 +292,7 @@ MoonMan_v2/shoot
   index: 3
 MoonMan_v2/shoot
   rotate: false
-  xy: 448, 736
+  xy: 192, 736
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -376,7 +376,7 @@ TimberWoman_v2/defeated
   index: -1
 TimberWoman_v2/init
   rotate: false
-  xy: 384, 1072
+  xy: 256, 1120
   size: 64, 448
   orig: 64, 448
   offset: 0, 0
@@ -390,42 +390,42 @@ TimberWoman_v2/jump_down
   index: -1
 TimberWoman_v2/jump_spin
   rotate: false
-  xy: 64, 608
-  size: 128, 128
-  orig: 128, 128
+  xy: 128, 1120
+  size: 128, 256
+  orig: 128, 256
   offset: 0, 0
   index: -1
 TimberWoman_v2/jump_up
   rotate: false
-  xy: 192, 608
+  xy: 64, 608
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 TimberWoman_v2/run
   rotate: false
-  xy: 256, 608
+  xy: 128, 608
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 TimberWoman_v2/stand
   rotate: false
-  xy: 448, 1072
+  xy: 320, 1120
   size: 64, 448
   orig: 64, 448
   offset: 0, 0
   index: -1
 TimberWoman_v2/stand_pound
   rotate: false
-  xy: 128, 1072
+  xy: 320, 928
   size: 128, 192
   orig: 128, 192
   offset: 0, 0
   index: -1
 TimberWoman_v2/stand_swing
   rotate: false
-  xy: 0, 736
+  xy: 256, 608
   size: 256, 128
   orig: 256, 128
   offset: 0, 0
