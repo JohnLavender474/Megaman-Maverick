@@ -77,5 +77,9 @@ object MegamanValues {
 
     const val CROUCH_DELAY = 0.1f
 
+    const val STUN_DUR = 0.25f
+    const val STUN_IMPULSE_X = 2.5f
+    const val STUM_IMPULSE_Y = 2f
+
     val WEAPON_SPAWN_MAGIC_COLOR: Color = Color.valueOf("dd00ffff")
 }

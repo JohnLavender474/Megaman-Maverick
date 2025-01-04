@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.90" orientation="orthogonal" renderorder="right-down" width="420" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="646">
+<map version="1.10" tiledversion="1.11.90" orientation="orthogonal" renderorder="right-down" width="420" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="647">
  <tileset firstgid="1" source="../tsx/pipe_forest.tsx"/>
  <tileset firstgid="22" source="../tsx/PlantManTileset.tsx"/>
  <tileset firstgid="772" source="../tsx/Tileset1.tsx"/>
@@ -599,7 +599,14 @@
     <property name="slow" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="644" name="TimberWoman" x="12736" y="224" width="32" height="32"/>
+  <object id="644" name="TimberWoman" x="12736" y="224" width="32" height="32">
+   <properties>
+    <property name="leaf_spawn" type="object" value="646"/>
+    <property name="wall_1" type="object" value="584"/>
+    <property name="wall_2" type="object" value="589"/>
+   </properties>
+  </object>
+  <object id="646" name="LeafSpawn" x="12384" y="160" width="384" height="32"/>
  </objectgroup>
  <objectgroup id="11" name="specials">
   <object id="250" name="Ladder" x="3776" y="960" width="32" height="320"/>

@@ -15,42 +15,52 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
         key
     }
 
-    !ready -> "spawn"
-
     game.isCameraRotating() -> amendKey("jump")
 
-    else -> when {
-        isBehaviorActive(BehaviorType.JETPACKING) -> amendKey("jetpack")
-        isBehaviorActive(BehaviorType.RIDING_CART) -> {
-            when {
-                damaged -> "cartin_damaged"
-                isBehaviorActive(BehaviorType.JUMPING) || !body.isSensing(BodySense.FEET_ON_GROUND) ->
-                    amendKey("cartin_jump")
-                else -> amendKey("cartin")
-            }
-        }
+    !ready -> "spawn"
 
-        damaged || stunned -> "damaged"
+    damaged -> "damaged"
 
-        isBehaviorActive(BehaviorType.CLIMBING) -> when {
-            !body.isSensing(BodySense.HEAD_TOUCHING_LADDER) && !shooting -> amendKey("climb_finish")
-            else -> {
-                val movement = if (direction.isHorizontal()) body.physics.velocity.x else body.physics.velocity.y
-                val key = if (movement != 0f) "climb" else "climb_still"
-                amendKey(key)
-            }
-        }
+    stunned -> "stunned"
 
-        isBehaviorActive(BehaviorType.AIR_DASHING) -> amendKey("airdash")
-        isBehaviorActive(BehaviorType.CROUCHING) -> amendKey("crouch")
-        isBehaviorActive(BehaviorType.GROUND_SLIDING) -> amendKey("groundslide")
-        isBehaviorActive(BehaviorType.WALL_SLIDING) -> amendKey("wallslide")
-        isBehaviorActive(BehaviorType.SWIMMING) -> amendKey("swim")
-        body.isSensing(BodySense.FEET_ON_GROUND) && running -> amendKey("run")
-        isBehaviorActive(BehaviorType.JUMPING) || !body.isSensing(BodySense.FEET_ON_GROUND) -> amendKey("jump")
-        slipSliding -> amendKey("slip")
-        else -> amendKey("stand")
+    isBehaviorActive(BehaviorType.JETPACKING) -> amendKey("jetpack")
+
+    isBehaviorActive(BehaviorType.RIDING_CART) -> when {
+        damaged -> "cartin_damaged"
+
+        isBehaviorActive(BehaviorType.JUMPING) || !body.isSensing(BodySense.FEET_ON_GROUND) ->
+            amendKey("cartin_jump")
+
+        else -> amendKey("cartin")
     }
+
+    isBehaviorActive(BehaviorType.CLIMBING) -> when {
+        !body.isSensing(BodySense.HEAD_TOUCHING_LADDER) && !shooting -> amendKey("climb_finish")
+
+        else -> {
+            val movement = if (direction.isHorizontal()) body.physics.velocity.x else body.physics.velocity.y
+            val key = if (movement != 0f) "climb" else "climb_still"
+            amendKey(key)
+        }
+    }
+
+    isBehaviorActive(BehaviorType.AIR_DASHING) -> amendKey("airdash")
+
+    isBehaviorActive(BehaviorType.CROUCHING) -> amendKey("crouch")
+
+    isBehaviorActive(BehaviorType.GROUND_SLIDING) -> amendKey("groundslide")
+
+    isBehaviorActive(BehaviorType.WALL_SLIDING) -> amendKey("wallslide")
+
+    isBehaviorActive(BehaviorType.SWIMMING) -> amendKey("swim")
+
+    isBehaviorActive(BehaviorType.JUMPING) || !body.isSensing(BodySense.FEET_ON_GROUND) -> amendKey("jump")
+
+    body.isSensing(BodySense.FEET_ON_GROUND) && running -> amendKey("run")
+
+    slipSliding -> amendKey("slip")
+
+    else -> amendKey("stand")
 }
 
 private fun Megaman.amendKey(baseKey: String) = when {

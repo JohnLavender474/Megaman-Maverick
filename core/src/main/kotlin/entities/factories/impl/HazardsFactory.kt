@@ -35,6 +35,7 @@ class HazardsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val SEA_MINE = "SeaMine"
         const val CACTUS = "Cactus"
         const val MAGMA_FLAME = "MagmaFlame"
+        const val DEADLY_LEAF = "DeadlyLeaf"
     }
 
     override fun init() {
@@ -65,6 +66,7 @@ class HazardsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(SEA_MINE, GameEntityPoolCreator.create { SeaMine(game) })
         pools.put(CACTUS, GameEntityPoolCreator.create { Cactus(game) })
         pools.put(MAGMA_FLAME, GameEntityPoolCreator.create { MagmaFlame(game) })
+        pools.put(DEADLY_LEAF, GameEntityPoolCreator.create { DeadlyLeaf(game) })
     }
 
     override fun fetch(key: Any?) = pools.get(key)?.fetch()

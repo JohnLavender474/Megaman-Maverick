@@ -944,7 +944,7 @@
     <property name="sound" value="atomic_fire_sound"/>
     <property name="spawn_type" value="spawn_now"/>
     <property name="x" type="float" value="0"/>
-    <property name="y" type="float" value="0.1"/>
+    <property name="y" type="float" value="0.003125"/>
    </properties>
   </object>
   <object id="448" name="CapsuleTeleporter" x="9024" y="1600" width="64" height="128">

@@ -46,7 +46,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
         private var region: TextureRegion? = null
     }
 
-    override var direction = Direction.UP
+    override lateinit var direction: Direction
 
     private val trajectory = Vector2()
     private var followTraj = true
@@ -128,6 +128,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
+
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
         disintegration!!.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }

@@ -78,6 +78,7 @@ class BrickPiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     private fun explodeAndDie() {
         destroy()
+
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)!!
         disintegration.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
         requestToPlaySound(SoundAsset.THUMP_SOUND, false)

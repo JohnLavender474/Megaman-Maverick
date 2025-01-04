@@ -76,7 +76,7 @@ class SmallGrass(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     }
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
-        .sprite(GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 5)))
+        .sprite(GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5)))
         .updatable { delta, sprite ->
             brushTimer.update(delta)
             val brush = !brushTimer.isFinished()

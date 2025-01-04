@@ -243,6 +243,7 @@
             <key type="filename">../frames/Megaman_v2/slip_charge_full.png</key>
             <key type="filename">../frames/Megaman_v2/stand.png</key>
             <key type="filename">../frames/Megaman_v2/stand_charge_full.png</key>
+            <key type="filename">../frames/Megaman_v2/stunned.png</key>
             <key type="filename">../frames/Megaman_v2/swim_charge_full.png</key>
             <key type="filename">../frames/Megaman_v2/wallslide_charge_full.png</key>
             <struct type="IndividualSpriteSettings">

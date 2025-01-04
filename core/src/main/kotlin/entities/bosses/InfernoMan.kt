@@ -468,6 +468,11 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             InfernoManState.JUMP -> {
                 body.physics.applyFrictionX = false
                 jump(megaman.body.getCenter())
+
+                if (previous == InfernoManState.WALL_SLIDE) {
+                    // TODO: add wall jump x impulse
+                }
+
                 resetShootTimer()
             }
 

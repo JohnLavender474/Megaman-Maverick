@@ -13,6 +13,7 @@ import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -63,8 +64,8 @@ class RoomShaker(game: MegamanMaverickGame) : MegaGameEntity(game), IEventListen
 
         interval = spawnProps.get(ConstKeys.INTERVAL, Float::class)!!
         duration = spawnProps.get(ConstKeys.DURATION, Float::class)!!
-        x = spawnProps.get(ConstKeys.X, Float::class)!!
-        y = spawnProps.get(ConstKeys.Y, Float::class)!!
+        x = spawnProps.get(ConstKeys.X, Float::class)!! * ConstVals.PPM
+        y = spawnProps.get(ConstKeys.Y, Float::class)!! * ConstVals.PPM
 
         run = false
 
