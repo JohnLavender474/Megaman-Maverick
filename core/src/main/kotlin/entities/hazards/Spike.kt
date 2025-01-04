@@ -13,6 +13,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.toObjectSet
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -126,7 +127,7 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
 
         block = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD)!! as Block
         val blockProps = spawnProps.copy()
-        blockProps.put(ConstKeys.BLOCK_FILTERS, TAG)
+        blockProps.putAll(ConstKeys.BLOCK_FILTERS pairTo TAG, ConstKeys.DRAW pairTo false)
         block!!.spawn(blockProps)
     }
 
@@ -142,6 +143,7 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
         val body = Body(BodyType.DYNAMIC)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
+        body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
@@ -154,6 +156,7 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
         val deathFixture = Fixture(body, FixtureType.DEATH, GameRectangle())
         deathFixture.putProperty(ConstKeys.INSTANT, false)
         body.addFixture(deathFixture)
+        debugShapes.add { deathFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f

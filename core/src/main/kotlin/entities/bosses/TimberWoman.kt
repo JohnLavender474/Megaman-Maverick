@@ -135,7 +135,8 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         private const val GROUND_GRAVITY = -0.01f
         private const val WALL_SLIDE_GRAVITY = -0.075f
 
-        private const val DEFAULT_FRICTION_X = 2.75f
+        private const val STAND_FRICTION_X = 7.5f
+        private const val RUN_FRICTION_X = 2.75f
         private const val JUMP_FRICTION_X = 1.15f
         private const val DEFAULT_FRICTION_Y = 1f
         private const val WALLSLIDE_FRICTION_Y = 10f
@@ -739,8 +740,11 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         body.addFixture(jumpSpinShieldFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.physics.defaultFrictionOnSelf.x =
-                if (body.isSensing(BodySense.FEET_ON_GROUND)) DEFAULT_FRICTION_X else JUMP_FRICTION_X
+            body.physics.defaultFrictionOnSelf.x = when (currentState) {
+                TimberWomanState.STAND -> STAND_FRICTION_X
+                TimberWomanState.RUN -> RUN_FRICTION_X
+                else -> JUMP_FRICTION_X
+            }
             body.physics.defaultFrictionOnSelf.y =
                 if (currentState == TimberWomanState.WALLSLIDE) WALLSLIDE_FRICTION_Y else DEFAULT_FRICTION_Y
 
