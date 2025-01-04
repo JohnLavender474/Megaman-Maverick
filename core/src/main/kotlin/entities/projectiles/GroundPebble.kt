@@ -37,7 +37,7 @@ class GroundPebble(game: MegamanMaverickGame) : AbstractProjectile(game), IBodyE
 
     companion object {
         const val TAG = "GroundPebble"
-        private const val BODY_SIZE = 0.25f
+        private const val BODY_SIZE = 0.5f
         private const val SPRITE_SIZE = 0.5f
         private const val SPRITE_ROTATE_DELAY = 0.1f
         private const val SPRITE_ROTATION = 90f
