@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities
 
+import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.common.extensions.putIfAbsentAndGet
@@ -31,6 +32,14 @@ object MegaGameEntities {
     }
 
     fun getEntitiesOfTag(tag: String): OrderedSet<MegaGameEntity> = entityTagToEntities.get(tag, OrderedSet())
+
+    fun getEntitiesOfTags(out: ObjectSet<MegaGameEntity>, vararg tags: String): ObjectSet<MegaGameEntity> {
+        tags.forEach { tag ->
+            val set = getEntitiesOfTag(tag)
+            out.addAll(set)
+        }
+        return out
+    }
 
     fun getEntitiesOfType(type: EntityType): OrderedSet<MegaGameEntity> = entityTypeToEntities.get(type, OrderedSet())
 

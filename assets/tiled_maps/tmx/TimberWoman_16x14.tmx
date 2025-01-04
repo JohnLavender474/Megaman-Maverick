@@ -606,7 +606,7 @@
     <property name="wall_2" type="object" value="589"/>
    </properties>
   </object>
-  <object id="646" name="LeafSpawn" x="12384" y="160" width="384" height="32"/>
+  <object id="646" name="LeafSpawn" x="12352" y="160" width="448" height="32"/>
  </objectgroup>
  <objectgroup id="11" name="specials">
   <object id="250" name="Ladder" x="3776" y="960" width="32" height="320"/>

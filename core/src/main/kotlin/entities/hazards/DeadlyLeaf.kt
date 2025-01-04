@@ -6,6 +6,8 @@ import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
+import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.SmoothOscillationTimer
@@ -19,6 +21,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -28,15 +31,18 @@ import com.mega.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
 import com.megaman.maverick.game.entities.contracts.IHazard
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.decorations.FallingLeaf
 import com.megaman.maverick.game.world.body.*
 
-class DeadlyLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), /* AbstractHealthEntity(game), */
-    IBodyEntity, ISpritesEntity, IAnimatedEntity, IHazard, IDamager {
+class DeadlyLeaf(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+    IAudioEntity, IHazard, IDamager {
 
     companion object {
         const val TAG = "DeadlyLeaf"
@@ -48,7 +54,7 @@ class DeadlyLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), /* AbstractH
         private var region: TextureRegion? = null
     }
 
-    // override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.SMALL)
+    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.SMALL)
 
     private val oscillationTimer = SmoothOscillationTimer(
         OSCILLATION_FREQUENCY,
@@ -61,7 +67,7 @@ class DeadlyLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), /* AbstractH
         if (region == null) region =
             game.assMan.getTextureRegion(TextureAsset.ENVIRONS_1.source, "Wood/${FallingLeaf.Companion.TAG}")
         super.init()
-        addComponent(defineUpdatablesComponent())
+        addComponent(AudioComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
@@ -69,9 +75,12 @@ class DeadlyLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), /* AbstractH
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
+
         oscillationTimer.reset()
+
         minY = spawnProps.getOrDefault(
             "${ConstKeys.MIN}_${ConstKeys.Y}",
             spawn.y - DEFAULT_MIN_Y_OFFSET * ConstVals.PPM,
@@ -79,19 +88,28 @@ class DeadlyLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), /* AbstractH
         )
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (body.getBounds().getY() < minY) {
-            destroy()
-            return@UpdatablesComponent
+    override fun takeDamageFrom(damager: IDamager): Boolean {
+        val damaged = super.takeDamageFrom(damager)
+        if (damaged && overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+        return damaged
+    }
+
+    override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
+        super.defineUpdatablesComponent(updatablesComponent)
+        updatablesComponent.add { delta ->
+            if (body.getBounds().getY() < minY) {
+                destroy()
+                return@add
+            }
+
+            oscillationTimer.update(delta)
+
+            val velX = X_VEL * ConstVals.PPM * oscillationTimer.getValue()
+            body.physics.velocity.x = velX
+
+            body.physics.velocity.y = Y_VEL * ConstVals.PPM
         }
-
-        oscillationTimer.update(delta)
-
-        val velX = X_VEL * ConstVals.PPM * oscillationTimer.getValue()
-        body.physics.velocity.x = velX
-
-        body.physics.velocity.y = Y_VEL * ConstVals.PPM
-    })
+    }
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
@@ -107,7 +125,7 @@ class DeadlyLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), /* AbstractH
         return BodyComponentCreator.create(
             this,
             body,
-            BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, /* FixtureType.DAMAGEABLE */ FixtureType.SHIELD)
+            BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
         )
     }
 
@@ -116,7 +134,10 @@ class DeadlyLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), /* AbstractH
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
                 .also { sprite -> sprite.setSize(5f * ConstVals.PPM) }
         )
-        .updatable { _, sprite -> sprite.setCenter(body.getCenter()) }
+        .updatable { _, sprite ->
+            sprite.setCenter(body.getCenter())
+            sprite.hidden = damageBlink
+        }
         .build()
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)

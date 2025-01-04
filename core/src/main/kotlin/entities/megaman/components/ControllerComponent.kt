@@ -12,11 +12,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
-import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
-import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
-import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.extensions.shoot
 import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
 import com.megaman.maverick.game.world.body.BodySense
@@ -113,7 +109,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
 
     val attack = ButtonActuator(
         onPressContinued = { _, delta ->
-            if (!ready || damaged /* TODO: || game.isCameraRotating() */ || teleporting ||
+            if (!ready || stunned || damaged /* TODO: || game.isCameraRotating() */ || teleporting ||
                 currentWeapon == MegamanWeapon.RUSH_JETPACK ||
                 (!charging && !weaponHandler.canFireWeapon(currentWeapon, MegaChargeStatus.HALF_CHARGED)) ||
                 (charging && !weaponHandler.canFireWeapon(currentWeapon, MegaChargeStatus.FULLY_CHARGED) ||
@@ -130,7 +126,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             chargingTimer.update(delta * scalar)
         },
         onJustReleased = {
-            if (damaged || game.isCameraRotating() || teleporting || !ready ||
+            if (stunned || damaged || game.isCameraRotating() || teleporting || !ready ||
                 !weaponHandler.canFireWeapon(currentWeapon, chargeStatus) ||
                 game.isProperty(ConstKeys.ROOM_TRANSITION, true)
             ) {

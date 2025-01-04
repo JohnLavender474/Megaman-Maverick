@@ -29,6 +29,8 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.IProjectileEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.body.*
@@ -70,6 +72,11 @@ class GroundPebble(game: MegamanMaverickGame) : AbstractProjectile(game), IBodyE
         otherShape: IGameShape2D
     ) = explodeAndDie()
 
+    override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        val entity = projectileFixture.getEntity() as IProjectileEntity
+        if (entity.owner == megaman) explodeAndDie()
+    }
+
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
@@ -92,7 +99,7 @@ class GroundPebble(game: MegamanMaverickGame) : AbstractProjectile(game), IBodyE
     }
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
-        .sprite(GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, 1))
+        .sprite(GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, 5))
             .also { sprite ->
                 sprite.setSize(SPRITE_SIZE * ConstVals.PPM)
                 sprite.setOriginCenter()
