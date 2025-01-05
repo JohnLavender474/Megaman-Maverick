@@ -108,7 +108,7 @@ class InfernoChainPlatform(game: MegamanMaverickGame) : FeetRiseSinkBlock(game),
     }
 
     private fun defineDrawables(chainCount: Int) {
-        val platform = GameSprite(regions[PLATFORM], DrawingPriority(DrawingSection.PLAYGROUND, 1))
+        val platform = GameSprite(regions[PLATFORM])
         sprites.put(PLATFORM, platform)
 
         putUpdateFunction(PLATFORM) { _, sprite -> platform.setBounds(body.getBounds()) }

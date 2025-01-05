@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="100" height="25" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="41">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="100" height="25" tilewidth="32" tileheight="32" infinite="0" nextlayerid="13" nextobjectid="77">
  <tileset firstgid="1" source="../tsx/InfernoManTileset.tsx"/>
  <tileset firstgid="46" source="../tsx/Tileset1.tsx"/>
  <layer id="1" name="tiles1" width="100" height="25">
@@ -10,20 +10,20 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-22,23,22,23,22,23,2684354589,23,22,23,22,23,22,23,22,23,22,23,22,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,22,23,22,23,22,23,22,23,22,23,22,23,22,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-31,32,31,32,31,32,2684354589,32,31,32,31,32,31,32,31,32,31,32,31,32,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,4,1,2,3,4,1,2,3,4,1,2,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+22,23,22,23,22,23,2684354589,23,22,23,22,23,22,23,22,23,22,23,22,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,22,23,22,23,22,23,22,23,22,23,22,23,22,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+31,32,31,32,31,32,2684354589,32,31,32,31,32,31,32,31,32,31,32,31,32,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,4,1,2,3,4,1,2,3,4,1,2,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 22,23,22,23,22,23,0,0,22,23,22,23,22,23,22,23,22,23,22,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 31,32,31,32,31,32,0,0,1,2,3,4,1,2,3,4,1,2,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-1,2,3,4,1,2,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-1610612765,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-1610612765,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-1610612765,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-1610612765,0,0,0,0,0,0,0,0,0,5,6,1,2,3,4,1,2,5,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,34,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-1610612765,0,0,0,0,0,0,0,0,0,15,16,13,13,13,13,13,13,15,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,24,25,1,2,3,4,1,2,3,4,1,2,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-1610612765,0,0,0,0,0,0,0,0,0,33,34,29,29,0,0,22,23,33,34,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,24,25,13,13,13,13,13,13,13,13,13,13,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-5,6,1,2,3,4,1,2,3,4,24,25,31,32,0,0,31,32,24,25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,24,25,22,23,22,23,22,23,22,23,22,23,22,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-15,16,13,13,13,28,13,13,13,13,24,25,22,23,22,2684354589,22,23,24,25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,24,25,31,32,31,32,31,32,31,32,31,32,31,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-15,16,22,23,22,37,38,38,38,38,24,25,31,32,31,2684354589,31,32,24,25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,24,25,22,23,22,23,22,23,22,23,22,23,22,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+1,2,3,4,1,2,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3,4,0,0,0,0,0,
+1610612765,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,13,13,13,13,0,0,0,0,0,
+1610612765,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3,4,22,23,22,23,0,0,0,0,0,
+1610612765,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,235,0,0,0,0,0,0,0,0,0,0,5,6,5,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,13,13,13,13,31,32,31,32,0,0,0,0,0,
+1610612765,0,0,0,0,0,0,0,0,0,5,6,1,2,3,4,1,2,5,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,34,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,16,15,16,0,0,0,0,0,0,0,0,0,0,1,2,3,4,22,23,22,23,22,23,22,23,0,0,0,0,0,
+1610612765,0,0,0,0,0,0,0,0,0,15,16,13,13,13,13,13,13,15,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,24,25,1,2,3,4,1,2,3,4,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,34,33,34,0,0,0,0,235,0,0,0,0,0,13,13,13,13,31,32,31,32,31,32,31,32,0,0,0,0,0,
+1610612765,0,0,0,0,0,0,0,0,0,33,34,29,29,0,0,22,23,33,34,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,24,25,13,13,13,13,13,13,13,13,13,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,24,25,24,25,0,0,0,0,0,0,0,0,0,0,22,23,22,23,22,23,22,23,22,23,22,23,0,0,0,0,0,
+5,6,1,2,3,4,1,2,3,4,24,25,31,32,0,0,31,32,24,25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,24,25,22,23,22,23,22,23,22,23,22,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,24,25,24,25,0,0,0,0,0,0,0,0,0,0,31,32,31,32,31,32,31,32,31,32,31,32,0,0,0,0,0,
+15,16,13,13,13,28,13,13,13,13,24,25,22,23,22,2684354589,22,23,24,25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,24,25,31,32,31,32,31,32,31,32,31,32,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,24,25,24,25,0,0,0,0,0,0,0,0,0,0,22,23,22,23,22,23,22,23,22,23,22,23,0,0,0,0,0,
+15,16,22,23,22,37,38,38,38,38,24,25,31,32,31,2684354589,31,32,24,25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,24,25,22,23,22,23,22,23,22,23,22,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,24,25,24,25,0,0,0,0,0,0,0,0,0,0,31,32,31,32,31,32,31,32,31,32,31,32,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -32,7 +32,7 @@
 </data>
  </layer>
  <objectgroup id="2" name="game_rooms">
-  <object id="1" name="room1" x="0" y="192" width="1952" height="448"/>
+  <object id="1" name="room1" x="0" y="192" width="3200" height="448"/>
  </objectgroup>
  <objectgroup id="4" name="backgrounds">
   <object id="9" name="InfernoBKG" x="0" y="192" width="512" height="448">
@@ -49,6 +49,23 @@
   <object id="26" name="LavaFall" x="1088" y="192" width="64" height="448">
    <polygon points="0,0 64,0 64,448 0,448"/>
   </object>
+  <object id="42" name="LavaFall" x="1696" y="192" width="64" height="448">
+   <polygon points="0,0 64,0 64,448 0,448"/>
+  </object>
+  <object id="54" name="Smoke" x="2048" y="192" width="96" height="448"/>
+  <object id="65" name="Smoke" x="2560" y="192" width="96" height="448"/>
+  <object id="68" name="Smoke" x="2464" y="192" width="96" height="448"/>
+ </objectgroup>
+ <objectgroup id="12" name="children">
+  <object id="62" name="Target" x="2352" y="368" width="32" height="32"/>
+  <object id="63" name="Start" x="2544" y="288" width="32" height="32"/>
+  <object id="64" name="Trigger" x="2304" y="192" width="32" height="224">
+   <properties>
+    <property name="start" type="object" value="63"/>
+    <property name="target" type="object" value="62"/>
+   </properties>
+  </object>
+  <object id="74" name="Scanner" x="2784" y="288" width="384" height="32"/>
  </objectgroup>
  <objectgroup id="11" name="blocks">
   <object id="4" x="320" y="448" width="320" height="352"/>
@@ -78,14 +95,53 @@
    </properties>
   </object>
   <object id="32" x="1184" y="384" width="64" height="416"/>
-  <object id="30" x="1248" y="480" width="352" height="320"/>
-  <object id="34" x="1184" y="-32" width="416" height="288"/>
+  <object id="30" x="1248" y="480" width="320" height="320"/>
+  <object id="34" x="1184" y="0" width="448" height="256"/>
   <object id="36" x="1312" y="416" width="64" height="64"/>
   <object id="37" x="1328" y="384" width="32" height="32"/>
   <object id="38" x="1472" y="256" width="64" height="64"/>
   <object id="39" x="1488" y="320" width="32" height="32"/>
+  <object id="43" name="Standard" x="1632" y="0" width="1568" height="96">
+   <properties>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="fixture_labels" value="no_side_touchie,no_projectile_collision,no_body_touchie"/>
+    <property name="spawn_type" value="spawn_now"/>
+   </properties>
+  </object>
+  <object id="51" x="1856" y="416" width="32" height="32"/>
+  <object id="55" name="InfernoChainPlatform" x="1664" y="416" width="64" height="64">
+   <properties>
+    <property name="min" type="float" value="3"/>
+    <property name="spawn_room" value="room1"/>
+    <property name="spawn_type" value="spawn_room"/>
+   </properties>
+  </object>
+  <object id="56" name="InfernoChainPlatform" x="2016" y="416" width="64" height="64">
+   <properties>
+    <property name="min" type="float" value="3"/>
+    <property name="spawn_room" value="room1"/>
+    <property name="spawn_type" value="spawn_room"/>
+   </properties>
+  </object>
+  <object id="58" x="2208" y="416" width="128" height="384"/>
+  <object id="70" x="2656" y="448" width="128" height="352"/>
+  <object id="71" x="2784" y="384" width="128" height="416"/>
+  <object id="72" x="2912" y="320" width="128" height="480"/>
+  <object id="76" x="2464" y="480" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="10" name="enemies"/>
+ <objectgroup id="10" name="enemies">
+  <object id="61" name="Popoheli" x="2352" y="256" width="32" height="32">
+   <properties>
+    <property name="trigger" type="object" value="64"/>
+    <property name="triggerable" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="73" name="FireDispensenator" x="2968" y="304" width="16" height="16">
+   <properties>
+    <property name="scanner" type="object" value="74"/>
+   </properties>
+  </object>
+ </objectgroup>
  <objectgroup id="7" name="hazards">
   <object id="18" name="LavaRiver" x="800" y="608" width="64" height="32">
    <properties>
@@ -162,6 +218,70 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
+  <object id="44" name="LavaRiver" x="1568" y="608" width="64" height="32">
+   <properties>
+    <property name="index" type="int" value="0"/>
+    <property name="left" type="bool" value="false"/>
+    <property name="spawn_room" value="room1"/>
+    <property name="spawn_type" value="spawn_room"/>
+    <property name="type" value="top"/>
+   </properties>
+  </object>
+  <object id="45" name="LavaRiver" x="1632" y="608" width="64" height="32">
+   <properties>
+    <property name="index" type="int" value="2"/>
+    <property name="left" type="bool" value="false"/>
+    <property name="spawn_room" value="room1"/>
+    <property name="spawn_type" value="spawn_room"/>
+    <property name="type" value="top"/>
+   </properties>
+  </object>
+  <object id="46" name="LavaRiver" x="1696" y="608" width="64" height="32">
+   <properties>
+    <property name="index" type="int" value="1"/>
+    <property name="left" type="bool" value="false"/>
+    <property name="spawn_room" value="room1"/>
+    <property name="spawn_type" value="spawn_room"/>
+    <property name="type" value="top"/>
+   </properties>
+  </object>
+  <object id="47" name="LavaRiver" x="1760" y="608" width="64" height="32">
+   <properties>
+    <property name="index" type="int" value="0"/>
+    <property name="left" type="bool" value="false"/>
+    <property name="spawn_room" value="room1"/>
+    <property name="spawn_type" value="spawn_room"/>
+    <property name="type" value="top"/>
+   </properties>
+  </object>
+  <object id="48" name="LavaRiver" x="1824" y="608" width="64" height="32">
+   <properties>
+    <property name="index" type="int" value="2"/>
+    <property name="left" type="bool" value="false"/>
+    <property name="spawn_room" value="room1"/>
+    <property name="spawn_type" value="spawn_room"/>
+    <property name="type" value="top"/>
+   </properties>
+  </object>
+  <object id="49" name="LavaRiver" x="1952" y="608" width="32" height="32">
+   <properties>
+    <property name="left" type="bool" value="false"/>
+    <property name="spawn_room" value="room1"/>
+    <property name="spawn_type" value="spawn_room"/>
+    <property name="type" value="fall_start"/>
+   </properties>
+  </object>
+  <object id="50" name="LavaRiver" x="1888" y="608" width="64" height="32">
+   <properties>
+    <property name="index" type="int" value="2"/>
+    <property name="left" type="bool" value="false"/>
+    <property name="spawn_room" value="room1"/>
+    <property name="spawn_type" value="spawn_room"/>
+    <property name="type" value="top"/>
+   </properties>
+  </object>
+  <object id="52" name="FireballBar" x="1856" y="416" width="32" height="32"/>
+  <object id="75" name="FireballBar" x="2464" y="480" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="5" name="sensors">
   <object id="17" name="Death" x="640" y="688" width="128" height="112">
@@ -172,6 +292,27 @@
    </properties>
   </object>
   <object id="31" name="Death" x="768" y="640" width="416" height="160">
+   <properties>
+    <property name="instant" type="bool" value="true"/>
+    <property name="spawn_room" value="room1"/>
+    <property name="spawn_type" value="spawn_room"/>
+   </properties>
+  </object>
+  <object id="59" name="Death" x="1568" y="640" width="416" height="160">
+   <properties>
+    <property name="instant" type="bool" value="true"/>
+    <property name="spawn_room" value="room1"/>
+    <property name="spawn_type" value="spawn_room"/>
+   </properties>
+  </object>
+  <object id="60" name="Death" x="1984" y="688" width="224" height="112">
+   <properties>
+    <property name="instant" type="bool" value="true"/>
+    <property name="spawn_room" value="room1"/>
+    <property name="spawn_type" value="spawn_room"/>
+   </properties>
+  </object>
+  <object id="69" name="Death" x="2336" y="688" width="320" height="112">
    <properties>
     <property name="instant" type="bool" value="true"/>
     <property name="spawn_room" value="room1"/>

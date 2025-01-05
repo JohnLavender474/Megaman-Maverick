@@ -251,7 +251,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
             if (waiting) return@put
 
             damagerFixture2.offsetFromBodyAttachment = Vector2(
-                FLAMES * FLAME_PADDING * facing.value * 0.75f * ConstVals.PPM, -0.5f * ConstVals.PPM
+                FLAMES * FLAME_PADDING * facing.value * 0.75f * ConstVals.PPM, -0.75f * ConstVals.PPM
             )
             damagerFixture2.setActive(attacking)
 

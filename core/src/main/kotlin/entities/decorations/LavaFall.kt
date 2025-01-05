@@ -78,7 +78,7 @@ class LavaFall(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
         sprite.setBounds(bounds)
         sprites.put(key, sprite)
 
-        val animation = Animation(region!!, 3, 1, 0.2f, true)
+        val animation = Animation(region!!, 3, 1, 0.1f, true)
         val animator = Animator(animation)
         putAnimator(key, sprite, animator)
     }
