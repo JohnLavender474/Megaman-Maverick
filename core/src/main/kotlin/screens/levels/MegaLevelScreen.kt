@@ -720,11 +720,19 @@ class MegaLevelScreen(
             playerStatsHandler.update(delta)
         }
 
+        // perform this on all cameras to reduce floating point rounding errors
+        game.viewports.values().forEach { viewport ->
+            val camera = viewport.camera
+            camera.position.x = (camera.position.x * ConstVals.PPM) / ConstVals.PPM
+            camera.position.y = (camera.position.y * ConstVals.PPM) / ConstVals.PPM
+        }
+
         val gameCamDeltaX = gameCamera.position.x - gameCameraPriorPosition.x
         val gameCamDeltaY = gameCamera.position.y - gameCameraPriorPosition.y
         backgrounds.forEach { it.move(gameCamDeltaX, gameCamDeltaY) }
         gameCameraPriorPosition.set(gameCamera.position)
 
+        // sort backgrounds in drawing order before calling draw()
         backgrounds.sort()
 
         /*
@@ -736,6 +744,7 @@ class MegaLevelScreen(
         }
          */
 
+        // TODO: this should open prompt for quitting game
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) onEscapePressed.invoke()
     }
 

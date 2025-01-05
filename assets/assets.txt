@@ -416,10 +416,15 @@ sprites/frames/Decorations1/CrystalConveyorBKG.png
 sprites/frames/Decorations1/BreathBubbles.png
 sprites/frames/Decorations1/UnderWaterBubble.png
 sprites/frames/Decorations1/RainDrop.png
+sprites/frames/Decorations1/Furnace.png
 sprites/frames/Decorations1/JetpackFlame.png
 sprites/frames/Decorations1/BlinkingArrow.png
 sprites/frames/Decorations1/FullChargedShotResidual.png
 sprites/frames/Decorations1/WhiteArrow.png
+sprites/frames/Decorations1/Smoke/3.png
+sprites/frames/Decorations1/Smoke/0.png
+sprites/frames/Decorations1/Smoke/1.png
+sprites/frames/Decorations1/Smoke/2.png
 sprites/frames/Decorations1/Lava.png
 sprites/frames/Decorations1/DrippingToxicGoop.png
 sprites/frames/Decorations1/MuzzleFlash.png
@@ -1121,6 +1126,7 @@ sprites/frames/Faces1/Desert Man.png
 sprites/frames/Faces1/Timber Woman.png
 sprites/frames/Faces1/Inferno Man.png
 sprites/frames/Backgrounds6/UndergroundPipes.png
+sprites/frames/Backgrounds6/InfernoBKG.png
 sprites/frames/Backgrounds6/CrystalBKG.png
 sprites/frames/Backgrounds6/Desert/NoSunSky.png
 sprites/frames/Backgrounds6/Desert/Canyon.png
@@ -1972,6 +1978,7 @@ tiled_maps/tsx/GearTrolley.tsx
 tiled_maps/tsx/ForestTiles.tsx
 tiled_maps/tsx/GlacierManTileset.tsx
 tiled_maps/tsx/ShadowMan.tsx
+tiled_maps/tsx/InfernoManTileset.tsx
 tiled_maps/tsx/ColorsTileset.tsx
 tiled_maps/tsx/MagnetMan2.tsx
 tiled_maps/tsx/tomahawk_man_stage_tileset.tsx
@@ -2298,6 +2305,7 @@ tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgro
 tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGFire1PU/1.png
 tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGFire1PU/2.png
 tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGTime.png
+tiled_maps/png/InfernoManTileset.png
 tiled_maps/png/mm9plug.png
 tiled_maps/png/tstBlizzardman.png
 tiled_maps/png/tstMM10Punk.png
@@ -2357,6 +2365,7 @@ tiled_maps/tmx/RodentMan_16x14.tmx
 tiled_maps/tmx/ReactMan_v2.tmx
 tiled_maps/tmx/WilyStage3_v2.tmx
 tiled_maps/tmx/Test2.tmx
+tiled_maps/tmx/InfernoMan_16x14_v2.tmx
 diagrams/Guts Tank - Design.drawio
 diagrams/Inferno Man - Design.drawio
 diagrams/Desert Man - Design.drawio

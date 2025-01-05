@@ -14,7 +14,7 @@ class Animation : IAnimation {
             val frames = Array<TextureRegion>()
             val durations = Array<Float>()
 
-            entries.forEach { (frame, duration) -> 
+            entries.forEach { (frame, duration) ->
                 frames.add(frame)
                 durations.add(duration)
             }
@@ -43,6 +43,10 @@ class Animation : IAnimation {
     constructor(
         region: TextureRegion, rows: Int, columns: Int, durations: Array<Float>, loop: Boolean = true
     ) : this(region.splitAndFlatten(rows, columns, Array()), durations, loop)
+
+    constructor(
+        frames: Array<TextureRegion>, duration: Float, loop: Boolean = true
+    ): this(frames, gdxFilledArrayOf(frames.size, duration), loop)
 
     constructor(
         frames: Array<TextureRegion>, durations: Array<Float>, loop: Boolean = true
