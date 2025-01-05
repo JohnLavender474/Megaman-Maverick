@@ -409,6 +409,7 @@ sprites/frames/Explosions1/DeathBombExplosion.png
 sprites/frames/Decorations1/AirConditioner/pipe.png
 sprites/frames/Decorations1/AirConditioner/machine.png
 sprites/frames/Decorations1/Candle.png
+sprites/frames/Decorations1/LavaFall.png
 sprites/frames/Decorations1/ToxicWaterfall.png
 sprites/frames/Decorations1/Thread.png
 sprites/frames/Decorations1/SandSplash.png
@@ -425,7 +426,6 @@ sprites/frames/Decorations1/Smoke/3.png
 sprites/frames/Decorations1/Smoke/0.png
 sprites/frames/Decorations1/Smoke/1.png
 sprites/frames/Decorations1/Smoke/2.png
-sprites/frames/Decorations1/Lava.png
 sprites/frames/Decorations1/DrippingToxicGoop.png
 sprites/frames/Decorations1/MuzzleFlash.png
 sprites/frames/Decorations1/SmallGrass/brush.png
@@ -657,6 +657,10 @@ sprites/frames/Hazards1/Lava/TopFlow1.png
 sprites/frames/Hazards1/Lava/Flow.png
 sprites/frames/Hazards1/Lava/TopFlow2.png
 sprites/frames/Hazards1/Lava/Flow3.png
+sprites/frames/Hazards1/LavaRiver/fall.png
+sprites/frames/Hazards1/LavaRiver/inner.png
+sprites/frames/Hazards1/LavaRiver/top.png
+sprites/frames/Hazards1/LavaRiver/fall_start.png
 sprites/frames/Hazards1/CeilingCrusher/Bar.png
 sprites/frames/Hazards1/CeilingCrusher/Crusher.png
 sprites/frames/Hazards1/Spike7.png
@@ -676,6 +680,10 @@ sprites/frames/Hazards1/MagmaFlame.png
 sprites/frames/Hazards1/FlameThrower/Blink.png
 sprites/frames/Hazards1/FlameThrower/Cool.png
 sprites/frames/Hazards1/FlameThrower/Hot.png
+sprites/frames/Hazards1/InfernoOven/hot.png
+sprites/frames/Hazards1/InfernoOven/flame.png
+sprites/frames/Hazards1/InfernoOven/cold.png
+sprites/frames/Hazards1/InfernoOven/warming_up.png
 sprites/frames/Hazards1/Electrocutie/Charge.png
 sprites/frames/Hazards1/Electrocutie/Shock.png
 sprites/frames/Hazards1/Electrocutie/Move.png
@@ -1171,6 +1179,8 @@ sprites/frames/Platforms1/BreakableIce/Shards.png
 sprites/frames/Platforms1/BreakableIce/3.png
 sprites/frames/Platforms1/BreakableIce/1.png
 sprites/frames/Platforms1/BreakableIce/2.png
+sprites/frames/Platforms1/InfernoChainPlatform/platform.png
+sprites/frames/Platforms1/InfernoChainPlatform/chain.png
 sprites/frames/Platforms1/Brick.png
 sprites/frames/Platforms1/8bitBlueBlockNoBorder.png
 sprites/frames/Platforms1/MetalCrate.png
@@ -1706,6 +1716,7 @@ sprites/texture_packer/Backgrounds5.tps
 sprites/texture_packer/Backgrounds4.tps
 sprites/texture_packer/AstroPlayer.tps
 sprites/texture_packer/MegamanCart.tps
+sprites/piskel/LavaRiver.piskel
 sprites/piskel/GlacierBKG.piskel
 sprites/piskel/Cannon_Ball.piskel
 sprites/piskel/Underwater_Penguin_Bot.piskel
@@ -1724,6 +1735,7 @@ sprites/piskel/MegamanSpawn.piskel
 sprites/piskel/PreciousShot.piskel
 sprites/piskel/Sphinx_Miniboss.piskel
 sprites/piskel/Imorm.piskel
+sprites/piskel/InfernoChainPlatform.piskel
 sprites/piskel/BigFishNeo.piskel
 sprites/piskel/WintryMan.piskel
 sprites/piskel/Glacier_Man_AirConditioner.piskel
@@ -1789,6 +1801,7 @@ sprites/piskel/LavaBeamer.piskel
 sprites/piskel/EnemyPlatforms1.piskel
 sprites/piskel/InfernoManProjectiles.piskel
 sprites/piskel/MechaDragon.piskel
+sprites/piskel/LavaFall.piskel
 sprites/piskel/Lava.piskel
 sprites/piskel/DesertMan_v2.piskel
 sprites/piskel/Grass.piskel
@@ -1820,6 +1833,7 @@ sprites/piskel/WhiteShards.piskel
 sprites/piskel/Asteroid.piskel
 sprites/piskel/AcidGoop.piskel
 sprites/piskel/Nuclear_Monkey_Boss_Jump.piskel
+sprites/piskel/Smoke.piskel
 sprites/piskel/Explosion.piskel
 sprites/piskel/ChargeOrbs.piskel
 sprites/piskel/Toxic_Waterfall.piskel
@@ -1878,6 +1892,7 @@ sprites/piskel/UFO_Bomb.piskel
 sprites/piskel/RollerBot.piskel
 sprites/piskel/MagmaPellet&Flame.piskel
 sprites/piskel/UFOBomb.piskel
+sprites/piskel/InfernoOven.piskel
 sprites/piskel/Gates.piskel
 sprites/piskel/Spike_Bot.piskel
 sprites/piskel/PreciousMan.piskel
@@ -1887,6 +1902,7 @@ sprites/piskel/Dropper Lift.piskel
 sprites/piskel/AirConditioner.piskel
 sprites/piskel/SpikeBall.piskel
 sprites/piskel/Popup Canon.piskel
+sprites/piskel/InfernoBKG.piskel
 sprites/piskel/Megaman_RUSH_JET.piskel
 sprites/piskel/InfernoManFace.piskel
 sprites/piskel/BossFaces.piskel

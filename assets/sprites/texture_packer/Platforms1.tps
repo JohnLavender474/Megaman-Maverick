@@ -234,6 +234,8 @@
             <key type="filename">../frames/Platforms1/ConveyorBelt/MiddlePart-MoveRight-Green.png</key>
             <key type="filename">../frames/Platforms1/ConveyorBelt/RightPart-MoveLeft-Green.png</key>
             <key type="filename">../frames/Platforms1/ConveyorBelt/RightPart-MoveRight-Green.png</key>
+            <key type="filename">../frames/Platforms1/InfernoChainPlatform/chain.png</key>
+            <key type="filename">../frames/Platforms1/InfernoChainPlatform/platform.png</key>
             <key type="filename">../frames/Platforms1/TrackBlock.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

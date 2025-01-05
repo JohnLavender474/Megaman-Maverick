@@ -31,6 +31,7 @@ class Animation : IAnimation {
         private set
 
     private var loop = true
+    private var startTime = 0f
 
     constructor(region: TextureRegion) : this(region, true)
 
@@ -65,6 +66,10 @@ class Animation : IAnimation {
             this.frames.reverse()
             this.durations.reverse()
         }
+    }
+
+    fun setStartTime(startTime: Float) {
+        this.startTime = startTime
     }
 
     fun size() = frames.size
@@ -120,7 +125,7 @@ class Animation : IAnimation {
     }
 
     override fun reset() {
-        elapsedTime = 0f
+        elapsedTime = startTime
     }
 
     override fun copy() = Animation(this)

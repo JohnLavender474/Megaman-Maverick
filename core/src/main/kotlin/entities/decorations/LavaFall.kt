@@ -1,11 +1,9 @@
 package com.megaman.maverick.game.entities.decorations
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
-import com.mega.game.engine.animations.IAnimator
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
@@ -35,14 +33,16 @@ class LavaFall(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
     companion object {
         const val TAG = "LavaFall"
+        private const val CELL_WIDTH = 1f
+        private const val CELL_HEIGHT = 2f
         private var region: TextureRegion? = null
     }
 
     private val matrix = Matrix<GameRectangle>()
-    private var polygon: GamePolygon? = null
+    private val polygon = GamePolygon()
 
     override fun init() {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, "Lava")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         addComponent(SpritesComponent())
         addComponent(AnimationsComponent())
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ polygon }), debug = true))
@@ -51,9 +51,9 @@ class LavaFall(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
-        polygon = spawnProps.get(ConstKeys.POLYGON, GamePolygon::class)!!
-        val cells = polygon!!.splitIntoGameRectanglesBasedOnCenter(
-            3f * ConstVals.PPM, ConstVals.PPM.toFloat(), matrix
+        polygon.set(spawnProps.get(ConstKeys.POLYGON, GamePolygon::class)!!)
+        val cells = polygon.splitIntoGameRectanglesBasedOnCenter(
+            CELL_WIDTH * ConstVals.PPM, CELL_HEIGHT * ConstVals.PPM, matrix
         )
         defineDrawables(cells)
     }
@@ -61,31 +61,29 @@ class LavaFall(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        sprites.clear()
+        animators.clear()
     }
 
-    private fun defineDrawables(cells: Matrix<GameRectangle>) {
-        val sprites = OrderedMap<Any, GameSprite>()
-        val animators = OrderedMap<Any, IAnimator>()
-        cells.forEach { x, y, bounds ->
-            if (bounds == null) return@forEach
+    private fun defineDrawables(cells: Matrix<GameRectangle>) = cells.forEach { x, y, bounds ->
+        if (bounds == null) return@forEach
 
-            val offset = 0.1f * ConstVals.PPM
-            bounds.translateSize(0f, offset)
-            bounds.translate(0f, offset)
+        val offset = 0.1f * ConstVals.PPM
+        bounds.translateSize(0f, offset)
+        bounds.translate(0f, offset)
 
-            val key = "${x}_${y}"
+        val key = "${x}_${y}"
 
-            val lavaSprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 0))
-            lavaSprite.setBounds(bounds)
-            sprites.put(key, lavaSprite)
+        val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 0))
+        sprite.setBounds(bounds)
+        sprites.put(key, sprite)
 
-            val animation = Animation(region!!, 1, 3, 0.2f, true)
-            val animator = Animator(animation)
-            animators.put(key, animator)
-        }
-        addComponent(SpritesComponent(sprites))
-        addComponent(AnimationsComponent(animators, sprites))
+        val animation = Animation(region!!, 3, 1, 0.2f, true)
+        val animator = Animator(animation)
+        putAnimator(key, sprite, animator)
     }
+
+    override fun getTag() = TAG
 
     override fun getEntityType() = EntityType.DECORATION
 }

@@ -14,7 +14,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getEntity
 import kotlin.math.abs
 
-class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
+open class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
 
     companion object {
         const val TAG = "FeetRiseSinkBlock"
@@ -74,10 +74,11 @@ class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
         fallingSpeed = -abs(spawnProps.getOrDefault(ConstKeys.FALL, 0f, Float::class))
         risingSpeed = abs(spawnProps.getOrDefault(ConstKeys.RISE, 0f, Float::class))
 
-        putProperty("${ConstKeys.FEET}_${ConstKeys.SOUND}", false)
+        val feetSound = spawnProps.getOrDefault("${ConstKeys.FEET}_${ConstKeys.SOUND}", false, Boolean::class)
+        putProperty("${ConstKeys.FEET}_${ConstKeys.SOUND}", feetSound)
     }
 
-    private fun shouldListenToFeet(feetFixture: IFixture): Boolean {
+    protected open fun shouldListenToFeet(feetFixture: IFixture): Boolean {
         val entity = feetFixture.getEntity()
         val shouldListen = entity.isAny(Megaman::class, PushableBlock::class)
         GameLogger.debug(TAG, "shouldListenToFeet(): shouldListen=$shouldListen, entity=${entity.getTag()}")

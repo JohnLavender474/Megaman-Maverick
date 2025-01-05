@@ -183,7 +183,8 @@ object MegamanDamageNegotations {
         RocketPlatform.TAG pairTo dmgNeg(1),
         TimberWoman.TAG pairTo dmgNeg(3),
         DeadlyLeaf.TAG pairTo dmgNeg(3),
-        GroundPebble.TAG pairTo dmgNeg(3)
+        GroundPebble.TAG pairTo dmgNeg(3),
+        InfernoOven.TAG pairTo dmgNeg(5)
     )
 
     fun contains(tag: String) = dmgNegotiations.containsKey(tag)

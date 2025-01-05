@@ -6,11 +6,12 @@ import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.drawables.sprites.GameSprite
 
-class Animator(
+open class Animator(
     val keySupplier: () -> String?,
     val animations: ObjectMap<String, IAnimation>,
     var updateScalar: Float = 1f,
-    var onChangeKey: ((String?, String?) -> Unit)? = null
+    var onChangeKey: ((String?, String?) -> Unit)? = null,
+    var shouldAnimatePredicate: (Float) -> Boolean = { true }
 ) : IAnimator {
 
     companion object {
@@ -18,12 +19,14 @@ class Animator(
         const val DEFAULT_KEY = "default_key"
     }
 
-    val currentAnimation: IAnimation?
+    open val currentAnimation: IAnimation?
         get() = if (currentKey != null) animations[currentKey] else null
     var currentKey: String? = null
-        private set
+        protected set
 
     constructor(animation: IAnimation) : this({ DEFAULT_KEY }, objectMapOf(DEFAULT_KEY pairTo animation))
+
+    override fun shouldAnimate(delta: Float) = shouldAnimatePredicate.invoke(delta)
 
     override fun animate(sprite: GameSprite, delta: Float) {
         val nextKey = keySupplier()

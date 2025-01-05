@@ -1,193 +1,193 @@
 Decorations1.png
-size: 1935, 585
+size: 504, 760
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 AirConditioner/machine
   rotate: false
-  xy: 1143, 0
+  xy: 168, 64
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 AirConditioner/pipe
   rotate: false
-  xy: 16, 0
+  xy: 14, 0
   size: 64, 16
   orig: 64, 16
   offset: 0, 0
   index: -1
 BlinkingArrow
   rotate: false
-  xy: 1116, 0
+  xy: 142, 64
   size: 26, 52
   orig: 26, 52
   offset: 0, 0
   index: -1
 BreathBubbles
   rotate: false
-  xy: 1099, 0
+  xy: 126, 64
   size: 16, 48
   orig: 16, 48
   offset: 0, 0
   index: -1
 Candle
   rotate: false
-  xy: 972, 0
+  xy: 0, 64
   size: 126, 42
   orig: 126, 42
   offset: 0, 0
   index: -1
 ChargedShot_Residual_Half
   rotate: false
-  xy: 1208, 0
+  xy: 232, 64
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 CrystalConveyorBKG
   rotate: false
-  xy: 1561, 201
+  xy: 0, 376
   size: 128, 384
   orig: 128, 384
   offset: 0, 0
   index: -1
 DrippingToxicGoop
   rotate: false
-  xy: 291, 0
+  xy: 280, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 FullChargedShotResidual
   rotate: false
-  xy: 1241, 0
+  xy: 264, 64
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Furnace
   rotate: false
-  xy: 324, 0
+  xy: 312, 0
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 GroundSnow/back
   rotate: false
-  xy: 81, 0
+  xy: 78, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 GroundSnow/left
   rotate: false
-  xy: 98, 0
+  xy: 94, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 GroundSnow/middle
   rotate: false
-  xy: 115, 0
+  xy: 110, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 GroundSnow/right
   rotate: false
-  xy: 132, 0
+  xy: 126, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 JetpackFlame
   rotate: false
-  xy: 421, 0
+  xy: 408, 0
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 Lantern
   rotate: false
-  xy: 1306, 0
+  xy: 328, 64
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
-Lava
+LavaFall
   rotate: false
-  xy: 0, 201
-  size: 1560, 260
-  orig: 1560, 260
+  xy: 360, 64
+  size: 16, 96
+  orig: 16, 96
   offset: 0, 0
   index: -1
 MegamanDamageBurst
   rotate: false
-  xy: 518, 0
+  xy: 0, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 MuzzleFlash
   rotate: false
-  xy: 149, 0
+  xy: 142, 0
   size: 48, 16
   orig: 48, 16
   offset: 0, 0
   index: -1
 RainDrop
   rotate: false
-  xy: 5, 0
+  xy: 4, 0
   size: 10, 9
   orig: 10, 9
   offset: 0, 0
   index: -1
 SandSplash
   rotate: false
-  xy: 551, 0
+  xy: 32, 32
   size: 160, 32
   orig: 160, 32
   offset: 0, 0
   index: -1
 SmallGrass/brush
   rotate: false
-  xy: 712, 0
+  xy: 192, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SmallGrass/still
   rotate: false
-  xy: 745, 0
+  xy: 224, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Smoke/0
   rotate: false
-  xy: 1339, 0
+  xy: 376, 64
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
   index: -1
 Smoke/1
   rotate: false
-  xy: 1388, 0
+  xy: 424, 64
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
   index: -1
 Smoke/2
   rotate: false
-  xy: 1437, 0
+  xy: 0, 176
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
   index: -1
 Smoke/3
   rotate: false
-  xy: 1486, 0
+  xy: 48, 176
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
@@ -201,42 +201,42 @@ Snow
   index: -1
 SpaceSatellite
   rotate: false
-  xy: 1535, 0
+  xy: 96, 176
   size: 400, 200
   orig: 400, 200
   offset: 0, 0
   index: -1
 Thread
   rotate: false
-  xy: 778, 0
+  xy: 256, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ToxicWaterfall
   rotate: false
-  xy: 198, 0
+  xy: 190, 0
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ToxicWaterSplash
   rotate: false
-  xy: 811, 0
+  xy: 288, 32
   size: 160, 32
   orig: 160, 32
   offset: 0, 0
   index: -1
 UnderWaterBubble
   rotate: false
-  xy: 231, 0
+  xy: 222, 0
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 WhiteArrow
   rotate: false
-  xy: 264, 0
+  xy: 254, 0
   size: 26, 26
   orig: 26, 26
   offset: 0, 0

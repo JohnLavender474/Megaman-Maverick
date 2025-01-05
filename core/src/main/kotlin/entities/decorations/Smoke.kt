@@ -48,7 +48,6 @@ class Smoke(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, I
                 val region = atlas.findRegion(key)
                 regions.add(region)
             }
-
         }
         super.init()
         addComponent(SpritesComponent())

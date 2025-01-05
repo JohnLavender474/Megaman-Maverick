@@ -12,12 +12,14 @@ class AnimationsSystem : GameSystem(AnimationsComponent::class) {
         for (entity in entities) {
             val component = entity.getComponent(AnimationsComponent::class)
             component?.animators?.forEach { e ->
+                val animator = e.value
+                if (!animator.shouldAnimate(delta)) return@forEach
+
                 val key = e.key
 
                 val sprite = component.sprites[key]
                 if (sprite == null) return@forEach
 
-                val animator = e.value
                 animator.animate(sprite, delta)
             }
         }

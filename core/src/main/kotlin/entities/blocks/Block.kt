@@ -131,29 +131,35 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         body.clearBlockFilters()
         if (spawnProps.containsKey(ConstKeys.BLOCK_FILTERS)) {
             var filters = spawnProps.get(ConstKeys.BLOCK_FILTERS)
-            if (filters is String) {
-                filters = filters.replace("\\s+", "").split(",")
-                filters.forEach { tag ->
-                    body.addBlockFilter { entity, _ ->
-                        entity.getTag().uppercase() == tag.uppercase()
-                    }
-                }
-            } else if (filters is Iterable<*>) {
-                try {
-                    filters as Iterable<String>
+            when (filters) {
+                is String -> {
+                    filters = filters.replace("\\s+", "").split(",")
                     filters.forEach { tag ->
                         body.addBlockFilter { entity, _ ->
                             entity.getTag().uppercase() == tag.uppercase()
                         }
                     }
-                } catch (e: Exception) {
-                    GameLogger.debug(TAG, "onSpawn(): e=$e")
-                    filters as Iterable<(MegaGameEntity, MegaGameEntity) -> Boolean>
-                    filters.forEach { filter -> body.addBlockFilter(filter) }
                 }
-            } else {
-                val filter = filters as (MegaGameEntity, MegaGameEntity) -> Boolean
-                body.addBlockFilter(filter)
+
+                is Iterable<*> -> {
+                    try {
+                        filters as Iterable<String>
+                        filters.forEach { tag ->
+                            body.addBlockFilter { entity, _ ->
+                                entity.getTag().uppercase() == tag.uppercase()
+                            }
+                        }
+                    } catch (e: Exception) {
+                        GameLogger.debug(TAG, "onSpawn(): e=$e")
+                        filters as Iterable<(MegaGameEntity, MegaGameEntity) -> Boolean>
+                        filters.forEach { filter -> body.addBlockFilter(filter) }
+                    }
+                }
+
+                else -> {
+                    val filter = filters as (MegaGameEntity, MegaGameEntity) -> Boolean
+                    body.addBlockFilter(filter)
+                }
             }
         }
 

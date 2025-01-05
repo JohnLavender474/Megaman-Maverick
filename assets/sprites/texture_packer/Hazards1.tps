@@ -225,6 +225,8 @@
             </struct>
             <key type="filename">../frames/Hazards1/Cactus/big.png</key>
             <key type="filename">../frames/Hazards1/Cactus/small.png</key>
+            <key type="filename">../frames/Hazards1/LavaRiver/inner.png</key>
+            <key type="filename">../frames/Hazards1/LavaRiver/top.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -359,6 +361,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Hazards1/InfernoOven/cold.png</key>
             <key type="filename">../frames/Hazards1/Lava/Fall.png</key>
             <key type="filename">../frames/Hazards1/Lava/Flow1.png</key>
             <key type="filename">../frames/Hazards1/Lava/Flow2.png</key>
@@ -377,6 +380,23 @@
                 <rect>8,24,16,48</rect>
                 <key>scale9Paddings</key>
                 <rect>8,24,16,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Hazards1/InfernoOven/flame.png</key>
+            <key type="filename">../frames/Hazards1/InfernoOven/hot.png</key>
+            <key type="filename">../frames/Hazards1/InfernoOven/warming_up.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,24,32,48</rect>
+                <key>scale9Paddings</key>
+                <rect>16,24,32,48</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -469,6 +489,36 @@
                 <rect>12,6,24,12</rect>
                 <key>scale9Paddings</key>
                 <rect>12,6,24,12</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Hazards1/LavaRiver/fall.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>4,24,8,48</rect>
+                <key>scale9Paddings</key>
+                <rect>4,24,8,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Hazards1/LavaRiver/fall_start.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>4,12,8,24</rect>
+                <key>scale9Paddings</key>
+                <rect>4,12,8,24</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

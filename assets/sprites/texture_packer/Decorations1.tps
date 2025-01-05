@@ -64,7 +64,7 @@
             </struct>
         </struct>
         <key>shapePadding</key>
-        <uint>1</uint>
+        <uint>0</uint>
         <key>jpgQuality</key>
         <uint>80</uint>
         <key>pngOptimizationLevel</key>
@@ -347,7 +347,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Decorations1/Lava.png</key>
+            <key type="filename">../frames/Decorations1/LavaFall.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -356,9 +356,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>130,65,260,130</rect>
+                <rect>4,8,8,16</rect>
                 <key>scale9Paddings</key>
-                <rect>130,65,260,130</rect>
+                <rect>4,8,8,16</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

@@ -19,7 +19,7 @@ interface IGameShape2D : Shape2D, IDrawableShape, ICopyable<IGameShape2D> {
     fun getMaxX(): Float
 
     fun getMaxY(): Float
-    
+
     fun setCenter(x: Float, y: Float): IGameShape2D
 
     fun setCenter(center: Vector2) = setCenter(center.x, center.y)

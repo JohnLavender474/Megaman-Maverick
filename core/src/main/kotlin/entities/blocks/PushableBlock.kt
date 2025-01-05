@@ -49,15 +49,21 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
     companion object {
         const val TAG = "PushableBlock"
+
         const val METAL_CRATE = "MetalCrate"
+
         private const val DEFAULT_FRICTION_X = 5f
         private const val X_VEL_CLAMP = 8f
+
         private const val PUSH_IMPULSE = 10f
         private const val PROJECTILE_IMPULSE = 5f
+
         private const val GRAVITY = 0.25f
         private const val GROUND_GRAVITY = 0.01f
+
         private const val BODY_WIDTH = 2f
         private const val BODY_HEIGHT = 2f
+
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -101,6 +107,7 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         block!!.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
+                ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
                 ConstKeys.FIXTURE_LABELS pairTo objectSetOf(FixtureLabel.NO_SIDE_TOUCHIE),
                 ConstKeys.BOUNDS pairTo GameRectangle().setSize(
                     BODY_WIDTH * ConstVals.PPM, BODY_HEIGHT * ConstVals.PPM

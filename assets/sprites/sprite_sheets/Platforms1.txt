@@ -1,5 +1,5 @@
 Platforms1.png
-size: 448, 624
+size: 472, 592
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -26,14 +26,14 @@ repeat: none
   index: -1
 AppearingBrick
   rotate: false
-  xy: 64, 96
+  xy: 0, 96
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 AppearingBrick2
   rotate: false
-  xy: 160, 96
+  xy: 96, 96
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
@@ -82,7 +82,7 @@ BreakableIce/3
   index: -1
 BreakableIce/Shards
   rotate: false
-  xy: 0, 256
+  xy: 268, 192
   size: 160, 32
   orig: 160, 32
   offset: 0, 0
@@ -152,7 +152,7 @@ ConveyorBelt/MiddlePart
   index: -1
 ConveyorBelt/RightPart-MoveLeft-Green
   rotate: false
-  xy: 0, 32
+  xy: 440, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -166,77 +166,77 @@ ConveyorBelt/RightPart-MoveLeft
   index: -1
 ConveyorBelt/RightPart-MoveRight-Green
   rotate: false
-  xy: 32, 32
+  xy: 0, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 DestroyableWoodPlank/flash
   rotate: false
-  xy: 160, 256
+  xy: 0, 256
   size: 192, 32
   orig: 192, 32
   offset: 0, 0
   index: -1
 DropperLift/Closed
   rotate: false
-  xy: 160, 32
+  xy: 192, 32
   size: 48, 32
   orig: 48, 32
   offset: 0, 0
   index: -1
 DropperLift/Open
   rotate: false
-  xy: 208, 32
+  xy: 240, 32
   size: 48, 32
   orig: 48, 32
   offset: 0, 0
   index: -1
 DropperLift/Opening
   rotate: false
-  xy: 271, 192
+  xy: 172, 192
   size: 96, 64
   orig: 96, 64
   offset: 0, 0
   index: -1
 FlipperPlatform/FlipToLeft
   rotate: false
-  xy: 0, 440
+  xy: 0, 408
   size: 430, 60
   orig: 430, 60
   offset: 0, 0
   index: -1
 FlipperPlatform/FlipToRight
   rotate: false
-  xy: 0, 500
+  xy: 0, 468
   size: 430, 60
   orig: 430, 60
   offset: 0, 0
   index: -1
 FlipperPlatform/Left
   rotate: false
-  xy: 99, 192
+  xy: 0, 192
   size: 86, 60
   orig: 86, 60
   offset: 0, 0
   index: -1
 FlipperPlatform/LeftDelay
   rotate: false
-  xy: 0, 320
+  xy: 0, 288
   size: 344, 60
   orig: 344, 60
   offset: 0, 0
   index: -1
 FlipperPlatform/Right
   rotate: false
-  xy: 185, 192
+  xy: 86, 192
   size: 86, 60
   orig: 86, 60
   offset: 0, 0
   index: -1
 FlipperPlatform/RightDelay
   rotate: false
-  xy: 0, 380
+  xy: 0, 348
   size: 344, 60
   orig: 344, 60
   offset: 0, 0
@@ -248,9 +248,23 @@ GearTrolleyPlatform
   orig: 64, 32
   offset: 0, 0
   index: -1
+InfernoChainPlatform/chain
+  rotate: false
+  xy: 32, 32
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+InfernoChainPlatform/platform
+  rotate: false
+  xy: 64, 32
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 JeffBezosLittleDickRocket
   rotate: false
-  xy: 0, 560
+  xy: 0, 528
   size: 448, 64
   orig: 448, 64
   offset: 0, 0
@@ -264,42 +278,42 @@ Lift
   index: -1
 MetalCrate
   rotate: false
-  xy: 192, 96
+  xy: 128, 96
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 MoonCrate
   rotate: false
-  xy: 256, 96
+  xy: 192, 96
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Platform1_64x8
   rotate: false
-  xy: 96, 32
+  xy: 128, 32
   size: 64, 8
   orig: 64, 8
   offset: 0, 0
   index: -1
 Platform2
   rotate: false
-  xy: 0, 192
+  xy: 352, 96
   size: 99, 32
   orig: 99, 32
   offset: 0, 0
   index: -1
 PropellerPlatform
   rotate: false
-  xy: 0, 288
+  xy: 192, 256
   size: 256, 32
   orig: 256, 32
   offset: 0, 0
   index: -1
 SwingingPlatform/other_small_platform
   rotate: false
-  xy: 256, 32
+  xy: 288, 32
   size: 80, 5
   orig: 80, 5
   offset: 0, 0
@@ -320,28 +334,28 @@ SwingingPlatform/ring
   index: -1
 SwingingPlatform/small_platform
   rotate: false
-  xy: 336, 32
+  xy: 368, 32
   size: 80, 5
   orig: 80, 5
   offset: 0, 0
   index: -1
 TrackBlock
   rotate: false
-  xy: 64, 32
+  xy: 96, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 WoodBlock1
   rotate: false
-  xy: 0, 96
+  xy: 400, 64
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 WoodPlank
   rotate: false
-  xy: 320, 96
+  xy: 256, 96
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
