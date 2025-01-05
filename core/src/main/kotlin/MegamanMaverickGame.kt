@@ -30,11 +30,9 @@ import com.mega.game.engine.behaviors.BehaviorsSystem
 import com.mega.game.engine.common.GameLogLevel
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IPropertizable
 import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.controller.ControllerSystem
 import com.mega.game.engine.controller.ControllerUtils
 import com.mega.game.engine.controller.buttons.ControllerButtons
@@ -101,6 +99,7 @@ import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
 import com.megaman.maverick.game.utils.interfaces.IShapeDebuggable
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.collisions.MegaCollisionHandler
+import com.megaman.maverick.game.world.contacts.MegaContactFilter
 import com.megaman.maverick.game.world.contacts.MegaContactListener
 import java.time.LocalDateTime
 import java.util.*
@@ -578,46 +577,7 @@ class MegamanMaverickGame(
                     worldContainerSupplier = { getWorldContainer() },
                     contactListener = MegaContactListener(this, CONTACT_LISTENER_DEBUG_FILTER),
                     collisionHandler = MegaCollisionHandler(this),
-                    contactFilterMap = objectMapOf(
-                        FixtureType.CONSUMER pairTo objectSetOf(*FixtureType.entries.toTypedArray()),
-                        FixtureType.PLAYER pairTo objectSetOf(FixtureType.BODY, FixtureType.ITEM),
-                        FixtureType.DAMAGEABLE pairTo objectSetOf(FixtureType.DAMAGER),
-                        FixtureType.BODY pairTo objectSetOf(
-                            FixtureType.BODY,
-                            FixtureType.FEET,
-                            FixtureType.BLOCK,
-                            FixtureType.FORCE,
-                            FixtureType.EXPLOSION,
-                            FixtureType.GRAVITY_CHANGE
-                        ),
-                        FixtureType.DEATH pairTo objectSetOf(
-                            FixtureType.FEET, FixtureType.SIDE, FixtureType.HEAD, FixtureType.BODY
-                        ),
-                        FixtureType.WATER pairTo objectSetOf(FixtureType.WATER_LISTENER),
-                        FixtureType.LADDER pairTo objectSetOf(FixtureType.HEAD, FixtureType.FEET),
-                        FixtureType.SIDE pairTo objectSetOf(
-                            FixtureType.ICE, FixtureType.GATE, FixtureType.BLOCK, FixtureType.BOUNCER
-                        ),
-                        FixtureType.FEET pairTo objectSetOf(
-                            FixtureType.ICE,
-                            FixtureType.BLOCK,
-                            FixtureType.BOUNCER,
-                            FixtureType.SAND,
-                            FixtureType.SNOW,
-                            FixtureType.CART
-                        ),
-                        FixtureType.HEAD pairTo objectSetOf(FixtureType.BLOCK, FixtureType.BOUNCER),
-                        FixtureType.PROJECTILE pairTo objectSetOf(
-                            FixtureType.BODY,
-                            FixtureType.BLOCK,
-                            FixtureType.WATER,
-                            FixtureType.SHIELD,
-                            FixtureType.SAND,
-                            FixtureType.PROJECTILE
-                        ),
-                        FixtureType.LASER pairTo objectSetOf(FixtureType.BLOCK),
-                        FixtureType.TELEPORTER pairTo objectSetOf(FixtureType.TELEPORTER_LISTENER)
-                    ),
+                    contactFilter = MegaContactFilter(),
                     fixedStepScalar = params.fixedStepScalar
                 ),
                 CullablesSystem(object : GameEntityCuller {

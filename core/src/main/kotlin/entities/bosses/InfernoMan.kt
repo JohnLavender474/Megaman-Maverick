@@ -103,6 +103,8 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val JUMP_MAX_IMPULSE_X = 10f
         private const val JUMP_IMPULSE_Y = 16f
 
+        private const val WALL_JUMP_IMPULSE_X = 5f
+
         private const val MEGAMAN_STRAIGHT_Y_THRESHOLD = 1f
 
         private const val ORB_SPEED = 15f
@@ -470,7 +472,9 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 jump(megaman.body.getCenter())
 
                 if (previous == InfernoManState.WALL_SLIDE) {
-                    // TODO: add wall jump x impulse
+                    var impulseX = WALL_JUMP_IMPULSE_X * ConstVals.PPM
+                    if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) impulseX *= -1f
+                    body.physics.velocity.x = impulseX
                 }
 
                 resetShootTimer()

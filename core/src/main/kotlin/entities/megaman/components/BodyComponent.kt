@@ -3,17 +3,17 @@ package com.megaman.maverick.game.entities.megaman.components
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
-import com.mega.game.engine.world.body.Body
-import com.mega.game.engine.world.body.BodyComponent
-import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
+import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
@@ -66,12 +66,42 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     }
 
     val feetFixture =
-        Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.8f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-    feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
+        Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.8f * ConstVals.PPM, 0.25f * ConstVals.PPM))
+    feetFixture.offsetFromBodyAttachment.y = (-body.getHeight() / 2f) - 0.1f * ConstVals.PPM
     feetFixture.setRunnable(onBounce)
     body.addFixture(feetFixture)
-    // debugShapes.add { feetFixture}
+    debugShapes.add { feetFixture }
     body.putProperty(ConstKeys.FEET, feetFixture)
+
+    // The feet gravity fixture is a consumer that checks for overlap with blocks. If there is a contact with a block,
+    // then Megaman's gravity should be adjusted accordingly. Note the differences in size and offset between this feet
+    // fixture and the other feet fixture.
+    val feetGravityFixture =
+        Fixture(body, FixtureType.CUSTOM, GameRectangle().setSize(0.8f * ConstVals.PPM, 0.1f * ConstVals.PPM))
+    val feetGravityFixtureFilter: (IFixture) -> Boolean = { it.getType() == FixtureType.BLOCK }
+    feetGravityFixture.putProperty(ConstKeys.FILTER, feetGravityFixtureFilter)
+    val feetGravitySet = ObjectSet<IFixture>()
+    feetGravityFixture.putProperty(ConstKeys.SET, feetGravitySet)
+    val handleContact: (ProcessState, IFixture, IFixture) -> Unit = handleContact@{ pState, f1, _ ->
+        when (pState) {
+            ProcessState.BEGIN, ProcessState.CONTINUE -> {
+                if ((f1.getEntity() as Block).body.hasBodyLabel(BodyLabel.COLLIDE_DOWN_ONLY) &&
+                    body.physics.velocity.y > 0f
+                ) {
+                    feetGravitySet.remove(f1)
+                    return@handleContact
+                }
+
+                feetGravitySet.add(f1)
+            }
+
+            else -> feetGravitySet.remove(f1)
+        }
+    }
+    feetGravityFixture.putProperty(ConstKeys.FUNCTION, handleContact)
+    feetGravityFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
+    body.addFixture(feetGravityFixture)
+    body.onReset.put("${ConstKeys.FEET}_${ConstKeys.GRAVITY}") { feetGravitySet.clear() }
 
     val headFixture =
         Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.5f * ConstVals.PPM))
@@ -127,8 +157,8 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 
         var gravityValue = when {
             body.isSensing(BodySense.IN_WATER) -> if (wallSlidingOnIce) waterIceGravity else waterGravity
+            !feetGravitySet.isEmpty -> groundGravity
             wallSlidingOnIce -> iceGravity
-            body.isSensing(BodySense.FEET_ON_GROUND) -> groundGravity
             else -> gravity
         }
         gravityValue *= gravityScalar

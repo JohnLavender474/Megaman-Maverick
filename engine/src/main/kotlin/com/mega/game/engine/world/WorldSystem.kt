@@ -2,7 +2,6 @@ package com.mega.game.engine.world
 
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.Array
-import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.common.objects.ImmutableCollection
@@ -17,6 +16,7 @@ import com.mega.game.engine.world.body.IBody
 import com.mega.game.engine.world.body.IFixture
 import com.mega.game.engine.world.collisions.ICollisionHandler
 import com.mega.game.engine.world.contacts.Contact
+import com.mega.game.engine.world.contacts.IContactFilter
 import com.mega.game.engine.world.contacts.IContactListener
 import com.mega.game.engine.world.container.IWorldContainer
 
@@ -26,7 +26,7 @@ class WorldSystem(
     private val worldContainerSupplier: () -> IWorldContainer?,
     private val contactListener: IContactListener,
     private val collisionHandler: ICollisionHandler,
-    private val contactFilterMap: ObjectMap<Any, ObjectSet<Any>>,
+    private val contactFilter: IContactFilter,
     var fixedStepScalar: Float = 1f
 ) : GameSystem(BodyComponent::class) {
 
@@ -100,17 +100,16 @@ class WorldSystem(
     override fun reset() {
         super.reset()
         accumulator = 0f
+
         priorContactSet.forEach { contactPool.free(it) }
         currentContactSet.forEach { contactPool.free(it) }
         priorContactSet.clear()
         currentContactSet.clear()
+
         worldContainerSupplier()?.clear()
     }
 
-    internal fun filterContact(fixture1: IFixture, fixture2: IFixture) =
-        (fixture1 != fixture2) &&
-                (contactFilterMap.get(fixture1.getType())?.contains(fixture2.getType()) == true ||
-                        contactFilterMap.get(fixture2.getType())?.contains(fixture1.getType()) == true)
+    internal fun filterContact(fixture1: IFixture, fixture2: IFixture) = contactFilter.filter(fixture1, fixture2)
 
     internal fun cycle(bodies: Array<IBody>, delta: Float) {
         bodies.forEach { body -> body.preProcess() }
@@ -145,7 +144,7 @@ class WorldSystem(
     }
 
     internal fun collectContacts(body: IBody, contactSet: ObjectSet<Contact>) = body.forEachFixture { fixture ->
-        if (fixture.isActive() && contactFilterMap.containsKey(fixture.getType())) {
+        if (fixture.isActive() && contactFilter.shouldProceedFiltering(fixture)) {
             fixture.getShape().getBoundingRectangle(reusableGameRect)
             val worldGraphResults = worldContainer.getFixtures(
                 MathUtils.floor(reusableGameRect.getX() / ppm),

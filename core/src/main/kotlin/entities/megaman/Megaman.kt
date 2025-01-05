@@ -503,7 +503,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     }
 
     override fun canBeDamagedBy(damager: IDamager): Boolean {
-        if (invincible) return false
+        if (invincible || dead) return false
 
         val tag = (damager as MegaGameEntity).getTag()
         if (!MegamanDamageNegotations.contains(tag)) return false

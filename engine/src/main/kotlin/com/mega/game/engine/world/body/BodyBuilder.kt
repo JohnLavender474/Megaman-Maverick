@@ -16,7 +16,7 @@ class BodyBuilder(
     private var fixtures: OrderedMap<Any, OrderedSet<IFixture>> = OrderedMap(),
     private var preProcess: OrderedMap<Any, () -> Unit> = OrderedMap(),
     private var postProcess: OrderedMap<Any, () -> Unit> = OrderedMap(),
-    private var onReset: (() -> Unit)? = null,
+    private var onReset: OrderedMap<Any, () -> Unit> = OrderedMap(),
     private var direction: Direction = Direction.UP,
     private var properties: Properties = Properties()
 ) {
@@ -58,8 +58,8 @@ class BodyBuilder(
         return this
     }
 
-    fun onReset(onReset: () -> Unit): BodyBuilder {
-        this.onReset = onReset
+    fun onReset(key: Any, onReset: () -> Unit): BodyBuilder {
+        this.onReset.put(key, onReset)
         return this
     }
 

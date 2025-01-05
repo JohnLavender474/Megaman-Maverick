@@ -28,6 +28,8 @@ fun IFixture.addFixtureLabels(fixtureLabels: ObjectSet<FixtureLabel>) {
     putProperty(ConstKeys.FIXTURE_LABELS, labels)
 }
 
+fun IFixture.addFixtureLabels(vararg fixtureLabels: FixtureLabel) = fixtureLabels.forEach { addFixtureLabel(it) }
+
 fun IFixture.clearFixtureLabels() {
     removeProperty(ConstKeys.FIXTURE_LABELS)
 }

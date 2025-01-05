@@ -121,12 +121,15 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         private val STAND_POUND_GROUND_BURST_TIMES = gdxArrayOf(0.35f, 0.95f, 1.55f)
 
         private val GROUND_PEBBLE_IMPULSES = gdxArrayOf(
+            Vector2(-18f, 5f),
             Vector2(-15f, 10f),
             Vector2(-9f, 18f),
             Vector2(-3f, 26f),
+            Vector2(0f, 30f),
             Vector2(3f, 26f),
             Vector2(9f, 18f),
-            Vector2(15f, 10f)
+            Vector2(15f, 10f),
+            Vector2(18f, 5f),
         )
         private const val GROUND_PEBBLES_AXE_SWING_OFFSET_X = 2f
         private const val GROUND_PEBBLES_OFFSET_Y = 0.35f
@@ -143,8 +146,10 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
 
         private const val JUMP_MAX_IMPULSE_X = 10f
         private const val JUMP_IMPULSE_Y = 16f
-        private const val WALL_SLIDE_JUMP_IMPULSE_X = 5f
-        private const val JUMP_SPIN_RADIUS = 2f
+
+        private const val WALL_JUMP_IMPULSE_X = 5f
+
+        private const val JUMP_SPIN_RADIUS = 1.5f
         private const val JUMP_SPIN_SCANNER_RADIUS = 2.5f
 
         private const val ROOM_SHAKE_DUR = 0.5f
@@ -455,7 +460,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
 
                 jump(megaman.body.getCenter())
                 if (previous == TimberWomanState.WALLSLIDE) {
-                    var impulseX = WALL_SLIDE_JUMP_IMPULSE_X * ConstVals.PPM
+                    var impulseX = WALL_JUMP_IMPULSE_X * ConstVals.PPM
                     if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) impulseX *= -1f
 
                     body.physics.velocity.x = impulseX

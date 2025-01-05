@@ -40,7 +40,7 @@ class WorldSystemTest : DescribeSpec({
             worldContainerSupplier = { mockWorldContainer },
             contactListener = mockContactListener,
             collisionHandler = mockCollisionHandler,
-            contactFilterMap = ObjectMap()
+            contactFilter = ObjectMap()
         )
 
         worldSystem.add(entity)

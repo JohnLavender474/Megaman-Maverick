@@ -49,8 +49,10 @@ class GameEngine(
         private set
 
     private val entities = MutableOrderedSet<IGameEntity>()
+
     private val entitiesToSpawn = EntitiesToSpawn()
     private val entitiesToKill = SimpleQueueSet<IGameEntity>()
+
     private var reset = false
     private var disposed = false
 
@@ -84,7 +86,9 @@ class GameEngine(
 
     private fun destroyNow(entity: IGameEntity) {
         entities.remove(entity)
+
         systems.forEach { s -> s.remove(entity) }
+
         entity.components.forEach { it.value.reset() }
         entity.onDestroy()
         entity.spawned = false
@@ -95,39 +99,53 @@ class GameEngine(
 
     override fun update(delta: Float) {
         if (disposed) throw IllegalStateException("Cannot update game engine after it has been disposed")
+
         updating = true
+
         while (!entitiesToSpawn.isEmpty()) {
             val (entity, spawnProps) = entitiesToSpawn.poll()
             spawnNow(entity, spawnProps)
         }
+
         while (!entitiesToKill.isEmpty()) {
             val entity = entitiesToKill.remove()
             destroyNow(entity)
         }
+
         systems.forEach { it.update(delta) }
+
         updating = false
+
         if (reset) reset()
     }
 
     override fun reset() {
-        reset = if (updating) true
-        else {
-            entities.filter { it.spawned }.forEach { destroyNow(it) }
-            entities.clear()
-            entitiesToSpawn.clear()
-            entitiesToKill.clear()
-            systems.forEach { it.reset() }
-            false
+        reset = when {
+            updating -> true
+            else -> {
+                entities.filter { it.spawned }.forEach { destroyNow(it) }
+                entities.clear()
+
+                entitiesToSpawn.clear()
+                entitiesToKill.clear()
+
+                systems.forEach { it.reset() }
+
+                false
+            }
         }
     }
 
     override fun dispose() {
         entities.filter { it.spawned }.forEach { destroyNow(it) }
         entities.clear()
+
         entitiesToSpawn.clear()
         entitiesToKill.clear()
+
         systems.forEach { it.reset() }
         systems.forEach { it.dispose() }
+
         disposed = true
     }
 }

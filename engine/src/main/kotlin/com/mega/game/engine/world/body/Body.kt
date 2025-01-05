@@ -29,7 +29,7 @@ class Body(
     var fixtures: OrderedMap<Any, OrderedSet<IFixture>> = OrderedMap(),
     var preProcess: OrderedMap<Any, () -> Unit> = OrderedMap(),
     var postProcess: OrderedMap<Any, () -> Unit> = OrderedMap(),
-    var onReset: (() -> Unit)? = null,
+    var onReset: OrderedMap<Any, () -> Unit> = OrderedMap(),
     override var direction: Direction = Direction.UP,
     override var properties: Properties = Properties(),
     override var drawingColor: Color = Color.RED,
@@ -114,7 +114,7 @@ class Body(
 
     override fun reset() {
         physics.reset()
-        onReset?.invoke()
+        onReset.values().forEach { it.invoke() }
     }
 
     override fun equals(other: Any?) = this === other

@@ -40,6 +40,11 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val SET = "set"
+    const val COUNT = "count"
+    const val FUNCTION = "function"
+    const val PLATFORM = "platform"
+    const val RING = "ring"
     const val AURA = "aura"
     const val ARRAY = "array"
     const val STATE = "state"
@@ -285,6 +290,7 @@ object ConstKeys {
     const val TRAJECTORY = "trajectory"
     const val BOOLEAN = "boolean"
     const val BODY_LABELS = "body_labels"
+    const val BODY_SENSES = "body_senses"
     const val SPAWNS = "spawns"
     const val SPAWN = "spawn"
     const val SPAWNER = "spawner"

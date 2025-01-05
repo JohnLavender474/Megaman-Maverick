@@ -89,6 +89,8 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         private const val JUMP_MAX_IMPULSE_X = 10f
         private const val JUMP_IMPULSE_Y = 14f
 
+        private const val WALL_JUMP_IMPULSE_X = 5f
+
         private const val WALL_SLIDE_DUR = 0.5f
         private const val WALL_SLIDE_FRICTION_Y = 6f
 
@@ -632,8 +634,16 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
 
             DesertManState.JUMP -> {
                 body.physics.applyFrictionX = false
+
                 val impulse = jump(megaman.body.getCenter())
+                if (previous == DesertManState.WALL_SLIDE) {
+                    var impulseX = WALL_JUMP_IMPULSE_X * ConstVals.PPM
+                    if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) impulseX *= -1f
+                    body.physics.velocity.x = impulseX
+                }
+
                 facing = if (impulse.x < 0f) Facing.LEFT else Facing.RIGHT
+
                 GameLogger.debug(
                     TAG, "onChangeState(): setting up JUMP state: " +
                         "body.physics.applyFrictionX=${body.physics.applyFrictionX}, " +
