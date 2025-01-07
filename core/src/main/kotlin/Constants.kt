@@ -40,6 +40,8 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val FULL = "full"
+    const val HALF = "half"
     const val SET = "set"
     const val COUNT = "count"
     const val FUNCTION = "function"

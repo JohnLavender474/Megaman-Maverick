@@ -53,8 +53,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravityEntity, IFaceable,
-    IDirectional {
+class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravityEntity, IFaceable, IDirectional {
 
     companion object {
         const val TAG = "SniperJoe"
@@ -150,20 +149,26 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
 
-        val spawn =
-            if (spawnProps.containsKey(ConstKeys.BOUNDS))
+        val spawn = when {
+            spawnProps.containsKey(ConstKeys.BOUNDS) ->
                 spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
-            else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+
+            else -> spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        }
         val position = DirectionPositionMapper.getInvertedPosition(direction)
         body.positionOnPoint(spawn, position)
 
-        if (spawnProps.containsKey(ConstKeys.TRIGGER)) {
-            canThrowShield = true
-            throwShieldTrigger =
-                spawnProps.get(ConstKeys.TRIGGER, RectangleMapObject::class)!!.rectangle.toGameRectangle()
-        } else {
-            canThrowShield = false
-            throwShieldTrigger = null
+        when {
+            spawnProps.containsKey(ConstKeys.TRIGGER) -> {
+                canThrowShield = true
+                throwShieldTrigger =
+                    spawnProps.get(ConstKeys.TRIGGER, RectangleMapObject::class)!!.rectangle.toGameRectangle()
+            }
+
+            else -> {
+                canThrowShield = false
+                throwShieldTrigger = null
+            }
         }
 
         canJump = spawnProps.getOrDefault(ConstKeys.JUMP, true, Boolean::class)
@@ -207,30 +212,30 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         body.addFixture(feetFixture)
-        // shapes.add { feetFixture}
+        // shapes.add { feetFixture }
 
         val headFixture = Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.1f * ConstVals.PPM))
         headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
         body.addFixture(headFixture)
-        // shapes.add { headFixture}
+        // shapes.add { headFixture }
 
         val damagerFixture = Fixture(
             body, FixtureType.DAMAGER, GameRectangle().setSize(0.75f * ConstVals.PPM, 1.25f * ConstVals.PPM)
         )
         body.addFixture(damagerFixture)
-        // shapes.add { damagerFixture}
+        // shapes.add { damagerFixture }
 
         val damageableFixture = Fixture(
             body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.8f * ConstVals.PPM, 1.35f * ConstVals.PPM)
         )
         body.addFixture(damageableFixture)
-        // shapes.add { damageableFixture}
+        // shapes.add { damageableFixture }
 
         val shieldFixture = Fixture(
             body, FixtureType.SHIELD, GameRectangle().setSize(0.25f * ConstVals.PPM, 1.25f * ConstVals.PPM)
         )
         body.addFixture(shieldFixture)
-        shapes.add { shieldFixture}
+        shapes.add { shieldFixture }
 
         val triggerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle())
         triggerFixture.setConsumer { processState, fixture ->
@@ -239,16 +244,22 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         }
         triggerFixture.attachedToBody = false
         body.addFixture(triggerFixture)
-        // shapes.add { triggerFixture}
+        // shapes.add { triggerFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            if (canThrowShield && throwShieldTrigger != null) {
-                triggerFixture.setActive(true)
-                triggerFixture.setShape(throwShieldTrigger!!)
-            } else triggerFixture.setActive(false)
+            when {
+                canThrowShield && throwShieldTrigger != null -> {
+                    triggerFixture.setActive(true)
+                    triggerFixture.setShape(throwShieldTrigger!!)
+                }
 
-            if (direction.equalsAny(Direction.UP, Direction.DOWN)) body.physics.velocity.x = 0f
-            else body.physics.velocity.y = 0f
+                else -> triggerFixture.setActive(false)
+            }
+
+            when {
+                direction.equalsAny(Direction.UP, Direction.DOWN) -> body.physics.velocity.x = 0f
+                else -> body.physics.velocity.y = 0f
+            }
 
             val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
             val gravityVec = GameObjectPools.fetch(Vector2::class)
@@ -265,10 +276,14 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
                 0.5f * ConstVals.PPM * if (direction.equalsAny(Direction.UP, Direction.LEFT)) facing.value
                 else -facing.value
 
-            if (shielded) damageableFixture.offsetFromBodyAttachment.x =
-                0.25f * ConstVals.PPM * if (direction.equalsAny(Direction.UP, Direction.LEFT)) -facing.value
-                else facing.value
-            else damageableFixture.offsetFromBodyAttachment.x = 0f
+            when {
+                shielded -> damageableFixture.offsetFromBodyAttachment.x = 0.25f * ConstVals.PPM * when {
+                    direction.equalsAny(Direction.UP, Direction.LEFT) -> -facing.value
+                    else -> facing.value
+                }
+
+                else -> damageableFixture.offsetFromBodyAttachment.x = 0f
+            }
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true))

@@ -1,5 +1,5 @@
 Projectiles1.png
-size: 480, 644
+size: 480, 612
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -40,14 +40,14 @@ CannonBall
   index: -1
 CaveRock/Burst
   rotate: false
-  xy: 0, 372
+  xy: 96, 340
   size: 384, 128
   orig: 384, 128
   offset: 0, 0
   index: -1
 CaveRock/Rock
   rotate: false
-  xy: 0, 500
+  xy: 0, 468
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
@@ -55,6 +55,13 @@ CaveRock/Rock
 ChargedShot
   rotate: false
   xy: 336, 212
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+ChargedShot_v2
+  rotate: false
+  xy: 368, 212
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
@@ -110,14 +117,14 @@ FirePellet
   index: -1
 FireWall/disintegrate
   rotate: false
-  xy: 384, 276
+  xy: 0, 340
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 FireWall/fire
   rotate: false
-  xy: 320, 500
+  xy: 320, 468
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -131,7 +138,7 @@ GachappanBall
   index: -1
 HalfChargedShot
   rotate: false
-  xy: 368, 212
+  xy: 400, 212
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
@@ -145,21 +152,21 @@ Joeball
   index: -1
 Monkey_Ball
   rotate: false
-  xy: 400, 212
+  xy: 0, 276
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Nuclear_Monkey_Ball
   rotate: false
-  xy: 0, 276
+  xy: 64, 276
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Petal
   rotate: false
-  xy: 64, 276
+  xy: 128, 276
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
@@ -229,28 +236,28 @@ ReactManProjectile/Small
   index: -1
 ReactorMonkeyBall/0
   rotate: false
-  xy: 320, 276
+  xy: 384, 276
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 ReactorMonkeyBall/1
   rotate: false
-  xy: 128, 500
+  xy: 128, 468
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 ReactorMonkeyBall/2
   rotate: false
-  xy: 192, 500
+  xy: 192, 468
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 ReactorMonkeyBall/3
   rotate: false
-  xy: 256, 500
+  xy: 256, 468
   size: 64, 128
   orig: 64, 128
   offset: 0, 0

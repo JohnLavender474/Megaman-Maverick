@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.blocks
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.isAny
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.world.body.IFixture
@@ -29,12 +30,15 @@ open class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
 
     override fun init() {
         super.init()
+
         body.preProcess.put(ConstKeys.MOVE) {
             val iter = feetSet.iterator()
             while (iter.hasNext) {
                 val feet = iter.next()
+
                 if (!feet.getShape().overlaps(body.getBounds())) {
                     iter.remove()
+
                     GameLogger.debug(
                         TAG,
                         "body.preProcess(): remove feet from body: " +
@@ -59,6 +63,7 @@ open class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
                 body.getY() < minY -> body.setY(minY)
             }
         }
+
         body.drawingColor = Color.BLUE
     }
 
@@ -78,6 +83,11 @@ open class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
         putProperty("${ConstKeys.FEET}_${ConstKeys.SOUND}", feetSound)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        feetSet.clear()
+    }
+
     protected open fun shouldListenToFeet(feetFixture: IFixture): Boolean {
         val entity = feetFixture.getEntity()
         val shouldListen = entity.isAny(Megaman::class, PushableBlock::class)
@@ -85,10 +95,14 @@ open class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
         return shouldListen
     }
 
-    override fun hitByFeet(feetFixture: IFixture) {
-        if (shouldListenToFeet(feetFixture)) {
-            feetSet.add(feetFixture)
-            GameLogger.debug(TAG, "hitByFeet(): feetSet.size=${feetSet.size}")
+    override fun hitByFeet(processState: ProcessState, feetFixture: IFixture) {
+        when (processState) {
+            ProcessState.BEGIN, ProcessState.CONTINUE -> if (shouldListenToFeet(feetFixture)) {
+                feetSet.add(feetFixture)
+                GameLogger.debug(TAG, "hitByFeet(): feetSet.size=${feetSet.size}")
+            }
+
+            ProcessState.END -> feetSet.remove(feetFixture)
         }
     }
 }

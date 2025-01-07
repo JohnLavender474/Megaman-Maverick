@@ -625,9 +625,8 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 popped.getCenter().x
             }
         }
-        val spawn = Vector2(x, meteorSpawnBounds.getY())
-
-        val trajectory = Vector2(0f, -METEOR_SPEED * ConstVals.PPM)
+        val spawn = GameObjectPools.fetch(Vector2::class).set(x, meteorSpawnBounds.getY())
+        val trajectory = GameObjectPools.fetch(Vector2::class).set(0f, -METEOR_SPEED * ConstVals.PPM)
 
         val floor = MegaGameEntities.getEntitiesOfMapObjectId(meteorCollideBlockId).first() as Block
 

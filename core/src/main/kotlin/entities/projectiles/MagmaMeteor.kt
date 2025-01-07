@@ -37,6 +37,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.utils.GameObjectPools
 
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGdxRectangle
@@ -47,6 +48,7 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     companion object {
         const val TAG = "MagmaMeteor"
         private const val ROTATION = 315f
+        private const val CULL_TIME = 0.5f
         private var region: TextureRegion? = null
     }
 
@@ -59,12 +61,18 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
+
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
+
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
+
         val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
         body.physics.velocity.set(trajectory)
+
         val rawCollideBounds = spawnProps.get("${ConstKeys.COLLIDE}_${ConstKeys.BODIES}")
         collideBodies = when (rawCollideBounds) {
             is IBodyEntity -> gdxArrayOf(rawCollideBounds)
@@ -79,6 +87,7 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         otherShape: IGameShape2D
     ) {
         GameLogger.debug(TAG, "hitBlock(): blockFixture=$blockFixture, thisShape=$thisShape, otherShape=$otherShape")
+
         var shouldExplode = true
         collideBodies?.let { shouldExplode = it.contains(blockFixture.getEntity() as IBodyEntity) }
         if (shouldExplode) explodeAndDie(thisShape, otherShape)
@@ -86,17 +95,23 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun explodeAndDie(vararg params: Any?) {
         GameLogger.debug(TAG, "explodeAndDie(): params=$params")
+
         destroy()
+
         val thisShape = params[0] as IGameShape2D
         val otherShape = params[1] as IGameShape2D
-        val overlap = Rectangle()
-        val spawn =
-            if (Intersector.intersectRectangles(
-                    thisShape.toGdxRectangle(),
-                    otherShape.toGdxRectangle(),
-                    overlap
-                )
-            ) overlap.getCenter() else thisShape.getCenter()
+        val overlap = GameObjectPools.fetch(Rectangle::class)
+
+        val spawn = when {
+            Intersector.intersectRectangles(
+                thisShape.toGdxRectangle(),
+                otherShape.toGdxRectangle(),
+                overlap
+            ) -> overlap.getCenter()
+
+            else -> thisShape.getCenter()
+        }
+
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.MAGMA_EXPLOSION)!!
         explosion.spawn(props(ConstKeys.POSITION pairTo spawn))
     }
@@ -106,9 +121,12 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         body.setSize(1.25f * ConstVals.PPM.toFloat(), 1.75f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
+
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
+
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
+
         return BodyComponentCreator.create(
             this,
             body,
@@ -117,7 +135,7 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->

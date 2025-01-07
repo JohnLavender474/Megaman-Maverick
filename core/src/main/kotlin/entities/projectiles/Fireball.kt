@@ -144,6 +144,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
             body.physics.velocity.setZero()
             burstCullTimer.update(it)
         }
+
         if (burstCullTimer.isFinished()) {
             destroy()
 
@@ -188,11 +189,13 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { delta, sprite ->
-            sprite.setOriginCenter()
-            sprite.rotation = if (burst) burstDirection.rotation else sprite.rotation + ROTATION * delta
+            if (!game.paused) {
+                sprite.setOriginCenter()
+                sprite.rotation = if (burst) burstDirection.rotation else sprite.rotation + ROTATION * delta
+            }
 
             val size = if (burst) 1f else 2f
             sprite.setSize(size * ConstVals.PPM)

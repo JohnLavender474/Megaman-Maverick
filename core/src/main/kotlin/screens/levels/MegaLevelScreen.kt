@@ -28,7 +28,6 @@ import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
-import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.controller.polling.IControllerPoller
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -179,7 +178,6 @@ class MegaLevelScreen(
     private var camerasSetToGameCamera = false
 
     private val spawns = Array<Spawn>()
-    private val debugPrintTimer = Timer(DEBUG_PRINT_DELAY)
 
     private var initialized = false
 
@@ -681,6 +679,20 @@ class MegaLevelScreen(
                     spawnsIter.remove()
                 }
             }
+
+            // because I'm not good at software design, there's a case tight coupling in this block
+            // essentially, the order in which these handlers are updated must not be modified or
+            // else the flow of events in the game might become broken
+            when {
+                !bossHealthHandler.finished -> bossHealthHandler.update(delta)
+                !endLevelEventHandler.finished -> endLevelEventHandler.update(delta)
+                !playerSpawnEventHandler.isFinished() -> playerSpawnEventHandler.update(delta)
+                !playerDeathEventHandler.finished -> playerDeathEventHandler.update(delta)
+            }
+
+            if (!megaman.dead) playerDeathEventHandler.setInactive()
+
+            playerStatsHandler.update(delta)
         }
 
         engine.update(delta)
@@ -704,20 +716,6 @@ class MegaLevelScreen(
             gameCamera.update(delta)
 
             if (!gameCameraShaker.isFinished) gameCameraShaker.update(delta)
-
-            // because I'm not good at software design, there's a case tight coupling in this block
-            // essentially, the order in which these handlers are updated must not be modified or
-            // else the flow of events in the game might become broken
-            when {
-                !bossHealthHandler.finished -> bossHealthHandler.update(delta)
-                !endLevelEventHandler.finished -> endLevelEventHandler.update(delta)
-                !playerSpawnEventHandler.finished -> playerSpawnEventHandler.update(delta)
-                !playerDeathEventHandler.finished -> playerDeathEventHandler.update(delta)
-            }
-
-            if (!megaman.dead) playerDeathEventHandler.setInactive()
-
-            playerStatsHandler.update(delta)
         }
 
         // perform this on all cameras to reduce floating point rounding errors
@@ -786,7 +784,7 @@ class MegaLevelScreen(
         bossHealthHandler.draw(drawer)
         playerStatsHandler.draw(drawer)
 
-        if (!playerSpawnEventHandler.finished) playerSpawnEventHandler.draw(drawer)
+        if (!playerSpawnEventHandler.isFinished()) playerSpawnEventHandler.draw(drawer)
 
         if (megaman.dead) playerDeathEventHandler.draw(drawer)
 

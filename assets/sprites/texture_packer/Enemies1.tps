@@ -299,7 +299,7 @@
             <key type="filename">../frames/Enemies1/SnowMet/GetUp.png</key>
             <key type="filename">../frames/Enemies1/SnowMet/LayDown.png</key>
             <key type="filename">../frames/Enemies1/SnowMet/PopUp.png</key>
-            <key type="filename">../frames/Enemies1/SpringHead/Compressed.png</key>
+            <key type="filename">../frames/Enemies1/SpringHead/compressed.png</key>
             <key type="filename">../frames/Enemies1/SwimmingMet/LayDown.png</key>
             <key type="filename">../frames/Enemies1/TurnBlaster/base.png</key>
             <key type="filename">../frames/Enemies1/TurnBlaster/dial.png</key>
@@ -484,6 +484,10 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Enemies1/Merserker/chop_down.png</key>
+            <key type="filename">../frames/Enemies1/Merserker/fly.png</key>
+            <key type="filename">../frames/Enemies1/Merserker/pre_chop_down.png</key>
+            <key type="filename">../frames/Enemies1/Merserker/return_up.png</key>
             <key type="filename">../frames/Enemies1/NuttGlider/glide.png</key>
             <key type="filename">../frames/Enemies1/NuttGlider/glide_nutt.png</key>
             <key type="filename">../frames/Enemies1/NuttGlider/jump.png</key>
@@ -502,6 +506,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Enemies1/Merserker/on_ground.png</key>
             <key type="filename">../frames/Enemies1/NuttGlider/stand.png</key>
             <key type="filename">../frames/Enemies1/NuttGlider/stand_nutt.png</key>
             <key type="filename">../frames/Enemies1/PreciousJoe/Shoot.png</key>
@@ -705,7 +710,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Enemies1/SpringHead/Unleashed.png</key>
+            <key type="filename">../frames/Enemies1/SpringHead/unleashed.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

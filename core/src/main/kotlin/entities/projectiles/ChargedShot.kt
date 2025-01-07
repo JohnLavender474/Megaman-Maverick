@@ -53,6 +53,8 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     companion object {
         const val TAG = "ChargedShot"
+        private const val HALF_CHARGED_SHOT_REGION_PREFIX = "Half"
+        private const val CHARGED_SHOT_REGION_SUFFIX = "_v2"
         private const val BOUNCE_LIMIT = 3
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -69,8 +71,8 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
-            regions.put("full", atlas.findRegion("ChargedShot"))
-            regions.put("half", atlas.findRegion("HalfChargedShot"))
+            regions.put(ConstKeys.FULL, atlas.findRegion("${TAG}${CHARGED_SHOT_REGION_SUFFIX}"))
+            regions.put(ConstKeys.HALF, atlas.findRegion("${HALF_CHARGED_SHOT_REGION_PREFIX}${TAG}"))
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -228,10 +230,10 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = { if (fullyCharged) "full" else "half" }
+        val keySupplier: () -> String = { if (fullyCharged) ConstKeys.FULL else ConstKeys.HALF }
         val animations = objectMapOf<String, IAnimation>(
-            "full" pairTo Animation(regions["full"], 2, 1, 0.05f, true),
-            "half" pairTo Animation(regions["half"], 2, 1, 0.05f, true)
+            ConstKeys.FULL pairTo Animation(regions[ConstKeys.FULL], 2, 1, 0.05f, true),
+            ConstKeys.HALF pairTo Animation(regions[ConstKeys.HALF], 2, 1, 0.05f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

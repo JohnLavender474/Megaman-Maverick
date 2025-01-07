@@ -8,6 +8,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.interfaces.IFinishable
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
@@ -29,13 +30,13 @@ import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_SIZE
 import com.megaman.maverick.game.entities.megaman.components.getSpritePriority
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.utils.Fade
-import com.megaman.maverick.game.screens.utils.Fade.*
+import com.megaman.maverick.game.screens.utils.Fade.FadeType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.getCenter
 
 class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializable, Updatable, Resettable,
-    IDrawable<Batch> {
+    IFinishable, IDrawable<Batch> {
 
     companion object {
         const val TAG = "PlayerSpawnEventHandler"
@@ -45,12 +46,6 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
         private const val BLINK_READY_DUR = 0.125f
         private const val FADE_IN_DUR = 0.25f
     }
-
-    val finished: Boolean
-        get() = fadein.isFinished() &&
-            preBeamTimer.isFinished() &&
-            beamDownTimer.isFinished() &&
-            beamTransitionTimer.isFinished()
 
     private val megaman = game.megaman
 
@@ -71,6 +66,8 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
 
     private var initialized = false
     private var showReadyText = false
+
+    private var finished = true
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -119,6 +116,8 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
         game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)
 
         fadein.init()
+
+        finished = false
     }
 
     override fun update(delta: Float) {
@@ -148,12 +147,17 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
             game.addDrawable(beamSprite)
     }
 
+    override fun isFinished() = finished
+
     override fun reset() {
         GameLogger.debug(TAG, "reset()")
+
         preBeamTimer.setToEnd()
         beamDownTimer.setToEnd()
         beamTransitionTimer.setToEnd()
         fadein.setToEnd()
+
+        finished = true
     }
 
     private fun preBeam(delta: Float) {
@@ -196,15 +200,13 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
             game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", false)
 
             showReadyText = false
+
+            finished = true
         }
     }
 
-    override fun draw(drawer: Batch) {
-        if (finished) return
-
-        when {
-            fadein.isFinished() && showReadyText -> ready.draw(drawer)
-            else -> fadein.draw(drawer)
-        }
+    override fun draw(drawer: Batch) = when {
+        fadein.isFinished() && showReadyText -> ready.draw(drawer)
+        else -> fadein.draw(drawer)
     }
 }

@@ -1111,6 +1111,7 @@ sprites/frames/Projectiles1/Asteroid.png
 sprites/frames/Projectiles1/ReactManProjectile/Big.png
 sprites/frames/Projectiles1/ReactManProjectile/Die.png
 sprites/frames/Projectiles1/ReactManProjectile/Small.png
+sprites/frames/Projectiles1/ChargedShot_v2.png
 sprites/frames/Projectiles1/ChargedShot.png
 sprites/frames/Projectiles1/CaveRock/Rock.png
 sprites/frames/Projectiles1/CaveRock/Burst.png
@@ -1347,8 +1348,8 @@ sprites/frames/Enemies1/BlueScrewie/Shoot.png
 sprites/frames/Enemies1/BlueScrewie/Rise.png
 sprites/frames/Enemies1/Arigock/shooting.png
 sprites/frames/Enemies1/Arigock/closed.png
-sprites/frames/Enemies1/SpringHead/Unleashed.png
-sprites/frames/Enemies1/SpringHead/Compressed.png
+sprites/frames/Enemies1/SpringHead/unleashed.png
+sprites/frames/Enemies1/SpringHead/compressed.png
 sprites/frames/Enemies1/Spiky.png
 sprites/frames/Enemies1/LaserBeamer.png
 sprites/frames/Enemies1/FloatingCan.png
@@ -1898,6 +1899,7 @@ sprites/piskel/Spike_Bot.piskel
 sprites/piskel/PreciousMan.piskel
 sprites/piskel/Snow.piskel
 sprites/piskel/AngryFlameBall.piskel
+sprites/piskel/ChargedShot_v2.piskel
 sprites/piskel/Dropper Lift.piskel
 sprites/piskel/AirConditioner.piskel
 sprites/piskel/SpikeBall.piskel

@@ -284,7 +284,7 @@ class MegaContactListener(
 
             body.setBodySense(BodySense.FEET_ON_GROUND, true)
 
-            block.hitByFeet(feetFixture)
+            block.hitByFeet(ProcessState.BEGIN, feetFixture)
             if (feetFixture.hasHitByBlockReceiver(ProcessState.BEGIN))
                 feetFixture.getHitByBlock(ProcessState.BEGIN, block, delta)
         }
@@ -789,6 +789,8 @@ class MegaContactListener(
             if (entity is Megaman) entity.aButtonTask = AButtonTask.JUMP
 
             body.setBodySense(BodySense.FEET_ON_GROUND, true)
+
+            block.hitByFeet(ProcessState.CONTINUE, feetFixture)
         }
 
         // feet, ladder
@@ -1118,6 +1120,8 @@ class MegaContactListener(
 
                 else -> body.setBodySense(BodySense.FEET_ON_GROUND, false)
             }
+
+            block.hitByFeet(ProcessState.END, feetFixture)
         }
 
         // feet, ice

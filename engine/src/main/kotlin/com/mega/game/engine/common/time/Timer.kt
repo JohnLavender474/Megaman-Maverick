@@ -2,12 +2,12 @@ package com.mega.game.engine.common.time
 
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Queue
-import com.mega.game.engine.common.interfaces.IFinishable
+import com.mega.game.engine.common.interfaces.IJustFinishable
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
 import kotlin.math.min
 
-class Timer(duration: Float) : Updatable, Resettable, IFinishable {
+class Timer(duration: Float) : Updatable, Resettable, IJustFinishable {
 
     companion object {
         const val DEFAULT_TIME = 1f

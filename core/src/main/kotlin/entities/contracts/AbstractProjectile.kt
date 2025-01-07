@@ -31,7 +31,11 @@ abstract class AbstractProjectile(game: MegamanMaverickGame) : MegaGameEntity(ga
 
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         when {
-            cullOutOfBounds -> putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getCullOnOutOfGameCam())
+            cullOutOfBounds -> {
+                val cullTime = spawnProps.getOrDefault(ConstKeys.CULL_TIME, PROJECTILE_DEFAULT_CULL_TIME, Float::class)
+                putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getCullOnOutOfGameCam(cullTime))
+            }
+
             else -> removeCullOnOutOfGameCam()
         }
 

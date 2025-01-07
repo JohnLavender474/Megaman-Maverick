@@ -40,6 +40,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
@@ -84,10 +85,12 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
 
+        spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
+
         val type = spawnProps.get(ConstKeys.TYPE, String::class)!!
         val left = spawnProps.getOrDefault(ConstKeys.LEFT, false, Boolean::class)
-        val index = 0 // spawnProps.getOrDefault(ConstKeys.INDEX, 0, Int::class)
-        defineDrawables(bounds, type, left, index)
+        // val index = spawnProps.getOrDefault(ConstKeys.INDEX, 0, Int::class)
+        defineDrawables(bounds, type, left /*, index */)
     }
 
     override fun onDestroy() {
@@ -112,8 +115,8 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         )
     )
 
-    private fun defineDrawables(bounds: GameRectangle, type: String, left: Boolean, index: Int) {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
+    private fun defineDrawables(bounds: GameRectangle, type: String, left: Boolean /*, index: Int*/) {
+        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         sprites.put(TAG, sprite)
         putUpdateFunction(TAG) { _, _ ->
             sprite.setBounds(bounds)
@@ -123,10 +126,12 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         val animDef = animDefs[type]
         val animation = Animation(regions[type], animDef.rows, animDef.cols, animDef.durations, animDef.loop)
 
+        /*
         var startTime = 0f
         for (i in 0 until index) startTime += animDef.durations[i]
         animation.setStartTime(startTime)
         animation.setCurrentTime(startTime)
+         */
 
         val animator = Animator(animation)
 

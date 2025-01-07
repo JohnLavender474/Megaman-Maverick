@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -34,8 +35,11 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     lateinit var blockFixture: Fixture
         private set
+
     var draw = true
+
     protected val debugShapeSuppliers = Array<() -> IDrawableShape?>()
+
     private val fixturesToRemove = ObjectSet<Fixture>()
 
     override fun init() {
@@ -183,7 +187,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     open fun hitBySide(sideFixture: IFixture) {}
 
-    open fun hitByFeet(feetFixture: IFixture) {}
+    open fun hitByFeet(processState: ProcessState, feetFixture: IFixture) {}
 
     open fun hitByHead(headFixture: IFixture) {}
 

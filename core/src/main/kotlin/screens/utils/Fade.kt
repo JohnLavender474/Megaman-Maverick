@@ -6,10 +6,10 @@ import com.mega.game.engine.common.interfaces.*
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.IDrawable
 import com.mega.game.engine.drawables.sprites.GameSprite
-import com.megaman.maverick.game.screens.utils.Fade.*
+import com.megaman.maverick.game.screens.utils.Fade.FadeType
 
 class Fade(private val type: FadeType, duration: Float) : ITypable<FadeType>, Initializable, Updatable,
-    Resettable, IDrawable<Batch>, IPositional, ISizable, IFinishable {
+    Resettable, IDrawable<Batch>, IPositional, ISizable, IJustFinishable {
 
     enum class FadeType { FADE_IN, FADE_OUT }
 

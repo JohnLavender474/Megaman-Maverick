@@ -244,6 +244,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Projectiles1/ChargedShot.png</key>
+            <key type="filename">../frames/Projectiles1/ChargedShot_v2.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

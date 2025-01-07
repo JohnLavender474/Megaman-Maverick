@@ -7,14 +7,18 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setBounds
+import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -27,7 +31,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.getBounds
 
-class InfernoChainPlatform(game: MegamanMaverickGame) : FeetRiseSinkBlock(game), ISpritesEntity {
+class InfernoChainPlatform(game: MegamanMaverickGame) : FeetRiseSinkBlock(game), ICullableEntity, ISpritesEntity {
 
     companion object {
         const val TAG = "InfernoChainPlatform"
@@ -36,7 +40,7 @@ class InfernoChainPlatform(game: MegamanMaverickGame) : FeetRiseSinkBlock(game),
         private const val CHAIN = "chain"
 
         private const val CHAIN_COUNT = "chain_count"
-        private const val DEFAULT_CHAIN_COUNT = 15
+        private const val DEFAULT_CHAIN_COUNT = 25
 
         private const val BLOCK_WIDTH = 2f
         private const val BLOCK_HEIGHT = 2f
@@ -44,8 +48,9 @@ class InfernoChainPlatform(game: MegamanMaverickGame) : FeetRiseSinkBlock(game),
         private const val CHAIN_WIDTH = BLOCK_WIDTH
         private const val CHAIN_HEIGHT = BLOCK_HEIGHT
 
-        private const val DEFAULT_FALL_SPEED = -2f
-        private const val DEFAULT_RISE_SPEED = 2f
+        private const val MIN = 12f
+        private const val FALL_SPEED = -2f
+        private const val RISE_SPEED = 2f
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -58,6 +63,7 @@ class InfernoChainPlatform(game: MegamanMaverickGame) : FeetRiseSinkBlock(game),
             gdxArrayOf(PLATFORM, CHAIN).forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
         super.init()
+        addComponent(defineCullablesComponent())
         addComponent(SpritesComponent())
     }
 
@@ -67,12 +73,12 @@ class InfernoChainPlatform(game: MegamanMaverickGame) : FeetRiseSinkBlock(game),
         val bottomCenter =
             spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         val bounds = GameObjectPools.fetch(GameRectangle::class)
-            .setSize(BLOCK_WIDTH * ConstVals.PPM, BLOCK_HEIGHT * ConstVals.PPM)
-            .setBottomCenterToPoint(bottomCenter)
+            .setSize(BLOCK_WIDTH * ConstVals.PPM, BLOCK_HEIGHT * ConstVals.PPM).setBottomCenterToPoint(bottomCenter)
         spawnProps.put(ConstKeys.BOUNDS, bounds)
 
-        spawnProps.putIfAbsent(ConstKeys.FALL, DEFAULT_FALL_SPEED)
-        spawnProps.putIfAbsent(ConstKeys.RISE, DEFAULT_RISE_SPEED)
+        spawnProps.put(ConstKeys.FALL, FALL_SPEED)
+        spawnProps.put(ConstKeys.RISE, RISE_SPEED)
+        spawnProps.put(ConstKeys.MIN, MIN)
 
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
 
@@ -84,28 +90,28 @@ class InfernoChainPlatform(game: MegamanMaverickGame) : FeetRiseSinkBlock(game),
 
         val chainCount = spawnProps.getOrDefault(CHAIN_COUNT, DEFAULT_CHAIN_COUNT, Int::class)
         defineDrawables(chainCount)
-
-        putCullable(ConstKeys.CULL_EVENTS, defineCullOnEventsCullable())
     }
-
-    private fun defineCullOnEventsCullable() = getStandardEventCullingLogic(
-        this, objectSetOf(EventType.END_ROOM_TRANS), { event ->
-            val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
-            val cull = room != spawnRoom
-            GameLogger.debug(
-                TAG,
-                "defineCullablesComponent(): currentRoom=$room, spawnRoom=$spawnRoom, cull=$cull"
-            )
-            cull
-        }
-    )
-
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         sprites.clear()
     }
+
+    private fun defineCullablesComponent() = CullablesComponent(
+        objectMapOf(
+            ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
+                this, objectSetOf(EventType.END_ROOM_TRANS), { event ->
+                    val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
+                    val cull = room != spawnRoom
+                    GameLogger.debug(
+                        TAG, "defineCullablesComponent(): currentRoom=$room, spawnRoom=$spawnRoom, cull=$cull"
+                    )
+                    cull
+                }
+            )
+        )
+    )
 
     private fun defineDrawables(chainCount: Int) {
         val platform = GameSprite(regions[PLATFORM])

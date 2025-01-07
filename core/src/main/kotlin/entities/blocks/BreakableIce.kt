@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.blocks
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -60,7 +61,7 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
         index = 1
     }
 
-    override fun hitByFeet(feetFixture: IFixture) = hit()
+    override fun hitByFeet(processState: ProcessState, feetFixture: IFixture) = hit()
 
     override fun hitByHead(headFixture: IFixture) = hit()
 

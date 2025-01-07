@@ -1,8 +1,10 @@
 package com.megaman.maverick.game.entities.enemies
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
@@ -24,6 +26,7 @@ import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
@@ -35,6 +38,7 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -60,6 +64,8 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         private const val FIRE_DUR = 0.5f
         private const val SLEEP_DUR = 0.25f
         private const val FIRE_TRAJ_X = 8f
+        private const val GROUND_GRAVITY = -0.01f
+        private const val GRAVITY = -0.15f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -124,9 +130,27 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     }
 
     override fun defineBodyComponent(): BodyComponent {
-        val body = Body(BodyType.ABSTRACT)
+        val body = Body(BodyType.DYNAMIC)
         body.setSize(2f * ConstVals.PPM)
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
+        body.drawingColor = Color.GRAY
+
+        val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBounds() }
+
+        val feetFixture =
+            Fixture(body, FixtureType.FEET, GameRectangle().setSize(1.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
+        feetFixture.offsetFromBodyAttachment.y = -ConstVals.PPM.toFloat()
+        body.addFixture(feetFixture)
+        feetFixture.drawingColor = Color.GREEN
+        debugShapes.add { feetFixture }
+
+        body.preProcess.put(ConstKeys.GRAVITY) {
+            val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
+            body.physics.gravity.y = gravity * ConstVals.PPM
+        }
+
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
+
         return BodyComponentCreator.create(
             this,
             body,
@@ -182,7 +206,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
 
     private fun fire() {
         val spawn = body.getPositionPoint(Position.BOTTOM_CENTER)
-            .add(0.5f * ConstVals.PPM * facing.value, 0.1f * ConstVals.PPM)
+            .add(0.5f * ConstVals.PPM * facing.value, -0.25f * ConstVals.PPM)
 
         val fireWall = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIRE_WALL)!!
         fireWall.spawn(
