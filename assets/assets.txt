@@ -658,6 +658,7 @@ sprites/frames/Hazards1/Lava/Flow.png
 sprites/frames/Hazards1/Lava/TopFlow2.png
 sprites/frames/Hazards1/Lava/Flow3.png
 sprites/frames/Hazards1/LavaRiver/fall.png
+sprites/frames/Hazards1/LavaRiver/innerOLD.png
 sprites/frames/Hazards1/LavaRiver/inner.png
 sprites/frames/Hazards1/LavaRiver/top.png
 sprites/frames/Hazards1/LavaRiver/fall_start.png
@@ -1348,7 +1349,7 @@ sprites/frames/Enemies1/BlueScrewie/Shoot.png
 sprites/frames/Enemies1/BlueScrewie/Rise.png
 sprites/frames/Enemies1/Arigock/shooting.png
 sprites/frames/Enemies1/Arigock/closed.png
-sprites/frames/Enemies1/SpringHead/unleashed.png
+sprites/frames/Enemies1/SpringHead/Unleashed.png
 sprites/frames/Enemies1/SpringHead/compressed.png
 sprites/frames/Enemies1/Spiky.png
 sprites/frames/Enemies1/LaserBeamer.png

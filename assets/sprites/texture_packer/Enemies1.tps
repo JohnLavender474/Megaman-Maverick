@@ -710,7 +710,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Enemies1/SpringHead/unleashed.png</key>
+            <key type="filename">../frames/Enemies1/SpringHead/Unleashed.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

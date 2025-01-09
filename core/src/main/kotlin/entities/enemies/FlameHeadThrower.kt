@@ -13,7 +13,6 @@ import com.mega.game.engine.common.extensions.coerceX
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -42,6 +41,7 @@ import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -93,13 +93,17 @@ class FlameHeadThrower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimat
             IMPULSE_Y * ConstVals.PPM
         ).coerceX(-MAX_THROW_X * ConstVals.PPM, MAX_THROW_X * ConstVals.PPM)
 
+        val spawn = body.getCenter().add(0.1f * ConstVals.PPM * facing.value, 0.1f * ConstVals.PPM)
+
+        val gravity = GameObjectPools.fetch(Vector2::class).set(0f, FIREBALL_GRAVITY * ConstVals.PPM)
+
         val fireBall = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIREBALL)!!
         fireBall.spawn(
             props(
-                ConstKeys.POSITION pairTo body.getCenter().add(0.1f * ConstVals.PPM * facing.value, 0.1f * ConstVals.PPM),
                 ConstKeys.OWNER pairTo this,
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.GRAVITY pairTo gravity,
                 ConstKeys.TRAJECTORY pairTo trajectory,
-                ConstKeys.GRAVITY pairTo Vector2(0f, FIREBALL_GRAVITY * ConstVals.PPM),
                 Fireball.BURST_ON_DAMAGE_INFLICTED pairTo true
             )
         )

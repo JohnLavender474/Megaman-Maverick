@@ -57,6 +57,8 @@ class InfernoChainPlatform(game: MegamanMaverickGame) : FeetRiseSinkBlock(game),
 
     private lateinit var spawnRoom: String
 
+    private val spawnPropsCopy = Properties()
+
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
@@ -70,21 +72,23 @@ class InfernoChainPlatform(game: MegamanMaverickGame) : FeetRiseSinkBlock(game),
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
 
+        spawnPropsCopy.putAll(spawnProps)
+
         val bottomCenter =
             spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         val bounds = GameObjectPools.fetch(GameRectangle::class)
             .setSize(BLOCK_WIDTH * ConstVals.PPM, BLOCK_HEIGHT * ConstVals.PPM).setBottomCenterToPoint(bottomCenter)
-        spawnProps.put(ConstKeys.BOUNDS, bounds)
+        spawnPropsCopy.put(ConstKeys.BOUNDS, bounds)
 
-        spawnProps.put(ConstKeys.FALL, FALL_SPEED)
-        spawnProps.put(ConstKeys.RISE, RISE_SPEED)
-        spawnProps.put(ConstKeys.MIN, MIN)
+        spawnPropsCopy.put(ConstKeys.FALL, FALL_SPEED)
+        spawnPropsCopy.put(ConstKeys.RISE, RISE_SPEED)
+        spawnPropsCopy.put(ConstKeys.MIN, MIN)
 
-        spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
+        spawnPropsCopy.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
 
-        spawnProps.put("${ConstKeys.FEET}_${ConstKeys.SOUND}", true)
+        spawnPropsCopy.put("${ConstKeys.FEET}_${ConstKeys.SOUND}", true)
 
-        super.onSpawn(spawnProps)
+        super.onSpawn(spawnPropsCopy)
 
         spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
 
@@ -95,6 +99,7 @@ class InfernoChainPlatform(game: MegamanMaverickGame) : FeetRiseSinkBlock(game),
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        spawnPropsCopy.clear()
         sprites.clear()
     }
 

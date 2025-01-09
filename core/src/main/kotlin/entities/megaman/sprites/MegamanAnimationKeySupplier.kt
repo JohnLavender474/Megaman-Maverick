@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.megaman.sprites
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.components.feetOnGround
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensing
 
@@ -28,7 +29,7 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
     isBehaviorActive(BehaviorType.RIDING_CART) -> when {
         damaged -> "cartin_damaged"
 
-        isBehaviorActive(BehaviorType.JUMPING) || !body.isSensing(BodySense.FEET_ON_GROUND) ->
+        isBehaviorActive(BehaviorType.JUMPING) || !feetOnGround ->
             amendKey("cartin_jump")
 
         else -> amendKey("cartin")
@@ -54,9 +55,9 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
 
     isBehaviorActive(BehaviorType.SWIMMING) -> amendKey("swim")
 
-    isBehaviorActive(BehaviorType.JUMPING) || !body.isSensing(BodySense.FEET_ON_GROUND) -> amendKey("jump")
+    isBehaviorActive(BehaviorType.JUMPING) || !feetOnGround -> amendKey("jump")
 
-    body.isSensing(BodySense.FEET_ON_GROUND) && running -> amendKey("run")
+    running -> amendKey("run")
 
     slipSliding -> amendKey("slip")
 

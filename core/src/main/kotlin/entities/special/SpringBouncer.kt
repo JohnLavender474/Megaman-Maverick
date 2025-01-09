@@ -8,8 +8,10 @@ import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -35,7 +37,8 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.world.body.*
 
-class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IBodyEntity, IAudioEntity {
+class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IBodyEntity, IAudioEntity,
+    IDirectional {
 
     companion object {
         private var atlas: TextureAtlas? = null
@@ -44,8 +47,8 @@ class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
         private const val SPRITE_DIM = 1.5f
     }
 
-    lateinit var direction: Direction
-        private set
+    override lateinit var direction: Direction
+
     private val bounceTimer = Timer(BOUNCE_DURATION)
     private lateinit var bounceFixture: Fixture
 
@@ -62,25 +65,26 @@ class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        bounceTimer.setToEnd()
+
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
         (bounceFixture.rawShape as GameRectangle).set(bounds)
-        val directionString = spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class)
-        direction =
-            when (directionString) {
-                ConstKeys.UP -> Direction.UP
-                ConstKeys.DOWN -> Direction.DOWN
-                ConstKeys.LEFT -> Direction.LEFT
-                ConstKeys.RIGHT -> Direction.RIGHT
-                else -> throw IllegalArgumentException("Incompatible value for direction: $directionString")
-            }
+
+        direction = Direction.valueOf(
+            spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase()
+        )
+
+        bounceTimer.setToEnd()
     }
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.STATIC)
         bounceFixture = Fixture(body, FixtureType.BOUNCER, GameRectangle())
-        bounceFixture.setVelocityAlteration { fixture, _ -> bounce(fixture) }
+        bounceFixture.setVelocityAlteration { fixture, _, state ->
+            if (state == ProcessState.BEGIN) requestToPlaySound(SoundAsset.DINK_SOUND, false)
+
+            bounce(fixture)
+        }
         body.addFixture(bounceFixture)
         return BodyComponentCreator.create(this, body)
     }
@@ -90,23 +94,22 @@ class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(SPRITE_DIM * ConstVals.PPM)
-        sprite.setOriginCenter()
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
-            sprite.rotation =
-                when (direction) {
-                    Direction.UP -> 0f
-                    Direction.DOWN -> 180f
-                    Direction.LEFT -> 90f
-                    Direction.RIGHT -> 270f
-                }
-            val position =
-                when (direction) {
-                    Direction.UP -> Position.BOTTOM_CENTER
-                    Direction.DOWN -> Position.TOP_CENTER
-                    Direction.LEFT -> Position.CENTER_RIGHT
-                    Direction.RIGHT -> Position.CENTER_LEFT
-                }
+            sprite.setOriginCenter()
+            sprite.rotation = when (direction) {
+                Direction.UP -> 0f
+                Direction.DOWN -> 180f
+                Direction.LEFT -> 90f
+                Direction.RIGHT -> 270f
+            }
+
+            val position = when (direction) {
+                Direction.UP -> Position.BOTTOM_CENTER
+                Direction.DOWN -> Position.TOP_CENTER
+                Direction.LEFT -> Position.CENTER_RIGHT
+                Direction.RIGHT -> Position.CENTER_LEFT
+            }
             val bodyPosition = body.getPositionPoint(position)
             sprite.setPosition(bodyPosition, position)
         }
@@ -125,10 +128,10 @@ class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
     }
 
     private fun bounce(fixture: IFixture): VelocityAlteration {
-        requestToPlaySound(SoundAsset.DINK_SOUND, false)
         bounceTimer.reset()
 
         val bounce = VelocityAlteration()
+
         when (direction) {
             Direction.UP -> bounce.forceY = BOUNCE * ConstVals.PPM
             Direction.DOWN -> bounce.forceY = -BOUNCE * ConstVals.PPM
@@ -138,12 +141,15 @@ class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
 
         if (fixture.getEntity() is Megaman) {
             val controllerPoller = game.controllerPoller
-            if ((direction == Direction.UP && controllerPoller.isPressed(MegaControllerButton.UP)) ||
-                (direction == Direction.DOWN && controllerPoller.isPressed(MegaControllerButton.DOWN))
-            ) bounce.forceY *= 2f
-            else if ((direction == Direction.LEFT && controllerPoller.isPressed(MegaControllerButton.LEFT)) ||
-                (direction == Direction.RIGHT && controllerPoller.isPressed(MegaControllerButton.RIGHT))
-            ) bounce.forceX *= 2f
+            when {
+                (direction == Direction.UP && controllerPoller.isPressed(MegaControllerButton.UP)) ||
+                    (direction == Direction.DOWN && controllerPoller.isPressed(MegaControllerButton.DOWN)) ->
+                    bounce.forceY *= 2f
+
+                (direction == Direction.LEFT && controllerPoller.isPressed(MegaControllerButton.LEFT)) ||
+                    (direction == Direction.RIGHT && controllerPoller.isPressed(MegaControllerButton.RIGHT)) ->
+                    bounce.forceX *= 2f
+            }
         }
 
         return bounce

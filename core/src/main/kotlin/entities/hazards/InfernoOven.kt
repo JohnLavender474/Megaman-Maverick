@@ -3,7 +3,6 @@ package com.megaman.maverick.game.entities.hazards
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
@@ -52,7 +51,6 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
-import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getOpposingPosition
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
@@ -130,13 +128,6 @@ class InfernoOven(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
         direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
 
-        val size = GameObjectPools.fetch(Vector2::class)
-        when {
-            direction.isHorizontal() -> size.set(BODY_HEIGHT, BODY_WIDTH)
-            else -> size.set(BODY_WIDTH, BODY_HEIGHT)
-        }.scl(ConstVals.PPM.toFloat())
-        body.setSize(size)
-
         val position = direction.getOpposingPosition()
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(position)
         body.positionOnPoint(spawn, position)
@@ -148,12 +139,14 @@ class InfernoOven(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        /*
         if (!overlapsGameCamera()) {
             loop.reset()
             animators[FLAME].reset()
             timers.values().forEach { it.reset() }
             return@UpdatablesComponent
         }
+         */
 
         val timer = timers[currentState]
         timer.update(delta)
@@ -170,6 +163,7 @@ class InfernoOven(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
+        body.setSize(BODY_WIDTH * ConstVals.PPM, BODY_HEIGHT * ConstVals.PPM)
         body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -185,17 +179,6 @@ class InfernoOven(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
         debugShapes.add { damagerFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            /*
-            val size = GameObjectPools.fetch(Vector2::class)
-            val damagerBounds = damagerFixture.rawShape as GameRectangle
-            damagerBounds.setSize(
-                when {
-                    direction.isHorizontal() -> size.set(DAMAGER_HEIGHT, DAMAGER_WIDTH)
-                    else -> size.set(DAMAGER_WIDTH, DAMAGER_HEIGHT)
-                }.scl(ConstVals.PPM.toFloat())
-            )
-             */
-
             damagerFixture.setActive(currentState == InfernoOvenState.HOT)
             damagerFixture.drawingColor = if (damagerFixture.isActive()) Color.RED else Color.WHITE
         }

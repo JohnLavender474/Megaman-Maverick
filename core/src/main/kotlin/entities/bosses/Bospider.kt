@@ -241,15 +241,19 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
                         val shootWeb = MathUtils.random.nextBoolean()
                         if (shootWeb) shootWebs()
                     }
+
                     spawnDelayTimer.update(delta)
                     if (spawnDelayTimer.isFinished()) {
                         val numChildrenToSpawn = MAX_CHILDREN - children.size
+
                         for (i in 0 until numChildrenToSpawn) {
                             val spawnRectObject = childrenSpawnPoints.get(i)
                             val spawnProps = spawnRectObject.properties.toProps()
                             spawnProps.put(ConstKeys.BOUNDS, spawnRectObject.rectangle.toGameRectangle())
+
                             val babySpider = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.BABY_SPIDER)!!
                             babySpider.spawn(spawnProps)
+
                             children.add(babySpider)
                         }
 
@@ -300,7 +304,9 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
                     if (body.getY() >= spawn.y + START_POINT_OFFSET * ConstVals.PPM) {
                         body.physics.velocity.setZero()
                         body.setCenter(spawn.x, spawn.y + START_POINT_OFFSET * ConstVals.PPM)
+
                         spawnDelayTimer.reset()
+
                         stateLoop.next()
                     }
                 }

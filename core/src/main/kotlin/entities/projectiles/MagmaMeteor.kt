@@ -38,7 +38,6 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.utils.GameObjectPools
-
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGdxRectangle
 import com.megaman.maverick.game.world.body.*
@@ -47,12 +46,12 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     companion object {
         const val TAG = "MagmaMeteor"
-        private const val ROTATION = 315f
-        private const val CULL_TIME = 0.5f
+        private const val DEFAULT_CULL_TIME = 0.5f
         private var region: TextureRegion? = null
     }
 
     private var collideBodies: Array<IBodyEntity>? = null
+    private var left = false
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
@@ -61,7 +60,7 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
+        spawnProps.putIfAbsent(ConstKeys.CULL_TIME, DEFAULT_CULL_TIME)
 
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
 
@@ -79,6 +78,8 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
             is Array<*> -> rawCollideBounds as Array<IBodyEntity>
             else -> null
         }
+
+        left = spawnProps.get(ConstKeys.LEFT, Boolean::class)!!
     }
 
     override fun hitBlock(
@@ -118,7 +119,7 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(1.25f * ConstVals.PPM.toFloat(), 1.75f * ConstVals.PPM)
+        body.setSize(1.25f * ConstVals.PPM.toFloat())
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
 
@@ -139,9 +140,8 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
+            sprite.setFlip(left, false)
             sprite.setCenter(body.getCenter())
-            sprite.setOriginCenter()
-            sprite.rotation = ROTATION
         }
         return spritesComponent
     }

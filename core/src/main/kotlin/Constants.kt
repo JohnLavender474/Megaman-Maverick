@@ -40,6 +40,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val OWN = "own"
     const val FULL = "full"
     const val HALF = "half"
     const val SET = "set"
@@ -122,6 +123,7 @@ object ConstKeys {
     const val SPIN = "spin"
     const val STICK_TO_BLOCK = "stick_to_block"
     const val FEET = "feet"
+    const val FEET_ON_GROUND = "feet_on_ground"
     const val DEBUG = "debug"
     const val EXPLOSION = "explosion"
     const val FACE = "face"

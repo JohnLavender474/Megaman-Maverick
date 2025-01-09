@@ -75,7 +75,7 @@ class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAn
         forceFixture!!.offsetFromBodyAttachment.y = ConstVals.PPM / 8f
         forceFixture!!.setEntity(this)
         body.addFixture(forceFixture!!)
-        addDebugShapeSupplier { forceFixture!!}
+        addDebugShapeSupplier { forceFixture!! }
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -90,15 +90,14 @@ class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAn
         var forceX = FORCE_IMPULSE * ConstVals.PPM
         if (left) forceX = -forceX
 
-        forceFixture!!.setVelocityAlteration { fixture, delta ->
+        forceFixture!!.setVelocityAlteration { fixture, delta, _ ->
             val body = fixture.getBody()
 
-            if ((left && body.physics.velocity.x <= -FORCE_MAX * ConstVals.PPM) ||
-                (!left && body.physics.velocity.x >= FORCE_MAX * ConstVals.PPM)
-            ) VelocityAlteration.addNone() else VelocityAlteration(
-                forceX = forceX * delta,
-                actionX = VelocityAlterationType.ADD
-            )
+            when {
+                (left && body.physics.velocity.x <= -FORCE_MAX * ConstVals.PPM) ||
+                    (!left && body.physics.velocity.x >= FORCE_MAX * ConstVals.PPM) -> VelocityAlteration.addNone()
+                else -> VelocityAlteration(forceX = forceX * delta, actionX = VelocityAlterationType.ADD)
+            }
         }
 
         val type = spawnProps.getOrDefault(ConstKeys.TYPE, DEFAULT_TYPE, String::class)
@@ -125,7 +124,12 @@ class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAn
             val animation = Animation(region, animDef.rows, animDef.cols, animDef.durations, true)
 
             val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
-            sprite.setBounds(bounds.getX() + i * ConstVals.PPM, bounds.getY(), ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
+            sprite.setBounds(
+                bounds.getX() + i * ConstVals.PPM,
+                bounds.getY(),
+                ConstVals.PPM.toFloat(),
+                ConstVals.PPM.toFloat()
+            )
 
             sprites.put(part, sprite)
             animators.add({ sprite } pairTo Animator(animation))

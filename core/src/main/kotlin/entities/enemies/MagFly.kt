@@ -113,9 +113,12 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             GameRectangle().setSize(ConstVals.PPM / 2f, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         )
         forceFixture.offsetFromBodyAttachment.y = -ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f
-        forceFixture.setVelocityAlteration { fixture, delta ->
+        forceFixture.setVelocityAlteration { fixture, delta, _ ->
             val entity = fixture.getEntity()
-            if (entity is AbstractEnemy || (entity is Megaman && entity.damaged)) return@setVelocityAlteration VelocityAlteration.addNone()
+
+            if (entity is AbstractEnemy || (entity is Megaman && entity.damaged))
+                return@setVelocityAlteration VelocityAlteration.addNone()
+
             if (entity is AbstractProjectile) entity.owner = null
 
             val x = PULL_FORCE_X * ConstVals.PPM * facing.value

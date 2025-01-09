@@ -135,14 +135,12 @@ class ToxicWaterfall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         body.addFixture(consumerFixture)
 
         val forceFixture = Fixture(body, FixtureType.FORCE)
-        forceFixture.setVelocityAlteration { fixture, delta ->
+        forceFixture.setVelocityAlteration { fixture, delta, _ ->
             val entity = fixture.getEntity()
-            return@setVelocityAlteration if (!entity.isAny(
-                    Megaman::class,
-                    AbstractEnemy::class
-                )
-            ) VelocityAlteration.addNone()
-            else VelocityAlteration.add(0f, -FORCE * ConstVals.PPM * delta)
+            return@setVelocityAlteration when {
+                !entity.isAny(Megaman::class, AbstractEnemy::class) -> VelocityAlteration.addNone()
+                else -> VelocityAlteration.add(0f, -FORCE * ConstVals.PPM * delta)
+            }
         }
         body.addFixture(forceFixture)
 

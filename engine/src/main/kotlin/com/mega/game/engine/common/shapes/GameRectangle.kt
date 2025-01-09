@@ -413,7 +413,6 @@ open class GameRectangle() : IGameShape2D, IRectangle, IRotatableShape {
     fun splitIntoCells(rowsAndColumns: Int, out: Matrix<GameRectangle>) =
         splitIntoCells(rowsAndColumns, rowsAndColumns, out)
 
-
     fun splitIntoCells(rows: Int, columns: Int, out: Matrix<GameRectangle>): Matrix<GameRectangle> {
         val cellWidth = ceil(getWidth() / columns).toInt()
         val cellHeight = ceil(getHeight() / rows).toInt()
@@ -422,11 +421,9 @@ open class GameRectangle() : IGameShape2D, IRectangle, IRotatableShape {
         out.rows = rows
         out.columns = columns
 
-        for (row in 0 until rows) {
-            for (column in 0 until columns) {
-                val cell = GameRectangle(getX() + column * cellWidth, getY() + row * cellHeight, cellWidth, cellHeight)
-                out[column, row] = cell
-            }
+        for (row in 0 until rows) for (column in 0 until columns) {
+            val cell = GameRectangle(getX() + column * cellWidth, getY() + row * cellHeight, cellWidth, cellHeight)
+            out[column, row] = cell
         }
 
         return out

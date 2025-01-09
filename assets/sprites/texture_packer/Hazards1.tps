@@ -58,9 +58,9 @@
             <key>filtering</key>
             <struct type="LibGDXFiltering">
                 <key>x</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
                 <key>y</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
             </struct>
         </struct>
         <key>shapePadding</key>
@@ -226,6 +226,7 @@
             <key type="filename">../frames/Hazards1/Cactus/big.png</key>
             <key type="filename">../frames/Hazards1/Cactus/small.png</key>
             <key type="filename">../frames/Hazards1/LavaRiver/inner.png</key>
+            <key type="filename">../frames/Hazards1/LavaRiver/innerOLD.png</key>
             <key type="filename">../frames/Hazards1/LavaRiver/top.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

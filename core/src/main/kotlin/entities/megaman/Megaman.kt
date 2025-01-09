@@ -79,7 +79,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         get() = !stunTimer.isFinished()
 
     override val invincible: Boolean
-        get() = damaged || !damageRecoveryTimer.isFinished() || !canBeDamaged
+        get() = damaged || !damageRecoveryTimer.isFinished() || !canBeDamaged || dead || !ready
 
     var canBeDamaged = true
     var canMove = true

@@ -51,11 +51,9 @@ open class Matrix<T>(var rows: Int = 0, var columns: Int = 0) : MutableCollectio
     internal val elementToIndexMap = ObjectMap<T, ObjectSet<IntPair>>()
 
     constructor(array: Array<Array<T>>) : this(array.size, array[0].size) {
-        for (x in 0 until columns) {
-            for (y in 0 until rows) {
-                val row = rows - 1 - y
-                set(x, y, array[row][x])
-            }
+        for (x in 0 until columns) for (y in 0 until rows) {
+            val row = rows - 1 - y
+            set(x, y, array[row][x])
         }
     }
 

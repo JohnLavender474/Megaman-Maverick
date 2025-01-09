@@ -1,14 +1,15 @@
 package com.megaman.maverick.game.entities.hazards
 
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.cullables.CullableOnEvent
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.IGameEntity
@@ -24,7 +25,9 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 
@@ -40,8 +43,7 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
     override var children = Array<IGameEntity>()
 
     private lateinit var rotatingLine: RotatingLine
-
-    override fun getEntityType() = EntityType.HAZARD
+    private lateinit var spawnRoom: String
 
     override fun init() {
         addComponent(defineUpdatablesComponent())
@@ -71,6 +73,8 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
             )
             children.add(fireball)
         }
+
+        spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
     }
 
     override fun onDestroy() {
@@ -89,13 +93,24 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
         }
     })
 
-    private fun defineCullablesComponent(): CullablesComponent {
-        val cullEvents = objectSetOf<Any>(
-            EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING
+    private fun defineCullablesComponent() = CullablesComponent(
+        objectMapOf(
+            ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
+                this, objectSetOf(EventType.END_ROOM_TRANS), { event ->
+                    val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
+                    val cull = room != spawnRoom
+                    GameLogger.debug(
+                        TAG,
+                        "defineCullablesComponent(): currentRoom=$room, spawnRoom=$spawnRoom, cull=$cull"
+                    )
+                    cull
+                }
+            )
         )
-        val cullOnEvents = CullableOnEvent({ cullEvents.contains(it.key) }, cullEvents)
-        runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.addListener(cullOnEvents) }
-        runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS pairTo cullOnEvents))
-    }
+    )
+
+
+    override fun getEntityType() = EntityType.HAZARD
+
+    override fun getTag() = TAG
 }

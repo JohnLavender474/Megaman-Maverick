@@ -117,7 +117,7 @@ BulbBlaster/Light
   index: -1
 BunbyTank/Roll
   rotate: false
-  xy: 663, 824
+  xy: 615, 824
   size: 88, 176
   orig: 88, 176
   offset: 0, 0
@@ -131,7 +131,7 @@ BunbyTank/Shoot
   index: -1
 BunbyTank/Still
   rotate: false
-  xy: 488, 824
+  xy: 440, 824
   size: 175, 175
   orig: 175, 175
   offset: 0, 0
@@ -285,9 +285,9 @@ FireDispensenator/close
   index: -1
 FireDispensenator/fire
   rotate: false
-  xy: 392, 824
-  size: 48, 144
-  orig: 48, 144
+  xy: 703, 824
+  size: 96, 192
+  orig: 96, 192
   offset: 0, 0
   index: -1
 FireDispensenator/open
@@ -649,14 +649,14 @@ SpikeBot/jump_snow
   index: -1
 SpikeBot/shoot
   rotate: false
-  xy: 440, 824
+  xy: 392, 824
   size: 24, 160
   orig: 24, 160
   offset: 0, 0
   index: -1
 SpikeBot/shoot_snow
   rotate: false
-  xy: 464, 824
+  xy: 416, 824
   size: 24, 160
   orig: 24, 160
   offset: 0, 0
@@ -817,7 +817,7 @@ ToxicBarrelBot/Closed
   index: -1
 ToxicBarrelBot/OpenCenter
   rotate: false
-  xy: 751, 824
+  xy: 799, 824
   size: 96, 192
   orig: 96, 192
   offset: 0, 0

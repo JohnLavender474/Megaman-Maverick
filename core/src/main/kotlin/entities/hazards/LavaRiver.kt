@@ -51,10 +51,10 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
     companion object {
         const val TAG = "LavaRiver"
 
-        private const val TOP = "top"
-        private const val INNER = "inner"
-        private const val FALL_START = "fall_start"
-        private const val FALL = "fall"
+        const val TOP = "top"
+        const val INNER = "inner"
+        const val FALL = "fall"
+        const val FALL_START = "fall_start"
 
         private val animDefs = orderedMapOf(
             TOP pairTo AnimationDef(3, 1, 0.1f, true),
@@ -65,35 +65,51 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
+    internal var active = true
+    internal var hidden = false
+
     private lateinit var spawnRoom: String
+    private var ownCull = true
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
+
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             animDefs.keys().forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
+
         super.init()
+
         addComponent(defineBodyComponent())
         addComponent(defineCullablesComponent())
+
         addComponent(SpritesComponent())
         addComponent(AnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
+
         super.onSpawn(spawnProps)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
 
-        spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
+        ownCull = spawnProps.getOrDefault("${ConstKeys.OWN}_${ConstKeys.CULL}", true, Boolean::class)
+        if (ownCull) spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
 
         val type = spawnProps.get(ConstKeys.TYPE, String::class)!!
         val left = spawnProps.getOrDefault(ConstKeys.LEFT, false, Boolean::class)
-        // val index = spawnProps.getOrDefault(ConstKeys.INDEX, 0, Int::class)
-        defineDrawables(bounds, type, left /*, index */)
+        defineDrawables(type, left)
+
+        active = spawnProps.getOrDefault(ConstKeys.ACTIVE, true, Boolean::class)
+        hidden = spawnProps.getOrDefault(ConstKeys.HIDDEN, false, Boolean::class)
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+
         super.onDestroy()
         sprites.clear()
         animators.clear()
@@ -102,52 +118,52 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
             ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
-                this, objectSetOf(EventType.END_ROOM_TRANS), { event ->
+                this, objectSetOf(EventType.END_ROOM_TRANS), cull@{ event ->
+                    if (!ownCull) return@cull false
+
                     val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
-                    val cull = room != spawnRoom
+                    val doCull = room != spawnRoom
                     GameLogger.debug(
                         TAG,
-                        "defineCullablesComponent(): currentRoom=$room, spawnRoom=$spawnRoom, cull=$cull"
+                        "defineCullablesComponent(): currentRoom=$room, spawnRoom=$spawnRoom, cull=$doCull"
                     )
-                    cull
+                    return@cull doCull
                 }
             )
         )
     )
 
-    private fun defineDrawables(bounds: GameRectangle, type: String, left: Boolean /*, index: Int*/) {
+    private fun defineDrawables(type: String, left: Boolean) {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         sprites.put(TAG, sprite)
         putUpdateFunction(TAG) { _, _ ->
-            sprite.setBounds(bounds)
+            sprite.hidden = hidden
             sprite.setFlip(left, false)
+            sprite.setBounds(body.getBounds())
         }
 
         val animDef = animDefs[type]
         val animation = Animation(regions[type], animDef.rows, animDef.cols, animDef.durations, animDef.loop)
-
-        /*
-        var startTime = 0f
-        for (i in 0 until index) startTime += animDef.durations[i]
-        animation.setStartTime(startTime)
-        animation.setCurrentTime(startTime)
-         */
-
         val animator = Animator(animation)
-
         putAnimator(sprite, animator)
     }
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
+        body.physics.applyFrictionX = false
+        body.physics.applyFrictionY = false
         body.drawingColor = Color.BLUE
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        val deathFixture = Fixture(body, FixtureType.DEATH)
+        val deathBounds = GameRectangle()
+        val deathFixture = Fixture(body, FixtureType.DEATH, deathBounds)
         deathFixture.putProperty(ConstKeys.INSTANT, true)
         body.addFixture(deathFixture)
+
+        body.preProcess.put(ConstKeys.DEATH) { deathBounds.set(body) }
+        body.preProcess.put(ConstKeys.ACTIVE) { body.forEachFixture { it.setActive(active) } }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

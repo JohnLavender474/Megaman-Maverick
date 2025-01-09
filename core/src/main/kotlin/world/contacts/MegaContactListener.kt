@@ -359,7 +359,7 @@ class MegaContactListener(
                 out
             )!!
 
-            val bounce = bouncerFixture.getVelocityAlteration(bounceableFixture, delta)
+            val bounce = bouncerFixture.getVelocityAlteration(bounceableFixture, delta, ProcessState.BEGIN)
             VelocityAlterator.alterate(bounceableFixture.getBody(), bounce)
 
             bouncerFixture.getRunnable()?.invoke()
@@ -455,7 +455,7 @@ class MegaContactListener(
             printDebugLog(contact, "beginContact(): Body-Force, contact=$contact")
             val (bodyFixture, forceFixture) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.FORCE, out)!!
 
-            val forceAlteration = forceFixture.getVelocityAlteration(bodyFixture, delta)
+            val forceAlteration = forceFixture.getVelocityAlteration(bodyFixture, delta, ProcessState.BEGIN)
             bodyFixture.applyForceAlteration(ProcessState.BEGIN, forceAlteration)
 
             bodyFixture.getBody().setBodySense(BodySense.FORCE_APPLIED, true)
@@ -931,7 +931,7 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.FORCE)) {
             val (bodyFixture, forceFixture) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.FORCE, out)!!
 
-            val forceAlteration = forceFixture.getVelocityAlteration(bodyFixture, delta)
+            val forceAlteration = forceFixture.getVelocityAlteration(bodyFixture, delta, ProcessState.CONTINUE)
             bodyFixture.applyForceAlteration(ProcessState.CONTINUE, forceAlteration)
 
             bodyFixture.getBody().setBodySense(BodySense.FORCE_APPLIED, true)
@@ -1206,7 +1206,7 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.FORCE)) {
             printDebugLog(contact, "endContact(): Body-Force, contact=$contact")
             val (bodyFixture, forceFixture) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.FORCE, out)!!
-            val forceAlteration = forceFixture.getVelocityAlteration(bodyFixture, delta)
+            val forceAlteration = forceFixture.getVelocityAlteration(bodyFixture, delta, ProcessState.END)
             bodyFixture.applyForceAlteration(ProcessState.END, forceAlteration)
             bodyFixture.getBody().setBodySense(BodySense.FORCE_APPLIED, false)
             forceFixture.getRunnable()?.invoke()

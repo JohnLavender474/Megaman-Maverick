@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.projectiles
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -15,7 +16,9 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
@@ -28,10 +31,12 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.world.body.*
 
@@ -39,6 +44,7 @@ class FireWall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     companion object {
         const val TAG = "FireWall"
+        const val IGNORE_BLOCKS = "ignore_blocks"
         private const val DISINTEGRATE_DUR = 0.2f
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -47,6 +53,8 @@ class FireWall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     private val disintegrateTimer = Timer(DISINTEGRATE_DUR)
     private var disintegrating = false
+
+    private val ignoreBlockSet = ObjectSet<Int>()
 
     override fun init() {
         if (regions.isEmpty) {
@@ -57,13 +65,6 @@ class FireWall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         super.init()
         addComponent(defineUpdatablesComponent())
         addComponent(defineAnimationsComponent())
-    }
-
-    // override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
-
-    override fun explodeAndDie(vararg params: Any?) {
-        body.physics.velocity.setZero()
-        disintegrating = true
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -81,6 +82,29 @@ class FireWall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
         disintegrateTimer.reset()
         disintegrating = false
+
+        if (spawnProps.containsKey(IGNORE_BLOCKS)) {
+            val set = spawnProps.get(IGNORE_BLOCKS) as ObjectSet<Int>
+            ignoreBlockSet.addAll(set)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        ignoreBlockSet.clear()
+    }
+
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        val entity = blockFixture.getEntity() as Block
+        if (ignoreBlockSet.contains(entity.mapObjectId)) return
+        explodeAndDie()
+    }
+
+    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
+
+    override fun explodeAndDie(vararg params: Any?) {
+        body.physics.velocity.setZero()
+        disintegrating = true
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -92,7 +116,7 @@ class FireWall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(1.5f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat(), 1.5f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
 

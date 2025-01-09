@@ -99,13 +99,17 @@ class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICul
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         val forceFixture = Fixture(body, FixtureType.FORCE, GameRectangle())
-        forceFixture.setVelocityAlteration { fixture, delta ->
-            if (filter(fixture)) VelocityAlteration(
-                forceX * if (applyDeltaX) delta else 1f,
-                forceY * if (applyDeltaY) delta else 1f,
-                actionX,
-                actionY
-            ) else VelocityAlteration.addNone()
+        forceFixture.setVelocityAlteration { fixture, delta, _ ->
+            when {
+                filter(fixture) -> VelocityAlteration(
+                    forceX * if (applyDeltaX) delta else 1f,
+                    forceY * if (applyDeltaY) delta else 1f,
+                    actionX,
+                    actionY
+                )
+
+                else -> VelocityAlteration.addNone()
+            }
         }
         body.addFixture(forceFixture)
         body.preProcess.put(ConstKeys.DEFAULT) { (forceFixture.rawShape as GameRectangle).set(body) }

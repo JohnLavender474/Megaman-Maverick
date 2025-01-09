@@ -519,17 +519,23 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
             SNOW_TYPE -> {
                 trajectory.x = SNOWBALL_X * ConstVals.PPM * facing.value
                 trajectory.y = SNOWBALL_Y * ConstVals.PPM
+
                 props.put(ConstKeys.GRAVITY_ON, true)
                 props.put(ConstKeys.GRAVITY, Vector2(0f, -SNOWBALL_GRAV * ConstVals.PPM))
+
                 sound = SoundAsset.CHILL_SHOOT_SOUND
+
                 EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SNOWBALL)!!
             }
 
             LAVA_TYPE -> {
                 trajectory.x = LAVA_X * ConstVals.PPM * facing.value
+
                 val rotation = if (isFacing(Facing.LEFT)) 90f else 270f
                 props.put(ConstKeys.ROTATION, rotation)
+
                 sound = SoundAsset.BLAST_2_SOUND
+
                 EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_GOOP)!!
             }
 

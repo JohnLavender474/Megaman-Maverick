@@ -44,6 +44,9 @@ val Megaman.bodyFixture: Fixture
 val Megaman.damageableFixture: Fixture
     get() = body.getProperty(ConstKeys.DAMAGEABLE, Fixture::class)!!
 
+val Megaman.feetOnGround: Boolean
+    get() = (body.getProperty(ConstKeys.FEET_ON_GROUND) as () -> Boolean).invoke()
+
 internal fun Megaman.defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.DYNAMIC)
     body.setSize(MEGAMAN_BODY_WIDTH * ConstVals.PPM, MEGAMAN_BODY_HEIGHT * ConstVals.PPM)
@@ -66,8 +69,8 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     }
 
     val feetFixture =
-        Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.8f * ConstVals.PPM, 0.25f * ConstVals.PPM))
-    feetFixture.offsetFromBodyAttachment.y = (-body.getHeight() / 2f) - 0.1f * ConstVals.PPM
+        Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.25f * ConstVals.PPM))
+    feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
     feetFixture.setRunnable(onBounce)
     body.addFixture(feetFixture)
     debugShapes.add { feetFixture }
@@ -77,7 +80,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     // then Megaman's gravity should be adjusted accordingly. Note the differences in size and offset between this feet
     // fixture and the other feet fixture.
     val feetGravityFixture =
-        Fixture(body, FixtureType.CUSTOM, GameRectangle().setSize(0.8f * ConstVals.PPM, 0.1f * ConstVals.PPM))
+        Fixture(body, FixtureType.CUSTOM, GameRectangle().setSize(0.9f * ConstVals.PPM, 0.1f * ConstVals.PPM))
     val feetGravityFixtureFilter: (IFixture) -> Boolean = { it.getType() == FixtureType.BLOCK }
     feetGravityFixture.putProperty(ConstKeys.FILTER, feetGravityFixtureFilter)
     val feetGravitySet = ObjectSet<IFixture>()
@@ -99,36 +102,38 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         }
     }
     feetGravityFixture.putProperty(ConstKeys.FUNCTION, handleContact)
+    val isFeetOnGround: () -> Boolean = { !feetGravitySet.isEmpty }
+    body.putProperty(ConstKeys.FEET_ON_GROUND, isFeetOnGround)
+    body.onReset.put("${ConstKeys.FEET}_${ConstKeys.GRAVITY}") { feetGravitySet.clear() }
     feetGravityFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
     body.addFixture(feetGravityFixture)
-    body.onReset.put("${ConstKeys.FEET}_${ConstKeys.GRAVITY}") { feetGravitySet.clear() }
 
     val headFixture =
-        Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.25f * ConstVals.PPM))
-    headFixture.offsetFromBodyAttachment.y = (body.getHeight() / 2f) - 0.1f * ConstVals.PPM
+        Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.5f * ConstVals.PPM))
+    headFixture.offsetFromBodyAttachment.y = (body.getHeight() / 2f) - 0.2f * ConstVals.PPM
     headFixture.setRunnable(onBounce)
     body.addFixture(headFixture)
     debugShapes.add { headFixture }
     body.putProperty(ConstKeys.HEAD, headFixture)
 
     val leftFixture =
-        Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.2f * ConstVals.PPM, 0.6f * ConstVals.PPM))
+        Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.2f * ConstVals.PPM, ConstVals.PPM.toFloat()))
     leftFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
     leftFixture.offsetFromBodyAttachment.y = 0.1f * ConstVals.PPM
     leftFixture.setRunnable(onBounce)
     leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
     body.addFixture(leftFixture)
-    // debugShapes.add { leftFixture}
+    debugShapes.add { leftFixture}
     body.putProperty("${ConstKeys.LEFT}_${ConstKeys.SIDE}", leftFixture)
 
     val rightFixture =
-        Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.2f * ConstVals.PPM, 0.6f * ConstVals.PPM))
+        Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.2f * ConstVals.PPM, ConstVals.PPM.toFloat()))
     rightFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
     rightFixture.offsetFromBodyAttachment.y = 0.1f * ConstVals.PPM
     rightFixture.setRunnable(onBounce)
     rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
     body.addFixture(rightFixture)
-    // debugShapes.add { rightFixture}
+    debugShapes.add { rightFixture}
     body.putProperty("${ConstKeys.RIGHT}_${ConstKeys.SIDE}", rightFixture)
 
     val damagableRect = GameRectangle()

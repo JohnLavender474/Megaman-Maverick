@@ -318,9 +318,16 @@ LavaRiver/inner
   orig: 32, 48
   offset: 0, 0
   index: -1
-LavaRiver/top
+LavaRiver/innerOLD
   rotate: false
   xy: 80, 145
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: -1
+LavaRiver/top
+  rotate: false
+  xy: 112, 145
   size: 32, 48
   orig: 32, 48
   offset: 0, 0
@@ -425,7 +432,7 @@ SpikeBall/SpikeBall
   index: -1
 SwingingAxe
   rotate: false
-  xy: 272, 145
+  xy: 304, 145
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -439,14 +446,14 @@ SwingingAxe_HandleEndCentered
   index: -1
 SwingingAxe_UpsideDown
   rotate: false
-  xy: 336, 145
+  xy: 368, 145
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 UnderwaterFan
   rotate: false
-  xy: 112, 145
+  xy: 144, 145
   size: 160, 56
   orig: 160, 56
   offset: 0, 0

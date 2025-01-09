@@ -17,10 +17,8 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanKeys
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
-import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
-import com.megaman.maverick.game.world.body.isSensing
 
 const val MEGAMAN_SPRITE_KEY = "Megaman"
 const val MEGAMAN_SPRITE_SIZE = 3f
@@ -72,7 +70,7 @@ fun Megaman.getSpriteXTranslation() = when (getSpriteDirection()) {
 
 fun Megaman.getSpriteYTranslation() = when (getSpriteDirection()) {
     Direction.UP -> when {
-        !body.isSensing(BodySense.FEET_ON_GROUND) && !isBehaviorActive(BehaviorType.WALL_SLIDING) -> -0.25f
+        !feetOnGround && !isBehaviorActive(BehaviorType.WALL_SLIDING) -> -0.25f
         isBehaviorActive(BehaviorType.GROUND_SLIDING) -> -GROUND_SLIDE_SPRITE_OFFSET_Y
         else -> 0f
     }

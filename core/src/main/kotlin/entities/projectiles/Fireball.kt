@@ -1,8 +1,9 @@
 package com.megaman.maverick.game.entities.projectiles
 
-import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -43,20 +44,20 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
-
 import com.megaman.maverick.game.world.body.*
 
 class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     companion object {
         const val TAG = "Fireball"
+
         const val BURST_ON_DAMAGE_INFLICTED = "burst_on_damage_inflicted"
         const val BURST_ON_HIT_BODY = "burst_on_hit_body"
         const val BURST_ON_HIT_BLOCK = "burst_on_hit_block"
-        private var fireballAtlas: TextureAtlas? = null
-        private var flameAtlas: TextureAtlas? = null
-        private const val ROTATION = 720f
+
         private const val BURST_CULL_DUR = 0.5f
+
+        private val regions = ObjectMap<String, TextureRegion>()
     }
 
     private lateinit var burstCullTimer: Timer
@@ -68,9 +69,13 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
     private var burst = false
 
     override fun init() {
-        if (fireballAtlas == null)
-            fireballAtlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
-        if (flameAtlas == null) flameAtlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+        if (regions.isEmpty) {
+            val fireballAtlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            regions.put("fireball", fireballAtlas.findRegion("Fire/Fireball"))
+
+            val flameAtlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+            regions.put("burst", flameAtlas.findRegion("Flame"))
+        }
         super.init()
         addComponent(defineAnimationsComponent())
         addComponent(defineUpdatablesComponent())
@@ -133,9 +138,12 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun hitWater(waterFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         destroy()
-        val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
+
         val spawn = Vector2(body.getCenter().x, waterFixture.getShape().getMaxY())
+
+        val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
         smokePuff.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.OWNER pairTo owner))
+
         playSoundNow(SoundAsset.WHOOSH_SOUND, false)
     }
 
@@ -169,7 +177,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val body = Body(BodyType.ABSTRACT)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
-        body.setSize(0.75f *  ConstVals.PPM)
+        body.setSize(0.75f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
@@ -177,11 +185,11 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val projectileFixture =
             Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.375f * ConstVals.PPM))
         body.addFixture(projectileFixture)
-        debugShapes.add { projectileFixture}
+        debugShapes.add { projectileFixture }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.375f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        debugShapes.add { damagerFixture}
+        debugShapes.add { damagerFixture }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -192,11 +200,6 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { delta, sprite ->
-            if (!game.paused) {
-                sprite.setOriginCenter()
-                sprite.rotation = if (burst) burstDirection.rotation else sprite.rotation + ROTATION * delta
-            }
-
             val size = if (burst) 1f else 2f
             sprite.setSize(size * ConstVals.PPM)
 
@@ -209,11 +212,10 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String = { if (burst) "burst" else "fireball" }
-        val animations =
-            objectMapOf<String, IAnimation>(
-                "burst" pairTo Animation(flameAtlas!!.findRegion("Flame"), 1, 4, 0.1f, true),
-                "fireball" pairTo Animation(fireballAtlas!!.findRegion("Fire/Fireball"))
-            )
+        val animations = objectMapOf<String, IAnimation>(
+            "burst" pairTo Animation(regions["burst"], 1, 4, 0.1f, true),
+            "fireball" pairTo Animation(regions["fireball"], 2, 2, 0.1f, true)
+        )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }

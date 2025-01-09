@@ -11,6 +11,7 @@ import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -20,16 +21,14 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.body.Body
-import com.mega.game.engine.world.body.BodyComponent
-import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -136,19 +135,22 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         body.addFixture(shieldFixture)
 
         val bouncerFixture = Fixture(
-            body, FixtureType.BOUNCER, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM)
+            body, FixtureType.BOUNCER, GameRectangle().setSize(0.5f * ConstVals.PPM)
         )
         bouncerFixture.offsetFromBodyAttachment.y = 0.1f * ConstVals.PPM
-        bouncerFixture.putProperty(ConstKeys.VELOCITY_ALTERATION) alter@{ bounceable: Fixture, _: Float ->
-            requestToPlaySound(SoundAsset.DINK_SOUND, false)
+        bouncerFixture.setVelocityAlteration alter@{ bounceable, _, state ->
+            if (state == ProcessState.BEGIN) requestToPlaySound(SoundAsset.DINK_SOUND, false)
+
             return@alter velocityAlteration(bounceable)
         }
         body.addFixture(bouncerFixture)
 
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
+
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun velocityAlteration(bounceable: Fixture): VelocityAlteration {
+    private fun velocityAlteration(bounceable: IFixture): VelocityAlteration {
         if (bouncing) return VelocityAlteration.addNone()
 
         bounceTimer.reset()

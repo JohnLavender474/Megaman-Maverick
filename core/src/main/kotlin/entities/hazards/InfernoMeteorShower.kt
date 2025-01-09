@@ -46,14 +46,20 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
         private const val SHAKE_X = 0f
         private const val SHAKE_Y = 0.003125f
 
-        private val METEOR_TRAJ = Vector2(0f, -10f).scl(ConstVals.PPM.toFloat())
+        private const val METEOR_CULL_TIME = 3f
+
+        private val METEOR_TRAJ = Vector2(8f, -8f).scl(ConstVals.PPM.toFloat())
     }
 
     private val bounds = GameRectangle()
+
     private val spawners = OrderedMap<GameRectangle, Timer>()
     private val timers = OrderedMap<String, Timer>()
+
     private lateinit var spawnRoom: String
+
     private var coolingDown = true
+    private var left = true
 
     override fun init() {
         if (timers.isEmpty) {
@@ -80,6 +86,7 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
             }
         }
 
+        left = spawnProps.getOrDefault(ConstKeys.LEFT, true, Boolean::class)
         spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
         timers.values().forEach { it.reset() }
         coolingDown = true
@@ -94,11 +101,16 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
     private fun spawnMeteor(spawn: Vector2) {
         GameLogger.debug(TAG, "spawnMeteor(): spawn=$spawn")
 
+        val trajectory = GameObjectPools.fetch(Vector2::class).set(METEOR_TRAJ)
+        if (left) trajectory.x *= -1f
+
         val meteor = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_METEOR)!!
         meteor.spawn(
             props(
+                ConstKeys.LEFT pairTo left,
                 ConstKeys.POSITION pairTo spawn,
-                ConstKeys.TRAJECTORY pairTo METEOR_TRAJ
+                ConstKeys.TRAJECTORY pairTo trajectory,
+                ConstKeys.CULL_TIME pairTo METEOR_CULL_TIME
             )
         )
     }
@@ -132,8 +144,11 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
 
                 if (cooldown.isFinished()) {
                     coolingDown = false
-                    shakeRoom()
+
                     resetTimers()
+
+                    val overlap = spawners.keys().any { it.overlaps(game.getGameCamera().toGameRectangle()) }
+                    if (overlap) shakeRoom()
                 }
             }
 

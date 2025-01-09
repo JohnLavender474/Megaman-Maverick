@@ -6,6 +6,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -50,6 +51,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.FireWall
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
@@ -61,7 +63,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         private const val OPEN_DUR = 0.25f
         private const val CLOSE_DUR = 0.25f
         private const val FIRE_TIME = 0.4f
-        private const val FIRE_DUR = 0.5f
+        private const val FIRE_DUR = 1f
         private const val SLEEP_DUR = 0.25f
         private const val FIRE_TRAJ_X = 8f
         private const val GROUND_GRAVITY = -0.01f
@@ -81,6 +83,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         "sleep" pairTo Timer(SLEEP_DUR)
     )
     private lateinit var stateMachine: StateMachine<FireDispensenatorState>
+    private val ignoreBlockSet = ObjectSet<Int>()
     private val scanner = GameRectangle()
 
     override fun init() {
@@ -110,6 +113,16 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
 
         timers.values().forEach { it.reset() }
         stateMachine.reset()
+
+        if (spawnProps.containsKey(FireWall.IGNORE_BLOCKS)) {
+            val ignoreBlocks = spawnProps.get(FireWall.IGNORE_BLOCKS, String::class)!!.split(",")
+            ignoreBlocks.forEach { id -> ignoreBlockSet.add(id.toInt()) }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        ignoreBlockSet.clear()
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -175,7 +188,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         val animations = objectMapOf<String, IAnimation>(
             "sleep" pairTo Animation(regions["sleep"]),
             "open" pairTo Animation(regions["open"], 2, 1, 0.1f, false),
-            "fire" pairTo Animation(regions["fire"], 3, 1, 0.1f, false),
+            "fire" pairTo Animation(regions["fire"], 4, 2, 0.1f, false),
             "close" pairTo Animation(regions["close"], 2, 1, 0.1f, false)
         )
         val animator = Animator(keySupplier, animations)
@@ -212,6 +225,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         fireWall.spawn(
             props(
                 ConstKeys.POSITION pairTo spawn,
+                FireWall.IGNORE_BLOCKS pairTo ignoreBlockSet,
                 "${ConstKeys.BODY}_${ConstKeys.POSITION}" pairTo Position.BOTTOM_CENTER,
                 ConstKeys.TRAJECTORY pairTo Vector2(FIRE_TRAJ_X * ConstVals.PPM * facing.value, 0f)
             )
