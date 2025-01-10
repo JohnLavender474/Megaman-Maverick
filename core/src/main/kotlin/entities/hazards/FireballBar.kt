@@ -46,11 +46,15 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
     private lateinit var spawnRoom: String
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
+        super.init()
         addComponent(defineUpdatablesComponent())
         addComponent(defineCullablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
+
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
@@ -59,7 +63,8 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
         val flip = spawnProps.getOrDefault(ConstKeys.FLIP, false, Boolean::class)
         if (flip) speed *= -1f
 
-        rotatingLine = RotatingLine(spawn, RADIUS * ConstVals.PPM, speed * ConstVals.PPM)
+        val angle = spawnProps.getOrDefault(ConstKeys.ANGLE, 0f, Float::class)
+        rotatingLine = RotatingLine(spawn, RADIUS * ConstVals.PPM, speed * ConstVals.PPM, angle)
 
         (0 until BALLS).forEach {
             val fireball = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIREBALL)!!
@@ -78,6 +83,7 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         children.forEach { (it as GameEntity).destroy() }
         children.clear()
@@ -108,7 +114,6 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
             )
         )
     )
-
 
     override fun getEntityType() = EntityType.HAZARD
 

@@ -1070,6 +1070,8 @@ sprites/frames/Backgrounds2/BKG10.png
 sprites/frames/Projectiles1/Asteroid/Regular.png
 sprites/frames/Projectiles1/Asteroid/Blue.png
 sprites/frames/Projectiles1/Snowball.png
+sprites/frames/Projectiles1/CacaFlame/fall.png
+sprites/frames/Projectiles1/CacaFlame/burst.png
 sprites/frames/Projectiles1/SnowballForm.png
 sprites/frames/Projectiles1/RocketBomb.png
 sprites/frames/Projectiles1/Petal.png
@@ -1349,9 +1351,13 @@ sprites/frames/Enemies1/BlueScrewie/Shoot.png
 sprites/frames/Enemies1/BlueScrewie/Rise.png
 sprites/frames/Enemies1/Arigock/shooting.png
 sprites/frames/Enemies1/Arigock/closed.png
-sprites/frames/Enemies1/SpringHead/Unleashed.png
+sprites/frames/Enemies1/SpringHead/unleashed.png
 sprites/frames/Enemies1/SpringHead/compressed.png
 sprites/frames/Enemies1/Spiky.png
+sprites/frames/Enemies1/DeathBat/fly_retreat.png
+sprites/frames/Enemies1/DeathBat/open.png
+sprites/frames/Enemies1/DeathBat/fly_attack.png
+sprites/frames/Enemies1/DeathBat/hang.png
 sprites/frames/Enemies1/LaserBeamer.png
 sprites/frames/Enemies1/FloatingCan.png
 sprites/frames/Enemies1/TurnBlaster/tube.png
@@ -1782,6 +1788,7 @@ sprites/piskel/DesertMan.piskel
 sprites/piskel/CartinJoe.piskel
 sprites/piskel/Flame2.piskel
 sprites/piskel/MagmaWave.piskel
+sprites/piskel/DeathBat.piskel
 sprites/piskel/Boulder.piskel
 sprites/piskel/Hanibiran.piskel
 sprites/piskel/FireMet.piskel

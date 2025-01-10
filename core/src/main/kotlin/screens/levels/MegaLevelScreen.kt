@@ -253,6 +253,8 @@ class MegaLevelScreen(
                     )
                 )
             )
+
+            game.putProperty(ConstKeys.ROOM_TRANSITION, true)
         }
         cameraManagerForRooms.endTransition = {
             GameLogger.debug(TAG, "End transition logic for camera manager")
@@ -271,15 +273,19 @@ class MegaLevelScreen(
                 )
             )
 
-            if (hasEvent) {
-                val props = props(ConstKeys.ROOM pairTo currentRoom)
-                val roomEvent = when (event) {
-                    ConstKeys.BOSS -> EventType.ENTER_BOSS_ROOM
-                    ConstKeys.SUCCESS -> EventType.VICTORY_EVENT
-                    else -> throw IllegalStateException("Unknown room event: $event")
+            when {
+                hasEvent -> {
+                    val props = props(ConstKeys.ROOM pairTo currentRoom)
+                    val roomEvent = when (event) {
+                        ConstKeys.BOSS -> EventType.ENTER_BOSS_ROOM
+                        ConstKeys.SUCCESS -> EventType.VICTORY_EVENT
+                        else -> throw IllegalStateException("Unknown room event: $event")
+                    }
+                    eventsMan.submitEvent(Event(roomEvent, props))
                 }
-                eventsMan.submitEvent(Event(roomEvent, props))
-            } else eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
+
+                else -> eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
+            }
 
             game.getSystem(BehaviorsSystem::class).on = true
 
@@ -637,13 +643,7 @@ class MegaLevelScreen(
     }
 
     override fun render(delta: Float) {
-        if (controllerPoller.isJustPressed(MegaControllerButton.START)
-        /* &&
-        playerStatsHandler.finished &&
-        playerSpawnEventHandler.finished &&
-        playerDeathEventHandler.finished
-         */
-        ) when {
+        if (controllerPoller.isJustPressed(MegaControllerButton.START)) when {
             game.paused -> {
                 GameLogger.debug(TAG, "render(): resume game")
                 game.resume()
@@ -655,30 +655,17 @@ class MegaLevelScreen(
             }
         }
 
-        /*
-        if (game.paused && (
-                !playerStatsHandler.finished ||
-                    !playerSpawnEventHandler.finished ||
-                    !playerDeathEventHandler.finished ||
-                    !bossHealthHandler.finished
-                )
-        ) {
-            GameLogger.debug(TAG, "render(): for resume because one of the handles is not finished")
-            game.resume()
-        }
-         */
-
         if (!game.paused) {
             spawnsMan.update(delta / 2f)
 
-            if (!cameraManagerForRooms.transitioning) {
-                val spawnsIter = spawns.iterator()
-                while (spawnsIter.hasNext()) {
-                    val spawn = spawnsIter.next()
-                    engine.spawn(spawn.entity, spawn.properties)
-                    spawnsIter.remove()
-                }
+            // if (!cameraManagerForRooms.transitioning) {
+            val spawnsIter = spawns.iterator()
+            while (spawnsIter.hasNext()) {
+                val spawn = spawnsIter.next()
+                engine.spawn(spawn.entity, spawn.properties)
+                spawnsIter.remove()
             }
+            // }
 
             // because I'm not good at software design, there's a case tight coupling in this block
             // essentially, the order in which these handlers are updated must not be modified or
@@ -700,16 +687,16 @@ class MegaLevelScreen(
         if (!game.paused) {
             spawnsMan.update(delta / 2f)
 
-            if (!cameraManagerForRooms.transitioning) {
-                playerSpawnsMan.run()
+            // if (!cameraManagerForRooms.transitioning) {
+            playerSpawnsMan.run()
 
-                val spawnsIter = spawns.iterator()
-                while (spawnsIter.hasNext()) {
-                    val spawn = spawnsIter.next()
-                    engine.spawn(spawn.entity, spawn.properties)
-                    spawnsIter.remove()
-                }
+            val spawnsIter = spawns.iterator()
+            while (spawnsIter.hasNext()) {
+                val spawn = spawnsIter.next()
+                engine.spawn(spawn.entity, spawn.properties)
+                spawnsIter.remove()
             }
+            // }
 
             backgrounds.forEach { it.update(delta) }
             cameraManagerForRooms.update(delta)

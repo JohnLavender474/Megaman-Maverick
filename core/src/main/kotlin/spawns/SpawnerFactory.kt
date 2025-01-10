@@ -14,25 +14,34 @@ object SpawnerFactory {
         camera: RotatableCamera,
         spawnShape: IGameShape2D,
         spawnSupplier: () -> Spawn,
-        respawnable: Boolean = true
+        respawnable: Boolean = true,
+        shouldTest: (Float) -> Boolean = { true }
     ): SpawnerForBoundsEntered {
         GameLogger.debug(TAG, "spawnerForWhenEnteringCamera(): creating spawner for camera=$camera")
+
         return SpawnerForBoundsEntered(
-            spawnSupplier,
-            { spawnShape },
-            { camera.getRotatedBounds() },
-            respawnable = respawnable
+            spawnSupplier = spawnSupplier,
+            thisBounds = { spawnShape },
+            otherBounds = { camera.getRotatedBounds() },
+            respawnable = respawnable,
+            shouldTestPred = shouldTest
         )
     }
 
     fun spawnerForWhenEventCalled(
         events: ObjectSet<Any>,
         spawnSupplier: () -> Spawn,
-        respawnable: Boolean = true
+        respawnable: Boolean = true,
+        shouldTest: (Float) -> Boolean = { true }
     ): SpawnerForEvent {
         GameLogger.debug(TAG, "spawnerForWhenEventCalled(): creating spawner for events=$events")
+
         return SpawnerForEvent(
-            { events.contains(it.key) }, spawnSupplier, eventKeyMask = events, respawnable = respawnable
+            predicate = { events.contains(it.key) },
+            spawnSupplier = spawnSupplier,
+            eventKeyMask = events,
+            respawnable = respawnable,
+            shouldTestPred = shouldTest
         )
     }
 
@@ -40,11 +49,17 @@ object SpawnerFactory {
         predicate: (Event) -> Boolean,
         eventKeyMask: ObjectSet<Any>,
         spawnSupplier: () -> Spawn,
-        respawnable: Boolean = true
+        respawnable: Boolean = true,
+        shouldTest: (Float) -> Boolean = { true }
     ): SpawnerForEvent {
         GameLogger.debug(TAG, "spawnerForOnEvent(): creating spawner for eventKeyMask=$eventKeyMask")
+
         return SpawnerForEvent(
-            { predicate.invoke(it) }, spawnSupplier, eventKeyMask = eventKeyMask, respawnable = respawnable
+            predicate = { predicate.invoke(it) },
+            spawnSupplier = spawnSupplier,
+            eventKeyMask = eventKeyMask,
+            respawnable = respawnable,
+            shouldTestPred = shouldTest
         )
     }
 }

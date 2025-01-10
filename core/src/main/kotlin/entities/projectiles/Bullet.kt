@@ -50,7 +50,6 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
 
     private val trajectory = Vector2()
     private var followTraj = true
-
     private var bounced = 0
 
     override fun init() {
@@ -135,7 +134,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.5f * ConstVals.PPM)
+        body.setSize(0.25f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         body.physics.velocityClamp.set(CLAMP * ConstVals.PPM)

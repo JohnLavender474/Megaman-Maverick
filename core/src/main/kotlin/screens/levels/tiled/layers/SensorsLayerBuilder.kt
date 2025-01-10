@@ -8,6 +8,8 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.SensorsFactory
+import com.megaman.maverick.game.entities.sensors.Death
+import com.megaman.maverick.game.entities.sensors.Gate
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toProps
 
@@ -21,12 +23,12 @@ class SensorsLayerBuilder : ITiledMapLayerBuilder {
                 props.put(ConstKeys.BOUNDS, mapObject.rectangle.toGameRectangle())
 
                 when (name) {
-                    "Death" -> {
+                    Death.TAG -> {
                         val death = EntityFactories.fetch(EntityType.SENSOR, SensorsFactory.DEATH)!!
                         death.spawn(props)
                     }
 
-                    "Gate" -> {
+                    Gate.TAG -> {
                         val gate = EntityFactories.fetch(EntityType.SENSOR, SensorsFactory.GATE)!!
                         gate.spawn(props)
                     }

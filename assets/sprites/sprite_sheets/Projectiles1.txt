@@ -1,5 +1,5 @@
 Projectiles1.png
-size: 512, 580
+size: 512, 676
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -31,6 +31,20 @@ Bullet
   orig: 32, 32
   offset: 0, 0
   index: -1
+CacaFlame/burst
+  rotate: false
+  xy: 336, 180
+  size: 48, 64
+  orig: 48, 64
+  offset: 0, 0
+  index: -1
+CacaFlame/fall
+  rotate: false
+  xy: 0, 308
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
 CannonBall
   rotate: false
   xy: 424, 0
@@ -40,28 +54,28 @@ CannonBall
   index: -1
 CaveRock/Burst
   rotate: false
-  xy: 96, 308
+  xy: 0, 404
   size: 384, 128
   orig: 384, 128
   offset: 0, 0
   index: -1
 CaveRock/Rock
   rotate: false
-  xy: 0, 436
+  xy: 384, 404
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ChargedShot
   rotate: false
-  xy: 336, 180
+  xy: 384, 180
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 ChargedShot_v2
   rotate: false
-  xy: 368, 180
+  xy: 416, 180
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
@@ -103,7 +117,7 @@ Electric/Zap
   index: -1
 Fire/Fireball
   rotate: false
-  xy: 400, 180
+  xy: 448, 180
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -117,14 +131,14 @@ FirePellet
   index: -1
 FireWall/disintegrate
   rotate: false
-  xy: 0, 308
+  xy: 48, 308
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 FireWall/fire
   rotate: false
-  xy: 320, 436
+  xy: 192, 532
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -138,7 +152,7 @@ GachappanBall
   index: -1
 HalfChargedShot
   rotate: false
-  xy: 464, 180
+  xy: 0, 244
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
@@ -152,21 +166,21 @@ Joeball
   index: -1
 Monkey_Ball
   rotate: false
-  xy: 0, 244
+  xy: 32, 244
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Nuclear_Monkey_Ball
   rotate: false
-  xy: 64, 244
+  xy: 96, 244
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Petal
   rotate: false
-  xy: 128, 244
+  xy: 160, 244
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
@@ -236,28 +250,28 @@ ReactManProjectile/Small
   index: -1
 ReactorMonkeyBall/0
   rotate: false
-  xy: 384, 244
+  xy: 416, 244
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 ReactorMonkeyBall/1
   rotate: false
-  xy: 128, 436
+  xy: 0, 532
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 ReactorMonkeyBall/2
   rotate: false
-  xy: 192, 436
+  xy: 64, 532
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 ReactorMonkeyBall/3
   rotate: false
-  xy: 256, 436
+  xy: 128, 532
   size: 64, 128
   orig: 64, 128
   offset: 0, 0

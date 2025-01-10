@@ -199,9 +199,8 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDi
                     }
                 }
 
-                BatStatus.FLYING_TO_RETREAT -> {
+                BatStatus.FLYING_TO_RETREAT ->
                     if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) status = BatStatus.HANGING
-                }
 
                 else -> {}
             }

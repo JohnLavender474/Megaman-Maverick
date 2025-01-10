@@ -2,7 +2,6 @@ package com.mega.game.engine.world
 
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.Array
-import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.common.objects.ImmutableCollection
 import com.mega.game.engine.common.objects.Pool
@@ -65,6 +64,7 @@ class WorldSystem(
     private val contactPool = Pool(supplier = { Contact(DummyFixture(), DummyFixture()) })
     private var priorContactSet = OrderedSet<Contact>()
     private var currentContactSet = OrderedSet<Contact>()
+
     private var accumulator = 0f
 
     private val reusableBodyArray = Array<IBody>()
@@ -89,8 +89,8 @@ class WorldSystem(
 
             worldContainer.clear()
             reusableBodyArray.forEach { body ->
-                worldContainer.addBody(body)
-                body.forEachFixture { worldContainer.addFixture(it) }
+                if (body.physics.collisionOn) worldContainer.addBody(body)
+                body.forEachFixture { if (it.isActive()) worldContainer.addFixture(it) }
             }
 
             reusableBodyArray.clear()
@@ -119,7 +119,7 @@ class WorldSystem(
             worldContainer.addBody(body)
             body.forEachFixture { worldContainer.addFixture(it) }
         }
-        bodies.forEach { body -> collectContacts(body, currentContactSet) }
+        bodies.forEach { body -> collectContacts(body) }
         processContacts()
         bodies.forEach { body -> resolveCollisions(body) }
         bodies.forEach { body -> body.postProcess() }
@@ -143,7 +143,7 @@ class WorldSystem(
         currentContactSet.clear()
     }
 
-    internal fun collectContacts(body: IBody, contactSet: ObjectSet<Contact>) = body.forEachFixture { fixture ->
+    internal fun collectContacts(body: IBody) = body.forEachFixture { fixture ->
         if (fixture.isActive() && contactFilter.shouldProceedFiltering(fixture)) {
             fixture.getShape().getBoundingRectangle(reusableGameRect)
             val worldGraphResults = worldContainer.getFixtures(
@@ -159,7 +159,7 @@ class WorldSystem(
                 ) {
                     val contact = contactPool.fetch()
                     contact.set(fixture, it)
-                    contactSet.add(contact)
+                    currentContactSet.add(contact)
                 }
             }
         }

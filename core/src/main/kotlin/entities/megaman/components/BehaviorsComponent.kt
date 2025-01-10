@@ -157,7 +157,11 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             v.x = when (direction) {
                 Direction.UP, Direction.DOWN -> {
                     when {
-                        isBehaviorActive(BehaviorType.WALL_SLIDING) ->
+                        isBehaviorActive(BehaviorType.WALL_SLIDING) ||
+                            (body.isSensingAny(
+                                BodySense.SIDE_TOUCHING_BLOCK_LEFT,
+                                BodySense.SIDE_TOUCHING_BLOCK_RIGHT
+                            ) && !body.isSensing(BodySense.FEET_ON_GROUND)) ->
                             MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM * facing.value
 
                         else -> body.physics.velocity.x
@@ -185,7 +189,11 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
                 Direction.LEFT, Direction.RIGHT -> {
                     when {
-                        isBehaviorActive(BehaviorType.WALL_SLIDING) ->
+                        isBehaviorActive(BehaviorType.WALL_SLIDING) ||
+                            (body.isSensingAny(
+                                BodySense.SIDE_TOUCHING_BLOCK_LEFT,
+                                BodySense.SIDE_TOUCHING_BLOCK_RIGHT
+                            ) && !body.isSensing(BodySense.FEET_ON_GROUND)) ->
                             MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM * facing.value
 
                         else -> body.physics.velocity.y

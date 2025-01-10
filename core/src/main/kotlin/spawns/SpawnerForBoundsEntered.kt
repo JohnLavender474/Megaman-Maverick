@@ -8,8 +8,9 @@ class SpawnerForBoundsEntered(
     var otherBounds: () -> IGameShape2D,
     shouldBeCulled: (Float) -> Boolean = { false },
     onCull: () -> Unit = {},
-    respawnable: Boolean = true
-) : Spawner(shouldBeCulled, onCull, respawnable) {
+    respawnable: Boolean = true,
+    shouldTestPred: (Float) -> Boolean = { true }
+) : Spawner(shouldBeCulled, onCull, respawnable, shouldTestPred) {
 
     companion object {
         const val TAG = "SpawnerForBoundsEntered"

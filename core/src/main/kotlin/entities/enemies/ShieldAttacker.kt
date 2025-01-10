@@ -49,7 +49,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.MEDIUM)
+    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.SMALL)
     override lateinit var facing: Facing
 
     private val turnAroundTimer = Timer(TURN_AROUND_DUR)

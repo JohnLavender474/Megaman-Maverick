@@ -80,7 +80,7 @@ class InfernoOven(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
         private val animDefs = ObjectMap<String, AnimationDef>()
     }
 
-    private enum class InfernoOvenState(val duration: Float) { COLD(1f), WARMING_UP(0.5f), HOT(1f) }
+    private enum class InfernoOvenState(val duration: Float) { COLD(1f), WARMING_UP(1f), HOT(1f) }
 
     override var direction: Direction
         get() = body.direction
@@ -125,12 +125,15 @@ class InfernoOven(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        direction =
+        val direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
 
         val position = direction.getOpposingPosition()
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(position)
         body.positionOnPoint(spawn, position)
+
+        // set the class level `direction` var after setting the body (the body should be set assuming UP position)
+        this.direction = direction
 
         loop.reset()
         timers.values().forEach { it.reset() }
@@ -139,15 +142,6 @@ class InfernoOven(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        /*
-        if (!overlapsGameCamera()) {
-            loop.reset()
-            animators[FLAME].reset()
-            timers.values().forEach { it.reset() }
-            return@UpdatablesComponent
-        }
-         */
-
         val timer = timers[currentState]
         timer.update(delta)
 
@@ -214,7 +208,16 @@ class InfernoOven(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(
             TAG, GameSprite()
-                .also { sprite -> sprite.setSize(SPRITE_WIDTH * ConstVals.PPM, SPRITE_HEIGHT * ConstVals.PPM) }
+                .also { sprite ->
+                    sprite.setSize(SPRITE_WIDTH * ConstVals.PPM, SPRITE_HEIGHT * ConstVals.PPM)
+
+                    // TODO: need to implement offset for when direction is horizontal since sprite is misplaced
+                    //  otherwise when direction is left or right
+                    /*
+                    val translateX: Float
+                    val translateY: Float
+                     */
+                }
         )
         .updatable { _, sprite -> rotateAndPositionSprite(sprite) }
         .sprite(

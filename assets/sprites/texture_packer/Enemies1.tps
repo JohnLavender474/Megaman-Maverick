@@ -359,6 +359,60 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Enemies1/DeathBat/fly_attack.png</key>
+            <key type="filename">../frames/Enemies1/DeathBat/fly_retreat.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,16,24,32</rect>
+                <key>scale9Paddings</key>
+                <rect>12,16,24,32</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/DeathBat/hang.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,8,24,16</rect>
+                <key>scale9Paddings</key>
+                <rect>12,8,24,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/DeathBat/open.png</key>
+            <key type="filename">../frames/Enemies1/Merserker/chop_down.png</key>
+            <key type="filename">../frames/Enemies1/Merserker/fly.png</key>
+            <key type="filename">../frames/Enemies1/Merserker/pre_chop_down.png</key>
+            <key type="filename">../frames/Enemies1/Merserker/return_up.png</key>
+            <key type="filename">../frames/Enemies1/NuttGlider/glide.png</key>
+            <key type="filename">../frames/Enemies1/NuttGlider/glide_nutt.png</key>
+            <key type="filename">../frames/Enemies1/NuttGlider/jump.png</key>
+            <key type="filename">../frames/Enemies1/NuttGlider/jump_nutt.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,24,24,48</rect>
+                <key>scale9Paddings</key>
+                <rect>12,24,24,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Enemies1/FireMet/Jump.png</key>
             <key type="filename">../frames/Enemies1/FireMet/Shoot.png</key>
             <struct type="IndividualSpriteSettings">
@@ -481,28 +535,6 @@
                 <rect>54,9,108,18</rect>
                 <key>scale9Paddings</key>
                 <rect>54,9,108,18</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies1/Merserker/chop_down.png</key>
-            <key type="filename">../frames/Enemies1/Merserker/fly.png</key>
-            <key type="filename">../frames/Enemies1/Merserker/pre_chop_down.png</key>
-            <key type="filename">../frames/Enemies1/Merserker/return_up.png</key>
-            <key type="filename">../frames/Enemies1/NuttGlider/glide.png</key>
-            <key type="filename">../frames/Enemies1/NuttGlider/glide_nutt.png</key>
-            <key type="filename">../frames/Enemies1/NuttGlider/jump.png</key>
-            <key type="filename">../frames/Enemies1/NuttGlider/jump_nutt.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>12,24,24,48</rect>
-                <key>scale9Paddings</key>
-                <rect>12,24,24,48</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -710,7 +742,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Enemies1/SpringHead/Unleashed.png</key>
+            <key type="filename">../frames/Enemies1/SpringHead/unleashed.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

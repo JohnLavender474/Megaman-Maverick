@@ -71,7 +71,7 @@ object EnemyDamageNegotiations {
 
     fun getEnemyDmgNegs(
         enemySize: Size,
-        vararg overrides: GamePair<KClass<out IDamager>, DamageNegotiation>
+        vararg overrides: GamePair<KClass<out IDamager>, DamageNegotiation?>
     ): ObjectMap<KClass<out IDamager>, DamageNegotiation> {
         val dmgNegs = ObjectMap(
             when (enemySize) {
@@ -80,7 +80,13 @@ object EnemyDamageNegotiations {
                 Size.SMALL -> SMALL_ENEMY_DMG_NEGS
             }
         )
-        overrides.forEach { dmgNegs.put(it.first, it.second) }
+
+        overrides.forEach {
+            val key = it.first
+            val dmgNeg = it.second
+            if (dmgNeg != null) dmgNegs.put(key, dmgNeg) else dmgNegs.remove(key)
+        }
+
         return dmgNegs
     }
 }

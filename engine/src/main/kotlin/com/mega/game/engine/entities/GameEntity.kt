@@ -7,7 +7,6 @@ import com.mega.game.engine.components.IGameComponent
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
 
-
 abstract class GameEntity(
     val engine: GameEngine,
     override val components: OrderedMap<KClass<out IGameComponent>, IGameComponent> = OrderedMap(),
@@ -18,21 +17,15 @@ abstract class GameEntity(
         const val TAG = "GameEntity"
     }
 
-
     override var initialized = false
-
 
     override var spawned = false
 
-
     override fun init() {}
-
 
     fun spawn(spawnProps: Properties) = engine.spawn(this, spawnProps)
 
-
     fun destroy() = engine.destroy(this)
-
 
     override fun canSpawn(spawnProps: Properties) = true
 

@@ -8,6 +8,8 @@ interface ISpawner : Supplier<Spawn?>, UpdatePredicate, ICullable {
 
     var respawnable: Boolean
 
+    fun shouldTest(delta: Float): Boolean = true
+
     override fun shouldBeCulled(delta: Float) = false
 
     override fun reset() {}

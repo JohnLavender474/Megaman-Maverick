@@ -16,7 +16,9 @@ import com.megaman.maverick.game.world.body.FixtureType
 
 class Death(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
 
-    override fun getEntityType() = EntityType.SENSOR
+    companion object {
+        const val TAG = "Death"
+    }
 
     override fun init() = addComponent(defineBodyComponent())
 
@@ -42,4 +44,8 @@ class Death(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
         body.addFixture(deathFixture)
         return BodyComponentCreator.create(this, body)
     }
+
+    override fun getEntityType() = EntityType.SENSOR
+
+    override fun getTag() = TAG
 }

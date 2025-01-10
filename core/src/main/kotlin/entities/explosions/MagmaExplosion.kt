@@ -69,11 +69,15 @@ class MagmaExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         owner = spawnProps.get(ConstKeys.OWNER) as GameEntity?
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
+
         timer.reset()
-        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.BLAST_1_SOUND, false)
+
+        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ASTEROID_EXPLODE_SOUND, false)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->

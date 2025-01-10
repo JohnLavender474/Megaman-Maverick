@@ -11,8 +11,9 @@ class SpawnerForEvent(
     override val eventKeyMask: ObjectSet<Any> = ObjectSet(),
     shouldBeCulled: (Float) -> Boolean = { false },
     onCull: () -> Unit = {},
-    respawnable: Boolean = true
-) : Spawner(shouldBeCulled, onCull, respawnable), IEventListener {
+    respawnable: Boolean = true,
+    shouldTestPred: (Float) -> Boolean = { true }
+) : Spawner(shouldBeCulled, onCull, respawnable, shouldTestPred), IEventListener {
 
     private val events = Array<Event>()
 

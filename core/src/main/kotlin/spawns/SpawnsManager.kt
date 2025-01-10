@@ -29,7 +29,7 @@ class SpawnsManager(val spawns: Array<Spawn>) : Updatable, Resettable {
                 continue
             }
 
-            if (spawner.test(delta)) {
+            if (spawner.shouldTest(delta) && spawner.test(delta)) {
                 val spawn = spawner.get()
                 spawns.add(spawn)
 

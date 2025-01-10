@@ -65,7 +65,6 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    internal var active = true
     internal var hidden = false
 
     private lateinit var spawnRoom: String
@@ -103,8 +102,15 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         val left = spawnProps.getOrDefault(ConstKeys.LEFT, false, Boolean::class)
         defineDrawables(type, left)
 
-        active = spawnProps.getOrDefault(ConstKeys.ACTIVE, true, Boolean::class)
+        val active = spawnProps.getOrDefault(ConstKeys.ACTIVE, true, Boolean::class)
+        setActive(active)
+
         hidden = spawnProps.getOrDefault(ConstKeys.HIDDEN, false, Boolean::class)
+    }
+
+    internal fun setActive(active: Boolean) {
+        body.physics.collisionOn = active
+        body.forEachFixture { it.setActive(active) }
     }
 
     override fun onDestroy() {
@@ -155,7 +161,7 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         body.drawingColor = Color.BLUE
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBounds() }
+        debugShapes.add { if (body.physics.collisionOn) body.getBounds() else null }
 
         val deathBounds = GameRectangle()
         val deathFixture = Fixture(body, FixtureType.DEATH, deathBounds)
@@ -163,7 +169,6 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         body.addFixture(deathFixture)
 
         body.preProcess.put(ConstKeys.DEATH) { deathBounds.set(body) }
-        body.preProcess.put(ConstKeys.ACTIVE) { body.forEachFixture { it.setActive(active) } }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

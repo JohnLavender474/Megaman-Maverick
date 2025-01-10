@@ -44,6 +44,17 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
             ConstKeys.PROJECTILES -> EntityType.PROJECTILE
             else -> throw IllegalArgumentException("Unknown spawner type: ${layer.name}")
         }
+        val shouldTestPred: (Float) -> Boolean = when (entityType) {
+            EntityType.BLOCK,
+            EntityType.HAZARD,
+            EntityType.DECORATION -> {
+                { true }
+            }
+
+            else -> {
+                { !game.isProperty(ConstKeys.ROOM_TRANSITION, true) }
+            }
+        }
 
         GameLogger.debug(TAG, "build(): layerName=${layer.name}, entityType=$entityType")
 
@@ -91,10 +102,12 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                         eventKeyMask = objectSetOf<Any>(
                             EventType.PLAYER_READY,
                             EventType.SET_TO_ROOM_NO_TRANS,
-                            EventType.END_ROOM_TRANS
+                            // EventType.END_ROOM_TRANS
+                            EventType.BEGIN_ROOM_TRANS
                         ),
                         spawnSupplier = spawnSupplier,
-                        respawnable = respawnable
+                        respawnable = respawnable,
+                        shouldTest = shouldTestPred
                     )
                     spawners.add(spawner)
 
@@ -111,7 +124,12 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                         events.add(eventType)
                     }
 
-                    val spawner = SpawnerFactory.spawnerForWhenEventCalled(events, spawnSupplier, respawnable)
+                    val spawner = SpawnerFactory.spawnerForWhenEventCalled(
+                        events = events,
+                        spawnSupplier = spawnSupplier,
+                        respawnable = respawnable,
+                        shouldTest = shouldTestPred
+                    )
                     spawners.add(spawner)
 
                     GameLogger.debug(TAG, "build(): adding SPAWN_EVENT spawne: entity=${it.name}")
@@ -121,18 +139,12 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                 }
 
                 else -> {
-                    val spawnRoomTrans =
-                        spawnProps.getOrDefault(
-                            "${ConstKeys.SPAWN}_${ConstKeys.ROOM_TRANSITION}",
-                            false,
-                            Boolean::class
-                        )
-
                     val spawner = SpawnerFactory.spawnerForWhenInCamera(
-                        game.getGameCamera(),
-                        SpawnerShapeFactory.getSpawnShape(entityType, it),
-                        spawnSupplier,
-                        respawnable
+                        camera = game.getGameCamera(),
+                        spawnShape = SpawnerShapeFactory.getSpawnShape(entityType, it),
+                        spawnSupplier = spawnSupplier,
+                        respawnable = respawnable,
+                        shouldTest = shouldTestPred
                     )
                     spawners.add(spawner)
 

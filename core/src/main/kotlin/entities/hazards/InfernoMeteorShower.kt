@@ -34,7 +34,7 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
     companion object {
         const val TAG = "InfernoMeteorShower"
 
-        private const val COOLDOWN_DUR = 2f
+        private const val COOLDOWN_DUR = 3f
         private const val METEOR_SHOWER_DUR = 3f
 
         private const val INIT_SPAWN_DELAY = 0.5f
