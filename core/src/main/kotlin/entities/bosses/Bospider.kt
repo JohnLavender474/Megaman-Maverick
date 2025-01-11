@@ -12,7 +12,6 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -20,7 +19,6 @@ import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
@@ -56,7 +54,6 @@ import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
@@ -64,7 +61,10 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toProps
-import com.megaman.maverick.game.world.body.*
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
 class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IParentEntity {
@@ -406,8 +406,6 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     private fun getCurrentSpeed() = ConstVals.PPM * (MIN_SPEED + (MAX_SPEED - MIN_SPEED) * (1 - getHealthRatio()))
 
     private fun shootWebs() {
-        requestToPlaySound(SoundAsset.SPLASH_SOUND, false)
-
         val centerTrajectory = megaman.body.getCenter().sub(body.getCenter()).nor()
         shootWeb(centerTrajectory)
 
@@ -416,17 +414,23 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
         val rightTrajectory = centerTrajectory.cpy().rotateDeg(ANGLE_X)
         shootWeb(rightTrajectory)
+
+        requestToPlaySound(SoundAsset.SPLASH_SOUND, false)
     }
 
     private fun shootWeb(trajectory: Vector2) {
-        val web = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SPIDER_WEB)!!
+        // TODO: Web shooting works, but has been removed from this boss's attack set.
+        //   Uncomment this code to add web shooting back to her attack set (yes, Bospider is a she).
+        /*
         val scaledTrajectory = trajectory.cpy().scl(WEB_SPEED * ConstVals.PPM)
+
+        val web = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SPIDER_WEB)!!
         val props = props(
             ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER),
             ConstKeys.TRAJECTORY pairTo scaledTrajectory,
             ConstKeys.OWNER pairTo this
         )
         web.spawn(props)
+         */
     }
-
 }

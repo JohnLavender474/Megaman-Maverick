@@ -688,7 +688,7 @@
   <object id="610" name="SniperJoe" x="10840" y="816" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="13" name="player">
-  <object id="647" name="0" x="5568" y="928" width="32" height="32"/>
+  <object id="647" name="0" x="12080" y="512" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="2" name="temp">
   <object id="5" name="0" x="128" y="1280" width="32" height="32"/>
