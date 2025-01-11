@@ -79,8 +79,6 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     companion object {
         const val TAG = "MoonMan"
 
-        private const val TAG_SUFFIX_FOR_ATLAS = "_v2"
-
         // if false, Gravity Man's direction rotation will never change
         private const val CHANGE_GRAVITY = false
 
@@ -193,11 +191,11 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_2.source)
             ANIM_DEFS.keys().forEach { key ->
-                val atlasKey = "${TAG}${TAG_SUFFIX_FOR_ATLAS}/${key}"
+                val atlasKey = "${TAG}/${key}"
                 when {
                     key.contains("shoot") -> {
                         val index = key.split("_")[1].toInt()
-                        val shootKey = "${TAG}${TAG_SUFFIX_FOR_ATLAS}/shoot"
+                        val shootKey = "${TAG}/shoot"
                         val region = atlas.findRegion(shootKey, index)
                         regions.put(key, region)
                     }

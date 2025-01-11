@@ -1,5 +1,5 @@
 Bosses2.png
-size: 512, 1568
+size: 512, 1520
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -12,28 +12,28 @@ DesertMan/arm_extension
   index: -1
 DesertMan/arm_extension_punch
   rotate: false
-  xy: 0, 1120
+  xy: 0, 1072
   size: 128, 256
   orig: 128, 256
   offset: 0, 0
   index: -1
 DesertMan/dance
   rotate: false
-  xy: 384, 224
+  xy: 240, 288
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 DesertMan/dance_flash
   rotate: false
-  xy: 0, 352
+  xy: 304, 288
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 DesertMan/defeated
   rotate: false
-  xy: 240, 736
+  xy: 192, 688
   size: 64, 192
   orig: 64, 192
   offset: 0, 0
@@ -47,42 +47,42 @@ DesertMan/jump
   index: -1
 DesertMan/punch
   rotate: false
-  xy: 304, 736
+  xy: 256, 688
   size: 64, 192
   orig: 64, 192
   offset: 0, 0
   index: -1
 DesertMan/punch_short
   rotate: false
-  xy: 128, 352
+  xy: 432, 288
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 DesertMan/stand
   rotate: false
-  xy: 192, 352
+  xy: 0, 416
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 DesertMan/tornado
   rotate: false
-  xy: 256, 352
+  xy: 64, 416
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 DesertMan/tornado_punch
   rotate: false
-  xy: 320, 352
+  xy: 128, 416
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 DesertMan/tornado_start
   rotate: false
-  xy: 448, 352
+  xy: 256, 416
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
@@ -94,35 +94,28 @@ DesertMan/wall_slide
   orig: 64, 64
   offset: 0, 0
   index: -1
-InfernoMan/charging
-  rotate: false
-  xy: 368, 736
-  size: 64, 192
-  orig: 64, 192
-  offset: 0, 0
-  index: -1
 InfernoMan/defeated
   rotate: false
-  xy: 432, 736
+  xy: 320, 688
   size: 64, 192
   orig: 64, 192
   offset: 0, 0
   index: -1
-InfernoMan/flame_head
+InfernoMan/flamehead
   rotate: false
-  xy: 0, 480
+  xy: 320, 416
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 InfernoMan/init
   rotate: false
-  xy: 0, 928
+  xy: 0, 880
   size: 192, 192
   orig: 192, 192
   offset: 0, 0
   index: -1
-InfernoMan/jump
+InfernoMan/jump_down
   rotate: false
   xy: 0, 64
   size: 64, 64
@@ -131,308 +124,308 @@ InfernoMan/jump
   index: -1
 InfernoMan/jump_shoot_down
   rotate: false
-  xy: 128, 480
-  size: 64, 128
-  orig: 64, 128
-  offset: 0, 0
-  index: -1
-InfernoMan/jump_shoot_straight
-  rotate: false
-  xy: 192, 480
-  size: 64, 128
-  orig: 64, 128
-  offset: 0, 0
-  index: -1
-InfernoMan/jump_shoot_up
-  rotate: false
-  xy: 256, 480
-  size: 64, 128
-  orig: 64, 128
-  offset: 0, 0
-  index: -1
-InfernoMan/slide
-  rotate: false
   xy: 64, 64
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-InfernoMan/stand
+InfernoMan/jump_shoot_straight
   rotate: false
   xy: 128, 64
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-InfernoMan/stand_shoot_mega
-  rotate: false
-  xy: 192, 928
-  size: 128, 192
-  orig: 128, 192
-  offset: 0, 0
-  index: -1
-InfernoMan/stand_shoot_straight
-  rotate: false
-  xy: 320, 480
-  size: 64, 128
-  orig: 64, 128
-  offset: 0, 0
-  index: -1
-InfernoMan/stand_shoot_straight_akimbo
-  rotate: false
-  xy: 384, 480
-  size: 64, 128
-  orig: 64, 128
-  offset: 0, 0
-  index: -1
-InfernoMan/stand_shoot_up
-  rotate: false
-  xy: 448, 480
-  size: 64, 128
-  orig: 64, 128
-  offset: 0, 0
-  index: -1
-InfernoMan/wall_slide
+InfernoMan/jump_shoot_up
   rotate: false
   xy: 192, 64
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-MoonMan_v2/defeated
-  rotate: false
-  xy: 192, 128
-  size: 96, 96
-  orig: 96, 96
-  offset: 0, 0
-  index: -1
-MoonMan_v2/gravity_change_begin
-  rotate: false
-  xy: 0, 736
-  size: 48, 144
-  orig: 48, 144
-  offset: 0, 0
-  index: -1
-MoonMan_v2/gravity_change_continue
-  rotate: false
-  xy: 288, 128
-  size: 96, 96
-  orig: 96, 96
-  offset: 0, 0
-  index: -1
-MoonMan_v2/gravity_change_end
-  rotate: false
-  xy: 0, 0
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-MoonMan_v2/jump
-  rotate: false
-  xy: 48, 0
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-MoonMan_v2/jump_land
-  rotate: false
-  xy: 384, 128
-  size: 48, 96
-  orig: 48, 96
-  offset: 0, 0
-  index: -1
-MoonMan_v2/jump_shoot
-  rotate: false
-  xy: 96, 0
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: 0
-MoonMan_v2/jump_shoot
-  rotate: false
-  xy: 48, 736
-  size: 48, 144
-  orig: 48, 144
-  offset: 0, 0
-  index: 1
-MoonMan_v2/jump_shoot
-  rotate: false
-  xy: 144, 0
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: 2
-MoonMan_v2/shoot
-  rotate: false
-  xy: 0, 224
-  size: 96, 96
-  orig: 96, 96
-  offset: 0, 0
-  index: 0
-MoonMan_v2/shoot
-  rotate: false
-  xy: 96, 736
-  size: 48, 144
-  orig: 48, 144
-  offset: 0, 0
-  index: 1
-MoonMan_v2/shoot
-  rotate: false
-  xy: 144, 736
-  size: 48, 144
-  orig: 48, 144
-  offset: 0, 0
-  index: 2
-MoonMan_v2/shoot
-  rotate: false
-  xy: 96, 224
-  size: 48, 96
-  orig: 48, 96
-  offset: 0, 0
-  index: 3
-MoonMan_v2/shoot
-  rotate: false
-  xy: 192, 736
-  size: 48, 144
-  orig: 48, 144
-  offset: 0, 0
-  index: 4
-MoonMan_v2/shoot
-  rotate: false
-  xy: 192, 0
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: 5
-MoonMan_v2/shoot
-  rotate: false
-  xy: 144, 224
-  size: 96, 96
-  orig: 96, 96
-  offset: 0, 0
-  index: 6
-MoonMan_v2/stand
-  rotate: false
-  xy: 240, 224
-  size: 48, 96
-  orig: 48, 96
-  offset: 0, 0
-  index: -1
-MoonMan_v2/throw
-  rotate: false
-  xy: 240, 0
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-MoonMan_v2/throw_asteroids
-  rotate: false
-  xy: 288, 224
-  size: 96, 96
-  orig: 96, 96
-  offset: 0, 0
-  index: -1
-TimberWoman_v2/axe_pound1
+InfernoMan/jump_up
   rotate: false
   xy: 256, 64
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-TimberWoman_v2/axe_pound2
+InfernoMan/slide
   rotate: false
   xy: 320, 64
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-TimberWoman_v2/axe_swing1
+InfernoMan/stand
   rotate: false
   xy: 384, 64
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-TimberWoman_v2/axe_swing2
+InfernoMan/stand_shoot_mega
+  rotate: false
+  xy: 192, 880
+  size: 128, 192
+  orig: 128, 192
+  offset: 0, 0
+  index: -1
+InfernoMan/stand_shoot_straight
   rotate: false
   xy: 448, 64
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-TimberWoman_v2/axe_wallslide
+InfernoMan/stand_shoot_up
   rotate: false
   xy: 0, 128
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-TimberWoman_v2/defeated
+InfernoMan/wallslide
   rotate: false
   xy: 64, 128
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-TimberWoman_v2/init
+MoonMan/defeated
   rotate: false
-  xy: 256, 1120
+  xy: 64, 192
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+MoonMan/gravity_change_begin
+  rotate: false
+  xy: 448, 544
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+MoonMan/gravity_change_continue
+  rotate: false
+  xy: 160, 192
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+MoonMan/gravity_change_end
+  rotate: false
+  xy: 0, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+MoonMan/jump
+  rotate: false
+  xy: 48, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+MoonMan/jump_land
+  rotate: false
+  xy: 256, 192
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+MoonMan/jump_shoot
+  rotate: false
+  xy: 96, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 0
+MoonMan/jump_shoot
+  rotate: false
+  xy: 0, 688
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: 1
+MoonMan/jump_shoot
+  rotate: false
+  xy: 144, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 2
+MoonMan/shoot
+  rotate: false
+  xy: 304, 192
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: 0
+MoonMan/shoot
+  rotate: false
+  xy: 48, 688
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: 1
+MoonMan/shoot
+  rotate: false
+  xy: 96, 688
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: 2
+MoonMan/shoot
+  rotate: false
+  xy: 400, 192
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: 3
+MoonMan/shoot
+  rotate: false
+  xy: 144, 688
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: 4
+MoonMan/shoot
+  rotate: false
+  xy: 192, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 5
+MoonMan/shoot
+  rotate: false
+  xy: 0, 288
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: 6
+MoonMan/stand
+  rotate: false
+  xy: 96, 288
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+MoonMan/throw
+  rotate: false
+  xy: 240, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+MoonMan/throw_asteroids
+  rotate: false
+  xy: 144, 288
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+TimberWoman/axe_pound1
+  rotate: false
+  xy: 128, 128
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+TimberWoman/axe_pound2
+  rotate: false
+  xy: 192, 128
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+TimberWoman/axe_swing1
+  rotate: false
+  xy: 256, 128
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+TimberWoman/axe_swing2
+  rotate: false
+  xy: 320, 128
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+TimberWoman/axe_wallslide
+  rotate: false
+  xy: 384, 128
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+TimberWoman/defeated
+  rotate: false
+  xy: 448, 128
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+TimberWoman/init
+  rotate: false
+  xy: 256, 1072
   size: 64, 448
   orig: 64, 448
   offset: 0, 0
   index: -1
-TimberWoman_v2/jump_down
+TimberWoman/jump_down
   rotate: false
-  xy: 0, 608
+  xy: 448, 416
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
-TimberWoman_v2/jump_spin
+TimberWoman/jump_spin
   rotate: false
-  xy: 128, 1120
+  xy: 128, 1072
   size: 128, 256
   orig: 128, 256
   offset: 0, 0
   index: -1
-TimberWoman_v2/jump_up
+TimberWoman/jump_up
   rotate: false
-  xy: 64, 608
+  xy: 0, 544
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
-TimberWoman_v2/run
+TimberWoman/run
   rotate: false
-  xy: 128, 608
+  xy: 64, 544
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-TimberWoman_v2/stand
+TimberWoman/stand
   rotate: false
-  xy: 320, 1120
+  xy: 320, 1072
   size: 64, 448
   orig: 64, 448
   offset: 0, 0
   index: -1
-TimberWoman_v2/stand_pound
+TimberWoman/stand_pound
   rotate: false
-  xy: 320, 928
+  xy: 320, 880
   size: 128, 192
   orig: 128, 192
   offset: 0, 0
   index: -1
-TimberWoman_v2/stand_swing
+TimberWoman/stand_swing
   rotate: false
-  xy: 256, 608
+  xy: 192, 544
   size: 256, 128
   orig: 256, 128
   offset: 0, 0
   index: -1
-TimberWoman_v2/wallslide
+TimberWoman/wallslide
   rotate: false
-  xy: 128, 128
+  xy: 0, 192
   size: 64, 64
   orig: 64, 64
   offset: 0, 0

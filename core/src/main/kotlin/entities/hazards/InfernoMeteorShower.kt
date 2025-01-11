@@ -5,8 +5,10 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
+import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -29,7 +31,7 @@ import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 
-class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity {
+class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity, IDirectional {
 
     companion object {
         const val TAG = "InfernoMeteorShower"
@@ -47,9 +49,9 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
         private const val SHAKE_Y = 0.003125f
 
         private const val METEOR_CULL_TIME = 3f
-
-        private val METEOR_TRAJ = Vector2(8f, -8f).scl(ConstVals.PPM.toFloat())
     }
+
+    override lateinit var direction: Direction
 
     private val bounds = GameRectangle()
 
@@ -59,7 +61,6 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
     private lateinit var spawnRoom: String
 
     private var coolingDown = true
-    private var left = true
 
     override fun init() {
         if (timers.isEmpty) {
@@ -74,6 +75,7 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
+
         super.onSpawn(spawnProps)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
@@ -86,30 +88,33 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
             }
         }
 
-        left = spawnProps.getOrDefault(ConstKeys.LEFT, true, Boolean::class)
+        direction = Direction.valueOf(
+            spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.DOWN, String::class).uppercase()
+        )
+
         spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
+
         timers.values().forEach { it.reset() }
+
         coolingDown = true
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
+
         super.onDestroy()
+
         spawners.clear()
     }
 
     private fun spawnMeteor(spawn: Vector2) {
         GameLogger.debug(TAG, "spawnMeteor(): spawn=$spawn")
 
-        val trajectory = GameObjectPools.fetch(Vector2::class).set(METEOR_TRAJ)
-        if (left) trajectory.x *= -1f
-
         val meteor = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_METEOR)!!
         meteor.spawn(
             props(
-                ConstKeys.LEFT pairTo left,
+                ConstKeys.DIRECTION pairTo direction,
                 ConstKeys.POSITION pairTo spawn,
-                ConstKeys.TRAJECTORY pairTo trajectory,
                 ConstKeys.CULL_TIME pairTo METEOR_CULL_TIME
             )
         )

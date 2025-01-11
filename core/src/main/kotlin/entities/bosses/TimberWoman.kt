@@ -181,8 +181,6 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
 
         private const val LEAVES_PER_POUND = 2
 
-        private const val REGION_TAG_SUFFIX = "_v2"
-
         private val regions = ObjectMap<String, TextureRegion>()
         private val animDefs = ObjectMap<String, AnimationDef>()
     }
@@ -245,7 +243,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
             )
             TimberWomanState.entries.forEach { keys.add(it.name.lowercase()) }
 
-            keys.forEach { key -> regions.put(key, atlas.findRegion("${TAG}${REGION_TAG_SUFFIX}/${key}")) }
+            keys.forEach { key -> regions.put(key, atlas.findRegion("${TAG}/${key}")) }
         }
 
         if (animDefs.isEmpty) animDefs.putAll(

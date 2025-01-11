@@ -9,9 +9,11 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -43,16 +45,35 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGdxRectangle
 import com.megaman.maverick.game.world.body.*
 
-class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
+class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IDirectional {
 
     companion object {
         const val TAG = "MagmaMeteor"
         private const val DEFAULT_CULL_TIME = 0.5f
+        private const val METEOR_SPEED = 10f
+        private const val SPRITE_ROTATION_OFFSET = 135f
         private var region: TextureRegion? = null
     }
 
+    // when direction is
+    //  - up: rotation = 0
+    //  - down: rotation = 180
+    //  - left: rotation = 135 (diagonal left)
+    //  - right: rotation = 225 (diagonal right)
+    override var direction: Direction
+        get() = body.direction
+        set(value) {
+            body.direction = value
+        }
+
+    private val rotation: Float
+        get() = when (direction) {
+            Direction.UP -> 0f
+            Direction.DOWN -> 180f
+            Direction.LEFT -> 135f
+            Direction.RIGHT -> 225f
+        }
     private var collideBodies: Array<IBodyEntity>? = null
-    private var left = false
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
@@ -70,8 +91,9 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
 
-        val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
-        body.physics.velocity.set(trajectory)
+        direction = Direction.valueOf(spawnProps.get(ConstKeys.DIRECTION, String::class)!!.uppercase())
+
+        body.physics.velocity.set(0f, METEOR_SPEED * ConstVals.PPM).rotateDeg(rotation)
 
         val rawCollideBounds = spawnProps.get("${ConstKeys.COLLIDE}_${ConstKeys.BODIES}")
         collideBodies = when (rawCollideBounds) {
@@ -79,8 +101,6 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
             is Array<*> -> rawCollideBounds as Array<IBodyEntity>
             else -> null
         }
-
-        left = spawnProps.get(ConstKeys.LEFT, Boolean::class)!!
     }
 
     override fun hitBlock(
@@ -114,9 +134,13 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
             else -> thisShape.getCenter()
         }
 
-        var offset = overlap.width / 2f
-        if (left) offset *= -1f
-        spawn.add(offset, 0f)
+        val offset = GameObjectPools.fetch(Vector2::class)
+        when (direction) {
+            Direction.LEFT -> offset.set(-overlap.width / 2f, 0f)
+            Direction.RIGHT -> offset.set(overlap.width / 2f, 0f)
+            else -> offset.setZero()
+        }
+        spawn.add(offset)
 
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.MAGMA_EXPLOSION)!!
         explosion.spawn(props(ConstKeys.POSITION pairTo spawn))
@@ -145,10 +169,16 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
-            val position = if (left) Position.BOTTOM_LEFT else Position.BOTTOM_RIGHT
-            sprite.setPosition(body.getPositionPoint(position), position)
+            sprite.setOriginCenter()
+            sprite.rotation = rotation + SPRITE_ROTATION_OFFSET
 
-            sprite.setFlip(left, false)
+            val position = when (direction) {
+                Direction.UP -> Position.TOP_CENTER
+                Direction.LEFT -> Position.BOTTOM_LEFT
+                Direction.DOWN -> Position.BOTTOM_CENTER
+                Direction.RIGHT -> Position.BOTTOM_RIGHT
+            }
+            sprite.setPosition(body.getPositionPoint(position), position)
         }
         return spritesComponent
     }

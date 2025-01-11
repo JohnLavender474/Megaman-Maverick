@@ -29,10 +29,7 @@ import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
-import com.mega.game.engine.drawables.sprites.GameSprite
-import com.mega.game.engine.drawables.sprites.SpritesComponent
-import com.mega.game.engine.drawables.sprites.setPosition
-import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.drawables.sprites.*
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.state.StateMachine
 import com.mega.game.engine.state.StateMachineBuilder
@@ -62,7 +59,6 @@ import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
-
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
@@ -110,13 +106,12 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val ORB_SPEED = 15f
         private const val GOOP_SPEED = 10f
         private const val WAVE_SPEED = 12f
-        private const val METEOR_SPEED = 10f
         private const val SPAWN_METEOR_DELAY = 1f
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private enum class InfernoManState { INIT, STAND, JUMP, WALL_SLIDE, FLAME_HEAD }
+    private enum class InfernoManState { INIT, STAND, JUMP, WALLSLIDE, FLAMEHEAD }
 
     private enum class ShootMethod { STRAIGHT, UP, DOWN, MEGA }
 
@@ -159,18 +154,18 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_2.source)
             InfernoManState.entries.forEach { state ->
                 val key = state.name.lowercase()
-                regions.put(key, atlas.findRegion("$TAG/$key"))
+                if (atlas.containsRegion("$TAG/$key")) regions.put(key, atlas.findRegion("$TAG/$key"))
             }
             gdxArrayOf(
+                "jump_up",
+                "jump_down",
                 "jump_shoot_down",
                 "jump_shoot_straight",
                 "jump_shoot_up",
                 "stand_shoot_mega",
                 "stand_shoot_straight",
-                "stand_shoot_straight_akimbo",
                 "stand_shoot_up",
                 "slide",
-                "wall_slide",
                 "defeated"
             ).forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
@@ -273,7 +268,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 else -> {
                     if (currentState == InfernoManState.INIT && !body.isSensing(BodySense.FEET_ON_GROUND)) return@add
 
-                    if (currentState == InfernoManState.WALL_SLIDE) {
+                    if (currentState == InfernoManState.WALLSLIDE) {
                         body.physics.velocity.x = 0f
                         if (shouldGoToStandState()) {
                             stateMachine.next()
@@ -332,7 +327,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 body.physics.velocity.y = 0f
 
             body.physics.gravity.y = when {
-                currentState == InfernoManState.WALL_SLIDE -> WALL_SLIDE_GRAVITY * ConstVals.PPM
+                currentState == InfernoManState.WALLSLIDE -> WALL_SLIDE_GRAVITY * ConstVals.PPM
                 body.isSensing(BodySense.FEET_ON_GROUND) -> GROUND_GRAVITY * ConstVals.PPM
                 else -> GRAVITY * ConstVals.PPM
             }
@@ -352,7 +347,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             val flipX = when (currentState) {
-                InfernoManState.WALL_SLIDE -> body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)
+                InfernoManState.WALLSLIDE -> body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)
                 else -> isFacing(Facing.LEFT)
             }
             sprite.setFlip(flipX, false)
@@ -364,31 +359,36 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private fun defineAnimationsComponent(): AnimationsComponent {
         val animations = objectMapOf<String, IAnimation>(
             "init" pairTo Animation(regions["init"], 3, 3, 0.1f, false),
-            "flame_head" pairTo Animation(regions["flame_head"], 2, 2, 0.1f, true),
-            "jump" pairTo Animation(regions["jump"]),
-            "jump_shoot_down" pairTo Animation(regions["jump_shoot_down"], 2, 1, 0.1f, false),
-            "jump_shoot_straight" pairTo Animation(regions["jump_shoot_straight"], 2, 1, 0.1f, false),
-            "jump_shoot_up" pairTo Animation(regions["jump_shoot_up"], 2, 1, 0.1f, false),
-            "wall_slide" pairTo Animation(regions["wall_slide"]),
+            "flamehead" pairTo Animation(regions["flamehead"], 2, 2, 0.1f, true),
+            "jump_up" pairTo Animation(regions["jump_up"]),
+            "jump_down" pairTo Animation(regions["jump_down"]),
+            "jump_shoot_down" pairTo Animation(regions["jump_shoot_down"]),
+            "jump_shoot_straight" pairTo Animation(regions["jump_shoot_straight"]),
+            "jump_shoot_up" pairTo Animation(regions["jump_shoot_up"]),
+            "wallslide" pairTo Animation(regions["wallslide"]),
             "slide" pairTo Animation(regions["slide"]),
             "stand" pairTo Animation(regions["stand"]),
             "stand_shoot_mega" pairTo Animation(regions["stand_shoot_mega"], 3, 2, 0.1f, false),
-            "stand_shoot_straight" pairTo Animation(regions["stand_shoot_straight"], 2, 1, 0.1f, false),
-            "stand_shoot_straight_akimbo" pairTo Animation(regions["stand_shoot_straight_akimbo"], 2, 1, 0.1f, true),
-            "stand_shoot_up" pairTo Animation(regions["stand_shoot_up"], 2, 1, 0.1f, false),
+            "stand_shoot_straight" pairTo Animation(regions["stand_shoot_straight"]),
+            // "stand_shoot_straight_akimbo" pairTo Animation(regions["stand_shoot_straight_akimbo"], 2, 1, 0.1f, true),
+            "stand_shoot_up" pairTo Animation(regions["stand_shoot_up"]),
             "defeated" pairTo Animation(regions["defeated"], 3, 1, 0.1f, true)
         )
         val keySupplier: () -> String? = {
             if (defeated) "defeated" else when (currentState) {
-                InfernoManState.INIT -> if (body.isSensing(BodySense.FEET_ON_GROUND)) "init" else "jump"
-                else -> {
-                    var key = currentState.name.lowercase()
-                    if (currentState.equalsAny(InfernoManState.STAND, InfernoManState.JUMP) && shooting) {
-                        val temp = key + "_shoot_${shootMethod.name.lowercase()}"
-                        if (animations.containsKey(temp)) key = temp
-                    }
-                    key
+                InfernoManState.INIT -> if (body.isSensing(BodySense.FEET_ON_GROUND)) "init" else "jump_down"
+
+                InfernoManState.JUMP -> "jump" + when {
+                    shooting -> "_shoot_${shootMethod.name.lowercase()}"
+                    else -> "_${if (body.physics.velocity.y > 0f) "up" else "down"}"
                 }
+
+                InfernoManState.STAND -> "stand" + when {
+                    shooting -> "_shoot_${shootMethod.name.lowercase()}"
+                    else -> ""
+                }
+
+                else -> currentState.name.lowercase()
             }
         }
         val animator = Animator(keySupplier, animations)
@@ -398,7 +398,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private fun buildTimers() {
         timers.put("init", Timer(INIT_DUR))
         timers.put("stand", Timer(STAND_DUR))
-        timers.put("wall_slide", Timer(WALL_SLIDE_DUR))
+        timers.put("wallslide", Timer(WALL_SLIDE_DUR))
         timers.put("shoot", Timer())
         timers.put("shoot_cooldown", Timer(SHOOT_COOLDOWN_DUR))
         timers.put("shoot_delay", Timer(SHOOT_DELAY))
@@ -413,7 +413,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             flameHeadRunnables.add(runnable)
         }
         flameHeadTimer.setRunnables(flameHeadRunnables)
-        timers.put("flame_head", flameHeadTimer)
+        timers.put("flamehead", flameHeadTimer)
     }
 
     private fun buildStateMachine(): StateMachine<InfernoManState> {
@@ -422,13 +422,13 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         builder.setOnChangeState(this::onChangeState)
         builder.initialState(InfernoManState.INIT.name)
             .transition(InfernoManState.INIT.name, InfernoManState.STAND.name) { ready }
-            .transition(InfernoManState.STAND.name, InfernoManState.FLAME_HEAD.name) { stateIndex % 3 == 0 }
+            .transition(InfernoManState.STAND.name, InfernoManState.FLAMEHEAD.name) { stateIndex % 3 == 0 }
             .transition(InfernoManState.STAND.name, InfernoManState.JUMP.name) { true }
             .transition(InfernoManState.JUMP.name, InfernoManState.STAND.name) { shouldGoToStandState() }
-            .transition(InfernoManState.JUMP.name, InfernoManState.WALL_SLIDE.name) { isWallSliding() }
-            .transition(InfernoManState.WALL_SLIDE.name, InfernoManState.STAND.name) { shouldGoToStandState() }
-            .transition(InfernoManState.WALL_SLIDE.name, InfernoManState.JUMP.name) { true }
-            .transition(InfernoManState.FLAME_HEAD.name, InfernoManState.STAND.name) { true }
+            .transition(InfernoManState.JUMP.name, InfernoManState.WALLSLIDE.name) { isWallSliding() }
+            .transition(InfernoManState.WALLSLIDE.name, InfernoManState.STAND.name) { shouldGoToStandState() }
+            .transition(InfernoManState.WALLSLIDE.name, InfernoManState.JUMP.name) { true }
+            .transition(InfernoManState.FLAMEHEAD.name, InfernoManState.STAND.name) { true }
         return builder.build()
     }
 
@@ -441,8 +441,8 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 timers["shoot_delay"].setToEnd()
             }
 
-            InfernoManState.WALL_SLIDE -> body.physics.defaultFrictionOnSelf.y = DEFAULT_FRICTION_Y
-            InfernoManState.FLAME_HEAD -> {
+            InfernoManState.WALLSLIDE -> body.physics.defaultFrictionOnSelf.y = DEFAULT_FRICTION_Y
+            InfernoManState.FLAMEHEAD -> {
                 val iter = poppedMeteorSpawners.iterator()
                 while (iter.hasNext) {
                     val entry = iter.next()
@@ -471,7 +471,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 body.physics.applyFrictionX = false
                 jump(megaman.body.getCenter())
 
-                if (previous == InfernoManState.WALL_SLIDE) {
+                if (previous == InfernoManState.WALLSLIDE) {
                     var impulseX = WALL_JUMP_IMPULSE_X * ConstVals.PPM
                     if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) impulseX *= -1f
                     body.physics.velocity.x = impulseX
@@ -480,13 +480,13 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 resetShootTimer()
             }
 
-            InfernoManState.FLAME_HEAD -> {
-                timers["flame_head"].reset()
+            InfernoManState.FLAMEHEAD -> {
+                timers["flamehead"].reset()
                 randomMeteorKeys.shuffle()
             }
 
-            InfernoManState.WALL_SLIDE -> {
-                timers["wall_slide"].reset()
+            InfernoManState.WALLSLIDE -> {
+                timers["wallslide"].reset()
                 body.physics.defaultFrictionOnSelf.y = WALL_SLIDE_FRICTION_Y
             }
 
@@ -562,14 +562,14 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
         when (shootMethod) {
             ShootMethod.UP -> {
-                offsetX = 0.65f * ConstVals.PPM * facing.value
-                offsetY = 0.4f * ConstVals.PPM
+                offsetX = 0.75f * ConstVals.PPM * facing.value
+                offsetY = 0.5f * ConstVals.PPM
                 rotation = if (isFacing(Facing.LEFT)) 45f else 315f
             }
 
             ShootMethod.DOWN -> {
-                offsetX = 0.85f * ConstVals.PPM * facing.value
-                offsetY = -0.2f * ConstVals.PPM
+                offsetX = ConstVals.PPM.toFloat() * facing.value
+                offsetY = -0.25f * ConstVals.PPM
                 rotation = if (isFacing(Facing.LEFT)) 135f else 225f
             }
 
@@ -626,7 +626,6 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             }
         }
         val spawn = GameObjectPools.fetch(Vector2::class).set(x, meteorSpawnBounds.getY())
-        val trajectory = GameObjectPools.fetch(Vector2::class).set(0f, -METEOR_SPEED * ConstVals.PPM)
 
         val floor = MegaGameEntities.getEntitiesOfMapObjectId(meteorCollideBlockId).first() as Block
 
@@ -634,7 +633,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         meteor.spawn(
             props(
                 ConstKeys.POSITION pairTo spawn,
-                ConstKeys.TRAJECTORY pairTo trajectory,
+                ConstKeys.DIRECTION pairTo ConstKeys.DOWN,
                 "${ConstKeys.COLLIDE}_${ConstKeys.BODIES}" pairTo floor
             )
         )

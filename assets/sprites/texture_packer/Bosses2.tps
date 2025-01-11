@@ -58,9 +58,9 @@
             <key>filtering</key>
             <struct type="LibGDXFiltering">
                 <key>x</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
                 <key>y</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
             </struct>
         </struct>
         <key>shapePadding</key>
@@ -175,18 +175,18 @@
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">../frames/Bosses2/DesertMan/arm_extension.png</key>
             <key type="filename">../frames/Bosses2/DesertMan/wall_slide.png</key>
-            <key type="filename">../frames/Bosses2/InfernoMan/jump.png</key>
+            <key type="filename">../frames/Bosses2/InfernoMan/jump_down.png</key>
+            <key type="filename">../frames/Bosses2/InfernoMan/jump_up.png</key>
             <key type="filename">../frames/Bosses2/InfernoMan/slide.png</key>
             <key type="filename">../frames/Bosses2/InfernoMan/stand.png</key>
-            <key type="filename">../frames/Bosses2/InfernoMan/wall_slide.png</key>
-            <key type="filename">../frames/Bosses2/TimberWoman_v2/axe_pound1.png</key>
-            <key type="filename">../frames/Bosses2/TimberWoman_v2/axe_pound2.png</key>
-            <key type="filename">../frames/Bosses2/TimberWoman_v2/axe_swing1.png</key>
-            <key type="filename">../frames/Bosses2/TimberWoman_v2/axe_swing2.png</key>
-            <key type="filename">../frames/Bosses2/TimberWoman_v2/axe_wallslide.png</key>
-            <key type="filename">../frames/Bosses2/TimberWoman_v2/defeated.png</key>
-            <key type="filename">../frames/Bosses2/TimberWoman_v2/jump_spin.png</key>
-            <key type="filename">../frames/Bosses2/TimberWoman_v2/wallslide.png</key>
+            <key type="filename">../frames/Bosses2/InfernoMan/wallslide.png</key>
+            <key type="filename">../frames/Bosses2/TimberWoman/axe_pound1.png</key>
+            <key type="filename">../frames/Bosses2/TimberWoman/axe_pound2.png</key>
+            <key type="filename">../frames/Bosses2/TimberWoman/axe_swing1.png</key>
+            <key type="filename">../frames/Bosses2/TimberWoman/axe_swing2.png</key>
+            <key type="filename">../frames/Bosses2/TimberWoman/axe_wallslide.png</key>
+            <key type="filename">../frames/Bosses2/TimberWoman/defeated.png</key>
+            <key type="filename">../frames/Bosses2/TimberWoman/wallslide.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -202,6 +202,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Bosses2/DesertMan/arm_extension_punch.png</key>
+            <key type="filename">../frames/Bosses2/TimberWoman/jump_spin.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -235,8 +236,8 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Bosses2/DesertMan/dance_flash.png</key>
-            <key type="filename">../frames/Bosses2/InfernoMan/flame_head.png</key>
-            <key type="filename">../frames/Bosses2/TimberWoman_v2/run.png</key>
+            <key type="filename">../frames/Bosses2/InfernoMan/flamehead.png</key>
+            <key type="filename">../frames/Bosses2/TimberWoman/run.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -253,7 +254,6 @@
             </struct>
             <key type="filename">../frames/Bosses2/DesertMan/defeated.png</key>
             <key type="filename">../frames/Bosses2/DesertMan/punch.png</key>
-            <key type="filename">../frames/Bosses2/InfernoMan/charging.png</key>
             <key type="filename">../frames/Bosses2/InfernoMan/defeated.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -319,10 +319,9 @@
             <key type="filename">../frames/Bosses2/InfernoMan/jump_shoot_straight.png</key>
             <key type="filename">../frames/Bosses2/InfernoMan/jump_shoot_up.png</key>
             <key type="filename">../frames/Bosses2/InfernoMan/stand_shoot_straight.png</key>
-            <key type="filename">../frames/Bosses2/InfernoMan/stand_shoot_straight_akimbo.png</key>
             <key type="filename">../frames/Bosses2/InfernoMan/stand_shoot_up.png</key>
-            <key type="filename">../frames/Bosses2/TimberWoman_v2/jump_down.png</key>
-            <key type="filename">../frames/Bosses2/TimberWoman_v2/jump_up.png</key>
+            <key type="filename">../frames/Bosses2/TimberWoman/jump_down.png</key>
+            <key type="filename">../frames/Bosses2/TimberWoman/jump_up.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -338,8 +337,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Bosses2/InfernoMan/stand_shoot_mega.png</key>
-            <key type="filename">../frames/Bosses2/TimberWoman_v2/stand_pound.png</key>
-            <key type="filename">../frames/Bosses2/TimberWoman_v2/stand_swing.png</key>
+            <key type="filename">../frames/Bosses2/TimberWoman/stand_pound.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -354,11 +352,11 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses2/MoonMan_v2/defeated.png</key>
-            <key type="filename">../frames/Bosses2/MoonMan_v2/gravity_change_continue.png</key>
-            <key type="filename">../frames/Bosses2/MoonMan_v2/shoot_0.png</key>
-            <key type="filename">../frames/Bosses2/MoonMan_v2/shoot_6.png</key>
-            <key type="filename">../frames/Bosses2/MoonMan_v2/throw_asteroids.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/defeated.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/gravity_change_continue.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/shoot_0.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/shoot_6.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/throw_asteroids.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -373,11 +371,11 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses2/MoonMan_v2/gravity_change_begin.png</key>
-            <key type="filename">../frames/Bosses2/MoonMan_v2/jump_shoot_1.png</key>
-            <key type="filename">../frames/Bosses2/MoonMan_v2/shoot_1.png</key>
-            <key type="filename">../frames/Bosses2/MoonMan_v2/shoot_2.png</key>
-            <key type="filename">../frames/Bosses2/MoonMan_v2/shoot_4.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/gravity_change_begin.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/jump_shoot_1.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/shoot_1.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/shoot_2.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/shoot_4.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -392,12 +390,12 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses2/MoonMan_v2/gravity_change_end.png</key>
-            <key type="filename">../frames/Bosses2/MoonMan_v2/jump.png</key>
-            <key type="filename">../frames/Bosses2/MoonMan_v2/jump_shoot_0.png</key>
-            <key type="filename">../frames/Bosses2/MoonMan_v2/jump_shoot_2.png</key>
-            <key type="filename">../frames/Bosses2/MoonMan_v2/shoot_5.png</key>
-            <key type="filename">../frames/Bosses2/MoonMan_v2/throw.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/gravity_change_end.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/jump.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/jump_shoot_0.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/jump_shoot_2.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/shoot_5.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/throw.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -412,9 +410,9 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses2/MoonMan_v2/jump_land.png</key>
-            <key type="filename">../frames/Bosses2/MoonMan_v2/shoot_3.png</key>
-            <key type="filename">../frames/Bosses2/MoonMan_v2/stand.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/jump_land.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/shoot_3.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/stand.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -429,7 +427,8 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses2/TimberWoman_v2/init.png</key>
+            <key type="filename">../frames/Bosses2/TimberWoman/init.png</key>
+            <key type="filename">../frames/Bosses2/TimberWoman/stand.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -444,7 +443,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses2/TimberWoman_v2/stand.png</key>
+            <key type="filename">../frames/Bosses2/TimberWoman/stand_swing.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -453,9 +452,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>80,560,160,1120</rect>
+                <rect>64,32,128,64</rect>
                 <key>scale9Paddings</key>
-                <rect>80,560,160,1120</rect>
+                <rect>64,32,128,64</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
