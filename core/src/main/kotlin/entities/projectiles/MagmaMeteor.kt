@@ -91,7 +91,15 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
 
-        direction = Direction.valueOf(spawnProps.get(ConstKeys.DIRECTION, String::class)!!.uppercase())
+        val rawDirection = spawnProps.get(ConstKeys.DIRECTION)!!
+        direction = when (rawDirection) {
+            is String -> Direction.valueOf(rawDirection.uppercase())
+            is Direction -> rawDirection
+            else -> {
+                GameLogger.error(TAG, "onSpawn(): invalid direction value: $rawDirection")
+                Direction.LEFT // return left by default on error
+            }
+        }
 
         body.physics.velocity.set(0f, METEOR_SPEED * ConstVals.PPM).rotateDeg(rotation)
 

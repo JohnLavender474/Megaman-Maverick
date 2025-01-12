@@ -75,6 +75,7 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         super.onSpawn(spawnProps)
 
         direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+
         val position = DirectionPositionMapper.getPosition(direction).opposite()
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.positionOnPoint(spawn, position)
@@ -90,7 +91,7 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(ConstVals.PPM.toFloat())
+        body.setSize(0.5f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
@@ -106,7 +107,7 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 15))
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             val position = DirectionPositionMapper.getInvertedPosition(direction)

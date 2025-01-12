@@ -189,6 +189,7 @@ comprehensive listing of the credits for the artwork used in this game.
 
 ### Music
 
+- Infero Man stage track - [vinnyz279](https://soundcloud.com/mega-vinnyz279)
 - MMX6 Blaze Heatnix - [Famitard](https://youtu.be/QpbMwCnJDSo) - used in Inferno Man stage
 - MMX5 Dark Necrobat - [Famitard](https://youtu.be/RosxPCxVOyk) - used in Moon Man stage
 - MMX7 Vanish. Gung. - [Famitard](https://youtu.be/MFfZ-LEwcMo) - used in Desert Man stage

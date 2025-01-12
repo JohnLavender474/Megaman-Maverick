@@ -160,8 +160,8 @@
   <object id="227" name="Smoke" x="5216" y="1152" width="96" height="544"/>
   <object id="228" name="Smoke" x="5760" y="1152" width="96" height="544"/>
   <object id="229" name="Smoke" x="6336" y="1152" width="96" height="544"/>
-  <object id="231" name="LavaFall" x="5344" y="1152" width="64" height="552">
-   <polygon points="0,0 64,0 64,552 0,552"/>
+  <object id="231" name="LavaFall" x="5344" y="1152" width="64" height="544">
+   <polygon points="0,0 64,0 64,544 0,544"/>
   </object>
   <object id="241" name="Furnace" x="6944" y="1600" width="64" height="64"/>
   <object id="242" name="Furnace" x="7072" y="1600" width="64" height="64"/>
@@ -1215,11 +1215,11 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="9" name="player">
+ <objectgroup id="9" name="temp">
   <object id="395" name="0" x="9408" y="2080" width="32" height="32"/>
   <object id="398" name="1" x="10032" y="2080" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="8" name="temp">
+ <objectgroup id="8" name="player">
   <object id="10" name="0" x="128" y="2912" width="32" height="32"/>
   <object id="236" name="1" x="3840" y="1536" width="32" height="32"/>
   <object id="325" name="2" x="7552" y="1504" width="32" height="32"/>

@@ -2452,6 +2452,7 @@ music/MMX3_IntroStage.ogg
 music/MMX3_IntroStage.txt
 music/MMX_ChillPenguin_Famitard.rtf
 music/MMX7_SoldierStonekong.mp3
+music/vinnyz_timber_track.mp3
 music/MMX6_Gate_Stage.txt
 music/MMX6_Sigma.txt
 music/MM2_Credits.mp3
@@ -2465,6 +2466,7 @@ music/MMX5_VoltKraken.txt
 music/MM10_Wily1.mp3
 music/MMX6_Sigma.mp3
 music/MM3_Magnet_Man.mp3
+music/vinnyz_inferno_track.mp3
 music/MMX3_NeonTiger.mp3
 music/MMX8_BurnRooster.txt
 music/MMX6_BossFight.mp3

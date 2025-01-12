@@ -63,7 +63,7 @@ class MagmaGoopExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
         private var region: TextureRegion? = null
     }
 
-    override var direction = Direction.UP
+    override lateinit var direction: Direction
 
     private val timer = Timer(EXPLOSION_DUR)
 
@@ -81,10 +81,13 @@ class MagmaGoopExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
         super.onSpawn(spawnProps)
 
         direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+
         val position = DirectionPositionMapper.getPosition(direction).opposite()
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.positionOnPoint(spawn, position)
+
         timer.reset()
+
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.WHOOSH_SOUND, false)
 
         val spawnPellets = spawnProps.getOrDefault(MagmaPellet.TAG, true, Boolean::class)
@@ -94,8 +97,10 @@ class MagmaGoopExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
     private fun spawnPellets() {
         val position = DirectionPositionMapper.getPosition(direction)
         val spawn = body.getPositionPoint(position)
+
         for (i in 0 until PELLET_IMPULSES.size) {
             val impulse = PELLET_IMPULSES[i].cpy().scl(ConstVals.PPM.toFloat()).rotateDeg(direction.rotation)
+
             val pellet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_PELLET)!!
             pellet.spawn(
                 props(
@@ -121,7 +126,7 @@ class MagmaGoopExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.25f * ConstVals.PPM))
         body.addFixture(damagerFixture)
         damagerFixture.drawingColor = Color.RED
-        debugShapes.add { damagerFixture}
+        debugShapes.add { damagerFixture }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

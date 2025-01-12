@@ -73,7 +73,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val SPRITE_SIZE = 3.5f
 
         private const val INIT_DUR = 1f
-        private const val STAND_DUR = 1.5f
+        private const val STAND_DUR = 1.25f
         private const val WALL_SLIDE_DUR = 0.75f
         private const val SHOOT_DUR = 0.25f
         private const val SHOOT_COOLDOWN_DUR = 0.5f
@@ -358,7 +358,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val animations = objectMapOf<String, IAnimation>(
-            "init" pairTo Animation(regions["init"], 3, 3, 0.1f, false),
+            "init" pairTo Animation(regions["init"], 3, 3, 0.125f, false),
             "flamehead" pairTo Animation(regions["flamehead"], 2, 2, 0.1f, true),
             "jump_up" pairTo Animation(regions["jump_up"]),
             "jump_down" pairTo Animation(regions["jump_down"]),
@@ -562,20 +562,20 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
         when (shootMethod) {
             ShootMethod.UP -> {
-                offsetX = 0.75f * ConstVals.PPM * facing.value
+                offsetX = 0.5f * ConstVals.PPM * facing.value
                 offsetY = 0.5f * ConstVals.PPM
                 rotation = if (isFacing(Facing.LEFT)) 45f else 315f
             }
 
             ShootMethod.DOWN -> {
-                offsetX = ConstVals.PPM.toFloat() * facing.value
+                offsetX = 1.5f * ConstVals.PPM * facing.value
                 offsetY = -0.25f * ConstVals.PPM
                 rotation = if (isFacing(Facing.LEFT)) 135f else 225f
             }
 
             else -> {
-                offsetX = 0.75f * ConstVals.PPM * facing.value
-                offsetY = 0.2f * ConstVals.PPM
+                offsetX = ConstVals.PPM.toFloat() * facing.value
+                offsetY = 0.25f * ConstVals.PPM
                 rotation = if (isFacing(Facing.LEFT)) 90f else 270f
             }
         }
