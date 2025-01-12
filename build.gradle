@@ -31,10 +31,10 @@ allprojects {
   }
 }
 
-configure(subprojects - project(':android')) {
+configure(subprojects) {
   apply plugin: 'java-library'
   apply plugin: 'kotlin'
-  sourceCompatibility = 11
+  sourceCompatibility = 17
 
   // From https://lyze.dev/2021/04/29/libGDX-Internal-Assets-List/
   // The article can be helpful when using assets.txt in your project.
@@ -59,7 +59,7 @@ configure(subprojects - project(':android')) {
   compileJava {
     options.incremental = true
   }
-  compileKotlin.compilerOptions.jvmTarget.set(JvmTarget.JVM_11)
+  compileKotlin.compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
 
 }
 

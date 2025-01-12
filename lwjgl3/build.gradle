@@ -23,12 +23,12 @@ sourceSets.main.resources.srcDirs += [ rootProject.file('assets').path ]
 mainClassName = 'com.megaman.maverick.game.lwjgl3.DesktopLauncher'
 application.setMainClass(mainClassName)
 eclipse.project.name = appName + '-lwjgl3'
-java.sourceCompatibility = 11
-java.targetCompatibility = 11
+java.sourceCompatibility = 17
+java.targetCompatibility = 17
 if (JavaVersion.current().isJava9Compatible()) {
-        compileJava.options.release.set(11)
+        compileJava.options.release.set(17)
 }
-kotlin.compilerOptions.jvmTarget.set(JvmTarget.JVM_11)
+kotlin.compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
 
 dependencies {
   implementation project(':engine')

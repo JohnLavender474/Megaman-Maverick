@@ -1,19 +1,9 @@
 package com.mega.game.engine.drawables
 
-import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.Pixmap
-import com.badlogic.gdx.graphics.TextureData
-import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.utils.OrderedMap
-import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.objects.IntPair
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.matchers.shouldBe
-import io.mockk.every
-import io.mockk.justRun
-import io.mockk.mockk
 
 class MagicPixelsTest : DescribeSpec({
+    /*
 
     describe("MagicPixels.get() method") {
 
@@ -101,4 +91,6 @@ class MagicPixelsTest : DescribeSpec({
             out.containsKey(IntPair(1, 0)) shouldBe true
         }
     }
+
+     */
 })

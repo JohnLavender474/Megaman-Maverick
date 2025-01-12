@@ -21,11 +21,12 @@ class AnimationsSystemTest :
                 entity = MockGameEntity()
                 mockSprite = mockk { every { setRegion(any<TextureRegion>()) } just Runs }
                 mockAnimator = mockk {
+                    every { shouldAnimate(any()) } returns true
                     every { animate(any(), any()) } answers
-                            {
-                                val sprite = arg<GameSprite>(0)
-                                sprite.setRegion(TextureRegion())
-                            }
+                        {
+                            val sprite = arg<GameSprite>(0)
+                            sprite.setRegion(TextureRegion())
+                        }
                 }
                 animationsComponent = spyk(AnimationsComponent())
                 animationsComponent.putAnimator(mockSprite, mockAnimator)

@@ -6,11 +6,9 @@ import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.MockGameEntity
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.world.body.Body
-import com.mega.game.engine.world.body.BodyComponent
-import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
+import com.mega.game.engine.world.body.*
 import com.mega.game.engine.world.collisions.ICollisionHandler
+import com.mega.game.engine.world.contacts.IContactFilter
 import com.mega.game.engine.world.contacts.IContactListener
 import com.mega.game.engine.world.container.IWorldContainer
 import io.kotest.core.spec.style.DescribeSpec
@@ -40,7 +38,15 @@ class WorldSystemTest : DescribeSpec({
             worldContainerSupplier = { mockWorldContainer },
             contactListener = mockContactListener,
             collisionHandler = mockCollisionHandler,
-            contactFilter = ObjectMap()
+            contactFilter = object : IContactFilter {
+                override fun shouldProceedFiltering(fixture: IFixture): Boolean {
+                    return true
+                }
+
+                override fun filter(fixture1: IFixture, fixture2: IFixture): Boolean {
+                    return true
+                }
+            }
         )
 
         worldSystem.add(entity)
@@ -92,7 +98,16 @@ class WorldSystemTest : DescribeSpec({
             worldContainerSupplier = { mockWorldContainer },
             contactListener = mockContactListener,
             collisionHandler = mockCollisionHandler,
-            contactFilterMap = filterMap
+            contactFilter = object : IContactFilter {
+                override fun shouldProceedFiltering(fixture: IFixture): Boolean {
+                    return filterMap.containsKey(fixture.getType())
+                }
+
+                override fun filter(fixture1: IFixture, fixture2: IFixture): Boolean {
+                    return (filterMap.get(fixture1.getType())?.contains(fixture2.getType()) == true ||
+                        filterMap.get(fixture2.getType())?.contains(fixture1.getType()) == true)
+                }
+            }
         )
 
         filteredSystem.filterContact(fixture1, fixture2) shouldBe true
