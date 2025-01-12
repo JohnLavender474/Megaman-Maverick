@@ -184,8 +184,14 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         debugShapes.add { feetFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
+            val gravity = when {
+                game.isProperty(ConstKeys.ROOM_TRANSITION, true) -> 0f
+                body.isSensing(BodySense.FEET_ON_GROUND) -> GROUND_GRAVITY
+                else -> GRAVITY
+            }
             body.physics.gravity.y = -gravity * ConstVals.PPM
+
+            if (game.isProperty(ConstKeys.ROOM_TRANSITION, true)) body.physics.velocity.setZero()
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

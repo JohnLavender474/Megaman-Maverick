@@ -60,6 +60,7 @@ www-test/
 
 ## IntelliJ, Android Studio:
 .idea/
+.fleet/
 *.ipr
 *.iws
 *.iml
