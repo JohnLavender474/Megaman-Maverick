@@ -11,4 +11,3 @@ java -jar ./game-builds/packr-all-4.0.0.jar \
      --vmargs Xmx1G XstartOnFirstThread \
      --resources assets/* \
      --output ./game-builds/out-linux
-     --verbose
