@@ -7,6 +7,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -64,7 +65,9 @@ class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, I
         type = spawnProps.get(ConstKeys.TYPE, String::class)!!
     }
 
-    override fun hitByHead(headFixture: IFixture) {
+    override fun hitByHead(processState: ProcessState, headFixture: IFixture) {
+        if (processState != ProcessState.BEGIN) return
+
         val entity = headFixture.getEntity()
         when (type) {
             BRICK_TYPE -> if (entity is Wanaan) {

@@ -382,7 +382,7 @@ class MegaContactListener(
             body.physics.velocity.y = 0f
 
             val blockEntity = blockFixture.getEntity() as Block
-            blockEntity.hitByHead(headFixture)
+            blockEntity.hitByHead(ProcessState.BEGIN, headFixture)
 
             if (headFixture.hasConsumer()) {
                 val consumer = headFixture.getConsumer()
@@ -849,6 +849,9 @@ class MegaContactListener(
 
             val body = headFixture.getBody()
             body.setBodySense(BodySense.HEAD_TOUCHING_BLOCK, true)
+
+            val block = blockFixture.getEntity() as Block
+            block.hitByHead(ProcessState.CONTINUE, headFixture)
         }
 
         // feet, ice
@@ -1162,9 +1165,13 @@ class MegaContactListener(
         // head, block
         else if (contact.fixturesMatch(FixtureType.HEAD, FixtureType.BLOCK)) {
             printDebugLog(contact, "endContact(): Head-Block, contact=$contact")
-            val (headFixture, _) = contact.getFixturesInOrder(FixtureType.HEAD, FixtureType.BLOCK, out)!!
+            val (headFixture, blockFixture) = contact.getFixturesInOrder(FixtureType.HEAD, FixtureType.BLOCK, out)!!
+
             val body = headFixture.getBody()
             body.setBodySense(BodySense.HEAD_TOUCHING_BLOCK, false)
+
+            val block = blockFixture.getEntity() as Block
+            block.hitByHead(ProcessState.END, headFixture)
         }
 
         // block, body

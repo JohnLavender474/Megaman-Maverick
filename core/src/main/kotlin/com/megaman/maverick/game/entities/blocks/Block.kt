@@ -189,7 +189,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     open fun hitByFeet(processState: ProcessState, feetFixture: IFixture) {}
 
-    open fun hitByHead(headFixture: IFixture) {}
+    open fun hitByHead(processState: ProcessState, headFixture: IFixture) {}
 
     open fun hitByProjectile(projectileFixture: IFixture) {}
 

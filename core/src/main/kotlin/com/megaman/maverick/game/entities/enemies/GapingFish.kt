@@ -56,7 +56,7 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     }
 
     override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(
-        Size.MEDIUM,
+        Size.SMALL,
         UnderwaterFan::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
         FallingIcicle::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
     )

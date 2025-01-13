@@ -61,9 +61,13 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
         index = 1
     }
 
-    override fun hitByFeet(processState: ProcessState, feetFixture: IFixture) = hit()
+    override fun hitByFeet(processState: ProcessState, feetFixture: IFixture) {
+        if (processState == ProcessState.BEGIN) hit()
+    }
 
-    override fun hitByHead(headFixture: IFixture) = hit()
+    override fun hitByHead(processState: ProcessState, headFixture: IFixture) {
+        if (processState == ProcessState.BEGIN) hit()
+    }
 
     override fun hitByProjectile(projectileFixture: IFixture) {
         val projectile = projectileFixture.getEntity() as AbstractProjectile
@@ -89,6 +93,7 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
             val iceShard = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.ICE_SHARD)!!
             iceShard.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.INDEX pairTo i))
         }
+
         destroy()
     }
 

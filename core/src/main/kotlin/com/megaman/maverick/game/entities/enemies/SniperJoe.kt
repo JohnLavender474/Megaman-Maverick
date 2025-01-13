@@ -97,7 +97,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         WAITING_SHIELDED, WAITING_NO_SHIELD, SHOOTING_WITH_SHIELD, SHOOTING_NO_SHIELD, THROWING_SHIELD
     }
 
-    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.LARGE)
+    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.MEDIUM)
     override var direction: Direction
         get() = body.direction
         set(value) {

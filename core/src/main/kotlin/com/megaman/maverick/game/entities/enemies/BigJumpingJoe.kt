@@ -55,24 +55,29 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
 
     companion object {
         const val TAG = "BigJumpingJoe"
+
         private const val WAIT_DURATION = 1.5f
+
         private const val JUMP_DELAY = 0.2f
-        private const val SHOOT_DURATION = 0.75f
         private const val X_VEL = 8f
         private const val Y_VEL = 20f
+
         private const val GROUND_GRAVITY = -0.001f
         private const val GRAVITY = -0.5f
+
+        private const val SHOOT_DURATION = 0.75f
         private const val BULLET_X_VEL = 10f
         private const val FIRST_BULLET_Y_VEL = -0.25f
         private const val SECOND_BULLET_Y_VEL = -0.5f
         private const val THIRD_BULLET_Y_VEL = -0.75f
+
         private var standRegion: TextureRegion? = null
         private var jumpRegion: TextureRegion? = null
     }
 
-    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.MEDIUM)
-    override var gravityScalar = 1f
+    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.LARGE)
     override lateinit var facing: Facing
+    override var gravityScalar = 1f
 
     private val waitTimer = Timer(WAIT_DURATION)
     private val jumpDelayTimer = Timer(JUMP_DELAY)
@@ -127,7 +132,7 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
         scaleBullet = spawnProps.getOrDefault("${ConstKeys.SCALE}_${ConstKeys.BULLET}", true, Boolean::class)
 
         val frameDuration = spawnProps.getOrDefault(ConstKeys.FRAME, 0.2f, Float::class)
-        gdxArrayOf(animations.get("jump")).forEach { it.setFrameDuration(frameDuration) }
+        animations["jump"].setFrameDuration(frameDuration)
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
