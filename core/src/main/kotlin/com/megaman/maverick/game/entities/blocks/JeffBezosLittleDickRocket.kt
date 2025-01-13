@@ -44,11 +44,11 @@ import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.setEntity
 
-class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, ISpritesEntity, IMotionEntity,
+class JeffBezosLittleDickRocket(game: MegamanMaverickGame) : Block(game), IParentEntity, ISpritesEntity, IMotionEntity,
     IEventListener, IDamager, IDirectional {
 
     companion object {
-        const val TAG = "RocketPlatform"
+        const val TAG = "JeffBezosLittleDickRocket"
         private var region: TextureRegion? = null
         private const val WIDTH = 1f
         private const val HEIGHT = 3.5f
@@ -67,8 +67,7 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
     private var hidden = false
 
     override fun init() {
-        if (region == null)
-            region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "JeffBezosLittleDickRocket")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, TAG)
         super.init()
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
@@ -81,7 +80,7 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
         game.eventsMan.addListener(this)
 
         direction =
-            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
+            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
 
         val position = DirectionPositionMapper.getPosition(direction).opposite()
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!

@@ -104,6 +104,14 @@ enum class LevelDefinition(
         music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
         screenOnCompletion = ScreenEnum.WILY_CASTLE_SCREEN
     ),
+    TEST_1(
+        type = LevelType.TEST_LEVEL,
+        mugshotAtlas = "FACES_1",
+        mugshotRegion = "Rodent Man",
+        tmxMapSource = "Test1.tmx",
+        music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
+        screenOnCompletion = ScreenEnum.WILY_CASTLE_SCREEN
+    ),
     TEST_TILESET_SIZE(
         type = LevelType.TEST_LEVEL,
         mugshotAtlas = "FACES_1",

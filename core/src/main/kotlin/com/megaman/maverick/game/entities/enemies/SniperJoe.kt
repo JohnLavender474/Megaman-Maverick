@@ -304,7 +304,6 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
 
             val rotation = when (direction) {
                 Direction.UP, Direction.DOWN -> 0f
-
                 Direction.LEFT -> 90f
                 Direction.RIGHT -> 270f
             }
@@ -505,7 +504,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravi
         }
         spawn.scl(ConstVals.PPM.toFloat()).add(body.getCenter())
 
-        val trajectory = Vector2()
+        val trajectory = GameObjectPools.fetch(Vector2::class)
 
         val props = props(
             ConstKeys.OWNER pairTo this,

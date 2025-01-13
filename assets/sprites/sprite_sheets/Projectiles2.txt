@@ -1,60 +1,60 @@
 Projectiles2.png
-size: 128, 1216
+size: 128, 1224
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 ArigockBall
   rotate: false
-  xy: 16, 228
+  xy: 16, 236
   size: 48, 82
   orig: 48, 82
   offset: 0, 0
   index: -1
 BunbyRedRocket
   rotate: false
-  xy: 0, 100
+  xy: 0, 108
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 CactusMissile/blink
   rotate: false
-  xy: 32, 100
+  xy: 32, 108
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 CactusMissile/fly
   rotate: false
-  xy: 96, 100
+  xy: 96, 108
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 DeathBomb/tick
   rotate: false
-  xy: 0, 164
+  xy: 0, 172
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 DeathBomb/wait
   rotate: false
-  xy: 32, 164
+  xy: 32, 172
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 FallingIcicle/shake
   rotate: false
-  xy: 0, 16
+  xy: 0, 24
   size: 24, 32
   orig: 24, 32
   offset: 0, 0
   index: -1
 FallingIcicle/shatter
   rotate: false
-  xy: 24, 16
+  xy: 24, 24
   size: 24, 32
   orig: 24, 32
   offset: 0, 0
@@ -82,21 +82,21 @@ Harpoon
   index: -1
 MagmaGoop
   rotate: false
-  xy: 48, 16
+  xy: 48, 24
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
 MagmaMeteor
   rotate: false
-  xy: 64, 164
+  xy: 64, 172
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 MagmaOrb
   rotate: false
-  xy: 96, 164
+  xy: 96, 172
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
@@ -110,42 +110,42 @@ MagmaPellet
   index: -1
 MagmaWave
   rotate: false
-  xy: 0, 544
+  xy: 0, 552
   size: 96, 192
   orig: 96, 192
   offset: 0, 0
   index: -1
 MagmaWave/disintegrate
   rotate: false
-  xy: 0, 928
+  xy: 0, 936
   size: 96, 288
   orig: 96, 288
   offset: 0, 0
   index: -1
 MagmaWave/wave
   rotate: false
-  xy: 0, 736
+  xy: 0, 744
   size: 96, 192
   orig: 96, 192
   offset: 0, 0
   index: -1
 MoonMan/crescent
   rotate: false
-  xy: 0, 424
+  xy: 0, 432
   size: 64, 120
   orig: 64, 120
   offset: 0, 0
   index: -1
 MoonMan/star
   rotate: false
-  xy: 64, 424
+  xy: 64, 432
   size: 64, 120
   orig: 64, 120
   offset: 0, 0
   index: -1
 MoonScythe
   rotate: false
-  xy: 64, 228
+  xy: 64, 236
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -173,56 +173,70 @@ Nutt
   index: -1
 Pebble
   rotate: false
-  xy: 80, 16
+  xy: 80, 24
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 SharpStar
   rotate: false
-  xy: 0, 324
+  xy: 0, 332
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 SmallGreenMissile
   rotate: false
-  xy: 0, 52
+  xy: 0, 60
   size: 35, 42
   orig: 35, 42
   offset: 0, 0
   index: -1
 SmallPurpleMissile
   rotate: false
-  xy: 35, 52
+  xy: 35, 60
   size: 35, 42
   orig: 35, 42
   offset: 0, 0
   index: -1
 SphinxBall
   rotate: false
-  xy: 70, 52
+  xy: 70, 60
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 SpitFireball
   rotate: false
-  xy: 48, 324
+  xy: 48, 332
   size: 50, 100
   orig: 50, 100
   offset: 0, 0
   index: -1
+SuperCoolActionStarWarsSpaceLazer/burst
+  rotate: false
+  xy: 116, 0
+  size: 8, 24
+  orig: 8, 24
+  offset: 0, 0
+  index: -1
+SuperCoolActionStarWarsSpaceLazer/lazer
+  rotate: false
+  xy: 108, 0
+  size: 8, 16
+  orig: 8, 16
+  offset: 0, 0
+  index: -1
 TeardropBlast
   rotate: false
-  xy: 64, 16
+  xy: 64, 24
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
 UFOBomb
   rotate: false
-  xy: 0, 228
+  xy: 0, 236
   size: 16, 80
   orig: 16, 80
   offset: 0, 0

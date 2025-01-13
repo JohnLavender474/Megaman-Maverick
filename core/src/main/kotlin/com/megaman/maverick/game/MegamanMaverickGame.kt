@@ -1,6 +1,5 @@
 package com.megaman.maverick.game
 
-import com.badlogic.gdx.Application.ApplicationType
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
@@ -76,11 +75,12 @@ import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.enemies.AstroAssAssaulter
 import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.hazards.FireballBar
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
+import com.megaman.maverick.game.entities.projectiles.SuperCoolActionStarWarsSpaceLazer
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -127,7 +127,7 @@ class MegamanMaverickGame(
         private const val ASSET_MILLIS = 17
         private const val LOADING = "LOADING"
         private const val SCREENSHOT_KEY = Input.Keys.P
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(FireballBar.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(AstroAssAssaulter.TAG, SuperCoolActionStarWarsSpaceLazer.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.DEATH, FixtureType.FEET)
         }
@@ -374,11 +374,14 @@ class MegamanMaverickGame(
         screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY_SCREEN.name, SimpleEndLevelScreen(this))
         screens.put(ScreenEnum.CREDITS_SCREEN.name, CreditsScreen(this))
 
-        setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
+        // setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
         // startLevelScreen(LevelDefinition.TEST_TILESET_SIZE)
+        startLevelScreen(LevelDefinition.TEST_1)
 
+        /*
         if (Gdx.app.type == ApplicationType.Android || params.showScreenController)
             screenController = ScreenController(this)
+         */
 
         /*
         val pixmap = Pixmap(Gdx.files.internal("sprites/frames/Megaman_v2/stand_shoot.png"));

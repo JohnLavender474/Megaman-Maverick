@@ -249,6 +249,10 @@ sprites/frames/Enemies2/CartinJoe/Move.png
 sprites/frames/Enemies2/WallTeck/still.png
 sprites/frames/Enemies2/WallTeck/angry.png
 sprites/frames/Enemies2/WallTeck/walk.png
+sprites/frames/Enemies2/AstroAssAssaulter/throw.png
+sprites/frames/Enemies2/AstroAssAssaulter/shoot_up.png
+sprites/frames/Enemies2/AstroAssAssaulter/stand.png
+sprites/frames/Enemies2/AstroAssAssaulter/shoot.png
 sprites/frames/Enemies2/AngryFlameBall.png
 sprites/frames/Enemies2/SpikeBot/shoot_snow.png
 sprites/frames/Enemies2/SpikeBot/stand_snow.png
@@ -287,6 +291,11 @@ sprites/frames/Enemies2/DemonMet/stand.png
 sprites/frames/Enemies2/DemonMet/fly.png
 sprites/frames/Enemies2/DemonMet/angel.png
 sprites/frames/Enemies2/UnderwaterPenguinBot.png
+sprites/frames/Enemies2/StagedMoonLandingFlag/fall.png
+sprites/frames/Enemies2/StagedMoonLandingFlag/stand.png
+sprites/frames/Enemies2/StagedMoonLandingFlag/hidden.png
+sprites/frames/Enemies2/StagedMoonLandingFlag/rise.png
+sprites/frames/Enemies2/StagedMoonLandingFlag/shield.png
 sprites/frames/Enemies2/FireDispensenator/close.png
 sprites/frames/Enemies2/FireDispensenator/open.png
 sprites/frames/Enemies2/FireDispensenator/fire.png
@@ -724,6 +733,8 @@ sprites/frames/Projectiles2/Harpoon.png
 sprites/frames/Projectiles2/FallingIcicle/still.png
 sprites/frames/Projectiles2/FallingIcicle/shake.png
 sprites/frames/Projectiles2/FallingIcicle/shatter.png
+sprites/frames/Projectiles2/SuperCoolActionStarWarsSpaceLazer/lazer.png
+sprites/frames/Projectiles2/SuperCoolActionStarWarsSpaceLazer/burst.png
 sprites/frames/Projectiles2/DeathBomb/wait.png
 sprites/frames/Projectiles2/DeathBomb/tick.png
 sprites/frames/Projectiles2/Pebble.png
@@ -1762,6 +1773,7 @@ sprites/piskel/BigFishNeo.piskel
 sprites/piskel/WintryMan.piskel
 sprites/piskel/Glacier_Man_AirConditioner.piskel
 sprites/piskel/Cactus.piskel
+sprites/piskel/SuperCoolActionStarWarsLazer.piskel
 sprites/piskel/Faces.piskel
 sprites/piskel/MoonManProjectiles.piskel
 sprites/piskel/CornMan.piskel
@@ -1890,6 +1902,7 @@ sprites/piskel/HibernalMan.piskel
 sprites/piskel/WanaanLauncher.piskel
 sprites/piskel/MagmaExplosion.piskel
 sprites/piskel/CactusLauncher.piskel
+sprites/piskel/StagedMoonLandingFlag.piskel
 sprites/piskel/Wanaan.piskel
 sprites/piskel/ToxicGoopShot.piskel
 sprites/piskel/MMX_Sigma2_Claw_Electric_Shot.piskel
@@ -1934,6 +1947,7 @@ sprites/piskel/WoodPlank.piskel
 sprites/piskel/DarkSamus993-FireManTileset.piskel
 sprites/piskel/SprBGTomahawk_v2.piskel
 sprites/piskel/UF_Oh_No_Bot_1.piskel
+sprites/piskel/AstroAss.piskel
 sprites/piskel/Death_Bomb.piskel
 sprites/piskel/MegamanFire.piskel
 sprites/piskel/Bits.piskel

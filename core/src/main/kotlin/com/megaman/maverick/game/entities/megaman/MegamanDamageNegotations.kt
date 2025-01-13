@@ -5,7 +5,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.pairTo
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
-import com.megaman.maverick.game.entities.blocks.RocketPlatform
+import com.megaman.maverick.game.entities.blocks.JeffBezosLittleDickRocket
 import com.megaman.maverick.game.entities.bosses.*
 import com.megaman.maverick.game.entities.bosses.gutstank.GutsTank
 import com.megaman.maverick.game.entities.bosses.gutstank.GutsTankFist
@@ -180,7 +180,7 @@ object MegamanDamageNegotations {
         Nutt.TAG pairTo dmgNeg(3),
         Screwie.TAG pairTo dmgNeg(3),
         Saw.TAG pairTo dmgNeg(6),
-        RocketPlatform.TAG pairTo dmgNeg(1),
+        JeffBezosLittleDickRocket.TAG pairTo dmgNeg(1),
         TimberWoman.TAG pairTo dmgNeg(3),
         DeadlyLeaf.TAG pairTo dmgNeg(3),
         GroundPebble.TAG pairTo dmgNeg(3),

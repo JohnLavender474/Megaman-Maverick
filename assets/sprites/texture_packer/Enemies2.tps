@@ -58,9 +58,9 @@
             <key>filtering</key>
             <struct type="LibGDXFiltering">
                 <key>x</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
                 <key>y</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
             </struct>
         </struct>
         <key>shapePadding</key>
@@ -211,6 +211,44 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Enemies2/AstroAssAssaulter/shoot.png</key>
+            <key type="filename">../frames/Enemies2/AstroAssAssaulter/shoot_up.png</key>
+            <key type="filename">../frames/Enemies2/AstroAssAssaulter/stand.png</key>
+            <key type="filename">../frames/Enemies2/CartinJoe/Move.png</key>
+            <key type="filename">../frames/Enemies2/CartinJoe/Shoot.png</key>
+            <key type="filename">../frames/Enemies2/FireDispensenator/sleep.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,12,24,24</rect>
+                <key>scale9Paddings</key>
+                <rect>12,12,24,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies2/AstroAssAssaulter/throw.png</key>
+            <key type="filename">../frames/Enemies2/FireDispensenator/close.png</key>
+            <key type="filename">../frames/Enemies2/FireDispensenator/open.png</key>
+            <key type="filename">../frames/Enemies2/ToxicBarrelBot/Closed.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,24,24,48</rect>
+                <key>scale9Paddings</key>
+                <rect>12,24,24,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Enemies2/BabySpider/Run.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -317,6 +355,9 @@
             </struct>
             <key type="filename">../frames/Enemies2/BombChute/turn.png</key>
             <key type="filename">../frames/Enemies2/RatRobot/run.png</key>
+            <key type="filename">../frames/Enemies2/StagedMoonLandingFlag/fall.png</key>
+            <key type="filename">../frames/Enemies2/StagedMoonLandingFlag/rise.png</key>
+            <key type="filename">../frames/Enemies2/StagedMoonLandingFlag/shield.png</key>
             <key type="filename">../frames/Enemies2/UnderwaterPenguinBot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -388,6 +429,8 @@
             <key type="filename">../frames/Enemies2/Shotman/Launch.png</key>
             <key type="filename">../frames/Enemies2/SnowheadThrower/NoFace.png</key>
             <key type="filename">../frames/Enemies2/SnowheadThrower/Snowhead.png</key>
+            <key type="filename">../frames/Enemies2/StagedMoonLandingFlag/hidden.png</key>
+            <key type="filename">../frames/Enemies2/StagedMoonLandingFlag/stand.png</key>
             <key type="filename">../frames/Enemies2/Taketenko/Fly.png</key>
             <key type="filename">../frames/Enemies2/Taketenko/Spin.png</key>
             <key type="filename">../frames/Enemies2/WallTeck/angry.png</key>
@@ -433,23 +476,6 @@
                 <rect>9,18,18,36</rect>
                 <key>scale9Paddings</key>
                 <rect>9,18,18,36</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/CartinJoe/Move.png</key>
-            <key type="filename">../frames/Enemies2/CartinJoe/Shoot.png</key>
-            <key type="filename">../frames/Enemies2/FireDispensenator/sleep.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>12,12,24,24</rect>
-                <key>scale9Paddings</key>
-                <rect>12,12,24,24</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -581,23 +607,6 @@
                 <rect>12,4,24,8</rect>
                 <key>scale9Paddings</key>
                 <rect>12,4,24,8</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/FireDispensenator/close.png</key>
-            <key type="filename">../frames/Enemies2/FireDispensenator/open.png</key>
-            <key type="filename">../frames/Enemies2/ToxicBarrelBot/Closed.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>12,24,24,48</rect>
-                <key>scale9Paddings</key>
-                <rect>12,24,24,48</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

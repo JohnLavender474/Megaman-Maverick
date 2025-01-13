@@ -40,6 +40,8 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val RISEN = "risen"
+    const val BURST = "burst"
     const val OWN = "own"
     const val FULL = "full"
     const val HALF = "half"
