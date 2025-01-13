@@ -68,8 +68,8 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         private const val THROW_DUR = 0.25f
         private const val THROW_TIME = 0.1f
 
-        private const val FLAG_SENSOR_WIDTH = 20f
-        private const val FLAG_SENSOR_HEIGHT = 3f
+        private const val SENSOR_WIDTH = 30f
+        private const val SENSOR_HEIGHT = 3f
 
         private const val FLAG_THROW_IMPULSE_X = 8f
         private const val FLAG_THROW_IMPULSE_Y = 5f
@@ -96,8 +96,8 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     private val stateTimers = OrderedMap<AstroAssState, Timer>()
 
     private var flag: StagedMoonLandingFlag? = null
-    private val flagSensor = GameRectangle()
-        .setSize(FLAG_SENSOR_WIDTH * ConstVals.PPM, FLAG_SENSOR_HEIGHT * ConstVals.PPM)
+
+    private val sensor = GameRectangle().setSize(SENSOR_WIDTH * ConstVals.PPM, SENSOR_HEIGHT * ConstVals.PPM)
 
     private var shootUp = false
 
@@ -137,8 +137,8 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
 
         addComponent(defineAnimationsComponent())
 
-        flagSensor.drawingColor = Color.GRAY
-        addDebugShapeSupplier { flagSensor }
+        sensor.drawingColor = Color.GRAY
+        addDebugShapeSupplier { sensor }
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -170,7 +170,7 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         flag = null
     }
 
-    private fun shouldThrowFlag() = flag == null && flagSensor.overlaps(megaman.body.getBounds())
+    private fun shouldThrowFlag() = flag == null && sensor.overlaps(megaman.body.getBounds())
 
     private fun throwFlag() {
         GameLogger.debug(TAG, "throwFlag()")
@@ -200,13 +200,15 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         this.flag = flag
     }
 
+    private fun shouldShootLazer() = sensor.overlaps(megaman.body.getBounds())
+
     private fun shootLazer() {
         val spawn = GameObjectPools.fetch(Vector2::class)
         when (direction) {
-            Direction.UP -> spawn.set(facing.value.toFloat(), 0.15f)
-            Direction.DOWN -> spawn.set(facing.value.toFloat(), -0.15f)
-            Direction.LEFT -> spawn.set(-0.15f, facing.value.toFloat())
-            Direction.RIGHT -> spawn.set(0.15f, -facing.value.toFloat())
+            Direction.UP -> spawn.set(facing.value.toFloat(), 0.3f)
+            Direction.DOWN -> spawn.set(facing.value.toFloat(), -0.3f)
+            Direction.LEFT -> spawn.set(-0.3f, facing.value.toFloat())
+            Direction.RIGHT -> spawn.set(0.3f, -facing.value.toFloat())
         }
         spawn.scl(ConstVals.PPM.toFloat()).add(body.getCenter())
 
@@ -248,18 +250,16 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            flagSensor.setCenter(body.getCenter())
+            if (flag?.dead == true) flag = null
+
+            sensor.setCenter(body.getCenter())
 
             if (currentState == AstroAssState.STAND) updateFacing()
 
             val timer = stateTimers[currentState]
             timer.update(delta)
 
-            if (timer.isFinished()) {
-                stateMachine.next()
-
-                timer.reset()
-            }
+            if (timer.isFinished()) stateMachine.next()
         }
     }
 
@@ -269,14 +269,17 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         AstroAssState.entries.forEach { builder.state(it.name, it) }
         builder.initialState(AstroAssState.STAND.name)
             .transition(AstroAssState.STAND.name, AstroAssState.THROW.name) { shouldThrowFlag() }
-            .transition(AstroAssState.STAND.name, AstroAssState.SHOOT.name) { true }
+            .transition(AstroAssState.STAND.name, AstroAssState.SHOOT.name) { shouldShootLazer() }
             .transition(AstroAssState.THROW.name, AstroAssState.STAND.name) { true }
             .transition(AstroAssState.SHOOT.name, AstroAssState.STAND.name) { true }
         return builder.build()
     }
 
-    private fun onChangeState(current: AstroAssState, previous: AstroAssState) =
+    private fun onChangeState(current: AstroAssState, previous: AstroAssState) {
         GameLogger.debug(TAG, "onChangeState(): current=$current, previous=$previous")
+
+        stateTimers[previous].reset()
+    }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
@@ -297,7 +300,7 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     }
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
-        .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(2.5f * ConstVals.PPM) })
+        .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(3f * ConstVals.PPM) })
         .updatable { _, sprite ->
             val flipX = facing == Facing.RIGHT
             val flipY = direction == Direction.DOWN
@@ -325,7 +328,7 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
                 }
                 .applyToAnimations { animations ->
                     animations.putAll(
-                        "stand" pairTo Animation(regions["stand"]),
+                        "stand" pairTo Animation(regions["stand"], 2, 1, gdxArrayOf(1f, 0.15f), true),
                         "throw" pairTo Animation(regions["throw"], 2, 1, 0.1f, false),
                         "shoot" pairTo Animation(regions["shoot"], 2, 1, 0.125f, true),
                         "shoot_up" pairTo Animation(regions["shoot_up"], 2, 1, 0.125f, true)

@@ -2,7 +2,6 @@ package com.mega.game.engine.state
 
 import com.mega.game.engine.common.interfaces.Resettable
 
-
 class StateMachine<T>(
     var initialState: IState<T>,
     var onChangeState: ((currentElement: T, previousElement: T) -> Unit)? = null,
@@ -11,15 +10,13 @@ class StateMachine<T>(
 
     private var currentState: IState<T> = initialState
 
-
     fun setState(state: IState<T>) {
         currentState = state
     }
 
-
     fun next(): T {
         val nextState = currentState.getNextState()
-        if (nextState != null && (triggerChangeWhenSameElement || currentState != nextState)) {
+        if (nextState != null && (currentState != nextState || triggerChangeWhenSameElement)) {
             val previousStateElement = currentState.element
             currentState = nextState
             onChangeState?.invoke(currentState.element, previousStateElement)
@@ -27,9 +24,7 @@ class StateMachine<T>(
         return currentState.element
     }
 
-
     fun getCurrent() = currentState.element
-
 
     override fun reset() {
         currentState = initialState

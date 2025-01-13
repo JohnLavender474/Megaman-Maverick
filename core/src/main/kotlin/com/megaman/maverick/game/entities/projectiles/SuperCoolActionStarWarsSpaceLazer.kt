@@ -112,7 +112,7 @@ class SuperCoolActionStarWarsSpaceLazer(game: MegamanMaverickGame) : AbstractPro
     }
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
-        .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(0.5f * ConstVals.PPM) })
+        .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(0.75f * ConstVals.PPM) })
         .updatable { _, sprite ->
             sprite.setOriginCenter()
             sprite.rotation = if (burst) 0f else body.physics.velocity.angleDeg() % 180f

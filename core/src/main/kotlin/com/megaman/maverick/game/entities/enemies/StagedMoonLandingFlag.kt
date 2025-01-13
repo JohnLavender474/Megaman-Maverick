@@ -159,6 +159,11 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
     internal fun setToBeDestroyed() {
         GameLogger.debug(TAG, "setToBeDestroyed()")
 
+        if (currentState == FlagState.HIDDEN) {
+            destroy()
+            return
+        }
+
         if (currentState != FlagState.FALL) loop.setIndex(FlagState.FALL.ordinal)
     }
 
@@ -282,12 +287,12 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
         val shieldFixture1 = Fixture(
             body,
             FixtureType.SHIELD,
-            GameRectangle().setSize(0.75f * ConstVals.PPM, 1.5f * ConstVals.PPM)
+            GameRectangle().setSize(0.5f * ConstVals.PPM, 1.5f * ConstVals.PPM)
         )
         shieldFixture1.setHitByProjectileReceiver { projectile ->
             if (projectile.owner == megaman) shield1Timer.reset()
         }
-        shieldFixture1.offsetFromBodyAttachment.x = -0.75f * ConstVals.PPM
+        shieldFixture1.offsetFromBodyAttachment.x = -0.5f * ConstVals.PPM
         body.addFixture(shieldFixture1)
         shieldFixture1.drawingColor = Color.ORANGE
         debugShapes.add { shieldFixture1 }
@@ -295,12 +300,12 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
         val shieldFixture2 = Fixture(
             body,
             FixtureType.SHIELD,
-            GameRectangle().setSize(0.75f * ConstVals.PPM, 1.5f * ConstVals.PPM)
+            GameRectangle().setSize(0.5f * ConstVals.PPM, 1.5f * ConstVals.PPM)
         )
         shieldFixture2.setHitByProjectileReceiver { projectile ->
             if (projectile.owner == megaman) shield2Timer.reset()
         }
-        shieldFixture2.offsetFromBodyAttachment.x = 0.75f * ConstVals.PPM
+        shieldFixture2.offsetFromBodyAttachment.x = 0.5f * ConstVals.PPM
         body.addFixture(shieldFixture2)
         shieldFixture2.drawingColor = Color.ORANGE
         debugShapes.add { shieldFixture2 }
@@ -335,6 +340,10 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
                 else -> body.physics.velocity.y = 0f
             }
 
+            val shieldsActive = currentState == FlagState.STAND
+            shieldFixture1.setActive(shieldsActive)
+            shieldFixture2.setActive(shieldsActive)
+
             val shieldDamager1Bounds = shieldDamager1.rawShape as GameRectangle
             shieldDamager1Bounds.set(shieldFixture1.getShape() as GameRectangle)
 
@@ -354,7 +363,7 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         // flag
-        .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
+        .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(2.5f * ConstVals.PPM) })
         .updatable { _, sprite ->
             val rotation = when (direction) {
                 Direction.UP, Direction.DOWN -> 0f
@@ -384,7 +393,7 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
                 .also { sprite -> sprite.setSize(2f * ConstVals.PPM) }
         )
         .updatable { _, sprite ->
-            sprite.hidden = shield1Timer.isFinished() || shield1Blink
+            sprite.hidden = shield1Timer.isFinished() || shield1Blink || currentState != FlagState.STAND
 
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
@@ -398,7 +407,7 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
                 .also { sprite -> sprite.setSize(2f * ConstVals.PPM) }
         )
         .updatable { _, sprite ->
-            sprite.hidden = shield2Timer.isFinished() || shield2Blink
+            sprite.hidden = shield2Timer.isFinished() || shield2Blink || currentState != FlagState.STAND
 
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
