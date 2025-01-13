@@ -95,8 +95,12 @@ class MegaContactListener(
             val (damagerFixture, damageableFixture) = contact.getFixturesInOrder(
                 FixtureType.DAMAGER, FixtureType.DAMAGEABLE, out
             )!!
+
             val damager = damagerFixture.getEntity() as IDamager
             val damageable = damageableFixture.getEntity() as IDamageable
+
+            if (damagerFixture.hasHitByDamageableReceiver())
+                damagerFixture.getHitByDamageable(damageable, ProcessState.BEGIN)
 
             val canBeDamaged = damageable.canBeDamagedBy(damager)
             printDebugLog(contact, "canBeDamaged=$canBeDamaged")
@@ -718,6 +722,9 @@ class MegaContactListener(
 
             val damager = damagerFixture.getEntity() as IDamager
             val damageable = damageableFixture.getEntity() as IDamageable
+
+            if (damagerFixture.hasHitByDamageableReceiver())
+                damagerFixture.getHitByDamageable(damageable, ProcessState.CONTINUE)
 
             if (damageable.canBeDamagedBy(damager) && damager.canDamage(damageable)) {
                 damageable.takeDamageFrom(damager)

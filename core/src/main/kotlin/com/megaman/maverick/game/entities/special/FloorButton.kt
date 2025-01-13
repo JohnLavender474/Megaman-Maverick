@@ -153,12 +153,12 @@ class FloorButton(game: MegamanMaverickGame) : Switch(game), IBodyEntity, ISprit
 
     override fun onFinishSwitchToDown() {
         GameLogger.debug(TAG, "onFinishSwitchToDown()")
-        requestToPlaySound(SoundAsset.SE_140, false)
+        requestToPlaySound(SoundAsset.BUTTON_SOUND, false)
     }
 
     override fun onFinishSwitchToUp() {
         GameLogger.debug(TAG, "onFinishSwitchToUp()")
-        requestToPlaySound(SoundAsset.SE_140, false)
+        requestToPlaySound(SoundAsset.BUTTON_SOUND, false)
     }
 
     override fun defineUpdatablesComponent(component: UpdatablesComponent) {

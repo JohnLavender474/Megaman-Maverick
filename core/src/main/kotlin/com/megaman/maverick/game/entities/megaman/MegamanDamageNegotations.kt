@@ -185,7 +185,10 @@ object MegamanDamageNegotations {
         DeadlyLeaf.TAG pairTo dmgNeg(3),
         GroundPebble.TAG pairTo dmgNeg(3),
         InfernoOven.TAG pairTo dmgNeg(5),
-        DeathBat.TAG pairTo dmgNeg(3)
+        DeathBat.TAG pairTo dmgNeg(3),
+        AstroAssAssaulter.TAG pairTo dmgNeg(3),
+        SuperCoolActionStarWarsSpaceLazer.TAG pairTo dmgNeg(3),
+        StagedMoonLandingFlag.TAG pairTo dmgNeg(3)
     )
 
     fun contains(tag: String) = dmgNegotiations.containsKey(tag)

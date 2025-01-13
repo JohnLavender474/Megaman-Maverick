@@ -8,12 +8,14 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
+import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
+import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.putAll
 import com.mega.game.engine.common.extensions.toGdxArray
@@ -26,10 +28,9 @@ import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
-import com.mega.game.engine.drawables.sprites.GameSprite
-import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
-import com.mega.game.engine.drawables.sprites.setPosition
-import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.mega.game.engine.drawables.sprites.*
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
@@ -39,9 +40,12 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
@@ -62,6 +66,9 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
         private const val GRAVITY = 0.15f
         private const val GROUND_GRAVITY = 0.01f
 
+        private const val SHIELD_SHOW_DUR = 1f
+        private const val SHIELD_BLINK_DUR = 0.1f
+
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -80,6 +87,16 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
         get() = loop.getCurrent()
     private val stateTimers = OrderedMap<FlagState, Timer>()
 
+    private val shield1Timer = Timer(SHIELD_SHOW_DUR)
+    private val shield1BlinkTimer = Timer(SHIELD_BLINK_DUR)
+    private var shield1Blink = false
+    private lateinit var shieldDamager1: Fixture
+
+    private val shield2Timer = Timer(SHIELD_SHOW_DUR)
+    private val shield2BlinkTimer = Timer(SHIELD_BLINK_DUR)
+    private var shield2Blink = false
+    private lateinit var shieldDamager2: Fixture
+
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
@@ -87,6 +104,7 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
                 val key = it.name.lowercase()
                 regions.put(key, atlas.findRegion("$TAG/$key"))
             }
+            regions.put(ConstKeys.SHIELD, atlas.findRegion("$TAG/${ConstKeys.SHIELD}"))
         }
 
         if (stateTimers.isEmpty) {
@@ -113,6 +131,21 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
         body.physics.velocity.set(impulse)
 
         loop.reset()
+        stateTimers.values().forEach { it.reset() }
+
+        shield1Timer.setToEnd()
+        shield1BlinkTimer.reset()
+        shield1Blink = false
+
+        shield2Timer.setToEnd()
+        shield2BlinkTimer.reset()
+        shield2Blink = false
+
+        facing = when (direction) {
+            Direction.UP, Direction.DOWN -> if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+            Direction.LEFT -> if (megaman.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
+            Direction.RIGHT -> if (megaman.body.getY() < body.getY()) Facing.RIGHT else Facing.LEFT
+        }
     }
 
     override fun onDestroy() {
@@ -121,14 +154,12 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
         super.onDestroy()
     }
 
-    override fun onHealthDepleted() {
-        if (!hasDepletedHealth()) setToBeDestroyed()
-    }
+    override fun onHealthDepleted() = setToBeDestroyed()
 
     internal fun setToBeDestroyed() {
         GameLogger.debug(TAG, "setToBeDestroyed()")
 
-        loop.setIndex(FlagState.FALL.ordinal)
+        if (currentState != FlagState.FALL) loop.setIndex(FlagState.FALL.ordinal)
     }
 
     private fun resetBodySizeOnUnfurling() {
@@ -158,10 +189,37 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            shield1Timer.update(delta)
+            if (!shield1Timer.isFinished()) {
+                shield1BlinkTimer.update(delta)
+                if (shield1BlinkTimer.isFinished()) {
+                    shield1Blink = !shield1Blink
+                    shield1BlinkTimer.reset()
+                }
+            }
+
+            shield2Timer.update(delta)
+            if (!shield2Timer.isFinished()) {
+                shield2BlinkTimer.update(delta)
+                if (shield2BlinkTimer.isFinished()) {
+                    shield2Blink = !shield2Blink
+                    shield2BlinkTimer.reset()
+                }
+            }
+
+            facing = when (direction) {
+                Direction.UP, Direction.DOWN -> if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                Direction.LEFT -> if (megaman.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
+                Direction.RIGHT -> if (megaman.body.getY() < body.getY()) Facing.RIGHT else Facing.LEFT
+            }
+
             when (currentState) {
                 FlagState.HIDDEN -> {
                     if (body.isSensing(BodySense.FEET_ON_GROUND)) {
                         resetBodySizeOnUnfurling()
+
+                        requestToPlaySound(SoundAsset.BRUSH_SOUND, false)
+
                         loop.next()
                     }
                 }
@@ -205,20 +263,14 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
             }.scl(ConstVals.PPM.toFloat())
         }
 
-        body.preProcess.put(ConstKeys.FIXTURES) {
-            body.forEachFixture { fixture ->
-                if (fixture.getType() == FixtureType.FEET) return@forEachFixture
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
+        body.addFixture(bodyFixture)
 
-                val bounds = (fixture as Fixture).rawShape as GameRectangle
-                bounds.set(body)
-            }
-        }
-        body.preProcess.put(ConstKeys.X) {
-            if (body.isSensing(BodySense.FEET_ON_GROUND)) when (direction) {
-                Direction.UP, Direction.DOWN -> body.physics.velocity.x = 0f
-                else -> body.physics.velocity.y = 0f
-            }
-        }
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
+        body.addFixture(damagerFixture)
+
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle())
+        body.addFixture(damageableFixture)
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
@@ -227,20 +279,81 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
         feetFixture.drawingColor = Color.GREEN
         debugShapes.add { feetFixture }
 
-        body.preProcess.put(ConstKeys.FEET) {
+        val shieldFixture1 = Fixture(
+            body,
+            FixtureType.SHIELD,
+            GameRectangle().setSize(0.75f * ConstVals.PPM, 1.5f * ConstVals.PPM)
+        )
+        shieldFixture1.setHitByProjectileReceiver { projectile ->
+            if (projectile.owner == megaman) shield1Timer.reset()
+        }
+        shieldFixture1.offsetFromBodyAttachment.x = -0.75f * ConstVals.PPM
+        body.addFixture(shieldFixture1)
+        shieldFixture1.drawingColor = Color.ORANGE
+        debugShapes.add { shieldFixture1 }
+
+        val shieldFixture2 = Fixture(
+            body,
+            FixtureType.SHIELD,
+            GameRectangle().setSize(0.75f * ConstVals.PPM, 1.5f * ConstVals.PPM)
+        )
+        shieldFixture2.setHitByProjectileReceiver { projectile ->
+            if (projectile.owner == megaman) shield2Timer.reset()
+        }
+        shieldFixture2.offsetFromBodyAttachment.x = 0.75f * ConstVals.PPM
+        body.addFixture(shieldFixture2)
+        shieldFixture2.drawingColor = Color.ORANGE
+        debugShapes.add { shieldFixture2 }
+
+        shieldDamager1 = Fixture(body, FixtureType.DAMAGER, GameRectangle())
+        shieldDamager1.setHitByDamageableReceiver { damageable, _ ->
+            if (damageable == megaman) shield1Timer.reset()
+        }
+        shieldDamager1.attachedToBody = false
+        body.addFixture(shieldDamager1)
+
+        shieldDamager2 = Fixture(body, FixtureType.DAMAGER, GameRectangle())
+        shieldDamager2.setHitByDamageableReceiver { damageable, _ ->
+            if (damageable == megaman) shield2Timer.reset()
+        }
+        shieldDamager2.attachedToBody = false
+        body.addFixture(shieldDamager2)
+
+        val fixturesToResizeToBody = gdxArrayOf(bodyFixture, damagerFixture, damageableFixture)
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            fixturesToResizeToBody.forEach { fixture ->
+                val bounds = fixture.rawShape as GameRectangle
+                bounds.set(body)
+            }
+
             val bounds = feetFixture.rawShape as GameRectangle
             val position = DirectionPositionMapper.getInvertedPosition(direction)
             bounds.positionOnPoint(body.getPositionPoint(position), Position.CENTER)
+
+            if (body.isSensing(BodySense.FEET_ON_GROUND)) when (direction) {
+                Direction.UP, Direction.DOWN -> body.physics.velocity.x = 0f
+                else -> body.physics.velocity.y = 0f
+            }
+
+            val shieldDamager1Bounds = shieldDamager1.rawShape as GameRectangle
+            shieldDamager1Bounds.set(shieldFixture1.getShape() as GameRectangle)
+
+            val shieldDamager2Bounds = shieldDamager2.rawShape as GameRectangle
+            shieldDamager2Bounds.set(shieldFixture2.getShape() as GameRectangle)
+
+            if (currentState == FlagState.FALL) {
+                val damageableFixture = body.fixtures.get(FixtureType.DAMAGEABLE).first()
+                damageableFixture.setActive(false)
+            }
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(
-            this, body, BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGEABLE, FixtureType.DAMAGER)
-        )
+        return BodyComponentCreator.create(this, body)
     }
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
+        // flag
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
         .updatable { _, sprite ->
             val rotation = when (direction) {
@@ -259,10 +372,46 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
             }
             val bodyPosition = body.getPositionPoint(position)
             sprite.setPosition(bodyPosition, position)
+
+            sprite.setFlip(isFacing(Facing.RIGHT), direction == Direction.DOWN)
+
+            sprite.hidden = damageBlink
         }
+        // shield 1
+        .sprite(
+            "${ConstKeys.SHIELD}_1",
+            GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
+                .also { sprite -> sprite.setSize(2f * ConstVals.PPM) }
+        )
+        .updatable { _, sprite ->
+            sprite.hidden = shield1Timer.isFinished() || shield1Blink
+
+            sprite.setOriginCenter()
+            sprite.rotation = direction.rotation
+
+            sprite.setCenter(shieldDamager1.getShape().getCenter())
+        }
+        // shield 2
+        .sprite(
+            "${ConstKeys.SHIELD}_2",
+            GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
+                .also { sprite -> sprite.setSize(2f * ConstVals.PPM) }
+        )
+        .updatable { _, sprite ->
+            sprite.hidden = shield2Timer.isFinished() || shield2Blink
+
+            sprite.setOriginCenter()
+            sprite.rotation = direction.rotation
+
+            sprite.setFlip(true, false)
+
+            sprite.setCenter(shieldDamager2.getShape().getCenter())
+        }
+        // build
         .build()
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
+        // flag
         .key(TAG)
         .animator(
             AnimatorBuilder()
@@ -277,5 +426,12 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
                 }
                 .build()
         )
+        // shield 1
+        .key("${ConstKeys.SHIELD}_1")
+        .animator(Animator(Animation(regions[ConstKeys.SHIELD], 3, 1, 0.1f, true)))
+        // shield 2
+        .key("${ConstKeys.SHIELD}_2")
+        .animator(Animator(Animation(regions[ConstKeys.SHIELD], 3, 1, 0.1f, true)))
+        // build
         .build()
 }

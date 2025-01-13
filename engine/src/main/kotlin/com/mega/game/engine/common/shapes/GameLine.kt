@@ -192,26 +192,12 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
     fun getLength(): Float {
         if (calculateLength) {
             calculateLength = false
-            val x = localPoint1.x - localPoint2.x
-            val y = localPoint1.y - localPoint2.y
+            calculateWorldPoints(reusableVec1, reusableVec2)
+            val x = worldPoint1.x - worldPoint2.x
+            val y = worldPoint1.y - worldPoint2.y
             length = sqrt((x * x + y * y).toDouble()).toFloat()
         }
         return length
-    }
-
-    fun setToRecalculateScaledLength(): GameLine {
-        calculateScaledLength = true
-        return this
-    }
-
-    fun getScaledLength(): Float {
-        if (calculateScaledLength) {
-            calculateScaledLength = false
-            val x = (localPoint1.x - localPoint2.x) * scaleX
-            val y = (localPoint1.y - localPoint2.y) * scaleY
-            scaledLength = sqrt((x * x + y * y).toDouble()).toFloat()
-        }
-        return scaledLength
     }
 
     fun setFirstLocalPoint(point: Vector2) = setFirstLocalPoint(point.x, point.y)
@@ -309,7 +295,6 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
             )
         ) out.set(intersection) else null
     }
-
 
     override fun contains(point: Vector2): Boolean {
         calculateWorldPoints(reusableVec1, reusableVec2)

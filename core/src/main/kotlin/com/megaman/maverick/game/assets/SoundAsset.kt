@@ -66,7 +66,8 @@ enum class SoundAsset(src: String, val seconds: Int) : IAsset {
     ASTEROID_EXPLODE_SOUND("asteroid_explode.wav", 1),
     SOLAR_BLAZE_SOUND("solar_blaze.wav", 1),
     BRUSH_SOUND("brush.wav", 1),
-    SE_140("SE [140].wav", 1);
+    BUTTON_SOUND("button.wav", 1),
+    SPACE_LAZER_SOUND("space_lazer.wav", 1);
 
     companion object {
         fun valuesAsIAssetArray(): Array<IAsset> {

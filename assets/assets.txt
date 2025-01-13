@@ -125,7 +125,6 @@ sounds/shake.wav
 sounds/liftoff.wav
 sounds/bassy_blast.wav
 sounds/boss_door.wav
-sounds/SE [140].wav
 sounds/beam_in.wav
 sounds/teleport.wav
 sounds/whip.wav
@@ -137,6 +136,7 @@ sounds/buster_bullet_shot.mp3
 sounds/chill_shoot.mp3
 sounds/mecha_dragon.wav
 sounds/buster_charged_shot_v2.wav
+sounds/button.wav
 sounds/chomp.wav
 sounds/conveyor_lift.mp3
 sounds/cursor_move_bloop.mp3
@@ -169,6 +169,7 @@ sounds/mecha_dragon.mp3
 sounds/buster_charged_shot.mp3
 sounds/electric_pulse.mp3
 sounds/bloopity.wav
+sounds/space_lazer.wav
 sounds/electric_shock.wav
 sounds/select_ping.mp3
 sounds/ice_shard_2.wav

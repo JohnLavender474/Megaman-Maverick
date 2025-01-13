@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.world.body
 
 import com.mega.game.engine.common.enums.ProcessState
+import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.world.body.IBody
 import com.mega.game.engine.world.body.IFixture
@@ -137,3 +138,12 @@ fun IFixture.hasHitByFeetReceiver(state: ProcessState) = hasProperty("${ConstKey
 
 fun IFixture.getHitByFeet(state: ProcessState, feet: IFixture, delta: Float) =
     (getProperty("${ConstKeys.HIT_BY_FEET}_${state.name}") as (IFixture, Float) -> Unit).invoke(feet, delta)
+
+fun IFixture.hasHitByDamageableReceiver() = hasProperty(ConstKeys.HIT_BY_DAMAGEABLE)
+
+fun IFixture.setHitByDamageableReceiver(receiver: (IDamageable, ProcessState) -> Unit) {
+    putProperty(ConstKeys.HIT_BY_DAMAGEABLE, receiver)
+}
+
+fun IFixture.getHitByDamageable(damageable: IDamageable, processState: ProcessState) =
+    (getProperty(ConstKeys.HIT_BY_DAMAGEABLE) as (IDamageable, ProcessState) -> Unit).invoke(damageable, processState)

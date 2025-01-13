@@ -41,10 +41,10 @@ import com.mega.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -62,7 +62,8 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         const val TAG = "AstroAssAssaulter"
 
         private const val STAND_DUR = 1f
-        private const val SHOOT_DUR = 0.5f
+        private const val SHOOT_DUR = 1f
+        private const val SHOOT_EACH_DELAY = 0.25f
 
         private const val THROW_DUR = 0.25f
         private const val THROW_TIME = 0.1f
@@ -94,6 +95,7 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
 
     private val stateTimers = OrderedMap<AstroAssState, Timer>()
 
+    private var flag: StagedMoonLandingFlag? = null
     private val flagSensor = GameRectangle()
         .setSize(FLAG_SENSOR_WIDTH * ConstVals.PPM, FLAG_SENSOR_HEIGHT * ConstVals.PPM)
 
@@ -111,7 +113,18 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
 
         if (stateTimers.isEmpty) {
             stateTimers.put(AstroAssState.STAND, Timer(STAND_DUR))
-            stateTimers.put(AstroAssState.SHOOT, Timer(SHOOT_DUR))
+            stateTimers.put(AstroAssState.SHOOT, Timer(SHOOT_DUR).also { timer ->
+                val runnables = Array<TimeMarkedRunnable>()
+
+                val max = (SHOOT_DUR / SHOOT_EACH_DELAY).toInt()
+                for (i in 0 until max) {
+                    val time = SHOOT_EACH_DELAY * i
+                    val runnable = TimeMarkedRunnable(time) { shootLazer() }
+                    runnables.add(runnable)
+                }
+
+                timer.setRunnables(runnables)
+            })
             stateTimers.put(AstroAssState.THROW, Timer(THROW_DUR).also { timer ->
                 val runnable = TimeMarkedRunnable(THROW_TIME) { throwFlag() }
                 timer.setRunnables(runnable)
@@ -150,12 +163,14 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
+
         super.onDestroy()
+
+        flag?.setToBeDestroyed()
+        flag = null
     }
 
-    private fun shouldThrowFlag() =
-        MegaGameEntities.getEntitiesOfTag(StagedMoonLandingFlag.TAG).isEmpty &&
-            flagSensor.overlaps(megaman.body.getBounds())
+    private fun shouldThrowFlag() = flag == null && flagSensor.overlaps(megaman.body.getBounds())
 
     private fun throwFlag() {
         GameLogger.debug(TAG, "throwFlag()")
@@ -174,22 +189,24 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
             .set(FLAG_THROW_IMPULSE_X * facing.value, FLAG_THROW_IMPULSE_Y)
             .scl(ConstVals.PPM.toFloat())
 
-        val flag = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.STAGED_MOON_LANDING_FLAG)!!
+        val flag =
+            EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.STAGED_MOON_LANDING_FLAG)!! as StagedMoonLandingFlag
         flag.spawn(
             props(
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.IMPULSE pairTo impulse
             )
         )
+        this.flag = flag
     }
 
     private fun shootLazer() {
         val spawn = GameObjectPools.fetch(Vector2::class)
         when (direction) {
-            Direction.UP -> spawn.set(0.35f * facing.value, 0.1f)
-            Direction.DOWN -> spawn.set(0.35f * facing.value, -0.1f)
-            Direction.LEFT -> spawn.set(-0.1f, 0.35f * facing.value)
-            Direction.RIGHT -> spawn.set(0.1f, 0.35f * -facing.value)
+            Direction.UP -> spawn.set(facing.value.toFloat(), 0.15f)
+            Direction.DOWN -> spawn.set(facing.value.toFloat(), -0.15f)
+            Direction.LEFT -> spawn.set(-0.15f, facing.value.toFloat())
+            Direction.RIGHT -> spawn.set(0.15f, -facing.value.toFloat())
         }
         spawn.scl(ConstVals.PPM.toFloat()).add(body.getCenter())
 
@@ -214,6 +231,8 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         val lazer =
             EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SUPER_COOL_ACTION_STAR_WARS_SPACE_LAZER)!!
         lazer.spawn(props)
+
+        requestToPlaySound(SoundAsset.SPACE_LAZER_SOUND, false)
 
         GameLogger.debug(TAG, "shootLazer(): spawn=$spawn, trajectory=$trajectory")
     }
@@ -256,15 +275,8 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         return builder.build()
     }
 
-    private fun onChangeState(current: AstroAssState, previous: AstroAssState) {
+    private fun onChangeState(current: AstroAssState, previous: AstroAssState) =
         GameLogger.debug(TAG, "onChangeState(): current=$current, previous=$previous")
-
-        if (current == AstroAssState.SHOOT) {
-            shootUp = false // TODO: determine if shoot up is true or false
-
-            shootLazer()
-        }
-    }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
@@ -315,8 +327,8 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
                     animations.putAll(
                         "stand" pairTo Animation(regions["stand"]),
                         "throw" pairTo Animation(regions["throw"], 2, 1, 0.1f, false),
-                        "shoot" pairTo Animation(regions["shoot"], 2, 1, 0.1f, false),
-                        "shoot_up" pairTo Animation(regions["shoot_up"], 2, 1, 0.1f, false)
+                        "shoot" pairTo Animation(regions["shoot"], 2, 1, 0.125f, true),
+                        "shoot_up" pairTo Animation(regions["shoot_up"], 2, 1, 0.125f, true)
                     )
                 }
                 .build()

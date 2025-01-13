@@ -40,6 +40,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val HIT_BY_DAMAGEABLE = "hit_by_damageable"
     const val RISEN = "risen"
     const val BURST = "burst"
     const val OWN = "own"
