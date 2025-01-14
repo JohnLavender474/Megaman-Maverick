@@ -73,6 +73,8 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
 
         private const val FLAG_THROW_IMPULSE_X = 8f
         private const val FLAG_THROW_IMPULSE_Y = 5f
+        private const val DEFAULT_FLAG_GRAVITY_SCALAR = 0.75f
+        private const val DEFAULT_FLAG_MOVEMENT_SCALAR = 1f
 
         private const val LAZER_SPEED = 10f
 
@@ -194,7 +196,9 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         flag.spawn(
             props(
                 ConstKeys.POSITION pairTo spawn,
-                ConstKeys.IMPULSE pairTo impulse
+                ConstKeys.IMPULSE pairTo impulse,
+                "${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}" pairTo DEFAULT_FLAG_MOVEMENT_SCALAR,
+                "${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}" pairTo DEFAULT_FLAG_GRAVITY_SCALAR
             )
         )
         this.flag = flag

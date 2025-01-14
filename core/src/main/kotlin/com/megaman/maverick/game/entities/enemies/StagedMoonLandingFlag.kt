@@ -44,12 +44,14 @@ import com.megaman.maverick.game.com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable, IDirectional {
+class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable, IDirectional,
+    IScalableGravityEntity {
 
     companion object {
         const val TAG = "StagedMoonLandingFlag"
@@ -81,6 +83,7 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
             body.direction = value
         }
     override lateinit var facing: Facing
+    override var gravityScalar = 1f
 
     private val loop = Loop(FlagState.entries.toGdxArray())
     private val currentState: FlagState
@@ -128,7 +131,7 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
         body.setCenter(spawn)
 
         val impulse = spawnProps.getOrDefault(ConstKeys.IMPULSE, Vector2.Zero, Vector2::class)
-        body.physics.velocity.set(impulse)
+        body.physics.velocity.set(impulse).scl(movementScalar)
 
         loop.reset()
         stateTimers.values().forEach { it.reset() }
@@ -146,6 +149,8 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
             Direction.LEFT -> if (megaman.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
             Direction.RIGHT -> if (megaman.body.getY() < body.getY()) Facing.RIGHT else Facing.LEFT
         }
+
+        gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
     }
 
     override fun onDestroy() {
@@ -265,7 +270,7 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
                 Direction.DOWN -> gravity.set(0f, value)
                 Direction.LEFT -> gravity.set(value, 0f)
                 Direction.RIGHT -> gravity.set(-value, 0f)
-            }.scl(ConstVals.PPM.toFloat())
+            }.scl(ConstVals.PPM * gravityScalar)
         }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
@@ -342,7 +347,9 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
 
             val shieldsActive = currentState == FlagState.STAND
             shieldFixture1.setActive(shieldsActive)
+            shieldDamager1.setActive(shieldsActive)
             shieldFixture2.setActive(shieldsActive)
+            shieldDamager2.setActive(shieldsActive)
 
             val shieldDamager1Bounds = shieldDamager1.rawShape as GameRectangle
             shieldDamager1Bounds.set(shieldFixture1.getShape() as GameRectangle)

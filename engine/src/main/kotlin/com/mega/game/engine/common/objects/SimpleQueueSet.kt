@@ -47,7 +47,7 @@ class SimpleQueueSet<T> : MutableCollection<T>, java.util.Queue<T> {
 
     override fun peek() = queue.firstOrNull()
 
-    override fun element() = queue.firstOrNull() ?: throw NoSuchElementException("Queue is empty")
+    override fun element(): T = queue.first()
 
     override fun offer(e: T) = add(e)
 

@@ -2,7 +2,7 @@ package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -15,7 +15,10 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IDirectional
-import com.mega.game.engine.common.objects.*
+import com.mega.game.engine.common.objects.Pool
+import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -70,7 +73,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     /** sets the entity's bodily direction; separate from [nextEntityDirection] */
     private var nextBodyDirection: Direction? = null
 
-    private val hopQueue = Array<GamePair<IBodyEntity, Timer>>()
+    private val hopQueueMap = OrderedMap<IBodyEntity, Timer>()
     private val timerPool = Pool<Timer>(supplier = { Timer() })
 
     private var thisKey = -1
@@ -179,7 +182,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         val timer = timerPool.fetch()
         timer.resetDuration(PORTAL_HOP_DELAY)
-        hopQueue.add(entity pairTo timer)
+        hopQueueMap.put(entity,  timer)
 
         GameLogger.debug(TAG, "teleportEntity(): thisKey=$thisKey, entity=$entity, hopPoint=$hopPoint")
     }
@@ -200,14 +203,17 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (hopQueue.isEmpty) {
+        if (hopQueueMap.isEmpty) {
             launch = false
             return@UpdatablesComponent
         }
 
-        val iter = hopQueue.iterator()
+        val iter = hopQueueMap.iterator()
         while (iter.hasNext()) {
-            val (entity, timer) = iter.next()
+            val entry = iter.next()
+            val entity = entry.key
+            val timer = entry.value
+
             timer.update(delta)
 
             val onPortalContinue = entity.getProperty(ConstKeys.ON_TELEPORT_CONTINUE) as? () -> Unit
