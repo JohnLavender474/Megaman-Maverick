@@ -52,11 +52,11 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     companion object {
         const val TAG = "MagmaFlame"
-        private const val DURATION = 0.5f
+        private const val DURATION = 0.2f
         private var region: TextureRegion? = null
     }
 
-    override var direction = Direction.UP
+    override lateinit var direction: Direction
 
     private val timer = Timer(DURATION)
 
@@ -81,6 +81,7 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         body.positionOnPoint(spawn, position)
 
         timer.reset()
+
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
     }
 

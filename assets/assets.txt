@@ -1821,6 +1821,7 @@ sprites/piskel/Hanibiran.piskel
 sprites/piskel/FireMet.piskel
 sprites/piskel/RatRobot.piskel
 sprites/piskel/LavaDrop.piskel
+sprites/piskel/MoonManTiles.piskel
 sprites/piskel/Jetpack_Ice_Blaster_Bot.piskel
 sprites/piskel/BulletCollision.piskel
 sprites/piskel/FloorButton.piskel
@@ -2051,6 +2052,7 @@ tiled_maps/tsx/MM10Endless.tsx
 tiled_maps/tsx/mm9tornado.tsx
 tiled_maps/tsx/MM2wood_01.tsx
 tiled_maps/tsx/MM10Wily2.tsx
+tiled_maps/tsx/MoonManTiles.tsx
 tiled_maps/tsx/StarManTileset.tsx
 tiled_maps/tsx/Reactor_Man_3.tsx
 tiled_maps/tsx/mm10blade.tsx
@@ -2200,6 +2202,7 @@ tiled_maps/png/tstElecman.png
 tiled_maps/png/tstMM10Enker.png
 tiled_maps/png/tstChillMan.png
 tiled_maps/png/tstFlashmanAnimated3.png
+tiled_maps/png/MoonManTiles.png
 tiled_maps/png/tstFlashmanAnimated.png
 tiled_maps/png/tstHardman.png
 tiled_maps/png/mm9endless.png
@@ -2406,6 +2409,7 @@ tiled_maps/tmx/Test7.tmx
 tiled_maps/tmx/InfernoMan_16x12.tmx
 tiled_maps/tmx/GlacierMan_v2.tmx
 tiled_maps/tmx/MoonMan_16x12.tmx
+tiled_maps/tmx/MoonMan_16x14_v3.tmx
 tiled_maps/tmx/Test6.tmx
 tiled_maps/tmx/DesertMan_v3.tmx
 tiled_maps/tmx/PreciousMan.tmx

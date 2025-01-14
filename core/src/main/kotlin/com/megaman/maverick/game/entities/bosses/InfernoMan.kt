@@ -116,11 +116,11 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private enum class ShootMethod { STRAIGHT, UP, DOWN, MEGA }
 
     override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class pairTo dmgNeg(1),
-        Fireball::class pairTo dmgNeg(2),
+        Bullet::class pairTo dmgNeg(2),
+        Fireball::class pairTo dmgNeg(1),
         ChargedShot::class pairTo dmgNeg {
             it as ChargedShot
-            if (it.fullyCharged) 2 else 1
+            if (it.fullyCharged) 4 else 2
         },
         ChargedShotExplosion::class pairTo dmgNeg {
             it as ChargedShotExplosion

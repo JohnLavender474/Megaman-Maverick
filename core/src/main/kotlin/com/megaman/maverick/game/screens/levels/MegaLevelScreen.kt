@@ -393,12 +393,14 @@ class MegaLevelScreen(
                 engine.systems.forEach { it.on = true }
                 game.putProperty(ConstKeys.ROOM_TRANSITION, false)
 
-                MegaGameEntities.getEntitiesOfType(EntityType.ENEMY).forEach { game.engine.destroy(it) }
+                MegaGameEntities.getEntitiesOfType(EntityType.ENEMY).forEach { it.destroy() }
 
-                GameLogger.debug(
-                    TAG, "onEvent(): Player spawn --> spawn Megaman: ${playerSpawnsMan.currentSpawnProps!!}"
-                )
-                megaman.spawn(playerSpawnsMan.currentSpawnProps!!)
+                val spawnProps = playerSpawnsMan.currentSpawnProps
+                if (spawnProps == null) throw IllegalStateException("Megaman spawn props are null")
+
+                GameLogger.debug(TAG, "onEvent(): Player spawn --> spawn Megaman: $spawnProps")
+
+                megaman.spawn(spawnProps)
             }
 
             EventType.PLAYER_READY -> {

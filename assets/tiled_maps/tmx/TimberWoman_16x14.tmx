@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="420" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="648">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="420" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="649">
  <tileset firstgid="1" source="../tsx/pipe_forest.tsx"/>
  <tileset firstgid="22" source="../tsx/PlantManTileset.tsx"/>
  <tileset firstgid="772" source="../tsx/Tileset1.tsx"/>
@@ -687,10 +687,10 @@
   <object id="609" name="Bat" x="10488" y="192" width="16" height="16"/>
   <object id="610" name="SniperJoe" x="10840" y="816" width="16" height="16"/>
  </objectgroup>
- <objectgroup id="13" name="temp">
-  <object id="647" name="0" x="12080" y="512" width="32" height="32"/>
+ <objectgroup id="13" name="player">
+  <object id="648" name="0" x="12096" y="512" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="2" name="player">
+ <objectgroup id="2" name="temp">
   <object id="5" name="0" x="128" y="1280" width="32" height="32"/>
   <object id="445" name="1" x="3904" y="768" width="32" height="32"/>
   <object id="492" name="2" x="7920" y="1408" width="32" height="32"/>

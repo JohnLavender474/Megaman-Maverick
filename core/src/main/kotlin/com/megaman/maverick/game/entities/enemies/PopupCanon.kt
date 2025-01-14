@@ -72,7 +72,7 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     private enum class PopupCanonState { REST, RISE, SHOOT, FALL }
 
-    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.MEDIUM)
+    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.SMALL)
     override lateinit var direction: Direction
     override lateinit var facing: Facing
 
