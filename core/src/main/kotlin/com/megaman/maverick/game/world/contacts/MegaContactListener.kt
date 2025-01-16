@@ -76,8 +76,8 @@ class MegaContactListener(
             printDebugLog(contact, "beginContact(): Custom-Any, contact=$contact")
             val (customFixture, otherFixture) = contact.getFixturesIfOneMatches(FixtureType.CUSTOM, out)!!
 
-            val function = customFixture.getProperty(ConstKeys.FUNCTION) as (ProcessState, IFixture, IFixture) -> Unit
-            function.invoke(ProcessState.BEGIN, otherFixture, customFixture)
+            val function = customFixture.getProperty(ConstKeys.FUNCTION) as ((ProcessState, IFixture, IFixture) -> Unit)?
+            function?.invoke(ProcessState.BEGIN, otherFixture, customFixture)
         }
 
         // consumer
@@ -704,8 +704,8 @@ class MegaContactListener(
             printDebugLog(contact, "continueContact(): Custom-Any, contact=$contact")
             val (customFixture, otherFixture) = contact.getFixturesIfOneMatches(FixtureType.CUSTOM, out)!!
 
-            val function = customFixture.getProperty(ConstKeys.FUNCTION) as (ProcessState, IFixture, IFixture) -> Unit
-            function.invoke(ProcessState.CONTINUE, otherFixture, customFixture)
+            val function = customFixture.getProperty(ConstKeys.FUNCTION) as ((ProcessState, IFixture, IFixture) -> Unit)?
+            function?.invoke(ProcessState.CONTINUE, otherFixture, customFixture)
         }
 
         // consumer
@@ -1078,8 +1078,8 @@ class MegaContactListener(
             printDebugLog(contact, "endContact(): Custom-Any, contact=$contact")
             val (customFixture, otherFixture) = contact.getFixturesIfOneMatches(FixtureType.CUSTOM, out)!!
 
-            val function = customFixture.getProperty(ConstKeys.FUNCTION) as (ProcessState, IFixture, IFixture) -> Unit
-            function.invoke(ProcessState.END, otherFixture, customFixture)
+            val function = customFixture.getProperty(ConstKeys.FUNCTION) as ((ProcessState, IFixture, IFixture) -> Unit)?
+            function?.invoke(ProcessState.END, otherFixture, customFixture)
         }
 
         // side, block

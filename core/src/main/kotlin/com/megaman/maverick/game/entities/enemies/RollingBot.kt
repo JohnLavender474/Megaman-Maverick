@@ -117,18 +117,23 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     }
 
     private fun shoot() {
-        requestToPlaySound(SoundAsset.ICE_SHARD_2_SOUND, false)
-        val rollingBotShot = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ROLLING_BOT_SHOT)!!
-        val position = if (isFacing(Facing.LEFT))
-            body.getPositionPoint(Position.CENTER_LEFT).add(-0.2f * ConstVals.PPM, 0.1f * ConstVals.PPM)
-        else body.getPositionPoint(Position.CENTER_RIGHT).add(0.2f * ConstVals.PPM, 0.1f * ConstVals.PPM)
-        rollingBotShot.spawn(
+        val position = when {
+            isFacing(Facing.LEFT) ->
+                body.getPositionPoint(Position.CENTER_LEFT).add(-0.2f * ConstVals.PPM, 0.1f * ConstVals.PPM)
+
+            else -> body.getPositionPoint(Position.CENTER_RIGHT).add(0.2f * ConstVals.PPM, 0.1f * ConstVals.PPM)
+        }
+
+        val shot = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ROLLING_BOT_SHOT)!!
+        shot.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.POSITION pairTo position,
                 ConstKeys.LEFT pairTo isFacing(Facing.LEFT)
             )
         )
+
+        requestToPlaySound(SoundAsset.ICE_SHARD_2_SOUND, false)
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -193,7 +198,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         body.addFixture(feetFixture)
-        debugShapes.add { feetFixture}
+        debugShapes.add { feetFixture }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
@@ -208,14 +213,14 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             var feetFixtureOffset = 0f
             when (rollingBotState) {
                 RollingBotState.ROLLING -> {
-                    body.setSize(0.75f * ConstVals.PPM)
+                    body.setSize(ConstVals.PPM.toFloat())
                     feetFixtureOffset = -0.375f * ConstVals.PPM
                 }
 
                 RollingBotState.OPENING,
                 RollingBotState.SHOOTING,
                 RollingBotState.CLOSING -> {
-                    body.setSize(ConstVals.PPM.toFloat(), 1.25f * ConstVals.PPM)
+                    body.setSize(ConstVals.PPM.toFloat(), 1.5f * ConstVals.PPM)
                     feetFixtureOffset = -0.675f * ConstVals.PPM
                 }
             }
@@ -226,8 +231,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                 if (fixture.getType() == FixtureType.FEET) {
                     fixture.offsetFromBodyAttachment.y = feetFixtureOffset
                     return@forEachFixture
-                }
-                else if (fixture.getType() == FixtureType.SHIELD) fixture.setActive(rolling)
+                } else if (fixture.getType() == FixtureType.SHIELD) fixture.setActive(rolling)
                 else if (fixture.getType() == FixtureType.DAMAGEABLE) fixture.setActive(!rolling)
 
                 val fixtureShape = fixture.rawShape as GameRectangle
@@ -235,7 +239,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             }
 
             body.physics.gravity.y = ConstVals.PPM *
-                    (if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY)
+                (if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY)
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -245,7 +249,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.75f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setFlip(isFacing(Facing.RIGHT), false)

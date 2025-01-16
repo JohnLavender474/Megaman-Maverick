@@ -48,11 +48,13 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         private const val MAX_BOUNCES = 3
         private const val BOUNCE_VEL_SCALAR = 0.75f
         private const val EXPLODING_ALPHA = 0.5f
+        private val INIT_IMPULSE = Vector2(0f, -3f * ConstVals.PPM)
         private val ANIM_DURS = gdxArrayOf(0.1f, 0.075f, 0.05f)
         private val regions = ObjectMap<Int, TextureRegion>()
     }
 
     override var owner: GameEntity? = null
+
     var hidden = false
     var collide = false
 
@@ -79,8 +81,8 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
-        body.physics.velocity.setZero()
         body.physics.gravityOn = true
+        body.physics.velocity.set(INIT_IMPULSE)
 
         exploding = false
         hidden = false
@@ -93,31 +95,36 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
     }
 
     override fun explodeAndDie(vararg params: Any?) {
-        val explosionField = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION_FIELD)!!
+        val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION_FIELD)!!
         val props = props(
             ConstKeys.BOUNDS pairTo GameRectangle(body),
             ConstKeys.OWNER pairTo this,
             ConstKeys.END pairTo { if (exploding) destroy() } as () -> Unit
         )
-        explosionField.spawn(props)
+        explosion.spawn(props)
 
         exploding = true
+
         body.physics.gravityOn = false
         body.physics.velocity.setZero()
     }
 
     private fun bounce(direction: Direction, add: Boolean = true) {
         if (!collide) return
+
         if (add) bounces++
-        if (bounces >= MAX_BOUNCES) explodeAndDie()
-        else {
-            when (direction) {
-                Direction.UP -> body.physics.velocity.y = abs(body.physics.velocity.y) * BOUNCE_VEL_SCALAR
-                Direction.DOWN -> body.physics.velocity.y = -abs(body.physics.velocity.y) * BOUNCE_VEL_SCALAR
-                Direction.LEFT -> body.physics.velocity.x = -abs(body.physics.velocity.x) * BOUNCE_VEL_SCALAR
-                Direction.RIGHT -> body.physics.velocity.x = abs(body.physics.velocity.x) * BOUNCE_VEL_SCALAR
+
+        when {
+            bounces >= MAX_BOUNCES -> explodeAndDie()
+            else -> {
+                when (direction) {
+                    Direction.UP -> body.physics.velocity.y = abs(body.physics.velocity.y) * BOUNCE_VEL_SCALAR
+                    Direction.DOWN -> body.physics.velocity.y = -abs(body.physics.velocity.y) * BOUNCE_VEL_SCALAR
+                    Direction.LEFT -> body.physics.velocity.x = -abs(body.physics.velocity.x) * BOUNCE_VEL_SCALAR
+                    Direction.RIGHT -> body.physics.velocity.x = abs(body.physics.velocity.x) * BOUNCE_VEL_SCALAR
+                }
+                requestToPlaySound(SoundAsset.BLOOPITY_SOUND, false)
             }
-            requestToPlaySound(SoundAsset.BLOOPITY_SOUND, false)
         }
     }
 

@@ -36,6 +36,7 @@ import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
@@ -81,16 +82,15 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
 
-        spriteWidth = spawnProps.get(ConstKeys.SPRITE_WIDTH, Float::class)
-        spriteHeight = spawnProps.get(ConstKeys.SPRITE_HEIGHT, Float::class)
+        direction = megaman.direction
 
         val gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, false, Boolean::class)
         body.physics.gravityOn = gravityOn
 
         if (!gravityOn) parent?.let { if (it is IBodyEntity) offset.set(body.getCenter().sub(it.body.getCenter())) }
 
-        direction =
-            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
+        spriteWidth = spawnProps.get(ConstKeys.SPRITE_WIDTH, Float::class)
+        spriteHeight = spawnProps.get(ConstKeys.SPRITE_HEIGHT, Float::class)
 
         val regionKey = spawnProps.get(ConstKeys.REGION, String::class)!!
         region = atlas!!.findRegion(regionKey)

@@ -34,7 +34,7 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
     companion object {
         const val TAG = "FloatingCanHole"
-        private const val SPAWN_DELAY = 2f
+        private const val SPAWN_DELAY = 1.5f
         private const val DEFAULT_MAX_SPAWNED = 3
         private const val DEFAULT_DROP_ITEM_ON_DEATH = true
     }
@@ -45,8 +45,6 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
     private var maxToSpawn = DEFAULT_MAX_SPAWNED
     private var dropItemOnDeath = DEFAULT_DROP_ITEM_ON_DEATH
 
-    override fun getEntityType() = EntityType.HAZARD
-
     override fun init() {
         addComponent(defineBodyComponent())
         addComponent(defineUpdatablesComponent())
@@ -55,10 +53,14 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
+
         maxToSpawn = spawnProps.getOrDefault(ConstKeys.MAX, DEFAULT_MAX_SPAWNED, Int::class)
+
         spawnDelayTimer.reset()
+
         dropItemOnDeath =
             spawnProps.getOrDefault(ConstKeys.DROP_ITEM_ON_DEATH, DEFAULT_DROP_ITEM_ON_DEATH, Boolean::class)
     }
@@ -104,4 +106,6 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         val camCullable = getGameCameraCullingLogic(this)
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo camCullable))
     }
+
+    override fun getEntityType() = EntityType.HAZARD
 }

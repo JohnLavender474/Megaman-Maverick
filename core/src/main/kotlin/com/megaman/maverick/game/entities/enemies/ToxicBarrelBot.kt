@@ -11,6 +11,7 @@ import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.UtilMethods.getRandomBool
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -20,7 +21,6 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -37,24 +37,18 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.DamageNegotiation
-import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.entities.projectiles.Bullet
-import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
-import kotlin.reflect.KClass
 
 class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
 
@@ -75,18 +69,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         private var openTopRegion: TextureRegion? = null
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class pairTo dmgNeg(3),
-        Bullet::class pairTo dmgNeg(5),
-        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class pairTo dmgNeg {
-            it as ChargedShot
-            if (it.fullyCharged) 15 else 10
-        },
-        ChargedShotExplosion::class pairTo dmgNeg {
-            it as ChargedShotExplosion
-            if (it.fullyCharged) 5 else 3
-        })
+    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.MEDIUM)
     override lateinit var facing: Facing
 
     private val closedTimer = Timer(CLOSED_DUR)
@@ -184,7 +167,8 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
 
     private fun shoot() {
         if (toxicBarrelBotState == ToxicBarrelBotState.OPEN_CENTER) {
-            val spawn = body.getCenter().add(0.5f * ConstVals.PPM * facing.value, -0.05f * ConstVals.PPM)
+            val spawn = body.getCenter().add(0.5f * ConstVals.PPM * facing.value, -0.25f * ConstVals.PPM)
+
             val trajectory = GameObjectPools.fetch(Vector2::class)
                 .set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
 
@@ -201,7 +185,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         } else {
             val spawn = body.getCenter().add(
                 0.25f * ConstVals.PPM * facing.value,
-                0.35f * ConstVals.PPM
+                0.5f * ConstVals.PPM
             )
             val impulse = GameObjectPools.fetch(Vector2::class)
                 .set(GOOP_SHOT_X_IMPULSE * ConstVals.PPM * facing.value, 0f)
@@ -221,7 +205,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setWidth(0.7f * ConstVals.PPM)
+        body.setWidth(ConstVals.PPM.toFloat())
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
@@ -252,12 +236,15 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.setHeight(
-                if (toxicBarrelBotState.equalsAny(
+                when {
+                    toxicBarrelBotState.equalsAny(
                         ToxicBarrelBotState.OPENING_TOP,
                         ToxicBarrelBotState.OPEN_TOP,
                         ToxicBarrelBotState.CLOSING_TOP
-                    )
-                ) 1.5f * ConstVals.PPM else 0.85f * ConstVals.PPM
+                    ) -> 2f * ConstVals.PPM
+
+                    else -> 1.5f * ConstVals.PPM
+                }
             )
             body.setBottomCenterToPoint(position)
 
@@ -299,7 +286,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.15f * ConstVals.PPM, 1.85f * ConstVals.PPM)
+        sprite.setSize(1.25f * ConstVals.PPM, 2.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setFlip(isFacing(Facing.RIGHT), false)

@@ -12,6 +12,7 @@ import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
@@ -23,18 +24,29 @@ import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.motion.MotionComponent
 import com.mega.game.engine.motion.Trajectory
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
+import com.megaman.maverick.game.world.body.setEntity
 
 class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity, ISpritesEntity, IAnimatedEntity,
-    IEventListener, IDirectional {
+    IDamager, IHazard, IEventListener, IDirectional {
 
     companion object {
         const val TAG = "PropellerPlatform"
+        private const val BODY_WIDTH = 1.25f
+        private const val BODY_HEIGHT = 0.25f
+        private const val DAMAGER_WIDTH = 0.85f
+        private const val DAMAGER_HEIGHT = 0.25f
+        private const val DAMAGER_OFFSET_Y = 0.6f
         private var region: TextureRegion? = null
     }
 
@@ -56,33 +68,42 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-        game.eventsMan.addListener(this)
+
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
 
         super.onSpawn(spawnProps)
 
-        val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        val center = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
+        val bounds = GameRectangle().setSize(BODY_WIDTH * ConstVals.PPM, BODY_HEIGHT * ConstVals.PPM).setCenter(center)
+        body.set(bounds)
 
-        if (spawnProps.containsKey(ConstKeys.DIRECTION)) {
-            var direction = spawnProps.get(ConstKeys.DIRECTION)
-            if (direction is String) direction = Direction.valueOf(direction.uppercase())
-            direction = direction as Direction
-        } else direction = Direction.UP
+        when {
+            spawnProps.containsKey(ConstKeys.DIRECTION) -> {
+                var direction = spawnProps.get(ConstKeys.DIRECTION)
+                if (direction is String) direction = Direction.valueOf(direction.uppercase())
+                direction = direction as Direction
+            }
+
+            else -> direction = Direction.UP
+        }
 
         val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY) as String, ConstVals.PPM)
-        val motionDefinition = MotionComponent.MotionDefinition(motion = trajectory,
+        val motionDefinition = MotionComponent.MotionDefinition(
+            motion = trajectory,
             function = { value, _ -> body.physics.velocity.set(value) },
             onReset = { body.set(bounds) })
         putMotionDefinition(ConstKeys.TRAJECTORY, motionDefinition)
 
         hidden = false
+
+        game.eventsMan.addListener(this)
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        game.eventsMan.removeListener(this)
         clearMotionDefinitions()
+        game.eventsMan.removeListener(this)
     }
 
     override fun onEvent(event: Event) {
@@ -97,9 +118,26 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
         }
     }
 
+    override fun defineBodyComponent(): BodyComponent {
+        val component = super.defineBodyComponent()
+        val body = component.body
+
+        val damagerFixture = Fixture(
+            body,
+            FixtureType.DAMAGER,
+            GameRectangle().setSize(DAMAGER_WIDTH * ConstVals.PPM, DAMAGER_HEIGHT * ConstVals.PPM)
+        )
+        damagerFixture.offsetFromBodyAttachment.y = -DAMAGER_OFFSET_Y * ConstVals.PPM
+        damagerFixture.setEntity(this)
+        body.addFixture(damagerFixture)
+        addDebugShapeSupplier { damagerFixture }
+
+        return component
+    }
+
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.05f * ConstVals.PPM)
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setOriginCenter()
@@ -123,4 +161,5 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
         return AnimationsComponent(this, animator)
     }
 
+    override fun getTag() = TAG
 }

@@ -111,7 +111,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private val projectilePosition: Vector2
         get() = body.getPositionPoint(Position.TOP_CENTER).add(
             0.15f * ConstVals.PPM * -facing.value,
-            (if (body.isSensing(BodySense.FEET_ON_GROUND)) 0.175f else 0.375f) * ConstVals.PPM
+            (if (body.isSensing(BodySense.FEET_ON_GROUND)) 0.1f else 0.25f) * ConstVals.PPM
         )
 
     private var projectile: ReactManProjectile? = null
@@ -292,7 +292,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(ConstVals.PPM.toFloat(), 1.35f * ConstVals.PPM)
+        body.setSize(1.5f * ConstVals.PPM, 2f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
@@ -308,38 +308,30 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         body.addFixture(damageableFixture)
 
         val headFixture = Fixture(
-            body, FixtureType.HEAD, GameRectangle().setSize(
-                0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM
-            )
+            body, FixtureType.HEAD, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM)
         )
-        headFixture.offsetFromBodyAttachment.y = 0.675f * ConstVals.PPM
+        headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
         debugShapes.add { headFixture}
         body.addFixture(headFixture)
 
         val feetFixture = Fixture(
-            body, FixtureType.FEET, GameRectangle().setSize(
-                0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM
-            )
+            body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM)
         )
-        feetFixture.offsetFromBodyAttachment.y = -0.675f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         debugShapes.add { feetFixture}
         body.addFixture(feetFixture)
 
         val leftFixture = Fixture(
-            body, FixtureType.SIDE, GameRectangle().setSize(
-                0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM
-            )
+            body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM)
         )
-        leftFixture.offsetFromBodyAttachment.x = -0.625f * ConstVals.PPM
+        leftFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         debugShapes.add { leftFixture}
 
         val rightFixture = Fixture(
-            body, FixtureType.SIDE, GameRectangle().setSize(
-                0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM
-            )
+            body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM)
         )
-        rightFixture.offsetFromBodyAttachment.x = 0.625f * ConstVals.PPM
+        rightFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         debugShapes.add { rightFixture}
 
@@ -357,8 +349,8 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
-        sprite.setSize(2.25f * ConstVals.PPM)
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
+        sprite.setSize(3f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)

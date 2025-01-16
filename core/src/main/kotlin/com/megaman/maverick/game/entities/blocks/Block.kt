@@ -45,11 +45,11 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     override fun init() {
         GameLogger.debug(TAG, "init()")
 
-        addComponent(CullablesComponent())
-        addComponent(defineBodyComponent())
-
         debugShapeSuppliers.add { if (draw) body.getBounds() else null }
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapeSuppliers, debug = true))
+
+        addComponent(CullablesComponent())
+        addComponent(defineBodyComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {

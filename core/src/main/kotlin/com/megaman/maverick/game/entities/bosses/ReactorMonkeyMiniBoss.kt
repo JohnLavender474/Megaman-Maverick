@@ -60,14 +60,20 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) :
     companion object {
         const val TAG = "ReactorMonkeyMiniBoss"
         const val BALL_SPAWN_Y_KEY = "${ConstKeys.BALL}_${ConstKeys.SPAWN}_${ConstKeys.Y}"
+
         private const val MIN_THROW_DELAY = 0.75f
         private const val MAX_THROW_DELAY = 2.25f
+
         private const val THROW_DUR = 0.3f
+
         private const val BALL_CATCH_RADIUS = 0.25f
         private const val BALL_IMPULSE_Y = 6f
+
         private const val HORIZONTAL_SCALAR = 1.25f
         private const val VERTICAL_SCALAR = 1f
-        private const val DEFAULT_BALL_SPAWN_Y = 4f
+
+        private const val DEFAULT_BALL_SPAWN_Y = 8f
+
         private val regions = ObjectMap<String, TextureRegion>()
     }
 

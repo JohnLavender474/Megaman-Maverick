@@ -8,43 +8,36 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.Size
+import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.getTextureRegion
-import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.overlaps
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
-import com.mega.game.engine.world.body.Body
-import com.mega.game.engine.world.body.BodyComponent
-import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.DamageNegotiation
-import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
-import com.megaman.maverick.game.entities.projectiles.Bullet
-import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
-import kotlin.reflect.KClass
+import com.megaman.maverick.game.world.body.getEntity
 
 class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDirectional {
 
@@ -61,13 +54,8 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         private const val HORIZ_SCANNER_OFFSET = 3f
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class pairTo dmgNeg(10),
-        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
-    )
-    override var direction = Direction.UP
+    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.SMALL)
+    override lateinit var direction: Direction
     override lateinit var facing: Facing
 
     private val behaviorTimer = Timer(CHANGE_BEHAV_DUR)
@@ -84,17 +72,27 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
 
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
+
         super.onSpawn(spawnProps)
-        if (spawnProps.containsKey(ConstKeys.DIRECTION)) {
-            var direction = spawnProps.get(ConstKeys.DIRECTION)
-            if (direction is String) direction = Direction.valueOf(direction.uppercase())
-            direction = direction as Direction
-        } else direction = Direction.UP
+
+        when {
+            spawnProps.containsKey(ConstKeys.DIRECTION) -> {
+                var direction = spawnProps.get(ConstKeys.DIRECTION)
+                if (direction is String) direction = Direction.valueOf(direction.uppercase())
+                direction = direction as Direction
+            }
+
+            else -> direction = Direction.UP
+        }
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
+
         currentBehavior = DragonFlyBehavior.MOVE_UP
         previousBehavior = DragonFlyBehavior.MOVE_UP
+
         behaviorTimer.reset()
+
         facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
@@ -102,11 +100,8 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.85f * ConstVals.PPM)
 
-        val damageableFixture = Fixture(
-            body, FixtureType.DAMAGEABLE, GameRectangle().setSize(
-                ConstVals.PPM.toFloat()
-            )
-        )
+        val damageableFixture =
+            Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(damageableFixture)
 
         val damagerFixture =
@@ -118,9 +113,11 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
             FixtureType.CUSTOM,
             GameRectangle().setSize(32f * ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
         )
+        megamanScannerFixture.putProperty(ConstKeys.FILTER) { fixture: IFixture -> fixture.getEntity() == megaman }
         body.addFixture(megamanScannerFixture)
 
         val oobScannerFixture = Fixture(body, FixtureType.CUSTOM, GameRectangle().setSize(ConstVals.PPM / 2f))
+        oobScannerFixture.putProperty(ConstKeys.FILTER) { fixture: IFixture -> false }
         body.addFixture(oobScannerFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
@@ -165,6 +162,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
                     var xVel = HORIZ_SPEED * ConstVals.PPM
                     if (toLeftBounds) xVel *= -1f
                     body.physics.velocity.set(xVel, 0f)
+
                     var xOffset: Float = HORIZ_SCANNER_OFFSET * ConstVals.PPM
                     if (toLeftBounds) xOffset *= -1f
                     oobScannerFixture.offsetFromBodyAttachment.set(xOffset, 0f)
@@ -181,7 +179,8 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
             when (currentBehavior) {
                 DragonFlyBehavior.MOVE_UP -> {
                     if (!game.getGameCamera().overlaps(
-                            oobScannerFixture.getShape().getBoundingRectangle(), GameObjectPools.fetch(BoundingBox::class)
+                            oobScannerFixture.getShape().getBoundingRectangle(),
+                            GameObjectPools.fetch(BoundingBox::class)
                         )
                     ) {
                         changeBehavior(DragonFlyBehavior.MOVE_HORIZONTAL)
@@ -190,9 +189,10 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
                 }
 
                 DragonFlyBehavior.MOVE_DOWN -> {
-                    if (megamanScannerFixture.getShape().contains(game.megaman.body.getCenter()) ||
+                    if (megamanScannerFixture.getShape().contains(megaman.body.getCenter()) ||
                         (!isMegamanBelow() && !game.getGameCamera().overlaps(
-                            oobScannerFixture.getShape().getBoundingRectangle(), GameObjectPools.fetch(BoundingBox::class)
+                            oobScannerFixture.getShape().getBoundingRectangle(),
+                            GameObjectPools.fetch(BoundingBox::class)
                         ))
                     ) {
                         changeBehavior(DragonFlyBehavior.MOVE_HORIZONTAL)
@@ -203,7 +203,8 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
                 DragonFlyBehavior.MOVE_HORIZONTAL -> {
                     val doChange = (toLeftBounds && !isMegamanLeft()) || (!toLeftBounds && isMegamanLeft())
                     if (doChange && !game.getGameCamera().overlaps(
-                            oobScannerFixture.getShape().getBoundingRectangle(), GameObjectPools.fetch(BoundingBox::class)
+                            oobScannerFixture.getShape().getBoundingRectangle(),
+                            GameObjectPools.fetch(BoundingBox::class)
                         )
                     ) {
                         changeBehavior(
@@ -219,17 +220,20 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IDi
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
-        sprite.setSize(1.75f * ConstVals.PPM)
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.hidden = damageBlink
+
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
+
             sprite.setPosition(body.getCenter(), Position.CENTER)
-            if (currentBehavior == DragonFlyBehavior.MOVE_UP || currentBehavior == DragonFlyBehavior.MOVE_DOWN) {
+
+            if (currentBehavior.equalsAny(DragonFlyBehavior.MOVE_UP, DragonFlyBehavior.MOVE_DOWN))
                 facing = if (isMegamanLeft()) Facing.LEFT else Facing.RIGHT
-            }
+
             sprite.setFlip(facing == Facing.LEFT, false)
         }
         return spritesComponent

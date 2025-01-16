@@ -73,8 +73,12 @@ class MegaContactFilter : IContactFilter {
                 }
             }
 
-            val filter = custom.getProperty(ConstKeys.FILTER) as (IFixture) -> Boolean
-            return filter.invoke(other)
+            try {
+                val filter = custom.getProperty(ConstKeys.FILTER) as (IFixture) -> Boolean
+                return filter.invoke(other)
+            } catch (e: Exception) {
+                throw IllegalStateException("Failed to filter fixtures: fixture1=$fixture1, fixture2=$fixture2", e)
+            }
         }
 
         return (filters.get(fixture1.getType() as FixtureType)?.contains(fixture2.getType()) == true ||
