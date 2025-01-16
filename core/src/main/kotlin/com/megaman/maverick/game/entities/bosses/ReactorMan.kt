@@ -300,25 +300,25 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         body.addFixture(bodyFixture)
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        debugShapes.add { damagerFixture}
+        debugShapes.add { damagerFixture }
         body.addFixture(damagerFixture)
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(1.25f * ConstVals.PPM))
-        debugShapes.add { damageableFixture}
+        debugShapes.add { damageableFixture }
         body.addFixture(damageableFixture)
 
         val headFixture = Fixture(
             body, FixtureType.HEAD, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM)
         )
         headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
-        debugShapes.add { headFixture}
+        debugShapes.add { headFixture }
         body.addFixture(headFixture)
 
         val feetFixture = Fixture(
             body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM)
         )
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
-        debugShapes.add { feetFixture}
+        debugShapes.add { feetFixture }
         body.addFixture(feetFixture)
 
         val leftFixture = Fixture(
@@ -326,14 +326,14 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         )
         leftFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        debugShapes.add { leftFixture}
+        debugShapes.add { leftFixture }
 
         val rightFixture = Fixture(
             body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM)
         )
         rightFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        debugShapes.add { rightFixture}
+        debugShapes.add { rightFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) && body.physics.velocity.y > 0f)

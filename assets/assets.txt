@@ -1106,7 +1106,6 @@ sprites/frames/Projectiles1/TubeBeam.png
 sprites/frames/Projectiles1/PurpleBlast/Charge.png
 sprites/frames/Projectiles1/PurpleBlast/Blast.png
 sprites/frames/Projectiles1/SnowJoeball.png
-sprites/frames/Projectiles1/Joeball.png
 sprites/frames/Projectiles1/CannonBall.png
 sprites/frames/Projectiles1/Monkey_Ball.png
 sprites/frames/Projectiles1/SpiderWeb/White.png
@@ -1118,6 +1117,7 @@ sprites/frames/Projectiles1/Snowball2.png
 sprites/frames/Projectiles1/UFOBomb.png
 sprites/frames/Projectiles1/Picket.png
 sprites/frames/Projectiles1/Fire/Fireball.png
+sprites/frames/Projectiles1/JoeBall.png
 sprites/frames/Projectiles1/ToxicGoopShot.png
 sprites/frames/Projectiles1/Prickly.png
 sprites/frames/Projectiles1/Nuclear_Monkey_Ball.png
@@ -1298,12 +1298,9 @@ sprites/frames/Enemies1/CloudedTorpedo/TorpedoFire.png
 sprites/frames/Enemies1/PreciousJoe/Stand.png
 sprites/frames/Enemies1/PreciousJoe/Charge.png
 sprites/frames/Enemies1/PreciousJoe/Shoot.png
-sprites/frames/Enemies1/SwinginJoe/SnowThrowBall.png
-sprites/frames/Enemies1/SwinginJoe/SwingBall1.png
-sprites/frames/Enemies1/SwinginJoe/SnowSwingBall1.png
-sprites/frames/Enemies1/SwinginJoe/SwingBall2.png
-sprites/frames/Enemies1/SwinginJoe/ThrowBall.png
-sprites/frames/Enemies1/SwinginJoe/SnowSwingBall2.png
+sprites/frames/Enemies1/SwinginJoe/throw.png
+sprites/frames/Enemies1/SwinginJoe/swing1.png
+sprites/frames/Enemies1/SwinginJoe/swing2.png
 sprites/frames/Enemies1/FlameHeadThrower/Stand.png
 sprites/frames/Enemies1/FlameHeadThrower/Throw.png
 sprites/frames/Enemies1/NuttGlider/glide_nutt.png

@@ -543,8 +543,7 @@
             <key type="filename">../frames/Enemies1/NuttGlider/stand_nutt.png</key>
             <key type="filename">../frames/Enemies1/PreciousJoe/Shoot.png</key>
             <key type="filename">../frames/Enemies1/PreciousJoe/Stand.png</key>
-            <key type="filename">../frames/Enemies1/SwinginJoe/SnowThrowBall.png</key>
-            <key type="filename">../frames/Enemies1/SwinginJoe/ThrowBall.png</key>
+            <key type="filename">../frames/Enemies1/SwinginJoe/throw.png</key>
             <key type="filename">../frames/Enemies1/WispyWasp/Nest.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -757,10 +756,8 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Enemies1/SwinginJoe/SnowSwingBall1.png</key>
-            <key type="filename">../frames/Enemies1/SwinginJoe/SnowSwingBall2.png</key>
-            <key type="filename">../frames/Enemies1/SwinginJoe/SwingBall1.png</key>
-            <key type="filename">../frames/Enemies1/SwinginJoe/SwingBall2.png</key>
+            <key type="filename">../frames/Enemies1/SwinginJoe/swing1.png</key>
+            <key type="filename">../frames/Enemies1/SwinginJoe/swing2.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -769,9 +766,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>48,12,96,24</rect>
+                <rect>24,24,48,48</rect>
                 <key>scale9Paddings</key>
-                <rect>48,12,96,24</rect>
+                <rect>24,24,48,48</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

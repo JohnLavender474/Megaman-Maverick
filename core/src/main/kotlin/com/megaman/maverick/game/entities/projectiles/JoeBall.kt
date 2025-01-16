@@ -5,10 +5,8 @@ import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
-import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.getTextureRegion
-import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -44,24 +42,17 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
 
     companion object {
         const val TAG = "JoeBall"
-        const val SNOW_TYPE = "Snow"
 
         private const val CLAMP = 15f
         private const val REFLECT_VEL = 5f
 
-        private var joeBallReg: TextureRegion? = null
-        private var snowJoeBallReg: TextureRegion? = null
+        private var region: TextureRegion? = null
     }
 
     private val trajectory = Vector2()
-    private var type = ""
 
     override fun init() {
-        if (joeBallReg == null)
-            joeBallReg = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Joeball")
-        if (snowJoeBallReg == null)
-            snowJoeBallReg =
-                game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "SnowJoeball")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }
@@ -71,8 +62,6 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
-
-        type = spawnProps.get(ConstKeys.TYPE, String::class)!!
 
         trajectory.set(spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!)
         body.physics.velocity.set(trajectory)
@@ -87,10 +76,14 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
 
         trajectory.x *= -1f
 
-        val deflection =
-            if (shieldFixture.hasProperty(ConstKeys.DIRECTION))
-                shieldFixture.getProperty(ConstKeys.DIRECTION, Direction::class)!!
-            else Direction.UP
+        val deflection = when {
+            shieldFixture.hasProperty(ConstKeys.DIRECTION) -> shieldFixture.getProperty(
+                ConstKeys.DIRECTION,
+                Direction::class
+            )!!
+
+            else -> Direction.UP
+        }
         when (deflection) {
             Direction.UP -> trajectory.y = REFLECT_VEL * ConstVals.PPM
             Direction.DOWN -> trajectory.y = -REFLECT_VEL * ConstVals.PPM
@@ -136,42 +129,25 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = { type }
-        val animations =
-            objectMapOf<String, IAnimation>(
-                "" pairTo Animation(joeBallReg!!, 1, 4, 0.1f, true),
-                SNOW_TYPE pairTo Animation(snowJoeBallReg!!, 1, 4, 0.1f, true)
-            )
-        val animator = Animator(keySupplier, animations)
+        val animation = Animation(region!!, 1, 4, 0.1f, true)
+        val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
 
-        val explosionType: String
-        val soundAsset: SoundAsset
-        when (type) {
-            SNOW_TYPE -> {
-                soundAsset = SoundAsset.THUMP_SOUND
-                explosionType = ExplosionsFactory.SNOWBALL_EXPLOSION
-            }
-
-            else -> {
-                soundAsset = SoundAsset.EXPLOSION_2_SOUND
-                explosionType = ExplosionsFactory.EXPLOSION
-            }
-        }
+        val soundAsset = SoundAsset.EXPLOSION_2_SOUND
+        val explosionType = ExplosionsFactory.EXPLOSION
 
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, explosionType)!!
         explosion.spawn(
             props(
                 ConstKeys.POSITION pairTo body.getCenter(),
                 ConstKeys.SOUND pairTo soundAsset,
-                ConstKeys.MASK pairTo
-                    objectSetOf<KClass<out IDamageable>>(
-                        if (owner is Megaman) AbstractEnemy::class else Megaman::class
-                    )
+                ConstKeys.MASK pairTo objectSetOf<KClass<out IDamageable>>(
+                    if (owner is Megaman) AbstractEnemy::class else Megaman::class
+                )
             )
         )
     }

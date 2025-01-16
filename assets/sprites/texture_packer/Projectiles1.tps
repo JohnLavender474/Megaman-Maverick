@@ -311,7 +311,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Projectiles1/Electric/ElectricBallPulse.png</key>
-            <key type="filename">../frames/Projectiles1/Joeball.png</key>
+            <key type="filename">../frames/Projectiles1/JoeBall.png</key>
             <key type="filename">../frames/Projectiles1/Picket.png</key>
             <key type="filename">../frames/Projectiles1/SnowJoeball.png</key>
             <struct type="IndividualSpriteSettings">

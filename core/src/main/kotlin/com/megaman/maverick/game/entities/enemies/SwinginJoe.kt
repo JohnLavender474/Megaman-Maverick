@@ -1,9 +1,10 @@
 package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -12,10 +13,9 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
-import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.IFaceable
+import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -44,49 +44,50 @@ import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getCenter
-import com.megaman.maverick.game.world.body.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
-    private enum class SwinginJoeSetting { SWING_EYES_CLOSED, SWING_EYES_OPEN, THROWING }
-
     companion object {
         const val TAG = "SwinginJoe"
-        private var atlas: TextureAtlas? = null
         private const val BALL_SPEED = 9f
         private const val SETTING_DUR = .8f
+        private val regions = ObjectMap<String, TextureRegion>()
     }
+
+    private enum class SwinginJoeState { SWING_EYES_CLOSED, SWING_EYES_OPEN, THROWING }
 
     override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.MEDIUM)
     override lateinit var facing: Facing
 
-    private lateinit var type: String
-    private lateinit var setting: SwinginJoeSetting
-    private val settingTimer = Timer(SETTING_DUR)
+    private val loop = Loop(SwinginJoeState.entries.toGdxArray())
+    private val currentState: SwinginJoeState
+        get() = loop.getCurrent()
+    private val stateTimer = Timer(SETTING_DUR)
 
     override fun init() {
         super.init()
-        if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+        if (regions.isEmpty) {
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            gdxArrayOf("swing1", "swing2", "throw").forEach { key ->
+                val region = atlas.findRegion("$TAG/$key")
+                regions.put(key, region)
+            }
+        }
         addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        settingTimer.reset()
-
-        setting = SwinginJoeSetting.SWING_EYES_CLOSED
-
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.positionOnPoint(spawn, Position.BOTTOM_CENTER)
 
-        type = if (spawnProps.containsKey(ConstKeys.TYPE))
-            spawnProps.get(ConstKeys.TYPE, String::class)!! else ""
+        loop.reset()
+        stateTimer.reset()
 
         facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
@@ -94,35 +95,24 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(ConstVals.PPM.toFloat(), 2f * ConstVals.PPM)
+        body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
-        body.addFixture(bodyFixture)
-        bodyFixture.drawingColor = Color.GRAY
-        debugShapes.add { bodyFixture }
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        body.addFixture(damagerFixture)
-        damagerFixture.drawingColor = Color.RED
-        debugShapes.add { damagerFixture }
+        debugShapes.add { body.getBounds() }
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
         body.addFixture(damageableFixture)
-        damageableFixture.drawingColor = Color.PURPLE
-        debugShapes.add { damageableFixture }
 
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle(body))
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
-        shieldFixture.drawingColor = Color.BLUE
-        debugShapes.add { shieldFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            shieldFixture.setActive(setting == SwinginJoeSetting.SWING_EYES_CLOSED)
-            damageableFixture.setActive(setting != SwinginJoeSetting.SWING_EYES_CLOSED)
-            when (setting) {
-                SwinginJoeSetting.SWING_EYES_CLOSED -> {
+            shieldFixture.setActive(currentState == SwinginJoeState.SWING_EYES_CLOSED)
+            damageableFixture.setActive(currentState != SwinginJoeState.SWING_EYES_CLOSED)
+
+            when (currentState) {
+                SwinginJoeState.SWING_EYES_CLOSED -> {
                     damageableFixture.offsetFromBodyAttachment.x = 0.05f * ConstVals.PPM * -facing.value
                     shieldFixture.offsetFromBodyAttachment.x = 0.1f * ConstVals.PPM * facing.value
                 }
@@ -133,7 +123,23 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER))
+    }
+
+    override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
+        super.defineUpdatablesComponent(updatablesComponent)
+        updatablesComponent.add {
+            facing = if (megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
+
+            stateTimer.update(it)
+            if (stateTimer.isJustFinished()) {
+                val next = loop.next()
+
+                if (next == SwinginJoeState.THROWING) throwBall()
+
+                stateTimer.reset()
+            }
+        }
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
@@ -149,51 +155,33 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         return spritesComponent
     }
 
-    override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
-        super.defineUpdatablesComponent(updatablesComponent)
-        updatablesComponent.add {
-            facing = if (megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
-
-            settingTimer.update(it)
-            if (settingTimer.isJustFinished()) {
-                val index = (setting.ordinal + 1) % SwinginJoeSetting.entries.size
-                setting = SwinginJoeSetting.entries.toTypedArray()[index]
-
-                if (setting == SwinginJoeSetting.THROWING) shoot()
-
-                settingTimer.reset()
-            }
-        }
-    }
-
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String = {
-            type + when (setting) {
-                SwinginJoeSetting.SWING_EYES_CLOSED -> "SwingBall1"
-                SwinginJoeSetting.SWING_EYES_OPEN -> "SwingBall2"
-                SwinginJoeSetting.THROWING -> "ThrowBall"
+            when (currentState) {
+                SwinginJoeState.SWING_EYES_CLOSED -> "swing1"
+                SwinginJoeState.SWING_EYES_OPEN -> "swing2"
+                SwinginJoeState.THROWING -> "throw"
             }
         }
         val animations = objectMapOf<String, IAnimation>(
-            "SwingBall1" pairTo Animation(atlas!!.findRegion("SwinginJoe/SwingBall1"), 1, 4, 0.05f, true),
-            "SwingBall2" pairTo Animation(atlas!!.findRegion("SwinginJoe/SwingBall2"), 1, 4, 0.05f, true),
-            "ThrowBall" pairTo Animation(atlas!!.findRegion("SwinginJoe/ThrowBall")),
-            "SnowSwingBall1" pairTo Animation(atlas!!.findRegion("SwinginJoe/SnowSwingBall1"), 1, 4, 0.05f, true),
-            "SnowSwingBall2" pairTo Animation(atlas!!.findRegion("SwinginJoe/SnowSwingBall2"), 1, 4, 0.05f, true),
-            "SnowThrowBall" pairTo Animation(atlas!!.findRegion("SwinginJoe/SnowThrowBall")),
+            "swing1" pairTo Animation(regions["swing1"], 2, 2, 0.1f, true),
+            "swing2" pairTo Animation(regions["swing2"], 2, 2, 0.1f, true),
+            "throw" pairTo Animation(regions["throw"])
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
 
-    private fun shoot() {
+    private fun throwBall() {
         val spawn = body.getCenter().add(0.25f * facing.value * ConstVals.PPM, 0f)
 
+        val trajectory = GameObjectPools.fetch(Vector2::class)
+            .set(BALL_SPEED * ConstVals.PPM * facing.value, 0f)
+
         val props = props(
-            ConstKeys.POSITION pairTo spawn,
-            ConstKeys.TYPE pairTo type,
             ConstKeys.OWNER pairTo this,
-            ConstKeys.TRAJECTORY pairTo Vector2().set(BALL_SPEED * ConstVals.PPM * facing.value, 0f),
+            ConstKeys.POSITION pairTo spawn,
+            ConstKeys.TRAJECTORY pairTo trajectory,
             ConstKeys.MASK pairTo objectSetOf<KClass<out IDamageable>>(Megaman::class)
         )
 

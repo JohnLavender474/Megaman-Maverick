@@ -1,7 +1,7 @@
 Projectiles1.png
 size: 512, 676
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Linear,Linear
 repeat: none
 Asteroid
   rotate: false
@@ -157,7 +157,7 @@ HalfChargedShot
   orig: 32, 64
   offset: 0, 0
   index: -1
-Joeball
+JoeBall
   rotate: false
   xy: 384, 32
   size: 128, 32
