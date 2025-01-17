@@ -13,7 +13,7 @@ import com.mega.game.engine.screens.BaseScreen
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.MusicAsset
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.backgrounds.ScrollingStars
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle

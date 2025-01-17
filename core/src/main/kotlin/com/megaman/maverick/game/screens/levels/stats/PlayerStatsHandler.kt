@@ -15,7 +15,7 @@ import com.mega.game.engine.drawables.sprites.SpritesSystem
 import com.mega.game.engine.events.Event
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.drawables.ui.BitsBar
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank

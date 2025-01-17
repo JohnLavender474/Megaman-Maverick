@@ -25,7 +25,7 @@ import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
@@ -77,10 +77,8 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
         trajectory.x *= -1f
 
         val deflection = when {
-            shieldFixture.hasProperty(ConstKeys.DIRECTION) -> shieldFixture.getProperty(
-                ConstKeys.DIRECTION,
-                Direction::class
-            )!!
+            shieldFixture.hasProperty(ConstKeys.DIRECTION) ->
+                shieldFixture.getProperty(ConstKeys.DIRECTION, Direction::class)!!
 
             else -> Direction.UP
         }

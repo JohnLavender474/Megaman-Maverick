@@ -26,7 +26,7 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -64,7 +64,7 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         defaultSprite.setPosition(spawn, Position.CENTER)
 
-        val sound = spawnProps.getOrDefault(ConstKeys.SOUND, true, Boolean::class)
+        val sound = spawnProps.getOrDefault(ConstKeys.SOUND, false, Boolean::class)
         if (sound) {
             reusableRect.setSize(ConstVals.PPM.toFloat()).setCenter(spawn)
 

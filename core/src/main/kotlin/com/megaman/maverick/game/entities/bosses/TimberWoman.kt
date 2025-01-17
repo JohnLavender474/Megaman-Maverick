@@ -48,7 +48,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
@@ -77,8 +77,6 @@ import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 import kotlin.reflect.KClass
 
-// TODO:
-//  - if Timber Woman is within Y distance of ground, do not allow jump spin
 class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IDrawableShapesEntity, IFaceable {
 
     companion object {
@@ -261,7 +259,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
             TimberWomanState.JUMP_DOWN.name.lowercase() pairTo AnimationDef(2, 1, 0.1f, true),
             TimberWomanState.RUN.name.lowercase() pairTo AnimationDef(2, 2, 0.1f, true),
             TimberWomanState.WALLSLIDE.name.lowercase() pairTo AnimationDef(),
-            ConstKeys.DEFEATED pairTo AnimationDef()
+            ConstKeys.DEFEATED pairTo AnimationDef(3, 1, 0.1f, true)
         )
 
         if (stateTimers.isEmpty) stateTimers.putAll(

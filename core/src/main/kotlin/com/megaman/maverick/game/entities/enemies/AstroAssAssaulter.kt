@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -41,7 +42,7 @@ import com.mega.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.EntityType
@@ -52,6 +53,7 @@ import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
@@ -94,13 +96,10 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     private lateinit var stateMachine: StateMachine<AstroAssState>
     private val currentState: AstroAssState
         get() = stateMachine.getCurrent()
-
     private val stateTimers = OrderedMap<AstroAssState, Timer>()
 
     private var flag: StagedMoonLandingFlag? = null
-
-    private val sensor = GameRectangle().setSize(SENSOR_WIDTH * ConstVals.PPM, SENSOR_HEIGHT * ConstVals.PPM)
-
+    private val sensor = GameRectangle()
     private var shootUp = false
 
     override fun init() {
@@ -161,6 +160,17 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         stateTimers.values().forEach { it.reset() }
 
         shootUp = false
+
+        sensor.set(
+            when {
+                spawnProps.containsKey(ConstKeys.SENSORS) ->
+                    spawnProps.get(ConstKeys.SENSOR, RectangleMapObject::class)!!.rectangle.toGameRectangle()
+
+                else -> GameObjectPools.fetch(GameRectangle::class)
+                    .setSize(SENSOR_WIDTH * ConstVals.PPM, SENSOR_HEIGHT * ConstVals.PPM)
+                    .setCenter(body.getCenter())
+            }
+        )
     }
 
     override fun onDestroy() {
@@ -255,8 +265,6 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             if (flag?.dead == true) flag = null
-
-            sensor.setCenter(body.getCenter())
 
             if (currentState == AstroAssState.STAND) updateFacing()
 

@@ -8,7 +8,7 @@ import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.IDrawable
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.drawables.ui.BitsBar
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.utils.misc.HealthFillType

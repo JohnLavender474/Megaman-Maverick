@@ -13,7 +13,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
-import com.megaman.maverick.game.entities.megaman.sprites.MegamanTrailSprite
+import com.megaman.maverick.game.entities.megaman.sprites.amendKey
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.isSensing
@@ -72,12 +72,9 @@ internal fun Megaman.defineUpdatablesComponent() = UpdatablesComponent({ delta -
     trailSpriteTimer.update(delta)
     if (trailSpriteTimer.isFinished()) {
         val spawnTrailSprite = when {
-            isBehaviorActive(BehaviorType.GROUND_SLIDING) -> {
-                val type = if (shooting) MegamanTrailSprite.GROUND_SLIDE_SHOOT else MegamanTrailSprite.GROUND_SLIDE
-                spawnTrailSprite(type)
-            }
-
-            isBehaviorActive(BehaviorType.AIR_DASHING) -> spawnTrailSprite(MegamanTrailSprite.AIR_DASH)
+            isBehaviorActive(BehaviorType.GROUND_SLIDING) -> spawnTrailSprite("groundslide")
+            isBehaviorActive(BehaviorType.AIR_DASHING) -> spawnTrailSprite("airdash")
+            // isBehaviorActive(BehaviorType.JUMPING) -> spawnTrailSprite("jump")
             else -> false
         }
         if (spawnTrailSprite) trailSpriteTimer.reset()
@@ -86,13 +83,10 @@ internal fun Megaman.defineUpdatablesComponent() = UpdatablesComponent({ delta -
     if (ready) spawningTimer.update(delta)
 })
 
-private fun Megaman.spawnTrailSprite(type: String): Boolean {
-    /*
-    val trailSprite = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.MEGAMAN_TRAIL_SPRITE)!!
-    return trailSprite.spawn(props(ConstKeys.TYPE pairTo type))
-     */
+private fun Megaman.spawnTrailSprite(animKey: String? = null): Boolean {
+    val key = if (animKey != null) amendKey(animKey) else null
     val trailSprite = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.MEGAMAN_TRAIL_SPRITE_V2)!!
-    return trailSprite.spawn(props())
+    return trailSprite.spawn(props(ConstKeys.KEY pairTo key))
 }
 
 private fun Megaman.spawnBubbles() {

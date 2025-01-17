@@ -28,7 +28,7 @@ import com.mega.game.engine.world.body.BodyComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.*
@@ -337,6 +337,11 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.positionOnPoint(bounds.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
 
+        body.physics.velocity.setZero()
+        body.physics.collisionOn = true
+        body.physics.gravityOn = true
+        body.forEachFixture { fixture -> fixture.setActive(true) }
+
         facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, ConstKeys.RIGHT, String::class).uppercase())
         direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
@@ -371,16 +376,16 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         stunTimer.setToEnd()
 
         putProperty(ConstKeys.ON_TELEPORT_START, {
-            standardOnTeleportStart(this)
             stopCharging()
+            standardOnTeleportStart(this)
             if (isBehaviorActive(BehaviorType.AIR_DASHING)) resetBehavior(BehaviorType.AIR_DASHING)
             teleporting = true
             canBeDamaged = false
         })
         setStandardOnTeleportContinueProp(this)
         putProperty(ConstKeys.ON_TELEPORT_END, {
-            standardOnTeleportEnd(this)
             stopCharging()
+            standardOnTeleportEnd(this)
             aButtonTask = AButtonTask.AIR_DASH
             teleporting = false
             canBeDamaged = true
@@ -418,14 +423,17 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
                 if (event.key == EventType.BEGIN_ROOM_TRANS) roomTransPauseTimer.reset()
 
                 val position = event.properties.get(ConstKeys.POSITION, Vector2::class)!!
+
                 GameLogger.debug(
                     MEGAMAN_EVENT_LISTENER_TAG, "BEGIN/CONTINUE ROOM TRANS: position=$position"
                 )
 
                 body.setCenter(position)
                 body.physics.gravityOn = false
+
                 if (event.key == EventType.BEGIN_ROOM_TRANS && !body.hasProperty(ConstKeys.VELOCITY))
                     body.putProperty(ConstKeys.VELOCITY, body.physics.velocity.cpy())
+
                 body.physics.velocity.setZero()
 
                 stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
@@ -433,17 +441,24 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
 
             EventType.END_ROOM_TRANS -> {
                 val setVel = event.getOrDefaultProperty(ConstKeys.VELOCITY, true, Boolean::class)
+
                 GameLogger.debug(MEGAMAN_EVENT_LISTENER_TAG, "endRoomTrans(): setVel=$setVel")
-                if (setVel && !isAnyBehaviorActive(
+
+                when {
+                    setVel && !isAnyBehaviorActive(
                         BehaviorType.CLIMBING,
                         BehaviorType.JETPACKING,
                         BehaviorType.RIDING_CART,
                         BehaviorType.SWIMMING
                     )
-                ) {
-                    val velocity = body.getProperty(ConstKeys.VELOCITY, Vector2::class)
-                    velocity?.let { body.physics.velocity.set(it) }
-                } else body.physics.velocity.setZero()
+                        -> {
+                        val velocity = body.getProperty(ConstKeys.VELOCITY, Vector2::class)
+                        velocity?.let { body.physics.velocity.set(it) }
+                    }
+
+                    else -> body.physics.velocity.setZero()
+                }
+
                 body.physics.gravityOn = !isBehaviorActive(BehaviorType.CLIMBING)
                 body.removeProperty(ConstKeys.VELOCITY)
             }

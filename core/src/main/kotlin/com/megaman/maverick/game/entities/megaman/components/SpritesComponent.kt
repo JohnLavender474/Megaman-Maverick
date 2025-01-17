@@ -32,17 +32,19 @@ const val DAMAGE_BURST_OFFSET = 0.25f
 
 const val GROUND_SLIDE_SPRITE_OFFSET_Y = 0.1f
 
-fun Megaman.getSpriteDirection() =
-    if (isBehaviorActive(BehaviorType.AIR_DASHING))
-        getProperty(MegamanKeys.DIRECTION_ON_AIR_DASH, Direction::class)!!
-    else direction
+fun Megaman.getSpriteDirection() = when {
+    isBehaviorActive(BehaviorType.AIR_DASHING) -> getProperty(MegamanKeys.DIRECTION_ON_AIR_DASH, Direction::class)!!
+    else -> direction
+}
 
 fun Megaman.shouldFlipSpriteX(): Boolean {
     if (maverick) return false
+
     val facing = when {
         getSpriteDirection() == Direction.RIGHT -> Facing.RIGHT
         else -> Facing.LEFT
     }
+
     return isFacing(facing)
 }
 

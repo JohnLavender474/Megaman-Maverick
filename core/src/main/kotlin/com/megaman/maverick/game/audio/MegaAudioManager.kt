@@ -10,7 +10,7 @@ import com.mega.game.engine.audio.SoundRequest
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.time.Timer
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.MusicAsset
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.assets.SoundAsset
 
 class MegaAudioManager(
     private val sounds: OrderedMap<SoundAsset, Sound>, private val music: OrderedMap<MusicAsset, Music>

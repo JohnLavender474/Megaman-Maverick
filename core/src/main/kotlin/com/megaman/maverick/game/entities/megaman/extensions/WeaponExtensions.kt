@@ -1,6 +1,6 @@
 package com.megaman.maverick.game.entities.megaman.extensions
 
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 

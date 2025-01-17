@@ -16,7 +16,7 @@ import com.mega.game.engine.entities.contracts.IParentEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.AnimatedBlock
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity

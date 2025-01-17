@@ -4,7 +4,7 @@ import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.drawables.sprites.SpritesSystem
 import com.mega.game.engine.systems.GameSystem
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.assets.SoundAsset
 
 class LevelStateHandler(private val game: MegamanMaverickGame) {
 

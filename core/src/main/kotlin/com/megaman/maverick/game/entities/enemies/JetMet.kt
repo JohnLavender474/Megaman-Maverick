@@ -39,7 +39,7 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.EntityType
@@ -81,7 +81,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     private lateinit var jetMetState: JetMetState
 
     private val target = Vector2()
-    val targetPQ = PriorityQueue { o1: Vector2, o2: Vector2 ->
+    private val targetPQ = PriorityQueue { o1: Vector2, o2: Vector2 ->
         val d1 = o1.dst2(megaman.body.getCenter())
         val d2 = o2.dst2(megaman.body.getCenter())
         d1.compareTo(d2)

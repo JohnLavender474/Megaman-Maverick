@@ -270,6 +270,7 @@ object ConstKeys {
     const val HAZARDS = "hazards"
     const val PPM = "ppm"
     const val SENSORS = "sensors"
+    const val SENSOR = "sensor"
     const val RESPAWNABLE = "respawnable"
     const val X = "x"
     const val Y = "y"

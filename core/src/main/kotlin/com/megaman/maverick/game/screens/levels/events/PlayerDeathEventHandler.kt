@@ -11,7 +11,7 @@ import com.mega.game.engine.drawables.IDrawable
 import com.mega.game.engine.events.Event
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.utils.Fade

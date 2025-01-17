@@ -64,7 +64,7 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
     else -> amendKey("stand")
 }
 
-private fun Megaman.amendKey(baseKey: String) = when {
+fun Megaman.amendKey(baseKey: String) = when {
     shooting -> "${baseKey}_shoot"
     fullyCharged -> "${baseKey}_charge_full"
     halfCharged -> "${baseKey}_charge_half"

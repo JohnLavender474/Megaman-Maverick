@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
@@ -15,10 +14,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IDirectional
-import com.mega.game.engine.common.objects.Pool
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.objects.*
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -35,21 +31,17 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.ITeleporterEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getCenter
-import com.megaman.maverick.game.world.body.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 
 class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ITeleporterEntity, IAudioEntity, IEventListener {
@@ -64,7 +56,6 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     override val eventKeyMask = objectSetOf<Any>(EventType.TELEPORT)
 
-    private lateinit var thisDirection: Direction
     private lateinit var nextDirection: Direction
 
     /** sets the entity's direction only when the entity implements [IDirectional] */
@@ -73,7 +64,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     /** sets the entity's bodily direction; separate from [nextEntityDirection] */
     private var nextBodyDirection: Direction? = null
 
-    private val hopQueueMap = OrderedMap<IBodyEntity, Timer>()
+    private val hopQueueMap = OrderedMap<IBodyEntity, GamePair<Timer, Direction>>()
     private val timerPool = Pool<Timer>(supplier = { Timer() })
 
     private var thisKey = -1
@@ -128,16 +119,19 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy(): thisKey=$thisKey")
         super.onDestroy()
+        hopQueueMap.clear()
         game.eventsMan.removeListener(this)
     }
 
     override fun onEvent(event: Event) {
-        GameLogger.debug(TAG, "onEvent(): thisKey=$thisKey, event=$event")
         if (event.key == EventType.TELEPORT && event.isProperty(ConstKeys.KEY, thisKey)) {
+            GameLogger.debug(TAG, "onEvent(): thisKey=$thisKey, event=$event")
+
             val entity = event.getProperty(ConstKeys.ENTITY, IBodyEntity::class)!!
             val direction = event.getProperty(ConstKeys.DIRECTION, Direction::class)!!
             val bodyDirection = event.getProperty("${ConstKeys.BODY}_${ConstKeys.DIRECTION}", Direction::class)
             val entityDirection = event.getProperty("${ConstKeys.ENTITY}_${ConstKeys.DIRECTION}", Direction::class)
+
             receiveEntity(entity, direction, bodyDirection, entityDirection)
         }
     }
@@ -158,16 +152,15 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
                 "entityDirection=$entityDirection"
         )
 
-        thisDirection = direction
         launch = true
 
-        val hopPoint = when (thisDirection) {
+        val hopPoint = when (direction) {
             Direction.UP -> body.getPositionPoint(Position.TOP_CENTER)
             Direction.DOWN -> body.getPositionPoint(Position.BOTTOM_CENTER)
             Direction.LEFT -> body.getPositionPoint(Position.CENTER_LEFT)
             Direction.RIGHT -> body.getPositionPoint(Position.CENTER_RIGHT)
         }
-        when (thisDirection) {
+        when (direction) {
             Direction.UP -> entity.body.setBottomCenterToPoint(hopPoint)
             Direction.DOWN -> entity.body.setTopCenterToPoint(hopPoint)
             Direction.LEFT -> entity.body.setCenterRightToPoint(hopPoint)
@@ -182,18 +175,18 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         val timer = timerPool.fetch()
         timer.resetDuration(PORTAL_HOP_DELAY)
-        hopQueueMap.put(entity,  timer)
 
-        GameLogger.debug(TAG, "teleportEntity(): thisKey=$thisKey, entity=$entity, hopPoint=$hopPoint")
+        hopQueueMap.put(entity, timer pairTo direction)
     }
 
     override fun teleportEntity(entity: IBodyEntity) {
-        GameLogger.debug(TAG, "teleportEntity(): thisKey=$thisKey, entity=$entity")
+        GameLogger.debug(TAG, "teleportEntity(): thisKey=$thisKey, nextKey=$nextKey, entity=$entity")
+
         game.eventsMan.submitEvent(
             Event(
                 EventType.TELEPORT, props(
-                    ConstKeys.ENTITY pairTo entity,
                     ConstKeys.KEY pairTo nextKey,
+                    ConstKeys.ENTITY pairTo entity,
                     ConstKeys.DIRECTION pairTo nextDirection,
                     "${ConstKeys.BODY}_${ConstKeys.DIRECTION}" pairTo nextBodyDirection,
                     "${ConstKeys.ENTITY}_${ConstKeys.DIRECTION}" pairTo nextEntityDirection
@@ -212,7 +205,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         while (iter.hasNext()) {
             val entry = iter.next()
             val entity = entry.key
-            val timer = entry.value
+            val (timer, direction) = entry.value
 
             timer.update(delta)
 
@@ -227,13 +220,13 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
                 val onPortalEnd = entity.getProperty(ConstKeys.ON_TELEPORT_END) as? () -> Unit
                 onPortalEnd?.invoke()
 
-                val impulse = (when (thisDirection) {
-                    Direction.UP -> Vector2(0f, PORTAL_HOP_IMPULSE)
-                    Direction.DOWN -> Vector2(0f, -PORTAL_HOP_IMPULSE)
-                    Direction.LEFT -> Vector2(-PORTAL_HOP_IMPULSE, 0f)
-                    Direction.RIGHT -> Vector2(PORTAL_HOP_IMPULSE, 0f)
-                }).scl(ConstVals.PPM.toFloat())
-                entity.body.physics.velocity.set(impulse)
+                val velocity = entity.body.physics.velocity
+                when (direction) {
+                    Direction.UP -> velocity.set(0f, PORTAL_HOP_IMPULSE)
+                    Direction.DOWN -> velocity.set(0f, -PORTAL_HOP_IMPULSE)
+                    Direction.LEFT -> velocity.set(-PORTAL_HOP_IMPULSE, 0f)
+                    Direction.RIGHT -> velocity.set(PORTAL_HOP_IMPULSE, 0f)
+                }.scl(ConstVals.PPM.toFloat())
 
                 timerPool.free(timer)
 
@@ -245,11 +238,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(1.5f * ConstVals.PPM)
-
-        val teleporterFixture = Fixture(body, FixtureType.TELEPORTER, GameRectangle(body))
-        body.addFixture(teleporterFixture)
-
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.TELEPORTER))
     }
 
     private fun defineSpritesComponent(): SpritesComponent {

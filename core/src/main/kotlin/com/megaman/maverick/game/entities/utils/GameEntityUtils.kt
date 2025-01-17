@@ -110,6 +110,7 @@ fun standardOnTeleportStart(entity: GameEntity) {
         body.physics.velocity.setZero()
         body.physics.collisionOn = false
         body.physics.gravityOn = false
+        body.forEachFixture { fixture -> fixture.setActive(false) }
     }
     if (entity is ISpritesEntity) entity.sprites.forEach { it.value.hidden = true }
 }
@@ -129,6 +130,7 @@ fun standardOnTeleportEnd(entity: GameEntity) {
         body.physics.velocity.setZero()
         body.physics.collisionOn = true
         body.physics.gravityOn = true
+        body.forEachFixture { fixture -> fixture.setActive(true) }
     }
     if (entity is ISpritesEntity) entity.sprites.forEach { it.value.hidden = false }
 }
