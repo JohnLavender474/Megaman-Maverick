@@ -224,7 +224,7 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
             sprite.priority.section = if (background) DrawingSection.BACKGROUND else DrawingSection.PLAYGROUND
         }.build()
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 
     override fun getTag() = TAG
 }

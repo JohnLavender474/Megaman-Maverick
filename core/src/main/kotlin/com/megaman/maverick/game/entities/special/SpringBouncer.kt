@@ -52,7 +52,7 @@ class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
     private val bounceTimer = Timer(BOUNCE_DURATION)
     private lateinit var bounceFixture: Fixture
 
-    override fun getEntityType() = EntityType.SPECIAL
+    override fun getType() = EntityType.SPECIAL
 
     override fun init() {
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)

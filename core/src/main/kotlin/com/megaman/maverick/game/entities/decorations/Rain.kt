@@ -133,7 +133,7 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
 
     override fun getTag() = TAG
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 }
 
 class RainFall(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity {
@@ -205,5 +205,5 @@ class RainFall(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntit
 
     override fun getTag() = TAG
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 }

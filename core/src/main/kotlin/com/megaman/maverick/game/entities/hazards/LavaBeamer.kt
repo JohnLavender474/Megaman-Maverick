@@ -81,7 +81,7 @@ class LavaBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     )
     private lateinit var cullOnEvents: CullableOnEvent
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 
     override fun init() {
         if (regions.isEmpty) {

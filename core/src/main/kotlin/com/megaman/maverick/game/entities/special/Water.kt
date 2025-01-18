@@ -183,7 +183,7 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         addComponent(AnimationsComponent(animators, sprites))
     }
 
-    override fun getEntityType() = EntityType.SPECIAL
+    override fun getType() = EntityType.SPECIAL
 
     override fun getTag() = TAG
 }

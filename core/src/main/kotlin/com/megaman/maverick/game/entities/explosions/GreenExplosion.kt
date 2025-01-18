@@ -86,7 +86,7 @@ class GreenExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     private var width = 0f
     private var damagerOffset = 0f
 
-    override fun getEntityType() = EntityType.EXPLOSION
+    override fun getType() = EntityType.EXPLOSION
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)

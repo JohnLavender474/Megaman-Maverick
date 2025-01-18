@@ -132,7 +132,7 @@ class WhiteArrowPool(game: MegamanMaverickGame) : MegaGameEntity(game), ICullabl
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cull))
     }
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 
     override fun getTag() = TAG
 }

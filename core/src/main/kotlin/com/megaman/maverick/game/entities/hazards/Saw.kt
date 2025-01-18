@@ -245,5 +245,5 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
 
     override fun getTag() = TAG
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 }

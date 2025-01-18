@@ -27,7 +27,7 @@ class GravityChange(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
     private lateinit var gravityChangeFixture: Fixture
 
-    override fun getEntityType() = EntityType.SPECIAL
+    override fun getType() = EntityType.SPECIAL
 
     override fun init() {
         addComponent(defineBodyComponent())

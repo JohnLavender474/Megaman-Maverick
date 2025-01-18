@@ -53,7 +53,7 @@ class Body(
 
     override fun addFixture(fixture: IFixture): Body {
         val type = fixture.getType()
-        val set = fixtures.putIfAbsentAndGet(type, OrderedSet())
+        val set = fixtures.putIfAbsentAndGet(type) { OrderedSet() }
         set.add(fixture)
         return this
     }

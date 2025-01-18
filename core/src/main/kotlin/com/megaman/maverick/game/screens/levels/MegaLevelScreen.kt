@@ -52,6 +52,7 @@ import com.megaman.maverick.game.com.megaman.maverick.game.audio.MegaAudioManage
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.drawables.backgrounds.Background
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IHazard
@@ -810,7 +811,11 @@ class MegaLevelScreen(
 
         eventsMan.removeListener(this)
 
+        MegaEntityFactory.reset()
+
+        // TODO: should replace EntityFactories with MegaEntityFactory
         EntityFactories.clear()
+
         engine.reset()
 
         spawns.clear()

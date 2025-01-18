@@ -36,7 +36,7 @@ class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : MegaGameEntity(game),
     private val fixturesConsumed = ObjectSet<FixtureType>()
     private var objectSpawned = false
 
-    override fun getEntityType() = EntityType.SENSOR
+    override fun getType() = EntityType.SENSOR
 
     override fun init() {
         addComponent(defineBodyComponent())

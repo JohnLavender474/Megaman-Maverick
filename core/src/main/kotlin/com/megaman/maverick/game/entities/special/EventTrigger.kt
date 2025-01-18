@@ -17,7 +17,7 @@ class EventTrigger(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableE
         const val EVENT_TYPE = "${ConstKeys.EVENT}_${ConstKeys.TYPE}"
     }
 
-    override fun getEntityType() = EntityType.SPECIAL
+    override fun getType() = EntityType.SPECIAL
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)

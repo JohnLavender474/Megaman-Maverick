@@ -71,7 +71,7 @@ class FireMetSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentE
     private val openTimer = Timer(OPEN_DUR)
     private var maxToSpawn = DEFAULT_MAX_SPAWNED
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 
     override fun init() {
         if (regions.isEmpty) {

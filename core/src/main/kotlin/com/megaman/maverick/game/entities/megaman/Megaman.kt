@@ -672,5 +672,5 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
 
     override fun getBounds() = body.getBounds()
 
-    override fun getEntityType() = EntityType.MEGAMAN
+    override fun getType() = EntityType.MEGAMAN
 }

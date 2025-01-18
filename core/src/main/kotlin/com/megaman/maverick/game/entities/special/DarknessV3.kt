@@ -426,7 +426,7 @@ class DarknessV3(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullable))
     }
 
-    override fun getEntityType() = EntityType.SPECIAL
+    override fun getType() = EntityType.SPECIAL
 
     override fun getTag() = TAG
 }

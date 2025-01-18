@@ -7,7 +7,10 @@ dependencies {
   api "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllersVersion"
   api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
   api "com.badlogicgames.gdx:gdx:$gdxVersion"
+
   api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+  
+  implementation("org.reflections:reflections:0.10.2")
 
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"

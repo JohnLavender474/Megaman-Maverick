@@ -35,7 +35,7 @@ open class DynamicBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
 
     private var staticInnerBlock: Block? = null
 
-    override fun getEntityType() = EntityType.SPECIAL
+    override fun getType() = EntityType.SPECIAL
 
     override fun init() {
         addComponent(DrawableShapesComponent(debug = true))

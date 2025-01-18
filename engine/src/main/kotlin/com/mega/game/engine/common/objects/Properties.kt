@@ -49,7 +49,7 @@ class Properties : ICopyable<Properties> {
         return value
     }
 
-    fun putIfAbsentAndGet(key: Any, defaultValue: Any?) = map.putIfAbsentAndGet(key, defaultValue)
+    fun putIfAbsentAndGet(key: Any, defaultValueSupplier: () -> Any?) = map.putIfAbsentAndGet(key, defaultValueSupplier)
 
     fun clear() = map.clear()
 

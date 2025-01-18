@@ -63,7 +63,7 @@ class SigmaRatElectricBallExplosion(game: MegamanMaverickGame) : MegaGameEntity(
     private val shockTimer = Timer(SHOCK_DUR)
     private val dissipateTimer = Timer(DISSIPATE_DUR)
 
-    override fun getEntityType() = EntityType.EXPLOSION
+    override fun getType() = EntityType.EXPLOSION
 
     override fun init() {
         if (explosionRegion == null || dissipateRegion == null) {

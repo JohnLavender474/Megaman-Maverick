@@ -44,7 +44,7 @@ class BodyBuilder(
     }
 
     fun fixture(fixture: IFixture): BodyBuilder {
-        fixtures.putIfAbsentAndGet(fixture.getType(), OrderedSet()).add(fixture)
+        fixtures.putIfAbsentAndGet(fixture.getType()) { OrderedSet() }.add(fixture)
         return this
     }
 

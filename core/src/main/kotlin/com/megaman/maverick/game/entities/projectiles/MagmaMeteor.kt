@@ -36,10 +36,9 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.explosions.MagmaExplosion
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGdxRectangle
@@ -150,7 +149,7 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         }
         spawn.add(offset)
 
-        val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.MAGMA_EXPLOSION)!!
+        val explosion = MegaEntityFactory.fetch(MagmaExplosion::class)!!
         explosion.spawn(props(ConstKeys.POSITION pairTo spawn))
     }
 

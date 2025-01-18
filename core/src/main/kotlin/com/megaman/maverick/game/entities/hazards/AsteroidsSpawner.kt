@@ -129,5 +129,5 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
         return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS pairTo cullOnEvents))
     }
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 }

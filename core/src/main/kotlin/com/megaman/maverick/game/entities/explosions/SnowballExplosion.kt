@@ -49,7 +49,7 @@ class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
     private lateinit var damageMask: ObjectSet<KClass<out IDamageable>>
     private val timer = Timer(DURATION)
 
-    override fun getEntityType() = EntityType.EXPLOSION
+    override fun getType() = EntityType.EXPLOSION
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "SnowballExplode")

@@ -39,7 +39,7 @@ class DecoratedGravityForce(game: MegamanMaverickGame) : MegaGameEntity(game), I
 
     private val matrix = Matrix<GameRectangle>()
 
-    override fun getEntityType() = EntityType.SPECIAL
+    override fun getType() = EntityType.SPECIAL
 
     override fun getTag() = TAG
 

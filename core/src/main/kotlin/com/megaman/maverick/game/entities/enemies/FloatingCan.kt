@@ -150,7 +150,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
                 var passable = true
                 var blockingBody: IBody? = null
 
-                for (otherBody in bodies) if (otherBody.getEntity().getEntityType() == EntityType.BLOCK) {
+                for (otherBody in bodies) if (otherBody.getEntity().getType() == EntityType.BLOCK) {
                     passable = false
                     blockingBody = otherBody
                     break

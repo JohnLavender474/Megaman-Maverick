@@ -50,7 +50,7 @@ class Flame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     private lateinit var cullTimer: Timer
     private var perpetual = true
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, "Flame")

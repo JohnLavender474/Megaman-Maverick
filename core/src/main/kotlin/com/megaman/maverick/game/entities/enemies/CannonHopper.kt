@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.entities
+package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
@@ -35,6 +35,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -97,7 +98,7 @@ class CannonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.
 
         val trajectory = GameObjectPools.fetch(Vector2::class).set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
 
-        val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
+        val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.Companion.BULLET)!!
         bullet.spawn(
             props(
                 ConstKeys.POSITION pairTo spawn,
@@ -169,7 +170,7 @@ class CannonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.
         return BodyComponentCreator.create(
             this,
             body,
-            BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
+            BodyFixtureDef.Companion.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
         )
     }
 

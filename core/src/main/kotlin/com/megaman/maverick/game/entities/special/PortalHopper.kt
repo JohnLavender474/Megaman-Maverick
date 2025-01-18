@@ -72,7 +72,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private var launch = false
     private var rotation = 0f
 
-    override fun getEntityType() = EntityType.SPECIAL
+    override fun getType() = EntityType.SPECIAL
 
     override fun init() {
         if (waitRegion == null || launchRegion == null) {

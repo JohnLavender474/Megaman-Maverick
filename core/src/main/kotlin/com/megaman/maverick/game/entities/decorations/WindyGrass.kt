@@ -41,7 +41,7 @@ open class WindyGrass(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     private lateinit var bounds: GameRectangle
     private val animationsToRemove = Array<String>()
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 
     override fun init() {
         if (leftRegion == null || rightRegion == null || middleRegion == null) {

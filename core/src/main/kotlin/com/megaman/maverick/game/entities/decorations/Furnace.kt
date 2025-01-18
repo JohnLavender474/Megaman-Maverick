@@ -67,5 +67,5 @@ class Furnace(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity,
 
     override fun getTag() = TAG
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 }

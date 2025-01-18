@@ -78,7 +78,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
     private lateinit var nextRoomKey: String
     private lateinit var thisBossKey: String
 
-    override fun getEntityType() = EntityType.SENSOR
+    override fun getType() = EntityType.SENSOR
 
     override fun init() {
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.GATES.source)

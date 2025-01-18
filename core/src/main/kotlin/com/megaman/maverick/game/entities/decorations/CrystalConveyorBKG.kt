@@ -56,7 +56,7 @@ class CrystalConveyorBKG(game: MegamanMaverickGame) : MegaGameEntity(game), ISpr
         .animator(AnimatorBuilder().addAnimation(Animation(region!!, 4, 2, 0.1f, true)).build())
         .build()
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 
     override fun getTag() = TAG
 }

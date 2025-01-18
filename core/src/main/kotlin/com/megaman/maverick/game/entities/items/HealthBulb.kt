@@ -243,7 +243,7 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
         }
     })
 
-    override fun getEntityType() = EntityType.ITEM
+    override fun getType() = EntityType.ITEM
 
     override fun getTag() = TAG
 }

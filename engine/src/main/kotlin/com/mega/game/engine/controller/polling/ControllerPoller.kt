@@ -3,7 +3,6 @@ package com.mega.game.engine.controller.polling
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.common.extensions.putIfAbsentAndGet
 import com.mega.game.engine.controller.buttons.ButtonStatus
-import com.mega.game.engine.controller.buttons.ControllerButton
 import com.mega.game.engine.controller.buttons.ControllerButtons
 
 
@@ -31,7 +30,7 @@ open class ControllerPoller(val controllerButtons: ControllerButtons) : IControl
         controllerButtons.forEach { e ->
             val key = e.key
             val button = e.value
-            val oldStatus = statusMap.putIfAbsentAndGet(key, ButtonStatus.RELEASED)
+            val oldStatus = statusMap.putIfAbsentAndGet(key) { ButtonStatus.RELEASED }
             val newStatus = if (on) {
                 if (button.isEnabled()) {
                     val pressed = button.isPressed()

@@ -148,5 +148,5 @@ class AcidGoop(game: MegamanMaverickGame) : MegaGameEntity(game), IDamager, IHaz
         return AnimationsComponent(this, animator)
     }
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 }

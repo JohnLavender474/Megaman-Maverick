@@ -22,9 +22,9 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.MagmaMeteor
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
@@ -110,7 +110,7 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
     private fun spawnMeteor(spawn: Vector2) {
         GameLogger.debug(TAG, "spawnMeteor(): spawn=$spawn")
 
-        val meteor = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_METEOR)!!
+        val meteor = MegaEntityFactory.fetch(MagmaMeteor::class)!!
         meteor.spawn(
             props(
                 ConstKeys.DIRECTION pairTo direction,
@@ -206,7 +206,7 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
         )
     )
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 
     override fun getTag() = TAG
 }

@@ -33,7 +33,7 @@ class EventsManager : Runnable {
 
     private fun submitEventNow(event: Event) {
         val eventKey = event.key
-        events.putIfAbsentAndGet(eventKey, Array()).add(event)
+        events.putIfAbsentAndGet(eventKey) { Array() }.add(event)
     }
 
 

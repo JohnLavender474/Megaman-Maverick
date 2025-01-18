@@ -15,14 +15,14 @@ object MegaGameEntities {
 
     fun add(entity: MegaGameEntity) {
         entities.add(entity)
-        entityTypeToEntities.putIfAbsentAndGet(entity.getEntityType(), OrderedSet()).add(entity)
-        mapObjectIdToEntities.putIfAbsentAndGet(entity.mapObjectId, OrderedSet()).add(entity)
-        entityTagToEntities.putIfAbsentAndGet(entity.getTag(), OrderedSet()).add(entity)
+        entityTypeToEntities.putIfAbsentAndGet(entity.getType()) { OrderedSet() }.add(entity)
+        mapObjectIdToEntities.putIfAbsentAndGet(entity.mapObjectId) { OrderedSet() }.add(entity)
+        entityTagToEntities.putIfAbsentAndGet(entity.getTag()) { OrderedSet() }.add(entity)
     }
 
     fun remove(entity: MegaGameEntity) {
         entities.remove(entity)
-        entityTypeToEntities.get(entity.getEntityType())?.remove(entity)
+        entityTypeToEntities.get(entity.getType())?.remove(entity)
         entityTagToEntities.get(entity.getTag())?.remove(entity)
         if (mapObjectIdToEntities.containsKey(entity.mapObjectId)) {
             val set = mapObjectIdToEntities.get(entity.mapObjectId)

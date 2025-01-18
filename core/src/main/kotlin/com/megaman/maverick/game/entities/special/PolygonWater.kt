@@ -147,7 +147,7 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullable))
     }
 
-    override fun getEntityType() = EntityType.SPECIAL
+    override fun getType() = EntityType.SPECIAL
 
     override fun getTag(): String = TAG
 }

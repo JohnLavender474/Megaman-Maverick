@@ -85,7 +85,7 @@ class FallingLeaves(game: MegamanMaverickGame) : MegaGameEntity(game), ICullable
         }
     })
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 
     override fun getTag() = TAG
 }

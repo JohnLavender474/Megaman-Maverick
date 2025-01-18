@@ -97,7 +97,7 @@ open class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ICulla
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ sendAddLightSourceEvent() })
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 
     override fun getTag() = TAG
 }

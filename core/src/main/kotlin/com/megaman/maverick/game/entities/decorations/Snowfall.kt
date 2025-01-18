@@ -155,5 +155,5 @@ class Snowfall(game: MegamanMaverickGame) : MegaGameEntity(game) {
         spawnDelay.resetDuration(random)
     }
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 }

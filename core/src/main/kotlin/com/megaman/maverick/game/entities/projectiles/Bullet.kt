@@ -29,11 +29,9 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-
+import com.megaman.maverick.game.entities.explosions.Disintegration
 import com.megaman.maverick.game.utils.VelocityAlterator
 import com.megaman.maverick.game.world.body.*
 
@@ -81,7 +79,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = bodyFixture.getEntity()
-        if (entity != owner && entity !is IDamageable) explodeAndDie()
+        if (entity != owner && entity is IDamageable && !entity.canBeDamagedBy(this)) explodeAndDie()
     }
 
     override fun hitSand(sandFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
@@ -128,8 +126,8 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
 
-        val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
-        disintegration!!.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+        val disintegration = MegaEntityFactory.fetch(Disintegration::class)!!
+        disintegration.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     override fun defineBodyComponent(): BodyComponent {

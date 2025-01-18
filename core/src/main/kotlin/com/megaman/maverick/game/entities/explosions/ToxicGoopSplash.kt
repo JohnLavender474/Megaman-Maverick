@@ -122,5 +122,5 @@ class ToxicGoopSplash(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         return AnimationsComponent(this, animator)
     }
 
-    override fun getEntityType() = EntityType.EXPLOSION
+    override fun getType() = EntityType.EXPLOSION
 }

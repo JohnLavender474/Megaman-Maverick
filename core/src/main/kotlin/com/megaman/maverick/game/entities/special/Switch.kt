@@ -84,5 +84,5 @@ abstract class Switch(game: MegamanMaverickGame) : MegaGameEntity(game) {
 
     override fun getTag() = TAG
 
-    override fun getEntityType() = EntityType.SPECIAL
+    override fun getType() = EntityType.SPECIAL
 }

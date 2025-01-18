@@ -268,7 +268,7 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         addComponent(AnimationsComponent(animators))
     }
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 
     override fun getTag() = TAG
 }

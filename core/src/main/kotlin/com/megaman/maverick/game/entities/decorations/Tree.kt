@@ -33,7 +33,7 @@ class Tree(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IC
 
     private lateinit var bounds: GameRectangle
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 
     override fun init() {
         if (region == null)

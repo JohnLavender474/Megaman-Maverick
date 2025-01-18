@@ -349,7 +349,7 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         hidden = true
     }
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 
     override fun getTag() = TAG
 }

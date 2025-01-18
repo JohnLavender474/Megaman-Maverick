@@ -225,5 +225,5 @@ class GroundSnow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(this))
     )
 
-    override fun getEntityType() = EntityType.SPECIAL
+    override fun getType() = EntityType.SPECIAL
 }

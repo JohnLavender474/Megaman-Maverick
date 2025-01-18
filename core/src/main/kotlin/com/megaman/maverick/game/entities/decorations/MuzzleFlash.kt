@@ -42,7 +42,7 @@ class MuzzleFlash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
     private val cullTimer = Timer(CULL_TIME)
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)

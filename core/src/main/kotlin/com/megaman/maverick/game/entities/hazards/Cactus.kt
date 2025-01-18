@@ -173,5 +173,5 @@ class Cactus(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntit
 
     override fun getTag() = TAG
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 }

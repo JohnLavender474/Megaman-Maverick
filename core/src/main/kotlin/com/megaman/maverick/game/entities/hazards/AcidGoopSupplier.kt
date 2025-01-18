@@ -43,7 +43,7 @@ class AcidGoopSupplier(game: MegamanMaverickGame) : MegaGameEntity(game), IHazar
     private val dropDelayTimer = Timer(DROP_DELAY)
     private var acidGoop: AcidGoop? = null
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 
     override fun init() {
         addComponent(defineUpdatablesComponent())

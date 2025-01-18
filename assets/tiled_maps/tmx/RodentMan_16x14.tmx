@@ -253,7 +253,7 @@
  </layer>
  <objectgroup id="16" name="TODO"/>
  <objectgroup id="2" name="game_rooms">
-  <object id="1" x="0" y="1056" width="1280" height="448"/>
+  <object id="1" name="room1" x="0" y="1056" width="1280" height="448"/>
   <object id="32" name="room2" x="1280" y="1056" width="800" height="448"/>
   <object id="56" name="room3" x="1568" y="608" width="512" height="448"/>
   <object id="69" name="room4" x="1568" y="160" width="1152" height="448"/>

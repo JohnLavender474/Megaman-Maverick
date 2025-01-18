@@ -2,10 +2,10 @@ package com.megaman.maverick.game.entities.factories.impl
 
 import com.mega.game.engine.common.GameLogger
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.entities.CannonHopper
+import com.megaman.maverick.game.entities.enemies.CannonHopper
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.enemies.*
-import com.megaman.maverick.game.entities.explosions.NuttGlider
+import com.megaman.maverick.game.entities.enemies.NuttGlider
 import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.GameEntityPoolCreator
 

@@ -135,5 +135,5 @@ class Bolt(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IHaza
         return AnimationsComponent(this, animator)
     }
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 }

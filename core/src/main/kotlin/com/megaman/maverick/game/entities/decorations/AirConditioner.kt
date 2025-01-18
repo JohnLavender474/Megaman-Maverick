@@ -108,5 +108,5 @@ class AirConditioner(game: MegamanMaverickGame) : MegaGameEntity(game), ICullabl
         objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(game.getGameCamera(), { bounds }))
     )
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 }

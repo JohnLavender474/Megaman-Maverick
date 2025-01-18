@@ -45,7 +45,7 @@ class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         private var region: TextureRegion? = null
     }
 
-    override fun getEntityType() = EntityType.EXPLOSION
+    override fun getType() = EntityType.EXPLOSION
 
     override fun init() {
         if (region == null) region =

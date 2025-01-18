@@ -225,7 +225,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
         requestToPlaySound(SoundAsset.CHOMP_SOUND, false)
     }
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 
     override fun getTag() = TAG
 }

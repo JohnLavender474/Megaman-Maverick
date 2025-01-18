@@ -47,7 +47,7 @@ open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
 
     private val childTargets = ObjectMap<GameEntity, Vector2>()
 
-    override fun getEntityType() = EntityType.SPECIAL
+    override fun getType() = EntityType.SPECIAL
 
     override fun init() {
         addComponent(MotionComponent())

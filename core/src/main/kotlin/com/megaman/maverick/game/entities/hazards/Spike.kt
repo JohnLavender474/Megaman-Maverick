@@ -215,7 +215,7 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
         return spritesComponent
     }
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 
     override fun getTag() = TAG
 }

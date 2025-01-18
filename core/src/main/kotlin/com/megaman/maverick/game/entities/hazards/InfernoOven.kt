@@ -262,7 +262,7 @@ class InfernoOven(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
         )
         .build()
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 
     override fun getTag() = TAG
 }

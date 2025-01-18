@@ -148,7 +148,7 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
         return cullablesComponent
     }
 
-    override fun getEntityType() = EntityType.SPECIAL
+    override fun getType() = EntityType.SPECIAL
 
     override fun getTag(): String = TAG
 }

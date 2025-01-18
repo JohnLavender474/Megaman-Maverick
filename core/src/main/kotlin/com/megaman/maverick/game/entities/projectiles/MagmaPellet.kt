@@ -29,11 +29,9 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
-
+import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGdxRectangle
@@ -58,8 +56,10 @@ class MagmaPellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
+
         val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)!!
         body.physics.velocity.set(impulse)
     }
@@ -95,7 +95,7 @@ class MagmaPellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
                 "direction=$direction, position=$position"
         )
 
-        val explosion = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.MAGMA_FLAME)!!
+        val explosion = MegaEntityFactory.fetch(MagmaFlame::class)!!
         explosion.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.DIRECTION pairTo direction))
     }
 

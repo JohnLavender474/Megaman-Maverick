@@ -53,7 +53,7 @@ class LavaBeam(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
             body.direction = value
         }
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, "LavaBeam")

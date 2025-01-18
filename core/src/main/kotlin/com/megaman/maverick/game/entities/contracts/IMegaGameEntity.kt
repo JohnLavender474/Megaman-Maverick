@@ -1,16 +1,15 @@
 package com.megaman.maverick.game.entities.contracts
 
 import com.mega.game.engine.common.interfaces.ITaggable
+import com.mega.game.engine.common.interfaces.ITypable
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.world.body.getBounds
 
-interface IMegaGameEntity : ITaggable {
+interface IMegaGameEntity : ITaggable, ITypable<EntityType> {
 
     val game: MegamanMaverickGame
-
-    fun getEntityType(): EntityType
 
     fun getGameCamera() = game.getGameCamera()
 

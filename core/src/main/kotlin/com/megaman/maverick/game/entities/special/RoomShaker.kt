@@ -44,7 +44,7 @@ class RoomShaker(game: MegamanMaverickGame) : MegaGameEntity(game), IEventListen
     private var y = 0f
     private var run = false
 
-    override fun getEntityType() = EntityType.SPECIAL
+    override fun getType() = EntityType.SPECIAL
 
     override fun init() {
         addComponent(defineUpdatablesComponent())

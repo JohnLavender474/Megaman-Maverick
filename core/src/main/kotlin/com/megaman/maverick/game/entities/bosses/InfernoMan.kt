@@ -579,8 +579,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private fun launchOrb(targetMegaman: Boolean) {
         setMeteorToBeSpawned(targetMegaman)
 
-        val spawn =
-            body.getPositionPoint(Position.TOP_CENTER).add(0.1f * ConstVals.PPM * facing.value, 0.1f * ConstVals.PPM)
+        val spawn = body.getPositionPoint(Position.TOP_CENTER).add(0f, 0.25f * ConstVals.PPM)
         val trajectory = GameObjectPools.fetch(Vector2::class).set(0f, ORB_SPEED * ConstVals.PPM)
 
         val orb = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_ORB)!!

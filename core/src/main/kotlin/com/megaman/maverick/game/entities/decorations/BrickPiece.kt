@@ -115,7 +115,7 @@ class BrickPiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         return spritesComponent
     }
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 
     override fun getTag() = TAG
 }

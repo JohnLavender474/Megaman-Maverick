@@ -96,7 +96,7 @@ class ExplosionField(game: MegamanMaverickGame): MegaGameEntity(game), IOwnable 
         }
     })
 
-    override fun getEntityType() = EntityType.EXPLOSION
+    override fun getType() = EntityType.EXPLOSION
 
     override fun getTag() = TAG
 }

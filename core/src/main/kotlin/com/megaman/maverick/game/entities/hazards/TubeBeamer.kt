@@ -50,7 +50,7 @@ class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity
 
     private val spawnTimer = Timer(SPAWN_DELAY)
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 
     override fun init() {
         addComponent(AudioComponent())

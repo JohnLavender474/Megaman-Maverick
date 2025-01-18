@@ -59,7 +59,7 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
     private var platform: RailTrackPlatform? = null
     private var platformRight = false
 
-    override fun getEntityType() = EntityType.SPECIAL
+    override fun getType() = EntityType.SPECIAL
 
     override fun init() {
         if (leftTrackRegion == null || rightTrackRegion == null || middleTrackRegion == null || dropTrackRegion == null) {

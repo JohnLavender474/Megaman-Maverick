@@ -163,7 +163,7 @@
   <object id="8" x="608" y="1440" width="64" height="64"/>
   <object id="9" x="992" y="1472" width="256" height="128"/>
   <object id="10" x="1248" y="1344" width="256" height="256"/>
-  <object id="11" name="Standard" x="0" y="960" width="3904" height="96">
+  <object id="11" x="0" y="960" width="3904" height="96">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
     <property name="fixture_labels" value="no_side_touchie,no_projectile_collision,no_body_touchie"/>

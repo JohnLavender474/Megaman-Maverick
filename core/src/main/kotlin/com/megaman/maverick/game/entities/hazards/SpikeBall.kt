@@ -49,7 +49,7 @@ class SpikeBall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         private var chainRegion: TextureRegion? = null
     }
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 
     override fun init() {
         if (spikeRegion == null || chainRegion == null) {

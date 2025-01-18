@@ -50,7 +50,7 @@ class CaveRockExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IDama
 
     private val timer = Timer(DURATION)
 
-    override fun getEntityType() = EntityType.EXPLOSION
+    override fun getType() = EntityType.EXPLOSION
 
     override fun init() {
         if (burstRegion == null) burstRegion =

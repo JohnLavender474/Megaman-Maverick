@@ -205,5 +205,5 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
 
     override fun getTag() = TAG
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 }

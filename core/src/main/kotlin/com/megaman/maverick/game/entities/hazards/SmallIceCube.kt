@@ -222,5 +222,5 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     override fun getTag() = TAG
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 }

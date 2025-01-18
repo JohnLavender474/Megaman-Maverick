@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.megaman
 
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.ISizable
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.damage.IDamager
@@ -17,11 +18,15 @@ import com.megaman.maverick.game.entities.hazards.DeadlyLeaf
 
 class MegamanDamageNegotiator(private val megaman: Megaman): IDamageNegotiator {
 
-    private val custom = objectMapOf<String, DamageNegotiation>(
-        JeffBezosLittleDickRocket.TAG pairTo dmgNeg(2),
-        PropellerPlatform.TAG pairTo dmgNeg(2),
-        DeadlyLeaf.TAG pairTo dmgNeg(1)
-    )
+    companion object {
+        private val custom = objectMapOf<String, DamageNegotiation>(
+            JeffBezosLittleDickRocket.TAG pairTo dmgNeg(2),
+            PropellerPlatform.TAG pairTo dmgNeg(2),
+            DeadlyLeaf.TAG pairTo dmgNeg(1)
+        )
+
+        private val entityTypes = objectSetOf(EntityType.ENEMY, EntityType.EXPLOSION, EntityType.HAZARD)
+    }
 
     override fun get(damager: IDamager): Int {
         val entity = damager as MegaGameEntity
@@ -39,7 +44,7 @@ class MegamanDamageNegotiator(private val megaman: Megaman): IDamageNegotiator {
                 Size.SMALL -> 2
             }
 
-            entity.getEntityType() == EntityType.EXPLOSION -> 3
+            entityTypes.contains(entity.getType()) -> 3
 
             else -> 0
         }

@@ -112,5 +112,5 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         return spritesComponent
     }
 
-    override fun getEntityType() = EntityType.EXPLOSION
+    override fun getType() = EntityType.EXPLOSION
 }

@@ -209,5 +209,5 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         return spritesComponent
     }
 
-    override fun getEntityType() = EntityType.BLOCK
+    override fun getType() = EntityType.BLOCK
 }

@@ -20,7 +20,7 @@ class Ladder(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
 
     private lateinit var ladderRectangle: GameRectangle
 
-    override fun getEntityType() = EntityType.SPECIAL
+    override fun getType() = EntityType.SPECIAL
 
     override fun init() {
         addComponent(defineBodyComponent())

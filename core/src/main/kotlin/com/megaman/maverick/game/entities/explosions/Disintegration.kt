@@ -97,7 +97,7 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         return AnimationsComponent(this, animator)
     }
 
-    override fun getEntityType() = EntityType.EXPLOSION
+    override fun getType() = EntityType.EXPLOSION
 
     override fun getTag() = TAG
 }

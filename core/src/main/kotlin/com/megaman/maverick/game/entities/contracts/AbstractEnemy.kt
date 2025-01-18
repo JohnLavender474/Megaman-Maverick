@@ -182,5 +182,5 @@ abstract class AbstractEnemy(
             body.getX() > megaman.body.getX() && megaman.facing == Facing.RIGHT
     }
 
-    override fun getEntityType() = EntityType.ENEMY
+    override fun getType() = EntityType.ENEMY
 }

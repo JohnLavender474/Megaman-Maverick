@@ -10,7 +10,9 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.blocks.Block
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.spawns.ISpawner
@@ -18,6 +20,7 @@ import com.megaman.maverick.game.spawns.Spawn
 import com.megaman.maverick.game.spawns.SpawnerFactory
 import com.megaman.maverick.game.spawns.SpawnerShapeFactory
 import com.megaman.maverick.game.utils.extensions.convertToProps
+import kotlin.reflect.KClass
 
 class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITiledMapLayerBuilder {
 
@@ -61,19 +64,36 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
         layer.objects.forEach {
             val spawnProps = it.convertToProps()
 
+            var name = it.name
+            if (name == null) name = when (entityType) {
+                EntityType.BLOCK -> Block.TAG
+                else -> throw IllegalStateException("Name cannot be blank in layer ${layer.name}: spawnProps=$spawnProps")
+            }
+
+            val clazz: KClass<out MegaGameEntity>
+            try {
+                clazz = Class.forName(entityType.getFullyQualifiedName(name)).kotlin as KClass<out MegaGameEntity>
+            } catch (e: Exception) {
+                throw IllegalStateException(
+                    "Failed to instantiate entity class: name=${name}, layer.name=${layer.name}", e
+                )
+            }
+
             val spawnType = spawnProps.get(ConstKeys.SPAWN_TYPE, String::class)
             if (spawnType == SpawnType.SPAWN_NOW) {
-                val entity = EntityFactories.fetch(entityType, it.name) ?: throw IllegalStateException(
-                    "Entity of type $entityType not found: ${it.name}"
+                val entity = MegaEntityFactory.fetch(clazz) ?: throw IllegalStateException(
+                    "Entity of type $entityType not found: $name"
                 )
+
                 entity.spawn(spawnProps)
+
                 return@forEach
             }
 
             val spawnSupplier = {
-                val entity = EntityFactories.fetch(entityType, it.name)
-                    ?: throw IllegalStateException("Entity of type $entityType not found: ${it.name}")
-
+                val entity = MegaEntityFactory.fetch(clazz) ?: throw IllegalStateException(
+                    "Entity of type $entityType not found: $name"
+                )
                 Spawn(entity, spawnProps)
             }
 
@@ -83,7 +103,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                 SpawnType.SPAWN_ROOM -> {
                     val roomName = it.properties.get(SpawnType.SPAWN_ROOM, String::class.java)!!
 
-                    GameLogger.debug(TAG, "build(): adding SPAWN_ROOM spawner: entity=${it.name}, room=$roomName")
+                    GameLogger.debug(TAG, "build(): adding SPAWN_ROOM spawner: entity=${name}, room=$roomName")
 
                     val spawner = SpawnerFactory.spawnerForOnEvent(
                         predicate = { event ->
@@ -92,7 +112,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                             GameLogger.debug(
                                 TAG,
                                 "build(): " +
-                                    "entity=${it.name}, " +
+                                    "entity=$name, " +
                                     "shouldSpawn=$shouldSpawn, " +
                                     "entityRoom=$roomName, " +
                                     "megamanRoom=$currentRoom"
@@ -132,7 +152,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                     )
                     spawners.add(spawner)
 
-                    GameLogger.debug(TAG, "build(): adding SPAWN_EVENT spawne: entity=${it.name}")
+                    GameLogger.debug(TAG, "build(): adding SPAWN_EVENT spawne: entity=$name")
 
                     game.eventsMan.addListener(spawner)
                     disposables.add { game.eventsMan.removeListener(spawner) }

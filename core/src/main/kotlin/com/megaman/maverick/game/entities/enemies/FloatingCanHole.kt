@@ -107,5 +107,5 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo camCullable))
     }
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 }

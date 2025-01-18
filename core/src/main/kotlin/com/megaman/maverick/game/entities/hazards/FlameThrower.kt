@@ -75,7 +75,7 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private val blinkTimer = Timer(BLINK_DUR)
     private val flameThrowTimer = Timer(FLAME_THROW_DUR)
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 
     override fun init() {
         if (regions.isEmpty) {

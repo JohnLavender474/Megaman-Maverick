@@ -97,5 +97,5 @@ class Smoke(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, I
 
     override fun getTag() = TAG
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 }

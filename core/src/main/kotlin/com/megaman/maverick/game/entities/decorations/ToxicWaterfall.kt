@@ -186,5 +186,5 @@ class ToxicWaterfall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         addComponent(AnimationsComponent(animators))
     }
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 }

@@ -38,7 +38,7 @@ class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICul
     private var applyDeltaX = true
     private var applyDeltaY = true
 
-    override fun getEntityType() = EntityType.SPECIAL
+    override fun getType() = EntityType.SPECIAL
 
     override fun getTag(): String = TAG
 

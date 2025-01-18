@@ -42,11 +42,10 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.MagmaPellet
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -101,7 +100,7 @@ class MagmaGoopExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
         for (i in 0 until PELLET_IMPULSES.size) {
             val impulse = PELLET_IMPULSES[i].cpy().scl(ConstVals.PPM.toFloat()).rotateDeg(direction.rotation)
 
-            val pellet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_PELLET)!!
+            val pellet = MegaEntityFactory.fetch(MagmaPellet::class)!!
             pellet.spawn(
                 props(
                     ConstKeys.OWNER pairTo this,
@@ -152,6 +151,6 @@ class MagmaGoopExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
         return AnimationsComponent(this, animator)
     }
 
-    override fun getEntityType() = EntityType.EXPLOSION
+    override fun getType() = EntityType.EXPLOSION
 
 }

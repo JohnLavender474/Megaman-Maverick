@@ -128,5 +128,5 @@ class ChargedShotResidual(game: MegamanMaverickGame) : MegaGameEntity(game), ISp
         return AnimationsComponent(this, animator)
     }
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 }

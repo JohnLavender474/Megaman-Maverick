@@ -66,7 +66,7 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
     private val sensor = GameCircle().setRadius(SENSOR_RADIUS * ConstVals.PPM)
     private var triggered = false
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 
     override fun init() {
         if (regions.isEmpty) {

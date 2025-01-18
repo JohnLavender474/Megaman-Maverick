@@ -47,7 +47,7 @@ class PipiEggShatter(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     private val fadeTimer = Timer(FADE_DUR)
     private var type = -1
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "Pipi/EggShatter")

@@ -156,7 +156,7 @@ class HeartTank(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, I
         return AnimationsComponent(this, animator)
     }
 
-    override fun getEntityType() = EntityType.ITEM
+    override fun getType() = EntityType.ITEM
 
     override fun getTag() = TAG
 }

@@ -84,5 +84,5 @@ class DrippingToxicGoop(game: MegamanMaverickGame) : MegaGameEntity(game), ICull
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOutOfBounds))
     }
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 }

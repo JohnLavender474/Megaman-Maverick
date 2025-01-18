@@ -16,8 +16,8 @@ fun <T, U> orderedMapOf(vararg pairs: GamePair<T, U>): OrderedMap<T, U> {
     return map
 }
 
-fun <K, V> ObjectMap<K, V>.putIfAbsentAndGet(key: K, defaultValue: V): V {
-    if (!containsKey(key)) put(key, defaultValue)
+fun <K, V> ObjectMap<K, V>.putIfAbsentAndGet(key: K, defaultValueSupplier: () -> V): V {
+    if (!containsKey(key)) put(key, defaultValueSupplier.invoke())
     return get(key)
 }
 

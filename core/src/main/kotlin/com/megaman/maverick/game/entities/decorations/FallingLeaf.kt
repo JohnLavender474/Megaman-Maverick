@@ -213,7 +213,7 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
         return DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true)
     }
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 
     override fun getTag() = TAG
 }

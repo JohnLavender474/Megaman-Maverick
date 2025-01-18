@@ -27,7 +27,7 @@ const val PROJECTILE_DEFAULT_CULL_TIME = 0.05f
 
 interface IProjectileEntity : IMegaGameEntity, IBodyEntity, IAudioEntity, ICullableEntity, IOwnable, IDamager, ISizable {
 
-    override fun getEntityType() = EntityType.PROJECTILE
+    override fun getType() = EntityType.PROJECTILE
 
     fun defineProjectileComponents(outOfBoundsCullTime: Float = PROJECTILE_DEFAULT_CULL_TIME): Array<IGameComponent> {
         val components = Array<IGameComponent>()

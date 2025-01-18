@@ -153,5 +153,5 @@ class SwingingAxe(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         addDebugShapeSupplier { circle2.setCenter(pendulum.getMotionValue()!!) }
     }
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 }

@@ -162,7 +162,7 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
         return AnimationsComponent(this, animator)
     }
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 
     override fun getTag() = TAG
 }

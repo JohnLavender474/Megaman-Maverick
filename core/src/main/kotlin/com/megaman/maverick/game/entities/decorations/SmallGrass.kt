@@ -94,7 +94,7 @@ class SmallGrass(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         }
         .build()
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 
     override fun getTag() = TAG
 }

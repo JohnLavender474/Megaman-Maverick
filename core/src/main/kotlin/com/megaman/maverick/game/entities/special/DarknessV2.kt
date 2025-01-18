@@ -67,19 +67,27 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
     companion object {
         const val TAG = "DarknessV2"
+
         const val MIN_ALPHA = 0f
         const val MAX_ALPHA = 0.85f
+
         private const val CAM_BOUNDS_BUFFER = 2f
+
         private const val DEFAULT_PPM_DIVISOR = 2
+
         private const val MEGAMAN_HALF_CHARGING_RADIUS = 3
         private const val MEGAMAN_HALF_CHARGING_RADIANCE = 1.25f
         private const val MEGAMAN_FULL_CHARGING_RADIUS = 4
         private const val MEGAMAN_FULL_CHARGING_RADIANCE = 1.5f
+
         private var region: TextureRegion? = null
+
         private val standardProjLightDef: (IBodyEntity) -> LightSourceDef =
             { LightSourceDef(it.body.getCenter(), 2 * ConstVals.PPM, 1.5f) }
+
         private val brighterProjLightDef: (IBodyEntity) -> LightSourceDef =
             { LightSourceDef(it.body.getCenter(), 3 * ConstVals.PPM, 2f) }
+
         private val lightUpEntities = objectMapOf<KClass<out IBodyEntity>, (IBodyEntity) -> LightSourceDef>(
             Bullet::class pairTo standardProjLightDef,
             ChargedShot::class pairTo brighterProjLightDef,
@@ -93,6 +101,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                 if (it.fullyCharged) brighterProjLightDef.invoke(it) else standardProjLightDef.invoke(it)
             },
         )
+
         private const val DEBUG_THRESHOLD_SECS = 0.025f
 
         private fun debugTime(start: Long, messageOnTooLong: (Float) -> String) {
@@ -128,6 +137,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     private val reusableRect = GameRectangle()
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.COLORS.source, "Black")
         super.init()
         addComponent(SpritesComponent())
@@ -165,9 +175,12 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
+
         super.onDestroy()
+
         game.eventsMan.removeListener(this)
         lightSourceQueue.clear()
+
         rooms.clear()
         allTiles.clear()
         previousTiles.clear()
@@ -215,7 +228,10 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
             EventType.ADD_LIGHT_SOURCE -> {
                 val keys = event.getProperty(ConstKeys.KEYS) as ObjectSet<Int>
+
                 if (keys.contains(key)) {
+                    GameLogger.debug(TAG, "onEvent(): ADD_LIGHT_SOURCE: keys=$key")
+
                     val center = event.getProperty(ConstKeys.CENTER, Vector2::class)!!
                     val radius = event.getProperty(ConstKeys.RADIUS, Int::class)!!
 
@@ -370,7 +386,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         debugTime(startTime) { "update(): updating tiles took too long: time=$it, size=${(maxX - minX) * (maxY - minY)}" }
     })
 
-    override fun getEntityType() = EntityType.SPECIAL
+    override fun getType() = EntityType.SPECIAL
 
     override fun getTag() = TAG
 }

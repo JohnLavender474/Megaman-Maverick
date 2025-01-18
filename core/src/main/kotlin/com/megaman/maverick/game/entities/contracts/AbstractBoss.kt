@@ -262,5 +262,5 @@ abstract class AbstractBoss(
         }
     }
 
-    override fun getEntityType() = EntityType.BOSS
+    override fun getType() = EntityType.BOSS
 }

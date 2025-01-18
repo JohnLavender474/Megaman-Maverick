@@ -45,7 +45,7 @@ class Death(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
         return BodyComponentCreator.create(this, body)
     }
 
-    override fun getEntityType() = EntityType.SENSOR
+    override fun getType() = EntityType.SENSOR
 
     override fun getTag() = TAG
 }

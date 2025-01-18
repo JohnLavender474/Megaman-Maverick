@@ -111,5 +111,5 @@ class StarExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         return AnimationsComponent(this, animator)
     }
 
-    override fun getEntityType() = EntityType.EXPLOSION
+    override fun getType() = EntityType.EXPLOSION
 }

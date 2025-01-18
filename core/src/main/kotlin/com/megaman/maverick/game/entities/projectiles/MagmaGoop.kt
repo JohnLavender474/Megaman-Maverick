@@ -33,11 +33,9 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-
+import com.megaman.maverick.game.entities.explosions.MagmaGoopExplosion
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -63,11 +61,15 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(MagmaMeteor.Companion.TAG, "onSpawn(): spawnProps=$spawnProps")
+
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
+
         val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
         body.physics.velocity.set(trajectory)
+
         rotation = spawnProps.get(ConstKeys.ROTATION, Float::class)!!
     }
 
@@ -102,7 +104,7 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
                 "direction=$direction, position=$position"
         )
 
-        val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.MAGMA_GOOP_EXPLOSION)!!
+        val explosion = MegaEntityFactory.fetch(MagmaGoopExplosion::class)!!
         explosion.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.DIRECTION pairTo direction))
     }
 
@@ -111,18 +113,17 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         body.setSize(0.5f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
+
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
+
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
-        return BodyComponentCreator.create(
-            this,
-            body,
-            BodyFixtureDef.of(FixtureType.BODY, FixtureType.PROJECTILE, FixtureType.DAMAGER)
-        )
+
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.PROJECTILE, FixtureType.DAMAGER))
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->

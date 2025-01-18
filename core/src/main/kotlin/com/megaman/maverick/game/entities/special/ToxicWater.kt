@@ -109,5 +109,5 @@ class ToxicWater(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOutOfBounds))
     }
 
-    override fun getEntityType() = EntityType.SPECIAL
+    override fun getType() = EntityType.SPECIAL
 }

@@ -158,7 +158,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
                         val entityTypes =
                             game.getWorldContainer()!!
                                 .getBodies(coordinate.x + i, coordinate.y + j)
-                                .map { body -> body.getEntity().getEntityType() }
+                                .map { body -> body.getEntity().getType() }
                                 .toObjectSet()
                         surroundingEntityTypes.put(IntPair(coordinate.x + i, coordinate.y + j), entityTypes)
                     }
@@ -295,7 +295,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
                 var passable = true
                 var blockingBody: IBody? = null
 
-                for (otherBody in bodies) if (otherBody.getEntity().getEntityType() == EntityType.BLOCK) {
+                for (otherBody in bodies) if (otherBody.getEntity().getType() == EntityType.BLOCK) {
                     passable = false
                     blockingBody = otherBody
                     break

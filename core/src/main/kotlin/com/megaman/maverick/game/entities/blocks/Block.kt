@@ -209,7 +209,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         return BodyComponentCreator.create(this, body)
     }
 
-    override fun getEntityType() = EntityType.BLOCK
+    override fun getType() = EntityType.BLOCK
 
     override fun getTag() = TAG
 }

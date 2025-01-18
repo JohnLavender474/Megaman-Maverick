@@ -10,5 +10,5 @@ class HealthTank(game: MegamanMaverickGame) : MegaGameEntity(game) {
         TODO("Not yet implemented")
     }
 
-    override fun getEntityType() = EntityType.ITEM
+    override fun getType() = EntityType.ITEM
 }

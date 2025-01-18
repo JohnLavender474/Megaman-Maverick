@@ -69,7 +69,7 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     }
 
     override fun canSpawn(spawnProps: Properties): Boolean {
-        val specials = MegaGameEntities.getEntitiesOfType(getEntityType())
+        val specials = MegaGameEntities.getEntitiesOfType(getType())
         val otherCart = specials.find { it is Cart && it != this }
         val canSpawn = otherCart == null
         GameLogger.debug(TAG, "Can spawn = $canSpawn. This = ${this.hashCode()}. Other = ${otherCart.hashCode()}")
@@ -177,5 +177,5 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
 
     override fun getTag() = TAG
 
-    override fun getEntityType() = EntityType.SPECIAL
+    override fun getType() = EntityType.SPECIAL
 }

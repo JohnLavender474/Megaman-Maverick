@@ -175,7 +175,7 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         return BodyComponentCreator.create(this, body)
     }
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 
     override fun getTag() = TAG
 }

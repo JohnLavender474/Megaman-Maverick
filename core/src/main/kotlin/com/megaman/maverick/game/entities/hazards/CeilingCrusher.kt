@@ -70,7 +70,7 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
 
     private var height = 0
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 
     override fun getTag() = TAG
 

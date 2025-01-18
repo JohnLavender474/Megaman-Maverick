@@ -119,5 +119,5 @@ class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwn
         return BodyComponentCreator.create(this, body)
     }
 
-    override fun getEntityType() = EntityType.EXPLOSION
+    override fun getType() = EntityType.EXPLOSION
 }

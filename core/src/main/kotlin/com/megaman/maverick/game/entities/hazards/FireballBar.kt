@@ -115,7 +115,7 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
         )
     )
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 
     override fun getTag() = TAG
 }

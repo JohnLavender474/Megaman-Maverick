@@ -126,7 +126,7 @@ class MegamanTrailSpriteV2(game: MegamanMaverickGame) : MegaGameEntity(game), IS
         return AnimationsComponent(this, animator)
     }
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 
     override fun getTag() = TAG
 }

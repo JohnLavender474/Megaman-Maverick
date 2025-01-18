@@ -53,5 +53,5 @@ class SpaceSatellite(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         return spritesComponent
     }
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 }

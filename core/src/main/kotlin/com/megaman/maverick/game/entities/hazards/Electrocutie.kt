@@ -66,7 +66,7 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
     private var minPosition = 0f
     private var maxPosition = 0f
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 
     override fun getTag() = TAG
 

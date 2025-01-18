@@ -62,7 +62,7 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
 
     private lateinit var animation: IAnimation
 
-    override fun getEntityType() = EntityType.EXPLOSION
+    override fun getType() = EntityType.EXPLOSION
 
     override fun init() {
         if (smokePuffRegion == null)

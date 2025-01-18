@@ -63,7 +63,7 @@ class ElectrocutieChild(game: MegamanMaverickGame) : MegaGameEntity(game), IHaza
     private lateinit var spawn: Vector2
     private var resetBodyPosition = true
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 
     override fun init() {
         if (moveRegion == null || chargeRegion == null || shockRegion == null) {

@@ -51,15 +51,21 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
     companion object {
         const val TAG = "Darkness"
+
         private const val DEFAULT_TRANS_DUR = 0.25f
         private const val DEFAULT_PPM_DIVISOR = 4
+
         private const val MEGAMAN_CHARGING_RADIUS = 4
         private const val MEGAMAN_CHARGING_RADIANCE = 1f
+
         private var region: TextureRegion? = null
+
         private val standardProjLightDef: (IBodyEntity) -> LightEventDef =
             { LightEventDef(true, it.body.getCenter(), 2, 1.5f) }
+
         private val brighterProjLightDef: (IBodyEntity) -> LightEventDef =
             { LightEventDef(true, it.body.getCenter(), 3, 2f) }
+
         private val lightUpEntities = objectMapOf<KClass<out IBodyEntity>, (IBodyEntity) -> LightEventDef>(
             Bullet::class pairTo standardProjLightDef,
             ChargedShot::class pairTo brighterProjLightDef,
@@ -106,13 +112,17 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
     private val lightEventQueue = PriorityQueue<LightEvent>()
     private val rooms = ObjectSet<String>()
+
     private lateinit var tiles: Matrix<BlackTile>
     private lateinit var bounds: GameRectangle
+
     private var key = -1
     private var darkMode = false
+
     private var ppmDivisor = 2
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.COLORS.source, "Black")
         addComponent(SpritesComponent())
         addComponent(defineCullablesComponent())
@@ -121,6 +131,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
+
         super.onSpawn(spawnProps)
 
         game.eventsMan.addListener(this)
@@ -132,6 +143,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
         ppmDivisor = spawnProps.getOrDefault("${ConstKeys.PPM}_${ConstKeys.DIVISOR}", DEFAULT_PPM_DIVISOR, Int::class)
         val rows = (bounds.getHeight() / (ConstVals.PPM / ppmDivisor)).toInt()
         val columns = (bounds.getWidth() / (ConstVals.PPM / ppmDivisor)).toInt()
+
         GameLogger.debug(TAG, "onSpawn(): rows=$rows, columns=$columns")
 
         tiles = Matrix(rows, columns)
@@ -155,7 +167,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
                 val key = "[$x][$y]"
                 sprites.put(key, sprite)
-                putUpdateFunction(key) { delta, _sprite ->
+                putUpdateFunction(key) { delta, _ ->
                     if (tile.startAlpha < 0f) tile.startAlpha = 0f
                     else if (tile.startAlpha > 1f) tile.startAlpha = 1f
 
@@ -172,7 +184,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
                     else if (alpha > 1f) alpha = 1f
 
                     tile.currentAlpha = alpha
-                    _sprite.setAlpha(alpha)
+                    sprite.setAlpha(alpha)
                 }
             }
         }
@@ -180,14 +192,20 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+
         super.onDestroy()
+
         game.eventsMan.removeListener(this)
+
         rooms.clear()
         sprites.clear()
         lightEventQueue.clear()
     }
 
     override fun onEvent(event: Event) {
+        GameLogger.debug(TAG, "onEvent(): event=$event")
+
         when (event.key) {
             EventType.ADD_LIGHT_SOURCE -> {
                 val keys = event.getProperty(ConstKeys.KEYS) as ObjectSet<Int>
@@ -231,6 +249,8 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
     }
 
     private fun tryToLightUp(entity: IGameEntity) {
+        GameLogger.debug(TAG, "tryToLightUp(): entity=$entity")
+
         if (entity is IBodyEntity &&
             entity.body.getBounds().overlaps(bounds) &&
             lightUpEntities.containsKey(entity::class)
@@ -276,6 +296,8 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
     })
 
     private fun handleLightEvent(lightEventType: LightEventType, lightEventDef: LightEventDef? = null) {
+        GameLogger.debug(TAG, "handleLightEvent(): lightEventType=$lightEventType, lightEventDef=$lightEventDef")
+
         when (lightEventType) {
             LightEventType.LIGHT_UP_ALL -> {
                 darkMode = false
@@ -307,10 +329,13 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
                 var startX = (((center.x - adjustedRadius) - bounds.getX()) / (ConstVals.PPM.toFloat() / ppmDivisor)).toInt()
                 startX = startX.coerceIn(0, tiles.columns - 1)
+
                 var endX = ceil(((center.x + adjustedRadius) - bounds.getX()) / (ConstVals.PPM / ppmDivisor)).toInt()
                 endX = endX.coerceIn(0, tiles.columns - 1)
+
                 var startY = (((center.y - adjustedRadius) - bounds.getY()) / (ConstVals.PPM / ppmDivisor)).toInt()
                 startY = startY.coerceIn(0, tiles.rows - 1)
+
                 var endY = ceil(((center.y + adjustedRadius) - bounds.getY()) / (ConstVals.PPM / ppmDivisor)).toInt()
                 endY = endY.coerceIn(0, tiles.rows - 1)
 
@@ -350,7 +375,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullable))
     }
 
-    override fun getEntityType() = EntityType.SPECIAL
+    override fun getType() = EntityType.SPECIAL
 
     override fun getTag(): String = TAG
 }

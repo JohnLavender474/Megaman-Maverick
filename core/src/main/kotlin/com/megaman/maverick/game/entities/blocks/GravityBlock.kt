@@ -202,5 +202,5 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     override fun getTag() = TAG
 
-    override fun getEntityType() = EntityType.BLOCK
+    override fun getType() = EntityType.BLOCK
 }

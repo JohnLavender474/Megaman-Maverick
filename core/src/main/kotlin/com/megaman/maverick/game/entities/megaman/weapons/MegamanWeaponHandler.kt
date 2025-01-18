@@ -14,6 +14,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -22,6 +23,8 @@ import com.megaman.maverick.game.entities.megaman.components.GROUND_SLIDE_SPRITE
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.BodySense
@@ -271,12 +274,12 @@ class MegamanWeaponHandler(private val megaman: Megaman /*, private val weaponSp
         props.put(ConstKeys.TRAJECTORY, trajectory)
         props.put(ConstKeys.DIRECTION, megaman.direction)
 
-        val megaBusterShot = when (stat) {
-            MegaChargeStatus.NOT_CHARGED -> EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)
+        val shot = when (stat) {
+            MegaChargeStatus.NOT_CHARGED -> MegaEntityFactory.fetch(Bullet::class)
 
             MegaChargeStatus.HALF_CHARGED, MegaChargeStatus.FULLY_CHARGED -> {
                 props.put(ConstKeys.BOOLEAN, stat == MegaChargeStatus.FULLY_CHARGED)
-                EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.CHARGED_SHOT)
+                MegaEntityFactory.fetch(ChargedShot::class)
             }
         } ?: throw IllegalStateException("MegaBusterShot is null")
 
@@ -289,9 +292,9 @@ class MegamanWeaponHandler(private val megaman: Megaman /*, private val weaponSp
 
         val s = getSpawnPosition(out)
         props.put(ConstKeys.POSITION, s)
-        engine.spawn(megaBusterShot, props)
+        engine.spawn(shot, props)
 
-        return megaBusterShot as AbstractProjectile
+        return shot
     }
 
     private fun fireFlameToss(stat: MegaChargeStatus): AbstractProjectile {

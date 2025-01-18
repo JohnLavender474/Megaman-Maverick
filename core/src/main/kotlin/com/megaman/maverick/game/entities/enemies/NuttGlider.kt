@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.entities.explosions
+package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
@@ -193,7 +193,7 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     }
 
     private fun dropNutt() {
-        val nutt = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.NUTT)!!
+        val nutt = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.Companion.NUTT)!!
         val spawn =
             body.getCenter().add(NUTT_DROP_OFFSET_X * ConstVals.PPM * facing.value, NUTT_DROP_OFFSET_Y * ConstVals.PPM)
         nutt.spawn(props(ConstKeys.POSITION pairTo spawn))
@@ -289,7 +289,7 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(
-            this, body, BodyFixtureDef.of(FixtureType.DAMAGER, FixtureType.DAMAGEABLE, FixtureType.BODY)
+            this, body, BodyFixtureDef.Companion.of(FixtureType.DAMAGER, FixtureType.DAMAGEABLE, FixtureType.BODY)
         )
     }
 

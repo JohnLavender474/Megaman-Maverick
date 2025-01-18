@@ -77,5 +77,5 @@ class SmallGrassPatch(game: MegamanMaverickGame) : MegaGameEntity(game) {
         )
     )
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 }

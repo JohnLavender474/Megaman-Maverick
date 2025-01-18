@@ -39,7 +39,7 @@ class ForceDecoration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     private lateinit var bounds: GameRectangle
     private var rotation = 0f
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 
     override fun init() {
         if (region == null)

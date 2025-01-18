@@ -115,5 +115,5 @@ class MagmaExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         return AnimationsComponent(this, animator)
     }
 
-    override fun getEntityType() = EntityType.EXPLOSION
+    override fun getType() = EntityType.EXPLOSION
 }

@@ -140,7 +140,7 @@ object LevelDefMap {
     init {
         LevelDefinition.entries.forEach { def ->
             val type = def.type
-            levelTypeToDefs.putIfAbsentAndGet(type, OrderedSet()).add(def)
+            levelTypeToDefs.putIfAbsentAndGet(type) { OrderedSet() }.add(def)
         }
     }
 

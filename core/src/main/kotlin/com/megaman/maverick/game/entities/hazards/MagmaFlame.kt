@@ -125,5 +125,5 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         return AnimationsComponent(this, animator)
     }
 
-    override fun getEntityType() = EntityType.HAZARD
+    override fun getType() = EntityType.HAZARD
 }

@@ -102,5 +102,5 @@ class MegamanTrailSprite(game: MegamanMaverickGame) : MegaGameEntity(game), ISpr
         return spritesComponent
     }
 
-    override fun getEntityType() = EntityType.DECORATION
+    override fun getType() = EntityType.DECORATION
 }
