@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="420" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="649">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="420" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="649">
  <tileset firstgid="1" source="../tsx/pipe_forest.tsx"/>
  <tileset firstgid="22" source="../tsx/PlantManTileset.tsx"/>
  <tileset firstgid="772" source="../tsx/Tileset1.tsx"/>
@@ -644,7 +644,11 @@
   <object id="155" name="Peat" x="2232" y="1176" width="16" height="16"/>
   <object id="245" name="Robbit" x="3704" y="1264" width="16" height="16"/>
   <object id="249" name="Bat" x="3624" y="1088" width="16" height="16"/>
-  <object id="281" name="SniperJoe" x="1624" y="1264" width="16" height="16"/>
+  <object id="281" name="AxeJoe" x="1704" y="1208" width="16" height="16">
+   <properties>
+    <property name="impulse_x" type="float" value="5"/>
+   </properties>
+  </object>
   <object id="328" name="NuttGlider" x="4408" y="848" width="16" height="16"/>
   <object id="351" name="Bat" x="4888" y="736" width="16" height="16"/>
   <object id="352" name="Bat" x="3032" y="1088" width="16" height="16"/>
@@ -671,7 +675,11 @@
     <property name="value" type="float" value="-4"/>
    </properties>
   </object>
-  <object id="454" name="SniperJoe" x="8704" y="1264" width="16" height="16"/>
+  <object id="454" name="AxeJoe" x="8696" y="1208" width="16" height="16">
+   <properties>
+    <property name="impulse_x" type="float" value="5"/>
+   </properties>
+  </object>
   <object id="488" name="Bat" x="9784" y="1120" width="16" height="16"/>
   <object id="489" name="Robbit" x="9816" y="1424" width="16" height="16"/>
   <object id="538" name="Bat" x="10616" y="768" width="16" height="16"/>
@@ -680,17 +688,17 @@
     <property name="value" type="float" value="-6"/>
    </properties>
   </object>
-  <object id="540" name="SniperJoe" x="10600" y="560" width="16" height="16"/>
-  <object id="542" name="SniperJoe" x="3096" y="1232" width="16" height="16"/>
+  <object id="540" name="AxeJoe" x="10600" y="560" width="16" height="16"/>
+  <object id="542" name="AxeJoe" x="3096" y="1176" width="16" height="16"/>
   <object id="578" name="NuttGlider" x="11640" y="432" width="16" height="16"/>
   <object id="579" name="Peat" x="11640" y="248" width="16" height="16"/>
   <object id="609" name="Bat" x="10488" y="192" width="16" height="16"/>
-  <object id="610" name="SniperJoe" x="10840" y="816" width="16" height="16"/>
+  <object id="610" name="AxeJoe" x="10840" y="816" width="16" height="16"/>
  </objectgroup>
- <objectgroup id="13" name="player">
+ <objectgroup id="13" name="temp">
   <object id="648" name="0" x="12096" y="512" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="2" name="temp">
+ <objectgroup id="2" name="player">
   <object id="5" name="0" x="128" y="1280" width="32" height="32"/>
   <object id="445" name="1" x="3904" y="768" width="32" height="32"/>
   <object id="492" name="2" x="7920" y="1408" width="32" height="32"/>

@@ -73,7 +73,7 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         private const val GLIDE_IMPULSE_X = 15f
         private const val GLIDE_VEL_Y = -2.5f
 
-        private const val NUTT_DROP_OFFSET_X = 0.5f
+        private const val NUTT_DROP_OFFSET_X = 0.75f
         private const val NUTT_DROP_OFFSET_Y = -0.25f
 
         private val ANIM_DEFS = objectMapOf<NuttGliderState, AnimationDef>(

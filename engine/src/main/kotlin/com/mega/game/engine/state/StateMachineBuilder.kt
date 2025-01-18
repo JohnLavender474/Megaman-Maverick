@@ -3,7 +3,6 @@ package com.mega.game.engine.state
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 
-
 class StateMachineBuilder<T> {
 
     private val stateDefinitions = ObjectMap<String, T>()
@@ -12,36 +11,35 @@ class StateMachineBuilder<T> {
     private var onChangeState: ((T, T) -> Unit)? = null
     private var triggerChangeWhenSameElement = false
 
-
     fun state(name: String, element: T): StateMachineBuilder<T> {
         stateDefinitions.put(name, element)
         return this
     }
 
+    fun states(receiver: (states: ObjectMap<String, T>) -> Unit): StateMachineBuilder<T> {
+        receiver.invoke(stateDefinitions)
+        return this
+    }
 
     fun transition(fromState: String, toState: String, condition: () -> Boolean): StateMachineBuilder<T> {
         transitionDefinitions.add(Triple(fromState, toState, condition))
         return this
     }
 
-
     fun initialState(name: String): StateMachineBuilder<T> {
         initialStateName = name
         return this
     }
 
-
-    fun setOnChangeState(onChangeState: ((T, T) -> Unit)? = null): Boolean {
-        val wasAlreadySet = this.onChangeState != null
+    fun setOnChangeState(onChangeState: ((T, T) -> Unit)? = null): StateMachineBuilder<T> {
         this.onChangeState = onChangeState
-        return wasAlreadySet
+        return this
     }
 
-
-    fun setTriggerChangeWhenSameElement(trigger: Boolean) {
+    fun setTriggerChangeWhenSameElement(trigger: Boolean): StateMachineBuilder<T> {
         triggerChangeWhenSameElement = trigger
+        return this
     }
-
 
     fun build(): StateMachine<T> {
         val states = mutableMapOf<String, IState<T>>()

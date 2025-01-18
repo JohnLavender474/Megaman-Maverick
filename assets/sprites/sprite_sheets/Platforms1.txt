@@ -1,5 +1,5 @@
 Platforms1.png
-size: 472, 592
+size: 472, 980
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -201,14 +201,14 @@ DropperLift/Opening
   index: -1
 FlipperPlatform/FlipToLeft
   rotate: false
-  xy: 0, 408
+  xy: 0, 796
   size: 430, 60
   orig: 430, 60
   offset: 0, 0
   index: -1
 FlipperPlatform/FlipToRight
   rotate: false
-  xy: 0, 468
+  xy: 0, 856
   size: 430, 60
   orig: 430, 60
   offset: 0, 0
@@ -264,9 +264,16 @@ InfernoChainPlatform/platform
   index: -1
 JeffBezosLittleDickRocket
   rotate: false
-  xy: 0, 528
+  xy: 0, 916
   size: 448, 64
   orig: 448, 64
+  offset: 0, 0
+  index: -1
+JeffBezosLittleDickRocket_v2
+  rotate: false
+  xy: 344, 348
+  size: 24, 448
+  orig: 24, 448
   offset: 0, 0
   index: -1
 Lift

@@ -237,6 +237,12 @@ sprites/frames/Enemies2/Adamski/Orange.png
 sprites/frames/Enemies2/Adamski/Purple.png
 sprites/frames/Enemies2/Adamski/Blue.png
 sprites/frames/Enemies2/OmniDirectionalBlasterBot.png
+sprites/frames/Enemies2/AxeJoe/throw.png
+sprites/frames/Enemies2/AxeJoe/throw_shielded.png
+sprites/frames/Enemies2/AxeJoe/jump_shielded.png
+sprites/frames/Enemies2/AxeJoe/stand.png
+sprites/frames/Enemies2/AxeJoe/jump.png
+sprites/frames/Enemies2/AxeJoe/stand_shielded.png
 sprites/frames/Enemies2/Wanaan.png
 sprites/frames/Enemies2/Shotman/Launch.png
 sprites/frames/Enemies2/Shotman/Shoot.png
@@ -738,6 +744,8 @@ sprites/frames/Projectiles2/SuperCoolActionStarWarsSpaceLazer/lazer.png
 sprites/frames/Projectiles2/SuperCoolActionStarWarsSpaceLazer/burst.png
 sprites/frames/Projectiles2/DeathBomb/wait.png
 sprites/frames/Projectiles2/DeathBomb/tick.png
+sprites/frames/Projectiles2/Axe/stuck.png
+sprites/frames/Projectiles2/Axe/spin.png
 sprites/frames/Projectiles2/Pebble.png
 sprites/frames/Projectiles2/MagmaWave.png
 sprites/frames/Projectiles2/MoonMan/crescent.png
@@ -1173,6 +1181,7 @@ sprites/frames/Backgrounds6/EarthBackdrop.png
 sprites/frames/Backgrounds6/Space.png
 sprites/frames/Backgrounds3/BKG19.png
 sprites/frames/Backgrounds3/BKG22.png
+sprites/frames/Backgrounds3/ForestBKG_v2.png
 sprites/frames/Backgrounds3/SprBGTomahawk.png
 sprites/frames/Backgrounds3/BKG18.png
 sprites/frames/Backgrounds3/ForestBKG.png
@@ -1213,6 +1222,7 @@ sprites/frames/Platforms1/InfernoChainPlatform/platform.png
 sprites/frames/Platforms1/InfernoChainPlatform/chain.png
 sprites/frames/Platforms1/Brick.png
 sprites/frames/Platforms1/8bitBlueBlockNoBorder.png
+sprites/frames/Platforms1/JeffBezosLittleDickRocket_v2.png
 sprites/frames/Platforms1/MetalCrate.png
 sprites/frames/Platforms1/ConveyorBelt/RightPart-MoveRight-Green.png
 sprites/frames/Platforms1/ConveyorBelt/MiddlePart-MoveLeft-Green.png
@@ -1381,6 +1391,8 @@ sprites/frames/Enemies1/DeathBat/fly_retreat.png
 sprites/frames/Enemies1/DeathBat/open.png
 sprites/frames/Enemies1/DeathBat/fly_attack.png
 sprites/frames/Enemies1/DeathBat/hang.png
+sprites/frames/Enemies1/CannonHopper/stand.png
+sprites/frames/Enemies1/CannonHopper/hop.png
 sprites/frames/Enemies1/LaserBeamer.png
 sprites/frames/Enemies1/FloatingCan.png
 sprites/frames/Enemies1/TurnBlaster/tube.png
@@ -1901,9 +1913,11 @@ sprites/piskel/HibernalMan.piskel
 sprites/piskel/WanaanLauncher.piskel
 sprites/piskel/MagmaExplosion.piskel
 sprites/piskel/CactusLauncher.piskel
+sprites/piskel/CannonHopper.piskel
 sprites/piskel/StagedMoonLandingFlag.piskel
 sprites/piskel/Wanaan.piskel
 sprites/piskel/ToxicGoopShot.piskel
+sprites/piskel/RocketPlatform_v2.piskel
 sprites/piskel/MMX_Sigma2_Claw_Electric_Shot.piskel
 sprites/piskel/Enemies2.piskel
 sprites/piskel/MagmaGoopExplosion.piskel
@@ -1992,6 +2006,7 @@ sprites/piskel/ChargedShot_Residual.piskel
 sprites/piskel/PiercingMan.piskel
 sprites/piskel/Candle.piskel
 sprites/piskel/Lantern.piskel
+sprites/piskel/AxeJoe.piskel
 sprites/piskel/Trees.piskel
 sprites/piskel/SnowSniperJoe.piskel
 sprites/piskel/SawBeam.piskel
@@ -2037,6 +2052,7 @@ tiled_maps/tsx/ColorsTileset.tsx
 tiled_maps/tsx/MagnetMan2.tsx
 tiled_maps/tsx/tomahawk_man_stage_tileset.tsx
 tiled_maps/tsx/MM3Wily4.tsx
+tiled_maps/tsx/pipe forest preview.tsx
 tiled_maps/tsx/mm9plug.tsx
 tiled_maps/tsx/Magnetman.tsx
 tiled_maps/tsx/mm9endless.tsx
@@ -2056,6 +2072,7 @@ tiled_maps/tsx/mm10blade.tsx
 tiled_maps/tsx/mm9magma.tsx
 tiled_maps/tsx/MM10Punk.tsx
 tiled_maps/tsx/MM3Wily2.tsx
+tiled_maps/tsx/pipe forest preview-big.tsx
 tiled_maps/tsx/CentaurMan.tsx
 tiled_maps/tsx/Reactor_Man_1.tsx
 tiled_maps/tsx/BKG01.tsx
@@ -2305,6 +2322,7 @@ tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstAstro_2.png
 tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstTengu.png
 tiled_maps/png/MMM MegaMan 8 tille sets/credits.txt
 tiled_maps/png/tstMagnetman.png
+tiled_maps/png/pipe forest preview.png
 tiled_maps/png/mm9jewel.png
 tiled_maps/png/Reactor_Man_3.png
 tiled_maps/png/1 - Main Menu Backgrounds.png
@@ -2384,6 +2402,7 @@ tiled_maps/tmx/MoonMan_v2.tmx
 tiled_maps/tmx/Test8.tmx
 tiled_maps/tmx/GlacierMan_v3.tmx
 tiled_maps/tmx/GlacierMan_16x12_v2.tmx
+tiled_maps/tmx/TimberWoman_16x14_v2.tmx
 tiled_maps/tmx/MoonMan_v3.tmx
 tiled_maps/tmx/MoonMan_16x14.tmx
 tiled_maps/tmx/DesertMan_v2.tmx

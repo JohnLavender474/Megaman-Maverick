@@ -17,7 +17,6 @@ import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
-import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IChildEntity
@@ -49,9 +48,10 @@ class JeffBezosLittleDickRocket(game: MegamanMaverickGame) : Block(game), IParen
 
     companion object {
         const val TAG = "JeffBezosLittleDickRocket"
-        private var region: TextureRegion? = null
         private const val WIDTH = 1f
         private const val HEIGHT = 3.5f
+        private const val REGION_SUFFIX = "_v2"
+        private var region: TextureRegion? = null
     }
 
     override val eventKeyMask = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS)
@@ -67,7 +67,8 @@ class JeffBezosLittleDickRocket(game: MegamanMaverickGame) : Block(game), IParen
     private var hidden = false
 
     override fun init() {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, TAG)
+        if (region == null)
+            region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "${TAG}${REGION_SUFFIX}")
         super.init()
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
@@ -161,7 +162,7 @@ class JeffBezosLittleDickRocket(game: MegamanMaverickGame) : Block(game), IParen
 
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, -1))
-        sprite.setSize(4.5f * ConstVals.PPM)
+        sprite.setSize(1.6875f * ConstVals.PPM, 4.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.hidden = hidden
@@ -183,7 +184,7 @@ class JeffBezosLittleDickRocket(game: MegamanMaverickGame) : Block(game), IParen
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(region!!, 1, 7, 0.05f, true)
+        val animation = Animation(region!!, 7, 1, 0.05f, true)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }

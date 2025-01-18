@@ -11,13 +11,12 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.putAll
-import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -54,11 +53,10 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
-import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
 class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDrawableShapesEntity,
-    IDirectional, IFaceable {
+    IFaceable {
 
     companion object {
         const val TAG = "AstroAssAssaulter"
@@ -78,7 +76,7 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         private const val DEFAULT_FLAG_GRAVITY_SCALAR = 0.75f
         private const val DEFAULT_FLAG_MOVEMENT_SCALAR = 1f
 
-        private const val LAZER_SPEED = 10f
+        private const val LAZER_SPEED = 8f
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -86,11 +84,6 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     private enum class AstroAssState { STAND, SHOOT, THROW }
 
     override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.MEDIUM)
-    override var direction: Direction
-        get() = body.direction
-        set(value) {
-            body.direction = value
-        }
     override lateinit var facing: Facing
 
     private lateinit var stateMachine: StateMachine<AstroAssState>
@@ -147,12 +140,8 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
 
         super.onSpawn(spawnProps)
 
-        direction =
-            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
-
-        val position = DirectionPositionMapper.getInvertedPosition(direction)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(position)
-        body.positionOnPoint(spawn, position)
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
+        body.positionOnPoint(spawn, Position.BOTTOM_CENTER)
 
         updateFacing()
 
@@ -188,13 +177,8 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
         GameLogger.debug(TAG, "throwFlag()")
 
         val spawn = GameObjectPools.fetch(Vector2::class)
-        when (direction) {
-            Direction.UP -> spawn.set(0.35f * facing.value, 0.2f)
-            Direction.DOWN -> spawn.set(0.35f * facing.value, -0.2f)
-            Direction.LEFT -> spawn.set(-0.2f, 0.35f * facing.value)
-            Direction.RIGHT -> spawn.set(0.2f, 0.35f * -facing.value)
-        }
-        spawn.scl(ConstVals.PPM.toFloat()).add(body.getCenter())
+            .set(0.35f * facing.value, 0.2f)
+            .scl(ConstVals.PPM.toFloat()).add(body.getCenter())
 
         // TODO: impulse dependent on direction
         val impulse = GameObjectPools.fetch(Vector2::class)
@@ -218,25 +202,10 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
 
     private fun shootLazer() {
         val spawn = GameObjectPools.fetch(Vector2::class)
-        when (direction) {
-            Direction.UP -> spawn.set(facing.value.toFloat(), 0.3f)
-            Direction.DOWN -> spawn.set(facing.value.toFloat(), -0.3f)
-            Direction.LEFT -> spawn.set(-0.3f, facing.value.toFloat())
-            Direction.RIGHT -> spawn.set(0.3f, -facing.value.toFloat())
-        }
-        spawn.scl(ConstVals.PPM.toFloat()).add(body.getCenter())
+            .set(facing.value.toFloat(), 0.3f)
+            .scl(ConstVals.PPM.toFloat()).add(body.getCenter())
 
-        val trajectory = GameObjectPools.fetch(Vector2::class)
-        when (direction) {
-            Direction.UP, Direction.DOWN ->
-                trajectory.set(LAZER_SPEED * ConstVals.PPM * facing.value, 0f)
-
-            Direction.LEFT ->
-                trajectory.set(0f, LAZER_SPEED * ConstVals.PPM * facing.value)
-
-            Direction.RIGHT ->
-                trajectory.set(0f, -LAZER_SPEED * ConstVals.PPM * facing.value)
-        }
+        val trajectory = GameObjectPools.fetch(Vector2::class).set(LAZER_SPEED * ConstVals.PPM * facing.value, 0f)
 
         val props = props(
             ConstKeys.OWNER pairTo this,
@@ -254,10 +223,9 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     }
 
     private fun updateFacing() {
-        facing = when (direction) {
-            Direction.UP, Direction.DOWN -> if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
-            Direction.LEFT -> if (megaman.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
-            Direction.RIGHT -> if (megaman.body.getY() < body.getY()) Facing.RIGHT else Facing.LEFT
+        when {
+            megaman.body.getMaxX() < body.getX() -> facing = Facing.LEFT
+            megaman.body.getX() > body.getMaxX() -> facing = Facing.RIGHT
         }
     }
 
@@ -314,16 +282,8 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game), IAnima
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(3f * ConstVals.PPM) })
         .updatable { _, sprite ->
-            val flipX = facing == Facing.RIGHT
-            val flipY = direction == Direction.DOWN
-            sprite.setFlip(flipX, flipY)
-
-            sprite.setOriginCenter()
-            sprite.rotation = direction.rotation
-
-            val position = DirectionPositionMapper.getInvertedPosition(direction)
-            sprite.setPosition(body.getPositionPoint(position), position)
-
+            sprite.setFlip(isFacing(Facing.RIGHT), false)
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             sprite.hidden = damageBlink
         }
         .build()

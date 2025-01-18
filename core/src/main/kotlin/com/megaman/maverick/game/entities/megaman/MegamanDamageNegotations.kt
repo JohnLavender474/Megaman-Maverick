@@ -5,13 +5,14 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.pairTo
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.entities.blocks.JeffBezosLittleDickRocket
+import com.megaman.maverick.game.entities.blocks.PropellerPlatform
 import com.megaman.maverick.game.entities.bosses.*
 import com.megaman.maverick.game.entities.bosses.gutstank.GutsTank
 import com.megaman.maverick.game.entities.bosses.gutstank.GutsTankFist
 import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRat
 import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRatClaw
 import com.megaman.maverick.game.entities.enemies.*
-import com.megaman.maverick.game.entities.blocks.*
 import com.megaman.maverick.game.entities.explosions.*
 import com.megaman.maverick.game.entities.hazards.*
 import com.megaman.maverick.game.entities.projectiles.*
@@ -189,7 +190,9 @@ object MegamanDamageNegotations {
         AstroAssAssaulter.TAG pairTo dmgNeg(3),
         SuperCoolActionStarWarsSpaceLazer.TAG pairTo dmgNeg(3),
         StagedMoonLandingFlag.TAG pairTo dmgNeg(3),
-        PropellerPlatform.TAG pairTo dmgNeg(3)
+        PropellerPlatform.TAG pairTo dmgNeg(3),
+        Axe.TAG pairTo dmgNeg(3),
+        AxeJoe.TAG pairTo dmgNeg(3)
     )
 
     fun contains(tag: String) = dmgNegotiations.containsKey(tag)

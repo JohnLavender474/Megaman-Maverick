@@ -80,23 +80,37 @@ BlueScrewie/Shoot
   orig: 32, 96
   offset: 0, 0
   index: -1
-CloudedTorpedo/CloudyTorpedo
+CannonHopper/hop
   rotate: false
   xy: 212, 0
-  size: 64, 32
-  orig: 64, 32
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
   index: -1
-CloudedTorpedo/TorpedoFire
+CannonHopper/stand
+  rotate: false
+  xy: 244, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+CloudedTorpedo/CloudyTorpedo
   rotate: false
   xy: 276, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
-CloudedTorpedo/UncloudedTorpedo
+CloudedTorpedo/TorpedoFire
   rotate: false
   xy: 340, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+CloudedTorpedo/UncloudedTorpedo
+  rotate: false
+  xy: 404, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
@@ -110,21 +124,21 @@ Darspider/crawl
   index: -1
 Darspider/frozen
   rotate: false
-  xy: 404, 0
+  xy: 468, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Darspider/jump
   rotate: false
-  xy: 436, 0
+  xy: 500, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Darspider/still
   rotate: false
-  xy: 468, 0
+  xy: 532, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -145,7 +159,7 @@ DeathBat/fly_retreat
   index: -1
 DeathBat/hang
   rotate: false
-  xy: 500, 0
+  xy: 564, 0
   size: 48, 32
   orig: 48, 32
   offset: 0, 0
@@ -159,7 +173,7 @@ DeathBat/open
   index: -1
 DragonFly
   rotate: false
-  xy: 548, 0
+  xy: 612, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
@@ -222,7 +236,7 @@ FlameHeadThrower/Throw
   index: -1
 FloatingCan
   rotate: false
-  xy: 612, 0
+  xy: 676, 0
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
@@ -243,70 +257,70 @@ FlyBoy/Stand
   index: -1
 FlyPincher/Open
   rotate: false
-  xy: 740, 0
+  xy: 804, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 FlyPincher/Pinch
   rotate: false
-  xy: 804, 0
+  xy: 868, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 GapingFish/Chomping
   rotate: false
-  xy: 868, 0
+  xy: 932, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 GapingFish/Gaping
   rotate: false
-  xy: 932, 0
+  xy: 0, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 GapingFish/Swimming
   rotate: false
-  xy: 0, 32
+  xy: 64, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 HeliMet/Fly
   rotate: false
-  xy: 64, 32
+  xy: 128, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 HeliMet/PopUp
   rotate: false
-  xy: 128, 32
+  xy: 192, 32
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 HeliMet/Shield
   rotate: false
-  xy: 224, 32
+  xy: 288, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 LaserBeamer
   rotate: false
-  xy: 256, 32
+  xy: 320, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 MagFly
   rotate: false
-  xy: 288, 32
+  xy: 352, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
@@ -355,28 +369,28 @@ Merserker/return_up
   index: -1
 Met/GetUp
   rotate: false
-  xy: 352, 32
+  xy: 416, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Met/LayDown
   rotate: false
-  xy: 384, 32
+  xy: 448, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Met/PopUp
   rotate: false
-  xy: 416, 32
+  xy: 480, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Met/Run
   rotate: false
-  xy: 448, 32
+  xy: 512, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
@@ -425,42 +439,42 @@ NuttGlider/stand_nutt
   index: -1
 Penguin/Jump
   rotate: false
-  xy: 512, 32
+  xy: 576, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Penguin/Slide
   rotate: false
-  xy: 544, 32
+  xy: 608, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Penguin/Slippin
   rotate: false
-  xy: 576, 32
+  xy: 640, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Penguin/Stand
   rotate: false
-  xy: 608, 32
+  xy: 672, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 PetitDevil/LargeGreen
   rotate: false
-  xy: 672, 32
+  xy: 736, 32
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
   index: -1
 PetitDevil/LargeOrange
   rotate: false
-  xy: 800, 32
+  xy: 864, 32
   size: 128, 32
   orig: 128, 32
   offset: 0, 0

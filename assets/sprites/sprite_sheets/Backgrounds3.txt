@@ -1,5 +1,5 @@
 Backgrounds3.png
-size: 2000, 1900
+size: 2000, 2124
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -59,9 +59,16 @@ ForestBKG
   orig: 256, 224
   offset: 0, 0
   index: -1
-GlacierBKG
+ForestBKG_v2
   rotate: false
   xy: 0, 400
+  size: 672, 224
+  orig: 672, 224
+  offset: 0, 0
+  index: -1
+GlacierBKG
+  rotate: false
+  xy: 0, 624
   size: 2000, 1500
   orig: 2000, 1500
   offset: 0, 0

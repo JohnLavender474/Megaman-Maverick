@@ -100,6 +100,21 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 DrawingPriority(DrawingSection.BACKGROUND, 1)
             )
         },
+        "ForestBKG_v2" pairTo {
+            Background(
+                key = it.name,
+                startX = it.rectangle.x,
+                startY = it.rectangle.y,
+                model = params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_3.source, "ForestBKG_v2"),
+                modelWidth = it.rectangle.width,
+                modelHeight = it.rectangle.height,
+                rows = it.properties.get(ConstKeys.ROWS) as Int,
+                columns = it.properties.get(ConstKeys.COLUMNS) as Int,
+                priority = DrawingPriority(DrawingSection.BACKGROUND, 1),
+                parallaxX = 0.075f,
+                parallaxY = 0f
+            )
+        },
         "GlacierBKG" pairTo {
             AnimatedBackground(
                 it.name,

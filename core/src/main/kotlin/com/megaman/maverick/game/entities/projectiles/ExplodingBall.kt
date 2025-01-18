@@ -69,8 +69,10 @@ class ExplodingBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
+    /*
     override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
         explodeAndDie()
+     */
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
@@ -102,6 +104,9 @@ class ExplodingBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.4f * ConstVals.PPM))
         body.addFixture(damagerFixture)
+
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(0.4f * ConstVals.PPM))
+        body.addFixture(shieldFixture)
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
 

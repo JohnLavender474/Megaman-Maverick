@@ -11,7 +11,6 @@ import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
@@ -19,7 +18,6 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.putAll
 import com.mega.game.engine.common.extensions.toGdxArray
-import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
@@ -47,10 +45,9 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable, IDirectional,
+class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable,
     IScalableGravityEntity {
 
     companion object {
@@ -77,11 +74,6 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
     private enum class FlagState { HIDDEN, RISE, STAND, FALL }
 
     override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.SMALL)
-    override var direction: Direction
-        get() = body.direction
-        set(value) {
-            body.direction = value
-        }
     override lateinit var facing: Facing
     override var gravityScalar = 1f
 
@@ -144,11 +136,7 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
         shield2BlinkTimer.reset()
         shield2Blink = false
 
-        facing = when (direction) {
-            Direction.UP, Direction.DOWN -> if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
-            Direction.LEFT -> if (megaman.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
-            Direction.RIGHT -> if (megaman.body.getY() < body.getY()) Facing.RIGHT else Facing.LEFT
-        }
+        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
     }
@@ -173,26 +161,11 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
     }
 
     private fun resetBodySizeOnUnfurling() {
-        val oldPos = when (direction) {
-            Direction.UP -> body.getPositionPoint(Position.BOTTOM_CENTER)
-            Direction.DOWN -> body.getPositionPoint(Position.TOP_CENTER)
-            Direction.LEFT -> body.getPositionPoint(Position.CENTER_RIGHT)
-            Direction.RIGHT -> body.getPositionPoint(Position.CENTER_LEFT)
-        }
-
+        val oldPos = body.getPositionPoint(Position.BOTTOM_CENTER)
         val oldBounds = body.getBounds()
-
         body.setSize(UNFURLED_WIDTH * ConstVals.PPM, UNFURLED_HEIGHT * ConstVals.PPM)
-
-        when (direction) {
-            Direction.UP -> body.setBottomCenterToPoint(oldPos)
-            Direction.DOWN -> body.setTopCenterToPoint(oldPos)
-            Direction.LEFT -> body.getCenterRightPoint(oldPos)
-            Direction.RIGHT -> body.setCenterLeftToPoint(oldPos)
-        }
-
+        body.setBottomCenterToPoint(oldPos)
         val newBounds = body.getBounds()
-
         GameLogger.debug(TAG, "resetBodySizeOnUnfurling(): oldBounds=$oldBounds, newBounds=$newBounds")
     }
 
@@ -217,11 +190,7 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
                 }
             }
 
-            facing = when (direction) {
-                Direction.UP, Direction.DOWN -> if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
-                Direction.LEFT -> if (megaman.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
-                Direction.RIGHT -> if (megaman.body.getY() < body.getY()) Facing.RIGHT else Facing.LEFT
-            }
+            facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
             when (currentState) {
                 FlagState.HIDDEN -> {
@@ -263,14 +232,7 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
 
         body.preProcess.put(ConstKeys.GRAVITY) {
             val value = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
-
-            val gravity = body.physics.gravity
-            when (direction) {
-                Direction.UP -> gravity.set(0f, -value)
-                Direction.DOWN -> gravity.set(0f, value)
-                Direction.LEFT -> gravity.set(value, 0f)
-                Direction.RIGHT -> gravity.set(-value, 0f)
-            }.scl(ConstVals.PPM * gravityScalar)
+            body.physics.gravity.set(0f, -value * ConstVals.PPM * gravityScalar)
         }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
@@ -337,13 +299,9 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
             }
 
             val bounds = feetFixture.rawShape as GameRectangle
-            val position = DirectionPositionMapper.getInvertedPosition(direction)
-            bounds.positionOnPoint(body.getPositionPoint(position), Position.CENTER)
+            bounds.positionOnPoint(body.getPositionPoint(Position.BOTTOM_CENTER), Position.CENTER)
 
-            if (body.isSensing(BodySense.FEET_ON_GROUND)) when (direction) {
-                Direction.UP, Direction.DOWN -> body.physics.velocity.x = 0f
-                else -> body.physics.velocity.y = 0f
-            }
+            if (body.isSensing(BodySense.FEET_ON_GROUND)) body.physics.velocity.x = 0f
 
             val shieldsActive = currentState == FlagState.STAND
             shieldFixture1.setActive(shieldsActive)
@@ -372,25 +330,8 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
         // flag
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(2.5f * ConstVals.PPM) })
         .updatable { _, sprite ->
-            val rotation = when (direction) {
-                Direction.UP, Direction.DOWN -> 0f
-                Direction.LEFT -> 90f
-                Direction.RIGHT -> 270f
-            }
-            sprite.setOriginCenter()
-            sprite.rotation = rotation
-
-            val position = when (direction) {
-                Direction.UP -> Position.BOTTOM_CENTER
-                Direction.DOWN -> Position.TOP_CENTER
-                Direction.LEFT -> Position.CENTER_RIGHT
-                Direction.RIGHT -> Position.CENTER_LEFT
-            }
-            val bodyPosition = body.getPositionPoint(position)
-            sprite.setPosition(bodyPosition, position)
-
-            sprite.setFlip(isFacing(Facing.RIGHT), direction == Direction.DOWN)
-
+            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+            sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.hidden = damageBlink
         }
         // shield 1
@@ -401,10 +342,6 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
         )
         .updatable { _, sprite ->
             sprite.hidden = shield1Timer.isFinished() || shield1Blink || currentState != FlagState.STAND
-
-            sprite.setOriginCenter()
-            sprite.rotation = direction.rotation
-
             sprite.setCenter(shieldDamager1.getShape().getCenter())
         }
         // shield 2
@@ -415,13 +352,8 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
         )
         .updatable { _, sprite ->
             sprite.hidden = shield2Timer.isFinished() || shield2Blink || currentState != FlagState.STAND
-
-            sprite.setOriginCenter()
-            sprite.rotation = direction.rotation
-
-            sprite.setFlip(true, false)
-
             sprite.setCenter(shieldDamager2.getShape().getCenter())
+            sprite.setFlip(true, false)
         }
         // build
         .build()

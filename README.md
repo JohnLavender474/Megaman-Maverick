@@ -155,13 +155,10 @@ comprehensive listing of the credits for the artwork used in this game.
 
 #### Enemies
 - Sprites by [MegaRed225](https://www.deviantart.com/megared225/gallery):
-  - [Random Enemies Set 3](https://www.deviantart.com/megared225/art/Random-Enemies-Set-3-517312719)
-    - Canno-Honey
-    - Beezees
-  - [Random Enemies Set 4](https://www.deviantart.com/megared225/art/Random-Enemies-Set-4-517313170)
-    - Demon Met
   - [Random Enemies Set 5](https://www.deviantart.com/megared225/art/Random-Enemies-Set-5-517418497):
+    - Lumber Joe 
     - Big Fish Neo
+    - Cannon Hopper
   - [Random Enemies Set 9](https://www.deviantart.com/megared225/art/Random-Enemy-Sprites-Set-9-557171615):
     - Fire Dispensenator
   - [Random Enemies Set 10](https://www.deviantart.com/megared225/art/Random-Enemy-Sprites-Set-10-571128501):

@@ -257,6 +257,8 @@
             <key type="filename">../frames/Enemies1/Bat/OpenEyes.png</key>
             <key type="filename">../frames/Enemies1/Bat/OpenWings.png</key>
             <key type="filename">../frames/Enemies1/BlueScrewie/Down.png</key>
+            <key type="filename">../frames/Enemies1/CannonHopper/hop.png</key>
+            <key type="filename">../frames/Enemies1/CannonHopper/stand.png</key>
             <key type="filename">../frames/Enemies1/Darspider/frozen.png</key>
             <key type="filename">../frames/Enemies1/Darspider/jump.png</key>
             <key type="filename">../frames/Enemies1/Darspider/still.png</key>
