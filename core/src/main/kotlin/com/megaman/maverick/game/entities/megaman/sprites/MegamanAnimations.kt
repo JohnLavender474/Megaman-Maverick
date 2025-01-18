@@ -12,7 +12,7 @@ import com.mega.game.engine.drawables.sprites.containsRegion
 import com.mega.game.engine.drawables.sprites.splitAndFlatten
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import java.util.function.Supplier
 

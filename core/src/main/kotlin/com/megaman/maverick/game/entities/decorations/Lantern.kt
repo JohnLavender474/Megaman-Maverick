@@ -18,7 +18,7 @@ import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 
 class Lantern(game: MegamanMaverickGame) : LightSource(game), ISpritesEntity, IAnimatedEntity {

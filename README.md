@@ -186,6 +186,7 @@ comprehensive listing of the credits for the artwork used in this game.
 
 ### Music
 
+- MM6 Capcom Logo - https://downloads.khinsider.com/game-soundtracks/album/megaman-6-original-soundtrack/01%2520Capcom%2520Logo.mp3
 - Infero Man stage track - [vinnyz279](https://soundcloud.com/mega-vinnyz279)
 - MMX6 Blaze Heatnix - [Famitard](https://youtu.be/QpbMwCnJDSo) - used in Inferno Man stage
 - MMX5 Dark Necrobat - [Famitard](https://youtu.be/RosxPCxVOyk) - used in Moon Man stage

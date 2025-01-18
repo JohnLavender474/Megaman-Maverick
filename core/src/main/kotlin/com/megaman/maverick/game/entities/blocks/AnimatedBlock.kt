@@ -19,7 +19,7 @@ import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.getCenter
 import java.util.function.Predicate

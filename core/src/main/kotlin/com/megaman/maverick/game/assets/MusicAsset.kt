@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.com.megaman.maverick.game.assets
+package com.megaman.maverick.game.assets
 
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.utils.Array
@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Array
 const val MUSIC_ASSET_PREFIX = "music/"
 
 enum class MusicAsset(src: String) : IAsset {
+    MM6_CAPCOM_LOGO_MUSIC("MM6_CapcomLogo.mp3"),
     MMX6_SIGMA_2_BATTLE_MUSIC("MMX6_Sigma.mp3"),
     MM6_WILY_BATTLE_MUSIC("MM6_WilyBattle.mp3"),
     MM8_FROST_MAN_MUSIC("MM8_FrostMan.mp3"),

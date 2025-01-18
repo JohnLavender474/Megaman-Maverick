@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.com.megaman.maverick.game.audio
+package com.megaman.maverick.game.audio
 
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
@@ -9,7 +9,7 @@ import com.mega.game.engine.audio.IAudioManager
 import com.mega.game.engine.audio.SoundRequest
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.time.Timer
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.MusicAsset
+import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 
 class MegaAudioManager(

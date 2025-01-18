@@ -2,7 +2,6 @@ package com.megaman.maverick.game.assets
 
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.utils.Array
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.IAsset
 
 const val SOUND_ASSET_PREFIX = "sounds/"
 

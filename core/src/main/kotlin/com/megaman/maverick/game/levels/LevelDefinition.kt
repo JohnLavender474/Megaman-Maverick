@@ -4,8 +4,8 @@ import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.common.extensions.putIfAbsentAndGet
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.IAsset
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.MusicAsset
+import com.megaman.maverick.game.assets.IAsset
+import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.screens.ScreenEnum
 
 enum class LevelDefinition(

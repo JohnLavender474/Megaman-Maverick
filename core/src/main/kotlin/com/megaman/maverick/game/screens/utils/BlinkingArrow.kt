@@ -14,7 +14,7 @@ import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.setSize
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 

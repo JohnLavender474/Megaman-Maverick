@@ -19,9 +19,9 @@ import com.mega.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstFuncs
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.MusicAsset
+import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.bosses.BossType
 import com.megaman.maverick.game.screens.ScreenEnum

@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.com.megaman.maverick.game.assets
+package com.megaman.maverick.game.assets
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.utils.Array

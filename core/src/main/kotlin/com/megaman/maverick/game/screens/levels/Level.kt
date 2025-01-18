@@ -2,7 +2,7 @@ package com.megaman.maverick.game.screens.levels
 
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.pairTo
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.MusicAsset
+import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.screens.ScreenEnum
 
 enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {

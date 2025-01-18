@@ -46,7 +46,7 @@ class SimpleInitGameScreen(private val game: MegamanMaverickGame) : BaseScreen()
 
         if (Gdx.input.isKeyJustPressed(Keys.ENTER)) {
             game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
-            game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
+            game.setCurrentScreen(ScreenEnum.LOGO_SCREEN.name)
         }
     }
 }

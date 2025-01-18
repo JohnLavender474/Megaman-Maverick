@@ -27,7 +27,7 @@ import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.common.shapes.toGameLines
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.MusicAsset
+import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.utils.GameObjectPools
 import kotlin.math.abs

@@ -11,7 +11,7 @@ import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.drawables.IDrawable
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.bosses.BossType
 import java.util.function.Supplier
 

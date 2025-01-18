@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.screens
 
 enum class ScreenEnum {
+    LOGO_SCREEN,
     MAIN_MENU_SCREEN,
     LEVEL_SCREEN,
     SAVE_GAME_SCREEN,

@@ -6,7 +6,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.objects.pairTo
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
 import com.megaman.maverick.game.entities.megaman.sprites.getAnimationKey

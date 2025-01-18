@@ -24,7 +24,7 @@ import com.mega.game.engine.drawables.sprites.setSize
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.assets.TextureAsset
 
 class ScreenController(private val game: MegamanMaverickGame) : Updatable, Resizable {
 

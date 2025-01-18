@@ -8,7 +8,7 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.drawables.IDrawable
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.assets.TextureAsset
 import kotlin.math.min
 
 class BitsBar(

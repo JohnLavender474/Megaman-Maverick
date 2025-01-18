@@ -1482,6 +1482,7 @@ sprites/frames/Ui1/StageSelectBox_Highlighted.png
 sprites/frames/Ui1/bar.png
 sprites/frames/Ui1/PaneShattered.png
 sprites/frames/Ui1/StandardBit.png
+sprites/frames/Ui1/OldLavyLogo.png
 sprites/frames/Ui1/Pane.png
 sprites/frames/Ui1/blue.png
 sprites/frames/Ui1/BlackBit.png
@@ -2476,6 +2477,7 @@ music/MMX5_DarkDizzy.mp3
 music/MMX2_MorphMoth.mp3
 music/MMZ_EnemyHall.mp3
 music/MM7_SlashMan.mp3
+music/MM6_CapcomLogo.mp3
 music/StageSelectMM3.mp3
 music/MM6_WilyBattle.mp3
 music/MMX5_IzzyGlow.mp3

@@ -16,8 +16,8 @@ import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.TEXTURE_ASSET_PREFIX
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.assets.TEXTURE_ASSET_PREFIX
+import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.backgrounds.*
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter

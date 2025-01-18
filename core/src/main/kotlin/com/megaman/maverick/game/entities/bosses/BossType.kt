@@ -10,7 +10,7 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.time.Timer
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.utils.GameObjectPools
 import java.util.*

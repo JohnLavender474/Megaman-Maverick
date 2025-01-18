@@ -7,7 +7,7 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.utils.extensions.getCenter
 
 class DesertNoSunSky(assMan: AssetManager, it: RectangleMapObject) : Background(

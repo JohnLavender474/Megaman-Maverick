@@ -65,11 +65,11 @@ import com.mega.game.engine.world.WorldSystem
 import com.mega.game.engine.world.contacts.Contact
 import com.mega.game.engine.world.container.IWorldContainer
 import com.mega.game.engine.world.pathfinding.WorldPathfinder
+import com.megaman.maverick.game.assets.IAsset
+import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.IAsset
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.MusicAsset
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.com.megaman.maverick.game.audio.MegaAudioManager
+import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.loadButtons
@@ -91,6 +91,7 @@ import com.megaman.maverick.game.screens.menus.*
 import com.megaman.maverick.game.screens.menus.bosses.LevelSelectScreen
 import com.megaman.maverick.game.screens.menus.temp.BossIntroScreen
 import com.megaman.maverick.game.screens.other.CreditsScreen
+import com.megaman.maverick.game.screens.other.LogoScreen
 import com.megaman.maverick.game.screens.other.SimpleEndLevelScreen
 import com.megaman.maverick.game.screens.other.SimpleInitGameScreen
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -366,6 +367,7 @@ class MegamanMaverickGame(
             ScreenEnum.LEVEL_SCREEN.name,
             MegaLevelScreen(this) { setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name) }
         )
+        screens.put(ScreenEnum.LOGO_SCREEN.name, LogoScreen(this))
         screens.put(ScreenEnum.MAIN_MENU_SCREEN.name, MainMenuScreen(this))
         screens.put(ScreenEnum.SAVE_GAME_SCREEN.name, SaveGameScreen(this))
         screens.put(ScreenEnum.LOAD_PASSWORD_SCREEN.name, LoadPasswordScreen(this))

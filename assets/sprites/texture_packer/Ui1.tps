@@ -58,9 +58,9 @@
             <key>filtering</key>
             <struct type="LibGDXFiltering">
                 <key>x</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
                 <key>y</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
             </struct>
         </struct>
         <key>shapePadding</key>
@@ -272,45 +272,6 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Ui1/LevelSelectScreen/bottom_center.png</key>
-            <key type="filename">../frames/Ui1/LevelSelectScreen/bottom_left.png</key>
-            <key type="filename">../frames/Ui1/LevelSelectScreen/bottom_right.png</key>
-            <key type="filename">../frames/Ui1/LevelSelectScreen/center.png</key>
-            <key type="filename">../frames/Ui1/LevelSelectScreen/center_left.png</key>
-            <key type="filename">../frames/Ui1/LevelSelectScreen/center_right.png</key>
-            <key type="filename">../frames/Ui1/LevelSelectScreen/none.png</key>
-            <key type="filename">../frames/Ui1/LevelSelectScreen/top_center.png</key>
-            <key type="filename">../frames/Ui1/LevelSelectScreen/top_left.png</key>
-            <key type="filename">../frames/Ui1/LevelSelectScreen/top_right.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>64,56,128,112</rect>
-                <key>scale9Paddings</key>
-                <rect>64,56,128,112</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Ui1/LevelSelectScreen/selected.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>64,112,128,224</rect>
-                <key>scale9Paddings</key>
-                <rect>64,112,128,224</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
             <key type="filename">../frames/Ui1/MegamanHelmet.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -510,6 +471,21 @@
                 <rect>20,12,40,24</rect>
                 <key>scale9Paddings</key>
                 <rect>20,12,40,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Ui1/OldLavyLogo.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>25,8,50,16</rect>
+                <key>scale9Paddings</key>
+                <rect>25,8,50,16</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
