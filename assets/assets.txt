@@ -1206,6 +1206,7 @@ sprites/frames/Platforms1/SwingingPlatform/other_small_platform.png
 sprites/frames/Platforms1/SwingingPlatform/ring.png
 sprites/frames/Platforms1/SwingingPlatform/small_platform.png
 sprites/frames/Platforms1/SwingingPlatform/platform.png
+sprites/frames/Platforms1/RocketPlatform_v2.png
 sprites/frames/Platforms1/WoodPlank.png
 sprites/frames/Platforms1/GearTrolleyPlatform.png
 sprites/frames/Platforms1/PropellerPlatform.png
@@ -1222,7 +1223,6 @@ sprites/frames/Platforms1/InfernoChainPlatform/platform.png
 sprites/frames/Platforms1/InfernoChainPlatform/chain.png
 sprites/frames/Platforms1/Brick.png
 sprites/frames/Platforms1/8bitBlueBlockNoBorder.png
-sprites/frames/Platforms1/JeffBezosLittleDickRocket_v2.png
 sprites/frames/Platforms1/MetalCrate.png
 sprites/frames/Platforms1/ConveyorBelt/RightPart-MoveRight-Green.png
 sprites/frames/Platforms1/ConveyorBelt/MiddlePart-MoveLeft-Green.png
@@ -1235,7 +1235,6 @@ sprites/frames/Platforms1/ConveyorBelt/MiddlePart.png
 sprites/frames/Platforms1/ConveyorBelt/RightPart-MoveLeft-Green.png
 sprites/frames/Platforms1/ConveyorBelt/MiddlePart-MoveRight-Green.png
 sprites/frames/Platforms1/TrackBlock.png
-sprites/frames/Platforms1/JeffBezosLittleDickRocket.png
 sprites/frames/Platforms1/AppearingBrick.png
 sprites/frames/Platforms1/BrickPiece.png
 sprites/frames/Platforms1/DestroyableWoodPlank/flash.png
@@ -1243,6 +1242,7 @@ sprites/frames/Platforms1/Platform2.png
 sprites/frames/Platforms1/8bitBlueBlock.png
 sprites/frames/Platforms1/8bitBlueBlockTransBorder.png
 sprites/frames/Platforms1/Lift.png
+sprites/frames/Platforms1/RocketPlatform.png
 sprites/frames/Platforms1/WoodBlock1.png
 sprites/frames/Platforms1/Boulder/Small.png
 sprites/frames/Platforms1/Boulder/Medium.png

@@ -378,7 +378,8 @@ class MegamanMaverickGame(
         screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY_SCREEN.name, SimpleEndLevelScreen(this))
         screens.put(ScreenEnum.CREDITS_SCREEN.name, CreditsScreen(this))
 
-        setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
+        // setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
+        setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
         // startLevelScreen(LevelDefinition.TEST_TILESET_SIZE)
         // startLevelScreen(LevelDefinition.TEST_1)
 

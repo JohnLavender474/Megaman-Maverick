@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.screens.menus
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
@@ -22,8 +23,8 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.ConstVals.UI_ARROW_BLINK_DUR
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -38,6 +39,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
     enum class MainScreenButton(val text: String) {
         START_NEW_GAME("START NEW GAME"),
+
         // TODO: LOAD_PASSWORD("LOAD PASSWORD"),
         LOAD_SAVE_FILE("LOAD SAVE FILE"),
         SETTINGS("SETTINGS"),
@@ -360,7 +362,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
                     if (!ControllerUtils.isControllerConnected()) {
-                        GameLogger.debug(TAG, "No controller connected")
+                        GameLogger.debug(TAG, "no controller connected")
                         game.audioMan.playSound(SoundAsset.ERROR_SOUND, false)
                         doNotPlayPing = true
                         return false
@@ -386,23 +388,28 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         game.getUiCamera().setToDefaultPosition()
         game.audioMan.playMusic(MusicAsset.MMX3_INTRO_STAGE_MUSIC)
 
-        GameLogger.debug(TAG, "Current button key: $currentButtonKey")
-        GameLogger.debug(TAG, "Blinking arrows keys: ${blinkArrows.keys().toGdxArray()}")
+        GameLogger.debug(TAG, "current button key: $currentButtonKey")
+        GameLogger.debug(TAG, "blinking arrows keys: ${blinkArrows.keys().toGdxArray()}")
     }
 
     override fun render(delta: Float) {
         super.render(delta)
 
-        if (!game.paused) {
-            screenSlide.update(delta)
-            if (screenSlide.justFinished) screenSlide.reverse()
+        when {
+            Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) ->
+                game.setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
 
-            blinkArrows.get(currentButtonKey).update(delta)
+            !game.paused -> {
+                screenSlide.update(delta)
+                if (screenSlide.justFinished) screenSlide.reverse()
 
-            settingsArrowBlinkTimer.update(delta)
-            if (settingsArrowBlinkTimer.isFinished()) {
-                settingsArrowBlink = !settingsArrowBlink
-                settingsArrowBlinkTimer.reset()
+                blinkArrows.get(currentButtonKey).update(delta)
+
+                settingsArrowBlinkTimer.update(delta)
+                if (settingsArrowBlinkTimer.isFinished()) {
+                    settingsArrowBlink = !settingsArrowBlink
+                    settingsArrowBlinkTimer.reset()
+                }
             }
         }
     }

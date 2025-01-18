@@ -394,36 +394,6 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Platforms1/JeffBezosLittleDickRocket.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>112,16,224,32</rect>
-                <key>scale9Paddings</key>
-                <rect>112,16,224,32</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Platforms1/JeffBezosLittleDickRocket_v2.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>6,112,12,224</rect>
-                <key>scale9Paddings</key>
-                <rect>6,112,12,224</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
             <key type="filename">../frames/Platforms1/Lift.png</key>
             <key type="filename">../frames/Platforms1/SwingingPlatform/ring.png</key>
             <struct type="IndividualSpriteSettings">
@@ -498,6 +468,36 @@
                 <rect>64,8,128,16</rect>
                 <key>scale9Paddings</key>
                 <rect>64,8,128,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Platforms1/RocketPlatform.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>112,16,224,32</rect>
+                <key>scale9Paddings</key>
+                <rect>112,16,224,32</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Platforms1/RocketPlatform_v2.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>6,112,12,224</rect>
+                <key>scale9Paddings</key>
+                <rect>6,112,12,224</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

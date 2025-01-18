@@ -43,11 +43,11 @@ import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.setEntity
 
-class JeffBezosLittleDickRocket(game: MegamanMaverickGame) : Block(game), IParentEntity, ISpritesEntity, IMotionEntity,
+class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, ISpritesEntity, IMotionEntity,
     IEventListener, IDamager, IDirectional {
 
     companion object {
-        const val TAG = "JeffBezosLittleDickRocket"
+        const val TAG = "RocketPlatform"
         private const val WIDTH = 1f
         private const val HEIGHT = 3.5f
         private const val REGION_SUFFIX = "_v2"
