@@ -56,10 +56,8 @@ class AsteroidExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
 
     private val timer = Timer(EXPLOSION_DUR)
 
-    override fun getEntityType() = EntityType.EXPLOSION
-
     override fun init() {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "AsteroidExplosion")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
         addComponent(AudioComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
@@ -114,4 +112,6 @@ class AsteroidExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
+
+    override fun getEntityType() = EntityType.EXPLOSION
 }

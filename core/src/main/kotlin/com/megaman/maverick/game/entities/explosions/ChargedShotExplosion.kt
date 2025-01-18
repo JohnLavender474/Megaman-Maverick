@@ -44,9 +44,12 @@ import com.megaman.maverick.game.world.body.getCenter
 class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
     companion object {
+        const val TAG = "ChargedShotExplosion"
+
         private const val FULLY_CHARGED_DURATION = 0.6f
         private const val HALF_CHARGED_DURATION = 0.3f
         private const val SOUND_INTERVAL = 0.15f
+
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -151,4 +154,6 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
+
+    override fun getTag() = TAG
 }

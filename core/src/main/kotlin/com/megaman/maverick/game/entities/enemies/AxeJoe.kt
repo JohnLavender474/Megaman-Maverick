@@ -43,7 +43,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
@@ -53,7 +52,7 @@ import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class AxeJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class AxeJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "AxeJoe"
@@ -93,7 +92,6 @@ class AxeJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
     private enum class AxeJoeState { STAND, JUMP, THROW }
 
-    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.MEDIUM)
     override lateinit var facing: Facing
 
     private lateinit var stateMachine: StateMachine<AxeJoeState>
@@ -330,7 +328,7 @@ class AxeJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         )
         impulse.x = impulse.x.coerceIn(-AXE_MAX_IMPULSE_X * ConstVals.PPM, AXE_MAX_IMPULSE_X * ConstVals.PPM)
 
-        val spawn = body.getCenter().add(0.25f * ConstVals.PPM * facing.value, 0.5f * ConstVals.PPM)
+        val spawn = body.getCenter().add(0.1f * ConstVals.PPM * facing.value, 0.75f * ConstVals.PPM)
 
         val axe = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.AXE)!!
         axe.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.IMPULSE pairTo impulse))

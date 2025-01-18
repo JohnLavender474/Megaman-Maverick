@@ -11,6 +11,7 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -22,7 +23,6 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -40,24 +40,18 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.DamageNegotiation
-import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.entities.projectiles.Bullet
-import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
-import kotlin.reflect.KClass
 
-class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAnimatedEntity, IDrawableShapesEntity {
+class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IFaceable, IAnimatedEntity,
+    IDrawableShapesEntity {
 
     companion object {
         const val TAG = "WalrusBot"
@@ -76,18 +70,6 @@ class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
 
     private enum class WalrusBotState { STAND, SLIDE, SHOOT, JET }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class pairTo dmgNeg(5),
-        Fireball::class pairTo dmgNeg(15),
-        ChargedShot::class pairTo dmgNeg {
-            it as ChargedShot
-            if (it.fullyCharged) 15 else 10
-        },
-        ChargedShotExplosion::class pairTo dmgNeg {
-            it as ChargedShotExplosion
-            if (it.fullyCharged) 10 else 5
-        }
-    )
     override lateinit var facing: Facing
 
     private val scannerBox = GameRectangle().setSize(10f * ConstVals.PPM, ConstVals.PPM.toFloat())
@@ -200,13 +182,13 @@ class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(1.35f * ConstVals.PPM))
         body.addFixture(damageableFixture)
         damageableFixture.drawingColor = Color.PURPLE
-        debugShapes.add { damageableFixture}
+        debugShapes.add { damageableFixture }
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -0.625f * ConstVals.PPM
         body.addFixture(feetFixture)
         feetFixture.drawingColor = Color.GREEN
-        debugShapes.add { feetFixture}
+        debugShapes.add { feetFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.gravity.y =

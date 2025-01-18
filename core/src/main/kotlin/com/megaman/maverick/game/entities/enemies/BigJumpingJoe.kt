@@ -38,7 +38,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
@@ -50,8 +49,8 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravityEntity, IFaceable,
-    IAnimatedEntity {
+class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.LARGE), IScalableGravityEntity,
+    IFaceable, IAnimatedEntity {
 
     companion object {
         const val TAG = "BigJumpingJoe"
@@ -75,7 +74,6 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableG
         private var jumpRegion: TextureRegion? = null
     }
 
-    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.LARGE)
     override lateinit var facing: Facing
     override var gravityScalar = 1f
 

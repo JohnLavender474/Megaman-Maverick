@@ -34,7 +34,6 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -44,7 +43,7 @@ import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
-class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
+class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity {
 
     enum class EyeeState { MOVING_TO_END, WAITING_AT_END, MOVING_TO_START, WAITING_AT_START }
 
@@ -57,9 +56,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
         private var blinkRegion: TextureRegion? = null
     }
 
-    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.SMALL)
-
-    private val loop = Loop(EyeeState.entries.toTypedArray().toGdxArray())
+    private val loop = Loop(EyeeState.entries.toGdxArray())
     private val currentState: EyeeState
         get() = loop.getCurrent()
 

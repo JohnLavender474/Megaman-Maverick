@@ -2,12 +2,10 @@ package com.megaman.maverick.game.entities.enemies
 
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -20,14 +18,12 @@ import com.mega.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
-import kotlin.reflect.KClass
 
 class TestEnemy(game: MegamanMaverickGame) : AbstractEnemy(game) {
 
@@ -35,8 +31,6 @@ class TestEnemy(game: MegamanMaverickGame) : AbstractEnemy(game) {
         const val TAG = "TestEnemy"
         const val DEBUG_DELAY = 0.25f
     }
-
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>()
 
     lateinit var arcMotion: ArcMotion
     val debugTimer = Timer(DEBUG_DELAY)

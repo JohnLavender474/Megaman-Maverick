@@ -11,6 +11,7 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.UtilMethods.getRandomBool
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.objects.*
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -34,8 +35,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.DamageNegotiation
-import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.damage.IDamageNegotiator
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.megaman
@@ -45,14 +45,12 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.SigmaRatElectricBall
-
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
-import kotlin.reflect.KClass
 
-class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
+class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE) {
 
     companion object {
         const val TAG = "SigmaRat"
@@ -117,10 +115,9 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game) {
         ELECTRIC_BALLS, FIRE_BLASTS, CLAW_SHOCK, CLAW_LAUNCH
     }
 
-    override val damageNegotiations =
-        objectMapOf<KClass<out IDamager>, DamageNegotiation>(ChargedShot::class pairTo dmgNeg {
-            if ((it as ChargedShot).fullyCharged) 1 else 0
-        })
+    override val damageNegotiator = object: IDamageNegotiator {
+        override fun get(damager: IDamager) = if (damager is ChargedShot && damager.fullyCharged) 1 else 0
+    }
 
     private val weightedAttackSelector = WeightedRandomSelector(
         SigmaRatAttack.ELECTRIC_BALLS pairTo HIGH_CHANCE,

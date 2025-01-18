@@ -33,8 +33,8 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -43,13 +43,13 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class CannonHopper(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
+class CannonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFaceable {
 
     companion object {
         const val TAG = "CannonHopper"
 
-        private const val STAND_DUR = 1.5f
-        private const val SHOOT_TIME = 0.75f
+        private const val STAND_DUR = 1f
+        private const val SHOOT_TIME = 0.5f
 
         private const val GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.01f
@@ -62,7 +62,6 @@ class CannonHopper(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.SMALL)
     override lateinit var facing: Facing
 
     private val loop = Loop("stand", "hop")
@@ -106,6 +105,8 @@ class CannonHopper(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 ConstKeys.OWNER pairTo this
             )
         )
+
+        requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
     }
 
     private fun jump() =
@@ -134,8 +135,6 @@ class CannonHopper(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(2f * ConstVals.PPM, ConstVals.PPM.toFloat())
-        body.physics.applyFrictionX = false
-        body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }

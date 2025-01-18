@@ -5,7 +5,9 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.UtilMethods.getRandomBool
 import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.interfaces.ISizable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -22,11 +24,12 @@ import com.mega.game.engine.world.body.BodyComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.damage.IDamageNegotiator
+import com.megaman.maverick.game.damage.SelfSizeDamageNegotiator
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ItemsFactory
-import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportEndProp
@@ -37,9 +40,10 @@ import com.megaman.maverick.game.world.body.getCenter
 abstract class AbstractEnemy(
     game: MegamanMaverickGame,
     dmgDuration: Float = DEFAULT_DMG_DURATION,
-    dmgBlinkBlur: Float = DEFAULT_DMG_BLINK_DUR
+    dmgBlinkBlur: Float = DEFAULT_DMG_BLINK_DUR,
+    override var size: Size = Size.MEDIUM
 ) : AbstractHealthEntity(game, dmgDuration, dmgBlinkBlur), IDamager, IBodyEntity, IAudioEntity, ISpritesEntity,
-    ICullableEntity {
+    ICullableEntity, ISizable {
 
     companion object {
         const val TAG = "AbstractEnemy"
@@ -47,6 +51,8 @@ abstract class AbstractEnemy(
         const val BASE_DROP_ITEM_CHANCE = 0.2f
         const val MEGAMAN_HEALTH_INFLUENCE_FACTOR = 0.3f
     }
+
+    override val damageNegotiator: IDamageNegotiator = SelfSizeDamageNegotiator(this)
 
     protected var movementScalar = 1f
     protected var dropItemOnDeath = true
@@ -125,16 +131,24 @@ abstract class AbstractEnemy(
 
     protected abstract fun defineSpritesComponent(): SpritesComponent
 
-    protected fun isDamagerOwnedByMegaman(damager: IDamager) =
-        damager is IOwnable && damager.owner is Megaman && (damager.owner as Megaman).has(MegaEnhancement.DAMAGE_INCREASE)
+    protected open fun isDamagerOwnedByMegaman(damager: IDamager) = damager is IOwnable &&
+        damager.owner == megaman && megaman.has(MegaEnhancement.DAMAGE_INCREASE)
 
     override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when {
         isDamagerOwnedByMegaman(damager) -> MegaEnhancement.scaleDamage(
-            baseDamage,
-            MegaEnhancement.ENEMY_DAMAGE_INCREASE_SCALAR
+            baseDamage, MegaEnhancement.ENEMY_DAMAGE_INCREASE_SCALAR
         )
 
         else -> baseDamage
+    }
+
+    override fun canBeDamagedBy(damager: IDamager): Boolean {
+        val canBeDamaged = super.canBeDamagedBy(damager)
+        if (!canBeDamaged) return false
+
+        if (damager is IOwnable) return damager.owner == megaman
+
+        return true
     }
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
@@ -149,6 +163,7 @@ abstract class AbstractEnemy(
 
     protected open fun disintegrate(disintegrationProps: Properties? = null) {
         if (overlapsGameCamera()) playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
         val props = disintegrationProps ?: props(ConstKeys.POSITION pairTo body.getCenter())
         disintegration?.spawn(props)

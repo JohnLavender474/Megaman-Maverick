@@ -40,15 +40,14 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable,
-    IScalableGravityEntity {
+class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity,
+    IFaceable, IScalableGravityEntity {
 
     companion object {
         const val TAG = "StagedMoonLandingFlag"
@@ -73,7 +72,6 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game), IA
 
     private enum class FlagState { HIDDEN, RISE, STAND, FALL }
 
-    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.SMALL)
     override lateinit var facing: Facing
     override var gravityScalar = 1f
 

@@ -10,6 +10,7 @@ import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -19,7 +20,6 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -36,23 +36,16 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.DamageNegotiation
-import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.entities.projectiles.Bullet
-import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
-import kotlin.reflect.KClass
 
-class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDirectional {
+class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IDirectional {
 
     enum class HanabiranState {
         SLEEPING,
@@ -82,17 +75,11 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     private val sleepTimer = Timer(SLEEP_DURATION)
     private val riseDropTimer = Timer(RISE_DROP_DURATION)
+
     private val petalTimer = Timer(PETAL_DURATION)
     private var petalCount = 4
-    private lateinit var hanabiranState: HanabiranState
 
-    override val damageNegotiations =
-        objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-            Bullet::class pairTo dmgNeg(10),
-            Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-            ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-            ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
-        )
+    private lateinit var hanabiranState: HanabiranState
 
     override fun init() {
         super.init()

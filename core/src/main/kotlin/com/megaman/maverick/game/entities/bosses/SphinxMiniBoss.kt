@@ -11,6 +11,7 @@ import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -22,7 +23,6 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -39,22 +39,16 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.DamageNegotiation
-import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.entities.projectiles.Bullet
-import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.SphinxBall
-
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
-import kotlin.reflect.KClass
 
-class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IDrawableShapesEntity {
+class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE), IAnimatedEntity,
+    IDrawableShapesEntity {
 
     companion object {
         const val TAG = "SphinxMiniBoss"
@@ -77,18 +71,6 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
     private enum class SphinxMiniBossState {
         WAIT, OPENING, LAUNCH_BALL, SHOOT_ORBS, CLOSING
     }
-
-    override val damageNegotiations =
-        objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-            Bullet::class pairTo dmgNeg(1),
-            ChargedShot::class pairTo dmgNeg {
-                it as ChargedShot
-                if (it.fullyCharged) 2 else 1
-            }, ChargedShotExplosion::class pairTo dmgNeg {
-                it as ChargedShotExplosion
-                if (it.fullyCharged) 2 else 1
-            }
-        )
 
     private val loop = Loop(SphinxMiniBossState.entries.toTypedArray().toGdxArray())
     private val timers = objectMapOf(
@@ -250,7 +232,7 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
         bodyFixture1.offsetFromBodyAttachment.x = 0.5f * ConstVals.PPM
         bodyFixture1.offsetFromBodyAttachment.y = -1.125f * ConstVals.PPM
         body.addFixture(bodyFixture1)
-        debugShapes.add { bodyFixture1}
+        debugShapes.add { bodyFixture1 }
 
         val bodyFixture2 = Fixture(
             body, FixtureType.BODY, GameRectangle().setSize(
@@ -260,7 +242,7 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
         bodyFixture2.offsetFromBodyAttachment.x = -0.25f * ConstVals.PPM
         bodyFixture2.offsetFromBodyAttachment.y = 0.5f * ConstVals.PPM
         body.addFixture(bodyFixture2)
-        debugShapes.add { bodyFixture2}
+        debugShapes.add { bodyFixture2 }
 
         val bodyFixture3 = Fixture(
             body, FixtureType.BODY, GameRectangle().setSize(
@@ -270,7 +252,7 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
         bodyFixture3.offsetFromBodyAttachment.x = -0.85f * ConstVals.PPM
         bodyFixture3.offsetFromBodyAttachment.y = 1.75f * ConstVals.PPM
         body.addFixture(bodyFixture3)
-        debugShapes.add { bodyFixture3}
+        debugShapes.add { bodyFixture3 }
 
         // create copies of body fixtures for damager and shield fixture
         gdxArrayOf(FixtureType.DAMAGER, FixtureType.SHIELD).forEach { type ->
@@ -294,7 +276,7 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
         damageableFixture.offsetFromBodyAttachment.x = -1.85f * ConstVals.PPM
         damageableFixture.offsetFromBodyAttachment.y = 1.75f * ConstVals.PPM
         body.addFixture(damageableFixture)
-        debugShapes.add { damageableFixture}
+        debugShapes.add { damageableFixture }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

@@ -8,6 +8,7 @@ import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.ProcessState
+import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
@@ -15,7 +16,6 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -33,20 +33,13 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.DamageNegotiation
-import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
-import com.megaman.maverick.game.entities.projectiles.Bullet
-import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
-import kotlin.reflect.KClass
 
-class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "FlyBoy"
@@ -57,19 +50,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         const val G_GRAV = -0.015f
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class pairTo dmgNeg(5),
-        Fireball::class pairTo dmgNeg(10),
-        ChargedShot::class pairTo dmgNeg {
-            it as ChargedShot
-            if (it.fullyCharged) 15 else 10
-        },
-        ChargedShotExplosion::class pairTo dmgNeg {
-            it as ChargedShotExplosion
-            if (it.fullyCharged) 10 else 5
-        }
-    )
-    override var facing = Facing.RIGHT
+    override lateinit var facing: Facing
 
     val flying: Boolean
         get() = !flyTimer.isFinished()
@@ -79,8 +60,6 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     private val flyTimer = Timer(FLY_DUR)
     private val standTimer = Timer(STAND_DUR)
 
-    override fun getTag() = TAG
-
     override fun init() {
         super.init()
         addComponent(defineAnimationsComponent())
@@ -88,8 +67,12 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
+
+        facing = if (body.getX() > megaman.body.getX()) Facing.LEFT else Facing.RIGHT
+
         standTimer.reset()
         flyTimer.setToEnd()
     }
@@ -162,7 +145,9 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
             facing = if (body.getX() > megaman.body.getX()) Facing.LEFT else Facing.RIGHT
+
             if (body.isSensing(BodySense.FEET_ON_GROUND)) body.physics.velocity.x = 0f
+
             if (standing && body.isSensing(BodySense.FEET_ON_GROUND)) {
                 standTimer.update(it)
                 if (standTimer.isJustFinished()) {
@@ -170,6 +155,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
                     body.physics.velocity.y = FLY_VEL * ConstVals.PPM
                 }
             }
+
             if (flying) {
                 flyTimer.update(it)
                 if (flyTimer.isJustFinished() || body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) {
@@ -196,4 +182,6 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         body.physics.velocity.x = 1.85f * (megaman.body.getX() - body.getX())
         body.physics.velocity.y = 0f
     }
+
+    override fun getTag() = TAG
 }

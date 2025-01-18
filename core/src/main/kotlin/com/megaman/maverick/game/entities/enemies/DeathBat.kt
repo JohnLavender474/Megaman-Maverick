@@ -37,7 +37,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
@@ -51,7 +50,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toGridCoordinate
 import com.megaman.maverick.game.world.body.*
 
-class DeathBat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity {
+class DeathBat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity {
 
     companion object {
         const val TAG = "DeathBat"
@@ -72,8 +71,6 @@ class DeathBat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     private enum class DeathBatState { HANG, OPEN, FLY_ATTACK, FLY_RETREAT }
 
-    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.SMALL, Fireball::class pairTo null)
-
     private val loop = Loop(DeathBatState.entries.toGdxArray())
     private val currentState: DeathBatState
         get() = loop.getCurrent()
@@ -86,6 +83,9 @@ class DeathBat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
+
+        damageOverrides.put(Fireball::class, null)
+
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             DeathBatState.entries.forEach {
@@ -93,17 +93,21 @@ class DeathBat(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity
                 regions.put(key, atlas.findRegion("$TAG/$key"))
             }
         }
+
         if (animDefs.isEmpty) {
             animDefs.put(DeathBatState.HANG, AnimationDef())
             animDefs.put(DeathBatState.OPEN, AnimationDef(3, 1, 0.1f, false))
             animDefs.put(DeathBatState.FLY_ATTACK, AnimationDef(2, 1, 0.1f, true))
             animDefs.put(DeathBatState.FLY_RETREAT, AnimationDef(2, 1, 0.1f, true))
         }
+
         if (stateTimers.isEmpty) {
             stateTimers.put(DeathBatState.HANG, Timer(HANG_DUR))
             stateTimers.put(DeathBatState.OPEN, Timer(OPEN_DUR))
         }
+
         super.init()
+
         addComponent(definePathfindingComponent())
         addComponent(defineAnimationsComponent())
     }

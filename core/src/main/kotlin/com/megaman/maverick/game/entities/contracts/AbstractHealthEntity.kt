@@ -5,12 +5,14 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.points.Points
 import com.mega.game.engine.points.PointsComponent
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.IDamageNegotiator
 import kotlin.reflect.KClass
 
 abstract class AbstractHealthEntity(
@@ -27,11 +29,12 @@ abstract class AbstractHealthEntity(
     override val invincible: Boolean
         get() = !damageTimer.isFinished()
 
-    protected abstract val damageNegotiations: ObjectMap<KClass<out IDamager>, DamageNegotiation>
+    protected abstract val damageNegotiator: IDamageNegotiator?
+    protected open val damageOverrides = ObjectMap<KClass<out IDamager>, DamageNegotiation?>()
 
-    protected val damageTimer = Timer(dmgDuration)
-    protected val damageBlinkTimer = Timer(dmgBlinkDur)
-    protected var damageBlink = false
+    protected open val damageTimer = Timer(dmgDuration)
+    protected open val damageBlinkTimer = Timer(dmgBlinkDur)
+    protected open var damageBlink = false
 
     private var wasHealthDepleted = false
 
@@ -44,25 +47,32 @@ abstract class AbstractHealthEntity(
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        setHealth(ConstVals.MAX_HEALTH)
+
+        setHealthToMax()
+
         damageTimer.setToEnd()
         damageBlinkTimer.setToEnd()
+
         wasHealthDepleted = false
     }
 
-    override fun canBeDamagedBy(damager: IDamager) = !invincible && damageNegotiations.containsKey(damager::class)
+    override fun canBeDamagedBy(damager: IDamager) = !invincible && (damageOverrides.containsKey(damager::class) ||
+        (damageNegotiator != null && damageNegotiator!!.get(damager) != 0))
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
-        val damagerKey = damager::class
-        if (!damageNegotiations.containsKey(damagerKey)) return false
+        val negotiation = when {
+            damageOverrides.containsKey(damager::class) -> damageOverrides[damager::class]?.get(damager) ?: 0
+            else -> damageNegotiator?.get(damager) ?: 0
+        }
+
+        if (negotiation <= 0) return false
+
+        val editedDamage = editDamageFrom(damager, negotiation)
+        if (editedDamage <= 0) return false
+
+        translateHealth(-editedDamage)
 
         damageTimer.reset()
-
-        val baseDamage = damageNegotiations[damagerKey].get(damager)
-
-        val editedDamage = editDamageFrom(damager, baseDamage)
-        if (editedDamage <= 0) return false
-        translateHealth(-editedDamage)
 
         return true
     }
@@ -75,28 +85,35 @@ abstract class AbstractHealthEntity(
 
     protected open fun definePointsComponent(): PointsComponent {
         val pointsComponent = PointsComponent()
-        pointsComponent.putPoints(
-            ConstKeys.HEALTH, max = ConstVals.MAX_HEALTH, current = ConstVals.MAX_HEALTH, min = ConstVals.MIN_HEALTH
-        )
+
+        val points = Points(max = ConstVals.MAX_HEALTH, current = ConstVals.MAX_HEALTH, min = ConstVals.MIN_HEALTH)
+        pointsComponent.putPoints(ConstKeys.HEALTH, points)
+
         pointsComponent.putListener(ConstKeys.HEALTH) {
             if (it.current <= ConstVals.MIN_HEALTH && !wasHealthDepleted) {
                 wasHealthDepleted = true
                 onHealthDepleted()
             }
         }
+
         return pointsComponent
     }
 
     protected open fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
-        updatablesComponent.add {
-            damageTimer.update(it)
-            if (!damageTimer.isFinished()) {
-                damageBlinkTimer.update(it)
-                if (damageBlinkTimer.isFinished()) {
-                    damageBlinkTimer.reset()
-                    damageBlink = !damageBlink
+        updatablesComponent.add { delta ->
+            damageTimer.update(delta)
+
+            when {
+                !damageTimer.isFinished() -> {
+                    damageBlinkTimer.update(delta)
+
+                    if (damageBlinkTimer.isFinished()) {
+                        damageBlinkTimer.reset()
+                        damageBlink = !damageBlink
+                    }
                 }
-            } else damageBlink = false
+                else -> damageBlink = false
+            }
         }
     }
 }

@@ -33,13 +33,12 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
+class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.LARGE), IFaceable {
 
     companion object {
         const val TAG = "Robbit"
@@ -60,7 +59,6 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     private enum class RobbitState { STANDING, CROUCHING, JUMPING }
 
     override var facing = Facing.RIGHT
-    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.MEDIUM)
 
     private val robbitLoop = Loop(RobbitState.entries.toTypedArray().toGdxArray())
     private val robbitTimers =

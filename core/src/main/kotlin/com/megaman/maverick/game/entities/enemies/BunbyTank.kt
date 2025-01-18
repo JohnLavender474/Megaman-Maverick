@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -11,19 +12,17 @@ import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
-
-
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -42,24 +41,17 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.DamageNegotiation
-import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.entities.projectiles.Bullet
-import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
-import kotlin.reflect.KClass
 
-class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDrawableShapesEntity, IFaceable,
-    IDirectional {
+class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity,
+    IDrawableShapesEntity, IFaceable, IDirectional {
 
     companion object {
         const val TAG = "BunbyTank"
@@ -72,18 +64,6 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class pairTo dmgNeg(5),
-        Fireball::class pairTo dmgNeg(15),
-        ChargedShot::class pairTo dmgNeg {
-            it as ChargedShot
-            if (it.fullyCharged) 15 else 10
-        },
-        ChargedShotExplosion::class pairTo dmgNeg {
-            it as ChargedShotExplosion
-            if (it.fullyCharged) 10 else 5
-        }
-    )
     override var direction: Direction
         get() = body.direction
         set(value) {
@@ -237,15 +217,15 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture}
+        debugShapes.add { bodyFixture }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)
-        debugShapes.add { damagerFixture}
+        debugShapes.add { damagerFixture }
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
         body.addFixture(damageableFixture)
-        debugShapes.add { damageableFixture}
+        debugShapes.add { damageableFixture }
 
         val leftSideFixture = Fixture(
             body, FixtureType.SIDE, GameRectangle().setSize(
@@ -255,7 +235,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftSideFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
         body.addFixture(leftSideFixture)
-        debugShapes.add { leftSideFixture}
+        debugShapes.add { leftSideFixture }
 
         val rightSideFixture = Fixture(
             body, FixtureType.SIDE, GameRectangle().setSize(
@@ -265,7 +245,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         rightSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         rightSideFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
         body.addFixture(rightSideFixture)
-        debugShapes.add { rightSideFixture}
+        debugShapes.add { rightSideFixture }
 
         val leftFootFixture = Fixture(
             body, FixtureType.CONSUMER, GameRectangle().setSize(
@@ -280,7 +260,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             }
         }
         body.addFixture(leftFootFixture)
-        debugShapes.add { leftFootFixture}
+        debugShapes.add { leftFootFixture }
 
         val rightFootFixture = Fixture(
             body, FixtureType.CONSUMER, GameRectangle().setSize(
@@ -295,7 +275,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             }
         }
         body.addFixture(rightFootFixture)
-        debugShapes.add { rightFootFixture}
+        debugShapes.add { rightFootFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             leftFootFixture.putProperty(ConstKeys.BLOCK, false)

@@ -11,7 +11,7 @@ import com.mega.game.engine.common.shapes.GamePolygon
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.utils.BoundingBoxUtils
 
-interface IRectangle : ISizable {
+interface IRectangle : IDimensionable {
 
     fun getPositionPoint(position: Position, out: Vector2) = when (position) {
         Position.TOP_LEFT -> getTopLeftPoint(out)

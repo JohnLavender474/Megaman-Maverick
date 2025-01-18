@@ -7,7 +7,6 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.audio.AudioComponent
-import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.SmoothOscillationTimer
@@ -33,12 +32,13 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.EnemyDamageNegotiations
+import com.megaman.maverick.game.damage.IDamageNegotiator
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
-import com.megaman.maverick.game.entities.contracts.IHazard
-import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.decorations.FallingLeaf
+import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.world.body.*
 
 class DeadlyLeaf(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
@@ -54,7 +54,16 @@ class DeadlyLeaf(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyE
         private var region: TextureRegion? = null
     }
 
-    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.SMALL)
+    override val damageNegotiator = object : IDamageNegotiator {
+
+        override fun get(damager: IDamager): Int {
+            val tag = (damager as MegaGameEntity).getTag()
+            return when (tag) {
+                ChargedShot.TAG, ChargedShotExplosion.TAG, Fireball.TAG -> ConstVals.MAX_HEALTH
+                else -> (ConstVals.MAX_HEALTH / 2).toInt()
+            }
+        }
+    }
 
     private val oscillationTimer = SmoothOscillationTimer(
         OSCILLATION_FREQUENCY,
@@ -64,9 +73,11 @@ class DeadlyLeaf(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyE
     private var minY = 0f
 
     override fun init() {
-        if (region == null) region =
-            game.assMan.getTextureRegion(TextureAsset.ENVIRONS_1.source, "Wood/${FallingLeaf.Companion.TAG}")
+        if (region == null)
+            region = game.assMan.getTextureRegion(TextureAsset.ENVIRONS_1.source, "Wood/${FallingLeaf.Companion.TAG}")
+
         super.init()
+
         addComponent(AudioComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
@@ -87,6 +98,8 @@ class DeadlyLeaf(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyE
             Float::class
         )
     }
+
+    override fun canBeDamagedBy(damager: IDamager) = damager is IProjectileEntity && damager.owner == megaman
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
         val damaged = super.takeDamageFrom(damager)

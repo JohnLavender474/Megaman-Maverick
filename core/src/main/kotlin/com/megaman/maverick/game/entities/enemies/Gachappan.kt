@@ -10,6 +10,7 @@ import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -18,7 +19,6 @@ import com.mega.game.engine.common.objects.*
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -37,54 +37,40 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.DamageNegotiation
-import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.entities.projectiles.Bullet
-import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
-import kotlin.reflect.KClass
 
-class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAnimatedEntity, IDrawableShapesEntity {
+class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IFaceable, IAnimatedEntity,
+    IDrawableShapesEntity {
 
     companion object {
         const val TAG = "Gachappan"
+
         private const val BULLET_SPEED = 7.5f
+
         private const val BALL_GRAVITY = -0.1f
         private const val BALL_IMPULSE = 12f
+
         private const val WAIT_DURATION = 0.9f
         private const val TRANS_DURATION = 0.3f
         private const val SHOOT_DURATION = 3f
+
         private var shootRegion: TextureRegion? = null
         private var waitRegion: TextureRegion? = null
         private var openRegion: TextureRegion? = null
     }
 
-    enum class GachappanState { WAIT, OPENING, SHOOT, CLOSING }
+    private enum class GachappanState { WAIT, OPENING, SHOOT, CLOSING }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class pairTo dmgNeg(5),
-        Fireball::class pairTo dmgNeg(15),
-        ChargedShot::class pairTo dmgNeg {
-            it as ChargedShot
-            if (it.fullyCharged) 15 else 10
-        },
-        ChargedShotExplosion::class pairTo dmgNeg {
-            it as ChargedShotExplosion
-            if (it.fullyCharged) 5 else 3
-        }
-    )
     override lateinit var facing: Facing
 
     private lateinit var loop: Loop<GamePair<GachappanState, Timer>>
@@ -160,13 +146,13 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture}
+        debugShapes.add { bodyFixture }
 
         val damagerFixture1 =
             Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(2f * ConstVals.PPM, 1.5f * ConstVals.PPM))
         damagerFixture1.offsetFromBodyAttachment.y = -0.5f * ConstVals.PPM
         body.addFixture(damagerFixture1)
-        debugShapes.add { damagerFixture1}
+        debugShapes.add { damagerFixture1 }
 
         val damagerFixture2 = Fixture(
             body,
@@ -175,25 +161,25 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
         )
         damagerFixture2.offsetFromBodyAttachment.y = 0.5f * ConstVals.PPM
         body.addFixture(damagerFixture2)
-        debugShapes.add { damagerFixture2}
+        debugShapes.add { damagerFixture2 }
 
         val damageableFixture1 =
             Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         damageableFixture1.offsetFromBodyAttachment.y = -0.35f * ConstVals.PPM
         body.addFixture(damageableFixture1)
-        debugShapes.add { damageableFixture1}
+        debugShapes.add { damageableFixture1 }
 
         val damageableFixture2 =
             Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.45f * ConstVals.PPM))
         damageableFixture2.offsetFromBodyAttachment.y = -1.25f * ConstVals.PPM
         body.addFixture(damageableFixture2)
-        debugShapes.add { damageableFixture2}
+        debugShapes.add { damageableFixture2 }
 
         val shieldFixture1 =
             Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(1f * ConstVals.PPM, 3f * ConstVals.PPM))
         shieldFixture1.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture1)
-        debugShapes.add { shieldFixture1}
+        debugShapes.add { shieldFixture1 }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -260,7 +246,8 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable, IAn
 
     private fun shoot() {
         val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
-        val spawn = body.getPositionPoint(Position.BOTTOM_CENTER).add(0.5f * ConstVals.PPM * facing.value, 0.175f * ConstVals.PPM)
+        val spawn = body.getPositionPoint(Position.BOTTOM_CENTER)
+            .add(0.5f * ConstVals.PPM * facing.value, 0.175f * ConstVals.PPM)
         val trajectory = Vector2(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
         val bulletProps = props(
             ConstKeys.POSITION pairTo spawn,

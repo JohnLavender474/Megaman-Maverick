@@ -12,6 +12,7 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.putAll
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -35,7 +36,6 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
@@ -45,7 +45,7 @@ import com.megaman.maverick.game.entities.projectiles.FallingIcicle
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
+class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFaceable {
 
     companion object {
         const val TAG = "GapingFish"
@@ -55,36 +55,42 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         private const val CHOMP_DUR = 1.25f
     }
 
-    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(
-        Size.SMALL,
-        UnderwaterFan::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-        FallingIcicle::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
-    )
     override lateinit var facing: Facing
 
-    val chomping: Boolean
+    private val chompTimer = Timer(CHOMP_DUR)
+    private val chomping: Boolean
         get() = !chompTimer.isFinished()
 
-    private val chompTimer = Timer(CHOMP_DUR)
-
     override fun init() {
-        GameLogger.debug(TAG, "Initializing GapingFish")
+        GameLogger.debug(TAG, "init()")
+
+        damageOverrides.putAll(
+            UnderwaterFan::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            FallingIcicle::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
+        )
+
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+
         super.init()
+
         addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "Spawning GapingFish with props = $spawnProps")
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
+
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
+
         chompTimer.setToEnd()
+
         facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
     override fun onDestroy() {
-        GameLogger.debug(TAG, "GapingFish on destroy")
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
     }
 
@@ -99,8 +105,8 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         updatablesComponent.add {
             GameLogger.debug(
                 TAG,
-                "GapingFish update. In water = ${body.isSensing(BodySense.IN_WATER)}. Invincible = " +
-                    "$invincible. Chomping = $chomping. Position = ${body.getPosition()}"
+                "update(): in water = ${body.isSensing(BodySense.IN_WATER)}, invincible = " +
+                    "$invincible, chomping = $chomping, position = ${body.getPosition()}"
             )
 
             chompTimer.update(it)

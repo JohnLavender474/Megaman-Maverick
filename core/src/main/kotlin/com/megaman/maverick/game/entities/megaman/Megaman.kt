@@ -18,28 +18,32 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
-import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.contracts.*
 import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.IEventListener
-import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.points.PointsComponent
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.*
+import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
+import com.megaman.maverick.game.entities.contracts.IProjectileEntity
+import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.enemies.SpringHead
 import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
 import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
+import com.megaman.maverick.game.entities.megaman.sprites.amendKey
 import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponHandler
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportContinueProp
 import com.megaman.maverick.game.entities.utils.standardOnTeleportEnd
@@ -53,9 +57,9 @@ import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.abs
 
-class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable, IEventListener, IFaceable,
-    IDamageable, IDirectional, IBodyEntity, IHealthEntity, ISpritesEntity, IBehaviorsEntity, IPointsEntity,
-    IAudioEntity, IAnimatedEntity, IScalableGravityEntity, IBoundsSupplier {
+class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgradable, IEventListener, IFaceable,
+    IDirectional, IBodyEntity, ISpritesEntity, IBehaviorsEntity, IPointsEntity, IAudioEntity, IAnimatedEntity,
+    IScalableGravityEntity, IBoundsSupplier {
 
     companion object {
         const val TAG = "Megaman"
@@ -71,6 +75,11 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
             Vector2(0f, -EXPLOSION_ORB_SPEED),
             Vector2(-EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED)
         )
+
+        private const val UNDER_WATER_BUBBLE_DELAY = 2f
+        private const val DEATH_X_OFFSET = 1.5f
+        private const val DEATH_Y_OFFSET = 1.5f
+        private const val TRAIL_SPRITE_DELAY = 0.1f
     }
 
     val damaged: Boolean
@@ -78,28 +87,35 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     val stunned: Boolean
         get() = !stunTimer.isFinished()
 
+    override val damageNegotiator = MegamanDamageNegotiator(this)
+
     override val invincible: Boolean
         get() = damaged || !damageRecoveryTimer.isFinished() || !canBeDamaged || dead || !ready
+    public override val damageTimer = Timer(MegamanValues.DAMAGE_DURATION).setToEnd()
 
     var canBeDamaged = true
     var canMove = true
         get() = field && !stunned && !damaged
 
     internal val stunTimer = Timer(MegamanValues.STUN_DUR)
-    internal val damageTimer = Timer(MegamanValues.DAMAGE_DURATION).setToEnd()
     internal val damageRecoveryTimer = Timer(MegamanValues.DAMAGE_RECOVERY_TIME).setToEnd()
     internal val damageFlashTimer = Timer(MegamanValues.DAMAGE_FLASH_DURATION)
 
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 
     internal val shootAnimTimer = Timer(MegamanValues.SHOOT_ANIM_TIME).setToEnd()
-    internal val chargingTimer =
-        Timer(MegamanValues.TIME_TO_FULLY_CHARGED, TimeMarkedRunnable(MegamanValues.TIME_TO_HALFWAY_CHARGED) {
+    internal val chargingTimer = Timer(
+        MegamanValues.TIME_TO_FULLY_CHARGED,
+        TimeMarkedRunnable(MegamanValues.TIME_TO_HALFWAY_CHARGED) {
             requestToPlaySound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND, false)
-        }).setToEnd()
+        }
+    ).setToEnd()
     internal val airDashTimer = Timer(MegamanValues.MAX_AIR_DASH_TIME)
     internal val wallJumpTimer = Timer(MegamanValues.WALL_JUMP_IMPETUS_TIME).setToEnd()
     internal val groundSlideTimer = Timer(MegamanValues.MAX_GROUND_SLIDE_TIME)
+
+    private val trailSpriteTimer = Timer(TRAIL_SPRITE_DELAY)
+    private val underWaterBubbleTimer = Timer(UNDER_WATER_BUBBLE_DELAY)
 
     override val eventKeyMask = objectSetOf<Any>(
         EventType.BEGIN_ROOM_TRANS,
@@ -132,9 +148,9 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         get() = if (currentWeapon == MegamanWeapon.BUSTER) Int.MAX_VALUE
         else weaponHandler.getAmmo(currentWeapon)
 
-    var damageFlash = false
-    var maverick = false
     var ready = false
+    var maverick = false
+    var recoveryFlash = false
 
     override var direction: Direction
         get() = body.direction
@@ -261,16 +277,16 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
     override fun init() {
         GameLogger.debug(TAG, "init()")
 
+        super.init()
+
         aButtonTask = AButtonTask.JUMP
         currentWeapon = MegamanWeapon.BUSTER
 
-        addComponent(AudioComponent())
-        addComponent(defineUpdatablesComponent())
-        addComponent(definePointsComponent())
         addComponent(defineBodyComponent())
         addComponent(defineBehaviorsComponent())
         addComponent(defineControllerComponent())
         addComponent(defineSpritesComponent())
+        addComponent(AudioComponent())
 
         /*
         val weaponSpawns = OrderedMap<String, IntPair>()
@@ -353,7 +369,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         weaponHandler.setAllToMaxAmmo()
 
         running = false
-        damageFlash = false
+        recoveryFlash = false
         canMove = true
         canBeDamaged = true
         teleporting = false
@@ -450,8 +466,7 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
                         BehaviorType.JETPACKING,
                         BehaviorType.RIDING_CART,
                         BehaviorType.SWIMMING
-                    )
-                        -> {
+                    ) -> {
                         val velocity = body.getProperty(ConstKeys.VELOCITY, Vector2::class)
                         velocity?.let { body.physics.velocity.set(it) }
                     }
@@ -517,28 +532,24 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
         }
     }
 
-    override fun canBeDamagedBy(damager: IDamager): Boolean {
-        if (invincible || dead) return false
-
-        val tag = (damager as MegaGameEntity).getTag()
-        if (!MegamanDamageNegotations.contains(tag)) return false
-
-        if (damager is IProjectileEntity) return damager.owner != this
-
-        return true
-    }
-
     fun setToNextWeapon() {
         val index = currentWeapon.ordinal
         val nextIndex = (index + 1) % MegamanWeapon.entries.size
         currentWeapon = MegamanWeapon.entries.toTypedArray()[nextIndex]
     }
 
+    override fun canBeDamagedBy(damager: IDamager) = when {
+        !super.canBeDamagedBy(damager) || dead -> false
+        damager is IProjectileEntity -> damager.owner != this
+        else -> true
+    }
+
     override fun takeDamageFrom(damager: IDamager): Boolean {
-        if (canMove && !isBehaviorActive(BehaviorType.RIDING_CART) && !noDmgBounce.contains(damager::class) &&
-            damager is GameEntity && damager.hasComponent(BodyComponent::class)
-        ) {
-            val bounds = damager.getComponent(BodyComponent::class)!!.body.getBounds()
+        if (!super.takeDamageFrom(damager)) return false
+
+        if (!isBehaviorActive(BehaviorType.RIDING_CART) && !noDmgBounce.contains(damager::class) && damager is IBodyEntity) {
+            val bounds = damager.body.getBounds()
+
             when (direction) {
                 Direction.UP -> {
                     body.physics.velocity.x =
@@ -566,17 +577,97 @@ class Megaman(game: MegamanMaverickGame) : MegaGameEntity(game), IMegaUpgradable
             }
         }
 
-        var damage = MegamanDamageNegotations.get((damager as MegaGameEntity).getTag()).get(damager)
-        if (has(MegaEnhancement.DAMAGE_INCREASE))
-            damage = MegaEnhancement.scaleDamage(damage, MegaEnhancement.MEGAMAN_DAMAGE_INCREASE_SCALAR)
-        translateHealth(-damage)
-
-        damageTimer.reset()
-
         stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
+
         requestToPlaySound(SoundAsset.MEGAMAN_DAMAGE_SOUND, false)
 
         return true
+    }
+
+    override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when {
+        has(MegaEnhancement.DAMAGE_INCREASE) ->
+            MegaEnhancement.scaleDamage(baseDamage, MegaEnhancement.MEGAMAN_DAMAGE_INCREASE_SCALAR)
+
+        else -> baseDamage
+    }
+
+    override fun definePointsComponent(): PointsComponent {
+        val component = super.definePointsComponent()
+
+        val points = component.getPoints(ConstKeys.HEALTH)
+        points.max = MegamanValues.START_HEALTH
+
+        return component
+    }
+
+    override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
+        super.defineUpdatablesComponent(updatablesComponent)
+        updatablesComponent.add { delta ->
+            if (body.getX() < -DEATH_X_OFFSET * ConstVals.PPM || body.getY() < -DEATH_Y_OFFSET * ConstVals.PPM ||
+                body.getMaxX() > (game.getTiledMapLoadResult().map.properties.get("width") as Int + DEATH_X_OFFSET) * ConstVals.PPM ||
+                body.getMaxY() > (game.getTiledMapLoadResult().map.properties.get("height") as Int + DEATH_Y_OFFSET) * ConstVals.PPM
+            ) {
+                GameLogger.error(TAG, "Megaman is below game bounds, killing him")
+
+                destroy()
+            }
+
+            if (!weaponHandler.isChargeable(currentWeapon)) stopCharging()
+            weaponHandler.update(delta)
+
+            if (body.isSensing(BodySense.FEET_ON_GROUND)) stunTimer.update(delta)
+            if (damageTimer.isJustFinished()) damageRecoveryTimer.reset()
+            if (stunned || damaged) chargingTimer.reset()
+
+            if (damageTimer.isFinished() && !damageRecoveryTimer.isFinished()) {
+                damageRecoveryTimer.update(delta)
+                damageFlashTimer.update(delta)
+                if (damageFlashTimer.isFinished()) {
+                    damageFlashTimer.reset()
+                    recoveryFlash = !recoveryFlash
+                }
+            }
+            if (damageRecoveryTimer.isJustFinished()) recoveryFlash = false
+
+            shootAnimTimer.update(delta)
+            wallJumpTimer.update(delta)
+            roomTransPauseTimer.update(delta)
+
+            if (body.isSensing(BodySense.IN_WATER)) {
+                underWaterBubbleTimer.update(delta)
+                if (underWaterBubbleTimer.isFinished()) {
+                    spawnBubbles()
+                    underWaterBubbleTimer.reset()
+                }
+            }
+
+            trailSpriteTimer.update(delta)
+            if (trailSpriteTimer.isFinished()) {
+                val spawnTrailSprite = when {
+                    isBehaviorActive(BehaviorType.GROUND_SLIDING) -> spawnTrailSprite("groundslide")
+                    isBehaviorActive(BehaviorType.AIR_DASHING) -> spawnTrailSprite("airdash")
+                    // isBehaviorActive(BehaviorType.JUMPING) -> spawnTrailSprite("jump")
+                    else -> false
+                }
+                if (spawnTrailSprite) trailSpriteTimer.reset()
+            }
+
+            if (ready) spawningTimer.update(delta)
+        }
+    }
+
+    private fun spawnTrailSprite(animKey: String? = null): Boolean {
+        val key = if (animKey != null) amendKey(animKey) else null
+        val trailSprite = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.MEGAMAN_TRAIL_SPRITE_V2)!!
+        return trailSprite.spawn(props(ConstKeys.KEY pairTo key))
+    }
+
+    private fun spawnBubbles() {
+        val bubbles = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.UNDER_WATER_BUBBLE)!!
+        val offsetY = if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) 0.05f else 0.1f
+        val offsetX = 0.2f * facing.value
+        val spawn = body.getCenter().add(offsetX * ConstVals.PPM, offsetY * ConstVals.PPM)
+        bubbles.spawn(props(ConstKeys.POSITION pairTo spawn))
     }
 
     override fun getBounds() = body.getBounds()

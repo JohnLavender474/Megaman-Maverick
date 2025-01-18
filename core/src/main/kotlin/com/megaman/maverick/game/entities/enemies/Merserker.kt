@@ -9,7 +9,6 @@ import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.enums.Facing
-import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.toGdxArray
@@ -35,7 +34,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -62,7 +60,6 @@ class Merserker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     private enum class MerserkerState { FLY, PRE_CHOP_DOWN, CHOP_DOWN, ON_GROUND, RETURN_UP }
 
-    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.MEDIUM)
     override lateinit var facing: Facing
 
     private val loop = Loop(MerserkerState.entries.toGdxArray())

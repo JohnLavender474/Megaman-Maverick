@@ -19,7 +19,6 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
@@ -39,7 +38,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
 import com.megaman.maverick.game.entities.contracts.megaman
@@ -49,12 +47,10 @@ import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getObjectProps
-
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
-import kotlin.reflect.KClass
 
 class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntity, IAudioEntity,
     ICullableEntity, IDrawableShapesEntity, IDirectional {
@@ -67,10 +63,9 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        // TODO
-    )
     override lateinit var direction: Direction
+    // wanaan launcher is only damaged by spikes
+    override val damageNegotiator = null
 
     private val newWanaanDelay = Timer(NEW_WANAAN_DELAY)
     private val launchDelay = Timer(LAUNCH_DELAY)
@@ -100,11 +95,15 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
         val children = getObjectProps(spawnProps, objs)
         children.forEach { sensors.add(it.rectangle.toGameRectangle(false)) }
 
-        this.direction = if (spawnProps.containsKey(ConstKeys.DIRECTION)) {
-            var direction = spawnProps.get(ConstKeys.DIRECTION)!!
-            if (direction is String) direction = Direction.valueOf(direction.uppercase())
-            direction as Direction
-        } else Direction.UP
+        this.direction = when {
+            spawnProps.containsKey(ConstKeys.DIRECTION) -> {
+                var direction = spawnProps.get(ConstKeys.DIRECTION)!!
+                if (direction is String) direction = Direction.valueOf(direction.uppercase())
+                direction as Direction
+            }
+
+            else -> Direction.UP
+        }
 
         launchDelay.reset()
         newWanaanDelay.reset()

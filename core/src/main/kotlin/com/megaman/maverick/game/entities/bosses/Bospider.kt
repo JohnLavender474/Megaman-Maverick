@@ -12,6 +12,7 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -21,7 +22,6 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -42,10 +42,9 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
@@ -65,9 +64,8 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
-import kotlin.reflect.KClass
 
-class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IParentEntity {
+class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE), IAnimatedEntity, IParentEntity {
 
     companion object {
         const val TAG = "Bospider"
@@ -89,9 +87,6 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
     }
 
     private enum class BospiderState { SPAWN, CLIMB, OPEN_EYE, CLOSE_EYE, RETREAT }
-
-    // set damage negotiations dynamically when spawning
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>()
 
     override var children = Array<IGameEntity>()
 
@@ -148,7 +143,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
             mini -> {
                 initTimer.setToEnd()
 
-                damageNegotiations.putAll(
+                damageOverrides.putAll(
                     objectMapOf(
                         Bullet::class pairTo dmgNeg(2),
                         Fireball::class pairTo dmgNeg(5),
@@ -166,7 +161,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
             else -> {
                 initTimer.reset()
 
-                damageNegotiations.putAll(
+                damageOverrides.putAll(
                     objectMapOf(
                         Bullet::class pairTo dmgNeg(1),
                         Fireball::class pairTo dmgNeg(2),
@@ -193,7 +188,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity,
 
     override fun onDestroy() {
         super.onDestroy()
-        damageNegotiations.clear()
+        damageOverrides.clear()
         children.forEach { (it as GameEntity).destroy() }
         children.clear()
         paths.clear()

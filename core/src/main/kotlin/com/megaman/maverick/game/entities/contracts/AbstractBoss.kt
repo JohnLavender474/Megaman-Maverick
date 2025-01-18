@@ -3,7 +3,9 @@ package com.megaman.maverick.game.entities.contracts
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.objects.Properties
@@ -18,23 +20,32 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.com.megaman.maverick.game.assets.MusicAsset
+import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.IDamageNegotiator
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.misc.HealthFillType
 import com.megaman.maverick.game.world.body.getCenter
+import kotlin.reflect.KClass
 
 abstract class AbstractBoss(
     game: MegamanMaverickGame,
     dmgDuration: Float = DEFAULT_BOSS_DMG_DURATION,
     dmgBlinkDur: Float = DEFAULT_DMG_BLINK_DUR,
-    defeatDur: Float = DEFAULT_DEFEAT_DURATION
-) : AbstractEnemy(game, dmgDuration, dmgBlinkDur), IEventListener {
+    defeatDur: Float = DEFAULT_DEFEAT_DURATION,
+    size: Size = Size.MEDIUM
+) : AbstractEnemy(game, dmgDuration, dmgBlinkDur, size), IEventListener {
 
     companion object {
         const val TAG = "AbstractBoss"
@@ -42,8 +53,27 @@ abstract class AbstractBoss(
         const val DEFAULT_MINI_BOSS_DMG_DURATION = 0.5f
         const val DEFAULT_DEFEAT_DURATION = 3f
         const val EXPLOSION_TIME = 0.25f
+
+        protected val BOSS_DMG_NEG = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+            Bullet::class pairTo dmgNeg(1),
+            Fireball::class pairTo dmgNeg(2),
+            ChargedShot::class pairTo dmgNeg {
+                it as ChargedShot
+                if (it.fullyCharged) 2 else 1
+            },
+            ChargedShotExplosion::class pairTo dmgNeg {
+                it as ChargedShotExplosion
+                if (it.fullyCharged) 2 else 1
+            }
+        )
     }
 
+    protected open class BossDamageNegotiator : IDamageNegotiator {
+
+        override fun get(damager: IDamager) = BOSS_DMG_NEG[damager::class]?.get(damager) ?: 0
+    }
+
+    override val damageNegotiator: IDamageNegotiator = BossDamageNegotiator()
     override val eventKeyMask = objectSetOf<Any>(EventType.END_BOSS_SPAWN, EventType.PLAYER_SPAWN)
 
     protected open val defeatTimer = Timer(defeatDur)

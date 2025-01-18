@@ -81,7 +81,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = bodyFixture.getEntity()
-        if (entity != owner && entity is IDamageable && !entity.canBeDamagedBy(this)) explodeAndDie()
+        if (entity != owner && entity !is IDamageable) explodeAndDie()
     }
 
     override fun hitSand(sandFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()

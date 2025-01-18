@@ -35,7 +35,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.EnemyDamageNegotiations
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
@@ -47,7 +46,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
+class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL) {
 
     companion object {
         const val TAG = "Screwie"
@@ -64,8 +63,6 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game) {
             Vector2(BULLET_VEL, 0f),
         )
     }
-
-    override val damageNegotiations = EnemyDamageNegotiations.getEnemyDmgNegs(Size.SMALL)
 
     private val downTimer = Timer(DOWN_DUR)
     private val riseTimer = Timer(RISE_DROP_DUR)

@@ -10,6 +10,7 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IDirectional
@@ -20,7 +21,6 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -40,18 +40,12 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.DamageNegotiation
-import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.enemies.HeliMet.HeliMetState.*
-import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.entities.projectiles.Bullet
-import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
@@ -59,9 +53,8 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
-import kotlin.reflect.KClass
 
-class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDirectional, IFaceable {
+class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IDirectional, IFaceable {
 
     enum class HeliMetState {
         SHIELD,
@@ -83,14 +76,7 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         private var flyRegion: TextureRegion? = null
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class pairTo dmgNeg(15),
-        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
-    )
-
-    override var direction = Direction.UP
+    override lateinit var direction: Direction
     override lateinit var facing: Facing
 
     private val popUpTimer = Timer(POP_UP_DUR)
@@ -103,9 +89,9 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     override fun init() {
         if (shieldRegion == null || popUpRegion == null || flyRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            shieldRegion = atlas.findRegion("HeliMet/Shield")
-            popUpRegion = atlas.findRegion("HeliMet/PopUp")
-            flyRegion = atlas.findRegion("HeliMet/Fly")
+            shieldRegion = atlas.findRegion("$TAG/Shield")
+            popUpRegion = atlas.findRegion("$TAG/PopUp")
+            flyRegion = atlas.findRegion("$TAG/Fly")
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -114,21 +100,24 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        if (spawnProps.containsKey(ConstKeys.POSITION)) {
-            val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-            body.setCenter(spawn)
-            target = spawnProps.get(ConstKeys.TARGET, Vector2::class)!!
-        } else {
-            val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
-            body.setCenter(spawn)
-            val target1 =
-                spawnProps.get("${ConstKeys.TARGET}_1", RectangleMapObject::class)!!
-                    .rectangle.toGameRectangle().getCenter()
-            val target2 =
-                spawnProps.get("${ConstKeys.TARGET}_2", RectangleMapObject::class)!!
-                    .rectangle.toGameRectangle().getCenter()
-            val megamanCenter = megaman.body.getCenter()
-            target = if (target1.dst2(megamanCenter) < target2.dst2(megamanCenter)) target1 else target2
+        when {
+            spawnProps.containsKey(ConstKeys.POSITION) -> {
+                val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+                body.setCenter(spawn)
+                target = spawnProps.get(ConstKeys.TARGET, Vector2::class)!!
+            }
+            else -> {
+                val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
+                body.setCenter(spawn)
+                val target1 =
+                    spawnProps.get("${ConstKeys.TARGET}_1", RectangleMapObject::class)!!
+                        .rectangle.toGameRectangle().getCenter()
+                val target2 =
+                    spawnProps.get("${ConstKeys.TARGET}_2", RectangleMapObject::class)!!
+                        .rectangle.toGameRectangle().getCenter()
+                val megamanCenter = megaman.body.getCenter()
+                target = if (target1.dst2(megamanCenter) < target2.dst2(megamanCenter)) target1 else target2
+            }
         }
 
         val direction = spawnProps.get(ConstKeys.DIRECTION)

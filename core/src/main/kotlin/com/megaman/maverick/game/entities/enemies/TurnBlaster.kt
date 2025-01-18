@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IDirectional
@@ -53,7 +54,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
-class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectional {
+class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IDirectional {
 
     companion object {
         const val TAG = "TurnBlaster"
@@ -65,18 +66,6 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IDirectional
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class pairTo dmgNeg(10),
-        Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShot::class pairTo dmgNeg {
-            it as ChargedShot
-            if (it.fullyCharged) 15 else 10
-        },
-        ChargedShotExplosion::class pairTo dmgNeg {
-            it as ChargedShotExplosion
-            if (it.fullyCharged) 10 else 5
-        }
-    )
     override var direction: Direction
         get() = body.direction
         set(value) {

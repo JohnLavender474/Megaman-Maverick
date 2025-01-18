@@ -9,6 +9,7 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.putAll
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -35,7 +36,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
@@ -51,7 +51,6 @@ import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
-import kotlin.reflect.KClass
 
 class Cactus(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity,
     IAudioEntity, IHazard, IDamager {
@@ -67,27 +66,32 @@ class Cactus(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntit
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-        Bullet::class pairTo dmgNeg(10),
-        ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-        ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-        SmallMissile::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-        ArigockBall::class pairTo dmgNeg(10),
-        Explosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-        Spiky::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-        GreenExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-        CactusMissile::class pairTo dmgNeg(10)
-    )
+    // use damage overrides to handle damage negotiation
+    override val damageNegotiator = null
 
     private var big = false
 
     override fun init() {
+        damageOverrides.putAll(
+            Bullet::class pairTo dmgNeg(10),
+            ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            SmallMissile::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            ArigockBall::class pairTo dmgNeg(10),
+            Explosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            Spiky::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            GreenExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            CactusMissile::class pairTo dmgNeg(10)
+        )
+
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             regions.put("small", atlas.findRegion("$TAG/small"))
             regions.put("big", atlas.findRegion("$TAG/big"))
         }
+
         super.init()
+
         addComponent(AudioComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())

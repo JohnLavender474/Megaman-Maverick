@@ -146,8 +146,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val shieldEntity = shieldFixture.getEntity()
-        if (shieldEntity == owner) return
-        if (shieldEntity is IOwnable && shieldEntity.owner == owner) return
+        if (shieldEntity == owner || (shieldEntity is IOwnable && shieldEntity.owner == owner)) return
 
         bounced++
         if (bounced >= BOUNCE_LIMIT) {
@@ -156,6 +155,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         }
 
         swapFacing()
+
         if (direction.isVertical() == true) trajectory.x *= -1f else trajectory.y *= -1f
 
         val deflection = shieldFixture.getOrDefaultProperty(ConstKeys.DIRECTION, Direction.UP, Direction::class)
@@ -208,8 +208,8 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         }
 
         val props = props(
-            ConstKeys.POSITION pairTo body.getCenter(),
             ConstKeys.OWNER pairTo owner,
+            ConstKeys.POSITION pairTo body.getCenter(),
             ConstKeys.DIRECTION pairTo direction,
             ConstKeys.BOOLEAN pairTo fullyCharged,
         )

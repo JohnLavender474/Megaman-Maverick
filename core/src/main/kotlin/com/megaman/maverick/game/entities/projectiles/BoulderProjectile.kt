@@ -43,30 +43,35 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     companion object {
         const val TAG = "BoulderProjectile"
+
         private const val MEDIUM_MAX_X = 6f
         private const val MEDIUM_MIN_X = 2.5f
         private const val MEDIUM_MAX_Y = 15f
         private const val MEDIUM_MIN_Y = 9f
+
         private const val SMALL_MAX_X = 3f
         private const val SMALL_MIN_X = 1f
         private const val SMALL_MAX_Y = 7f
         private const val SMALL_MIN_Y = 5f
+
         private const val SPAWN_EXPLODE_DELAY = 0.25f
+
         private const val GRAVITY = -0.25f
+
         private const val LARGE_SIZE = 2f
         private const val MEDIUM_SIZE = 1f
         private const val SMALL_SIZE = 0.5f
+
         private const val MEDIUM_ROTATION_SPEED = 360f
         private const val SMALL_ROTATION_SPEED = 720f
+
         private var largeRegion: TextureRegion? = null
         private var mediumRegion: TextureRegion? = null
         private var smallRegion: TextureRegion? = null
     }
 
     override var owner: GameEntity? = null
-
-    lateinit var size: Size
-        private set
+    override lateinit var size: Size
 
     private val spawnExplodeDelay = Timer(SPAWN_EXPLODE_DELAY)
 
@@ -84,7 +89,9 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "Spawn props = $spawnProps")
+
         super.onSpawn(spawnProps)
+
         size = spawnProps.getOrDefault(ConstKeys.SIZE, Size.LARGE, Size::class)
         body.setSize(
             when (size) {
@@ -93,22 +100,28 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
                 Size.SMALL -> SMALL_SIZE
             } * ConstVals.PPM
         )
+
         val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
         body.physics.velocity.set(trajectory)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
+
         spawnExplodeDelay.reset()
     }
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
+
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
         disintegration!!.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+
         if (overlapsGameCamera() && size == Size.SMALL) requestToPlaySound(SoundAsset.THUMP_SOUND, false)
     }
 
     private fun breakApart(shape: IGameShape2D) {
         GameLogger.debug(TAG, "Breaking apart")
+
         val trajectories = Array<Vector2>()
         when (size) {
             Size.LARGE -> {
@@ -131,7 +144,9 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
             Size.SMALL -> throw IllegalStateException("Cannot break apart a small boulder")
         }
+
         val direction = getOverlapPushDirection(body.getBounds(), shape) ?: return
+
         trajectories.forEach { trajectory ->
             val rotatedTrajectory = trajectory.rotateDeg(direction.rotation)
             val boulder = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BOULDER_PROJECTILE)
@@ -143,14 +158,19 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
                 )
             )
         }
+
         if (size == Size.LARGE) requestToPlaySound(SoundAsset.QUAKE_SOUND, false)
+
         explodeAndDie()
     }
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (!spawnExplodeDelay.isFinished() || bodyFixture.getEntity() is BoulderProjectile) return
+
         GameLogger.debug(TAG, "Hit body: $bodyFixture")
+
         super.hitBody(bodyFixture, thisShape, otherShape)
+
         when (size) {
             Size.LARGE, Size.MEDIUM -> breakApart(bodyFixture.getShape())
             Size.SMALL -> explodeAndDie()
@@ -159,8 +179,11 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (!spawnExplodeDelay.isFinished()) return
+
         GameLogger.debug(TAG, "Hit block: $blockFixture")
+
         super.hitBlock(blockFixture, thisShape, otherShape)
+
         when (size) {
             Size.LARGE, Size.MEDIUM -> breakApart(blockFixture.getShape())
             Size.SMALL -> explodeAndDie()
@@ -169,8 +192,11 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (!spawnExplodeDelay.isFinished()) return
+
         GameLogger.debug(TAG, "Hit shield: $shieldFixture")
+
         super.hitShield(shieldFixture, thisShape, otherShape)
+
         when (size) {
             Size.LARGE, Size.MEDIUM -> breakApart(shieldFixture.getShape())
             Size.SMALL -> explodeAndDie()
@@ -179,7 +205,9 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun hitWater(waterFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         GameLogger.debug(TAG, "Hit water: $waterFixture")
+
         super.hitWater(waterFixture, thisShape, otherShape)
+
         body.physics.velocity.x = 0f
         // TODO: boulder should sink or float in water?
     }
@@ -187,7 +215,9 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
     override fun onDamageInflictedTo(damageable: IDamageable) {
         if (damageable is IBodyEntity) {
             GameLogger.debug(TAG, "On damage inflicted pairTo: $damageable")
+
             super.onDamageInflictedTo(damageable)
+
             when (size) {
                 Size.LARGE, Size.MEDIUM -> breakApart(damageable.body.getBounds())
                 Size.SMALL -> explodeAndDie()
@@ -237,12 +267,14 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
                 Size.SMALL -> smallRegion
             }
             sprite.setRegion(region!!)
+
             sprite.setOriginCenter()
             sprite.rotation = when (size) {
                 Size.LARGE -> 0f
                 Size.MEDIUM -> sprite.rotation + MEDIUM_ROTATION_SPEED * delta
                 Size.SMALL -> sprite.rotation + SMALL_ROTATION_SPEED * delta
             }
+
             sprite.setCenter(body.getCenter())
         }
         return spritesComponent

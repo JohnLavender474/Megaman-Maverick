@@ -115,7 +115,7 @@ private fun Megaman.defineMegamanSprite(component: SpritesComponent) {
         player.setPosition(body.getPositionPoint(position), position)
         player.translateX(getSpriteXTranslation() * ConstVals.PPM)
         player.translateY(getSpriteYTranslation() * ConstVals.PPM)
-        player.setAlpha(if (damageFlash) 0f else 1f)
+        player.setAlpha(if (recoveryFlash) 0f else 1f)
         player.hidden = shouldHideSprite()
     }
 }
