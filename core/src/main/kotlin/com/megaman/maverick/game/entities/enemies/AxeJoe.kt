@@ -43,11 +43,10 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -332,7 +331,7 @@ class AxeJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
 
         val spawn = body.getCenter().add(-0.25f * ConstVals.PPM * facing.value, ConstVals.PPM.toFloat())
 
-        val axe = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.AXE)!!
+        val axe = MegaEntityFactory.fetch(Axe::class)!!
         axe.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.IMPULSE pairTo impulse))
     }
 }

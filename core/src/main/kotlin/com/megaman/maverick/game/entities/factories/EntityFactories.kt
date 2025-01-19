@@ -8,6 +8,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.impl.*
 
+// TODO: This is deprecated by the MegaEntityFactory object.
 object EntityFactories : Factories<Any?, MegaGameEntity>(), Initializable, IClearable {
 
     fun initialize(game: MegamanMaverickGame) {
