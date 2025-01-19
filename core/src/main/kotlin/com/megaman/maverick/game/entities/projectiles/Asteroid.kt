@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectSetOf
@@ -37,7 +38,6 @@ import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
@@ -54,6 +54,8 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
         const val MAX_ROTATION_SPEED = 1.5f
 
         private const val BLINK_DUR = 0.01f
+
+        private const val CULL_TIME = 1f
 
         private val HIT_PROJS = objectSetOf<KClass<out IProjectileEntity>>(
             Asteroid::class, ExplodingBall::class, RocketBomb::class, Bullet::class, ChargedShot::class
@@ -73,23 +75,32 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
     private var blink = false
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
+
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             regions.put(REGULAR, atlas.findRegion("$TAG/$REGULAR"))
             regions.put(BLUE, atlas.findRegion("$TAG/$BLUE"))
         }
+
         super.init()
+
         addComponent(defineUpdatablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
+        spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
+
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
+
         super.onSpawn(spawnProps)
 
-        val spawn =
-            if (spawnProps.containsKey(ConstKeys.BOUNDS))
+        val spawn = when {
+            spawnProps.containsKey(ConstKeys.BOUNDS) ->
                 spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
-            else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+
+            else -> spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        }
         body.setCenter(spawn)
 
         val impulse = spawnProps.getOrDefault(ConstKeys.IMPULSE, Vector2.Zero, Vector2::class)
@@ -111,6 +122,12 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
         val active = delayTimer == null
         body.physics.collisionOn = active
         body.forEachFixture { it.setActive(delayTimer == null) }
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+
+        super.onDestroy()
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -141,17 +158,21 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = bodyFixture.getEntity()
+
         if (entity == owner ||
             (entity is IOwnable && entity.owner == owner) ||
             (entity is IDamageable && canDamage(entity))
         ) return
+
         explodeAndDie()
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val block = blockFixture.getEntity()
+
         val filters = blockFixture.getBody().getBlockFilters()
         if (filters != null && filters.any { it.invoke(this, block) }) return
+
         explodeAndDie()
     }
 
@@ -182,19 +203,19 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.625f * ConstVals.PPM))
         body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture}
+        debugShapes.add { bodyFixture }
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.625f * ConstVals.PPM))
         body.addFixture(projectileFixture)
-        debugShapes.add { projectileFixture}
+        debugShapes.add { projectileFixture }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.65f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        debugShapes.add { damagerFixture}
+        debugShapes.add { damagerFixture }
 
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(0.6f * ConstVals.PPM))
         body.addFixture(shieldFixture)
-        debugShapes.add { shieldFixture}
+        debugShapes.add { shieldFixture }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

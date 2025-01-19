@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="900" height="75" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="486">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="900" height="75" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="487">
  <tileset firstgid="1" source="../tsx/MoonManTiles.tsx"/>
  <tileset firstgid="65" source="../tsx/mm9endless.tsx"/>
  <layer id="2" name="tiles2" width="900" height="75">
@@ -1440,32 +1440,32 @@
     <property name="gravity_scalar" type="float" value="0.25"/>
    </properties>
   </object>
-  <object id="271" name="Adamski" x="14528" y="1568" width="32" height="32">
+  <object id="271" name="TellySaucer" x="14528" y="1568" width="32" height="32">
    <properties>
     <property name="flip" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="272" name="Adamski" x="14528" y="1600" width="96" height="32">
+  <object id="272" name="TellySaucer" x="14528" y="1600" width="96" height="32">
    <properties>
     <property name="flip" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="273" name="Adamski" x="14720" y="1568" width="64" height="32">
+  <object id="273" name="TellySaucer" x="14720" y="1568" width="64" height="32">
    <properties>
     <property name="flip" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="274" name="Adamski" x="14720" y="1600" width="32" height="32">
+  <object id="274" name="TellySaucer" x="14720" y="1600" width="32" height="32">
    <properties>
     <property name="flip" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="275" name="Adamski" x="14976" y="1336" width="64" height="32">
+  <object id="275" name="TellySaucer" x="14976" y="1336" width="64" height="32">
    <properties>
     <property name="flip" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="276" name="Adamski" x="14976" y="1400" width="32" height="32">
+  <object id="276" name="TellySaucer" x="14976" y="1400" width="32" height="32">
    <properties>
     <property name="flip" type="bool" value="false"/>
    </properties>
@@ -1491,7 +1491,7 @@
     <property name="value" type="float" value="-5"/>
    </properties>
   </object>
-  <object id="280" name="Adamski" x="13288" y="1616" width="16" height="16"/>
+  <object id="280" name="TellySaucer" x="13288" y="1616" width="16" height="16"/>
   <object id="281" name="Screwie" x="18520" y="1616" width="16" height="16">
    <properties>
     <property name="movement_scalar" type="float" value="0.65"/>
@@ -1586,12 +1586,12 @@
     <property name="gravity_scalar" type="float" value="0.25"/>
    </properties>
   </object>
-  <object id="475" name="Adamski" x="21856" y="1184" width="32" height="32">
+  <object id="475" name="TellySaucer" x="21856" y="1184" width="32" height="32">
    <properties>
     <property name="flip" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="476" name="Adamski" x="21904" y="1168" width="32" height="32">
+  <object id="476" name="TellySaucer" x="21904" y="1168" width="32" height="32">
    <properties>
     <property name="flip" type="bool" value="true"/>
    </properties>
@@ -1611,8 +1611,8 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="12" name="temp">
-  <object id="451" name="0" x="20960" y="1600" width="32" height="32">
+ <objectgroup id="12" name="player">
+  <object id="486" name="0" x="12832" y="1600" width="32" height="32">
    <properties>
     <property name="apply_scalar_to_children" type="bool" value="true"/>
     <property name="gravity_scalar" type="float" value="0.35"/>
@@ -1620,7 +1620,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="13" name="player">
+ <objectgroup id="13" name="temp">
   <object id="14" name="0" x="128" y="2144" width="32" height="32">
    <properties>
     <property name="apply_scalar_to_children" type="bool" value="true"/>

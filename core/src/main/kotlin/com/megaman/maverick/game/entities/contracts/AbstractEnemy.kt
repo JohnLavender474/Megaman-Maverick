@@ -146,7 +146,7 @@ abstract class AbstractEnemy(
         val canBeDamaged = super.canBeDamagedBy(damager)
         if (!canBeDamaged) return false
 
-        if (damager is IOwnable) return damager.owner == megaman
+        if (damager is IOwnable) return damager.owner == megaman || damager.owner == null
 
         return true
     }

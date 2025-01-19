@@ -1327,6 +1327,9 @@ sprites/frames/Enemies1/NuttGlider/stand.png
 sprites/frames/Enemies1/NuttGlider/jump.png
 sprites/frames/Enemies1/NuttGlider/stand_nutt.png
 sprites/frames/Enemies1/NuttGlider/glide.png
+sprites/frames/Enemies1/TellySaucer/collapsed.png
+sprites/frames/Enemies1/TellySaucer/spin.png
+sprites/frames/Enemies1/TellySaucer/hit.png
 sprites/frames/Enemies1/SnowBat/OpenEyes.png
 sprites/frames/Enemies1/SnowBat/Hang.png
 sprites/frames/Enemies1/SnowBat/OpenWings.png
@@ -1923,6 +1926,7 @@ sprites/piskel/SmallGreenMissile.piskel
 sprites/piskel/MegamanMaverick.piskel
 sprites/piskel/HibernalMan.piskel
 sprites/piskel/WanaanLauncher.piskel
+sprites/piskel/TellySaucer.piskel
 sprites/piskel/MagmaExplosion.piskel
 sprites/piskel/CactusLauncher.piskel
 sprites/piskel/CannonHopper.piskel
