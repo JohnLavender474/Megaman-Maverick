@@ -67,6 +67,7 @@ class Smoke(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, I
         super.onDestroy()
         sprites.clear()
         animators.clear()
+        clearSpriteUpdateFunctions()
     }
 
     private fun defineDrawables(bounds: GameRectangle) {

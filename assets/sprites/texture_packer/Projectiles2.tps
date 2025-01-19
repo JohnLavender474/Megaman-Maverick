@@ -333,6 +333,7 @@
             <key type="filename">../frames/Projectiles2/Needle/default.png</key>
             <key type="filename">../frames/Projectiles2/Needle/ice.png</key>
             <key type="filename">../frames/Projectiles2/Nutt.png</key>
+            <key type="filename">../frames/Projectiles2/SmallGreenMissile.png</key>
             <key type="filename">../frames/Projectiles2/TeardropBlast.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -423,22 +424,6 @@
                 <rect>9,9,18,18</rect>
                 <key>scale9Paddings</key>
                 <rect>9,9,18,18</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Projectiles2/SmallGreenMissile.png</key>
-            <key type="filename">../frames/Projectiles2/SmallPurpleMissile.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>9,11,17,21</rect>
-                <key>scale9Paddings</key>
-                <rect>9,11,17,21</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

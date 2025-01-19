@@ -731,7 +731,6 @@ sprites/frames/Projectiles2/MagmaWave/disintegrate.png
 sprites/frames/Projectiles2/Needle/default.png
 sprites/frames/Projectiles2/Needle/ice.png
 sprites/frames/Projectiles2/MoonScythe.png
-sprites/frames/Projectiles2/SmallPurpleMissile.png
 sprites/frames/Projectiles2/BunbyRedRocket.png
 sprites/frames/Projectiles2/ArigockBall.png
 sprites/frames/Projectiles2/SmallGreenMissile.png
@@ -836,6 +835,15 @@ sprites/frames/Environs1/Wood/DeadBranch.png
 sprites/frames/Environs1/SandSplash.png
 sprites/frames/Environs1/Trees/TreeStump.png
 sprites/frames/Environs1/Trees/Tree1.png
+sprites/frames/Environs1/QuickSand_v2/center.png
+sprites/frames/Environs1/QuickSand_v2/center_right.png
+sprites/frames/Environs1/QuickSand_v2/bottom_left.png
+sprites/frames/Environs1/QuickSand_v2/top_left.png
+sprites/frames/Environs1/QuickSand_v2/bottom_right.png
+sprites/frames/Environs1/QuickSand_v2/bottom_center.png
+sprites/frames/Environs1/QuickSand_v2/top_right.png
+sprites/frames/Environs1/QuickSand_v2/top_center.png
+sprites/frames/Environs1/QuickSand_v2/center_left.png
 sprites/frames/Environs1/Water/WhiteSplash.png
 sprites/frames/Environs1/Water/Surface.png
 sprites/frames/Environs1/Water/Splash_v2.png
@@ -1769,6 +1777,7 @@ sprites/piskel/MMX_Sigma2_Claw_Electric_Explosion.piskel
 sprites/piskel/PortalHopper.piskel
 sprites/piskel/CeilingCrusher.piskel
 sprites/piskel/FlameColumn.piskel
+sprites/piskel/Tileset1_Full_32x32.piskel
 sprites/piskel/ColorsTileset.piskel
 sprites/piskel/Flame.piskel
 sprites/piskel/Megaman_v2.piskel
@@ -1821,6 +1830,7 @@ sprites/piskel/SpitFireball.piskel
 sprites/piskel/FirePellet.piskel
 sprites/piskel/FlipperPlatform.piskel
 sprites/piskel/MagmaGoop.piskel
+sprites/piskel/QuickSand_v2_Top.piskel
 sprites/piskel/DesertMan.piskel
 sprites/piskel/CartinJoe.piskel
 sprites/piskel/Flame2.piskel
@@ -1908,6 +1918,7 @@ sprites/piskel/MoonManMugshot.piskel
 sprites/piskel/MagmaOrb.piskel
 sprites/piskel/BombChute.piskel
 sprites/piskel/Pipi & Copipi.piskel
+sprites/piskel/QuickSand_v2_Right.piskel
 sprites/piskel/SmallGreenMissile.piskel
 sprites/piskel/MegamanMaverick.piskel
 sprites/piskel/HibernalMan.piskel
@@ -1915,6 +1926,7 @@ sprites/piskel/WanaanLauncher.piskel
 sprites/piskel/MagmaExplosion.piskel
 sprites/piskel/CactusLauncher.piskel
 sprites/piskel/CannonHopper.piskel
+sprites/piskel/QuickSand_v2_BottomLeft.piskel
 sprites/piskel/StagedMoonLandingFlag.piskel
 sprites/piskel/Wanaan.piskel
 sprites/piskel/ToxicGoopShot.piskel
@@ -1945,13 +1957,16 @@ sprites/piskel/UFOBomb.piskel
 sprites/piskel/InfernoOven.piskel
 sprites/piskel/Gates.piskel
 sprites/piskel/Spike_Bot.piskel
+sprites/piskel/QuickSand_v2.piskel
 sprites/piskel/PreciousMan.piskel
+sprites/piskel/QuickSand_v2_BottomRight.piskel
 sprites/piskel/Snow.piskel
 sprites/piskel/AngryFlameBall.piskel
 sprites/piskel/ChargedShot_v2.piskel
 sprites/piskel/Dropper Lift.piskel
 sprites/piskel/AirConditioner.piskel
 sprites/piskel/SpikeBall.piskel
+sprites/piskel/QuickSand_v2_Left.piskel
 sprites/piskel/Popup Canon.piskel
 sprites/piskel/InfernoBKG.piskel
 sprites/piskel/Megaman_RUSH_JET.piskel
@@ -1959,6 +1974,7 @@ sprites/piskel/InfernoManFace.piskel
 sprites/piskel/BossFaces.piskel
 sprites/piskel/WoodPlank.piskel
 sprites/piskel/DarkSamus993-FireManTileset.piskel
+sprites/piskel/QuickSand_v2_TopLeft.piskel
 sprites/piskel/SprBGTomahawk_v2.piskel
 sprites/piskel/UF_Oh_No_Bot_1.piskel
 sprites/piskel/AstroAss.piskel
@@ -1981,6 +1997,7 @@ sprites/piskel/LevelSelectScreen.piskel
 sprites/piskel/PenguinMiniBoss.piskel
 sprites/piskel/GlacierMan.piskel
 sprites/piskel/Sealion.piskel
+sprites/piskel/QuickSand_v2_TopRight.piskel
 sprites/piskel/MMX_Sigma2_Claw.piskel
 sprites/piskel/MicrowaveMan.piskel
 sprites/piskel/Adamski.piskel
@@ -1999,6 +2016,7 @@ sprites/piskel/InfernoMan_v2.piskel
 sprites/piskel/DrLight.piskel
 sprites/piskel/SinkSand.piskel
 sprites/piskel/UFOBombBot.piskel
+sprites/piskel/QuickSand_v2_BottomCenter.piskel
 sprites/piskel/Robbit.piskel
 sprites/piskel/TimberWoman.piskel
 sprites/piskel/MegamanFaces.piskel
@@ -2395,6 +2413,7 @@ tiled_maps/tmx/ReactMan.tmx
 tiled_maps/tmx/TimberWoman.tmx
 tiled_maps/tmx/MagnetMan.tmx
 tiled_maps/tmx/TimberWoman_v2.tmx
+tiled_maps/tmx/DesertMan_16x14_v2.tmx
 tiled_maps/tmx/WilyStage3.tmx
 tiled_maps/tmx/MoonMan_16x14_v2.tmx
 tiled_maps/tmx/ReactorMan_16x12.tmx

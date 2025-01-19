@@ -69,6 +69,7 @@ class AirConditioner(game: MegamanMaverickGame) : MegaGameEntity(game), ICullabl
         super.onDestroy()
         sprites.clear()
         animators.clear()
+        clearSpriteUpdateFunctions()
     }
 
     private fun defineDrawables(centerX: Float, startY: Float, rows: Int) {

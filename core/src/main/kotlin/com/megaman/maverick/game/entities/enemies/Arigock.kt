@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
@@ -20,6 +21,8 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
@@ -34,16 +37,13 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.ArigockBall
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodyFixtureDef
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 
 class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable {
 
@@ -64,14 +64,14 @@ class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
             TimeMarkedRunnable(0.5f) { shoot(1) },
             TimeMarkedRunnable(0.75f) { shoot(2) },
             TimeMarkedRunnable(1f) { shoot(3) }
-        ))
+        )
+    )
     private val closedTimer = Timer(CLOSED_DUR)
 
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            regions.put("closed", atlas.findRegion("$TAG/closed"))
-            regions.put("shooting", atlas.findRegion("$TAG/shooting"))
+            gdxArrayOf("closed", "shooting").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -79,16 +79,22 @@ class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
+
         shootingTimer.setToEnd()
         closedTimer.reset()
     }
 
     private fun shoot(xImpulseIndex: Int) {
-        val ball = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ARIGOCK_BALL)!!
-        val impulse = Vector2(shotImpulses[xImpulseIndex], BALL_Y_FORCE).scl(ConstVals.PPM.toFloat())
+        val impulse = GameObjectPools.fetch(Vector2::class)
+            .set(shotImpulses[xImpulseIndex], BALL_Y_FORCE)
+            .scl(ConstVals.PPM.toFloat())
+
         val position = body.getPositionPoint(Position.TOP_CENTER).sub(0f, 0.2f * ConstVals.PPM)
+
+        val ball = MegaEntityFactory.fetch(ArigockBall::class)!!
         ball.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
@@ -96,6 +102,7 @@ class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
                 ConstKeys.IMPULSE pairTo impulse
             )
         )
+
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
     }
 
@@ -105,6 +112,7 @@ class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
             if (!closedTimer.isFinished()) {
                 closedTimer.update(delta)
                 if (closedTimer.isFinished()) shootingTimer.reset()
+
                 return@add
             }
 
@@ -115,18 +123,21 @@ class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(ConstVals.PPM.toFloat())
+        body.setSize(1.25f * ConstVals.PPM)
+
+        val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBounds() }
+
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
+
         return BodyComponentCreator.create(
-            this, body, BodyFixtureDef.of(
-                FixtureType.BODY, FixtureType.DAMAGER,
-                FixtureType.DAMAGEABLE
-            )
+            this, body, BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
         )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.25f * ConstVals.PPM)
+        sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)

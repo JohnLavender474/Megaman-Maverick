@@ -121,14 +121,14 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(1.25f * ConstVals.PPM, ConstVals.PPM.toFloat())
+        body.setSize(1.5f * ConstVals.PPM, ConstVals.PPM.toFloat())
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
         val damageableFixture = Fixture(
             body, FixtureType.DAMAGEABLE, GameRectangle().setSize(
-                1.35f * ConstVals.PPM, 0.5f * ConstVals.PPM
+                1.75f * ConstVals.PPM, 0.5f * ConstVals.PPM
             )
         )
         damageableFixture.offsetFromBodyAttachment.y = 0.75f * ConstVals.PPM
@@ -146,7 +146,7 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(2.5f * ConstVals.PPM)
+        sprite.setSize(3f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)

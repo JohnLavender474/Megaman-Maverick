@@ -28,10 +28,9 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
@@ -68,13 +67,15 @@ class ArigockBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun hitSand(sandFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
-    override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
+    override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
+        explodeAndDie()
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
-        val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
+
+        val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(
             props(
                 ConstKeys.OWNER pairTo owner,
@@ -86,7 +87,7 @@ class ArigockBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.25f * ConstVals.PPM)
+        body.setSize(0.5f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
@@ -94,11 +95,11 @@ class ArigockBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.075f * ConstVals.PPM))
+        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.25f * ConstVals.PPM))
         body.addFixture(projectileFixture)
-        debugShapes.add { projectileFixture}
+        debugShapes.add { projectileFixture }
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.075f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.25f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -108,7 +109,7 @@ class ArigockBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(2.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
         return spritesComponent

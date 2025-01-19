@@ -90,7 +90,7 @@ class SpikeBall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
 
             val chainDistance = tempDistance * ConstVals.PPM
 
-            putUpdateFunction(key) { _, sprite ->
+            putSpriteUpdateFunction(key) { _, sprite ->
                 val center = pendulum.getPointFromAnchor(chainDistance)
                 sprite.setCenter(center)
             }

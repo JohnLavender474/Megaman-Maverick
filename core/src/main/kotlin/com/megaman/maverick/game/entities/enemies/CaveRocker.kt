@@ -35,12 +35,11 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.CaveRock
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -103,7 +102,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(ConstVals.PPM.toFloat())
+        body.setSize(ConstVals.PPM.toFloat(), 1.5f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
@@ -119,14 +118,14 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         body.addFixture(damagerFixture)
         debugShapes.add { damagerFixture}
 
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(1.15f * ConstVals.PPM))
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(1.25f * ConstVals.PPM))
         body.addFixture(damageableFixture)
         debugShapes.add { damageableFixture}
 
         val headFixture = Fixture(
             body, FixtureType.HEAD, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM)
         )
-        headFixture.offsetFromBodyAttachment.y = 0.55f * ConstVals.PPM
+        headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
         body.addFixture(headFixture)
         debugShapes.add { headFixture}
 
@@ -157,7 +156,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(2.75f * ConstVals.PPM)
+        sprite.setSize(3f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.hidden = damageBlink
@@ -179,13 +178,15 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     private fun throwRock() {
         throwing = true
-        val caveRockToThrow = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.CAVE_ROCK)!!
+
         val impulse = MegaUtilMethods.calculateJumpImpulse(
             body.getPositionPoint(Position.TOP_CENTER),
             megaman.body.getCenter(),
             ROCK_IMPULSE_Y * ConstVals.PPM
         )
         impulse.x = impulse.x.coerceIn(-ROCK_IMPULSE_X * ConstVals.PPM, ROCK_IMPULSE_X * ConstVals.PPM)
+
+        val caveRockToThrow = MegaEntityFactory.fetch(CaveRock::class)!!
         caveRockToThrow.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
@@ -198,8 +199,9 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     private fun spawnNewRock() {
         val spawn = body.getCenter().add(0f, newRockOffsetY * ConstVals.PPM)
-        val impulse = Vector2(0f, -ROCK_IMPULSE_Y * ConstVals.PPM)
-        newRock = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.CAVE_ROCK) as CaveRock
+        val impulse = GameObjectPools.fetch(Vector2::class).set(0f, -ROCK_IMPULSE_Y * ConstVals.PPM)
+
+        newRock = MegaEntityFactory.fetch(CaveRock::class)!!
         newRock!!.spawn(
             props(
                 ConstKeys.OWNER pairTo this,

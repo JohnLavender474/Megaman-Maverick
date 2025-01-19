@@ -26,10 +26,12 @@ interface ISpritesEntity : IGameEntity {
 
     fun removeSprite(key: Any): GameSprite? = spritesComponent.removeSprite(key)
 
-    fun putUpdateFunction(function: UpdateFunction<GameSprite>) = spritesComponent.putUpdateFunction(function)
+    fun putSpriteUpdateFunction(function: UpdateFunction<GameSprite>) = spritesComponent.putUpdateFunction(function)
 
-    fun putUpdateFunction(key: String, updateFunction: UpdateFunction<GameSprite>) =
+    fun putSpriteUpdateFunction(key: String, updateFunction: UpdateFunction<GameSprite>) =
         spritesComponent.putUpdateFunction(key, updateFunction)
 
-    fun removeUpdateFunction(key: Any) = spritesComponent.removeUpdateFunction(key)
+    fun clearSpriteUpdateFunctions() = spritesComponent.clearUpdateFunctions()
+
+    fun removeSpriteUpdateFunction(key: Any) = spritesComponent.removeUpdateFunction(key)
 }

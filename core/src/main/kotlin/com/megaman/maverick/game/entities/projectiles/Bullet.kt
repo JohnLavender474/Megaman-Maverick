@@ -30,6 +30,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.explosions.Disintegration
 import com.megaman.maverick.game.utils.VelocityAlterator
@@ -79,6 +80,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = bodyFixture.getEntity()
+        if (entity is AbstractEnemy && owner is AbstractEnemy) return
         if (entity != owner && entity is IDamageable && !entity.canBeDamagedBy(this)) explodeAndDie()
     }
 

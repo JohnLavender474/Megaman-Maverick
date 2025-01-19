@@ -1,19 +1,17 @@
 package com.megaman.maverick.game.entities.special
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
-import com.mega.game.engine.animations.IAnimator
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.interfaces.UpdateFunction
-import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Matrix
 import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -22,6 +20,7 @@ import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
@@ -43,6 +42,7 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
 
     companion object {
         const val TAG = "QuickSand"
+        private const val ATLAS_KEY_SUFFIX = "_v2"
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -51,31 +51,55 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
-            regions.put("TopCenter", atlas.findRegion("$TAG/TopCenter"))
-            regions.put("TopLeft", atlas.findRegion("$TAG/TopLeft"))
-            regions.put("TopRight", atlas.findRegion("$TAG/TopRight"))
-            regions.put("Center", atlas.findRegion("$TAG/Center"))
-            regions.put("Left", atlas.findRegion("$TAG/Left"))
-            regions.put("Right", atlas.findRegion("$TAG/Right"))
+            Position.entries.forEach { position ->
+                val key = position.name.lowercase()
+                val regionKey = "${TAG}${ATLAS_KEY_SUFFIX}/$key"
+                val region = atlas.findRegion(regionKey)
+                regions.put(key, region)
+
+                GameLogger.debug(TAG, "init(): putting regions: regionKey=$regionKey, key=$key, region=$region")
+            }
         }
+
+        super.init()
+
         addComponent(defineBodyComponent())
+        addComponent(SpritesComponent())
+        addComponent(AnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
+
         super.onSpawn(spawnProps)
+
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
+
         body.forEachFixture { ((it as Fixture).rawShape as GameRectangle).set(bounds) }
+
         defineDrawables(bounds.splitByCellSize(ConstVals.PPM.toFloat(), matrix))
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+
+        super.onDestroy()
+
+        sprites.clear()
+        animators.clear()
+        clearSpriteUpdateFunctions()
     }
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
+        body.drawingColor = Color.GRAY
+
         val debugShapes = Array<() -> IDrawableShape?>()
 
         val sandFixture = Fixture(body, FixtureType.SAND)
         body.addFixture(sandFixture)
-        debugShapes.add { sandFixture}
+        debugShapes.add { sandFixture }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -83,31 +107,49 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
     }
 
     private fun defineDrawables(cells: Matrix<GameRectangle>) {
-        val sprites = OrderedMap<Any, GameSprite>()
-        val updateFunctions = ObjectMap<Any, UpdateFunction<GameSprite>>()
-        val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
-
         cells.forEach { x, y, bounds ->
-            val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
-            sprite.setSize(1.005f * ConstVals.PPM, ConstVals.PPM.toFloat())
+            val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
+            sprite.setSize(ConstVals.PPM.toFloat())
 
-            val key = "sand_${x}_${y}"
+            val key = "${x}_${y}"
             sprites.put(key, sprite)
 
-            updateFunctions.put(key, UpdateFunction { _, _ -> sprite.setCenter(bounds!!.getCenter()) })
+            putSpriteUpdateFunction(key) { _, _ -> sprite.setCenter(bounds!!.getCenter()) }
 
-            var regionKey = if (x % 3 == 0) "Left" else if (x % 3 == 2) "Right" else "Center"
-            if (y == cells.rows - 1) regionKey = "Top$regionKey"
+            val regionKey = when (x) {
+                0 -> when (y) {
+                    0 -> Position.BOTTOM_LEFT
+                    cells.rows - 1 -> Position.TOP_LEFT
+                    else -> Position.CENTER_LEFT
+                }
 
-            val region = regions.get(regionKey)
-            val animation = Animation(region!!, 1, 2, 0.25f, true)
-            val animator = Animator(animation)
-            animators.add({ sprite } pairTo animator)
+                cells.columns - 1 -> when (y) {
+                    0 -> Position.BOTTOM_RIGHT
+                    cells.rows - 1 -> Position.TOP_RIGHT
+                    else -> Position.CENTER_RIGHT
+                }
+
+                else -> when (y) {
+                    0 -> Position.BOTTOM_CENTER
+                    cells.rows - 1 -> Position.TOP_CENTER
+                    else -> Position.CENTER
+                }
+            }.name.lowercase()
+
+            val animator: Animator
+            try {
+                val region = regions[regionKey]
+                val animation = Animation(region!!, 4, 2, 0.1f, true)
+                animator = Animator(animation)
+            } catch (e: Exception) {
+                throw IllegalStateException("Failed to create animator for region $regionKey", e)
+            }
+
+            putAnimator(key, sprite, animator)
         }
-
-        addComponent(SpritesComponent(sprites, updateFunctions))
-        addComponent(AnimationsComponent(animators))
     }
 
     override fun getType() = EntityType.SPECIAL
+
+    override fun getTag() = TAG
 }

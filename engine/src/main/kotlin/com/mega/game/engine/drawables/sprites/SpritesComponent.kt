@@ -51,6 +51,8 @@ class SpritesComponent(
     fun removeUpdateFunction(key: Any) {
         updatables.remove(key)
     }
+
+    fun clearUpdateFunctions() = updatables.clear()
 }
 
 class SpritesComponentBuilder {

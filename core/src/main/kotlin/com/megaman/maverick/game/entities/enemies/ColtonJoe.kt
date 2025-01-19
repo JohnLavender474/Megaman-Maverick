@@ -32,18 +32,17 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.SmallGreenMissile
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
@@ -66,8 +65,7 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            regions.put("stand", atlas.findRegion("$TAG/stand"))
-            regions.put("shoot", atlas.findRegion("$TAG/shoot"))
+            gdxArrayOf("stand", "shoot").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -76,26 +74,34 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
+
         scanner = GameRectangle().setSize(10f * ConstVals.PPM, ConstVals.PPM.toFloat())
+
         shootTimer.setToEnd()
         shootDelayTimer.setToEnd()
+
         facing = if (body.getX() < megaman.body.getX()) Facing.RIGHT else Facing.LEFT
     }
 
     private fun shoot() {
-        val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SMALL_MISSILE)!!
-        val position = body.getCenter().add(0.65f * ConstVals.PPM * facing.value, 0.125f * ConstVals.PPM)
-        bullet.spawn(
+        val position = body.getCenter().add(0.75f * ConstVals.PPM * facing.value, 0.1f * ConstVals.PPM)
+
+        val trajectory = GameObjectPools.fetch(Vector2::class).set(BULLET_SPEED * facing.value * ConstVals.PPM, 0f)
+
+        val missile = MegaEntityFactory.fetch(SmallGreenMissile::class)!!
+        missile.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
+                ConstKeys.GRAVITY_ON pairTo false,
                 ConstKeys.POSITION pairTo position,
-                ConstKeys.TRAJECTORY pairTo Vector2(BULLET_SPEED * facing.value * ConstVals.PPM, 0f),
-                ConstKeys.DIRECTION pairTo if (isFacing(Facing.LEFT)) Direction.LEFT else Direction.RIGHT,
-                ConstKeys.GRAVITY_ON pairTo false
+                ConstKeys.TRAJECTORY pairTo trajectory,
+                ConstKeys.DIRECTION pairTo if (isFacing(Facing.LEFT)) Direction.LEFT else Direction.RIGHT
             )
         )
+
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.BLAST_2_SOUND, false)
     }
 
@@ -114,6 +120,7 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
             if (!shootDelayTimer.isFinished()) {
                 shootDelayTimer.update(delta)
+
                 if (shootDelayTimer.isJustFinished()) {
                     shoot()
                     shootTimer.reset()
@@ -126,34 +133,21 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(ConstVals.PPM.toFloat(), 1.25f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat(), 2f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
-        body.addFixture(bodyFixture)
-
-        val damagerFixture = Fixture(
-            body, FixtureType.DAMAGER, GameRectangle().setSize(0.75f * ConstVals.PPM, 1.15f * ConstVals.PPM)
-        )
-        body.addFixture(damagerFixture)
-        debugShapes.add { damagerFixture}
-
-        val damageableFixture = Fixture(
-            body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.8f * ConstVals.PPM, 1.35f * ConstVals.PPM)
-        )
-        body.addFixture(damageableFixture)
-        debugShapes.add { damageableFixture}
-
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(
+            this, body, BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
+        )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(2.85f * ConstVals.PPM)
+        sprite.setSize(4f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
@@ -172,4 +166,6 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
+
+    override fun getTag() = TAG
 }

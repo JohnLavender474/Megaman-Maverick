@@ -31,11 +31,9 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.utils.GameObjectPools
-
 import kotlin.math.ceil
 
 class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAudioEntity {
@@ -47,22 +45,10 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
         val defaultSize: Float,
         val regionkey: String
     ) {
-        BLUE(0.5f, DrawingSection.PLAYGROUND, -1, 1.5f * ConstVals.PPM, "Water/Splash_v2"),
-        WHITE(
-            0.5f,
-            DrawingSection.PLAYGROUND,
-            -1,
-            1.5f * ConstVals.PPM,
-            "Water/WhiteSplash"
-        ),
-        TOXIC(0.5f, DrawingSection.PLAYGROUND, -1, 1.5f * ConstVals.PPM, "Water/ToxicSplash"),
-        SAND(
-            1f,
-            DrawingSection.FOREGROUND,
-            15,
-            2f * ConstVals.PPM,
-            "SandSplash"
-        )
+        BLUE(0.5f, DrawingSection.PLAYGROUND, -1, 2f * ConstVals.PPM, "Water/Splash_v2"),
+        WHITE(0.5f, DrawingSection.PLAYGROUND, -1, 2f * ConstVals.PPM, "Water/WhiteSplash"),
+        TOXIC(0.5f, DrawingSection.PLAYGROUND, -1, 2f * ConstVals.PPM, "Water/ToxicSplash"),
+        SAND(1f, DrawingSection.FOREGROUND, 15, 2f * ConstVals.PPM, "SandSplash")
     }
 
     companion object {
@@ -72,13 +58,16 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
 
         fun splashOnWaterSurface(splasher: GameRectangle, water: GameRectangle, makeSound: Boolean = true) {
             GameLogger.debug(TAG, "splashOnWaterSurface(): splasher=$splasher, water=$water, makeSound=$makeSound")
+
             val numSplashes = ceil(splasher.getWidth() / ConstVals.PPM).toInt()
+
             for (i in 0 until numSplashes) {
-                val splash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)!!
                 val spawn = GameObjectPools.fetch(Vector2::class).set(
                     splasher.getX() + ConstVals.PPM / 2f + i * ConstVals.PPM,
                     water.getY() + water.getHeight()
                 )
+
+                val splash = MegaEntityFactory.fetch(Splash::class)!!
                 splash.spawn(
                     props(
                         ConstKeys.POSITION pairTo spawn,
@@ -96,10 +85,7 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
-            SplashType.entries.forEach { t ->
-                val region = atlas.findRegion(t.regionkey)
-                regions.put(t.name, region)
-            }
+            SplashType.entries.forEach { t -> regions.put(t.name, atlas.findRegion(t.regionkey)) }
         }
         addComponent(SpritesComponent(GameSprite()))
         addComponent(defineAnimationsComponent())
@@ -110,11 +96,15 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        type = if (spawnProps.containsKey(ConstKeys.TYPE)) {
-            val rawType = spawnProps.get(ConstKeys.TYPE)
-            rawType as? SplashType ?: if (rawType is String) SplashType.valueOf(rawType.uppercase())
-            else throw IllegalArgumentException("Type value must be a string or SplashType: $rawType")
-        } else SplashType.BLUE
+        type = when {
+            spawnProps.containsKey(ConstKeys.TYPE) -> {
+                val rawType = spawnProps.get(ConstKeys.TYPE)
+                rawType as? SplashType ?: if (rawType is String) SplashType.valueOf(rawType.uppercase())
+                else throw IllegalArgumentException("Type value must be a string or SplashType: $rawType")
+            }
+
+            else -> SplashType.BLUE
+        }
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         val size = spawnProps.getOrDefault(ConstKeys.SIZE, type.defaultSize, Float::class)

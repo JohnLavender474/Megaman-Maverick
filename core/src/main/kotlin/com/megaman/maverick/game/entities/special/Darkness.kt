@@ -71,7 +71,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
             ChargedShot::class pairTo brighterProjLightDef,
             ArigockBall::class pairTo standardProjLightDef,
             CactusMissile::class pairTo brighterProjLightDef,
-            SmallMissile::class pairTo standardProjLightDef,
+            SmallGreenMissile::class pairTo standardProjLightDef,
             Explosion::class pairTo brighterProjLightDef,
             ChargedShotExplosion::class pairTo {
                 it as ChargedShotExplosion
@@ -167,7 +167,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
                 val key = "[$x][$y]"
                 sprites.put(key, sprite)
-                putUpdateFunction(key) { delta, _ ->
+                putSpriteUpdateFunction(key) { delta, _ ->
                     if (tile.startAlpha < 0f) tile.startAlpha = 0f
                     else if (tile.startAlpha > 1f) tile.startAlpha = 1f
 

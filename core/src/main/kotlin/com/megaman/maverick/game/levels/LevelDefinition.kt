@@ -44,7 +44,7 @@ enum class LevelDefinition(
         type = LevelType.ROBOT_MASTER_LEVEL,
         mugshotAtlas = "FACES_1",
         mugshotRegion = "Desert Man",
-        tmxMapSource = "DesertMan_16x14.tmx",
+        tmxMapSource = "DesertMan_16x14_v2.tmx",
         music = MusicAsset.MMX7_VANISHING_GUNGAROO_MUSIC,
         screenOnCompletion = ScreenEnum.SAVE_GAME_SCREEN
     ),

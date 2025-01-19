@@ -136,7 +136,7 @@ class DarknessV3(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             ChargedShot::class pairTo brighterProjLightDef,
             ArigockBall::class pairTo standardProjLightDef,
             CactusMissile::class pairTo brighterProjLightDef,
-            SmallMissile::class pairTo standardProjLightDef,
+            SmallGreenMissile::class pairTo standardProjLightDef,
             Explosion::class pairTo brighterProjLightDef,
             ChargedShotExplosion::class pairTo {
                 it as ChargedShotExplosion

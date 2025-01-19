@@ -42,17 +42,13 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getCenter
-import com.megaman.maverick.game.world.body.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 
 class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
 
@@ -104,11 +100,15 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
+
         loop.reset()
         timers.values().forEach { it.reset() }
+
         shootPositionIndex = 0
+
         facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
@@ -120,12 +120,12 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     private fun getShootPositionY(index: Int) = when (index) {
         0 -> -0.75f
         1 -> -0.01f
-        2 -> 0.75f
-        else -> 1.5f
+        2 -> 0.85f
+        else -> 1.65f
     }
 
     private fun shoot() {
-        val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
+        val bullet = MegaEntityFactory.fetch(Bullet::class)!!
         bullet.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
@@ -136,6 +136,7 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
                 ConstKeys.TRAJECTORY pairTo Vector2(BULLET_SPEED * facing.value * ConstVals.PPM, 0f)
             )
         )
+
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
     }
 
@@ -148,8 +149,10 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
             timer.update(delta)
             if (timer.isFinished()) {
                 loop.next()
+
                 if (loop.getCurrent() == TotemPolemState.EYES_OPENING)
                     shootPositionIndex = getRandom(0, SHOOT_OPTIONS - 1)
+
                 timer.reset()
             }
         }
@@ -157,34 +160,13 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.85f * ConstVals.PPM, 3.25f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat(), 3.5f * ConstVals.PPM)
         body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body }
+        debugShapes.add { body.getBounds() }
 
-        val bodyFixture = Fixture(
-            body, FixtureType.BODY, GameRectangle().setSize(
-                0.65f * ConstVals.PPM, 3.25f * ConstVals.PPM
-            )
-        )
-        body.addFixture(bodyFixture)
-
-        val damagerFixture = Fixture(
-            body, FixtureType.DAMAGER, GameRectangle().setSize(
-                0.65f * ConstVals.PPM, 3.25f * ConstVals.PPM
-            )
-        )
-        body.addFixture(damagerFixture)
-
-        val shieldFixture = Fixture(
-            body, FixtureType.SHIELD, GameRectangle().setSize(
-                0.65f * ConstVals.PPM, 3.25f * ConstVals.PPM
-            )
-        )
-        body.addFixture(shieldFixture)
-
-        val damageableFixtures = Array<Fixture>()
+        val damageables = Array<Fixture>()
         for (i in 0 until SHOOT_OPTIONS) {
             val damageableFixture = Fixture(
                 body,
@@ -193,31 +175,28 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
             )
             damageableFixture.offsetFromBodyAttachment.y = getShootPositionY(i) * ConstVals.PPM
             body.addFixture(damageableFixture)
-
-            damageableFixtures.add(damageableFixture)
-
-            debugShapes.add {
-                damageableFixture.drawingColor = if (damageableFixture.isActive()) Color.PURPLE else Color.GRAY
-                damageableFixture.getShape()
-            }
+            damageables.add(damageableFixture)
+            debugShapes.add { damageableFixture }
         }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            for (i in 0 until damageableFixtures.size) {
-                val d = damageableFixtures[i]
-                d.offsetFromBodyAttachment.x = 0.25f * ConstVals.PPM * facing.value
-                d.setActive(eyesOpen)
+            damageables.forEach { damageable ->
+                damageable.setActive(eyesOpen)
+                damageable.offsetFromBodyAttachment.x = 0.25f * ConstVals.PPM * facing.value
+                damageable.drawingColor = if (damageable.isActive()) Color.PURPLE else Color.GRAY
             }
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(
+            this, body, BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.SHIELD)
+        )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(4.5f * ConstVals.PPM)
+        sprite.setSize(5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)

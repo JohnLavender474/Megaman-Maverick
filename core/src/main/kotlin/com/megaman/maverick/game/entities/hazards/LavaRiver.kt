@@ -119,6 +119,7 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         super.onDestroy()
         sprites.clear()
         animators.clear()
+        clearSpriteUpdateFunctions()
     }
 
     private fun defineCullablesComponent() = CullablesComponent(
@@ -142,7 +143,7 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
     private fun defineDrawables(type: String, left: Boolean) {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         sprites.put(TAG, sprite)
-        putUpdateFunction(TAG) { _, _ ->
+        putSpriteUpdateFunction(TAG) { _, _ ->
             sprite.hidden = hidden
             sprite.setFlip(left, false)
             sprite.setBounds(body.getBounds())

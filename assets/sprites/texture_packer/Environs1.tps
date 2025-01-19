@@ -58,13 +58,13 @@
             <key>filtering</key>
             <struct type="LibGDXFiltering">
                 <key>x</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
                 <key>y</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
             </struct>
         </struct>
         <key>shapePadding</key>
-        <uint>0</uint>
+        <uint>1</uint>
         <key>jpgQuality</key>
         <uint>80</uint>
         <key>pngOptimizationLevel</key>
@@ -76,7 +76,7 @@
         <key>textureFormat</key>
         <enum type="SettingsBase::TextureFormat">png</enum>
         <key>borderPadding</key>
-        <uint>0</uint>
+        <uint>1</uint>
         <key>maxTextureSize</key>
         <QSize>
             <key>width</key>
@@ -98,7 +98,7 @@
             <key>freeSizeMode</key>
             <enum type="AlgorithmSettings::AlgorithmFreeSizeMode">Best</enum>
             <key>sizeConstraints</key>
-            <enum type="AlgorithmSettings::SizeConstraints">AnySize</enum>
+            <enum type="AlgorithmSettings::SizeConstraints">POT</enum>
             <key>forceSquared</key>
             <false/>
             <key>maxRects</key>
@@ -155,13 +155,13 @@
             <key>scaleMode</key>
             <enum type="ScaleMode">Smooth</enum>
             <key>extrude</key>
-            <uint>0</uint>
+            <uint>1</uint>
             <key>trimThreshold</key>
             <uint>1</uint>
             <key>trimMargin</key>
             <uint>1</uint>
             <key>trimMode</key>
-            <enum type="SpriteSettings::TrimMode">None</enum>
+            <enum type="SpriteSettings::TrimMode">Trim</enum>
             <key>tracerTolerance</key>
             <int>200</int>
             <key>heuristicMask</key>
@@ -212,6 +212,29 @@
                 <rect>16,8,32,16</rect>
                 <key>scale9Paddings</key>
                 <rect>16,8,32,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Environs1/QuickSand_v2/bottom_center.png</key>
+            <key type="filename">../frames/Environs1/QuickSand_v2/bottom_left.png</key>
+            <key type="filename">../frames/Environs1/QuickSand_v2/bottom_right.png</key>
+            <key type="filename">../frames/Environs1/QuickSand_v2/center.png</key>
+            <key type="filename">../frames/Environs1/QuickSand_v2/center_left.png</key>
+            <key type="filename">../frames/Environs1/QuickSand_v2/center_right.png</key>
+            <key type="filename">../frames/Environs1/QuickSand_v2/top_center.png</key>
+            <key type="filename">../frames/Environs1/QuickSand_v2/top_left.png</key>
+            <key type="filename">../frames/Environs1/QuickSand_v2/top_right.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,32,32,64</rect>
+                <key>scale9Paddings</key>
+                <rect>16,32,32,64</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

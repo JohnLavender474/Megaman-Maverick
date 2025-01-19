@@ -3,10 +3,9 @@ package com.megaman.maverick.game.entities.projectiles
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -36,19 +35,17 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.utils.GameObjectPools
-
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional {
+class SmallGreenMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional {
 
     companion object {
-        const val TAG = "SmallMissile"
+        const val TAG = "SmallGreenMissile"
         const val WAVE_EXPLOSION = "wave_explosion"
         const val DEFAULT_EXPLOSION = "default_explosion"
         private const val GRAVITY = 0.15f
-        private val regions = ObjectMap<String, TextureRegion>()
+        private var region: TextureRegion? = null
     }
 
     override var direction: Direction
@@ -60,11 +57,7 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
     private lateinit var explosionType: String
 
     override fun init() {
-        if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
-            regions.put("green", atlas.findRegion("SmallGreenMissile"))
-            regions.put("purple", atlas.findRegion("SmallPurpleMissile"))
-        }
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
     }
 
@@ -81,9 +74,6 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
 
         val trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2.Zero, Vector2::class)
         body.physics.velocity.set(trajectory)
-
-        val region = regions.get(spawnProps.getOrDefault(ConstKeys.COLOR, ConstKeys.GREEN, String::class))
-        defaultSprite.setRegion(region)
 
         explosionType = spawnProps.getOrDefault(ConstKeys.EXPLOSION, DEFAULT_EXPLOSION, String::class)
     }
@@ -130,7 +120,7 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.35f * ConstVals.PPM, 0.65f * ConstVals.PPM)
+        body.setSize(0.5f * ConstVals.PPM, 0.75f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
 
@@ -138,26 +128,25 @@ class SmallMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirec
         debugShapes.add { body.getBounds() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            val gravityVec = GameObjectPools.fetch(Vector2::class)
+            val gravity = body.physics.gravity
             when (direction) {
-                Direction.UP -> gravityVec.set(0f, -GRAVITY)
-                Direction.DOWN -> gravityVec.set(0f, GRAVITY)
-                Direction.LEFT -> gravityVec.set(GRAVITY, 0f)
-                Direction.RIGHT -> gravityVec.set(-GRAVITY, 0f)
+                Direction.UP -> gravity.set(0f, -GRAVITY)
+                Direction.DOWN -> gravity.set(0f, GRAVITY)
+                Direction.LEFT -> gravity.set(GRAVITY, 0f)
+                Direction.RIGHT -> gravity.set(-GRAVITY, 0f)
             }.scl(ConstVals.PPM.toFloat())
-            body.physics.gravity.set(gravityVec)
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(
-            this, body, BodyFixtureDef.of(FixtureType.BODY, FixtureType.PROJECTILE, FixtureType.DAMAGER)
+            this, body, BodyFixtureDef.of(FixtureType.PROJECTILE, FixtureType.DAMAGER, FixtureType.SHIELD)
         )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
-        sprite.setSize(0.5f * ConstVals.PPM)
+        val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, 10))
+        sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setOriginCenter()

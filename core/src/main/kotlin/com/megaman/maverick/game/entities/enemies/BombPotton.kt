@@ -32,12 +32,10 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.entities.projectiles.SmallMissile
+import com.megaman.maverick.game.entities.projectiles.SmallGreenMissile
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
@@ -74,7 +72,9 @@ class BombPotton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
         targetReached = false
 
         speed = 0f
+
         launchedBomb = false
+
         facing = if (body.getX() > megaman.body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
@@ -110,20 +110,20 @@ class BombPotton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
     }
 
     private fun launchBomb() {
-        val greenBomb = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SMALL_MISSILE)!!
-        greenBomb.spawn(
+        val bomb = MegaEntityFactory.fetch(SmallGreenMissile::class)!!
+        bomb.spawn(
             props(
-                ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER),
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.DIRECTION pairTo Direction.UP,
-                ConstKeys.EXPLOSION pairTo SmallMissile.WAVE_EXPLOSION
+                ConstKeys.EXPLOSION pairTo SmallGreenMissile.WAVE_EXPLOSION,
+                ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)
             )
         )
     }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(1.25f * ConstVals.PPM)
+        body.setSize(1.5f * ConstVals.PPM)
         body.preProcess.put(ConstKeys.DEFAULT) {
             if (body.isSensing(BodySense.BODY_TOUCHING_BLOCK)) {
                 explode()
@@ -132,7 +132,8 @@ class BombPotton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
         }
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body }
+        debugShapes.add { body.getBounds() }
+
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(
@@ -144,7 +145,7 @@ class BombPotton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setCenter(body.getCenter())

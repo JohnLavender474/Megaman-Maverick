@@ -9,13 +9,13 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
-import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
@@ -36,14 +36,13 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -55,18 +54,22 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
 
     companion object {
         const val TAG = "CactusMissile"
+
         private const val SPEED = 4f
+
         private const val UP_DUR = 0.25f
         private const val RECALC_DELAY = 0.5f
         private const val DAMAGE_DURATION = 0.1f
         private const val LIFE_DUR = 3f
         private const val BLINK_TIME = 2.5f
+
         private val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>(
             Bullet::class pairTo 10,
             Fireball::class pairTo ConstVals.MAX_HEALTH,
             ChargedShot::class pairTo ConstVals.MAX_HEALTH,
             ChargedShotExplosion::class pairTo ConstVals.MAX_HEALTH
         )
+
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -77,13 +80,13 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
     private val recalcTimer = Timer(RECALC_DELAY)
     private val damageTimer = Timer(DAMAGE_DURATION)
     private val lifeTimer = Timer(LIFE_DUR, TimeMarkedRunnable(BLINK_TIME) { blink = true })
+
     private var blink = false
 
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
-            regions.put("fly", atlas.findRegion("$TAG/fly"))
-            regions.put("blink", atlas.findRegion("$TAG/blink"))
+            gdxArrayOf("fly", "blink").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
         addComponent(defineUpdatablesComponent())
@@ -93,18 +96,23 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         setHealth(ConstVals.MAX_HEALTH)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
-        lifeTimer.reset()
+
         upTimer.reset()
+        lifeTimer.reset()
         recalcTimer.reset()
         damageTimer.setToEnd()
+
         blink = false
     }
 
     override fun onDestroy() {
         super.onDestroy()
+
         if (hasDepletedHealth()) explode()
     }
 
@@ -118,7 +126,7 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
     }
 
     private fun explode() {
-        val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
+        val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(
             props(
                 ConstKeys.POSITION pairTo body.getCenter(),
@@ -181,25 +189,22 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         val body = Body(BodyType.ABSTRACT)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
-        body.setSize(1.25f * ConstVals.PPM)
+        body.setSize(1.5f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.625f * ConstVals.PPM))
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.75f * ConstVals.PPM))
         body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture}
+        debugShapes.add { bodyFixture }
 
-        val projectileFixture =
-            Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(0.625f * ConstVals.PPM))
+        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.75f * ConstVals.PPM))
         body.addFixture(projectileFixture)
-        debugShapes.add { projectileFixture}
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.625f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.75f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
-        val damageableFixture =
-            Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.625f * ConstVals.PPM))
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(0.75f * ConstVals.PPM))
         body.addFixture(damageableFixture)
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -216,12 +221,14 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = body.physics.velocity.angleDeg() - 90f
+
             sprite.setCenter(body.getCenter())
+
             sprite.hidden = !damageTimer.isFinished()
         }
         return spritesComponent

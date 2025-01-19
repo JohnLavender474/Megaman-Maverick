@@ -98,7 +98,7 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
             sprite.setRegion(barRegion!!)
             sprite.setSize(2.25f * ConstVals.PPM)
             sprites.put("bar_$i", sprite)
-            putUpdateFunction("bar_$i") { _, _ ->
+            putSpriteUpdateFunction("bar_$i") { _, _ ->
                 val centerX = body.getCenter().x
                 val bottomY = body.getPositionPoint(Position.BOTTOM_CENTER).y + (i * 2.25f * ConstVals.PPM)
                 sprite.setPosition(Vector2(centerX, bottomY), Position.BOTTOM_CENTER)
