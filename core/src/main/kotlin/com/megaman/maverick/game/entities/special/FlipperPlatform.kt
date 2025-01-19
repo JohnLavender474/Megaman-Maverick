@@ -55,10 +55,10 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         private const val SWITCH_DELAY = 0.4f
         private const val SWITCH_DURATION = 0.25f
 
-        private const val BLOCK_WIDTH = 1.75f
+        private const val BLOCK_WIDTH = 2f
         private const val BLOCK_HEIGHT = 0.5f
-        private const val OFFSET_X = 0.25f
-        private const val OFFSET_Y = 0.5f
+        private const val OFFSET_X = 0.5f
+        private const val OFFSET_Y = 0.75f
 
         private var leftRegion: TextureRegion? = null
         private var rightRegion: TextureRegion? = null
@@ -81,12 +81,12 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     override fun init() {
         if (leftRegion == null || rightRegion == null || flipToRightRegion == null || flipToLeftRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
-            leftRegion = atlas.findRegion("FlipperPlatform/Left")
-            rightRegion = atlas.findRegion("FlipperPlatform/Right")
-            leftDelayRegion = atlas.findRegion("FlipperPlatform/LeftDelay")
-            rightDelayRegion = atlas.findRegion("FlipperPlatform/RightDelay")
-            flipToRightRegion = atlas.findRegion("FlipperPlatform/FlipToRight")
-            flipToLeftRegion = atlas.findRegion("FlipperPlatform/FlipToLeft")
+            leftRegion = atlas.findRegion("$TAG/Left")
+            rightRegion = atlas.findRegion("$TAG/Right")
+            leftDelayRegion = atlas.findRegion("$TAG/LeftDelay")
+            rightDelayRegion = atlas.findRegion("$TAG/RightDelay")
+            flipToRightRegion = atlas.findRegion("$TAG/FlipToRight")
+            flipToLeftRegion = atlas.findRegion("$TAG/FlipToLeft")
         }
         addComponent(defineUpdatablesComponent())
         addComponent(defineCullablesComponent())
@@ -208,7 +208,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
-        sprite.setSize(/* 2.6875f */  4.03125f * ConstVals.PPM, /* 1.875f */ 2.8125f * ConstVals.PPM)
+        sprite.setSize(6f * ConstVals.PPM, 4f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             sprite.setPosition(bounds.getPositionPoint(Position.TOP_CENTER), Position.TOP_CENTER)

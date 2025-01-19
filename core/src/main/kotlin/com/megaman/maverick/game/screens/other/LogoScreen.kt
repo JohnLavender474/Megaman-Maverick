@@ -15,6 +15,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.utils.Fade
@@ -28,7 +29,7 @@ class LogoScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initiali
 
         private const val INIT_DUR = 0.5f
         private const val LOGO_FADE_IN_DUR = 2.5f
-        private const val SHOW_DUR = 1f
+        private const val SHOW_DUR = 2f
         private const val FADE_OUT_DUR = 1f
 
         private const val TOP_LINE = "A GAME BY"
@@ -105,13 +106,21 @@ class LogoScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initiali
 
     override fun show() {
         if (!initialized) init()
+
         oldLavyLogo.setAlpha(0f)
+
         fadeOut.reset()
+        timers.values().forEach { it.reset() }
+
+        stateQueue.clear()
         LogoScreenState.entries.forEach { stateQueue.addLast(it) }
     }
 
     override fun render(delta: Float) {
-        if (stateQueue.isEmpty) return
+        if (game.controllerPoller.isJustPressed(MegaControllerButton.START)) {
+            game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
+            return
+        }
 
         val timer = timers[currentState]
         timer.update(delta)

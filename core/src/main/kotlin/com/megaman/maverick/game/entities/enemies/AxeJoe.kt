@@ -147,6 +147,8 @@ class AxeJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
         body.physics.velocity.set(initImpulseX * facing.value, initImpulseY).scl(ConstVals.PPM.toFloat())
 
         stateMachine.reset()
+        stateTimers.values().forEach { it.reset() }
+
         hasShield = true
     }
 

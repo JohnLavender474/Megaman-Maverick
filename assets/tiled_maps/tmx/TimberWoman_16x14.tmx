@@ -610,7 +610,7 @@
  </objectgroup>
  <objectgroup id="11" name="specials">
   <object id="250" name="Ladder" x="3776" y="960" width="32" height="320"/>
-  <object id="381" name="FlipperPlatform" x="5888" y="872" width="32" height="32"/>
+  <object id="381" name="FlipperPlatform" x="5856" y="864" width="96" height="32"/>
   <object id="387" name="FlipperPlatform" x="6048" y="832" width="32" height="32"/>
   <object id="408" name="FlipperPlatform" x="6656" y="784" width="32" height="32"/>
   <object id="411" name="FlipperPlatform" x="6784" y="912" width="32" height="32"/>

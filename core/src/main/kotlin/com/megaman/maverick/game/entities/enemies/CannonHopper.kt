@@ -57,7 +57,7 @@ class CannonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.
 
         private const val BULLET_SPEED = 8f
 
-        private const val JUMP_X = 5f
+        private const val JUMP_X = 4f
         private const val JUMP_Y = 8f
 
         private val regions = ObjectMap<String, TextureRegion>()
@@ -135,20 +135,20 @@ class CannonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(2f * ConstVals.PPM, ConstVals.PPM.toFloat())
+        body.setSize(1.5f * ConstVals.PPM, ConstVals.PPM.toFloat())
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
         val feetFixture =
-            Fixture(body, FixtureType.FEET, GameRectangle().setSize(1.75f * ConstVals.PPM, 0.1f * ConstVals.PPM))
+            Fixture(body, FixtureType.FEET, GameRectangle().setSize(1.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         body.addFixture(feetFixture)
         feetFixture.drawingColor = Color.GREEN
         debugShapes.add { feetFixture }
 
         val headFixture =
-            Fixture(body, FixtureType.HEAD, GameRectangle().setSize(1.75f * ConstVals.PPM, 0.1f * ConstVals.PPM))
+            Fixture(body, FixtureType.HEAD, GameRectangle().setSize(1.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
         body.addFixture(headFixture)
         headFixture.drawingColor = Color.ORANGE
