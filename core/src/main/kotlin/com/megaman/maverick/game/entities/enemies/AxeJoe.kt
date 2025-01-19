@@ -330,7 +330,7 @@ class AxeJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
         )
         impulse.x = impulse.x.coerceIn(-AXE_MAX_IMPULSE_X * ConstVals.PPM, AXE_MAX_IMPULSE_X * ConstVals.PPM)
 
-        val spawn = body.getCenter().add(0.1f * ConstVals.PPM * facing.value, 0.75f * ConstVals.PPM)
+        val spawn = body.getCenter().add(-0.25f * ConstVals.PPM * facing.value, ConstVals.PPM.toFloat())
 
         val axe = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.AXE)!!
         axe.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.IMPULSE pairTo impulse))

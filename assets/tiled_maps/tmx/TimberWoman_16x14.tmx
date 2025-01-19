@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="420" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="649">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="420" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="650">
  <tileset firstgid="1" source="../tsx/pipe_forest.tsx"/>
  <tileset firstgid="22" source="../tsx/PlantManTileset.tsx"/>
  <tileset firstgid="772" source="../tsx/Tileset1.tsx"/>
@@ -417,7 +417,7 @@
   <object id="584" x="12288" y="0" width="64" height="544"/>
   <object id="588" x="12352" y="0" width="448" height="192"/>
   <object id="589" x="12800" y="0" width="96" height="544"/>
-  <object id="615" x="10656" y="1472" width="224" height="128"/>
+  <object id="615" x="10656" y="1520" width="224" height="128"/>
   <object id="618" x="10432" y="672" width="64" height="64"/>
   <object id="619" x="11776" y="416" width="64" height="128"/>
   <object id="620" x="12256" y="416" width="32" height="32"/>
@@ -545,34 +545,34 @@
     <property name="path9" type="object" value="478"/>
    </properties>
   </object>
-  <object id="470" x="10144" y="1080" visible="0">
+  <object id="470" x="10144" y="1080">
    <polyline points="0,0 0,72 192,72 192,168 -32,168 -32,232 -192,232 -192,328 192,328"/>
   </object>
-  <object id="471" x="10144" y="1088" visible="0">
+  <object id="471" x="10144" y="1088">
    <polyline points="0,0 -192,0 -192,64 -64,64 -64,128 192,128 192,192 0,192 0,320 192,320"/>
   </object>
-  <object id="472" x="10144" y="1088" visible="0">
+  <object id="472" x="10144" y="1088">
    <polyline points="0,0 0,160 -192,160 -192,224 -96,224 -96,288 96,288 96,320 192,320"/>
   </object>
-  <object id="473" x="10144" y="1088" visible="0">
+  <object id="473" x="10144" y="1088">
    <polyline points="0,0 -64,0 -64,64 128,64 128,128 192,128 192,192 0,192 0,224 -128,224 -128,320 -192,320"/>
   </object>
-  <object id="474" x="10144" y="1088" visible="0">
+  <object id="474" x="10144" y="1088">
    <polyline points="0,0 64,0 64,64 160,64 160,128 -64,128 -64,192 -128,192 -128,320 192,320"/>
   </object>
-  <object id="475" x="10144" y="1088" visible="0">
+  <object id="475" x="10144" y="1088">
    <polyline points="0,0 -96,0 -96,128 -192,128 -192,320 -96,320 -96,224 -32,224 -32,160 192,160 192,320 0,320"/>
   </object>
-  <object id="476" x="10144" y="1088" visible="0">
+  <object id="476" x="10144" y="1088">
    <polyline points="0,0 0,64 192,64 192,320 128,320 128,160 -32,160 -32,96 -184,96 -192,96 -192,320 0,320"/>
   </object>
-  <object id="477" x="10144" y="1088" visible="0">
+  <object id="477" x="10144" y="1088">
    <polyline points="0,0 -96,0 -96,96 192,96 192,160 -192,160 -192,224 -64,224 -64,320 192,320"/>
   </object>
-  <object id="478" x="10144" y="1088" visible="0">
+  <object id="478" x="10144" y="1088">
    <polyline points="0,0 96,0 96,64 192,64 192,160 -32,160 -32,224 96,224 96,256 32,256 32,320 -192,320"/>
   </object>
-  <object id="479" x="10144" y="1088" visible="0">
+  <object id="479" x="10144" y="1088">
    <polyline points="0,0 0,32 -96,32 -96,64 128,64 128,128 32,128 32,160 192,160 192,192 -32,192 -32,224 -128,224 -128,256 32,256 32,320 192,320"/>
   </object>
   <object id="480" name="BabySpider" x="9992" y="1096" width="16" height="16">
