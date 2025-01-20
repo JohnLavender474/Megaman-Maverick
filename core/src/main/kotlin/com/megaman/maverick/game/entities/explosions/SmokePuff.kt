@@ -24,6 +24,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -53,7 +54,7 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
         private var smokePuffRegion: TextureRegion? = null
     }
 
-    override var owner: GameEntity? = null
+    override var owner: IGameEntity? = null
     override var direction: Direction
         get() = body.direction
         set(value) {
@@ -76,8 +77,10 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
         direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         val position = when (direction) {
             Direction.UP -> Position.BOTTOM_CENTER
@@ -86,6 +89,7 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
             Direction.RIGHT -> Position.CENTER_LEFT
         }
         body.positionOnPoint(spawn, position)
+
         animation.reset()
     }
 

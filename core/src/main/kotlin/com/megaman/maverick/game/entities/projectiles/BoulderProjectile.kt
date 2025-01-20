@@ -21,7 +21,7 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
-import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.*
@@ -36,7 +36,6 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-
 import com.megaman.maverick.game.world.body.*
 
 class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
@@ -70,7 +69,7 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
         private var smallRegion: TextureRegion? = null
     }
 
-    override var owner: GameEntity? = null
+    override var owner: IGameEntity? = null
     override lateinit var size: Size
 
     private val spawnExplodeDelay = Timer(SPAWN_EXPLODE_DELAY)

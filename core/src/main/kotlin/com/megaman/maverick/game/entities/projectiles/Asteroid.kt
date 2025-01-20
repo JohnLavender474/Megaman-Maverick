@@ -25,6 +25,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
@@ -64,9 +65,10 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override var owner: GameEntity? = null
+    override var owner: IGameEntity? = null
 
     private lateinit var type: String
+
     private var rotation = 0f
     private var rotationSpeed = 0f
 

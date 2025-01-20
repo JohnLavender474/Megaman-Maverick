@@ -22,6 +22,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
@@ -54,7 +55,7 @@ class StarExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         private var region: TextureRegion? = null
     }
 
-    override var owner: GameEntity? = null
+    override var owner: IGameEntity? = null
 
     private val timer = Timer(EXPLOSION_DUR)
 
@@ -69,10 +70,14 @@ class StarExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         owner = spawnProps.get(ConstKeys.OWNER) as GameEntity?
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
+
         timer.reset()
+
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.BLAST_1_SOUND, false)
     }
 

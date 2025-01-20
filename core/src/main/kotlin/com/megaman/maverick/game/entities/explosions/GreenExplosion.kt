@@ -23,6 +23,7 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
@@ -57,7 +58,7 @@ class GreenExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         set(value) {
             body.direction = value
         }
-    override var owner: GameEntity? = null
+    override var owner: IGameEntity? = null
 
     private val timer = Timer(
         DURATION, gdxArrayOf(
@@ -98,8 +99,10 @@ class GreenExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
         direction = spawnProps.get(ConstKeys.DIRECTION, Direction::class) ?: Direction.UP
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         when (direction) {
             Direction.UP -> body.setBottomCenterToPoint(spawn)
@@ -107,8 +110,10 @@ class GreenExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
             Direction.LEFT -> body.setCenterRightToPoint(spawn)
             Direction.RIGHT -> body.setCenterLeftToPoint(spawn)
         }
+
         width = 0f
         damagerOffset = 0f
+
         timer.reset()
     }
 

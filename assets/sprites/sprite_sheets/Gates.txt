@@ -1,19 +1,40 @@
 Gates.png
-size: 180, 64
+size: 416, 64
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-closed
+standard/closed
   rotate: false
   xy: 0, 0
-  size: 30, 64
-  orig: 30, 64
+  size: 32, 64
+  orig: 32, 64
   offset: 0, 0
   index: -1
-opening
+standard/closing
   rotate: false
-  xy: 30, 0
-  size: 150, 64
-  orig: 150, 64
+  xy: 32, 0
+  size: 160, 64
+  orig: 160, 64
+  offset: 0, 0
+  index: -1
+standard/open
+  rotate: false
+  xy: 192, 0
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+standard/openable
+  rotate: false
+  xy: 224, 0
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+standard/opening
+  rotate: false
+  xy: 256, 0
+  size: 160, 64
+  orig: 160, 64
   offset: 0, 0
   index: -1

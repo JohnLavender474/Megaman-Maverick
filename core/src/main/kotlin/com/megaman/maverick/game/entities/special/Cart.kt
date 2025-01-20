@@ -23,7 +23,7 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
-import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
@@ -57,7 +57,7 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         private const val FRICTION_Y = 1.25f
     }
 
-    override var owner: GameEntity? = null
+    override var owner: IGameEntity? = null
     override lateinit var facing: Facing
 
     override fun init() {
@@ -71,16 +71,21 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     override fun canSpawn(spawnProps: Properties): Boolean {
         val specials = MegaGameEntities.getEntitiesOfType(getType())
         val otherCart = specials.find { it is Cart && it != this }
+
         val canSpawn = otherCart == null
+
         GameLogger.debug(TAG, "Can spawn = $canSpawn. This = ${this.hashCode()}. Other = ${otherCart.hashCode()}")
+
         return canSpawn
     }
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "Spawn cart. Hashcode = ${this.hashCode()}. Props = $spawnProps")
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
+
         facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "right", String::class).uppercase())
     }
 

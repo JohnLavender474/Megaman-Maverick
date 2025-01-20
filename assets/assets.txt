@@ -346,8 +346,11 @@ sprites/frames/Enemies2/BombPotton.png
 sprites/frames/Enemies2/JetMet/Stand.png
 sprites/frames/Enemies2/JetMet/Jet.png
 sprites/frames/Enemies2/JetMet/TakeOff.png
-sprites/frames/Gates/opening.png
-sprites/frames/Gates/closed.png
+sprites/frames/Gates/standard/closing.png
+sprites/frames/Gates/standard/open.png
+sprites/frames/Gates/standard/opening.png
+sprites/frames/Gates/standard/openable.png
+sprites/frames/Gates/standard/closed.png
 sprites/frames/MegamanFire/Stand.png
 sprites/frames/MegamanFire/Swim.png
 sprites/frames/MegamanFire/JumpShoot.png
@@ -1902,6 +1905,7 @@ sprites/piskel/Explosion.piskel
 sprites/piskel/ChargeOrbs.piskel
 sprites/piskel/Toxic_Waterfall.piskel
 sprites/piskel/ReactMan.piskel
+sprites/piskel/CrystalManTileset.piskel
 sprites/piskel/Dripping_Toxic_Goop.piskel
 sprites/piskel/MegamanChargedShot.piskel
 sprites/piskel/PurpleBlast.piskel

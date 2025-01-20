@@ -5,6 +5,7 @@ import com.mega.game.engine.common.interfaces.ISizable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.events.IEventListener
 import com.megaman.maverick.game.ConstKeys
@@ -13,7 +14,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 abstract class AbstractProjectile(game: MegamanMaverickGame, override var size: Size = Size.MEDIUM) :
     MegaGameEntity(game), IProjectileEntity, ISpritesEntity, ISizable {
 
-    override var owner: GameEntity? = null
+    override var owner: IGameEntity? = null
 
     open val canMove: Boolean
         get() = !game.isCameraRotating()

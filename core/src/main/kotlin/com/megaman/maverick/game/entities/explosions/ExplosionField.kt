@@ -8,6 +8,7 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -29,7 +30,7 @@ class ExplosionField(game: MegamanMaverickGame): MegaGameEntity(game), IOwnable 
         private const val DEFAULT_EXPLODE_ON_START = true
     }
 
-    override var owner: GameEntity? = null
+    override var owner: IGameEntity? = null
 
     private lateinit var bounds: GameRectangle
     private lateinit var timer: Timer

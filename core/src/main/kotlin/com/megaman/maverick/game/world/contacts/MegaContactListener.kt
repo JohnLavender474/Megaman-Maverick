@@ -43,7 +43,6 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.sensors.Gate
-import com.megaman.maverick.game.entities.sensors.Gate.GateState
 import com.megaman.maverick.game.entities.special.Cart
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.VelocityAlterator
@@ -221,7 +220,7 @@ class MegaContactListener(
             val entity = otherFixture.getEntity()
             if (entity is Megaman) {
                 val gate = gateFixture.getEntity() as Gate
-                if (gate.state == GateState.OPENABLE) gate.trigger()
+                if (gate.isTriggerable()) gate.trigger()
             }
         }
 

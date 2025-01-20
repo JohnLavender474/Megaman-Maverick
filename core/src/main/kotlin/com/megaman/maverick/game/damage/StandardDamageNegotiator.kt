@@ -7,7 +7,6 @@ import com.mega.game.engine.common.interfaces.ISizable
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.damage.IDamager
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.hazards.Saw
 import com.megaman.maverick.game.entities.projectiles.Bullet
@@ -15,7 +14,8 @@ import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import kotlin.reflect.KClass
 
-class StandardDamageNegotiator(val overrides: ObjectMap<String, DamageNegotiation> = ObjectMap()) : IDamageNegotiator {
+class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, DamageNegotiation?> = ObjectMap()) :
+    IDamageNegotiator {
 
     companion object {
         private val LARGE_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -72,21 +72,17 @@ class StandardDamageNegotiator(val overrides: ObjectMap<String, DamageNegotiatio
     }
 
     override fun get(damager: IDamager): Int {
-        val entity = damager as MegaGameEntity
-
-        val tag = entity.getTag()
-
+        val key = damager::class
         return when {
-            overrides.containsKey(tag) -> overrides[tag].get(damager)
-            entity is ISizable -> {
-                val negotiations = when (entity.size) {
+            overrides.containsKey(key) -> overrides[key]?.get(damager) ?: 0
+            damager is ISizable -> {
+                val negotiations = when (damager.size) {
                     Size.LARGE -> LARGE_DMG_NEGS
                     Size.MEDIUM -> MEDIUM_DMG_NEGS
                     Size.SMALL -> SMALL_DMG_NEGS
                 }
                 negotiations.get(damager::class)?.get(damager) ?: 0
             }
-
             else -> 0
         }
     }

@@ -115,7 +115,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         private val STAND_POUND_GROUND_BURST_TIMES = gdxArrayOf(0.35f, 0.95f, 1.55f)
 
         private val GROUND_PEBBLE_IMPULSES = gdxArrayOf(
-            Vector2(-18f, 5f),
+            // Vector2(-18f, 5f),
             Vector2(-15f, 10f),
             Vector2(-9f, 18f),
             Vector2(-3f, 26f),
@@ -123,7 +123,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
             Vector2(3f, 26f),
             Vector2(9f, 18f),
             Vector2(15f, 10f),
-            Vector2(18f, 5f),
+            // Vector2(18f, 5f),
         )
         private const val GROUND_PEBBLES_AXE_SWING_OFFSET_X = 2f
         private const val GROUND_PEBBLES_OFFSET_Y = 0.35f
@@ -182,7 +182,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         private const val AXE_POUND_REGION_2 = "axe_pound2"
         private const val AXE_POUND_2_INDEX = 4
 
-        private const val LEAVES_PER_POUND = 2
+        private const val SECOND_LEAF_OFFSET = 1.5f
 
         private val regions = ObjectMap<String, TextureRegion>()
         private val animDefs = ObjectMap<String, AnimationDef>()
@@ -636,11 +636,17 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         }
     }
 
-    private fun spawnDeadlyLeaf(spawn: Vector2) {
-        GameLogger.debug(TAG, "spawnDeadlyLeaf(): spawn=$spawn")
+    private fun spawnDeadlyLeaves(spawn1: Vector2) {
+        val spawn2 = GameObjectPools.fetch(Vector2::class).set(spawn1).add(SECOND_LEAF_OFFSET * ConstVals.PPM, 0f)
+        if (walls.any { it.contains(spawn2) }) spawn2.sub(2f * SECOND_LEAF_OFFSET * ConstVals.PPM, 0f)
 
-        val leaf = MegaEntityFactory.fetch(DeadlyLeaf::class)!!
-        leaf.spawn(props(ConstKeys.POSITION pairTo spawn))
+        GameLogger.debug(TAG, "spawnDeadlyLeaf(): spawn1=$spawn1, spawn2=$spawn2")
+
+        val leaf1 = MegaEntityFactory.fetch(DeadlyLeaf::class)!!
+        leaf1.spawn(props(ConstKeys.POSITION pairTo spawn1))
+
+        val leaf2 = MegaEntityFactory.fetch(DeadlyLeaf::class)!!
+        leaf2.spawn(props(ConstKeys.POSITION pairTo spawn2))
     }
 
     private fun spawnGroundPebbles() {
@@ -670,11 +676,9 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
 
         spawnGroundPebbles()
 
-        (0 until LEAVES_PER_POUND).forEach {
-            val spawn = GameObjectPools.fetch(Vector2::class)
-            val randomLeafSpawn = leafSpawnBounds.getRandomPositionInBounds(spawn)
-            spawnDeadlyLeaf(randomLeafSpawn)
-        }
+        val spawn = GameObjectPools.fetch(Vector2::class)
+        val randomLeafSpawn = leafSpawnBounds.getRandomPositionInBounds(spawn)
+        spawnDeadlyLeaves(randomLeafSpawn)
 
         game.eventsMan.submitEvent(
             Event(

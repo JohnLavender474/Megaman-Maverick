@@ -16,7 +16,7 @@ import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
-import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
@@ -52,7 +52,7 @@ class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
     }
 
     override var size = Size.SMALL
-    override var owner: GameEntity? = null
+    override var owner: IGameEntity? = null
     override val damageNegotiator = SelfSizeDamageNegotiator(this)
 
     private var ballInHand = true
