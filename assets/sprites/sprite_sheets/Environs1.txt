@@ -1,236 +1,236 @@
 Environs1.png
-size: 1024, 256
+size: 1604, 192
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 Leaves/SpringLeaf
   rotate: false
-  xy: 2, 2
-  size: 136, 10
+  xy: 96, 0
+  size: 160, 32
   orig: 160, 32
-  offset: 12, 11
+  offset: 0, 0
   index: -1
 QuickSand/Center
   rotate: false
-  xy: 666, 32
+  xy: 256, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 QuickSand/Left
   rotate: false
-  xy: 733, 32
+  xy: 320, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 QuickSand/Right
   rotate: false
-  xy: 800, 32
+  xy: 384, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 QuickSand/TopCenter
   rotate: false
-  xy: 867, 32
+  xy: 448, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 QuickSand/TopLeft
   rotate: false
-  xy: 934, 32
+  xy: 512, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 QuickSand/TopRight
   rotate: false
-  xy: 2, 67
+  xy: 576, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 QuickSand_v2/bottom_center
   rotate: false
-  xy: 320, 67
+  xy: 832, 32
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 QuickSand_v2/bottom_left
   rotate: false
-  xy: 387, 67
+  xy: 896, 32
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 QuickSand_v2/bottom_right
   rotate: false
-  xy: 454, 67
+  xy: 960, 32
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 QuickSand_v2/center
   rotate: false
-  xy: 521, 67
+  xy: 1024, 32
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 QuickSand_v2/center_left
   rotate: false
-  xy: 588, 67
+  xy: 1088, 32
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 QuickSand_v2/center_right
   rotate: false
-  xy: 655, 67
+  xy: 1152, 32
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 QuickSand_v2/top_center
   rotate: false
-  xy: 722, 67
+  xy: 1216, 32
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 QuickSand_v2/top_left
   rotate: false
-  xy: 789, 67
+  xy: 1280, 32
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 QuickSand_v2/top_right
   rotate: false
-  xy: 856, 67
+  xy: 1344, 32
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 SandSplash
   rotate: false
-  xy: 861, 2
-  size: 154, 27
+  xy: 640, 0
+  size: 160, 32
   orig: 160, 32
-  offset: 3, 0
+  offset: 0, 0
   index: -1
 Trees/Tree1
   rotate: false
-  xy: 923, 67
-  size: 97, 152
+  xy: 1408, 32
+  size: 98, 160
   orig: 98, 160
   offset: 0, 0
   index: -1
 Trees/TreeStump
   rotate: false
-  xy: 630, 32
-  size: 33, 30
+  xy: 1506, 32
+  size: 98, 160
   orig: 98, 160
-  offset: 32, 0
+  offset: 0, 0
   index: -1
 Water/Splash
   rotate: false
-  xy: 2, 32
-  size: 154, 27
+  xy: 800, 0
+  size: 160, 32
   orig: 160, 32
-  offset: 3, 0
+  offset: 0, 0
   index: -1
 Water/Splash_v2
   rotate: false
-  xy: 159, 32
-  size: 154, 27
+  xy: 960, 0
+  size: 160, 32
   orig: 160, 32
-  offset: 3, 0
+  offset: 0, 0
   index: -1
 Water/Surface
   rotate: false
-  xy: 69, 67
+  xy: 1120, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Water/ToxicSplash
   rotate: false
-  xy: 316, 32
-  size: 154, 27
+  xy: 1184, 0
+  size: 160, 32
   orig: 160, 32
-  offset: 3, 0
+  offset: 0, 0
   index: -1
 Water/Under
   rotate: false
-  xy: 136, 67
+  xy: 1344, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Water/Water
   rotate: false
-  xy: 203, 67
+  xy: 1408, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Water/WhiteSplash
   rotate: false
-  xy: 473, 32
-  size: 154, 27
+  xy: 1440, 0
+  size: 160, 32
   orig: 160, 32
-  offset: 3, 0
+  offset: 0, 0
   index: -1
 WindyGrass/Left
   rotate: false
-  xy: 172, 2
-  size: 32, 14
+  xy: 0, 0
+  size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 WindyGrass/Middle
   rotate: false
-  xy: 207, 2
-  size: 32, 14
+  xy: 32, 0
+  size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 WindyGrass/Right
   rotate: false
-  xy: 141, 2
-  size: 28, 13
+  xy: 64, 0
+  size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 Wood/DeadBranch
   rotate: false
-  xy: 280, 67
-  size: 37, 64
+  xy: 0, 32
+  size: 64, 64
   orig: 64, 64
-  offset: 13, 0
+  offset: 0, 0
   index: -1
 Wood/FallingLeaf
   rotate: false
-  xy: 242, 2
-  size: 596, 17
+  xy: 64, 32
+  size: 640, 64
   orig: 640, 64
-  offset: 22, 24
+  offset: 0, 0
   index: -1
 Wood/Leaf
   rotate: false
-  xy: 841, 2
-  size: 17, 17
+  xy: 704, 32
+  size: 64, 64
   orig: 64, 64
-  offset: 23, 24
+  offset: 0, 0
   index: -1
 Wood/Stump
   rotate: false
-  xy: 238, 67
-  size: 39, 32
+  xy: 768, 32
+  size: 64, 64
   orig: 64, 64
-  offset: 12, 16
+  offset: 0, 0
   index: -1

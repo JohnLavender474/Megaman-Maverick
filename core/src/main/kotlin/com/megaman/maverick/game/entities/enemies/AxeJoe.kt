@@ -14,6 +14,7 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
+import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.orderedMapOf
@@ -57,8 +58,11 @@ class AxeJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
         const val TAG = "AxeJoe"
 
         private const val STAND_DUR = 0.75f
-        private const val THROW_DUR = 0.25f
-        private const val THROW_TIME = 0.2f
+        private const val THROW_DUR = 0.5f
+        private const val THROW_TIME = 0.125f
+        private const val COOLDOWN_DUR = 1.5f
+
+        private const val AXES_BEFORE_COOLDOWN = 3
 
         private const val JUMP_SENSOR_WIDTH = 1f
         private const val JUMP_SENSOR_HEIGHT = 4f
@@ -82,14 +86,15 @@ class AxeJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
 
         private val animDefs = orderedMapOf(
             "stand" pairTo AnimationDef(2, 1, gdxArrayOf(0.5f, 0.15f), true),
+            "cooldown" pairTo AnimationDef(2, 1, gdxArrayOf(0.25f, 0.25f), true),
+            "throw" pairTo AnimationDef(3, 1, gdxArrayOf(0.125f, 0.25f, 0.125f), false),
             "jump" pairTo AnimationDef(),
-            "throw" pairTo AnimationDef(2, 1, 0.1f, false)
         )
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private enum class AxeJoeState { STAND, JUMP, THROW }
+    private enum class AxeJoeState { STAND, JUMP, THROW, COOLDOWN }
 
     override lateinit var facing: Facing
 
@@ -97,6 +102,7 @@ class AxeJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
     private val currentState: AxeJoeState
         get() = stateMachine.getCurrent()
     private val stateTimers = OrderedMap<AxeJoeState, Timer>()
+    private var axesThrown = 0
     private var hasShield = true
 
     private val jumpSensor =
@@ -122,6 +128,7 @@ class AxeJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
                 AxeJoeState.THROW,
                 Timer(THROW_DUR).setRunnables(TimeMarkedRunnable(THROW_TIME) { throwAxe() })
             )
+            stateTimers.put(AxeJoeState.COOLDOWN, Timer(COOLDOWN_DUR))
         }
 
         super.init()
@@ -148,6 +155,8 @@ class AxeJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
         stateMachine.reset()
         stateTimers.values().forEach { it.reset() }
 
+        axesThrown = 0
+
         hasShield = true
     }
 
@@ -161,7 +170,7 @@ class AxeJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
         updatablesComponent.add { delta ->
             jumpSensor.setBottomCenterToPoint(body.getPositionPoint(Position.TOP_CENTER))
 
-            if (currentState == AxeJoeState.STAND) updateFacing()
+            if (currentState.equalsAny(AxeJoeState.STAND, AxeJoeState.COOLDOWN)) updateFacing()
 
             when (currentState) {
                 AxeJoeState.JUMP -> if (shouldStopJump()) stateMachine.next()
@@ -187,12 +196,6 @@ class AxeJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        body.addFixture(damagerFixture)
-
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
-        body.addFixture(damageableFixture)
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.8f * ConstVals.PPM, 0.1f * ConstVals.PPM))
@@ -296,17 +299,31 @@ class AxeJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
         .setTriggerChangeWhenSameElement(false)
         .setOnChangeState(this::onChangeState)
         .initialState(AxeJoeState.JUMP.name)
+        // stand
         .transition(AxeJoeState.STAND.name, AxeJoeState.JUMP.name) { shouldJump() }
         .transition(AxeJoeState.STAND.name, AxeJoeState.THROW.name) { true }
+        // jump
         .transition(AxeJoeState.JUMP.name, AxeJoeState.STAND.name) { shouldStopJump() }
+        // throw
+        .transition(AxeJoeState.THROW.name, AxeJoeState.COOLDOWN.name) { shouldCooldown() }
         .transition(AxeJoeState.THROW.name, AxeJoeState.STAND.name) { true }
+        // cooldown
+        .transition(AxeJoeState.COOLDOWN.name, AxeJoeState.JUMP.name) { !body.isSensing(BodySense.FEET_ON_GROUND) }
+        .transition(AxeJoeState.COOLDOWN.name, AxeJoeState.STAND.name) { true }
         .build()
 
     private fun onChangeState(current: AxeJoeState, previous: AxeJoeState) {
         GameLogger.debug(TAG, "onChangeState(): current=$current, previous=$previous")
 
-        if (current == AxeJoeState.JUMP) jump()
+        when (current) {
+            AxeJoeState.JUMP -> jump()
+            AxeJoeState.THROW -> axesThrown++
+            AxeJoeState.COOLDOWN -> axesThrown = 0
+            else -> {}
+        }
     }
+
+    private fun shouldCooldown() = axesThrown >= AXES_BEFORE_COOLDOWN
 
     private fun shouldJump() =
         megaman.body.getBounds().overlaps(jumpSensor) || !body.isSensing(BodySense.FEET_ON_GROUND)

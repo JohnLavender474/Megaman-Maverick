@@ -581,7 +581,7 @@
   <object id="81" name="Darspider" x="2568" y="1152" width="16" height="16">
    <properties>
     <property name="off_max" type="float" value="1"/>
-    <property name="off_min" type="float" value="7"/>
+    <property name="off_min" type="float" value="6"/>
     <property name="on_max" type="float" value="1"/>
     <property name="on_min" type="float" value="4"/>
    </properties>

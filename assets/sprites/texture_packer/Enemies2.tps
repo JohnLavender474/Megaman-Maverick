@@ -249,23 +249,8 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Enemies2/AxeJoe/jump.png</key>
-            <key type="filename">../frames/Enemies2/AxeJoe/jump_shielded.png</key>
-            <key type="filename">../frames/Enemies2/PenguinBot/stand.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>10,10,20,20</rect>
-                <key>scale9Paddings</key>
-                <rect>10,10,20,20</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
+            <key type="filename">../frames/Enemies2/AxeJoe/cooldown.png</key>
+            <key type="filename">../frames/Enemies2/AxeJoe/cooldown_shielded.png</key>
             <key type="filename">../frames/Enemies2/AxeJoe/stand.png</key>
             <key type="filename">../frames/Enemies2/AxeJoe/stand_shielded.png</key>
             <key type="filename">../frames/Enemies2/AxeJoe/throw.png</key>
@@ -291,6 +276,23 @@
                 <rect>10,20,20,40</rect>
                 <key>scale9Paddings</key>
                 <rect>10,20,20,40</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies2/AxeJoe/jump.png</key>
+            <key type="filename">../frames/Enemies2/AxeJoe/jump_shielded.png</key>
+            <key type="filename">../frames/Enemies2/PenguinBot/stand.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>10,10,20,20</rect>
+                <key>scale9Paddings</key>
+                <rect>10,10,20,20</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

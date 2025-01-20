@@ -239,9 +239,11 @@ sprites/frames/Enemies2/Adamski/Blue.png
 sprites/frames/Enemies2/OmniDirectionalBlasterBot.png
 sprites/frames/Enemies2/AxeJoe/throw.png
 sprites/frames/Enemies2/AxeJoe/throw_shielded.png
+sprites/frames/Enemies2/AxeJoe/cooldown.png
 sprites/frames/Enemies2/AxeJoe/jump_shielded.png
 sprites/frames/Enemies2/AxeJoe/stand.png
 sprites/frames/Enemies2/AxeJoe/jump.png
+sprites/frames/Enemies2/AxeJoe/cooldown_shielded.png
 sprites/frames/Enemies2/AxeJoe/stand_shielded.png
 sprites/frames/Enemies2/Wanaan.png
 sprites/frames/Enemies2/Shotman/Launch.png
@@ -1884,6 +1886,7 @@ sprites/piskel/CrystalConveyorBKG.piskel
 sprites/piskel/GreenConveyorBelt.piskel
 sprites/piskel/SniperJoeShield.piskel
 sprites/piskel/Bullet.piskel
+sprites/piskel/OldLavyLogo.piskel
 sprites/piskel/Breath_Bubbles.piskel
 sprites/piskel/CapsuleTeleporter.piskel
 sprites/piskel/TimberWoman_v2.piskel
