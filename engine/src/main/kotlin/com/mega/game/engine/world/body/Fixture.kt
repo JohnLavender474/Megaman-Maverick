@@ -75,9 +75,7 @@ class Fixture(
 
     override fun isActive() = isActive
 
-    override fun toString() =
-        "Fixture(raw_shape=$rawShape, type=$fixtureType, active=$isActive, attachedToBody=$attachedToBody, " +
-                "offsetFromBodyCenter=$offsetFromBodyAttachment, properties=$properties)"
+    override fun toString() = "Fixture(type=$fixtureType, active=$isActive, shape=${getShape()}, raw_shape=$rawShape)"
 
     fun overlaps(other: IGameShape2D) = getShape().overlaps(other)
 

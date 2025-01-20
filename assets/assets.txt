@@ -1824,6 +1824,7 @@ sprites/piskel/BreakableIce.piskel
 sprites/piskel/ChargedShot_Residual_Half.piskel
 sprites/piskel/Nuclear_Monkey_Ball.piskel
 sprites/piskel/JetMet.piskel
+sprites/piskel/CanonMet.piskel
 sprites/piskel/Bunby Tank DX.piskel
 sprites/piskel/ColtonJoe.piskel
 sprites/piskel/Items.piskel

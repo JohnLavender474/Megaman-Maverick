@@ -71,15 +71,6 @@ class MegaContactListener(
     private val tempVec2Arr = Array<Vector2>()
 
     override fun beginContact(contact: Contact, delta: Float) {
-        // custom
-        if (contact.oneFixtureMatches(FixtureType.CUSTOM)) {
-            printDebugLog(contact, "beginContact(): Custom-Any, contact=$contact")
-            val (customFixture, otherFixture) = contact.getFixturesIfOneMatches(FixtureType.CUSTOM, out)!!
-
-            val function = customFixture.getProperty(ConstKeys.FUNCTION) as ((ProcessState, IFixture, IFixture) -> Unit)?
-            function?.invoke(ProcessState.BEGIN, otherFixture, customFixture)
-        }
-
         // consumer
         if (contact.oneFixtureMatches(FixtureType.CONSUMER)) {
             printDebugLog(contact, "beginContact(): Consumer, contact=$contact")
@@ -699,19 +690,10 @@ class MegaContactListener(
     }
 
     override fun continueContact(contact: Contact, delta: Float) {
-        // custom
-        if (contact.oneFixtureMatches(FixtureType.CUSTOM)) {
-            printDebugLog(contact, "continueContact(): Custom-Any, contact=$contact")
-            val (customFixture, otherFixture) = contact.getFixturesIfOneMatches(FixtureType.CUSTOM, out)!!
-
-            val function = customFixture.getProperty(ConstKeys.FUNCTION) as ((ProcessState, IFixture, IFixture) -> Unit)?
-            function?.invoke(ProcessState.CONTINUE, otherFixture, customFixture)
-        }
-
         // consumer
         if (contact.oneFixtureMatches(FixtureType.CONSUMER)) {
-            val (consumer, consumable) = contact.getFixturesIfOneMatches(FixtureType.CONSUMER, out)!!
-            consumer.getConsumer()?.invoke(ProcessState.CONTINUE, consumable)
+            val (consumerFixture, consumableFixture) = contact.getFixturesIfOneMatches(FixtureType.CONSUMER, out)!!
+            consumerFixture.getConsumer()?.invoke(ProcessState.CONTINUE, consumableFixture)
         }
 
         // damager, damageable
@@ -1073,13 +1055,10 @@ class MegaContactListener(
     }
 
     override fun endContact(contact: Contact, delta: Float) {
-        // custom
-        if (contact.oneFixtureMatches(FixtureType.CUSTOM)) {
-            printDebugLog(contact, "endContact(): Custom-Any, contact=$contact")
-            val (customFixture, otherFixture) = contact.getFixturesIfOneMatches(FixtureType.CUSTOM, out)!!
-
-            val function = customFixture.getProperty(ConstKeys.FUNCTION) as ((ProcessState, IFixture, IFixture) -> Unit)?
-            function?.invoke(ProcessState.END, otherFixture, customFixture)
+        // consumer
+        if (contact.oneFixtureMatches(FixtureType.CONSUMER)) {
+            val (consumerFixture, consumableFixture) = contact.getFixturesIfOneMatches(FixtureType.CONSUMER, out)!!
+            consumerFixture.getConsumer()?.invoke(ProcessState.END, consumableFixture)
         }
 
         // side, block

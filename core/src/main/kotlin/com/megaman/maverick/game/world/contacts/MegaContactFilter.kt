@@ -5,14 +5,14 @@ import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.world.body.IFixture
 import com.mega.game.engine.world.contacts.IContactFilter
-import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getEntity
+import com.megaman.maverick.game.world.body.getFilter
+import com.megaman.maverick.game.world.body.hasFilter
 
 class MegaContactFilter : IContactFilter {
 
     private val filters = objectMapOf(
-        FixtureType.CONSUMER pairTo objectSetOf(*FixtureType.entries.toTypedArray()),
         FixtureType.PLAYER pairTo objectSetOf(FixtureType.BODY, FixtureType.ITEM),
         FixtureType.DAMAGEABLE pairTo objectSetOf(FixtureType.DAMAGER),
         FixtureType.BODY pairTo objectSetOf(
@@ -53,33 +53,35 @@ class MegaContactFilter : IContactFilter {
     )
 
     override fun shouldProceedFiltering(fixture: IFixture) =
-        filters.containsKey(fixture.getType() as FixtureType) || fixture.getType() == FixtureType.CUSTOM
+        filters.containsKey(fixture.getType() as FixtureType) || fixture.getType() == FixtureType.CONSUMER
 
     override fun filter(fixture1: IFixture, fixture2: IFixture): Boolean {
         if (fixture1 == fixture2 || fixture1.getEntity() == fixture2.getEntity()) return false
 
-        if (fixture1.getType() == FixtureType.CUSTOM || fixture2.getType() == FixtureType.CUSTOM) {
-            val custom: IFixture
+        if (fixture1.getType() == FixtureType.CONSUMER || fixture2.getType() == FixtureType.CONSUMER) {
+            val consumer: IFixture
             val other: IFixture
-            when (FixtureType.CUSTOM) {
-                fixture1.getType() -> {
-                    custom = fixture1
-                    other = fixture2
-                }
 
-                else -> {
-                    custom = fixture2
-                    other = fixture1
-                }
+            if (fixture1.getType() == FixtureType.CONSUMER) {
+                consumer = fixture1
+                other = fixture2
+            } else {
+                consumer = fixture2
+                other = fixture1
             }
 
             try {
-                val filter = custom.getProperty(ConstKeys.FILTER) as (IFixture) -> Boolean
-                return filter.invoke(other)
+                return consumer.getFilter().invoke(other)
             } catch (e: Exception) {
-                throw IllegalStateException("Failed to filter fixtures: fixture1=$fixture1, fixture2=$fixture2", e)
+                throw IllegalStateException(
+                    "Failed to perform custom filter on fixtures: fixture1=$fixture1, fixture2=$fixture2", e
+                )
             }
         }
+
+        if ((fixture1.hasFilter() && !fixture1.getFilter().invoke(fixture2)) ||
+            (fixture2.hasFilter() && !fixture2.getFilter().invoke(fixture1))
+        ) return false
 
         return (filters.get(fixture1.getType() as FixtureType)?.contains(fixture2.getType()) == true ||
             filters.get(fixture2.getType() as FixtureType)?.contains(fixture1.getType()) == true)

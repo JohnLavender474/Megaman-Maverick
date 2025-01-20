@@ -27,12 +27,9 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.IProjectileEntity
-import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.explosions.Disintegration
 import com.megaman.maverick.game.world.body.*
 
 class GroundPebble(game: MegamanMaverickGame) : AbstractProjectile(game), IBodyEntity, ISpritesEntity {
@@ -67,23 +64,23 @@ class GroundPebble(game: MegamanMaverickGame) : AbstractProjectile(game), IBodyE
     }
 
     override fun hitBlock(
-        blockFixture: IFixture,
-        thisShape: IGameShape2D,
-        otherShape: IGameShape2D
+        blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D
     ) = explodeAndDie()
 
+    /*
     override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = projectileFixture.getEntity() as IProjectileEntity
         if (entity.owner == megaman) explodeAndDie()
     }
+     */
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
 
-        val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
-        disintegration!!.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.SOUND pairTo false))
+        val disintegration = MegaEntityFactory.fetch(Disintegration::class)!!
+        disintegration.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.SOUND pairTo false))
     }
 
     override fun defineBodyComponent(): BodyComponent {

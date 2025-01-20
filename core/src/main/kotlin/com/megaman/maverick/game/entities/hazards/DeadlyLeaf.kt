@@ -46,11 +46,15 @@ class DeadlyLeaf(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyE
 
     companion object {
         const val TAG = "DeadlyLeaf"
+
+        private const val X_VEL = 2f
+        private const val Y_VEL = -4f
+
         private const val OSCILLATION_AMPLITUDE = 2f
         private const val OSCILLATION_FREQUENCY = 1f
-        private const val X_VEL = 1f
-        private const val Y_VEL = -3f
+
         private const val DEFAULT_MIN_Y_OFFSET = 15f
+
         private var region: TextureRegion? = null
     }
 
@@ -60,13 +64,13 @@ class DeadlyLeaf(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyE
             val tag = (damager as MegaGameEntity).getTag()
             return when (tag) {
                 ChargedShot.TAG, ChargedShotExplosion.TAG, Fireball.TAG -> ConstVals.MAX_HEALTH
-                else -> (ConstVals.MAX_HEALTH / 2).toInt()
+                else -> ConstVals.MAX_HEALTH / 2
             }
         }
     }
 
     private val oscillationTimer = SmoothOscillationTimer(
-        OSCILLATION_FREQUENCY,
+        duration = OSCILLATION_FREQUENCY,
         start = -OSCILLATION_AMPLITUDE,
         end = OSCILLATION_AMPLITUDE
     )

@@ -22,8 +22,6 @@ fun IFixture.setEntity(entity: IBodyEntity): IFixture {
     return this
 }
 
-fun IFixture.hasFixtureType(fixtureType: Any) = fixtureType == getType()
-
 fun IFixture.getEntity() = properties.get(ConstKeys.ENTITY) as MegaGameEntity
 
 fun IFixture.depleteHealth(): Boolean {
@@ -42,6 +40,12 @@ fun IFixture.setVelocityAlteration(alteration: (IFixture, Float, ProcessState) -
 fun IFixture.getVelocityAlteration(alterableBodyFixture: IFixture, delta: Float, processState: ProcessState) =
     (properties.get(ConstKeys.VELOCITY_ALTERATION) as (IFixture, Float, ProcessState) -> VelocityAlteration)
         .invoke(alterableBodyFixture, delta, processState)
+
+fun IFixture.setFilter(filter: (IFixture) -> Boolean) = putProperty(ConstKeys.FILTER, filter)
+
+fun IFixture.hasFilter() = hasProperty(ConstKeys.FILTER)
+
+fun IFixture.getFilter() = getProperty(ConstKeys.FILTER) as (IFixture) -> Boolean
 
 fun IFixture.setRunnable(runnable: () -> Unit): IFixture {
     properties.put(ConstKeys.RUNNABLE, runnable)

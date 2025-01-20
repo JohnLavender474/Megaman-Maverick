@@ -10,8 +10,8 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.IDamageNegotiator
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.blocks.RocketPlatform
 import com.megaman.maverick.game.entities.blocks.PropellerPlatform
+import com.megaman.maverick.game.entities.blocks.RocketPlatform
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.hazards.DeadlyLeaf
@@ -22,7 +22,7 @@ class MegamanDamageNegotiator(private val megaman: Megaman): IDamageNegotiator {
         private val custom = objectMapOf<String, DamageNegotiation>(
             RocketPlatform.TAG pairTo dmgNeg(2),
             PropellerPlatform.TAG pairTo dmgNeg(2),
-            DeadlyLeaf.TAG pairTo dmgNeg(1)
+            DeadlyLeaf.TAG pairTo dmgNeg(2)
         )
 
         private val entityTypes = objectSetOf(EntityType.ENEMY, EntityType.EXPLOSION, EntityType.HAZARD)

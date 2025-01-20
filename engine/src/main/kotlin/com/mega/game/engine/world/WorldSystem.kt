@@ -154,9 +154,7 @@ class WorldSystem(
             )
 
             worldGraphResults.forEach {
-                if (it.isActive() && filterContact(fixture, it) &&
-                    fixture.getShape().overlaps(it.getShape())
-                ) {
+                if (it.isActive() && filterContact(fixture, it) && fixture.getShape().overlaps(it.getShape())) {
                     val contact = contactPool.fetch()
                     contact.set(fixture, it)
                     currentContactSet.add(contact)

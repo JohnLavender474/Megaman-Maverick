@@ -80,32 +80,36 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     // then Megaman's gravity should be adjusted accordingly. Note the differences in size and offset between this feet
     // fixture and the other feet fixture.
     val feetGravityFixture =
-        Fixture(body, FixtureType.CUSTOM, GameRectangle().setSize(0.9f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-    val feetGravityFixtureFilter: (IFixture) -> Boolean = { it.getType() == FixtureType.BLOCK }
-    feetGravityFixture.putProperty(ConstKeys.FILTER, feetGravityFixtureFilter)
+        Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.9f * ConstVals.PPM, 0.1f * ConstVals.PPM))
+
+    feetGravityFixture.setFilter { it.getType() == FixtureType.BLOCK }
+
     val feetGravitySet = ObjectSet<IFixture>()
     feetGravityFixture.putProperty(ConstKeys.SET, feetGravitySet)
-    val handleContact: (ProcessState, IFixture, IFixture) -> Unit = handleContact@{ pState, f1, _ ->
-        when (pState) {
+    feetGravityFixture.setConsumer consumer@{ processState, fixture ->
+        when (processState) {
             ProcessState.BEGIN, ProcessState.CONTINUE -> {
-                if ((f1.getEntity() as Block).body.hasBodyLabel(BodyLabel.COLLIDE_DOWN_ONLY) &&
-                    body.physics.velocity.y > 0f
-                ) {
-                    feetGravitySet.remove(f1)
-                    return@handleContact
+                val block = fixture.getEntity() as Block
+
+                if (block.body.hasBodyLabel(BodyLabel.COLLIDE_DOWN_ONLY) && body.physics.velocity.y > 0f) {
+                    feetGravitySet.remove(fixture)
+                    return@consumer
                 }
 
-                feetGravitySet.add(f1)
+                feetGravitySet.add(fixture)
             }
 
-            else -> feetGravitySet.remove(f1)
+            ProcessState.END -> feetGravitySet.remove(fixture)
         }
     }
-    feetGravityFixture.putProperty(ConstKeys.FUNCTION, handleContact)
+
     val isFeetOnGround: () -> Boolean = { !feetGravitySet.isEmpty }
     body.putProperty(ConstKeys.FEET_ON_GROUND, isFeetOnGround)
+
     body.onReset.put("${ConstKeys.FEET}_${ConstKeys.GRAVITY}") { feetGravitySet.clear() }
+
     feetGravityFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
+
     body.addFixture(feetGravityFixture)
 
     val headFixture =

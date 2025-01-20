@@ -16,6 +16,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectSetOf
@@ -52,16 +53,16 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.hazards.DeadlyLeaf
 import com.megaman.maverick.game.entities.megaman.components.damageableFixture
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.GroundPebble
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -101,7 +102,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         // When Timber Woman transitions to the stand state, she might be sliding on the floor due to
         // velocity applied in a previous state. When this amount of time has passed in the state state,
         // her X velocity should be set to zero to prevent further floor sliding.
-        private const val STAND_STILL_DELAY = 0.1f
+        private const val STAND_STILL_DELAY = 0.05f
         private const val STAND_STILL_DELAY_KEY = "stand_still_delay"
 
         private const val MAX_CYCLES_WITHOUT_JUMP = 3
@@ -145,10 +146,17 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         private const val JUMP_SPIN_RADIUS = 1.5f
         private const val JUMP_SPIN_SCANNER_RADIUS = 2.5f
 
+        private const val SWING_AT_MEGAMAN_SCANNER_WIDTH = 6f
+        private const val SWING_AT_MEGAMAN_SCANNAR_HEIGHT = 3f
+
+        private const val PROJECTILE_LISTENER_WIDTH = 8f
+        private const val PROJECTILE_LISTENER_HEIGHT = 2f
+        private val DEFLECTABLE_PROJECTILES = objectSetOf(Bullet.TAG, ChargedShot.TAG)
+
         private const val ROOM_SHAKE_DUR = 0.5f
         private const val ROOM_SHAKE_INTERVAL = 0.1f
-        private const val ROOM_SHAKE_X = 0f
-        private const val ROOM_SHAKE_Y = 0.003125f
+        private const val ROOM_SHAKE_X = 0.001f
+        private const val ROOM_SHAKE_Y = 0.005f
 
         private const val AXE_SWING_DAMAGER_WIDTH_1 = 1.25f
         private const val AXE_SWING_DAMAGER_HEIGHT_1 = 2f
@@ -157,6 +165,8 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         private const val AXE_SWING_DAMAGER_WIDTH_2 = 1.75f
         private const val AXE_SWING_DAMAGER_HEIGHT_2 = 0.5f
         private const val AXE_SWING_DAMAGER_ANIM_INDEX_MAX_2 = 5
+
+        private const val AXE_SWING_SHIELD_WIDTH_SCALAR = 0.5f
 
         private const val AXE_WALLSLIDE_REGION = "axe_wallslide"
 
@@ -182,6 +192,8 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         INIT, STAND, STAND_SWING, STAND_POUND, WALLSLIDE, RUN, JUMP_UP, JUMP_DOWN, JUMP_SPIN
     }
 
+    private enum class VicinityProjectileType { DEFLECTABLE, OTHER }
+
     override lateinit var facing: Facing
 
     private lateinit var stateMachine: StateMachine<TimberWomanState>
@@ -205,8 +217,20 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
 
     private var cyclesSinceLastJump = 0
 
+    private val swingAtMegamanScanner = GameRectangle().setSize(
+        SWING_AT_MEGAMAN_SCANNER_WIDTH * ConstVals.PPM,
+        SWING_AT_MEGAMAN_SCANNAR_HEIGHT * ConstVals.PPM
+    )
+
+    // Timber Woman's behavior can change dynamically based on the projectiles in her vicinity.
+    // See the `projectileListenerFixture` in `defineBodyComponent()`.
+    private val projectilesInVicinity = OrderedMap<VicinityProjectileType, OrderedSet<IProjectileEntity>>()
+        .also { map -> VicinityProjectileType.entries.forEach { type -> map.put(type, OrderedSet()) } }
+    private val anyProjectileInVicinity: Boolean
+        get() = projectilesInVicinity.values().any { !it.isEmpty }
+
     // Used to collect entities that should be destroyed when Timber Woman is destroyed.
-    private val entitySet = OrderedSet<MegaGameEntity>()
+    private val outSet = OrderedSet<MegaGameEntity>()
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -321,8 +345,10 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
 
         walls.clear()
 
+        projectilesInVicinity.values().forEach { it.clear() }
+
         // Destroy all ground pebbles and deadly leaves when Timber Woman is destroyed
-        val entitiesToDestroy = MegaGameEntities.getEntitiesOfTags(entitySet, GroundPebble.TAG, DeadlyLeaf.TAG)
+        val entitiesToDestroy = MegaGameEntities.getEntitiesOfTags(outSet, GroundPebble.TAG, DeadlyLeaf.TAG)
         entitiesToDestroy.forEach { entity -> entity.destroy() }
         entitiesToDestroy.clear()
     }
@@ -332,17 +358,11 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         TimberWomanState.entries.forEach { builder.state(it.name, it) }
         builder.setOnChangeState(this::onChangeState)
         builder.initialState(TimberWomanState.INIT.name)
-            // from init state
+            // init
             .transition(TimberWomanState.INIT.name, TimberWomanState.STAND.name) { ready }
 
-            // from stand state
-            .transition(TimberWomanState.STAND.name, TimberWomanState.JUMP_UP.name) {
-                when {
-                    cyclesSinceLastJump <= 1 -> false
-                    cyclesSinceLastJump >= MAX_CYCLES_WITHOUT_JUMP -> true
-                    else -> getRandom(0, 100) <= JUMP_CHANCE
-                }
-            }
+            // stand
+            .transition(TimberWomanState.STAND.name, TimberWomanState.JUMP_UP.name) { shouldJump() }
             .transition(TimberWomanState.STAND.name, TimberWomanState.STAND_POUND.name) {
                 getRandom(0, 100) <= STAND_POUND_CHANCE
             }
@@ -352,36 +372,40 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
                 if ((isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
                     (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) ||
                     megaman.body.getY() > body.getMaxY()
-                ) false
+                ) return@standToRun false
 
                 return@standToRun getRandom(0, 100) <= RUN_CHANCE
             }
             .transition(TimberWomanState.STAND.name, TimberWomanState.STAND_SWING.name) { true }
 
-            // from run state
+            // run
+            .transition(TimberWomanState.RUN.name, TimberWomanState.STAND_SWING.name) {
+                shouldTransFromRunningToSwing()
+            }
+            .transition(TimberWomanState.RUN.name, TimberWomanState.JUMP_UP.name) { shouldJump() }
             .transition(TimberWomanState.RUN.name, TimberWomanState.STAND.name) { true }
 
-            // from stand swing state
+            // stand swing / stand pound
             .transition(TimberWomanState.STAND_SWING.name, TimberWomanState.STAND.name) { true }
             .transition(TimberWomanState.STAND_POUND.name, TimberWomanState.STAND.name) { true }
 
-            // from jump up state
+            // jump up
             .transition(TimberWomanState.JUMP_UP.name, TimberWomanState.WALLSLIDE.name) { shouldStartWallSliding() }
             .transition(TimberWomanState.JUMP_UP.name, TimberWomanState.JUMP_SPIN.name) { shouldJumpSpin() }
             .transition(TimberWomanState.JUMP_UP.name, TimberWomanState.JUMP_DOWN.name) { true }
 
-            // from jump down state
+            // jump down
             .transition(TimberWomanState.JUMP_DOWN.name, TimberWomanState.WALLSLIDE.name) { shouldStartWallSliding() }
             .transition(TimberWomanState.JUMP_DOWN.name, TimberWomanState.JUMP_SPIN.name) { shouldJumpSpin() }
             .transition(TimberWomanState.JUMP_DOWN.name, TimberWomanState.STAND.name) { true }
 
-            // from wall slide state
+            // wall slide
             .transition(TimberWomanState.WALLSLIDE.name, TimberWomanState.JUMP_UP.name) {
                 !body.isSensing(BodySense.FEET_ON_GROUND)
             }
             .transition(TimberWomanState.WALLSLIDE.name, TimberWomanState.STAND.name) { true }
 
-            // from jump spin state
+            // jump spin
             .transition(TimberWomanState.JUMP_SPIN.name, TimberWomanState.JUMP_UP.name) {
                 !body.isSensing(BodySense.FEET_ON_GROUND) && body.physics.velocity.y > 0f
             }
@@ -567,6 +591,15 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         return timer.isFinished()
     }
 
+    private fun shouldJump() = when (currentState) {
+        TimberWomanState.RUN -> !projectilesInVicinity.get(VicinityProjectileType.OTHER).isEmpty
+        else -> when {
+            cyclesSinceLastJump <= 1 -> false
+            cyclesSinceLastJump >= MAX_CYCLES_WITHOUT_JUMP -> true
+            else -> getRandom(0, 100) <= JUMP_CHANCE
+        }
+    }
+
     private fun shouldStopJumpingUp() =
         body.physics.velocity.y <= 0f || body.isSensing(BodySense.FEET_ON_GROUND) || shouldStartWallSliding()
 
@@ -574,18 +607,25 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
 
     private fun shouldStopJumpSpinning() = shouldStopJumpingDown()
 
+    private fun shouldJumpSpin() = !body.isSensing(BodySense.FEET_ON_GROUND) &&
+        !megaman.invincible && jumpSpinScannerCircle.overlaps(megaman.damageableFixture.getShape())
+
     private fun shouldStartWallSliding() = !body.isSensing(BodySense.FEET_ON_GROUND) &&
         ((isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
             (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)))
-
-    private fun shouldJumpSpin() = !body.isSensing(BodySense.FEET_ON_GROUND) &&
-        !megaman.invincible && jumpSpinScannerCircle.overlaps(megaman.damageableFixture.getShape())
 
     private fun shouldStopWallSliding() =
         !body.isSensingAny(BodySense.SIDE_TOUCHING_BLOCK_LEFT, BodySense.SIDE_TOUCHING_BLOCK_RIGHT) ||
             body.isSensing(BodySense.FEET_ON_GROUND)
 
-    private fun shouldStopRunning() = body.getBounds().contains(megaman.body.getCenter()) ||
+    private fun shouldTransFromRunningToSwing() =
+        swingAtMegamanScanner.setCenter(body.getCenter()).overlaps(megaman.body.getBounds()) ||
+            projectilesInVicinity.let {
+                !it.get(VicinityProjectileType.DEFLECTABLE).isEmpty && it.get(VicinityProjectileType.OTHER).isEmpty
+            }
+
+    private fun shouldStopRunning() = shouldTransFromRunningToSwing() || shouldJump() ||
+        body.getBounds().contains(megaman.body.getCenter()) ||
         (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
         (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
 
@@ -599,8 +639,8 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
     private fun spawnDeadlyLeaf(spawn: Vector2) {
         GameLogger.debug(TAG, "spawnDeadlyLeaf(): spawn=$spawn")
 
-        val deadlyLeaf = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.DEADLY_LEAF)!!
-        deadlyLeaf.spawn(props(ConstKeys.POSITION pairTo spawn))
+        val leaf = MegaEntityFactory.fetch(DeadlyLeaf::class)!!
+        leaf.spawn(props(ConstKeys.POSITION pairTo spawn))
     }
 
     private fun spawnGroundPebbles() {
@@ -615,7 +655,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         for (i in 0 until GROUND_PEBBLE_IMPULSES.size) {
             val impulse = GROUND_PEBBLE_IMPULSES[i].cpy().scl(ConstVals.PPM.toFloat())
 
-            val pebble = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.GROUND_PEBBLE)!!
+            val pebble = MegaEntityFactory.fetch(GroundPebble::class)!!
             pebble.spawn(
                 props(
                     ConstKeys.POSITION pairTo spawn,
@@ -714,14 +754,60 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         standSwingDamagerFixture.drawingColor = Color.RED
         debugShapes.add { if (standSwingDamagerFixture.isActive()) standSwingDamagerFixture else null }
 
+        val standSwingShieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle())
+        standSwingShieldFixture.attachedToBody = false
+        body.addFixture(standSwingShieldFixture)
+        standSwingShieldFixture.drawingColor = Color.BLUE
+        debugShapes.add { if (standSwingShieldFixture.isActive()) standSwingShieldFixture else null }
+
         val jumpSpinDamagerFixture =
             Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(JUMP_SPIN_RADIUS * ConstVals.PPM))
         body.addFixture(jumpSpinDamagerFixture)
-        debugShapes.add { jumpSpinDamagerFixture }
+        jumpSpinDamagerFixture.drawingColor = Color.RED
+        debugShapes.add { if (jumpSpinDamagerFixture.isActive()) jumpSpinDamagerFixture else null }
 
         val jumpSpinShieldFixture =
             Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(JUMP_SPIN_RADIUS * ConstVals.PPM))
         body.addFixture(jumpSpinShieldFixture)
+
+        val projectileListenerFixture = Fixture(
+            body,
+            FixtureType.CONSUMER,
+            GameRectangle().setSize(
+                PROJECTILE_LISTENER_WIDTH * ConstVals.PPM,
+                PROJECTILE_LISTENER_HEIGHT * ConstVals.PPM
+            )
+        )
+        projectileListenerFixture.setFilter { fixture ->
+            fixture.getType() == FixtureType.PROJECTILE && (fixture.getEntity() as IProjectileEntity).owner != this
+        }
+        projectileListenerFixture.setConsumer { processState, fixture ->
+            if (processState != ProcessState.CONTINUE) GameLogger.debug(
+                TAG,
+                "projectileListenerFixture(): consume: " +
+                    "processState=$processState, projectilesInVicinity=$projectileListenerFixture, fixture=$fixture"
+            )
+
+            val projectile = fixture.getEntity() as IProjectileEntity
+
+            val tag = (projectile as MegaGameEntity).getTag()
+
+            val type = when {
+                DEFLECTABLE_PROJECTILES.contains(tag) -> VicinityProjectileType.DEFLECTABLE
+                else -> VicinityProjectileType.OTHER
+            }
+
+            val set = projectilesInVicinity.get(type)
+            when (processState) {
+                ProcessState.BEGIN, ProcessState.CONTINUE -> set.add(projectile)
+                ProcessState.END -> set.remove(projectile)
+            }
+        }
+        body.addFixture(projectileListenerFixture)
+        debugShapes.add debugShape@{
+            projectileListenerFixture.drawingColor = if (anyProjectileInVicinity) Color.VIOLET else Color.DARK_GRAY
+            return@debugShape projectileListenerFixture
+        }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.defaultFrictionOnSelf.x = when (currentState) {
@@ -743,6 +829,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
 
             val jumpSpinActive = currentState == TimberWomanState.JUMP_SPIN
             jumpSpinDamagerFixture.drawingColor = if (jumpSpinActive) Color.RED else Color.GRAY
+
             jumpSpinDamagerFixture.setActive(jumpSpinActive)
             jumpSpinShieldFixture.setActive(jumpSpinActive)
 
@@ -785,6 +872,17 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
                     position.flipHorizontally()
                 )
             }
+
+            (standSwingShieldFixture.rawShape as GameRectangle).let { shieldBounds ->
+                shieldBounds.setSize(
+                    standSwingDamagerBounds.getWidth() * AXE_SWING_SHIELD_WIDTH_SCALAR,
+                    standSwingDamagerBounds.getHeight()
+                )
+                val position = if (isFacing(Facing.LEFT)) Position.CENTER_LEFT else Position.CENTER_RIGHT
+                val point = standSwingDamagerBounds.getPositionPoint(position)
+                shieldBounds.positionOnPoint(point, position)
+            }
+            standSwingShieldFixture.setActive(standSwingDamagerDef == 1)
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

@@ -23,7 +23,10 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
-import com.mega.game.engine.world.body.*
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -36,7 +39,6 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
-import com.megaman.maverick.game.world.body.getEntity
 
 class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFaceable, IDirectional {
 
@@ -111,11 +113,9 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
             FixtureType.CUSTOM,
             GameRectangle().setSize(32f * ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
         )
-        megamanScannerFixture.putProperty(ConstKeys.FILTER) { fixture: IFixture -> fixture.getEntity() == megaman }
         body.addFixture(megamanScannerFixture)
 
         val oobScannerFixture = Fixture(body, FixtureType.CUSTOM, GameRectangle().setSize(ConstVals.PPM / 2f))
-        oobScannerFixture.putProperty(ConstKeys.FILTER) { fixture: IFixture -> false }
         body.addFixture(oobScannerFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
