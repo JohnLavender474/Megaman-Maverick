@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="575" height="80" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="587">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="575" height="80" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="593">
  <tileset firstgid="1" source="../tsx/GlacierManTileset.tsx"/>
  <tileset firstgid="17281" source="../tsx/Blizzardman.tsx"/>
  <layer id="2" name="tiles2" width="575" height="80">
@@ -702,9 +702,9 @@
   <object id="219" x="6944" y="608" width="640" height="256"/>
   <object id="220" x="6944" y="960" width="384" height="288"/>
   <object id="221" x="7424" y="864" width="160" height="480"/>
-  <object id="222" x="4512" y="960" width="256" height="32"/>
+  <object id="222" x="4672" y="960" width="96" height="32"/>
   <object id="223" x="4896" y="960" width="96" height="224"/>
-  <object id="224" x="4512" y="608" width="160" height="352"/>
+  <object id="224" x="4512" y="608" width="160" height="384"/>
   <object id="243" x="7200" y="1344" width="384" height="192"/>
   <object id="246" x="6944" y="1248" width="160" height="480"/>
   <object id="247" x="7200" y="1408" width="1120" height="224"/>
@@ -1131,9 +1131,8 @@
     <property name="type" value="Snow"/>
    </properties>
   </object>
-  <object id="229" name="Matasaburo" x="7224" y="944" width="16" height="16"/>
-  <object id="230" name="Matasaburo" x="6184" y="880" width="16" height="16"/>
-  <object id="231" name="Bat" x="6184" y="736" width="16" height="16">
+  <object id="229" name="Coldier" x="7224" y="944" width="16" height="16"/>
+  <object id="231" name="Bat" x="6168" y="736" width="16" height="16">
    <properties>
     <property name="type" value="Snow"/>
    </properties>
@@ -1143,7 +1142,7 @@
     <property name="value" type="float" value="-5"/>
    </properties>
   </object>
-  <object id="233" name="Matasaburo" x="4728" y="944" width="16" height="16"/>
+  <object id="233" name="Coldier" x="4728" y="944" width="16" height="16"/>
   <object id="234" name="ShieldAttacker" x="6416" y="968" width="16" height="16">
    <properties>
     <property name="value" type="float" value="-5"/>
@@ -1232,7 +1231,7 @@
     <property name="type" value="snow"/>
    </properties>
   </object>
-  <object id="291" name="SpikeBot" x="11112" y="1744" width="16" height="16">
+  <object id="291" name="SpikeBot" x="11472" y="1864" width="16" height="16">
    <properties>
     <property name="movement_scalar" type="float" value="0.5"/>
     <property name="type" value="snow"/>
@@ -1248,7 +1247,7 @@
     <property name="value" type="float" value="-4"/>
    </properties>
   </object>
-  <object id="377" name="Matasaburo" x="12104" y="880" width="16" height="16"/>
+  <object id="377" name="Coldier" x="12104" y="880" width="16" height="16"/>
   <object id="378" name="SpikeBot" x="13256" y="960" width="16" height="16">
    <properties>
     <property name="type" value="snow"/>
@@ -1274,18 +1273,12 @@
     <property name="type" value="Snow"/>
    </properties>
   </object>
-  <object id="385" name="Bat" x="13880" y="832" width="16" height="16">
-   <properties>
-    <property name="type" value="Snow"/>
-   </properties>
-  </object>
   <object id="386" name="Bat" x="14088" y="832" width="16" height="16">
    <properties>
     <property name="type" value="Snow"/>
    </properties>
   </object>
   <object id="387" name="SnowheadThrower" x="14088" y="992" width="16" height="16"/>
-  <object id="388" name="SnowheadThrower" x="13624" y="992" width="16" height="16"/>
   <object id="389" name="SpikeBot" x="14280" y="912" width="16" height="16">
    <properties>
     <property name="type" value="snow"/>
@@ -1322,7 +1315,6 @@
     <property name="type" value="snow"/>
    </properties>
   </object>
-  <object id="472" name="Matasaburo" x="16552" y="896" width="16" height="16"/>
   <object id="557" name="ShieldAttacker" x="824" y="2152" width="16" height="16">
    <properties>
     <property name="value" type="float" value="-5"/>
@@ -1339,11 +1331,14 @@
     <property name="type" value="snow"/>
    </properties>
   </object>
+  <object id="587" name="Coldier" x="6168" y="880" width="16" height="16"/>
+  <object id="588" name="Coldier" x="13688" y="992" width="16" height="16"/>
+  <object id="592" name="Coldier" x="11096" y="1360" width="16" height="16"/>
  </objectgroup>
- <objectgroup id="5" name="temp">
-  <object id="582" name="0" x="11208" y="1728" width="32" height="32"/>
+ <objectgroup id="5" name="player">
+  <object id="591" name="0" x="11232" y="1728" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="3" name="player">
+ <objectgroup id="3" name="temp">
   <object id="169" name="0" x="128" y="2288" width="32" height="32"/>
   <object id="473" name="2" x="5184" y="768" width="32" height="32"/>
   <object id="474" name="3" x="7360" y="1312" width="32" height="32">

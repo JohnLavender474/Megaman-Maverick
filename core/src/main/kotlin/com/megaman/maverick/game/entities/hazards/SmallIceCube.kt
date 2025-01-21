@@ -56,24 +56,26 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     companion object {
         const val TAG = "FragileIceCube"
+
         const val BODY_SIZE = 0.5f
+
         private const val DEFAULT_GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.01f
+
         private const val CLAMP = 10f
         private const val CULL_TIME = 2f
         private const val DEFAULT_MAX_HIT_TIMES = 1
+
         private var region1: TextureRegion? = null
         private var region2: TextureRegion? = null
-        private val INSTANT_DEATH_ENTITIES = objectSetOf(
-            Megaman::class,
-            ChargedShot::class
-        )
+
+        private val INSTANT_DEATH_ENTITIES = objectSetOf(Megaman::class, ChargedShot::class)
     }
 
     private var hitTimes = 0
     private var destroyOnHitBlock = false
-    private var maxHitTimes = DEFAULT_MAX_HIT_TIMES
     private var gravity = DEFAULT_GRAVITY
+    private var maxHitTimes = DEFAULT_MAX_HIT_TIMES
 
     override fun init() {
         if (region1 == null || region2 == null) {
@@ -110,7 +112,7 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val section = spawnProps.getOrDefault(ConstKeys.SECTION, DrawingSection.PLAYGROUND, DrawingSection::class)
         defaultSprite.priority.section = section
 
-        val priority = spawnProps.getOrDefault(ConstKeys.PRIORITY, 1, Int::class)
+        val priority = spawnProps.getOrDefault(ConstKeys.PRIORITY, 5, Int::class)
         defaultSprite.priority.value = priority
 
         val doClamp = spawnProps.getOrDefault(ConstKeys.CLAMP, true, Boolean::class)
@@ -130,6 +132,7 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private fun shatterAndDie() {
         destroy()
+
         for (i in 0 until 5) {
             val iceShard = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.ICE_SHARD)!!
             iceShard.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.INDEX pairTo i))
@@ -138,11 +141,13 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private fun getHit(entity: IGameEntity) {
         GameLogger.debug(TAG, "getHit(): entity=$entity")
-        if (INSTANT_DEATH_ENTITIES.contains(entity::class)) shatterAndDie()
-        else {
-            hitTimes++
-            if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ICE_SHARD_1_SOUND, false)
-            if (hitTimes > maxHitTimes) shatterAndDie()
+        when {
+            INSTANT_DEATH_ENTITIES.contains(entity::class) -> shatterAndDie()
+            else -> {
+                hitTimes++
+                if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ICE_SHARD_1_SOUND, false)
+                if (hitTimes > maxHitTimes) shatterAndDie()
+            }
         }
     }
 
@@ -150,10 +155,10 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val body = Body(BodyType.DYNAMIC)
         body.setSize(BODY_SIZE * ConstVals.PPM)
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(body.getSize().scl(1.05f)))
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(body.getSize().scl(1.25f)))
         bodyFixture.setHitByExplosionReceiver { shatterAndDie() }
         bodyFixture.setHitByBodyReceiver { entity -> if (entity is SmallIceCube) shatterAndDie() }
-        bodyFixture.setHitByPlayerReceiver { if (!it.canBeDamaged) getHit(it) }
+        bodyFixture.setHitByPlayerReceiver { if (!it.canBeDamaged) shatterAndDie() }
         bodyFixture.setHitByProjectileReceiver { getHit(it) }
         bodyFixture.setHitByBlockReceiver(ProcessState.BEGIN) { block, _ ->
             if (destroyOnHitBlock) shatterAndDie() else getHit(block)
@@ -183,6 +188,7 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         body.preProcess.put(ConstKeys.DEFAULT) {
             val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else gravity
             body.physics.gravity.y = gravity * ConstVals.PPM
+
             if (body.isSensing(BodySense.FEET_ON_GROUND)) body.physics.velocity.y = 0f
 
             when {

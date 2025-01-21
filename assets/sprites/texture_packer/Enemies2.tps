@@ -216,6 +216,8 @@
             <key type="filename">../frames/Enemies2/AstroAssAssaulter/stand.png</key>
             <key type="filename">../frames/Enemies2/CartinJoe/Move.png</key>
             <key type="filename">../frames/Enemies2/CartinJoe/Shoot.png</key>
+            <key type="filename">../frames/Enemies2/Coldier/before_big_blow.png</key>
+            <key type="filename">../frames/Enemies2/Coldier/before_small_blow.png</key>
             <key type="filename">../frames/Enemies2/FireDispensenator/sleep.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -232,6 +234,10 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Enemies2/AstroAssAssaulter/throw.png</key>
+            <key type="filename">../frames/Enemies2/Coldier/big_blow.png</key>
+            <key type="filename">../frames/Enemies2/Coldier/cooldown.png</key>
+            <key type="filename">../frames/Enemies2/Coldier/small_blow.png</key>
+            <key type="filename">../frames/Enemies2/Coldier/stand.png</key>
             <key type="filename">../frames/Enemies2/FireDispensenator/close.png</key>
             <key type="filename">../frames/Enemies2/FireDispensenator/open.png</key>
             <key type="filename">../frames/Enemies2/ToxicBarrelBot/Closed.png</key>

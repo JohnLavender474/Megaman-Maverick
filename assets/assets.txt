@@ -292,6 +292,12 @@ sprites/frames/Enemies2/CarriCarry/shake.png
 sprites/frames/Enemies2/CarriCarry/ride.png
 sprites/frames/Enemies2/UFOBombBot/Dropping.png
 sprites/frames/Enemies2/UFOBombBot/Closed.png
+sprites/frames/Enemies2/Coldier/small_blow.png
+sprites/frames/Enemies2/Coldier/cooldown.png
+sprites/frames/Enemies2/Coldier/before_big_blow.png
+sprites/frames/Enemies2/Coldier/stand.png
+sprites/frames/Enemies2/Coldier/before_small_blow.png
+sprites/frames/Enemies2/Coldier/big_blow.png
 sprites/frames/Enemies2/Togglee/Left.png
 sprites/frames/Enemies2/Togglee/Right.png
 sprites/frames/Enemies2/Togglee/SwitchToRight.png
@@ -736,6 +742,7 @@ sprites/frames/Projectiles2/MagmaWave/disintegrate.png
 sprites/frames/Projectiles2/Needle/default.png
 sprites/frames/Projectiles2/Needle/ice.png
 sprites/frames/Projectiles2/MoonScythe.png
+sprites/frames/Projectiles2/ColdGust.png
 sprites/frames/Projectiles2/BunbyRedRocket.png
 sprites/frames/Projectiles2/ArigockBall.png
 sprites/frames/Projectiles2/SmallGreenMissile.png
@@ -1857,6 +1864,7 @@ sprites/piskel/FloorButton.piskel
 sprites/piskel/All_Terrain_Missile_Bot.piskel
 sprites/piskel/Petit Devil.piskel
 sprites/piskel/MoonMan.piskel
+sprites/piskel/Gate.piskel
 sprites/piskel/NuttGlider.piskel
 sprites/piskel/Merserker.piskel
 sprites/piskel/MediumPlatforms.piskel
@@ -1886,6 +1894,7 @@ sprites/piskel/SprBGTomahawk.piskel
 sprites/piskel/Totem Polem.piskel
 sprites/piskel/SiliconSilkie.piskel
 sprites/piskel/Spikes.piskel
+sprites/piskel/Coldier.piskel
 sprites/piskel/CrystalConveyorBKG.piskel
 sprites/piskel/GreenConveyorBelt.piskel
 sprites/piskel/SniperJoeShield.piskel
@@ -1932,6 +1941,7 @@ sprites/piskel/Pipi & Copipi.piskel
 sprites/piskel/QuickSand_v2_Right.piskel
 sprites/piskel/SmallGreenMissile.piskel
 sprites/piskel/MegamanMaverick.piskel
+sprites/piskel/Coldier_BigBlow.piskel
 sprites/piskel/HibernalMan.piskel
 sprites/piskel/WanaanLauncher.piskel
 sprites/piskel/TellySaucer.piskel
@@ -1983,6 +1993,7 @@ sprites/piskel/Popup Canon.piskel
 sprites/piskel/InfernoBKG.piskel
 sprites/piskel/Megaman_RUSH_JET.piskel
 sprites/piskel/InfernoManFace.piskel
+sprites/piskel/ColdGust.piskel
 sprites/piskel/BossFaces.piskel
 sprites/piskel/WoodPlank.piskel
 sprites/piskel/DarkSamus993-FireManTileset.piskel
@@ -2036,6 +2047,7 @@ sprites/piskel/MugshotPane_48x48.piskel
 sprites/piskel/ChargedShot_Residual.piskel
 sprites/piskel/PiercingMan.piskel
 sprites/piskel/Candle.piskel
+sprites/piskel/Coldier_SmallBlow.piskel
 sprites/piskel/Lantern.piskel
 sprites/piskel/AxeJoe.piskel
 sprites/piskel/Trees.piskel

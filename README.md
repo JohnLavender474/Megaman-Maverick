@@ -128,18 +128,17 @@ comprehensive listing of the credits for the artwork used in this game.
 - 
 - Rodent Man 
   - Original by [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/Rodent-Man-Megaman-Maverick-1087797101)
-  - Updated mugshot by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/1137571452)
+  - Updated by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/1137571452)
 - Precious Man - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/Precious-Man-Megaman-Maverick-1087800596)
 - Timber Woman:
   - Original by [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/TimberWoman-Megaman-Maverick-1087794591)
-  - Updated mugshot by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/Timber-Woman-Mugshot-1137568070)
-  - Updated spritesheet by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/1141743410)
+  - Updated by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/Timber-Woman-Mugshot-1137568070)
 - Moon Man spritesheet:
   - Original by [boberatu](https://www.deviantart.com/boberatu/art/MPN-006-Moon-Man-625679636)
   - Updated by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/1136876962)
 - Inferno Man 
   - Original by [boberatu](https://www.deviantart.com/boberatu/art/MPN-000-Volcano-Man-313694441)
-  - Updated mugshot by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/1137570993)
+  - Updated by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/1137570993)
 - Reactor Man spritesheet & mugshot - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
 - Glacier Man spritesheet & mugshot - [Balloon Cart](https://balloon-cart.itch.io/glacier-man-asset-pack)
 - Desert Man spritesheet & mugshot - [rcrdcat](https://www.deviantart.com/rcrdcat/art/Desert-Man-Spritesheet-Mugshot-332165249)
@@ -171,6 +170,7 @@ comprehensive listing of the credits for the artwork used in this game.
 
 ### Blocks / Platforms
 - [Samuel_X7](https://www.deviantart.com/samuelx4):
+  - Robot Master Entry Gate
   - Rocket Platform (Jeff Bezos' Little Dick Rocket)
 
 #### Tilesets

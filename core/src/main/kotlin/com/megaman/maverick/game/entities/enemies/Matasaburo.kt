@@ -60,9 +60,6 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         val body = Body(BodyType.DYNAMIC)
         body.setSize(1.75f * ConstVals.PPM)
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
-        body.addFixture(bodyFixture)
-
         val blowFixture = Fixture(
             body,
             FixtureType.FORCE,
@@ -87,18 +84,16 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         }
         body.addFixture(blowFixture)
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        body.addFixture(damagerFixture)
-
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
-        body.addFixture(damageableFixture)
-
         body.preProcess.put(ConstKeys.DEFAULT) {
             val offsetX = 5f * ConstVals.PPM * facing.value
             blowFixture.offsetFromBodyAttachment.x = offsetX
         }
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(
+            this,
+            body,
+            BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
+        )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
