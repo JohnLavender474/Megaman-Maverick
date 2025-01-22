@@ -2,10 +2,8 @@ package com.megaman.maverick.game.entities.factories.impl
 
 import com.mega.game.engine.common.GameLogger
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.entities.enemies.CannonHopper
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.enemies.*
-import com.megaman.maverick.game.entities.enemies.NuttGlider
 import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.GameEntityPoolCreator
 
@@ -93,7 +91,6 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val DEATH_BAT = "DeathBat"
         const val ASTRO_ASS_ASSAULTER = "AstroAssAssaulter"
         const val STAGED_MOON_LANDING_FLAG = "StagedMoonLandingFlag"
-        const val AXE_JOE = "AxeJoe"
         const val CANNON_HOPPER = "CannonHopper"
     }
 
@@ -178,7 +175,6 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(DEATH_BAT, GameEntityPoolCreator.create { DeathBat(game) })
         pools.put(ASTRO_ASS_ASSAULTER, GameEntityPoolCreator.create { AstroAssAssaulter(game) })
         pools.put(STAGED_MOON_LANDING_FLAG, GameEntityPoolCreator.create { StagedMoonLandingFlag(game) })
-        pools.put(AXE_JOE, GameEntityPoolCreator.create { AxeJoe(game) })
         pools.put(CANNON_HOPPER, GameEntityPoolCreator.create { CannonHopper(game) })
     }
 

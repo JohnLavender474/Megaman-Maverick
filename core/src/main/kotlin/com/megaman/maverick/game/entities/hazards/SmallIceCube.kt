@@ -47,7 +47,6 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
-
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 
@@ -55,7 +54,7 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     IAudioEntity, IHazard, IDamager {
 
     companion object {
-        const val TAG = "FragileIceCube"
+        const val TAG = "SmallIceCube"
 
         const val BODY_SIZE = 0.5f
 
@@ -145,8 +144,11 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             INSTANT_DEATH_ENTITIES.contains(entity::class) -> shatterAndDie()
             else -> {
                 hitTimes++
-                if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ICE_SHARD_1_SOUND, false)
-                if (hitTimes > maxHitTimes) shatterAndDie()
+
+                when {
+                    hitTimes > maxHitTimes -> shatterAndDie()
+                    overlapsGameCamera() -> requestToPlaySound(SoundAsset.ICE_SHARD_1_SOUND, false)
+                }
             }
         }
     }

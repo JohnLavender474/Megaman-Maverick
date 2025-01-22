@@ -1,5 +1,5 @@
 Enemies2.png
-size: 1016, 1579
+size: 1024, 1579
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -509,23 +509,44 @@ Hanabiran/4PetalsStand
   index: -1
 Hanabiran/Drop
   rotate: false
-  xy: 0, 304
+  xy: 832, 240
   size: 192, 64
   orig: 192, 64
   offset: 0, 0
   index: -1
 Hanabiran/NoPetalsSpin
   rotate: false
-  xy: 192, 304
+  xy: 0, 304
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 Hanabiran/Rise
   rotate: false
-  xy: 320, 304
+  xy: 128, 304
   size: 192, 64
   orig: 192, 64
+  offset: 0, 0
+  index: -1
+IceSkaterPeng/brake
+  rotate: false
+  xy: 320, 304
+  size: 48, 64
+  orig: 48, 64
+  offset: 0, 0
+  index: -1
+IceSkaterPeng/jump
+  rotate: false
+  xy: 368, 304
+  size: 48, 64
+  orig: 48, 64
+  offset: 0, 0
+  index: -1
+IceSkaterPeng/skate
+  rotate: false
+  xy: 416, 304
+  size: 48, 64
+  orig: 48, 64
   offset: 0, 0
   index: -1
 Imorm
@@ -677,7 +698,7 @@ RatRobot/still
   index: -1
 RedTiggerSquirt
   rotate: false
-  xy: 800, 304
+  xy: 752, 304
   size: 144, 72
   orig: 144, 72
   offset: 0, 0
@@ -803,14 +824,14 @@ SpikeBot/stand_snow
   index: -1
 SpikeBot/walk
   rotate: false
-  xy: 512, 304
+  xy: 464, 304
   size: 48, 64
   orig: 48, 64
   offset: 0, 0
   index: -1
 SpikeBot/walk_snow
   rotate: false
-  xy: 560, 304
+  xy: 512, 304
   size: 48, 64
   orig: 48, 64
   offset: 0, 0
@@ -992,14 +1013,14 @@ ToxicBarrelBot/OpenTop
   index: -1
 Tropish/bent
   rotate: false
-  xy: 608, 304
+  xy: 560, 304
   size: 48, 64
   orig: 48, 64
   offset: 0, 0
   index: -1
 Tropish/swim
   rotate: false
-  xy: 656, 304
+  xy: 608, 304
   size: 48, 64
   orig: 48, 64
   offset: 0, 0
@@ -1069,7 +1090,7 @@ WallTeck/still
   index: -1
 WallTeck/walk
   rotate: false
-  xy: 704, 304
+  xy: 656, 304
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -1104,7 +1125,7 @@ WalrusBot/stand
   index: -1
 Wanaan
   rotate: false
-  xy: 768, 304
+  xy: 720, 304
   size: 32, 64
   orig: 32, 64
   offset: 0, 0

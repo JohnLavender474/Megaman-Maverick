@@ -258,6 +258,9 @@ sprites/frames/Enemies2/CartinJoe/Move.png
 sprites/frames/Enemies2/WallTeck/still.png
 sprites/frames/Enemies2/WallTeck/angry.png
 sprites/frames/Enemies2/WallTeck/walk.png
+sprites/frames/Enemies2/IceSkaterPeng/jump.png
+sprites/frames/Enemies2/IceSkaterPeng/brake.png
+sprites/frames/Enemies2/IceSkaterPeng/skate.png
 sprites/frames/Enemies2/AstroAssAssaulter/throw.png
 sprites/frames/Enemies2/AstroAssAssaulter/shoot_up.png
 sprites/frames/Enemies2/AstroAssAssaulter/stand.png
@@ -1126,10 +1129,12 @@ sprites/frames/Projectiles1/Asteroid/Blue.png
 sprites/frames/Projectiles1/Snowball.png
 sprites/frames/Projectiles1/CacaFlame/fall.png
 sprites/frames/Projectiles1/CacaFlame/burst.png
+sprites/frames/Projectiles1/CryoPellet.png
 sprites/frames/Projectiles1/SnowballForm.png
 sprites/frames/Projectiles1/RocketBomb.png
 sprites/frames/Projectiles1/Petal.png
 sprites/frames/Projectiles1/RollingBotShot.png
+sprites/frames/Projectiles1/GreenPelletBlast.png
 sprites/frames/Projectiles1/TubeBeam.png
 sprites/frames/Projectiles1/PurpleBlast/Charge.png
 sprites/frames/Projectiles1/PurpleBlast/Blast.png
@@ -1148,6 +1153,8 @@ sprites/frames/Projectiles1/Fire/Fireball.png
 sprites/frames/Projectiles1/JoeBall.png
 sprites/frames/Projectiles1/ToxicGoopShot.png
 sprites/frames/Projectiles1/Prickly.png
+sprites/frames/Projectiles1/HoneyDrip/splash.png
+sprites/frames/Projectiles1/HoneyDrip/drip.png
 sprites/frames/Projectiles1/Nuclear_Monkey_Ball.png
 sprites/frames/Projectiles1/PreciousShot/Form.png
 sprites/frames/Projectiles1/PreciousShot/Shoot.png
@@ -1292,6 +1299,14 @@ sprites/frames/Enemies1/PetitDevil/SmallGreen.png
 sprites/frames/Enemies1/Matasaburo.png
 sprites/frames/Enemies1/FlyPincher/Pinch.png
 sprites/frames/Enemies1/FlyPincher/Open.png
+sprites/frames/Enemies1/GreenUziJoe/stand_shoot.png
+sprites/frames/Enemies1/GreenUziJoe/stand_shoot_start.png
+sprites/frames/Enemies1/GreenUziJoe/stand_shoot.png_blast
+sprites/frames/Enemies1/GreenUziJoe/stand.png
+sprites/frames/Enemies1/GreenUziJoe/jump.png
+sprites/frames/Enemies1/GreenUziJoe/jump_shoot.png
+sprites/frames/Enemies1/GreenUziJoe/jump_shoot_blast.png
+sprites/frames/Enemies1/GreenUziJoe/jump_shoot_start.png
 sprites/frames/Enemies1/DragonFly.png
 sprites/frames/Enemies1/GapingFish/Chomping.png
 sprites/frames/Enemies1/GapingFish/Swimming.png
@@ -1331,6 +1346,11 @@ sprites/frames/Enemies1/PreciousJoe/Shoot.png
 sprites/frames/Enemies1/SwinginJoe/throw.png
 sprites/frames/Enemies1/SwinginJoe/swing1.png
 sprites/frames/Enemies1/SwinginJoe/swing2.png
+sprites/frames/Enemies1/CryoMet/flash.png
+sprites/frames/Enemies1/CryoMet/down.png
+sprites/frames/Enemies1/CryoMet/rise.png
+sprites/frames/Enemies1/CryoMet/lower.png
+sprites/frames/Enemies1/CryoMet/run.png
 sprites/frames/Enemies1/FlameHeadThrower/Stand.png
 sprites/frames/Enemies1/FlameHeadThrower/Throw.png
 sprites/frames/Enemies1/NuttGlider/glide_nutt.png
@@ -1349,6 +1369,10 @@ sprites/frames/Enemies1/SnowBat/Fly.png
 sprites/frames/Enemies1/FireMetSpawner/Closed.png
 sprites/frames/Enemies1/FireMetSpawner/Opening.png
 sprites/frames/Enemies1/FireMetSpawner/Open.png
+sprites/frames/Enemies1/CannoHoney/closed_eyes.png
+sprites/frames/Enemies1/CannoHoney/closing_eyes.png
+sprites/frames/Enemies1/CannoHoney/opening_eyes.png
+sprites/frames/Enemies1/CannoHoney/oepn_eyes.png
 sprites/frames/Enemies1/SwimmingMet/Swim.png
 sprites/frames/Enemies1/SwimmingMet/LayDown.png
 sprites/frames/Enemies1/Sealion/wait_no_ball.png
@@ -1381,6 +1405,7 @@ sprites/frames/Enemies1/SnowMet/Run.png
 sprites/frames/Enemies1/SnowMet/PopUp.png
 sprites/frames/Enemies1/ShieldAttacker/Attack.png
 sprites/frames/Enemies1/ShieldAttacker/TurnAround.png
+sprites/frames/Enemies1/Beezee.png
 sprites/frames/Enemies1/Bat/OpenEyes.png
 sprites/frames/Enemies1/Bat/Hang.png
 sprites/frames/Enemies1/Bat/OpenWings.png
@@ -1790,6 +1815,7 @@ sprites/piskel/Underwater_Penguin_Bot.piskel
 sprites/piskel/CrewMan.piskel
 sprites/piskel/MMX_Sigma2_Claw_Electric_Explosion.piskel
 sprites/piskel/PortalHopper.piskel
+sprites/piskel/Beezee.piskel
 sprites/piskel/CeilingCrusher.piskel
 sprites/piskel/FlameColumn.piskel
 sprites/piskel/Tileset1_Full_32x32.piskel
@@ -1809,6 +1835,7 @@ sprites/piskel/WintryMan.piskel
 sprites/piskel/Glacier_Man_AirConditioner.piskel
 sprites/piskel/Cactus.piskel
 sprites/piskel/SuperCoolActionStarWarsLazer.piskel
+sprites/piskel/EnhancedSniperJoe1.piskel
 sprites/piskel/Faces.piskel
 sprites/piskel/MoonManProjectiles.piskel
 sprites/piskel/CornMan.piskel
@@ -1863,6 +1890,7 @@ sprites/piskel/BulletCollision.piskel
 sprites/piskel/FloorButton.piskel
 sprites/piskel/All_Terrain_Missile_Bot.piskel
 sprites/piskel/Petit Devil.piskel
+sprites/piskel/GreenUziJoe.piskel
 sprites/piskel/MoonMan.piskel
 sprites/piskel/Gate.piskel
 sprites/piskel/NuttGlider.piskel
@@ -1905,6 +1933,7 @@ sprites/piskel/CapsuleTeleporter.piskel
 sprites/piskel/TimberWoman_v2.piskel
 sprites/piskel/TurnBlaster.piskel
 sprites/piskel/SeaMine.piskel
+sprites/piskel/GreenPelletBlast.piskel
 sprites/piskel/WhiteShards.piskel
 sprites/piskel/Asteroid.piskel
 sprites/piskel/AcidGoop.piskel
@@ -1933,7 +1962,9 @@ sprites/piskel/NavalMan.piskel
 sprites/piskel/PolarityMan.piskel
 sprites/piskel/FridgeMan.piskel
 sprites/piskel/MoonMan_Mugshot_v2.piskel
+sprites/piskel/IceSkaterPeng.piskel
 sprites/piskel/NavalMan_raw.piskel
+sprites/piskel/HoneyDrip.piskel
 sprites/piskel/MoonManMugshot.piskel
 sprites/piskel/MagmaOrb.piskel
 sprites/piskel/BombChute.piskel
@@ -1974,6 +2005,7 @@ sprites/piskel/FireDispensenator.piskel
 sprites/piskel/temp.piskel
 sprites/piskel/UFO_Bomb.piskel
 sprites/piskel/RollerBot.piskel
+sprites/piskel/CryoMet.piskel
 sprites/piskel/MagmaPellet&Flame.piskel
 sprites/piskel/UFOBomb.piskel
 sprites/piskel/InfernoOven.piskel
@@ -2002,6 +2034,7 @@ sprites/piskel/SprBGTomahawk_v2.piskel
 sprites/piskel/UF_Oh_No_Bot_1.piskel
 sprites/piskel/AstroAss.piskel
 sprites/piskel/Death_Bomb.piskel
+sprites/piskel/CannoHoney.piskel
 sprites/piskel/MegamanFire.piskel
 sprites/piskel/Bits.piskel
 sprites/piskel/large_swing.piskel
@@ -2079,6 +2112,7 @@ sprites/piskel/SmokePuff.piskel
 sprites/piskel/NukeMan.piskel
 sprites/piskel/Buddies.piskel
 sprites/piskel/CaveRocker.piskel
+sprites/piskel/CryoPellet.piskel
 sprites/piskel/Cart.piskel
 sprites/piskel/SnowheadThrower.piskel
 tiled_maps/tsx/mm10-final-stage-tileset.tsx

@@ -47,7 +47,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
             ConstKeys.PROJECTILES -> EntityType.PROJECTILE
             else -> throw IllegalArgumentException("Unknown spawner type: ${layer.name}")
         }
-        val shouldTestPred: (Float) -> Boolean = when (entityType) {
+        val shouldTestSpawnerPredicate: (Float) -> Boolean = when (entityType) {
             EntityType.BLOCK,
             EntityType.HAZARD,
             EntityType.DECORATION -> {
@@ -74,9 +74,11 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
             try {
                 clazz = Class.forName(entityType.getFullyQualifiedName(name)).kotlin as KClass<out MegaGameEntity>
             } catch (e: Exception) {
-                throw IllegalStateException(
-                    "Failed to instantiate entity class: name=${name}, layer.name=${layer.name}", e
+                GameLogger.error(
+                    TAG, "Failed to create spawner for entity: name=${name}, layer.name=${layer.name}", e
                 )
+
+                return@forEach
             }
 
             val spawnType = spawnProps.get(ConstKeys.SPAWN_TYPE, String::class)
@@ -127,7 +129,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                         ),
                         spawnSupplier = spawnSupplier,
                         respawnable = respawnable,
-                        shouldTest = shouldTestPred
+                        shouldTest = shouldTestSpawnerPredicate
                     )
                     spawners.add(spawner)
 
@@ -148,7 +150,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                         events = events,
                         spawnSupplier = spawnSupplier,
                         respawnable = respawnable,
-                        shouldTest = shouldTestPred
+                        shouldTest = shouldTestSpawnerPredicate
                     )
                     spawners.add(spawner)
 
@@ -164,7 +166,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                         spawnShape = SpawnerShapeFactory.getSpawnShape(entityType, it),
                         spawnSupplier = spawnSupplier,
                         respawnable = respawnable,
-                        shouldTest = shouldTestPred
+                        shouldTest = shouldTestSpawnerPredicate
                     )
                     spawners.add(spawner)
 

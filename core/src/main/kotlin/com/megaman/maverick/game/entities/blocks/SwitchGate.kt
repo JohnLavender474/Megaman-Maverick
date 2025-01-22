@@ -36,6 +36,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.sensors.Gate.GateType
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.getBounds
@@ -47,6 +48,7 @@ class SwitchGate(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnim
     companion object {
         const val TAG = "SwitchGate"
         private const val SWITCH_DUR = 0.5f
+        private val REGION_PREFIX = GateType.STANDARD.name.lowercase()
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -70,9 +72,9 @@ class SwitchGate(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnim
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.GATES.source)
-            SwitchGateState.entries.forEach {
-                val key = it.name.lowercase()
-                regions.put(key, atlas.findRegion(key))
+            SwitchGateState.entries.forEach { state ->
+                val key = state.name.lowercase()
+                regions.put(key, atlas.findRegion("$REGION_PREFIX/$key"))
             }
         }
         super.init()

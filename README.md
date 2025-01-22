@@ -162,10 +162,13 @@ comprehensive listing of the credits for the artwork used in this game.
     - Big Fish Neo
     - Cannon Hopper
     - Telly Saucer
+  - [Random Enemies Set 7](https://www.deviantart.com/megared225/art/Random-Enemies-Set-7-539684729):
+    - Iceskate Peng
   - [Random Enemies Set 9](https://www.deviantart.com/megared225/art/Random-Enemy-Sprites-Set-9-557171615):
     - Fire Dispensenator
   - [Random Enemies Set 10](https://www.deviantart.com/megared225/art/Random-Enemy-Sprites-Set-10-571128501):
     - Nutt Glider
+- Enhanced Sniper Joe sprites by Aburtos: https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/162288/
 - All other enemy sprites sourced from https://www.spriters-resource.com/
 
 ### Blocks / Platforms
