@@ -780,7 +780,7 @@
     <property name="spawn_type" value="spawn_now"/>
    </properties>
   </object>
-  <object id="340" name="IceBlock" x="13216" y="976" width="96" height="240"/>
+  <object id="340" x="13216" y="976" width="96" height="240"/>
   <object id="341" name="IceBlock" x="13408" y="992" width="96" height="224"/>
   <object id="342" name="IceBlock" x="13504" y="896" width="96" height="320"/>
   <object id="343" name="IceBlock" x="13536" y="864" width="128" height="32"/>

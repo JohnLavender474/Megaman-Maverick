@@ -286,7 +286,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(
-            TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
+            TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
                 .also { sprite -> sprite.setSize(2f * ConstVals.PPM, 3f * ConstVals.PPM) }
         )
         .updatable { _, sprite ->
