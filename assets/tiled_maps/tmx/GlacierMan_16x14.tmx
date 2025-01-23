@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="575" height="80" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="608">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="575" height="80" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="609">
  <tileset firstgid="1" source="../tsx/GlacierManTileset.tsx"/>
  <tileset firstgid="17281" source="../tsx/Blizzardman.tsx"/>
  <layer id="2" name="tiles2" width="575" height="80">
@@ -898,6 +898,7 @@
   <object id="605" x="11200" y="864" width="224" height="352"/>
   <object id="606" x="864" y="2144" width="32" height="128"/>
   <object id="607" name="IceBlock" x="12256" y="768" width="32" height="32"/>
+  <object id="608" name="IceBlock" x="13600" y="896" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="13" name="children">
   <object id="170" name="MinY" x="0" y="2400" width="32" height="32"/>
@@ -964,7 +965,7 @@
   <object id="542" name="FallingIcicle" x="2568" y="2240" width="16" height="16"/>
   <object id="545" name="FallingIcicle" x="4088" y="2080" width="16" height="16"/>
   <object id="546" name="FallingIcicle" x="14200" y="768" width="16" height="16"/>
-  <object id="548" name="FallingIcicle" x="13032" y="832" width="16" height="16"/>
+  <object id="548" name="FallingIcicle" x="13032" y="768" width="16" height="16"/>
   <object id="549" name="FallingIcicle" x="12776" y="768" width="16" height="16"/>
   <object id="550" name="FallingIcicle" x="12712" y="768" width="16" height="16"/>
   <object id="551" name="FallingIcicle" x="12168" y="768" width="16" height="16"/>
@@ -1312,17 +1313,12 @@
     <property name="type" value="Snow"/>
    </properties>
   </object>
-  <object id="386" name="Bat" x="13976" y="832" width="16" height="16">
+  <object id="386" name="Bat" x="14008" y="832" width="16" height="16">
    <properties>
     <property name="type" value="Snow"/>
    </properties>
   </object>
-  <object id="387" name="SnowheadThrower" x="13656" y="992" width="16" height="16"/>
-  <object id="389" name="SpikeBot" x="14280" y="912" width="16" height="16">
-   <properties>
-    <property name="type" value="snow"/>
-   </properties>
-  </object>
+  <object id="387" name="SnowheadThrower" x="13704" y="992" width="16" height="16"/>
   <object id="465" name="Sealion" x="15368" y="952" width="16" height="16"/>
   <object id="466" name="YellowTiggerSquirt" x="15240" y="1056" width="16" height="16">
    <properties>
@@ -1371,7 +1367,7 @@
    </properties>
   </object>
   <object id="587" name="Coldier" x="6168" y="848" width="16" height="16"/>
-  <object id="588" name="Coldier" x="13976" y="992" width="16" height="16"/>
+  <object id="588" name="Coldier" x="14008" y="992" width="16" height="16"/>
   <object id="592" name="Coldier" x="11096" y="1360" width="16" height="16"/>
   <object id="593" name="IceskatePeng" x="1944" y="2288" width="16" height="16"/>
   <object id="595" name="IceskatePeng" x="4088" y="2256" width="16" height="16"/>
