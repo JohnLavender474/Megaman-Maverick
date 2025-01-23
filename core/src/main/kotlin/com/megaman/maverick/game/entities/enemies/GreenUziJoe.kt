@@ -68,7 +68,7 @@ class GreenUziJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGra
         private const val GRAVITY = 0.15f
         private const val GROUND_GRAVITY = 0.01f
 
-        private const val JUMP_IMPULSE = 15f
+        private const val JUMP_IMPULSE = 10f
         private const val JUMP_SENSOR_WIDTH = 2f
         private const val JUMP_SENSOR_HEIGHT = 6f
 

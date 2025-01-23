@@ -125,7 +125,6 @@ comprehensive listing of the credits for the artwork used in this game.
 #### Robot Masters
 
 - Timber Woman spritesheet- [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/TimberWoman-Megaman-Maverick-1087794591)
-- 
 - Rodent Man 
   - Original by [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/Rodent-Man-Megaman-Maverick-1087797101)
   - Updated by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/1137571452)
@@ -153,23 +152,24 @@ comprehensive listing of the credits for the artwork used in this game.
 - Sphinx spritesheet - [Mister Mike](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/108177/) (currently not used)
 
 #### Enemies
-- [Samuel_X7](https://www.deviantart.com/samuelx4):
+- [Samuel_X7](https://www.deviantart.com/samuelx4)
   - Astro (Ass) Assaulter
   - Staged Moon Landing Flag
 - [MegaRed225](https://www.deviantart.com/megared225/gallery):
-  - [Random Enemies Set 5](https://www.deviantart.com/megared225/art/Random-Enemies-Set-5-517418497):
+  - [Random Enemies Set 5](https://www.deviantart.com/megared225/art/Random-Enemies-Set-5-517418497)
     - Lumber Joe 
     - Big Fish Neo
     - Cannon Hopper
     - Telly Saucer
-  - [Random Enemies Set 7](https://www.deviantart.com/megared225/art/Random-Enemies-Set-7-539684729):
+  - [Random Enemies Set 7](https://www.deviantart.com/megared225/art/Random-Enemies-Set-7-539684729)
     - Iceskate Peng
   - [Random Enemies Set 9](https://www.deviantart.com/megared225/art/Random-Enemy-Sprites-Set-9-557171615):
     - Fire Dispensenator
-  - [Random Enemies Set 10](https://www.deviantart.com/megared225/art/Random-Enemy-Sprites-Set-10-571128501):
+  - [Random Enemies Set 10](https://www.deviantart.com/megared225/art/Random-Enemy-Sprites-Set-10-571128501)
     - Nutt Glider
-- Enhanced Sniper Joe sprites by Aburtos: https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/162288/
-- All other enemy sprites sourced from https://www.spriters-resource.com/
+- Aburtos
+  - [Enhance Sniper Joe](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/162288/)
+- All other enemy sprites made by Capcom and sourced from https://www.spriters-resource.com/
 
 ### Blocks / Platforms
 - [Samuel_X7](https://www.deviantart.com/samuelx4):
@@ -178,41 +178,42 @@ comprehensive listing of the credits for the artwork used in this game.
 
 #### Tilesets
 
-- [Balloon Cart (Reactor Man)](https://balloon-cart.itch.io/reactor-man-asset-pack)
-- [Balloon Cart (Glacier Man)](https://balloon-cart.itch.io/glacier-man-asset-pack)
-- [Ansimuz (Rodent Man)](https://ansimuz.itch.io/mega-bot)
-- [Ansimuz (Inferno Man) (Commission)](https://www.deviantart.com/oldlavygenes474/art/1142906425)
-- [Mega 8-Bit](https://assetstore.unity.com/packages/2d/environments/mega-8-bit-pixel-pack-60158?srsltid=AfmBOordeWICo0KR-N3MKcw6iqd2TehrlFgQn6Hijzmk09-2eoq2Gid0)
-- Mister Mike:
+- [Balloon Cart](https://balloon-cart.itch.io)
+  - [Reactor Man tileset](https://balloon-cart.itch.io/reactor-man-asset-pack)
+  - [Glacier Man tileset](https://balloon-cart.itch.io/glacier-man-asset-pack)
+- [Ansimuz](https://ansimuz.itch.io)
+  - [Rodent Man tileset](https://ansimuz.itch.io/mega-bot)
+  - [Inferno Man tileset (Commissioned by oldlavygenes)](https://www.deviantart.com/oldlavygenes474/art/1142906425)
+- [Super Icon Ltd](https://assetstore.unity.com/publishers/5990) 
+  - [Mega 8-Bit Pixel Pack](https://assetstore.unity.com/packages/2d/environments/mega-8-bit-pixel-pack-60158)
+- [Bongwater-bandit](https://www.deviantart.com/bongwater-bandit:
+  - [MM6 Plant Man edit](https://www.deviantart.com/bongwater-bandit/art/MM6-Plant-Man-edit-875037908)
+- Mister Mike
   - [Megaman 6 - Tomahawk Man Tileset](https://www.spriters-resource.com/nes/mm6/sheet/16402/)
   - [Megaman 3 - Wily Stage 1 Tileset](https://www.spriters-resource.com/nes/mm3/sheet/16388/)
-- AxeW1eld3r:
+- AxeW1eld3r
   - [Megaman 9 - Endless Attack Tileset](https://www.spriters-resource.com/wii/mm9/sheet/166545/)
-- Rabbid4240:
+- Rabbid4240
   - [Megaman 9 - Magma Man Tileset](https://www.spriters-resource.com/wii/mm9/sheet/197901/)
-- Bongwater-bandit:
-  - [MM6 Plant Man edit](https://www.deviantart.com/bongwater-bandit/art/MM6-Plant-Man-edit-875037908)
-- Megaman Maker:
+- Megaman Maker
   - [Crystal Cave Background](https://wiki.megamanmaker.com/index.php/File:SprBGCrystal5_0.png)
 
 ### Music
 
-- MM6 Capcom Logo - https://downloads.khinsider.com/game-soundtracks/album/megaman-6-original-soundtrack/01%2520Capcom%2520Logo.mp3
-- Inferno Man stage track - [vinnyz279](https://soundcloud.com/mega-vinnyz279)
-- MMX3 Intro Stage - [Famitard](https://youtu.be/jEPimSadiRE)
-- MMX6 Blaze Heatnix - [Famitard](https://youtu.be/QpbMwCnJDSo) - used in Inferno Man stage
-- MMX5 Dark Necrobat - [Famitard](https://youtu.be/RosxPCxVOyk) - used in Moon Man stage
-- MMX7 Vanish. Gung. - [Famitard](https://youtu.be/MFfZ-LEwcMo) - used in Desert Man stage
-- MMX1 Chill Penguin - [Famitard](https://youtu.be/QWmsNV18S1g) - used in Glacier Man stage
-- MMX8 Burn Rooster - [Famitard](https://youtu.be/DHh-QSWvb-o) - used in Reactor Man stage
-- MMX6 Blaze Heatnix - [Famitard](https://youtu.be/QpbMwCnJDSo) - used in Inferno Man stage
-- MM7 Slash Man - [Famitard](https://youtu.be/24ECwWnh6Es) - used in Rodent Man stage
-- MMX3 Neon Tiger - [Famitard](https://youtu.be/cXiyGW0ulIY) - used in Timber Woman stage
-- MMX2 Crystal Snail - [Famitard](https://youtu.be/1qrbYy9qQdE) - used in Precious Man stage
-- MMX6 Boss - [Famitard](https://youtu.be/IeySHEF5U_8) - used in Robot Master boss fights
-- MMX6 Gate's Laboratory- [Famitard](https://youtu.be/Zdtp6f57E_c) - used in Wily stage 3
-- MMX6 Sigma Final Boss - [Famitard](https://youtu.be/FVdYxfEo4lI) - used in Wily stage 3 boss fight
-- MMX Vile Fight - [Famitard](https://youtu.be/iIcvnpYVTKc) - used in Wily stages 1 & 2 boss fights
+- [Famitard](https://www.youtube.com/@FamiTard)
+  - Main Menu - [MMX3 Intro Stage 8-Bit](https://youtu.be/jEPimSadiRE)
+  - Desert Man Stage - [MMX7 Vanishing Gungaroo 8-Bit](https://youtu.be/MFfZ-LEwcMo)
+  - Moon Man Stage - [MMX5 Dark Necrobat 8-Bit](https://youtu.be/RosxPCxVOyk)
+  - Glacier Man Stage - [MMX Chill Penguin 8-Bit](https://youtu.be/QWmsNV18S1g)
+  - Reactor Man Stage - [MMX8 Burn Rooster 8-Bit](https://youtu.be/DHh-QSWvb-o)
+  - Rodent Man Stage - [MM7 Slash Man 8-Bit](https://youtu.be/24ECwWnh6Es)
+  - Timber Woman Stage - [MMX3 Neon Tiger 8-Bit](https://youtu.be/cXiyGW0ulIY)
+  - Precious Man Stage - [MMX2 Crystal Snail 8-Bit](https://youtu.be/1qrbYy9qQdE)
+  - Robot Master Fight - [MMX6 Boss Fight 8-Bit](https://youtu.be/IeySHEF5U_8) 
+- [vinnyz29](https://soundcloud.com/mega-vinnyz279)
+  - Inferno Man Stage
+- Capcom:
+  - Logo Intro Music: [MM6 Capcom Logo](https://downloads.khinsider.com/game-soundtracks/album/megaman-6-original-soundtrack/01%2520Capcom%2520Logo.mp3)
 - TODO: Other music tracks are saved in the `assets` dir but not yet used in the game. These will be added here as they're added to the game.
 
 ### Sounds

@@ -658,7 +658,7 @@
   <object id="336" name="GreenUziJoe" x="34616" y="304" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="4" name="player">
-  <object id="319" name="0" x="34160" y="352" width="32" height="32">
+  <object id="319" name="0" x="33296" y="352" width="32" height="32">
    <properties>
     <property name="direction" value="up"/>
    </properties>
