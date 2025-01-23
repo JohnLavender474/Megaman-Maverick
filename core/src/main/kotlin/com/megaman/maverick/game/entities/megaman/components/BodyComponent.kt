@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.ProcessState
+import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -25,6 +26,8 @@ import com.megaman.maverick.game.world.body.*
 
 const val MEGAMAN_BODY_WIDTH = 1f
 const val MEGAMAN_BODY_HEIGHT = 1.35f
+
+const val GROUNDSLIDE_HEIGHT = 0.75f
 
 val Megaman.feetFixture: Fixture
     get() = body.getProperty(ConstKeys.FEET) as Fixture
@@ -49,7 +52,6 @@ val Megaman.feetOnGround: Boolean
 
 internal fun Megaman.defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.DYNAMIC)
-    body.setSize(MEGAMAN_BODY_WIDTH * ConstVals.PPM, MEGAMAN_BODY_HEIGHT * ConstVals.PPM)
     body.putProperty("${ConstKeys.ICE}_${ConstKeys.FRICTION_Y}", false)
     body.physics.applyFrictionX = true
     body.physics.applyFrictionY = true
@@ -57,10 +59,10 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     val debugShapes = Array<() -> IDrawableShape?>()
     // debugShapes.add { body.getBounds() }
 
-    val playerFixture = Fixture(body, FixtureType.PLAYER, GameRectangle(body))
+    val playerFixture = Fixture(body, FixtureType.PLAYER, GameRectangle())
     body.addFixture(playerFixture)
 
-    val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
+    val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
     body.addFixture(bodyFixture)
     body.putProperty(ConstKeys.BODY, bodyFixture)
 
@@ -70,10 +72,10 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 
     val feetFixture =
         Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.25f * ConstVals.PPM))
-    feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
+    feetFixture.offsetFromBodyAttachment.y = -MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
     feetFixture.setRunnable(onBounce)
     body.addFixture(feetFixture)
-    debugShapes.add { feetFixture }
+    // debugShapes.add { feetFixture }
     body.putProperty(ConstKeys.FEET, feetFixture)
 
     // The feet gravity fixture is a consumer that checks for overlap with blocks. If there is a contact with a block,
@@ -81,9 +83,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     // fixture and the other feet fixture.
     val feetGravityFixture =
         Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.9f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-
     feetGravityFixture.setFilter { it.getType() == FixtureType.BLOCK }
-
     val feetGravitySet = ObjectSet<IFixture>()
     feetGravityFixture.putProperty(ConstKeys.SET, feetGravitySet)
     feetGravityFixture.setConsumer consumer@{ processState, fixture ->
@@ -102,42 +102,39 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
             ProcessState.END -> feetGravitySet.remove(fixture)
         }
     }
-
     val isFeetOnGround: () -> Boolean = { !feetGravitySet.isEmpty }
     body.putProperty(ConstKeys.FEET_ON_GROUND, isFeetOnGround)
-
     body.onReset.put("${ConstKeys.FEET}_${ConstKeys.GRAVITY}") { feetGravitySet.clear() }
-
-    feetGravityFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
-
+    feetGravityFixture.offsetFromBodyAttachment.y = -MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
     body.addFixture(feetGravityFixture)
 
     val headFixture =
         Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.5f * ConstVals.PPM))
-    headFixture.offsetFromBodyAttachment.y = (body.getHeight() / 2f) - 0.2f * ConstVals.PPM
+    headFixture.offsetFromBodyAttachment.y = MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
     headFixture.setRunnable(onBounce)
     body.addFixture(headFixture)
+    headFixture.drawingColor = Color.ORANGE
     debugShapes.add { headFixture }
     body.putProperty(ConstKeys.HEAD, headFixture)
 
     val leftFixture =
         Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.2f * ConstVals.PPM, ConstVals.PPM.toFloat()))
-    leftFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
+    leftFixture.offsetFromBodyAttachment.x = -MEGAMAN_BODY_WIDTH * ConstVals.PPM / 2f
     leftFixture.offsetFromBodyAttachment.y = 0.1f * ConstVals.PPM
     leftFixture.setRunnable(onBounce)
     leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
     body.addFixture(leftFixture)
-    debugShapes.add { leftFixture}
+    // debugShapes.add { leftFixture }
     body.putProperty("${ConstKeys.LEFT}_${ConstKeys.SIDE}", leftFixture)
 
     val rightFixture =
         Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.2f * ConstVals.PPM, ConstVals.PPM.toFloat()))
-    rightFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
+    rightFixture.offsetFromBodyAttachment.x = MEGAMAN_BODY_WIDTH * ConstVals.PPM / 2f
     rightFixture.offsetFromBodyAttachment.y = 0.1f * ConstVals.PPM
     rightFixture.setRunnable(onBounce)
     rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
     body.addFixture(rightFixture)
-    debugShapes.add { rightFixture}
+    // debugShapes.add { rightFixture }
     body.putProperty("${ConstKeys.RIGHT}_${ConstKeys.SIDE}", rightFixture)
 
     val damagableRect = GameRectangle()
@@ -146,15 +143,33 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.addFixture(damageableFixture)
     body.putProperty(ConstKeys.DAMAGEABLE, damageableFixture)
     damageableFixture.drawingColor = Color.PURPLE
-    debugShapes.add { damageableFixture }
+    // debugShapes.add { damageableFixture }
 
-    val waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle(body))
+    val waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle())
     body.addFixture(waterListenerFixture)
 
-    val teleporterListenerFixture = Fixture(body, FixtureType.TELEPORTER_LISTENER, GameRectangle(body))
+    val teleporterListenerFixture = Fixture(body, FixtureType.TELEPORTER_LISTENER, GameRectangle())
     body.addFixture(teleporterListenerFixture)
 
+    val fixturesToSizeToBody = gdxArrayOf(bodyFixture, playerFixture, waterListenerFixture, teleporterListenerFixture)
+
     body.preProcess.put(ConstKeys.DEFAULT) {
+        val height = if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) GROUNDSLIDE_HEIGHT else MEGAMAN_BODY_HEIGHT
+        body.setSize(MEGAMAN_BODY_WIDTH * ConstVals.PPM, height * ConstVals.PPM)
+
+        fixturesToSizeToBody.forEach { fixture ->
+            val bounds = fixture.rawShape as GameRectangle
+            bounds.set(body)
+        }
+
+        /*
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
+        feetGravityFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
+        headFixture.offsetFromBodyAttachment.y = MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
+        leftFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
+        rightFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
+         */
+
         if (!ready) {
             body.physics.velocity.setZero()
             body.physics.gravity.setZero()

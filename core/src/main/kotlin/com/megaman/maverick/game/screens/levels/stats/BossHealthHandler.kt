@@ -65,9 +65,7 @@ class BossHealthHandler(private val game: MegamanMaverickGame) : IDrawable<Batch
                         game.audioMan.playSound(SoundAsset.ENERGY_FILL_SOUND)
                     })
                 }
-                timer.setRunnables(runnables)
-                timer.runOnFirstUpdate = runOnFirstUpdate
-                timer.runOnFinished = runOnFinished
+                timer.setRunnables(runnables).setRunOnFirstupdate(runOnFirstUpdate).setRunOnFinished(runOnFinished)
 
                 this.timer = timer
             }

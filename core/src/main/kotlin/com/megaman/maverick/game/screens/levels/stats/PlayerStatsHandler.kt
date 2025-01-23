@@ -48,7 +48,8 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
     override fun init() {
         if (initialized) return
 
-        healthBar = BitsBar(assMan,
+        healthBar = BitsBar(
+            assMan,
             "Bit",
             ConstVals.HEALTH_BAR_X * ConstVals.PPM,
             ConstVals.STATS_BAR_Y * ConstVals.PPM,
@@ -66,7 +67,8 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
                 else -> throw IllegalStateException("No bit source for weapon $it")
             }
 
-            val weaponBar = BitsBar(assMan,
+            val weaponBar = BitsBar(
+                assMan,
                 bitSource,
                 ConstVals.WEAPON_BAR_X * ConstVals.PPM,
                 ConstVals.STATS_BAR_Y * ConstVals.PPM,
@@ -90,17 +92,21 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
         }
 
         val timer = Timer(SPECIAL_ITEM_DUR)
-        timer.runOnFirstUpdate = {
-            audioMan.playSound(SoundAsset.LIFE_SOUND, false)
-            engine.systems.forEach { if (it !is SpritesSystem) it.on = false }
-        }
-        timer.runOnFinished = {
-            megaman.add(heartTank)
-            eventsMan.submitEvent(
-                Event(EventType.ADD_PLAYER_HEALTH, props(ConstKeys.VALUE pairTo MegaHeartTank.HEALTH_BUMP))
-            )
-            engine.systems.forEach { it.on = true }
-        }
+        timer
+            .setRunOnFirstupdate {
+                audioMan.playSound(SoundAsset.LIFE_SOUND, false)
+
+                engine.systems.forEach { if (it !is SpritesSystem) it.on = false }
+            }
+            .setRunOnFinished {
+                megaman.add(heartTank)
+
+                eventsMan.submitEvent(
+                    Event(EventType.ADD_PLAYER_HEALTH, props(ConstKeys.VALUE pairTo MegaHeartTank.HEALTH_BUMP))
+                )
+
+                engine.systems.forEach { it.on = true }
+            }
         timerQueue.addLast(timer)
     }
 
@@ -139,7 +145,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
             })
         }
         val timer = Timer(dur, timeMarkedRunnables)
-        if (addToTanks) timer.runOnFinished = { audioMan.playSound(SoundAsset.LIFE_SOUND) }
+        if (addToTanks) timer.setRunOnFinished { audioMan.playSound(SoundAsset.LIFE_SOUND) }
         timerQueue.addLast(timer)
 
         engine.systems.forEach { if (it !is SpritesSystem) it.on = false }

@@ -426,7 +426,6 @@ sprites/frames/Explosions1/MagmaGoopExplosion.png
 sprites/frames/Explosions1/Explosion.png
 sprites/frames/Explosions1/Disintegration.png
 sprites/frames/Explosions1/ExplosionOrbs.png
-sprites/frames/Explosions1/ChargedShot_half.png
 sprites/frames/Explosions1/PreciousExplosion.png
 sprites/frames/Explosions1/IcicleShards.png
 sprites/frames/Explosions1/ChargedShotExplosion.png
@@ -1134,7 +1133,6 @@ sprites/frames/Projectiles1/SnowballForm.png
 sprites/frames/Projectiles1/RocketBomb.png
 sprites/frames/Projectiles1/Petal.png
 sprites/frames/Projectiles1/RollingBotShot.png
-sprites/frames/Projectiles1/GreenPelletBlast.png
 sprites/frames/Projectiles1/TubeBeam.png
 sprites/frames/Projectiles1/PurpleBlast/Charge.png
 sprites/frames/Projectiles1/PurpleBlast/Blast.png
@@ -1158,6 +1156,8 @@ sprites/frames/Projectiles1/HoneyDrip/drip.png
 sprites/frames/Projectiles1/Nuclear_Monkey_Ball.png
 sprites/frames/Projectiles1/PreciousShot/Form.png
 sprites/frames/Projectiles1/PreciousShot/Shoot.png
+sprites/frames/Projectiles1/GreenPelletBlast/burst.png
+sprites/frames/Projectiles1/GreenPelletBlast/blast.png
 sprites/frames/Projectiles1/FireWall/disintegrate.png
 sprites/frames/Projectiles1/FireWall/fire.png
 sprites/frames/Projectiles1/FirePellet.png
@@ -1301,9 +1301,9 @@ sprites/frames/Enemies1/FlyPincher/Pinch.png
 sprites/frames/Enemies1/FlyPincher/Open.png
 sprites/frames/Enemies1/GreenUziJoe/stand_shoot.png
 sprites/frames/Enemies1/GreenUziJoe/stand_shoot_start.png
-sprites/frames/Enemies1/GreenUziJoe/stand_shoot.png_blast
 sprites/frames/Enemies1/GreenUziJoe/stand.png
 sprites/frames/Enemies1/GreenUziJoe/jump.png
+sprites/frames/Enemies1/GreenUziJoe/stand_shoot_blast.png
 sprites/frames/Enemies1/GreenUziJoe/jump_shoot.png
 sprites/frames/Enemies1/GreenUziJoe/jump_shoot_blast.png
 sprites/frames/Enemies1/GreenUziJoe/jump_shoot_start.png

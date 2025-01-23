@@ -499,8 +499,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     private fun resetShootTimer() {
         val timer = timers["shoot"]
-        timer.clearRunnables()
-        timer.runOnFirstUpdate = null
+        timer.clearRunnables().setRunOnFirstupdate(null)
 
         shootMethod = getShootMethod()
 
@@ -512,8 +511,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             }
 
             else -> {
-                timer.resetDuration(SHOOT_DUR)
-                timer.runOnFirstUpdate = { shootGoop() }
+                timer.resetDuration(SHOOT_DUR).setRunOnFirstupdate { shootGoop() }
                 if (currentState == InfernoManState.JUMP) timers["shoot_delay"].reset()
             }
         }
@@ -590,7 +588,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     private fun setMeteorToBeSpawned(targetMegaman: Boolean) {
         val spawnMeteorTimer = Timer(SPAWN_METEOR_DELAY)
-        spawnMeteorTimer.runOnFinished = { spawnMeteor(targetMegaman) }
+        spawnMeteorTimer.setRunOnFinished { spawnMeteor(targetMegaman) }
         meteorSpawnDelays.add(spawnMeteorTimer)
     }
 

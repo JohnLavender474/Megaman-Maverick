@@ -402,6 +402,13 @@ GreenUziJoe/stand_shoot
   orig: 48, 32
   offset: 0, 0
   index: -1
+GreenUziJoe/stand_shoot_blast
+  rotate: false
+  xy: 208, 660
+  size: 48, 64
+  orig: 48, 64
+  offset: 0, 0
+  index: -1
 GreenUziJoe/stand_shoot_start
   rotate: false
   xy: 432, 64
@@ -628,7 +635,7 @@ PicketJoe/Throw
   index: -1
 Pipi/Copipi
   rotate: false
-  xy: 208, 660
+  xy: 256, 660
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
@@ -677,7 +684,7 @@ PopupCanon/Down
   index: -1
 PopupCanon/Rise
   rotate: false
-  xy: 240, 660
+  xy: 288, 660
   size: 96, 64
   orig: 96, 64
   offset: 0, 0
@@ -1069,7 +1076,7 @@ SnowSeal/Stand
   index: -1
 Spiky
   rotate: false
-  xy: 336, 660
+  xy: 384, 660
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
@@ -1153,7 +1160,7 @@ TellySaucer/collapsed
   index: -1
 TellySaucer/hit
   rotate: false
-  xy: 368, 660
+  xy: 416, 660
   size: 32, 64
   orig: 32, 64
   offset: 0, 0

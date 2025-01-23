@@ -418,6 +418,7 @@
             <key type="filename">../frames/Enemies1/DeathBat/fly_attack.png</key>
             <key type="filename">../frames/Enemies1/DeathBat/fly_retreat.png</key>
             <key type="filename">../frames/Enemies1/GreenUziJoe/jump_shoot_blast.png</key>
+            <key type="filename">../frames/Enemies1/GreenUziJoe/stand_shoot_blast.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

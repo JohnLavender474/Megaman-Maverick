@@ -576,15 +576,17 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
         for (i in 0 until STAND_SHOOT_DURS.size) {
             val key = "shoot_$i"
+
             val dur = STAND_SHOOT_DURS[i]
+
             val timer = Timer(dur)
-
-            timer.runOnFinished = when (i) {
-                2 -> this::shootMoon
-                4 -> this::shootStar
-                else -> null
-            }
-
+            timer.setRunOnFinished(
+                when (i) {
+                    2 -> this::shootMoon
+                    4 -> this::shootStar
+                    else -> null
+                }
+            )
             timers.put(key, timer)
         }
     }
