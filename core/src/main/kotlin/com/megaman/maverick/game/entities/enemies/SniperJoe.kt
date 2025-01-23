@@ -496,10 +496,10 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     private fun shoot() {
         val spawn = GameObjectPools.fetch(Vector2::class)
         when (direction) {
-            Direction.UP -> spawn.set(0.35f * facing.value, -0.275f)
-            Direction.DOWN -> spawn.set(0.35f * facing.value, 0.275f)
-            Direction.LEFT -> spawn.set(0.275f, 0.35f * facing.value)
-            Direction.RIGHT -> spawn.set(-0.275f, 0.35f * -facing.value)
+            Direction.UP -> spawn.set(0.5f * facing.value, -0.275f)
+            Direction.DOWN -> spawn.set(0.5f * facing.value, 0.275f)
+            Direction.LEFT -> spawn.set(0.275f, 0.5f * facing.value)
+            Direction.RIGHT -> spawn.set(-0.275f, -0.5f * facing.value)
         }
         spawn.scl(ConstVals.PPM.toFloat()).add(body.getCenter())
 

@@ -51,7 +51,7 @@ class IceskatePeng(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         private const val JUMP_IMPULSE_Y = 10f
         private const val JUMP_MAX_VEL_X = 2f
 
-        private const val SENSOR_WIDTH = 12f
+        private const val SENSOR_WIDTH = 1.5f
         private const val SENSOR_HEIGHT = 2f
 
         private const val DEFAULT_FRICTION_X = 1.25f
@@ -122,7 +122,7 @@ class IceskatePeng(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            sensor.setCenter(body.getCenter())
+            sensor.setBottomCenterToPoint(body.getPositionPoint(Position.TOP_CENTER))
 
             when (currentState) {
                 IceSkaterPengState.SKATE -> {

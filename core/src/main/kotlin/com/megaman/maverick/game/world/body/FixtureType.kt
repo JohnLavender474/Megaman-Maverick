@@ -12,6 +12,7 @@ enum class FixtureType {
     SAND,
     SNOW,
     GATE,
+    CART,
     LASER,
     WATER,
     FORCE,
@@ -27,7 +28,6 @@ enum class FixtureType {
     PROJECTILE,
     WATER_LISTENER,
     GRAVITY_CHANGE,
-    CART,
     TELEPORTER,
     TELEPORTER_LISTENER
 }

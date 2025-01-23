@@ -77,6 +77,9 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         private const val GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.01f
 
+        private const val NORMAL_MOVEMENT_SCALAR = 1f
+        private const val WATER_MOVEMENT_SCALAR = 0.5f
+
         private val angles = gdxArrayOf(45f, 0f, 315f)
         private val xOffsets = gdxArrayOf(-0.1f, 0f, 0.1f)
         private val regions = ObjectMap<String, TextureRegion>()
@@ -96,7 +99,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         "shoot" pairTo Timer(SHOOT_DUR, gdxArrayOf(TimeMarkedRunnable(SHOOT_TIME) { shoot() })),
         "walk" pairTo Timer(WALK_DUR)
     )
-    private lateinit var animations: ObjectMap<String, IAnimation>
+    private lateinit var animator: Animator
 
     override fun init() {
         if (regions.isEmpty) {
@@ -122,15 +125,17 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         timers.values().forEach { it.reset() }
         facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
-        val frameDuration = 0.1f / movementScalar
-        animations.values().forEach { it.setFrameDuration(frameDuration) }
+        type = when {
+            spawnProps.containsKey(ConstKeys.TYPE) -> {
+                val rawType = spawnProps.get(ConstKeys.TYPE)
+                rawType as? SpikeBotType ?: when (rawType) {
+                    is String -> SpikeBotType.valueOf(rawType.uppercase())
+                    else -> throw IllegalArgumentException("Illegal value for type: $rawType")
+                }
+            }
 
-        type = if (spawnProps.containsKey(ConstKeys.TYPE)) {
-            val rawType = spawnProps.get(ConstKeys.TYPE)
-            rawType as? SpikeBotType
-                ?: if (rawType is String) SpikeBotType.valueOf(rawType.uppercase())
-                else throw IllegalArgumentException("Illegal value for type: $rawType")
-        } else SpikeBotType.DEFAULT
+            else -> SpikeBotType.DEFAULT
+        }
     }
 
     private fun shoot() {
@@ -159,7 +164,11 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
             )
         }
 
-        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.THUMP_SOUND, false)
+        val sound = when (type) {
+            SpikeBotType.DEFAULT -> SoundAsset.THUMP_SOUND
+            SpikeBotType.SNOW -> SoundAsset.ICE_SHARD_1_SOUND
+        }
+        if (overlapsGameCamera()) requestToPlaySound(sound, false)
     }
 
     private fun jump() {
@@ -169,6 +178,9 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            movementScalar = if (body.isSensing(BodySense.IN_WATER)) WATER_MOVEMENT_SCALAR else NORMAL_MOVEMENT_SCALAR
+            animator.updateScalar = movementScalar
+
             if (!body.isSensing(BodySense.FEET_ON_GROUND)) return@add
 
             when (loop.getCurrent()) {
@@ -240,18 +252,16 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         debugShapes.add { rightSideFixture }
 
         val leftFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        leftFootFixture.setConsumer { _, fixture ->
-            if (fixture.getType() == FixtureType.BLOCK) body.putProperty(LEFT_FOOT, true)
-        }
+        leftFootFixture.setFilter { fixture -> fixture.getType() == FixtureType.BLOCK }
+        leftFootFixture.setConsumer { _, fixture -> body.putProperty(LEFT_FOOT, true) }
         leftFootFixture.offsetFromBodyAttachment.set(-body.getWidth() / 2f, -body.getHeight() / 2f)
         body.addFixture(leftFootFixture)
         leftFootFixture.drawingColor = Color.ORANGE
         debugShapes.add { leftFootFixture }
 
         val rightFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        rightFootFixture.setConsumer { _, fixture ->
-            if (fixture.getType() == FixtureType.BLOCK) body.putProperty(RIGHT_FOOT, true)
-        }
+        rightFootFixture.setFilter { fixture -> fixture.getType() == FixtureType.BLOCK }
+        rightFootFixture.setConsumer { _, fixture -> body.putProperty(RIGHT_FOOT, true) }
         rightFootFixture.offsetFromBodyAttachment.set(body.getWidth() / 2f, -body.getHeight() / 2f)
         body.addFixture(rightFootFixture)
         rightFootFixture.drawingColor = Color.ORANGE
@@ -271,7 +281,9 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(
-            this, body, BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
+            this,
+            body,
+            BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE, FixtureType.WATER_LISTENER)
         )
     }
 
@@ -299,7 +311,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
             }
             "${key}${type.append}"
         }
-        animations = ObjectMap<String, IAnimation>()
+        val animations = ObjectMap<String, IAnimation>()
         gdxArrayOf(
             "jump" pairTo AnimationDef(),
             "stand" pairTo AnimationDef(),
@@ -312,7 +324,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                 animations.put(amendedKey, animation)
             }
         }
-        val animator = Animator(keySupplier, animations)
+        animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
 }

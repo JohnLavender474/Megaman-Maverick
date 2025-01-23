@@ -13,6 +13,7 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
+import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IDirectional
@@ -253,6 +254,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             )
         )
         leftFootFixture.offsetFromBodyAttachment.set(-ConstVals.PPM.toFloat(), -0.75f * ConstVals.PPM)
+        leftFootFixture.setFilter { fixture -> fixture.getType().equalsAny(FixtureType.BLOCK, FixtureType.DEATH) }
         leftFootFixture.setConsumer { _, fixture ->
             when (fixture.getType()) {
                 FixtureType.BLOCK -> leftFootFixture.putProperty(ConstKeys.BLOCK, true)
@@ -268,6 +270,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             )
         )
         rightFootFixture.offsetFromBodyAttachment.set(ConstVals.PPM.toFloat(), -0.75f * ConstVals.PPM)
+        rightFootFixture.setFilter { fixture -> fixture.getType().equalsAny(FixtureType.BLOCK, FixtureType.DEATH) }
         rightFootFixture.setConsumer { _, fixture ->
             when (fixture.getType()) {
                 FixtureType.BLOCK -> rightFootFixture.putProperty(ConstKeys.BLOCK, true)

@@ -12,6 +12,7 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.coerceX
+import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
@@ -227,6 +228,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
 
         val leftConsumerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftConsumerFixture.offsetFromBodyAttachment.set(-0.75f, -0.75f).scl(ConstVals.PPM.toFloat())
+        leftConsumerFixture.setFilter { fixture -> fixture.getType().equalsAny(FixtureType.DEATH, FixtureType.BLOCK) }
         leftConsumerFixture.setConsumer { _, fixture ->
             when (fixture.getType()) {
                 FixtureType.DEATH -> leftConsumerFixture.putProperty(ConstKeys.DEATH, true)
@@ -238,6 +240,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
 
         val rightConsumerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.2f * ConstVals.PPM))
         rightConsumerFixture.offsetFromBodyAttachment.set(0.75f * ConstVals.PPM, -0.75f * ConstVals.PPM)
+        rightConsumerFixture.setFilter { fixture -> fixture.getType().equalsAny(FixtureType.DEATH, FixtureType.BLOCK) }
         rightConsumerFixture.setConsumer { _, fixture ->
             when (fixture.getType()) {
                 FixtureType.DEATH -> rightConsumerFixture.putProperty(ConstKeys.DEATH, true)
