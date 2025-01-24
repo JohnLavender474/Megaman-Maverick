@@ -58,9 +58,9 @@
             <key>filtering</key>
             <struct type="LibGDXFiltering">
                 <key>x</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
                 <key>y</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
             </struct>
         </struct>
         <key>shapePadding</key>
@@ -186,7 +186,6 @@
             <key type="filename">../frames/Faces1/Megaman/top_left.png</key>
             <key type="filename">../frames/Faces1/Megaman/top_right.png</key>
             <key type="filename">../frames/Faces1/Moon Man.png</key>
-            <key type="filename">../frames/Faces1/Precious Man.png</key>
             <key type="filename">../frames/Faces1/Reactor Man.png</key>
             <key type="filename">../frames/Faces1/Rodent Man.png</key>
             <key type="filename">../frames/Faces1/Timber Woman.png</key>
@@ -201,6 +200,21 @@
                 <rect>8,8,16,16</rect>
                 <key>scale9Paddings</key>
                 <rect>8,8,16,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Faces1/Precious Woman.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>33,33,66,66</rect>
+                <key>scale9Paddings</key>
+                <rect>33,33,66,66</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

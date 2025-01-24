@@ -101,7 +101,7 @@ Moon Man
   orig: 32, 32
   offset: 0, 0
   index: -1
-Precious Man
+Precious Woman
   rotate: false
   xy: 0, 272
   size: 32, 32

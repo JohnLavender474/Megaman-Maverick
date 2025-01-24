@@ -210,7 +210,7 @@
   </object>
  </objectgroup>
  <objectgroup id="6" name="blocks">
-  <object id="4" x="0" y="1792" width="544" height="224"/>
+  <object id="4" x="0" y="1792" width="512" height="224"/>
   <object id="5" x="512" y="1632" width="480" height="384"/>
   <object id="7" x="352" y="1632" width="128" height="32"/>
   <object id="8" x="128" y="1760" width="96" height="64"/>

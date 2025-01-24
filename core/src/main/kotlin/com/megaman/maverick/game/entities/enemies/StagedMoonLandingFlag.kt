@@ -80,15 +80,17 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
         get() = loop.getCurrent()
     private val stateTimers = OrderedMap<FlagState, Timer>()
 
+    private var parentId = -1
+
+    private lateinit var shieldDamager1: Fixture
     private val shield1Timer = Timer(SHIELD_SHOW_DUR)
     private val shield1BlinkTimer = Timer(SHIELD_BLINK_DUR)
     private var shield1Blink = false
-    private lateinit var shieldDamager1: Fixture
 
+    private lateinit var shieldDamager2: Fixture
     private val shield2Timer = Timer(SHIELD_SHOW_DUR)
     private val shield2BlinkTimer = Timer(SHIELD_BLINK_DUR)
     private var shield2Blink = false
-    private lateinit var shieldDamager2: Fixture
 
     override fun init() {
         if (regions.isEmpty) {
@@ -114,6 +116,8 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
 
         super.onSpawn(spawnProps)
+
+        parentId = spawnProps.getOrDefault("${ConstKeys.PARENT}_${ConstKeys.ID}", -1, Int::class)
 
         body.setSize(HIDDEN_WIDTH * ConstVals.PPM, HIDDEN_HEIGHT * ConstVals.PPM)
 
@@ -143,6 +147,8 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
         GameLogger.debug(TAG, "onDestroy()")
 
         super.onDestroy()
+
+        AstroAssAssaulter.FLAGS.remove(parentId)
     }
 
     override fun onHealthDepleted() = setToBeDestroyed()
@@ -161,9 +167,12 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
     private fun resetBodySizeOnUnfurling() {
         val oldPos = body.getPositionPoint(Position.BOTTOM_CENTER)
         val oldBounds = body.getBounds()
+
         body.setSize(UNFURLED_WIDTH * ConstVals.PPM, UNFURLED_HEIGHT * ConstVals.PPM)
         body.setBottomCenterToPoint(oldPos)
+
         val newBounds = body.getBounds()
+
         GameLogger.debug(TAG, "resetBodySizeOnUnfurling(): oldBounds=$oldBounds, newBounds=$newBounds")
     }
 
@@ -171,8 +180,10 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             shield1Timer.update(delta)
+
             if (!shield1Timer.isFinished()) {
                 shield1BlinkTimer.update(delta)
+
                 if (shield1BlinkTimer.isFinished()) {
                     shield1Blink = !shield1Blink
                     shield1BlinkTimer.reset()
@@ -180,8 +191,10 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
             }
 
             shield2Timer.update(delta)
+
             if (!shield2Timer.isFinished()) {
                 shield2BlinkTimer.update(delta)
+
                 if (shield2BlinkTimer.isFinished()) {
                     shield2Blink = !shield2Blink
                     shield2BlinkTimer.reset()

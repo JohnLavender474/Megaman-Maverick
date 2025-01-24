@@ -72,11 +72,11 @@ enum class LevelDefinition(
         music = MusicAsset.MMX_CHILL_PENGUIN_MUSIC,
         screenOnCompletion = ScreenEnum.SAVE_GAME_SCREEN
     ),
-    PRECIOUS_MAN(
+    PRECIOUS_WOMAN(
         type = LevelType.ROBOT_MASTER_LEVEL,
         mugshotAtlas = "FACES_1",
-        mugshotRegion = "Precious Man",
-        tmxMapSource = "PreciousMan.tmx",
+        mugshotRegion = "Precious Woman",
+        tmxMapSource = "PreciousWoman.tmx",
         music = MusicAsset.MMX2_CRYSTAL_SNAIL_MUSIC,
         screenOnCompletion = ScreenEnum.SAVE_GAME_SCREEN
     ),

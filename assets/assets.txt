@@ -1180,7 +1180,6 @@ sprites/frames/Projectiles1/ChargedShot.png
 sprites/frames/Projectiles1/CaveRock/Rock.png
 sprites/frames/Projectiles1/CaveRock/Burst.png
 sprites/frames/Projectiles1/SealionBall.png
-sprites/frames/Faces1/Precious Man.png
 sprites/frames/Faces1/Rodent Man.png
 sprites/frames/Faces1/Glacier Man.png
 sprites/frames/Faces1/Megaman/center.png
@@ -1193,6 +1192,7 @@ sprites/frames/Faces1/Megaman/top_right.png
 sprites/frames/Faces1/Megaman/top_center.png
 sprites/frames/Faces1/Megaman/center_left.png
 sprites/frames/Faces1/Reactor Man.png
+sprites/frames/Faces1/Precious Woman.png
 sprites/frames/Faces1/extras/MoonPieces.png
 sprites/frames/Faces1/Moon Man.png
 sprites/frames/Faces1/Desert Man.png
@@ -2467,6 +2467,7 @@ tiled_maps/png/tstMM3Wily2.png
 tiled_maps/png/GlacierMan_old.png
 tiled_maps/tmx/DesertMan_16x12.tmx
 tiled_maps/tmx/GlacierMan_16x12_test_groundsnow_boss.tmx
+tiled_maps/tmx/PreciousWoman.tmx
 tiled_maps/tmx/ReactMan.tmx
 tiled_maps/tmx/TimberWoman.tmx
 tiled_maps/tmx/MagnetMan.tmx

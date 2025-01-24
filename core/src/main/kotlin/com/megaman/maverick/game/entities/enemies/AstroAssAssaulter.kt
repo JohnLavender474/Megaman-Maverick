@@ -60,6 +60,8 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
     companion object {
         const val TAG = "AstroAssAssaulter"
 
+        internal val FLAGS = OrderedMap<Int, StagedMoonLandingFlag>()
+
         private const val STAND_DUR = 1f
         private const val SHOOT_DUR = 1f
         private const val SHOOT_EACH_DELAY = 0.25f
@@ -68,7 +70,7 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
         private const val THROW_TIME = 0.1f
 
         private const val SENSOR_WIDTH = 30f
-        private const val SENSOR_HEIGHT = 3f
+        private const val SENSOR_HEIGHT = 6f
 
         private const val FLAG_THROW_IMPULSE_X = 8f
         private const val FLAG_THROW_IMPULSE_Y = 5f
@@ -164,12 +166,9 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
         GameLogger.debug(TAG, "onDestroy()")
 
         super.onDestroy()
-
-        flag?.setToBeDestroyed()
-        flag = null
     }
 
-    private fun shouldThrowFlag() = flag == null && sensor.overlaps(megaman.body.getBounds())
+    private fun shouldThrowFlag() = !FLAGS.containsKey(mapObjectId)
 
     private fun throwFlag() {
         GameLogger.debug(TAG, "throwFlag()")
@@ -189,11 +188,13 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
             props(
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.IMPULSE pairTo impulse,
+                "${ConstKeys.PARENT}_${ConstKeys.ID}" pairTo mapObjectId,
                 "${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}" pairTo DEFAULT_FLAG_MOVEMENT_SCALAR,
                 "${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}" pairTo DEFAULT_FLAG_GRAVITY_SCALAR
             )
         )
-        this.flag = flag
+
+        FLAGS.put(mapObjectId, flag)
     }
 
     private fun shouldShootLazer() = sensor.overlaps(megaman.body.getBounds())
