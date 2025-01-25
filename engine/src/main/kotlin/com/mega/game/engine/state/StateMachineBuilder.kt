@@ -10,6 +10,7 @@ class StateMachineBuilder<T> {
     private var initialStateName: String? = null
     private var onChangeState: ((T, T) -> Unit)? = null
     private var triggerChangeWhenSameElement = false
+    private var callOnChangeStateOnReset: Boolean = false
 
     fun state(name: String, element: T): StateMachineBuilder<T> {
         stateDefinitions.put(name, element)
@@ -36,8 +37,13 @@ class StateMachineBuilder<T> {
         return this
     }
 
-    fun setTriggerChangeWhenSameElement(trigger: Boolean): StateMachineBuilder<T> {
-        triggerChangeWhenSameElement = trigger
+    fun setTriggerChangeWhenSameElement(triggerChangeWhenSameElement: Boolean): StateMachineBuilder<T> {
+        this.triggerChangeWhenSameElement = triggerChangeWhenSameElement
+        return this
+    }
+
+    fun setCallOnChangeOnReset(callOnChangeOnReset: Boolean): StateMachineBuilder<T> {
+        this.callOnChangeStateOnReset = callOnChangeOnReset
         return this
     }
 

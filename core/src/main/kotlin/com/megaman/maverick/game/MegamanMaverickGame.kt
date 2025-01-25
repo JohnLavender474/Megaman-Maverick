@@ -75,8 +75,9 @@ import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.bosses.TimberWoman
+import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.enemies.GreenUziJoe
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
@@ -128,7 +129,7 @@ class MegamanMaverickGame(
         private const val ASSET_MILLIS = 17
         private const val LOADING = "LOADING"
         private const val SCREENSHOT_KEY = Input.Keys.P
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(GreenUziJoe.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(AbstractBoss.TAG, TimberWoman.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.oneFixtureMatches(FixtureType.CONSUMER)
         }

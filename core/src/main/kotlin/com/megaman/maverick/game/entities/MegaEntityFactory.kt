@@ -27,6 +27,11 @@ object MegaEntityFactory : ArgsInitializable<MegamanMaverickGame>, Resettable {
         initialized = true
     }
 
+    fun <K: MegaGameEntity> fetch(key: String, castClass: KClass<K>): K? {
+        val clazz = Class.forName(key).kotlin as KClass<MegaGameEntity>
+        return castClass.cast(fetch(clazz))
+    }
+
     fun <K : MegaGameEntity> fetch(key: KClass<K>): K? {
         if (!initialized) throw IllegalStateException("Entity factory not initialized")
 

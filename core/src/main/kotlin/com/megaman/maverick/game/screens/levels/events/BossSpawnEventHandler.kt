@@ -7,8 +7,8 @@ import com.mega.game.engine.events.Event
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.events.EventType
 
 class BossSpawnEventHandler(private val game: MegamanMaverickGame) {
@@ -18,9 +18,11 @@ class BossSpawnEventHandler(private val game: MegamanMaverickGame) {
     }
 
     fun init(bossName: String, bossSpawnProps: Properties) {
-        val boss = EntityFactories.fetch(EntityType.BOSS, bossName)!! as AbstractBoss
+        val boss = MegaEntityFactory.fetch(EntityType.BOSS.getFullyQualifiedName(bossName), AbstractBoss::class)!!
+
         boss.ready = false
         boss.spawn(bossSpawnProps)
+
         game.eventsMan.submitEvent(Event(EventType.BEGIN_BOSS_SPAWN, props(ConstKeys.BOSS pairTo boss)))
     }
 }

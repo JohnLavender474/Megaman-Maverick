@@ -803,6 +803,20 @@ sprites/frames/Specials1/ToxicWater/water.png
 sprites/frames/Specials1/ToxicWater/waves.png
 sprites/frames/Specials1/Cart.png
 sprites/frames/Backgrounds5/GlacierCloudsBKG.png
+sprites/frames/Bosses3/PreciousWoman/stand_throw.png
+sprites/frames/Bosses3/PreciousWoman/wallslide.png
+sprites/frames/Bosses3/PreciousWoman/damaged.png
+sprites/frames/Bosses3/PreciousWoman/wink.png
+sprites/frames/Bosses3/PreciousWoman/stand_laugh1.png
+sprites/frames/Bosses3/PreciousWoman/stand.png
+sprites/frames/Bosses3/PreciousWoman/jump.png
+sprites/frames/Bosses3/PreciousWoman/jump_throw.png
+sprites/frames/Bosses3/PreciousWoman/stand_laugh2.png
+sprites/frames/Bosses3/PreciousWoman/airpunch1.png
+sprites/frames/Bosses3/PreciousWoman/airpunch2.png
+sprites/frames/Bosses3/PreciousWoman/run.png
+sprites/frames/Bosses3/PreciousWoman/defeated.png
+sprites/frames/Bosses3/PreciousWoman/groundslide.png
 sprites/frames/Faces_old/Distributor Man.png
 sprites/frames/Faces_old/Blunt Man.png
 sprites/frames/Faces_old/Precious Man.png
@@ -1706,6 +1720,7 @@ sprites/sprite_sheets/DistributorMan.txt
 sprites/sprite_sheets/Ui1.png
 sprites/sprite_sheets/BluntMan.txt
 sprites/sprite_sheets/FreezerMan.txt
+sprites/sprite_sheets/Bosses3.png
 sprites/sprite_sheets/Gates.txt
 sprites/sprite_sheets/Backgrounds5.txt
 sprites/sprite_sheets/Megaman_RUSH_JETPACK.txt
@@ -1720,6 +1735,7 @@ sprites/sprite_sheets/Enemies1.png
 sprites/sprite_sheets/Ui1.txt
 sprites/sprite_sheets/Megaman_BUSTER.png
 sprites/sprite_sheets/RodentMan.txt
+sprites/sprite_sheets/Bosses3.txt
 sprites/sprite_sheets/Environs1.txt
 sprites/sprite_sheets/Hazards1.txt
 sprites/sprite_sheets/RoasterMan.png
@@ -1773,6 +1789,7 @@ sprites/texture_packer/GutsTank.tps
 sprites/texture_packer/FreezerMan.tps
 sprites/texture_packer/IcicleMan.tps
 sprites/texture_packer/Megaman_v2_BUSTER.tps
+sprites/texture_packer/Bosses3.tps
 sprites/texture_packer/Megaman.tps
 sprites/texture_packer/PreciousMan.tps
 sprites/texture_packer/RodentMan.tps
@@ -1903,6 +1920,7 @@ sprites/piskel/LavaBeamer.piskel
 sprites/piskel/EnemyPlatforms1.piskel
 sprites/piskel/InfernoManProjectiles.piskel
 sprites/piskel/MechaDragon.piskel
+sprites/piskel/PreciousWoman.piskel
 sprites/piskel/LavaFall.piskel
 sprites/piskel/Lava.piskel
 sprites/piskel/DesertMan_v2.piskel

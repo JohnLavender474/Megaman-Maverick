@@ -7,7 +7,6 @@ import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -20,13 +19,15 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.MusicAsset
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.IDamageNegotiator
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
+import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
@@ -93,6 +94,7 @@ abstract class AbstractBoss(
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
+
         game.eventsMan.addListener(this)
 
         mini = spawnProps.getOrDefault(ConstKeys.MINI, false, Boolean::class)
@@ -221,6 +223,8 @@ abstract class AbstractBoss(
     protected abstract fun isReady(delta: Float): Boolean
 
     protected open fun onReady() {
+        GameLogger.debug(TAG, "onReady()")
+
         val event = Event(
             EventType.BOSS_READY, props(
                 ConstKeys.BOSS pairTo this,
@@ -233,6 +237,7 @@ abstract class AbstractBoss(
     }
 
     protected open fun onEndBossSpawnEvent() {
+        GameLogger.debug(TAG, "onEndBossSpawnEvent()")
         betweenReadyAndEndBossSpawnEvent = false
     }
 
@@ -248,8 +253,9 @@ abstract class AbstractBoss(
     protected open fun explodeOnDefeat(delta: Float) {
         explosionTimer.update(delta)
         if (explosionTimer.isFinished()) {
-            val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
-            val position = Position.entries.toTypedArray().toGdxArray().random()
+            val position = Position.entries.random()
+
+            val explosion = MegaEntityFactory.fetch(Explosion::class)!!
             explosion.spawn(
                 props(
                     ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND,
@@ -258,6 +264,7 @@ abstract class AbstractBoss(
                     )
                 )
             )
+
             explosionTimer.reset()
         }
     }

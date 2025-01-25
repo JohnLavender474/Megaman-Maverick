@@ -337,6 +337,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
 
     override fun onReady() {
         super.onReady()
+
         body.physics.gravityOn = true
     }
 
@@ -462,6 +463,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
                 body.physics.applyFrictionX = false
 
                 jump(megaman.body.getCenter())
+
                 if (previous == TimberWomanState.WALLSLIDE) {
                     var impulseX = WALL_JUMP_IMPULSE_X * ConstVals.PPM
                     if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) impulseX *= -1f
