@@ -117,11 +117,11 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
                     runnables.add(runnable)
                 }
 
-                timer.setRunnables(runnables)
+                timer.addRunnables(runnables)
             })
             stateTimers.put(AstroAssState.THROW, Timer(THROW_DUR).also { timer ->
                 val runnable = TimeMarkedRunnable(THROW_TIME) { throwFlag() }
-                timer.setRunnables(runnable)
+                timer.addRunnables(runnable)
             })
         }
 

@@ -1186,6 +1186,9 @@ sprites/frames/Projectiles1/ReactorMonkeyBall/1.png
 sprites/frames/Projectiles1/ReactorMonkeyBall/2.png
 sprites/frames/Projectiles1/HalfChargedShot.png
 sprites/frames/Projectiles1/Asteroid.png
+sprites/frames/Projectiles1/PreciousGem/purple.png
+sprites/frames/Projectiles1/PreciousGem/pink.png
+sprites/frames/Projectiles1/PreciousGem/blue.png
 sprites/frames/Projectiles1/ReactManProjectile/Big.png
 sprites/frames/Projectiles1/ReactManProjectile/Die.png
 sprites/frames/Projectiles1/ReactManProjectile/Small.png
@@ -2010,6 +2013,7 @@ sprites/piskel/Toxic_Splash.piskel
 sprites/piskel/RodentMan.piskel
 sprites/piskel/Bunby Red Rocket.piskel
 sprites/piskel/GutsTank.piskel
+sprites/piskel/PreciousGem.piskel
 sprites/piskel/SandSplash.piskel
 sprites/piskel/SwitcharooArrow.piskel
 sprites/piskel/EarthBackdrop.piskel

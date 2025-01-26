@@ -78,7 +78,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             regions.put("stand", atlas.findRegion("$TAG/Stand"))
             regions.put("throw", atlas.findRegion("$TAG/Throw"))
         }
-        throwTimer.setRunnables(gdxArrayOf(TimeMarkedRunnable(0.2f) { throwPicket() }))
+        throwTimer.addRunnables(gdxArrayOf(TimeMarkedRunnable(0.2f) { throwPicket() }))
         addComponent(defineAnimationsComponent())
     }
 

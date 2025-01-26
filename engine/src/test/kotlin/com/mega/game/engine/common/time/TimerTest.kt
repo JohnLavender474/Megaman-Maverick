@@ -40,7 +40,7 @@ class TimerTest :
             it("should reset correctly") {
                 val array = Array<TimeMarkedRunnable>()
                 array.add(mockRunnable)
-                timer.setRunnables(array)
+                timer.addRunnables(array)
 
                 timer.runnableQueue.size shouldBe 1
                 timer.update(1f)
@@ -107,7 +107,7 @@ class TimerTest :
                 timer.runnableQueue.size shouldBe 0
                 val array = Array<TimeMarkedRunnable>()
                 array.add(mockRunnable)
-                timer.setRunnables(array)
+                timer.addRunnables(array)
                 timer.runnableQueue.size shouldBe 1
             }
         }

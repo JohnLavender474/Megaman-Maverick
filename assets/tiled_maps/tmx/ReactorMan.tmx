@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="400" height="65" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="441">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="400" height="65" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="442">
  <tileset firstgid="1" source="../tsx/React_Man_2.tsx"/>
  <tileset firstgid="241" name="Reactor_Man_No_Black" tilewidth="32" tileheight="32" tilecount="240" columns="16">
   <image source="../png/Reactor_Man_No_Black.png" width="512" height="480"/>
@@ -279,7 +279,7 @@
   <object id="122" x="3808" y="1280" width="224" height="32"/>
   <object id="123" x="3712" y="896" width="32" height="320"/>
   <object id="124" x="3616" y="512" width="96" height="896"/>
-  <object id="128" name="PropellerPlatform" x="3824" y="1192" width="32" height="8">
+  <object id="128" name="PropellerPlatform" x="3824" y="1176" width="32" height="8">
    <properties>
     <property name="respawnable" type="bool" value="false"/>
     <property name="spawn_room" value="room4"/>
@@ -287,7 +287,7 @@
     <property name="trajectory" value="2,0,2;0,0,1;-2,0,2;0,0,1"/>
    </properties>
   </object>
-  <object id="129" name="PropellerPlatform" x="3984" y="1096" width="32" height="8">
+  <object id="129" name="PropellerPlatform" x="3984" y="1080" width="32" height="8">
    <properties>
     <property name="respawnable" type="bool" value="false"/>
     <property name="spawn_room" value="room4"/>
@@ -759,10 +759,10 @@
   <object id="366" name="ToxicBarrelBot" x="10776" y="1840" width="16" height="16"/>
   <object id="412" name="FloatingCanHole" x="7264" y="1760" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="14" name="temp">
-  <object id="440" name="0" x="11176" y="1824" width="32" height="32"/>
+ <objectgroup id="14" name="player">
+  <object id="441" name="0" x="3968" y="1376" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="3" name="player">
+ <objectgroup id="3" name="temp">
   <object id="9" name="0" x="64" y="1760" width="32" height="32"/>
   <object id="63" name="1" x="2752" y="1728" width="32" height="32"/>
   <object id="130" name="2" x="4000" y="1376" width="32" height="32">

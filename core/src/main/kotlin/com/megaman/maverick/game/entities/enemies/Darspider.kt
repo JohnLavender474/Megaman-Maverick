@@ -44,7 +44,8 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IDirectional, IFaceable {
+class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IDirectional,
+    IFaceable {
 
     companion object {
         const val TAG = "Darspider"
@@ -201,19 +202,15 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
         debugShapes.add { rightSideFixture }
 
         val leftFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        leftFootFixture.setConsumer { _, fixture ->
-            if (fixture.getType() == FixtureType.BLOCK)
-                body.putProperty("${ConstKeys.LEFT}_${ConstKeys.FOOT}", true)
-        }
+        leftFootFixture.setFilter { fixture -> fixture.getType() == FixtureType.BLOCK }
+        leftFootFixture.setConsumer { _, fixture -> body.putProperty("${ConstKeys.LEFT}_${ConstKeys.FOOT}", true) }
         leftFootFixture.offsetFromBodyAttachment.set(-body.getWidth() / 2f, -body.getHeight() / 2f)
         body.addFixture(leftFootFixture)
         debugShapes.add { leftFootFixture }
 
         val rightFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        rightFootFixture.setConsumer { _, fixture ->
-            if (fixture.getType() == FixtureType.BLOCK)
-                body.putProperty("${ConstKeys.RIGHT}_${ConstKeys.FOOT}", true)
-        }
+        rightFootFixture.setFilter { fixture -> fixture.getType() == FixtureType.BLOCK }
+        rightFootFixture.setConsumer { _, fixture -> body.putProperty("${ConstKeys.RIGHT}_${ConstKeys.FOOT}", true) }
         rightFootFixture.offsetFromBodyAttachment.set(body.getWidth() / 2f, -body.getHeight() / 2f)
         body.addFixture(rightFootFixture)
         debugShapes.add { rightFootFixture }

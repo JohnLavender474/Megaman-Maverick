@@ -84,7 +84,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     override fun init() {
         super.init()
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-        shootTimer.setRunnables(
+        shootTimer.addRunnables(
             gdxArrayOf(
                 TimeMarkedRunnable(0.5f) { shoot() },
                 TimeMarkedRunnable(1.0f) { shoot() },

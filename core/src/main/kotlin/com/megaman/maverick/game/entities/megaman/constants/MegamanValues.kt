@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color
 
 object MegamanValues {
 
-    const val START_HEALTH = 14
+    const val START_HEALTH = 30 // 14
     const val MAX_WEAPON_AMMO = 30
 
     const val SLIP_SLIDE_VEL_THRESHOLD = 0.25f

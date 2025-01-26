@@ -22,3 +22,11 @@ fun <K, V> ObjectMap<K, V>.putIfAbsentAndGet(key: K, defaultValueSupplier: () ->
 }
 
 fun <K, V> ObjectMap<K, V>.putAll(vararg entries: GamePair<K, V>) = entries.forEach { put(it.first, it.second) }
+
+fun <K, V> OrderedMap<K, V>.forEachIndexed(consumer: (key: K, value: V, index: Int) -> Unit) {
+    var index = 0
+    this.forEach { entry ->
+        consumer.invoke(entry.key, entry.value, index)
+        index++
+    }
+}

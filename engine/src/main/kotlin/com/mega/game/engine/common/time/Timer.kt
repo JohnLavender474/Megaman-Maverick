@@ -1,10 +1,10 @@
 package com.mega.game.engine.common.time
 
 import com.badlogic.gdx.utils.Array
-import com.badlogic.gdx.utils.Queue
 import com.mega.game.engine.common.interfaces.IJustFinishable
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
+import java.util.*
 import kotlin.math.min
 
 class Timer(duration: Float) : Updatable, Resettable, IJustFinishable {
@@ -20,15 +20,15 @@ class Timer(duration: Float) : Updatable, Resettable, IJustFinishable {
     var justFinished = false
         private set
 
-    internal var runnables: Array<TimeMarkedRunnable> = Array()
-    internal var runnableQueue = Queue<TimeMarkedRunnable>()
+    // the array of runnables which should be added to the queue on every reset
+    internal var runnables = Array<TimeMarkedRunnable>()
+    // the queue which is polled on every update and refilled with the elements in [runnables] on every reset
+    internal var runnableQueue = PriorityQueue<TimeMarkedRunnable>()
 
     private var runOnFirstUpdate: (() -> Unit)? = null
     private var runOnFinished: (() -> Unit)? = null
 
     private var firstUpdate = true
-
-    private val reusableArray = Array<TimeMarkedRunnable>()
 
     constructor() : this(DEFAULT_TIME)
 
@@ -37,7 +37,7 @@ class Timer(duration: Float) : Updatable, Resettable, IJustFinishable {
     constructor(duration: Float, runnables: Array<TimeMarkedRunnable>) : this(duration, false, runnables)
 
     constructor(duration: Float, setToEnd: Boolean, runnables: Array<TimeMarkedRunnable>) : this(duration) {
-        setRunnables(runnables)
+        addRunnables(runnables)
         time = if (setToEnd) duration else 0f
     }
 
@@ -49,9 +49,20 @@ class Timer(duration: Float) : Updatable, Resettable, IJustFinishable {
 
         val finishedBefore = isFinished()
 
+        val oldTime = time
         time = min(this@Timer.duration, time + delta)
 
-        while (!runnableQueue.isEmpty && runnableQueue.first().time <= time) runnableQueue.removeFirst().run()
+        var qTime = runnableQueue.peek()?.time
+        while (qTime != null && qTime <= time) {
+            val runnable = runnableQueue.poll()
+
+            when {
+                runnable.shouldRunOnlyWhenJustPassedTime() -> if (qTime >= oldTime) runnable.run()
+                else -> runnable.run()
+            }
+
+            qTime = runnableQueue.peek()?.time
+        }
 
         justFinished = !finishedBefore && isFinished()
 
@@ -65,12 +76,7 @@ class Timer(duration: Float) : Updatable, Resettable, IJustFinishable {
         justFinished = false
 
         runnableQueue.clear()
-
-        reusableArray.clear()
-        reusableArray.addAll(runnables)
-        reusableArray.sort()
-        reusableArray.forEach { runnableQueue.addLast(it) }
-        reusableArray.clear()
+        runnables.forEach { runnableQueue.add(it) }
     }
 
     fun setRunOnFirstupdate(runnable: (() -> Unit)?): Timer {
@@ -97,24 +103,13 @@ class Timer(duration: Float) : Updatable, Resettable, IJustFinishable {
 
     override fun isJustFinished() = justFinished
 
-    fun setRunnables(vararg runnables: TimeMarkedRunnable): Timer {
-        val array = Array<TimeMarkedRunnable>()
-        runnables.forEach { array.add(it) }
-        setRunnables(array)
+    fun addRunnables(vararg runnables: TimeMarkedRunnable) = addRunnables(runnables.asIterable())
 
-        return this
-    }
-
-    fun setRunnables(runnables: Array<TimeMarkedRunnable>): Timer {
-        this@Timer.runnables.clear()
-        this@Timer.runnables.addAll(runnables)
-
-        runnableQueue.clear()
-
-        val temp = Array(runnables)
-        temp.sort()
-        temp.forEach { runnableQueue.addLast(it) }
-
+    fun addRunnables(runnables: Iterable<TimeMarkedRunnable>): Timer {
+        runnables.forEach {
+            runnableQueue.add(it)
+            this.runnables.add(it)
+        }
         return this
     }
 

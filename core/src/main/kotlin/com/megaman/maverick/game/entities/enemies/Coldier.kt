@@ -120,7 +120,7 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                     runnables.add(runnable)
                 }
 
-                timer.setRunnables(runnables)
+                timer.addRunnables(runnables)
             },
             "before_small_blow" pairTo Timer(BEFORE_SMALL_BLOW_DUR),
             "before_big_blow" pairTo Timer(BEFORE_BIG_BLOW_DUR),

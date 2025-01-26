@@ -28,10 +28,11 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.explosions.ExplosionOrb
+import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
+import com.megaman.maverick.game.entities.megaman.contracts.IMegamanDamageListener
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
@@ -46,14 +47,26 @@ abstract class AbstractBoss(
     dmgBlinkDur: Float = DEFAULT_DMG_BLINK_DUR,
     defeatDur: Float = DEFAULT_DEFEAT_DURATION,
     size: Size = Size.MEDIUM
-) : AbstractEnemy(game, dmgDuration, dmgBlinkDur, size), IEventListener {
+) : AbstractEnemy(game, dmgDuration, dmgBlinkDur, size), IMegamanDamageListener, IEventListener {
 
     companion object {
         const val TAG = "AbstractBoss"
+
         const val DEFAULT_BOSS_DMG_DURATION = 1.25f
         const val DEFAULT_MINI_BOSS_DMG_DURATION = 0.5f
         const val DEFAULT_DEFEAT_DURATION = 3f
         const val EXPLOSION_TIME = 0.25f
+
+        val EXPLOSION_ORB_TRAJS = gdxArrayOf(
+            Vector2(-EXPLOSION_ORB_SPEED, 0f),
+            Vector2(-EXPLOSION_ORB_SPEED, EXPLOSION_ORB_SPEED),
+            Vector2(0f, EXPLOSION_ORB_SPEED),
+            Vector2(EXPLOSION_ORB_SPEED, EXPLOSION_ORB_SPEED),
+            Vector2(EXPLOSION_ORB_SPEED, 0f),
+            Vector2(EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED),
+            Vector2(0f, -EXPLOSION_ORB_SPEED),
+            Vector2(-EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED)
+        )
 
         protected val BOSS_DMG_NEG = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
             Bullet::class pairTo dmgNeg(1),
@@ -124,35 +137,30 @@ abstract class AbstractBoss(
         }
 
         super.onSpawn(spawnProps)
+
+        megaman.addDamageListener(this)
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
 
+        megaman.removeDamageListener(this)
+
         removeProperty("${ConstKeys.BOSS}_${ConstKeys.KEY}")
+
         game.eventsMan.removeListener(this)
+
         ready = false
 
         super.onDestroy()
-        if (getCurrentHealth() > 0) return
 
-        if (orbs) {
-            val explosionOrbTrajectories = gdxArrayOf(
-                Vector2(-EXPLOSION_ORB_SPEED, 0f),
-                Vector2(-EXPLOSION_ORB_SPEED, EXPLOSION_ORB_SPEED),
-                Vector2(0f, EXPLOSION_ORB_SPEED),
-                Vector2(EXPLOSION_ORB_SPEED, EXPLOSION_ORB_SPEED),
-                Vector2(EXPLOSION_ORB_SPEED, 0f),
-                Vector2(EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED),
-                Vector2(0f, -EXPLOSION_ORB_SPEED),
-                Vector2(-EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED)
-            )
-            explosionOrbTrajectories.forEach { trajectory ->
-                val explosionOrb = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION_ORB)
-                explosionOrb?.spawn(
+        if (getCurrentHealth() <= 0) {
+            if (orbs) EXPLOSION_ORB_TRAJS.forEach { trajectory ->
+                val explosionOrb = MegaEntityFactory.fetch(ExplosionOrb::class)!!
+                explosionOrb.spawn(
                     props(
-                        ConstKeys.TRAJECTORY pairTo trajectory.scl(ConstVals.PPM.toFloat()),
-                        ConstKeys.POSITION pairTo body.getCenter()
+                        ConstKeys.POSITION pairTo body.getCenter(),
+                        ConstKeys.TRAJECTORY pairTo trajectory.cpy().scl(ConstVals.PPM.toFloat())
                     )
                 )
             }
@@ -177,6 +185,8 @@ abstract class AbstractBoss(
 
         else -> baseDamage
     }
+
+    override fun onMegamanDamaged(damager: IDamager, megaman: Megaman) {}
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)

@@ -437,12 +437,12 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         timers.put("init", initTimer)
 
         val standTimer = Timer(STAND_DUR)
-        standTimer.setRunnables(gdxArrayOf(TimeMarkedRunnable(0.5f) { shoot() }))
+        standTimer.addRunnables(gdxArrayOf(TimeMarkedRunnable(0.5f) { shoot() }))
         timers.put("stand", standTimer)
 
         val duckTimer = Timer(DUCK_DUR)
         val duckRunnable = TimeMarkedRunnable(0.25f) { shoot() }
-        duckTimer.setRunnables(gdxArrayOf(duckRunnable))
+        duckTimer.addRunnables(gdxArrayOf(duckRunnable))
         timers.put("duck", duckTimer)
 
         val sledTimer = Timer(SLED_DUR)
@@ -452,7 +452,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             val sledRunnable = TimeMarkedRunnable(time) { shoot() }
             sledRunnables.add(sledRunnable)
         }
-        sledTimer.setRunnables(sledRunnables)
+        sledTimer.addRunnables(sledRunnables)
         timers.put("sled", sledTimer)
 
         val maxBrakeTimer = Timer(MAX_BRAKE_DUR)
@@ -466,7 +466,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             val iceBlastAttackRunnable = TimeMarkedRunnable(time) { iceBlast() }
             iceBlastAttackTimerRunnables.add(iceBlastAttackRunnable)
         }
-        iceBlastAttackTimer.setRunnables(iceBlastAttackTimerRunnables)
+        iceBlastAttackTimer.addRunnables(iceBlastAttackTimerRunnables)
         timers.put("ice_blast_attack", iceBlastAttackTimer)
 
         val stopTimer = Timer(STOP_DUR)

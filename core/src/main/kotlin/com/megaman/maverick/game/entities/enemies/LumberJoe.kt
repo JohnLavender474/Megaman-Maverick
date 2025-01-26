@@ -126,7 +126,7 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             stateTimers.put(AxeJoeState.STAND, Timer(STAND_DUR))
             stateTimers.put(
                 AxeJoeState.THROW,
-                Timer(THROW_DUR).setRunnables(TimeMarkedRunnable(THROW_TIME) { throwAxe() })
+                Timer(THROW_DUR).addRunnables(TimeMarkedRunnable(THROW_TIME) { throwAxe() })
             )
             stateTimers.put(AxeJoeState.COOLDOWN, Timer(COOLDOWN_DUR))
         }

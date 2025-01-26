@@ -8,6 +8,7 @@ import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.isAny
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -125,17 +126,13 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         block = null
     }
 
-    private fun setToCrushIfTarget(fixture: IFixture) {
-        val entity = fixture.getEntity()
-        if (entity is Megaman || entity is AbstractEnemy) {
-            GameLogger.debug(TAG, "setToCrushIfTarget: entity = $entity")
-            ceilingCrusherState = CeilingCrusherState.DROPPING
-            dropDelayTimer.reset()
-        }
+    private fun setToCrush() {
+        ceilingCrusherState = CeilingCrusherState.DROPPING
+        dropDelayTimer.reset()
     }
 
-    private fun setToStopIfBlock(fixture: IFixture) {
-        if (fixture.getEntity() != block && fixture.getType() == FixtureType.BLOCK) {
+    private fun setToStop(fixture: IFixture) {
+        if (fixture.getEntity() != block) {
             GameLogger.debug(TAG, "setToStopIfBlock: fixture = $fixture")
             ceilingCrusherState = CeilingCrusherState.RAISING
             body.physics.velocity.setZero()
@@ -158,7 +155,8 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
 
         val consumerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle())
         consumerFixture.attachedToBody = false
-        consumerFixture.setConsumer { _, fixture -> setToCrushIfTarget(fixture) }
+        consumerFixture.setFilter { fixture -> fixture.getEntity().isAny(Megaman::class, AbstractEnemy::class) }
+        consumerFixture.setConsumer { _, fixture -> setToCrush() }
         body.addFixture(consumerFixture)
         consumerFixture.drawingColor = Color.CYAN
         debugShapes.add { consumerFixture }
@@ -180,7 +178,8 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
             )
         )
         bottomFixture.attachedToBody = false
-        bottomFixture.setConsumer { _, fixture -> setToStopIfBlock(fixture) }
+        bottomFixture.setFilter { fixture -> fixture.getType() == FixtureType.BLOCK }
+        bottomFixture.setConsumer { _, fixture -> setToStop(fixture) }
         body.addFixture(bottomFixture)
         bottomFixture.drawingColor = Color.GREEN
         debugShapes.add { bottomFixture }

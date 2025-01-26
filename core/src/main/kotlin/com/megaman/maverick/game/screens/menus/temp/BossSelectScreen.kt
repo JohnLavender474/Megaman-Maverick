@@ -116,7 +116,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
         for (b in BossType.values()) bNameSet.add(b.name)
         val outTimerRunnable = Array<TimeMarkedRunnable>()
         for (i in 1..10) outTimerRunnable.add(TimeMarkedRunnable(.1f * i) { blink = !blink })
-        outTimer.setRunnables(outTimerRunnable)
+        outTimer.addRunnables(outTimerRunnable)
         val megamanFacesAtlas = game.assMan.get(TextureAsset.FACES_1.source, TextureAtlas::class.java)
         val megamanFaces: MutableMap<Position, TextureRegion> = EnumMap(Position::class.java)
         for (position in Position.values()) {

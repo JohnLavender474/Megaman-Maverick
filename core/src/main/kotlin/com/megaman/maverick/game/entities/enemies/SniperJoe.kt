@@ -183,14 +183,14 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             LAVA_TYPE -> {
                 shootTimer.resetDuration(LAVA_SHOOT_DUR)
                 val shootRunnable = TimeMarkedRunnable(TIMES_TO_SHOOT[0]) { shoot() }
-                shootTimer.setRunnables(gdxArrayOf(shootRunnable))
+                shootTimer.addRunnables(gdxArrayOf(shootRunnable))
             }
 
             else -> {
                 shootTimer.resetDuration(SHOOT_DUR)
                 val shootRunnables = Array<TimeMarkedRunnable>()
                 TIMES_TO_SHOOT.forEach { shootRunnables.add(TimeMarkedRunnable(it) { shoot() }) }
-                shootTimer.setRunnables(shootRunnables)
+                shootTimer.addRunnables(shootRunnables)
             }
         }
         shootTimer.setToEnd()
@@ -237,13 +237,13 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         shapes.add { shieldFixture }
 
         val triggerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle())
+        triggerFixture.setFilter { fixture -> fixture.getType() == FixtureType.PLAYER }
         triggerFixture.setConsumer { processState, fixture ->
-            if (hasShield && processState == ProcessState.BEGIN && fixture.getType() == FixtureType.PLAYER)
-                setToThrowShield = true
+            if (hasShield && processState == ProcessState.BEGIN) setToThrowShield = true
         }
         triggerFixture.attachedToBody = false
         body.addFixture(triggerFixture)
-        // shapes.add { triggerFixture }
+        shapes.add { triggerFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             when {

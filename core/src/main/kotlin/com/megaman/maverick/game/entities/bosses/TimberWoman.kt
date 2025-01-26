@@ -275,14 +275,14 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
             TimberWomanState.RUN pairTo Timer(MAX_RUN_DUR),
             TimberWomanState.WALLSLIDE pairTo Timer(WALL_SLIDE_DUR),
             TimberWomanState.STAND_SWING pairTo Timer(STAND_SWING_DUR)
-                .setRunnables(TimeMarkedRunnable(STAND_SWING_GROUND_BURST_TIME) { groundPound() }),
+                .addRunnables(TimeMarkedRunnable(STAND_SWING_GROUND_BURST_TIME) { groundPound() }),
             TimberWomanState.STAND_POUND pairTo Timer(STAND_POUND_DUR)
                 .also { timer ->
                     val runnables = Array<TimeMarkedRunnable>()
                     STAND_POUND_GROUND_BURST_TIMES.forEach { time ->
                         runnables.add(TimeMarkedRunnable(time) { groundPound() })
                     }
-                    timer.setRunnables(runnables)
+                    timer.addRunnables(runnables)
                 },
             TimberWomanState.JUMP_SPIN pairTo Timer(MAX_JUMP_SPIN_DUR)
         )

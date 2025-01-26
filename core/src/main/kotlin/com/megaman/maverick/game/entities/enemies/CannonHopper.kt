@@ -68,7 +68,7 @@ class CannonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.
     private val loop = Loop("stand", "hop")
     private val currentState: String
         get() = loop.getCurrent()
-    private val standTimer = Timer(STAND_DUR).setRunnables(TimeMarkedRunnable(SHOOT_TIME) { shoot() })
+    private val standTimer = Timer(STAND_DUR).addRunnables(TimeMarkedRunnable(SHOOT_TIME) { shoot() })
 
     override fun init() {
         if (regions.isEmpty) {

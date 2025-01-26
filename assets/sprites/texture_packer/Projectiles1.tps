@@ -425,6 +425,9 @@
             </struct>
             <key type="filename">../frames/Projectiles1/Monkey_Ball.png</key>
             <key type="filename">../frames/Projectiles1/Nuclear_Monkey_Ball.png</key>
+            <key type="filename">../frames/Projectiles1/PreciousGem/blue.png</key>
+            <key type="filename">../frames/Projectiles1/PreciousGem/pink.png</key>
+            <key type="filename">../frames/Projectiles1/PreciousGem/purple.png</key>
             <key type="filename">../frames/Projectiles1/ReactorMonkeyBall/0.png</key>
             <key type="filename">../frames/Projectiles1/ReactorMonkeyBall/1.png</key>
             <key type="filename">../frames/Projectiles1/ReactorMonkeyBall/2.png</key>

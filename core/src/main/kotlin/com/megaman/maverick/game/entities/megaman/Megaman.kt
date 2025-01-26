@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.megaman
 
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
@@ -41,6 +42,7 @@ import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
+import com.megaman.maverick.game.entities.megaman.contracts.IMegamanDamageListener
 import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
 import com.megaman.maverick.game.entities.megaman.sprites.amendKey
@@ -273,6 +275,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
     internal val spawningTimer = Timer(MegamanValues.SPAWNING_DUR)
 
     private var neverSpawnedBefore = true
+
+    private val damageListeners = OrderedSet<IMegamanDamageListener>()
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -544,6 +548,10 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
         else -> true
     }
 
+    fun addDamageListener(damageListener: IMegamanDamageListener) = damageListeners.add(damageListener)
+
+    fun removeDamageListener(damageListener: IMegamanDamageListener) = damageListeners.remove(damageListener)
+
     override fun takeDamageFrom(damager: IDamager): Boolean {
         if (!super.takeDamageFrom(damager)) return false
 
@@ -580,6 +588,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
         stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
 
         requestToPlaySound(SoundAsset.MEGAMAN_DAMAGE_SOUND, false)
+
+        damageListeners.forEach { it.onMegamanDamaged(damager, this) }
 
         return true
     }

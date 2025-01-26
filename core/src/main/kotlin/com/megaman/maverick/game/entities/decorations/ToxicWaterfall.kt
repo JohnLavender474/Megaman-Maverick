@@ -122,8 +122,8 @@ class ToxicWaterfall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         body.physics.applyFrictionY = false
 
         val consumerFixture = Fixture(body, FixtureType.CONSUMER)
+        consumerFixture.setFilter { fixture -> fixture.getType() == FixtureType.BODY }
         consumerFixture.setConsumer { state, fixture ->
-            if (fixture.getType() != FixtureType.BODY) return@setConsumer
             val entity = fixture.getEntity() as IBodyEntity
 
             if (state == ProcessState.BEGIN) {

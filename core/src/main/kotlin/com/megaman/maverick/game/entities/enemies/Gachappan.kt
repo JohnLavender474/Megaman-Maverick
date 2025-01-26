@@ -92,7 +92,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             gdxArrayOf(
                 GachappanState.WAIT pairTo Timer(WAIT_DURATION),
                 GachappanState.OPENING pairTo Timer(TRANS_DURATION),
-                GachappanState.SHOOT pairTo Timer(SHOOT_DURATION).setRunnables(runnables),
+                GachappanState.SHOOT pairTo Timer(SHOOT_DURATION).addRunnables(runnables),
                 GachappanState.CLOSING pairTo Timer(TRANS_DURATION)
             )
         )

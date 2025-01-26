@@ -392,7 +392,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             val runnable = TimeMarkedRunnable(time) { launchOrb(i == randomIndex) }
             flameHeadRunnables.add(runnable)
         }
-        flameHeadTimer.setRunnables(flameHeadRunnables)
+        flameHeadTimer.addRunnables(flameHeadRunnables)
         timers.put("flamehead", flameHeadTimer)
     }
 
@@ -507,7 +507,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             ShootMethod.MEGA -> {
                 timer.resetDuration(MEGA_SHOOT_DUR)
                 val runnables = gdxArrayOf(TimeMarkedRunnable(MEGA_SHOOT_TIME) { shootWave() })
-                timer.setRunnables(runnables)
+                timer.addRunnables(runnables)
             }
 
             else -> {

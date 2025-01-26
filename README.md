@@ -208,7 +208,7 @@ comprehensive listing of the credits for the artwork used in this game.
   - Reactor Man Stage - [MMX8 Burn Rooster 8-Bit](https://youtu.be/DHh-QSWvb-o)
   - Rodent Man Stage - [MM7 Slash Man 8-Bit](https://youtu.be/24ECwWnh6Es)
   - Timber Woman Stage - [MMX3 Neon Tiger 8-Bit](https://youtu.be/cXiyGW0ulIY)
-  - Precious Man Stage - [MMX2 Crystal Snail 8-Bit](https://youtu.be/1qrbYy9qQdE)
+  - Precious Woman Stage - [MMX2 Crystal Snail 8-Bit](https://youtu.be/1qrbYy9qQdE)
   - Robot Master Fight - [MMX6 Boss Fight 8-Bit](https://youtu.be/IeySHEF5U_8) 
 - [vinnyz29](https://soundcloud.com/mega-vinnyz279)
   - Inferno Man Stage

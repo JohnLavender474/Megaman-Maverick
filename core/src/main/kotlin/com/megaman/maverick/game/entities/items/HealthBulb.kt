@@ -95,7 +95,7 @@ class HealthBulb(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, 
 
     override fun init() {
         if (textureAtlas == null) textureAtlas = game.assMan.getTextureAtlas(TextureAsset.ITEMS_1.source)
-        cullTimer.setRunnables(gdxArrayOf(TimeMarkedRunnable(TIME_TO_BLINK) { warning = true }))
+        cullTimer.addRunnables(gdxArrayOf(TimeMarkedRunnable(TIME_TO_BLINK) { warning = true }))
         addComponent(defineBodyComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())

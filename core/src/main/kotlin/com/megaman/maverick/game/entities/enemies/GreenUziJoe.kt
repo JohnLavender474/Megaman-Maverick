@@ -105,7 +105,7 @@ class GreenUziJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGra
             GameLogger.debug(TAG, "runOnFirstUpdate(): set blasting to false")
             blasting = false
         }
-        .setRunnables(
+        .addRunnables(
             Array<TimeMarkedRunnable>().also { runnables ->
                 val startBlasting = TimeMarkedRunnable(BLAST_START_DELAY) {
                     GameLogger.debug(TAG, "runnable(): set blasting to true")
