@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.bosses
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
@@ -65,7 +66,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private const val BODY_HEIGHT = 2f
 
         private const val RUN_DUR = 0.75f
-        private const val RUN_CHANCE = 25f
+        private const val RUN_CHANCE = 20f
         private const val RUN_IMPULSE_X = 35f
         private const val MAX_RUN_SPEED = 8f
 
@@ -82,28 +83,33 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private const val SPRITE_SIZE = 3f
 
         private const val INIT_DUR = 1f
-        private const val STAND_DUR = 1.3f
-        private const val WALL_SLIDE_DUR = 0.75f
+        private const val STAND_DUR = 1.5f
+        private const val WALL_SLIDE_DUR = 1f
+        private const val GROUND_SLIDE_DUR = 0.75f
         private const val LAUGH_1_DUR = 0.25f
         private const val LAUGH_2_DUR = 1.25f
-        private const val THROW_DUR = 1f
+        private const val THROW_GEMS_DUR = 1f
+        private const val THROW_SHIELD_GEMS_DUR = 0.5f
         private const val THROW_TIME = 0.1f
         private const val SPAWN_SHIELDS_DUR = 1.5f
 
+        private const val GROUNDSLIDE_CHANCE = 20f
+        private const val GROUNDSLIDE_VEL_X = 8f
+
         private const val AIRPUNCH_DELAY = 0.25f
-        private const val AIRPUNCH_DUR = 1f
+        private const val AIRPUNCH_MAX_DUR = 1f
         private const val AIRPUNCH_COOLDOWN = 5f
         private const val AIRPUNCH_VEL_X = 10f
         private const val AIRPUNCH_CHANCE = 50f
 
         private const val JUMP_CHANCE = 25f
         private const val JUMP_MAX_IMPULSE_X = 6f
-        private const val JUMP_IMPULSE_Y = 16f
+        private const val JUMP_IMPULSE_Y = 10f
         private const val WALL_JUMP_IMPULSE_X = 4f
 
-        private const val THROW_SPEED = 6f
+        private const val THROW_SPEED = 5f
         private const val GEMS_TO_THROW = 3
-        private const val THROW_GEM_OFFSET = 3f
+        private const val THROW_GEM_OFFSET = 2f
         private val THROW_OFFSETS = gdxArrayOf(
             Vector2(THROW_GEM_OFFSET, THROW_GEM_OFFSET),
             Vector2(THROW_GEM_OFFSET, 0f),
@@ -111,7 +117,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         )
 
         const val SHIELD_GEM_SPIN_SPEED = 0.25f
-        const val SHIELD_GEM_CLUSTER_SPEED = 6f
+        const val SHIELD_GEM_CLUSTER_SPEED = 5f
         const val SHIELD_GEM_MAX_DIST_FROM_ROOM_CENTER = 10f
 
         private const val CAN_SPAWN_SHIELD_GEMS_DELAY = 5f
@@ -123,9 +129,9 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         private val GEM_COLORS = PreciousGemColor.entries.toGdxArray()
 
-        // the amount of times Precious Woman should enter stand/throw state before throwing gems
-        private const val STATES_BETWEEN_THROW = 4
-        private const val MIN_THROW_COOLDOWN = 5f
+        // the amount of times she should enter stand/jump state before throwing gems
+        private const val STATES_BETWEEN_THROW = 5
+        private const val MIN_THROW_COOLDOWN = 6f
 
         private val animDefs = orderedMapOf(
             "airpunch1" pairTo AnimationDef(3, 1, 0.1f, false),
@@ -134,12 +140,12 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             "defeated" pairTo AnimationDef(2, 2, 0.1f, true),
             "groundslide" pairTo AnimationDef(),
             "jump" pairTo AnimationDef(),
-            "jump_throw" pairTo AnimationDef(), // TODO: add "glimmer" effect for when gems are thrown
+            "jump_throw" pairTo AnimationDef(5, 1, 0.1f, false),
             "run" pairTo AnimationDef(2, 2, 0.1f, true),
             "stand" pairTo AnimationDef(2, 1, gdxArrayOf(1f, 0.15f), true),
             "stand_laugh1" pairTo AnimationDef(2, 1, 0.1f, false),
             "stand_laugh2" pairTo AnimationDef(2, 1, 0.1f, true),
-            "stand_throw" pairTo AnimationDef(), // TODO: add "glimmer" effect for when gems are thrown
+            "stand_throw" pairTo AnimationDef(5, 1, 0.1f, false),
             "wallslide" pairTo AnimationDef(),
             "wink" pairTo AnimationDef(3, 3, 0.1f, false)
         )
@@ -170,7 +176,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     private val laughing: Boolean
         get() = !laughTimer.isFinished()
 
-    private val throwingTimer = Timer(THROW_DUR).addRunnables(
+    private val throwingTimer = Timer(THROW_GEMS_DUR).addRunnables(
         TimeMarkedRunnable(THROW_TIME) { throwGems() }.setToRunOnlyWhenJustPassedTime(true)
     )
     private val throwing: Boolean
@@ -180,11 +186,15 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
     private val spawnShieldsDelay = Timer(CAN_SPAWN_SHIELD_GEMS_DELAY)
     private var spawnShieldChance = SPAWN_SHIELD_START_CHANCE
+
+    // declared as var so that reference can be detached when passed to shield gem cluster
     private var shieldGems = OrderedMap<PreciousGem, ShieldGemDef>()
 
     private val airpunchCooldown = Timer(AIRPUNCH_COOLDOWN)
 
     private val roomCenter = Vector2()
+
+    private var firstUpdate = true
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -195,13 +205,14 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
 
         if (stateTimers.isEmpty) stateTimers.putAll(
+            PreciousWomanState.RUN pairTo Timer(RUN_DUR),
             PreciousWomanState.INIT pairTo Timer(INIT_DUR),
             PreciousWomanState.STAND pairTo Timer(STAND_DUR),
-            PreciousWomanState.RUN pairTo Timer(RUN_DUR),
             PreciousWomanState.WALLSLIDE pairTo Timer(WALL_SLIDE_DUR),
-            PreciousWomanState.AIRPUNCH pairTo Timer(AIRPUNCH_DELAY + AIRPUNCH_DUR),
+            PreciousWomanState.AIRPUNCH pairTo Timer(AIRPUNCH_MAX_DUR),
+            PreciousWomanState.GROUNDSLIDE pairTo Timer(GROUND_SLIDE_DUR),
             PreciousWomanState.SPAWN_SHIELD_GEMS pairTo Timer(SPAWN_SHIELDS_DUR),
-            PreciousWomanState.THROW_SHIELD_GEMS pairTo Timer(THROW_DUR)
+            PreciousWomanState.THROW_SHIELD_GEMS pairTo Timer(THROW_SHIELD_GEMS_DUR)
         )
 
         super.init()
@@ -237,6 +248,8 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         spawnShieldChance = SPAWN_SHIELD_START_CHANCE
 
         roomCenter.set(spawnProps.get(ConstKeys.ROOM, RectangleMapObject::class)!!.rectangle.getCenter())
+
+        firstUpdate = true
     }
 
     override fun onDestroy() {
@@ -279,14 +292,11 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 if (spawnShieldChance > 100f) spawnShieldChance = 100f
             }
 
-            if (!shieldGems.isEmpty &&
-                (currentState == PreciousWomanState.THROW_SHIELD_GEMS ||
-                    shieldGems.keys().all { gem -> gem.targetReached })
-            ) updateShieldGems(delta)
+            if (!shieldGems.isEmpty && shieldGems.keys().all { gem -> gem.targetReached }) updateShieldGems(delta)
 
             airpunchCooldown.update(delta)
 
-            if (currentState != PreciousWomanState.AIRPUNCH) {
+            if (!currentState.equalsAny(PreciousWomanState.GROUNDSLIDE, PreciousWomanState.AIRPUNCH)) {
                 throwingTimer.update(delta)
                 if (throwingTimer.isJustFinished()) GameLogger.debug(TAG, "update(): throwing timer just finished")
 
@@ -326,7 +336,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 }
 
                 PreciousWomanState.INIT, PreciousWomanState.STAND -> {
-                    updateFacing()
+                    if (!throwing) updateFacing()
 
                     if (body.isSensing(BodySense.FEET_ON_GROUND)) body.physics.velocity.x = 0f
                 }
@@ -355,7 +365,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 }
 
                 PreciousWomanState.JUMP -> {
-                    updateFacing()
+                    if (!throwing) updateFacing()
 
                     if (shouldEndJump()) {
                         val next = stateMachine.next()
@@ -368,9 +378,13 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     GameLogger.debug(TAG, "update(): ended wall slide, set state machine to next=$next")
                 }
 
-                PreciousWomanState.GROUNDSLIDE -> if (shouldEndGroundslide()) {
-                    val next = stateMachine.next()
-                    GameLogger.debug(TAG, "update(): ended ground slide, set state machine to next=$next")
+                PreciousWomanState.GROUNDSLIDE -> {
+                    body.physics.velocity.x = GROUNDSLIDE_VEL_X * ConstVals.PPM * facing.value
+
+                    if (shouldEndGroundslide()) {
+                        val next = stateMachine.next()
+                        GameLogger.debug(TAG, "update(): ended ground slide, set state machine to next=$next")
+                    }
                 }
 
                 else -> {}
@@ -494,6 +508,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.offsetFromBodyAttachment.x = -BODY_WIDTH * ConstVals.PPM / 2f
         body.addFixture(leftFixture)
+        leftFixture.drawingColor = Color.YELLOW
         debugShapes.add { leftFixture }
 
         val rightFixture =
@@ -501,7 +516,15 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         rightFixture.offsetFromBodyAttachment.x = BODY_WIDTH * ConstVals.PPM / 2f
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
+        rightFixture.drawingColor = Color.YELLOW
         debugShapes.add { rightFixture }
+
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(ConstVals.PPM.toFloat()))
+        body.addFixture(shieldFixture)
+        debugShapes.add debugShapes@{
+            shieldFixture.drawingColor = if (shieldFixture.isActive()) Color.BLUE else Color.GRAY
+            return@debugShapes shieldFixture
+        }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) && body.physics.velocity.y > 0f)
@@ -514,6 +537,10 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 PreciousWomanState.WALLSLIDE -> WALLSLIDE_FRICTION_Y
                 else -> DEFAULT_FRICTION_Y
             }
+
+            val shieldActive = currentState == PreciousWomanState.AIRPUNCH
+            shieldFixture.setActive(shieldActive)
+            shieldFixture.offsetFromBodyAttachment.x = ConstVals.PPM.toFloat() * facing.value
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -615,7 +642,12 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         // init
         .transition(PreciousWomanState.INIT.name, PreciousWomanState.STAND.name) { true }
         // stand
-        .transition(PreciousWomanState.STAND.name, PreciousWomanState.JUMP.name) { getRandom(0f, 100f) <= JUMP_CHANCE }
+        .transition(PreciousWomanState.STAND.name, PreciousWomanState.JUMP.name) {
+            firstUpdate || getRandom(0f, 100f) <= JUMP_CHANCE
+        }
+        .transition(PreciousWomanState.STAND.name, PreciousWomanState.GROUNDSLIDE.name) {
+            getRandom(0f, 100f) <= GROUNDSLIDE_CHANCE
+        }
         .transition(PreciousWomanState.STAND.name, PreciousWomanState.RUN.name) { getRandom(0f, 100f) <= RUN_CHANCE }
         .transition(
             PreciousWomanState.STAND.name,
@@ -632,6 +664,8 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         .transition(PreciousWomanState.STAND.name, PreciousWomanState.RUN.name) { true }
         // run
         .transition(PreciousWomanState.RUN.name, PreciousWomanState.JUMP.name) { true }
+        // ground slide
+        .transition(PreciousWomanState.GROUNDSLIDE.name, PreciousWomanState.JUMP.name) { true }
         // jump
         .transition(PreciousWomanState.JUMP.name, PreciousWomanState.WALLSLIDE.name) { shouldStartWallSliding() }
         .transition(PreciousWomanState.JUMP.name, PreciousWomanState.AIRPUNCH.name) { shouldAirPunch() }
@@ -663,6 +697,8 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         when (current) {
             PreciousWomanState.STAND, PreciousWomanState.JUMP -> {
+                if (firstUpdate && current == PreciousWomanState.JUMP) firstUpdate = false
+
                 updateFacing()
 
                 statesSinceLastThrow++
@@ -723,6 +759,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     )
                 )
 
+                // redeclare to detach from reference passed to `cluster`
                 shieldGems = OrderedMap()
 
                 throwMinCooldown.reset()
@@ -757,8 +794,9 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             else -> GameLogger.debug(TAG, "onChangeState(): no action when previous=$previous")
         }
 
-        if (current == PreciousWomanState.JUMP &&
-            previous.equalsAny(PreciousWomanState.STAND, PreciousWomanState.WALLSLIDE)
+        if (current == PreciousWomanState.JUMP && previous.equalsAny(
+                PreciousWomanState.STAND, PreciousWomanState.GROUNDSLIDE, PreciousWomanState.WALLSLIDE
+            )
         ) {
             body.physics.applyFrictionX = false
 
@@ -799,7 +837,9 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     private fun shouldAirPunch() = airpunchCooldown.isFinished() && getRandom(0f, 100f) <= AIRPUNCH_CHANCE &&
         megaman.body.getY() <= body.getMaxY() && megaman.body.getMaxY() >= body.getY()
 
-    private fun shouldEndAirPunch() = shouldStartWallSliding() || body.getBounds().overlaps(megaman.body.getBounds())
+    private fun shouldEndAirPunch() = body.getBounds().overlaps(megaman.body.getBounds()) ||
+        ((isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
+            (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)))
 
     private fun shouldEndJump() =
         shouldStand() || shouldStartWallSliding() || shouldAirPunch() || shouldSpawnShieldGems()
@@ -810,13 +850,12 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         ((isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
             (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)))
 
-    private fun shouldEndGroundslide() =
+    private fun shouldEndGroundslide() = body.getBounds().overlaps(megaman.body.getBounds()) ||
         (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
-            (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
+        (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
 
-    private fun shouldEndWallslide() =
-        !body.isSensingAny(BodySense.SIDE_TOUCHING_BLOCK_LEFT, BodySense.SIDE_TOUCHING_BLOCK_RIGHT) ||
-            body.isSensing(BodySense.FEET_ON_GROUND)
+    private fun shouldEndWallslide() = body.isSensing(BodySense.FEET_ON_GROUND) ||
+        !body.isSensingAny(BodySense.SIDE_TOUCHING_BLOCK_LEFT, BodySense.SIDE_TOUCHING_BLOCK_RIGHT)
 
     private fun updateFacing() {
         when {

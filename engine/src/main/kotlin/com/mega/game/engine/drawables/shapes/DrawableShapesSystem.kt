@@ -5,12 +5,10 @@ import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.systems.GameSystem
 import java.util.function.Consumer
 
-
 class DrawableShapesSystem(
     private val shapesCollector: (IDrawableShape) -> Unit,
     var debug: Boolean = false
 ) : GameSystem(DrawableShapesComponent::class) {
-
 
     constructor(
         shapesCollector: Consumer<IDrawableShape>,

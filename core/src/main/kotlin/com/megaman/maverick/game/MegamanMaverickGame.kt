@@ -31,6 +31,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IPropertizable
+import com.mega.game.engine.common.objects.InsertionOrderPriorityQueue
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.controller.ControllerSystem
 import com.mega.game.engine.controller.ControllerUtils
@@ -107,7 +108,6 @@ import com.megaman.maverick.game.world.collisions.MegaCollisionHandler
 import com.megaman.maverick.game.world.contacts.MegaContactFilter
 import com.megaman.maverick.game.world.contacts.MegaContactListener
 import java.time.LocalDateTime
-import java.util.*
 import java.util.zip.Deflater
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
@@ -215,11 +215,12 @@ class MegamanMaverickGame(
     fun getUiCamera() = viewports.get(ConstKeys.UI).camera as OrthographicCamera
 
     fun getDrawables() =
-        properties.get(ConstKeys.DRAWABLES) as ObjectMap<DrawingSection, PriorityQueue<IComparableDrawable<Batch>>>
+        properties.get(ConstKeys.DRAWABLES) as ObjectMap<DrawingSection, java.util.Queue<IComparableDrawable<Batch>>>
 
     fun addDrawable(drawable: IComparableDrawable<Batch>) {
         val section = drawable.priority.section
-        getDrawables().get(section).add(drawable)
+        val queue = getDrawables().get(section)
+        queue.add(drawable)
     }
 
     fun getShapes() = properties.get(ConstKeys.SHAPES) as Array<IDrawableShape>
@@ -269,8 +270,8 @@ class MegamanMaverickGame(
 
     override fun create() {
         GameLogger.setLogLevel(params.logLevel)
-        GameLogger.filterByTag = true
         GameLogger.tagsToLog.addAll(TAGS_TO_LOG)
+        GameLogger.filterByTag = true
 
         GameLogger.debug(TAG, "create(): appType=${Gdx.app.type}")
 
@@ -575,8 +576,8 @@ class MegamanMaverickGame(
     }
 
     private fun createGameEngine(): GameEngine {
-        val drawables = ObjectMap<DrawingSection, PriorityQueue<IComparableDrawable<Batch>>>()
-        DrawingSection.entries.forEach { section -> drawables.put(section, PriorityQueue()) }
+        val drawables = ObjectMap<DrawingSection, InsertionOrderPriorityQueue<IComparableDrawable<Batch>>>()
+        DrawingSection.entries.forEach { section -> drawables.put(section, InsertionOrderPriorityQueue()) }
         properties.put(ConstKeys.DRAWABLES, drawables)
 
         val shapes = Array<IDrawableShape>()

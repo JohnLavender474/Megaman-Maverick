@@ -18,6 +18,7 @@ abstract class GameSystem(
 
     companion object {
         const val TAG = "GameSystem"
+
         private fun buildComponentMaskFromVarArgs(
             componentMask: kotlin.Array<out KClass<out IGameComponent>>
         ): ObjectSet<KClass<out IGameComponent>> {

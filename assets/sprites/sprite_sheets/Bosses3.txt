@@ -1,32 +1,32 @@
 Bosses3.png
-size: 250, 392
+size: 494, 340
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 PreciousWoman/airpunch1
   rotate: false
-  xy: 1, 247
+  xy: 151, 99
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
   index: -1
 PreciousWoman/airpunch2
   rotate: false
-  xy: 1, 51
+  xy: 151, 1
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 PreciousWoman/damaged
   rotate: false
-  xy: 51, 51
+  xy: 201, 1
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 PreciousWoman/defeated
   rotate: false
-  xy: 149, 51
+  xy: 299, 1
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -47,56 +47,56 @@ PreciousWoman/jump
   index: -1
 PreciousWoman/jump_throw
   rotate: false
-  xy: 101, 1
-  size: 48, 48
-  orig: 48, 48
+  xy: 347, 99
+  size: 48, 240
+  orig: 48, 240
   offset: 0, 0
   index: -1
 PreciousWoman/run
   rotate: false
-  xy: 1, 149
+  xy: 397, 1
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 PreciousWoman/stand
   rotate: false
-  xy: 99, 149
+  xy: 1, 99
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 PreciousWoman/stand_laugh1
   rotate: false
-  xy: 149, 149
+  xy: 51, 99
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 PreciousWoman/stand_laugh2
   rotate: false
-  xy: 199, 149
+  xy: 101, 99
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 PreciousWoman/stand_throw
   rotate: false
-  xy: 151, 1
-  size: 48, 48
-  orig: 48, 48
+  xy: 397, 99
+  size: 48, 240
+  orig: 48, 240
   offset: 0, 0
   index: -1
 PreciousWoman/wallslide
   rotate: false
-  xy: 201, 1
+  xy: 101, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 PreciousWoman/wink
   rotate: false
-  xy: 51, 247
+  xy: 201, 99
   size: 144, 144
   orig: 144, 144
   offset: 0, 0

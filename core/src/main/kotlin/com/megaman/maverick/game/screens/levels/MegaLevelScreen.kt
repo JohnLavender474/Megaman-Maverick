@@ -163,7 +163,7 @@ class MegaLevelScreen(
 
     private lateinit var bossSpawnEventHandler: BossSpawnEventHandler
 
-    private lateinit var drawables: ObjectMap<DrawingSection, PriorityQueue<IComparableDrawable<Batch>>>
+    private lateinit var drawables: ObjectMap<DrawingSection, Queue<IComparableDrawable<Batch>>>
     private lateinit var shapes: Array<IDrawableShape>
     private lateinit var backgrounds: Array<Background>
     private lateinit var backgroundsToHide: ObjectSet<String>
