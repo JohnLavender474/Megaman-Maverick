@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="1200" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="348">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="1200" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="350">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/Gravity Man Stage.tsx"/>
  <tileset firstgid="4609" source="../tsx/MM3Wily1.tsx"/>
@@ -487,6 +487,7 @@
  <objectgroup id="12" name="projectiles">
   <object id="282" name="FallingIcicle" x="32272" y="96" width="32" height="32"/>
   <object id="283" name="FallingIcicle" x="31872" y="96" width="32" height="32"/>
+  <object id="348" name="FallingIcicle" x="35192" y="128" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="5" name="enemies">
   <object id="12" name="Bat" x="608" y="160" width="32" height="32"/>
