@@ -144,15 +144,13 @@ abstract class AbstractBoss(
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
 
-        megaman.removeDamageListener(this)
-
-        removeProperty("${ConstKeys.BOSS}_${ConstKeys.KEY}")
-
-        game.eventsMan.removeListener(this)
+        super.onDestroy()
 
         ready = false
 
-        super.onDestroy()
+        megaman.removeDamageListener(this)
+        game.eventsMan.removeListener(this)
+        removeProperty("${ConstKeys.BOSS}_${ConstKeys.KEY}")
 
         if (getCurrentHealth() <= 0) {
             if (orbs) EXPLOSION_ORB_TRAJS.forEach { trajectory ->

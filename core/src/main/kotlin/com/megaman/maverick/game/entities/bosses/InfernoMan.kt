@@ -160,6 +160,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
+        body.physics.gravityOn = true
         body.physics.defaultFrictionOnSelf.x = DEFAULT_FRICTION_X
         body.physics.defaultFrictionOnSelf.y = DEFAULT_FRICTION_Y
 

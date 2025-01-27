@@ -156,11 +156,13 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         body.physics.defaultFrictionOnSelf.x = 1f
         body.physics.applyFrictionX = false
         body.physics.velocity.setZero()
+        body.physics.gravityOn = true
 
         stateMachine.reset()
         timers.forEach { if (it.key == "shoot_anim") it.value.setToEnd() else it.value.reset() }
 
         facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+
         shootUp = false
         firstUpdate = true
         iceBlastLeftHand = false
@@ -328,9 +330,12 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         spritesComponent.putUpdateFunction { _, _ ->
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
-            val translateY = if (stateMachine.getCurrent() == GlacierManState.JUMP) -0.5f else 0f
+
+            val translateY = if (!defeated && stateMachine.getCurrent() == GlacierManState.JUMP) -0.5f else 0f
             sprite.translateY(translateY * ConstVals.PPM)
+
             sprite.setFlip(isFacing(Facing.RIGHT), false)
+
             sprite.hidden = damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true)
         }
         return spritesComponent
