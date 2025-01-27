@@ -428,7 +428,6 @@
             </struct>
             <key type="filename">../frames/Enemies2/BulbBlaster/Dark.png</key>
             <key type="filename">../frames/Enemies2/BulbBlaster/Light.png</key>
-            <key type="filename">../frames/Enemies2/SnowheadThrower/Stand.png</key>
             <key type="filename">../frames/Enemies2/Togglee/SwitchToLeft.png</key>
             <key type="filename">../frames/Enemies2/Togglee/SwitchToRight.png</key>
             <struct type="IndividualSpriteSettings">
@@ -480,8 +479,8 @@
             <key type="filename">../frames/Enemies2/DemonMet/stand.png</key>
             <key type="filename">../frames/Enemies2/RatRobot/still.png</key>
             <key type="filename">../frames/Enemies2/Shotman/Launch.png</key>
-            <key type="filename">../frames/Enemies2/SnowheadThrower/NoFace.png</key>
-            <key type="filename">../frames/Enemies2/SnowheadThrower/Snowhead.png</key>
+            <key type="filename">../frames/Enemies2/SnowheadThrower/headless.png</key>
+            <key type="filename">../frames/Enemies2/SnowheadThrower/spawn_head.png</key>
             <key type="filename">../frames/Enemies2/StagedMoonLandingFlag/hidden.png</key>
             <key type="filename">../frames/Enemies2/StagedMoonLandingFlag/stand.png</key>
             <key type="filename">../frames/Enemies2/Taketenko/Fly.png</key>
@@ -872,7 +871,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Enemies2/SnowheadThrower/Throw.png</key>
+            <key type="filename">../frames/Enemies2/SnowheadThrower/throw_head.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

@@ -217,10 +217,9 @@ sprites/frames/Enemies2/BunbyTank/Still.png
 sprites/frames/Enemies2/BunbyTank/Roll.png
 sprites/frames/Enemies2/UpNDown/Red.png
 sprites/frames/Enemies2/UpNDown/Blue.png
-sprites/frames/Enemies2/SnowheadThrower/Stand.png
-sprites/frames/Enemies2/SnowheadThrower/Throw.png
-sprites/frames/Enemies2/SnowheadThrower/NoFace.png
-sprites/frames/Enemies2/SnowheadThrower/Snowhead.png
+sprites/frames/Enemies2/SnowheadThrower/throw_head.png
+sprites/frames/Enemies2/SnowheadThrower/headless.png
+sprites/frames/Enemies2/SnowheadThrower/spawn_head.png
 sprites/frames/Enemies2/BabySpider/Run.png
 sprites/frames/Enemies2/BabySpider/Still.png
 sprites/frames/Enemies2/BigFishNeo/swim.png
@@ -753,6 +752,9 @@ sprites/frames/Projectiles2/Harpoon.png
 sprites/frames/Projectiles2/FallingIcicle/still.png
 sprites/frames/Projectiles2/FallingIcicle/shake.png
 sprites/frames/Projectiles2/FallingIcicle/shatter.png
+sprites/frames/Projectiles2/Snowhead/default.png
+sprites/frames/Projectiles2/Snowhead/blank.png
+sprites/frames/Projectiles2/Snowhead/attached.png
 sprites/frames/Projectiles2/SuperCoolActionStarWarsSpaceLazer/lazer.png
 sprites/frames/Projectiles2/SuperCoolActionStarWarsSpaceLazer/burst.png
 sprites/frames/Projectiles2/DeathBomb/wait.png

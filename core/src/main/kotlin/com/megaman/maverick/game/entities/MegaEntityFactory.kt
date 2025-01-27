@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities
 
+import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.common.extensions.putIfAbsentAndGet
@@ -27,7 +28,7 @@ object MegaEntityFactory : ArgsInitializable<MegamanMaverickGame>, Resettable {
         initialized = true
     }
 
-    fun <K: MegaGameEntity> fetch(key: String, castClass: KClass<K>): K? {
+    fun <K : MegaGameEntity> fetch(key: String, castClass: KClass<K>): K? {
         val clazz = Class.forName(key).kotlin as KClass<MegaGameEntity>
         return castClass.cast(fetch(clazz))
     }
@@ -46,6 +47,14 @@ object MegaEntityFactory : ArgsInitializable<MegamanMaverickGame>, Resettable {
         }
 
         return key.cast(pools[key]?.fetch())
+    }
+
+    fun <K : MegaGameEntity> fetch(amount: Int, out: Array<K>, key: KClass<K>): Array<K> {
+        (0 until amount).forEach {
+            val entity = fetch(key)!!
+            out.add(entity)
+        }
+        return out
     }
 
     override fun reset() = pools.clear()

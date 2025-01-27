@@ -40,6 +40,8 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val ATTACHED = "attached"
+    const val BLANK = "blank"
     const val BLAST = "blast"
     const val STANDARD = "standard"
     const val SINE = "sine"

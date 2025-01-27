@@ -85,7 +85,6 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val BRAKE_FRICTION_X = 1.25f
         private const val MAX_BRAKE_DUR = 0.75f
 
-        private const val SNOWBALL_SIZE = 0.5f
         private const val SNOWBALL_VEL_UP_X = 9f
         private const val SNOWBALL_VEL_UP_Y = 15f
         private const val SNOWBALL_VEL_STRAIGHT_X = 15f
@@ -323,11 +322,14 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(3.5f * ConstVals.PPM, 2.625f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+            val position = Position.BOTTOM_CENTER
+            sprite.setPosition(body.getPositionPoint(position), position)
+            val translateY = if (stateMachine.getCurrent() == GlacierManState.JUMP) -0.5f else 0f
+            sprite.translateY(translateY * ConstVals.PPM)
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.hidden = damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true)
         }
@@ -561,11 +563,8 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             props(
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.POSITION pairTo spawn,
-                ConstKeys.TRAJECTORY pairTo trajectory,
-                "${ConstKeys.NO}_${ConstKeys.FACE}" pairTo true,
-                ConstKeys.SIZE pairTo Vector2().set(SNOWBALL_SIZE * ConstVals.PPM),
-                ConstKeys.SECTION pairTo DrawingSection.FOREGROUND,
-                ConstKeys.PRIORITY pairTo 1
+                ConstKeys.TYPE pairTo ConstKeys.BLANK,
+                ConstKeys.TRAJECTORY pairTo trajectory
             )
         )
 
