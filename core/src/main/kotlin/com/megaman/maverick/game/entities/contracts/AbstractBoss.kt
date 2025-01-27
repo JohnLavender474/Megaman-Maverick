@@ -73,7 +73,7 @@ abstract class AbstractBoss(
             Fireball::class pairTo dmgNeg(1),
             ChargedShot::class pairTo dmgNeg {
                 it as ChargedShot
-                if (it.fullyCharged) 3 else 2
+                if (it.fullyCharged) 2 else 1
             },
             ChargedShotExplosion::class pairTo dmgNeg {
                 it as ChargedShotExplosion

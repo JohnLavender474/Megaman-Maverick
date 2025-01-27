@@ -68,7 +68,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private const val RUN_DUR = 0.75f
         private const val RUN_CHANCE = 20f
         private const val RUN_IMPULSE_X = 35f
-        private const val MAX_RUN_SPEED = 8f
+        private const val MAX_RUN_SPEED = 10f
 
         private const val VEL_CLAMP_X = 50f
         private const val VEL_CLAMP_Y = 25f
@@ -103,11 +103,11 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private const val AIRPUNCH_CHANCE = 50f
 
         private const val JUMP_CHANCE = 25f
-        private const val JUMP_MAX_IMPULSE_X = 6f
-        private const val JUMP_IMPULSE_Y = 10f
+        private const val JUMP_MAX_IMPULSE_X = 8f
+        private const val JUMP_IMPULSE_Y = 12f
         private const val WALL_JUMP_IMPULSE_X = 4f
 
-        private const val THROW_SPEED = 5f
+        private const val THROW_SPEED = 6f
         private const val GEMS_TO_THROW = 3
         private const val THROW_GEM_OFFSET = 2f
         private val THROW_OFFSETS = gdxArrayOf(
@@ -117,13 +117,13 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         )
 
         const val SHIELD_GEM_SPIN_SPEED = 0.25f
-        const val SHIELD_GEM_CLUSTER_SPEED = 5f
+        const val SHIELD_GEM_CLUSTER_SPEED = 6f
         const val SHIELD_GEM_MAX_DIST_FROM_ROOM_CENTER = 10f
 
         private const val CAN_SPAWN_SHIELD_GEMS_DELAY = 5f
         private const val SPAWN_SHIELD_START_CHANCE = 25f
         private const val SPAWN_SHIELD_CHANCE_DELTA = 5f
-        private const val SHIELD_GEM_START_OFFSET = 2f
+        private const val SHIELD_GEM_START_OFFSET = 1.5f
 
         private val SHIELD_GEMS_ANGLES = gdxArrayOf(0f, 90f, 180f, 270f)
 
