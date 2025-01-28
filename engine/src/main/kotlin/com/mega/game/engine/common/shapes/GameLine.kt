@@ -74,7 +74,6 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
     private var length = 0f
     private var calculateLength = true
 
-    private var scaledLength = 0f
     private var calculateScaledLength = true
 
     private val reusableVec1 = Vector2()
@@ -403,27 +402,35 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
 
     fun getMinsAndMaxes(min: Vector2, max: Vector2) {
         calculateWorldPoints(reusableVec1, reusableVec2)
+
         min.x = min(reusableVec1.x, reusableVec2.x)
-        max.x = max(reusableVec1.x, reusableVec2.x)
         min.y = min(reusableVec1.y, reusableVec2.y)
+
+        max.x = max(reusableVec1.x, reusableVec2.x)
         max.y = max(reusableVec1.y, reusableVec2.y)
     }
 
     fun getBoundingRectangle(out: Rectangle): Rectangle {
         getMinsAndMaxes(reusableVec1, reusableVec2)
+
         val minX = reusableVec1.x
         val minY = reusableVec1.y
+
         val maxX = reusableVec2.x
         val maxY = reusableVec2.y
+
         return out.set(minX, minY, maxX - minX, maxY - minY)
     }
 
     override fun getBoundingRectangle(out: GameRectangle): GameRectangle {
         getMinsAndMaxes(reusableVec1, reusableVec2)
+
         val minX = reusableVec1.x
         val minY = reusableVec1.y
+
         val maxX = reusableVec2.x
         val maxY = reusableVec2.y
+
         return out.set(minX, minY, maxX - minX, maxY - minY)
     }
 

@@ -50,6 +50,7 @@ class SimpleGridWorldContainer(
         val minY = MathUtils.floor(adjustedMinY / ppm.toFloat()) - bufferOffset
         val maxX = MathUtils.floor(adjustedMaxX / ppm.toFloat()) + bufferOffset
         val maxY = MathUtils.floor(adjustedMaxY / ppm.toFloat()) + bufferOffset
+
         return MinsAndMaxes(minX, minY, maxX, maxY)
     }
 

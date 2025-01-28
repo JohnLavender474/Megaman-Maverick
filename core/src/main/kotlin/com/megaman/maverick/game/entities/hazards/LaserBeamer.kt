@@ -4,9 +4,11 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
@@ -14,8 +16,10 @@ import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameLine
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
@@ -30,6 +34,7 @@ import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
 import com.mega.game.engine.world.body.Fixture
+import com.mega.game.engine.world.body.IBody
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -40,6 +45,8 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.setHitByBodyReceiver
 import java.util.*
 
 class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, ISpritesEntity, IBodyEntity,
@@ -68,7 +75,13 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
 
     private lateinit var rotatingLine: RotatingLine
     private lateinit var laserFixture: Fixture
-    private lateinit var contacts: PriorityQueue<Vector2>
+    private lateinit var damagerFixture: Fixture
+
+    private val contacts = PriorityQueue { p1: Vector2, p2: Vector2 ->
+        val d1 = p1.dst2(rotatingLine.getOrigin(outVec))
+        val d2 = p2.dst2(rotatingLine.getOrigin(outVec))
+        d1.compareTo(d2)
+    }
 
     private var clockwise = false
     private var contactIndex = 0
@@ -76,24 +89,16 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
 
-        contacts = PriorityQueue { p1: Vector2, p2: Vector2 ->
-            val d1 = p1.dst2(rotatingLine.getOrigin(outVec))
-            val d2 = p2.dst2(rotatingLine.getOrigin(outVec))
-            d1.compareTo(d2)
-        }
+        addComponent(MotionComponent())
+        addComponent(defineBodyComponent())
+        addComponent(defineSpritesCompoent())
+        addComponent(defineUpdatablesComponent())
 
         contactGlow.drawingColor = Color.WHITE
         contactGlow.drawingShapeType = ShapeType.Filled
 
-        addComponent(
-            DrawableShapesComponent(
-                prodShapeSuppliers = gdxArrayOf({ contactGlow }, { laser }), debug = true
-            )
-        )
-        addComponent(defineBodyComponent())
-        addComponent(defineSpritesCompoent())
-        addComponent(defineUpdatablesComponent())
-        addComponent(MotionComponent())
+        val prodShapeSuppliers: Array<() -> IDrawableShape?> = gdxArrayOf({ contactGlow }, { damagerFixture })
+        addComponent(DrawableShapesComponent(prodShapeSuppliers = prodShapeSuppliers, debug = true))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -108,16 +113,30 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
         switchTimer.reset()
     }
 
+    override fun onDamageInflictedTo(damageable: IDamageable) = logTouchBody((damageable as IBodyEntity).body)
+
+    private fun logTouchBody(body: IBody) =
+        GameLogger.debug(
+            TAG, "onDamageInflictedTo():\n" +
+                "\tthis.body=${this.body.getBounds()}}\n" +
+                "\tother.body=${body.getBounds()},\n" +
+                "\tlaser=${laserFixture.getShape()}\n" +
+                "\tlaser.raw=${laserFixture.rawShape},\n" +
+                "\tdamager=${damagerFixture.getShape()}\n" +
+                "\tdamager.raw=${damagerFixture.rawShape}"
+        )
+
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat())
 
         laserFixture = Fixture(body, FixtureType.LASER, GameLine())
         laserFixture.putProperty(ConstKeys.COLLECTION, contacts)
+        laserFixture.setHitByBodyReceiver { entity, state -> if (state == ProcessState.BEGIN) logTouchBody(entity.body) }
         laserFixture.attachedToBody = false
         body.addFixture(laserFixture)
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameLine())
+        damagerFixture = Fixture(body, FixtureType.DAMAGER, GameLine())
         damagerFixture.attachedToBody = false
         body.addFixture(damagerFixture)
 
@@ -140,12 +159,14 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IS
             val end = if (contacts.isEmpty()) rotatingLine.getEndPoint(outVec) else contacts.first()
             laser.setSecondLocalPoint(end)
 
+            /*
             if (!contacts.isEmpty()) {
                 GameLogger.debug(
                     TAG,
                     "body.postProcess(): laser=$laser, line=${rotatingLine.line}, end=$end, contacts=$contacts"
                 )
             }
+             */
 
             laserFixture.setShape(laser)
             damagerFixture.setShape(laser)

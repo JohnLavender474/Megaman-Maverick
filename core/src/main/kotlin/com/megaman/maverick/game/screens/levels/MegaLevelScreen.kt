@@ -224,11 +224,16 @@ class MegaLevelScreen(
             val room = cameraManagerForRooms.currentGameRoom
 
             eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
+
+            val prior = cameraManagerForRooms.priorGameRoom
+
             eventsMan.submitEvent(
                 Event(
                     EventType.BEGIN_ROOM_TRANS, props(
                         ConstKeys.ROOM pairTo room,
-                        ConstKeys.PRIOR pairTo cameraManagerForRooms.priorGameRoom,
+                        ConstKeys.PRIOR pairTo prior,
+                        ConstKeys.NAME pairTo room?.name,
+                        "${ConstKeys.PRIOR}_${ConstKeys.NAME}" pairTo prior?.name,
                         ConstKeys.POSITION pairTo cameraManagerForRooms.transitionInterpolation,
                     )
                 )

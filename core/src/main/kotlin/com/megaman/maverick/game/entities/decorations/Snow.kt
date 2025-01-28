@@ -184,9 +184,10 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
             GameLogger.debug(TAG, "hitByBlock(): background=$background, mapObjId=${block.mapObjectId}")
             handleHit()
         }
-        bodyFixture.setHitByBodyReceiver {
-            if ((it as MegaGameEntity).getTag() == getTag()) return@setHitByBodyReceiver
-            GameLogger.debug(TAG, "hitByBody(): background=$background, body=$it")
+        bodyFixture.setHitByBodyReceiver receiver@{ entity, processState ->
+            if (processState != ProcessState.BEGIN) return@receiver
+            if ((entity as MegaGameEntity).getTag() == getTag()) return@receiver
+            GameLogger.debug(TAG, "hitByBody(): background=$background, body=${entity.body.getBounds()}")
             handleHit()
         }
         bodyFixture.setHitByProjectileReceiver {

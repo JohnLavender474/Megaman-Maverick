@@ -68,6 +68,19 @@ class GameLineTest :
                 line1.overlaps(line3) shouldBe false
             }
 
+            it("local points and world points should be the same") {
+                val line = GameLine(2f, 3f, 4f, 5f)
+                val localPoint1 = line.getFirstLocalPoint(Vector2())
+                val localPoint2 = line.getSecondLocalPoint(Vector2())
+
+                val worldPoint1 = Vector2()
+                val worldPoint2 = Vector2()
+                line.calculateWorldPoints(worldPoint1, worldPoint2)
+
+                (localPoint1 == worldPoint1) shouldBe true
+                (localPoint2 == worldPoint2) shouldBe true
+            }
+
             it("should provide correct local and world points") {
                 (0 until 10).forEach {
                     val random = Array<Float>()

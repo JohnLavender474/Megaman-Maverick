@@ -97,14 +97,14 @@ fun IFixture.hasHitByExplosionReceiver() = hasProperty(ConstKeys.HIT_BY_EXPLOSIO
 fun IFixture.getHitByExplosion(explosion: IBodyEntity) =
     (getProperty(ConstKeys.HIT_BY_EXPLOSION) as (IBodyEntity) -> Unit).invoke(explosion)
 
-fun IFixture.setHitByBodyReceiver(receiver: (IBodyEntity) -> Unit) {
+fun IFixture.hasHitByBodyReceiver() = hasProperty(ConstKeys.HIT_BY_BODY)
+
+fun IFixture.setHitByBodyReceiver(receiver: (IBodyEntity, ProcessState) -> Unit) {
     putProperty(ConstKeys.HIT_BY_BODY, receiver)
 }
 
-fun IFixture.hasHitByBodyReceiver() = hasProperty(ConstKeys.HIT_BY_BODY)
-
-fun IFixture.getHitByBody(body: IBodyEntity) =
-    (getProperty(ConstKeys.HIT_BY_BODY) as (IBodyEntity) -> Unit).invoke(body)
+fun IFixture.getHitByBody(body: IBodyEntity, processState: ProcessState) =
+    (getProperty(ConstKeys.HIT_BY_BODY) as (IBodyEntity, ProcessState) -> Unit).invoke(body, processState)
 
 fun IFixture.setHitByBlockReceiver(state: ProcessState, receiver: (Block, Float) -> Unit) {
     putProperty("${ConstKeys.HIT_BY_BLOCK}_${state.name}", receiver)
@@ -151,3 +151,12 @@ fun IFixture.setHitByDamageableReceiver(receiver: (IDamageable, ProcessState) ->
 
 fun IFixture.getHitByDamageable(damageable: IDamageable, processState: ProcessState) =
     (getProperty(ConstKeys.HIT_BY_DAMAGEABLE) as (IDamageable, ProcessState) -> Unit).invoke(damageable, processState)
+
+fun IFixture.hasHitByLaserReceiver() = hasProperty(ConstKeys.HIT_BY_LASER)
+
+fun IFixture.setHitByLaserReceiver(receiver: (IFixture, ProcessState) -> Unit) {
+    putProperty(ConstKeys.HIT_BY_LASER, receiver)
+}
+
+fun IFixture.getHitByLaser(laser: IFixture, processState: ProcessState) =
+    (getProperty(ConstKeys.HIT_BY_LASER) as (IFixture, ProcessState) -> Unit).invoke(laser, processState)

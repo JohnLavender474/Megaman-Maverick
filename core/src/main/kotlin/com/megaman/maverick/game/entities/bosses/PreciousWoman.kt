@@ -65,7 +65,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private const val BODY_WIDTH = 1f
         private const val BODY_HEIGHT = 2f
 
-        private const val RUN_DUR = 0.75f
+        private const val RUN_DUR = 1f
         private const val RUN_CHANCE = 20f
         private const val RUN_IMPULSE_X = 35f
         private const val MAX_RUN_SPEED = 10f
@@ -83,15 +83,15 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private const val SPRITE_SIZE = 3f
 
         private const val INIT_DUR = 1f
-        private const val STAND_DUR = 1.5f
+        private const val STAND_DUR = 1f
         private const val WALL_SLIDE_DUR = 1f
-        private const val GROUND_SLIDE_DUR = 0.75f
+        private const val GROUND_SLIDE_DUR = 1f
         private const val LAUGH_1_DUR = 0.25f
         private const val LAUGH_2_DUR = 1.25f
         private const val THROW_GEMS_DUR = 1f
         private const val THROW_SHIELD_GEMS_DUR = 0.5f
         private const val THROW_TIME = 0.1f
-        private const val SPAWN_SHIELDS_DUR = 1.5f
+        private const val SPAWN_SHIELDS_DUR = 1f
 
         private const val GROUNDSLIDE_CHANCE = 20f
         private const val GROUNDSLIDE_VEL_X = 8f
@@ -104,7 +104,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         private const val JUMP_CHANCE = 25f
         private const val JUMP_MAX_IMPULSE_X = 8f
-        private const val JUMP_IMPULSE_Y = 12f
+        private const val JUMP_IMPULSE_Y = 14f
         private const val WALL_JUMP_IMPULSE_X = 4f
 
         private const val THROW_SPEED = 6f
@@ -118,11 +118,11 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         const val SHIELD_GEM_SPIN_SPEED = 0.25f
         const val SHIELD_GEM_CLUSTER_SPEED = 6f
-        const val SHIELD_GEM_MAX_DIST_FROM_ROOM_CENTER = 10f
+        const val SHIELD_GEM_MAX_DIST_FROM_ROOM_CENTER = 16f
 
         private const val CAN_SPAWN_SHIELD_GEMS_DELAY = 5f
-        private const val SPAWN_SHIELD_START_CHANCE = 25f
-        private const val SPAWN_SHIELD_CHANCE_DELTA = 5f
+        private const val SPAWN_SHIELD_START_CHANCE = 10f
+        private const val SPAWN_SHIELD_CHANCE_DELTA = 2.5f
         private const val SHIELD_GEM_START_OFFSET = 1.5f
 
         private val SHIELD_GEMS_ANGLES = gdxArrayOf(0f, 90f, 180f, 270f)
@@ -131,7 +131,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         // the amount of times she should enter stand/jump state before throwing gems
         private const val STATES_BETWEEN_THROW = 5
-        private const val MIN_THROW_COOLDOWN = 6f
+        private const val MIN_THROW_COOLDOWN = 3f
 
         private val animDefs = orderedMapOf(
             "airpunch1" pairTo AnimationDef(3, 1, 0.1f, false),
@@ -645,10 +645,8 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         .transition(PreciousWomanState.STAND.name, PreciousWomanState.JUMP.name) {
             firstUpdate || getRandom(0f, 100f) <= JUMP_CHANCE
         }
-        .transition(PreciousWomanState.STAND.name, PreciousWomanState.GROUNDSLIDE.name) {
-            getRandom(0f, 100f) <= GROUNDSLIDE_CHANCE
-        }
-        .transition(PreciousWomanState.STAND.name, PreciousWomanState.RUN.name) { getRandom(0f, 100f) <= RUN_CHANCE }
+        .transition(PreciousWomanState.STAND.name, PreciousWomanState.GROUNDSLIDE.name) { shouldGroundslide() }
+        .transition(PreciousWomanState.STAND.name, PreciousWomanState.RUN.name) { shouldStartRunning() }
         .transition(
             PreciousWomanState.STAND.name,
             PreciousWomanState.THROW_SHIELD_GEMS.name
@@ -816,6 +814,14 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             GameLogger.debug(TAG, "onChangeState(): jump vel=${body.physics.velocity}")
         }
     }
+
+    private fun shouldGroundslide() = getRandom(0f, 100f) <= GROUNDSLIDE_CHANCE &&
+        !(isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) &&
+        !(isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
+
+    private fun shouldStartRunning() = getRandom(0f, 100f) <= RUN_CHANCE &&
+        !(isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) &&
+        !(isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
 
     private fun shouldSpawnShieldGems() =
         shieldGems.isEmpty && spawnShieldsDelay.isFinished() && getRandom(0f, 100f) <= spawnShieldChance

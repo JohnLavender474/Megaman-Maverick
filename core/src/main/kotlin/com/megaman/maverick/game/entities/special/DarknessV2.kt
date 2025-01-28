@@ -36,6 +36,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.enemies.ShieldAttacker
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.ExplosionOrb
@@ -69,7 +70,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         const val TAG = "DarknessV2"
 
         const val MIN_ALPHA = 0f
-        const val MAX_ALPHA = 0.85f
+        const val MAX_ALPHA = 1f
 
         private const val CAM_BOUNDS_BUFFER = 2f
 
@@ -100,6 +101,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                 it as ChargedShotExplosion
                 if (it.fullyCharged) brighterProjLightDef.invoke(it) else standardProjLightDef.invoke(it)
             },
+            ShieldAttacker::class pairTo brighterProjLightDef
         )
 
         private const val DEBUG_THRESHOLD_SECS = 0.025f
@@ -138,20 +140,26 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
+
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.COLORS.source, "Black")
+
         super.init()
+
         addComponent(SpritesComponent())
         addComponent(defineUpdatablesComponent())
+
         tileSpritesPool = Pool(
             startAmount = 0,
             supplier = { GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 10)) },
             onFree = { sprite -> sprite.hidden = true },
             onFetch = { sprite -> sprite.hidden = false })
+
         lightSourcePool = Pool(startAmount = 0, supplier = { LightSourceDef(Vector2(), 0, 0f) })
     }
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
+
         super.onSpawn(spawnProps)
 
         game.eventsMan.addListener(this)
@@ -179,29 +187,31 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         super.onDestroy()
 
         game.eventsMan.removeListener(this)
-        lightSourceQueue.clear()
 
         rooms.clear()
         allTiles.clear()
-        previousTiles.clear()
         currentTiles.clear()
+        previousTiles.clear()
         tileSpritesPool.clear()
         lightSourcePool.clear()
+        lightSourceQueue.clear()
     }
 
     override fun onEvent(event: Event) {
+        GameLogger.debug(TAG, "onEvent(): event=$event")
+
         when (event.key) {
             EventType.PLAYER_READY -> {
-                darkMode = rooms.contains(game.getCurrentRoom()?.name)
+                val room = game.getCurrentRoom()?.name
+                darkMode = if (room == null) false else rooms.contains(room)
                 GameLogger.debug(TAG, "onEvent(): PLAYER_READY: darkMode=$darkMode")
             }
 
             EventType.BEGIN_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS -> {
                 val priorRoom = event.getProperty(ConstKeys.PRIOR, RectangleMapObject::class)?.name
                 val newRoom = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)?.name
-                if (priorRoom == null || newRoom == null) return
 
-                if (rooms.contains(priorRoom) && !rooms.contains(newRoom)) {
+                if ((priorRoom == null || rooms.contains(priorRoom)) && newRoom != null && !rooms.contains(newRoom)) {
                     GameLogger.debug(
                         TAG,
                         "onEvent(): BEGIN_ROOM_TRANS/SET_TO_ROOM_NO_TRANS: light up all: " +
@@ -215,13 +225,12 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                 val priorRoom = event.getProperty(ConstKeys.PRIOR, RectangleMapObject::class)?.name
                 val newRoom = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)?.name
 
-                if (priorRoom == null && newRoom == null) return
-
-                if (!rooms.contains(priorRoom) && rooms.contains(newRoom)) {
+                if ((priorRoom == null || !rooms.contains(priorRoom)) && newRoom != null && rooms.contains(newRoom)) {
                     GameLogger.debug(
                         TAG,
                         "onEvent(): END_ROOM_TRANS: darken all: event=$event, rooms=$rooms, newRoom=$newRoom"
                     )
+
                     darkMode = true
                 }
             }
@@ -266,20 +275,23 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             val tileBounds = GameRectangle(posX, posY, dividedPPM, dividedPPM)
             allTiles[x, y] = BlackTile(tileBounds)
         }
+
         return allTiles[x, y]!!
     }
 
     private fun tryToLightUp(entity: IGameEntity) {
         if (entity is IBodyEntity &&
             entity.body.getBounds().overlaps(bounds) &&
-            lightUpEntities.containsKey((entity as IBodyEntity)::class)
+            lightUpEntities.containsKey(entity::class)
         ) {
             val lightSourceDef = lightSourcePool.fetch()
-            lightUpEntities[(entity as IBodyEntity)::class].invoke(entity).let {
+
+            lightUpEntities[entity::class].invoke(entity).let {
                 lightSourceDef.center = it.center
                 lightSourceDef.radiance = it.radiance
                 lightSourceDef.radius = it.radius
             }
+
             lightSourceQueue.addLast(lightSourceDef)
         }
     }
@@ -294,6 +306,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         val (minX, minY, maxX, maxY) = getMinsAndMaxes(reusableRect)
         for (x in minX..maxX) for (y in minY..maxY) {
             val tile = getTile(x, y)
+
             if (reusableCircle.overlaps(tile.bounds)) {
                 val alpha = ((tile.bounds.getCenter().dst(center) / radius) / radiance)
                 tile.currentAlpha = min(alpha.coerceIn(MIN_ALPHA, MAX_ALPHA), tile.currentAlpha)
@@ -307,24 +320,30 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        MegaGameEntities.getEntitiesOfType(EntityType.PROJECTILE).forEach { t -> tryToLightUp(t) }
-        MegaGameEntities.getEntitiesOfType(EntityType.EXPLOSION).forEach { t -> tryToLightUp(t) }
+        val entities =
+            MegaGameEntities.getEntitiesOfTypes(EntityType.PROJECTILE, EntityType.EXPLOSION, EntityType.ENEMY)
+        entities.forEach { entity -> tryToLightUp(entity) }
 
         if (megaman.body.getBounds().overlaps(bounds)) {
             if (megaman.charging) {
                 val fullCharged = megaman.fullyCharged
+
                 val lightSourceDef = lightSourcePool.fetch()
+
                 lightSourceDef.center = megaman.body.getCenter()
                 lightSourceDef.radius =
                     (if (fullCharged) MEGAMAN_FULL_CHARGING_RADIUS else MEGAMAN_HALF_CHARGING_RADIUS) * ConstVals.PPM
                 lightSourceDef.radiance =
                     if (fullCharged) MEGAMAN_FULL_CHARGING_RADIANCE else MEGAMAN_HALF_CHARGING_RADIANCE
+
                 lightSourceQueue.addLast(lightSourceDef)
             } else if (megaman.isBehaviorActive(BehaviorType.JETPACKING)) {
                 val lightSourceDef = lightSourcePool.fetch()
+
                 lightSourceDef.center = megaman.body.getCenter()
                 lightSourceDef.radius = MEGAMAN_HALF_CHARGING_RADIUS * ConstVals.PPM
                 lightSourceDef.radiance = MEGAMAN_HALF_CHARGING_RADIANCE
+
                 lightSourceQueue.addLast(lightSourceDef)
             }
         }
@@ -332,27 +351,29 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         val beaming = game.isProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)
         if (beaming) {
             val beamCenter = game.getProperty("${Megaman.TAG}_${ConstKeys.BEAM}_${ConstKeys.CENTER}", Vector2::class)
+
             if (beamCenter != null) {
                 val lightSourceDef = lightSourcePool.fetch()
+
                 lightSourceDef.center = beamCenter
                 lightSourceDef.radius = MEGAMAN_FULL_CHARGING_RADIUS * ConstVals.PPM
                 lightSourceDef.radiance = MEGAMAN_FULL_CHARGING_RADIANCE
+
                 lightSourceQueue.addLast(lightSourceDef)
             }
         }
 
-        while (!lightSourceQueue.isEmpty()) {
+        while (!lightSourceQueue.isEmpty) {
             val lightSourceDef = lightSourceQueue.removeFirst()
+
             handleLightSource(lightSourceDef)
+
             lightSourcePool.free(lightSourceDef)
         }
 
         val camBounds = game.getGameCamera().getRotatedBounds()
         camBounds.translate(-CAM_BOUNDS_BUFFER * ConstVals.PPM, -CAM_BOUNDS_BUFFER * ConstVals.PPM)
-        camBounds.translateSize(
-            2f * CAM_BOUNDS_BUFFER * ConstVals.PPM,
-            2f * CAM_BOUNDS_BUFFER * ConstVals.PPM
-        )
+        camBounds.translateSize(2f * CAM_BOUNDS_BUFFER * ConstVals.PPM, 2f * CAM_BOUNDS_BUFFER * ConstVals.PPM)
 
         previousTiles.forEach { t -> if (!camBounds.overlaps(t.bounds)) t.reset(darkMode) }
         previousTiles.clear()

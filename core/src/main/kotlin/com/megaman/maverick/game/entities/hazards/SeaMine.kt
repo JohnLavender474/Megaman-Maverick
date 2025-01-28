@@ -9,6 +9,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
@@ -131,12 +132,12 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
         debugShapes.add { body }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.5f * ConstVals.PPM))
-        bodyFixture.setHitByBodyReceiver { trigger() }
-        debugShapes.add { bodyFixture}
+        bodyFixture.setHitByBodyReceiver { _, state -> if (state == ProcessState.BEGIN) trigger() }
+        debugShapes.add { bodyFixture }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.55f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        debugShapes.add { damagerFixture}
+        debugShapes.add { damagerFixture }
 
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(0.55f * ConstVals.PPM))
         shieldFixture.setHitByProjectileReceiver { trigger() }

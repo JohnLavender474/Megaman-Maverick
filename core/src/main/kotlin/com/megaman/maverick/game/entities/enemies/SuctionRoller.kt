@@ -29,6 +29,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
@@ -36,10 +37,12 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
 
     companion object {
         const val TAG = "SuctionRoller"
-        private var textureRegion: TextureRegion? = null
+
         private const val GRAVITY = -0.1f
         private const val VEL_X = 2.5f
         private const val VEL_Y = 2.5f
+
+        private var region: TextureRegion? = null
     }
 
     override lateinit var facing: Facing
@@ -48,35 +51,38 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
     private var wasOnWall = false
 
     override fun init() {
-        if (textureRegion == null)
-            textureRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "SuctionRoller")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        onWall = false
-        wasOnWall = false
-        facing = if (game.megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.positionOnPoint(spawn, Position.BOTTOM_CENTER)
+
+        facing = if (game.megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
+
+        onWall = false
+        wasOnWall = false
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            val megaman = game.megaman
             if (megaman.dead) return@add
-            wasOnWall = onWall
-            onWall =
-                (facing == Facing.LEFT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
-                    (facing == Facing.RIGHT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
 
-            if (body.isSensing(BodySense.FEET_ON_GROUND)) {
-                if (megaman.body.getBounds().getPositionPoint(Position.BOTTOM_RIGHT).x < body.getX())
+            wasOnWall = onWall
+
+            onWall = (facing == Facing.LEFT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
+                (facing == Facing.RIGHT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
+
+            if (body.isSensing(BodySense.FEET_ON_GROUND)) when {
+                megaman.body.getBounds().getPositionPoint(Position.BOTTOM_RIGHT).x < body.getX() ->
                     facing = Facing.LEFT
-                else if (megaman.body.getX() > body.getBounds().getPositionPoint(Position.BOTTOM_RIGHT).x)
+
+                megaman.body.getX() > body.getBounds().getPositionPoint(Position.BOTTOM_RIGHT).x ->
                     facing = Facing.RIGHT
             }
         }
@@ -198,7 +204,7 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(textureRegion!!, 1, 5, 0.1f, true)
+        val animation = Animation(region!!, 1, 5, 0.1f, true)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }

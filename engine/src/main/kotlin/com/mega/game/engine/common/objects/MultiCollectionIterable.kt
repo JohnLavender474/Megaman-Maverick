@@ -36,21 +36,25 @@ class MultiCollectionIterator<T>(private val multiCollectionIterable: MultiColle
 }
 
 
-class MultiCollectionIterable<T>(internal val iterables: Array<Iterable<T>>) : Iterable<T> {
-
+class MultiCollectionIterable<T>(internal val iterables: Array<Iterable<T>> = Array()) : Iterable<T> {
 
     override fun iterator() = MultiCollectionIterator(this)
 
+    fun add(iterable: Iterable<T>) = iterables.add(iterable)
 
-    fun forEach(action: (outerIndex: Int, innerIndex: Int, value: T) -> Unit) {
+    fun forEach(action: (value: T, outerIndex: Int, innerIndex: Int) -> Unit) {
         var outerIndex = 0
-        iterables.forEach {
+
+        iterables.forEach { iterable ->
             var innerIndex = 0
-            it.forEach { value ->
-                action(outerIndex, innerIndex, value)
+
+            iterable.forEach { value ->
+                action(value, outerIndex, innerIndex)
+
                 innerIndex++
-                outerIndex++
             }
+
+            outerIndex++
         }
     }
 }

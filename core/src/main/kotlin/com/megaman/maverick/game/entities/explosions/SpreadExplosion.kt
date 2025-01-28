@@ -44,7 +44,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class GreenExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class SpreadExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     IDirectional, IOwnable, IDamager, IHazard {
 
     companion object {
@@ -86,8 +86,6 @@ class GreenExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     )
     private var width = 0f
     private var damagerOffset = 0f
-
-    override fun getType() = EntityType.EXPLOSION
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
@@ -182,4 +180,8 @@ class GreenExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
+
+    override fun getType() = EntityType.EXPLOSION
+
+    override fun getTag() = TAG
 }

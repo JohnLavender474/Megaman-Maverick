@@ -46,6 +46,7 @@ object ConstKeys {
     const val STANDARD = "standard"
     const val SINE = "sine"
     const val HIT_BY_DAMAGEABLE = "hit_by_damageable"
+    const val HIT_BY_LASER = "hit_by_laser"
     const val RISEN = "risen"
     const val BURST = "burst"
     const val OWN = "own"

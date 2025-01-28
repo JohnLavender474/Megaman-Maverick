@@ -37,6 +37,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.PreciousGem
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -109,7 +110,9 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
             val direction = getOverlapPushDirection(bodyFixture.getShape(), block.body.getBounds())
             splash(direction?.rotation ?: 0f)
         }
-        bodyFixture.setHitByBodyReceiver {
+        bodyFixture.setHitByBodyReceiver receiver@{ it, state ->
+            if (state != ProcessState.BEGIN) return@receiver
+
             if (!it.isAny(RainFall::class, RainDrop::class)) {
                 GameLogger.debug(TAG, "hit body $it")
                 val direction = getOverlapPushDirection(bodyFixture.getShape(), it.body.getBounds())

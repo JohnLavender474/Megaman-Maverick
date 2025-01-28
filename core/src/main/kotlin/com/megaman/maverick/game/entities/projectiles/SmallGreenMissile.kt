@@ -31,8 +31,10 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.explosions.SpreadExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.body.*
@@ -105,7 +107,7 @@ class SmallGreenMissile(game: MegamanMaverickGame) : AbstractProjectile(game), I
             }
 
             WAVE_EXPLOSION -> {
-                val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.GREEN_EXPLOSION)!!
+                val explosion = MegaEntityFactory.fetch(SpreadExplosion::class)!!
                 explosion.spawn(
                     props(
                         ConstKeys.OWNER pairTo owner,

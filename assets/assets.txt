@@ -2101,6 +2101,7 @@ sprites/piskel/Robbit.piskel
 sprites/piskel/TimberWoman.piskel
 sprites/piskel/MegamanFaces.piskel
 sprites/piskel/MugshotPane_48x48.piskel
+sprites/piskel/mm9jewel.piskel
 sprites/piskel/ChargedShot_Residual.piskel
 sprites/piskel/PiercingMan.piskel
 sprites/piskel/Candle.piskel

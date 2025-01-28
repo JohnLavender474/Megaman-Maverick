@@ -48,7 +48,7 @@ class MegaContactFilter : IContactFilter {
             FixtureType.SAND,
             FixtureType.PROJECTILE
         ),
-        FixtureType.LASER pairTo objectSetOf(FixtureType.BLOCK),
+        FixtureType.LASER pairTo objectSetOf(FixtureType.BLOCK, FixtureType.BODY),
         FixtureType.TELEPORTER pairTo objectSetOf(FixtureType.TELEPORTER_LISTENER)
     )
 

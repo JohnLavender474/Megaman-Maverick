@@ -15,6 +15,8 @@ object GamePasswords {
 
     fun getGamePassword(state: GameState): IntArray {
         val password = IntArray(36)
+
+        // TODO: fix
         val multiCollectionIterable = MultiCollectionIterable(
             gdxArrayOf(
                 BossType.entries.toTypedArray().toGdxArray(),
@@ -23,7 +25,9 @@ object GamePasswords {
                 // MegaAbility.values().toGdxArray()
             )
         )
-        multiCollectionIterable.forEach { outerIndex, _, value ->
+
+        // TODO: fix
+        multiCollectionIterable.forEach { value, outerIndex, _ ->
             val index = indices[outerIndex]
             val digit = when (value) {
                 is LevelDefinition -> if (state.levelsDefeated.contains(value)) 1 else 0
@@ -42,6 +46,8 @@ object GamePasswords {
         val (bossesDefeated, heartTanksCollected, healthTanksCollected) = state
 
         val passwordArray = password.map { it.toString().toInt() }.toIntArray()
+
+        // TODO: fix
         val multiCollectionIterable = MultiCollectionIterable(
             gdxArrayOf(
                 BossType.entries.toTypedArray().toGdxArray(),
@@ -50,7 +56,9 @@ object GamePasswords {
                 // MegaAbility.values().toGdxArray()
             )
         )
-        multiCollectionIterable.forEach { outerIndex, _, value ->
+
+        // TODO: fix
+        multiCollectionIterable.forEach { value, outerIndex, _ ->
             val index = indices[outerIndex]
             when (value) {
                 is LevelDefinition-> if (passwordArray[index] == 1) bossesDefeated.add(value)

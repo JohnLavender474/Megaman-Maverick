@@ -155,8 +155,16 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.BODY)) {
             printDebugLog(contact, "beginContact(): Body-Body, contact=$contact")
             val (bodyFixture1, bodyFixture2) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.BODY, out)!!
-            if (bodyFixture1.hasHitByBodyReceiver()) bodyFixture1.getHitByBody(bodyFixture2.getEntity() as IBodyEntity)
-            if (bodyFixture2.hasHitByBodyReceiver()) bodyFixture2.getHitByBody(bodyFixture1.getEntity() as IBodyEntity)
+
+            if (bodyFixture1.hasHitByBodyReceiver()) bodyFixture1.getHitByBody(
+                bodyFixture2.getEntity() as IBodyEntity,
+                ProcessState.BEGIN
+            )
+
+            if (bodyFixture2.hasHitByBodyReceiver()) bodyFixture2.getHitByBody(
+                bodyFixture1.getEntity() as IBodyEntity,
+                ProcessState.BEGIN
+            )
         }
 
         // body, feet
@@ -668,7 +676,7 @@ class MegaContactListener(
 
         // laser, block
         else if (contact.fixturesMatch(FixtureType.LASER, FixtureType.BLOCK)) {
-            printDebugLog(contact, "continueContact(): Laser-Block, contact=$contact")
+            printDebugLog(contact, "beginContact(): Laser-Block, contact=$contact")
             val (laserFixture, blockFixture) = contact.getFixturesInOrder(FixtureType.LASER, FixtureType.BLOCK, out)!!
 
             val laserEntity = laserFixture.getEntity()
@@ -684,6 +692,21 @@ class MegaContactListener(
                     intersections.addAll(tempVec2Arr)
 
                 tempVec2Arr.clear()
+            }
+        }
+
+        // laser, body
+        else if (contact.fixturesMatch(FixtureType.LASER, FixtureType.BODY)) {
+            printDebugLog(contact, "beginContact(): Laser-Body, contact=$contact")
+
+            val (laserFixture, bodyFixture) = contact.getFixturesInOrder(FixtureType.LASER, FixtureType.BODY, out)!!
+
+            val laserEntity = laserFixture.getEntity()
+            val bodyEntity = bodyFixture.getEntity() as IBodyEntity
+
+            if (laserEntity != bodyEntity) {
+                if (bodyFixture.hasHitByLaserReceiver()) bodyFixture.getHitByLaser(laserFixture, ProcessState.BEGIN)
+                if (laserFixture.hasHitByBodyReceiver()) laserFixture.getHitByBody(bodyEntity, ProcessState.BEGIN)
             }
         }
     }
@@ -1021,6 +1044,21 @@ class MegaContactListener(
                     intersections.addAll(tempVec2Arr)
 
                 tempVec2Arr.clear()
+            }
+        }
+
+        // laser, body
+        else if (contact.fixturesMatch(FixtureType.LASER, FixtureType.BODY)) {
+            printDebugLog(contact, "continueContact(): Laser-Body, contact=$contact")
+
+            val (laserFixture, bodyFixture) = contact.getFixturesInOrder(FixtureType.LASER, FixtureType.BODY, out)!!
+
+            val laserEntity = laserFixture.getEntity()
+            val bodyEntity = bodyFixture.getEntity() as IBodyEntity
+
+            if (laserEntity != bodyEntity) {
+                if (bodyFixture.hasHitByLaserReceiver()) bodyFixture.getHitByLaser(laserFixture, ProcessState.CONTINUE)
+                if (laserFixture.hasHitByBodyReceiver()) laserFixture.getHitByBody(bodyEntity, ProcessState.CONTINUE)
             }
         }
 

@@ -44,7 +44,7 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.enemies.Spiky
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
-import com.megaman.maverick.game.entities.explosions.GreenExplosion
+import com.megaman.maverick.game.entities.explosions.SpreadExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.*
@@ -80,7 +80,7 @@ class Cactus(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntit
             ArigockBall::class pairTo dmgNeg(10),
             Explosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             Spiky::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-            GreenExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            SpreadExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             CactusMissile::class pairTo dmgNeg(10)
         )
 
