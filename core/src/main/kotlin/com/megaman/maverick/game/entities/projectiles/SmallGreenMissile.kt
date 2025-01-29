@@ -35,6 +35,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.SpreadExplosion
+import com.megaman.maverick.game.entities.explosions.SpreadExplosion.SpreadExplosionColor
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.body.*
@@ -111,6 +112,7 @@ class SmallGreenMissile(game: MegamanMaverickGame) : AbstractProjectile(game), I
                 explosion.spawn(
                     props(
                         ConstKeys.OWNER pairTo owner,
+                        ConstKeys.COLOR pairTo SpreadExplosionColor.GREEN,
                         ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)
                     )
                 )

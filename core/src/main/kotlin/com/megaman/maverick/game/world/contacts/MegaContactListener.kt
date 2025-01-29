@@ -388,6 +388,15 @@ class MegaContactListener(
             }
         }
 
+        // head, feet
+        else if (contact.fixturesMatch(FixtureType.HEAD, FixtureType.FEET)) {
+            printDebugLog(contact, "beginContact(): Head-Feet, contact=$contact")
+            val (headFixture, feetFixture) = contact.getFixturesInOrder(FixtureType.HEAD, FixtureType.FEET, out)!!
+
+            if (headFixture.hasHitByFeetReceiver(ProcessState.BEGIN))
+                headFixture.getHitByFeet(ProcessState.BEGIN, feetFixture, delta)
+        }
+
         // water listener, water
         else if (contact.fixturesMatch(FixtureType.WATER_LISTENER, FixtureType.WATER)) {
             val (listenerFixture, waterFixture) = contact.getFixturesInOrder(
@@ -860,6 +869,15 @@ class MegaContactListener(
             block.hitByHead(ProcessState.CONTINUE, headFixture)
         }
 
+        // head, feet
+        else if (contact.fixturesMatch(FixtureType.HEAD, FixtureType.FEET)) {
+            printDebugLog(contact, "continueContact(): Head-Feet, contact=$contact")
+            val (headFixture, feetFixture) = contact.getFixturesInOrder(FixtureType.HEAD, FixtureType.FEET, out)!!
+
+            if (headFixture.hasHitByFeetReceiver(ProcessState.CONTINUE))
+                headFixture.getHitByFeet(ProcessState.CONTINUE, feetFixture, delta)
+        }
+
         // feet, ice
         else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.ICE)) {
             val (feetFixture, _) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.ICE, out)!!
@@ -1190,6 +1208,15 @@ class MegaContactListener(
 
             val block = blockFixture.getEntity() as Block
             block.hitByHead(ProcessState.END, headFixture)
+        }
+
+        // head, feet
+        else if (contact.fixturesMatch(FixtureType.HEAD, FixtureType.FEET)) {
+            printDebugLog(contact, "endContact(): Head-Feet, contact=$contact")
+            val (headFixture, feetFixture) = contact.getFixturesInOrder(FixtureType.HEAD, FixtureType.FEET, out)!!
+
+            if (headFixture.hasHitByFeetReceiver(ProcessState.END))
+                headFixture.getHitByFeet(ProcessState.END, feetFixture, delta)
         }
 
         // block, body

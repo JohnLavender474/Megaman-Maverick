@@ -320,6 +320,10 @@ sprites/frames/Enemies2/FireDispensenator/fire.png
 sprites/frames/Enemies2/FireDispensenator/sleep.png
 sprites/frames/Enemies2/UnderwaterPenguinBot/swim.png
 sprites/frames/Enemies2/UnderwaterPenguinBot/bent.png
+sprites/frames/Enemies2/TorikoPlundge/plunge3.png
+sprites/frames/Enemies2/TorikoPlundge/plunge2.png
+sprites/frames/Enemies2/TorikoPlundge/plunge1.png
+sprites/frames/Enemies2/TorikoPlundge/idle.png
 sprites/frames/Enemies2/WalrusBot/stand.png
 sprites/frames/Enemies2/WalrusBot/jet.png
 sprites/frames/Enemies2/WalrusBot/slide.png
@@ -1948,6 +1952,7 @@ sprites/piskel/GlacierCloudsBKG.piskel
 sprites/piskel/SprBGTomahawk.piskel
 sprites/piskel/Totem Polem.piskel
 sprites/piskel/SiliconSilkie.piskel
+sprites/piskel/TorikoPlundge.piskel
 sprites/piskel/Spikes.piskel
 sprites/piskel/Coldier.piskel
 sprites/piskel/CrystalConveyorBKG.piskel

@@ -372,6 +372,7 @@
             <key type="filename">../frames/Enemies2/Hanabiran/2PetalsStand.png</key>
             <key type="filename">../frames/Enemies2/Hanabiran/3PetalsStand.png</key>
             <key type="filename">../frames/Enemies2/Hanabiran/4PetalsStand.png</key>
+            <key type="filename">../frames/Enemies2/TorikoPlundge/plunge1.png</key>
             <key type="filename">../frames/Enemies2/WallTeck/walk.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -392,6 +393,9 @@
             <key type="filename">../frames/Enemies2/BombPotton.png</key>
             <key type="filename">../frames/Enemies2/CactusLauncher/fire.png</key>
             <key type="filename">../frames/Enemies2/CactusLauncher/reload.png</key>
+            <key type="filename">../frames/Enemies2/TorikoPlundge/idle.png</key>
+            <key type="filename">../frames/Enemies2/TorikoPlundge/plunge2.png</key>
+            <key type="filename">../frames/Enemies2/TorikoPlundge/plunge3.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

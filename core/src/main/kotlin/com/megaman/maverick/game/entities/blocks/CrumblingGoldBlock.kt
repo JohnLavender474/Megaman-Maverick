@@ -24,7 +24,7 @@ import com.megaman.maverick.game.entities.decorations.BlockPiece
 import com.megaman.maverick.game.entities.decorations.BlockPiece.BlockPieceColor
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.SpreadExplosion
-import com.megaman.maverick.game.entities.explosions.TorikoPlundge
+import com.megaman.maverick.game.entities.enemies.TorikoPlundge
 import com.megaman.maverick.game.entities.projectiles.SmallGreenMissile
 import com.megaman.maverick.game.world.body.*
 
