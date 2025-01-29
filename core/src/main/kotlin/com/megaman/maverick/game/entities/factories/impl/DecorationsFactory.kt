@@ -30,7 +30,6 @@ class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory(
         const val LIGHT_SOURCE = "LightSource"
         const val LANTERN = "Lantern"
         const val SPACE_SATELLITE = "SpaceSatellite"
-        const val BRICK_PIECE = "BrickPiece"
         const val MEGAMAN_TRAIL_SPRITE = "MegamanTrailSprite"
         const val MEGAMAN_TRAIL_SPRITE_V2 = "MegamanTrailSprite_v2"
         const val CHARGED_SHOT_RESIDUAL = "ChargedShotResidual"
@@ -66,7 +65,6 @@ class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory(
         pools.put(LIGHT_SOURCE, GameEntityPoolCreator.create { LightSource(game) })
         pools.put(LANTERN, GameEntityPoolCreator.create { Lantern(game) })
         pools.put(SPACE_SATELLITE, GameEntityPoolCreator.create { SpaceSatellite(game) })
-        pools.put(BRICK_PIECE, GameEntityPoolCreator.create { BrickPiece(game) })
         pools.put(MEGAMAN_TRAIL_SPRITE, GameEntityPoolCreator.create { MegamanTrailSprite(game) })
         pools.put(MEGAMAN_TRAIL_SPRITE_V2, GameEntityPoolCreator.create { MegamanTrailSpriteV2(game) })
         pools.put(CHARGED_SHOT_RESIDUAL, GameEntityPoolCreator.create { ChargedShotResidual(game) })

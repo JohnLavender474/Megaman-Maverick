@@ -228,6 +228,8 @@
             <key type="filename">../frames/Platforms1/BreakableIce/2.png</key>
             <key type="filename">../frames/Platforms1/BreakableIce/3.png</key>
             <key type="filename">../frames/Platforms1/Brick.png</key>
+            <key type="filename">../frames/Platforms1/BrickPiece/gold.png</key>
+            <key type="filename">../frames/Platforms1/BrickPiece/red.png</key>
             <key type="filename">../frames/Platforms1/ConveyorBelt/LeftPart-MoveLeft-Green.png</key>
             <key type="filename">../frames/Platforms1/ConveyorBelt/LeftPart-MoveRight-Green.png</key>
             <key type="filename">../frames/Platforms1/ConveyorBelt/MiddlePart-MoveLeft-Green.png</key>
@@ -263,21 +265,6 @@
                 <rect>40,8,80,16</rect>
                 <key>scale9Paddings</key>
                 <rect>40,8,80,16</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Platforms1/BrickPiece.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>80,80,160,160</rect>
-                <key>scale9Paddings</key>
-                <rect>80,80,160,160</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

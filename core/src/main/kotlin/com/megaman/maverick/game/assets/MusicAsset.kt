@@ -38,6 +38,7 @@ enum class MusicAsset(src: String) : IAsset {
     MM7_SLASH_MAN_MUSIC("MM7_SlashMan.mp3"),
     MMX3_NEON_TIGER_MUSIC("MMX3_NeonTiger.mp3"),
     MMX2_CRYSTAL_SNAIL_MUSIC("MMX2_CrystalSnail.mp3"),
+    MMX5_STAGE_SELECT_MUSIC("MMX5_StageSelect.mp3"),
     INFERNO_MAN_MUSIC("vinnyz_inferno_track.mp3");
 
     companion object {

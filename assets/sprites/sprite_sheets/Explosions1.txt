@@ -1,25 +1,18 @@
 Explosions1.png
-size: 960, 339
+size: 768, 608
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 AsteroidExplosion
   rotate: false
-  xy: 32, 96
+  xy: 160, 128
   size: 48, 72
   orig: 48, 72
   offset: 0, 0
   index: -1
-ChargedShot_half
-  rotate: false
-  xy: 96, 32
-  size: 32, 64
-  orig: 32, 64
-  offset: 0, 0
-  index: -1
 ChargedShotExplosion
   rotate: false
-  xy: 80, 96
+  xy: 208, 128
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
@@ -40,28 +33,21 @@ Disintegration
   index: -1
 Explosion
   rotate: false
-  xy: 128, 32
+  xy: 0, 64
   size: 704, 64
   orig: 704, 64
   offset: 0, 0
   index: -1
 ExplosionOrbs
   rotate: false
-  xy: 832, 32
+  xy: 0, 128
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
-GreenExplosion
-  rotate: false
-  xy: 528, 96
-  size: 340, 243
-  orig: 340, 243
-  offset: 0, 0
-  index: -1
 HalfChargedShotExplosion
   rotate: false
-  xy: 112, 96
+  xy: 240, 128
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
@@ -75,14 +61,14 @@ IcicleShards
   index: -1
 MagmaExplosion
   rotate: false
-  xy: 144, 96
+  xy: 272, 128
   size: 192, 192
   orig: 192, 192
   offset: 0, 0
   index: -1
 MagmaGoopExplosion
   rotate: false
-  xy: 0, 96
+  xy: 128, 128
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
@@ -96,21 +82,35 @@ PreciousExplosion
   index: -1
 SmokePuff
   rotate: false
-  xy: 672, 0
+  xy: 0, 32
   size: 224, 32
   orig: 224, 32
   offset: 0, 0
   index: -1
 SnowballExplode
   rotate: false
-  xy: 0, 32
+  xy: 224, 32
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
+SpreadExplosion/default
+  rotate: false
+  xy: 0, 320
+  size: 384, 288
+  orig: 384, 288
+  offset: 0, 0
+  index: -1
+SpreadExplosion/green
+  rotate: false
+  xy: 384, 320
+  size: 384, 288
+  orig: 384, 288
+  offset: 0, 0
+  index: -1
 StarExplosion
   rotate: false
-  xy: 336, 96
+  xy: 464, 128
   size: 192, 192
   orig: 192, 192
   offset: 0, 0

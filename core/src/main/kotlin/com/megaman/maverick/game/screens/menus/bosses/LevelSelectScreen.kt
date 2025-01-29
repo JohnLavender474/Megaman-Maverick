@@ -281,6 +281,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
 
             override fun onSelect(delta: Float): Boolean {
                 game.audioMan.playSound(SoundAsset.BEAM_OUT_SOUND, false)
+
                 game.audioMan.stopMusic(null)
 
                 selectedLevelDef = levelDef
@@ -322,7 +323,8 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         outroTimer.reset()
 
         game.getUiCamera().position.set(ConstFuncs.getUiCamInitPos())
-        game.audioMan.playMusic(MusicAsset.STAGE_SELECT_MM3_MUSIC, true)
+
+        game.audioMan.playMusic(MusicAsset.MMX5_STAGE_SELECT_MUSIC, true)
     }
 
     override fun onAnyMovement(direction: Direction) =
@@ -357,13 +359,11 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         drawer.projectionMatrix = game.getUiCamera().combined
 
         drawer.begin()
-
         background.draw(drawer)
         mugshotGrid.forEach { it.value.draw(drawer) }
         text.forEach { it.draw(drawer) }
         blinkingArrows.get(currentButtonKey)?.draw(drawer)
         foregroundSprites.keys().forEach { it.draw(drawer) }
-
         drawer.end()
     }
 

@@ -5,6 +5,7 @@ temp/MegaRed225/Random Enemy Sprites Set 9/random-enemy-sprites-9.jpg
 temp/MegaRed225/random-enemies-4.jpg
 temp/MegaRed225/Random Enemy Sprites Set 10/enemies.jpg
 temp/MegaRed225/Random Enemy Sprites Set 10/Link
+temp/MegaRed225/random_enemies_set___1__by_megared225_d8jzqio.png
 temp/MegaRed225/Killers - Byte Bros. [Mega Man OCs]/killers___byte_bros___mega_man_ocs__by_megared225_db3ay7w.gif
 temp/MegaRed225/Killers - Byte Bros. [Mega Man OCs]/Link
 temp/MegaRed225/KillerDocBot/Link
@@ -422,6 +423,8 @@ sprites/frames/Explosions1/ToxicGoopSplash.png
 sprites/frames/Explosions1/AsteroidExplosion.png
 sprites/frames/Explosions1/SmokePuff.png
 sprites/frames/Explosions1/MagmaGoopExplosion.png
+sprites/frames/Explosions1/SpreadExplosion/default.png
+sprites/frames/Explosions1/SpreadExplosion/green.png
 sprites/frames/Explosions1/Explosion.png
 sprites/frames/Explosions1/Disintegration.png
 sprites/frames/Explosions1/ExplosionOrbs.png
@@ -431,7 +434,6 @@ sprites/frames/Explosions1/ChargedShotExplosion.png
 sprites/frames/Explosions1/MagmaExplosion.png
 sprites/frames/Explosions1/SnowballExplode.png
 sprites/frames/Explosions1/HalfChargedShotExplosion.png
-sprites/frames/Explosions1/GreenExplosion.png
 sprites/frames/Explosions1/StarExplosion.png
 sprites/frames/Explosions1/DeathBombExplosion.png
 sprites/frames/Decorations1/AirConditioner/pipe.png
@@ -1265,6 +1267,8 @@ sprites/frames/Platforms1/BreakableIce/Shards.png
 sprites/frames/Platforms1/BreakableIce/3.png
 sprites/frames/Platforms1/BreakableIce/1.png
 sprites/frames/Platforms1/BreakableIce/2.png
+sprites/frames/Platforms1/BrickPiece/red.png
+sprites/frames/Platforms1/BrickPiece/gold.png
 sprites/frames/Platforms1/InfernoChainPlatform/platform.png
 sprites/frames/Platforms1/InfernoChainPlatform/chain.png
 sprites/frames/Platforms1/Brick.png
@@ -1282,7 +1286,6 @@ sprites/frames/Platforms1/ConveyorBelt/RightPart-MoveLeft-Green.png
 sprites/frames/Platforms1/ConveyorBelt/MiddlePart-MoveRight-Green.png
 sprites/frames/Platforms1/TrackBlock.png
 sprites/frames/Platforms1/AppearingBrick.png
-sprites/frames/Platforms1/BrickPiece.png
 sprites/frames/Platforms1/DestroyableWoodPlank/flash.png
 sprites/frames/Platforms1/Platform2.png
 sprites/frames/Platforms1/8bitBlueBlock.png
@@ -1477,6 +1480,7 @@ sprites/frames/Enemies1/HeliMet/Shield.png
 sprites/frames/Enemies1/HeliMet/Fly.png
 sprites/frames/Enemies1/HeliMet/PopUp.png
 sprites/frames/Ui2/MegamanSubtitle.png
+sprites/frames/Ui2/TitleScreenBackgroundv2.png
 sprites/frames/Ui2/MegamanTitle.png
 sprites/frames/Ui2/TitleScreenBackground.png
 sprites/frames/Ui1/PaneHighlighted.png
@@ -2004,6 +2008,7 @@ sprites/piskel/CactusLauncher.piskel
 sprites/piskel/CannonHopper.piskel
 sprites/piskel/QuickSand_v2_BottomLeft.piskel
 sprites/piskel/StagedMoonLandingFlag.piskel
+sprites/piskel/CountryKibbo.piskel
 sprites/piskel/Wanaan.piskel
 sprites/piskel/ToxicGoopShot.piskel
 sprites/piskel/RocketPlatform_v2.piskel
@@ -2072,6 +2077,7 @@ sprites/piskel/PolarityManFace.piskel
 sprites/piskel/Bospider.piskel
 sprites/piskel/Penguin_Bot.piskel
 sprites/piskel/ScreenController.piskel
+sprites/piskel/SpreadExplosion.piskel
 sprites/piskel/MMX_Sigma2_ElectricBall.piskel
 sprites/piskel/LevelSelectScreen.piskel
 sprites/piskel/PenguinMiniBoss.piskel
@@ -2112,6 +2118,7 @@ sprites/piskel/Trees.piskel
 sprites/piskel/SnowSniperJoe.piskel
 sprites/piskel/SawBeam.piskel
 sprites/piskel/Colors.piskel
+sprites/piskel/TNT.piskel
 sprites/piskel/Shotman.piskel
 sprites/piskel/CarriCarry.piskel
 sprites/piskel/Gachappan.piskel
@@ -2580,6 +2587,7 @@ music/MMX5_DarkDizzy.mp3
 music/MMX2_MorphMoth.mp3
 music/MMZ_EnemyHall.mp3
 music/MM7_SlashMan.mp3
+music/MMX5_StageSelect.mp3
 music/MM6_CapcomLogo.mp3
 music/StageSelectMM3.mp3
 music/MM6_WilyBattle.mp3

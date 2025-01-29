@@ -626,7 +626,9 @@ class MegaContactListener(
 
                 FixtureType.PROJECTILE -> {
                     printDebugLog(contact, "beginContact(): Projectile-Projectile, contact=$contact")
+
                     projectile1.hitProjectile(otherFixture, thisShape, otherShape)
+
                     val projectile2 = otherFixture.getEntity() as IProjectileEntity
                     projectile2.hitProjectile(projectileFixture, otherShape, thisShape)
                 }

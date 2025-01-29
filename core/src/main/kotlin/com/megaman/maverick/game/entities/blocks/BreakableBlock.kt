@@ -24,11 +24,10 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.decorations.BlockPiece
+import com.megaman.maverick.game.entities.decorations.BlockPiece.BlockPieceColor
 import com.megaman.maverick.game.entities.enemies.Wanaan
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
-
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
@@ -75,13 +74,16 @@ class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, I
 
                 for (i in 0 until BRICK_PIECE_IMPULSES.size) {
                     val spawn = body.getCenter()
+
                     val impulse = BRICK_PIECE_IMPULSES[i].cpy().scl(ConstVals.PPM.toFloat())
-                    val brickPiece = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.BRICK_PIECE)!!
-                    brickPiece.spawn(
+
+                    val piece = MegaEntityFactory.fetch(BlockPiece::class)!!
+                    piece.spawn(
                         props(
                             ConstKeys.POSITION pairTo spawn,
                             ConstKeys.IMPULSE pairTo impulse,
-                            ConstKeys.THUMP pairTo BRICK_TYPE_THUMP
+                            ConstKeys.THUMP pairTo BRICK_TYPE_THUMP,
+                            ConstKeys.COLOR pairTo BlockPieceColor.RED
                         )
                     )
                 }

@@ -116,7 +116,7 @@ comprehensive listing of the credits for the artwork used in this game.
 
 #### Title Screen
 
-- Megaman Title - [Mister Mike](https://www.spriters-resource.com/fullview/258/)
+- Megaman Title Card - [SamuelX4](https://www.deviantart.com/samuelx4)
 - Megaman Weapon Get Sprite - [PixelBoy127](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/166239/)
 
 #### Megaman
@@ -202,6 +202,7 @@ comprehensive listing of the credits for the artwork used in this game.
 
 - [Famitard](https://www.youtube.com/@FamiTard)
   - Main Menu - [MMX3 Intro Stage 8-Bit](https://youtu.be/jEPimSadiRE)
+  - Stage Select Menu - [MMX5 Stage Select 8-Bit](https://youtu.be/NooP1Ir2jp0)
   - Desert Man Stage - [MMX7 Vanishing Gungaroo 8-Bit](https://youtu.be/MFfZ-LEwcMo)
   - Moon Man Stage - [MMX5 Dark Necrobat 8-Bit](https://youtu.be/RosxPCxVOyk)
   - Glacier Man Stage - [MMX Chill Penguin 8-Bit](https://youtu.be/QWmsNV18S1g)
@@ -212,15 +213,15 @@ comprehensive listing of the credits for the artwork used in this game.
   - Robot Master Fight - [MMX6 Boss Fight 8-Bit](https://youtu.be/IeySHEF5U_8) 
 - [vinnyz29](https://soundcloud.com/mega-vinnyz279)
   - Inferno Man Stage
-- Capcom:
+- Capcom
   - Logo Intro Music: [MM6 Capcom Logo](https://downloads.khinsider.com/game-soundtracks/album/megaman-6-original-soundtrack/01%2520Capcom%2520Logo.mp3)
 - TODO: Other music tracks are saved in the `assets` dir but not yet used in the game. These will be added here as they're added to the game.
 
 ### Sounds
 
-- Megaman 5 Sounds: https://www.sounds-resource.com/nes/megaman5/sound/3618/
-- Megaman 6 Sounds: https://www.sounds-resource.com/nes/megaman6/sound/3619/
-- Megaman 9 Sounds: https://www.sounds-resource.com/xbox_360/megaman9/sound/33185/
+- Megaman 5 sounds: https://www.sounds-resource.com/nes/megaman5/sound/3618/
+- Megaman 6 sounds: https://www.sounds-resource.com/nes/megaman6/sound/3619/
+- Megaman 9 sounds: https://www.sounds-resource.com/xbox_360/megaman9/sound/33185/
 
 Sounds belong to Capcom (Megaman-ripped sound effects) and Nintendo (Mario-ripped sound effects)
 

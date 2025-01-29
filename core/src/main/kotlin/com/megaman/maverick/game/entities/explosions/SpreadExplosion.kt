@@ -4,13 +4,14 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
-import com.mega.game.engine.animations.AnimationsComponent
-import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.AnimationsComponentBuilder
+import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -19,8 +20,10 @@ import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
-import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.IGameEntity
@@ -48,10 +51,12 @@ class SpreadExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
     IDirectional, IOwnable, IDamager, IHazard {
 
     companion object {
-        const val TAG = "GreenExplosion"
+        const val TAG = "SpreadExplosion"
         private const val DURATION = 0.3f
-        private var region: TextureRegion? = null
+        private val regions = ObjectMap<String, TextureRegion>()
     }
+
+    enum class SpreadExplosionColor { GREEN, DEFAULT }
 
     override var direction: Direction
         get() = body.direction
@@ -60,35 +65,46 @@ class SpreadExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         }
     override var owner: IGameEntity? = null
 
+    private lateinit var color: SpreadExplosionColor
+
+    private val size = Vector2()
+    private var offset = 0f
+
     private val timer = Timer(
         DURATION, gdxArrayOf(
             TimeMarkedRunnable(0.05f) {
-                width = 0.5f
-                damagerOffset = 0.25f
+                size.set(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
+                offset = 0.5f
             },
             TimeMarkedRunnable(0.1f) {
-                width = 1f
-                damagerOffset = 0.5f
+                size.set(ConstVals.PPM.toFloat(), 2f * ConstVals.PPM)
+                offset = 1f
             },
             TimeMarkedRunnable(0.15f) {
-                width = 1.5f
-                damagerOffset = 0.75f
+                size.set(2f * ConstVals.PPM, 3f * ConstVals.PPM)
+                offset = 1.5f
             },
             TimeMarkedRunnable(0.2f) {
-                width = 1f
-                damagerOffset = 1f
+                size.set(ConstVals.PPM.toFloat(), 2f * ConstVals.PPM)
+                offset = 2f
             },
             TimeMarkedRunnable(0.25f) {
-                width = 0.5f
-                damagerOffset = 1.5f
+                size.set(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
+                offset = 2f
             },
         )
     )
-    private var width = 0f
-    private var damagerOffset = 0f
 
     override fun init() {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
+        if (regions.isEmpty) {
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.EXPLOSIONS_1.source)
+            SpreadExplosionColor.entries.forEach { color ->
+                val key = color.name.lowercase()
+                val region = atlas.findRegion("$TAG/$key")
+                regions.put(key, region)
+            }
+        }
+        super.init()
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
@@ -99,7 +115,8 @@ class SpreadExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         super.onSpawn(spawnProps)
 
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
-        direction = spawnProps.get(ConstKeys.DIRECTION, Direction::class) ?: Direction.UP
+        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+        color = spawnProps.getOrDefault(ConstKeys.COLOR, SpreadExplosionColor.DEFAULT, SpreadExplosionColor::class)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         when (direction) {
@@ -109,8 +126,8 @@ class SpreadExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
             Direction.RIGHT -> body.setCenterLeftToPoint(spawn)
         }
 
-        width = 0f
-        damagerOffset = 0f
+        size.set(0.25f * ConstVals.PPM, 0.25f * ConstVals.PPM)
+        offset = 0f
 
         timer.reset()
     }
@@ -145,10 +162,14 @@ class SpreadExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.forEachFixture {
                 val fixture = it as Fixture
-                (fixture.rawShape as GameRectangle).setWidth(width * ConstVals.PPM)
+
+                if (fixture.getType() != FixtureType.DAMAGER) return@forEachFixture
+
+                (fixture.rawShape as GameRectangle).setSize(size)
             }
-            damagerFixture1.offsetFromBodyAttachment.x = damagerOffset * ConstVals.PPM
-            damagerFixture2.offsetFromBodyAttachment.x = -damagerOffset * ConstVals.PPM
+
+            damagerFixture1.offsetFromBodyAttachment.x = offset * ConstVals.PPM
+            damagerFixture2.offsetFromBodyAttachment.x = -offset * ConstVals.PPM
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -156,13 +177,15 @@ class SpreadExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
-        sprite.setSize(3.5f * ConstVals.PPM, ConstVals.PPM.toFloat())
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+    private fun defineSpritesComponent() = SpritesComponentBuilder()
+        .sprite(
+            TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
+                .also { sprite -> sprite.setSize(6f * ConstVals.PPM, 3f * ConstVals.PPM) }
+        )
+        .updatable { _, sprite ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
+
             val position = when (direction) {
                 Direction.UP -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER
@@ -172,14 +195,23 @@ class SpreadExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
             val bodyPosition = body.getPositionPoint(position)
             sprite.setPosition(bodyPosition, position)
         }
-        return spritesComponent
-    }
+        .build()
 
-    private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(region!!, 3, 2, 0.05f, false)
-        val animator = Animator(animation)
-        return AnimationsComponent(this, animator)
-    }
+    private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
+        .key(TAG)
+        .animator(
+            AnimatorBuilder()
+                .setKeySupplier { color.name.lowercase() }
+                .applyToAnimations { animations ->
+                    SpreadExplosionColor.entries.forEach { color ->
+                        val key = color.name.lowercase()
+                        val animation = Animation(regions[key], 3, 2, 0.05f, false)
+                        animations.put(key, animation)
+                    }
+                }
+                .build()
+        )
+        .build()
 
     override fun getType() = EntityType.EXPLOSION
 

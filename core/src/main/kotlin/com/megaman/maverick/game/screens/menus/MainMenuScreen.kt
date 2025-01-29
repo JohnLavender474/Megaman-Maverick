@@ -23,8 +23,8 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.ConstVals.UI_ARROW_BLINK_DUR
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.MusicAsset
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -39,7 +39,6 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
     enum class MainScreenButton(val text: String) {
         START_NEW_GAME("START NEW GAME"),
-
         // TODO: LOAD_PASSWORD("LOAD PASSWORD"),
         LOAD_SAVE_FILE("LOAD SAVE FILE"),
         SETTINGS("SETTINGS"),
@@ -167,7 +166,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         }
 
         val atlas = game.assMan.getTextureAtlas(TextureAsset.UI_2.source)
-        background = Sprite(atlas.findRegion("TitleScreenBackground"))
+        background = Sprite(atlas.findRegion("TitleScreenBackgroundv2"))
         background.setSize(ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         background.setCenter(ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f, ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f)
 
