@@ -7,7 +7,6 @@ import com.mega.game.engine.common.extensions.putIfAbsentAndGet
 import com.mega.game.engine.common.objects.SimpleQueueSet
 import java.util.*
 
-
 class EventsManager : Runnable {
 
     companion object {
@@ -36,32 +35,25 @@ class EventsManager : Runnable {
         events.putIfAbsentAndGet(eventKey) { Array() }.add(event)
     }
 
-
     fun isListener(listener: IEventListener) = listeners.contains(listener)
-
 
     fun isQueuedToBeAdded(listener: IEventListener) = listenersToAdd.contains(listener)
 
-
     fun isQueuedToBeRemoved(listener: IEventListener) = listenersToRemove.contains(listener)
-
 
     fun addListener(listener: IEventListener) =
         if (running) listenersToAdd.add(listener) else addListenerNow(listener)
 
     private fun addListenerNow(listener: IEventListener) = listeners.add(listener)
 
-
     fun removeListener(listener: IEventListener) =
         if (running) listenersToRemove.add(listener) else removeListenerNow(listener)
 
     private fun removeListenerNow(listener: IEventListener): Boolean = listeners.remove(listener)
 
-
     fun clearListeners() = if (running) setToClearListeners = true else clearListenersNow()
 
     private fun clearListenersNow() = listeners.clear()
-
 
     override fun run() {
         running = true

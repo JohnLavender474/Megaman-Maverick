@@ -105,10 +105,16 @@ class Properties : ICopyable<Properties> {
         for (entry in map.entries()) action(entry.key, entry.value)
     }
 
-    fun collect(predicate: (key: Any, value: Any?) -> Boolean): Properties {
+    fun collectProps(predicate: (key: Any, value: Any?) -> Boolean): Properties {
         val collected = Properties()
         forEach { key, value -> if (predicate(key, value)) collected.put(key, value) }
         return collected
+    }
+
+    fun <T: Any> collectValues(predicate: (key: Any, value: Any?) -> Boolean): Array<T> {
+        val out = Array<T>()
+        forEach { key, value -> if (predicate(key, value)) out.add(value as T) }
+        return out
     }
 
     override fun copy() = Properties(map)

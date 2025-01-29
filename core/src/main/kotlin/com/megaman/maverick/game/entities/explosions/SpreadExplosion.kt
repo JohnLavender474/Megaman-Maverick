@@ -10,6 +10,7 @@ import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.interfaces.IDirectional
@@ -146,12 +147,22 @@ class SpreadExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         debugShapes.add { body }
 
         val damagerFixture1 = Fixture(body, FixtureType.DAMAGER, GameRectangle().setHeight(ConstVals.PPM.toFloat()))
+        damagerFixture1.attachedToBody = false
         body.addFixture(damagerFixture1)
         debugShapes.add { damagerFixture1 }
 
+        val explosionFixture1 = Fixture(body, FixtureType.EXPLOSION, GameRectangle())
+        explosionFixture1.attachedToBody = false
+        body.addFixture(explosionFixture1)
+
         val damagerFixture2 = Fixture(body, FixtureType.DAMAGER, GameRectangle().setHeight(ConstVals.PPM.toFloat()))
+        damagerFixture2.attachedToBody = false
         body.addFixture(damagerFixture2)
         debugShapes.add { damagerFixture2 }
+
+        val explosionFixture2 = Fixture(body, FixtureType.EXPLOSION, GameRectangle())
+        explosionFixture2.attachedToBody = false
+        body.addFixture(explosionFixture2)
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setHeight(0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -0.5f * ConstVals.PPM
@@ -163,13 +174,20 @@ class SpreadExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
             body.forEachFixture {
                 val fixture = it as Fixture
 
-                if (fixture.getType() != FixtureType.DAMAGER) return@forEachFixture
+                if (!fixture.getType().equalsAny(FixtureType.DAMAGER, FixtureType.EXPLOSION)) return@forEachFixture
 
-                (fixture.rawShape as GameRectangle).setSize(size)
+                (fixture.rawShape as GameRectangle).let { bounds ->
+                    bounds.setSize(size)
+
+                    bounds.setBottomCenterToPoint(body.getPositionPoint(Position.BOTTOM_CENTER))
+
+                    val translateX = when (fixture) {
+                        damagerFixture1, explosionFixture1 -> offset * ConstVals.PPM
+                        else -> -offset * ConstVals.PPM
+                    }
+                    bounds.translate(translateX, -0.1f * ConstVals.PPM)
+                }
             }
-
-            damagerFixture1.offsetFromBodyAttachment.x = offset * ConstVals.PPM
-            damagerFixture2.offsetFromBodyAttachment.x = -offset * ConstVals.PPM
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

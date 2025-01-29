@@ -1,5 +1,5 @@
 Platforms1.png
-size: 480, 992
+size: 504, 992
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -38,44 +38,58 @@ AppearingBrick2
   orig: 32, 96
   offset: 0, 0
   index: -1
-Boulder/Large
+BlockPiece/gold
   rotate: false
   xy: 56, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-Boulder/Medium
+BlockPiece/red
   rotate: false
   xy: 88, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-Boulder/Small
+Boulder/Large
   rotate: false
   xy: 120, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-BreakableIce/1
+Boulder/Medium
   rotate: false
   xy: 152, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-BreakableIce/2
+Boulder/Small
   rotate: false
   xy: 184, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-BreakableIce/3
+BreakableIce/1
   rotate: false
   xy: 216, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+BreakableIce/2
+  rotate: false
+  xy: 248, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+BreakableIce/3
+  rotate: false
+  xy: 280, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -88,20 +102,6 @@ BreakableIce/Shards
   offset: 0, 0
   index: -1
 Brick
-  rotate: false
-  xy: 248, 0
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-BrickPiece/gold
-  rotate: false
-  xy: 280, 0
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-BrickPiece/red
   rotate: false
   xy: 312, 0
   size: 32, 32
@@ -159,7 +159,7 @@ ConveyorBelt/MiddlePart
   index: -1
 ConveyorBelt/RightPart-MoveLeft-Green
   rotate: false
-  xy: 0, 32
+  xy: 472, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -172,6 +172,13 @@ ConveyorBelt/RightPart-MoveLeft
   offset: 0, 0
   index: -1
 ConveyorBelt/RightPart-MoveRight-Green
+  rotate: false
+  xy: 0, 32
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+CrumblingBlock
   rotate: false
   xy: 32, 32
   size: 32, 32

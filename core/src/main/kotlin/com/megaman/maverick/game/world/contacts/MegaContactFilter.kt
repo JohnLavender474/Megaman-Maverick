@@ -20,8 +20,11 @@ class MegaContactFilter : IContactFilter {
             FixtureType.FEET,
             FixtureType.BLOCK,
             FixtureType.FORCE,
-            FixtureType.EXPLOSION,
             FixtureType.GRAVITY_CHANGE
+        ),
+        FixtureType.EXPLOSION pairTo objectSetOf(
+            FixtureType.BLOCK,
+            FixtureType.BODY
         ),
         FixtureType.DEATH pairTo objectSetOf(
             FixtureType.FEET, FixtureType.SIDE, FixtureType.HEAD, FixtureType.BODY

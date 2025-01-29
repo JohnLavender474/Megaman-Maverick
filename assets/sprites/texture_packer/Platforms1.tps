@@ -221,6 +221,8 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Platforms1/BlockPiece/gold.png</key>
+            <key type="filename">../frames/Platforms1/BlockPiece/red.png</key>
             <key type="filename">../frames/Platforms1/Boulder/Large.png</key>
             <key type="filename">../frames/Platforms1/Boulder/Medium.png</key>
             <key type="filename">../frames/Platforms1/Boulder/Small.png</key>
@@ -228,14 +230,13 @@
             <key type="filename">../frames/Platforms1/BreakableIce/2.png</key>
             <key type="filename">../frames/Platforms1/BreakableIce/3.png</key>
             <key type="filename">../frames/Platforms1/Brick.png</key>
-            <key type="filename">../frames/Platforms1/BrickPiece/gold.png</key>
-            <key type="filename">../frames/Platforms1/BrickPiece/red.png</key>
             <key type="filename">../frames/Platforms1/ConveyorBelt/LeftPart-MoveLeft-Green.png</key>
             <key type="filename">../frames/Platforms1/ConveyorBelt/LeftPart-MoveRight-Green.png</key>
             <key type="filename">../frames/Platforms1/ConveyorBelt/MiddlePart-MoveLeft-Green.png</key>
             <key type="filename">../frames/Platforms1/ConveyorBelt/MiddlePart-MoveRight-Green.png</key>
             <key type="filename">../frames/Platforms1/ConveyorBelt/RightPart-MoveLeft-Green.png</key>
             <key type="filename">../frames/Platforms1/ConveyorBelt/RightPart-MoveRight-Green.png</key>
+            <key type="filename">../frames/Platforms1/CrumblingBlock.png</key>
             <key type="filename">../frames/Platforms1/InfernoChainPlatform/chain.png</key>
             <key type="filename">../frames/Platforms1/InfernoChainPlatform/platform.png</key>
             <key type="filename">../frames/Platforms1/TrackBlock.png</key>

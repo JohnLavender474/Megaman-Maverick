@@ -180,7 +180,7 @@ class MegaContactListener(
 
         // body, explosion
         else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.EXPLOSION)) {
-            printDebugLog(contact, "beginContact(): Body-Feet, contact=$contact")
+            printDebugLog(contact, "beginContact(): Body-Explosion, contact=$contact")
             val (bodyFixture, explosionFixture) = contact.getFixturesInOrder(
                 FixtureType.BODY,
                 FixtureType.EXPLOSION,
@@ -189,6 +189,20 @@ class MegaContactListener(
             if (bodyFixture.hasHitByExplosionReceiver()) {
                 val explosion = explosionFixture.getEntity() as IBodyEntity
                 bodyFixture.getHitByExplosion(explosion)
+            }
+        }
+
+        // block, explosion
+        else if (contact.fixturesMatch(FixtureType.BLOCK, FixtureType.EXPLOSION)) {
+            printDebugLog(contact, "beginContact(): Block-Explosion, contact=$contact")
+            val (blockFixture, explosionFixture) = contact.getFixturesInOrder(
+                FixtureType.BLOCK,
+                FixtureType.EXPLOSION,
+                out
+            )!!
+            if (blockFixture.hasHitByExplosionReceiver()) {
+                val explosion = explosionFixture.getEntity() as IBodyEntity
+                blockFixture.getHitByExplosion(explosion)
             }
         }
 
@@ -982,6 +996,19 @@ class MegaContactListener(
             if (bodyFixture.hasHitByExplosionReceiver()) {
                 val explosion = explosionFixture.getEntity() as IBodyEntity
                 bodyFixture.getHitByExplosion(explosion)
+            }
+        }
+
+        // block, explosion
+        else if (contact.fixturesMatch(FixtureType.BLOCK, FixtureType.EXPLOSION)) {
+            val (blockFixture, explosionFixture) = contact.getFixturesInOrder(
+                FixtureType.BLOCK,
+                FixtureType.EXPLOSION,
+                out
+            )!!
+            if (blockFixture.hasHitByExplosionReceiver()) {
+                val explosion = explosionFixture.getEntity() as IBodyEntity
+                blockFixture.getHitByExplosion(explosion)
             }
         }
 
