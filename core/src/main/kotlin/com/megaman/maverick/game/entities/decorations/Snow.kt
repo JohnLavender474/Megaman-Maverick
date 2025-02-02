@@ -103,7 +103,7 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
         fadingOut = false
         fadeTimer.reset()
 
-        val setOfAllSnow = MegaGameEntities.getEntitiesOfTag(getTag())
+        val setOfAllSnow = MegaGameEntities.getOfTag(getTag())
         GameLogger.debug(
             TAG,
             "onSpawn(): " +
@@ -125,7 +125,7 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
 
     override fun onDestroy() {
         super.onDestroy()
-        val size = MegaGameEntities.getEntitiesOfTag(getTag()).size
+        val size = MegaGameEntities.getOfTag(getTag()).size
         GameLogger.debug(
             TAG,
             "onDestroy(): snowAmount=$size"

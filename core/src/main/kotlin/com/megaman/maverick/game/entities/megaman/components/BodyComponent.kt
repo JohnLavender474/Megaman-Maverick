@@ -55,9 +55,10 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.putProperty("${ConstKeys.ICE}_${ConstKeys.FRICTION_Y}", false)
     body.physics.applyFrictionX = true
     body.physics.applyFrictionY = true
+    body.drawingColor = Color.GRAY
 
     val debugShapes = Array<() -> IDrawableShape?>()
-    // debugShapes.add { body.getBounds() }
+    debugShapes.add { body.getBounds() }
 
     val playerFixture = Fixture(body, FixtureType.PLAYER, GameRectangle())
     body.addFixture(playerFixture)
@@ -75,7 +76,8 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     feetFixture.offsetFromBodyAttachment.y = -MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
     feetFixture.setRunnable(onBounce)
     body.addFixture(feetFixture)
-    // debugShapes.add { feetFixture }
+    feetFixture.drawingColor = Color.GREEN
+    debugShapes.add { feetFixture }
     body.putProperty(ConstKeys.FEET, feetFixture)
 
     // The feet gravity fixture is a consumer that checks for overlap with blocks. If there is a contact with a block,

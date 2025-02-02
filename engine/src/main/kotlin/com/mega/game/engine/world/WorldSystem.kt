@@ -113,15 +113,21 @@ class WorldSystem(
 
     internal fun cycle(bodies: Array<IBody>, delta: Float) {
         bodies.forEach { body -> body.preProcess() }
+
         worldContainer.clear()
+
         bodies.forEach { body ->
             body.process(delta)
             worldContainer.addBody(body)
             body.forEachFixture { worldContainer.addFixture(it) }
         }
+
         bodies.forEach { body -> collectContacts(body) }
+
         processContacts()
+
         bodies.forEach { body -> resolveCollisions(body) }
+
         bodies.forEach { body -> body.postProcess() }
     }
 
@@ -146,6 +152,7 @@ class WorldSystem(
     internal fun collectContacts(body: IBody) = body.forEachFixture { fixture ->
         if (fixture.isActive() && contactFilter.shouldProceedFiltering(fixture)) {
             fixture.getShape().getBoundingRectangle(reusableGameRect)
+
             val worldGraphResults = worldContainer.getFixtures(
                 MathUtils.floor(reusableGameRect.getX() / ppm),
                 MathUtils.floor(reusableGameRect.getY() / ppm),
@@ -165,11 +172,17 @@ class WorldSystem(
 
     internal fun resolveCollisions(body: IBody) {
         val bounds = body.getBounds(out1)
-        worldContainer.getBodies(
+
+        val bodies = worldContainer.getBodies(
             MathUtils.floor(bounds.getX() / ppm),
             MathUtils.floor(bounds.getY() / ppm),
             MathUtils.floor(bounds.getMaxX() / ppm),
             MathUtils.floor(bounds.getMaxY() / ppm)
-        ).forEach { if (it != body && it.getBounds(out2).overlaps(bounds)) collisionHandler.handleCollision(body, it) }
+        )
+
+        bodies.forEach {
+            if (it != body && it.getBounds(out2).overlaps(bounds))
+                collisionHandler.handleCollision(body, it)
+        }
     }
 }

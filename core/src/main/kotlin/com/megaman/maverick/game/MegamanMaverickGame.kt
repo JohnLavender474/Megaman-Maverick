@@ -77,7 +77,6 @@ import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.CrumblingBlock
-import com.megaman.maverick.game.entities.blocks.CrumblingBlockEventListener
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.enemies.TorikoPlundge
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -130,9 +129,7 @@ class MegamanMaverickGame(
         private const val ASSET_MILLIS = 17
         private const val LOADING = "LOADING"
         private const val SCREENSHOT_KEY = Input.Keys.P
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(
-            CrumblingBlockEventListener.TAG, CrumblingBlock.TAG, TorikoPlundge.TAG
-        )
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(CrumblingBlock.TAG, TorikoPlundge.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.oneFixtureMatches(FixtureType.CONSUMER)
         }
@@ -385,10 +382,9 @@ class MegamanMaverickGame(
         screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY_SCREEN.name, SimpleEndLevelScreen(this))
         screens.put(ScreenEnum.CREDITS_SCREEN.name, CreditsScreen(this))
 
-        setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
         // setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
         // startLevelScreen(LevelDefinition.TEST_TILESET_SIZE)
-        // startLevelScreen(LevelDefinition.TEST_1)
+        startLevelScreen(LevelDefinition.TEST_1)
 
         /*
         if (Gdx.app.type == ApplicationType.Android || params.showScreenController)
@@ -565,7 +561,7 @@ class MegamanMaverickGame(
         assets.addAll(SoundAsset.valuesAsIAssetArray())
         assets.addAll(TextureAsset.valuesAsIAssetArray())
 
-        assMan.setLoader(TiledMap::class.java, TmxMapLoader(InternalFileHandleResolver()));
+        assMan.setLoader(TiledMap::class.java, TmxMapLoader(InternalFileHandleResolver()))
         LevelDefinition.entries.forEach { assets.add(it) }
 
         assets.forEach {

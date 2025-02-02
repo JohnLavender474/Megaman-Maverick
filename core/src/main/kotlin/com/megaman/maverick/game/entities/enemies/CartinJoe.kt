@@ -94,7 +94,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
 
     override fun onDestroy() {
         super.onDestroy()
-        if (hasDepletedHealth()) explode()
+        if (isHealthDepleted()) explode()
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

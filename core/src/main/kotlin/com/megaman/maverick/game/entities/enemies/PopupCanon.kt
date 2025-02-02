@@ -142,7 +142,7 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
     override fun onDestroy() {
         super.onDestroy()
-        if (hasDepletedHealth()) explode()
+        if (isHealthDepleted()) explode()
     }
 
     private fun shoot() {

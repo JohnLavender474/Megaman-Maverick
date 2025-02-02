@@ -1202,6 +1202,7 @@ sprites/frames/Projectiles1/ReactManProjectile/Die.png
 sprites/frames/Projectiles1/ReactManProjectile/Small.png
 sprites/frames/Projectiles1/ChargedShot_v2.png
 sprites/frames/Projectiles1/ChargedShot.png
+sprites/frames/Projectiles1/BouncingPebble.png
 sprites/frames/Projectiles1/CaveRock/Rock.png
 sprites/frames/Projectiles1/CaveRock/Burst.png
 sprites/frames/Projectiles1/SealionBall.png
@@ -2532,6 +2533,7 @@ tiled_maps/tmx/TilesetSizeTest.tmx
 tiled_maps/tmx/Test5.tmx
 tiled_maps/tmx/DesertMan_v4.tmx
 tiled_maps/tmx/CaveMan.tmx
+tiled_maps/tmx/DesertMan_16x14_v3.tmx
 tiled_maps/tmx/WilyStage1.tmx
 tiled_maps/tmx/InfernoMan_v2.tmx
 tiled_maps/tmx/Test1.tmx

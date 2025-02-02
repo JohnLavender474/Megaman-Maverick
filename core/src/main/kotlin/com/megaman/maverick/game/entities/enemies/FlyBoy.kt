@@ -79,7 +79,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
 
     override fun onDestroy() {
         super.onDestroy()
-        if (hasDepletedHealth()) explode()
+        if (isHealthDepleted()) explode()
     }
 
     override fun defineBodyComponent(): BodyComponent {

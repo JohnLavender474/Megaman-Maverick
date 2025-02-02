@@ -41,7 +41,10 @@ fun IFixture.getVelocityAlteration(alterableBodyFixture: IFixture, delta: Float,
     (properties.get(ConstKeys.VELOCITY_ALTERATION) as (IFixture, Float, ProcessState) -> VelocityAlteration)
         .invoke(alterableBodyFixture, delta, processState)
 
-fun IFixture.setFilter(filter: (IFixture) -> Boolean) = putProperty(ConstKeys.FILTER, filter)
+fun IFixture.setFilter(filter: (IFixture) -> Boolean): IFixture {
+    putProperty(ConstKeys.FILTER, filter)
+    return this
+}
 
 fun IFixture.hasFilter() = hasProperty(ConstKeys.FILTER)
 
@@ -66,8 +69,9 @@ fun IFixture.getConsumer() = properties.get(ConstKeys.CONSUMER) as ((ProcessStat
 fun IFixture.hasForceAlterationForState(processState: ProcessState) =
     hasProperty("${processState.name.lowercase()}_${ConstKeys.FORCE}_${ConstKeys.VELOCITY_ALTERATION}")
 
-fun IFixture.setForceAlterationForState(processState: ProcessState, listener: (VelocityAlteration) -> Unit) {
+fun IFixture.setForceAlterationForState(processState: ProcessState, listener: (VelocityAlteration) -> Unit): IFixture {
     putProperty("${processState.name.lowercase()}_${ConstKeys.FORCE}_${ConstKeys.VELOCITY_ALTERATION}", listener)
+    return this
 }
 
 fun IFixture.applyForceAlteration(processState: ProcessState, alteration: VelocityAlteration) {
@@ -79,35 +83,45 @@ fun IFixture.applyForceAlteration(processState: ProcessState, alteration: Veloci
     } else VelocityAlterator.alterate(getBody(), alteration)
 }
 
-fun IFixture.setHitByWaterReceiver(receiver: (IWater) -> Unit) {
+fun IFixture.setHitByWaterReceiver(receiver: (IWater) -> Unit): IFixture {
     putProperty(ConstKeys.HIT_WATER, receiver)
+    return this
 }
 
 fun IFixture.hasHitByWaterByReceiver() = hasProperty(ConstKeys.HIT_WATER)
 
-fun IFixture.getHitByWater(water: IWater) =
+fun IFixture.getHitByWater(water: IWater): IFixture {
     (getProperty(ConstKeys.HIT_WATER) as (IWater) -> Unit).invoke(water)
+    return this
+}
 
-fun IFixture.setHitByExplosionReceiver(receiver: (IBodyEntity) -> Unit) {
+fun IFixture.setHitByExplosionReceiver(receiver: (IBodyEntity) -> Unit): IFixture {
     putProperty(ConstKeys.HIT_BY_EXPLOSION, receiver)
+    return this
 }
 
 fun IFixture.hasHitByExplosionReceiver() = hasProperty(ConstKeys.HIT_BY_EXPLOSION)
 
-fun IFixture.getHitByExplosion(explosion: IBodyEntity) =
+fun IFixture.getHitByExplosion(explosion: IBodyEntity): IFixture {
     (getProperty(ConstKeys.HIT_BY_EXPLOSION) as (IBodyEntity) -> Unit).invoke(explosion)
+    return this
+}
 
 fun IFixture.hasHitByBodyReceiver() = hasProperty(ConstKeys.HIT_BY_BODY)
 
-fun IFixture.setHitByBodyReceiver(receiver: (IBodyEntity, ProcessState) -> Unit) {
+fun IFixture.setHitByBodyReceiver(receiver: (IBodyEntity, ProcessState) -> Unit): IFixture {
     putProperty(ConstKeys.HIT_BY_BODY, receiver)
+    return this
 }
 
-fun IFixture.getHitByBody(body: IBodyEntity, processState: ProcessState) =
+fun IFixture.getHitByBody(body: IBodyEntity, processState: ProcessState): IFixture {
     (getProperty(ConstKeys.HIT_BY_BODY) as (IBodyEntity, ProcessState) -> Unit).invoke(body, processState)
+    return this
+}
 
-fun IFixture.setHitByBlockReceiver(state: ProcessState, receiver: (Block, Float) -> Unit) {
+fun IFixture.setHitByBlockReceiver(state: ProcessState, receiver: (Block, Float) -> Unit): IFixture {
     putProperty("${ConstKeys.HIT_BY_BLOCK}_${state.name}", receiver)
+    return this
 }
 
 fun IFixture.hasHitByBlockReceiver(state: ProcessState) =
@@ -116,8 +130,9 @@ fun IFixture.hasHitByBlockReceiver(state: ProcessState) =
 fun IFixture.getHitByBlock(state: ProcessState, block: Block, delta: Float) =
     (getProperty("${ConstKeys.HIT_BY_BLOCK}_${state.name}") as (Block, Float) -> Unit).invoke(block, delta)
 
-fun IFixture.setHitByPlayerReceiver(receiver: (Megaman) -> Unit) {
+fun IFixture.setHitByPlayerReceiver(receiver: (Megaman) -> Unit): IFixture {
     putProperty(ConstKeys.HIT_BY_PLAYER, receiver)
+    return this
 }
 
 fun IFixture.hasHitByPlayerReceiver() = hasProperty(ConstKeys.HIT_BY_PLAYER)
@@ -125,8 +140,9 @@ fun IFixture.hasHitByPlayerReceiver() = hasProperty(ConstKeys.HIT_BY_PLAYER)
 fun IFixture.getHitByPlayer(player: Megaman) =
     (getProperty(ConstKeys.HIT_BY_PLAYER) as (Megaman) -> Unit).invoke(player)
 
-fun IFixture.setHitByProjectileReceiver(receiver: (IProjectileEntity) -> Unit) {
+fun IFixture.setHitByProjectileReceiver(receiver: (IProjectileEntity) -> Unit): IFixture {
     putProperty(ConstKeys.HIT_BY_PROJECTILE, receiver)
+    return this
 }
 
 fun IFixture.hasHitByProjectileReceiver() = hasProperty(ConstKeys.HIT_BY_PROJECTILE)
@@ -134,8 +150,9 @@ fun IFixture.hasHitByProjectileReceiver() = hasProperty(ConstKeys.HIT_BY_PROJECT
 fun IFixture.getHitByProjectile(projectile: IProjectileEntity) =
     (getProperty(ConstKeys.HIT_BY_PROJECTILE) as (IProjectileEntity) -> Unit).invoke(projectile)
 
-fun IFixture.setHitByFeetReceiver(state: ProcessState, receiver: (IFixture, Float) -> Unit) {
+fun IFixture.setHitByFeetReceiver(state: ProcessState, receiver: (IFixture, Float) -> Unit): IFixture {
     putProperty("${ConstKeys.HIT_BY_FEET}_${state.name}", receiver)
+    return this
 }
 
 fun IFixture.hasHitByFeetReceiver(state: ProcessState) = hasProperty("${ConstKeys.HIT_BY_FEET}_${state.name}")
@@ -145,8 +162,9 @@ fun IFixture.getHitByFeet(state: ProcessState, feet: IFixture, delta: Float) =
 
 fun IFixture.hasHitByDamageableReceiver() = hasProperty(ConstKeys.HIT_BY_DAMAGEABLE)
 
-fun IFixture.setHitByDamageableReceiver(receiver: (IDamageable, ProcessState) -> Unit) {
+fun IFixture.setHitByDamageableReceiver(receiver: (IDamageable, ProcessState) -> Unit): IFixture {
     putProperty(ConstKeys.HIT_BY_DAMAGEABLE, receiver)
+    return this
 }
 
 fun IFixture.getHitByDamageable(damageable: IDamageable, processState: ProcessState) =
@@ -154,8 +172,9 @@ fun IFixture.getHitByDamageable(damageable: IDamageable, processState: ProcessSt
 
 fun IFixture.hasHitByLaserReceiver() = hasProperty(ConstKeys.HIT_BY_LASER)
 
-fun IFixture.setHitByLaserReceiver(receiver: (IFixture, ProcessState) -> Unit) {
+fun IFixture.setHitByLaserReceiver(receiver: (IFixture, ProcessState) -> Unit): IFixture {
     putProperty(ConstKeys.HIT_BY_LASER, receiver)
+    return this
 }
 
 fun IFixture.getHitByLaser(laser: IFixture, processState: ProcessState) =

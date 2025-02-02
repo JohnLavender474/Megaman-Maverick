@@ -78,7 +78,7 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
 
     override fun onDestroy() {
         super.onDestroy()
-        if (hasDepletedHealth()) explode()
+        if (isHealthDepleted()) explode()
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {

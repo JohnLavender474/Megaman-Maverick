@@ -27,8 +27,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodyFixtureDef
-import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
 class BlockPiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAudioEntity {
@@ -46,7 +44,6 @@ class BlockPiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     private lateinit var color: BlockPieceColor
     private val cullTimer = Timer(CULL_TIME)
-    private var thump = true
 
     override fun init() {
         if (regions.isEmpty) {
@@ -75,8 +72,6 @@ class BlockPiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
         color = spawnProps.getOrDefault(ConstKeys.COLOR, BlockPieceColor.RED, BlockPieceColor::class)
 
-        thump = spawnProps.getOrDefault(ConstKeys.THUMP, true, Boolean::class)
-
         cullTimer.reset()
     }
 
@@ -88,10 +83,11 @@ class BlockPiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.25f * ConstVals.PPM)
+        body.physics.collisionOn = false
         body.physics.applyFrictionY = false
         body.physics.gravity.y = -GRAVITY * ConstVals.PPM
 
-        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.BODY))
+        return BodyComponentCreator.create(this, body)
     }
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()

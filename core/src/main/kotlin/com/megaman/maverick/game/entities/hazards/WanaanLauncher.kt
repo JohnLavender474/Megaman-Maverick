@@ -133,7 +133,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (hasDepletedHealth()) return@add
+            if (isHealthDepleted()) return@add
 
             if (wanaan != null && wanaan!!.comingDown && body.getBounds().contains(wanaan!!.cullPoint)) {
                 wanaan!!.destroy()
@@ -173,7 +173,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
         sprite.setSize(2f * ConstVals.PPM, ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
-            val bust = this.hasDepletedHealth()
+            val bust = this.isHealthDepleted()
             val region = if (bust) regions["bust"] else regions["launcher"]
             sprite.setRegion(region)
             sprite.setCenter(body.getCenter())

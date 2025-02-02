@@ -44,8 +44,9 @@ class Fixture(
     private val reusableGameRect = GameRectangle()
     private val out1 = Vector2()
 
-    override fun setShape(shape: IGameShape2D) {
+    override fun setShape(shape: IGameShape2D): Fixture {
         rawShape = shape
+        return this
     }
 
     override fun getShape(): IGameShape2D {
@@ -69,8 +70,9 @@ class Fixture(
 
     override fun getType() = fixtureType
 
-    override fun setActive(active: Boolean) {
+    override fun setActive(active: Boolean): Fixture {
         isActive = active
+        return this
     }
 
     override fun isActive() = isActive

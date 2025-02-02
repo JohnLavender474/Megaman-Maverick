@@ -125,7 +125,7 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
         fadeTimer.reset()
         fading = false
 
-        val setOfAllLeaves = MegaGameEntities.getEntitiesOfTag(getTag())
+        val setOfAllLeaves = MegaGameEntities.getOfTag(getTag())
         GameLogger.debug(
             TAG,
             "onSpawn(): " +

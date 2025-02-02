@@ -113,7 +113,7 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
     override fun onDestroy() {
         super.onDestroy()
 
-        if (hasDepletedHealth()) explode()
+        if (isHealthDepleted()) explode()
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()

@@ -99,7 +99,7 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
         }
         addComponent(defineAnimationsComponent())
         runnablesOnDestroy.put(ConstKeys.CHILD) {
-            if (hasDepletedHealth()) {
+            if (isHealthDepleted()) {
                 val sniperJoe = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.SNIPER_JOE)!!
                 val spawnProps = props(
                     ConstKeys.POSITION pairTo body.getCenter().add(

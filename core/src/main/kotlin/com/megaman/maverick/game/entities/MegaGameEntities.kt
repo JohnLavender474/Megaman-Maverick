@@ -32,33 +32,33 @@ object MegaGameEntities {
         }
     }
 
-    fun getEntitiesOfTag(tag: String): OrderedSet<MegaGameEntity> = entityTagToEntities.get(tag, OrderedSet())
+    fun getOfTag(tag: String): OrderedSet<MegaGameEntity> = entityTagToEntities.get(tag, OrderedSet())
 
-    fun getEntitiesOfTags(out: ObjectSet<MegaGameEntity>, vararg tags: String): ObjectSet<MegaGameEntity> {
+    fun getOfTags(out: ObjectSet<MegaGameEntity>, vararg tags: String): ObjectSet<MegaGameEntity> {
         tags.forEach { tag ->
-            val set = getEntitiesOfTag(tag)
+            val set = getOfTag(tag)
             out.addAll(set)
         }
         return out
     }
 
-    fun getEntitiesOfType(type: EntityType): OrderedSet<MegaGameEntity> = entityTypeToEntities.get(type, OrderedSet())
+    fun getOfType(type: EntityType): OrderedSet<MegaGameEntity> = entityTypeToEntities.get(type, OrderedSet())
 
-    fun getEntitiesOfTypes(vararg types: EntityType): Iterable<MegaGameEntity> {
+    fun getOfTypes(vararg types: EntityType): Iterable<MegaGameEntity> {
         val iterable = MultiCollectionIterable<MegaGameEntity>()
 
         types.forEach { type ->
-            val set = getEntitiesOfType(type)
+            val set = getOfType(type)
             iterable.add(set)
         }
 
         return iterable
     }
 
-    fun hasAnyEntitiesOfMapObjectId(mapObjectId: Int) = !getEntitiesOfMapObjectId(mapObjectId).isEmpty
+    fun hasAnyOfMapObjectId(mapObjectId: Int) = !getOfMapObjectId(mapObjectId).isEmpty
 
-    fun getEntitiesOfMapObjectId(mapObjectId: Int): OrderedSet<MegaGameEntity> =
+    fun getOfMapObjectId(mapObjectId: Int): OrderedSet<MegaGameEntity> =
         mapObjectIdToEntities.get(mapObjectId, OrderedSet())
 
-    fun forEachEntity(action: (MegaGameEntity) -> Unit) = entities.forEach { action.invoke(it) }
+    fun forEach(action: (MegaGameEntity) -> Unit) = entities.forEach { action.invoke(it) }
 }

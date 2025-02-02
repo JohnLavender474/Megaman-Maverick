@@ -40,6 +40,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val BOUNCE = "bounce"
     const val ATTACHED = "attached"
     const val BLANK = "blank"
     const val BLAST = "blast"

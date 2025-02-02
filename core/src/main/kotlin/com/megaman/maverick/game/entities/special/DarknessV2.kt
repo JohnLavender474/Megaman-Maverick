@@ -40,8 +40,12 @@ import com.megaman.maverick.game.entities.enemies.ShieldAttacker
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.ExplosionOrb
+import com.megaman.maverick.game.entities.explosions.SpreadExplosion
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.projectiles.*
+import com.megaman.maverick.game.entities.projectiles.ArigockBall
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.CactusMissile
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.getBounds
@@ -89,19 +93,25 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         private val brighterProjLightDef: (IBodyEntity) -> LightSourceDef =
             { LightSourceDef(it.body.getCenter(), 3 * ConstVals.PPM, 2f) }
 
+        private val brightestProjLightDef: (IBodyEntity) -> LightSourceDef =
+            { LightSourceDef(it.body.getCenter(), 4 * ConstVals.PPM, 2.5f) }
+
         private val lightUpEntities = objectMapOf<KClass<out IBodyEntity>, (IBodyEntity) -> LightSourceDef>(
             Bullet::class pairTo standardProjLightDef,
-            ChargedShot::class pairTo brighterProjLightDef,
-            ArigockBall::class pairTo standardProjLightDef,
-            CactusMissile::class pairTo brighterProjLightDef,
-            SmallGreenMissile::class pairTo standardProjLightDef,
-            Explosion::class pairTo brighterProjLightDef,
-            ExplosionOrb::class pairTo standardProjLightDef,
+            ChargedShot::class pairTo {
+                it as ChargedShot
+                if (it.fullyCharged) brightestProjLightDef.invoke(it) else brighterProjLightDef.invoke(it)
+            },
             ChargedShotExplosion::class pairTo {
                 it as ChargedShotExplosion
-                if (it.fullyCharged) brighterProjLightDef.invoke(it) else standardProjLightDef.invoke(it)
+                if (it.fullyCharged) brightestProjLightDef.invoke(it) else brighterProjLightDef.invoke(it)
             },
-            ShieldAttacker::class pairTo brighterProjLightDef
+            ArigockBall::class pairTo standardProjLightDef,
+            CactusMissile::class pairTo brighterProjLightDef,
+            Explosion::class pairTo brighterProjLightDef,
+            ExplosionOrb::class pairTo standardProjLightDef,
+            ShieldAttacker::class pairTo brighterProjLightDef,
+            SpreadExplosion::class pairTo brightestProjLightDef
         )
 
         private const val DEBUG_THRESHOLD_SECS = 0.025f
@@ -321,7 +331,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         val entities =
-            MegaGameEntities.getEntitiesOfTypes(EntityType.PROJECTILE, EntityType.EXPLOSION, EntityType.ENEMY)
+            MegaGameEntities.getOfTypes(EntityType.PROJECTILE, EntityType.EXPLOSION, EntityType.ENEMY)
         entities.forEach { entity -> tryToLightUp(entity) }
 
         if (megaman.body.getBounds().overlaps(bounds)) {

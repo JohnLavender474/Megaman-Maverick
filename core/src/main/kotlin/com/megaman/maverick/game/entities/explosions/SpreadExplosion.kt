@@ -44,6 +44,8 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
@@ -177,15 +179,28 @@ class SpreadExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
                 if (!fixture.getType().equalsAny(FixtureType.DAMAGER, FixtureType.EXPLOSION)) return@forEachFixture
 
                 (fixture.rawShape as GameRectangle).let { bounds ->
-                    bounds.setSize(size)
+                    if (direction.isVertical()) bounds.setSize(size.x, size.y) else bounds.setSize(size.y, size.x)
 
-                    bounds.setBottomCenterToPoint(body.getPositionPoint(Position.BOTTOM_CENTER))
+                    val position = DirectionPositionMapper.getInvertedPosition(direction)
+                    bounds.positionOnPoint(body.getPositionPoint(position), position)
 
-                    val translateX = when (fixture) {
-                        damagerFixture1, explosionFixture1 -> offset * ConstVals.PPM
-                        else -> -offset * ConstVals.PPM
+                    val translation = GameObjectPools.fetch(Vector2::class)
+                    when (direction) {
+                        Direction.UP, Direction.DOWN -> when (fixture) {
+                            damagerFixture1, explosionFixture1 ->
+                                translation.set(offset, if (direction == Direction.UP) -0.1f else 0.1f)
+
+                            else -> translation.set(-offset, if (direction == Direction.UP) 0.1f else -0.1f)
+                        }
+
+                        Direction.LEFT, Direction.RIGHT -> when (fixture) {
+                            damagerFixture1, explosionFixture1 ->
+                                translation.set(if (direction == Direction.LEFT) 0.1f else -0.1f, offset)
+
+                            else -> translation.set(if (direction == Direction.LEFT) -0.1f else 0.1f, -offset)
+                        }
                     }
-                    bounds.translate(translateX, -0.1f * ConstVals.PPM)
+                    bounds.translate(translation.scl(ConstVals.PPM.toFloat()))
                 }
             }
         }

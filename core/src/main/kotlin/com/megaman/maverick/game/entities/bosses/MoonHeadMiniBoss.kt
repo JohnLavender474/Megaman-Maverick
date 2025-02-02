@@ -192,7 +192,7 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
         val arcMotion2 = arcMotion1.copy()
         arcMotion2.arcFactor = -ARC_FACTOR
 
-        val blocks = MegaGameEntities.getEntitiesOfType(EntityType.BLOCK).map { it as Block }
+        val blocks = MegaGameEntities.getOfType(EntityType.BLOCK).map { it as Block }
         val mockBody = GameRectangle(body)
 
         val totalDistance = body.getCenter().dst(target) * DISTANCE_FACTOR

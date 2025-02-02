@@ -67,7 +67,7 @@ abstract class AbstractEnemy(
         addComponent(CullablesComponent())
 
         runnablesOnDestroy.put(ConstKeys.ITEMS) {
-            if (hasDepletedHealth()) {
+            if (isHealthDepleted()) {
                 disintegrate()
                 if (dropItemOnDeath) {
                     val playerHealthModifier = 1f - megaman.getHealthRatio()

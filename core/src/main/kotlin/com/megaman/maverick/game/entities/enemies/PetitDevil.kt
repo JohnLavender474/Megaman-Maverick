@@ -139,13 +139,13 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
 
     override fun onDestroy() {
         super.onDestroy()
-        if (hasDepletedHealth()) explode(
+        if (isHealthDepleted()) explode(
             props(
                 ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND
             )
         )
         children.forEach {
-            if (hasDepletedHealth()) (it as PetitDevilChild).disintegrateAndDie()
+            if (isHealthDepleted()) (it as PetitDevilChild).disintegrateAndDie()
             else (it as GameEntity).destroy()
         }
         children.clear()

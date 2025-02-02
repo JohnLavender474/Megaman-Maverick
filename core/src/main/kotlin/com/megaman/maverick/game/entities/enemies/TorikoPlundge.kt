@@ -3,16 +3,18 @@ package com.megaman.maverick.game.entities.enemies
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.badlogic.gdx.utils.ObjectSet
+import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.*
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -30,7 +32,10 @@ import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.body.*
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -40,18 +45,20 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.IDamageNegotiator
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.blocks.Block
-import com.megaman.maverick.game.entities.blocks.CrumblingBlockEventListener
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.SpreadExplosion
+import com.megaman.maverick.game.entities.explosions.SpreadExplosion.SpreadExplosionColor
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
-class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IParentEntity {
+class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IParentEntity, IDirectional {
 
     companion object {
         const val TAG = "TorikoPlundge"
@@ -79,11 +86,17 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
         override fun get(damager: IDamager) = damageNegotiations[damager::class]?.get(damager) ?: 0
     }
     override var children = Array<IGameEntity>()
+    override var direction: Direction
+        get() = body.direction
+        set(value) {
+            body.direction = value
+        }
 
     private val plungeTimer = Timer(PLUNGE_1_DUR + PLUNGE_2_DUR + PLUNGE_3_DUR)
     private var plunging = false
 
-    private val crumblingBlockIds = ObjectSet<Int>()
+    private val crumblingBlockIds = OrderedSet<Int>()
+    private val plundgeIds = OrderedSet<Int>()
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -102,7 +115,7 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
         val canSpawn = spawnProps
             .collectValues<RectangleMapObject> { key, value -> key.toString().contains(ConstKeys.BLOCK) }
             .map { obj -> obj.properties.get(ConstKeys.ID, Int::class.java) }
-            .any { id -> !CrumblingBlockEventListener.get(id) }
+            .any { id -> MegaGameEntities.hasAnyOfMapObjectId(id) }
 
         GameLogger.debug(TAG, "canSpawn(): canSpawn=$canSpawn, spawnProps=$spawnProps")
 
@@ -111,22 +124,34 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-
         super.onSpawn(spawnProps)
 
-        val position = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
-        body.setBottomCenterToPoint(position)
+        direction = Direction.valueOf(
+            spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase()
+        )
 
-        plungeTimer.reset()
-        plunging = false
+        val position = DirectionPositionMapper.getInvertedPosition(direction)
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(position)
+        body.positionOnPoint(spawn, position)
 
         val block1 = MegaEntityFactory.fetch(Block::class)!!
         block1.spawn(
             props(
                 ConstKeys.BOUNDS pairTo GameObjectPools.fetch(GameRectangle::class)
                     .setSize(ConstVals.PPM.toFloat(), 0.25f * ConstVals.PPM)
-                    .setTopCenterToPoint(position)
-                    .translate(0f, 1.85f * ConstVals.PPM),
+                    .positionOnPoint(spawn, position)
+                    .also { bounds ->
+                        val translation = GameObjectPools.fetch(Vector2::class)
+
+                        when (direction) {
+                            Direction.UP -> translation.set(0f, 1.5f)
+                            Direction.DOWN -> translation.set(0f, -1.5f)
+                            Direction.LEFT -> translation.set(-1.5f, 0f)
+                            Direction.RIGHT -> translation.set(1.5f, 0f)
+                        }.scl(ConstVals.PPM.toFloat())
+
+                        bounds.translate(translation)
+                    },
                 ConstKeys.FIXTURE_LABELS pairTo objectSetOf(
                     FixtureLabel.NO_PROJECTILE_COLLISION,
                     FixtureLabel.NO_SIDE_TOUCHIE,
@@ -152,26 +177,34 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
             )
         )
         children.add(block2)
+
+        spawnProps.forEach { key, value ->
+            if (key.toString().contains(ConstKeys.BLOCK)) {
+                val id = (value as RectangleMapObject).properties.get(ConstKeys.ID, Int::class.java)
+                crumblingBlockIds.add(id)
+            } else if (key.toString().contains(TAG.lowercase())) {
+                val id = (value as RectangleMapObject).properties.get(ConstKeys.ID, Int::class.java)
+                plundgeIds.add(id)
+            }
+        }
+
+        plungeTimer.reset()
+        plunging = false
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
-
         super.onDestroy()
 
         children.forEach { (it as MegaGameEntity).destroy() }
         children.clear()
+
+        crumblingBlockIds.clear()
+        plundgeIds.clear()
     }
 
-    private fun hitByFeet(fixture: IFixture) {
-        GameLogger.debug(TAG, "hitByFeet(): fixture=$fixture")
-
-        val entity = fixture.getEntity() as IBodyEntity
-
-        if (entity.body.physics.velocity.y > 0f) {
-            GameLogger.debug(TAG, "hitByFeet(): velocity > 0, do nothing")
-            return
-        }
+    private fun trigger(entity: IBodyEntity) {
+        GameLogger.debug(TAG, "trigger: entity=$entity")
 
         if (!plunging) {
             plunging = true
@@ -181,18 +214,31 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
 
     private fun onStartPlunge() {
         val block = children[0] as Block
-        block.body.physics.velocity.y = -PLUNGE_SPEED * ConstVals.PPM
+
+        block.body.physics.velocity.let { velocity ->
+            when (direction) {
+                Direction.UP -> velocity.set(0f, -PLUNGE_SPEED)
+                Direction.DOWN -> velocity.set(0f, PLUNGE_SPEED)
+                Direction.LEFT -> velocity.set(PLUNGE_SPEED, 0f)
+                Direction.RIGHT -> velocity.set(-PLUNGE_SPEED, 0f)
+            }
+        }.scl(ConstVals.PPM.toFloat())
     }
 
-    private fun onEndPlunge() {
-        GameLogger.debug(TAG, "onEndPlunge()")
+    private fun explodeAndDie() {
+        GameLogger.debug(TAG, "explodeAndDie()")
+
+        destroy()
+
+        val position = DirectionPositionMapper.getInvertedPosition(direction)
 
         val explosion = MegaEntityFactory.fetch(SpreadExplosion::class)!!
         explosion.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
-                ConstKeys.COLOR pairTo SpreadExplosion.SpreadExplosionColor.DEFAULT,
-                ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)
+                ConstKeys.DIRECTION pairTo direction,
+                ConstKeys.COLOR pairTo SpreadExplosionColor.DEFAULT,
+                ConstKeys.POSITION pairTo body.getPositionPoint(position)
             )
         )
 
@@ -201,27 +247,56 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
 
     override fun onHealthDepleted() {
         GameLogger.debug(TAG, "onHealthDepleted()")
-
         super.onHealthDepleted()
-
-        onEndPlunge()
+        explodeAndDie()
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            val shouldExplode = !plundgeIds.isEmpty && plundgeIds.none { id ->
+                MegaGameEntities.hasAnyOfMapObjectId(id)
+            }
+            if (shouldExplode) {
+                explodeAndDie()
+                return@add
+            }
+
+            val shouldDie = !crumblingBlockIds.isEmpty && crumblingBlockIds.none { id ->
+                MegaGameEntities.hasAnyOfMapObjectId(id)
+            }
+            if (shouldDie) {
+                destroy()
+                return@add
+            }
+
             if (plunging) {
                 val block = children[0] as Block
-                if (block.body.getY() <= body.getMaxY()) {
-                    block.body.physics.velocity.y = 0f
-                    block.body.setY(body.getMaxY())
+
+                when (direction) {
+                    Direction.UP -> if (block.body.getY() <= body.getMaxY()) {
+                        block.body.physics.velocity.y = 0f
+                        block.body.setY(body.getMaxY())
+                    }
+
+                    Direction.DOWN -> if (block.body.getMaxY() >= body.getY()) {
+                        block.body.physics.velocity.y = 0f
+                        block.body.setMaxY(body.getY())
+                    }
+
+                    Direction.LEFT -> if (block.body.getMaxX() >= body.getX()) {
+                        block.body.physics.velocity.y = 0f
+                        block.body.setMaxX(body.getX())
+                    }
+
+                    Direction.RIGHT -> if (block.body.getX() <= body.getMaxX()) {
+                        block.body.physics.velocity.y = 0f
+                        block.body.setX(body.getMaxX())
+                    }
                 }
 
                 plungeTimer.update(delta)
-                if (plungeTimer.isFinished()) {
-                    destroy()
-                    onEndPlunge()
-                }
+                if (plungeTimer.isFinished()) explodeAndDie()
             }
         }
     }
@@ -234,13 +309,21 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        val headFixture = Fixture(body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f))
-        headFixture.offsetFromBodyAttachment.y = (body.getHeight() / 2f) + 0.75f * ConstVals.PPM
-        headFixture.setHitByFeetReceiver(ProcessState.BEGIN) { fixture, _ -> hitByFeet(fixture) }
-        headFixture.setHitByFeetReceiver(ProcessState.CONTINUE) { fixture, _ -> hitByFeet(fixture) }
-        body.addFixture(headFixture)
-        headFixture.drawingColor = Color.BLUE
-        debugShapes.add { headFixture }
+        val triggerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f))
+        triggerFixture.setFilter filter@{ fixture ->
+            return@filter when (direction) {
+                Direction.UP -> fixture.getType() == FixtureType.FEET
+                Direction.DOWN -> fixture.getType() == FixtureType.HEAD
+                Direction.LEFT, Direction.RIGHT -> fixture.getType() == FixtureType.SIDE
+            }
+        }
+        triggerFixture.setConsumer { processState, fixture ->
+            if (processState == ProcessState.BEGIN) trigger(fixture.getEntity() as IBodyEntity)
+        }
+        triggerFixture.offsetFromBodyAttachment.y = (body.getHeight() / 2f) + 0.75f * ConstVals.PPM
+        body.addFixture(triggerFixture)
+        triggerFixture.drawingColor = Color.BLUE
+        debugShapes.add { triggerFixture }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -254,8 +337,11 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
         .updatable { _, sprite ->
-            val position = Position.BOTTOM_CENTER
+            val position = DirectionPositionMapper.getInvertedPosition(direction)
             sprite.setPosition(body.getPositionPoint(position), position)
+
+            sprite.setOriginCenter()
+            sprite.rotation = direction.rotation
 
             sprite.hidden = damageBlink
         }

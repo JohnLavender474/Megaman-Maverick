@@ -8,9 +8,9 @@ interface IFixture : ITypable<Any>, IPropertizable {
 
     fun getShape(): IGameShape2D
 
-    fun setShape(shape: IGameShape2D)
+    fun setShape(shape: IGameShape2D): IFixture
 
-    fun setActive(active: Boolean)
+    fun setActive(active: Boolean): IFixture
 
     fun isActive(): Boolean
 }

@@ -31,6 +31,8 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.explosions.Explosion
+import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
@@ -61,6 +63,21 @@ class ArigockBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
         val gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, true, Boolean::class)
         body.physics.gravityOn = gravityOn
+    }
+
+    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        val shieldCenterX = shieldFixture.getShape().getBoundingRectangle().getCenter().x
+        val thisCenterX = body.getCenter().x
+
+        body.physics.velocity.let { velocity ->
+            if ((velocity.x > 0f && shieldCenterX > thisCenterX) ||
+                (velocity.x < 0f && shieldCenterX < thisCenterX)
+            ) {
+                velocity.x *= -0.5f
+
+                requestToPlaySound(SoundAsset.DINK_SOUND, false)
+            }
+        }
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()

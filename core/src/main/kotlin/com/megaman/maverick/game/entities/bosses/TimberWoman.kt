@@ -349,7 +349,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         projectilesInVicinity.values().forEach { it.clear() }
 
         // Destroy all ground pebbles and deadly leaves when Timber Woman is destroyed
-        val entitiesToDestroy = MegaGameEntities.getEntitiesOfTags(outSet, GroundPebble.TAG, DeadlyLeaf.TAG)
+        val entitiesToDestroy = MegaGameEntities.getOfTags(outSet, GroundPebble.TAG, DeadlyLeaf.TAG)
         entitiesToDestroy.forEach { entity -> entity.destroy() }
         entitiesToDestroy.clear()
     }

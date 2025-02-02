@@ -111,7 +111,7 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
 
     override fun onDestroy() {
         super.onDestroy()
-        if (hasDepletedHealth()) explode()
+        if (isHealthDepleted()) explode()
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()

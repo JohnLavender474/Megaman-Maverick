@@ -114,7 +114,7 @@ class SnowheadThrower(game: MegamanMaverickGame) : AbstractEnemy(game, size = Si
         snowhead?.let { it.body.physics.gravityOn = true }
         snowhead = null
 
-        if (hasDepletedHealth()) explode()
+        if (isHealthDepleted()) explode()
     }
 
     override fun explode(explosionProps: Properties?) {

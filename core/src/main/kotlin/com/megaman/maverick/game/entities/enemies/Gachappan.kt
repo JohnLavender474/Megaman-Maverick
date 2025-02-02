@@ -115,7 +115,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
     override fun onDestroy() {
         super.onDestroy()
-        if (hasDepletedHealth()) {
+        if (isHealthDepleted()) {
             val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
             val props = props(
                 ConstKeys.POSITION pairTo body.getCenter(),

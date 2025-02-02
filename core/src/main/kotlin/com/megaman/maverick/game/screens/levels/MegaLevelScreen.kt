@@ -239,7 +239,7 @@ class MegaLevelScreen(
                 )
             )
 
-            MegaGameEntities.getEntitiesOfType(EntityType.ENEMY).forEach { it.destroy() }
+            MegaGameEntities.getOfType(EntityType.ENEMY).forEach { it.destroy() }
 
             game.getSystem(BehaviorsSystem::class).on = false
             game.putProperty(ConstKeys.ROOM_TRANSITION, true)
@@ -399,7 +399,7 @@ class MegaLevelScreen(
                 engine.systems.forEach { it.on = true }
                 game.putProperty(ConstKeys.ROOM_TRANSITION, false)
 
-                MegaGameEntities.getEntitiesOfType(EntityType.ENEMY).forEach { it.destroy() }
+                MegaGameEntities.getOfType(EntityType.ENEMY).forEach { it.destroy() }
 
                 val spawnProps = playerSpawnsMan.currentSpawnProps
                 if (spawnProps == null) throw IllegalStateException("Megaman spawn props are null")
@@ -558,7 +558,7 @@ class MegaLevelScreen(
                 val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
                 if (!boss.mini) audioMan.unsetMusic()
 
-                MegaGameEntities.forEachEntity {
+                MegaGameEntities.forEach {
                     if (it.isAny(IDamager::class, IHazard::class) && it != boss) it.destroy()
                 }
 

@@ -362,8 +362,8 @@ class DarknessV3(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        MegaGameEntities.getEntitiesOfType(EntityType.PROJECTILE).forEach { t -> tryToLightUp(t) }
-        MegaGameEntities.getEntitiesOfType(EntityType.EXPLOSION).forEach { t -> tryToLightUp(t) }
+        MegaGameEntities.getOfType(EntityType.PROJECTILE).forEach { t -> tryToLightUp(t) }
+        MegaGameEntities.getOfType(EntityType.EXPLOSION).forEach { t -> tryToLightUp(t) }
 
         if (megaman.body.getBounds().overlaps(bounds) && megaman.charging) {
             val lightSourceDef = lightSourcePool.fetch()
@@ -401,7 +401,7 @@ class DarknessV3(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
         tilesInLightSourceMap.forEach { entry ->
             val mapObjectId = entry.key
-            if (!MegaGameEntities.hasAnyEntitiesOfMapObjectId(mapObjectId)) {
+            if (!MegaGameEntities.hasAnyOfMapObjectId(mapObjectId)) {
                 queuedLightSourcesToRemove.addLast(mapObjectId)
                 return@forEach
             }

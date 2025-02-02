@@ -263,8 +263,8 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
     private fun defineUpdatablesComponent() = UpdatablesComponent({
         val currentRoom = game.getCurrentRoom()
         if (currentRoom != null) {
-            MegaGameEntities.getEntitiesOfType(EntityType.PROJECTILE).forEach { t -> tryToLightUp(t) }
-            MegaGameEntities.getEntitiesOfType(EntityType.EXPLOSION).forEach { t -> tryToLightUp(t) }
+            MegaGameEntities.getOfType(EntityType.PROJECTILE).forEach { t -> tryToLightUp(t) }
+            MegaGameEntities.getOfType(EntityType.EXPLOSION).forEach { t -> tryToLightUp(t) }
 
             if (megaman.body.getBounds().overlaps(bounds) && megaman.charging) {
                 val lightEvent = LightEvent(
