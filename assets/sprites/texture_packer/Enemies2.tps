@@ -214,8 +214,6 @@
             <key type="filename">../frames/Enemies2/AstroAssAssaulter/shoot.png</key>
             <key type="filename">../frames/Enemies2/AstroAssAssaulter/shoot_up.png</key>
             <key type="filename">../frames/Enemies2/AstroAssAssaulter/stand.png</key>
-            <key type="filename">../frames/Enemies2/CartinJoe/Move.png</key>
-            <key type="filename">../frames/Enemies2/CartinJoe/Shoot.png</key>
             <key type="filename">../frames/Enemies2/Coldier/before_big_blow.png</key>
             <key type="filename">../frames/Enemies2/Coldier/before_small_blow.png</key>
             <key type="filename">../frames/Enemies2/FireDispensenator/sleep.png</key>
@@ -532,6 +530,23 @@
                 <rect>9,18,18,36</rect>
                 <key>scale9Paddings</key>
                 <rect>9,18,18,36</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies2/CartinJoe/move.png</key>
+            <key type="filename">../frames/Enemies2/CartinJoe/shoot.png</key>
+            <key type="filename">../frames/Enemies2/UFOBombBot/Closed.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>24,12,48,24</rect>
+                <key>scale9Paddings</key>
+                <rect>24,12,48,24</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -1011,21 +1026,6 @@
                 <rect>12,8,24,16</rect>
                 <key>scale9Paddings</key>
                 <rect>12,8,24,16</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/UFOBombBot/Closed.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>24,12,48,24</rect>
-                <key>scale9Paddings</key>
-                <rect>24,12,48,24</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

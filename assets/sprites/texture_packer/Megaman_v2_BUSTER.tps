@@ -58,9 +58,9 @@
             <key>filtering</key>
             <struct type="LibGDXFiltering">
                 <key>x</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
                 <key>y</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
             </struct>
         </struct>
         <key>shapePadding</key>
@@ -176,6 +176,8 @@
             <key type="filename">../frames/Megaman_v2/airdash.png</key>
             <key type="filename">../frames/Megaman_v2/airdash_shoot.png</key>
             <key type="filename">../frames/Megaman_v2/beam.png</key>
+            <key type="filename">../frames/Megaman_v2/cartin_jump.png</key>
+            <key type="filename">../frames/Megaman_v2/cartin_jump_shoot.png</key>
             <key type="filename">../frames/Megaman_v2/climb_finish.png</key>
             <key type="filename">../frames/Megaman_v2/climb_still.png</key>
             <key type="filename">../frames/Megaman_v2/climb_still_shoot.png</key>
@@ -210,6 +212,7 @@
             </struct>
             <key type="filename">../frames/Megaman_v2/airdash_charge_full.png</key>
             <key type="filename">../frames/Megaman_v2/airdash_charge_half.png</key>
+            <key type="filename">../frames/Megaman_v2/cartin_jump_charge_half.png</key>
             <key type="filename">../frames/Megaman_v2/climb_finish_charge_half.png</key>
             <key type="filename">../frames/Megaman_v2/climb_still_charge_half.png</key>
             <key type="filename">../frames/Megaman_v2/crouch_charge_half.png</key>
@@ -234,6 +237,10 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Megaman_v2/cartin.png</key>
+            <key type="filename">../frames/Megaman_v2/cartin_charge_full.png</key>
+            <key type="filename">../frames/Megaman_v2/cartin_jump_charge_full.png</key>
+            <key type="filename">../frames/Megaman_v2/cartin_shoot.png</key>
             <key type="filename">../frames/Megaman_v2/climb.png</key>
             <key type="filename">../frames/Megaman_v2/climb_finish_charge_full.png</key>
             <key type="filename">../frames/Megaman_v2/climb_still_charge_full.png</key>
@@ -260,6 +267,23 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Megaman_v2/cartin_charge_half.png</key>
+            <key type="filename">../frames/Megaman_v2/cartin_damaged.png</key>
+            <key type="filename">../frames/Megaman_v2/climb_charge_half.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>24,36,48,72</rect>
+                <key>scale9Paddings</key>
+                <rect>24,36,48,72</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Megaman_v2/climb_charge_full.png</key>
             <key type="filename">../frames/Megaman_v2/run.png</key>
             <key type="filename">../frames/Megaman_v2/run_charge_half.png</key>
@@ -275,21 +299,6 @@
                 <rect>24,24,48,48</rect>
                 <key>scale9Paddings</key>
                 <rect>24,24,48,48</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Megaman_v2/climb_charge_half.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>24,36,48,72</rect>
-                <key>scale9Paddings</key>
-                <rect>24,36,48,72</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

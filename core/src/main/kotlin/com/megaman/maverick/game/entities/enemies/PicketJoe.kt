@@ -26,8 +26,9 @@ import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
-import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
@@ -54,10 +55,13 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
     companion object {
         const val TAG = "PicketJoe"
+
         private const val STAND_DUR = 1f
         private const val THROW_DUR = 0.5f
+
         private const val MAX_IMPULSE_X = 6f
         private const val PICKET_IMPULSE_Y = 10f
+
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -100,13 +104,19 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
             facing = if (megaman.body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
-            if (standing) {
-                standTimer.update(it)
-                if (standTimer.isFinished()) setToThrowingPickets()
-            } else if (throwingPickets) {
-                throwTimer.update(it)
-                if (throwTimer.isFinished()) setToStanding()
+
+            when {
+                standing -> {
+                    standTimer.update(it)
+                    if (standTimer.isFinished()) setToThrowingPickets()
+                }
+
+                throwingPickets -> {
+                    throwTimer.update(it)
+                    if (throwTimer.isFinished()) setToStanding()
+                }
             }
+
             if (throwTimer.isFinished()) facing = if (megaman.body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
         }
     }
@@ -119,7 +129,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture}
+        debugShapes.add { bodyFixture }
 
         val feetFixture = Fixture(
             body, FixtureType.FEET,
@@ -127,7 +137,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         )
         feetFixture.offsetFromBodyAttachment.y = -0.5f * ConstVals.PPM
         body.addFixture(feetFixture)
-        debugShapes.add { feetFixture}
+        debugShapes.add { feetFixture }
 
         val shieldFixture = Fixture(
             body,
@@ -136,7 +146,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         )
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
-        debugShapes.add { shieldFixture}
+        debugShapes.add { shieldFixture }
 
         val damagerFixture = Fixture(
             body,
@@ -144,7 +154,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             GameRectangle().setSize(0.75f * ConstVals.PPM, 1.15f * ConstVals.PPM)
         )
         body.addFixture(damagerFixture)
-        debugShapes.add { damagerFixture}
+        debugShapes.add { damagerFixture }
 
         val damageableFixture = Fixture(
             body,
@@ -152,10 +162,11 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             GameRectangle().setSize(0.8f * ConstVals.PPM, 1.35f * ConstVals.PPM)
         )
         body.addFixture(damageableFixture)
-        debugShapes.add { damageableFixture}
+        debugShapes.add { damageableFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             shieldFixture.setActive(standing)
+
             if (standing) {
                 damageableFixture.offsetFromBodyAttachment.x = 0.25f * ConstVals.PPM * -facing.value
                 shieldFixture.offsetFromBodyAttachment.x = 0.35f * ConstVals.PPM * facing.value
@@ -167,17 +178,16 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         return BodyComponentCreator.create(this, body)
     }
 
-    override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
-        sprite.setSize(1.5f * ConstVals.PPM, 1.65f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setFlip(isFacing(Facing.LEFT), false)
-            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
-            _sprite.hidden = if (invincible) damageBlink else false
+    override fun defineSpritesComponent() = SpritesComponentBuilder()
+        .sprite(GameSprite().also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
+        .updatable { _, sprite ->
+            sprite.setFlip(isFacing(Facing.LEFT), false)
+            sprite.hidden = if (invincible) damageBlink else false
+
+            val position = Position.BOTTOM_CENTER
+            sprite.setPosition(body.getPositionPoint(position), position)
         }
-        return spritesComponent
-    }
+        .build()
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (standing) "stand" else "throw" }
@@ -203,8 +213,8 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         if (!overlapsGameCamera()) return
 
         val spawn = body.getCenter()
-        spawn.x += 0.175f * ConstVals.PPM * facing.value
-        spawn.y += 0.4f * ConstVals.PPM
+        spawn.x += 0.25f * ConstVals.PPM * facing.value
+        spawn.y += 0.75f * ConstVals.PPM
 
         val impulse = MegaUtilMethods.calculateJumpImpulse(
             spawn, megaman.body.getCenter(), PICKET_IMPULSE_Y * ConstVals.PPM

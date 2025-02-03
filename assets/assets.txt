@@ -253,8 +253,8 @@ sprites/frames/Enemies2/Gachappan/Wait.png
 sprites/frames/Enemies2/Gachappan/Open.png
 sprites/frames/Enemies2/Tropish/swim.png
 sprites/frames/Enemies2/Tropish/bent.png
-sprites/frames/Enemies2/CartinJoe/Shoot.png
-sprites/frames/Enemies2/CartinJoe/Move.png
+sprites/frames/Enemies2/CartinJoe/move.png
+sprites/frames/Enemies2/CartinJoe/shoot.png
 sprites/frames/Enemies2/WallTeck/still.png
 sprites/frames/Enemies2/WallTeck/angry.png
 sprites/frames/Enemies2/WallTeck/walk.png
@@ -477,6 +477,7 @@ sprites/frames/Decorations1/GroundSnow/back.png
 sprites/frames/Megaman_v2/climb_still_shoot.png
 sprites/frames/Megaman_v2/crouch_charge_half.png
 sprites/frames/Megaman_v2/climb_charge_half.png
+sprites/frames/Megaman_v2/cartin_jump_charge_full.png
 sprites/frames/Megaman_v2/airdash_shoot.png
 sprites/frames/Megaman_v2/swim_charge_full.png
 sprites/frames/Megaman_v2/wallslide.png
@@ -485,14 +486,18 @@ sprites/frames/Megaman_v2/wallslide_shoot.png
 sprites/frames/Megaman_v2/airdash_charge_full.png
 sprites/frames/Megaman_v2/climb_still_charge_full.png
 sprites/frames/Megaman_v2/climb.png
+sprites/frames/Megaman_v2/cartin_jump_shoot.png
 sprites/frames/Megaman_v2/airdash_charge_half.png
 sprites/frames/Megaman_v2/damaged.png
+sprites/frames/Megaman_v2/cartin_charge_full.png
 sprites/frames/Megaman_v2/crouch.png
 sprites/frames/Megaman_v2/climb_finish.png
 sprites/frames/Megaman_v2/stand_charge_half.png
 sprites/frames/Megaman_v2/swim_shoot.png
 sprites/frames/Megaman_v2/stand_charge_full.png
+sprites/frames/Megaman_v2/cartin_shoot.png
 sprites/frames/Megaman_v2/stunned.png
+sprites/frames/Megaman_v2/cartin_jump_charge_half.png
 sprites/frames/Megaman_v2/stand.png
 sprites/frames/Megaman_v2/jump.png
 sprites/frames/Megaman_v2/airdash.png
@@ -506,6 +511,8 @@ sprites/frames/Megaman_v2/beam.png
 sprites/frames/Megaman_v2/climb_still_charge_half.png
 sprites/frames/Megaman_v2/wallslide_charge_full.png
 sprites/frames/Megaman_v2/slip_charge_half.png
+sprites/frames/Megaman_v2/cartin.png
+sprites/frames/Megaman_v2/cartin_jump.png
 sprites/frames/Megaman_v2/run_charge_half.png
 sprites/frames/Megaman_v2/crouch_shoot.png
 sprites/frames/Megaman_v2/groundslide_charge_full.png
@@ -514,6 +521,7 @@ sprites/frames/Megaman_v2/climb_finish_charge_half.png
 sprites/frames/Megaman_v2/climb_charge_full.png
 sprites/frames/Megaman_v2/crouch_charge_full.png
 sprites/frames/Megaman_v2/run_shoot.png
+sprites/frames/Megaman_v2/cartin_charge_half.png
 sprites/frames/Megaman_v2/climb_finish_charge_full.png
 sprites/frames/Megaman_v2/jump_charge_half.png
 sprites/frames/Megaman_v2/climb_still.png
@@ -524,6 +532,7 @@ sprites/frames/Megaman_v2/run.png
 sprites/frames/Megaman_v2/groundslide_shoot.png
 sprites/frames/Megaman_v2/spawn.png
 sprites/frames/Megaman_v2/swim_charge_half.png
+sprites/frames/Megaman_v2/cartin_damaged.png
 sprites/frames/Megaman_v2/slip_charge_full.png
 sprites/frames/Megaman_v2/groundslide.png
 sprites/frames/Test/PenguinMiniBoss.png
@@ -2131,6 +2140,7 @@ sprites/piskel/CarriCarry.piskel
 sprites/piskel/Gachappan.piskel
 sprites/piskel/LargeSpikes.piskel
 sprites/piskel/MegamanHalfChargedShot.piskel
+sprites/piskel/Megaman_v2_cartin.piskel
 sprites/piskel/LeafCanopy.piskel
 sprites/piskel/DistributorMan.piskel
 sprites/piskel/LavaBeam.piskel

@@ -48,7 +48,7 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
         BLUE(0.5f, DrawingSection.PLAYGROUND, -1, 2f * ConstVals.PPM, "Water/Splash_v2"),
         WHITE(0.5f, DrawingSection.PLAYGROUND, -1, 2f * ConstVals.PPM, "Water/WhiteSplash"),
         TOXIC(0.5f, DrawingSection.PLAYGROUND, -1, 2f * ConstVals.PPM, "Water/ToxicSplash"),
-        SAND(1f, DrawingSection.FOREGROUND, 15, 2f * ConstVals.PPM, "SandSplash")
+        SAND(1f, DrawingSection.PLAYGROUND, 10, 2f * ConstVals.PPM, "SandSplash")
     }
 
     companion object {

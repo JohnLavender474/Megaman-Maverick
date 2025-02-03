@@ -108,7 +108,7 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
 
     private fun defineDrawables(cells: Matrix<GameRectangle>) {
         cells.forEach { x, y, bounds ->
-            val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
+            val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 20))
             sprite.setSize(ConstVals.PPM.toFloat())
 
             val key = "${x}_${y}"

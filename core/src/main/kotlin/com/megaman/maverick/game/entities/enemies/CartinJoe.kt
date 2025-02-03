@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.enemies
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -11,6 +12,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IDirectional
@@ -51,18 +53,22 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
 
     companion object {
         const val TAG = "CartinJoe"
-        private var moveRegion: TextureRegion? = null
-        private var shootRegion: TextureRegion? = null
+
         private const val VEL_X = 5f
+
         private const val GROUND_GRAVITY = -0.0015f
         private const val GRAVITY = -0.5f
+
         private const val WAIT_DURATION = 0.5f
         private const val SHOOT_DURATION = 0.25f
+
         private const val BULLET_SPEED = 10f
+
+        private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override var facing = Facing.RIGHT
-    override var direction: Direction = Direction.UP
+    override lateinit var facing: Facing
+    override lateinit var direction: Direction
 
     val shooting: Boolean get() = !shootTimer.isFinished()
 
@@ -70,16 +76,17 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
     private val shootTimer = Timer(SHOOT_DURATION)
 
     override fun init() {
-        super.init()
-        if (moveRegion == null || shootRegion == null) {
+        GameLogger.debug(TAG, "init()")
+        if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            moveRegion = atlas.findRegion("$TAG/Move")
-            shootRegion = atlas.findRegion("$TAG/Shoot")
+            gdxArrayOf("move", "shoot").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
+        super.init()
         addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
@@ -93,6 +100,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         if (isHealthDepleted()) explode()
     }
@@ -121,21 +129,20 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        val bodyFixture = Fixture(
-            body, FixtureType.BODY, GameRectangle().setSize(1.25f * ConstVals.PPM, 1.85f * ConstVals.PPM)
-        )
+        val bodyFixture =
+            Fixture(body, FixtureType.BODY, GameRectangle().setSize(1.25f * ConstVals.PPM, 1.85f * ConstVals.PPM))
         body.addFixture(bodyFixture)
 
         val shieldFixture =
             Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(0.85f, 0.65f * ConstVals.PPM))
         shieldFixture.offsetFromBodyAttachment.y = -0.275f * ConstVals.PPM
         body.addFixture(shieldFixture)
-        debugShapes.add { shieldFixture}
+        debugShapes.add { shieldFixture }
 
         val damagerFixture =
             Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(ConstVals.PPM.toFloat(), 1.25f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        debugShapes.add { damagerFixture}
+        debugShapes.add { damagerFixture }
 
         val damageableFixture = Fixture(
             body, FixtureType.DAMAGEABLE, GameRectangle().setSize(
@@ -144,13 +151,13 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
         )
         damageableFixture.offsetFromBodyAttachment.y = 0.45f * ConstVals.PPM
         body.addFixture(damageableFixture)
-        debugShapes.add { damageableFixture}
+        debugShapes.add { damageableFixture }
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -0.6f * ConstVals.PPM
         body.addFixture(feetFixture)
-        debugShapes.add { feetFixture}
+        debugShapes.add { feetFixture }
 
         val onBounce: () -> Unit = {
             swapFacing()
@@ -166,7 +173,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
         leftFixture.setRunnable(onBounce)
         leftFixture.offsetFromBodyAttachment.x = -0.75f * ConstVals.PPM
         body.addFixture(leftFixture)
-        debugShapes.add { leftFixture}
+        debugShapes.add { leftFixture }
 
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
@@ -174,7 +181,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
         rightFixture.setRunnable(onBounce)
         rightFixture.offsetFromBodyAttachment.x = 0.75f * ConstVals.PPM
         body.addFixture(rightFixture)
-        debugShapes.add { rightFixture}
+        debugShapes.add { rightFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.gravity.y =
@@ -191,24 +198,24 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(2.5f * ConstVals.PPM)
+        sprite.setSize(3f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.hidden = damageBlink
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
+
             val position = body.getPositionPoint(Position.BOTTOM_CENTER)
-            _sprite.setPosition(position, Position.BOTTOM_CENTER)
-            _sprite.setFlip(isFacing(Facing.RIGHT), false)
+            sprite.setPosition(position, Position.BOTTOM_CENTER)
+
+            sprite.setFlip(isFacing(Facing.RIGHT), false)
         }
         return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
-            if (shooting) "shoot" else "move"
-        }
+        val keySupplier: () -> String? = { if (shooting) "shoot" else "move" }
         val animations = objectMapOf<String, IAnimation>(
-            "shoot" pairTo Animation(shootRegion!!, 1, 2, 0.1f, true),
-            "move" pairTo Animation(moveRegion!!, 1, 2, 0.1f, true)
+            "shoot" pairTo Animation(regions["shoot"], 1, 2, 0.1f, true),
+            "move" pairTo Animation(regions["move"], 1, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

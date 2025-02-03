@@ -807,7 +807,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="14" name="specials">
+ <objectgroup id="14" name="specials" visible="0">
   <object id="7" name="QuickSand" x="1600" y="1600" width="64" height="160">
    <properties>
     <property name="spawn_type" value="spawn_now"/>

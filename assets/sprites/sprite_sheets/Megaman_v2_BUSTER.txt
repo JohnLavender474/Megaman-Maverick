@@ -1,5 +1,5 @@
 Megaman_v2_BUSTER.png
-size: 480, 672
+size: 480, 768
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -12,14 +12,14 @@ airdash
   index: -1
 airdash_charge_full
   rotate: false
-  xy: 48, 96
+  xy: 144, 96
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 airdash_charge_half
   rotate: false
-  xy: 192, 192
+  xy: 0, 288
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -38,331 +38,394 @@ beam
   orig: 48, 48
   offset: 0, 0
   index: -1
-climb
-  rotate: false
-  xy: 96, 96
-  size: 48, 96
-  orig: 48, 96
-  offset: 0, 0
-  index: -1
-climb_charge_full
-  rotate: false
-  xy: 240, 192
-  size: 96, 96
-  orig: 96, 96
-  offset: 0, 0
-  index: -1
-climb_charge_half
-  rotate: false
-  xy: 144, 480
-  size: 96, 144
-  orig: 96, 144
-  offset: 0, 0
-  index: -1
-climb_finish
-  rotate: false
-  xy: 144, 0
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-climb_finish_charge_full
-  rotate: false
-  xy: 144, 96
-  size: 48, 96
-  orig: 48, 96
-  offset: 0, 0
-  index: -1
-climb_finish_charge_half
-  rotate: false
-  xy: 336, 192
-  size: 48, 144
-  orig: 48, 144
-  offset: 0, 0
-  index: -1
-climb_still
-  rotate: false
-  xy: 192, 0
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-climb_still_charge_full
+cartin
   rotate: false
   xy: 192, 96
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
-climb_still_charge_half
-  rotate: false
-  xy: 384, 192
-  size: 48, 144
-  orig: 48, 144
-  offset: 0, 0
-  index: -1
-climb_still_shoot
-  rotate: false
-  xy: 240, 0
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-crouch
-  rotate: false
-  xy: 288, 0
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-crouch_charge_full
+cartin_charge_full
   rotate: false
   xy: 240, 96
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
-crouch_charge_half
+cartin_charge_half
   rotate: false
-  xy: 432, 192
-  size: 48, 144
-  orig: 48, 144
+  xy: 0, 576
+  size: 96, 144
+  orig: 96, 144
   offset: 0, 0
   index: -1
-crouch_shoot
+cartin_damaged
   rotate: false
-  xy: 336, 0
+  xy: 96, 576
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+cartin_jump
+  rotate: false
+  xy: 144, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-damaged
-  rotate: false
-  xy: 0, 336
-  size: 48, 144
-  orig: 48, 144
-  offset: 0, 0
-  index: -1
-groundslide
-  rotate: false
-  xy: 384, 0
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-groundslide_charge_full
+cartin_jump_charge_full
   rotate: false
   xy: 288, 96
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
-groundslide_charge_half
+cartin_jump_charge_half
   rotate: false
-  xy: 48, 336
+  xy: 48, 288
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
   index: -1
-groundslide_shoot
+cartin_jump_shoot
   rotate: false
-  xy: 432, 0
+  xy: 192, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-jump
-  rotate: false
-  xy: 0, 48
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-jump_charge_full
+cartin_shoot
   rotate: false
   xy: 336, 96
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
-jump_charge_half
-  rotate: false
-  xy: 96, 336
-  size: 48, 144
-  orig: 48, 144
-  offset: 0, 0
-  index: -1
-jump_shoot
-  rotate: false
-  xy: 48, 48
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-run
-  rotate: false
-  xy: 144, 336
-  size: 96, 96
-  orig: 96, 96
-  offset: 0, 0
-  index: -1
-run_charge_full
-  rotate: false
-  xy: 240, 480
-  size: 192, 96
-  orig: 192, 96
-  offset: 0, 0
-  index: -1
-run_charge_half
-  rotate: false
-  xy: 240, 336
-  size: 96, 96
-  orig: 96, 96
-  offset: 0, 0
-  index: -1
-run_shoot
-  rotate: false
-  xy: 336, 336
-  size: 96, 96
-  orig: 96, 96
-  offset: 0, 0
-  index: -1
-run_start
-  rotate: false
-  xy: 96, 48
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-run_start_shoot
-  rotate: false
-  xy: 144, 48
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-slip
-  rotate: false
-  xy: 192, 48
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-slip_charge_full
+climb
   rotate: false
   xy: 384, 96
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
-slip_charge_half
+climb_charge_full
   rotate: false
-  xy: 432, 336
-  size: 48, 144
-  orig: 48, 144
+  xy: 96, 288
+  size: 96, 96
+  orig: 96, 96
   offset: 0, 0
   index: -1
-slip_shoot
+climb_charge_half
   rotate: false
-  xy: 240, 48
+  xy: 192, 576
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+climb_finish
+  rotate: false
+  xy: 240, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-spawn
-  rotate: false
-  xy: 0, 624
-  size: 336, 48
-  orig: 336, 48
-  offset: 0, 0
-  index: -1
-stand
+climb_finish_charge_full
   rotate: false
   xy: 432, 96
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
-stand_charge_full
+climb_finish_charge_half
+  rotate: false
+  xy: 192, 288
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+climb_still
+  rotate: false
+  xy: 288, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+climb_still_charge_full
   rotate: false
   xy: 0, 192
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
-stand_charge_half
+climb_still_charge_half
   rotate: false
-  xy: 0, 480
+  xy: 240, 288
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
   index: -1
-stand_shoot
+climb_still_shoot
   rotate: false
-  xy: 288, 48
+  xy: 336, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-stunned
+crouch
+  rotate: false
+  xy: 384, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+crouch_charge_full
   rotate: false
   xy: 48, 192
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
-swim
+crouch_charge_half
   rotate: false
-  xy: 336, 48
+  xy: 288, 288
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+crouch_shoot
+  rotate: false
+  xy: 432, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-swim_charge_full
+damaged
+  rotate: false
+  xy: 336, 288
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+groundslide
+  rotate: false
+  xy: 0, 48
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+groundslide_charge_full
   rotate: false
   xy: 96, 192
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
-swim_charge_half
+groundslide_charge_half
   rotate: false
-  xy: 48, 480
+  xy: 384, 288
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
   index: -1
-swim_shoot
+groundslide_shoot
   rotate: false
-  xy: 384, 48
+  xy: 48, 48
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-wallslide
+jump
   rotate: false
-  xy: 432, 48
+  xy: 96, 48
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-wallslide_charge_full
+jump_charge_full
   rotate: false
   xy: 144, 192
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
+jump_charge_half
+  rotate: false
+  xy: 432, 288
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+jump_shoot
+  rotate: false
+  xy: 144, 48
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+run
+  rotate: false
+  xy: 0, 432
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+run_charge_full
+  rotate: false
+  xy: 288, 576
+  size: 192, 96
+  orig: 192, 96
+  offset: 0, 0
+  index: -1
+run_charge_half
+  rotate: false
+  xy: 96, 432
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+run_shoot
+  rotate: false
+  xy: 192, 432
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+run_start
+  rotate: false
+  xy: 192, 48
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+run_start_shoot
+  rotate: false
+  xy: 240, 48
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+slip
+  rotate: false
+  xy: 288, 48
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+slip_charge_full
+  rotate: false
+  xy: 192, 192
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+slip_charge_half
+  rotate: false
+  xy: 288, 432
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+slip_shoot
+  rotate: false
+  xy: 336, 48
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+spawn
+  rotate: false
+  xy: 0, 720
+  size: 336, 48
+  orig: 336, 48
+  offset: 0, 0
+  index: -1
+stand
+  rotate: false
+  xy: 240, 192
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+stand_charge_full
+  rotate: false
+  xy: 288, 192
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+stand_charge_half
+  rotate: false
+  xy: 336, 432
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+stand_shoot
+  rotate: false
+  xy: 384, 48
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+stunned
+  rotate: false
+  xy: 336, 192
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+swim
+  rotate: false
+  xy: 432, 48
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+swim_charge_full
+  rotate: false
+  xy: 384, 192
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+swim_charge_half
+  rotate: false
+  xy: 384, 432
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+swim_shoot
+  rotate: false
+  xy: 0, 96
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+wallslide
+  rotate: false
+  xy: 48, 96
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+wallslide_charge_full
+  rotate: false
+  xy: 432, 192
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
 wallslide_charge_half
   rotate: false
-  xy: 96, 480
+  xy: 432, 432
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
   index: -1
 wallslide_shoot
   rotate: false
-  xy: 0, 96
+  xy: 96, 96
   size: 48, 48
   orig: 48, 48
   offset: 0, 0

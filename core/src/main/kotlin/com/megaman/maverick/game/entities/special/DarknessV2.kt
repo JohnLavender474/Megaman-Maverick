@@ -36,6 +36,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.enemies.PicketJoe
 import com.megaman.maverick.game.entities.enemies.ShieldAttacker
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
@@ -111,7 +112,8 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             Explosion::class pairTo brighterProjLightDef,
             ExplosionOrb::class pairTo standardProjLightDef,
             ShieldAttacker::class pairTo brighterProjLightDef,
-            SpreadExplosion::class pairTo brightestProjLightDef
+            SpreadExplosion::class pairTo brightestProjLightDef,
+            PicketJoe::class pairTo brighterProjLightDef
         )
 
         private const val DEBUG_THRESHOLD_SECS = 0.025f
@@ -160,7 +162,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
         tileSpritesPool = Pool(
             startAmount = 0,
-            supplier = { GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 10)) },
+            supplier = { GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 1)) },
             onFree = { sprite -> sprite.hidden = true },
             onFetch = { sprite -> sprite.hidden = false })
 

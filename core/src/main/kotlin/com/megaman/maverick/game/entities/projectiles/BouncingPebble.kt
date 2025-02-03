@@ -13,11 +13,14 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
@@ -37,10 +40,13 @@ class BouncingPebble(game: MegamanMaverickGame) : AbstractProjectile(game) {
     companion object {
         const val TAG = "BouncingPebble"
         private const val BOUNCE_VEL_SCALAR = 0.75f
-        private const val DEFAULT_MAX_BOUNCES = 3
+        private const val DEFAULT_MAX_BOUNCES = 2
         private const val GRAVITY = -0.1f
+        private const val MAX_CULL_TIME = 2f
         private var region: TextureRegion? = null
     }
+
+    private val cullTimer = Timer(MAX_CULL_TIME)
 
     private var maxBounces = DEFAULT_MAX_BOUNCES
     private var bounces = 0
@@ -49,6 +55,7 @@ class BouncingPebble(game: MegamanMaverickGame) : AbstractProjectile(game) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
+        addComponent(defineUpdatablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -63,6 +70,8 @@ class BouncingPebble(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         maxBounces = spawnProps.getOrDefault("${ConstKeys.MAX}_${ConstKeys.BOUNCE}", DEFAULT_MAX_BOUNCES, Int::class)
         bounces = 0
+
+        cullTimer.reset()
     }
 
     override fun onDestroy() {
@@ -95,15 +104,19 @@ class BouncingPebble(game: MegamanMaverickGame) : AbstractProjectile(game) {
                 Direction.RIGHT -> velocity.set(abs(velocity.x) * BOUNCE_VEL_SCALAR, velocity.y)
             }
         }
+
+        cullTimer.reset()
     }
+
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        cullTimer.update(delta)
+        if (cullTimer.isFinished()) disintegrate()
+    })
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(0.25f * ConstVals.PPM)
-        body.physics.applyFrictionX = false
-        body.physics.applyFrictionY = false
+        body.setSize(0.5f * ConstVals.PPM)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
-        body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
@@ -139,6 +152,8 @@ class BouncingPebble(game: MegamanMaverickGame) : AbstractProjectile(game) {
         body.addFixture(rightFixture)
         rightFixture.drawingColor = Color.YELLOW
         debugShapes.add { rightFixture }
+
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(
             this,

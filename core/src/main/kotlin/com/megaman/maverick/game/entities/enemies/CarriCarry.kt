@@ -63,9 +63,9 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
         private const val SHAKE_DUR = 1f
 
-        private const val CULL_TIME = 2.5f
+        private const val CULL_TIME = 3f
 
-        private const val THROW_PEBBLE_IMPULSE_X = 4f
+        private const val THROW_PEBBLE_IMPULSE_X = 6f
         private const val THROW_PEBBLE_IMPULSE_Y = 4f
 
         private const val CRUMBLE_MAX_BOUNCES = 1
