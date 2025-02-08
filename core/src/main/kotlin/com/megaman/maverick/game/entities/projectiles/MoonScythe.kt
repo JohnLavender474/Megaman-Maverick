@@ -29,10 +29,8 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodyFixtureDef
@@ -94,6 +92,7 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         if (bounces > MAX_BOUNCES) {
             if (shouldDebug) GameLogger.debug(TAG, "hitBlock(): start to fade")
+
             fade = true
         }
 
@@ -121,16 +120,20 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game) {
             else -> {
                 spawnTrailDelay.update(delta)
                 if (spawnTrailDelay.isFinished()) {
+                    val position = body.getCenter()
+
                     val trajectory = GameObjectPools.fetch(Vector2::class).setZero()
-                    val moonScythe = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MOON_SCYTHE)!!
-                    moonScythe.spawn(
+
+                    val scythe = MegaEntityFactory.fetch(MoonScythe::class)!!
+                    scythe.spawn(
                         props(
-                            ConstKeys.POSITION pairTo body.getCenter(),
-                            ConstKeys.TRAJECTORY pairTo trajectory,
+                            ConstKeys.FADE pairTo true,
+                            ConstKeys.POSITION pairTo position,
                             ConstKeys.ROTATION pairTo rotation,
-                            ConstKeys.FADE pairTo true
+                            ConstKeys.TRAJECTORY pairTo trajectory
                         )
                     )
+
                     spawnTrailDelay.reset()
                 }
             }
@@ -143,8 +146,10 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game) {
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         body.preProcess.put(ConstKeys.DEFAULT) {
-            if (canMove && !fade) body.physics.velocity.set(trajectory).scl(movementScalar)
-            else body.physics.velocity.setZero()
+            when {
+                canMove && !fade -> body.physics.velocity.set(trajectory).scl(movementScalar)
+                else -> body.physics.velocity.setZero()
+            }
         }
 
         val debugShapes = gdxArrayOf<() -> IDrawableShape?>()

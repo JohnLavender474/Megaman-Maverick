@@ -1,15 +1,24 @@
 package com.mega.game.engine.common
 
 import com.badlogic.gdx.ApplicationLogger
+import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-enum class GameLogLevel {
-    OFF,
-    LOG,
-    DEBUG,
-    ERROR
+enum class GameLogLevel { LOG, DEBUG, ERROR }
+
+interface LogReceiver {
+
+    fun receive(
+        fullMessage: String,
+        time: String,
+        level: GameLogLevel,
+        tag: String,
+        message: String,
+        throwable: Throwable?
+    )
 }
 
 object GameLogger : ApplicationLogger {
@@ -27,22 +36,20 @@ object GameLogger : ApplicationLogger {
     val tagsToLog = ObjectSet<String>()
     var filterByTag = true
 
+    val logReceivers = Array<LogReceiver>()
+
     internal var formatter: (
         time: String, level: GameLogLevel, tag: String, message: String, throwable: Throwable?
     ) -> String = DEFAULT_LOG_FORMATTER
 
-    internal var level = GameLogLevel.OFF
+    private val levels = ObjectMap<GameLogLevel, Boolean>()
 
-    fun setLogLevel(level: GameLogLevel) {
-        this.level = level
+    init {
+        GameLogLevel.entries.forEach { level -> levels.put(level, false) }
     }
 
-    fun getLogLevel() = level
-
-    fun setLogFormatter(
-        formatter: (time: String, level: GameLogLevel, tag: String, message: String, throwable: Throwable?) -> String
-    ) {
-        this.formatter = formatter
+    fun setLogLevel(level: GameLogLevel, on: Boolean) {
+        levels.put(level, on)
     }
 
     override fun log(tag: String, message: String) = print(GameLogLevel.LOG, tag, message)
@@ -61,15 +68,14 @@ object GameLogger : ApplicationLogger {
         print(GameLogLevel.ERROR, tag, message, exception)
 
     private fun print(level: GameLogLevel, tag: String, message: String, throwable: Throwable? = null) {
-        if (level == GameLogLevel.OFF ||
-            this.level.ordinal > level.ordinal ||
-            (filterByTag && !tagsToLog.contains(tag))
-        ) return
+        if (!levels[level] || (filterByTag && !tagsToLog.contains(tag))) return
 
         val time = LocalTime.now()
         val formattedTime = time.format(DateTimeFormatter.ofPattern("HH:mm:ss"))
 
         val string = formatter.invoke(formattedTime, level, tag, message, throwable)
         println(string)
+
+        logReceivers.forEach { it.receive(string, formattedTime, level, tag, message, throwable) }
     }
 }

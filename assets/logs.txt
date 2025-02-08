@@ -1,0 +1,3268 @@
+===== SESSION STARTED: 2025-02-08T12:14:19.936364107 =====
+
+12:14:20 | DEBUG | MegamanMaverickGame | resize(): width=1920, height=1080
+12:14:20 | DEBUG | MegamanMaverickGame | resize(): width=1920, height=995
+12:14:21 | DEBUG | MegamanMaverickGame | resize(): width=1440, height=737
+12:14:21 | DEBUG | MegamanMaverickGame | resize(): width=1280, height=995
+12:14:21 | DEBUG | Megaman | init()
+12:14:26 | DEBUG | CameraManagerForRooms | set focus to { Megaman:[mapObjId=0, dead=false, hashCode=566641954] }
+12:14:26 | DEBUG | MegaLevelScreenEventListener | onEvent(): Player spawn --> reset camera manager for rooms and spawn megaman
+12:14:26 | DEBUG | MegaLevelScreen | onEvent(): Player spawn --> spawn Megaman: Properties({
+	[bounds=[128.0,192.0,32.0,32.0]]
+	[x=128.0]
+	[height=32.0]
+	[id=5]
+	[name=0]
+	[y=192.0]
+	[width=32.0]
+})
+12:14:26 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[fixture_labels=no_side_touchie,no_projectile_collision,no_body_touchie]
+	[bounds=[0.0,704.0,3712.0,96.0]]
+	[x=0.0]
+	[height=96.0]
+	[spawn_type=spawn_now]
+	[cull_out_of_bounds=false]
+	[id=8]
+	[name=null]
+	[y=704.0]
+	[width=3712.0]
+})
+12:14:26 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[fixture_labels=no_side_touchie,no_projectile_collision,no_body_touchie]
+	[bounds=[4640.0,1600.0,832.0,96.0]]
+	[x=4640.0]
+	[height=96.0]
+	[spawn_type=spawn_now]
+	[cull_out_of_bounds=false]
+	[id=89]
+	[name=null]
+	[y=1600.0]
+	[width=832.0]
+})
+12:14:26 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[224.0,0.0,96.0,112.0]]
+	[x=224.0]
+	[height=112.0]
+	[id=20]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:14:26 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[1152.0,0.0,96.0,112.0]]
+	[x=1152.0]
+	[height=112.0]
+	[id=22]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:14:26 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[1536.0,0.0,96.0,112.0]]
+	[x=1536.0]
+	[height=112.0]
+	[id=28]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:14:26 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[2080.0,0.0,96.0,112.0]]
+	[x=2080.0]
+	[height=112.0]
+	[id=36]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:14:26 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[2784.0,0.0,160.0,112.0]]
+	[x=2784.0]
+	[height=112.0]
+	[id=48]
+	[name=Death]
+	[y=0.0]
+	[width=160.0]
+	[instant=true]
+})
+12:14:26 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[2336.0,0.0,96.0,112.0]]
+	[x=2336.0]
+	[height=112.0]
+	[id=79]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:14:26 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[4288.0,928.0,224.0,80.0]]
+	[x=4288.0]
+	[height=80.0]
+	[id=87]
+	[name=Death]
+	[y=928.0]
+	[width=224.0]
+	[instant=true]
+})
+12:14:26 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[6816.0,480.0,96.0,80.0]]
+	[x=6816.0]
+	[height=80.0]
+	[id=103]
+	[name=Death]
+	[y=480.0]
+	[width=96.0]
+	[instant=true]
+})
+12:14:26 | DEBUG | MegaGameEntity | Megaman: onSpawn(): Megaman, spawnProps=Properties({
+	[bounds=[128.0,192.0,32.0,32.0]]
+	[x=128.0]
+	[height=32.0]
+	[id=5]
+	[name=0]
+	[y=192.0]
+	[width=32.0]
+})
+12:14:26 | DEBUG | Megaman | direction-set(): value=UP
+12:14:26 | DEBUG | Megaman | direction-set(): value same as field
+12:14:26 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[0.0,0.0,224.0,192.0]]
+	[x=0.0]
+	[height=192.0]
+	[id=1]
+	[name=null]
+	[y=0.0]
+	[width=224.0]
+})
+12:14:26 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[fixture_labels=no_side_touchie,no_projectile_collision]
+	[bounds=[0.0,192.0,72.0,512.0]]
+	[x=0.0]
+	[height=512.0]
+	[id=7]
+	[name=null]
+	[y=192.0]
+	[width=72.0]
+})
+12:14:26 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[320.0,0.0,384.0,192.0]]
+	[x=320.0]
+	[height=192.0]
+	[id=19]
+	[name=null]
+	[y=0.0]
+	[width=384.0]
+})
+12:14:26 | DEBUG | CameraManagerForRooms | update(): reset
+12:14:26 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = com.badlogic.gdx.maps.objects.RectangleMapObject@3e33d73e
+12:14:28 | DEBUG | MegaLevelScreenEventListener | onEvent(): Player ready
+12:14:29 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:14:29 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:14:29 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:14:29 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:29 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:29 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:29 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[608.0,192.0,96.0,160.0]]
+	[x=608.0]
+	[height=160.0]
+	[id=14]
+	[name=null]
+	[y=192.0]
+	[width=96.0]
+})
+12:14:30 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:14:30 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:14:30 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[704.0,0.0,448.0,224.0]]
+	[x=704.0]
+	[height=224.0]
+	[id=2]
+	[name=null]
+	[y=0.0]
+	[width=448.0]
+})
+12:14:30 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:14:30 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:30 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:14:30 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:30 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:30 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:14:30 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:31 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:14:32 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[960.0,224.0,96.0,96.0]]
+	[x=960.0]
+	[height=96.0]
+	[id=16]
+	[name=null]
+	[y=224.0]
+	[width=96.0]
+})
+12:14:33 | DEBUG | MegaGameEntity | SniperJoe: onSpawn(): SniperJoe, spawnProps=Properties({
+	[bounds=[1000.0,320.0,16.0,16.0]]
+	[x=1000.0]
+	[height=16.0]
+	[id=18]
+	[name=SniperJoe]
+	[y=320.0]
+	[width=16.0]
+})
+12:14:33 | DEBUG | MegaLevelScreen | render(): pause game
+12:14:34 | DEBUG | MegaLevelScreen | render(): resume game
+12:14:35 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[position=(847.40936,248.8)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=566641954] }]
+})
+12:14:35 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(956.2108,248.8)]
+})
+12:14:35 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:14:35 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:14:36 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(992.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=18, dead=false, hashCode=44627686] }]
+})
+12:14:36 | DEBUG | Megaman | takeDamageFrom(): healthDiff=3, damager={ Bullet:[mapObjId=0, dead=false, hashCode=408987553] }
+12:14:36 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(953.5995,341.6)]
+})
+12:14:36 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:14:36 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:14:37 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(992.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=18, dead=false, hashCode=44627686] }]
+})
+12:14:37 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(992.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=18, dead=false, hashCode=44627686] }]
+})
+12:14:38 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(706.1295,341.6)]
+})
+12:14:38 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:14:38 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:14:38 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[position=(967.7674,356.6173)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=566641954] }]
+})
+12:14:38 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(706.1295,341.6)]
+})
+12:14:38 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:14:38 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[position=(971.8182,331.38196)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=566641954] }]
+})
+12:14:38 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:14:39 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:14:39 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:14:39 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(992.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=18, dead=false, hashCode=44627686] }]
+})
+12:14:39 | DEBUG | Megaman | takeDamageFrom(): healthDiff=3, damager={ Bullet:[mapObjId=0, dead=false, hashCode=1469597388] }
+12:14:39 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(959.9996,341.6)]
+})
+12:14:39 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:14:40 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:14:40 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(992.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=18, dead=false, hashCode=44627686] }]
+})
+12:14:41 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(992.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=18, dead=false, hashCode=44627686] }]
+})
+12:14:41 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(962.13293,341.6)]
+})
+12:14:41 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:14:41 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(706.1295,341.6)]
+})
+12:14:41 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:14:41 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:14:41 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash_charge_half]
+})
+12:14:41 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:14:41 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash_charge_half]
+})
+12:14:41 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash_charge_half]
+})
+12:14:41 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[1248.0,0.0,288.0,224.0]]
+	[x=1248.0]
+	[height=224.0]
+	[id=21]
+	[name=null]
+	[y=0.0]
+	[width=288.0]
+})
+12:14:41 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:41 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:42 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:42 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[1344.0,288.0,128.0,32.0]]
+	[x=1344.0]
+	[height=32.0]
+	[id=26]
+	[name=null]
+	[y=288.0]
+	[width=128.0]
+})
+12:14:42 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:14:42 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:14:42 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash_charge_full]
+})
+12:14:42 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash_charge_full]
+})
+12:14:43 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash_charge_full]
+})
+12:14:43 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[position=(1024.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=18, dead=false, hashCode=44627686] }]
+})
+12:14:43 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:43 | DEBUG | MegaGameEntity | HeliMet: onSpawn(): HeliMet, spawnProps=Properties({
+	[bounds=[1472.0,416.0,32.0,32.0]]
+	[x=1472.0]
+	[height=32.0]
+	[target_1=com.badlogic.gdx.maps.objects.RectangleMapObject@2f408960]
+	[id=23]
+	[name=HeliMet]
+	[y=416.0]
+	[width=32.0]
+	[target_2=com.badlogic.gdx.maps.objects.RectangleMapObject@1516f497]
+})
+12:14:43 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:43 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:43 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_full]
+})
+12:14:43 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_full]
+})
+12:14:43 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_full]
+})
+12:14:43 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:43 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:43 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:44 | DEBUG | MegaGameEntity | SniperJoe: onDestroy(): SniperJoe
+12:14:44 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:14:44 | DEBUG | MegaGameEntity | ChargedShot: onSpawn(): ChargedShot, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[boolean=true]
+	[position=(1348.1398,350.3167)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=566641954] }]
+})
+12:14:44 | DEBUG | MegaGameEntity | ChargedShotResidual: onSpawn(): ChargedShotResidual, spawnProps=Properties({
+	[direction=UP]
+	[boolean=true]
+	[spawn=(1348.1398,350.3167)]
+	[facing=RIGHT]
+	[position=CENTER_LEFT]
+})
+12:14:44 | DEBUG | MegaGameEntity | ChargedShotExplosion: onSpawn(): ChargedShotExplosion, spawnProps=Properties({
+	[direction=RIGHT]
+	[boolean=true]
+	[position=(1352.4064,350.3167)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=566641954] }]
+})
+12:14:44 | DEBUG | MegaGameEntity | ChargedShot: onDestroy(): ChargedShot
+12:14:44 | DEBUG | MegaGameEntity | HeliMet: onDestroy(): HeliMet
+12:14:44 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(1379.1316,365.013)]
+})
+12:14:44 | DEBUG | MegaGameEntity | ChargedShotResidual: onDestroy(): ChargedShotResidual
+12:14:44 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[960.0,224.0,96.0,96.0]]
+	[x=960.0]
+	[height=96.0]
+	[id=16]
+	[name=null]
+	[y=224.0]
+	[width=96.0]
+})
+12:14:44 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:14:45 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:14:45 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:14:45 | DEBUG | MegaGameEntity | ChargedShotExplosion: onDestroy(): ChargedShotExplosion
+12:14:45 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:14:45 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[1632.0,0.0,448.0,288.0]]
+	[x=1632.0]
+	[height=288.0]
+	[id=27]
+	[name=null]
+	[y=0.0]
+	[width=448.0]
+})
+12:14:45 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:14:45 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:45 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:45 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:46 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:14:46 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash_charge_full]
+})
+12:14:46 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:14:46 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash_charge_full]
+})
+12:14:46 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash_charge_full]
+})
+12:14:46 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:46 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:47 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:47 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_full]
+})
+12:14:47 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_full]
+})
+12:14:47 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_full]
+})
+12:14:47 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:47 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:47 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:47 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = RIGHT
+12:14:47 | DEBUG | MegaLevelScreen | Begin transition logic for camera manager
+12:14:47 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (1600.0,384.0)
+12:14:47 | DEBUG | MegamanEventListener | BEGIN ROOM TRANS: position=(1841.9111,382.25543)
+12:14:48 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[2176.0,0.0,160.0,320.0]]
+	[x=2176.0]
+	[height=320.0]
+	[id=30]
+	[name=null]
+	[y=0.0]
+	[width=160.0]
+})
+12:14:49 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (2112.0,384.0)
+12:14:49 | DEBUG | MegaLevelScreen | End transition logic for camera manager
+12:14:49 | DEBUG | MegamanEventListener | endRoomTrans(): setVel=true
+12:14:49 | DEBUG | MegaGameEntity | BombChute: onSpawn(): BombChute, spawnProps=Properties({
+	[start=com.badlogic.gdx.maps.objects.RectangleMapObject@4306191]
+	[bounds=[2112.0,288.0,32.0,32.0]]
+	[x=2112.0]
+	[height=32.0]
+	[id=31]
+	[name=BombChute]
+	[target=com.badlogic.gdx.maps.objects.RectangleMapObject@649573d0]
+	[y=288.0]
+	[width=32.0]
+})
+12:14:49 | DEBUG | MegaGameEntity | ChargedShot: onSpawn(): ChargedShot, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[boolean=true]
+	[position=(1974.8827,364.00616)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=566641954] }]
+})
+12:14:49 | DEBUG | MegaGameEntity | ChargedShotResidual: onSpawn(): ChargedShotResidual, spawnProps=Properties({
+	[direction=UP]
+	[boolean=true]
+	[spawn=(1974.8827,364.00616)]
+	[facing=RIGHT]
+	[position=CENTER_LEFT]
+})
+12:14:49 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:14:49 | DEBUG | MegaGameEntity | ChargedShotResidual: onDestroy(): ChargedShotResidual
+12:14:49 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[position=(1996.5741,323.45712)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=566641954] }]
+})
+12:14:49 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:14:50 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(2109.6392,323.45712)]
+})
+12:14:50 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:14:50 | DEBUG | MegaGameEntity | BombChute: onDestroy(): BombChute
+12:14:50 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(2128.0,335.7865)]
+})
+12:14:50 | DEBUG | MegaGameEntity | HealthBulb: onSpawn(): HealthBulb, spawnProps=Properties({
+	[large=false]
+	[position=(2128.0,335.7865)]
+})
+12:14:50 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:14:50 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:14:50 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:14:50 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:50 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:14:50 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:14:50 | DEBUG | MegaGameEntity | ChargedShot: onDestroy(): ChargedShot
+12:14:50 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:14:50 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:51 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:51 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:14:51 | DEBUG | MegaGameEntity | HealthBulb: onDestroy(): HealthBulb
+12:14:51 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[2432.0,0.0,352.0,288.0]]
+	[x=2432.0]
+	[height=288.0]
+	[id=35]
+	[name=null]
+	[y=0.0]
+	[width=352.0]
+})
+12:14:52 | DEBUG | MegamanMaverickGame | resize(): width=1920, height=995
+===== SESSION STARTED: 2025-02-08T12:17:49.595947174 =====
+12:17:49 | DEBUG | MegamanMaverickGame | resize(): width=1920, height=1080
+12:17:49 | DEBUG | MegamanMaverickGame | resize(): width=1920, height=995
+12:17:51 | DEBUG | Megaman | init()
+12:17:54 | DEBUG | MegamanMaverickGame | resize(): width=1280, height=995
+12:17:54 | DEBUG | MegamanMaverickGame | resize(): width=1280, height=995
+12:17:58 | DEBUG | CameraManagerForRooms | set focus to { Megaman:[mapObjId=0, dead=false, hashCode=701487403] }
+12:17:58 | DEBUG | MegaLevelScreenEventListener | onEvent(): Player spawn --> reset camera manager for rooms and spawn megaman
+12:17:58 | DEBUG | MegaLevelScreen | onEvent(): Player spawn --> spawn Megaman: Properties({
+	[bounds=[128.0,192.0,32.0,32.0]]
+	[x=128.0]
+	[height=32.0]
+	[id=5]
+	[name=0]
+	[y=192.0]
+	[width=32.0]
+})
+12:17:58 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[fixture_labels=no_side_touchie,no_projectile_collision,no_body_touchie]
+	[bounds=[0.0,704.0,3712.0,96.0]]
+	[x=0.0]
+	[height=96.0]
+	[spawn_type=spawn_now]
+	[cull_out_of_bounds=false]
+	[id=8]
+	[name=null]
+	[y=704.0]
+	[width=3712.0]
+})
+12:17:58 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[fixture_labels=no_side_touchie,no_projectile_collision,no_body_touchie]
+	[bounds=[4640.0,1600.0,832.0,96.0]]
+	[x=4640.0]
+	[height=96.0]
+	[spawn_type=spawn_now]
+	[cull_out_of_bounds=false]
+	[id=89]
+	[name=null]
+	[y=1600.0]
+	[width=832.0]
+})
+12:17:58 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[224.0,0.0,96.0,112.0]]
+	[x=224.0]
+	[height=112.0]
+	[id=20]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:17:58 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[1152.0,0.0,96.0,112.0]]
+	[x=1152.0]
+	[height=112.0]
+	[id=22]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:17:59 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[1536.0,0.0,96.0,112.0]]
+	[x=1536.0]
+	[height=112.0]
+	[id=28]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:17:59 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[2080.0,0.0,96.0,112.0]]
+	[x=2080.0]
+	[height=112.0]
+	[id=36]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:17:59 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[2784.0,0.0,160.0,112.0]]
+	[x=2784.0]
+	[height=112.0]
+	[id=48]
+	[name=Death]
+	[y=0.0]
+	[width=160.0]
+	[instant=true]
+})
+12:17:59 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[2336.0,0.0,96.0,112.0]]
+	[x=2336.0]
+	[height=112.0]
+	[id=79]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:17:59 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[4288.0,928.0,224.0,80.0]]
+	[x=4288.0]
+	[height=80.0]
+	[id=87]
+	[name=Death]
+	[y=928.0]
+	[width=224.0]
+	[instant=true]
+})
+12:17:59 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[6816.0,480.0,96.0,80.0]]
+	[x=6816.0]
+	[height=80.0]
+	[id=103]
+	[name=Death]
+	[y=480.0]
+	[width=96.0]
+	[instant=true]
+})
+12:17:59 | DEBUG | MegaGameEntity | Megaman: onSpawn(): Megaman, spawnProps=Properties({
+	[bounds=[128.0,192.0,32.0,32.0]]
+	[x=128.0]
+	[height=32.0]
+	[id=5]
+	[name=0]
+	[y=192.0]
+	[width=32.0]
+})
+12:17:59 | DEBUG | Megaman | direction-set(): value=UP
+12:17:59 | DEBUG | Megaman | direction-set(): value same as field
+12:17:59 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[0.0,0.0,224.0,192.0]]
+	[x=0.0]
+	[height=192.0]
+	[id=1]
+	[name=null]
+	[y=0.0]
+	[width=224.0]
+})
+12:17:59 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[fixture_labels=no_side_touchie,no_projectile_collision]
+	[bounds=[0.0,192.0,72.0,512.0]]
+	[x=0.0]
+	[height=512.0]
+	[id=7]
+	[name=null]
+	[y=192.0]
+	[width=72.0]
+})
+12:17:59 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[320.0,0.0,384.0,192.0]]
+	[x=320.0]
+	[height=192.0]
+	[id=19]
+	[name=null]
+	[y=0.0]
+	[width=384.0]
+})
+12:17:59 | DEBUG | CameraManagerForRooms | update(): reset
+12:17:59 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = com.badlogic.gdx.maps.objects.RectangleMapObject@4c6007fb
+12:18:00 | DEBUG | MegaLevelScreenEventListener | onEvent(): Player ready
+===== SESSION ENDED: 2025-02-08T12:18:01.132645500 =====
+===== SESSION STARTED: 2025-02-08T12:18:52.114057672 =====
+12:18:52 | DEBUG | MegamanMaverickGame | resize(): width=1920, height=1080
+12:18:52 | DEBUG | MegamanMaverickGame | resize(): width=1920, height=995
+12:18:54 | DEBUG | MegamanMaverickGame | resize(): width=1440, height=737
+12:18:54 | DEBUG | MegamanMaverickGame | resize(): width=1280, height=995
+12:18:54 | DEBUG | Megaman | init()
+12:18:58 | DEBUG | CameraManagerForRooms | set focus to { Megaman:[mapObjId=0, dead=false, hashCode=701487403] }
+12:18:58 | DEBUG | MegaLevelScreenEventListener | onEvent(): Player spawn --> reset camera manager for rooms and spawn megaman
+12:18:58 | DEBUG | MegaLevelScreen | onEvent(): Player spawn --> spawn Megaman: Properties({
+	[bounds=[128.0,192.0,32.0,32.0]]
+	[x=128.0]
+	[height=32.0]
+	[id=5]
+	[name=0]
+	[y=192.0]
+	[width=32.0]
+})
+12:18:58 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[fixture_labels=no_side_touchie,no_projectile_collision,no_body_touchie]
+	[bounds=[0.0,704.0,3712.0,96.0]]
+	[x=0.0]
+	[height=96.0]
+	[spawn_type=spawn_now]
+	[cull_out_of_bounds=false]
+	[id=8]
+	[name=null]
+	[y=704.0]
+	[width=3712.0]
+})
+12:18:58 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[fixture_labels=no_side_touchie,no_projectile_collision,no_body_touchie]
+	[bounds=[4640.0,1600.0,832.0,96.0]]
+	[x=4640.0]
+	[height=96.0]
+	[spawn_type=spawn_now]
+	[cull_out_of_bounds=false]
+	[id=89]
+	[name=null]
+	[y=1600.0]
+	[width=832.0]
+})
+12:18:58 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[224.0,0.0,96.0,112.0]]
+	[x=224.0]
+	[height=112.0]
+	[id=20]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:18:58 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[1152.0,0.0,96.0,112.0]]
+	[x=1152.0]
+	[height=112.0]
+	[id=22]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:18:58 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[1536.0,0.0,96.0,112.0]]
+	[x=1536.0]
+	[height=112.0]
+	[id=28]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:18:58 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[2080.0,0.0,96.0,112.0]]
+	[x=2080.0]
+	[height=112.0]
+	[id=36]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:18:58 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[2784.0,0.0,160.0,112.0]]
+	[x=2784.0]
+	[height=112.0]
+	[id=48]
+	[name=Death]
+	[y=0.0]
+	[width=160.0]
+	[instant=true]
+})
+12:18:58 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[2336.0,0.0,96.0,112.0]]
+	[x=2336.0]
+	[height=112.0]
+	[id=79]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:18:58 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[4288.0,928.0,224.0,80.0]]
+	[x=4288.0]
+	[height=80.0]
+	[id=87]
+	[name=Death]
+	[y=928.0]
+	[width=224.0]
+	[instant=true]
+})
+12:18:58 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[6816.0,480.0,96.0,80.0]]
+	[x=6816.0]
+	[height=80.0]
+	[id=103]
+	[name=Death]
+	[y=480.0]
+	[width=96.0]
+	[instant=true]
+})
+12:18:58 | DEBUG | MegaGameEntity | Megaman: onSpawn(): Megaman, spawnProps=Properties({
+	[bounds=[128.0,192.0,32.0,32.0]]
+	[x=128.0]
+	[height=32.0]
+	[id=5]
+	[name=0]
+	[y=192.0]
+	[width=32.0]
+})
+12:18:58 | DEBUG | Megaman | direction-set(): value=UP
+12:18:58 | DEBUG | Megaman | direction-set(): value same as field
+12:18:58 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[0.0,0.0,224.0,192.0]]
+	[x=0.0]
+	[height=192.0]
+	[id=1]
+	[name=null]
+	[y=0.0]
+	[width=224.0]
+})
+12:18:58 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[fixture_labels=no_side_touchie,no_projectile_collision]
+	[bounds=[0.0,192.0,72.0,512.0]]
+	[x=0.0]
+	[height=512.0]
+	[id=7]
+	[name=null]
+	[y=192.0]
+	[width=72.0]
+})
+12:18:58 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[320.0,0.0,384.0,192.0]]
+	[x=320.0]
+	[height=192.0]
+	[id=19]
+	[name=null]
+	[y=0.0]
+	[width=384.0]
+})
+12:18:59 | DEBUG | CameraManagerForRooms | update(): reset
+12:18:59 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = com.badlogic.gdx.maps.objects.RectangleMapObject@4c6007fb
+12:19:00 | DEBUG | MegaLevelScreenEventListener | onEvent(): Player ready
+===== SESSION STARTED: 2025-02-08T12:21:08.891108472 =====
+12:21:09 | DEBUG | MegamanMaverickGame | resize(): width=1920, height=1080
+12:21:09 | DEBUG | MegamanMaverickGame | resize(): width=1920, height=995
+12:21:10 | DEBUG | Megaman | init()
+12:21:20 | DEBUG | MegamanMaverickGame | resize(): width=1280, height=995
+12:21:20 | DEBUG | MegamanMaverickGame | resize(): width=1280, height=995
+12:21:24 | DEBUG | CameraManagerForRooms | set focus to { Megaman:[mapObjId=0, dead=false, hashCode=701487403] }
+12:21:24 | DEBUG | MegaLevelScreenEventListener | onEvent(): Player spawn --> reset camera manager for rooms and spawn megaman
+12:21:24 | DEBUG | MegaLevelScreen | onEvent(): Player spawn --> spawn Megaman: Properties({
+	[bounds=[128.0,192.0,32.0,32.0]]
+	[x=128.0]
+	[height=32.0]
+	[id=5]
+	[name=0]
+	[y=192.0]
+	[width=32.0]
+})
+12:21:24 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[fixture_labels=no_side_touchie,no_projectile_collision,no_body_touchie]
+	[bounds=[0.0,704.0,3712.0,96.0]]
+	[x=0.0]
+	[height=96.0]
+	[spawn_type=spawn_now]
+	[cull_out_of_bounds=false]
+	[id=8]
+	[name=null]
+	[y=704.0]
+	[width=3712.0]
+})
+12:21:24 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[fixture_labels=no_side_touchie,no_projectile_collision,no_body_touchie]
+	[bounds=[4640.0,1600.0,832.0,96.0]]
+	[x=4640.0]
+	[height=96.0]
+	[spawn_type=spawn_now]
+	[cull_out_of_bounds=false]
+	[id=89]
+	[name=null]
+	[y=1600.0]
+	[width=832.0]
+})
+12:21:24 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[224.0,0.0,96.0,112.0]]
+	[x=224.0]
+	[height=112.0]
+	[id=20]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:21:24 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[1152.0,0.0,96.0,112.0]]
+	[x=1152.0]
+	[height=112.0]
+	[id=22]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:21:24 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[1536.0,0.0,96.0,112.0]]
+	[x=1536.0]
+	[height=112.0]
+	[id=28]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:21:24 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[2080.0,0.0,96.0,112.0]]
+	[x=2080.0]
+	[height=112.0]
+	[id=36]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:21:24 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[2784.0,0.0,160.0,112.0]]
+	[x=2784.0]
+	[height=112.0]
+	[id=48]
+	[name=Death]
+	[y=0.0]
+	[width=160.0]
+	[instant=true]
+})
+12:21:24 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[2336.0,0.0,96.0,112.0]]
+	[x=2336.0]
+	[height=112.0]
+	[id=79]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:21:24 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[4288.0,928.0,224.0,80.0]]
+	[x=4288.0]
+	[height=80.0]
+	[id=87]
+	[name=Death]
+	[y=928.0]
+	[width=224.0]
+	[instant=true]
+})
+12:21:24 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[6816.0,480.0,96.0,80.0]]
+	[x=6816.0]
+	[height=80.0]
+	[id=103]
+	[name=Death]
+	[y=480.0]
+	[width=96.0]
+	[instant=true]
+})
+12:21:24 | DEBUG | MegaGameEntity | Megaman: onSpawn(): Megaman, spawnProps=Properties({
+	[bounds=[128.0,192.0,32.0,32.0]]
+	[x=128.0]
+	[height=32.0]
+	[id=5]
+	[name=0]
+	[y=192.0]
+	[width=32.0]
+})
+12:21:24 | DEBUG | Megaman | direction-set(): value=UP
+12:21:24 | DEBUG | Megaman | direction-set(): value same as field
+12:21:24 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[0.0,0.0,224.0,192.0]]
+	[x=0.0]
+	[height=192.0]
+	[id=1]
+	[name=null]
+	[y=0.0]
+	[width=224.0]
+})
+12:21:24 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[fixture_labels=no_side_touchie,no_projectile_collision]
+	[bounds=[0.0,192.0,72.0,512.0]]
+	[x=0.0]
+	[height=512.0]
+	[id=7]
+	[name=null]
+	[y=192.0]
+	[width=72.0]
+})
+12:21:24 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[320.0,0.0,384.0,192.0]]
+	[x=320.0]
+	[height=192.0]
+	[id=19]
+	[name=null]
+	[y=0.0]
+	[width=384.0]
+})
+12:21:25 | DEBUG | CameraManagerForRooms | update(): reset
+12:21:25 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = com.badlogic.gdx.maps.objects.RectangleMapObject@4c6007fb
+12:21:26 | DEBUG | MegaLevelScreenEventListener | onEvent(): Player ready
+12:21:27 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:21:27 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:21:27 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:21:27 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:27 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:27 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:28 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[608.0,192.0,96.0,160.0]]
+	[x=608.0]
+	[height=160.0]
+	[id=14]
+	[name=null]
+	[y=192.0]
+	[width=96.0]
+})
+12:21:28 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:21:28 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:21:28 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:21:28 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:28 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[704.0,0.0,448.0,224.0]]
+	[x=704.0]
+	[height=224.0]
+	[id=2]
+	[name=null]
+	[y=0.0]
+	[width=448.0]
+})
+12:21:28 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:21:28 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:28 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:28 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:28 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:21:29 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:21:30 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash_charge_full]
+})
+12:21:30 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash_charge_full]
+})
+12:21:30 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash_charge_full]
+})
+12:21:30 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:30 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:30 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:30 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[960.0,224.0,96.0,96.0]]
+	[x=960.0]
+	[height=96.0]
+	[id=16]
+	[name=null]
+	[y=224.0]
+	[width=96.0]
+})
+12:21:31 | DEBUG | MegaGameEntity | SniperJoe: onSpawn(): SniperJoe, spawnProps=Properties({
+	[bounds=[1000.0,320.0,16.0,16.0]]
+	[x=1000.0]
+	[height=16.0]
+	[id=18]
+	[name=SniperJoe]
+	[y=320.0]
+	[width=16.0]
+})
+12:21:31 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash_charge_full]
+})
+12:21:31 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash_charge_full]
+})
+12:21:31 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash_charge_full]
+})
+12:21:31 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:31 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:31 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:32 | DEBUG | MegaGameEntity | ChargedShot: onSpawn(): ChargedShot, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[boolean=true]
+	[position=(903.5708,339.02057)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=701487403] }]
+})
+12:21:32 | DEBUG | MegaGameEntity | ChargedShotResidual: onSpawn(): ChargedShotResidual, spawnProps=Properties({
+	[direction=UP]
+	[boolean=true]
+	[spawn=(903.5708,339.02057)]
+	[facing=RIGHT]
+	[position=CENTER_LEFT]
+})
+12:21:32 | DEBUG | MegaGameEntity | ChargedShotResidual: onDestroy(): ChargedShotResidual
+12:21:32 | DEBUG | MegaGameEntity | ChargedShotExplosion: onSpawn(): ChargedShotExplosion, spawnProps=Properties({
+	[direction=RIGHT]
+	[boolean=true]
+	[position=(976.1051,339.02057)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=701487403] }]
+})
+12:21:32 | DEBUG | MegaGameEntity | ChargedShot: onDestroy(): ChargedShot
+12:21:32 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(992.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=18, dead=false, hashCode=1634319881] }]
+})
+12:21:33 | DEBUG | MegaGameEntity | SniperJoe: onDestroy(): SniperJoe
+12:21:33 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(1008.0,348.0)]
+})
+12:21:33 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:21:33 | DEBUG | MegaGameEntity | ChargedShotExplosion: onDestroy(): ChargedShotExplosion
+12:21:33 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(706.1295,341.6)]
+})
+12:21:33 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:21:34 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:21:34 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[1248.0,0.0,288.0,224.0]]
+	[x=1248.0]
+	[height=224.0]
+	[id=21]
+	[name=null]
+	[y=0.0]
+	[width=288.0]
+})
+12:21:34 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[1344.0,288.0,128.0,32.0]]
+	[x=1344.0]
+	[height=32.0]
+	[id=26]
+	[name=null]
+	[y=288.0]
+	[width=128.0]
+})
+12:21:35 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:21:35 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:21:35 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[position=(1145.7858,248.8)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=701487403] }]
+})
+12:21:35 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:21:36 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:21:36 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:21:36 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:36 | DEBUG | MegaGameEntity | HeliMet: onSpawn(): HeliMet, spawnProps=Properties({
+	[bounds=[1472.0,416.0,32.0,32.0]]
+	[x=1472.0]
+	[height=32.0]
+	[target_1=com.badlogic.gdx.maps.objects.RectangleMapObject@3e73f5e7]
+	[id=23]
+	[name=HeliMet]
+	[y=416.0]
+	[width=32.0]
+	[target_2=com.badlogic.gdx.maps.objects.RectangleMapObject@495bc9e7]
+})
+12:21:36 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:36 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:36 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:21:37 | DEBUG | MegaGameEntity | ChargedShot: onSpawn(): ChargedShot, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[boolean=false]
+	[position=(1346.6241,351.7984)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=701487403] }]
+})
+12:21:37 | DEBUG | MegaGameEntity | ChargedShotResidual: onSpawn(): ChargedShotResidual, spawnProps=Properties({
+	[direction=UP]
+	[boolean=false]
+	[spawn=(1346.6241,351.7984)]
+	[facing=RIGHT]
+	[position=CENTER_LEFT]
+})
+12:21:37 | DEBUG | MegaGameEntity | ChargedShotResidual: onDestroy(): ChargedShotResidual
+12:21:37 | DEBUG | MegaGameEntity | ChargedShotExplosion: onSpawn(): ChargedShotExplosion, spawnProps=Properties({
+	[direction=RIGHT]
+	[boolean=false]
+	[position=(1367.9572,351.7984)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=701487403] }]
+})
+12:21:37 | DEBUG | MegaGameEntity | ChargedShotExplosion: onSpawn(): ChargedShotExplosion, spawnProps=Properties({
+	[direction=RIGHT]
+	[boolean=false]
+	[position=(1367.9572,351.7984)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=701487403] }]
+})
+12:21:37 | DEBUG | MegaGameEntity | ChargedShot: onDestroy(): ChargedShot
+12:21:37 | DEBUG | MegaGameEntity | HeliMet: onDestroy(): HeliMet
+12:21:37 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(1383.1919,365.01303)]
+})
+12:21:37 | DEBUG | MegaGameEntity | ChargedShotExplosion: onDestroy(): ChargedShotExplosion
+12:21:37 | DEBUG | MegaGameEntity | ChargedShotExplosion: onDestroy(): ChargedShotExplosion
+12:21:37 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:21:37 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:21:37 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:21:38 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:21:38 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[1632.0,0.0,448.0,288.0]]
+	[x=1632.0]
+	[height=288.0]
+	[id=27]
+	[name=null]
+	[y=0.0]
+	[width=448.0]
+})
+12:21:38 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:21:38 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:38 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:21:38 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:38 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:38 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:39 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:21:39 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:21:39 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:21:39 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:21:39 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:39 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:39 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:39 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:21:39 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:21:39 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:21:39 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:39 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:21:39 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:40 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:21:40 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:40 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_half]
+})
+12:21:40 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:40 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = RIGHT
+12:21:40 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_half]
+})
+12:21:40 | DEBUG | MegaLevelScreen | Begin transition logic for camera manager
+12:21:40 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (1600.0,384.0)
+12:21:40 | DEBUG | MegamanEventListener | BEGIN ROOM TRANS: position=(1845.051,300.0)
+12:21:40 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:40 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_half]
+})
+12:21:40 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:40 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_half]
+})
+12:21:40 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:40 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_half]
+})
+12:21:40 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:40 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_half]
+})
+12:21:40 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:40 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_half]
+})
+12:21:40 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:40 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_half]
+})
+12:21:40 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:41 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_half]
+})
+12:21:41 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:41 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_half]
+})
+12:21:41 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:41 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[2176.0,0.0,160.0,320.0]]
+	[x=2176.0]
+	[height=320.0]
+	[id=30]
+	[name=null]
+	[y=0.0]
+	[width=160.0]
+})
+12:21:41 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_half]
+})
+12:21:41 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:41 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_half]
+})
+12:21:41 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:41 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_half]
+})
+12:21:41 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:41 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_half]
+})
+12:21:41 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (2112.0,384.0)
+12:21:41 | DEBUG | MegaLevelScreen | End transition logic for camera manager
+12:21:41 | DEBUG | MegamanEventListener | endRoomTrans(): setVel=true
+12:21:41 | DEBUG | MegaGameEntity | BombChute: onSpawn(): BombChute, spawnProps=Properties({
+	[start=com.badlogic.gdx.maps.objects.RectangleMapObject@467686b2]
+	[bounds=[2112.0,288.0,32.0,32.0]]
+	[x=2112.0]
+	[height=32.0]
+	[id=31]
+	[name=BombChute]
+	[target=com.badlogic.gdx.maps.objects.RectangleMapObject@42d7be51]
+	[y=288.0]
+	[width=32.0]
+})
+12:21:41 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:41 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:41 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:41 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:21:42 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:21:42 | DEBUG | MegaGameEntity | ChargedShot: onSpawn(): ChargedShot, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[boolean=false]
+	[position=(2065.5854,395.26593)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=701487403] }]
+})
+12:21:42 | DEBUG | MegaGameEntity | ChargedShotResidual: onSpawn(): ChargedShotResidual, spawnProps=Properties({
+	[direction=UP]
+	[boolean=false]
+	[spawn=(2065.5854,395.26593)]
+	[facing=RIGHT]
+	[position=CENTER_LEFT]
+})
+12:21:42 | DEBUG | MegaGameEntity | ChargedShotResidual: onDestroy(): ChargedShotResidual
+12:21:42 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[position=(2071.9707,378.13864)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=701487403] }]
+})
+12:21:42 | DEBUG | MegaGameEntity | ChargedShotExplosion: onSpawn(): ChargedShotExplosion, spawnProps=Properties({
+	[direction=RIGHT]
+	[boolean=false]
+	[position=(2106.1182,395.26593)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=701487403] }]
+})
+12:21:42 | DEBUG | MegaGameEntity | ChargedShot: onDestroy(): ChargedShot
+12:21:42 | DEBUG | MegaGameEntity | ChargedShotExplosion: onDestroy(): ChargedShotExplosion
+12:21:43 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:21:43 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:21:43 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash_charge_half]
+})
+12:21:43 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:43 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:43 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[2432.0,0.0,352.0,288.0]]
+	[x=2432.0]
+	[height=288.0]
+	[id=35]
+	[name=null]
+	[y=0.0]
+	[width=352.0]
+})
+12:21:43 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:43 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_half]
+})
+12:21:43 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:21:43 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_half]
+})
+12:21:43 | DEBUG | MegaGameEntity | HeliMet: onSpawn(): HeliMet, spawnProps=Properties({
+	[bounds=[2496.0,416.0,32.0,32.0]]
+	[x=2496.0]
+	[height=32.0]
+	[target_1=com.badlogic.gdx.maps.objects.RectangleMapObject@3a01f6f3]
+	[id=37]
+	[name=HeliMet]
+	[y=416.0]
+	[width=32.0]
+	[target_2=com.badlogic.gdx.maps.objects.RectangleMapObject@1992ce66]
+})
+12:21:44 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_half]
+})
+12:21:44 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:44 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_half]
+})
+12:21:44 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:44 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:44 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:44 | DEBUG | MegaGameEntity | ChargedShot: onSpawn(): ChargedShot, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[boolean=true]
+	[position=(2323.4246,374.54294)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=701487403] }]
+})
+12:21:44 | DEBUG | MegaGameEntity | ChargedShotResidual: onSpawn(): ChargedShotResidual, spawnProps=Properties({
+	[direction=UP]
+	[boolean=true]
+	[spawn=(2323.4246,374.54294)]
+	[facing=RIGHT]
+	[position=CENTER_LEFT]
+})
+12:21:45 | DEBUG | MegaGameEntity | ChargedShotResidual: onDestroy(): ChargedShotResidual
+12:21:45 | DEBUG | MegaGameEntity | ChargedShotExplosion: onSpawn(): ChargedShotExplosion, spawnProps=Properties({
+	[direction=RIGHT]
+	[boolean=true]
+	[position=(2387.4236,374.54294)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=701487403] }]
+})
+12:21:45 | DEBUG | MegaGameEntity | ChargedShot: onDestroy(): ChargedShot
+12:21:45 | DEBUG | MegaGameEntity | HeliMet: onDestroy(): HeliMet
+12:21:45 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(2414.0867,365.013)]
+})
+12:21:45 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:21:45 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:21:45 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:21:45 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:21:45 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:45 | DEBUG | MegaGameEntity | ChargedShotExplosion: onDestroy(): ChargedShotExplosion
+12:21:45 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:45 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:46 | DEBUG | MegaGameEntity | Explosion: onSpawn(): Explosion, spawnProps=Properties({
+	[position=(2267.3418,334.276)]
+	[owner={ BombChute:[mapObjId=31, dead=true, hashCode=1535234908] }]
+})
+12:21:46 | DEBUG | MegaGameEntity | BombChute: onDestroy(): BombChute
+12:21:46 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:21:46 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_half]
+})
+12:21:46 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_half]
+})
+12:21:46 | DEBUG | MegaGameEntity | Explosion: onDestroy(): Explosion
+12:21:46 | DEBUG | MegaGameEntity | BombChute: onSpawn(): BombChute, spawnProps=Properties({
+	[start=com.badlogic.gdx.maps.objects.RectangleMapObject@39f8db0e]
+	[bounds=[2816.0,288.0,32.0,32.0]]
+	[x=2816.0]
+	[height=32.0]
+	[id=40]
+	[name=BombChute]
+	[target=com.badlogic.gdx.maps.objects.RectangleMapObject@2794e6d3]
+	[y=288.0]
+	[width=32.0]
+})
+12:21:46 | DEBUG | MegaGameEntity | HeliMet: onSpawn(): HeliMet, spawnProps=Properties({
+	[bounds=[2816.0,416.0,32.0,32.0]]
+	[x=2816.0]
+	[height=32.0]
+	[target_1=com.badlogic.gdx.maps.objects.RectangleMapObject@62694fae]
+	[id=43]
+	[name=HeliMet]
+	[y=416.0]
+	[width=32.0]
+	[target_2=com.badlogic.gdx.maps.objects.RectangleMapObject@45959d]
+})
+12:21:46 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_full]
+})
+12:21:46 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:46 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_full]
+})
+12:21:46 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:46 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:46 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:46 | DEBUG | MegaGameEntity | ChargedShot: onSpawn(): ChargedShot, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[boolean=true]
+	[position=(2698.4187,356.104)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=701487403] }]
+})
+12:21:46 | DEBUG | MegaGameEntity | ChargedShotResidual: onSpawn(): ChargedShotResidual, spawnProps=Properties({
+	[direction=UP]
+	[boolean=true]
+	[spawn=(2698.4187,356.104)]
+	[facing=RIGHT]
+	[position=CENTER_LEFT]
+})
+12:21:47 | DEBUG | MegaGameEntity | ChargedShotResidual: onDestroy(): ChargedShotResidual
+12:21:47 | DEBUG | MegaGameEntity | ChargedShotExplosion: onSpawn(): ChargedShotExplosion, spawnProps=Properties({
+	[direction=RIGHT]
+	[boolean=true]
+	[position=(2732.5515,356.104)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=701487403] }]
+})
+12:21:47 | DEBUG | MegaGameEntity | ChargedShot: onDestroy(): ChargedShot
+12:21:47 | DEBUG | MegaGameEntity | HeliMet: onDestroy(): HeliMet
+12:21:47 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(2759.718,365.013)]
+})
+12:21:47 | DEBUG | MegaGameEntity | HealthBulb: onSpawn(): HealthBulb, spawnProps=Properties({
+	[large=false]
+	[position=(2759.718,365.013)]
+})
+12:21:47 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:21:47 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:21:47 | DEBUG | MegaGameEntity | ChargedShotExplosion: onDestroy(): ChargedShotExplosion
+12:21:48 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:21:48 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:21:49 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[2944.0,0.0,544.0,320.0]]
+	[x=2944.0]
+	[height=320.0]
+	[id=47]
+	[name=null]
+	[y=0.0]
+	[width=544.0]
+})
+12:21:49 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_half]
+})
+12:21:49 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:49 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_half]
+})
+12:21:49 | DEBUG | MegaGameEntity | HealthBulb: onDestroy(): HealthBulb
+12:21:49 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:49 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide_charge_half]
+})
+12:21:49 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:49 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:49 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash_charge_half]
+})
+12:21:49 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:49 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:50 | DEBUG | MegaGameEntity | SniperJoe: onSpawn(): SniperJoe, spawnProps=Properties({
+	[bounds=[3160.0,320.0,16.0,16.0]]
+	[x=3160.0]
+	[height=16.0]
+	[id=46]
+	[name=SniperJoe]
+	[y=320.0]
+	[width=16.0]
+})
+12:21:50 | DEBUG | MegaGameEntity | Megaman: onDestroy(): Megaman
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | MegaLevelScreenEventListener | onEvent(): Player just died --> init death handler
+12:21:50 | DEBUG | MegaGameEntity | ExplosionOrb: onSpawn(): ExplosionOrb, spawnProps=Properties({
+	[trajectory=(-112.0,0.0)]
+	[position=(2915.799,136.01898)]
+})
+12:21:50 | DEBUG | MegaGameEntity | ExplosionOrb: onSpawn(): ExplosionOrb, spawnProps=Properties({
+	[trajectory=(-112.0,112.0)]
+	[position=(2915.799,136.01898)]
+})
+12:21:50 | DEBUG | MegaGameEntity | ExplosionOrb: onSpawn(): ExplosionOrb, spawnProps=Properties({
+	[trajectory=(0.0,112.0)]
+	[position=(2915.799,136.01898)]
+})
+12:21:50 | DEBUG | MegaGameEntity | ExplosionOrb: onSpawn(): ExplosionOrb, spawnProps=Properties({
+	[trajectory=(112.0,112.0)]
+	[position=(2915.799,136.01898)]
+})
+12:21:50 | DEBUG | MegaGameEntity | ExplosionOrb: onSpawn(): ExplosionOrb, spawnProps=Properties({
+	[trajectory=(112.0,0.0)]
+	[position=(2915.799,136.01898)]
+})
+12:21:50 | DEBUG | MegaGameEntity | ExplosionOrb: onSpawn(): ExplosionOrb, spawnProps=Properties({
+	[trajectory=(112.0,-112.0)]
+	[position=(2915.799,136.01898)]
+})
+12:21:50 | DEBUG | MegaGameEntity | ExplosionOrb: onSpawn(): ExplosionOrb, spawnProps=Properties({
+	[trajectory=(0.0,-112.0)]
+	[position=(2915.799,136.01898)]
+})
+12:21:50 | DEBUG | MegaGameEntity | ExplosionOrb: onSpawn(): ExplosionOrb, spawnProps=Properties({
+	[trajectory=(-112.0,-112.0)]
+	[position=(2915.799,136.01898)]
+})
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | MegaGameEntity | ExplosionOrb: onDestroy(): ExplosionOrb
+12:21:50 | DEBUG | MegaGameEntity | ExplosionOrb: onDestroy(): ExplosionOrb
+12:21:50 | DEBUG | MegaGameEntity | ExplosionOrb: onDestroy(): ExplosionOrb
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(3152.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=46, dead=false, hashCode=1634319881] }]
+})
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | MegaGameEntity | Explosion: onSpawn(): Explosion, spawnProps=Properties({
+	[position=(2928.0317,182.60187)]
+	[owner={ BombChute:[mapObjId=40, dead=true, hashCode=1535234908] }]
+})
+12:21:52 | DEBUG | MegaGameEntity | BombChute: onDestroy(): BombChute
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(3152.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=46, dead=false, hashCode=1634319881] }]
+})
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | MegaGameEntity | Explosion: onDestroy(): Explosion
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:52 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(3152.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=46, dead=false, hashCode=1634319881] }]
+})
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | MegaGameEntity | ExplosionOrb: onDestroy(): ExplosionOrb
+12:21:53 | DEBUG | MegaGameEntity | ExplosionOrb: onDestroy(): ExplosionOrb
+12:21:53 | DEBUG | MegaGameEntity | ExplosionOrb: onDestroy(): ExplosionOrb
+12:21:53 | DEBUG | MegaGameEntity | ExplosionOrb: onDestroy(): ExplosionOrb
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:53 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | MegaLevelScreenEventListener | onEvent(): Player done dying --> respawn player
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = null
+12:21:54 | DEBUG | MegaLevelScreenEventListener | onEvent(): Player spawn --> reset camera manager for rooms and spawn megaman
+12:21:54 | DEBUG | MegaLevelScreen | onEvent(): Player spawn --> spawn Megaman: Properties({
+	[bounds=[128.0,192.0,32.0,32.0]]
+	[x=128.0]
+	[height=32.0]
+	[id=5]
+	[name=0]
+	[y=192.0]
+	[width=32.0]
+})
+12:21:54 | DEBUG | MegaGameEntity | Megaman: onSpawn(): Megaman, spawnProps=Properties({
+	[bounds=[128.0,192.0,32.0,32.0]]
+	[x=128.0]
+	[height=32.0]
+	[id=5]
+	[name=0]
+	[y=192.0]
+	[width=32.0]
+})
+12:21:54 | DEBUG | Megaman | direction-set(): value=UP
+12:21:54 | DEBUG | Megaman | direction-set(): value same as field
+12:21:54 | DEBUG | MegaGameEntity | SniperJoe: onDestroy(): SniperJoe
+12:21:54 | DEBUG | CameraManagerForRooms | update(): reset
+12:21:54 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = com.badlogic.gdx.maps.objects.RectangleMapObject@4c6007fb
+12:21:54 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[0.0,0.0,224.0,192.0]]
+	[x=0.0]
+	[height=192.0]
+	[id=1]
+	[name=null]
+	[y=0.0]
+	[width=224.0]
+})
+12:21:54 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[fixture_labels=no_side_touchie,no_projectile_collision]
+	[bounds=[0.0,192.0,72.0,512.0]]
+	[x=0.0]
+	[height=512.0]
+	[id=7]
+	[name=null]
+	[y=192.0]
+	[width=72.0]
+})
+12:21:54 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[320.0,0.0,384.0,192.0]]
+	[x=320.0]
+	[height=192.0]
+	[id=19]
+	[name=null]
+	[y=0.0]
+	[width=384.0]
+})
+12:21:54 | DEBUG | MegaGameEntity | ExplosionOrb: onDestroy(): ExplosionOrb
+12:21:54 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:21:55 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:21:55 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:21:56 | DEBUG | MegaLevelScreenEventListener | onEvent(): Player ready
+12:21:57 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:21:57 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:21:57 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:21:57 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:58 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:58 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:58 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[608.0,192.0,96.0,160.0]]
+	[x=608.0]
+	[height=160.0]
+	[id=14]
+	[name=null]
+	[y=192.0]
+	[width=96.0]
+})
+12:21:58 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:21:58 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:21:58 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[704.0,0.0,448.0,224.0]]
+	[x=704.0]
+	[height=224.0]
+	[id=2]
+	[name=null]
+	[y=0.0]
+	[width=448.0]
+})
+12:21:58 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:21:58 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:58 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:21:58 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:58 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:59 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:21:59 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:21:59 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:22:00 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash_charge_full]
+})
+12:22:00 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash_charge_full]
+})
+12:22:00 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash_charge_full]
+})
+12:22:00 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:22:00 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:22:00 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:22:00 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[960.0,224.0,96.0,96.0]]
+	[x=960.0]
+	[height=96.0]
+	[id=16]
+	[name=null]
+	[y=224.0]
+	[width=96.0]
+})
+12:22:01 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash_charge_full]
+})
+12:22:01 | DEBUG | MegaGameEntity | SniperJoe: onSpawn(): SniperJoe, spawnProps=Properties({
+	[bounds=[1000.0,320.0,16.0,16.0]]
+	[x=1000.0]
+	[height=16.0]
+	[id=18]
+	[name=SniperJoe]
+	[y=320.0]
+	[width=16.0]
+})
+12:22:01 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash_charge_full]
+})
+12:22:01 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash_charge_full]
+})
+12:22:01 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:22:01 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:22:01 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:22:02 | DEBUG | MegaGameEntity | ChargedShot: onSpawn(): ChargedShot, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[boolean=true]
+	[position=(928.1667,338.5696)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=701487403] }]
+})
+12:22:02 | DEBUG | MegaGameEntity | ChargedShotResidual: onSpawn(): ChargedShotResidual, spawnProps=Properties({
+	[direction=UP]
+	[boolean=true]
+	[spawn=(928.1667,338.5696)]
+	[facing=RIGHT]
+	[position=CENTER_LEFT]
+})
+12:22:02 | DEBUG | MegaGameEntity | ChargedShotResidual: onDestroy(): ChargedShotResidual
+12:22:03 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(992.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=18, dead=false, hashCode=1634319881] }]
+})
+12:22:03 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[position=(958.5096,337.84082)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=701487403] }]
+})
+12:22:03 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(992.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=18, dead=false, hashCode=1634319881] }]
+})
+12:22:03 | DEBUG | MegaGameEntity | ChargedShot: onDestroy(): ChargedShot
+12:22:03 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(984.1099,337.84082)]
+})
+12:22:03 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:22:03 | DEBUG | Megaman | takeDamageFrom(): healthDiff=3, damager={ Bullet:[mapObjId=0, dead=false, hashCode=714581757] }
+12:22:03 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(947.1994,341.6)]
+})
+12:22:03 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:22:04 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(706.1295,341.6)]
+})
+12:22:04 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:22:04 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:22:04 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:22:04 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(992.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=18, dead=false, hashCode=1634319881] }]
+})
+12:22:04 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:22:05 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(706.1295,341.6)]
+})
+12:22:05 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:22:05 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:22:06 | DEBUG | MegaGameEntity | ChargedShot: onSpawn(): ChargedShot, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[boolean=true]
+	[position=(954.939,363.59018)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=701487403] }]
+})
+12:22:06 | DEBUG | MegaGameEntity | ChargedShotResidual: onSpawn(): ChargedShotResidual, spawnProps=Properties({
+	[direction=UP]
+	[boolean=true]
+	[spawn=(954.939,363.59018)]
+	[facing=RIGHT]
+	[position=CENTER_LEFT]
+})
+12:22:06 | DEBUG | MegaGameEntity | ChargedShotExplosion: onSpawn(): ChargedShotExplosion, spawnProps=Properties({
+	[direction=RIGHT]
+	[boolean=true]
+	[position=(976.27264,363.59018)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=701487403] }]
+})
+12:22:06 | DEBUG | MegaGameEntity | ChargedShot: onDestroy(): ChargedShot
+12:22:06 | DEBUG | MegaGameEntity | ChargedShotResidual: onDestroy(): ChargedShotResidual
+12:22:06 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(992.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=18, dead=true, hashCode=1634319881] }]
+})
+12:22:06 | DEBUG | MegaGameEntity | SniperJoe: onDestroy(): SniperJoe
+12:22:06 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(1008.0,348.0)]
+})
+12:22:06 | DEBUG | MegaGameEntity | HealthBulb: onSpawn(): HealthBulb, spawnProps=Properties({
+	[large=true]
+	[position=(1008.0,348.0)]
+})
+12:22:06 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:22:06 | DEBUG | MegaGameEntity | ChargedShotExplosion: onDestroy(): ChargedShotExplosion
+12:22:07 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(706.1295,341.6)]
+})
+12:22:07 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:22:07 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:22:07 | DEBUG | MegaGameEntity | HealthBulb: onDestroy(): HealthBulb
+12:22:08 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[1248.0,0.0,288.0,224.0]]
+	[x=1248.0]
+	[height=224.0]
+	[id=21]
+	[name=null]
+	[y=0.0]
+	[width=288.0]
+})
+12:22:08 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:22:08 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:22:08 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:22:08 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:22:08 | DEBUG | MegaGameEntity | Death: onDestroy(): Death
+12:22:08 | DEBUG | MegaGameEntity | Death: onDestroy(): Death
+12:22:08 | DEBUG | MegaGameEntity | Death: onDestroy(): Death
+12:22:08 | DEBUG | MegaGameEntity | Death: onDestroy(): Death
+12:22:08 | DEBUG | MegaGameEntity | Death: onDestroy(): Death
+12:22:08 | DEBUG | MegaGameEntity | Death: onDestroy(): Death
+12:22:08 | DEBUG | MegaGameEntity | Death: onDestroy(): Death
+12:22:08 | DEBUG | MegaGameEntity | Death: onDestroy(): Death
+12:22:08 | DEBUG | MegaGameEntity | Megaman: onDestroy(): Megaman
+12:22:08 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:22:08 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:22:08 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:22:08 | DEBUG | MegaLevelScreen | dispose(): Disposing level screen
+===== SESSION STARTED: 2025-02-08T12:23:59.868082819 =====
+12:24:00 | DEBUG | MegamanMaverickGame | resize(): width=1920, height=1080
+12:24:00 | DEBUG | MegamanMaverickGame | resize(): width=1920, height=995
+12:24:01 | DEBUG | Megaman | init()
+12:24:03 | DEBUG | CameraManagerForRooms | set focus to { Megaman:[mapObjId=0, dead=false, hashCode=1959708563] }
+12:24:03 | DEBUG | MegaLevelScreenEventListener | onEvent(): Player spawn --> reset camera manager for rooms and spawn megaman
+12:24:03 | DEBUG | MegaLevelScreen | onEvent(): Player spawn --> spawn Megaman: Properties({
+	[bounds=[128.0,192.0,32.0,32.0]]
+	[x=128.0]
+	[height=32.0]
+	[id=5]
+	[name=0]
+	[y=192.0]
+	[width=32.0]
+})
+12:24:03 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[fixture_labels=no_side_touchie,no_projectile_collision,no_body_touchie]
+	[bounds=[0.0,704.0,3712.0,96.0]]
+	[x=0.0]
+	[height=96.0]
+	[spawn_type=spawn_now]
+	[cull_out_of_bounds=false]
+	[id=8]
+	[name=null]
+	[y=704.0]
+	[width=3712.0]
+})
+12:24:03 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[fixture_labels=no_side_touchie,no_projectile_collision,no_body_touchie]
+	[bounds=[4640.0,1600.0,832.0,96.0]]
+	[x=4640.0]
+	[height=96.0]
+	[spawn_type=spawn_now]
+	[cull_out_of_bounds=false]
+	[id=89]
+	[name=null]
+	[y=1600.0]
+	[width=832.0]
+})
+12:24:03 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[224.0,0.0,96.0,112.0]]
+	[x=224.0]
+	[height=112.0]
+	[id=20]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:24:03 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[1152.0,0.0,96.0,112.0]]
+	[x=1152.0]
+	[height=112.0]
+	[id=22]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:24:03 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[1536.0,0.0,96.0,112.0]]
+	[x=1536.0]
+	[height=112.0]
+	[id=28]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:24:03 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[2080.0,0.0,96.0,112.0]]
+	[x=2080.0]
+	[height=112.0]
+	[id=36]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:24:03 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[2784.0,0.0,160.0,112.0]]
+	[x=2784.0]
+	[height=112.0]
+	[id=48]
+	[name=Death]
+	[y=0.0]
+	[width=160.0]
+	[instant=true]
+})
+12:24:03 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[2336.0,0.0,96.0,112.0]]
+	[x=2336.0]
+	[height=112.0]
+	[id=79]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:24:03 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[4288.0,928.0,224.0,80.0]]
+	[x=4288.0]
+	[height=80.0]
+	[id=87]
+	[name=Death]
+	[y=928.0]
+	[width=224.0]
+	[instant=true]
+})
+12:24:03 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[6816.0,480.0,96.0,80.0]]
+	[x=6816.0]
+	[height=80.0]
+	[id=103]
+	[name=Death]
+	[y=480.0]
+	[width=96.0]
+	[instant=true]
+})
+12:24:03 | DEBUG | MegaGameEntity | Megaman: onSpawn(): Megaman, spawnProps=Properties({
+	[bounds=[128.0,192.0,32.0,32.0]]
+	[x=128.0]
+	[height=32.0]
+	[id=5]
+	[name=0]
+	[y=192.0]
+	[width=32.0]
+})
+12:24:03 | DEBUG | Megaman | direction-set(): value=UP
+12:24:03 | DEBUG | Megaman | direction-set(): value same as field
+12:24:03 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[0.0,0.0,224.0,192.0]]
+	[x=0.0]
+	[height=192.0]
+	[id=1]
+	[name=null]
+	[y=0.0]
+	[width=224.0]
+})
+12:24:03 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[fixture_labels=no_side_touchie,no_projectile_collision]
+	[bounds=[0.0,192.0,72.0,512.0]]
+	[x=0.0]
+	[height=512.0]
+	[id=7]
+	[name=null]
+	[y=192.0]
+	[width=72.0]
+})
+12:24:03 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[320.0,0.0,384.0,192.0]]
+	[x=320.0]
+	[height=192.0]
+	[id=19]
+	[name=null]
+	[y=0.0]
+	[width=384.0]
+})
+12:24:03 | DEBUG | CameraManagerForRooms | update(): reset
+12:24:03 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = com.badlogic.gdx.maps.objects.RectangleMapObject@60f70249
+12:24:05 | DEBUG | MegaLevelScreenEventListener | onEvent(): Player ready
+12:24:05 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:06 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:06 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:06 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:06 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:06 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:06 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:24:06 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[608.0,192.0,96.0,160.0]]
+	[x=608.0]
+	[height=160.0]
+	[id=14]
+	[name=null]
+	[y=192.0]
+	[width=96.0]
+})
+12:24:06 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:24:06 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:24:06 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:07 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:24:07 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[704.0,0.0,448.0,224.0]]
+	[x=704.0]
+	[height=224.0]
+	[id=2]
+	[name=null]
+	[y=0.0]
+	[width=448.0]
+})
+12:24:07 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:07 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:07 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:24:07 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:24:07 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:07 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:24:07 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:07 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:24:07 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:07 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:08 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:24:08 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:08 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:08 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:08 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:08 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:08 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:09 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[960.0,224.0,96.0,96.0]]
+	[x=960.0]
+	[height=96.0]
+	[id=16]
+	[name=null]
+	[y=224.0]
+	[width=96.0]
+})
+12:24:09 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:09 | DEBUG | MegaGameEntity | SniperJoe: onSpawn(): SniperJoe, spawnProps=Properties({
+	[bounds=[1000.0,320.0,16.0,16.0]]
+	[x=1000.0]
+	[height=16.0]
+	[id=18]
+	[name=SniperJoe]
+	[y=320.0]
+	[width=16.0]
+})
+12:24:09 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:09 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:09 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:09 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:09 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:11 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(992.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=18, dead=false, hashCode=661970164] }]
+})
+12:24:11 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(992.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=18, dead=false, hashCode=661970164] }]
+})
+12:24:12 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(706.1295,341.6)]
+})
+12:24:12 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:24:12 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:24:12 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(992.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=18, dead=false, hashCode=661970164] }]
+})
+12:24:12 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(706.1295,341.6)]
+})
+12:24:12 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:24:12 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:24:13 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(706.1295,341.6)]
+})
+12:24:13 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:24:13 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:24:14 | DEBUG | MegaGameEntity | ChargedShot: onSpawn(): ChargedShot, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[boolean=true]
+	[position=(962.744,351.56073)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=1959708563] }]
+})
+12:24:14 | DEBUG | MegaGameEntity | ChargedShotResidual: onSpawn(): ChargedShotResidual, spawnProps=Properties({
+	[direction=UP]
+	[boolean=true]
+	[spawn=(962.744,351.56073)]
+	[facing=RIGHT]
+	[position=CENTER_LEFT]
+})
+12:24:14 | DEBUG | MegaGameEntity | ChargedShotExplosion: onSpawn(): ChargedShotExplosion, spawnProps=Properties({
+	[direction=RIGHT]
+	[boolean=true]
+	[position=(977.67755,351.56073)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=1959708563] }]
+})
+12:24:14 | DEBUG | MegaGameEntity | ChargedShot: onDestroy(): ChargedShot
+12:24:14 | DEBUG | MegaGameEntity | ChargedShotResidual: onDestroy(): ChargedShotResidual
+12:24:14 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(992.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=18, dead=false, hashCode=661970164] }]
+})
+12:24:14 | DEBUG | MegaGameEntity | SniperJoe: onDestroy(): SniperJoe
+12:24:14 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(1008.0,348.0)]
+})
+12:24:14 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:24:14 | DEBUG | MegaGameEntity | ChargedShotExplosion: onDestroy(): ChargedShotExplosion
+12:24:15 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:15 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(706.1295,341.6)]
+})
+12:24:15 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:24:15 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:15 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:15 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[1248.0,0.0,288.0,224.0]]
+	[x=1248.0]
+	[height=224.0]
+	[id=21]
+	[name=null]
+	[y=0.0]
+	[width=288.0]
+})
+12:24:15 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:15 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:24:15 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:15 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:16 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[1344.0,288.0,128.0,32.0]]
+	[x=1344.0]
+	[height=32.0]
+	[id=26]
+	[name=null]
+	[y=288.0]
+	[width=128.0]
+})
+12:24:16 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:24:16 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:24:16 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:16 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:16 | DEBUG | MegaGameEntity | HeliMet: onSpawn(): HeliMet, spawnProps=Properties({
+	[bounds=[1472.0,416.0,32.0,32.0]]
+	[x=1472.0]
+	[height=32.0]
+	[target_1=com.badlogic.gdx.maps.objects.RectangleMapObject@7fd3c38b]
+	[id=23]
+	[name=HeliMet]
+	[y=416.0]
+	[width=32.0]
+	[target_2=com.badlogic.gdx.maps.objects.RectangleMapObject@27260f9c]
+})
+12:24:17 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:17 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:17 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:17 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:18 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[position=(1345.3707,370.62555)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=1959708563] }]
+})
+12:24:18 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(1373.1036,370.62555)]
+})
+12:24:18 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(1373.1036,370.62555)]
+})
+12:24:18 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:24:18 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[position=(1356.4004,350.77628)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=1959708563] }]
+})
+12:24:18 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(1369.2002,350.77628)]
+})
+12:24:18 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(1369.2002,350.77628)]
+})
+12:24:18 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:24:18 | DEBUG | MegaGameEntity | HeliMet: onDestroy(): HeliMet
+12:24:18 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(1387.2664,365.01303)]
+})
+12:24:18 | DEBUG | MegaGameEntity | HealthBulb: onSpawn(): HealthBulb, spawnProps=Properties({
+	[large=true]
+	[position=(1387.2664,365.01303)]
+})
+12:24:18 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[position=(1360.0,310.22723)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=1959708563] }]
+})
+12:24:18 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(1362.1333,310.22723)]
+})
+12:24:18 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:24:18 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:24:18 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:24:18 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[position=(1360.0,272.63004)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=1959708563] }]
+})
+12:24:18 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:24:18 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:24:18 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:24:18 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:24:18 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:24:19 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:24:20 | DEBUG | MegaGameEntity | HealthBulb: onDestroy(): HealthBulb
+12:24:20 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[1632.0,0.0,448.0,288.0]]
+	[x=1632.0]
+	[height=288.0]
+	[id=27]
+	[name=null]
+	[y=0.0]
+	[width=448.0]
+})
+12:24:21 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:24:21 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:24:21 | DEBUG | MegaGameEntity | Death: onDestroy(): Death
+12:24:21 | DEBUG | MegaGameEntity | Death: onDestroy(): Death
+12:24:21 | DEBUG | MegaGameEntity | Death: onDestroy(): Death
+12:24:21 | DEBUG | MegaGameEntity | Death: onDestroy(): Death
+12:24:21 | DEBUG | MegaGameEntity | Death: onDestroy(): Death
+12:24:21 | DEBUG | MegaGameEntity | Death: onDestroy(): Death
+12:24:21 | DEBUG | MegaGameEntity | Death: onDestroy(): Death
+12:24:21 | DEBUG | MegaGameEntity | Death: onDestroy(): Death
+12:24:21 | DEBUG | MegaGameEntity | Megaman: onDestroy(): Megaman
+12:24:21 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:24:21 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:24:21 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:24:21 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:24:21 | DEBUG | MegaLevelScreen | dispose(): Disposing level screen
+===== SESSION STARTED: 2025-02-08T12:24:38.132240999 =====
+12:24:38 | DEBUG | MegamanMaverickGame | resize(): width=1920, height=1080
+12:24:38 | DEBUG | MegamanMaverickGame | resize(): width=1920, height=995
+12:24:40 | DEBUG | Megaman | init()
+12:24:41 | DEBUG | CameraManagerForRooms | set focus to { Megaman:[mapObjId=0, dead=false, hashCode=1334405552] }
+12:24:41 | DEBUG | MegaLevelScreenEventListener | onEvent(): Player spawn --> reset camera manager for rooms and spawn megaman
+12:24:41 | DEBUG | MegaLevelScreen | onEvent(): Player spawn --> spawn Megaman: Properties({
+	[bounds=[128.0,192.0,32.0,32.0]]
+	[x=128.0]
+	[height=32.0]
+	[id=5]
+	[name=0]
+	[y=192.0]
+	[width=32.0]
+})
+12:24:41 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[fixture_labels=no_side_touchie,no_projectile_collision,no_body_touchie]
+	[bounds=[0.0,704.0,3712.0,96.0]]
+	[x=0.0]
+	[height=96.0]
+	[spawn_type=spawn_now]
+	[cull_out_of_bounds=false]
+	[id=8]
+	[name=null]
+	[y=704.0]
+	[width=3712.0]
+})
+12:24:41 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[fixture_labels=no_side_touchie,no_projectile_collision,no_body_touchie]
+	[bounds=[4640.0,1600.0,832.0,96.0]]
+	[x=4640.0]
+	[height=96.0]
+	[spawn_type=spawn_now]
+	[cull_out_of_bounds=false]
+	[id=89]
+	[name=null]
+	[y=1600.0]
+	[width=832.0]
+})
+12:24:41 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[224.0,0.0,96.0,112.0]]
+	[x=224.0]
+	[height=112.0]
+	[id=20]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:24:41 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[1152.0,0.0,96.0,112.0]]
+	[x=1152.0]
+	[height=112.0]
+	[id=22]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:24:41 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[1536.0,0.0,96.0,112.0]]
+	[x=1536.0]
+	[height=112.0]
+	[id=28]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:24:41 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[2080.0,0.0,96.0,112.0]]
+	[x=2080.0]
+	[height=112.0]
+	[id=36]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:24:41 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[2784.0,0.0,160.0,112.0]]
+	[x=2784.0]
+	[height=112.0]
+	[id=48]
+	[name=Death]
+	[y=0.0]
+	[width=160.0]
+	[instant=true]
+})
+12:24:41 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[2336.0,0.0,96.0,112.0]]
+	[x=2336.0]
+	[height=112.0]
+	[id=79]
+	[name=Death]
+	[y=0.0]
+	[width=96.0]
+	[instant=true]
+})
+12:24:41 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[4288.0,928.0,224.0,80.0]]
+	[x=4288.0]
+	[height=80.0]
+	[id=87]
+	[name=Death]
+	[y=928.0]
+	[width=224.0]
+	[instant=true]
+})
+12:24:41 | DEBUG | MegaGameEntity | Death: onSpawn(): Death, spawnProps=Properties({
+	[bounds=[6816.0,480.0,96.0,80.0]]
+	[x=6816.0]
+	[height=80.0]
+	[id=103]
+	[name=Death]
+	[y=480.0]
+	[width=96.0]
+	[instant=true]
+})
+12:24:41 | DEBUG | MegaGameEntity | Megaman: onSpawn(): Megaman, spawnProps=Properties({
+	[bounds=[128.0,192.0,32.0,32.0]]
+	[x=128.0]
+	[height=32.0]
+	[id=5]
+	[name=0]
+	[y=192.0]
+	[width=32.0]
+})
+12:24:41 | DEBUG | Megaman | direction-set(): value=UP
+12:24:41 | DEBUG | Megaman | direction-set(): value same as field
+12:24:41 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[0.0,0.0,224.0,192.0]]
+	[x=0.0]
+	[height=192.0]
+	[id=1]
+	[name=null]
+	[y=0.0]
+	[width=224.0]
+})
+12:24:41 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[fixture_labels=no_side_touchie,no_projectile_collision]
+	[bounds=[0.0,192.0,72.0,512.0]]
+	[x=0.0]
+	[height=512.0]
+	[id=7]
+	[name=null]
+	[y=192.0]
+	[width=72.0]
+})
+12:24:41 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[320.0,0.0,384.0,192.0]]
+	[x=320.0]
+	[height=192.0]
+	[id=19]
+	[name=null]
+	[y=0.0]
+	[width=384.0]
+})
+12:24:41 | DEBUG | CameraManagerForRooms | update(): reset
+12:24:41 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = com.badlogic.gdx.maps.objects.RectangleMapObject@262816a8
+12:24:43 | DEBUG | MegaLevelScreenEventListener | onEvent(): Player ready
+12:24:43 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:43 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:43 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:43 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:43 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:43 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:44 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:24:44 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[608.0,192.0,96.0,160.0]]
+	[x=608.0]
+	[height=160.0]
+	[id=14]
+	[name=null]
+	[y=192.0]
+	[width=96.0]
+})
+12:24:44 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:24:44 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:24:44 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:44 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:24:44 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:44 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[704.0,0.0,448.0,224.0]]
+	[x=704.0]
+	[height=224.0]
+	[id=2]
+	[name=null]
+	[y=0.0]
+	[width=448.0]
+})
+12:24:44 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:24:44 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:44 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:24:44 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:44 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:24:44 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:45 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=groundslide]
+})
+12:24:45 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:45 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:45 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:24:45 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:45 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:24:46 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:46 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:46 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:46 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:46 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:47 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:47 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[960.0,224.0,96.0,96.0]]
+	[x=960.0]
+	[height=96.0]
+	[id=16]
+	[name=null]
+	[y=224.0]
+	[width=96.0]
+})
+12:24:47 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:47 | DEBUG | MegaGameEntity | SniperJoe: onSpawn(): SniperJoe, spawnProps=Properties({
+	[bounds=[1000.0,320.0,16.0,16.0]]
+	[x=1000.0]
+	[height=16.0]
+	[id=18]
+	[name=SniperJoe]
+	[y=320.0]
+	[width=16.0]
+})
+12:24:47 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:47 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:47 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:47 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:47 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:49 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[position=(959.9381,365.26923)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=1334405552] }]
+})
+12:24:49 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(985.53845,365.26923)]
+})
+12:24:49 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:24:49 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(992.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=18, dead=false, hashCode=914629851] }]
+})
+12:24:49 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[position=(958.1202,338.53546)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=1334405552] }]
+})
+12:24:49 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(985.8539,338.53546)]
+})
+12:24:49 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:24:49 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[position=(957.3453,293.7782)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=1334405552] }]
+})
+12:24:49 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(959.47864,293.7782)]
+})
+12:24:49 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:24:49 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:24:49 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:24:49 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:24:49 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(992.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=18, dead=false, hashCode=914629851] }]
+})
+12:24:50 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(706.1295,341.6)]
+})
+12:24:50 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:24:50 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:24:50 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(992.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=18, dead=false, hashCode=914629851] }]
+})
+12:24:50 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(706.1295,341.6)]
+})
+12:24:50 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:24:51 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:24:51 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(706.1295,341.6)]
+})
+12:24:51 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:24:51 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:24:52 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(992.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=18, dead=false, hashCode=914629851] }]
+})
+12:24:52 | DEBUG | Megaman | takeDamageFrom(): healthDiff=3, damager={ Bullet:[mapObjId=0, dead=false, hashCode=345723898] }
+12:24:52 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(949.33276,341.6)]
+})
+12:24:52 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:24:53 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:24:53 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(992.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=18, dead=false, hashCode=914629851] }]
+})
+12:24:53 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(992.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=18, dead=false, hashCode=914629851] }]
+})
+12:24:54 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(706.1295,341.6)]
+})
+12:24:54 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:24:54 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:24:54 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(706.1295,341.6)]
+})
+12:24:54 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:24:54 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:24:55 | DEBUG | MegaGameEntity | ChargedShot: onSpawn(): ChargedShot, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[boolean=true]
+	[position=(960.341,355.2418)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=1334405552] }]
+})
+12:24:55 | DEBUG | MegaGameEntity | ChargedShotResidual: onSpawn(): ChargedShotResidual, spawnProps=Properties({
+	[direction=UP]
+	[boolean=true]
+	[spawn=(960.341,355.2418)]
+	[facing=RIGHT]
+	[position=CENTER_LEFT]
+})
+12:24:55 | DEBUG | MegaGameEntity | ChargedShotExplosion: onSpawn(): ChargedShotExplosion, spawnProps=Properties({
+	[direction=RIGHT]
+	[boolean=true]
+	[position=(977.4079,355.2418)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=1334405552] }]
+})
+12:24:55 | DEBUG | MegaGameEntity | ChargedShot: onDestroy(): ChargedShot
+12:24:55 | DEBUG | MegaGameEntity | ChargedShotResidual: onDestroy(): ChargedShotResidual
+12:24:55 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(-320.0,0.0)]
+	[position=(992.0,341.6)]
+	[owner={ SniperJoe:[mapObjId=18, dead=false, hashCode=914629851] }]
+})
+12:24:55 | DEBUG | MegaGameEntity | SniperJoe: onDestroy(): SniperJoe
+12:24:55 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(1008.0,348.0)]
+})
+12:24:56 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:24:56 | DEBUG | MegaGameEntity | ChargedShotExplosion: onDestroy(): ChargedShotExplosion
+12:24:56 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(706.1295,341.6)]
+})
+12:24:56 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:24:56 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:56 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:57 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:57 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[1248.0,0.0,288.0,224.0]]
+	[x=1248.0]
+	[height=224.0]
+	[id=21]
+	[name=null]
+	[y=0.0]
+	[width=288.0]
+})
+12:24:57 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:24:57 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:57 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:57 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:57 | DEBUG | MegaGameEntity | Block: onSpawn(): Block, spawnProps=Properties({
+	[bounds=[1344.0,288.0,128.0,32.0]]
+	[x=1344.0]
+	[height=32.0]
+	[id=26]
+	[name=null]
+	[y=288.0]
+	[width=128.0]
+})
+12:24:57 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:24:57 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:24:58 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:58 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:58 | DEBUG | MegaGameEntity | HeliMet: onSpawn(): HeliMet, spawnProps=Properties({
+	[bounds=[1472.0,416.0,32.0,32.0]]
+	[x=1472.0]
+	[height=32.0]
+	[target_1=com.badlogic.gdx.maps.objects.RectangleMapObject@3e7ac200]
+	[id=23]
+	[name=HeliMet]
+	[y=416.0]
+	[width=32.0]
+	[target_2=com.badlogic.gdx.maps.objects.RectangleMapObject@222b4ab1]
+})
+12:24:58 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onSpawn(): MegamanTrailSpriteV2, spawnProps=Properties({
+	[key=airdash]
+})
+12:24:58 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:58 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:58 | DEBUG | MegaGameEntity | MegamanTrailingSprite_v2: onDestroy(): MegamanTrailSpriteV2
+12:24:59 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[position=(1353.5247,372.52777)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=1334405552] }]
+})
+12:24:59 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(1370.5911,372.52777)]
+})
+12:24:59 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(1370.5911,372.52777)]
+})
+12:24:59 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:24:59 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[position=(1364.7179,346.46313)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=1334405552] }]
+})
+12:24:59 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(1366.8512,346.46313)]
+})
+12:24:59 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(1366.8512,346.46313)]
+})
+12:24:59 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:24:59 | DEBUG | MegaGameEntity | HeliMet: onDestroy(): HeliMet
+12:24:59 | DEBUG | MegaGameEntity | Disintegration: onSpawn(): Disintegration, spawnProps=Properties({
+	[position=(1385.5438,365.013)]
+})
+12:24:59 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[position=(1369.6859,344.80002)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=1334405552] }]
+})
+12:25:00 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:25:00 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:25:00 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:25:00 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:25:00 | DEBUG | MegaGameEntity | Disintegration: onDestroy(): Disintegration
+12:25:00 | DEBUG | MegaGameEntity | Bullet: onSpawn(): Bullet, spawnProps=Properties({
+	[direction=UP]
+	[trajectory=(320.0,0.0)]
+	[position=(1379.5072,344.80002)]
+	[owner={ Megaman:[mapObjId=5, dead=false, hashCode=1334405552] }]
+})
+12:25:00 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:25:00 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:25:00 | DEBUG | MegaGameEntity | Bullet: onDestroy(): Bullet
+12:25:01 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:25:01 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:25:01 | DEBUG | MegaGameEntity | Death: onDestroy(): Death
+12:25:01 | DEBUG | MegaGameEntity | Death: onDestroy(): Death
+12:25:01 | DEBUG | MegaGameEntity | Death: onDestroy(): Death
+12:25:01 | DEBUG | MegaGameEntity | Death: onDestroy(): Death
+12:25:01 | DEBUG | MegaGameEntity | Death: onDestroy(): Death
+12:25:01 | DEBUG | MegaGameEntity | Death: onDestroy(): Death
+12:25:01 | DEBUG | MegaGameEntity | Death: onDestroy(): Death
+12:25:01 | DEBUG | MegaGameEntity | Death: onDestroy(): Death
+12:25:01 | DEBUG | MegaGameEntity | Megaman: onDestroy(): Megaman
+12:25:01 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:25:01 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:25:01 | DEBUG | MegaGameEntity | Block: onDestroy(): Block
+12:25:01 | DEBUG | MegaLevelScreen | dispose(): Disposing level screen

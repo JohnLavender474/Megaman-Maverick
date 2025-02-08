@@ -55,13 +55,13 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
     companion object {
         const val TAG = "RisingLavaRiver"
 
-        private const val DEFAULT_RISE_SPEED = 1.5f
-        private const val DEFAULT_FALL_SPEED = 6f
+        private const val DEFAULT_RISE_SPEED = 1.25f
+        private const val DEFAULT_FALL_SPEED = 8f
 
         private const val STOP_DELAY = 0.5f
 
         private const val SHAKE_X = 0f
-        private const val SHAKE_Y = 0.003125f
+        private const val SHAKE_Y = 0.005f
 
         private const val RISE_SHAKE_DELAY = 2f
         private const val FALL_SHAKE_DELAY = 1f
@@ -88,6 +88,7 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         EventType.PLAYER_READY,
         EventType.PLAYER_DONE_DYIN,
         EventType.BEGIN_ROOM_TRANS,
+        EventType.GATE_INIT_OPENING,
         EventType.END_ROOM_TRANS
     )
 
@@ -186,6 +187,8 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
                 val room = game.getCurrentRoom()!!.name
                 if (room == riseRoom) setLavaToRising()
             }
+
+            EventType.GATE_INIT_OPENING -> setLavaToDormant()
         }
     }
 

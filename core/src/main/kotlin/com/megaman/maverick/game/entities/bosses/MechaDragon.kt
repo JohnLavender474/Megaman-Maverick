@@ -101,6 +101,8 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         private const val FIRE_SPEED = 10f
         private const val FIRE_ANGLE_DELTA = 75f
 
+        private const val SUBSEQUENT_FIRE_ANGLE_DIFF = 10f
+
         private val animDefs = orderedMapOf(
             "init" pairTo AnimationDef(),
             "fly" pairTo AnimationDef(3, 2, 0.1f, true),
@@ -636,52 +638,68 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
     private fun getRoomSideOf(target: Vector2) = if (target.x < roomCenter.x) RoomSide.LEFT else RoomSide.RIGHT
 
     private fun spitFireball() {
-        val spawn = body.getCenter().add(3f * ConstVals.PPM * facing.value, 0f)
-
-        val maxAngle: Float
-        val minAngle: Float
-        when (facing) {
-            Facing.LEFT -> {
-                maxAngle = 90f + FIRE_ANGLE_DELTA
-                minAngle = 90f - FIRE_ANGLE_DELTA
-            }
-
-            Facing.RIGHT -> {
-                maxAngle = 270f + FIRE_ANGLE_DELTA
-                minAngle = 270f - FIRE_ANGLE_DELTA
-            }
+        val fireballsToLaunch = when {
+            getHealthRatio() > 0.5f -> 1
+            getHealthRatio() > 0.25f -> 2
+            else -> 3
         }
 
-        var megamanToSpawnAngle = megaman.body.getCenter().sub(spawn).nor().angleDeg() - 90f
-        if (megamanToSpawnAngle < 0f) megamanToSpawnAngle += 360f
+        (0 until fireballsToLaunch).forEach { i ->
+            val spawn = body.getCenter().add(3f * ConstVals.PPM * facing.value, 0f)
 
-        var angle = megamanToSpawnAngle
-        if (angle > maxAngle) angle = maxAngle else if (angle < minAngle) angle = minAngle
+            val maxAngle: Float
+            val minAngle: Float
+            when (facing) {
+                Facing.LEFT -> {
+                    maxAngle = 90f + FIRE_ANGLE_DELTA
+                    minAngle = 90f - FIRE_ANGLE_DELTA
+                }
 
-        val trajectory = GameObjectPools.fetch(Vector2::class)
-            .set(0f, FIRE_SPEED * ConstVals.PPM)
-            .rotateDeg(angle)
+                Facing.RIGHT -> {
+                    maxAngle = 270f + FIRE_ANGLE_DELTA
+                    minAngle = 270f - FIRE_ANGLE_DELTA
+                }
+            }
 
-        GameLogger.debug(
-            TAG,
-            "spitFireball(): " +
-                "spawn=$spawn, " +
-                "megamanToSpawnAngle=${megamanToSpawnAngle}, " +
-                "angle=$angle, " +
-                "trajectory=$trajectory"
-        )
+            var megamanToSpawnAngle = megaman.body.getCenter().sub(spawn).nor().angleDeg() - 90f
+            if (megamanToSpawnAngle < 0f) megamanToSpawnAngle += 360f
 
-        val fireball = MegaEntityFactory.fetch(SpitFireball::class)!!
-        fireball.spawn(
-            props(
-                ConstKeys.OWNER pairTo this,
-                ConstKeys.POSITION pairTo spawn,
-                ConstKeys.BLOCKS pairTo blockIds,
-                ConstKeys.TRAJECTORY pairTo trajectory
+            var angle = megamanToSpawnAngle
+            when {
+                angle > maxAngle -> angle = maxAngle
+                angle < minAngle -> angle = minAngle
+            }
+
+            when (i) {
+                1 -> angle += SUBSEQUENT_FIRE_ANGLE_DIFF
+                2 -> angle -= SUBSEQUENT_FIRE_ANGLE_DIFF
+            }
+
+            val trajectory = GameObjectPools.fetch(Vector2::class)
+                .set(0f, FIRE_SPEED * ConstVals.PPM)
+                .rotateDeg(angle)
+
+            GameLogger.debug(
+                TAG,
+                "spitFireball(): " +
+                    "spawn=$spawn, " +
+                    "megamanToSpawnAngle=${megamanToSpawnAngle}, " +
+                    "angle=$angle, " +
+                    "trajectory=$trajectory"
             )
-        )
 
-        requestToPlaySound(SoundAsset.MM2_MECHA_DRAGON_SOUND, false)
+            val fireball = MegaEntityFactory.fetch(SpitFireball::class)!!
+            fireball.spawn(
+                props(
+                    ConstKeys.OWNER pairTo this,
+                    ConstKeys.POSITION pairTo spawn,
+                    ConstKeys.BLOCKS pairTo blockIds,
+                    ConstKeys.TRAJECTORY pairTo trajectory
+                )
+            )
+
+            requestToPlaySound(SoundAsset.MM2_MECHA_DRAGON_SOUND, false)
+        }
     }
 
     private fun updateFacingByRoomSide(roomSide: RoomSide) {

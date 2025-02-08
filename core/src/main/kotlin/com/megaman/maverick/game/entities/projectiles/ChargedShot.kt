@@ -39,13 +39,12 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.IOwnable
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
-import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.decorations.ChargedShotResidual
+import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
@@ -53,12 +52,16 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     companion object {
         const val TAG = "ChargedShot"
+
+        val FULL_BODY_SIZE = Vector2(0.75f, 1f).scl(ConstVals.PPM.toFloat())
+        val HALF_BODY_SIZE = Vector2(0.5f, 0.75f).scl(ConstVals.PPM.toFloat())
+
         private const val HALF_CHARGED_SHOT_REGION_PREFIX = "Half"
         private const val CHARGED_SHOT_REGION_SUFFIX = "_v2"
         private const val BOUNCE_LIMIT = 3
-        val FULL_BODY_SIZE = Vector2(0.75f, 1f).scl(ConstVals.PPM.toFloat())
-        val HALF_BODY_SIZE = Vector2(0.5f, 0.75f).scl(ConstVals.PPM.toFloat())
+
         private val SPRITE_SIZE = Vector2(2f, 2f).scl(ConstVals.PPM.toFloat())
+
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -122,7 +125,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
                 if (isFacing(Facing.LEFT)) Position.TOP_CENTER else Position.BOTTOM_CENTER
         }
 
-        val residual = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.CHARGED_SHOT_RESIDUAL)!!
+        val residual = MegaEntityFactory.fetch(ChargedShotResidual::class)!!
         residual.spawn(
             props(
                 ConstKeys.SPAWN pairTo body.getCenter(),
@@ -140,7 +143,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = bodyFixture.getEntity()
-        if (entity != owner && entity is IDamageable && !entity.canBeDamagedBy(this)) explodeAndDie()
+        if (entity != owner && entity is IDamageable && !entity.dead && !entity.canBeDamagedBy(this)) explodeAndDie()
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
@@ -202,7 +205,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
 
-        val e = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CHARGED_SHOT_EXPLOSION)!!
+        val e = MegaEntityFactory.fetch(ChargedShotExplosion::class)!!
 
         val direction = when {
             abs(trajectory.y) > abs(trajectory.x) -> (if (trajectory.y > 0f) Direction.UP else Direction.DOWN)

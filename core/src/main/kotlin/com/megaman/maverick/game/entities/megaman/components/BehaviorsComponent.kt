@@ -155,49 +155,41 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         init = {
             val v = GameObjectPools.fetch(Vector2::class)
             v.x = when (direction) {
-                Direction.UP, Direction.DOWN -> {
-                    when {
-                        isBehaviorActive(BehaviorType.WALL_SLIDING) ||
-                            (body.isSensingAny(
-                                BodySense.SIDE_TOUCHING_BLOCK_LEFT,
-                                BodySense.SIDE_TOUCHING_BLOCK_RIGHT
-                            ) && !body.isSensing(BodySense.FEET_ON_GROUND)) ->
-                            MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM * facing.value
+                Direction.UP, Direction.DOWN -> when {
+                    isBehaviorActive(BehaviorType.WALL_SLIDING) ||
+                        (body.isSensingAny(
+                            BodySense.SIDE_TOUCHING_BLOCK_LEFT,
+                            BodySense.SIDE_TOUCHING_BLOCK_RIGHT
+                        ) && !body.isSensing(BodySense.FEET_ON_GROUND)) ->
+                        MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM * facing.value
 
-                        else -> body.physics.velocity.x
-                    }
+                    else -> body.physics.velocity.x
                 }
 
-                Direction.LEFT, Direction.RIGHT -> {
-                    ConstVals.PPM * when {
-                        isBehaviorActive(BehaviorType.WALL_SLIDING) -> wallJumpVel
-                        isBehaviorActive(BehaviorType.RIDING_CART) -> cartJumpVel
-                        has(MegaEnhancement.JUMP_BOOST) -> jumpVel * MegaEnhancement.JUMP_BOOST_SCALAR
-                        else -> jumpVel
-                    }
+                Direction.LEFT, Direction.RIGHT -> ConstVals.PPM * when {
+                    isBehaviorActive(BehaviorType.WALL_SLIDING) -> wallJumpVel
+                    isBehaviorActive(BehaviorType.RIDING_CART) -> cartJumpVel
+                    has(MegaEnhancement.JUMP_BOOST) -> jumpVel * MegaEnhancement.JUMP_BOOST_SCALAR
+                    else -> jumpVel
                 }
             }
             v.y = when (direction) {
-                Direction.UP, Direction.DOWN -> {
-                    ConstVals.PPM * when {
-                        isBehaviorActive(BehaviorType.WALL_SLIDING) -> wallJumpVel
-                        isBehaviorActive(BehaviorType.RIDING_CART) -> cartJumpVel
-                        has(MegaEnhancement.JUMP_BOOST) -> jumpVel * MegaEnhancement.JUMP_BOOST_SCALAR
-                        else -> jumpVel
-                    }
+                Direction.UP, Direction.DOWN -> ConstVals.PPM * when {
+                    isBehaviorActive(BehaviorType.WALL_SLIDING) -> wallJumpVel
+                    isBehaviorActive(BehaviorType.RIDING_CART) -> cartJumpVel
+                    has(MegaEnhancement.JUMP_BOOST) -> jumpVel * MegaEnhancement.JUMP_BOOST_SCALAR
+                    else -> jumpVel
                 }
 
-                Direction.LEFT, Direction.RIGHT -> {
-                    when {
-                        isBehaviorActive(BehaviorType.WALL_SLIDING) ||
-                            (body.isSensingAny(
-                                BodySense.SIDE_TOUCHING_BLOCK_LEFT,
-                                BodySense.SIDE_TOUCHING_BLOCK_RIGHT
-                            ) && !body.isSensing(BodySense.FEET_ON_GROUND)) ->
-                            MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM * facing.value
+                Direction.LEFT, Direction.RIGHT -> when {
+                    isBehaviorActive(BehaviorType.WALL_SLIDING) ||
+                        (body.isSensingAny(
+                            BodySense.SIDE_TOUCHING_BLOCK_LEFT,
+                            BodySense.SIDE_TOUCHING_BLOCK_RIGHT
+                        ) && !body.isSensing(BodySense.FEET_ON_GROUND)) ->
+                        MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM * facing.value
 
-                        else -> body.physics.velocity.y
-                    }
+                    else -> body.physics.velocity.y
                 }
             }
             body.physics.velocity.set(v)

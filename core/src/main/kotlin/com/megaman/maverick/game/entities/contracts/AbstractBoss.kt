@@ -107,6 +107,7 @@ abstract class AbstractBoss(
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
+        GameLogger.log(getTag(), "onSpawn(): spawnProps=$spawnProps")
 
         game.eventsMan.addListener(this)
 
@@ -143,6 +144,7 @@ abstract class AbstractBoss(
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
+        GameLogger.log(getTag(), "onDestroy()")
 
         super.onDestroy()
 
@@ -169,6 +171,7 @@ abstract class AbstractBoss(
 
     override fun onEvent(event: Event) {
         GameLogger.debug(TAG, "onEvent: event=$event")
+        GameLogger.log(getTag(), "onEvent: event=$event")
         when (event.key) {
             EventType.END_BOSS_SPAWN -> onEndBossSpawnEvent()
             EventType.PLAYER_SPAWN -> destroy()
@@ -232,6 +235,7 @@ abstract class AbstractBoss(
 
     protected open fun onReady() {
         GameLogger.debug(TAG, "onReady()")
+        GameLogger.log(getTag(), "onReady()")
 
         val event = Event(
             EventType.BOSS_READY, props(
@@ -246,11 +250,13 @@ abstract class AbstractBoss(
 
     protected open fun onEndBossSpawnEvent() {
         GameLogger.debug(TAG, "onEndBossSpawnEvent()")
+        GameLogger.log(getTag(), "onEndBossSpawnEvent()")
         betweenReadyAndEndBossSpawnEvent = false
     }
 
     protected open fun triggerDefeat() {
         GameLogger.debug(TAG, "triggerDefeat()")
+        GameLogger.log(getTag(), "triggerDefeat()")
         game.eventsMan.submitEvent(Event(EventType.BOSS_DEFEATED, props(ConstKeys.BOSS pairTo this)))
         defeatTimer.reset()
         defeated = true

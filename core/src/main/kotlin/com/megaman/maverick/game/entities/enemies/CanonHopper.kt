@@ -127,6 +127,7 @@ class CanonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
                     facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
                     standTimer.update(delta)
+
                     if (standTimer.isFinished()) {
                         jump()
                         loop.next()
@@ -134,7 +135,8 @@ class CanonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
                     }
                 }
 
-                CanonHopperState.HOP -> if (body.isSensing(BodySense.FEET_ON_GROUND) && body.physics.velocity.y <= 0f) loop.next()
+                CanonHopperState.HOP ->
+                    if (body.isSensing(BodySense.FEET_ON_GROUND) && body.physics.velocity.y <= 0f) loop.next()
             }
         }
     }
@@ -190,7 +192,10 @@ class CanonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
             sprite.setFlip(isFacing(Facing.LEFT), false)
 
-            val position = if (body.isSensing(BodySense.FEET_ON_GROUND)) Position.BOTTOM_CENTER else Position.CENTER
+            val position = when (currentState) {
+                CanonHopperState.STAND -> Position.BOTTOM_CENTER
+                else -> Position.CENTER
+            }
             sprite.setPosition(body.getPositionPoint(position), position)
         }
         .build()

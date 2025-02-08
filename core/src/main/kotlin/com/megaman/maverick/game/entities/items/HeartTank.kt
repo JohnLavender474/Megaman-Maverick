@@ -99,6 +99,7 @@ class HeartTank(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, I
 
     override fun contactWithPlayer(megaman: Megaman) {
         destroy()
+
         game.eventsMan.submitEvent(Event(EventType.ADD_HEART_TANK, props(ConstKeys.VALUE pairTo heartTank)))
     }
 

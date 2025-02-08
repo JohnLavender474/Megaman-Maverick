@@ -18,9 +18,11 @@ object DesktopLauncher {
     private const val DEFAULT_WIDTH = 800
     private const val DEFAULT_HEIGHT = 700
     private const val DEFAULT_FULLSCREEN = false
+    private const val DEFAULT_WRITE_LOGS_TO_FILE = false
+    private const val DEFAULT_DEBUG_WINDOW = false
     private const val DEFAULT_DEBUG_SHAPES = false
     private const val DEFAULT_DEBUG_TEXT = false
-    private const val DEFAULT_LOG_LEVEL = "off"
+    private const val DEFAULT_LOG_LEVELS = ""
     private const val DEFAULT_FIXED_STEP_SCALAR = 1.0f
     private const val DEFAULT_MUSIC_VOLUME = 0.5f
     private const val DEFAULT_SOUND_VOLUME = 0.5f
@@ -48,7 +50,7 @@ object DesktopLauncher {
         println("- Fullscreen: " + appArgs.fullScreen)
         println("- Debug Shapes: " + appArgs.debugShapes)
         println("- Debug FPS: " + appArgs.debugText)
-        println("- Log Level: " + appArgs.logLevel)
+        println("- Log Level: " + appArgs.logLevels)
         println("- Fixed Step Scalar: " + appArgs.fixedStepScalar)
         println("- Music volume: " + appArgs.musicVolume)
         println("- Sound volume: " + appArgs.soundVolume)
@@ -61,14 +63,21 @@ object DesktopLauncher {
         if (appArgs.fullScreen) config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode())
 
         val params = MegamanMaverickGameParams()
+        params.writeLogsToFile = appArgs.writeLogsToFile
+        params.debugWindow = appArgs.debugWindow
         params.debugShapes = appArgs.debugShapes
         params.debugText = appArgs.debugText
         params.fixedStepScalar = appArgs.fixedStepScalar
         params.musicVolume = appArgs.musicVolume
         params.soundVolume = appArgs.soundVolume
         params.showScreenController = appArgs.showScreenController
+
+        val logLevels = appArgs.logLevels.replace("\\s+", "").split(",")
         try {
-            params.logLevel = GameLogLevel.valueOf(appArgs.logLevel.uppercase())
+            logLevels.forEach {
+                val logLevel = GameLogLevel.valueOf(it.uppercase())
+                params.logLevels.add(logLevel)
+            }
         } catch (e: Exception) {
             System.err.println("Exception while setting log level: $e")
         }
@@ -76,28 +85,18 @@ object DesktopLauncher {
         val game = MegamanMaverickGame(params)
 
         config.setWindowListener(object : Lwjgl3WindowAdapter() {
-            @Override
-            override fun iconified(isIconified: Boolean) {
-                game.pause()
-            }
 
-            @Override
-            override fun focusGained() {
-                game.resume()
-            }
+            override fun iconified(isIconified: Boolean) = game.pause()
 
-            @Override
-            override fun focusLost() {
-                game.pause()
-            }
+            override fun focusGained() = game.resume()
+
+            override fun focusLost() = game.pause()
         })
 
         try {
             Lwjgl3Application(game, config)
         } catch (e: Exception) {
-            System.err.println("Exception while running game!")
-            System.err.println("Exception message: " + e.message)
-            System.err.println("Exception stacktrace: ")
+            System.err.println("Exception while running game: ${e.message}")
             e.printStackTrace()
             game.dispose()
         }
@@ -123,6 +122,18 @@ object DesktopLauncher {
         var fullScreen = DEFAULT_FULLSCREEN
 
         @Parameter(
+            names = ["--writeLogsToFile"],
+            description = "Write logs to a log file. Default value = $DEFAULT_WRITE_LOGS_TO_FILE."
+        )
+        var writeLogsToFile = DEFAULT_WRITE_LOGS_TO_FILE
+
+        @Parameter(
+            names = ["--debugWindow"],
+            description = ("Enable displaying a secondary window for logs. Default value = $DEFAULT_DEBUG_WINDOW.")
+        )
+        var debugWindow = DEFAULT_DEBUG_WINDOW
+
+        @Parameter(
             names = ["--debugShapes"],
             description = ("Enable debugging shapes. Default value = $DEFAULT_DEBUG_SHAPES.")
         )
@@ -135,10 +146,11 @@ object DesktopLauncher {
         var debugText = DEFAULT_DEBUG_TEXT
 
         @Parameter(
-            names = ["--logLevel"],
-            description = ("Set the log level of the game logger. Default value = $DEFAULT_LOG_LEVEL")
+            names = ["--logLevels"],
+            description = ("Set the log levels of the game logger. Each log level should be separated with a comma. " +
+                "Default value = $DEFAULT_LOG_LEVELS")
         )
-        var logLevel = DEFAULT_LOG_LEVEL
+        var logLevels = DEFAULT_LOG_LEVELS
 
         @Parameter(
             names = ["--fixedStepScalar"],

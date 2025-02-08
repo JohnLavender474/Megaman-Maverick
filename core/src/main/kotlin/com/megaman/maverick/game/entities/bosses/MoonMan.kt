@@ -49,12 +49,14 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Asteroid
+import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -622,7 +624,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             val rotation = (if (isFacing(Facing.LEFT)) 90f else 270f) + rotOffset
             trajectory.rotateDeg(rotation)
 
-            val scythe = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MOON_SCYTHE)!!
+            val scythe = MegaEntityFactory.fetch(MoonScythe::class)!!
             scythe.spawn(
                 props(
                     ConstKeys.POSITION pairTo body.getCenter().add(0.5f * ConstVals.PPM * facing.value, 0f),
@@ -659,7 +661,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         spawn.x = getRandom(asteroidSpawnBounds.getMaxX(), asteroidSpawnBounds.getMaxX())
         spawn.y = getRandom(asteroidSpawnBounds.getY(), asteroidSpawnBounds.getMaxY())
 
-        val asteroid = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ASTEROID)!! as Asteroid
+        val asteroid = MegaEntityFactory.fetch(Asteroid::class)!!
         asteroid.spawn(
             props(
                 ConstKeys.POSITION pairTo spawn,

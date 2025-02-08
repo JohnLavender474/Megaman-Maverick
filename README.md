@@ -138,18 +138,18 @@ comprehensive listing of the credits for the artwork used in this game.
 - Inferno Man 
   - Original by [boberatu](https://www.deviantart.com/boberatu/art/MPN-000-Volcano-Man-313694441)
   - Updated by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/1137570993)
-- Reactor Man spritesheet & mugshot - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
-- Glacier Man spritesheet & mugshot - [Balloon Cart](https://balloon-cart.itch.io/glacier-man-asset-pack)
-- Desert Man spritesheet & mugshot - [rcrdcat](https://www.deviantart.com/rcrdcat/art/Desert-Man-Spritesheet-Mugshot-332165249)
+- Reactor Man - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
+- Glacier Man - [Balloon Cart](https://balloon-cart.itch.io/glacier-man-asset-pack)
+- Desert Man - [rcrdcat](https://www.deviantart.com/rcrdcat/art/Desert-Man-Spritesheet-Mugshot-332165249)
 
 #### Other Bosses
-- Moon Head spritesheet - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/MoonHead-Miniboss-Megaman-Maverick-1090151707)
-- Nuclear Monkey spritesheet - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
-- Bospider spritesheet - [Bean and Shawn](https://www.spriters-resource.com/game_boy_gbc/mmxtreme/sheet/480/?source=genre)
-- Mecha Dragon spritesheet - [Mister Mike](https://www.spriters-resource.com/nes/mm2/sheet/2317/)
-- Guts Tank spritesheet - [Mister Mike](https://www.spriters-resource.com/nes/mm2/sheet/2317/)
-- Penpen Maker spritesheet - [Mister Mike](https://www.spriters-resource.com/nes/mm3/sheet/77911/) (currently not used)
-- Sphinx spritesheet - [Mister Mike](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/108177/) (currently not used)
+- Moon Head - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/MoonHead-Miniboss-Megaman-Maverick-1090151707)
+- Nuclear Monkey - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
+- Mecha Dragon - [Ansimuz](https://ansimuz.itch.io/mega-bot)
+- Bospider - [Bean and Shawn](https://www.spriters-resource.com/game_boy_gbc/mmxtreme/sheet/480/?source=genre)
+- Guts Tank - [Mister Mike](https://www.spriters-resource.com/nes/mm2/sheet/2317/)
+- Penpen Maker - [Mister Mike](https://www.spriters-resource.com/nes/mm3/sheet/77911/) (currently not used)
+- Sphinx - [Mister Mike](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/108177/) (currently not used)
 
 #### Enemies
 - [Samuel_X7](https://www.deviantart.com/samuelx4)
@@ -160,6 +160,9 @@ comprehensive listing of the credits for the artwork used in this game.
     - Toriko Plundge 
   - [Random Enemies Set 2](https://www.deviantart.com/megared225/art/Random-Enemies-Set-2-517311774)
     - Spike Copter
+  - [Random Enemies Set 4](https://www.deviantart.com/megared225/art/Random-Enemies-Set-4-517313170)
+    - Mettaur Demon
+    - Mettaur Angel
   - [Random Enemies Set 5](https://www.deviantart.com/megared225/art/Random-Enemies-Set-5-517418497)
     - Lumber Joe 
     - Big Fish Neo
@@ -187,7 +190,7 @@ comprehensive listing of the credits for the artwork used in this game.
   - [Glacier Man tileset](https://balloon-cart.itch.io/glacier-man-asset-pack)
 - [Ansimuz](https://ansimuz.itch.io)
   - [Rodent Man tileset](https://ansimuz.itch.io/mega-bot)
-  - [Inferno Man tileset (Commissioned by oldlavygenes)](https://www.deviantart.com/oldlavygenes474/art/1142906425)
+  - [Inferno Man tileset (commissioned by oldlavygenes)](https://www.deviantart.com/oldlavygenes474/art/1142906425)
 - [Super Icon Ltd](https://assetstore.unity.com/publishers/5990) 
   - [Mega 8-Bit Pixel Pack](https://assetstore.unity.com/packages/2d/environments/mega-8-bit-pixel-pack-60158)
 - [Bongwater-bandit](https://www.deviantart.com/bongwater-bandit:

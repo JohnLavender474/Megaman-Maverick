@@ -19,6 +19,8 @@ import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
@@ -136,7 +138,10 @@ class SpikeTeeth(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     }
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
-        .sprite(TAG, GameSprite(region!!).also { sprite -> sprite.setSize(2f * ConstVals.PPM, 0.5f * ConstVals.PPM) })
+        .sprite(
+            TAG, GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, 15))
+                .also { sprite -> sprite.setSize(2f * ConstVals.PPM, 0.5f * ConstVals.PPM) }
+        )
         .updatable { _, sprite ->
             sprite.setCenter(body.getCenter())
             sprite.setFlip(false, body.isSensing(BodySense.FEET_ON_GROUND))

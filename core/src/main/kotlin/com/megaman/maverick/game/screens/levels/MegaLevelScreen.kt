@@ -247,8 +247,6 @@ class MegaLevelScreen(
             if (room?.name == ConstKeys.BOSS_ROOM) audioMan.fadeOutMusic(FADE_OUT_MUSIC_ON_BOSS_SPAWN)
         }
         cameraManagerForRooms.continueTransition = { _ ->
-            if (cameraManagerForRooms.delayJustFinished) game.getSystem(AnimationsSystem::class).on = true
-
             eventsMan.submitEvent(
                 Event(
                     EventType.CONTINUE_ROOM_TRANS,
@@ -368,6 +366,8 @@ class MegaLevelScreen(
     }
 
     override fun onEvent(event: Event) {
+        GameLogger.log(TAG, "event(): event.key=${event.key}")
+
         when (event.key) {
             EventType.GAME_PAUSE -> {
                 GameLogger.debug(
@@ -471,10 +471,10 @@ class MegaLevelScreen(
                 )
 
                 val systemsToTurnOff = gdxArrayOf(
-                    SimplePathfindingSystem::class,
+                    WorldSystem::class,
                     MotionSystem::class,
                     BehaviorsSystem::class,
-                    WorldSystem::class,
+                    SimplePathfindingSystem::class
                 )
                 systemsToTurnOff.forEach { game.getSystem(it).on = false }
 
@@ -487,10 +487,10 @@ class MegaLevelScreen(
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Gate init closing")
 
                 val systemsToTurnOn = gdxArrayOf(
-                    SimplePathfindingSystem::class,
+                    WorldSystem::class,
                     MotionSystem::class,
                     BehaviorsSystem::class,
-                    WorldSystem::class
+                    SimplePathfindingSystem::class
                 )
                 systemsToTurnOn.forEach { game.getSystem(it).on = true }
 

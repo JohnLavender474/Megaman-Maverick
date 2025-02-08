@@ -28,6 +28,7 @@ import com.mega.game.engine.audio.AudioSystem
 import com.mega.game.engine.behaviors.BehaviorsSystem
 import com.mega.game.engine.common.GameLogLevel
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.LogReceiver
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IPropertizable
@@ -76,18 +77,21 @@ import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.bosses.MechaDragon
+import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.Megaman.Companion.MEGAMAN_EVENT_LISTENER_TAG
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
-import com.megaman.maverick.game.entities.projectiles.SpitFireball
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
+import com.megaman.maverick.game.screens.debug.DebugWindow
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
+import com.megaman.maverick.game.screens.levels.MegaLevelScreen.Companion.MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG
+import com.megaman.maverick.game.screens.levels.camera.CameraManagerForRooms
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 import com.megaman.maverick.game.screens.menus.*
 import com.megaman.maverick.game.screens.menus.bosses.LevelSelectScreen
@@ -96,6 +100,7 @@ import com.megaman.maverick.game.screens.other.CreditsScreen
 import com.megaman.maverick.game.screens.other.LogoScreen
 import com.megaman.maverick.game.screens.other.SimpleEndLevelScreen
 import com.megaman.maverick.game.screens.other.SimpleInitGameScreen
+import com.megaman.maverick.game.utils.AsyncFileWriter
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getMusics
 import com.megaman.maverick.game.utils.extensions.getSounds
@@ -111,13 +116,15 @@ import kotlin.reflect.KClass
 import kotlin.reflect.cast
 
 class MegamanMaverickGameParams {
+    var writeLogsToFile: Boolean = false
+    var debugWindow: Boolean = false
     var debugShapes: Boolean = false
     var debugText: Boolean = false
-    var logLevel: GameLogLevel = GameLogLevel.LOG
     var fixedStepScalar: Float = 1f
     var musicVolume: Float = 0.5f
     var soundVolume: Float = 0.5f
     var showScreenController: Boolean = false
+    var logLevels: OrderedSet<GameLogLevel> = OrderedSet()
 }
 
 class MegamanMaverickGame(
@@ -126,10 +133,21 @@ class MegamanMaverickGame(
 
     companion object {
         const val TAG = "MegamanMaverickGame"
+        private const val LOG_FILE_NAME = "logs.txt"
         private const val ASSET_MILLIS = 17
         private const val LOADING = "LOADING"
         private const val SCREENSHOT_KEY = Input.Keys.P
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(Megaman.TAG, MechaDragon.TAG, SpitFireball.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> =
+            objectSetOf(
+                TAG,
+                Megaman.TAG,
+                AbstractBoss.TAG,
+                MegaGameEntity.TAG,
+                MegaLevelScreen.TAG,
+                CameraManagerForRooms.TAG,
+                MEGAMAN_EVENT_LISTENER_TAG,
+                MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG
+            )
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.oneFixtureMatches(FixtureType.CONSUMER)
         }
@@ -170,117 +188,15 @@ class MegamanMaverickGame(
     private lateinit var loadingText: MegaFontHandle
     private var finishedLoadingAssets = false
 
-    fun setCurrentScreen(key: String) {
-        GameLogger.debug(TAG, "setCurrentScreen(): set to screen with key = $key")
-
-        currentScreen?.let {
-            it.hide()
-            it.reset()
-        }
-
-        currentScreenKey = key
-
-        currentScreen?.let {
-            it.show()
-            it.resize(Gdx.graphics.width, Gdx.graphics.height)
-        }
-
-        if (paused) resume()
-    }
-
-    fun startLevelScreen(levelDef: LevelDefinition) {
-        val levelScreen = screens.get(ScreenEnum.LEVEL_SCREEN.name) as MegaLevelScreen
-
-        levelScreen.music = levelDef.music
-        levelScreen.tmxMapSource = levelDef.source
-        levelScreen.screenOnCompletion = levelDef.screenOnCompletion
-
-        setCurrentScreen(ScreenEnum.LEVEL_SCREEN.name)
-    }
-
-    fun startLevelScreen(level: Level) {
-        throw IllegalStateException("Should not use this method anymore")
-        /*
-        val levelScreen = screens.get(ScreenEnum.LEVEL_SCREEN.name) as MegaLevelScreen
-
-        levelScreen.level = level
-        levelScreen.music = level.musicAss
-        levelScreen.tmxMapSource = level.tmxSourceFile
-
-        setCurrentScreen(ScreenEnum.LEVEL_SCREEN.name)
-         */
-    }
-
-    fun getGameCamera() = viewports.get(ConstKeys.GAME).camera as RotatableCamera
-
-    fun setCameraRotating(value: Boolean) = putProperty("${ConstKeys.CAM}_${ConstKeys.ROTATION}", value)
-
-    fun isCameraRotating() = getOrDefaultProperty("${ConstKeys.CAM}_${ConstKeys.ROTATION}", false, Boolean::class)
-
-    fun getUiCamera() = viewports.get(ConstKeys.UI).camera as OrthographicCamera
-
-    fun getDrawables() =
-        properties.get(ConstKeys.DRAWABLES) as ObjectMap<DrawingSection, java.util.Queue<IComparableDrawable<Batch>>>
-
-    fun addDrawable(drawable: IComparableDrawable<Batch>) {
-        val section = drawable.priority.section
-        val queue = getDrawables().get(section)
-        queue.add(drawable)
-    }
-
-    fun getShapes() = properties.get(ConstKeys.SHAPES) as Array<IDrawableShape>
-
-    fun getSystems(): ObjectMap<String, GameSystem> =
-        properties.get(ConstKeys.SYSTEMS) as ObjectMap<String, GameSystem>
-
-    fun <T : GameSystem> getSystem(clazz: KClass<T>) = clazz.cast(getSystems()[clazz.simpleName]!!)
-
-    fun setRoomsSupplier(supplier: () -> Array<RectangleMapObject>?) =
-        properties.put("${ConstKeys.ROOMS}_${ConstKeys.SUPPLIER}", supplier)
-
-    fun getRooms(out: Array<RectangleMapObject>): Array<RectangleMapObject> {
-        if (properties.containsKey("${ConstKeys.ROOMS}_${ConstKeys.SUPPLIER}")) {
-            val supplier =
-                properties.get("${ConstKeys.ROOMS}_${ConstKeys.SUPPLIER}") as () -> Array<RectangleMapObject>?
-
-            val rooms = supplier.invoke()
-
-            if (rooms != null) out.addAll(rooms)
-        }
-        return out
-    }
-
-    fun setCurrentRoomSupplier(supplier: () -> RectangleMapObject?) =
-        properties.put("${ConstKeys.ROOM}_${ConstKeys.SUPPLIER}", supplier)
-
-    fun getCurrentRoom(): RectangleMapObject? {
-        if (properties.containsKey("${ConstKeys.ROOM}_${ConstKeys.SUPPLIER}")) {
-            val supplier = properties.get("${ConstKeys.ROOM}_${ConstKeys.SUPPLIER}") as () -> RectangleMapObject?
-            return supplier.invoke()
-        }
-
-        return null
-    }
-
-    fun setWorldContainer(worldContainer: IWorldContainer) = properties.put(ConstKeys.WORLD_CONTAINER, worldContainer)
-
-    fun getWorldContainer(): IWorldContainer? = properties.get(ConstKeys.WORLD_CONTAINER) as IWorldContainer?
-
-    fun setTiledMapLoadResult(tiledMapLoadResult: TiledMapLoadResult) =
-        properties.put(ConstKeys.TILED_MAP_LOAD_RESULT, tiledMapLoadResult)
-
-    fun getTiledMapLoadResult() = properties.get(ConstKeys.TILED_MAP_LOAD_RESULT) as TiledMapLoadResult
-
-    fun setDebugText(text: String) = setDebugTextSupplier { text }
-
-    fun setDebugTextSupplier(supplier: () -> String) = debugText.setTextSupplier(supplier)
+    private var logFileWriter: AsyncFileWriter? = null
+    private var debugWindow: DebugWindow? = null
 
     override fun create() {
-        GameLogger.setLogLevel(params.logLevel)
+        params.logLevels.forEach { GameLogger.setLogLevel(it, true) }
         GameLogger.tagsToLog.addAll(TAGS_TO_LOG)
         GameLogger.filterByTag = true
 
-        GameLogger.debug(TAG, "create(): appType=${Gdx.app.type}")
+        GameLogger.log(TAG, "create(): appType=${Gdx.app.type}")
 
         shapeRenderer = ShapeRenderer()
         shapeRenderer.setAutoShapeType(true)
@@ -345,6 +261,41 @@ class MegamanMaverickGame(
 
         assMan = AssetManager()
         queueAssets()
+
+        if (params.writeLogsToFile) {
+            logFileWriter = AsyncFileWriter(LOG_FILE_NAME)
+            logFileWriter!!.init()
+
+            GameLogger.logReceivers.add(object : LogReceiver {
+                override fun receive(
+                    fullMessage: String,
+                    time: String,
+                    level: GameLogLevel,
+                    tag: String,
+                    message: String,
+                    throwable: Throwable?
+                ) {
+                    logFileWriter!!.write(fullMessage)
+                }
+            })
+        }
+
+        if (params.debugWindow) {
+            debugWindow = DebugWindow()
+
+            GameLogger.logReceivers.add(object : LogReceiver {
+                override fun receive(
+                    fullMessage: String,
+                    time: String,
+                    level: GameLogLevel,
+                    tag: String,
+                    message: String,
+                    throwable: Throwable?
+                ) {
+                    debugWindow!!.log(fullMessage)
+                }
+            })
+        }
     }
 
     private fun postCreate() {
@@ -508,26 +459,28 @@ class MegamanMaverickGame(
     }
 
     override fun pause() {
-        GameLogger.debug(TAG, "pause()")
+        GameLogger.log(TAG, "pause()")
         if (paused) return
         paused = true
         currentScreen?.pause()
     }
 
     override fun resume() {
-        GameLogger.debug(TAG, "resume()")
+        GameLogger.log(TAG, "resume()")
         if (!paused) return
         paused = false
         currentScreen?.resume()
     }
 
     override fun dispose() {
-        GameLogger.debug(TAG, "dispose()")
+        GameLogger.log(TAG, "dispose()")
         if (this::batch.isInitialized) batch.dispose()
         if (this::shapeRenderer.isInitialized) shapeRenderer.dispose()
         if (this::engine.isInitialized) engine.dispose()
         screens.values().forEach { it.dispose() }
         disposables.values().forEach { it.dispose() }
+        debugWindow?.dispose()
+        logFileWriter?.dispose()
     }
 
     fun saveState() {
@@ -668,4 +621,109 @@ class MegamanMaverickGame(
 
         return engine
     }
+
+    fun setCurrentScreen(key: String) {
+        GameLogger.log(TAG, "setCurrentScreen(): set to screen with key = $key")
+
+        currentScreen?.let {
+            it.hide()
+            it.reset()
+        }
+
+        currentScreenKey = key
+
+        currentScreen?.let {
+            it.show()
+            it.resize(Gdx.graphics.width, Gdx.graphics.height)
+        }
+
+        if (paused) resume()
+    }
+
+    fun startLevelScreen(levelDef: LevelDefinition) {
+        val levelScreen = screens.get(ScreenEnum.LEVEL_SCREEN.name) as MegaLevelScreen
+
+        levelScreen.music = levelDef.music
+        levelScreen.tmxMapSource = levelDef.source
+        levelScreen.screenOnCompletion = levelDef.screenOnCompletion
+
+        setCurrentScreen(ScreenEnum.LEVEL_SCREEN.name)
+    }
+
+    fun startLevelScreen(level: Level) {
+        throw IllegalStateException("Should not use this method anymore")
+        /*
+        val levelScreen = screens.get(ScreenEnum.LEVEL_SCREEN.name) as MegaLevelScreen
+
+        levelScreen.level = level
+        levelScreen.music = level.musicAss
+        levelScreen.tmxMapSource = level.tmxSourceFile
+
+        setCurrentScreen(ScreenEnum.LEVEL_SCREEN.name)
+         */
+    }
+
+    fun getGameCamera() = viewports.get(ConstKeys.GAME).camera as RotatableCamera
+
+    fun setCameraRotating(value: Boolean) = putProperty("${ConstKeys.CAM}_${ConstKeys.ROTATION}", value)
+
+    fun isCameraRotating() = getOrDefaultProperty("${ConstKeys.CAM}_${ConstKeys.ROTATION}", false, Boolean::class)
+
+    fun getUiCamera() = viewports.get(ConstKeys.UI).camera as OrthographicCamera
+
+    fun getDrawables() =
+        properties.get(ConstKeys.DRAWABLES) as ObjectMap<DrawingSection, java.util.Queue<IComparableDrawable<Batch>>>
+
+    fun addDrawable(drawable: IComparableDrawable<Batch>) {
+        val section = drawable.priority.section
+        val queue = getDrawables().get(section)
+        queue.add(drawable)
+    }
+
+    fun getShapes() = properties.get(ConstKeys.SHAPES) as Array<IDrawableShape>
+
+    fun getSystems(): ObjectMap<String, GameSystem> =
+        properties.get(ConstKeys.SYSTEMS) as ObjectMap<String, GameSystem>
+
+    fun <T : GameSystem> getSystem(clazz: KClass<T>) = clazz.cast(getSystems()[clazz.simpleName]!!)
+
+    fun setRoomsSupplier(supplier: () -> Array<RectangleMapObject>?) =
+        properties.put("${ConstKeys.ROOMS}_${ConstKeys.SUPPLIER}", supplier)
+
+    fun getRooms(out: Array<RectangleMapObject>): Array<RectangleMapObject> {
+        if (properties.containsKey("${ConstKeys.ROOMS}_${ConstKeys.SUPPLIER}")) {
+            val supplier =
+                properties.get("${ConstKeys.ROOMS}_${ConstKeys.SUPPLIER}") as () -> Array<RectangleMapObject>?
+
+            val rooms = supplier.invoke()
+
+            if (rooms != null) out.addAll(rooms)
+        }
+        return out
+    }
+
+    fun setCurrentRoomSupplier(supplier: () -> RectangleMapObject?) =
+        properties.put("${ConstKeys.ROOM}_${ConstKeys.SUPPLIER}", supplier)
+
+    fun getCurrentRoom(): RectangleMapObject? {
+        if (properties.containsKey("${ConstKeys.ROOM}_${ConstKeys.SUPPLIER}")) {
+            val supplier = properties.get("${ConstKeys.ROOM}_${ConstKeys.SUPPLIER}") as () -> RectangleMapObject?
+            return supplier.invoke()
+        }
+
+        return null
+    }
+
+    fun setWorldContainer(worldContainer: IWorldContainer) = properties.put(ConstKeys.WORLD_CONTAINER, worldContainer)
+
+    fun getWorldContainer(): IWorldContainer? = properties.get(ConstKeys.WORLD_CONTAINER) as IWorldContainer?
+
+    fun setTiledMapLoadResult(tiledMapLoadResult: TiledMapLoadResult) =
+        properties.put(ConstKeys.TILED_MAP_LOAD_RESULT, tiledMapLoadResult)
+
+    fun getTiledMapLoadResult() = properties.get(ConstKeys.TILED_MAP_LOAD_RESULT) as TiledMapLoadResult
+
+    fun setDebugText(text: String) = setDebugTextSupplier { text }
+
+    fun setDebugTextSupplier(supplier: () -> String) = debugText.setTextSupplier(supplier)
 }

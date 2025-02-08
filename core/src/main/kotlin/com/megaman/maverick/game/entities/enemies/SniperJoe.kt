@@ -268,9 +268,10 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             body.physics.gravity.set(gravityVec)
 
             shieldFixture.setActive(shielded)
-            shieldFixture.offsetFromBodyAttachment.x =
-                0.5f * ConstVals.PPM * if (direction.equalsAny(Direction.UP, Direction.LEFT)) facing.value
-                else -facing.value
+            shieldFixture.offsetFromBodyAttachment.x = 0.75f * ConstVals.PPM * when {
+                direction.equalsAny(Direction.UP, Direction.LEFT) -> facing.value
+                else -> -facing.value
+            }
 
             when {
                 shielded -> damageableFixture.offsetFromBodyAttachment.x = 0.25f * ConstVals.PPM * when {
@@ -285,40 +286,6 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         addComponent(DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
-    }
-
-    override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
-        sprite.setSize(2f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
-            sprite.hidden = damageBlink
-
-            val flipX = facing == Facing.LEFT
-            val flipY = direction == Direction.DOWN
-            sprite.setFlip(flipX, flipY)
-
-            val rotation = when (direction) {
-                Direction.UP, Direction.DOWN -> 0f
-                Direction.LEFT -> 90f
-                Direction.RIGHT -> 270f
-            }
-            sprite.setOriginCenter()
-            sprite.rotation = rotation
-
-            val position = when (direction) {
-                Direction.UP -> Position.BOTTOM_CENTER
-                Direction.DOWN -> Position.TOP_CENTER
-                Direction.LEFT -> Position.CENTER_RIGHT
-                Direction.RIGHT -> Position.CENTER_LEFT
-            }
-            val bodyPosition = body.getPositionPoint(position)
-            sprite.setPosition(bodyPosition, position)
-
-            if (direction == Direction.LEFT) sprite.translateX(0.15f * ConstVals.PPM)
-            else if (direction == Direction.RIGHT) sprite.translateX(-0.15f * ConstVals.PPM)
-        }
-        return spritesComponent
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -410,6 +377,40 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
                 }
             }
         }
+    }
+
+    override fun defineSpritesComponent(): SpritesComponent {
+        val sprite = GameSprite()
+        sprite.setSize(2f * ConstVals.PPM)
+        val spritesComponent = SpritesComponent(sprite)
+        spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
+
+            val flipX = facing == Facing.LEFT
+            val flipY = direction == Direction.DOWN
+            sprite.setFlip(flipX, flipY)
+
+            val rotation = when (direction) {
+                Direction.UP, Direction.DOWN -> 0f
+                Direction.LEFT -> 90f
+                Direction.RIGHT -> 270f
+            }
+            sprite.setOriginCenter()
+            sprite.rotation = rotation
+
+            val position = when (direction) {
+                Direction.UP -> Position.BOTTOM_CENTER
+                Direction.DOWN -> Position.TOP_CENTER
+                Direction.LEFT -> Position.CENTER_RIGHT
+                Direction.RIGHT -> Position.CENTER_LEFT
+            }
+            val bodyPosition = body.getPositionPoint(position)
+            sprite.setPosition(bodyPosition, position)
+
+            if (direction == Direction.LEFT) sprite.translateX(0.15f * ConstVals.PPM)
+            else if (direction == Direction.RIGHT) sprite.translateX(-0.15f * ConstVals.PPM)
+        }
+        return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

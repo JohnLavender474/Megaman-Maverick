@@ -208,6 +208,7 @@ sounds/quake.mp3
 sounds/floating_portal.wav
 sounds/whoosh.mp3
 badlogic.jpg
+logs.txt
 sprites/frames/MegamanTrailSprite/airdash.png
 sprites/frames/MegamanTrailSprite/groundslide_shoot.png
 sprites/frames/MegamanTrailSprite/groundslide.png

@@ -350,7 +350,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "onSpawn(): spawnProps = $spawnProps")
+        // GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         game.eventsMan.addListener(this)
@@ -416,7 +416,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
     }
 
     override fun onDestroy() {
-        GameLogger.debug(TAG, "onDestroy()")
+        // GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
         body.removeProperty(ConstKeys.VELOCITY)
@@ -445,8 +445,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
 
                 val position = event.properties.get(ConstKeys.POSITION, Vector2::class)!!
 
-                GameLogger.debug(
-                    MEGAMAN_EVENT_LISTENER_TAG, "BEGIN/CONTINUE ROOM TRANS: position=$position"
+                if (event.key == EventType.BEGIN_ROOM_TRANS) GameLogger.debug(
+                    MEGAMAN_EVENT_LISTENER_TAG, "BEGIN ROOM TRANS: position=$position"
                 )
 
                 body.setCenter(position)
@@ -554,9 +554,12 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
     fun removeDamageListener(damageListener: IMegamanDamageListener) = damageListeners.remove(damageListener)
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
-        GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
+        val oldHealth = getCurrentHealth()
 
         if (!super.takeDamageFrom(damager)) return false
+
+        val healthDiff = oldHealth - getCurrentHealth()
+        GameLogger.debug(TAG, "takeDamageFrom(): healthDiff=$healthDiff, damager=$damager")
 
         if (!isBehaviorActive(BehaviorType.RIDING_CART) && !noDmgBounce.contains(damager::class) && damager is IBodyEntity) {
             val bounds = damager.body.getBounds()
