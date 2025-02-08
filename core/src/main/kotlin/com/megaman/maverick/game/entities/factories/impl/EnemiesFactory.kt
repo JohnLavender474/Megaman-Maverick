@@ -175,7 +175,7 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(DEATH_BAT, GameEntityPoolCreator.create { DeathBat(game) })
         pools.put(ASTRO_ASS_ASSAULTER, GameEntityPoolCreator.create { AstroAssAssaulter(game) })
         pools.put(STAGED_MOON_LANDING_FLAG, GameEntityPoolCreator.create { StagedMoonLandingFlag(game) })
-        pools.put(CANNON_HOPPER, GameEntityPoolCreator.create { CannonHopper(game) })
+        pools.put(CANNON_HOPPER, GameEntityPoolCreator.create { CanonHopper(game) })
     }
 
     override fun fetch(key: Any?): MegaGameEntity? {

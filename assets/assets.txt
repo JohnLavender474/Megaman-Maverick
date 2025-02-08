@@ -24,7 +24,6 @@ temp/Anonymous - Reddit Post/txvtb9j8fn161.webp
 temp/Anonymous - Reddit Post/c4h1gdyaxbz61.webp
 temp/Aburtos/megaman_spritesheet.png
 temp/Aburtos/Link
-temp/MegamanCrouch.piskel
 temp/PixelBoy127/MegamanWeaponGet.png
 temp/PixelBoy127/Link
 temp/boberatu/Moon Man/Link
@@ -39,6 +38,28 @@ temp/boberatu/Inferno Man/inferno_man.png
 temp/boberatu/Inferno Man/Link
 temp/boberatu/Fox Man/Link
 temp/boberatu/Fox Man/fox_man.png
+temp/ansimuz-Mega Bot Collection/Dragon Files/Dragon/Sprites/Shooting/frame3.png
+temp/ansimuz-Mega Bot Collection/Dragon Files/Dragon/Sprites/Shooting/frame1.png
+temp/ansimuz-Mega Bot Collection/Dragon Files/Dragon/Sprites/Shooting/frame2.png
+temp/ansimuz-Mega Bot Collection/Dragon Files/Dragon/Sprites/Shooting/frame4.png
+temp/ansimuz-Mega Bot Collection/Dragon Files/Dragon/Sprites/Shooting/frame6.png
+temp/ansimuz-Mega Bot Collection/Dragon Files/Dragon/Sprites/Shooting/frame5.png
+temp/ansimuz-Mega Bot Collection/Dragon Files/Dragon/Sprites/Flying/frame3.png
+temp/ansimuz-Mega Bot Collection/Dragon Files/Dragon/Sprites/Flying/frame1.png
+temp/ansimuz-Mega Bot Collection/Dragon Files/Dragon/Sprites/Flying/frame2.png
+temp/ansimuz-Mega Bot Collection/Dragon Files/Dragon/Sprites/Flying/frame4.png
+temp/ansimuz-Mega Bot Collection/Dragon Files/Dragon/Sprites/Flying/frame6.png
+temp/ansimuz-Mega Bot Collection/Dragon Files/Dragon/Sprites/Flying/frame5.png
+temp/ansimuz-Mega Bot Collection/Dragon Files/Dragon/Previews/flying.gif
+temp/ansimuz-Mega Bot Collection/Dragon Files/Dragon/Previews/Shooting.gif
+temp/ansimuz-Mega Bot Collection/Dragon Files/Dragon/Spritesheets/flying.png
+temp/ansimuz-Mega Bot Collection/Dragon Files/Dragon/Spritesheets/Shooting.png
+temp/ansimuz-Mega Bot Collection/Dragon Files/Dragon/Dragon.ase
+temp/ansimuz-Mega Bot Collection/Dragon Files/Ball/Fireball.gif
+temp/ansimuz-Mega Bot Collection/Dragon Files/Ball/Fireball.png
+temp/ansimuz-Mega Bot Collection/Dragon Files/Ball/Sprites/frame1.png
+temp/ansimuz-Mega Bot Collection/Dragon Files/Ball/Sprites/frame2.png
+temp/ansimuz-Mega Bot Collection/Dragon Files/Ball/Fireball.ase
 temp/ansimuz-Mega Bot Collection/Mega Bot Music/Pipes Forest Music/pipes-forest.mp3
 temp/ansimuz-Mega Bot Collection/Mega Bot Music/Pipes Forest Music/pipes-forest.ogg
 temp/ansimuz-Mega Bot Collection/Mega Bot Music/Pipes Forest Music/pipes-forest.wav
@@ -607,6 +628,9 @@ sprites/frames/Rejects/FreezerMan/Opening.png
 sprites/frames/Rejects/FreezerMan/JumpOpenFreezer.png
 sprites/frames/Rejects/FreezerMan/StandLookDown.png
 sprites/frames/Rejects/FreezerMan/StandLookUp.png
+sprites/frames/Bosses_old/MechaDragonMiniBoss_OLD/fly.png
+sprites/frames/Bosses_old/MechaDragonMiniBoss_OLD/shoot.png
+sprites/frames/Bosses_old/MechaDragonMiniBoss_OLD/defeated.png
 sprites/frames/Bosses_old/RodentMan/Stand.png
 sprites/frames/Bosses_old/RodentMan/Jump.png
 sprites/frames/Bosses_old/RodentMan/WallSlide.png
@@ -678,6 +702,7 @@ sprites/frames/Bosses_old/SphinxMiniBoss/laugh.png
 sprites/frames/Bosses_old/SphinxMiniBoss/defeated.png
 sprites/frames/Backgrounds4/GlacierBKG_v2.png
 sprites/frames/Backgrounds4/BGNeedle.png
+sprites/frames/Projectiles_old/SpitFireball_OLD.png
 sprites/frames/Hazards1/LavaBeamer.png
 sprites/frames/Hazards1/LavaBeamer/Off.png
 sprites/frames/Hazards1/LavaBeamer/SwitchingOn.png
@@ -687,6 +712,7 @@ sprites/frames/Hazards1/Flame.png
 sprites/frames/Hazards1/Cactus/big.png
 sprites/frames/Hazards1/Cactus/small.png
 sprites/frames/Hazards1/CrystalSpikes.png
+sprites/frames/Hazards1/SpikeTeeth.png
 sprites/frames/Hazards1/SpikeBall/Chain.png
 sprites/frames/Hazards1/SpikeBall/SpikeBall.png
 sprites/frames/Hazards1/CactusSpike.png
@@ -808,12 +834,14 @@ sprites/frames/Specials1/LightSwitch/Off.png
 sprites/frames/Specials1/LightSwitch/On.png
 sprites/frames/Specials1/LightSwitch/SwitchOff.png
 sprites/frames/Specials1/SpringBounceStill.png
-sprites/frames/Specials1/RailTrack/Left.png
-sprites/frames/Specials1/RailTrack/Right.png
-sprites/frames/Specials1/RailTrack/PlatformDrop.png
-sprites/frames/Specials1/RailTrack/Drop.png
-sprites/frames/Specials1/RailTrack/Platform.png
-sprites/frames/Specials1/RailTrack/Middle.png
+sprites/frames/Specials1/CartV2/move.png
+sprites/frames/Specials1/CartV2/idle.png
+sprites/frames/Specials1/RailTrack/middle.png
+sprites/frames/Specials1/RailTrack/left.png
+sprites/frames/Specials1/RailTrack/right.png
+sprites/frames/Specials1/RailTrack/drop.png
+sprites/frames/Specials1/RailTrack/platform_drop.png
+sprites/frames/Specials1/RailTrack/platform.png
 sprites/frames/Specials1/Togglee/Left.png
 sprites/frames/Specials1/Togglee/Right.png
 sprites/frames/Specials1/ToxicWater/water.png
@@ -1045,15 +1073,16 @@ sprites/frames/Megaman/AirDashCharging.png
 sprites/frames/Megaman/StandThrow.png
 sprites/frames/Megaman/GroundSlide.png
 sprites/frames/Megaman/Spawn.png
-sprites/frames/Bosses1/MoonHeadMiniBoss/Dark.png
-sprites/frames/Bosses1/MoonHeadMiniBoss/Damaged.png
-sprites/frames/Bosses1/MoonHeadMiniBoss/Crumble.png
-sprites/frames/Bosses1/MoonHeadMiniBoss/Awaken.png
-sprites/frames/Bosses1/MoonHeadMiniBoss/Shoot.png
-sprites/frames/Bosses1/MoonHeadMiniBoss/Angry.png
 sprites/frames/Bosses1/Bospider/Climb.png
 sprites/frames/Bosses1/Bospider/Still.png
 sprites/frames/Bosses1/Bospider/OpenEye.png
+sprites/frames/Bosses1/MechaDragon/charging.png
+sprites/frames/Bosses1/MechaDragon/init.png
+sprites/frames/Bosses1/MechaDragon/fire2.png
+sprites/frames/Bosses1/MechaDragon/fly.png
+sprites/frames/Bosses1/MechaDragon/fire1.png
+sprites/frames/Bosses1/MechaDragon/turning.png
+sprites/frames/Bosses1/MechaDragon/defeated.png
 sprites/frames/Bosses1/ReactorMan/Stand.png
 sprites/frames/Bosses1/ReactorMan/Throw.png
 sprites/frames/Bosses1/ReactorMan/Jump.png
@@ -1077,20 +1106,21 @@ sprites/frames/Bosses1/GlacierMan/duck_shoot_up.png
 sprites/frames/Bosses1/GlacierMan/duck_shoot.png
 sprites/frames/Bosses1/GlacierMan/stand_shoot_up.png
 sprites/frames/Bosses1/GlacierMan/defeated.png
-sprites/frames/Bosses1/ReactorMonkeyMiniBoss/Stand.png
-sprites/frames/Bosses1/ReactorMonkeyMiniBoss/Throw.png
-sprites/frames/Bosses1/ReactorMonkeyMiniBoss/StandDamaged.png
-sprites/frames/Bosses1/ReactorMonkeyMiniBoss/Jump.png
-sprites/frames/Bosses1/ReactorMonkeyMiniBoss/ThrowDamaged.png
-sprites/frames/Bosses1/ReactorMonkeyMiniBoss/Nuclear_Monkey_Ball.png
+sprites/frames/Bosses1/ReactorMonkey/throw.png
+sprites/frames/Bosses1/ReactorMonkey/stand_damaged.png
+sprites/frames/Bosses1/ReactorMonkey/throw_damaged.png
+sprites/frames/Bosses1/ReactorMonkey/stand.png
 sprites/frames/Bosses1/GutsTank/Laughing.png
 sprites/frames/Bosses1/GutsTank/FistLaunched.png
 sprites/frames/Bosses1/GutsTank/MouthOpen.png
 sprites/frames/Bosses1/GutsTank/Fist.png
 sprites/frames/Bosses1/GutsTank/MouthClosed.png
-sprites/frames/Bosses1/MechaDragonMiniBoss/fly.png
-sprites/frames/Bosses1/MechaDragonMiniBoss/shoot.png
-sprites/frames/Bosses1/MechaDragonMiniBoss/defeated.png
+sprites/frames/Bosses1/MoonHead/dark.png
+sprites/frames/Bosses1/MoonHead/damaged.png
+sprites/frames/Bosses1/MoonHead/angry.png
+sprites/frames/Bosses1/MoonHead/awaken.png
+sprites/frames/Bosses1/MoonHead/crumble.png
+sprites/frames/Bosses1/MoonHead/shoot.png
 sprites/frames/MegamanTrailSprite_v2/climb_still_shoot.png
 sprites/frames/MegamanTrailSprite_v2/climb_charge_half.png
 sprites/frames/MegamanTrailSprite_v2/airdash_shoot.png
@@ -1151,6 +1181,7 @@ sprites/frames/Backgrounds2/BKG11.png
 sprites/frames/Backgrounds2/BKG03.png
 sprites/frames/Backgrounds2/BKG15.png
 sprites/frames/Backgrounds2/BKG02.png
+sprites/frames/Backgrounds2/BKG03-bkg.png
 sprites/frames/Backgrounds2/BKG09.png
 sprites/frames/Backgrounds2/BKG04.png
 sprites/frames/Backgrounds2/BKG10.png
@@ -1192,11 +1223,15 @@ sprites/frames/Projectiles1/GreenPelletBlast/blast.png
 sprites/frames/Projectiles1/FireWall/disintegrate.png
 sprites/frames/Projectiles1/FireWall/fire.png
 sprites/frames/Projectiles1/FirePellet.png
+sprites/frames/Projectiles1/DuoBall.png
 sprites/frames/Projectiles1/Electric/Zap.png
 sprites/frames/Projectiles1/Electric/PurpleShockBalls.png
 sprites/frames/Projectiles1/Electric/BigElectric.png
 sprites/frames/Projectiles1/Electric/ElectricBallPulse.png
 sprites/frames/Projectiles1/Electric/SmallElectric.png
+sprites/frames/Projectiles1/ReactorManProjectile/big.png
+sprites/frames/Projectiles1/ReactorManProjectile/small.png
+sprites/frames/Projectiles1/ReactorManProjectile/die.png
 sprites/frames/Projectiles1/ReactorMonkeyBall/3.png
 sprites/frames/Projectiles1/ReactorMonkeyBall/0.png
 sprites/frames/Projectiles1/ReactorMonkeyBall/1.png
@@ -1206,9 +1241,6 @@ sprites/frames/Projectiles1/Asteroid.png
 sprites/frames/Projectiles1/PreciousGem/purple.png
 sprites/frames/Projectiles1/PreciousGem/pink.png
 sprites/frames/Projectiles1/PreciousGem/blue.png
-sprites/frames/Projectiles1/ReactManProjectile/Big.png
-sprites/frames/Projectiles1/ReactManProjectile/Die.png
-sprites/frames/Projectiles1/ReactManProjectile/Small.png
 sprites/frames/Projectiles1/ChargedShot_v2.png
 sprites/frames/Projectiles1/ChargedShot.png
 sprites/frames/Projectiles1/BouncingPebble.png
@@ -1318,6 +1350,8 @@ sprites/frames/Platforms1/FlipperPlatform/Left.png
 sprites/frames/Platforms1/FlipperPlatform/Right.png
 sprites/frames/Platforms1/FlipperPlatform/FlipToLeft.png
 sprites/frames/Platforms1/FlipperPlatform/LeftDelay.png
+sprites/frames/Enemies1/CanonHopper/stand.png
+sprites/frames/Enemies1/CanonHopper/hop.png
 sprites/frames/Enemies1/PicketJoe/Stand.png
 sprites/frames/Enemies1/PicketJoe/Throw.png
 sprites/frames/Enemies1/Popoheli.png
@@ -1374,6 +1408,10 @@ sprites/frames/Enemies1/SniperJoe/Snow/ShootingWithShield.png
 sprites/frames/Enemies1/SniperJoe/Snow/JumpNoShield.png
 sprites/frames/Enemies1/SniperJoe/Snow/ThrowShield.png
 sprites/frames/Enemies1/MagFly.png
+sprites/frames/Enemies1/DuoBallCanon/straight.png
+sprites/frames/Enemies1/DuoBallCanon/up.png
+sprites/frames/Enemies1/DuoBallCanon/up_shoot.png
+sprites/frames/Enemies1/DuoBallCanon/straight_shoot.png
 sprites/frames/Enemies1/CloudedTorpedo/UncloudedTorpedo.png
 sprites/frames/Enemies1/CloudedTorpedo/CloudyTorpedo.png
 sprites/frames/Enemies1/CloudedTorpedo/TorpedoFire.png
@@ -1443,6 +1481,9 @@ sprites/frames/Enemies1/SnowMet/PopUp.png
 sprites/frames/Enemies1/ShieldAttacker/Attack.png
 sprites/frames/Enemies1/ShieldAttacker/TurnAround.png
 sprites/frames/Enemies1/Beezee.png
+sprites/frames/Enemies1/SpikeCopter/drop_teeth.png
+sprites/frames/Enemies1/SpikeCopter/fly.png
+sprites/frames/Enemies1/SpikeCopter/drop.png
 sprites/frames/Enemies1/Bat/OpenEyes.png
 sprites/frames/Enemies1/Bat/Hang.png
 sprites/frames/Enemies1/Bat/OpenWings.png
@@ -1476,8 +1517,6 @@ sprites/frames/Enemies1/DeathBat/fly_retreat.png
 sprites/frames/Enemies1/DeathBat/open.png
 sprites/frames/Enemies1/DeathBat/fly_attack.png
 sprites/frames/Enemies1/DeathBat/hang.png
-sprites/frames/Enemies1/CannonHopper/stand.png
-sprites/frames/Enemies1/CannonHopper/hop.png
 sprites/frames/Enemies1/LaserBeamer.png
 sprites/frames/Enemies1/FloatingCan.png
 sprites/frames/Enemies1/TurnBlaster/tube.png
@@ -1491,9 +1530,9 @@ sprites/frames/Enemies1/Met/LayDown.png
 sprites/frames/Enemies1/Met/GetUp.png
 sprites/frames/Enemies1/Met/Run.png
 sprites/frames/Enemies1/Met/PopUp.png
-sprites/frames/Enemies1/HeliMet/Shield.png
-sprites/frames/Enemies1/HeliMet/Fly.png
-sprites/frames/Enemies1/HeliMet/PopUp.png
+sprites/frames/Enemies1/HeliMet/fly.png
+sprites/frames/Enemies1/HeliMet/shield.png
+sprites/frames/Enemies1/HeliMet/pop_up.png
 sprites/frames/Ui2/MegamanSubtitle.png
 sprites/frames/Ui2/TitleScreenBackgroundv2.png
 sprites/frames/Ui2/MegamanTitle.png
@@ -1914,6 +1953,7 @@ sprites/piskel/SpitFireball.piskel
 sprites/piskel/FirePellet.piskel
 sprites/piskel/FlipperPlatform.piskel
 sprites/piskel/MagmaGoop.piskel
+sprites/piskel/DuoBallCanon.piskel
 sprites/piskel/QuickSand_v2_Top.piskel
 sprites/piskel/DesertMan.piskel
 sprites/piskel/CartinJoe.piskel
@@ -1943,6 +1983,7 @@ sprites/piskel/SpaceSatellite.piskel
 sprites/piskel/LavaBeamer.piskel
 sprites/piskel/EnemyPlatforms1.piskel
 sprites/piskel/InfernoManProjectiles.piskel
+sprites/piskel/DuoBall.piskel
 sprites/piskel/MechaDragon.piskel
 sprites/piskel/PreciousWoman.piskel
 sprites/piskel/LavaFall.piskel
@@ -1951,6 +1992,7 @@ sprites/piskel/DesertMan_v2.piskel
 sprites/piskel/Grass.piskel
 sprites/piskel/Toxic_Water.piskel
 sprites/piskel/Reactor_Man_Boss.piskel
+sprites/piskel/MegamanCrouch.piskel
 sprites/piskel/Electric.piskel
 sprites/piskel/GreenCeilingFan.piskel
 sprites/piskel/Lift.piskel
@@ -2062,6 +2104,7 @@ sprites/piskel/QuickSand_v2_BottomRight.piskel
 sprites/piskel/Snow.piskel
 sprites/piskel/AngryFlameBall.piskel
 sprites/piskel/ChargedShot_v2.piskel
+sprites/piskel/SpikeCopter.piskel
 sprites/piskel/Dropper Lift.piskel
 sprites/piskel/AirConditioner.piskel
 sprites/piskel/SpikeBall.piskel
@@ -2118,6 +2161,7 @@ sprites/piskel/InfernoMan_v2.piskel
 sprites/piskel/DrLight.piskel
 sprites/piskel/SinkSand.piskel
 sprites/piskel/UFOBombBot.piskel
+sprites/piskel/SpikeTeeth.piskel
 sprites/piskel/QuickSand_v2_BottomCenter.piskel
 sprites/piskel/Robbit.piskel
 sprites/piskel/TimberWoman.piskel
@@ -2546,6 +2590,7 @@ tiled_maps/tmx/CaveMan.tmx
 tiled_maps/tmx/DesertMan_16x14_v3.tmx
 tiled_maps/tmx/WilyStage1.tmx
 tiled_maps/tmx/InfernoMan_v2.tmx
+tiled_maps/tmx/IntroStage.tmx
 tiled_maps/tmx/Test1.tmx
 tiled_maps/tmx/GlacierMan_16x14.tmx
 tiled_maps/tmx/InfernoMan.tmx
@@ -2603,6 +2648,7 @@ music/MMX_Vile.mp3
 music/MMX5_VoltKraken.mp3
 music/MMX5_DarkDizzy.mp3
 music/MMX2_MorphMoth.mp3
+music/MMX2_IntroStage.mp3
 music/MMZ_EnemyHall.mp3
 music/MM7_SlashMan.mp3
 music/MMX5_StageSelect.mp3

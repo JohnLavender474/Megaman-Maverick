@@ -20,7 +20,7 @@ import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
-import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.IGameEntity
@@ -50,11 +50,14 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
 
     companion object {
         const val TAG = "Cart"
-        private var region: TextureRegion? = null
+
+        private const val GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.01f
-        private const val GRAVITY = -0.1f
+
         private const val FRICTION_X = 1.5f
         private const val FRICTION_Y = 1.25f
+
+        private var region: TextureRegion? = null
     }
 
     override var owner: IGameEntity? = null
@@ -62,8 +65,9 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.SPECIALS_1.source, TAG)
+        super.init()
         addComponent(defineBodyComponent())
-        addComponent(defineSpriteComponent())
+        addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
         addComponent(defineCullablesComponent())
     }
@@ -74,19 +78,19 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
 
         val canSpawn = otherCart == null
 
-        GameLogger.debug(TAG, "Can spawn = $canSpawn. This = ${this.hashCode()}. Other = ${otherCart.hashCode()}")
+        GameLogger.debug(TAG, "canSpawn=$canSpawn, this=${this.hashCode()}, other=${otherCart.hashCode()}")
 
         return canSpawn
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "Spawn cart. Hashcode = ${this.hashCode()}. Props = $spawnProps")
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps, this=${this.hashCode()}")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
-        facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "right", String::class).uppercase())
+        facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, ConstKeys.RIGHT, String::class).uppercase())
     }
 
     private fun defineBodyComponent(): BodyComponent {
@@ -103,7 +107,7 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         cartFixture.offsetFromBodyAttachment.y = -0.25f * ConstVals.PPM
         cartFixture.putProperty(ConstKeys.ENTITY, this)
         body.addFixture(cartFixture)
-        debugShapes.add { cartFixture}
+        debugShapes.add { cartFixture }
 
         val bodyFixture =
             Fixture(body, FixtureType.BODY, GameRectangle().setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM))
@@ -141,16 +145,13 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineSpriteComponent(): SpritesComponent {
-        val sprite = GameSprite()
-        sprite.setSize(2.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+    private fun defineSpritesComponent() = SpritesComponentBuilder()
+        .sprite(GameSprite().also { sprite -> sprite.setSize(3f * ConstVals.PPM) })
+        .updatable { _, sprite ->
             val position = body.getPositionPoint(Position.BOTTOM_CENTER)
             sprite.setPosition(position, Position.BOTTOM_CENTER)
         }
-        return spritesComponent
-    }
+        .build()
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = {

@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.projectiles
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -34,18 +35,18 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.world.body.*
 
-class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
+class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
     companion object {
-        const val TAG = "ReactManProjectile"
+        const val TAG = "ReactorManProjectile"
+
         private const val GRAVITY = -0.15f
         private const val DIE_DUR = 0.05f
+
         private val shatterTrajectories = objectMapOf(
             Direction.UP pairTo gdxArrayOf(
                 Vector2(5f, 9f),
@@ -68,9 +69,8 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
                 Vector2(9f, -5f)
             )
         )
-        private var bigRegion: TextureRegion? = null
-        private var smallRegion: TextureRegion? = null
-        private var dyingRegion: TextureRegion? = null
+
+        private val regions = ObjectMap<String, TextureRegion>()
     }
 
     var active = false
@@ -80,11 +80,9 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
     private var big = false
 
     override fun init() {
-        if (bigRegion == null || smallRegion == null) {
+        if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
-            bigRegion = atlas.findRegion("ReactManProjectile/Big")
-            smallRegion = atlas.findRegion("ReactManProjectile/Small")
-            dyingRegion = atlas.findRegion("ReactManProjectile/Die")
+            gdxArrayOf("big", "small", "die").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
         addComponent(defineUpdatablesComponent())
@@ -132,9 +130,11 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
 
     private fun shatter(shape: IGameShape2D) {
         playSoundNow(SoundAsset.BURST_SOUND, false)
+
         val direction = getOverlapPushDirection(body.getBounds(), shape) ?: Direction.UP
+
         shatterTrajectories.get(direction).forEach { trajectory ->
-            val projectile = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.REACT_MAN_PROJECTILE)!!
+            val projectile = MegaEntityFactory.fetch(ReactorManProjectile::class)!!
             projectile.spawn(
                 props(
                     ConstKeys.POSITION pairTo when (direction) {
@@ -187,19 +187,25 @@ class ReactManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), 
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 2))
-        sprite.setSize(0.85f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
-        return spritesComponent
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
+        sprite.setSize(ConstVals.PPM.toFloat())
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (big) "big" else if (!dying) "small" else "dying" }
+        val keySupplier: () -> String? = {
+            when {
+                big -> "big"
+                !dying -> "small"
+                else -> "dying"
+            }
+        }
         val animations = objectMapOf<String, IAnimation>(
-            "big" pairTo Animation(bigRegion!!, 1, 3, 0.1f, true),
-            "small" pairTo Animation(smallRegion!!, 2, 2, 0.1f, true),
-            "dying" pairTo Animation(dyingRegion!!, 1, 2, 0.05f, false)
+            "big" pairTo Animation(regions["big"], 1, 3, 0.1f, true),
+            "small" pairTo Animation(regions["small"], 2, 2, 0.1f, true),
+            "dying" pairTo Animation(regions["dying"], 1, 2, 0.05f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

@@ -12,6 +12,7 @@ import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.IDrawable
+import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
@@ -22,6 +23,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_SIZE
+import com.megaman.maverick.game.entities.megaman.components.getSpritePriority
 import com.megaman.maverick.game.entities.megaman.components.shouldFlipSpriteX
 import com.megaman.maverick.game.entities.megaman.components.shouldFlipSpriteY
 import com.megaman.maverick.game.events.EventType
@@ -68,8 +70,10 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
             initialized = true
 
             val atlas = game.assMan.getTextureAtlas(TextureAsset.MEGAMAN_V2_BUSTER.source)
+
             beamRegion = atlas.findRegion(ConstKeys.BEAM)
-            beamSprite = GameSprite(beamRegion)
+            val priority = DrawingPriority()
+            beamSprite = GameSprite(beamRegion, megaman.getSpritePriority(priority))
             beamSprite.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
 
             beamTransAnim = Animation(atlas.findRegion(ConstKeys.SPAWN), 1, 7, 0.05f, false).reversed()
@@ -79,7 +83,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
 
         beamTransAnim.reset()
         beamSprite.hidden = true
-        beamSprite.setPosition(-ConstVals.PPM.toFloat(), -ConstVals.PPM.toFloat())
+        beamSprite.setPosition(-100f * ConstVals.PPM, -100f * -ConstVals.PPM)
 
         megaman.canBeDamaged = false
         megaman.setAllBehaviorsAllowed(false)
@@ -88,6 +92,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
     }
 
     override fun draw(drawer: Batch) {
+        /*
         val drawing = drawer.isDrawing
         if (!drawing) drawer.begin()
 
@@ -99,9 +104,12 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         }
 
         if (!drawing) drawer.end()
+         */
     }
 
     override fun update(delta: Float) {
+        game.addDrawable(beamSprite)
+
         when {
             !startDelayTimer.isFinished() -> {
                 startDelayTimer.update(delta)

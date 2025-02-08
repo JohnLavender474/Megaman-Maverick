@@ -1,6 +1,9 @@
 package com.megaman.maverick.game.entities.projectiles
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Intersector
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -8,19 +11,18 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
-import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
-import com.mega.game.engine.common.UtilMethods.mask
+import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
-import com.mega.game.engine.common.shapes.GameCircle
+import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -37,13 +39,16 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.explosions.SmokePuff
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
+import com.megaman.maverick.game.utils.extensions.toGdxRectangle
+import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
 class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
@@ -63,10 +68,10 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
     private lateinit var burstCullTimer: Timer
     private lateinit var burstDirection: Direction
 
-    private var burstOnDamageInflicted = false
     private var burstOnHitBlock = true
-    private var burstOnHitBody = false
     private var burst = false
+
+    private var canDamage = true
 
     override fun init() {
         if (regions.isEmpty) {
@@ -98,37 +103,31 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2.Zero, Vector2::class)
         body.physics.gravity.set(gravity)
 
-        burstOnDamageInflicted = spawnProps.getOrDefault(BURST_ON_DAMAGE_INFLICTED, false, Boolean::class)
-        burstOnHitBody = spawnProps.getOrDefault(BURST_ON_HIT_BODY, false, Boolean::class)
         burstOnHitBlock = spawnProps.getOrDefault(BURST_ON_HIT_BLOCK, true, Boolean::class)
 
         burst = false
         burstDirection = Direction.UP
+
+        canDamage = spawnProps.getOrDefault(ConstKeys.DAMAGER, true, Boolean::class)
     }
 
 
     override fun explodeAndDie(vararg params: Any?) {
         burst = true
+
         body.physics.gravity.setZero()
+
+        val feetBounds = params[0] as GameRectangle
+        val hitBounds = params[1] as GameRectangle
+        burstDirection = UtilMethods.getOverlapPushDirection(feetBounds, hitBounds) ?: Direction.UP
+
+        val overlap = GameObjectPools.fetch(Rectangle::class)
+        Intersector.intersectRectangles(feetBounds.toGdxRectangle(), hitBounds.toGdxRectangle(), overlap)
+
+        val position = DirectionPositionMapper.getInvertedPosition(burstDirection)
+        body.positionOnPoint(overlap.toGameRectangle().getPositionPoint(position), position)
+
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
-    }
-
-    override fun onDamageInflictedTo(damageable: IDamageable) {
-        if (burstOnDamageInflicted) explodeAndDie()
-    }
-
-    override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        if (burstOnHitBody && mask(owner, bodyFixture.getEntity(), { it is Megaman }, { it is AbstractEnemy })) {
-            burstDirection = getOverlapPushDirection(body.getBounds(), bodyFixture.getShape()) ?: Direction.UP
-            explodeAndDie()
-        }
-    }
-
-    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        if (burstOnHitBlock) {
-            burstDirection = getOverlapPushDirection(body.getBounds(), blockFixture.getShape()) ?: Direction.UP
-            explodeAndDie()
-        }
     }
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
@@ -139,10 +138,10 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
     override fun hitWater(waterFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         destroy()
 
-        val spawn = Vector2(body.getCenter().x, waterFixture.getShape().getMaxY())
+        val spawn = GameObjectPools.fetch(Vector2::class).set(body.getCenter().x, waterFixture.getShape().getMaxY())
 
-        val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
-        smokePuff.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.OWNER pairTo owner))
+        val puff = MegaEntityFactory.fetch(SmokePuff::class)!!
+        puff.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.OWNER pairTo owner))
 
         playSoundNow(SoundAsset.WHOOSH_SOUND, false)
     }
@@ -156,14 +155,15 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         if (burstCullTimer.isFinished()) {
             destroy()
 
-            val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
             val position = when (burstDirection) {
                 Direction.UP -> body.getPositionPoint(Position.BOTTOM_CENTER)
                 Direction.DOWN -> body.getPositionPoint(Position.TOP_CENTER)
                 Direction.LEFT -> body.getPositionPoint(Position.CENTER_RIGHT)
                 Direction.RIGHT -> body.getPositionPoint(Position.CENTER_LEFT)
             }
-            smokePuff.spawn(
+
+            val puff = MegaEntityFactory.fetch(SmokePuff::class)!!
+            puff.spawn(
                 props(
                     ConstKeys.OWNER pairTo owner,
                     ConstKeys.POSITION pairTo position,
@@ -174,26 +174,36 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
     })
 
     override fun defineBodyComponent(): BodyComponent {
-        val body = Body(BodyType.ABSTRACT)
+        val body = Body(BodyType.DYNAMIC)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
-        body.setSize(0.75f * ConstVals.PPM)
+        body.setSize(0.25f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        val projectileFixture =
-            Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.375f * ConstVals.PPM))
-        body.addFixture(projectileFixture)
-        debugShapes.add { projectileFixture }
+        val feetFixture =
+            Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
+        feetFixture.setHitByBlockReceiver(ProcessState.BEGIN) { block, _ ->
+            if (burstOnHitBlock) explodeAndDie(feetFixture.getShape().getBoundingRectangle(), block.body.getBounds())
+        }
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
+        body.addFixture(feetFixture)
+        feetFixture.drawingColor = Color.GREEN
+        debugShapes.add { feetFixture }
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.375f * ConstVals.PPM))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)
         debugShapes.add { damagerFixture }
 
+        body.preProcess.put(ConstKeys.DAMAGER) {
+            damagerFixture.setActive(canDamage)
+            damagerFixture.drawingColor = if (damagerFixture.isActive()) Color.RED else Color.GRAY
+        }
+
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.PROJECTILE))
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
@@ -203,9 +213,12 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
             val size = if (burst) 1f else 2f
             sprite.setSize(size * ConstVals.PPM)
 
-            val position = if (burst) Position.BOTTOM_CENTER else Position.CENTER
+            val position = if (burst) DirectionPositionMapper.getInvertedPosition(burstDirection) else Position.CENTER
             val bodyPosition = body.getPositionPoint(position)
             sprite.setPosition(bodyPosition, position)
+
+            sprite.setOriginCenter()
+            sprite.rotation = burstDirection.rotation
         }
         return spritesComponent
     }

@@ -1,13 +1,16 @@
 package com.megaman.maverick.game.entities.enemies
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
+import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.UpdateFunction
@@ -16,6 +19,8 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
@@ -24,26 +29,19 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.entities.projectiles.ReactManProjectile
-
+import com.megaman.maverick.game.entities.projectiles.ReactorManProjectile
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.*
 
 class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IDirectional {
 
@@ -65,24 +63,27 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.M
 
     private val aimTimer = Timer(AIM_DUR)
     private val shootDelayTimer = Timer(SHOOT_DELAY)
-    private var orb: AbstractProjectile? = null
+
+    private var orb: ReactorManProjectile? = null
+
     private var angleOffset = 0f
+
     private var debug = false
 
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            regions.put("base", atlas.findRegion("$TAG/base"))
-            regions.put("dial", atlas.findRegion("$TAG/dial"))
-            regions.put("tube", atlas.findRegion("$TAG/tube"))
+            gdxArrayOf("base", "dial", "tube").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
     }
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         direction =
-            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
+            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
+
         val position = when (direction) {
             Direction.UP -> Position.BOTTOM_CENTER
             Direction.DOWN -> Position.TOP_CENTER
@@ -91,25 +92,28 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.M
         }
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.positionOnPoint(bounds.getPositionPoint(position), position)
+
         aimTimer.reset()
         shootDelayTimer.setToEnd()
+
         angleOffset = 0f
+
         debug = spawnProps.getOrDefault(ConstKeys.DEBUG, false, Boolean::class)
     }
 
     private fun spawnOrb() {
-        orb =
-            EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.REACT_MAN_PROJECTILE) as AbstractProjectile
         val offset = Vector2(0f, 0.65f * ConstVals.PPM).rotateDeg(direction.rotation + angleOffset)
         val position = body.getCenter().add(offset)
+
+        orb = MegaEntityFactory.fetch(ReactorManProjectile::class)!!
         orb!!.spawn(props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo position, ConstKeys.BIG pairTo false))
     }
 
     private fun shootOrb() {
-        val rOrb = orb as ReactManProjectile
-        rOrb.active = true
-        rOrb.setTrajectory(Vector2(0f, ORB_SPEED * ConstVals.PPM).rotateDeg(direction.rotation + angleOffset))
+        orb!!.active = true
+        orb!!.setTrajectory(Vector2(0f, ORB_SPEED * ConstVals.PPM).rotateDeg(direction.rotation + angleOffset))
         orb = null
+
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
     }
 
@@ -118,10 +122,14 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.M
         updatablesComponent.add { delta ->
             if (!shootDelayTimer.isFinished()) {
                 shootDelayTimer.update(delta)
-                if (shootDelayTimer.isJustFinished()) {
-                    aimTimer.reset()
-                    shootOrb()
-                } else return@add
+                when {
+                    shootDelayTimer.isJustFinished() -> {
+                        aimTimer.reset()
+                        shootOrb()
+                    }
+
+                    else -> return@add
+                }
             }
 
             val desiredAngle = (megaman.body.getCenter().sub(body.getCenter()).angleDeg() - 90f) % 360f
@@ -150,17 +158,20 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.M
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(1.25f * ConstVals.PPM)
+        body.physics.applyFrictionX = false
+        body.physics.applyFrictionY = false
+        body.drawingColor = Color.GRAY
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
-        body.addFixture(bodyFixture)
+        val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBounds() }
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
-        body.addFixture(damagerFixture)
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().set(body))
-        body.addFixture(damageableFixture)
-
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(
+            this,
+            body,
+            BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
+        )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {

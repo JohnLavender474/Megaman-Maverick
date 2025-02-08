@@ -121,8 +121,8 @@ class Properties : ICopyable<Properties> {
 
     override fun toString(): String {
         val sb = StringBuilder()
-        sb.append("Properties({")
-        forEach { key, value -> sb.append("[$key=$value]") }
+        sb.append("Properties({\n")
+        forEach { key, value -> sb.append("\t[$key=$value]\n") }
         sb.append("})")
         return sb.toString()
     }

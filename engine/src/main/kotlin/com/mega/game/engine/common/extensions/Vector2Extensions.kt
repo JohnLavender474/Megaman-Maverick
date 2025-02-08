@@ -45,6 +45,10 @@ fun Vector2.coerce(min: Vector2, max: Vector2): Vector2 {
     return this
 }
 
+fun Vector2.setX(x: Float): Vector2 = set(x, y)
+
+fun Vector2.setY(y: Float): Vector2 = set(x, y)
+
 fun randomVector2(min: Float, max: Float, out: Vector2) = out.set(getRandom(min, max), getRandom(min, max))
 
 fun randomVector2(minX: Float, maxX: Float, minY: Float, maxY: Float, out: Vector2) =

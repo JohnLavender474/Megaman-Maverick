@@ -12,22 +12,21 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.PropellerPlatform
 import com.megaman.maverick.game.entities.blocks.RocketPlatform
+import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.hazards.DeadlyLeaf
 import com.megaman.maverick.game.entities.hazards.LaserBeamer
 
-class MegamanDamageNegotiator(private val megaman: Megaman): IDamageNegotiator {
+class MegamanDamageNegotiator(private val megaman: Megaman) : IDamageNegotiator {
 
     companion object {
         private val custom = objectMapOf<String, DamageNegotiation>(
             PropellerPlatform.TAG pairTo dmgNeg(2),
             RocketPlatform.TAG pairTo dmgNeg(2),
-            LaserBeamer.TAG pairTo dmgNeg(3),
-            DeadlyLeaf.TAG pairTo dmgNeg(2)
+            LaserBeamer.TAG pairTo dmgNeg(3)
         )
 
-        private val entityTypes = objectSetOf(EntityType.ENEMY, EntityType.EXPLOSION, EntityType.HAZARD)
+        private val entityTypes = objectSetOf(EntityType.ENEMY, EntityType.EXPLOSION)
     }
 
     override fun get(damager: IDamager): Int {
@@ -45,6 +44,8 @@ class MegamanDamageNegotiator(private val megaman: Megaman): IDamageNegotiator {
                 Size.MEDIUM -> 3
                 Size.SMALL -> 2
             }
+
+            entity is IHazard -> entity.getDamageToMegaman()
 
             entityTypes.contains(entity.getType()) -> 3
 

@@ -12,10 +12,7 @@ import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
-import com.mega.game.engine.common.extensions.equalsAny
-import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.extensions.toGdxArray
+import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -43,13 +40,11 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.hazards.AsteroidsSpawner
 import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -57,11 +52,11 @@ import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
 
-class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDuration = DAMAGE_DUR, size = Size.LARGE),
+class MoonHead(game: MegamanMaverickGame) : AbstractBoss(game, dmgDuration = DAMAGE_DUR, size = Size.LARGE),
     IAnimatedEntity {
 
     companion object {
-        const val TAG = "MoonHeadMiniBoss"
+        const val TAG = "MoonHead"
         private const val DAMAGE_DUR = 0.25f
         private const val SHOOT_SPEED = 6f
         private const val ASTEROID_OFFSET_Y = -0.65f
@@ -82,6 +77,7 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
     private enum class MoonHeadState { DELAY, DARK, AWAKEN, SHOOT, MOVE, CRUMBLE }
 
     private val loop = Loop(MoonHeadState.entries.toTypedArray().toGdxArray())
+
     private val timers = objectMapOf(
         "delay" pairTo Timer(DELAY),
         "dark" pairTo Timer(DARK_DUR),
@@ -91,22 +87,22 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
         "shoot" pairTo Timer(SHOOT_DUR),
         "crumble" pairTo Timer(CRUMBLE_DUR),
     )
+
     private val area = GameRectangle()
+
     private val firstSpawnPos = Vector2()
     private var firstSpawn = true
 
     private var asteroidsSpawner: AsteroidsSpawner? = null
+
     private lateinit var arcMotion: ArcMotion
 
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
-            regions.put("dark", atlas.findRegion("$TAG/Dark"))
-            regions.put("awaken", atlas.findRegion("$TAG/Awaken"))
-            regions.put("angry", atlas.findRegion("$TAG/Angry"))
-            regions.put("shoot", atlas.findRegion("$TAG/Shoot"))
-            regions.put("crumble", atlas.findRegion("$TAG/Crumble"))
-            regions.put("damaged", atlas.findRegion("$TAG/Damaged"))
+            gdxArrayOf("dark", "awaken", "angry", "shoot", "crumble", "damaged").forEach { key ->
+                regions.put(key, atlas.findRegion("$TAG/$key"))
+            }
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -120,14 +116,15 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
         timers.values().forEach { it.reset() }
 
         area.set(spawnProps.get(ConstKeys.AREA, RectangleMapObject::class)!!.rectangle.toGameRectangle())
+
         firstSpawnPos.set(spawnProps.get(ConstKeys.FIRST, RectangleMapObject::class)!!.rectangle.getCenter())
         firstSpawn = true
 
         if (spawnProps.containsKey(AsteroidsSpawner.TAG)) {
             val asteroidsSpawnerBounds =
                 spawnProps.get(AsteroidsSpawner.TAG, RectangleMapObject::class)!!.rectangle.toGameRectangle()
-            asteroidsSpawner =
-                EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.ASTEROIDS_SPAWNER)!! as AsteroidsSpawner
+
+            asteroidsSpawner = MegaEntityFactory.fetch(AsteroidsSpawner::class)!!
             asteroidsSpawner!!.spawn(
                 props(
                     ConstKeys.BOUNDS pairTo asteroidsSpawnerBounds,
@@ -137,7 +134,7 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
         }
     }
 
-    override fun isReady(delta: Float) = true // TODO
+    override fun isReady(delta: Float) = true
 
     override fun onDefeated(delta: Float) {
         super.onDefeated(delta)
@@ -162,8 +159,10 @@ class MoonHeadMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, dmgDurati
 
     private fun shoot() {
         val spawn = body.getCenter().add(0f, ASTEROID_OFFSET_Y * ConstVals.PPM)
+
         val impulse = megaman.body.getCenter().sub(spawn).nor().scl(SHOOT_SPEED * ConstVals.PPM)
-        val asteroid = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ASTEROID)!!
+
+        val asteroid = MegaEntityFactory.fetch(Asteroid::class)!!
         asteroid.spawn(
             props(
                 ConstKeys.POSITION pairTo spawn,

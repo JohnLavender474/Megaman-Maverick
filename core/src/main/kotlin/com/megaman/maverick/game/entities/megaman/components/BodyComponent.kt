@@ -58,7 +58,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.drawingColor = Color.GRAY
 
     val debugShapes = Array<() -> IDrawableShape?>()
-    debugShapes.add { body.getBounds() }
+    // debugShapes.add { body.getBounds() }
 
     val playerFixture = Fixture(body, FixtureType.PLAYER, GameRectangle())
     body.addFixture(playerFixture)
@@ -145,7 +145,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.addFixture(damageableFixture)
     body.putProperty(ConstKeys.DAMAGEABLE, damageableFixture)
     damageableFixture.drawingColor = Color.PURPLE
-    // debugShapes.add { damageableFixture }
+    debugShapes.add { damageableFixture }
 
     val waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle())
     body.addFixture(waterListenerFixture)
@@ -163,14 +163,6 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
             val bounds = fixture.rawShape as GameRectangle
             bounds.set(body)
         }
-
-        /*
-        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
-        feetGravityFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
-        headFixture.offsetFromBodyAttachment.y = MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
-        leftFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
-        rightFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
-         */
 
         if (!ready) {
             body.physics.velocity.setZero()

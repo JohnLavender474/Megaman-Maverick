@@ -156,6 +156,10 @@ comprehensive listing of the credits for the artwork used in this game.
   - Astro (Ass) Assaulter
   - Staged Moon Landing Flag
 - [MegaRed225](https://www.deviantart.com/megared225/gallery):
+  - [Random Enemies Set 1](https://www.deviantart.com/megared225/art/Random-Enemies-Set-1-517309440)
+    - Toriko Plundge 
+  - [Random Enemies Set 2](https://www.deviantart.com/megared225/art/Random-Enemies-Set-2-517311774)
+    - Spike Copter
   - [Random Enemies Set 5](https://www.deviantart.com/megared225/art/Random-Enemies-Set-5-517418497)
     - Lumber Joe 
     - Big Fish Neo

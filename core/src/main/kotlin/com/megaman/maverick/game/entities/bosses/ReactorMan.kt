@@ -42,7 +42,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.entities.projectiles.ReactManProjectile
+import com.megaman.maverick.game.entities.projectiles.ReactorManProjectile
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -94,7 +94,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             (if (body.isSensing(BodySense.FEET_ON_GROUND)) 0.1f else 0.25f) * ConstVals.PPM
         )
 
-    private var projectile: ReactManProjectile? = null
+    private var projectile: ReactorManProjectile? = null
     private var jumped = false
     private var throwOnJump = true
     private lateinit var currentState: ReactManState
@@ -239,7 +239,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         projectile = EntityFactories.fetch(
             EntityType.PROJECTILE,
             ProjectilesFactory.REACT_MAN_PROJECTILE
-        )!! as ReactManProjectile
+        )!! as ReactorManProjectile
 
         projectile!!.spawn(
             props(

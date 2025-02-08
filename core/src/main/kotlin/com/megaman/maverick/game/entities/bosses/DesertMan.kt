@@ -184,6 +184,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         leftWallBounds = spawnProps.get(
             "${ConstKeys.LEFT}_${ConstKeys.WALL}", RectangleMapObject::class
         )!!.rectangle.toGameRectangle()
+
         rightWallBounds = spawnProps.get(
             "${ConstKeys.RIGHT}_${ConstKeys.WALL}", RectangleMapObject::class
         )!!.rectangle.toGameRectangle()
@@ -286,7 +287,9 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
 
                 DesertManState.WALL_SLIDE -> {
                     body.physics.velocity.x = 0f
+
                     if (shouldGoToStandState()) stateMachine.next()
+
                     val timer = timers["wall_slide"]
                     timer.update(delta)
                     if (timer.isFinished()) stateMachine.next()
@@ -335,33 +338,33 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         feetFixture.offsetFromBodyAttachment.y = -BODY_HEIGHT * ConstVals.PPM / 2f
         feetFixture.putProperty(ConstKeys.STICK_TO_BLOCK, false)
         body.addFixture(feetFixture)
-        debugShapes.add { feetFixture}
+        debugShapes.add { feetFixture }
 
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
         headFixture.offsetFromBodyAttachment.y = BODY_HEIGHT * ConstVals.PPM / 2f
         body.addFixture(headFixture)
-        debugShapes.add { headFixture}
+        debugShapes.add { headFixture }
 
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, ConstVals.PPM.toFloat()))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.offsetFromBodyAttachment.x = -BODY_WIDTH * ConstVals.PPM / 2f
         body.addFixture(leftFixture)
-        debugShapes.add { leftFixture}
+        debugShapes.add { leftFixture }
 
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, ConstVals.PPM.toFloat()))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         rightFixture.offsetFromBodyAttachment.x = BODY_WIDTH * ConstVals.PPM / 2f
         body.addFixture(rightFixture)
-        debugShapes.add { rightFixture}
+        debugShapes.add { rightFixture }
 
         val bodyFixture =
             Fixture(body, FixtureType.BODY, GameRectangle().setWidth(BODY_WIDTH * ConstVals.PPM))
         bodyFixture.attachedToBody = false
         body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture}
+        debugShapes.add { bodyFixture }
 
         val damagerFixture =
             Fixture(body, FixtureType.DAMAGER, GameRectangle().setWidth(BODY_WIDTH * ConstVals.PPM))
@@ -400,20 +403,25 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
                 if (isPunching()) {
                     val shape = t.rawShape as GameRectangle
                     shape.setWidth(
-                        if (isTornadoPunching()) SHORT_PUNCH_WIDTH * ConstVals.PPM
-                        else (longPunchExtensionCount * SPRITE_SIZE * ConstVals.PPM) +
-                            (LONG_PUNCH_EXTRA_WIDTH * ConstVals.PPM)
+                        when {
+                            isTornadoPunching() -> SHORT_PUNCH_WIDTH * ConstVals.PPM
+                            else -> (longPunchExtensionCount * SPRITE_SIZE * ConstVals.PPM) +
+                                (LONG_PUNCH_EXTRA_WIDTH * ConstVals.PPM)
+                        }
                     )
 
                     when (currentState) {
-                        DesertManState.TORNADO -> {
-                            if (isFacing(Facing.LEFT)) shape.setCenterRightToPoint(body.getPositionPoint(Position.TOP_LEFT))
-                            else shape.setCenterLeftToPoint(body.getPositionPoint(Position.TOP_RIGHT))
+                        DesertManState.TORNADO -> when {
+                            isFacing(Facing.LEFT) -> shape.setCenterRightToPoint(body.getPositionPoint(Position.TOP_LEFT))
+                            else -> shape.setCenterLeftToPoint(body.getPositionPoint(Position.TOP_RIGHT))
                         }
 
+
                         else -> {
-                            if (isFacing(Facing.LEFT)) shape.setCenterRightToPoint(body.getPositionPoint(Position.CENTER_LEFT))
-                            else shape.setCenterLeftToPoint(body.getPositionPoint(Position.CENTER_RIGHT))
+                            when {
+                                isFacing(Facing.LEFT) -> shape.setCenterRightToPoint(body.getPositionPoint(Position.CENTER_LEFT))
+                                else -> shape.setCenterLeftToPoint(body.getPositionPoint(Position.CENTER_RIGHT))
+                            }
 
                             shape.translate(0f, ARM_OFFSET_Y * ConstVals.PPM)
                         }
@@ -429,8 +437,12 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
             when {
                 body.isSensing(BodySense.FEET_ON_SAND) -> {
                     body.physics.gravityOn = false
-                    body.physics.defaultFrictionOnSelf.x =
-                        if (currentState == DesertManState.TORNADO) DEFAULT_FRICTION_X else SAND_FRICTION_X
+
+                    body.physics.defaultFrictionOnSelf.x = when (currentState) {
+                        DesertManState.TORNADO -> DEFAULT_FRICTION_X
+                        else -> SAND_FRICTION_X
+                    }
+
                     if (body.physics.velocity.y < 0f) body.physics.velocity.y = 0f
                 }
 
@@ -450,10 +462,10 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         val sprites = OrderedMap<Any, GameSprite>()
         val updateFunctions = ObjectMap<Any, UpdateFunction<GameSprite>>()
 
-        val mainSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
+        val mainSprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         mainSprite.setSize(SPRITE_SIZE * ConstVals.PPM)
-        sprites.put("main", mainSprite)
-        updateFunctions.put("main") { _, sprite ->
+        sprites.put(ConstKeys.MAIN, mainSprite)
+        updateFunctions.put(ConstKeys.MAIN) { _, sprite ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             sprite.translateY(SPRITE_Y_OFFSET * ConstVals.PPM)
             val flipX =
@@ -466,9 +478,9 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         for (i in 1..ARM_EXTENSIONS_COUNT) {
             val armExtensionSprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
             armExtensionSprite.setSize(SPRITE_SIZE * ConstVals.PPM)
-            sprites.put("arm_$i", armExtensionSprite)
+            sprites.put("${ConstKeys.ARM}_$i", armExtensionSprite)
 
-            updateFunctions.put("arm_$i") { _, sprite ->
+            updateFunctions.put("${ConstKeys.ARM}_$i") { _, sprite ->
                 val position =
                     (if (isFacing(Facing.LEFT)) leftArmExtensions[i - 1] else rightArmExtensions[i - 1])
                         .getPositionPoint(Position.BOTTOM_CENTER)
@@ -491,10 +503,10 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
             else when (currentState) {
                 DesertManState.INIT -> if (body.isSensing(BodySense.FEET_ON_GROUND)) "dance" else "jump"
                 DesertManState.DANCE -> if (danceFlash) "dance_flash" else "dance"
-                DesertManState.TORNADO -> {
-                    if (!timers["tornado_start"].isFinished()) "tornado_start"
-                    else if (!timers["tornado_punch"].isFinished()) "tornado_punch"
-                    else "tornado"
+                DesertManState.TORNADO -> when {
+                    !timers["tornado_start"].isFinished() -> "tornado_start"
+                    !timers["tornado_punch"].isFinished() -> "tornado_punch"
+                    else -> "tornado"
                 }
 
                 else -> currentState.name.lowercase()

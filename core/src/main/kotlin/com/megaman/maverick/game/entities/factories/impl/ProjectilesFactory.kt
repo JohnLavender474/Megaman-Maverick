@@ -83,7 +83,7 @@ class ProjectilesFactory(private val game: MegamanMaverickGame) : EntityFactory(
         pools.put(TOXIC_GOOP_SHOT, GameEntityPoolCreator.create { ToxicGoopShot(game) })
         pools.put(REACTOR_MONKEY_BALL, GameEntityPoolCreator.create { ReactorMonkeyBall(game) })
         pools.put(TUBE_BEAM, GameEntityPoolCreator.create { TubeBeam(game) })
-        pools.put(REACT_MAN_PROJECTILE, GameEntityPoolCreator.create { ReactManProjectile(game) })
+        pools.put(REACT_MAN_PROJECTILE, GameEntityPoolCreator.create { ReactorManProjectile(game) })
         pools.put(ASTEROID, GameEntityPoolCreator.create { Asteroid(game) })
         pools.put(ROCKET_BOMB, GameEntityPoolCreator.create { RocketBomb(game) })
         pools.put(BUNBY_RED_ROCKET, GameEntityPoolCreator.create { BunbyRedRocket(game) })

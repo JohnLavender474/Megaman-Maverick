@@ -27,8 +27,10 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.damage.IDamageNegotiator
 import com.megaman.maverick.game.damage.SelfSizeDamageNegotiator
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.explosions.Disintegration
+import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ItemsFactory
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
@@ -69,6 +71,7 @@ abstract class AbstractEnemy(
         runnablesOnDestroy.put(ConstKeys.ITEMS) {
             if (isHealthDepleted()) {
                 disintegrate()
+
                 if (dropItemOnDeath) {
                     val playerHealthModifier = 1f - megaman.getHealthRatio()
                     val dropChance = BASE_DROP_ITEM_CHANCE + (playerHealthModifier * MEGAMAN_HEALTH_INFLUENCE_FACTOR)
@@ -164,20 +167,22 @@ abstract class AbstractEnemy(
     protected open fun disintegrate(disintegrationProps: Properties? = null) {
         if (overlapsGameCamera()) playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
 
-        val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)
+        val disintegration = MegaEntityFactory.fetch(Disintegration::class)!!
         val props = disintegrationProps ?: props(ConstKeys.POSITION pairTo body.getCenter())
-        disintegration?.spawn(props)
+        disintegration.spawn(props)
     }
 
     protected open fun explode(explosionProps: Properties? = null) {
         if (overlapsGameCamera()) playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
-        val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)
+
+        val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         val props = explosionProps ?: props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo body.getCenter())
-        explosion?.spawn(props)
+        explosion.spawn(props)
     }
 
     open fun isMegamanShootingAtMe(): Boolean {
         if (!megaman.shooting) return false
+
         return body.getX() < megaman.body.getX() && megaman.facing == Facing.LEFT ||
             body.getX() > megaman.body.getX() && megaman.facing == Facing.RIGHT
     }

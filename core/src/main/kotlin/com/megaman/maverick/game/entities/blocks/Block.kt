@@ -204,7 +204,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         blockFixture.drawingColor = Color.GRAY
         debugShapeSuppliers.add { blockFixture }
 
-        body.preProcess.put(ConstKeys.DEFAULT) { blockRect.set(body) }
+        body.preProcess.put("${ConstKeys.BLOCK}_${ConstKeys.FIXTURE}") { blockRect.set(body) }
 
         return BodyComponentCreator.create(this, body)
     }

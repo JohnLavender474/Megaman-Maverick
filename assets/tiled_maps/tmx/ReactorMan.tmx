@@ -553,24 +553,24 @@
   <object id="172" name="Start" x="4776" y="824" width="16" height="16"/>
   <object id="173" name="Target" x="4776" y="536" width="16" height="16"/>
   <object id="175" name="Trigger" x="4864" y="512" width="32" height="192"/>
-  <object id="220" name="ReactorMonkeyMiniBoss" x="6624" y="736" width="32" height="32">
+  <object id="220" name="ReactorMonkey" x="6624" y="736" width="32" height="32">
    <properties>
     <property name="boss_key" value="2"/>
     <property name="mini" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="259" name="ReactorMonkeyMiniBoss" x="7648" y="928" width="32" height="32">
+  <object id="259" name="ReactorMonkey" x="7648" y="928" width="32" height="32">
    <properties>
     <property name="boss_key" value="3"/>
     <property name="mini" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="375" name="ReactorMan" x="11776" y="1536" width="32" height="32">
+  <object id="375" name="ReactorMonkey" x="11776" y="1536" width="32" height="32">
    <properties>
     <property name="music" value="MMX6_BOSS_FIGHT_MUSIC"/>
    </properties>
   </object>
-  <object id="416" name="ReactorMonkeyMiniBoss" x="7648" y="1984" width="32" height="32">
+  <object id="416" name="ReactorMonkey" x="7648" y="1984" width="32" height="32">
    <properties>
     <property name="boss_key" value="99"/>
     <property name="mini" type="bool" value="true"/>
@@ -759,10 +759,10 @@
   <object id="366" name="ToxicBarrelBot" x="10776" y="1840" width="16" height="16"/>
   <object id="412" name="FloatingCanHole" x="7264" y="1760" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="14" name="player">
+ <objectgroup id="14" name="temp">
   <object id="441" name="0" x="3968" y="1376" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="3" name="temp">
+ <objectgroup id="3" name="player">
   <object id="9" name="0" x="64" y="1760" width="32" height="32"/>
   <object id="63" name="1" x="2752" y="1728" width="32" height="32"/>
   <object id="130" name="2" x="4000" y="1376" width="32" height="32">

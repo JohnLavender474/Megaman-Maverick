@@ -103,7 +103,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
         beamTransitionTimer.reset()
         beamLandAnimation.reset()
 
-        beamSprite.setPosition(-ConstVals.PPM.toFloat(), -ConstVals.PPM.toFloat())
+        beamSprite.setPosition(-100f * ConstVals.PPM, -100f * ConstVals.PPM)
 
         megaman.ready = false
         megaman.canBeDamaged = false

@@ -40,12 +40,14 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.SniperJoeShield
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
@@ -201,7 +203,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(1.5f * ConstVals.PPM, 2f * ConstVals.PPM)
+        body.setSize(1.25f * ConstVals.PPM, 1.75f * ConstVals.PPM)
 
         val shapes = Array<() -> IDrawableShape?>()
 
@@ -218,21 +220,16 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         body.addFixture(headFixture)
         // shapes.add { headFixture }
 
-        val damagerFixture = Fixture(
-            body, FixtureType.DAMAGER, GameRectangle().setSize(0.75f * ConstVals.PPM, 1.25f * ConstVals.PPM)
-        )
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)
-        // shapes.add { damagerFixture }
+        shapes.add { damagerFixture }
 
-        val damageableFixture = Fixture(
-            body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.8f * ConstVals.PPM, 1.35f * ConstVals.PPM)
-        )
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
         body.addFixture(damageableFixture)
         // shapes.add { damageableFixture }
 
-        val shieldFixture = Fixture(
-            body, FixtureType.SHIELD, GameRectangle().setSize(0.25f * ConstVals.PPM, 1.25f * ConstVals.PPM)
-        )
+        val shieldFixture =
+            Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(0.25f * ConstVals.PPM, 1.25f * ConstVals.PPM))
         body.addFixture(shieldFixture)
         shapes.add { shieldFixture }
 
@@ -448,15 +445,19 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     }
 
     private fun throwShield() {
-        val shield = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SNIPER_JOE_SHIELD)!!
+        val trajectory = normalizedTrajectory(
+            body.getCenter(),
+            megaman.body.getCenter(),
+            SHIELD_VEL * ConstVals.PPM,
+            GameObjectPools.fetch(Vector2::class)
+        )
+
+        val shield = MegaEntityFactory.fetch(SniperJoeShield::class)!!
         shield.spawn(
             props(
-                ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.TRAJECTORY pairTo normalizedTrajectory(
-                    body.getCenter(),
-                    megaman.body.getCenter(),
-                    SHIELD_VEL * ConstVals.PPM,
-                    GameObjectPools.fetch(Vector2::class)
-                ), ConstKeys.OWNER pairTo this
+                ConstKeys.POSITION pairTo body.getCenter(),
+                ConstKeys.TRAJECTORY pairTo trajectory,
+                ConstKeys.OWNER pairTo this
             )
         )
     }
@@ -484,22 +485,24 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
     private fun jump() {
         val impulse = GameObjectPools.fetch(Vector2::class)
+
         when (direction) {
             Direction.UP -> impulse.set(0f, JUMP_IMPULSE)
             Direction.DOWN -> impulse.set(0f, -JUMP_IMPULSE)
             Direction.LEFT -> impulse.set(-JUMP_IMPULSE, 0f)
             Direction.RIGHT -> impulse.set(JUMP_IMPULSE, 0f)
         }.scl(ConstVals.PPM.toFloat())
+
         body.physics.velocity.set(impulse)
     }
 
     private fun shoot() {
         val spawn = GameObjectPools.fetch(Vector2::class)
         when (direction) {
-            Direction.UP -> spawn.set(0.5f * facing.value, -0.275f)
-            Direction.DOWN -> spawn.set(0.5f * facing.value, 0.275f)
-            Direction.LEFT -> spawn.set(0.275f, 0.5f * facing.value)
-            Direction.RIGHT -> spawn.set(-0.275f, -0.5f * facing.value)
+            Direction.UP -> spawn.set(0.5f * facing.value, -0.2f)
+            Direction.DOWN -> spawn.set(0.5f * facing.value, 0.2f)
+            Direction.LEFT -> spawn.set(0.2f, 0.5f * facing.value)
+            Direction.RIGHT -> spawn.set(-0.2f, -0.5f * facing.value)
         }
         spawn.scl(ConstVals.PPM.toFloat()).add(body.getCenter())
 

@@ -17,6 +17,7 @@ import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.controller.ControllerUtils
+import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstKeys
@@ -27,6 +28,7 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
+import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
 import com.megaman.maverick.game.screens.utils.ScreenSlide
@@ -102,8 +104,10 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                     centerY = false
                 )
             fontHandles.add(fontHandle)
+
             val arrowCenter = Vector2(1.5f * ConstVals.PPM, (row - ARROW_CENTER_ROW_DECREMENT) * ConstVals.PPM)
             blinkArrows.put(it.text, BlinkingArrow(game.assMan, arrowCenter))
+
             row -= TEXT_ROW_DECREMENT * ConstVals.PPM
         }
 
@@ -119,8 +123,10 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                     centerY = false
                 )
             fontHandles.add(fontHandle)
+
             val arrowCenter = Vector2(16.5f * ConstVals.PPM, (row - ARROW_CENTER_ROW_DECREMENT) * ConstVals.PPM)
             blinkArrows.put(it.text, BlinkingArrow(game.assMan, arrowCenter))
+
             row -= TEXT_ROW_DECREMENT * ConstVals.PPM
         }
 
@@ -154,7 +160,8 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         var y = 9.8f
         for (i in 0 until 4) {
             if (i != 0 && i % 2 == 0) y -= 0.85f
-            val blinkArrow = Sprite(arrowRegion)
+
+            val blinkArrow = GameSprite(arrowRegion)
             blinkArrow.setBounds(
                 (if (i % 2 == 0) 24f else 26f) * ConstVals.PPM,
                 y * ConstVals.PPM,
@@ -162,11 +169,12 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                 ConstVals.PPM / 2f
             )
             blinkArrow.setFlip(i % 2 == 0, false)
+
             settingsArrows.add(blinkArrow)
         }
 
         val atlas = game.assMan.getTextureAtlas(TextureAsset.UI_2.source)
-        background = Sprite(atlas.findRegion("TitleScreenBackgroundv2"))
+        background = GameSprite(atlas.findRegion("TitleScreenBackgroundv2"))
         background.setSize(ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         background.setCenter(ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f, ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f)
 
@@ -175,7 +183,9 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
             object : IMenuButton {
                 override fun onSelect(delta: Float): Boolean {
                     game.state.reset()
-                    game.setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name)
+                    // TODO: should start intro cutscene screen
+                    game.startLevelScreen(LevelDefinition.INTRO_STAGE)
+                    // game.setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name)
                     return true
                 }
 

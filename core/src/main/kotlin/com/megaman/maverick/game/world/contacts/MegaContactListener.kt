@@ -206,7 +206,18 @@ class MegaContactListener(
             }
         }
 
-        // side, block
+        // body, side
+        else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.SIDE)) {
+            printDebugLog(contact, "beginContact(): Body-Side, contact=$contact")
+
+            val (bodyFixture, sideFixture) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.SIDE, out)!!
+            if (bodyFixture.hasFixtureLabel(FixtureLabel.NO_SIDE_TOUCHIE)) return
+
+            val bodyEntity = bodyFixture.getEntity() as IBodyEntity
+            if (sideFixture.hasHitByBodyReceiver()) sideFixture.getHitByBody(bodyEntity, ProcessState.BEGIN)
+        }
+
+        // block, side
         else if (contact.fixturesMatch(FixtureType.BLOCK, FixtureType.SIDE)) {
             printDebugLog(contact, "beginContact(): Block-Side, contact=$contact")
 
@@ -670,7 +681,7 @@ class MegaContactListener(
             if (playerEntity is Megaman && itemEntity is ItemEntity) itemEntity.contactWithPlayer(playerEntity)
         }
 
-        // player feet, cart
+        // feet, cart
         else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.CART)) {
             printDebugLog(contact, "beginContact(): Feet-Cart, contact=$contact")
             val (feetFixture, cartFixture) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.CART, out)!!
@@ -847,6 +858,17 @@ class MegaContactListener(
                 body.setBodySense(BodySense.FEET_TOUCHING_LADDER, true)
                 body.putProperty(ConstKeys.LADDER, ladderFixture.getEntity())
             }
+        }
+
+        // body, side
+        else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.SIDE)) {
+            printDebugLog(contact, "continueContact(): Body-Side, contact=$contact")
+
+            val (bodyFixture, sideFixture) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.SIDE, out)!!
+            if (bodyFixture.hasFixtureLabel(FixtureLabel.NO_SIDE_TOUCHIE)) return
+
+            val bodyEntity = bodyFixture.getEntity() as IBodyEntity
+            if (sideFixture.hasHitByBodyReceiver()) sideFixture.getHitByBody(bodyEntity, ProcessState.CONTINUE)
         }
 
         // head, ladder
@@ -1155,6 +1177,17 @@ class MegaContactListener(
             val sideType = sideFixture.getProperty(ConstKeys.SIDE)
             if (sideType == ConstKeys.LEFT) body.setBodySense(BodySense.SIDE_TOUCHING_BLOCK_LEFT, false)
             else body.setBodySense(BodySense.SIDE_TOUCHING_BLOCK_RIGHT, false)
+        }
+
+        // body, side
+        else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.SIDE)) {
+            printDebugLog(contact, "endContact(): Body-Side, contact=$contact")
+
+            val (bodyFixture, sideFixture) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.SIDE, out)!!
+            if (bodyFixture.hasFixtureLabel(FixtureLabel.NO_SIDE_TOUCHIE)) return
+
+            val bodyEntity = bodyFixture.getEntity() as IBodyEntity
+            if (sideFixture.hasHitByBodyReceiver()) sideFixture.getHitByBody(bodyEntity, ProcessState.END)
         }
 
         // side, ice

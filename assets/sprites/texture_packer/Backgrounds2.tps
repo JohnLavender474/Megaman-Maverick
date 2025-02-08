@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.4.0</string>
+        <string>7.5.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -58,9 +58,9 @@
             <key>filtering</key>
             <struct type="LibGDXFiltering">
                 <key>x</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
                 <key>y</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
             </struct>
         </struct>
         <key>shapePadding</key>
@@ -189,6 +189,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Backgrounds2/BKG02.png</key>
+            <key type="filename">../frames/Backgrounds2/BKG03-bkg.png</key>
             <key type="filename">../frames/Backgrounds2/BKG03.png</key>
             <key type="filename">../frames/Backgrounds2/BKG04.png</key>
             <key type="filename">../frames/Backgrounds2/BKG05.png</key>

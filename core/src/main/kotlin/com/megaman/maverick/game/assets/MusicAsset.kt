@@ -10,6 +10,7 @@ enum class MusicAsset(src: String) : IAsset {
     MMX6_SIGMA_2_BATTLE_MUSIC("MMX6_Sigma.mp3"),
     MM6_WILY_BATTLE_MUSIC("MM6_WilyBattle.mp3"),
     MM8_FROST_MAN_MUSIC("MM8_FrostMan.mp3"),
+    MMX2_INTRO_STAGE_MUSIC("MMX2_IntroStage.mp3"),
     MM8_FROST_MAN_ALT_MUSIC("MM8_FrostMan_Alt.mp3"),
     MMX2_X_HUNTER_MUSIC("MMX2_X-Hunter.mp3"),
     MMX5_VOLT_KRAKEN_MUSIC("MMX5_VoltKraken.mp3"),

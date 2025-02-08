@@ -33,7 +33,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.bosses.MoonHeadMiniBoss
+import com.megaman.maverick.game.entities.bosses.MoonHead
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
@@ -156,7 +156,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
         }
     })
 
-    override fun canDamage(damageable: IDamageable) = damageable !is MoonHeadMiniBoss && super.canDamage(damageable)
+    override fun canDamage(damageable: IDamageable) = damageable !is MoonHead && super.canDamage(damageable)
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = bodyFixture.getEntity()

@@ -58,9 +58,9 @@
             <key>filtering</key>
             <struct type="LibGDXFiltering">
                 <key>x</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
                 <key>y</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
             </struct>
         </struct>
         <key>shapePadding</key>
@@ -220,6 +220,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Specials1/Cart/idle.png</key>
+            <key type="filename">../frames/Specials1/CartV2/idle.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -235,6 +236,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Specials1/Cart/move.png</key>
+            <key type="filename">../frames/Specials1/CartV2/move.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -255,10 +257,10 @@
             <key type="filename">../frames/Specials1/LightSwitch/Off.png</key>
             <key type="filename">../frames/Specials1/LightSwitch/On.png</key>
             <key type="filename">../frames/Specials1/PortalHopper/Launch.png</key>
-            <key type="filename">../frames/Specials1/RailTrack/Drop.png</key>
-            <key type="filename">../frames/Specials1/RailTrack/Left.png</key>
-            <key type="filename">../frames/Specials1/RailTrack/Middle.png</key>
-            <key type="filename">../frames/Specials1/RailTrack/Right.png</key>
+            <key type="filename">../frames/Specials1/RailTrack/drop.png</key>
+            <key type="filename">../frames/Specials1/RailTrack/left.png</key>
+            <key type="filename">../frames/Specials1/RailTrack/middle.png</key>
+            <key type="filename">../frames/Specials1/RailTrack/right.png</key>
             <key type="filename">../frames/Specials1/Water_v2/surface_background.png</key>
             <key type="filename">../frames/Specials1/Water_v2/surface_foreground.png</key>
             <key type="filename">../frames/Specials1/Water_v2/surface_waves_outline.png</key>
@@ -351,7 +353,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Specials1/RailTrack/Platform.png</key>
+            <key type="filename">../frames/Specials1/RailTrack/platform.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -366,7 +368,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Specials1/RailTrack/PlatformDrop.png</key>
+            <key type="filename">../frames/Specials1/RailTrack/platform_drop.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

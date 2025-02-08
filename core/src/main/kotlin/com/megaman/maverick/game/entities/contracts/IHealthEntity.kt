@@ -33,4 +33,6 @@ interface IHealthEntity : IPointsEntity {
     fun hasMaxHealth() = getCurrentHealth() >= getMaxHealth()
 
     fun isHealthDepleted() = getCurrentHealth() <= getMinHealth()
+
+    fun depleteHealth() = setHealth(getMinHealth())
 }

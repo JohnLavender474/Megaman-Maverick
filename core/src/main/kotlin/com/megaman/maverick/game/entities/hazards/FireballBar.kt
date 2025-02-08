@@ -21,9 +21,9 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
@@ -31,7 +31,7 @@ import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 
-class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEntity, ICullableEntity {
+class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEntity, ICullableEntity, IHazard {
 
     companion object {
         const val TAG = "FireballBar"
@@ -66,14 +66,17 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
         val angle = spawnProps.getOrDefault(ConstKeys.ANGLE, 0f, Float::class)
         rotatingLine = RotatingLine(spawn, RADIUS * ConstVals.PPM, speed * ConstVals.PPM, angle)
 
-        (0 until BALLS).forEach {
-            val fireball = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIREBALL)!!
+        (0 until BALLS).forEach { i ->
+            val canDamage = i != 0
+
+            val fireball = MegaEntityFactory.fetch(Fireball::class)!!
             fireball.spawn(
                 props(
                     ConstKeys.OWNER pairTo this,
-                    ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
+                    ConstKeys.DAMAGER pairTo canDamage,
                     ConstKeys.CULL_EVENTS pairTo false,
-                    Fireball.BURST_ON_HIT_BLOCK pairTo false
+                    Fireball.BURST_ON_HIT_BLOCK pairTo false,
+                    ConstKeys.CULL_OUT_OF_BOUNDS pairTo false
                 )
             )
             children.add(fireball)
@@ -84,13 +87,16 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
+
         super.onDestroy()
+
         children.forEach { (it as GameEntity).destroy() }
         children.clear()
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         rotatingLine.update(delta)
+
         for (i in 0 until BALLS) {
             val child = children.get(i) as Fireball
             val position =

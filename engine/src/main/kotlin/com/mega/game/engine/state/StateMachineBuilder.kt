@@ -3,7 +3,7 @@ package com.mega.game.engine.state
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 
-class StateMachineBuilder<T> {
+open class StateMachineBuilder<T> {
 
     private val stateDefinitions = ObjectMap<String, T>()
     private val transitionDefinitions = Array<Triple<String, String, () -> Boolean>>()
@@ -65,3 +65,4 @@ class StateMachineBuilder<T> {
         return stateMachine
     }
 }
+

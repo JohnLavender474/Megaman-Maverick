@@ -22,6 +22,7 @@ class Timer(duration: Float) : Updatable, Resettable, IJustFinishable {
 
     // the array of runnables which should be added to the queue on every reset
     internal var runnables = Array<TimeMarkedRunnable>()
+
     // the queue which is polled on every update and refilled with the elements in [runnables] on every reset
     internal var runnableQueue = PriorityQueue<TimeMarkedRunnable>()
 
@@ -103,13 +104,19 @@ class Timer(duration: Float) : Updatable, Resettable, IJustFinishable {
 
     override fun isJustFinished() = justFinished
 
-    fun addRunnables(vararg runnables: TimeMarkedRunnable) = addRunnables(runnables.asIterable())
+    fun addRunnable(runnable: TimeMarkedRunnable): Timer {
+        runnableQueue.add(runnable)
+        this.runnables.add(runnable)
+        return this
+    }
+
+    fun addRunnables(vararg runnables: TimeMarkedRunnable): Timer {
+        runnables.forEach { addRunnable(it) }
+        return this
+    }
 
     fun addRunnables(runnables: Iterable<TimeMarkedRunnable>): Timer {
-        runnables.forEach {
-            runnableQueue.add(it)
-            this.runnables.add(it)
-        }
+        runnables.forEach { addRunnable(it) }
         return this
     }
 

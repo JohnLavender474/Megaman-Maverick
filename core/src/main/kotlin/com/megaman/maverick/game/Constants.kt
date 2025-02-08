@@ -40,6 +40,10 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val CHARGE = "charge"
+    const val HOVER = "hover"
+    const val MAIN = "main"
+    const val ARM = "arm"
     const val BOUNCE = "bounce"
     const val ATTACHED = "attached"
     const val BLANK = "blank"
@@ -198,6 +202,7 @@ object ConstKeys {
     const val FIXTURE_LABELS = "fixture_labels"
     const val FRONT = "front"
     const val BACK = "back"
+    const val FIXTURE = "fixture"
     const val FIXTURES = "fixtures"
     const val BODY = "body"
     const val BODIES = "bodies"

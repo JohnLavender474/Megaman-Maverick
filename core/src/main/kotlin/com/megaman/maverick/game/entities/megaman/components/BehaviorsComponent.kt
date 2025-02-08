@@ -597,12 +597,18 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         }
 
         override fun act(delta: Float) {
-            if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && isFacing(Facing.RIGHT)) ||
-                (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && isFacing(Facing.LEFT))
-            ) body.physics.velocity.x = 0f
-            else if (!body.isSensing(BodySense.FEET_ON_GROUND))
-                body.physics.velocity.x += MegamanValues.CART_JUMP_ACCELERATION * facing.value * ConstVals.PPM
-            else body.physics.velocity.x += MegamanValues.CART_RIDE_ACCELERATION * facing.value * ConstVals.PPM
+            when {
+                (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && isFacing(Facing.RIGHT)) ||
+                    (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && isFacing(Facing.LEFT)) ->
+                    body.physics.velocity.x = 0f
+
+                !body.isSensing(BodySense.FEET_ON_GROUND) ->
+                    body.physics.velocity.x += MegamanValues.CART_JUMP_ACCELERATION * facing.value * ConstVals.PPM
+
+                else -> body.physics.velocity.x += MegamanValues.CART_RIDE_ACCELERATION * facing.value * ConstVals.PPM
+            }
+
+            body.setCenter(cart.body.getCenter())
         }
 
         override fun end() {
@@ -687,7 +693,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
     behaviorsComponent.addBehavior(BehaviorType.CROUCHING, crouch)
     behaviorsComponent.addBehavior(BehaviorType.GROUND_SLIDING, groundSlide)
     behaviorsComponent.addBehavior(BehaviorType.CLIMBING, climb)
-    behaviorsComponent.addBehavior(BehaviorType.RIDING_CART, ridingCart)
+    // TODO: behaviorsComponent.addBehavior(BehaviorType.RIDING_CART, ridingCart)
     behaviorsComponent.addBehavior(BehaviorType.JETPACKING, jetpacking)
 
     return behaviorsComponent

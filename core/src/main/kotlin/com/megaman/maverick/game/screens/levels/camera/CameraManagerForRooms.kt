@@ -11,7 +11,6 @@ import com.mega.game.engine.common.UtilMethods.interpolate
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.toVector2
-import com.mega.game.engine.common.interfaces.IBoundsSupplier
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -56,13 +55,16 @@ class CameraManagerForRooms(
     val currentGameRoomKey: String?
         get() = currentGameRoom?.name
 
-    var focus: IBoundsSupplier? = null
+    var focus: IFocusable? = null
         set(value) {
             GameLogger.debug(TAG, "set focus to $value")
+
             field = value
             reset = true
+
             if (value == null) return
-            val pos = value.getBounds().getCenter()
+
+            val pos = value.getFocusPosition()
             camera.position.x = pos.x
             camera.position.y = pos.y
         }
@@ -143,7 +145,7 @@ class CameraManagerForRooms(
 
         transitionTarget.set(transitionStart)
 
-        focusStart.set(focus!!.getBounds().getCenter())
+        focusStart.set(focus!!.getFocusBounds().getCenter())
         focusTarget.set(focusStart)
 
         when (transitionDirection) {
@@ -181,14 +183,16 @@ class CameraManagerForRooms(
                 onSetToRoomNoTrans?.invoke()
             }
 
-            focus?.getBounds()?.getCenter()?.let { camera.position.x = it.x }
+            focus?.getFocusPosition()?.let { camera.position.x = it.x }
 
             return
         }
 
         if (focus == null) return
 
-        if (currentGameRoom != null && !currentGameRoom!!.rectangle.toGameRectangle().overlaps(focus!!.getBounds())) {
+        if (currentGameRoom != null &&
+            !currentGameRoom!!.rectangle.toGameRectangle().overlaps(focus!!.getFocusBounds())
+        ) {
             priorGameRoom = currentGameRoom
             currentGameRoom = null
         }
@@ -196,7 +200,7 @@ class CameraManagerForRooms(
         val currentRoomBounds = currentGameRoom?.rectangle?.toGameRectangle()
 
         when {
-            currentRoomBounds?.overlaps(focus!!.getBounds()) == true -> {
+            currentRoomBounds?.overlaps(focus!!.getFocusBounds()) == true -> {
                 setCameraToFocusable()
                 camera.coerceIntoBounds(currentRoomBounds)
             }
@@ -213,10 +217,10 @@ class CameraManagerForRooms(
 
         if (currentRoomBounds != null) for (room in gameRooms!!) {
             val roomBounds = room.rectangle.toGameRectangle()
-            if (roomBounds.overlaps(focus!!.getBounds()) && room.name != currentGameRoomKey) {
+            if (roomBounds.overlaps(focus!!.getFocusBounds()) && room.name != currentGameRoomKey) {
                 val boundingBox = GameRectangle()
                     .setSize(transitionScannerDimensions.x, transitionScannerDimensions.y)
-                    .setCenter(focus!!.getBounds().getCenter())
+                    .setCenter(focus!!.getFocusBounds().getCenter())
 
                 transitionDirection = getOverlapPushDirection(boundingBox, currentRoomBounds, outRect)
 
@@ -283,10 +287,11 @@ class CameraManagerForRooms(
         }
 
         var nextGameRoom: RectangleMapObject? = null
-        for (room in gameRooms!!) if (room.rectangle.contains(focus!!.getBounds().getCenter())) {
-            nextGameRoom = room
-            break
-        }
+        for (room in gameRooms!!)
+            if (room.rectangle.contains(focus!!.getFocusBounds().getCenter())) {
+                nextGameRoom = room
+                break
+            }
         nextGameRoom = nextGameRoom ?: currentGameRoom
 
         GameLogger.debug(TAG, "nextGameRoom(): next room = $nextGameRoom")
@@ -296,9 +301,16 @@ class CameraManagerForRooms(
 
     private fun setCameraToFocusable(focusY: Boolean = true) {
         focus?.let {
-            val focusPos = it.getBounds().getCenter()
+            val focusPos = it.getFocusPosition()
             camera.position.x = focusPos.x
             if (focusY) camera.position.y = focusPos.y
         }
     }
+}
+
+interface IFocusable {
+
+    fun getFocusBounds(): GameRectangle
+
+    fun getFocusPosition(): Vector2
 }

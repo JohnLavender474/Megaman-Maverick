@@ -76,13 +76,13 @@ import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.blocks.CrumblingBlock
+import com.megaman.maverick.game.entities.bosses.MechaDragon
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.enemies.TorikoPlundge
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
+import com.megaman.maverick.game.entities.projectiles.SpitFireball
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -129,7 +129,7 @@ class MegamanMaverickGame(
         private const val ASSET_MILLIS = 17
         private const val LOADING = "LOADING"
         private const val SCREENSHOT_KEY = Input.Keys.P
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(CrumblingBlock.TAG, TorikoPlundge.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(Megaman.TAG, MechaDragon.TAG, SpitFireball.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.oneFixtureMatches(FixtureType.CONSUMER)
         }
@@ -172,34 +172,43 @@ class MegamanMaverickGame(
 
     fun setCurrentScreen(key: String) {
         GameLogger.debug(TAG, "setCurrentScreen(): set to screen with key = $key")
+
         currentScreen?.let {
             it.hide()
             it.reset()
         }
+
         currentScreenKey = key
+
         currentScreen?.let {
             it.show()
             it.resize(Gdx.graphics.width, Gdx.graphics.height)
         }
+
         if (paused) resume()
     }
 
     fun startLevelScreen(levelDef: LevelDefinition) {
         val levelScreen = screens.get(ScreenEnum.LEVEL_SCREEN.name) as MegaLevelScreen
 
-        levelScreen.screenOnCompletion = ScreenEnum.LEVEL_SELECT_SCREEN // TODO: levelDef.screenOnCompletion
         levelScreen.music = levelDef.music
         levelScreen.tmxMapSource = levelDef.source
+        levelScreen.screenOnCompletion = levelDef.screenOnCompletion
 
         setCurrentScreen(ScreenEnum.LEVEL_SCREEN.name)
     }
 
     fun startLevelScreen(level: Level) {
+        throw IllegalStateException("Should not use this method anymore")
+        /*
         val levelScreen = screens.get(ScreenEnum.LEVEL_SCREEN.name) as MegaLevelScreen
+
         levelScreen.level = level
         levelScreen.music = level.musicAss
         levelScreen.tmxMapSource = level.tmxSourceFile
+
         setCurrentScreen(ScreenEnum.LEVEL_SCREEN.name)
+         */
     }
 
     fun getGameCamera() = viewports.get(ConstKeys.GAME).camera as RotatableCamera
@@ -233,7 +242,9 @@ class MegamanMaverickGame(
         if (properties.containsKey("${ConstKeys.ROOMS}_${ConstKeys.SUPPLIER}")) {
             val supplier =
                 properties.get("${ConstKeys.ROOMS}_${ConstKeys.SUPPLIER}") as () -> Array<RectangleMapObject>?
+
             val rooms = supplier.invoke()
+
             if (rooms != null) out.addAll(rooms)
         }
         return out
@@ -382,9 +393,7 @@ class MegamanMaverickGame(
         screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY_SCREEN.name, SimpleEndLevelScreen(this))
         screens.put(ScreenEnum.CREDITS_SCREEN.name, CreditsScreen(this))
 
-        // setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
-        // startLevelScreen(LevelDefinition.TEST_TILESET_SIZE)
-        startLevelScreen(LevelDefinition.TEST_1)
+        setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
 
         /*
         if (Gdx.app.type == ApplicationType.Android || params.showScreenController)

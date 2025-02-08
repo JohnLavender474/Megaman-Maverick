@@ -30,17 +30,12 @@ import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.motion.MotionComponent
 import com.mega.game.engine.motion.RotatingLine
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.body.Body
-import com.mega.game.engine.world.body.BodyComponent
-import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
-import com.mega.game.engine.world.body.IBody
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -49,8 +44,8 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.setHitByBodyReceiver
 import java.util.*
 
-class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, ISpritesEntity, IBodyEntity,
-    IDrawableShapesEntity, IDamager {
+class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IBodyEntity, IDrawableShapesEntity,
+    IDamager {
 
     companion object {
         const val TAG = "LaserBeamer"

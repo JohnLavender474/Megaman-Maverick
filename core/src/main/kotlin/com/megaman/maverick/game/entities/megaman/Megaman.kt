@@ -10,7 +10,6 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.interfaces.IBoundsSupplier
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
@@ -51,7 +50,9 @@ import com.megaman.maverick.game.entities.utils.setStandardOnTeleportContinuePro
 import com.megaman.maverick.game.entities.utils.standardOnTeleportEnd
 import com.megaman.maverick.game.entities.utils.standardOnTeleportStart
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.screens.levels.camera.IFocusable
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.utils.misc.StunType
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getBounds
@@ -61,7 +62,7 @@ import kotlin.math.abs
 
 class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgradable, IEventListener, IFaceable,
     IDirectional, IBodyEntity, ISpritesEntity, IBehaviorsEntity, IPointsEntity, IAudioEntity, IAnimatedEntity,
-    IScalableGravityEntity, IBoundsSupplier {
+    IScalableGravityEntity, IFocusable {
 
     companion object {
         const val TAG = "Megaman"
@@ -553,6 +554,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
     fun removeDamageListener(damageListener: IMegamanDamageListener) = damageListeners.remove(damageListener)
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
+        GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
+
         if (!super.takeDamageFrom(damager)) return false
 
         if (!isBehaviorActive(BehaviorType.RIDING_CART) && !noDmgBounce.contains(damager::class) && damager is IBodyEntity) {
@@ -680,7 +683,19 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
         bubbles.spawn(props(ConstKeys.POSITION pairTo spawn))
     }
 
-    override fun getBounds() = body.getBounds()
+    override fun getFocusBounds() = body.getBounds()
+
+    override fun getFocusPosition(): Vector2 {
+        val position = DirectionPositionMapper.getInvertedPosition(direction)
+        val focus = body.getBounds().getPositionPoint(position)
+        when (direction) {
+            Direction.UP -> focus.y += MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
+            Direction.DOWN -> focus.y -= MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
+            Direction.LEFT -> focus.x -= MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
+            Direction.RIGHT -> focus.x += MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
+        }
+        return focus
+    }
 
     override fun getType() = EntityType.MEGAMAN
 }

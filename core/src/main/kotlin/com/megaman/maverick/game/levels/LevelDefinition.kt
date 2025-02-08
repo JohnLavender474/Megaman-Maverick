@@ -10,12 +10,18 @@ import com.megaman.maverick.game.screens.ScreenEnum
 
 enum class LevelDefinition(
     val type: LevelType,
-    val mugshotAtlas: String,
-    val mugshotRegion: String,
     val tmxMapSource: String,
     val music: MusicAsset,
-    val screenOnCompletion: ScreenEnum
+    val screenOnCompletion: ScreenEnum,
+    val mugshotAtlas: String? = null,
+    val mugshotRegion: String? = null
 ) : IAsset {
+    INTRO_STAGE(
+        type = LevelType.INTRO_LEVEL,
+        tmxMapSource = "IntroStage.tmx",
+        music = MusicAsset.MMX2_INTRO_STAGE_MUSIC,
+        screenOnCompletion = ScreenEnum.SAVE_GAME_SCREEN
+    ),
     TIMBER_WOMAN(
         type = LevelType.ROBOT_MASTER_LEVEL,
         mugshotAtlas = "FACES_1",
@@ -82,40 +88,30 @@ enum class LevelDefinition(
     ),
     WILY_STAGE_1(
         type = LevelType.WILY_LEVEL,
-        mugshotAtlas = "FACES_1",
-        mugshotRegion = "Rodent Man",
         tmxMapSource = "WilyStage1.tmx",
         music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
         screenOnCompletion = ScreenEnum.WILY_CASTLE_SCREEN
     ),
     WILY_STAGE_2(
         type = LevelType.WILY_LEVEL,
-        mugshotAtlas = "FACES_1",
-        mugshotRegion = "Rodent Man",
         tmxMapSource = "WilyStage2.tmx",
         music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
         screenOnCompletion = ScreenEnum.WILY_CASTLE_SCREEN
     ),
     WILY_STAGE_3(
         type = LevelType.WILY_LEVEL,
-        mugshotAtlas = "FACES_1",
-        mugshotRegion = "Rodent Man",
         tmxMapSource = "WilyStage3_v2.tmx",
         music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
         screenOnCompletion = ScreenEnum.WILY_CASTLE_SCREEN
     ),
     TEST_1(
         type = LevelType.TEST_LEVEL,
-        mugshotAtlas = "FACES_1",
-        mugshotRegion = "Rodent Man",
         tmxMapSource = "Test1.tmx",
         music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
         screenOnCompletion = ScreenEnum.WILY_CASTLE_SCREEN
     ),
     TEST_TILESET_SIZE(
         type = LevelType.TEST_LEVEL,
-        mugshotAtlas = "FACES_1",
-        mugshotRegion = "Rodent Man",
         tmxMapSource = "TilesetSizeTest.tmx",
         music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
         screenOnCompletion = ScreenEnum.WILY_CASTLE_SCREEN

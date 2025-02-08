@@ -37,9 +37,9 @@ class BossesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(GUTS_TANK, GameEntityPoolCreator.create { GutsTank(game) })
         pools.put(SIGMA_RAT, GameEntityPoolCreator.create { SigmaRat(game) })
         pools.put(PENGUIN_MINI_BOSS, GameEntityPoolCreator.create { PenguinMiniBoss(game) })
-        pools.put(REACTOR_MONKEY_MINI_BOSS, GameEntityPoolCreator.create { ReactorMonkeyMiniBoss(game) })
-        pools.put(MOON_FACE_MINI_BOSS, GameEntityPoolCreator.create { MoonHeadMiniBoss(game) })
-        pools.put(MECHA_DRAGON_MINI_BOSS, GameEntityPoolCreator.create { MechaDragonMiniBoss(game) })
+        pools.put(REACTOR_MONKEY_MINI_BOSS, GameEntityPoolCreator.create { ReactorMonkey(game) })
+        pools.put(MOON_FACE_MINI_BOSS, GameEntityPoolCreator.create { MoonHead(game) })
+        pools.put(MECHA_DRAGON_MINI_BOSS, GameEntityPoolCreator.create { MechaDragon_OLD(game) })
         pools.put(SPHINX_MINI_BOSS, GameEntityPoolCreator.create { SphinxMiniBoss(game) })
     }
 

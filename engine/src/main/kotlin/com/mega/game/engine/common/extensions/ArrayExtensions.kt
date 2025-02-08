@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.IntArray
 import com.badlogic.gdx.utils.Predicate
 import java.util.function.Consumer
 import java.util.function.Function
+import kotlin.random.Random
 
 fun Array<Float>.toGdxFloatArray(out: FloatArray): FloatArray {
     forEach { out.add(it) }
@@ -95,4 +96,11 @@ fun <T> Array<T>.addAllAndReturn(iterable: Iterable<T>): Array<T> {
 fun <T> Array<T>.addAllAndReturn(vararg elements: T): Array<T> {
     elements.forEach { add(it) }
     return this
+}
+
+fun <T> Array<T>.superRandom(): T? {
+    if (size == 0) return null
+
+    val random = Random(System.currentTimeMillis()).nextInt(0, size)
+    return items[random]
 }

@@ -95,7 +95,7 @@ class MegaLevelScreen(
         private const val TRANSITION_SCANNER_SIZE = 5f
         private const val FADE_OUT_MUSIC_ON_BOSS_SPAWN = 1f
         private const val DEBUG_PRINT_DELAY = 2f
-        private const val DISPLAY_ROOMS_DEBUG_TEXT = true
+        private const val DISPLAY_ROOMS_DEBUG_TEXT = false
     }
 
     override val eventKeyMask = objectSetOf<Any>(
@@ -609,9 +609,12 @@ class MegaLevelScreen(
 
             EventType.END_LEVEL -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): End level")
+
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
+
                 val nextScreen = screenOnCompletion
                     ?: throw IllegalStateException("Level must have a defined screen on completion value")
+
                 game.setCurrentScreen(nextScreen.name)
             }
 

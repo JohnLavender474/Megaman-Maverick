@@ -189,20 +189,32 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
             GameLogger.debug(TAG, "build(): building custom background ${o.name}")
 
             val props = o.properties.toProps()
-            val backgroundRegion =
-                params.game.assMan.getTextureRegion(
-                    TEXTURE_ASSET_PREFIX + props.get(ConstKeys.ATLAS, String::class)!!,
-                    props.get(ConstKeys.REGION, String::class)!!
-                )
+
+            val atlasKey = TEXTURE_ASSET_PREFIX + props.get(ConstKeys.ATLAS, String::class)!!
+            val regionKey = props.get(ConstKeys.REGION, String::class)!!
+            val backgroundRegion = params.game.assMan.getTextureRegion(atlasKey, regionKey)
+
             val rows = props.get(ConstKeys.ROWS, Int::class)!!
             val columns = props.get(ConstKeys.COLUMNS, Int::class)!!
+
             val offsetX = props.getOrDefault(ConstKeys.OFFSET_X, 0f, Float::class) * ConstVals.PPM
             val offsetY = props.getOrDefault(ConstKeys.OFFSET_Y, 0f, Float::class) * ConstVals.PPM
+
             val parallaxX =
                 props.getOrDefault("${ConstKeys.PARALLAX}_${ConstKeys.X}", ConstVals.DEFAULT_PARALLAX_X, Float::class)
             val parallaxY =
                 props.getOrDefault("${ConstKeys.PARALLAX}_${ConstKeys.Y}", ConstVals.DEFAULT_PARALLAX_Y, Float::class)
+
             val rotatable = props.getOrDefault(ConstKeys.ROTATION, true, Boolean::class)
+
+            val section = DrawingSection.valueOf(
+                props.getOrDefault(
+                    ConstKeys.SECTION,
+                    DrawingSection.BACKGROUND.name,
+                    String::class
+                )
+            )
+            val priority = props.getOrDefault(ConstKeys.PRIORITY, 0, Int::class)
 
             val background = if (o.name == ANIMATED_BACKGROUND) {
                 val animRows = props.get("${ConstKeys.ANIMATION}_${ConstKeys.ROWS}", Int::class)!!
@@ -223,7 +235,8 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                     initPos = Vector2(o.rectangle.getCenter().x + offsetX, o.rectangle.getCenter().y + offsetY),
                     parallaxX = parallaxX,
                     parallaxY = parallaxY,
-                    rotatable = rotatable
+                    rotatable = rotatable,
+                    priority = DrawingPriority(section, priority)
                 )
             } else Background(
                 o.name,
@@ -237,7 +250,8 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 initPos = Vector2(o.rectangle.getCenter().x + offsetX, o.rectangle.getCenter().y + offsetY),
                 parallaxX = parallaxX,
                 parallaxY = parallaxY,
-                rotatable = rotatable
+                rotatable = rotatable,
+                priority = DrawingPriority(section, priority)
             )
             backgrounds.add(background)
         }

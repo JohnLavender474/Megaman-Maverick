@@ -19,7 +19,7 @@ AcidGoop/Landed
   index: -1
 Bolt
   rotate: false
-  xy: 285, 0
+  xy: 317, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
@@ -40,21 +40,21 @@ Cactus/small
   index: -1
 CactusSpike
   rotate: false
-  xy: 349, 0
+  xy: 381, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 CeilingCrusher/Bar
   rotate: false
-  xy: 381, 0
+  xy: 413, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 CeilingCrusher/Crusher
   rotate: false
-  xy: 413, 0
+  xy: 445, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -89,14 +89,14 @@ Electrocutie/Shock
   index: -1
 Flame
   rotate: false
-  xy: 4, 0
+  xy: 36, 0
   size: 64, 16
   orig: 64, 16
   offset: 0, 0
   index: -1
 Flame2
   rotate: false
-  xy: 68, 0
+  xy: 100, 0
   size: 48, 16
   orig: 48, 16
   offset: 0, 0
@@ -285,14 +285,14 @@ LavaBeamer/SwitchingOn
   index: -1
 LavaDrop/Falling
   rotate: false
-  xy: 132, 0
+  xy: 164, 0
   size: 72, 24
   orig: 72, 24
   offset: 0, 0
   index: -1
 LavaDrop/Landed
   rotate: false
-  xy: 204, 0
+  xy: 236, 0
   size: 48, 24
   orig: 48, 24
   offset: 0, 0
@@ -341,7 +341,7 @@ MagmaFlame
   index: -1
 Saw/ring
   rotate: false
-  xy: 116, 0
+  xy: 148, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -369,7 +369,7 @@ SeaMine/wait
   index: -1
 Spike1
   rotate: false
-  xy: 252, 0
+  xy: 284, 0
   size: 33, 31
   orig: 33, 31
   offset: 0, 0
@@ -428,6 +428,13 @@ SpikeBall/SpikeBall
   xy: 96, 64
   size: 32, 32
   orig: 32, 32
+  offset: 0, 0
+  index: -1
+SpikeTeeth
+  rotate: false
+  xy: 4, 0
+  size: 32, 8
+  orig: 32, 8
   offset: 0, 0
   index: -1
 SwingingAxe

@@ -5,21 +5,21 @@ filter: Nearest,Nearest
 repeat: none
 Asteroid
   rotate: false
-  xy: 280, 0
+  xy: 288, 0
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 Asteroid/Blue
   rotate: false
-  xy: 304, 0
+  xy: 312, 0
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 Asteroid/Regular
   rotate: false
-  xy: 328, 0
+  xy: 336, 0
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
@@ -33,7 +33,7 @@ BouncingPebble
   index: -1
 Bullet
   rotate: false
-  xy: 408, 0
+  xy: 416, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -54,7 +54,7 @@ CacaFlame/fall
   index: -1
 CannonBall
   rotate: false
-  xy: 440, 0
+  xy: 448, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -89,9 +89,16 @@ ChargedShot_v2
   index: -1
 CryoPellet
   rotate: false
-  xy: 352, 0
+  xy: 360, 0
   size: 8, 24
   orig: 8, 24
+  offset: 0, 0
+  index: -1
+DuoBall
+  rotate: false
+  xy: 8, 0
+  size: 8, 16
+  orig: 8, 16
   offset: 0, 0
   index: -1
 Electric/BigElectric
@@ -138,7 +145,7 @@ Fire/Fireball
   index: -1
 FirePellet
   rotate: false
-  xy: 8, 0
+  xy: 16, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -159,7 +166,7 @@ FireWall/fire
   index: -1
 GachappanBall
   rotate: false
-  xy: 24, 0
+  xy: 32, 0
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
@@ -290,21 +297,21 @@ PurpleBlast/Charge
   orig: 336, 48
   offset: 0, 0
   index: -1
-ReactManProjectile/Big
+ReactorManProjectile/big
   rotate: false
-  xy: 56, 0
+  xy: 64, 0
   size: 48, 16
   orig: 48, 16
   offset: 0, 0
   index: -1
-ReactManProjectile/Die
+ReactorManProjectile/die
   rotate: false
-  xy: 104, 0
+  xy: 112, 0
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
-ReactManProjectile/Small
+ReactorManProjectile/small
   rotate: false
   xy: 288, 64
   size: 32, 32
@@ -355,7 +362,7 @@ RollingBotShot
   index: -1
 SealionBall
   rotate: false
-  xy: 360, 0
+  xy: 368, 0
   size: 48, 30
   orig: 48, 30
   offset: 0, 0
@@ -369,7 +376,7 @@ Snowball
   index: -1
 Snowball2
   rotate: false
-  xy: 136, 0
+  xy: 144, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -411,7 +418,7 @@ SpiderWeb/White
   index: -1
 ToxicGoopShot
   rotate: false
-  xy: 152, 0
+  xy: 160, 0
   size: 48, 16
   orig: 48, 16
   offset: 0, 0
@@ -425,7 +432,7 @@ TubeBeam
   index: -1
 UFOBomb
   rotate: false
-  xy: 200, 0
+  xy: 208, 0
   size: 80, 16
   orig: 80, 16
   offset: 0, 0

@@ -1,20 +1,20 @@
 package com.megaman.maverick.game.entities.projectiles
 
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
-import com.mega.game.engine.animations.AnimationsComponent
-import com.mega.game.engine.animations.Animator
-import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.animations.AnimationsComponentBuilder
+import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
@@ -24,10 +24,11 @@ import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
-import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
@@ -45,7 +46,6 @@ import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
@@ -56,11 +56,18 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         private const val HALF_CHARGED_SHOT_REGION_PREFIX = "Half"
         private const val CHARGED_SHOT_REGION_SUFFIX = "_v2"
         private const val BOUNCE_LIMIT = 3
+        val FULL_BODY_SIZE = Vector2(0.75f, 1f).scl(ConstVals.PPM.toFloat())
+        val HALF_BODY_SIZE = Vector2(0.5f, 0.75f).scl(ConstVals.PPM.toFloat())
+        private val SPRITE_SIZE = Vector2(2f, 2f).scl(ConstVals.PPM.toFloat())
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override var facing = Facing.RIGHT
-    override var direction = Direction.UP
+    override var direction: Direction
+        get() = body.direction
+        set(value) {
+            body.direction = value
+        }
+    override lateinit var facing: Facing
 
     var fullyCharged = false
         private set
@@ -83,16 +90,12 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         super.onSpawn(spawnProps)
 
         fullyCharged = spawnProps.get(ConstKeys.BOOLEAN, Boolean::class)!!
+
+        val bodySize = if (fullyCharged) FULL_BODY_SIZE else HALF_BODY_SIZE
+        body.setSize(bodySize)
+        body.forEachFixture { ((it as Fixture).rawShape as GameRectangle).setSize(bodySize) }
+
         direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
-
-        var bodyDimension = ConstVals.PPM.toFloat()
-        var spriteDimension = 1.5f * ConstVals.PPM
-
-        if (fullyCharged) spriteDimension *= 1.5f else bodyDimension /= 2f
-        defaultSprite.setSize(spriteDimension)
-
-        body.setSize(bodyDimension)
-        body.forEachFixture { ((it as Fixture).rawShape as GameRectangle).setSize(bodyDimension) }
 
         trajectory.set(spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!)
 
@@ -225,35 +228,45 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         val body = Body(BodyType.ABSTRACT)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
+        body.drawingColor = Color.GRAY
+
+        val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBounds() }
+
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
+
         return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.PROJECTILE, FixtureType.DAMAGER))
     }
 
-    private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = { if (fullyCharged) ConstKeys.FULL else ConstKeys.HALF }
-        val animations = objectMapOf<String, IAnimation>(
-            ConstKeys.FULL pairTo Animation(regions[ConstKeys.FULL], 2, 1, 0.05f, true),
-            ConstKeys.HALF pairTo Animation(regions[ConstKeys.HALF], 2, 1, 0.05f, true)
+    override fun defineSpritesComponent() = SpritesComponentBuilder()
+        .sprite(
+            TAG,
+            GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10)).also { sprite -> sprite.setSize(SPRITE_SIZE) }
         )
-        val animator = Animator(keySupplier, animations)
-        return AnimationsComponent(this, animator)
-    }
-
-    override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setFlip(
-                when {
-                    direction.equalsAny(Direction.UP, Direction.LEFT) -> isFacing(Facing.LEFT)
-                    else -> isFacing(Facing.RIGHT)
-                },
-                false
-            )
+        .updatable { _, sprite ->
             sprite.setPosition(body.getCenter(), Position.CENTER)
+
+            val flipX = when {
+                direction.equalsAny(Direction.UP, Direction.LEFT) -> isFacing(Facing.LEFT)
+                else -> isFacing(Facing.RIGHT)
+            }
+            sprite.setFlip(flipX, false)
+
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
         }
-        return spritesComponent
-    }
+        .build()
+
+    private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
+        .key(TAG)
+        .animator(
+            AnimatorBuilder()
+                .setKeySupplier { if (fullyCharged) ConstKeys.FULL else ConstKeys.HALF }
+                .addAnimations(
+                    ConstKeys.FULL pairTo Animation(regions[ConstKeys.FULL], 2, 1, 0.05f, true),
+                    ConstKeys.HALF pairTo Animation(regions[ConstKeys.HALF], 2, 1, 0.05f, true)
+                )
+                .build()
+        )
+        .build()
 }

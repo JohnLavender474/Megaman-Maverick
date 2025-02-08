@@ -228,7 +228,7 @@
             <key type="filename">../frames/Enemies1/GapingFish/Chomping.png</key>
             <key type="filename">../frames/Enemies1/GapingFish/Gaping.png</key>
             <key type="filename">../frames/Enemies1/GapingFish/Swimming.png</key>
-            <key type="filename">../frames/Enemies1/HeliMet/Fly.png</key>
+            <key type="filename">../frames/Enemies1/HeliMet/fly.png</key>
             <key type="filename">../frames/Enemies1/MagFly.png</key>
             <key type="filename">../frames/Enemies1/Met/Run.png</key>
             <key type="filename">../frames/Enemies1/Penguin/Stand.png</key>
@@ -257,14 +257,14 @@
             <key type="filename">../frames/Enemies1/Bat/OpenEyes.png</key>
             <key type="filename">../frames/Enemies1/Bat/OpenWings.png</key>
             <key type="filename">../frames/Enemies1/BlueScrewie/Down.png</key>
-            <key type="filename">../frames/Enemies1/CannonHopper/hop.png</key>
-            <key type="filename">../frames/Enemies1/CannonHopper/stand.png</key>
+            <key type="filename">../frames/Enemies1/CanonHopper/hop.png</key>
+            <key type="filename">../frames/Enemies1/CanonHopper/stand.png</key>
             <key type="filename">../frames/Enemies1/CryoMet/down.png</key>
             <key type="filename">../frames/Enemies1/CryoMet/lower.png</key>
             <key type="filename">../frames/Enemies1/Darspider/frozen.png</key>
             <key type="filename">../frames/Enemies1/Darspider/jump.png</key>
             <key type="filename">../frames/Enemies1/Darspider/still.png</key>
-            <key type="filename">../frames/Enemies1/HeliMet/Shield.png</key>
+            <key type="filename">../frames/Enemies1/HeliMet/shield.png</key>
             <key type="filename">../frames/Enemies1/LaserBeamer.png</key>
             <key type="filename">../frames/Enemies1/Met/GetUp.png</key>
             <key type="filename">../frames/Enemies1/Met/LayDown.png</key>
@@ -303,6 +303,7 @@
             <key type="filename">../frames/Enemies1/SnowMet/GetUp.png</key>
             <key type="filename">../frames/Enemies1/SnowMet/LayDown.png</key>
             <key type="filename">../frames/Enemies1/SnowMet/PopUp.png</key>
+            <key type="filename">../frames/Enemies1/SpikeCopter/drop.png</key>
             <key type="filename">../frames/Enemies1/SpringHead/compressed.png</key>
             <key type="filename">../frames/Enemies1/SwimmingMet/LayDown.png</key>
             <key type="filename">../frames/Enemies1/TellySaucer/collapsed.png</key>
@@ -326,6 +327,7 @@
             <key type="filename">../frames/Enemies1/Beezee.png</key>
             <key type="filename">../frames/Enemies1/CryoMet/flash.png</key>
             <key type="filename">../frames/Enemies1/CryoMet/rise.png</key>
+            <key type="filename">../frames/Enemies1/SpikeCopter/drop_teeth.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -343,7 +345,7 @@
             <key type="filename">../frames/Enemies1/BlueScrewie/Drop.png</key>
             <key type="filename">../frames/Enemies1/BlueScrewie/Rise.png</key>
             <key type="filename">../frames/Enemies1/BlueScrewie/Shoot.png</key>
-            <key type="filename">../frames/Enemies1/HeliMet/PopUp.png</key>
+            <key type="filename">../frames/Enemies1/HeliMet/pop_up.png</key>
             <key type="filename">../frames/Enemies1/PetitDevil/LargeGreen.png</key>
             <key type="filename">../frames/Enemies1/PetitDevil/LargeOrange.png</key>
             <key type="filename">../frames/Enemies1/PetitDevil/SmallGreen.png</key>
@@ -369,6 +371,7 @@
             <key type="filename">../frames/Enemies1/CannoHoney/closed_eyes.png</key>
             <key type="filename">../frames/Enemies1/CannoHoney/oepn_eyes.png</key>
             <key type="filename">../frames/Enemies1/CryoMet/run.png</key>
+            <key type="filename">../frames/Enemies1/SpikeCopter/fly.png</key>
             <key type="filename">../frames/Enemies1/TellySaucer/hit.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -417,6 +420,8 @@
             </struct>
             <key type="filename">../frames/Enemies1/DeathBat/fly_attack.png</key>
             <key type="filename">../frames/Enemies1/DeathBat/fly_retreat.png</key>
+            <key type="filename">../frames/Enemies1/DuoBallCanon/straight_shoot.png</key>
+            <key type="filename">../frames/Enemies1/DuoBallCanon/up_shoot.png</key>
             <key type="filename">../frames/Enemies1/GreenUziJoe/jump_shoot_blast.png</key>
             <key type="filename">../frames/Enemies1/GreenUziJoe/stand_shoot_blast.png</key>
             <struct type="IndividualSpriteSettings">
@@ -434,6 +439,8 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Enemies1/DeathBat/hang.png</key>
+            <key type="filename">../frames/Enemies1/DuoBallCanon/straight.png</key>
+            <key type="filename">../frames/Enemies1/DuoBallCanon/up.png</key>
             <key type="filename">../frames/Enemies1/GreenUziJoe/jump.png</key>
             <key type="filename">../frames/Enemies1/GreenUziJoe/jump_shoot.png</key>
             <key type="filename">../frames/Enemies1/GreenUziJoe/jump_shoot_start.png</key>

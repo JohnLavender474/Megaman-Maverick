@@ -20,14 +20,13 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
 
     !ready -> "spawn"
 
-    damaged -> "damaged"
-
     stunned -> "stunned"
+
+    damaged -> if (isBehaviorActive(BehaviorType.RIDING_CART)) "cartin_damaged" else "damaged"
 
     isBehaviorActive(BehaviorType.JETPACKING) -> amendKey("jetpack")
 
     isBehaviorActive(BehaviorType.RIDING_CART) -> when {
-        damaged -> "cartin_damaged"
         isBehaviorActive(BehaviorType.JUMPING) || !feetOnGround -> amendKey("cartin_jump")
         else -> amendKey("cartin")
     }

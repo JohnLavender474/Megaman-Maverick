@@ -9,8 +9,8 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
-import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
@@ -44,10 +44,10 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class CannonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFaceable {
+class CanonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFaceable {
 
     companion object {
-        const val TAG = "CannonHopper"
+        const val TAG = "CanonHopper"
 
         private const val STAND_DUR = 1f
         private const val SHOOT_TIME = 0.5f
@@ -55,25 +55,31 @@ class CannonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.
         private const val GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.01f
 
-        private const val BULLET_SPEED = 8f
+        private const val BULLET_SPEED = 10f
 
-        private const val JUMP_X = 4f
-        private const val JUMP_Y = 8f
+        private const val JUMP_X = 5f
+        private const val JUMP_Y = 10f
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
+    private enum class CanonHopperState { STAND, HOP }
+
     override lateinit var facing: Facing
 
-    private val loop = Loop("stand", "hop")
-    private val currentState: String
+    private val loop = Loop(CanonHopperState.entries.toGdxArray())
+    private val currentState: CanonHopperState
         get() = loop.getCurrent()
+
     private val standTimer = Timer(STAND_DUR).addRunnables(TimeMarkedRunnable(SHOOT_TIME) { shoot() })
 
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            gdxArrayOf("stand", "hop").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
+            CanonHopperState.entries.forEach { state ->
+                val key = state.name.lowercase()
+                regions.put(key, atlas.findRegion("$TAG/$key"))
+            }
         }
         super.init()
     }
@@ -117,7 +123,7 @@ class CannonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             when (currentState) {
-                "stand" -> {
+                CanonHopperState.STAND -> {
                     facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
                     standTimer.update(delta)
@@ -128,7 +134,7 @@ class CannonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.
                     }
                 }
 
-                "hop" -> if (body.isSensing(BodySense.FEET_ON_GROUND) && body.physics.velocity.y <= 0f) loop.next()
+                CanonHopperState.HOP -> if (body.isSensing(BodySense.FEET_ON_GROUND) && body.physics.velocity.y <= 0f) loop.next()
             }
         }
     }
@@ -177,11 +183,15 @@ class CannonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
         .updatable { _, sprite ->
-            val region = regions[currentState]
+            val region = regions[currentState.name.lowercase()]
             sprite.setRegion(region)
-            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
-            sprite.setFlip(isFacing(Facing.LEFT), false)
+
             sprite.hidden = damageBlink
+
+            sprite.setFlip(isFacing(Facing.LEFT), false)
+
+            val position = if (body.isSensing(BodySense.FEET_ON_GROUND)) Position.BOTTOM_CENTER else Position.CENTER
+            sprite.setPosition(body.getPositionPoint(position), position)
         }
         .build()
 }

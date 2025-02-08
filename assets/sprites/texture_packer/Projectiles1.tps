@@ -210,7 +210,7 @@
             <key type="filename">../frames/Projectiles1/Fire/Fireball.png</key>
             <key type="filename">../frames/Projectiles1/HoneyDrip/drip.png</key>
             <key type="filename">../frames/Projectiles1/Prickly.png</key>
-            <key type="filename">../frames/Projectiles1/ReactManProjectile/Small.png</key>
+            <key type="filename">../frames/Projectiles1/ReactorManProjectile/small.png</key>
             <key type="filename">../frames/Projectiles1/Snowball.png</key>
             <key type="filename">../frames/Projectiles1/SpiderWeb/Gray.png</key>
             <key type="filename">../frames/Projectiles1/SpiderWeb/White.png</key>
@@ -321,6 +321,21 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Projectiles1/DuoBall.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>2,4,4,8</rect>
+                <key>scale9Paddings</key>
+                <rect>2,4,4,8</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Projectiles1/Electric/BigElectric.png</key>
             <key type="filename">../frames/Projectiles1/Electric/PurpleShockBalls.png</key>
             <key type="filename">../frames/Projectiles1/Electric/SmallElectric.png</key>
@@ -407,7 +422,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Projectiles1/GachappanBall.png</key>
-            <key type="filename">../frames/Projectiles1/ReactManProjectile/Die.png</key>
+            <key type="filename">../frames/Projectiles1/ReactorManProjectile/die.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -535,7 +550,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Projectiles1/ReactManProjectile/Big.png</key>
+            <key type="filename">../frames/Projectiles1/ReactorManProjectile/big.png</key>
             <key type="filename">../frames/Projectiles1/ToxicGoopShot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

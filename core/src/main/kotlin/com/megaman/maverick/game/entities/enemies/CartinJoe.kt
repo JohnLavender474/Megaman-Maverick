@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -45,6 +46,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
@@ -97,12 +99,14 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
 
         waitTimer.reset()
         shootTimer.setToEnd()
+
+        direction =
+            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        if (isHealthDepleted()) explode()
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -125,24 +129,17 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(1.25f * ConstVals.PPM)
+        body.setSize(1.25f * ConstVals.PPM, 2f * ConstVals.PPM)
+        body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-
-        val bodyFixture =
-            Fixture(body, FixtureType.BODY, GameRectangle().setSize(1.25f * ConstVals.PPM, 1.85f * ConstVals.PPM))
-        body.addFixture(bodyFixture)
+        debugShapes.add { body.getBounds() }
 
         val shieldFixture =
             Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(0.85f, 0.65f * ConstVals.PPM))
         shieldFixture.offsetFromBodyAttachment.y = -0.275f * ConstVals.PPM
         body.addFixture(shieldFixture)
         debugShapes.add { shieldFixture }
-
-        val damagerFixture =
-            Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(ConstVals.PPM.toFloat(), 1.25f * ConstVals.PPM))
-        body.addFixture(damagerFixture)
-        debugShapes.add { damagerFixture }
 
         val damageableFixture = Fixture(
             body, FixtureType.DAMAGEABLE, GameRectangle().setSize(
@@ -193,7 +190,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER))
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
@@ -222,16 +219,19 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
     }
 
     private fun shoot() {
-        val spawn = (when (direction) {
-            Direction.UP -> Vector2(0.25f * facing.value, 0.5f)
-            Direction.DOWN -> Vector2(0.25f * facing.value, -0.5f)
-            Direction.LEFT -> Vector2(-0.4f, 0.25f * facing.value)
-            Direction.RIGHT -> Vector2(0.4f, 0.25f * facing.value)
-        }).scl(ConstVals.PPM.toFloat()).add(body.getCenter())
+        val spawn = GameObjectPools.fetch(Vector2::class)
+        when (direction) {
+            Direction.UP -> spawn.set(0.25f * facing.value, 0.5f)
+            Direction.DOWN -> spawn.set(0.25f * facing.value, -0.5f)
+            Direction.LEFT -> spawn.set(-0.4f, 0.25f * facing.value)
+            Direction.RIGHT -> spawn.set(0.4f, 0.25f * facing.value)
+        }.scl(ConstVals.PPM.toFloat()).add(body.getCenter())
 
-        val trajectory = Vector2()
-        if (direction.isVertical()) trajectory.set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
-        else trajectory.set(0f, BULLET_SPEED * ConstVals.PPM * facing.value)
+        val trajectory = GameObjectPools.fetch(Vector2::class)
+        when {
+            direction.isVertical() -> trajectory.set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
+            else -> trajectory.set(0f, BULLET_SPEED * ConstVals.PPM * facing.value)
+        }
 
         val props = props(
             ConstKeys.OWNER pairTo this,

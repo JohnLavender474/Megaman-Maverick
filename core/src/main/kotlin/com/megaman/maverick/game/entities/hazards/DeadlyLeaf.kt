@@ -167,4 +167,6 @@ class DeadlyLeaf(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyE
         .build()
 
     override fun getType() = EntityType.HAZARD
+
+    override fun getDamageToMegaman() = 2
 }

@@ -18,6 +18,7 @@ class MegaContactFilter : IContactFilter {
         FixtureType.BODY pairTo objectSetOf(
             FixtureType.BODY,
             FixtureType.FEET,
+            FixtureType.SIDE,
             FixtureType.BLOCK,
             FixtureType.FORCE,
             FixtureType.GRAVITY_CHANGE

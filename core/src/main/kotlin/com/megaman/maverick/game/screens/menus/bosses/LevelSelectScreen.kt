@@ -256,8 +256,8 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
 
     private fun putBossMugshot(position: Position, levelDef: LevelDefinition) {
         val mugshotRegion = game.assMan.getTextureRegion(
-            TextureAsset.valueOf(levelDef.mugshotAtlas.uppercase()).source,
-            levelDef.mugshotRegion
+            TextureAsset.valueOf(levelDef.mugshotAtlas!!.uppercase()).source,
+            levelDef.mugshotRegion!!
         )
         val faceSupplier: () -> TextureRegion = {
             when {

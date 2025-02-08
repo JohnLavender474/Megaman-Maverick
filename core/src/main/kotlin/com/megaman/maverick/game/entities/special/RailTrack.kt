@@ -1,8 +1,10 @@
 package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -19,10 +21,7 @@ import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
-import com.mega.game.engine.drawables.sprites.GameSprite
-import com.mega.game.engine.drawables.sprites.SpritesComponent
-import com.mega.game.engine.drawables.sprites.setPosition
-import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.drawables.sprites.*
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
@@ -32,12 +31,12 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -46,28 +45,27 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
 
     companion object {
         const val TAG = "RailTrack"
+
         private const val DROPS = "drops"
         private const val PLATFORM_SPEED = 2.75f
-        private var leftTrackRegion: TextureRegion? = null
-        private var rightTrackRegion: TextureRegion? = null
-        private var middleTrackRegion: TextureRegion? = null
-        private var dropTrackRegion: TextureRegion? = null
+
+        private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private lateinit var drops: Array<GameRectangle>
-    private lateinit var bounds: GameRectangle
+    private val bounds = GameRectangle()
+    private val drops = Array<GameRectangle>()
+
+    private lateinit var spawnRoom: String
+
     private var platform: RailTrackPlatform? = null
     private var platformRight = false
 
-    override fun getType() = EntityType.SPECIAL
-
     override fun init() {
-        if (leftTrackRegion == null || rightTrackRegion == null || middleTrackRegion == null || dropTrackRegion == null) {
+        if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
-            leftTrackRegion = atlas.findRegion("$TAG/Left")
-            rightTrackRegion = atlas.findRegion("$TAG/Right")
-            middleTrackRegion = atlas.findRegion("$TAG/Middle")
-            dropTrackRegion = atlas.findRegion("$TAG/Drop")
+            gdxArrayOf("left", "right", "middle", "drop").forEach { key ->
+                regions.put(key, atlas.findRegion("$TAG/$key"))
+            }
         }
         addComponent(defineUpdatablesComponent())
         addComponent(defineCullablesComponent())
@@ -77,9 +75,10 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
+
         super.onSpawn(spawnProps)
 
-        bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
         val spawn = bounds.getPositionPoint(Position.CENTER_LEFT)
         val width = (bounds.getWidth() / ConstVals.PPM).toInt()
 
@@ -90,17 +89,17 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
                 .toObjectSet()
         else Array()
 
-        drops = dropIndices.map {
+        drops.addAll(dropIndices.map {
             val drop = GameRectangle()
             drop.setSize(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
             drop.setCenterLeftToPoint(Vector2(spawn.x + it * ConstVals.PPM, spawn.y))
             drop
-        }.toGdxArray()
+        }.toGdxArray())
 
         val leftSprite = GameSprite()
         leftSprite.setSize(ConstVals.PPM.toFloat())
         leftSprite.setPosition(spawn, Position.CENTER_LEFT)
-        leftSprite.setRegion(leftTrackRegion!!)
+        leftSprite.setRegion(regions["left"])
         sprites.put(ConstKeys.LEFT, leftSprite)
 
         for (i in 1 until width - 1) {
@@ -108,7 +107,7 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
             middleSprite.setSize(ConstVals.PPM.toFloat())
             val position = Vector2(spawn.x + i * ConstVals.PPM, spawn.y)
             middleSprite.setPosition(position, Position.CENTER_LEFT)
-            val region = if (dropIndices.contains(i)) dropTrackRegion else middleTrackRegion
+            val region = if (dropIndices.contains(i)) regions["drop"] else regions["middle"]
             middleSprite.setRegion(region!!)
             sprites.put(ConstKeys.MIDDLE + i, middleSprite)
         }
@@ -117,10 +116,10 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
         rightSprite.setSize(ConstVals.PPM.toFloat())
         val rightPosition = Vector2(spawn.x + (width - 1) * ConstVals.PPM, spawn.y)
         rightSprite.setPosition(rightPosition, Position.CENTER_LEFT)
-        rightSprite.setRegion(rightTrackRegion!!)
+        rightSprite.setRegion(regions["right"])
         sprites.put(ConstKeys.RIGHT, rightSprite)
 
-        platform = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.RAIL_TRACK_PLATFORM)!! as RailTrackPlatform
+        platform = MegaEntityFactory.fetch(RailTrackPlatform::class)!!
         val platformSpawn = spawnProps.get(ConstKeys.CHILD, Int::class)!!
         platformRight = spawnProps.get(ConstKeys.RIGHT, Boolean::class)!!
         platform!!.spawn(
@@ -130,49 +129,73 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
                 ConstKeys.TRAJECTORY pairTo PLATFORM_SPEED * ConstVals.PPM * if (platformRight) 1 else -1
             )
         )
+
+        spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
+
         super.onDestroy()
+
         platform?.destroy()
         platform = null
+
+        drops.clear()
+
         sprites.clear()
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
         platform!!.body.setCenterY(bounds.getCenter().y + 0.35f * ConstVals.PPM)
-        if (platformRight && platform!!.pivot.getMaxX() >= bounds.getMaxX() - 0.5f * ConstVals.PPM) {
-            platform!!.body.physics.velocity.x = PLATFORM_SPEED * ConstVals.PPM * -1f
-            platformRight = false
-        } else if (!platformRight && platform!!.pivot.getX() <= bounds.getX() + 0.5f * ConstVals.PPM) {
-            platform!!.body.physics.velocity.x = PLATFORM_SPEED * ConstVals.PPM
-            platformRight = true
+
+        when {
+            platformRight && platform!!.pivot.getMaxX() >= bounds.getMaxX() - 0.5f * ConstVals.PPM -> {
+                platform!!.body.physics.velocity.x = PLATFORM_SPEED * ConstVals.PPM * -1f
+                platformRight = false
+            }
+
+            !platformRight && platform!!.pivot.getX() <= bounds.getX() + 0.5f * ConstVals.PPM -> {
+                platform!!.body.physics.velocity.x = PLATFORM_SPEED * ConstVals.PPM
+                platformRight = true
+            }
         }
 
         val pivot = platform!!.pivot
-        if (platform!!.dropped && drops.none { drop -> pivot.getX() >= drop.getX() && pivot.getMaxX() <= drop.getMaxX() })
-            platform!!.raise()
-        else if (!platform!!.dropped && drops.any { drop -> pivot.getX() >= drop.getX() && pivot.getMaxX() <= drop.getMaxX() })
-            platform!!.drop()
+        when {
+            platform!!.dropped && drops.none { drop ->
+                pivot.getX() >= drop.getX() && pivot.getMaxX() <= drop.getMaxX()
+            } -> platform!!.raise()
+
+            !platform!!.dropped && drops.any { drop ->
+                pivot.getX() >= drop.getX() && pivot.getMaxX() <= drop.getMaxX()
+            } -> platform!!.drop()
+        }
     })
 
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
             ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
                 this,
-                objectSetOf(EventType.BEGIN_ROOM_TRANS)
+                objectSetOf(EventType.END_ROOM_TRANS),
+                predicate@{ event ->
+                    val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
+                    return@predicate room != spawnRoom
+                }
             )
         )
     )
+
+    override fun getType() = EntityType.SPECIAL
+
+    override fun getTag() = TAG
 }
 
 class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "RailTrackPlatform"
-        private var platformRegion: TextureRegion? = null
-        private var platformDropRegion: TextureRegion? = null
+        private val regions = ObjectMap<String, TextureRegion>()
     }
 
     val pivot = GameRectangle().setSize(0.1f * ConstVals.PPM, 0.1f * ConstVals.PPM)
@@ -180,10 +203,11 @@ class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), ISpritesEntity
         get() = !body.physics.collisionOn
 
     override fun init() {
-        if (platformRegion == null || platformDropRegion == null) {
+        if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
-            platformRegion = atlas.findRegion("${RailTrack.TAG}/Platform")
-            platformDropRegion = atlas.findRegion("${RailTrack.TAG}/PlatformDrop")
+            gdxArrayOf("platform", "platform_drop").forEach { key ->
+                regions.put(key, atlas.findRegion("${RailTrack.TAG}/$key"))
+            }
         }
         super.init()
         addComponent(AudioComponent())
@@ -211,40 +235,47 @@ class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), ISpritesEntity
 
         val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Float::class)!!
         body.physics.velocity.x = trajectory
+
         body.physics.collisionOn = true
+
+        blockFixture.setActive(true)
     }
 
     internal fun drop() {
         body.physics.collisionOn = false
+        blockFixture.setActive(false)
     }
 
     internal fun raise() {
         body.physics.collisionOn = true
+        blockFixture.setActive(true)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
         pivot.setPosition(body.getPosition())
     })
 
-    private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
-        sprite.setSize(2f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+    private fun defineSpritesComponent() = SpritesComponentBuilder()
+        .sprite(
+            GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
+                .also { sprite -> sprite.setSize(2f * ConstVals.PPM) }
+        )
+        .updatable { _, sprite ->
             val position = body.getPositionPoint(Position.TOP_CENTER)
             position.y += 0.1f * ConstVals.PPM
             sprite.setPosition(position, Position.TOP_CENTER)
         }
-        return spritesComponent
-    }
+        .build()
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: () -> String? = { if (body.physics.collisionOn) "platform" else "drop" }
         val animations = objectMapOf<String, IAnimation>(
-            "platform" pairTo Animation(platformRegion!!),
-            "drop" pairTo Animation(platformDropRegion!!, 1, 3, 0.025f, false)
+            "platform" pairTo Animation(regions["platform"]),
+            "drop" pairTo Animation(regions["platform_drop"], 1, 3, 0.025f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
+
+    override fun getTag() = TAG
 }

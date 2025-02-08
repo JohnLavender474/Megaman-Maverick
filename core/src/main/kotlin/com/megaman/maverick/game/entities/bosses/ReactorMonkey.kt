@@ -46,11 +46,11 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) :
+class ReactorMonkey(game: MegamanMaverickGame) :
     AbstractBoss(game, dmgDuration = DEFAULT_MINI_BOSS_DMG_DURATION, size = Size.LARGE), IAnimatedEntity, IFaceable {
 
     companion object {
-        const val TAG = "ReactorMonkeyMiniBoss"
+        const val TAG = "ReactorMonkey"
         const val BALL_SPAWN_Y_KEY = "${ConstKeys.BALL}_${ConstKeys.SPAWN}_${ConstKeys.Y}"
 
         private const val MIN_THROW_DELAY = 0.75f
@@ -85,10 +85,10 @@ class ReactorMonkeyMiniBoss(game: MegamanMaverickGame) :
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
-            regions.put("stand", atlas.findRegion("$TAG/Stand"))
-            regions.put("stand_damaged", atlas.findRegion("$TAG/StandDamaged"))
-            regions.put("throw", atlas.findRegion("$TAG/Throw"))
-            regions.put("throw_damaged", atlas.findRegion("$TAG/ThrowDamaged"))
+            gdxArrayOf("stand", "stand_damaged", "throw", "throw_damaged").forEach { key ->
+                val region = atlas.findRegion("$TAG/$key")
+                regions.put(key, region)
+            }
         }
         super.init()
         addComponent(defineAnimationsComponent())

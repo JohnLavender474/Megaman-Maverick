@@ -58,9 +58,9 @@
             <key>filtering</key>
             <struct type="LibGDXFiltering">
                 <key>x</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
                 <key>y</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
             </struct>
         </struct>
         <key>shapePadding</key>
@@ -204,7 +204,6 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Bosses1/Bospider/Still.png</key>
-            <key type="filename">../frames/Bosses1/ReactorMonkeyMiniBoss/Nuclear_Monkey_Ball.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -370,9 +369,9 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses1/MechaDragonMiniBoss/defeated.png</key>
-            <key type="filename">../frames/Bosses1/MechaDragonMiniBoss/fly.png</key>
-            <key type="filename">../frames/Bosses1/MechaDragonMiniBoss/shoot.png</key>
+            <key type="filename">../frames/Bosses1/MechaDragon/charging.png</key>
+            <key type="filename">../frames/Bosses1/MechaDragon/fire2.png</key>
+            <key type="filename">../frames/Bosses1/MechaDragon/turning.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -381,15 +380,61 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>100,50,200,100</rect>
+                <rect>64,96,128,192</rect>
                 <key>scale9Paddings</key>
-                <rect>100,50,200,100</rect>
+                <rect>64,96,128,192</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses1/MoonHeadMiniBoss/Angry.png</key>
-            <key type="filename">../frames/Bosses1/MoonHeadMiniBoss/Dark.png</key>
-            <key type="filename">../frames/Bosses1/MoonHeadMiniBoss/Shoot.png</key>
+            <key type="filename">../frames/Bosses1/MechaDragon/defeated.png</key>
+            <key type="filename">../frames/Bosses1/MechaDragon/fly.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>100,150,200,300</rect>
+                <key>scale9Paddings</key>
+                <rect>100,150,200,300</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses1/MechaDragon/fire1.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>128,128,256,256</rect>
+                <key>scale9Paddings</key>
+                <rect>128,128,256,256</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses1/MechaDragon/init.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>32,32,64,64</rect>
+                <key>scale9Paddings</key>
+                <rect>32,32,64,64</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses1/MoonHead/angry.png</key>
+            <key type="filename">../frames/Bosses1/MoonHead/dark.png</key>
+            <key type="filename">../frames/Bosses1/MoonHead/shoot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -404,7 +449,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses1/MoonHeadMiniBoss/Awaken.png</key>
+            <key type="filename">../frames/Bosses1/MoonHead/awaken.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -419,7 +464,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses1/MoonHeadMiniBoss/Crumble.png</key>
+            <key type="filename">../frames/Bosses1/MoonHead/crumble.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -434,7 +479,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses1/MoonHeadMiniBoss/Damaged.png</key>
+            <key type="filename">../frames/Bosses1/MoonHead/damaged.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -494,23 +539,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses1/ReactorMonkeyMiniBoss/Jump.png</key>
-            <key type="filename">../frames/Bosses1/ReactorMonkeyMiniBoss/StandDamaged.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>38,40,76,80</rect>
-                <key>scale9Paddings</key>
-                <rect>38,40,76,80</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Bosses1/ReactorMonkeyMiniBoss/Stand.png</key>
+            <key type="filename">../frames/Bosses1/ReactorMonkey/stand.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -525,8 +554,23 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses1/ReactorMonkeyMiniBoss/Throw.png</key>
-            <key type="filename">../frames/Bosses1/ReactorMonkeyMiniBoss/ThrowDamaged.png</key>
+            <key type="filename">../frames/Bosses1/ReactorMonkey/stand_damaged.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>38,40,76,80</rect>
+                <key>scale9Paddings</key>
+                <rect>38,40,76,80</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses1/ReactorMonkey/throw.png</key>
+            <key type="filename">../frames/Bosses1/ReactorMonkey/throw_damaged.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

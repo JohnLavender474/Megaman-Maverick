@@ -29,10 +29,9 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
@@ -69,23 +68,19 @@ class ExplodingBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
-    /*
-    override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
-        explodeAndDie()
-     */
-
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
 
-        val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)
-        val props = props(
-            ConstKeys.POSITION pairTo body.getCenter(),
-            ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND,
-            ConstKeys.OWNER pairTo owner
+        val explosion = MegaEntityFactory.fetch(Explosion::class)!!
+        explosion.spawn(
+            props(
+                ConstKeys.POSITION pairTo body.getCenter(),
+                ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND,
+                ConstKeys.OWNER pairTo owner
+            )
         )
-        explosion!!.spawn(props)
     }
 
     override fun defineBodyComponent(): BodyComponent {
