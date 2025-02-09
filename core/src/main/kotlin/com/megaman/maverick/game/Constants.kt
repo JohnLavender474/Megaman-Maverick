@@ -40,6 +40,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val ORIGIN = "origin"
     const val CHARGE = "charge"
     const val HOVER = "hover"
     const val MAIN = "main"

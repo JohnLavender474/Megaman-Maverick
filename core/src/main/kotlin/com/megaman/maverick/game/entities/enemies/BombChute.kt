@@ -42,7 +42,7 @@ class BombChute(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
         private const val RISE_SPEED = 8f
         private const val FALL_SPEED = -3f
         private const val TURN_DUR = 0.85f
-        private const val X_MAX_SPEED = 2f
+        private const val X_MAX_SPEED = 3f
         private const val X_ACCELERATION = 5f
         private val regions = ObjectMap<String, TextureRegion>()
     }

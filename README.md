@@ -209,6 +209,7 @@ comprehensive listing of the credits for the artwork used in this game.
 
 - [Famitard](https://www.youtube.com/@FamiTard)
   - Main Menu - [MMX3 Intro Stage 8-Bit](https://youtu.be/jEPimSadiRE)
+  - Intro Stage - [MMX2 Intro Stage 8-Bit](https://youtu.be/7omZK5SjNms)
   - Stage Select Menu - [MMX5 Stage Select 8-Bit](https://youtu.be/NooP1Ir2jp0)
   - Desert Man Stage - [MMX7 Vanishing Gungaroo 8-Bit](https://youtu.be/MFfZ-LEwcMo)
   - Moon Man Stage - [MMX5 Dark Necrobat 8-Bit](https://youtu.be/RosxPCxVOyk)

@@ -259,5 +259,7 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
                 ConstKeys.IMPULSE pairTo impulse
             )
         )
+
+        requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
     }
 }

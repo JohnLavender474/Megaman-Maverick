@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -25,28 +26,19 @@ object BodyComponentCreator {
         bodyFixtureDefs: Array<BodyFixtureDef> = Array(),
         debugShapes: Array<() -> IDrawableShape?>? = null
     ): BodyComponent {
-        bodyFixtureDefs.forEach { t ->
-            val shape = t.shape ?: GameRectangle(body)
+        val component = BodyComponent(body)
+        return amend(entity, component, bodyFixtureDefs, debugShapes)
+    }
 
-            val fixture = Fixture(
-                body = body,
-                type = t.type,
-                rawShape = shape,
-                active = t.active,
-                attachedToBody = t.attached,
-                bodyAttachmentPosition = t.attachment,
-                offsetFromBodyAttachment = t.offset.cpy(),
-                properties = t.props
-            )
-            fixture.addFixtureLabels(t.labels)
+    fun amend(
+        entity: IBodyEntity,
+        component: BodyComponent,
+        bodyFixtureDefs: Array<BodyFixtureDef> = Array(),
+        debugShapes: Array<() -> IDrawableShape?>? = null
+    ): BodyComponent {
+        val body = component.body
 
-            body.addFixture(fixture)
-
-            if (debugShapes != null) {
-                t.drawingColor?.let { color -> fixture.drawingColor = color }
-                debugShapes.add { fixture }
-            }
-        }
+        handleBodyFixtureDefs(body, bodyFixtureDefs, debugShapes)
 
         body.setEntity(entity)
         body.forEachFixture { fixture -> fixture.setEntity(entity) }
@@ -56,7 +48,34 @@ object BodyComponentCreator {
         if (entity is MegaGameEntity)
             entity.runnablesOnDestroy.put(ConstKeys.CLEAR_FEET_BLOCKS) { body.clearFeetBlocks() }
 
-        return BodyComponent(body)
+        return component
+    }
+
+    private fun handleBodyFixtureDefs(
+        body: Body,
+        bodyFixtureDefs: Array<BodyFixtureDef>,
+        debugShapes: Array<() -> IDrawableShape?>? = null
+    ) = bodyFixtureDefs.forEach { t ->
+        val shape = t.shape ?: GameRectangle(body)
+
+        val fixture = Fixture(
+            body = body,
+            type = t.type,
+            rawShape = shape,
+            active = t.active,
+            attachedToBody = t.attached,
+            bodyAttachmentPosition = t.attachment,
+            offsetFromBodyAttachment = t.offset.cpy(),
+            properties = t.props
+        )
+        fixture.addFixtureLabels(t.labels)
+
+        body.addFixture(fixture)
+
+        if (debugShapes != null) {
+            t.drawingColor?.let { color -> fixture.drawingColor = color }
+            debugShapes.add { fixture }
+        }
     }
 }
 
@@ -77,6 +96,12 @@ data class BodyFixtureDef(
         fun of(vararg types: FixtureType): Array<BodyFixtureDef> {
             val array = Array<BodyFixtureDef>()
             types.forEach { type -> array.add(BodyFixtureDef(type)) }
+            return array
+        }
+
+        fun of(vararg entries: GamePair<FixtureType, IGameShape2D>): Array<BodyFixtureDef> {
+            val array = Array<BodyFixtureDef>()
+            entries.forEach { (type, shape) -> array.add(create(type, shape)) }
             return array
         }
 

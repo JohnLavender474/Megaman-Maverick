@@ -22,16 +22,18 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
         private set
 
     override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "${getTag()}: onSpawn(): ${this::class.simpleName}, spawnProps=$spawnProps")
         mapObjectId = spawnProps.getOrDefault(ConstKeys.ID, 0, Int::class)
         runnablesOnSpawn.values().forEach { it.invoke() }
         MegaGameEntities.add(this)
+
+        GameLogger.debug(TAG, "${getTag()}: onSpawn(): this=$this, spawnProps=$spawnProps")
     }
 
     override fun onDestroy() {
-        GameLogger.debug(TAG, "${getTag()}: onDestroy(): ${this::class.simpleName}")
         runnablesOnDestroy.values().forEach { it.invoke() }
         MegaGameEntities.remove(this)
+
+        GameLogger.debug(TAG, "${getTag()}: onDestroy(): this=$this")
     }
 
     override fun getTag() = this::class.simpleName ?: "?"

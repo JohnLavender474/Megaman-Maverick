@@ -4,8 +4,9 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.feetOnGround
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.entities.special.Ladder
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
 
 fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
     !roomTransPauseTimer.isFinished() -> null
@@ -31,13 +32,17 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
         else -> amendKey("cartin")
     }
 
-    isBehaviorActive(BehaviorType.CLIMBING) -> when {
-        !body.isSensing(BodySense.HEAD_TOUCHING_LADDER) && !shooting -> amendKey("climb_finish")
+    isBehaviorActive(BehaviorType.CLIMBING) -> {
+        val ladder = body.getProperty(ConstKeys.LADDER, Ladder::class)
+        val inLadder = ladder != null && ladder.body.getBounds().contains(body.getCenter())
 
-        else -> {
-            val movement = if (direction.isHorizontal()) body.physics.velocity.x else body.physics.velocity.y
-            val key = if (movement != 0f) "climb" else "climb_still"
-            amendKey(key)
+        when {
+            !inLadder && !shooting -> amendKey("climb_finish")
+            else -> {
+                val movement = if (direction.isHorizontal()) body.physics.velocity.x else body.physics.velocity.y
+                val key = if (movement != 0f) "climb" else "climb_still"
+                amendKey(key)
+            }
         }
     }
 

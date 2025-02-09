@@ -137,17 +137,16 @@ class MegamanMaverickGame(
         private const val ASSET_MILLIS = 17
         private const val LOADING = "LOADING"
         private const val SCREENSHOT_KEY = Input.Keys.P
-        val TAGS_TO_LOG: ObjectSet<String> =
-            objectSetOf(
-                TAG,
-                Megaman.TAG,
-                AbstractBoss.TAG,
-                MegaGameEntity.TAG,
-                MegaLevelScreen.TAG,
-                CameraManagerForRooms.TAG,
-                MEGAMAN_EVENT_LISTENER_TAG,
-                MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG
-            )
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(
+            TAG,
+            Megaman.TAG,
+            AbstractBoss.TAG,
+            MegaGameEntity.TAG,
+            MegaLevelScreen.TAG,
+            CameraManagerForRooms.TAG,
+            MEGAMAN_EVENT_LISTENER_TAG,
+            MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG
+        )
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.oneFixtureMatches(FixtureType.CONSUMER)
         }
@@ -473,7 +472,7 @@ class MegamanMaverickGame(
     }
 
     override fun dispose() {
-        GameLogger.log(TAG, "dispose()")
+        GameLogger.log(TAG, "dispose(): start")
         if (this::batch.isInitialized) batch.dispose()
         if (this::shapeRenderer.isInitialized) shapeRenderer.dispose()
         if (this::engine.isInitialized) engine.dispose()
@@ -481,6 +480,7 @@ class MegamanMaverickGame(
         disposables.values().forEach { it.dispose() }
         debugWindow?.dispose()
         logFileWriter?.dispose()
+        GameLogger.log(TAG, "dispose(): end")
     }
 
     fun saveState() {

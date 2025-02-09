@@ -402,7 +402,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 ) || !body.properties.containsKey(ConstKeys.LADDER)
             ) return false
 
-            ladder = body.properties.get(ConstKeys.LADDER, Ladder::class)!!
+            ladder = body.getProperty(ConstKeys.LADDER, Ladder::class)!!
 
             val center = body.getCenter()
 
