@@ -77,11 +77,10 @@ import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.bosses.BigAssMaverickRobot
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.Megaman.Companion.MEGAMAN_EVENT_LISTENER_TAG
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.events.EventType
@@ -90,8 +89,6 @@ import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.debug.DebugWindow
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
-import com.megaman.maverick.game.screens.levels.MegaLevelScreen.Companion.MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG
-import com.megaman.maverick.game.screens.levels.camera.CameraManagerForRooms
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 import com.megaman.maverick.game.screens.menus.*
 import com.megaman.maverick.game.screens.menus.bosses.LevelSelectScreen
@@ -138,6 +135,7 @@ class MegamanMaverickGame(
         private const val LOADING = "LOADING"
         private const val SCREENSHOT_KEY = Input.Keys.P
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(
+            /*
             TAG,
             Megaman.TAG,
             AbstractBoss.TAG,
@@ -146,6 +144,8 @@ class MegamanMaverickGame(
             CameraManagerForRooms.TAG,
             MEGAMAN_EVENT_LISTENER_TAG,
             MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG
+             */
+            BigAssMaverickRobot.TAG
         )
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.oneFixtureMatches(FixtureType.CONSUMER)
@@ -192,6 +192,20 @@ class MegamanMaverickGame(
 
     override fun create() {
         params.logLevels.forEach { GameLogger.setLogLevel(it, true) }
+        // only print errors to terminal; all other log levels should only be displayed in the logger window
+        GameLogger.logReceivers.add(object : LogReceiver {
+
+            override fun receive(
+                fullMessage: String,
+                time: String,
+                level: GameLogLevel,
+                tag: String,
+                message: String,
+                throwable: Throwable?
+            ) {
+                if (level == GameLogLevel.ERROR) println(fullMessage)
+            }
+        })
         GameLogger.tagsToLog.addAll(TAGS_TO_LOG)
         GameLogger.filterByTag = true
 
@@ -217,11 +231,10 @@ class MegamanMaverickGame(
 
         val gameWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
         val gameHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
-        val gameCamera =
-            RotatableCamera(onJustFinishedRotating = {
-                setCameraRotating(false)
-                eventsMan.submitEvent(Event(EventType.END_GAME_CAM_ROTATION))
-            })
+        val gameCamera = RotatableCamera(onJustFinishedRotating = {
+            setCameraRotating(false)
+            eventsMan.submitEvent(Event(EventType.END_GAME_CAM_ROTATION))
+        })
         gameCamera.setToDefaultPosition()
 
         val gameViewport = FitViewport(gameWidth, gameHeight, gameCamera)
@@ -472,7 +485,7 @@ class MegamanMaverickGame(
     }
 
     override fun dispose() {
-        GameLogger.log(TAG, "dispose(): start")
+        GameLogger.log(TAG, "dispose()")
         if (this::batch.isInitialized) batch.dispose()
         if (this::shapeRenderer.isInitialized) shapeRenderer.dispose()
         if (this::engine.isInitialized) engine.dispose()
@@ -480,7 +493,6 @@ class MegamanMaverickGame(
         disposables.values().forEach { it.dispose() }
         debugWindow?.dispose()
         logFileWriter?.dispose()
-        GameLogger.log(TAG, "dispose(): end")
     }
 
     fun saveState() {

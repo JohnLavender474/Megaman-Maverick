@@ -2,8 +2,6 @@ package com.megaman.maverick.game.entities.factories.impl
 
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.bosses.*
-import com.megaman.maverick.game.entities.bosses.gutstank.GutsTank
-import com.megaman.maverick.game.entities.bosses.sigmarat.SigmaRat
 import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.GameEntityPoolCreator
 

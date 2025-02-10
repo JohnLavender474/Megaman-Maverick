@@ -2628,6 +2628,7 @@ credits.txt
 music/MMX5_DarkDizzy.txt
 music/MMX6_BossFight.txt
 music/MMZ_EnemyHall.txt
+music/MMX7_BossFight.mp3
 music/MMX_Sigma_2_Stage.mp3
 music/MMX_ChillPenguin_Famitard.mp3
 music/MMX_Sigma1st.mp3
@@ -2642,6 +2643,7 @@ music/MMX8_BurnRooster.mp3
 music/MMX7_VanishingGungaroo.mp3
 music/MMX6_BlazeHeatnix.mp3
 music/MMX2_CrystalSnail.mp3
+music/MMX5_BossFight.mp3
 music/MMX2_X-Hunter.txt
 music/MMX_StormEagle.txt
 music/MM7_Final_Boss_Intro.mp3

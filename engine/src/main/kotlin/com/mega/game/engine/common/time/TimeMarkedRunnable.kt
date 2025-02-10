@@ -15,7 +15,7 @@ class TimeMarkedRunnable(
     val runnable: () -> Unit
 ) : Runnable, Comparable<TimeMarkedRunnable> {
 
-    private var runOnlyWhenJustPassedTime: Boolean = false
+    private var runOnlyWhenJustPassedTime: Boolean = true
 
     constructor(
         time: Float, runnable: Runnable

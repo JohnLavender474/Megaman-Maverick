@@ -17,6 +17,7 @@ class LadderTop(game: MegamanMaverickGame) : Block(game) {
             objectSetOf(FixtureLabel.NO_PROJECTILE_COLLISION, FixtureLabel.NO_SIDE_TOUCHIE)
         )
         spawnProps.put(ConstKeys.BODY_LABELS, objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY))
+        spawnProps.put("${ConstKeys.FEET}_${ConstKeys.SOUND}", false)
         super.onSpawn(spawnProps)
     }
 }

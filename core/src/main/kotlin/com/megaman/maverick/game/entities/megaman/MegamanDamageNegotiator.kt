@@ -12,6 +12,8 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.PropellerPlatform
 import com.megaman.maverick.game.entities.blocks.RocketPlatform
+import com.megaman.maverick.game.entities.bosses.BigAssMaverickRobot
+import com.megaman.maverick.game.entities.bosses.BigAssMaverickRobotHand
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -21,6 +23,8 @@ class MegamanDamageNegotiator(private val megaman: Megaman) : IDamageNegotiator 
 
     companion object {
         private val custom = objectMapOf<String, DamageNegotiation>(
+            BigAssMaverickRobotHand.TAG pairTo dmgNeg(1),
+            BigAssMaverickRobot.TAG pairTo dmgNeg(1),
             PropellerPlatform.TAG pairTo dmgNeg(2),
             RocketPlatform.TAG pairTo dmgNeg(2),
             LaserBeamer.TAG pairTo dmgNeg(3)

@@ -74,8 +74,6 @@ object GameLogger : ApplicationLogger {
         val formattedTime = time.format(DateTimeFormatter.ofPattern("HH:mm:ss"))
 
         val string = formatter.invoke(formattedTime, level, tag, message, throwable)
-        println(string)
-
         logReceivers.forEach { it.receive(string, formattedTime, level, tag, message, throwable) }
     }
 }

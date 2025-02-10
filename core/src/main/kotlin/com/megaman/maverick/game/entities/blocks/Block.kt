@@ -201,16 +201,18 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     protected open fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.STATIC)
-        body.drawingColor = Color.GRAY
-        debugShapeSuppliers.add { body.getBounds() }
+        debugShapeSuppliers.add { if (body.physics.collisionOn) body.getBounds() else null }
 
         val blockRect = GameRectangle()
         blockFixture = Fixture(body, FixtureType.BLOCK, blockRect)
         body.addFixture(blockFixture)
-        blockFixture.drawingColor = Color.GRAY
         debugShapeSuppliers.add { blockFixture }
 
-        body.preProcess.put("${ConstKeys.BLOCK}_${ConstKeys.FIXTURE}") { blockRect.set(body) }
+        body.preProcess.put("${ConstKeys.BLOCK}_${ConstKeys.FIXTURE}") {
+            blockRect.set(body)
+
+            blockFixture.drawingColor = if (blockFixture.isActive()) Color.RED else Color.GRAY
+        }
 
         return BodyComponentCreator.create(this, body)
     }

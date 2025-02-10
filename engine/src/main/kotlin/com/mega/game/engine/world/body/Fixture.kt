@@ -21,7 +21,7 @@ class Fixture(
     var bodyAttachmentPosition: Position = Position.CENTER,
     var offsetFromBodyAttachment: Vector2 = Vector2(),
     override var properties: Properties = Properties(),
-    override var drawingColor: Color = Color.RED,
+    override var drawingColor: Color = rawShape.drawingColor,
     override var drawingShapeType: ShapeType = ShapeType.Line
 ) : IFixture, ICopyable<Fixture>, IDrawableShape {
 

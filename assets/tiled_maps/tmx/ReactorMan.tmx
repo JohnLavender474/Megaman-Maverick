@@ -544,7 +544,7 @@
   <object id="72" name="Trigger" x="4352" y="1536" width="32" height="288"/>
   <object id="74" name="Start" x="4288" y="1904" width="32" height="32"/>
   <object id="75" name="Target" x="4288" y="1640" width="32" height="32"/>
-  <object id="97" name="ReactorMonkeyMiniBoss" x="4224" y="1376" width="32" height="32">
+  <object id="97" name="ReactorMonkey" x="4224" y="1376" width="32" height="32">
    <properties>
     <property name="boss_key" value="1"/>
     <property name="mini" type="bool" value="true"/>

@@ -1,5 +1,6 @@
 package com.mega.game.engine.world
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
@@ -86,8 +87,8 @@ class WorldSystemTest : DescribeSpec({
     }
 
     it("should filter contacts correctly") {
-        val fixture1 = Fixture(mockk(), "Type1", mockk())
-        val fixture2 = Fixture(mockk(), "Type2", mockk())
+        val fixture1 = Fixture(mockk(), "Type1", mockk(), drawingColor = Color.RED)
+        val fixture2 = Fixture(mockk(), "Type2", mockk(), drawingColor = Color.RED)
         val filterMap = ObjectMap<Any, ObjectSet<Any>>().apply {
             put("Type1", objectSetOf("Type2"))
         }
