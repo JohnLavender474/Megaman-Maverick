@@ -276,35 +276,35 @@ MoonHead/shoot
   orig: 32, 27
   offset: 0, 0
   index: -1
-ReactorMan/Defeated
+ReactorMan/defeated
   rotate: false
   xy: 784, 96
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
   index: -1
-ReactorMan/Jump
+ReactorMan/jump
   rotate: false
   xy: 624, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-ReactorMan/Run
+ReactorMan/run
   rotate: false
   xy: 48, 96
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
-ReactorMan/Stand
+ReactorMan/stand
   rotate: false
   xy: 672, 0
   size: 144, 48
   orig: 144, 48
   offset: 0, 0
   index: -1
-ReactorMan/Throw
+ReactorMan/throw
   rotate: false
   xy: 816, 0
   size: 48, 48

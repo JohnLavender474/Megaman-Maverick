@@ -96,9 +96,8 @@ object DesktopLauncher {
         try {
             Lwjgl3Application(game, config)
         } catch (e: Exception) {
-            System.err.println("Exception while running game: ${e.message}")
-            e.printStackTrace()
             game.dispose()
+            throw e
         }
     }
 

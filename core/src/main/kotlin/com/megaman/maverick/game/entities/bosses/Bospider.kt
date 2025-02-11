@@ -42,7 +42,6 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
@@ -348,7 +347,6 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         return BodyComponentCreator.create(this, body)
     }
 
-
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         sprite.setSize(5f * ConstVals.PPM)
@@ -410,7 +408,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         val rightTrajectory = centerTrajectory.cpy().rotateDeg(ANGLE_X)
         shootWeb(rightTrajectory)
 
-        requestToPlaySound(SoundAsset.SPLASH_SOUND, false)
+        // TODO: requestToPlaySound(SoundAsset.SPLASH_SOUND, false)
     }
 
     private fun shootWeb(trajectory: Vector2) {

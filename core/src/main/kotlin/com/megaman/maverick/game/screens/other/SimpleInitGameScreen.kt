@@ -67,7 +67,7 @@ class SimpleInitGameScreen(private val game: MegamanMaverickGame) : BaseScreen()
             GameLogger.debug(TAG, "render(): set to next screen")
             game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
             game.setCurrentScreen(ScreenEnum.LOGO_SCREEN.name)
-            // game.startLevelScreen(LevelDefinition.INFERNO_MAN)
+            // game.startLevelScreen(LevelDefinition.WILY_STAGE_1)
         }
     }
 }

@@ -123,6 +123,11 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
 
         StandardFacingSetter.set(this)
 
+        canonDirectionLoop.reset()
+
+        delayTimer.reset()
+        ballsTimer.reset()
+        bulletsTimer.reset()
         shootAnimTimer.setToEnd()
     }
 

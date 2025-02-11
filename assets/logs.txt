@@ -548,3 +548,67 @@
 19:36:49 | LOG | BigAssMaverickRobot | onDestroy()
 ===== SESSION STARTED: 2025-02-09T19:36:56.057922670 =====
 ===== SESSION STARTED: 2025-02-09T19:38:04.955105519 =====
+===== SESSION STARTED: 2025-02-10T12:33:02.389597469 =====
+12:35:35 | DEBUG | BigAssMaverickRobot | init()
+12:35:35 | DEBUG | BigAssMaverickRobot | onSpawn(): spawnProps=Properties({
+	[bounds=[9152.0,672.0,224.0,320.0]]
+	[x=9152.0]
+	[height=320.0]
+	[right=com.badlogic.gdx.maps.objects.RectangleMapObject@31ff6309]
+	[music=MMX7_BOSS_FIGHT_MUSIC]
+	[id=144]
+	[left=com.badlogic.gdx.maps.objects.RectangleMapObject@204e90f7]
+	[y=672.0]
+	[width=224.0]
+})
+12:35:35 | LOG | BigAssMaverickRobot | onSpawn(): spawnProps=Properties({
+	[bounds=[9152.0,672.0,224.0,320.0]]
+	[x=9152.0]
+	[height=320.0]
+	[right=com.badlogic.gdx.maps.objects.RectangleMapObject@31ff6309]
+	[music=MMX7_BOSS_FIGHT_MUSIC]
+	[id=144]
+	[left=com.badlogic.gdx.maps.objects.RectangleMapObject@204e90f7]
+	[y=672.0]
+	[width=224.0]
+})
+12:35:37 | DEBUG | BigAssMaverickRobot | onDestroy()
+12:35:37 | LOG | BigAssMaverickRobot | onDestroy()
+===== SESSION STARTED: 2025-02-10T13:22:42.003345855 =====
+===== SESSION STARTED: 2025-02-10T13:42:20.938455398 =====
+===== SESSION STARTED: 2025-02-10T13:43:44.417526217 =====
+===== SESSION STARTED: 2025-02-10T13:44:28.783120070 =====
+===== SESSION STARTED: 2025-02-10T13:48:17.386851312 =====
+===== SESSION STARTED: 2025-02-10T13:48:24.389749108 =====
+===== SESSION STARTED: 2025-02-10T13:48:47.100239071 =====
+===== SESSION STARTED: 2025-02-10T13:49:29.218280844 =====
+===== SESSION STARTED: 2025-02-10T18:28:12.917905930 =====
+===== SESSION STARTED: 2025-02-10T18:29:36.450615926 =====
+===== SESSION STARTED: 2025-02-10T19:05:24.867208022 =====
+===== SESSION STARTED: 2025-02-10T19:18:02.193903978 =====
+===== SESSION STARTED: 2025-02-10T19:18:56.958933555 =====
+19:21:10 | DEBUG | BigAssMaverickRobot | init()
+19:21:10 | DEBUG | BigAssMaverickRobot | onSpawn(): spawnProps=Properties({
+	[bounds=[9152.0,672.0,224.0,320.0]]
+	[x=9152.0]
+	[height=320.0]
+	[right=com.badlogic.gdx.maps.objects.RectangleMapObject@7808f638]
+	[music=MMX7_BOSS_FIGHT_MUSIC]
+	[id=144]
+	[left=com.badlogic.gdx.maps.objects.RectangleMapObject@62d73ead]
+	[y=672.0]
+	[width=224.0]
+})
+19:21:11 | LOG | BigAssMaverickRobot | onSpawn(): spawnProps=Properties({
+	[bounds=[9152.0,672.0,224.0,320.0]]
+	[x=9152.0]
+	[height=320.0]
+	[right=com.badlogic.gdx.maps.objects.RectangleMapObject@7808f638]
+	[music=MMX7_BOSS_FIGHT_MUSIC]
+	[id=144]
+	[left=com.badlogic.gdx.maps.objects.RectangleMapObject@62d73ead]
+	[y=672.0]
+	[width=224.0]
+})
+19:21:11 | DEBUG | BigAssMaverickRobot | onDestroy()
+19:21:11 | LOG | BigAssMaverickRobot | onDestroy()

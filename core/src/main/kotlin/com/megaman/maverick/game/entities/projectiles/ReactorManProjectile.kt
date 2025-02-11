@@ -4,15 +4,15 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
-import com.mega.game.engine.animations.AnimationsComponent
-import com.mega.game.engine.animations.Animator
-import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.animations.AnimationsComponentBuilder
+import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -23,7 +23,7 @@ import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
-import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.GameEntity
@@ -33,6 +33,7 @@ import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -70,6 +71,11 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
             )
         )
 
+        private val animDefs = orderedMapOf(
+            "big" pairTo AnimationDef(1, 3, 0.1f, true),
+            "small" pairTo AnimationDef(2, 2, 0.1f, true),
+            "die" pairTo AnimationDef(1, 2, 0.05f, false)
+        )
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -82,7 +88,7 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
-            gdxArrayOf("big", "small", "die").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
+            animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
         addComponent(defineUpdatablesComponent())
@@ -186,28 +192,27 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
         return BodyComponentCreator.create(this, body)
     }
 
-    override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
-        sprite.setSize(ConstVals.PPM.toFloat())
-        val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
-        return component
-    }
-
-    private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
-            when {
-                big -> "big"
-                !dying -> "small"
-                else -> "dying"
-            }
-        }
-        val animations = objectMapOf<String, IAnimation>(
-            "big" pairTo Animation(regions["big"], 1, 3, 0.1f, true),
-            "small" pairTo Animation(regions["small"], 2, 2, 0.1f, true),
-            "dying" pairTo Animation(regions["dying"], 1, 2, 0.05f, false)
+    override fun defineSpritesComponent() = SpritesComponentBuilder()
+        .sprite(
+            TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
+                .also { sprite -> sprite.setSize(ConstVals.PPM.toFloat()) }
         )
-        val animator = Animator(keySupplier, animations)
-        return AnimationsComponent(this, animator)
-    }
+        .updatable { _, sprite -> sprite.setCenter(body.getCenter()) }
+        .build()
+
+    private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
+        .key(TAG)
+        .animator(
+            AnimatorBuilder()
+                .setKeySupplier { if (big) "big" else if (!dying) "small" else "die" }
+                .applyToAnimations { animations ->
+                    animDefs.forEach { entry ->
+                        val key = entry.key
+                        val (rows, cols, durations, loop) = entry.value
+                        animations.put(key, Animation(regions[key], rows, cols, durations, loop))
+                    }
+                }
+                .build()
+        )
+        .build()
 }

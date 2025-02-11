@@ -1084,11 +1084,11 @@ sprites/frames/Bosses1/MechaDragon/fly.png
 sprites/frames/Bosses1/MechaDragon/fire1.png
 sprites/frames/Bosses1/MechaDragon/turning.png
 sprites/frames/Bosses1/MechaDragon/defeated.png
-sprites/frames/Bosses1/ReactorMan/Stand.png
-sprites/frames/Bosses1/ReactorMan/Throw.png
-sprites/frames/Bosses1/ReactorMan/Jump.png
-sprites/frames/Bosses1/ReactorMan/Defeated.png
-sprites/frames/Bosses1/ReactorMan/Run.png
+sprites/frames/Bosses1/ReactorMan/throw.png
+sprites/frames/Bosses1/ReactorMan/stand.png
+sprites/frames/Bosses1/ReactorMan/jump.png
+sprites/frames/Bosses1/ReactorMan/run.png
+sprites/frames/Bosses1/ReactorMan/defeated.png
 sprites/frames/Bosses1/GlacierMan/fall.png
 sprites/frames/Bosses1/GlacierMan/fall_shoot_up.png
 sprites/frames/Bosses1/GlacierMan/duck.png
@@ -1273,6 +1273,7 @@ sprites/frames/Backgrounds6/Desert/NoSunSky.png
 sprites/frames/Backgrounds6/Desert/Canyon.png
 sprites/frames/Backgrounds6/Desert/SunSky.png
 sprites/frames/Backgrounds6/EarthBackdrop.png
+sprites/frames/Backgrounds6/Wily1.png
 sprites/frames/Backgrounds6/Space.png
 sprites/frames/Backgrounds3/BKG19.png
 sprites/frames/Backgrounds3/BKG22.png
@@ -1916,6 +1917,7 @@ sprites/piskel/WintryMan.piskel
 sprites/piskel/Glacier_Man_AirConditioner.piskel
 sprites/piskel/Cactus.piskel
 sprites/piskel/SuperCoolActionStarWarsLazer.piskel
+sprites/piskel/MegamanWanted_WilyStage1.piskel
 sprites/piskel/EnhancedSniperJoe1.piskel
 sprites/piskel/Faces.piskel
 sprites/piskel/MoonManProjectiles.piskel
@@ -2232,6 +2234,7 @@ tiled_maps/tsx/mm9galaxy.tsx
 tiled_maps/tsx/MM10Lab.tsx
 tiled_maps/tsx/React_Man_2.tsx
 tiled_maps/tsx/SkyMan.tsx
+tiled_maps/tsx/MegamanWanted_WilyStage1.tsx
 tiled_maps/tsx/MM10Endless.tsx
 tiled_maps/tsx/mm9tornado.tsx
 tiled_maps/tsx/MM2wood_01.tsx
@@ -2403,6 +2406,7 @@ tiled_maps/png/tstMM10Lab.png
 tiled_maps/png/tstFlashmanAnimated2.png
 tiled_maps/png/ReactorManCondensed.png
 tiled_maps/png/PlantManTileset.png
+tiled_maps/png/MegamanWanted_WilyStage1.png
 tiled_maps/png/NES - Mega Man 5 - Gravity Man Stage(1).png
 tiled_maps/png/CrystalManTileset.png
 tiled_maps/png/React_Man_1.png
@@ -2591,6 +2595,7 @@ tiled_maps/tmx/CaveMan.tmx
 tiled_maps/tmx/DesertMan_16x14_v3.tmx
 tiled_maps/tmx/WilyStage1.tmx
 tiled_maps/tmx/InfernoMan_v2.tmx
+tiled_maps/tmx/WilyStage1_v2.tmx
 tiled_maps/tmx/IntroStage.tmx
 tiled_maps/tmx/Test1.tmx
 tiled_maps/tmx/GlacierMan_16x14.tmx

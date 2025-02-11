@@ -1,18 +1,18 @@
 package com.megaman.maverick.game.entities.bosses
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
-import com.mega.game.engine.animations.AnimationsComponent
-import com.mega.game.engine.animations.Animator
-import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.animations.AnimationsComponentBuilder
+import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -24,7 +24,7 @@ import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
-import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
@@ -36,12 +36,11 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.ReactorManProjectile
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -50,15 +49,8 @@ import com.megaman.maverick.game.world.body.*
 
 class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IFaceable {
 
-    enum class ReactManState(val regionName: String) {
-        JUMP("Jump"),
-        RUN("Run"),
-        STAND("Stand"),
-        THROW("Throw")
-    }
-
     companion object {
-        const val TAG = "ReactMan"
+        const val TAG = "ReactorMan"
 
         private const val GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.001f
@@ -78,15 +70,23 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val PROJECTILE_MIN_SPEED = 8f
         private const val PROJECTILE_MAX_SPEED = 14f
 
+        private val animDefs = orderedMapOf(
+            "stand" pairTo AnimationDef(1, 3, gdxArrayOf(1f, 0.1f, 0.1f), true),
+            "throw" pairTo AnimationDef(),
+            "run" pairTo AnimationDef(2, 2, 0.1f, true),
+            "jump" pairTo AnimationDef(),
+            "defeated" pairTo AnimationDef(3, 1, 0.1f, true)
+        )
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
+    private enum class ReactorManState { JUMP, RUN, STAND, THROW }
+
     override lateinit var facing: Facing
 
-    private val standTimer = Timer(STAND_MAX_DUR)
-    private val danceTimer = Timer(DANCE_DUR)
     private val runTimer = Timer(RUN_DUR)
     private val throwTimer = Timer(THROW_DELAY)
+    private val standTimer = Timer(STAND_MAX_DUR)
 
     private val projectilePosition: Vector2
         get() = body.getPositionPoint(Position.TOP_CENTER).add(
@@ -94,20 +94,17 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             (if (body.isSensing(BodySense.FEET_ON_GROUND)) 0.1f else 0.25f) * ConstVals.PPM
         )
 
-    private var projectile: ReactorManProjectile? = null
     private var jumped = false
     private var throwOnJump = true
-    private lateinit var currentState: ReactManState
+
+    private var projectile: ReactorManProjectile? = null
+
+    private lateinit var currentState: ReactorManState
 
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
-            ReactManState.entries.forEach {
-                val region = atlas.findRegion("$TAG/${it.regionName}")
-                regions.put(it.regionName, region)
-            }
-            regions.put("Die", atlas.findRegion("$TAG/Die"))
-            regions.put("Defeated", atlas.findRegion("$TAG/Defeated"))
+            animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -120,14 +117,13 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         body.setBottomCenterToPoint(spawn)
 
         standTimer.reset()
-        danceTimer.reset()
         throwTimer.reset()
         runTimer.reset()
 
         jumped = false
         throwOnJump = true
 
-        currentState = ReactManState.STAND
+        currentState = ReactorManState.STAND
         facing = if (megaman.body.getX() <= body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
@@ -154,7 +150,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             }
 
             when (currentState) {
-                ReactManState.STAND -> {
+                ReactorManState.STAND -> {
                     if (projectile == null) spawnProjectile()
 
                     if (megaman.body.getX() <= body.getX()) facing = Facing.LEFT
@@ -166,12 +162,12 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                         standTimer.update(delta)
                         if (standTimer.isFinished()) {
                             standTimer.resetDuration(getStandDur())
-                            currentState = ReactManState.JUMP
+                            currentState = ReactorManState.JUMP
                         }
                     }
                 }
 
-                ReactManState.JUMP -> {
+                ReactorManState.JUMP -> {
                     if (!jumped) {
                         jump()
                         jumped = true
@@ -190,11 +186,11 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                     if (body.isSensing(BodySense.FEET_ON_GROUND) && body.physics.velocity.y <= 0f) {
                         jumped = false
                         throwTimer.reset()
-                        currentState = if (throwOnJump) ReactManState.RUN else ReactManState.THROW
+                        currentState = if (throwOnJump) ReactorManState.RUN else ReactorManState.THROW
                     }
                 }
 
-                ReactManState.THROW -> {
+                ReactorManState.THROW -> {
                     if (projectile != null) throwProjectile()
 
                     body.physics.velocity.setZero()
@@ -206,15 +202,15 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                         if (megaman.body.getX() <= body.getX()) facing = Facing.LEFT
                         else if (megaman.body.getMaxX() >= body.getMaxX()) facing = Facing.RIGHT
 
-                        currentState = ReactManState.RUN
+                        currentState = ReactorManState.RUN
                     }
                 }
 
-                ReactManState.RUN -> {
+                ReactorManState.RUN -> {
                     runTimer.update(delta)
                     if (runTimer.isFinished() || shouldStopRunning()) {
                         runTimer.reset()
-                        currentState = ReactManState.STAND
+                        currentState = ReactorManState.STAND
                         return@add
                     }
 
@@ -236,26 +232,25 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     }
 
     private fun spawnProjectile() {
-        projectile = EntityFactories.fetch(
-            EntityType.PROJECTILE,
-            ProjectilesFactory.REACT_MAN_PROJECTILE
-        )!! as ReactorManProjectile
-
-        projectile!!.spawn(
+        val projectile = MegaEntityFactory.fetch(ReactorManProjectile::class)!!
+        projectile.spawn(
             props(
-                ConstKeys.POSITION pairTo projectilePosition,
                 ConstKeys.BIG pairTo true,
                 ConstKeys.OWNER pairTo this,
-                ConstKeys.ACTIVE pairTo false
+                ConstKeys.ACTIVE pairTo false,
+                ConstKeys.POSITION pairTo projectilePosition
             )
         )
+        this.projectile = projectile
     }
 
     private fun throwProjectile() {
-        val trajectory =
-            megaman.body.getCenter().sub(body.getCenter()).nor().scl(getProjectileSpeed() * ConstVals.PPM)
-        projectile!!.setTrajectory(trajectory)
-        projectile!!.active = true
+        projectile!!.let {
+            val trajectory =
+                megaman.body.getCenter().sub(body.getCenter()).nor().scl(getProjectileSpeed() * ConstVals.PPM)
+            it.setTrajectory(trajectory)
+            it.active = true
+        }
         projectile = null
     }
 
@@ -273,39 +268,34 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(1.5f * ConstVals.PPM, 2f * ConstVals.PPM)
+        body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
-        body.addFixture(bodyFixture)
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        debugShapes.add { damagerFixture }
-        body.addFixture(damagerFixture)
-
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(1.25f * ConstVals.PPM))
-        debugShapes.add { damageableFixture }
-        body.addFixture(damageableFixture)
+        debugShapes.add { body.getBounds() }
 
         val headFixture = Fixture(
             body, FixtureType.HEAD, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM)
         )
         headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
-        debugShapes.add { headFixture }
         body.addFixture(headFixture)
+        headFixture.drawingColor = Color.ORANGE
+        debugShapes.add { headFixture }
 
         val feetFixture = Fixture(
             body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM)
         )
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
-        debugShapes.add { feetFixture }
         body.addFixture(feetFixture)
+        feetFixture.drawingColor = Color.GREEN
+        debugShapes.add { feetFixture }
 
         val leftFixture = Fixture(
             body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM)
         )
         leftFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
+        body.addFixture(leftFixture)
+        leftFixture.drawingColor = Color.YELLOW
         debugShapes.add { leftFixture }
 
         val rightFixture = Fixture(
@@ -313,6 +303,8 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         )
         rightFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
+        body.addFixture(rightFixture)
+        rightFixture.drawingColor = Color.YELLOW
         debugShapes.add { rightFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
@@ -325,42 +317,52 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(
+            this,
+            body,
+            BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
+        )
     }
 
-    override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
-        sprite.setSize(3f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+    override fun defineSpritesComponent() = SpritesComponentBuilder()
+        .sprite(
+            TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
+                .also { sprite -> sprite.setSize(3f * ConstVals.PPM) }
+        )
+        .updatable { _, sprite ->
+            val position = Position.BOTTOM_CENTER
+            sprite.setPosition(body.getPositionPoint(position), position)
+
             sprite.setFlip(isFacing(Facing.RIGHT), false)
+
             sprite.hidden = damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true)
         }
-        return spritesComponent
-    }
+        .build()
 
-    private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
-            if (defeated) "defeated"
-            else if (currentState == ReactManState.STAND) {
-                if (body.isSensing(BodySense.FEET_ON_GROUND)) ReactManState.STAND.name else ReactManState.JUMP.name
-            } else if (currentState == ReactManState.JUMP && throwOnJump && throwTimer.isFinished())
-                ReactManState.THROW.name
-            else currentState.name
-        }
-        val animations = objectMapOf<String, IAnimation>(
-            ReactManState.STAND.name pairTo Animation(
-                regions.get(ReactManState.STAND.regionName), 1, 3, gdxArrayOf(1f, 0.1f, 0.1f), true
-            ),
-            ReactManState.THROW.name pairTo Animation(regions.get(ReactManState.THROW.regionName)),
-            ReactManState.RUN.name pairTo Animation(regions.get(ReactManState.RUN.regionName), 2, 2, 0.1f, true),
-            ReactManState.JUMP.name pairTo Animation(regions.get(ReactManState.JUMP.regionName)),
-            "defeated" pairTo Animation(regions.get("Defeated"), 3, 1, 0.1f, true)
+    private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
+        .key(TAG)
+        .animator(
+            AnimatorBuilder()
+                .setKeySupplier {
+                    when {
+                        defeated -> "defeated"
+                        currentState == ReactorManState.STAND ->
+                            if (body.isSensing(BodySense.FEET_ON_GROUND)) "stand" else "jump"
+
+                        currentState == ReactorManState.JUMP && throwOnJump && throwTimer.isFinished() -> "throw"
+                        else -> currentState.name.lowercase()
+                    }
+                }
+                .applyToAnimations { animations ->
+                    animDefs.forEach { entry ->
+                        val key = entry.key
+                        val (rows, cols, durations, loop) = entry.value
+                        animations.put(key, Animation(regions[key], rows, cols, durations, loop))
+                    }
+                }
+                .build()
         )
-        val animator = Animator(keySupplier, animations)
-        return AnimationsComponent(this, animator)
-    }
+        .build()
 
     override fun getTag() = TAG
 }

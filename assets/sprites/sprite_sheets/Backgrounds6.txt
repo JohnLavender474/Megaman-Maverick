@@ -1,5 +1,5 @@
 Backgrounds6.png
-size: 944, 1296
+size: 1024, 1584
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -26,36 +26,43 @@ Desert/NoSunSky
   index: -1
 Desert/SunSky
   rotate: false
-  xy: 0, 224
+  xy: 0, 672
   size: 256, 672
   orig: 256, 672
   offset: 0, 0
   index: -1
 EarthBackdrop
   rotate: false
-  xy: 0, 896
+  xy: 0, 224
   size: 512, 160
   orig: 512, 160
   offset: 0, 0
   index: -1
 InfernoBKG
   rotate: false
-  xy: 256, 224
+  xy: 512, 224
   size: 256, 448
   orig: 256, 448
   offset: 0, 0
   index: -1
 Space
   rotate: false
-  xy: 512, 224
+  xy: 768, 224
   size: 256, 448
   orig: 256, 448
   offset: 0, 0
   index: -1
 UndergroundPipes
   rotate: false
-  xy: 0, 1056
+  xy: 0, 1344
   size: 944, 240
   orig: 944, 240
+  offset: 0, 0
+  index: -1
+Wily1
+  rotate: false
+  xy: 256, 672
+  size: 512, 448
+  orig: 512, 448
   offset: 0, 0
   index: -1

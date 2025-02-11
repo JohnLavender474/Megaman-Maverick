@@ -321,8 +321,8 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Bosses1/GutsTank/Fist.png</key>
-            <key type="filename">../frames/Bosses1/ReactorMan/Jump.png</key>
-            <key type="filename">../frames/Bosses1/ReactorMan/Throw.png</key>
+            <key type="filename">../frames/Bosses1/ReactorMan/jump.png</key>
+            <key type="filename">../frames/Bosses1/ReactorMan/throw.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -494,7 +494,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses1/ReactorMan/Defeated.png</key>
+            <key type="filename">../frames/Bosses1/ReactorMan/defeated.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -509,7 +509,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses1/ReactorMan/Run.png</key>
+            <key type="filename">../frames/Bosses1/ReactorMan/run.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -524,7 +524,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses1/ReactorMan/Stand.png</key>
+            <key type="filename">../frames/Bosses1/ReactorMan/stand.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
