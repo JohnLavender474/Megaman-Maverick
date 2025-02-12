@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.megaman.constants
 
 import com.badlogic.gdx.graphics.Color
+import com.mega.game.engine.common.extensions.gdxArrayOf
 
 object MegamanValues {
 
@@ -69,9 +70,15 @@ object MegamanValues {
 
     const val EXPLOSION_ORB_SPEED = 3.5f
 
+    const val BULLET_VEL = 10f
+
     const val FLAME_TOSS_Y_VEL = 7.5f
     const val FLAME_TOSS_X_VEL = 10f
     const val FLAME_TOSS_GRAVITY = -0.25f
+
+    const val MOON_SCYTHE_SPEED = 8f
+    const val MAX_MOONS_BEFORE_SHOOT_AGAIN = 1
+    val MOON_SCYTHE_DEG_OFFSETS = gdxArrayOf(10f, 40f, 70f)
 
     const val SPAWNING_DUR = 0.05f
 

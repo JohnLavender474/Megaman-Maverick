@@ -18,7 +18,7 @@ import java.util.function.Supplier
 
 class MegamanAnimations(
     private val game: MegamanMaverickGame,
-    private val regionProcessor: ((region: TextureRegion, fullKey: String, defKey: String, def: AnimationDef, index: Int) -> TextureRegion)? = null
+    private val regionProcessor: MegaRegionProcessor? = null
 ) : Initializable, Supplier<OrderedMap<String, IAnimation>> {
 
     companion object {
@@ -26,20 +26,23 @@ class MegamanAnimations(
 
         fun buildFullKey(regionKey: String, weapon: MegamanWeapon) =
             "${regionKey}_${weapon.name.lowercase().replace("_", "")}"
-
-        fun splitFullKey(definitionKey: String) = definitionKey.split("_")
     }
 
-    private var initialized = false
     private val animations = OrderedMap<String, IAnimation>()
+
+    private var initialized = false
 
     override fun init() {
         MegamanWeapon.entries.forEach { weapon ->
             val assetSource = when (weapon) {
-                MegamanWeapon.BUSTER -> TextureAsset.MEGAMAN_V2_BUSTER.source
-                MegamanWeapon.RUSH_JETPACK -> TextureAsset.MEGAMAN_RUSH_JETPACK.source
-                // TODO: MegamanWeapon.FLAME_TOSS -> "" // TODO: TextureAsset.MEGAMAN_FLAME_TOSS.source
+                MegamanWeapon.BUSTER -> TextureAsset.MEGAMAN_BUSTER.source
+                MegamanWeapon.FIREBALL -> TextureAsset.MEGAMAN_FIREBALL.source
+                MegamanWeapon.MOON_SCYTHE -> TextureAsset.MEGAMAN_MOON_SCYTHE.source
+                MegamanWeapon.RUSH_JETPACK -> "" // TODO: TextureAsset.MEGAMAN_RUSH_JETPACK.source
             }
+
+            // TODO: remove when all mega weapon atlases are complete
+            if (assetSource == "") return@forEach
 
             val atlas = game.assMan.getTextureAtlas(assetSource)
             MegamanAnimationDefs.getKeys().forEach { defKey ->
@@ -52,7 +55,7 @@ class MegamanAnimations(
                 val fullKey = buildFullKey(defKey, weapon)
 
                 if (regionProcessor != null) for (i in 0 until regions.size)
-                    regions[i] = regionProcessor.invoke(regions[i], fullKey, defKey, def, i)
+                    regions[i] = regionProcessor.process(regions[i], fullKey, defKey, def, i)
 
                 val animation = Animation(regions, def.durations)
                 animations.put(fullKey, animation)
@@ -65,9 +68,15 @@ class MegamanAnimations(
     override fun get(): OrderedMap<String, IAnimation> {
         if (!initialized) {
             init()
+
             initialized = true
         }
 
         return animations
     }
+}
+
+interface MegaRegionProcessor {
+
+    fun process(region: TextureRegion, fullKey: String, defKey: String, def: AnimationDef, index: Int): TextureRegion
 }

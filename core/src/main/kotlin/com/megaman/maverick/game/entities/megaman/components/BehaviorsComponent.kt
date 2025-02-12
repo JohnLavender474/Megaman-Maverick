@@ -632,7 +632,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 !game.controllerPoller.areAllPressed(gdxArrayOf(MegaControllerButton.A, MegaControllerButton.UP)) ||
                 isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.AIR_DASHING, BehaviorType.GROUND_SLIDING) ||
                 body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.IN_WATER) ||
-                weaponHandler.isDepleted(MegamanWeapon.RUSH_JETPACK)
+                weaponsHandler.isDepleted(MegamanWeapon.RUSH_JETPACK)
             ) return false
 
             return if (isBehaviorActive(BehaviorType.JETPACKING)) game.controllerPoller.areAllPressed(
@@ -667,7 +667,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             }
             timePerBitTimer.update(delta)
             if (timePerBitTimer.isFinished()) {
-                weaponHandler.translateAmmo(MegamanWeapon.RUSH_JETPACK, -1)
+                weaponsHandler.translateAmmo(MegamanWeapon.RUSH_JETPACK, -1)
                 timePerBitTimer.reset()
             }
         }

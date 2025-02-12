@@ -91,7 +91,7 @@ fun Megaman.getSpritePriority(out: DrawingPriority): DrawingPriority {
     return out
 }
 
-fun Megaman.shouldHideSprite() = !ready || teleporting // || !spawnHiddenTimer.isFinished()
+fun Megaman.shouldHideSprite() = !ready || teleporting
 
 internal fun Megaman.defineSpritesComponent(): SpritesComponent {
     val component = SpritesComponent()
@@ -104,9 +104,9 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
 private fun Megaman.defineMegamanSprite(component: SpritesComponent) {
     val priority = DrawingPriority()
     val sprite = GameSprite(getSpritePriority(priority))
-    sprite.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
     component.putSprite(MEGAMAN_SPRITE_KEY, sprite)
     component.putUpdateFunction(MEGAMAN_SPRITE_KEY) { delta, player ->
+        player.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
         val direction = getSpriteDirection()
         player.setFlip(shouldFlipSpriteX(), shouldFlipSpriteY())
         player.setOriginCenter()
@@ -121,10 +121,11 @@ private fun Megaman.defineMegamanSprite(component: SpritesComponent) {
 }
 
 private fun Megaman.defineJetpackFlameSprite(component: SpritesComponent) {
-    val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0), false)
-    sprite.setSize(JETPACK_FLAME_SPRITE_SIZE * ConstVals.PPM)
+    val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0), false)
     component.putSprite(JETPACK_FLAME_SPRITE_KEY, sprite)
     component.putUpdateFunction(JETPACK_FLAME_SPRITE_KEY) { _, flame ->
+        flame.setSize(JETPACK_FLAME_SPRITE_SIZE * ConstVals.PPM)
+
         val hidden = !isBehaviorActive(BehaviorType.JETPACKING)
         flame.hidden = hidden
         if (hidden) return@putUpdateFunction
@@ -149,9 +150,10 @@ private fun Megaman.defineDamagedBurstSprite(component: SpritesComponent) {
     val region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, "MegamanDamageBurst")
     val priority = getSpritePriority(DrawingPriority())
     val sprite = GameSprite(region, DrawingPriority(priority.section, priority.value - 1))
-    sprite.setSize(DAMAGE_BURST_SPRITE_SIZE * ConstVals.PPM)
     component.putSprite(DAMAGE_BURST_SPRITE_KEY, sprite)
     component.putUpdateFunction(DAMAGE_BURST_SPRITE_KEY) { _, burst ->
+        burst.setSize(DAMAGE_BURST_SPRITE_SIZE * ConstVals.PPM)
+
         val center = body.getCenter()
 
         val offset = GameObjectPools.fetch(Vector2::class)

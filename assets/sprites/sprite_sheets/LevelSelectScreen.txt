@@ -1,81 +1,81 @@
 LevelSelectScreen.png
-size: 512, 1568
+size: 1024, 1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-bottom_center
+background_selected
   rotate: false
   xy: 0, 0
-  size: 256, 224
-  orig: 256, 224
+  size: 256, 448
+  orig: 256, 448
   offset: 0, 0
   index: -1
-bottom_left
+background_static
   rotate: false
   xy: 256, 0
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-bottom_right
+selector/bottom_center
   rotate: false
-  xy: 0, 224
+  xy: 512, 0
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-center
+selector/bottom_left
   rotate: false
-  xy: 256, 224
+  xy: 768, 0
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-center_left
+selector/bottom_right
   rotate: false
   xy: 0, 448
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-center_right
+selector/center
   rotate: false
   xy: 256, 448
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-none
+selector/center_left
+  rotate: false
+  xy: 512, 448
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+selector/center_right
+  rotate: false
+  xy: 768, 448
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+selector/top_center
   rotate: false
   xy: 0, 672
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-selected
+selector/top_left
   rotate: false
   xy: 256, 672
-  size: 256, 448
-  orig: 256, 448
-  offset: 0, 0
-  index: -1
-top_center
-  rotate: false
-  xy: 0, 1120
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-top_left
+selector/top_right
   rotate: false
-  xy: 256, 1120
-  size: 256, 224
-  orig: 256, 224
-  offset: 0, 0
-  index: -1
-top_right
-  rotate: false
-  xy: 0, 1344
+  xy: 512, 672
   size: 256, 224
   orig: 256, 224
   offset: 0, 0

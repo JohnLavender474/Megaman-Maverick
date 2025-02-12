@@ -45,7 +45,7 @@ import com.megaman.maverick.game.entities.megaman.contracts.IMegamanDamageListen
 import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
 import com.megaman.maverick.game.entities.megaman.sprites.amendKey
-import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponHandler
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportContinueProp
 import com.megaman.maverick.game.entities.utils.standardOnTeleportEnd
 import com.megaman.maverick.game.entities.utils.standardOnTeleportStart
@@ -131,11 +131,11 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
 
     override val upgradeHandler = MegamanUpgradeHandler(game.state, this)
 
-    lateinit var weaponHandler: MegamanWeaponHandler
+    lateinit var weaponsHandler: MegamanWeaponsHandler
     // val weaponHandler = MegamanWeaponHandler(this)
 
     val canChargeCurrentWeapon: Boolean
-        get() = weaponHandler.isChargeable(currentWeapon)
+        get() = weaponsHandler.isChargeable(currentWeapon)
     val chargeStatus: MegaChargeStatus
         get() = if (fullyCharged) MegaChargeStatus.FULLY_CHARGED
         else if (charging) MegaChargeStatus.HALF_CHARGED else MegaChargeStatus.NOT_CHARGED
@@ -149,7 +149,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
         get() = !shootAnimTimer.isFinished()
     val ammo: Int
         get() = if (currentWeapon == MegamanWeapon.BUSTER) Int.MAX_VALUE
-        else weaponHandler.getAmmo(currentWeapon)
+        else weaponsHandler.getAmmo(currentWeapon)
 
     var ready = false
     var maverick = false
@@ -228,8 +228,11 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
         }
 
     var currentWeapon: MegamanWeapon
-        get() = getProperty(MegamanProps.WEAPON) as MegamanWeapon
+        get() = getProperty(MegamanProps.WEAPON, MegamanWeapon::class)!!
         set(value) {
+            val previous = getProperty(MegamanProps.WEAPON, MegamanWeapon::class)
+            weaponsHandler.onChangeWeapon(value, previous)
+
             putProperty(MegamanProps.WEAPON, value)
         }
 
@@ -283,9 +286,6 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
         GameLogger.debug(TAG, "init()")
 
         super.init()
-
-        aButtonTask = AButtonTask.JUMP
-        currentWeapon = MegamanWeapon.BUSTER
 
         addComponent(defineBodyComponent())
         addComponent(defineBehaviorsComponent())
@@ -345,8 +345,11 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
 
         // GameLogger.debug(TAG, "init(): weaponSpawns=$weaponSpawns")
 
-        weaponHandler = MegamanWeaponHandler(this /* , weaponSpawns */)
-        weaponHandler.putWeapon(MegamanWeapon.BUSTER)
+        weaponsHandler = MegamanWeaponsHandler(this /* , weaponSpawns */)
+        weaponsHandler.putWeapon(MegamanWeapon.BUSTER)
+
+        aButtonTask = AButtonTask.JUMP
+        currentWeapon = MegamanWeapon.BUSTER
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -371,7 +374,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
         currentWeapon = MegamanWeapon.BUSTER
 
         setHealth(getMaxHealth())
-        weaponHandler.setAllToMaxAmmo()
+        weaponsHandler.setAllToMaxAmmo()
 
         running = false
         recoveryFlash = false
@@ -537,12 +540,6 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
         }
     }
 
-    fun setToNextWeapon() {
-        val index = currentWeapon.ordinal
-        val nextIndex = (index + 1) % MegamanWeapon.entries.size
-        currentWeapon = MegamanWeapon.entries.toTypedArray()[nextIndex]
-    }
-
     override fun canBeDamagedBy(damager: IDamager) = when {
         !super.canBeDamagedBy(damager) || dead -> false
         damager is IProjectileEntity -> damager.owner != this
@@ -628,8 +625,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
                 destroy()
             }
 
-            if (!weaponHandler.isChargeable(currentWeapon)) stopCharging()
-            weaponHandler.update(delta)
+            if (!weaponsHandler.isChargeable(currentWeapon)) stopCharging()
+            weaponsHandler.update(delta)
 
             if (body.isSensing(BodySense.FEET_ON_GROUND)) stunTimer.update(delta)
             if (damageTimer.isJustFinished()) damageRecoveryTimer.reset()

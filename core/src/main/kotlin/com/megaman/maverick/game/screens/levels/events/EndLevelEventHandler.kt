@@ -69,7 +69,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         if (!initialized) {
             initialized = true
 
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.MEGAMAN_V2_BUSTER.source)
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.MEGAMAN_BUSTER.source)
 
             beamRegion = atlas.findRegion(ConstKeys.BEAM)
             val priority = DrawingPriority()

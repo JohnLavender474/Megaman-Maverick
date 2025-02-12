@@ -52,93 +52,100 @@ ColdGust
   orig: 240, 48
   offset: 0, 0
   index: -1
-DeathBomb/tick
+CrystalSpike
   rotate: false
   xy: 0, 144
+  size: 7, 8
+  orig: 7, 8
+  offset: 0, 0
+  index: -1
+DeathBomb/tick
+  rotate: false
+  xy: 7, 144
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 DeathBomb/wait
   rotate: false
-  xy: 32, 144
+  xy: 39, 144
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 FallingIcicle/shake
   rotate: false
-  xy: 64, 144
+  xy: 71, 144
   size: 24, 32
   orig: 24, 32
   offset: 0, 0
   index: -1
 FallingIcicle/shatter
   rotate: false
-  xy: 88, 144
+  xy: 95, 144
   size: 24, 32
   orig: 24, 32
   offset: 0, 0
   index: -1
 FallingIcicle/still
   rotate: false
-  xy: 112, 144
+  xy: 119, 144
   size: 24, 16
   orig: 24, 16
   offset: 0, 0
   index: -1
 GroundPebble
   rotate: false
-  xy: 136, 144
+  xy: 143, 144
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 Harpoon
   rotate: false
-  xy: 144, 144
+  xy: 151, 144
   size: 12, 12
   orig: 12, 12
   offset: 0, 0
   index: -1
 MagmaGoop
   rotate: false
-  xy: 156, 144
+  xy: 163, 144
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
 MagmaMeteor
   rotate: false
-  xy: 172, 144
+  xy: 179, 144
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 MagmaOrb
   rotate: false
-  xy: 204, 144
+  xy: 0, 208
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 MagmaPellet
   rotate: false
-  xy: 0, 208
+  xy: 32, 208
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 MagmaWave
   rotate: false
-  xy: 16, 208
+  xy: 48, 208
   size: 96, 192
   orig: 96, 192
   offset: 0, 0
   index: -1
 MagmaWave/disintegrate
   rotate: false
-  xy: 112, 208
+  xy: 144, 208
   size: 96, 288
   orig: 96, 288
   offset: 0, 0

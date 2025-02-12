@@ -10,12 +10,12 @@ fun Megaman.stopCharging() {
 }
 
 fun Megaman.shoot(): Boolean {
-    val shot = weaponHandler.fireWeapon(currentWeapon, chargeStatus)
+    val shot = weaponsHandler.fireWeapon(currentWeapon, chargeStatus)
     if (shot) shootAnimTimer.reset()
     return shot
 }
 
 fun Megaman.canFireWeapon(weapon: MegamanWeapon) =
-    weaponHandler.canFireWeapon(weapon, chargeStatus)
+    weaponsHandler.canFireWeapon(weapon, chargeStatus)
 
 fun Megaman.canFireCurrentWeapon() = canFireWeapon(currentWeapon)

@@ -83,15 +83,17 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
+        val copyProps = spawnProps.copy()
+
+        copyProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
 
         val center = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         val bounds = GameObjectPools.fetch(GameRectangle::class)
             .setSize(BODY_WIDTH * ConstVals.PPM, BODY_HEIGHT * ConstVals.PPM)
             .setCenter(center)
-        spawnProps.put(ConstKeys.BOUNDS, bounds)
+        copyProps.put(ConstKeys.BOUNDS, bounds)
 
-        super.onSpawn(spawnProps)
+        super.onSpawn(copyProps)
 
         setPendulum(bounds)
 

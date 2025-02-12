@@ -77,21 +77,27 @@ import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.bosses.BigAssMaverickRobot
+import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.Megaman.Companion.MEGAMAN_EVENT_LISTENER_TAG
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
+import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_CONTROLLER_COMPONENT_TAG
 import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
+import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.debug.DebugWindow
 import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
+import com.megaman.maverick.game.screens.levels.MegaLevelScreen.Companion.MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG
+import com.megaman.maverick.game.screens.levels.camera.CameraManagerForRooms
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 import com.megaman.maverick.game.screens.menus.*
-import com.megaman.maverick.game.screens.menus.bosses.LevelSelectScreen
+import com.megaman.maverick.game.screens.menus.level.LevelSelectScreen
 import com.megaman.maverick.game.screens.menus.temp.BossIntroScreen
 import com.megaman.maverick.game.screens.other.CreditsScreen
 import com.megaman.maverick.game.screens.other.LogoScreen
@@ -135,17 +141,16 @@ class MegamanMaverickGame(
         private const val LOADING = "LOADING"
         private const val SCREENSHOT_KEY = Input.Keys.P
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(
-            /*
             TAG,
             Megaman.TAG,
             AbstractBoss.TAG,
             MegaGameEntity.TAG,
             MegaLevelScreen.TAG,
+            MegamanWeaponsHandler.TAG,
             CameraManagerForRooms.TAG,
             MEGAMAN_EVENT_LISTENER_TAG,
+            MEGAMAN_CONTROLLER_COMPONENT_TAG,
             MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG
-             */
-            BigAssMaverickRobot.TAG
         )
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.oneFixtureMatches(FixtureType.CONSUMER)
@@ -332,12 +337,16 @@ class MegamanMaverickGame(
         megamanUpgradeHandler.add(MegaAbility.GROUND_SLIDE)
         megamanUpgradeHandler.add(MegaAbility.WALL_SLIDE)
 
-        // TODO: remove comment line to debug enhancements
+        // TODO: remove comment lines to go ahead and add enhancements to Megaman on startup
         // megamanUpgradeHandler.add(MegaEnhancement.DAMAGE_INCREASE)
         // megamanUpgradeHandler.add(MegaEnhancement.JUMP_BOOST)
         // megamanUpgradeHandler.add(MegaEnhancement.GROUND_SLIDE_BOOST)
         // megamanUpgradeHandler.add(MegaEnhancement.AIR_DASH_BOOST)
         // megamanUpgradeHandler.add(MegaEnhancement.FASTER_BUSTER_CHARGING)
+
+        // TODO: remove comment lines to go ahead and add weapons to Megaman on startup
+        megaman.weaponsHandler.putWeapon(MegamanWeapon.FIREBALL)
+        megaman.weaponsHandler.putWeapon(MegamanWeapon.MOON_SCYTHE)
 
         screens.put(
             ScreenEnum.LEVEL_SCREEN.name,

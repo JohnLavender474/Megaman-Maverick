@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.5.0</string>
+        <string>7.6.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -100,7 +100,7 @@
             <key>sizeConstraints</key>
             <enum type="AlgorithmSettings::SizeConstraints">AnySize</enum>
             <key>forceSquared</key>
-            <false/>
+            <true/>
             <key>maxRects</key>
             <struct type="AlgorithmMaxRectsSettings">
                 <key>heuristic</key>
@@ -141,7 +141,7 @@
             <string></string>
         </struct>
         <key>autoAliasEnabled</key>
-        <true/>
+        <false/>
         <key>trimSpriteNames</key>
         <false/>
         <key>prependSmartFolderName</key>
@@ -161,7 +161,7 @@
             <key>trimMargin</key>
             <uint>1</uint>
             <key>trimMode</key>
-            <enum type="SpriteSettings::TrimMode">Trim</enum>
+            <enum type="SpriteSettings::TrimMode">None</enum>
             <key>tracerTolerance</key>
             <int>200</int>
             <key>heuristicMask</key>
@@ -173,16 +173,7 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../frames/LevelSelectScreen/bottom_center.png</key>
-            <key type="filename">../frames/LevelSelectScreen/bottom_left.png</key>
-            <key type="filename">../frames/LevelSelectScreen/bottom_right.png</key>
-            <key type="filename">../frames/LevelSelectScreen/center.png</key>
-            <key type="filename">../frames/LevelSelectScreen/center_left.png</key>
-            <key type="filename">../frames/LevelSelectScreen/center_right.png</key>
-            <key type="filename">../frames/LevelSelectScreen/none.png</key>
-            <key type="filename">../frames/LevelSelectScreen/top_center.png</key>
-            <key type="filename">../frames/LevelSelectScreen/top_left.png</key>
-            <key type="filename">../frames/LevelSelectScreen/top_right.png</key>
+            <key type="filename">../frames/LevelSelectScreen/background_selected.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -191,13 +182,22 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>64,56,128,112</rect>
+                <rect>64,112,128,224</rect>
                 <key>scale9Paddings</key>
-                <rect>64,56,128,112</rect>
+                <rect>64,112,128,224</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/LevelSelectScreen/selected.png</key>
+            <key type="filename">../frames/LevelSelectScreen/background_static.png</key>
+            <key type="filename">../frames/LevelSelectScreen/selector/bottom_center.png</key>
+            <key type="filename">../frames/LevelSelectScreen/selector/bottom_left.png</key>
+            <key type="filename">../frames/LevelSelectScreen/selector/bottom_right.png</key>
+            <key type="filename">../frames/LevelSelectScreen/selector/center.png</key>
+            <key type="filename">../frames/LevelSelectScreen/selector/center_left.png</key>
+            <key type="filename">../frames/LevelSelectScreen/selector/center_right.png</key>
+            <key type="filename">../frames/LevelSelectScreen/selector/top_center.png</key>
+            <key type="filename">../frames/LevelSelectScreen/selector/top_left.png</key>
+            <key type="filename">../frames/LevelSelectScreen/selector/top_right.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -206,9 +206,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>64,112,128,224</rect>
+                <rect>64,56,128,112</rect>
                 <key>scale9Paddings</key>
-                <rect>64,112,128,224</rect>
+                <rect>64,56,128,112</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

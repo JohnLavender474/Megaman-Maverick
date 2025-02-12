@@ -7,9 +7,10 @@ import java.time.LocalDateTime
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-class AsyncFileWriter(filePath: String) : Initializable, Disposable {
+class AsyncFileWriter(filePath: String, private val deleteIfExists: Boolean = true) : Initializable, Disposable {
 
     companion object {
+        const val TAG = "AsyncFileWriter"
         private const val START_LOG = "===== SESSION STARTED: %s ====="
     }
 
@@ -19,6 +20,8 @@ class AsyncFileWriter(filePath: String) : Initializable, Disposable {
 
     override fun init() {
         if (disposed) throw IllegalStateException("Cannot call init() after calling dispose()")
+
+        if (deleteIfExists && fileHandle.exists()) fileHandle.delete()
 
         val startLog = String.format(START_LOG, LocalDateTime.now().toString())
         write(startLog)

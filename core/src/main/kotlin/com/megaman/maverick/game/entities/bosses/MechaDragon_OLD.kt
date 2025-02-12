@@ -255,8 +255,6 @@ class MechaDragon_OLD(game: MegamanMaverickGame) : AbstractBoss(game, size = Siz
                 return@add
             }
 
-            game.setDebugText(currentState.name)
-
             when (currentState) {
                 MechaDragonState.IDLE -> {
                     facing = if (body.getCenter().x < roomCenter.x) Facing.RIGHT else Facing.LEFT

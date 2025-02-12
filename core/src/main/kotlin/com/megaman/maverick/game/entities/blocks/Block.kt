@@ -112,16 +112,19 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         }
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)
-        if (bounds != null) body.set(bounds)
+        when {
+            bounds != null -> body.set(bounds)
+            else -> {
+                val width = spawnProps.get(ConstKeys.WIDTH, Float::class)
+                if (width != null) body.setWidth(width)
 
-        val width = spawnProps.get(ConstKeys.WIDTH, Float::class)
-        if (width != null) body.setWidth(width)
+                val height = spawnProps.get(ConstKeys.HEIGHT, Float::class)
+                if (height != null) body.setHeight(height)
 
-        val height = spawnProps.get(ConstKeys.HEIGHT, Float::class)
-        if (height != null) body.setHeight(height)
-
-        val position = spawnProps.get(ConstKeys.POSITION, Vector2::class)
-        if (position != null) body.setPosition(position)
+                val position = spawnProps.get(ConstKeys.POSITION, Vector2::class)
+                if (position != null) body.setPosition(position)
+            }
+        }
 
         val collisionOn = spawnProps.getOrDefault(ConstKeys.ON, true, Boolean::class)
         body.physics.collisionOn = collisionOn

@@ -12,6 +12,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.Megaman.Companion.TAG
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.extensions.shoot
 import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
@@ -23,9 +24,7 @@ const val MEGAMAN_CONTROLLER_COMPONENT_TAG = "MegamanControllerComponent"
 
 internal fun Megaman.defineControllerComponent(): ControllerComponent {
     val left = ButtonActuator(
-        onJustPressed = { _ ->
-            GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just pressed")
-        },
+        onJustPressed = { _ -> GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just pressed") },
         onPressContinued = { poller, delta ->
             if (!canMove || !ready || damaged || poller.isPressed(MegaControllerButton.RIGHT) || teleporting ||
                 isBehaviorActive(BehaviorType.GROUND_SLIDING)
@@ -58,16 +57,14 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
         },
         onJustReleased = { poller ->
             GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just released")
+
             if (!poller.isPressed(MegaControllerButton.RIGHT)) running = false
         },
-        onReleaseContinued = { poller, _ ->
-            if (!poller.isPressed(MegaControllerButton.RIGHT)) running = false
-        })
+        onReleaseContinued = { poller, _ -> if (!poller.isPressed(MegaControllerButton.RIGHT)) running = false }
+    )
 
     val right = ButtonActuator(
-        onJustPressed = { _ ->
-            GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just pressed")
-        },
+        onJustPressed = { _ -> GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just pressed") },
         onPressContinued = { poller, delta ->
             if (!canMove || !ready || damaged || poller.isPressed(MegaControllerButton.LEFT) || teleporting ||
                 isBehaviorActive(BehaviorType.GROUND_SLIDING)
@@ -100,6 +97,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
         },
         onJustReleased = { poller ->
             GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just released")
+
             if (!poller.isPressed(MegaControllerButton.LEFT)) running = false
         },
         onReleaseContinued = { poller, _ ->
@@ -111,8 +109,8 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
         onPressContinued = { _, delta ->
             if (!ready || stunned || damaged /* TODO: || game.isCameraRotating() */ || teleporting ||
                 currentWeapon == MegamanWeapon.RUSH_JETPACK ||
-                (!charging && !weaponHandler.canFireWeapon(currentWeapon, MegaChargeStatus.HALF_CHARGED)) ||
-                (charging && !weaponHandler.canFireWeapon(currentWeapon, MegaChargeStatus.FULLY_CHARGED) ||
+                (!charging && !weaponsHandler.canFireWeapon(currentWeapon, MegaChargeStatus.HALF_CHARGED)) ||
+                (charging && !weaponsHandler.canFireWeapon(currentWeapon, MegaChargeStatus.FULLY_CHARGED) ||
                     !has(MegaAbility.CHARGE_WEAPONS))
             ) {
                 stopCharging()
@@ -123,24 +121,47 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
                 has(MegaEnhancement.FASTER_BUSTER_CHARGING) -> MegaEnhancement.FASTER_BUSTER_CHARGING_SCALAR
                 else -> 1f
             }
+
             chargingTimer.update(delta * scalar)
         },
         onJustReleased = {
             if (stunned || damaged || game.isCameraRotating() || teleporting || !ready ||
-                !weaponHandler.canFireWeapon(currentWeapon, chargeStatus) ||
+                !weaponsHandler.canFireWeapon(currentWeapon, chargeStatus) ||
                 game.isProperty(ConstKeys.ROOM_TRANSITION, true)
             ) {
+                GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG,
+                    "attack actuator just released, do not shoot: " +
+                    "stunned=$stunned, damaged=$damaged, game.isCameraRotating=${game.isCameraRotating()}, " +
+                    "teleporting=$teleporting, ready=$ready, " +
+                    "canFireWeapon=${weaponsHandler.canFireWeapon(currentWeapon, chargeStatus)}"
+                )
+
                 stopCharging()
                 return@ButtonActuator
             }
 
+            GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "attack actuator just released, shoot")
+
             shoot()
+
             stopCharging()
-        },
+        }
     )
 
-    val changeWeapon = ButtonActuator(onJustReleased = { _ ->
-        if (!ready || damaged || teleporting) return@ButtonActuator
+    val select = ButtonActuator(onJustReleased = { _ ->
+        if (!ready || damaged || teleporting) {
+            GameLogger.debug(
+                MEGAMAN_CONTROLLER_COMPONENT_TAG,
+                "select actuator just released, do nothing: ready=$ready, damaged=$damaged, teleporting=$teleporting"
+            )
+            return@ButtonActuator
+        }
+
+        GameLogger.debug(
+            MEGAMAN_CONTROLLER_COMPONENT_TAG,
+            "select actuator just released, attempt to set to next weapon"
+        )
+
         setToNextWeapon()
     })
 
@@ -148,5 +169,32 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
         MegaControllerButton.LEFT pairTo { left },
         MegaControllerButton.RIGHT pairTo { right },
         MegaControllerButton.B pairTo { attack },
-        MegaControllerButton.SELECT pairTo { changeWeapon })
+        MegaControllerButton.SELECT pairTo { select }
+    )
+}
+
+private fun Megaman.setToNextWeapon() {
+    val start = currentWeapon.ordinal
+    var temp = currentWeapon.ordinal + 1
+
+    var nextWeapon = currentWeapon
+
+    while (temp != start) {
+        if (temp >= MegamanWeapon.entries.size) temp = 0
+
+        val weapon = MegamanWeapon.entries[temp]
+        if (weaponsHandler.hasWeapon(weapon)) {
+            nextWeapon = weapon
+            break
+        }
+
+        temp++
+    }
+
+    if (nextWeapon == currentWeapon)
+        GameLogger.debug(TAG, "setToNextWeapon(): no next weapon, stay on current weapon: $currentWeapon")
+    else {
+        GameLogger.debug(TAG, "setToNextWeapon(): set to next weapon: next=$nextWeapon, current=$currentWeapon")
+        currentWeapon = nextWeapon
+    }
 }

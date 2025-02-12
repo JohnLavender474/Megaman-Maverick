@@ -137,7 +137,10 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
             shootAnimTimer.update(delta)
 
             delayTimer.update(delta)
-            if (!delayTimer.isFinished()) return@add
+            if (!delayTimer.isFinished()) {
+                StandardFacingSetter.set(this)
+                return@add
+            }
 
             val attackTimer = if (canonDirection == DuoBallCanonDirection.UP) ballsTimer else bulletsTimer
             attackTimer.update(delta)

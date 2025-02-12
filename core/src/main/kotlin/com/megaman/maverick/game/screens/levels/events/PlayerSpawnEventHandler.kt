@@ -73,7 +73,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
         GameLogger.debug(TAG, "init()")
 
         if (!initialized) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.MEGAMAN_V2_BUSTER.source)
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.MEGAMAN_BUSTER.source)
 
             beamRegion = atlas.findRegion(ConstKeys.BEAM)
             val priority = DrawingPriority()

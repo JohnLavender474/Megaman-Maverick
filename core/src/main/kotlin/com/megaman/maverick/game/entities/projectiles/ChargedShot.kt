@@ -53,8 +53,8 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     companion object {
         const val TAG = "ChargedShot"
 
-        val FULL_BODY_SIZE = Vector2(0.75f, 1f).scl(ConstVals.PPM.toFloat())
-        val HALF_BODY_SIZE = Vector2(0.5f, 0.75f).scl(ConstVals.PPM.toFloat())
+        val FULL_BODY_SIZE: Vector2 = Vector2(0.75f, 1f).scl(ConstVals.PPM.toFloat())
+        val HALF_BODY_SIZE: Vector2 = Vector2(0.5f, 0.75f).scl(ConstVals.PPM.toFloat())
 
         private const val HALF_CHARGED_SHOT_REGION_PREFIX = "Half"
         private const val CHARGED_SHOT_REGION_SUFFIX = "_v2"

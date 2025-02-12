@@ -5,21 +5,16 @@ import com.mega.game.engine.common.extensions.putIfAbsentAndGet
 import com.mega.game.engine.controller.buttons.ButtonStatus
 import com.mega.game.engine.controller.buttons.ControllerButtons
 
-
 open class ControllerPoller(val controllerButtons: ControllerButtons) : IControllerPoller {
-
 
     override var on = true
 
     private val statusMap = ObjectMap<Any, ButtonStatus>()
     private var initialized = false
 
-
     override fun init() = controllerButtons.keys().forEach { statusMap.put(it, ButtonStatus.RELEASED) }
 
-
     override fun getStatus(key: Any): ButtonStatus? = statusMap[key]
-
 
     override fun run() {
         if (!initialized) {

@@ -41,5 +41,6 @@ internal fun Megaman.defineAnimationsComponent(animations: OrderedMap<String, IA
         MEGAMAN_SPRITE_KEY pairTo megamanAnimator,
         JETPACK_FLAME_SPRITE_KEY pairTo jetpackFlameAnimator
     )
+
     return AnimationsComponent(animators, sprites)
 }

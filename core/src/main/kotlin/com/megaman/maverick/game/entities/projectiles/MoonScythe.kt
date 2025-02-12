@@ -128,9 +128,10 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game) {
                     scythe.spawn(
                         props(
                             ConstKeys.FADE pairTo true,
+                            ConstKeys.OWNER pairTo owner,
                             ConstKeys.POSITION pairTo position,
                             ConstKeys.ROTATION pairTo rotation,
-                            ConstKeys.TRAJECTORY pairTo trajectory
+                            ConstKeys.TRAJECTORY pairTo trajectory,
                         )
                     )
 

@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.megaman.constants
 
 enum class MegamanWeapon {
     BUSTER,
-    // TODO: FLAME_TOSS,
+    FIREBALL,
+    MOON_SCYTHE,
     RUSH_JETPACK
 }

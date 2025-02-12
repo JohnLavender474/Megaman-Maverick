@@ -584,7 +584,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             val timer = Timer(dur)
             timer.setRunOnFinished(
                 when (i) {
-                    2 -> this::shootMoon
+                    2 -> this::shootMoonScythe
                     4 -> this::shootStar
                     else -> null
                 }
@@ -615,7 +615,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
     private fun canShootInJumpState() = (jumpIndex + 1) % 2 == 0
 
-    private fun shootMoon() {
+    private fun shootMoonScythe() {
         for (i in 0 until MOON_SCYTHE_DEG_OFFSETS.size) {
             val trajectory = GameObjectPools.fetch(Vector2::class).set(0f, MOON_SCYTHE_SPEED * ConstVals.PPM)
 

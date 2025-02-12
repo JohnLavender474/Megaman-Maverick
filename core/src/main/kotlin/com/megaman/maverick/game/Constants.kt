@@ -40,6 +40,8 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val SELECTOR = "selector"
+    const val STATIC = "static"
     const val ORIGIN = "origin"
     const val CHARGE = "charge"
     const val HOVER = "hover"

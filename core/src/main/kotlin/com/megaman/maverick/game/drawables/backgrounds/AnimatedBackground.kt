@@ -66,7 +66,7 @@ open class AnimatedBackground(
             }
             it.update(delta)
 
-            sprite.setRegion(it.getCurrentRegion())
+            sprite.setRegion(it.getCurrentRegion()!!)
         }
     }
 }
