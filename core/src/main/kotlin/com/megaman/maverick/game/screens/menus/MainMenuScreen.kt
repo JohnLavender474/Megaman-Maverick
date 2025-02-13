@@ -41,6 +41,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
     enum class MainScreenButton(val text: String) {
         START_NEW_GAME("START NEW GAME"),
+
         // TODO: LOAD_PASSWORD("LOAD PASSWORD"),
         LOAD_SAVE_FILE("LOAD SAVE FILE"),
         SETTINGS("SETTINGS"),
@@ -95,14 +96,13 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         var row = MAIN_MENU_TEXT_START_ROW
 
         MainScreenButton.entries.forEach {
-            val fontHandle =
-                MegaFontHandle(
-                    it.text,
-                    positionX = 2f * ConstVals.PPM,
-                    positionY = row * ConstVals.PPM,
-                    centerX = false,
-                    centerY = false
-                )
+            val fontHandle = MegaFontHandle(
+                it.text,
+                positionX = 2f * ConstVals.PPM,
+                positionY = row * ConstVals.PPM,
+                centerX = false,
+                centerY = false
+            )
             fontHandles.add(fontHandle)
 
             val arrowCenter = Vector2(1.5f * ConstVals.PPM, (row - ARROW_CENTER_ROW_DECREMENT) * ConstVals.PPM)
@@ -114,14 +114,13 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         row = SETTINGS_TEXT_START_ROW
 
         MainScreenSettingsButton.entries.forEach {
-            val fontHandle =
-                MegaFontHandle(
-                    it.text,
-                    positionX = 17f * ConstVals.PPM,
-                    positionY = row * ConstVals.PPM,
-                    centerX = false,
-                    centerY = false
-                )
+            val fontHandle = MegaFontHandle(
+                it.text,
+                positionX = 17f * ConstVals.PPM,
+                positionY = row * ConstVals.PPM,
+                centerX = false,
+                centerY = false
+            )
             fontHandles.add(fontHandle)
 
             val arrowCenter = Vector2(16.5f * ConstVals.PPM, (row - ARROW_CENTER_ROW_DECREMENT) * ConstVals.PPM)
@@ -195,24 +194,6 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                     else -> currentButtonKey
                 }
             })
-
-        // TODO:
-        /*
-        buttons.put(
-            MainScreenButton.LOAD_PASSWORD.text,
-            object : IMenuButton {
-                override fun onSelect(delta: Float): Boolean {
-                    game.setCurrentScreen(ScreenEnum.LOAD_PASSWORD_SCREEN.name)
-                    return true
-                }
-
-                override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                    Direction.UP -> MainScreenButton.START_NEW_GAME.text
-                    Direction.DOWN -> MainScreenButton.LOAD_SAVE_FILE.text
-                    else -> currentButtonKey
-                }
-            })
-         */
 
         buttons.put(
             MainScreenButton.LOAD_SAVE_FILE.text,

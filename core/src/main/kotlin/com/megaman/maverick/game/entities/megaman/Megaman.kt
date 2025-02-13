@@ -36,9 +36,9 @@ import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.enemies.SpringHead
+import com.megaman.maverick.game.entities.explosions.ExplosionOrb
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
-import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
@@ -52,6 +52,7 @@ import com.megaman.maverick.game.entities.utils.setStandardOnTeleportContinuePro
 import com.megaman.maverick.game.entities.utils.standardOnTeleportEnd
 import com.megaman.maverick.game.entities.utils.standardOnTeleportStart
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.levels.camera.IFocusable
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
@@ -69,6 +70,18 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
     companion object {
         const val TAG = "Megaman"
         const val MEGAMAN_EVENT_LISTENER_TAG = "MegamanEventListener"
+
+        fun getWeaponsFromLevelDef(levelDef: LevelDefinition): OrderedSet<MegamanWeapon> {
+            val set = OrderedSet<MegamanWeapon>()
+
+            when (levelDef) {
+                LevelDefinition.MOON_MAN -> set.add(MegamanWeapon.MOON_SCYTHE)
+                LevelDefinition.INFERNO_MAN -> set.add(MegamanWeapon.FIREBALL)
+                else -> {}
+            }
+
+            return set
+        }
 
         private val explosionOrbTrajectories = gdxArrayOf(
             Vector2(-EXPLOSION_ORB_SPEED, 0f),
@@ -433,8 +446,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
         stopSoundNow(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
 
         if (getCurrentHealth() <= 0) explosionOrbTrajectories.forEach { trajectory ->
-            val explosionOrb = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION_ORB)
-            explosionOrb?.spawn(
+            val explosionOrb = MegaEntityFactory.fetch(ExplosionOrb::class)!!
+            explosionOrb.spawn(
                 props(
                     ConstKeys.TRAJECTORY pairTo trajectory.cpy().scl(ConstVals.PPM.toFloat()),
                     ConstKeys.POSITION pairTo body.getCenter()
@@ -485,6 +498,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
                 }
 
                 body.physics.gravityOn = !isBehaviorActive(BehaviorType.CLIMBING)
+
                 body.removeProperty(ConstKeys.VELOCITY)
             }
 
@@ -492,10 +506,10 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
                 GameLogger.debug(MEGAMAN_EVENT_LISTENER_TAG, "GATE_INIT_OPENING")
 
                 body.physics.gravityOn = false
-                if (!body.hasProperty(ConstKeys.VELOCITY)) body.putProperty(
-                    ConstKeys.VELOCITY,
-                    body.physics.velocity.cpy()
-                )
+
+                if (!body.hasProperty(ConstKeys.VELOCITY))
+                    body.putProperty(ConstKeys.VELOCITY, body.physics.velocity.cpy())
+
                 body.physics.velocity.setZero()
 
                 stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
@@ -535,8 +549,19 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
                 stunTimer.reset()
             }
 
+            EventType.END_LEVEL -> {
+                val levelDef = game.getProperty("${ConstKeys.LEVEL}_${ConstKeys.DEF}", LevelDefinition::class)!!
+
+                val weaponsAttained = getWeaponsFromLevelDef(levelDef)
+
+                weaponsAttained.forEach { weapon ->
+                    if (!weaponsHandler.hasWeapon(weapon)) weaponsHandler.putWeapon(weapon)
+                }
+            }
+
             EventType.END_GAME_CAM_ROTATION -> {
                 canMove = true
+
                 body.physics.gravityOn = true
             }
         }
@@ -619,8 +644,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             if (body.getX() < -DEATH_X_OFFSET * ConstVals.PPM || body.getY() < -DEATH_Y_OFFSET * ConstVals.PPM ||
-                body.getMaxX() > (game.getTiledMapLoadResult().map.properties.get("width") as Int + DEATH_X_OFFSET) * ConstVals.PPM ||
-                body.getMaxY() > (game.getTiledMapLoadResult().map.properties.get("height") as Int + DEATH_Y_OFFSET) * ConstVals.PPM
+                body.getMaxX() > (game.getTiledMapLoadResult().map.properties.get(ConstKeys.WIDTH) as Int + DEATH_X_OFFSET) * ConstVals.PPM ||
+                body.getMaxY() > (game.getTiledMapLoadResult().map.properties.get(ConstKeys.HEIGHT) as Int + DEATH_Y_OFFSET) * ConstVals.PPM
             ) {
                 GameLogger.error(TAG, "Megaman is below game bounds, killing him")
 

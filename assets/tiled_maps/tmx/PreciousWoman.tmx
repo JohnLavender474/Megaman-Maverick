@@ -210,9 +210,9 @@
   <object id="119" x="2368" y="192" width="704" height="160"/>
   <object id="124" x="2944" y="736" width="32" height="32"/>
   <object id="125" x="3040" y="576" width="96" height="32"/>
-  <object id="129" name="SwingingPlatform" x="3696" y="544" width="32" height="32">
+  <object id="129" name="SwingingPlatform" x="3696" y="528" width="32" height="32">
    <properties>
-    <property name="spawn_room" value="room2"/>
+    <property name="spawn_room" value="room4b"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>

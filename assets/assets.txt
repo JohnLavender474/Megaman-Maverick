@@ -1444,8 +1444,8 @@ sprites/frames/Items1/HeartTank.png
 sprites/frames/Items1/SniperJoeShield/Orange.png
 sprites/frames/Items1/SniperJoeShield/Blue.png
 sprites/frames/Items1/HealthTank.png
-sprites/frames/Items1/WeaponBulb.png
-sprites/frames/Items1/SmallWeaponBulb.png
+sprites/frames/Items1/WeaponBulb/large.png
+sprites/frames/Items1/WeaponBulb/small.png
 sprites/frames/Items1/Key.png
 sprites/frames/Items1/EmptyHealthTank.png
 sprites/frames/Items1/HealthBulb.png
@@ -2307,6 +2307,7 @@ sprites/piskel/PenguinMiniBoss.piskel
 sprites/piskel/GlacierMan.piskel
 sprites/piskel/Sealion.piskel
 sprites/piskel/QuickSand_v2_TopRight.piskel
+sprites/piskel/WeaponEnergy.piskel
 sprites/piskel/MMX_Sigma2_Claw.piskel
 sprites/piskel/MicrowaveMan.piskel
 sprites/piskel/Adamski.piskel

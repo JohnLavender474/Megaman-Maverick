@@ -39,7 +39,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
     val wallSlide = FunctionalBehaviorImpl(
         evaluate = {
-            if (dead || !ready || !canMove || !has(MegaAbility.WALL_SLIDE) || body.isSensing(BodySense.FEET_ON_SAND) ||
+            if (dead || !ready || !canMove || body.isSensing(BodySense.FEET_ON_SAND) ||
                 isAnyBehaviorActive(BehaviorType.JETPACKING, BehaviorType.RIDING_CART)
             ) return@FunctionalBehaviorImpl false
 
@@ -214,10 +214,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
         override fun evaluate(delta: Float): Boolean {
             if (dead || !ready || !canMove || damaged || teleporting || airDashTimer.isFinished() ||
-                !has(MegaAbility.AIR_DASH) || body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.TELEPORTING) ||
-                isAnyBehaviorActive(
-                    BehaviorType.WALL_SLIDING, BehaviorType.CLIMBING, BehaviorType.RIDING_CART,
-                    BehaviorType.JETPACKING
+                body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.TELEPORTING) || isAnyBehaviorActive(
+                    BehaviorType.WALL_SLIDING, BehaviorType.CLIMBING, BehaviorType.RIDING_CART, BehaviorType.JETPACKING
                 )
             ) return false
 
@@ -289,11 +287,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         private val timer = Timer(MegamanValues.CROUCH_DELAY)
 
         override fun evaluate(delta: Float): Boolean {
-            if (!has(MegaAbility.CROUCH)) {
-                timer.reset()
-                return false
-            }
-
             // always update the timer if Megaman has the crouch ability, even when the `if` below returns false
             when {
                 !game.controllerPoller.isPressed(MegaControllerButton.DOWN) ||
@@ -321,9 +314,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         private var directionOnInit: Direction? = null
 
         override fun evaluate(delta: Float): Boolean {
-            if (dead || !ready || !canMove || game.isCameraRotating() || !has(MegaAbility.GROUND_SLIDE) ||
-                body.isSensing(BodySense.FEET_ON_SAND)
-            ) return false
+            if (dead || !ready || !canMove || game.isCameraRotating() || body.isSensing(BodySense.FEET_ON_SAND))
+                return false
 
             if (isBehaviorActive(BehaviorType.GROUND_SLIDING) && body.isSensing(BodySense.HEAD_TOUCHING_BLOCK))
                 return true

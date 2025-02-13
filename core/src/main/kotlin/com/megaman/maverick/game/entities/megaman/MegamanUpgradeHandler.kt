@@ -2,7 +2,6 @@ package com.megaman.maverick.game.entities.megaman
 
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.GameState
-import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
@@ -27,10 +26,6 @@ interface IMegaUpgradable {
 
     operator fun get(healthTank: MegaHealthTank) = upgradeHandler[healthTank]
 
-    fun has(ability: MegaAbility) = upgradeHandler.has(ability)
-
-    fun add(ability: MegaAbility) = upgradeHandler.add(ability)
-
     fun has(enhancement: MegaEnhancement) = upgradeHandler.has(enhancement)
 
     fun add(enhancement: MegaEnhancement) = upgradeHandler.add(enhancement)
@@ -40,7 +35,6 @@ class MegamanUpgradeHandler(private val state: GameState, private val megaman: M
 
     private val heartTanks = state.heartTanksCollected
     private val healthTanks = state.healthTanksCollected
-    private val abilities = state.abilitiesAttained
     private val enhancements = state.enhancementsAttained
 
     fun has(heartTank: MegaHeartTank) = heartTanks.contains(heartTank)
@@ -94,10 +88,6 @@ class MegamanUpgradeHandler(private val state: GameState, private val megaman: M
     fun has(healthTank: MegaHealthTank) = healthTanks.containsKey(healthTank)
 
     operator fun get(healthTank: MegaHealthTank): Int = if (!has(healthTank)) 0 else healthTanks[healthTank]
-
-    fun has(ability: MegaAbility) = abilities.contains(ability)
-
-    fun add(ability: MegaAbility) = abilities.add(ability)
 
     fun has(enhancement: MegaEnhancement) = enhancements.contains(enhancement)
 

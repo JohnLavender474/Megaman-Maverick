@@ -84,8 +84,6 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.Megaman.Companion.MEGAMAN_EVENT_LISTENER_TAG
 import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_CONTROLLER_COMPONENT_TAG
-import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
@@ -96,7 +94,10 @@ import com.megaman.maverick.game.screens.levels.MegaLevelScreen
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen.Companion.MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG
 import com.megaman.maverick.game.screens.levels.camera.CameraManagerForRooms
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
-import com.megaman.maverick.game.screens.menus.*
+import com.megaman.maverick.game.screens.menus.ControllerSettingsScreen
+import com.megaman.maverick.game.screens.menus.MainMenuScreen
+import com.megaman.maverick.game.screens.menus.SaveGameScreen
+import com.megaman.maverick.game.screens.menus.SimpleSelectLevelScreen
 import com.megaman.maverick.game.screens.menus.level.LevelSelectScreen
 import com.megaman.maverick.game.screens.menus.temp.BossIntroScreen
 import com.megaman.maverick.game.screens.other.CreditsScreen
@@ -328,14 +329,6 @@ class MegamanMaverickGame(
         megaman.initialized = true
 
         megamanUpgradeHandler = MegamanUpgradeHandler(state, megaman)
-        // Megaman should have all upgrades at the start of the game.
-        // This can be changed so that Megaman must earn each of these ability (or never attains any of them),
-        // but doing so will require reworking level designs and certain parts of the codebase
-        megamanUpgradeHandler.add(MegaAbility.CHARGE_WEAPONS)
-        megamanUpgradeHandler.add(MegaAbility.AIR_DASH)
-        megamanUpgradeHandler.add(MegaAbility.CROUCH)
-        megamanUpgradeHandler.add(MegaAbility.GROUND_SLIDE)
-        megamanUpgradeHandler.add(MegaAbility.WALL_SLIDE)
 
         // TODO: remove comment lines to go ahead and add enhancements to Megaman on startup
         // megamanUpgradeHandler.add(MegaEnhancement.DAMAGE_INCREASE)
@@ -345,9 +338,9 @@ class MegamanMaverickGame(
         // megamanUpgradeHandler.add(MegaEnhancement.FASTER_BUSTER_CHARGING)
 
         // TODO: remove comment lines to go ahead and add weapons to Megaman on startup
-        megaman.weaponsHandler.putWeapon(MegamanWeapon.FIREBALL)
-        megaman.weaponsHandler.putWeapon(MegamanWeapon.MOON_SCYTHE)
-        megaman.weaponsHandler.putWeapon(MegamanWeapon.RUSH_JETPACK)
+        // megaman.weaponsHandler.putWeapon(MegamanWeapon.FIREBALL)
+        // megaman.weaponsHandler.putWeapon(MegamanWeapon.MOON_SCYTHE)
+        // megaman.weaponsHandler.putWeapon(MegamanWeapon.RUSH_JETPACK)
 
         screens.put(
             ScreenEnum.LEVEL_SCREEN.name,
@@ -356,7 +349,6 @@ class MegamanMaverickGame(
         screens.put(ScreenEnum.LOGO_SCREEN.name, LogoScreen(this))
         screens.put(ScreenEnum.MAIN_MENU_SCREEN.name, MainMenuScreen(this))
         screens.put(ScreenEnum.SAVE_GAME_SCREEN.name, SaveGameScreen(this))
-        screens.put(ScreenEnum.LOAD_PASSWORD_SCREEN.name, LoadPasswordScreen(this))
         screens.put(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, true))
         screens.put(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, false))
         screens.put(ScreenEnum.LEVEL_SELECT_SCREEN.name, LevelSelectScreen(this))
@@ -507,30 +499,38 @@ class MegamanMaverickGame(
 
     fun saveState() {
         val saveFile = Gdx.app.getPreferences(PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE)
-        val password = GamePasswords.getGamePassword(state)
-        saveFile.putString(ConstKeys.PASSWORD, password.joinToString(""))
+        val state = this.state.toString()
+        saveFile.putString(ConstKeys.STATE, state)
         saveFile.flush()
     }
 
     fun hasSavedState(): Boolean {
         val saveFile = Gdx.app.getPreferences(PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE)
-        return saveFile.contains(ConstKeys.PASSWORD)
+        return saveFile.contains(ConstKeys.STATE)
     }
 
     fun loadSavedState(): Boolean {
         val saveFile = Gdx.app.getPreferences(PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE)
-        if (saveFile.contains(ConstKeys.PASSWORD)) {
-            val password = saveFile.getString(ConstKeys.PASSWORD)
-            if (password == null) {
-                GameLogger.error(TAG, "loadSavedState(): Password is null")
+
+        if (saveFile.contains(ConstKeys.STATE)) {
+            val state = saveFile.getString(ConstKeys.STATE)
+
+            if (state == null) {
+                GameLogger.error(TAG, "loadSavedState(): state is null")
+
                 return false
             } else {
-                GameLogger.debug(TAG, "loadSavedState(): Password found")
-                GamePasswords.loadGamePassword(state, password.toCharArray().map { it.toString().toInt() }.toIntArray())
+                GameLogger.debug(TAG, "loadSavedState(): loading state")
+
+                this.state.reset()
+                this.state.fromString(state)
+
                 return true
             }
         }
-        GameLogger.error(TAG, "loadSavedState(): Password not found")
+
+        GameLogger.debug(TAG, "loadSavedState(): no state to load")
+
         return false
     }
 
@@ -670,6 +670,8 @@ class MegamanMaverickGame(
         levelScreen.screenOnCompletion = levelDef.screenOnCompletion
 
         setCurrentScreen(ScreenEnum.LEVEL_SCREEN.name)
+
+        putProperty("${ConstKeys.LEVEL}_${ConstKeys.DEF}", levelDef)
     }
 
     fun startLevelScreen(level: Level) {

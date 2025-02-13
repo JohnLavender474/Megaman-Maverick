@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.screens.levels.events
 
-import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.common.GameLogger
@@ -11,7 +10,6 @@ import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.drawables.IDrawable
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.setPosition
@@ -30,8 +28,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializable, Updatable, IDrawable<Batch>,
-    Resettable {
+class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializable, Updatable, Resettable {
 
     companion object {
         const val TAG = "PlayerSpawnEventHandler"
@@ -89,22 +86,6 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         megaman.setAllBehaviorsAllowed(false)
 
         game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
-    }
-
-    override fun draw(drawer: Batch) {
-        /*
-        val drawing = drawer.isDrawing
-        if (!drawing) drawer.begin()
-
-        if (startDelayTimer.isFinished() && preBeamTimer.isFinished() &&
-            (!beamUpTimer.isFinished() || !beamTransitionTimer.isFinished())
-        ) {
-            drawer.projectionMatrix = game.getGameCamera().combined
-            beamSprite.draw(drawer)
-        }
-
-        if (!drawing) drawer.end()
-         */
     }
 
     override fun update(delta: Float) {

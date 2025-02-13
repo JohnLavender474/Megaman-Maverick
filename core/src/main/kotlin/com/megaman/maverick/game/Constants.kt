@@ -40,6 +40,8 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val LEVEL = "level"
+    const val DEF = "def"
     const val SELECTOR = "selector"
     const val STATIC = "static"
     const val ORIGIN = "origin"

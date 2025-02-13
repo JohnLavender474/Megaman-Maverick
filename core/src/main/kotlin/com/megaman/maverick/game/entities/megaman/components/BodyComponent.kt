@@ -17,7 +17,6 @@ import com.megaman.maverick.game.com.megaman.maverick.game.behaviors.BehaviorTyp
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
-import com.megaman.maverick.game.entities.megaman.constants.MegaAbility
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -67,9 +66,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.addFixture(bodyFixture)
     body.putProperty(ConstKeys.BODY, bodyFixture)
 
-    val onBounce = {
-        if (!body.isSensing(BodySense.IN_WATER) && has(MegaAbility.AIR_DASH)) aButtonTask = AButtonTask.AIR_DASH
-    }
+    val onBounce = { if (!body.isSensing(BodySense.IN_WATER)) aButtonTask = AButtonTask.AIR_DASH }
 
     val feetFixture =
         Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.25f * ConstVals.PPM))

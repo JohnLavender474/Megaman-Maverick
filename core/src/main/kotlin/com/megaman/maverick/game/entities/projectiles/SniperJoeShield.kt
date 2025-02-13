@@ -44,8 +44,8 @@ class SniperJoeShield(game: MegamanMaverickGame) : AbstractProjectile(game), IFa
 
     companion object {
         const val TAG = "SniperJoeShield"
-        const val ORANGE_TYPE = "orange"
-        const val BLUE_TYPE = "blue"
+        const val ORANGE_TYPE = "Orange"
+        const val BLUE_TYPE = "Blue"
         private const val ROTATION_DURATION = 0.1f
         private var orangeRegion: TextureRegion? = null
         private var blueRegion: TextureRegion? = null
@@ -62,8 +62,8 @@ class SniperJoeShield(game: MegamanMaverickGame) : AbstractProjectile(game), IFa
     override fun init() {
         if (orangeRegion == null || blueRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ITEMS_1.source)
-            orangeRegion = atlas.findRegion("SniperJoeShield/Orange")
-            blueRegion = atlas.findRegion("SniperJoeShield/Blue")
+            orangeRegion = atlas.findRegion("$TAG/$ORANGE_TYPE")
+            blueRegion = atlas.findRegion("$TAG/$BLUE_TYPE")
         }
         super.init()
         addComponent(defineUpdatablesComponent())

@@ -35,6 +35,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.enemies.PicketJoe
 import com.megaman.maverick.game.entities.enemies.SniperJoe
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -105,8 +106,8 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
         }
 
         body.preProcess.put(ConstKeys.TARGET) {
-            target?.let { target ->
-                body.physics.velocity.set(target)
+            target?.let { it ->
+                body.physics.velocity.set(it)
                     .sub(body.getPositionPoint(Position.TOP_CENTER))
                     .scl(1f / ConstVals.FIXED_TIME_STEP)
             }
@@ -124,6 +125,8 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
         children.clear()
 
         enemyToSpawn = null
+
+        target = null
 
         game.eventsMan.removeListener(this)
     }
@@ -143,7 +146,10 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
         )
         putMotionDefinition(
             ConstKeys.PENDULUM,
-            MotionDefinition(motion = pendulum, function = { value, _ -> target = value })
+            MotionDefinition(
+                motion = pendulum,
+                function = { value, _ -> if (target == null) target = value.cpy() else target!!.set(value) }
+            )
         )
 
         val line = GameLine()
@@ -167,6 +173,11 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        game.setDebugText(
+            "${body.getX().toInt()},${body.getY().toInt()};" +
+                "${megaman.body.getX().toInt()},${megaman.body.getY().toInt()}"
+        )
+
         if (enemyToSpawn != null) {
             timeToSpawnEnemyTimer.update(delta)
 

@@ -94,7 +94,6 @@ class MegaLevelScreen(
         private const val ROOM_DISTANCE_ON_TRANSITION = 2f
         private const val TRANSITION_SCANNER_SIZE = 5f
         private const val FADE_OUT_MUSIC_ON_BOSS_SPAWN = 1f
-        private const val DEBUG_PRINT_DELAY = 2f
         private const val DISPLAY_ROOMS_DEBUG_TEXT = false
     }
 
@@ -144,7 +143,7 @@ class MegaLevelScreen(
     val controllerPoller: IControllerPoller
         get() = game.controllerPoller
 
-    var level: Level? = null
+
     var music: MusicAsset? = null
     var screenOnCompletion: ScreenEnum? = null
 
@@ -773,8 +772,6 @@ class MegaLevelScreen(
             val foregroundSprite = foregroundSprites.poll()
             foregroundSprite.draw(drawer)
         }
-
-        if (!endLevelEventHandler.finished) endLevelEventHandler.draw(drawer)
 
         game.viewports.get(ConstKeys.UI).apply()
         drawer.projectionMatrix = uiCamera.combined
