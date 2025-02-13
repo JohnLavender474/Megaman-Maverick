@@ -30,6 +30,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
@@ -44,6 +45,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOS
 import com.megaman.maverick.game.entities.megaman.contracts.IMegamanDamageListener
 import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
+import com.megaman.maverick.game.entities.megaman.sprites.MegamanTrailSpriteV2
 import com.megaman.maverick.game.entities.megaman.sprites.amendKey
 import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportContinueProp
@@ -655,13 +657,26 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
             }
 
             trailSpriteTimer.update(delta)
+
             if (trailSpriteTimer.isFinished()) {
                 val spawnTrailSprite = when {
-                    isBehaviorActive(BehaviorType.GROUND_SLIDING) -> spawnTrailSprite("groundslide")
-                    isBehaviorActive(BehaviorType.AIR_DASHING) -> spawnTrailSprite("airdash")
-                    // isBehaviorActive(BehaviorType.JUMPING) -> spawnTrailSprite("jump")
+                    isBehaviorActive(BehaviorType.GROUND_SLIDING) -> {
+                        var key = "groundslide"
+                        if (currentWeapon == MegamanWeapon.RUSH_JETPACK) key += "_jetpack"
+                        if (shooting) key += "_shoot"
+                        spawnTrailSprite(key)
+                    }
+
+                    isBehaviorActive(BehaviorType.AIR_DASHING) -> {
+                        var key = "airdash"
+                        if (currentWeapon == MegamanWeapon.RUSH_JETPACK) key += "_jetpack"
+                        if (shooting) key += "_shoot"
+                        spawnTrailSprite(key)
+                    }
+
                     else -> false
                 }
+
                 if (spawnTrailSprite) trailSpriteTimer.reset()
             }
 
@@ -671,7 +686,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
 
     private fun spawnTrailSprite(animKey: String? = null): Boolean {
         val key = if (animKey != null) amendKey(animKey) else null
-        val trailSprite = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.MEGAMAN_TRAIL_SPRITE_V2)!!
+        val trailSprite = MegaEntityFactory.fetch(MegamanTrailSpriteV2::class)!!
         return trailSprite.spawn(props(ConstKeys.KEY pairTo key))
     }
 

@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.5.0</string>
+        <string>7.6.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -50,7 +50,7 @@
         <key>dxtCompressionMode</key>
         <enum type="SettingsBase::DxtCompressionMode">DXT_PERCEPTUAL</enum>
         <key>ditherType</key>
-        <enum type="SettingsBase::DitherType">NearestNeighbour</enum>
+        <enum type="SettingsBase::DitherType">PngQuantLow</enum>
         <key>backgroundColor</key>
         <uint>0</uint>
         <key>libGdx</key>
@@ -58,9 +58,9 @@
             <key>filtering</key>
             <struct type="LibGDXFiltering">
                 <key>x</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
                 <key>y</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
             </struct>
         </struct>
         <key>shapePadding</key>
@@ -74,7 +74,7 @@
         <key>textureSubPath</key>
         <string></string>
         <key>textureFormat</key>
-        <enum type="SettingsBase::TextureFormat">png</enum>
+        <enum type="SettingsBase::TextureFormat">png8</enum>
         <key>borderPadding</key>
         <uint>0</uint>
         <key>maxTextureSize</key>
@@ -174,13 +174,17 @@
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">../frames/MegamanTrailSprite_v2/airdash.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/airdash_jetpack.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/airdash_jetpack_shoot.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/airdash_shoot.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/beam.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/climb_finish.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/climb_still.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/climb_still_shoot.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/groundslide.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/groundslide_jetpack.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/groundslide_shoot.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/groundslide_shoot_jetpack.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/jump.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/jump_shoot.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/run_start.png</key>

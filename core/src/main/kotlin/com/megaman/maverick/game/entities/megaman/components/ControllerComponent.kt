@@ -127,7 +127,8 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
         onJustReleased = {
             if (stunned || damaged || game.isCameraRotating() || teleporting || !ready ||
                 !weaponsHandler.canFireWeapon(currentWeapon, chargeStatus) ||
-                game.isProperty(ConstKeys.ROOM_TRANSITION, true)
+                game.isProperty(ConstKeys.ROOM_TRANSITION, true) ||
+                isBehaviorActive(BehaviorType.AIR_DASHING)
             ) {
                 GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG,
                     "attack actuator just released, do not shoot: " +
@@ -137,6 +138,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
                 )
 
                 stopCharging()
+
                 return@ButtonActuator
             }
 

@@ -64,8 +64,6 @@ data class MegaWeaponHandler(
         return count
     }
 
-    fun hasAnySpawned(stats: Iterable<MegaChargeStatus>) = stats.any { stat -> !spawned[stat].isEmpty }
-
     fun cullAllDead() = spawned.values().forEach { set ->
         val iter = set.iterator()
         while (iter.hasNext) {
@@ -239,11 +237,8 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
     fun hasWeapon(weapon: MegamanWeapon) = weaponHandlers.containsKey(weapon)
 
-    fun onChangeWeapon(current: MegamanWeapon, previous: MegamanWeapon?) {
+    fun onChangeWeapon(current: MegamanWeapon, previous: MegamanWeapon?) =
         GameLogger.debug(TAG, "onChangeWeapon(): current=$current, previous=$previous")
-
-        // TODO: handle any special logic when changing weapons
-    }
 
     fun isChargeable(weapon: MegamanWeapon) = hasWeapon(weapon) && weaponHandlers[weapon].let { it.chargeable(it) }
 

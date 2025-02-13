@@ -7,7 +7,9 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.sprites.*
 import com.mega.game.engine.entities.contracts.ISpritesEntity
@@ -15,6 +17,7 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -28,6 +31,11 @@ class MegamanTrailSpriteV2(game: MegamanMaverickGame) : MegaGameEntity(game), IS
     companion object {
         const val TAG = "MegamanTrailingSprite_v2"
         private const val FADE_DUR = 0.25f
+        private val customAnimDefs = orderedMapOf(
+            "airdash_jetpack" pairTo AnimationDef(),
+            "groundslide_jetpack" pairTo AnimationDef(),
+            "groundslide_jetpack_shoot" pairTo AnimationDef()
+        )
     }
 
     private val fadeTimer = Timer(FADE_DUR)
@@ -110,16 +118,35 @@ class MegamanTrailSpriteV2(game: MegamanMaverickGame) : MegaGameEntity(game), IS
         val keySupplier: () -> String? = { animKey }
 
         val animations = ObjectMap<String, IAnimation>()
+
         val atlas = game.assMan.getTextureAtlas(TextureAsset.MEGAMAN_TRAIL_SPRITE_V2.source)
+
         MegamanAnimationDefs.getKeys().forEach { key ->
             if (!atlas.containsRegion(key)) {
                 GameLogger.debug(TAG, "defineAnimationsComponent(): no region with key=$key")
                 return@forEach
             }
-            val def = MegamanAnimationDefs.get(key)
-            animations.put(key, Animation(atlas.findRegion(key), def.rows, def.cols, def.durations))
+
+            val (rows, columns, durations, loop) = MegamanAnimationDefs.get(key)
+            animations.put(key, Animation(atlas.findRegion(key), rows, columns, durations, loop))
+
             GameLogger.debug(TAG, "defineAnimationsComponent(): put animation with key=$key")
         }
+
+        customAnimDefs.forEach { entry ->
+            val key = entry.key
+
+            if (!atlas.containsRegion(key)) {
+                GameLogger.debug(TAG, "defineAnimationsComponent(): no region with key=$key")
+                return@forEach
+            }
+
+            val (rows, columns, durations, loop) = entry.value
+            animations.put(key, Animation(atlas.findRegion(key), rows, columns, durations, loop))
+
+            GameLogger.debug(TAG, "defineAnimationsComponent(): put animation with key=$key")
+        }
+
         GameLogger.debug(TAG, "defineAnimationsComponent(): animations.size=${animations.size}")
 
         val animator = Animator(keySupplier, animations)

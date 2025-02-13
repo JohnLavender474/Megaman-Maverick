@@ -38,13 +38,11 @@ class MegamanAnimations(
                 MegamanWeapon.BUSTER -> TextureAsset.MEGAMAN_BUSTER.source
                 MegamanWeapon.FIREBALL -> TextureAsset.MEGAMAN_FIREBALL.source
                 MegamanWeapon.MOON_SCYTHE -> TextureAsset.MEGAMAN_MOON_SCYTHE.source
-                MegamanWeapon.RUSH_JETPACK -> "" // TODO: TextureAsset.MEGAMAN_RUSH_JETPACK.source
+                MegamanWeapon.RUSH_JETPACK -> TextureAsset.MEGAMAN_RUSH_JETPACK.source
             }
 
-            // TODO: remove when all mega weapon atlases are complete
-            if (assetSource == "") return@forEach
-
             val atlas = game.assMan.getTextureAtlas(assetSource)
+
             MegamanAnimationDefs.getKeys().forEach { defKey ->
                 if (!atlas.containsRegion(defKey)) return@forEach
 

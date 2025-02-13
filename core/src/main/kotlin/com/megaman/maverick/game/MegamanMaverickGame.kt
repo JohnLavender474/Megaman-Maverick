@@ -347,6 +347,7 @@ class MegamanMaverickGame(
         // TODO: remove comment lines to go ahead and add weapons to Megaman on startup
         megaman.weaponsHandler.putWeapon(MegamanWeapon.FIREBALL)
         megaman.weaponsHandler.putWeapon(MegamanWeapon.MOON_SCYTHE)
+        megaman.weaponsHandler.putWeapon(MegamanWeapon.RUSH_JETPACK)
 
         screens.put(
             ScreenEnum.LEVEL_SCREEN.name,
