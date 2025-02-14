@@ -1,0 +1,16 @@
+===== SESSION STARTED: 2025-02-14T15:14:29.838869866 =====
+15:14:30 | DEBUG | MegamanMaverickGame | resize(): width=1920, height=1080
+15:14:30 | LOG | MegamanMaverickGame | resume()
+15:14:30 | LOG | MegamanMaverickGame | pause()
+15:14:31 | DEBUG | Megaman | init()
+15:14:31 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=BUSTER, entry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@1dd0e7c4, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x000073fc5c21d430@7894f09b, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x000073fc5c21d650@3d484181, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x000073fc5c21d870@6111ba37, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x000073fc5c21da90@7be58f16, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x000073fc5c21dcb0@242aa8d9), weapons=com.badlogic.gdx.utils.ObjectMap$Keys@5b11a194
+15:14:31 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=BUSTER, previous=null
+15:14:31 | DEBUG | GameState | addListener(): listener={ Megaman:[mapObjId=0, dead=false, hashCode=505231702] }, added=true
+15:14:31 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = SIMPLE_INIT_GAME_SCREEN
+15:14:31 | LOG | MegamanMaverickGame | resume()
+15:14:32 | LOG | MegamanMaverickGame | resume()
+15:14:33 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = LOGO_SCREEN
+15:14:33 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = MAIN_MENU_SCREEN
+15:14:39 | LOG | MegamanMaverickGame | pause()
+15:14:39 | LOG | MegamanMaverickGame | dispose()
+15:14:39 | DEBUG | MegaLevelScreen | dispose(): Disposing level screen
