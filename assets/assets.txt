@@ -1679,6 +1679,14 @@ sprites/frames/Enemies1/Darspider/jump.png
 sprites/frames/Enemies1/Darspider/still.png
 sprites/frames/Enemies1/Darspider/frozen.png
 sprites/frames/Enemies1/Darspider/crawl.png
+sprites/frames/Enemies1/LumberJoe/throw.png
+sprites/frames/Enemies1/LumberJoe/throw_shielded.png
+sprites/frames/Enemies1/LumberJoe/cooldown.png
+sprites/frames/Enemies1/LumberJoe/jump_shielded.png
+sprites/frames/Enemies1/LumberJoe/stand.png
+sprites/frames/Enemies1/LumberJoe/jump.png
+sprites/frames/Enemies1/LumberJoe/cooldown_shielded.png
+sprites/frames/Enemies1/LumberJoe/stand_shielded.png
 sprites/frames/Enemies1/Met/LayDown.png
 sprites/frames/Enemies1/Met/GetUp.png
 sprites/frames/Enemies1/Met/Run.png

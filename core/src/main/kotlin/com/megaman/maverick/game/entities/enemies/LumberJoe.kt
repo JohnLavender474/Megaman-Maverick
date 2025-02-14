@@ -55,7 +55,7 @@ import com.megaman.maverick.game.world.body.*
 class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
 
     companion object {
-        const val TAG = "AxeJoe"
+        const val TAG = "LumberJoe"
 
         private const val STAND_DUR = 0.75f
         private const val THROW_DUR = 0.5f
@@ -94,14 +94,14 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private enum class AxeJoeState { STAND, JUMP, THROW, COOLDOWN }
+    private enum class LumberJoeState { STAND, JUMP, THROW, COOLDOWN }
 
     override lateinit var facing: Facing
 
-    private lateinit var stateMachine: StateMachine<AxeJoeState>
-    private val currentState: AxeJoeState
+    private lateinit var stateMachine: StateMachine<LumberJoeState>
+    private val currentState: LumberJoeState
         get() = stateMachine.getCurrent()
-    private val stateTimers = OrderedMap<AxeJoeState, Timer>()
+    private val stateTimers = OrderedMap<LumberJoeState, Timer>()
     private var axesThrown = 0
     private var hasShield = true
 
@@ -112,23 +112,25 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         GameLogger.debug(TAG, "init()")
 
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            AxeJoeState.entries.forEach { state ->
-                val key = state.name.lowercase()
-                regions.put(key, atlas.findRegion("$TAG/$key"))
-
-                val shieldedKey = "${key}$SHIELDED_REGION_SUFFIX"
-                regions.put(shieldedKey, atlas.findRegion("$TAG/$shieldedKey"))
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            animDefs.keys().forEach { key ->
+                gdxArrayOf(key, "${key}$SHIELDED_REGION_SUFFIX").forEach {
+                    try {
+                        regions.put(it, atlas.findRegion("$TAG/$it")!!)
+                    } catch (e: Exception) {
+                        throw Exception("Failed to add animation for key=$it", e)
+                    }
+                }
             }
         }
 
         if (stateTimers.isEmpty) {
-            stateTimers.put(AxeJoeState.STAND, Timer(STAND_DUR))
+            stateTimers.put(LumberJoeState.STAND, Timer(STAND_DUR))
             stateTimers.put(
-                AxeJoeState.THROW,
+                LumberJoeState.THROW,
                 Timer(THROW_DUR).addRunnables(TimeMarkedRunnable(THROW_TIME) { throwAxe() })
             )
-            stateTimers.put(AxeJoeState.COOLDOWN, Timer(COOLDOWN_DUR))
+            stateTimers.put(LumberJoeState.COOLDOWN, Timer(COOLDOWN_DUR))
         }
 
         super.init()
@@ -170,10 +172,10 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         updatablesComponent.add { delta ->
             jumpSensor.setBottomCenterToPoint(body.getPositionPoint(Position.TOP_CENTER))
 
-            if (currentState.equalsAny(AxeJoeState.STAND, AxeJoeState.COOLDOWN)) updateFacing()
+            if (currentState.equalsAny(LumberJoeState.STAND, LumberJoeState.COOLDOWN)) updateFacing()
 
             when (currentState) {
-                AxeJoeState.JUMP -> if (shouldStopJump()) stateMachine.next()
+                LumberJoeState.JUMP -> if (shouldStopJump()) stateMachine.next()
                 else -> {
                     val timer = stateTimers[currentState]
 
@@ -261,10 +263,14 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
                     animDefs.forEach { entry ->
                         var key = entry.key
                         val def = entry.value
-                        animations.put(key, Animation(regions[key], def.rows, def.cols, def.durations, def.loop))
 
-                        key = "${key}$SHIELDED_REGION_SUFFIX"
-                        animations.put(key, Animation(regions[key], def.rows, def.cols, def.durations, def.loop))
+                        gdxArrayOf(key, "${key}$SHIELDED_REGION_SUFFIX").forEach {
+                            try {
+                                animations.put(it, Animation(regions[it]!!, def.rows, def.cols, def.durations, def.loop))
+                            } catch (e: Exception) {
+                                throw Exception("Failed to add animation for key=$it", e)
+                            }
+                        }
                     }
                 }
                 .build()
@@ -274,10 +280,10 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     private fun isShielded(): Boolean {
         if (!hasShield) return false
 
-        if (currentState == AxeJoeState.THROW) {
+        if (currentState == LumberJoeState.THROW) {
             val animator = animators[TAG] as Animator
 
-            val key = "${AxeJoeState.THROW.name.lowercase()}${SHIELDED_REGION_SUFFIX}"
+            val key = "${LumberJoeState.THROW.name.lowercase()}${SHIELDED_REGION_SUFFIX}"
             if (animator.currentKey != key) return false
 
             val index = animator.animations[key].getIndex()
@@ -294,31 +300,34 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         }
     }
 
-    private fun buildStateMachine() = StateMachineBuilder<AxeJoeState>()
-        .states { states -> AxeJoeState.entries.forEach { states.put(it.name, it) } }
+    private fun buildStateMachine() = StateMachineBuilder<LumberJoeState>()
+        .states { states -> LumberJoeState.entries.forEach { states.put(it.name, it) } }
         .setTriggerChangeWhenSameElement(false)
         .setOnChangeState(this::onChangeState)
-        .initialState(AxeJoeState.JUMP.name)
+        .initialState(LumberJoeState.JUMP.name)
         // stand
-        .transition(AxeJoeState.STAND.name, AxeJoeState.JUMP.name) { shouldJump() }
-        .transition(AxeJoeState.STAND.name, AxeJoeState.THROW.name) { true }
+        .transition(LumberJoeState.STAND.name, LumberJoeState.JUMP.name) { shouldJump() }
+        .transition(LumberJoeState.STAND.name, LumberJoeState.THROW.name) { true }
         // jump
-        .transition(AxeJoeState.JUMP.name, AxeJoeState.STAND.name) { shouldStopJump() }
+        .transition(LumberJoeState.JUMP.name, LumberJoeState.STAND.name) { shouldStopJump() }
         // throw
-        .transition(AxeJoeState.THROW.name, AxeJoeState.COOLDOWN.name) { shouldCooldown() }
-        .transition(AxeJoeState.THROW.name, AxeJoeState.STAND.name) { true }
+        .transition(LumberJoeState.THROW.name, LumberJoeState.COOLDOWN.name) { shouldCooldown() }
+        .transition(LumberJoeState.THROW.name, LumberJoeState.STAND.name) { true }
         // cooldown
-        .transition(AxeJoeState.COOLDOWN.name, AxeJoeState.JUMP.name) { !body.isSensing(BodySense.FEET_ON_GROUND) }
-        .transition(AxeJoeState.COOLDOWN.name, AxeJoeState.STAND.name) { true }
+        .transition(
+            LumberJoeState.COOLDOWN.name,
+            LumberJoeState.JUMP.name
+        ) { !body.isSensing(BodySense.FEET_ON_GROUND) }
+        .transition(LumberJoeState.COOLDOWN.name, LumberJoeState.STAND.name) { true }
         .build()
 
-    private fun onChangeState(current: AxeJoeState, previous: AxeJoeState) {
+    private fun onChangeState(current: LumberJoeState, previous: LumberJoeState) {
         GameLogger.debug(TAG, "onChangeState(): current=$current, previous=$previous")
 
         when (current) {
-            AxeJoeState.JUMP -> jump()
-            AxeJoeState.THROW -> axesThrown++
-            AxeJoeState.COOLDOWN -> axesThrown = 0
+            LumberJoeState.JUMP -> jump()
+            LumberJoeState.THROW -> axesThrown++
+            LumberJoeState.COOLDOWN -> axesThrown = 0
             else -> {}
         }
     }
@@ -351,4 +360,6 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         val axe = MegaEntityFactory.fetch(Axe::class)!!
         axe.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.IMPULSE pairTo impulse))
     }
+
+    override fun getTag() = TAG
 }

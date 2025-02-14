@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.5.0</string>
+        <string>7.6.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -50,7 +50,7 @@
         <key>dxtCompressionMode</key>
         <enum type="SettingsBase::DxtCompressionMode">DXT_PERCEPTUAL</enum>
         <key>ditherType</key>
-        <enum type="SettingsBase::DitherType">NearestNeighbour</enum>
+        <enum type="SettingsBase::DitherType">PngQuantLow</enum>
         <key>backgroundColor</key>
         <uint>0</uint>
         <key>libGdx</key>
@@ -74,7 +74,7 @@
         <key>textureSubPath</key>
         <string></string>
         <key>textureFormat</key>
-        <enum type="SettingsBase::TextureFormat">png</enum>
+        <enum type="SettingsBase::TextureFormat">png8</enum>
         <key>borderPadding</key>
         <uint>0</uint>
         <key>maxTextureSize</key>
@@ -580,6 +580,8 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Enemies1/FlyBoy/Stand.png</key>
+            <key type="filename">../frames/Enemies1/LumberJoe/jump.png</key>
+            <key type="filename">../frames/Enemies1/LumberJoe/jump_shielded.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -591,6 +593,40 @@
                 <rect>10,10,20,20</rect>
                 <key>scale9Paddings</key>
                 <rect>10,10,20,20</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/LumberJoe/cooldown.png</key>
+            <key type="filename">../frames/Enemies1/LumberJoe/cooldown_shielded.png</key>
+            <key type="filename">../frames/Enemies1/LumberJoe/stand.png</key>
+            <key type="filename">../frames/Enemies1/LumberJoe/stand_shielded.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>10,20,20,40</rect>
+                <key>scale9Paddings</key>
+                <rect>10,20,20,40</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/LumberJoe/throw.png</key>
+            <key type="filename">../frames/Enemies1/LumberJoe/throw_shielded.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>10,30,20,60</rect>
+                <key>scale9Paddings</key>
+                <rect>10,30,20,60</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

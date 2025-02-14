@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="500" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="369">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="500" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="370">
  <tileset firstgid="1" source="../tsx/pipe_forest_bkg.tsx"/>
  <tileset firstgid="81" source="../tsx/pipe forest preview.tsx"/>
  <tileset firstgid="741" source="../tsx/PlantManTileset.tsx"/>
@@ -635,7 +635,7 @@
   </object>
  </objectgroup>
  <objectgroup id="6" name="temp">
-  <object id="368" name="0" x="6304" y="896" width="32" height="32"/>
+  <object id="369" name="0" x="2640" y="1312" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="5" name="player">
   <object id="55" name="0" x="80" y="1248" width="32" height="32"/>
