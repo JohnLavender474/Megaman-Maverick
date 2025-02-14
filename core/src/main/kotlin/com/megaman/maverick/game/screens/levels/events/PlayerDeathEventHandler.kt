@@ -33,6 +33,8 @@ class PlayerDeathEventHandler(private val game: MegamanMaverickGame) : Initializ
     private val fadeout = Fade(FadeType.FADE_OUT, FADE_OUT_DUR)
     private val deathTimer = Timer(ON_DEATH_DELAY).setToEnd()
 
+    private val megaman = game.megaman
+
     override fun init() {
         GameLogger.debug(TAG, "init()")
 
@@ -44,8 +46,8 @@ class PlayerDeathEventHandler(private val game: MegamanMaverickGame) : Initializ
 
         game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
 
-        game.megaman.body.physics.gravityOn = false
-        game.megaman.ready = false
+        megaman.body.physics.gravityOn = false
+        megaman.ready = false
 
         game.audioMan.playSound(SoundAsset.DEFEAT_SOUND)
     }
@@ -62,18 +64,18 @@ class PlayerDeathEventHandler(private val game: MegamanMaverickGame) : Initializ
             val bounds = game.getUiCamera().toGameRectangle()
             fadeout.setPosition(bounds.getX(), bounds.getY())
             fadeout.setSize(bounds.getWidth(), bounds.getHeight())
+
             fadeout.update(delta)
 
             if (fadeout.isJustFinished()) {
                 GameLogger.debug(TAG, "update(): fade out just finished, submit PLAYER_DONE_DYIN event")
+
                 game.eventsMan.submitEvent(Event(EventType.PLAYER_DONE_DYIN))
             }
         }
     }
 
-    override fun draw(drawer: Batch) {
-        fadeout.draw(drawer)
-    }
+    override fun draw(drawer: Batch) = fadeout.draw(drawer)
 
     override fun reset() {
         GameLogger.debug(TAG, "reset()")

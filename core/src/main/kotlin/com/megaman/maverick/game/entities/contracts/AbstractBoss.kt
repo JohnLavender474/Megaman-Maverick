@@ -179,10 +179,8 @@ abstract class AbstractBoss(
     }
 
     override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when {
-        isDamagerOwnedByMegaman(damager) -> MegaEnhancement.scaleDamage(
-            baseDamage,
-            MegaEnhancement.BOSS_DAMAGE_INCREASE_SCALAR
-        )
+        damager is IOwnable && damager.owner == megaman && megaman.hasEnhancement(MegaEnhancement.DAMAGE_INCREASE)->
+            MegaEnhancement.scaleDamage(baseDamage, MegaEnhancement.BOSS_DAMAGE_INCREASE_SCALAR)
 
         else -> baseDamage
     }

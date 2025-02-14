@@ -15,6 +15,7 @@ import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.utils.GameObjectPools
 import java.util.*
 
+// TODO: update to use LevelDefinition
 enum class BossType(val bossName: String, val level: Level, val position: Position, val ass: TextureAsset) {
     TIMBER_WOMAN("Timber Woman", Level.TIMBER_WOMAN, Position.TOP_LEFT, TextureAsset.TIMBER_WOMAN) {
         override fun getSpriteSize(): Vector2 {

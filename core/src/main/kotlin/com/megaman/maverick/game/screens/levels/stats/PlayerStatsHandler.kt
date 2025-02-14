@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.Queue
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.pairTo
@@ -27,9 +28,12 @@ import com.megaman.maverick.game.events.EventType
 class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatable, IDrawable<Batch> {
 
     companion object {
+        const val TAG = "PlayerStatsHandler"
+
         private const val SPECIAL_ITEM_DUR = 0.35f
     }
 
+    private val state = megaman.game.state
     private val engine = megaman.game.engine
     private val assMan = megaman.game.assMan
     private val eventsMan = megaman.game.eventsMan
@@ -90,10 +94,12 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
     }
 
     fun attain(heartTank: MegaHeartTank) {
-        if (megaman.has(heartTank) || megaman.getMaxHealth() == ConstVals.MAX_HEALTH) {
+        if (megaman.hasHeartTank(heartTank) || megaman.getMaxHealth() == ConstVals.MAX_HEALTH) {
             audioMan.playSound(SoundAsset.ERROR_SOUND, false)
             return
         }
+
+        GameLogger.debug(TAG, "attain(): heartTank=$heartTank")
 
         val timer = Timer(SPECIAL_ITEM_DUR)
         timer
@@ -103,7 +109,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
                 engine.systems.forEach { if (it !is SpritesSystem) it.on = false }
             }
             .setRunOnFinished {
-                megaman.add(heartTank)
+                state.addHeartTank(heartTank)
 
                 eventsMan.submitEvent(
                     Event(EventType.ADD_PLAYER_HEALTH, props(ConstKeys.VALUE pairTo MegaHeartTank.HEALTH_BUMP))
@@ -116,15 +122,30 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
 
     fun attain(healthTank: MegaHealthTank) {
         check(finished) { "Cannot call attain if handler is not finished" }
-        if (megaman.has(healthTank)) return
-        /*
-        timer = Timer(SPECIAL_ITEM_DUR)
-        timer!!.runOnFinished = { megaman.put(healthTank) }
-         */
+
+        GameLogger.debug(TAG, "attain(): healthTank=$healthTank")
+
+        // TODO
+    }
+
+    fun addWeaponEnergy(energy: Int) {
+        val currentAmmo = megaman.ammo
+        val maxAmmo = MegamanValues.MAX_WEAPON_AMMO
+
+        GameLogger.debug(TAG, "addWeaponEnergy(): currentAmmo=$currentAmmo, maxAmmo=$maxAmmo")
+
+        if (currentAmmo >= maxAmmo) return
+
+        megaman.translateAmmo(energy)
+
+        audioMan.playSound(SoundAsset.ENERGY_FILL_SOUND, false)
     }
 
     fun addHealth(health: Int) {
         val healthNeeded = megaman.getHealthPoints().max - megaman.getHealthPoints().current
+
+        GameLogger.debug(TAG, "addHealth(): heathNeeded=$healthNeeded, healthToAdd=$health")
+
         if (healthNeeded <= 0) return
 
         val addToTanks: Boolean
@@ -134,7 +155,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
             addToTanks = false
         } else {
             healthToAdd = healthNeeded
-            addToTanks = if (megaman.hasHealthTanks()) megaman.addToHealthTank(health) else false
+            addToTanks = if (megaman.hasAnyHealthTanks) megaman.addToHealthTanks(health) else false
         }
 
         var dur = healthToAdd * ConstVals.DUR_PER_BIT

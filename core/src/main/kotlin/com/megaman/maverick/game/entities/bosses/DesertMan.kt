@@ -177,8 +177,8 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         longPunchingForward = false
         danceFlash = false
 
+        body.physics.gravityOn = true
         body.physics.velocity.setZero()
-        body.physics.gravityOn = false
         body.physics.defaultFrictionOnSelf.y = DEFAULT_FRICTION_Y
 
         leftWallBounds = spawnProps.get(
@@ -190,7 +190,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         )!!.rectangle.toGameRectangle()
     }
 
-    override fun isReady(delta: Float) = timers["init"].isFinished()
+    override fun isReady(delta: Float) = timers[ConstKeys.INIT].isFinished()
 
     override fun onReady() {
         super.onReady()

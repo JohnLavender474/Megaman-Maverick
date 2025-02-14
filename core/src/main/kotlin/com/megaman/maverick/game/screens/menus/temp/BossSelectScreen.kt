@@ -240,7 +240,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
                 bIntroScreen.set(bSelect!!)
                 game.setCurrentScreen(ScreenEnum.BOSS_INTRO_SCREEN.name)
                  */
-                game.startLevelScreen(bSelect!!.level)
+                // TODO: game.startLevelScreen(bSelect!!.level)
                 return
             }
             for (e in bars) {

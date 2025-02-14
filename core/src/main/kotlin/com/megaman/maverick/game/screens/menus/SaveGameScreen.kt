@@ -1,9 +1,10 @@
 package com.megaman.maverick.game.screens.menus
 
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstVals
@@ -22,14 +23,13 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
         private const val SAVE = "SAVE"
         private const val CONTINUE = "CONTINUE"
         private const val MAIN_MENU = "MAIN MENU"
+        private const val TEXT_ROW_START = 6f
     }
 
-    private val fontHandles = Array<MegaFontHandle>()
-    private lateinit var arrow: BlinkingArrow
+    private val fontHandles = OrderedMap<String, MegaFontHandle>()
+    private val arrows = OrderedMap<String, BlinkingArrow>()
 
     private var initialized = false
-
-    private val out = Vector2()
 
     override fun init() {
         if (initialized) return
@@ -37,34 +37,23 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
 
         GameLogger.debug(TAG, "init()")
 
-        val saveFont = MegaFontHandle(
-            text = SAVE,
-            positionX = ConstVals.PPM.toFloat(),
-            positionY = 3f * ConstVals.PPM,
-            centerX = false,
-            centerY = false,
-        )
-        fontHandles.add(saveFont)
+        var row = TEXT_ROW_START
 
-        val continueFont = MegaFontHandle(
-            text = CONTINUE,
-            positionX = ConstVals.PPM.toFloat(),
-            positionY = 2f * ConstVals.PPM,
-            centerX = false,
-            centerY = false
-        )
-        fontHandles.add(continueFont)
+        gdxArrayOf(SAVE, CONTINUE, MAIN_MENU).forEach { text ->
+            val fontHandle = MegaFontHandle(
+                text = text,
+                positionX = 2f * ConstVals.PPM,
+                positionY = row * ConstVals.PPM,
+                centerX = false,
+                centerY = false,
+            )
+            fontHandles.put(text, fontHandle)
 
-        val mainMenuFont = MegaFontHandle(
-            text = MAIN_MENU,
-            positionX = ConstVals.PPM.toFloat(),
-            positionY = ConstVals.PPM.toFloat(),
-            centerX = false,
-            centerY = false
-        )
-        fontHandles.add(mainMenuFont)
+            val arrowCenter = Vector2(1.5f, row - ConstVals.ARROW_CENTER_ROW_DECREMENT).scl(ConstVals.PPM.toFloat())
+            arrows.put(text, BlinkingArrow(game.assMan, arrowCenter))
 
-        arrow = BlinkingArrow(game.assMan)
+            row -= ConstVals.TEXT_ROW_DECREMENT * ConstVals.PPM
+        }
 
         buttons.put(SAVE, object : IMenuButton {
 
@@ -121,17 +110,13 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
     override fun render(delta: Float) {
         super.render(delta)
 
-        val font = if (currentButtonKey == CONTINUE) fontHandles[0] else fontHandles[1]
-        val arrowPosition = font.getPosition(out)
-        arrowPosition.x -= ConstVals.PPM.toFloat()
-        arrow.x = arrowPosition.x
-        arrow.y = arrowPosition.y
+        val arrow = arrows[currentButtonKey]
         arrow.update(delta)
 
         val batch = game.batch
         batch.projectionMatrix = game.getUiCamera().combined
         batch.begin()
-        fontHandles.forEach { it.draw(batch) }
+        fontHandles.values().forEach { it.draw(batch) }
         arrow.draw(batch)
         batch.end()
     }

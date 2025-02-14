@@ -1,5 +1,5 @@
 Items1.png
-size: 64, 178
+size: 64, 242
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -10,66 +10,66 @@ EmptyHealthTank
   orig: 32, 32
   offset: 0, 0
   index: -1
-HealthBulb
+HealthBulb/large
   rotate: false
-  xy: 32, 18
-  size: 32, 16
-  orig: 32, 16
+  xy: 0, 50
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+HealthBulb/small
+  rotate: false
+  xy: 32, 50
+  size: 32, 64
+  orig: 32, 64
   offset: 0, 0
   index: -1
 HealthTank
-  rotate: false
-  xy: 0, 82
-  size: 64, 32
-  orig: 64, 32
-  offset: 0, 0
-  index: -1
-HeartTank
   rotate: false
   xy: 0, 114
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
+HeartTank
+  rotate: false
+  xy: 0, 146
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
 Key
   rotate: false
-  xy: 0, 50
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-SmallHealthBulb
-  rotate: false
-  xy: 0, 0
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-SmallWeaponBulb
-  rotate: false
-  xy: 32, 50
+  xy: 32, 18
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SniperJoeShield/Blue
   rotate: false
-  xy: 16, 0
+  xy: 0, 0
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: -1
 SniperJoeShield/Orange
   rotate: false
-  xy: 34, 0
+  xy: 18, 0
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: -1
-WeaponBulb
+WeaponEnergyBulb/large
   rotate: false
-  xy: 0, 146
-  size: 64, 32
-  orig: 64, 32
+  xy: 0, 178
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+WeaponEnergyBulb/small
+  rotate: false
+  xy: 32, 178
+  size: 32, 64
+  orig: 32, 64
   offset: 0, 0
   index: -1

@@ -119,7 +119,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             }
 
             val scalar = when {
-                has(MegaEnhancement.FASTER_BUSTER_CHARGING) -> MegaEnhancement.FASTER_BUSTER_CHARGING_SCALAR
+                hasEnhancement(MegaEnhancement.FASTER_BUSTER_CHARGING) -> MegaEnhancement.FASTER_BUSTER_CHARGING_SCALAR
                 else -> 1f
             }
 

@@ -227,19 +227,19 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
         gravityScalar =
             spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", DEFAULT_GRAVITY_SCALAR, Float::class)
+
+        body.physics.gravityOn = true
     }
 
-    override fun isReady(delta: Float) = timers["init"].isFinished()
+    override fun isReady(delta: Float) = timers[ConstKeys.INIT].isFinished()
 
     override fun onReady() {
         GameLogger.debug(TAG, "onReady()")
         super.onReady()
-        body.physics.gravityOn = true
     }
 
     override fun onDefeated(delta: Float) {
         GameLogger.debug(TAG, "onDefeated()")
-
         super.onDefeated(delta)
 
         asteroidsToThrow.forEach { it.first.destroy() }
@@ -248,7 +248,6 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
-
         super.onDestroy()
 
         asteroidsToThrow.forEach { it.first.destroy() }

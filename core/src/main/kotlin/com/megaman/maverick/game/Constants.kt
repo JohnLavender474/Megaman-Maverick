@@ -37,6 +37,11 @@ object ConstVals {
     const val DEFAULT_PARALLAX_Y = 0f
     const val DUR_PER_BIT = 0.075f
     const val EMPTY_STRING = ""
+    const val TEXT_ROW_DECREMENT = 0.025f
+    const val ARROW_CENTER_ROW_DECREMENT = 0.25f
+    const val MIN_LIVES = 0
+    const val MAX_LIVES = 9
+    const val START_LIVES = 3
 }
 
 object ConstKeys {

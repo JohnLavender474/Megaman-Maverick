@@ -1,6 +1,8 @@
 package com.megaman.maverick.game.entities.megaman
 
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.audio.AudioComponent
@@ -22,6 +24,7 @@ import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.entities.contracts.*
 import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.IEventListener
+import com.mega.game.engine.points.Points
 import com.mega.game.engine.points.PointsComponent
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
@@ -54,6 +57,7 @@ import com.megaman.maverick.game.entities.utils.standardOnTeleportStart
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.levels.camera.IFocusable
+import com.megaman.maverick.game.state.IGameStateListener
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.utils.misc.StunType
@@ -63,9 +67,9 @@ import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.abs
 
-class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgradable, IEventListener, IFaceable,
-    IDirectional, IBodyEntity, ISpritesEntity, IBehaviorsEntity, IPointsEntity, IAudioEntity, IAnimatedEntity,
-    IScalableGravityEntity, IFocusable {
+class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventListener, IFaceable, IDirectional,
+    IBodyEntity, ISpritesEntity, IBehaviorsEntity, IPointsEntity, IAudioEntity, IAnimatedEntity, IScalableGravityEntity,
+    IFocusable, IGameStateListener {
 
     companion object {
         const val TAG = "Megaman"
@@ -144,10 +148,14 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
         EventType.END_GAME_CAM_ROTATION
     )
 
-    override val upgradeHandler = MegamanUpgradeHandler(game.state, this)
+    internal lateinit var weaponsHandler: MegamanWeaponsHandler
+    internal val heartTanksCollected = ObjectSet<MegaHeartTank>()
+    internal val enhancementsAttained = ObjectSet<MegaEnhancement>()
+    internal val healthTanksCollected = ObjectMap<MegaHealthTank, Int>()
+    internal val lives = Points(ConstVals.MIN_LIVES, ConstVals.MAX_LIVES, ConstVals.START_LIVES)
 
-    lateinit var weaponsHandler: MegamanWeaponsHandler
-    // val weaponHandler = MegamanWeaponHandler(this)
+    val hasAnyHealthTanks: Boolean
+        get() = !healthTanksCollected.isEmpty
 
     val canChargeCurrentWeapon: Boolean
         get() = weaponsHandler.isChargeable(currentWeapon)
@@ -549,16 +557,6 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
                 stunTimer.reset()
             }
 
-            EventType.END_LEVEL -> {
-                val levelDef = game.getProperty("${ConstKeys.LEVEL}_${ConstKeys.DEF}", LevelDefinition::class)!!
-
-                val weaponsAttained = getWeaponsFromLevelDef(levelDef)
-
-                weaponsAttained.forEach { weapon ->
-                    if (!weaponsHandler.hasWeapon(weapon)) weaponsHandler.putWeapon(weapon)
-                }
-            }
-
             EventType.END_GAME_CAM_ROTATION -> {
                 canMove = true
 
@@ -625,7 +623,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
     }
 
     override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when {
-        has(MegaEnhancement.DAMAGE_INCREASE) ->
+        enhancementsAttained.contains(MegaEnhancement.DAMAGE_INCREASE) ->
             MegaEnhancement.scaleDamage(baseDamage, MegaEnhancement.MEGAMAN_DAMAGE_INCREASE_SCALAR)
 
         else -> baseDamage
@@ -736,6 +734,95 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IMegaUpgr
         }
         return focus
     }
+
+    override fun onAddLevelDefeated(level: LevelDefinition) {
+        val weaponsAttained = getWeaponsFromLevelDef(level)
+        weaponsAttained.forEach { weapon -> if (!weaponsHandler.hasWeapon(weapon)) weaponsHandler.putWeapon(weapon) }
+    }
+
+    override fun onRemoveLevelDefeated(level: LevelDefinition) {
+        val weaponsToRemove = getWeaponsFromLevelDef(level)
+        weaponsToRemove.forEach { weapon -> if (weaponsHandler.hasWeapon(weapon)) weaponsHandler.removeWeapon(weapon) }
+    }
+
+    override fun onAddHeartTank(heartTank: MegaHeartTank) {
+        if (heartTanksCollected.contains(heartTank)) return
+        heartTanksCollected.add(heartTank)
+        megaman.getHealthPoints().max += MegaHeartTank.HEALTH_BUMP
+    }
+
+    override fun onRemoveHeartTank(heartTank: MegaHeartTank) {
+        if (!heartTanksCollected.contains(heartTank)) return
+        heartTanksCollected.remove(heartTank)
+        megaman.getHealthPoints().max += MegaHeartTank.HEALTH_BUMP
+    }
+
+    override fun onPutHealthTank(healthTank: MegaHealthTank) {
+        if (healthTanksCollected.containsKey(healthTank)) return
+        healthTanksCollected.put(healthTank, 0)
+    }
+
+    override fun onRemoveHealthTank(healthTank: MegaHealthTank) {
+        healthTanksCollected.remove(healthTank)
+    }
+
+    override fun onAddEnhancement(enhancement: MegaEnhancement) {
+        enhancementsAttained.add(enhancement)
+    }
+
+    override fun onRemoveEnhancement(enhancement: MegaEnhancement) {
+        enhancementsAttained.remove(enhancement)
+    }
+
+    fun hasHeartTank(heartTank: MegaHeartTank) = heartTanksCollected.contains(heartTank)
+
+    fun hasHealthTank(healthTank: MegaHealthTank) = healthTanksCollected.containsKey(healthTank)
+
+    fun hasEnhancement(enhancement: MegaEnhancement) = enhancementsAttained.contains(enhancement)
+
+    fun addToHealthTanks(health: Int): Boolean {
+        check(health >= 0) { "Cannot add negative amount of health" }
+
+        if (health == 0 || megaman.getHealthPoints().current == megaman.getHealthPoints().max) return false
+
+        var temp = health
+
+        healthTanksCollected.forEach { entry ->
+            val tankAmountToFill = ConstVals.MAX_HEALTH - entry.value
+            // health tank is full so continue
+            if (tankAmountToFill <= 0) return@forEach
+            // health is less than amount needed to fill the health tank
+            else if (tankAmountToFill >= temp) {
+                entry.value += temp
+                return true
+            }
+            // health is greater than amount needed to fill the health tank
+            else {
+                entry.value += tankAmountToFill
+                temp -= tankAmountToFill
+            }
+        }
+
+        // if any tanks were filled, then the temp health value should not be equal to the original health value
+        return health != temp
+    }
+
+    fun translateAmmo(ammo: Int) {
+        val weapon = megaman.currentWeapon
+        megaman.weaponsHandler.translateAmmo(weapon, ammo)
+    }
+
+    fun getCurrentLives() = lives.current
+
+    fun isAtMinLives() = lives.isMin()
+
+    fun isAtMaxLives() = lives.isMax()
+
+    fun addOneLife() = lives.translate(1)
+
+    fun removeOneLife() = lives.translate(-1)
+
+    fun resetLives() = lives.set(ConstVals.START_LIVES)
 
     override fun getType() = EntityType.MEGAMAN
 }

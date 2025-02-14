@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.3.0</string>
+        <string>7.6.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -50,7 +50,7 @@
         <key>dxtCompressionMode</key>
         <enum type="SettingsBase::DxtCompressionMode">DXT_PERCEPTUAL</enum>
         <key>ditherType</key>
-        <enum type="SettingsBase::DitherType">NearestNeighbour</enum>
+        <enum type="SettingsBase::DitherType">PngQuantLow</enum>
         <key>backgroundColor</key>
         <uint>0</uint>
         <key>libGdx</key>
@@ -58,9 +58,9 @@
             <key>filtering</key>
             <struct type="LibGDXFiltering">
                 <key>x</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
                 <key>y</key>
-                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <enum type="LibGDXFiltering::Filtering">Nearest</enum>
             </struct>
         </struct>
         <key>shapePadding</key>
@@ -74,7 +74,7 @@
         <key>textureSubPath</key>
         <string></string>
         <key>textureFormat</key>
-        <enum type="SettingsBase::TextureFormat">png</enum>
+        <enum type="SettingsBase::TextureFormat">png8</enum>
         <key>borderPadding</key>
         <uint>0</uint>
         <key>maxTextureSize</key>
@@ -175,8 +175,6 @@
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">../frames/Items1/EmptyHealthTank.png</key>
             <key type="filename">../frames/Items1/Key.png</key>
-            <key type="filename">../frames/Items1/SmallHealthBulb.png</key>
-            <key type="filename">../frames/Items1/SmallWeaponBulb.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -191,10 +189,38 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Items1/HealthBulb.png</key>
+            <key type="filename">../frames/Items1/HealthBulb/large.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,4,16,8</rect>
+                <key>scale9Paddings</key>
+                <rect>8,4,16,8</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Items1/HealthBulb/small.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>4,4,8,8</rect>
+                <key>scale9Paddings</key>
+                <rect>4,4,8,8</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Items1/HealthTank.png</key>
             <key type="filename">../frames/Items1/HeartTank.png</key>
-            <key type="filename">../frames/Items1/WeaponBulb.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -222,6 +248,22 @@
                 <rect>5,5,9,9</rect>
                 <key>scale9Paddings</key>
                 <rect>5,5,9,9</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Items1/WeaponEnergyBulb/large.png</key>
+            <key type="filename">../frames/Items1/WeaponEnergyBulb/small.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>6,8,12,16</rect>
+                <key>scale9Paddings</key>
+                <rect>6,8,12,16</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

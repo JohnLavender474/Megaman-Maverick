@@ -28,7 +28,7 @@ object UtilMethods {
 
     fun amountIsTrue(amount: Int, vararg conditions: Boolean) = conditions.count { it } == amount
 
-    fun getRandomBool() = getRandom(0, 1) == 1
+    fun getRandomBool() = random.nextBoolean()
 
     fun getRandom(min: Int, max: Int) = random.nextInt(max + 1 - min) + min
 

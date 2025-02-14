@@ -122,7 +122,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 Direction.LEFT -> impulse.set(swimVel, 0f)
                 Direction.RIGHT -> impulse.set(-swimVel, 0f)
             }.scl(ConstVals.PPM.toFloat())
-            if (has(MegaEnhancement.JUMP_BOOST)) impulse.scl(MegaEnhancement.JUMP_BOOST_SCALAR)
+            if (hasEnhancement(MegaEnhancement.JUMP_BOOST)) impulse.scl(MegaEnhancement.JUMP_BOOST_SCALAR)
             body.physics.velocity.add(impulse)
             // add instead of set because when Megaman jumps, he's grounded, but when he swims, the applied gravity
             // should weigh down his swimming impulse
@@ -169,7 +169,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 Direction.LEFT, Direction.RIGHT -> ConstVals.PPM * when {
                     isBehaviorActive(BehaviorType.WALL_SLIDING) -> wallJumpVel
                     isBehaviorActive(BehaviorType.RIDING_CART) -> cartJumpVel
-                    has(MegaEnhancement.JUMP_BOOST) -> jumpVel * MegaEnhancement.JUMP_BOOST_SCALAR
+                    hasEnhancement(MegaEnhancement.JUMP_BOOST) -> jumpVel * MegaEnhancement.JUMP_BOOST_SCALAR
                     else -> jumpVel
                 }
             }
@@ -177,7 +177,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 Direction.UP, Direction.DOWN -> ConstVals.PPM * when {
                     isBehaviorActive(BehaviorType.WALL_SLIDING) -> wallJumpVel
                     isBehaviorActive(BehaviorType.RIDING_CART) -> cartJumpVel
-                    has(MegaEnhancement.JUMP_BOOST) -> jumpVel * MegaEnhancement.JUMP_BOOST_SCALAR
+                    hasEnhancement(MegaEnhancement.JUMP_BOOST) -> jumpVel * MegaEnhancement.JUMP_BOOST_SCALAR
                     else -> jumpVel
                 }
 
@@ -237,7 +237,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             var impulseValue = facing.value * ConstVals.PPM * movementScalar *
                 (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_AIR_DASH_VEL else MegamanValues.AIR_DASH_VEL)
-            if (has(MegaEnhancement.AIR_DASH_BOOST)) impulseValue *= MegaEnhancement.AIR_DASH_BOOST_SCALAR
+            if (hasEnhancement(MegaEnhancement.AIR_DASH_BOOST)) impulseValue *= MegaEnhancement.AIR_DASH_BOOST_SCALAR
 
             when (direction) {
                 Direction.UP, Direction.DOWN -> impulse.x = impulseValue
@@ -363,7 +363,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 body.isSensing(BodySense.IN_WATER) -> MegamanValues.WATER_GROUND_SLIDE_VEL
                 else -> MegamanValues.GROUND_SLIDE_VEL
             }) * ConstVals.PPM * movementScalar * facing.value
-            if (has(MegaEnhancement.GROUND_SLIDE_BOOST)) impulse *= MegaEnhancement.GROUND_SLIDE_BOOST_SCALAR
+
+            if (hasEnhancement(MegaEnhancement.GROUND_SLIDE_BOOST)) impulse *= MegaEnhancement.GROUND_SLIDE_BOOST_SCALAR
 
             when (direction) {
                 Direction.UP, Direction.DOWN -> body.physics.velocity.x = impulse

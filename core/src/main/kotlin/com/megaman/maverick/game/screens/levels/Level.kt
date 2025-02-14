@@ -5,6 +5,7 @@ import com.mega.game.engine.common.objects.pairTo
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.screens.ScreenEnum
 
+// TODO: replace with LevelDefinition
 enum class Level(tmxSourceFile: String, val musicAss: MusicAsset) {
     // Boss levels
     DESERT_MAN("DesertMan_16x12.tmx", MusicAsset.MMX7_VANISHING_GUNGAROO_MUSIC),

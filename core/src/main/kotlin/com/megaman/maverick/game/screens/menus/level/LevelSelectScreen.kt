@@ -166,7 +166,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
 
         buttons.put(BACK_BUTTON_KEY, object : IMenuButton {
             override fun onSelect(delta: Float): Boolean {
-                game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
+                game.setCurrentScreen(ScreenEnum.SAVE_GAME_SCREEN.name)
                 return true
             }
 
@@ -205,24 +205,6 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
             ConstVals.VIEW_WIDTH * ConstVals.PPM,
             ConstVals.VIEW_HEIGHT * ConstVals.PPM
         )
-    }
-
-    private fun navigate(position: Position, direction: Direction): String {
-        var x = position.x
-        var y = position.y
-
-        when (direction) {
-            Direction.UP -> y += 1
-            Direction.DOWN -> y -= 1
-            Direction.LEFT -> x -= 1
-            Direction.RIGHT -> x += 1
-        }
-        if (y < 0 || y > 2) return BACK_BUTTON_KEY
-
-        if (x < 0) x = 2
-        if (x > 2) x = 0
-
-        return Position.get(x, y).name
     }
 
     private fun getMugshotPosition(position: Position, out: Vector2): Vector2 {
@@ -264,6 +246,24 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         })
     }
 
+    private fun navigate(position: Position, direction: Direction): String {
+        var x = position.x
+        var y = position.y
+
+        when (direction) {
+            Direction.UP -> y += 1
+            Direction.DOWN -> y -= 1
+            Direction.LEFT -> x -= 1
+            Direction.RIGHT -> x += 1
+        }
+        if (y < 0 || y > 2) return BACK_BUTTON_KEY
+
+        if (x < 0) x = 2
+        if (x > 2) x = 0
+
+        return Position.get(x, y).name
+    }
+
     private fun putBossMugshot(position: Position, levelDef: LevelDefinition) {
         val mugshotRegion = game.assMan.getTextureRegion(
             TextureAsset.valueOf(levelDef.mugshotAtlas!!.uppercase()).source,
@@ -271,7 +271,8 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         )
         val faceSupplier: () -> TextureRegion = {
             when {
-                game.state.levelsDefeated.contains(levelDef) -> regions[ConstKeys.BLACK]
+                // TODO: replace with more interesting "defeated" mugshot region
+                game.state.isLevelDefeated(levelDef) -> regions[ConstKeys.BLACK]
                 else -> mugshotRegion
             }
         }

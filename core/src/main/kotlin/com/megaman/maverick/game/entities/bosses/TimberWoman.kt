@@ -331,15 +331,11 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         putProperty(ConstKeys.ENTITY_KILLED_BY_DEATH_FIXTURE, false)
 
         cyclesSinceLastJump = 0
-    }
-
-    override fun isReady(delta: Float) = stateTimers[TimberWomanState.INIT].isFinished()
-
-    override fun onReady() {
-        super.onReady()
 
         body.physics.gravityOn = true
     }
+
+    override fun isReady(delta: Float) = stateTimers[TimberWomanState.INIT].isFinished()
 
     override fun onDestroy() {
         super.onDestroy()

@@ -78,32 +78,32 @@ import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.Megaman.Companion.MEGAMAN_EVENT_LISTENER_TAG
-import com.megaman.maverick.game.entities.megaman.MegamanUpgradeHandler
 import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_CONTROLLER_COMPONENT_TAG
 import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.debug.DebugWindow
-import com.megaman.maverick.game.screens.levels.Level
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen.Companion.MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG
 import com.megaman.maverick.game.screens.levels.camera.CameraManagerForRooms
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
+import com.megaman.maverick.game.screens.levels.stats.PlayerStatsHandler
 import com.megaman.maverick.game.screens.menus.ControllerSettingsScreen
 import com.megaman.maverick.game.screens.menus.MainMenuScreen
 import com.megaman.maverick.game.screens.menus.SaveGameScreen
-import com.megaman.maverick.game.screens.menus.SimpleSelectLevelScreen
 import com.megaman.maverick.game.screens.menus.level.LevelSelectScreen
 import com.megaman.maverick.game.screens.menus.temp.BossIntroScreen
 import com.megaman.maverick.game.screens.other.CreditsScreen
+import com.megaman.maverick.game.screens.other.GameOverScreen
 import com.megaman.maverick.game.screens.other.LogoScreen
-import com.megaman.maverick.game.screens.other.SimpleEndLevelScreen
 import com.megaman.maverick.game.screens.other.SimpleInitGameScreen
+import com.megaman.maverick.game.state.GameState
 import com.megaman.maverick.game.utils.AsyncFileWriter
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getMusics
@@ -142,16 +142,9 @@ class MegamanMaverickGame(
         private const val LOADING = "LOADING"
         private const val SCREENSHOT_KEY = Input.Keys.P
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(
-            TAG,
-            Megaman.TAG,
-            AbstractBoss.TAG,
-            MegaGameEntity.TAG,
-            MegaLevelScreen.TAG,
-            MegamanWeaponsHandler.TAG,
-            CameraManagerForRooms.TAG,
-            MEGAMAN_EVENT_LISTENER_TAG,
-            MEGAMAN_CONTROLLER_COMPONENT_TAG,
-            MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG
+            TAG, Megaman.TAG, GameState.TAG, AbstractBoss.TAG, AbstractEnemy.TAG, MegaLevelScreen.TAG,
+            PlayerStatsHandler.TAG, MegamanWeaponsHandler.TAG, CameraManagerForRooms.TAG, MEGAMAN_EVENT_LISTENER_TAG,
+            MEGAMAN_CONTROLLER_COMPONENT_TAG, MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG
         )
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.oneFixtureMatches(FixtureType.CONSUMER)
@@ -179,10 +172,10 @@ class MegamanMaverickGame(
     lateinit var audioMan: MegaAudioManager
 
     lateinit var engine: GameEngine
+
     lateinit var state: GameState
 
     lateinit var megaman: Megaman
-    lateinit var megamanUpgradeHandler: MegamanUpgradeHandler
 
     var paused = false
 
@@ -285,6 +278,7 @@ class MegamanMaverickGame(
             logFileWriter!!.init()
 
             GameLogger.logReceivers.add(object : LogReceiver {
+
                 override fun receive(
                     fullMessage: String,
                     time: String,
@@ -292,9 +286,7 @@ class MegamanMaverickGame(
                     tag: String,
                     message: String,
                     throwable: Throwable?
-                ) {
-                    logFileWriter!!.write(fullMessage)
-                }
+                ) = logFileWriter!!.write(fullMessage)
             })
         }
 
@@ -302,6 +294,7 @@ class MegamanMaverickGame(
             debugWindow = DebugWindow()
 
             GameLogger.logReceivers.add(object : LogReceiver {
+
                 override fun receive(
                     fullMessage: String,
                     time: String,
@@ -309,9 +302,7 @@ class MegamanMaverickGame(
                     tag: String,
                     message: String,
                     throwable: Throwable?
-                ) {
-                    debugWindow!!.log(fullMessage)
-                }
+                ) = debugWindow!!.log(fullMessage)
             })
         }
     }
@@ -327,20 +318,8 @@ class MegamanMaverickGame(
         // manually call init and set initialized to true before megaman is spawned
         megaman.init()
         megaman.initialized = true
-
-        megamanUpgradeHandler = MegamanUpgradeHandler(state, megaman)
-
-        // TODO: remove comment lines to go ahead and add enhancements to Megaman on startup
-        // megamanUpgradeHandler.add(MegaEnhancement.DAMAGE_INCREASE)
-        // megamanUpgradeHandler.add(MegaEnhancement.JUMP_BOOST)
-        // megamanUpgradeHandler.add(MegaEnhancement.GROUND_SLIDE_BOOST)
-        // megamanUpgradeHandler.add(MegaEnhancement.AIR_DASH_BOOST)
-        // megamanUpgradeHandler.add(MegaEnhancement.FASTER_BUSTER_CHARGING)
-
-        // TODO: remove comment lines to go ahead and add weapons to Megaman on startup
-        // megaman.weaponsHandler.putWeapon(MegamanWeapon.FIREBALL)
-        // megaman.weaponsHandler.putWeapon(MegamanWeapon.MOON_SCYTHE)
-        // megaman.weaponsHandler.putWeapon(MegamanWeapon.RUSH_JETPACK)
+        // add megaman as a game state listener
+        state.addListener(megaman)
 
         screens.put(
             ScreenEnum.LEVEL_SCREEN.name,
@@ -349,32 +328,15 @@ class MegamanMaverickGame(
         screens.put(ScreenEnum.LOGO_SCREEN.name, LogoScreen(this))
         screens.put(ScreenEnum.MAIN_MENU_SCREEN.name, MainMenuScreen(this))
         screens.put(ScreenEnum.SAVE_GAME_SCREEN.name, SaveGameScreen(this))
+        screens.put(ScreenEnum.GAME_OVER_SCREEN.name, GameOverScreen(this))
         screens.put(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, true))
         screens.put(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, false))
         screens.put(ScreenEnum.LEVEL_SELECT_SCREEN.name, LevelSelectScreen(this))
         screens.put(ScreenEnum.BOSS_INTRO_SCREEN.name, BossIntroScreen(this))
         screens.put(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name, SimpleInitGameScreen(this))
-        screens.put(ScreenEnum.SIMPLE_SELECT_LEVEL_SCREEN.name, SimpleSelectLevelScreen(this))
-        screens.put(ScreenEnum.SIMPLE_END_LEVEL_SUCCESSFULLY_SCREEN.name, SimpleEndLevelScreen(this))
         screens.put(ScreenEnum.CREDITS_SCREEN.name, CreditsScreen(this))
 
         setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
-
-        /*
-        if (Gdx.app.type == ApplicationType.Android || params.showScreenController)
-            screenController = ScreenController(this)
-         */
-
-        /*
-        val pixmap = Pixmap(Gdx.files.internal("sprites/frames/Megaman_v2/stand_shoot.png"));
-        println("Width: " + pixmap.width + " Height: " + pixmap.height)
-        for (x in 0 until pixmap.width) {
-            for (y in 0 until pixmap.height) {
-                val pixel = pixmap.getPixel(x, y)
-                println("Pixel at (" + x + ", " + y + "): " + Integer.toHexString(pixel))
-            }
-        }
-         */
     }
 
     override fun render() {
@@ -497,9 +459,15 @@ class MegamanMaverickGame(
         logFileWriter?.dispose()
     }
 
+    fun setCurrentLevelDef(levelDef: LevelDefinition) = putProperty("${ConstKeys.LEVEL}_${ConstKeys.DEF}", levelDef)
+
+    fun getCurrentLevelDef() = getProperty("${ConstKeys.LEVEL}_${ConstKeys.DEF}", LevelDefinition::class)!!
+
     fun saveState() {
-        val saveFile = Gdx.app.getPreferences(PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE)
         val state = this.state.toString()
+        GameLogger.debug(TAG, "saveState(): state=$state")
+
+        val saveFile = Gdx.app.getPreferences(PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE)
         saveFile.putString(ConstKeys.STATE, state)
         saveFile.flush()
     }
@@ -520,7 +488,7 @@ class MegamanMaverickGame(
 
                 return false
             } else {
-                GameLogger.debug(TAG, "loadSavedState(): loading state")
+                GameLogger.debug(TAG, "loadSavedState(): loading state: state=$state")
 
                 this.state.reset()
                 this.state.fromString(state)
@@ -671,20 +639,7 @@ class MegamanMaverickGame(
 
         setCurrentScreen(ScreenEnum.LEVEL_SCREEN.name)
 
-        putProperty("${ConstKeys.LEVEL}_${ConstKeys.DEF}", levelDef)
-    }
-
-    fun startLevelScreen(level: Level) {
-        throw IllegalStateException("Should not use this method anymore")
-        /*
-        val levelScreen = screens.get(ScreenEnum.LEVEL_SCREEN.name) as MegaLevelScreen
-
-        levelScreen.level = level
-        levelScreen.music = level.musicAss
-        levelScreen.tmxMapSource = level.tmxSourceFile
-
-        setCurrentScreen(ScreenEnum.LEVEL_SCREEN.name)
-         */
+        setCurrentLevelDef(levelDef)
     }
 
     fun getGameCamera() = viewports.get(ConstKeys.GAME).camera as RotatableCamera

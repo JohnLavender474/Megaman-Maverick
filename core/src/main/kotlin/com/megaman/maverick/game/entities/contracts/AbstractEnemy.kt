@@ -30,8 +30,8 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.explosions.Disintegration
 import com.megaman.maverick.game.entities.explosions.Explosion
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ItemsFactory
+import com.megaman.maverick.game.entities.items.HealthBulb
+import com.megaman.maverick.game.entities.items.WeaponEnergyBulb
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportEndProp
@@ -50,8 +50,8 @@ abstract class AbstractEnemy(
     companion object {
         const val TAG = "AbstractEnemy"
         const val DEFAULT_CULL_TIME = 1f
-        const val BASE_DROP_ITEM_CHANCE = 0.2f
-        const val MEGAMAN_HEALTH_INFLUENCE_FACTOR = 0.3f
+        const val BASE_DROP_ITEM_CHANCE = 20
+        const val MEGAMAN_HEALTH_INFLUENCE_FACTOR = 0.25f
     }
 
     override val damageNegotiator: IDamageNegotiator = SelfSizeDamageNegotiator(this)
@@ -73,21 +73,31 @@ abstract class AbstractEnemy(
                 disintegrate()
 
                 if (dropItemOnDeath) {
-                    val playerHealthModifier = 1f - megaman.getHealthRatio()
+                    val playerHealthModifier = 100 - (100 * megaman.getHealthRatio())
+
                     val dropChance = BASE_DROP_ITEM_CHANCE + (playerHealthModifier * MEGAMAN_HEALTH_INFLUENCE_FACTOR)
-                    val rand = getRandom(0f, 1f)
+
+                    val rand = getRandom(0, 100)
+
                     GameLogger.debug(
                         TAG,
                         "Player health modifier = $playerHealthModifier. Drop chance = $dropChance. Random: $rand"
                     )
+
                     if (rand < dropChance) {
-                        val props = props(ConstKeys.POSITION pairTo body.getCenter())
+                        val props = props(
+                            ConstKeys.POSITION pairTo body.getCenter(),
+                            ConstKeys.LARGE pairTo getRandomBool()
+                        )
+
                         val spawnHealth = getRandomBool()
-                        val entity = if (spawnHealth) {
-                            props.put(ConstKeys.LARGE, getRandomBool())
-                            EntityFactories.fetch(EntityType.ITEM, ItemsFactory.HEALTH_BULB)
-                        } else EntityFactories.fetch(EntityType.ITEM, ItemsFactory.WEAPON_ENERGY)
-                        entity?.spawn(props)
+
+                        val entity = when {
+                            spawnHealth -> MegaEntityFactory.fetch(HealthBulb::class)!!
+                            else -> MegaEntityFactory.fetch(WeaponEnergyBulb::class)!!
+                        }
+
+                        entity.spawn(props)
                     }
                 }
             }
@@ -134,13 +144,9 @@ abstract class AbstractEnemy(
 
     protected abstract fun defineSpritesComponent(): SpritesComponent
 
-    protected open fun isDamagerOwnedByMegaman(damager: IDamager) = damager is IOwnable &&
-        damager.owner == megaman && megaman.has(MegaEnhancement.DAMAGE_INCREASE)
-
     override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when {
-        isDamagerOwnedByMegaman(damager) -> MegaEnhancement.scaleDamage(
-            baseDamage, MegaEnhancement.ENEMY_DAMAGE_INCREASE_SCALAR
-        )
+        damager is IOwnable && damager.owner == megaman && megaman.hasEnhancement(MegaEnhancement.DAMAGE_INCREASE) ->
+            MegaEnhancement.scaleDamage(baseDamage, MegaEnhancement.ENEMY_DAMAGE_INCREASE_SCALAR)
 
         else -> baseDamage
     }

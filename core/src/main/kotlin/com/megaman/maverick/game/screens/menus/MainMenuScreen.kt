@@ -22,7 +22,6 @@ import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.ConstVals.UI_ARROW_BLINK_DUR
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
@@ -62,8 +61,6 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         private const val DEBUG_SHAPES = false
         private const val MAIN_MENU_TEXT_START_ROW = 6f
         private const val SETTINGS_TEXT_START_ROW = 11f
-        private const val TEXT_ROW_DECREMENT = 0.025f
-        private const val ARROW_CENTER_ROW_DECREMENT = 0.25f
         private const val SETTINGS_TRANS_DUR = 0.5f
         private val SETTINGS_TRAJ = Vector3(15f * ConstVals.PPM, 0f, 0f)
     }
@@ -81,7 +78,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
     private val fontHandles = Array<MegaFontHandle>()
     private val settingsArrows = Array<Sprite>()
 
-    private val settingsArrowBlinkTimer = Timer(UI_ARROW_BLINK_DUR)
+    private val settingsArrowBlinkTimer = Timer(ConstVals.UI_ARROW_BLINK_DUR)
     private val blinkArrows = ObjectMap<String, BlinkingArrow>()
 
     private var settingsArrowBlink = false
@@ -105,10 +102,10 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
             )
             fontHandles.add(fontHandle)
 
-            val arrowCenter = Vector2(1.5f * ConstVals.PPM, (row - ARROW_CENTER_ROW_DECREMENT) * ConstVals.PPM)
+            val arrowCenter = Vector2(1.5f * ConstVals.PPM, (row - ConstVals.ARROW_CENTER_ROW_DECREMENT) * ConstVals.PPM)
             blinkArrows.put(it.text, BlinkingArrow(game.assMan, arrowCenter))
 
-            row -= TEXT_ROW_DECREMENT * ConstVals.PPM
+            row -= ConstVals.TEXT_ROW_DECREMENT * ConstVals.PPM
         }
 
         row = SETTINGS_TEXT_START_ROW
@@ -123,10 +120,10 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
             )
             fontHandles.add(fontHandle)
 
-            val arrowCenter = Vector2(16.5f * ConstVals.PPM, (row - ARROW_CENTER_ROW_DECREMENT) * ConstVals.PPM)
+            val arrowCenter = Vector2(16.5f * ConstVals.PPM, (row - ConstVals.ARROW_CENTER_ROW_DECREMENT) * ConstVals.PPM)
             blinkArrows.put(it.text, BlinkingArrow(game.assMan, arrowCenter))
 
-            row -= TEXT_ROW_DECREMENT * ConstVals.PPM
+            row -= ConstVals.TEXT_ROW_DECREMENT * ConstVals.PPM
         }
 
         fontHandles.add(
@@ -173,7 +170,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         }
 
         val atlas = game.assMan.getTextureAtlas(TextureAsset.UI_2.source)
-        background = GameSprite(atlas.findRegion("TitleScreenBackgroundv2"))
+        background = GameSprite(atlas.findRegion("TitleScreenBackgroundv3"))
         background.setSize(ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         background.setCenter(ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f, ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f)
 

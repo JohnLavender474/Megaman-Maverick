@@ -198,12 +198,26 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
         return out
     }
+    
+    fun clearWeapons() {
+        megaman.currentWeapon = MegamanWeapon.BUSTER
+        weaponHandlers.clear()
+
+        GameLogger.debug(TAG, "clearWeapons()")
+    }
 
     fun putWeapon(weapon: MegamanWeapon) {
         val entry = createWeaponEntry(weapon)
         weaponHandlers.put(weapon, entry)
 
-        GameLogger.debug(TAG, "putWeapon(): weapon=$weapon, entry=$entry")
+        GameLogger.debug(TAG, "putWeapon(): weapon=$weapon, entry=$entry, weapons=${weaponHandlers.keys()}")
+    }
+
+    fun removeWeapon(weapon: MegamanWeapon) {
+        if (megaman.currentWeapon == weapon) megaman.currentWeapon = MegamanWeapon.BUSTER
+        weaponHandlers.remove(weapon)
+
+        GameLogger.debug(TAG, "removeWeapon(): weapon=$weapon, weapons=${weaponHandlers.keys()}")
     }
 
     private fun createWeaponEntry(weapon: MegamanWeapon) = when (weapon) {
@@ -214,7 +228,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             normalCost = { 3 },
             halfChargedCost = { 5 },
             fullyChargedCost = { 7 },
-            chargeable = { _ -> !megaman.body.isSensing(BodySense.IN_WATER) },
+            chargeable = { _ -> false /* TODO: !megaman.body.isSensing(BodySense.IN_WATER) */ },
             canFireWeapon = { _, _ -> !megaman.body.isSensing(BodySense.IN_WATER) }
         )
 
@@ -224,8 +238,12 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             halfChargedCost = { 5 },
             fullyChargedCost = { 7 },
             chargeable = chargeable@{ it ->
+                false
+                // TODO:
+                /*
                 val count = it.getSpawnedCount(MegaChargeStatus.entries)
                 return@chargeable count <= MegamanValues.MAX_MOONS_BEFORE_SHOOT_AGAIN
+                 */
             },
             canFireWeapon = canFireWeapon@{ it, _ ->
                 val count = it.getSpawnedCount(MegaChargeStatus.entries)

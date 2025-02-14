@@ -134,7 +134,7 @@ class BossIntroScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
 
     override fun render(delta: Float) {
         if (durTimer.isFinished()) {
-            game.startLevelScreen(b!!.level)
+            // TODO: game.startLevelScreen(b!!.level)
             return
         }
 

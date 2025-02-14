@@ -9,6 +9,8 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
+import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -182,7 +184,9 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         if (beamEndTimer.isFinished()) {
             GameLogger.debug(TAG, "beam end timer just finished")
 
-            game.eventsMan.submitEvent(Event(EventType.END_LEVEL))
+            val level = game.getCurrentLevelDef()
+
+            game.eventsMan.submitEvent(Event(EventType.END_LEVEL, props(ConstKeys.LEVEL pairTo level)))
         }
     }
 }

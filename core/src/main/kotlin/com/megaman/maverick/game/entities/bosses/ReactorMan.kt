@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
@@ -57,8 +58,6 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
         private const val STAND_MAX_DUR = 0.75f
         private const val STAND_MIN_DUR = 0.25f
-
-        private const val DANCE_DUR = 0.4f
 
         private const val RUN_DUR = 0.5f
         private const val RUN_MIN_SPEED = 8f
@@ -125,12 +124,21 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
         currentState = ReactorManState.STAND
         facing = if (megaman.body.getX() <= body.getX()) Facing.LEFT else Facing.RIGHT
+
+        body.physics.gravityOn = true
     }
 
     override fun isReady(delta: Float) = body.isSensing(BodySense.FEET_ON_GROUND)
 
+    override fun onReady() {
+        GameLogger.debug(TAG, "onReady()")
+        super.onReady()
+    }
+
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+
         projectile?.destroy()
         projectile = null
     }

@@ -9,10 +9,10 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.events.EventType
 
-class HealthBulb(game: MegamanMaverickGame) : AbstractEnergyItem(game) {
+class WeaponEnergyBulb(game: MegamanMaverickGame): AbstractEnergyItem(game) {
 
     companion object {
-        const val TAG = "HealthBulb"
+        const val TAG = "WeaponEnergyBulb"
     }
 
     override fun contactWithPlayer(megaman: Megaman) {
@@ -22,7 +22,7 @@ class HealthBulb(game: MegamanMaverickGame) : AbstractEnergyItem(game) {
 
         game.eventsMan.submitEvent(
             Event(
-                EventType.ADD_PLAYER_HEALTH, props(ConstKeys.VALUE pairTo if (large) LARGE_AMOUNT else SMALL_AMOUNT)
+                EventType.ADD_WEAPON_ENERGY, props(ConstKeys.VALUE pairTo if (large) LARGE_AMOUNT else SMALL_AMOUNT)
             )
         )
     }

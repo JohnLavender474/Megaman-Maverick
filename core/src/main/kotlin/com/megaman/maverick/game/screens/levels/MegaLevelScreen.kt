@@ -107,7 +107,8 @@ class MegaLevelScreen(
         EventType.PLAYER_DONE_DYIN,
 
         EventType.ADD_PLAYER_HEALTH,
-        EventType.ADD_HEART_TANK,
+        EventType.ADD_WEAPON_ENERGY,
+        EventType.ATTAIN_HEART_TANK,
 
         EventType.NEXT_ROOM_REQ,
         EventType.GATE_INIT_OPENING,
@@ -145,7 +146,8 @@ class MegaLevelScreen(
 
 
     var music: MusicAsset? = null
-    var screenOnCompletion: ScreenEnum? = null
+
+    lateinit var screenOnCompletion: (MegamanMaverickGame) -> ScreenEnum
 
     private lateinit var spawnsMan: SpawnsManager
     private lateinit var playerSpawnsMan: PlayerSpawnsManager
@@ -307,8 +309,11 @@ class MegaLevelScreen(
     }
 
     override fun show() {
+        // TODO: should replace EntityFactories with MegaEntityFactory
         EntityFactories.init()
+
         if (!initialized) init()
+
         super.show()
 
         eventsMan.addListener(this)
@@ -418,6 +423,8 @@ class MegaLevelScreen(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Player just died --> init death handler"
                 )
 
+                megaman.removeOneLife()
+
                 audioMan.unsetMusic()
                 audioMan.stopAllLoopingSounds()
 
@@ -431,8 +438,19 @@ class MegaLevelScreen(
 
                 music?.let { audioMan.playMusic(it, true) }
 
+                if (megaman.isAtMinLives()) {
+                    game.setCurrentScreen(ScreenEnum.GAME_OVER_SCREEN.name)
+                    megaman.resetLives()
+                    return
+                }
+
                 playerSpawnEventHandler.init()
                 playerDeathEventHandler.setToEnd()
+            }
+
+            EventType.ADD_WEAPON_ENERGY -> {
+                val ammo = event.getProperty(ConstKeys.VALUE, Int::class)!!
+                playerStatsHandler.addWeaponEnergy(ammo)
             }
 
             EventType.ADD_PLAYER_HEALTH -> {
@@ -443,7 +461,7 @@ class MegaLevelScreen(
                 }
             }
 
-            EventType.ADD_HEART_TANK -> {
+            EventType.ATTAIN_HEART_TANK -> {
                 val heartTank = event.properties.get(ConstKeys.VALUE) as MegaHeartTank
                 playerStatsHandler.attain(heartTank)
             }
@@ -501,6 +519,12 @@ class MegaLevelScreen(
             EventType.ENTER_BOSS_ROOM -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Enter boss room")
 
+                val levelDef = game.getCurrentLevelDef()
+                if (game.state.isLevelDefeated(levelDef)) {
+                    eventsMan.submitEvent(Event(EventType.VICTORY_EVENT))
+                    return
+                }
+
                 val bossRoom = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!
                 val bossMapObject = bossRoom.properties.get(ConstKeys.OBJECT, RectangleMapObject::class.java)
                 val bossName = bossMapObject.name
@@ -514,7 +538,7 @@ class MegaLevelScreen(
 
             EventType.BOSS_READY -> {
                 val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
-                if (boss.mini) game.eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN))
+                if (boss.mini) eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN))
                 else {
                     val type = event.getOrDefaultProperty(
                         ConstKeys.HEALTH_FILL_TYPE,
@@ -529,7 +553,7 @@ class MegaLevelScreen(
                         else -> null
                     }
                     val runOnFinished = {
-                        game.eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN))
+                        eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN))
                         if (type == HealthFillType.BIT_BY_BIT) game.audioMan.playMusic()
                     }
                     bossHealthHandler.set(boss, type, runOnFirstUpdate, runOnFinished)
@@ -611,10 +635,11 @@ class MegaLevelScreen(
 
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
 
-                val nextScreen = screenOnCompletion
-                    ?: throw IllegalStateException("Level must have a defined screen on completion value")
-
+                val nextScreen = screenOnCompletion.invoke(game)
                 game.setCurrentScreen(nextScreen.name)
+
+                val level = game.getCurrentLevelDef()
+                game.state.addLevelDefeated(level)
             }
 
             EventType.EDIT_TILED_MAP -> {
@@ -840,7 +865,7 @@ class MegaLevelScreen(
         audioMan.unsetMusic()
 
         game.putProperty(ConstKeys.ROOM_TRANSITION, false)
-        game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
+        eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
     }
 
     override fun dispose() {

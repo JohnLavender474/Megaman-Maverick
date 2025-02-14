@@ -19,7 +19,6 @@ abstract class GameEntity(
     }
 
     override var initialized = false
-
     override var spawned = false
 
     override fun init() {}
