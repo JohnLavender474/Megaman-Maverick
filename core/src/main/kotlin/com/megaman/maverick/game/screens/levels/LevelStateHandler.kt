@@ -19,7 +19,6 @@ class LevelStateHandler(private val game: MegamanMaverickGame) {
         }
 
         game.audioMan.pauseAllSound()
-        game.audioMan.pauseMusic()
         game.audioMan.playSound(SoundAsset.PAUSE_SOUND, false)
     }
 
@@ -27,7 +26,6 @@ class LevelStateHandler(private val game: MegamanMaverickGame) {
         systemsOnPause.forEach { it.key.on = it.value }
 
         game.audioMan.resumeAllSound()
-        game.audioMan.playMusic()
         game.audioMan.playSound(SoundAsset.PAUSE_SOUND, false)
     }
 }

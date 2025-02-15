@@ -869,15 +869,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         disposables.clear()
     }
 
-    override fun pause() {
-        audioMan.pauseMusic()
-        levelStateHandler.pause()
-    }
+    override fun pause() = levelStateHandler.pause()
 
-    override fun resume() {
-        audioMan.playMusic()
-        levelStateHandler.resume()
-    }
+    override fun resume() = levelStateHandler.resume()
 
     override fun resize(width: Int, height: Int) =
         backgrounds.forEach { background -> background.updateViewportSize(width, height) }
