@@ -109,7 +109,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
     override fun update(delta: Float) = weaponHandlers.values().forEach { entry -> entry.update(delta) }
 
-    fun getSpawnPosition(): Vector2 {
+    fun getSpawnPosition(weapon: MegamanWeapon): Vector2 {
         /*
         val rawKey = (megaman.animators[MEGAMAN_SPRITE_KEY] as Animator).currentKey
         if (rawKey != null) {
@@ -348,7 +348,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
         when (weapon) {
             MegamanWeapon.BUSTER, MegamanWeapon.RUSH_JETPACK -> fireMegaBuster(stat)
-            MegamanWeapon.FIREBALL -> fireFlameToss(stat)
+            MegamanWeapon.FIREBALL -> fireball(stat)
             MegamanWeapon.MOON_SCYTHE -> fireMoonScythes(stat)
         }
 
@@ -376,8 +376,8 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         val props = props(
             ConstKeys.OWNER pairTo megaman,
             ConstKeys.TRAJECTORY pairTo trajectory,
-            ConstKeys.POSITION pairTo getSpawnPosition(),
             ConstKeys.DIRECTION pairTo megaman.direction,
+            ConstKeys.POSITION pairTo getSpawnPosition(MegamanWeapon.BUSTER)
         )
 
         when (stat) {
@@ -404,12 +404,12 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         }
     }
 
-    private fun fireFlameToss(stat: MegaChargeStatus) {
+    private fun fireball(stat: MegaChargeStatus) {
         GameLogger.debug(TAG, "fireFlameToss(): stat=$stat")
 
         val props = props(
             ConstKeys.OWNER pairTo megaman,
-            ConstKeys.POSITION pairTo getSpawnPosition()
+            ConstKeys.POSITION pairTo getSpawnPosition(MegamanWeapon.FIREBALL)
         )
 
         // TODO: spawned entity should change based on stat
@@ -464,8 +464,8 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                         ConstKeys.FADE pairTo false,
                         ConstKeys.OWNER pairTo megaman,
                         ConstKeys.TRAJECTORY pairTo trajectory,
-                        ConstKeys.POSITION pairTo getSpawnPosition(),
                         ConstKeys.ROTATION pairTo trajectory.angleDeg(),
+                        ConstKeys.POSITION pairTo getSpawnPosition(MegamanWeapon.MOON_SCYTHE),
                         "${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}" pairTo megaman.movementScalar
                     )
                 )

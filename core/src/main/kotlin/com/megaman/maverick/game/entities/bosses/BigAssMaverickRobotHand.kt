@@ -201,7 +201,13 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
                 .scl(1f / ConstVals.FIXED_TIME_STEP)
         }
 
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
+        addComponent(
+            DrawableShapesComponent(
+                prodShapeSuppliers = debugShapes,
+                /* TODO: debugShapeSuppliers = debugShapes, */
+                debug = true
+            )
+        )
 
         val fixtureShape = GameCircle().setRadius(FIXTURE_RADIUS * ConstVals.PPM / 2f)
 

@@ -129,6 +129,16 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
         fontHandles.add(
             MegaFontHandle(
+                MegamanMaverickGame.VERSION,
+                positionX = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f,
+                positionY = 8.5f * ConstVals.PPM,
+                centerX = true,
+                centerY = true
+            )
+        )
+
+        fontHandles.add(
+            MegaFontHandle(
                 "OLDLAVYGENES 20XX",
                 positionX = 5f * ConstVals.PPM,
                 positionY = 0.5f * ConstVals.PPM,

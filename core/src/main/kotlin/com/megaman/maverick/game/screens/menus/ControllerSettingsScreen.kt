@@ -137,8 +137,8 @@ class ControllerSettingsScreen(
 
         hintFontHandle = MegaFontHandle(
             {
-                "Press any ${if (isKeyboardSettings) "keyboard key" else "controller button"} to set \na new code for" +
-                    " the button: \n$selectedMegaButton"
+                "Press any ${if (isKeyboardSettings) "keyboard key" else "controller button"}\n" +
+                    "to set a new code for\nthe button: $selectedMegaButton"
             },
             positionX =
                 ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f,

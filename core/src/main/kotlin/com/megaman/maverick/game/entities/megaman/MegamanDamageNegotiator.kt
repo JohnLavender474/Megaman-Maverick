@@ -25,8 +25,8 @@ class MegamanDamageNegotiator(private val megaman: Megaman) : IDamageNegotiator 
         private val custom = objectMapOf<String, DamageNegotiation>(
             BigAssMaverickRobotHand.TAG pairTo dmgNeg(1),
             BigAssMaverickRobot.TAG pairTo dmgNeg(1),
-            PropellerPlatform.TAG pairTo dmgNeg(2),
-            RocketPlatform.TAG pairTo dmgNeg(2),
+            PropellerPlatform.TAG pairTo dmgNeg(1),
+            RocketPlatform.TAG pairTo dmgNeg(1),
             LaserBeamer.TAG pairTo dmgNeg(3)
         )
 
@@ -44,9 +44,9 @@ class MegamanDamageNegotiator(private val megaman: Megaman) : IDamageNegotiator 
             custom.containsKey(tag) -> custom[tag].get(damager)
 
             entity is ISizable -> when (entity.size) {
-                Size.LARGE -> 4
+                Size.LARGE -> 5
                 Size.MEDIUM -> 3
-                Size.SMALL -> 2
+                Size.SMALL -> 1
             }
 
             entity is IHazard -> entity.getDamageToMegaman()

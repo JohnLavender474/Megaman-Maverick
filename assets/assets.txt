@@ -2285,6 +2285,7 @@ sprites/piskel/SpikeBall.piskel
 sprites/piskel/QuickSand_v2_Left.piskel
 sprites/piskel/Popup Canon.piskel
 sprites/piskel/InfernoBKG.piskel
+sprites/piskel/LevelPauseMenu.piskel
 sprites/piskel/Megaman_RUSH_JET.piskel
 sprites/piskel/InfernoManFace.piskel
 sprites/piskel/ColdGust.piskel

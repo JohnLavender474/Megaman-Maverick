@@ -232,7 +232,14 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         headDamageable.drawingColor = Color.PURPLE
         debugShapes.add { headDamageable }
 
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
+        // TODO
+        addComponent(
+            DrawableShapesComponent(
+                prodShapeSuppliers = debugShapes,
+                /* TODO: debugShapeSuppliers = debugShapes*/
+                debug = true
+            )
+        )
 
         return BodyComponentCreator.create(this, body)
     }

@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -25,7 +26,7 @@ import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 
-class BigAssMaverickRobotOrb(game: MegamanMaverickGame): AbstractProjectile(game), IAnimatedEntity {
+class BigAssMaverickRobotOrb(game: MegamanMaverickGame) : AbstractProjectile(game, size = Size.SMALL), IAnimatedEntity {
 
     companion object {
         const val TAG = "BigAssMaverickRobotOrb"
