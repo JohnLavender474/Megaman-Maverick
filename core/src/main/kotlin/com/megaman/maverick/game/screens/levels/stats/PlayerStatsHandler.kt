@@ -94,7 +94,14 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
     }
 
     fun attain(heartTank: MegaHeartTank) {
-        if (megaman.hasHeartTank(heartTank) || megaman.getMaxHealth() == ConstVals.MAX_HEALTH) {
+        if (megaman.hasHeartTank(heartTank)) {
+            GameLogger.error(TAG, "attain(): already has heart tank: $heartTank")
+            audioMan.playSound(SoundAsset.ERROR_SOUND, false)
+            return
+        }
+
+        if (megaman.getMaxHealth() >= ConstVals.MAX_HEALTH) {
+            GameLogger.error(TAG, "attain(): cannot attain heart because max health already reached: $heartTank")
             audioMan.playSound(SoundAsset.ERROR_SOUND, false)
             return
         }

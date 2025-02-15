@@ -38,7 +38,7 @@ import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class IceskatePeng(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class IceSkaterPeng(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "IceSkaterPeng"
@@ -242,7 +242,7 @@ class IceskatePeng(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
                 .applyToAnimations { animations ->
                     IceSkaterPengState.entries.forEach { state ->
                         val key = state.name.lowercase()
-                        animations.put(key, Animation(regions[key], 2, 1, 0.1f, true))
+                        animations.put(key, Animation(regions[key], 1, 2, 0.1f, true))
                     }
                 }
                 .build()

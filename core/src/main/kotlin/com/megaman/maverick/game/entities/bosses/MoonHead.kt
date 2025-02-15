@@ -76,7 +76,7 @@ class MoonHead(game: MegamanMaverickGame) : AbstractBoss(game, dmgDuration = DAM
 
     private enum class MoonHeadState { DELAY, DARK, AWAKEN, SHOOT, MOVE, CRUMBLE }
 
-    private val loop = Loop(MoonHeadState.entries.toTypedArray().toGdxArray())
+    private val loop = Loop(MoonHeadState.entries.toGdxArray())
 
     private val timers = objectMapOf(
         "delay" pairTo Timer(DELAY),

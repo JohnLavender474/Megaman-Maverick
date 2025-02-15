@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.screens.menus
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
@@ -102,7 +101,8 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
             )
             fontHandles.add(fontHandle)
 
-            val arrowCenter = Vector2(1.5f * ConstVals.PPM, (row - ConstVals.ARROW_CENTER_ROW_DECREMENT) * ConstVals.PPM)
+            val arrowCenter =
+                Vector2(1.5f * ConstVals.PPM, (row - ConstVals.ARROW_CENTER_ROW_DECREMENT) * ConstVals.PPM)
             blinkArrows.put(it.text, BlinkingArrow(game.assMan, arrowCenter))
 
             row -= ConstVals.TEXT_ROW_DECREMENT * ConstVals.PPM
@@ -120,7 +120,8 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
             )
             fontHandles.add(fontHandle)
 
-            val arrowCenter = Vector2(16.5f * ConstVals.PPM, (row - ConstVals.ARROW_CENTER_ROW_DECREMENT) * ConstVals.PPM)
+            val arrowCenter =
+                Vector2(16.5f * ConstVals.PPM, (row - ConstVals.ARROW_CENTER_ROW_DECREMENT) * ConstVals.PPM)
             blinkArrows.put(it.text, BlinkingArrow(game.assMan, arrowCenter))
 
             row -= ConstVals.TEXT_ROW_DECREMENT * ConstVals.PPM
@@ -177,17 +178,17 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         buttons.put(
             MainScreenButton.START_NEW_GAME.text,
             object : IMenuButton {
+
                 override fun onSelect(delta: Float): Boolean {
                     game.state.reset()
                     // TODO: should start intro cutscene screen
                     game.startLevelScreen(LevelDefinition.INTRO_STAGE)
-                    // game.setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name)
                     return true
                 }
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                     Direction.UP -> MainScreenButton.EXIT.text
-                    Direction.DOWN -> MainScreenButton.LOAD_SAVE_FILE.text // TODO: MainScreenButton.LOAD_PASSWORD.text
+                    Direction.DOWN -> MainScreenButton.LOAD_SAVE_FILE.text
                     else -> currentButtonKey
                 }
             })
@@ -195,11 +196,18 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         buttons.put(
             MainScreenButton.LOAD_SAVE_FILE.text,
             object : IMenuButton {
+
                 override fun onSelect(delta: Float): Boolean {
                     if (game.hasSavedState() && game.loadSavedState()) {
                         GameLogger.debug(TAG, "Loaded saved state")
-                        game.setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name)
+                        when {
+                            game.state.isLevelDefeated(LevelDefinition.INTRO_STAGE) ->
+                                game.setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name)
+
+                            else -> game.startLevelScreen(LevelDefinition.INTRO_STAGE)
+                        }
                         game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
+
                         return true
                     } else {
                         GameLogger.error(TAG, "Failed to load saved state")
@@ -210,7 +218,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                 }
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                    Direction.UP -> MainScreenButton.START_NEW_GAME.text // TODO: MainScreenButton.LOAD_PASSWORD.text
+                    Direction.UP -> MainScreenButton.START_NEW_GAME.text
                     Direction.DOWN -> MainScreenButton.SETTINGS.text
                     else -> currentButtonKey
                 }
@@ -220,6 +228,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         buttons.put(
             MainScreenButton.SETTINGS.text,
             object : IMenuButton {
+
                 override fun onSelect(delta: Float): Boolean {
                     screenSlide.init()
                     currentButtonKey = MainScreenSettingsButton.BACK.text
@@ -236,6 +245,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         buttons.put(
             MainScreenButton.CREDITS.text,
             object : IMenuButton {
+
                 override fun onSelect(delta: Float): Boolean {
                     game.setCurrentScreen(ScreenEnum.CREDITS_SCREEN.name)
                     return true
@@ -251,6 +261,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         buttons.put(
             MainScreenButton.EXIT.text,
             object : IMenuButton {
+
                 override fun onSelect(delta: Float): Boolean {
                     Gdx.app.exit()
                     return true
@@ -266,6 +277,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         buttons.put(
             MainScreenSettingsButton.BACK.text,
             object : IMenuButton {
+
                 override fun onSelect(delta: Float): Boolean {
                     screenSlide.init()
                     currentButtonKey = MainScreenButton.SETTINGS.text
@@ -282,6 +294,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         buttons.put(
             MainScreenSettingsButton.MUSIC_VOLUME.text,
             object : IMenuButton {
+
                 override fun onSelect(delta: Float) = false
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
@@ -307,6 +320,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         buttons.put(
             MainScreenSettingsButton.EFFECTS_VOLUME.text,
             object : IMenuButton {
+
                 override fun onSelect(delta: Float) = false
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
@@ -332,6 +346,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         buttons.put(
             MainScreenSettingsButton.KEYBOARD_SETTINGS.text,
             object : IMenuButton {
+
                 override fun onSelect(delta: Float): Boolean {
                     game.setCurrentScreen(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name)
                     return true
@@ -347,6 +362,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         buttons.put(
             MainScreenSettingsButton.CONTROLLER_SETTINGS.text,
             object : IMenuButton {
+
                 override fun onSelect(delta: Float): Boolean {
                     if (!ControllerUtils.isControllerConnected()) {
                         GameLogger.debug(TAG, "no controller connected")
@@ -382,21 +398,16 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
     override fun render(delta: Float) {
         super.render(delta)
 
-        when {
-            Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) ->
-                game.setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
+        if (!game.paused) {
+            screenSlide.update(delta)
+            if (screenSlide.justFinished) screenSlide.reverse()
 
-            !game.paused -> {
-                screenSlide.update(delta)
-                if (screenSlide.justFinished) screenSlide.reverse()
+            blinkArrows.get(currentButtonKey).update(delta)
 
-                blinkArrows.get(currentButtonKey).update(delta)
-
-                settingsArrowBlinkTimer.update(delta)
-                if (settingsArrowBlinkTimer.isFinished()) {
-                    settingsArrowBlink = !settingsArrowBlink
-                    settingsArrowBlinkTimer.reset()
-                }
+            settingsArrowBlinkTimer.update(delta)
+            if (settingsArrowBlinkTimer.isFinished()) {
+                settingsArrowBlink = !settingsArrowBlink
+                settingsArrowBlinkTimer.reset()
             }
         }
     }

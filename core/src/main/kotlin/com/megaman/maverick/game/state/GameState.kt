@@ -133,17 +133,16 @@ class GameState : Resettable {
         builder.append(enhancements)
 
         val s = builder.toString()
-
         GameLogger.debug(TAG, "toString(): s=$s")
-
         return s
     }
 
     fun fromString(s: String) {
         GameLogger.debug(TAG, "fromString(): s=$s")
 
-        val lines = s.split(";").map { it.split(",") }
+        val lines = s.split(";").map { it.split(",") }.toMutableList()
         if (lines.size != EXPECTED_STRING_LINES) throw IllegalArgumentException("Invalid game state string: $s")
+        for (i in 0 until lines.size) lines[i] = lines[i].filter { !it.isBlank() }
 
         if (!lines[0].isEmpty()) lines[0].forEach {
             try {
@@ -154,7 +153,7 @@ class GameState : Resettable {
             }
         }
 
-        if (!lines[1].isEmpty()) lines[1].forEach{
+        if (!lines[1].isEmpty()) lines[1].forEach {
             try {
                 val heartTank = MegaHeartTank.valueOf(it.uppercase())
                 addHeartTank(heartTank)

@@ -1218,6 +1218,7 @@ sprites/frames/Bosses1/GlacierMan/fall.png
 sprites/frames/Bosses1/GlacierMan/fall_shoot_up.png
 sprites/frames/Bosses1/GlacierMan/duck.png
 sprites/frames/Bosses1/GlacierMan/stand_shoot.png
+sprites/frames/Bosses1/GlacierMan/fired.png
 sprites/frames/Bosses1/GlacierMan/stand.png
 sprites/frames/Bosses1/GlacierMan/jump.png
 sprites/frames/Bosses1/GlacierMan/sled.png
@@ -2805,6 +2806,7 @@ music/MMX5_DarkDizzy.txt
 music/MMX6_BossFight.txt
 music/MMZ_EnemyHall.txt
 music/MMX7_BossFight.mp3
+music/MM3_GameOver.mp3
 music/MMX_Sigma_2_Stage.mp3
 music/MMX_ChillPenguin_Famitard.mp3
 music/MMX_Sigma1st.mp3

@@ -79,7 +79,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
             val set = OrderedSet<MegamanWeapon>()
 
             when (levelDef) {
-                LevelDefinition.MOON_MAN -> set.add(MegamanWeapon.MOON_SCYTHE)
+                LevelDefinition.MOON_MAN -> set.addAll(MegamanWeapon.MOON_SCYTHE, MegamanWeapon.RUSH_JETPACK)
                 LevelDefinition.INFERNO_MAN -> set.add(MegamanWeapon.FIREBALL)
                 else -> {}
             }

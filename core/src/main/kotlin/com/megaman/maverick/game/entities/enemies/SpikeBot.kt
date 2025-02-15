@@ -315,8 +315,8 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         gdxArrayOf(
             "jump" pairTo AnimationDef(),
             "stand" pairTo AnimationDef(),
-            "walk" pairTo AnimationDef(2, 2, 0.1f),
-            "shoot" pairTo AnimationDef(5, duration = 0.1f)
+            "walk" pairTo AnimationDef(2, 2, 0.1f, true),
+            "shoot" pairTo AnimationDef(1, 5, 0.1f, false)
         ).forEach { (key, def) ->
             SpikeBotType.entries.forEach { type ->
                 val amendedKey = "${key}${type.append}"

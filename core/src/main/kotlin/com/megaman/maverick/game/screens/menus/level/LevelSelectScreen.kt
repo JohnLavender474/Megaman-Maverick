@@ -292,7 +292,6 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
 
             override fun onSelect(delta: Float): Boolean {
                 game.audioMan.playSound(SoundAsset.BEAM_OUT_SOUND, false)
-
                 game.audioMan.stopMusic(null)
 
                 selectedLevelDef = levelDef
@@ -318,6 +317,8 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
 
                 moonPieces.setPosition(x, y)
                 moonPieces.setSize(width, height)
+
+                moonPieces.hidden = game.state.isLevelDefeated(levelDef)
             }
         }
     }

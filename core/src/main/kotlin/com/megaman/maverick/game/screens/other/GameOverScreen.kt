@@ -7,6 +7,7 @@ import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.screens.BaseScreen
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -52,12 +53,15 @@ class GameOverScreen(private val game: MegamanMaverickGame): BaseScreen(), Initi
     }
 
     override fun show() {
+        if (!initialized) init()
         super.show()
 
         game.getUiCamera().setToDefaultPosition()
 
         pressStartBlinkTimer.reset()
         pressStartBlink = true
+
+        game.audioMan.playMusic(MusicAsset.MM3_GAME_OVER_MUSIC, true)
     }
 
     override fun render(delta: Float) {
@@ -82,5 +86,7 @@ class GameOverScreen(private val game: MegamanMaverickGame): BaseScreen(), Initi
 
         fontHandles[GAME_OVER].draw(drawer)
         if (pressStartBlink) fontHandles[PRESS_START].draw(drawer)
+
+        batch.end()
     }
 }

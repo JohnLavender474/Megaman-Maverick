@@ -7,6 +7,7 @@ const val MUSIC_ASSET_PREFIX = "music/"
 
 enum class MusicAsset(src: String) : IAsset {
     MM6_CAPCOM_LOGO_MUSIC("MM6_CapcomLogo.mp3"),
+    MM3_GAME_OVER_MUSIC("MM3_GameOver.mp3"),
     MMX6_SIGMA_2_BATTLE_MUSIC("MMX6_Sigma.mp3"),
     MM6_WILY_BATTLE_MUSIC("MM6_WilyBattle.mp3"),
     MM8_FROST_MAN_MUSIC("MM8_FrostMan.mp3"),

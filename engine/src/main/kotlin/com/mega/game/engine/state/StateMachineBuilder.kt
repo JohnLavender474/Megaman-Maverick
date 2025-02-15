@@ -22,6 +22,13 @@ open class StateMachineBuilder<T> {
         return this
     }
 
+    fun transitionForAll(toState: String, condition: () -> Boolean): StateMachineBuilder<T> {
+        stateDefinitions.keys().filter { key -> key != toState }.forEach { fromState ->
+            transitionDefinitions.add(Triple(fromState, toState, condition))
+        }
+        return this
+    }
+
     fun transition(fromState: String, toState: String, condition: () -> Boolean): StateMachineBuilder<T> {
         transitionDefinitions.add(Triple(fromState, toState, condition))
         return this

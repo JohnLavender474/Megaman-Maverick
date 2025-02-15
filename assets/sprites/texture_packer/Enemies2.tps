@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.5.0</string>
+        <string>7.6.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -64,7 +64,7 @@
             </struct>
         </struct>
         <key>shapePadding</key>
-        <uint>0</uint>
+        <uint>2</uint>
         <key>jpgQuality</key>
         <uint>80</uint>
         <key>pngOptimizationLevel</key>
@@ -74,9 +74,9 @@
         <key>textureSubPath</key>
         <string></string>
         <key>textureFormat</key>
-        <enum type="SettingsBase::TextureFormat">png</enum>
+        <enum type="SettingsBase::TextureFormat">png8</enum>
         <key>borderPadding</key>
-        <uint>0</uint>
+        <uint>2</uint>
         <key>maxTextureSize</key>
         <QSize>
             <key>width</key>
@@ -391,6 +391,7 @@
             <key type="filename">../frames/Enemies2/BombPotton.png</key>
             <key type="filename">../frames/Enemies2/CactusLauncher/fire.png</key>
             <key type="filename">../frames/Enemies2/CactusLauncher/reload.png</key>
+            <key type="filename">../frames/Enemies2/CrystalSpiky/blink.png</key>
             <key type="filename">../frames/Enemies2/TorikoPlundge/idle.png</key>
             <key type="filename">../frames/Enemies2/TorikoPlundge/plunge2.png</key>
             <key type="filename">../frames/Enemies2/TorikoPlundge/plunge3.png</key>
@@ -409,6 +410,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Enemies2/BombChute/turn.png</key>
+            <key type="filename">../frames/Enemies2/CrystalSpiky/shoot.png</key>
             <key type="filename">../frames/Enemies2/RatRobot/run.png</key>
             <key type="filename">../frames/Enemies2/StagedMoonLandingFlag/fall.png</key>
             <key type="filename">../frames/Enemies2/StagedMoonLandingFlag/rise.png</key>

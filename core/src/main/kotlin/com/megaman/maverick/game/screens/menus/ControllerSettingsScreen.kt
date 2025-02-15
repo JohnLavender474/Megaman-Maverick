@@ -31,9 +31,9 @@ class ControllerSettingsScreen(
     game: MegamanMaverickGame,
     private val controllerButtons: ControllerButtons,
     var isKeyboardSettings: Boolean,
-    var backAction: () -> Boolean = {
+    var backAction: () -> Boolean = backAction@{
         game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
-        true
+        return@backAction true
     }
 ) : MegaMenuScreen(game, BACK), Initializable {
 
@@ -58,11 +58,14 @@ class ControllerSettingsScreen(
     private var oldInputProcessor: InputProcessor? = null
     private var initialized = false
 
+    private var actionOnNextUpdate: (() -> Unit)? = null
+
     override fun init() {
         if (initialized) return
         initialized = true
 
         keyboardListener = object : InputAdapter() {
+
             override fun keyDown(keycode: Int): Boolean {
                 if (selectedMegaButton == null) return true
 
@@ -91,11 +94,13 @@ class ControllerSettingsScreen(
                 selectedMegaButton = null
 
                 delayOnChangeTimer.reset()
+
                 return true
             }
         }
 
         buttonListener = object : ControllerAdapter() {
+
             override fun buttonDown(controller: Controller, buttonIndex: Int): Boolean {
                 if (selectedMegaButton == null) return true
 
@@ -125,7 +130,8 @@ class ControllerSettingsScreen(
                 selectedMegaButton = null
 
                 delayOnChangeTimer.reset()
-                return super.buttonUp(controller, buttonIndex)
+
+                return true
             }
         }
 
@@ -171,6 +177,7 @@ class ControllerSettingsScreen(
         fontHandles.add(resetToDefaultsFontHandle)
 
         buttons.put(RESET_TO_DEFAULTS, object : IMenuButton {
+
             override fun onSelect(delta: Float): Boolean {
                 ControllerUtils.resetToDefaults(controllerButtons, isKeyboardSettings)
                 game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
@@ -201,15 +208,18 @@ class ControllerSettingsScreen(
             fontHandles.add(buttonFontHandle)
 
             buttons.put(b.name, object : IMenuButton {
+
                 override fun onSelect(delta: Float): Boolean {
                     selectedMegaButton = b
+
                     if (isKeyboardSettings) {
                         oldInputProcessor = Gdx.input.inputProcessor
                         Gdx.input.inputProcessor = keyboardListener
                     } else {
                         if (controller == null) return false
-                        controller!!.addListener(buttonListener)
+                        actionOnNextUpdate = { controller!!.addListener(buttonListener) }
                     }
+
                     return true
                 }
 
@@ -250,17 +260,21 @@ class ControllerSettingsScreen(
             return
         }
 
+        if (actionOnNextUpdate != null) {
+            actionOnNextUpdate!!.invoke()
+            actionOnNextUpdate = null
+        }
+
         super.render(delta)
 
         delayOnChangeTimer.update(delta)
         if (delayOnChangeTimer.isJustFinished()) undoSelection()
 
-        val arrowY =
-            when (currentButtonKey) {
-                BACK -> 10.6f
-                RESET_TO_DEFAULTS -> 9.6f
-                else -> 9.6f - (MegaControllerButton.valueOf(currentButtonKey!!).ordinal + 1)
-            }
+        val arrowY = when (currentButtonKey) {
+            BACK -> 10.6f
+            RESET_TO_DEFAULTS -> 9.6f
+            else -> 9.6f - (MegaControllerButton.valueOf(currentButtonKey!!).ordinal + 1)
+        }
         blinkingArrow.centerX = 2.5f * ConstVals.PPM
         blinkingArrow.centerY = arrowY * ConstVals.PPM
         blinkingArrow.update(delta)

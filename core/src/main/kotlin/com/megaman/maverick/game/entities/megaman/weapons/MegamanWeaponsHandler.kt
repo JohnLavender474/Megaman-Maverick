@@ -198,7 +198,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
         return out
     }
-    
+
     fun clearWeapons() {
         megaman.currentWeapon = MegamanWeapon.BUSTER
         weaponHandlers.clear()

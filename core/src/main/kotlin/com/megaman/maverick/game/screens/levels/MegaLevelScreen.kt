@@ -1,7 +1,5 @@
 package com.megaman.maverick.game.screens.levels
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
@@ -82,10 +80,8 @@ import com.megaman.maverick.game.utils.interfaces.IShapeDebuggable
 import com.megaman.maverick.game.utils.misc.HealthFillType
 import java.util.*
 
-class MegaLevelScreen(
-    private val game: MegamanMaverickGame,
-    private val onEscapePressed: () -> Unit = {},
-) : TiledMapLevelScreen(game.batch, TiledMapLoader(game.assMan)), Initializable, IEventListener, IShapeDebuggable,
+class MegaLevelScreen(private val game: MegamanMaverickGame) :
+    TiledMapLevelScreen(game.batch, TiledMapLoader(game.assMan)), Initializable, IEventListener, IShapeDebuggable,
     Resettable {
 
     companion object {
@@ -763,9 +759,6 @@ class MegaLevelScreen(
             GameLogger.debug(TAG, "Megaman center: ${megaman.body.getCenter()}")
         }
          */
-
-        // TODO: this should open prompt for quitting game
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) onEscapePressed.invoke()
     }
 
     override fun draw(drawer: Batch) {

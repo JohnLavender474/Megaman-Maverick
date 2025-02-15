@@ -237,6 +237,8 @@ abstract class AbstractEnergyItem(game: MegamanMaverickGame) : MegaGameEntity(ga
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
+            sprite.rotation = direction.rotation
+
             val position = DirectionPositionMapper.getInvertedPosition(direction)
             sprite.setPosition(body.getPositionPoint(position), position)
 
