@@ -12,6 +12,7 @@ enum class EventType {
 
     ADD_PLAYER_HEALTH,
     ADD_WEAPON_ENERGY,
+    ADD_CURRENCY,
     ATTAIN_HEART_TANK,
 
     BEGIN_ROOM_TRANS,

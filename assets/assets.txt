@@ -199,6 +199,7 @@ sounds/dink.mp3
 sounds/asteroid_explode.wav
 sounds/ice_shard_1.wav
 sounds/electric_saw.wav
+sounds/currency_pickup.wav
 sounds/mario_fireball.mp3
 sounds/whee.wav
 sounds/energy_fill.mp3
@@ -207,6 +208,7 @@ sounds/burst.wav
 sounds/quake.mp3
 sounds/floating_portal.wav
 sounds/whoosh.mp3
+sounds/one_up.wav
 badlogic.jpg
 logs.txt
 sprites/frames/MegamanTrailSprite/airdash.png
@@ -447,6 +449,8 @@ sprites/frames/LevelSelectScreen/selector/bottom_center.png
 sprites/frames/LevelSelectScreen/selector/top_right.png
 sprites/frames/LevelSelectScreen/selector/top_center.png
 sprites/frames/LevelSelectScreen/selector/center_left.png
+sprites/frames/Explosions1/BigAssMaverickRobotOrbExplosion/ElectricDissipate.png
+sprites/frames/Explosions1/BigAssMaverickRobotOrbExplosion/ElectricPulse.png
 sprites/frames/Explosions1/ToxicGoopSplash.png
 sprites/frames/Explosions1/AsteroidExplosion.png
 sprites/frames/Explosions1/SmokePuff.png
@@ -1351,6 +1355,8 @@ sprites/frames/Projectiles1/PreciousShot/Form.png
 sprites/frames/Projectiles1/PreciousShot/Shoot.png
 sprites/frames/Projectiles1/GreenPelletBlast/burst.png
 sprites/frames/Projectiles1/GreenPelletBlast/blast.png
+sprites/frames/Projectiles1/BigAssMaverickRobotOrb/ball.png
+sprites/frames/Projectiles1/BigAssMaverickRobotOrb/hit.png
 sprites/frames/Projectiles1/FireWall/disintegrate.png
 sprites/frames/Projectiles1/FireWall/fire.png
 sprites/frames/Projectiles1/FirePellet.png
@@ -1441,14 +1447,16 @@ sprites/frames/Megaman_v2_RushJet/run.png
 sprites/frames/Megaman_v2_RushJet/groundslide_shoot.png
 sprites/frames/Megaman_v2_RushJet/groundslide.png
 sprites/frames/Items1/HeartTank.png
+sprites/frames/Items1/Life.png
 sprites/frames/Items1/SniperJoeShield/Orange.png
 sprites/frames/Items1/SniperJoeShield/Blue.png
 sprites/frames/Items1/HealthTank.png
 sprites/frames/Items1/HealthBulb/large.png
 sprites/frames/Items1/HealthBulb/small.png
+sprites/frames/Items1/Screw/large.png
+sprites/frames/Items1/Screw/small.png
 sprites/frames/Items1/WeaponEnergyBulb/large.png
 sprites/frames/Items1/WeaponEnergyBulb/small.png
-sprites/frames/Items1/Key.png
 sprites/frames/Items1/EmptyHealthTank.png
 sprites/frames/Platforms1/SwingingPlatform/other_small_platform.png
 sprites/frames/Platforms1/SwingingPlatform/ring.png
@@ -2116,6 +2124,7 @@ sprites/piskel/MegamanMaverick_Left.piskel
 sprites/piskel/Megaman_Color_Palettes.piskel
 sprites/piskel/Lava2.piskel
 sprites/piskel/Walrus_Bot.piskel
+sprites/piskel/Life.piskel
 sprites/piskel/WallTeck.piskel
 sprites/piskel/TubeBeam.piskel
 sprites/piskel/Jetpack_Ice_Blaster_Bot_Projectile.piskel
@@ -2400,6 +2409,7 @@ sprites/piskel/CaveRocker.piskel
 sprites/piskel/CryoPellet.piskel
 sprites/piskel/Cart.piskel
 sprites/piskel/SnowheadThrower.piskel
+sprites/piskel/Screws.piskel
 tiled_maps/tsx/mm10-final-stage-tileset.tsx
 tiled_maps/tsx/Tileset1.tsx
 tiled_maps/tsx/Reactor_Man_No_Black.tsx

@@ -88,6 +88,7 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
         super.hitBlock(blockFixture, thisShape, otherShape)
 
         body.physics.velocity.setZero()
+
         hit = true
 
         val blockBounds = blockFixture.getBody().getBounds()

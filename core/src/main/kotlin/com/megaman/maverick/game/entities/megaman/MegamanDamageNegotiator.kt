@@ -44,9 +44,9 @@ class MegamanDamageNegotiator(private val megaman: Megaman) : IDamageNegotiator 
             custom.containsKey(tag) -> custom[tag].get(damager)
 
             entity is ISizable -> when (entity.size) {
-                Size.LARGE -> 5
+                Size.LARGE -> 4
                 Size.MEDIUM -> 3
-                Size.SMALL -> 1
+                Size.SMALL -> 2
             }
 
             entity is IHazard -> entity.getDamageToMegaman()

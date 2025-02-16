@@ -18,13 +18,18 @@ class Points(min: Int, max: Int, current: Int) {
     var current: Int = current
         private set
 
-    fun set(points: Int) {
+    fun set(points: Int): Int {
         current = points
         if (current < min) current = min
         if (current > max) current = max
+        return current
     }
 
-    fun translate(delta: Int) = set(current + delta)
+    fun translate(delta: Int): Boolean {
+        val old = current
+        val new = set(current + delta)
+        return old != new
+    }
 
     fun setToMax() = set(max)
 

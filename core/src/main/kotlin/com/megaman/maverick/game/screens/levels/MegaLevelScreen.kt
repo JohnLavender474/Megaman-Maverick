@@ -105,6 +105,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         EventType.ADD_PLAYER_HEALTH,
         EventType.ADD_WEAPON_ENERGY,
+        EventType.ADD_CURRENCY,
         EventType.ATTAIN_HEART_TANK,
 
         EventType.NEXT_ROOM_REQ,
@@ -461,6 +462,11 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 }
             }
 
+            EventType.ADD_CURRENCY -> {
+                val currency = event.getProperty(ConstKeys.VALUE, Int::class)!!
+                game.state.addCurrency(currency)
+            }
+
             EventType.ATTAIN_HEART_TANK -> {
                 val heartTank = event.properties.get(ConstKeys.VALUE) as MegaHeartTank
                 playerStatsHandler.attain(heartTank)
@@ -682,32 +688,16 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             GameLogger.debug(TAG, "render(): pause game")
             game.runQueue.addLast { game.pause() }
         }
-        // TODO: pause screen overlay is responsible to resume game
-        /*
-        if (controllerPoller.isJustReleased(MegaControllerButton.START)) when {
-            game.paused -> {
-                GameLogger.debug(TAG, "render(): resume game")
-                game.resume()
-            }
-
-            else -> {
-                GameLogger.debug(TAG, "render(): pause game")
-                game.pause()
-            }
-        }
-         */
 
         if (!game.paused) {
             spawnsMan.update(delta / 2f)
 
-            // if (!cameraManagerForRooms.transitioning) {
             val spawnsIter = spawns.iterator()
             while (spawnsIter.hasNext()) {
                 val spawn = spawnsIter.next()
                 engine.spawn(spawn.entity, spawn.properties)
                 spawnsIter.remove()
             }
-            // }
 
             // because I'm not good at software design, there's a case tight coupling in this block
             // essentially, the order in which these handlers are updated must not be modified or
@@ -729,7 +719,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         if (!game.paused) {
             spawnsMan.update(delta / 2f)
 
-            // if (!cameraManagerForRooms.transitioning) {
             playerSpawnsMan.run()
 
             val spawnsIter = spawns.iterator()
@@ -738,7 +727,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 engine.spawn(spawn.entity, spawn.properties)
                 spawnsIter.remove()
             }
-            // }
 
             backgrounds.forEach { it.update(delta) }
             cameraManagerForRooms.update(delta)
@@ -747,17 +735,17 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             if (!gameCameraShaker.isFinished) gameCameraShaker.update(delta)
         }
 
+        val gameCamDeltaX = gameCamera.position.x - gameCameraPriorPosition.x
+        val gameCamDeltaY = gameCamera.position.y - gameCameraPriorPosition.y
+        backgrounds.forEach { it.move(gameCamDeltaX, gameCamDeltaY) }
+        gameCameraPriorPosition.set(gameCamera.position)
+
         // perform this on all cameras to reduce floating point rounding errors
         game.viewports.values().forEach { viewport ->
             val camera = viewport.camera
             camera.position.x = (camera.position.x * ConstVals.PPM) / ConstVals.PPM
             camera.position.y = (camera.position.y * ConstVals.PPM) / ConstVals.PPM
         }
-
-        val gameCamDeltaX = gameCamera.position.x - gameCameraPriorPosition.x
-        val gameCamDeltaY = gameCamera.position.y - gameCameraPriorPosition.y
-        backgrounds.forEach { it.move(gameCamDeltaX, gameCamDeltaY) }
-        gameCameraPriorPosition.set(gameCamera.position)
 
         if (game.paused) pauseScreen.render(delta)
 
@@ -776,13 +764,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
     override fun draw(drawer: Batch) {
         drawer.begin()
-
-        if (game.paused) {
-            pauseScreen.draw(drawer)
-            drawables.values().forEach { it.clear() }
-            drawer.end()
-            return
-        }
 
         // each background has its own viewport instance which is applied when the background is drawn,
         // so wait until after all backgrounds are drawn before applying the game viewport
@@ -820,6 +801,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         if (!playerSpawnEventHandler.isFinished()) playerSpawnEventHandler.draw(drawer)
 
         if (megaman.dead) playerDeathEventHandler.draw(drawer)
+
+        if (game.paused) pauseScreen.draw(drawer)
 
         drawer.end()
     }

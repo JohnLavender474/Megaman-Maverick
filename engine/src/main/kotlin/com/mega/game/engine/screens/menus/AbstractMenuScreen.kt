@@ -4,10 +4,7 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.screens.BaseScreen
 
-abstract class AbstractMenuScreen(
-    protected var buttons: ObjectMap<String, IMenuButton> = ObjectMap(),
-    protected var pauseSupplier: () -> Boolean = { false },
-): BaseScreen() {
+abstract class AbstractMenuScreen(protected var buttons: ObjectMap<String, IMenuButton> = ObjectMap()) : BaseScreen() {
 
     var selectionMade = false
         protected set
@@ -15,6 +12,8 @@ abstract class AbstractMenuScreen(
     abstract fun setCurrentButtonKey(key: String?)
 
     abstract fun getCurrentButtonKey(): String?
+
+    protected open fun isInteractionAllowed() = !selectionMade
 
     protected abstract fun getNavigationDirection(): Direction?
 
@@ -37,13 +36,10 @@ abstract class AbstractMenuScreen(
     override fun render(delta: Float) {
         super.render(delta)
 
-        if (selectionMade || pauseSupplier.invoke()) return
-
-        buttons[getCurrentButtonKey()]?.let { button ->
+        if (isInteractionAllowed()) buttons[getCurrentButtonKey()]?.let { button ->
             getNavigationDirection()?.let {
                 val key = button.onNavigate(it, delta)
                 setCurrentButtonKey(key)
-
                 onAnyMovement(it)
             }
 

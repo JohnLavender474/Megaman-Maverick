@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
@@ -13,6 +14,7 @@ import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.objects.table.Table
 import com.mega.game.engine.common.objects.table.TableBuilder
 import com.mega.game.engine.common.objects.table.TableNode
+import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.containsRegion
 import com.mega.game.engine.screens.menus.IMenuButton
@@ -20,11 +22,12 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.screens.menus.MegaMenuScreen
 
-class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, pauseSupplier = { false }), Initializable {
+class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initializable {
 
     companion object {
         const val TAG = "LevelPauseScreen"
@@ -33,6 +36,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, pauseSu
             .row(gdxArrayOf(MegamanWeapon.MEGA_BUSTER))
             .row(gdxArrayOf(MegamanWeapon.MOON_SCYTHE))
             .row(gdxArrayOf(MegamanWeapon.FIRE_BALL))
+            .row(gdxArrayOf(MegamanWeapon.RUSH_JETPACK))
             .build()
 
         private val HEALTH_TANKS_TABLE = TableBuilder<MegaHealthTank>()
@@ -44,6 +48,19 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, pauseSu
         private const val HEALTH_TANKS_PREFIX = "health_tanks"
         private const val SELECTED_SUFFIX = "_selected"
 
+        private const val LIVES_X = 13.5f
+        private const val LIVES_Y = 2.75f
+
+        private const val SCREWS_X = 13.5f
+        private const val SCREWS_Y = 1.75f
+
+        private const val FADEOUT_DUR = 0.25f
+
+        private const val BACKGROUND_SPRITE_TARGET_POS_Y = 0f
+
+        private const val SLIDE_OFFSET_Y = ConstVals.VIEW_HEIGHT
+        private const val SLIDE_DUR = 0.5f
+
         private val buttonRegions = OrderedMap<String, TextureRegion>()
     }
 
@@ -53,7 +70,13 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, pauseSu
     private val backgroundSprite = GameSprite()
     private val buttonSprites = OrderedMap<String, GameSprite>()
 
+    private val fontHandles = Array<MegaFontHandle>()
+
     private var initialized = false
+
+    private var exiting = false
+
+    private val slideTimer = Timer(SLIDE_DUR)
 
     override fun init() {
         if (initialized) return
@@ -83,6 +106,23 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, pauseSu
             }
         }
 
+        fontHandles.addAll(
+            MegaFontHandle(
+                textSupplier = { "0${game.megaman.lives.current}" },
+                positionX = LIVES_X * ConstVals.PPM,
+                positionY = LIVES_Y * ConstVals.PPM,
+                centerX = false,
+                centerY = false
+            ),
+            MegaFontHandle(
+                textSupplier = { game.state.getCurrency().toString().padStart(3, '0') },
+                positionX = SCREWS_X * ConstVals.PPM,
+                positionY = SCREWS_Y * ConstVals.PPM,
+                centerX = false,
+                centerY = false
+            )
+        )
+
         GameLogger.debug(TAG, "init(): buttonRegions=$buttonRegions")
     }
 
@@ -91,6 +131,9 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, pauseSu
 
         super.show()
 
+        exiting = false
+        slideTimer.reset()
+
         val builder = TableBuilder<Any>()
         for (i in 0 until WEAPONS_TABLE.rowCount()) {
             val row = Array<Any>()
@@ -98,8 +141,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, pauseSu
             for (j in 0 until WEAPONS_TABLE.columnCount(i)) {
                 val element = WEAPONS_TABLE.get(i, j).element
 
-                // TODO: temporarily disable rush jetpack as a button until the button sprite is made
-                if (game.megaman.hasWeapon(element) && element != MegamanWeapon.RUSH_JETPACK) {
+                if (game.megaman.hasWeapon(element)) {
                     row.add(element)
 
                     val button = createWeaponButton(element)
@@ -136,8 +178,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, pauseSu
                     "builder=$builder, " +
                     "table=$table, " +
                     "WEAPONS_TABLE=$WEAPONS_TABLE, " +
-                    "HEALTH_TANKS_TABLE=$HEALTH_TANKS_TABLE",
-                e
+                    "HEALTH_TANKS_TABLE=$HEALTH_TANKS_TABLE", e
             )
         }
 
@@ -187,20 +228,39 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, pauseSu
         )
     }
 
+    override fun isInteractionAllowed() = super.isInteractionAllowed() && slideTimer.isFinished() && !exiting
+
     override fun render(delta: Float) {
         super.render(delta)
 
-        game.setDebugText("none set")
+        if (!slideTimer.isFinished()) {
+            slideTimer.update(delta)
+
+            val start: Float
+            val target: Float
+            if (exiting) {
+                start = BACKGROUND_SPRITE_TARGET_POS_Y * ConstVals.PPM
+                target = (BACKGROUND_SPRITE_TARGET_POS_Y - SLIDE_OFFSET_Y) * ConstVals.PPM
+            } else {
+                start = (BACKGROUND_SPRITE_TARGET_POS_Y - SLIDE_OFFSET_Y) * ConstVals.PPM
+                target = BACKGROUND_SPRITE_TARGET_POS_Y * ConstVals.PPM
+            }
+
+            backgroundSprite.y = UtilMethods.interpolate(start, target, slideTimer.getRatio())
+
+            if (exiting && slideTimer.isJustFinished()) game.runQueue.addLast { game.resume() }
+        }
 
         buttonSprites.forEach { entry ->
             val key = entry.key
             val buttonSprite = entry.value
 
-            val buttonRegion = when (key) {
-                getCurrentButtonKey() -> {
-                    game.setDebugText("set=$key")
-                    buttonRegions["$key$SELECTED_SUFFIX"]
+            val buttonRegion = when {
+                key == getCurrentButtonKey() -> {
+                    val selectedKey = "$key$SELECTED_SUFFIX"
+                    buttonRegions[selectedKey]
                 }
+
                 else -> buttonRegions[key]
             }
             buttonSprite.setRegion(buttonRegion)
@@ -216,7 +276,11 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, pauseSu
         if (!drawing) drawer.begin()
 
         backgroundSprite.draw(drawer)
-        buttonSprites.values().forEach { buttonSprite -> buttonSprite.draw(drawer) }
+
+        if (slideTimer.isFinished() && !exiting) {
+            buttonSprites.values().forEach { it.draw(drawer) }
+            fontHandles.forEach { it.draw(drawer) }
+        }
 
         if (!drawing) drawer.end()
     }
@@ -265,8 +329,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, pauseSu
             }
         } catch (e: Exception) {
             throw IllegalStateException(
-                "Failed to navigate to next node: direction=$direction, currentNode=$node, $table=$table",
-                e
+                "Failed to navigate to next node: direction=$direction, currentNode=$node, $table=$table", e
             )
         }
         GameLogger.debug(TAG, "navigate(): direction=$direction, oldNode=$oldNode, node=$node")
@@ -280,9 +343,8 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, pauseSu
     override fun onAnySelection() {
         GameLogger.debug(TAG, "onAnySelection()")
         super.onAnySelection()
-        // TODO: conditionally resume game only when selection is valid
-        //  this can be handled by returning false from `onSelection` in each button
-        game.runQueue.addLast { game.resume() }
+        exiting = true
+        slideTimer.reset()
     }
 
     override fun reset() {

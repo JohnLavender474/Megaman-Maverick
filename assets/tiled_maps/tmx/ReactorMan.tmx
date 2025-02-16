@@ -755,10 +755,10 @@
   <object id="366" name="ToxicBarrelBot" x="10776" y="1840" width="16" height="16"/>
   <object id="412" name="FloatingCanHole" x="7264" y="1760" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="14" name="player">
+ <objectgroup id="14" name="temp">
   <object id="442" name="0" x="11232" y="1824" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="3" name="temp">
+ <objectgroup id="3" name="player">
   <object id="9" name="0" x="64" y="1760" width="32" height="32"/>
   <object id="63" name="1" x="2752" y="1728" width="32" height="32"/>
   <object id="130" name="2" x="4000" y="1376" width="32" height="32">

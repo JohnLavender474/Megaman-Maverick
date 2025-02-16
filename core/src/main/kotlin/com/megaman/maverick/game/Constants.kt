@@ -42,6 +42,8 @@ object ConstVals {
     const val MIN_LIVES = 0
     const val MAX_LIVES = 9
     const val START_LIVES = 3
+    const val MIN_CURRENCY = 0
+    const val MAX_CURRENCY = 999
 }
 
 object ConstKeys {

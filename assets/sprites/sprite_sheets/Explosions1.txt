@@ -10,6 +10,20 @@ AsteroidExplosion
   orig: 48, 72
   offset: 0, 0
   index: -1
+BigAssMaverickRobotOrbExplosion/ElectricDissipate
+  rotate: false
+  xy: 0, 0
+  size: 48, 16
+  orig: 48, 16
+  offset: 0, 0
+  index: -1
+BigAssMaverickRobotOrbExplosion/ElectricPulse
+  rotate: false
+  xy: 144, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
 ChargedShotExplosion
   rotate: false
   xy: 208, 128
@@ -19,14 +33,14 @@ ChargedShotExplosion
   index: -1
 DeathBombExplosion
   rotate: false
-  xy: 96, 0
+  xy: 208, 0
   size: 224, 32
   orig: 224, 32
   offset: 0, 0
   index: -1
 Disintegration
   rotate: false
-  xy: 320, 0
+  xy: 432, 0
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
@@ -54,7 +68,7 @@ HalfChargedShotExplosion
   index: -1
 IcicleShards
   rotate: false
-  xy: 416, 0
+  xy: 528, 0
   size: 160, 32
   orig: 160, 32
   offset: 0, 0
@@ -75,21 +89,21 @@ MagmaGoopExplosion
   index: -1
 PreciousExplosion
   rotate: false
-  xy: 576, 0
+  xy: 0, 32
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 SmokePuff
   rotate: false
-  xy: 0, 32
+  xy: 96, 32
   size: 224, 32
   orig: 224, 32
   offset: 0, 0
   index: -1
 SnowballExplode
   rotate: false
-  xy: 224, 32
+  xy: 320, 32
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
@@ -117,7 +131,7 @@ StarExplosion
   index: -1
 ToxicGoopSplash
   rotate: false
-  xy: 0, 0
+  xy: 48, 0
   size: 96, 16
   orig: 96, 16
   offset: 0, 0

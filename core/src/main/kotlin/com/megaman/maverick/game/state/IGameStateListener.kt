@@ -7,19 +7,25 @@ import com.megaman.maverick.game.levels.LevelDefinition
 
 interface IGameStateListener {
 
-    fun onAddLevelDefeated(level: LevelDefinition)
+    fun onAddLevelDefeated(level: LevelDefinition) {}
 
-    fun onRemoveLevelDefeated(level: LevelDefinition)
+    fun onRemoveLevelDefeated(level: LevelDefinition) {}
 
-    fun onAddHeartTank(heartTank: MegaHeartTank)
+    fun onAddHeartTank(heartTank: MegaHeartTank) {}
 
-    fun onRemoveHeartTank(heartTank: MegaHeartTank)
+    fun onRemoveHeartTank(heartTank: MegaHeartTank) {}
 
-    fun onPutHealthTank(healthTank: MegaHealthTank)
+    fun onPutHealthTank(healthTank: MegaHealthTank) {}
 
-    fun onRemoveHealthTank(healthTank: MegaHealthTank)
+    fun onRemoveHealthTank(healthTank: MegaHealthTank) {}
 
-    fun onAddEnhancement(enhancement: MegaEnhancement)
+    fun onAddHealthToHealthTank(healthTank: MegaHealthTank, value: Int) {}
 
-    fun onRemoveEnhancement(enhancement: MegaEnhancement)
+    fun onAddEnhancement(enhancement: MegaEnhancement) {}
+
+    fun onRemoveEnhancement(enhancement: MegaEnhancement) {}
+
+    fun onAddCurrency(value: Int) {}
+
+    fun onRemoveCurrency(value: Int) {}
 }

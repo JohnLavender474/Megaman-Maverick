@@ -3,11 +3,12 @@ package com.megaman.maverick.game.entities.contracts
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods.getRandom
-import com.mega.game.engine.common.UtilMethods.getRandomBool
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Size
+import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.ISizable
+import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -31,6 +32,8 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.explosions.Disintegration
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.items.HealthBulb
+import com.megaman.maverick.game.entities.items.Life
+import com.megaman.maverick.game.entities.items.Screw
 import com.megaman.maverick.game.entities.items.WeaponEnergyBulb
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
@@ -38,6 +41,7 @@ import com.megaman.maverick.game.entities.utils.setStandardOnTeleportEndProp
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportStartProp
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.getCenter
+import kotlin.reflect.KClass
 
 abstract class AbstractEnemy(
     game: MegamanMaverickGame,
@@ -49,9 +53,27 @@ abstract class AbstractEnemy(
 
     companion object {
         const val TAG = "AbstractEnemy"
+
         const val DEFAULT_CULL_TIME = 1f
-        const val BASE_DROP_ITEM_CHANCE = 20
         const val MEGAMAN_HEALTH_INFLUENCE_FACTOR = 0.25f
+
+        const val LIFE_CHANCE = 10
+        const val SCREW_CHANCE = 50
+        const val HEALTH_CHANCE = 25
+        const val WEAPON_CHANCE = 35
+
+        const val LARGE_ITEM_CHANCE = 25
+
+        private val DROP_ENTITIES = gdxArrayOf<GamePair<KClass<out MegaGameEntity>, (AbstractEnemy) -> Number>>(
+            Life::class pairTo { LIFE_CHANCE },
+            Screw::class pairTo { SCREW_CHANCE },
+            HealthBulb::class pairTo chance@{ enemy ->
+                val megaman = enemy.megaman
+                val playerHealthModifier = 100 - (100 * megaman.getHealthRatio())
+                return@chance HEALTH_CHANCE + (playerHealthModifier * MEGAMAN_HEALTH_INFLUENCE_FACTOR)
+            },
+            WeaponEnergyBulb::class pairTo { WEAPON_CHANCE }
+        )
     }
 
     override val damageNegotiator: IDamageNegotiator = SelfSizeDamageNegotiator(this)
@@ -63,41 +85,35 @@ abstract class AbstractEnemy(
     override fun init() {
         super.init()
 
-        addComponent(defineBodyComponent())
-        addComponent(defineSpritesComponent())
         addComponent(AudioComponent())
         addComponent(CullablesComponent())
+        addComponent(defineBodyComponent())
+        addComponent(defineSpritesComponent())
 
         runnablesOnDestroy.put(ConstKeys.ITEMS) {
             if (isHealthDepleted()) {
                 disintegrate()
 
                 if (dropItemOnDeath) {
-                    val playerHealthModifier = 100 - (100 * megaman.getHealthRatio())
+                    DROP_ENTITIES.shuffle()
 
-                    val dropChance = BASE_DROP_ITEM_CHANCE + (playerHealthModifier * MEGAMAN_HEALTH_INFLUENCE_FACTOR)
+                    DROP_ENTITIES.any { (type, chanceFunction) ->
+                        val random = getRandom(0, 100)
+                        val chance = chanceFunction.invoke(this)
 
-                    val rand = getRandom(0, 100)
-
-                    GameLogger.debug(
-                        TAG,
-                        "Player health modifier = $playerHealthModifier. Drop chance = $dropChance. Random: $rand"
-                    )
-
-                    if (rand < dropChance) {
-                        val props = props(
-                            ConstKeys.POSITION pairTo body.getCenter(),
-                            ConstKeys.LARGE pairTo getRandomBool()
-                        )
-
-                        val spawnHealth = getRandomBool()
-
-                        val entity = when {
-                            spawnHealth -> MegaEntityFactory.fetch(HealthBulb::class)!!
-                            else -> MegaEntityFactory.fetch(WeaponEnergyBulb::class)!!
+                        if (random <= chance.toInt()) {
+                            val position = body.getCenter()
+                            val large = getRandom(0, 100) <= LARGE_ITEM_CHANCE
+                            val entity = MegaEntityFactory.fetch(type)!!
+                            return@any entity.spawn(
+                                props(
+                                    ConstKeys.POSITION pairTo position,
+                                    ConstKeys.LARGE pairTo large
+                                )
+                            )
                         }
 
-                        entity.spawn(props)
+                        return@any false
                     }
                 }
             }

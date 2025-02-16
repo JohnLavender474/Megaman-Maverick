@@ -27,7 +27,6 @@ class MegaAudioManager(
         override fun hashCode() = ass.hashCode()
 
         override fun equals(other: Any?) = other is SoundEntry && other.ass == ass
-
     }
 
     override var soundVolume: Float = DEFAULT_VOLUME

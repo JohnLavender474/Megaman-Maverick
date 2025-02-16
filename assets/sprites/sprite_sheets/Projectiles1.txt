@@ -1,5 +1,5 @@
 Projectiles1.png
-size: 512, 708
+size: 984, 352
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -24,6 +24,20 @@ Asteroid/Regular
   orig: 24, 24
   offset: 0, 0
   index: -1
+BigAssMaverickRobotOrb/ball
+  rotate: false
+  xy: 416, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+BigAssMaverickRobotOrb/hit
+  rotate: false
+  xy: 480, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 BouncingPebble
   rotate: false
   xy: 0, 0
@@ -33,56 +47,56 @@ BouncingPebble
   index: -1
 Bullet
   rotate: false
-  xy: 416, 0
+  xy: 512, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 CacaFlame/burst
   rotate: false
-  xy: 336, 212
+  xy: 0, 112
   size: 48, 64
   orig: 48, 64
   offset: 0, 0
   index: -1
 CacaFlame/fall
   rotate: false
-  xy: 192, 340
+  xy: 880, 112
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 CannonBall
   rotate: false
-  xy: 448, 0
+  xy: 544, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 CaveRock/Burst
   rotate: false
-  xy: 0, 436
+  xy: 160, 208
   size: 384, 128
   orig: 384, 128
   offset: 0, 0
   index: -1
 CaveRock/Rock
   rotate: false
-  xy: 384, 436
+  xy: 544, 208
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ChargedShot
   rotate: false
-  xy: 384, 212
+  xy: 48, 112
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 ChargedShot_v2
   rotate: false
-  xy: 416, 212
+  xy: 80, 112
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
@@ -103,42 +117,42 @@ DuoBall
   index: -1
 Electric/BigElectric
   rotate: false
-  xy: 0, 32
+  xy: 576, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Electric/ElectricBallPulse
   rotate: false
-  xy: 64, 32
+  xy: 640, 0
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
   index: -1
 Electric/PurpleShockBalls
   rotate: false
-  xy: 192, 32
+  xy: 768, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Electric/SmallElectric
   rotate: false
-  xy: 256, 32
+  xy: 832, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Electric/Zap
   rotate: false
-  xy: 320, 32
+  xy: 896, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Fire/Fireball
   rotate: false
-  xy: 448, 212
+  xy: 112, 112
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -152,14 +166,14 @@ FirePellet
   index: -1
 FireWall/disintegrate
   rotate: false
-  xy: 240, 340
+  xy: 0, 208
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 FireWall/fire
   rotate: false
-  xy: 192, 564
+  xy: 864, 208
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -173,126 +187,126 @@ GachappanBall
   index: -1
 GreenPelletBlast/blast
   rotate: false
-  xy: 0, 276
+  xy: 176, 112
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 GreenPelletBlast/burst
   rotate: false
-  xy: 336, 340
+  xy: 96, 208
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 HalfChargedShot
   rotate: false
-  xy: 32, 276
+  xy: 208, 112
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 HoneyDrip/drip
   rotate: false
-  xy: 384, 32
+  xy: 0, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 HoneyDrip/splash
   rotate: false
-  xy: 368, 340
+  xy: 128, 208
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 JoeBall
   rotate: false
-  xy: 0, 64
+  xy: 32, 32
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
   index: -1
 Monkey_Ball
   rotate: false
-  xy: 64, 276
+  xy: 240, 112
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Nuclear_Monkey_Ball
   rotate: false
-  xy: 128, 276
+  xy: 304, 112
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Petal
   rotate: false
-  xy: 192, 276
+  xy: 368, 112
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 Picket
   rotate: false
-  xy: 128, 64
+  xy: 160, 32
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
   index: -1
 PreciousGem/blue
   rotate: false
-  xy: 448, 276
+  xy: 624, 112
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 PreciousGem/pink
   rotate: false
-  xy: 0, 340
+  xy: 688, 112
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 PreciousGem/purple
   rotate: false
-  xy: 64, 340
+  xy: 752, 112
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 PreciousShot/Form
   rotate: false
-  xy: 0, 128
+  xy: 0, 64
   size: 324, 36
   orig: 324, 36
   offset: 0, 0
   index: -1
 PreciousShot/Shoot
   rotate: false
-  xy: 324, 128
+  xy: 324, 64
   size: 108, 36
   orig: 108, 36
   offset: 0, 0
   index: -1
 Prickly
   rotate: false
-  xy: 256, 64
+  xy: 288, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 PurpleBlast/Blast
   rotate: false
-  xy: 120, 164
+  xy: 552, 64
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 PurpleBlast/Charge
   rotate: false
-  xy: 0, 212
+  xy: 648, 64
   size: 336, 48
   orig: 336, 48
   offset: 0, 0
@@ -313,49 +327,49 @@ ReactorManProjectile/die
   index: -1
 ReactorManProjectile/small
   rotate: false
-  xy: 288, 64
+  xy: 320, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ReactorMonkeyBall/0
   rotate: false
-  xy: 128, 340
+  xy: 816, 112
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 ReactorMonkeyBall/1
   rotate: false
-  xy: 0, 564
+  xy: 672, 208
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 ReactorMonkeyBall/2
   rotate: false
-  xy: 64, 564
+  xy: 736, 208
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 ReactorMonkeyBall/3
   rotate: false
-  xy: 128, 564
+  xy: 800, 208
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 RocketBomb
   rotate: false
-  xy: 0, 164
+  xy: 432, 64
   size: 120, 40
   orig: 120, 40
   offset: 0, 0
   index: -1
 RollingBotShot
   rotate: false
-  xy: 320, 64
+  xy: 352, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
@@ -369,7 +383,7 @@ SealionBall
   index: -1
 Snowball
   rotate: false
-  xy: 384, 64
+  xy: 416, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -383,35 +397,35 @@ Snowball2
   index: -1
 SnowballForm
   rotate: false
-  xy: 416, 64
+  xy: 448, 32
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 SnowJoeball
   rotate: false
-  xy: 0, 96
+  xy: 544, 32
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
   index: -1
 SpiderWeb/BlinkWhite
   rotate: false
-  xy: 128, 96
+  xy: 672, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 SpiderWeb/Gray
   rotate: false
-  xy: 192, 96
+  xy: 736, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SpiderWeb/White
   rotate: false
-  xy: 224, 96
+  xy: 768, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -425,7 +439,7 @@ ToxicGoopShot
   index: -1
 TubeBeam
   rotate: false
-  xy: 256, 96
+  xy: 800, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

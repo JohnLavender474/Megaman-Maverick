@@ -4,9 +4,8 @@ import com.badlogic.gdx.utils.ObjectMap
 
 abstract class StandardMenuScreen(
     buttons: ObjectMap<String, IMenuButton> = ObjectMap(),
-    pauseSupplier: () -> Boolean = { false },
     protected var firstButtonKey: String? = null
-) : AbstractMenuScreen(buttons, pauseSupplier) {
+) : AbstractMenuScreen(buttons) {
 
     protected var buttonKey: String? = null
 

@@ -3,7 +3,6 @@ package com.mega.game.engine.common
 import com.badlogic.gdx.math.Intersector
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
@@ -34,9 +33,10 @@ object UtilMethods {
 
     fun getRandom(min: Float, max: Float) = random.nextFloat() * (max - min) + min
 
-    fun <T> getRandomValue(suppliers: Array<() -> T>): T {
-        if (suppliers.isEmpty) throw IllegalArgumentException("No suppliers provided")
-        return suppliers[random.nextInt(suppliers.size)]()
+    fun <T> getRandom(vararg values: T) : T {
+        if (values.isEmpty()) throw IllegalStateException("Must have at least one value")
+        val index = random.nextInt(values.size)
+        return values[index]
     }
 
     fun doIfRandomMatches(min: Int, max: Int, matches: Iterable<Int>, runOnMatch: Consumer<Int?>) {

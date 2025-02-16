@@ -184,8 +184,6 @@
             <key type="filename">../frames/LevelPauseScreen/weapons/mega_buster_selected.png</key>
             <key type="filename">../frames/LevelPauseScreen/weapons/moon_scythe.png</key>
             <key type="filename">../frames/LevelPauseScreen/weapons/moon_scythe_selected.png</key>
-            <key type="filename">../frames/LevelPauseScreen/weapons/rush_jetpack.png</key>
-            <key type="filename">../frames/LevelPauseScreen/weapons/rush_jetpack_selected.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -197,6 +195,22 @@
                 <rect>128,120,256,240</rect>
                 <key>scale9Paddings</key>
                 <rect>128,120,256,240</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/LevelPauseScreen/weapons/rush_jetpack.png</key>
+            <key type="filename">../frames/LevelPauseScreen/weapons/rush_jetpack_selected.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>64,60,128,120</rect>
+                <key>scale9Paddings</key>
+                <rect>64,60,128,120</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -216,7 +230,10 @@
         <key>replaceList</key>
         <array/>
         <key>ignoredWarnings</key>
-        <array/>
+        <array>
+            <string>enable-multipack</string>
+            <string>large-max-texture-size</string>
+        </array>
         <key>commonDivisorX</key>
         <uint>1</uint>
         <key>commonDivisorY</key>

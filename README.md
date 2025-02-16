@@ -233,6 +233,7 @@ comprehensive listing of the credits for the artwork used in this game.
 - Megaman 5 sounds: https://www.sounds-resource.com/nes/megaman5/sound/3618/
 - Megaman 6 sounds: https://www.sounds-resource.com/nes/megaman6/sound/3619/
 - Megaman 9 sounds: https://www.sounds-resource.com/xbox_360/megaman9/sound/33185/
+- Megaman 10 sounds: https://www.sounds-resource.com/xbox_360/megaman10/sound/33186/
 
 Sounds belong to Capcom (Megaman-ripped sound effects) and Nintendo (Mario-ripped sound effects)
 

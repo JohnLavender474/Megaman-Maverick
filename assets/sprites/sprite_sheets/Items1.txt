@@ -1,5 +1,5 @@
 Items1.png
-size: 64, 242
+size: 64, 306
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -38,11 +38,25 @@ HeartTank
   orig: 64, 32
   offset: 0, 0
   index: -1
-Key
+Life
   rotate: false
   xy: 32, 18
   size: 32, 32
   orig: 32, 32
+  offset: 0, 0
+  index: -1
+Screw/large
+  rotate: false
+  xy: 0, 178
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+Screw/small
+  rotate: false
+  xy: 32, 178
+  size: 32, 64
+  orig: 32, 64
   offset: 0, 0
   index: -1
 SniperJoeShield/Blue
@@ -61,14 +75,14 @@ SniperJoeShield/Orange
   index: -1
 WeaponEnergyBulb/large
   rotate: false
-  xy: 0, 178
+  xy: 0, 242
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 WeaponEnergyBulb/small
   rotate: false
-  xy: 32, 178
+  xy: 32, 242
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
