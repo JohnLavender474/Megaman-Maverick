@@ -110,7 +110,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
     override fun render(delta: Float) {
         super.render(delta)
 
-        val arrow = arrows[currentButtonKey]
+        val arrow = arrows[buttonKey]
         arrow.update(delta)
 
         val batch = game.batch

@@ -28,6 +28,7 @@ enum class TextureAsset(src: String) : IAsset {
     UI_2("Ui2.txt"),
     FACES_1("Faces1.txt"),
     LEVEL_SELECT_SCREEN("LevelSelectScreen.txt"),
+    LEVEL_PAUSE_SCREEN("LevelPauseScreen.txt"),
     MEGAMAN_BUSTER("Megaman_v2_BUSTER.txt"),
     MEGAMAN_MOON_SCYTHE("Megaman_v2_MOON.txt"),
     MEGAMAN_FIREBALL("Megaman_v2_FIREBALL.txt"),

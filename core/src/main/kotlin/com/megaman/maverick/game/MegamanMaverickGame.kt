@@ -98,6 +98,7 @@ import com.megaman.maverick.game.screens.levels.stats.PlayerStatsHandler
 import com.megaman.maverick.game.screens.menus.ControllerSettingsScreen
 import com.megaman.maverick.game.screens.menus.MainMenuScreen
 import com.megaman.maverick.game.screens.menus.SaveGameScreen
+import com.megaman.maverick.game.screens.menus.level.LevelPauseScreen
 import com.megaman.maverick.game.screens.menus.level.LevelSelectScreen
 import com.megaman.maverick.game.screens.menus.temp.BossIntroScreen
 import com.megaman.maverick.game.screens.other.CreditsScreen
@@ -147,7 +148,8 @@ class MegamanMaverickGame(
             TAG, Megaman.TAG, GameState.TAG, AbstractBoss.TAG, AbstractEnemy.TAG, MegaLevelScreen.TAG,
             PlayerStatsHandler.TAG, MegamanWeaponsHandler.TAG, CameraManagerForRooms.TAG, MEGAMAN_EVENT_LISTENER_TAG,
             MEGAMAN_CONTROLLER_COMPONENT_TAG, MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, GlacierMan.TAG, MoonMan.TAG,
-            InfernoMan.TAG, TimberWoman.TAG, DesertMan.TAG, ReactorMan.TAG, PreciousWoman.TAG
+            InfernoMan.TAG, TimberWoman.TAG, DesertMan.TAG, ReactorMan.TAG, PreciousWoman.TAG, LevelPauseScreen.TAG,
+            MainMenuScreen.TAG, LevelSelectScreen.TAG
         )
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.oneFixtureMatches(FixtureType.CONSUMER)
@@ -163,6 +165,8 @@ class MegamanMaverickGame(
         get() = currentScreenKey?.let { screens[it] }
 
     val disposables = OrderedMap<String, Disposable>()
+
+    val runQueue = Queue<() -> Unit>()
 
     lateinit var batch: SpriteBatch
     lateinit var shapeRenderer: ShapeRenderer
@@ -343,6 +347,11 @@ class MegamanMaverickGame(
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
+        while (!runQueue.isEmpty) {
+            val runnable = runQueue.removeLast()
+            runnable.invoke()
+        }
+
         if (!finishedLoadingAssets) {
             val finished = assMan.update(ASSET_MILLIS)
 
@@ -364,6 +373,7 @@ class MegamanMaverickGame(
             val delta = Gdx.graphics.deltaTime
 
             controllerPoller.run()
+
             screenController?.update(delta)
 
             val screen = currentScreen

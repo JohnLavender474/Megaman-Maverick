@@ -89,7 +89,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
     private val selectorRegions = ObjectMap<String, TextureRegion>()
     private val selectorBlinkTimer = Timer(SELECTOR_BLINK_DUR)
     private val shouldDrawSelector: Boolean
-        get() = currentButtonKey != null && currentButtonKey != BACK_BUTTON_KEY && !selectionMade
+        get() = buttonKey != null && buttonKey != BACK_BUTTON_KEY && !selectionMade
 
     private val text = Array<MegaFontHandle>()
     private val blinkingArrows = OrderedMap<String, BlinkingArrow>()
@@ -145,7 +145,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
 
         val bossName = MegaFontHandle(
             textSupplier = {
-                val key = currentButtonKey
+                val key = buttonKey
                 when (key) {
                     BACK_BUTTON_KEY, null -> PRESS_START
                     Position.CENTER.name -> MEGA_MAN
@@ -223,7 +223,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         }
 
         val faceSupplier: () -> TextureRegion = {
-            val position = Position.entries.find { it.name == currentButtonKey } ?: Position.CENTER
+            val position = Position.entries.find { it.name == buttonKey } ?: Position.CENTER
             faces[position]
         }
 
@@ -364,7 +364,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
             background.setRegion(currentBkgAnim.getCurrentRegion())
 
             if (shouldDrawSelector) {
-                val selectorRegion = selectorRegions[currentButtonKey]
+                val selectorRegion = selectorRegions[buttonKey]
                 selector.setRegion(selectorRegion)
 
                 selectorBlinkTimer.update(delta)
@@ -374,7 +374,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
                 }
             }
 
-            blinkingArrows.get(currentButtonKey)?.update(delta)
+            blinkingArrows.get(buttonKey)?.update(delta)
             foregroundSprites.values().forEach { it?.update(delta) }
         }
     }
@@ -391,7 +391,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
 
         text.forEach { it.draw(drawer) }
 
-        blinkingArrows.get(currentButtonKey)?.draw(drawer)
+        blinkingArrows.get(buttonKey)?.draw(drawer)
 
         foregroundSprites.keys().forEach { it.draw(drawer) }
 

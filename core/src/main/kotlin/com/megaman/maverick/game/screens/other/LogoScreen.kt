@@ -117,7 +117,7 @@ class LogoScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initiali
     }
 
     override fun render(delta: Float) {
-        if (game.controllerPoller.isJustPressed(MegaControllerButton.START)) {
+        if (game.controllerPoller.isJustReleased(MegaControllerButton.START)) {
             game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
             return
         }

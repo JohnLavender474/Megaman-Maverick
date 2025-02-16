@@ -124,7 +124,7 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
             megamanFaces[position] = faceRegion
         }
         val megamanFaceSupplier = Supplier {
-            val boss = BossType.findByName(currentButtonKey!!) ?: return@Supplier megamanFaces[Position.CENTER]
+            val boss = BossType.findByName(buttonKey!!) ?: return@Supplier megamanFaces[Position.CENTER]
             megamanFaces[boss.position]
         }
         val megamanPane = Mugshot(game, megamanFaceSupplier, MEGA_MAN, Position.CENTER)
@@ -249,11 +249,11 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
             }
             for (b in bp) {
                 b.state =
-                    if (b.name == currentButtonKey) (if (selectionMade) MugshotState.HIGHLIGHTED else MugshotState.BLINKING)
+                    if (b.name == buttonKey) (if (selectionMade) MugshotState.HIGHLIGHTED else MugshotState.BLINKING)
                     else MugshotState.NONE
                 b.update(delta)
             }
-            if (bArrs.containsKey(currentButtonKey)) bArrs.get(currentButtonKey).update(delta)
+            if (bArrs.containsKey(buttonKey)) bArrs.get(buttonKey).update(delta)
         }
         batch.projectionMatrix = game.getUiCamera().combined
         batch.begin()
@@ -263,10 +263,10 @@ class BossSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MEGA_MA
         for (b in bp) b.draw(batch)
         bar1.draw(batch)
         bar2.draw(batch)
-        if (bArrs.containsKey(currentButtonKey)) bArrs.get(currentButtonKey).draw(batch)
+        if (bArrs.containsKey(buttonKey)) bArrs.get(buttonKey).draw(batch)
         for (text in t) text.draw(batch)
-        if (MEGA_MAN == currentButtonKey || bNameSet.contains(currentButtonKey)) {
-            bName.setTextSupplier { currentButtonKey!!.uppercase(Locale.getDefault()) }
+        if (MEGA_MAN == buttonKey || bNameSet.contains(buttonKey)) {
+            bName.setTextSupplier { buttonKey!!.uppercase(Locale.getDefault()) }
             bName.draw(batch)
         }
         batch.end()

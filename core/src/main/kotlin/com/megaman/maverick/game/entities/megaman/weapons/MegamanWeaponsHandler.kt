@@ -200,7 +200,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
     }
 
     fun clearWeapons() {
-        megaman.currentWeapon = MegamanWeapon.BUSTER
+        megaman.currentWeapon = MegamanWeapon.MEGA_BUSTER
         weaponHandlers.clear()
 
         GameLogger.debug(TAG, "clearWeapons()")
@@ -214,16 +214,16 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
     }
 
     fun removeWeapon(weapon: MegamanWeapon) {
-        if (megaman.currentWeapon == weapon) megaman.currentWeapon = MegamanWeapon.BUSTER
+        if (megaman.currentWeapon == weapon) megaman.currentWeapon = MegamanWeapon.MEGA_BUSTER
         weaponHandlers.remove(weapon)
 
         GameLogger.debug(TAG, "removeWeapon(): weapon=$weapon, weapons=${weaponHandlers.keys()}")
     }
 
     private fun createWeaponEntry(weapon: MegamanWeapon) = when (weapon) {
-        MegamanWeapon.BUSTER -> MegaWeaponHandler(cooldown = Timer(0.1f))
+        MegamanWeapon.MEGA_BUSTER -> MegaWeaponHandler(cooldown = Timer(0.1f))
         MegamanWeapon.RUSH_JETPACK -> MegaWeaponHandler(cooldown = Timer(0.1f), chargeable = { false })
-        MegamanWeapon.FIREBALL -> MegaWeaponHandler(
+        MegamanWeapon.FIRE_BALL -> MegaWeaponHandler(
             cooldown = Timer(0.5f),
             normalCost = { 3 },
             halfChargedCost = { 5 },
@@ -284,7 +284,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
     fun getAmmo(weapon: MegamanWeapon) = when {
         !hasWeapon(weapon) -> 0
-        weapon == MegamanWeapon.BUSTER -> Int.MAX_VALUE
+        weapon == MegamanWeapon.MEGA_BUSTER -> Int.MAX_VALUE
         else -> weaponHandlers[weapon].ammo
     }
 
@@ -298,7 +298,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
         val cost = when {
             handler.chargeable(handler) -> (when {
-                weapon === MegamanWeapon.BUSTER -> 0
+                weapon === MegamanWeapon.MEGA_BUSTER -> 0
                 else -> when (stat) {
                     MegaChargeStatus.FULLY_CHARGED -> handler.fullyChargedCost()
                     MegaChargeStatus.HALF_CHARGED -> handler.halfChargedCost()
@@ -332,7 +332,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         val weaponEntry = weaponHandlers[weapon]
 
         val cost = when {
-            weapon.equalsAny(MegamanWeapon.BUSTER, MegamanWeapon.RUSH_JETPACK) -> 0
+            weapon.equalsAny(MegamanWeapon.MEGA_BUSTER, MegamanWeapon.RUSH_JETPACK) -> 0
             else -> when (stat) {
                 MegaChargeStatus.FULLY_CHARGED -> weaponEntry.fullyChargedCost()
                 MegaChargeStatus.HALF_CHARGED -> weaponEntry.halfChargedCost()
@@ -347,8 +347,8 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         }
 
         when (weapon) {
-            MegamanWeapon.BUSTER, MegamanWeapon.RUSH_JETPACK -> fireMegaBuster(stat)
-            MegamanWeapon.FIREBALL -> fireball(stat)
+            MegamanWeapon.MEGA_BUSTER, MegamanWeapon.RUSH_JETPACK -> fireMegaBuster(stat)
+            MegamanWeapon.FIRE_BALL -> fireball(stat)
             MegamanWeapon.MOON_SCYTHE -> fireMoonScythes(stat)
         }
 
@@ -377,7 +377,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             ConstKeys.OWNER pairTo megaman,
             ConstKeys.TRAJECTORY pairTo trajectory,
             ConstKeys.DIRECTION pairTo megaman.direction,
-            ConstKeys.POSITION pairTo getSpawnPosition(MegamanWeapon.BUSTER)
+            ConstKeys.POSITION pairTo getSpawnPosition(MegamanWeapon.MEGA_BUSTER)
         )
 
         when (stat) {
@@ -387,7 +387,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 val bullet = MegaEntityFactory.fetch(Bullet::class)!!
                 bullet.spawn(props)
 
-                weaponHandlers[MegamanWeapon.BUSTER].addSpawned(stat, bullet)
+                weaponHandlers[MegamanWeapon.MEGA_BUSTER].addSpawned(stat, bullet)
             }
 
             MegaChargeStatus.HALF_CHARGED, MegaChargeStatus.FULLY_CHARGED -> {
@@ -399,7 +399,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 val chargedShot = MegaEntityFactory.fetch(ChargedShot::class)!!
                 chargedShot.spawn(props)
 
-                weaponHandlers[MegamanWeapon.BUSTER].addSpawned(stat, chargedShot)
+                weaponHandlers[MegamanWeapon.MEGA_BUSTER].addSpawned(stat, chargedShot)
             }
         }
     }
@@ -409,7 +409,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
         val props = props(
             ConstKeys.OWNER pairTo megaman,
-            ConstKeys.POSITION pairTo getSpawnPosition(MegamanWeapon.FIREBALL)
+            ConstKeys.POSITION pairTo getSpawnPosition(MegamanWeapon.FIRE_BALL)
         )
 
         // TODO: spawned entity should change based on stat
@@ -434,7 +434,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 val fireball = MegaEntityFactory.fetch(Fireball::class)!!
                 fireball.spawn(props)
 
-                weaponHandlers[MegamanWeapon.FIREBALL].addSpawned(stat, fireball)
+                weaponHandlers[MegamanWeapon.FIRE_BALL].addSpawned(stat, fireball)
 
                 megaman.requestToPlaySound(SoundAsset.CRASH_BOMBER_SOUND, false)
             }

@@ -1775,6 +1775,19 @@ sprites/frames/Ui1/Pane.png
 sprites/frames/Ui1/blue.png
 sprites/frames/Ui1/BlackBit.png
 sprites/frames/Ui1/ZeroSilhouette.png
+sprites/frames/LevelPauseScreen/health_tanks/b.png
+sprites/frames/LevelPauseScreen/health_tanks/a.png
+sprites/frames/LevelPauseScreen/health_tanks/c.png
+sprites/frames/LevelPauseScreen/health_tanks/d.png
+sprites/frames/LevelPauseScreen/background.png
+sprites/frames/LevelPauseScreen/weapons/fire_ball.png
+sprites/frames/LevelPauseScreen/weapons/fire_ball_selected.png
+sprites/frames/LevelPauseScreen/weapons/mega_buster_selected.png
+sprites/frames/LevelPauseScreen/weapons/mega_buster.png
+sprites/frames/LevelPauseScreen/weapons/moon_scythe.png
+sprites/frames/LevelPauseScreen/weapons/rush_jetpack.png
+sprites/frames/LevelPauseScreen/weapons/rush_jetpack_selected.png
+sprites/frames/LevelPauseScreen/weapons/moon_scythe_selected.png
 sprites/frames/Buddies/RushJet.png
 sprites/frames/Buddies/RushSpring.png
 sprites/frames/Buddies/RushStand.png
@@ -1944,6 +1957,7 @@ sprites/sprite_sheets/MegamanTrailSprite.png
 sprites/sprite_sheets/NukeMan.png
 sprites/sprite_sheets/Explosions1.png
 sprites/sprite_sheets/MegamanTrailSprite_v2.txt
+sprites/sprite_sheets/LevelPauseScreen.png
 sprites/sprite_sheets/Projectiles1.png
 sprites/sprite_sheets/DistributorMan.txt
 sprites/sprite_sheets/Ui1.png
@@ -1977,6 +1991,7 @@ sprites/sprite_sheets/PreciousMan.png
 sprites/sprite_sheets/MegamanMaverick_BUSTER.png
 sprites/sprite_sheets/Backgrounds5.png
 sprites/sprite_sheets/Projectiles1.txt
+sprites/sprite_sheets/LevelPauseScreen.txt
 sprites/sprite_sheets/Colors.txt
 sprites/sprite_sheets/MegamanChargedShot.png
 sprites/sprite_sheets/MegamanCart.txt
@@ -2011,6 +2026,7 @@ sprites/texture_packer/MegamanTrailSprite.tps
 sprites/texture_packer/Test.tps
 sprites/texture_packer/BluntMan.tps
 sprites/texture_packer/Bosses2.tps
+sprites/texture_packer/LevelPauseScreen.tps
 sprites/texture_packer/MicrowaveMan.tps
 sprites/texture_packer/Buddies.tps
 sprites/texture_packer/Explosions1.tps

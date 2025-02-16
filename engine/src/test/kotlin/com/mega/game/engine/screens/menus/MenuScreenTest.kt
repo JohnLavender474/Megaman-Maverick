@@ -13,7 +13,7 @@ class MenuScreenTest :
     DescribeSpec({
         describe("MenuScreen") {
             lateinit var pauseSupplier: () -> Boolean
-            lateinit var abstractMenuScreen: AbstractMenuScreen
+            lateinit var standardMenuScreen: StandardMenuScreen
 
             var direction: Direction?
             var selectionRequested: Boolean
@@ -50,9 +50,9 @@ class MenuScreenTest :
 
                 pauseSupplier = { false }
 
-                abstractMenuScreen =
+                standardMenuScreen =
                     spyk(
-                        object : AbstractMenuScreen(buttons, pauseSupplier, firstButtonKey) {
+                        object : StandardMenuScreen(buttons, pauseSupplier, firstButtonKey) {
 
                             override fun onAnyMovement(direction: Direction) {
                                 onAnyMovement = true
@@ -76,21 +76,21 @@ class MenuScreenTest :
 
             it("should show the menu screen correctly") {
                 // when
-                abstractMenuScreen.show()
+                standardMenuScreen.show()
 
                 // then
-                abstractMenuScreen.selectionMade shouldBe false
-                abstractMenuScreen.currentButtonKey shouldBe firstButtonKey
+                standardMenuScreen.selectionMade shouldBe false
+                standardMenuScreen.buttonKey shouldBe firstButtonKey
             }
 
             describe("renderLevelMap") {
                 it("should renderLevelMap the menu screen correctly") {
                     // when
-                    abstractMenuScreen.render(0.0f)
+                    standardMenuScreen.render(0.0f)
 
                     // then
-                    abstractMenuScreen.selectionMade shouldBe false
-                    abstractMenuScreen.currentButtonKey shouldBe firstButtonKey
+                    standardMenuScreen.selectionMade shouldBe false
+                    standardMenuScreen.buttonKey shouldBe firstButtonKey
                 }
 
                 it("should call button 1 navigation") {
@@ -98,11 +98,11 @@ class MenuScreenTest :
                     direction = Direction.UP
 
                     // when
-                    abstractMenuScreen.render(0.0f)
+                    standardMenuScreen.render(0.0f)
 
                     // then
-                    abstractMenuScreen.selectionMade shouldBe false
-                    abstractMenuScreen.currentButtonKey shouldBe secondButtonKey
+                    standardMenuScreen.selectionMade shouldBe false
+                    standardMenuScreen.buttonKey shouldBe secondButtonKey
                     verify(exactly = 1) { buttons[firstButtonKey]?.onNavigate(Direction.UP, 0.0f) }
                     verify(exactly = 0) { buttons[secondButtonKey]?.onNavigate(Direction.DOWN, 0.0f) }
                     verify(exactly = 0) { buttons[secondButtonKey]?.onSelect(0.0f) }
@@ -112,14 +112,14 @@ class MenuScreenTest :
                 it("should call button 2 navigation") {
                     // given
                     direction = Direction.DOWN
-                    abstractMenuScreen.currentButtonKey = secondButtonKey
+                    standardMenuScreen.buttonKey = secondButtonKey
 
                     // when
-                    abstractMenuScreen.render(0.0f)
+                    standardMenuScreen.render(0.0f)
 
                     // then
-                    abstractMenuScreen.selectionMade shouldBe false
-                    abstractMenuScreen.currentButtonKey shouldBe firstButtonKey
+                    standardMenuScreen.selectionMade shouldBe false
+                    standardMenuScreen.buttonKey shouldBe firstButtonKey
                     verify(exactly = 1) { buttons[secondButtonKey]?.onNavigate(Direction.DOWN, 0.0f) }
                     verify(exactly = 0) { buttons[firstButtonKey]?.onNavigate(Direction.UP, 0.0f) }
                     verify(exactly = 0) { buttons[secondButtonKey]?.onSelect(0.0f) }
@@ -131,11 +131,11 @@ class MenuScreenTest :
                     selectionRequested = true
 
                     // when
-                    abstractMenuScreen.render(0.0f)
+                    standardMenuScreen.render(0.0f)
 
                     // then
-                    abstractMenuScreen.selectionMade shouldBe true
-                    abstractMenuScreen.currentButtonKey shouldBe firstButtonKey
+                    standardMenuScreen.selectionMade shouldBe true
+                    standardMenuScreen.buttonKey shouldBe firstButtonKey
                     verify(exactly = 0) { buttons[firstButtonKey]?.onNavigate(any(), 0.0f) }
                     verify(exactly = 1) { buttons[firstButtonKey]?.onSelect(0.0f) }
                     verify(exactly = 0) { buttons[secondButtonKey]?.onSelect(0.0f) }

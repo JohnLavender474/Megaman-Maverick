@@ -63,7 +63,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
 
         val weaponBars = ObjectMap<MegamanWeapon, BitsBar>()
         MegamanWeapon.entries.forEach {
-            if (it == MegamanWeapon.BUSTER) return@forEach
+            if (it == MegamanWeapon.MEGA_BUSTER) return@forEach
 
             // TODO: set bit region source dynamically
             val bitSource = "RedBit"
@@ -89,7 +89,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
 
         weaponBarSupplier = {
             val current = megaman.currentWeapon
-            if (current == MegamanWeapon.BUSTER) null else weaponBars.get(current)
+            if (current == MegamanWeapon.MEGA_BUSTER) null else weaponBars.get(current)
         }
     }
 

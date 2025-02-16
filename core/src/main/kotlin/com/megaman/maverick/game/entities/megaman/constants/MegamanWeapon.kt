@@ -1,8 +1,8 @@
 package com.megaman.maverick.game.entities.megaman.constants
 
 enum class MegamanWeapon {
-    BUSTER,
-    FIREBALL,
+    MEGA_BUSTER,
+    FIRE_BALL,
     MOON_SCYTHE,
     RUSH_JETPACK
 }

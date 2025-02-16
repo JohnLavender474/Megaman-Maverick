@@ -71,6 +71,7 @@ import com.megaman.maverick.game.screens.levels.stats.BossHealthHandler
 import com.megaman.maverick.game.screens.levels.stats.PlayerStatsHandler
 import com.megaman.maverick.game.screens.levels.tiled.layers.MegaMapLayerBuilders
 import com.megaman.maverick.game.screens.levels.tiled.layers.MegaMapLayerBuildersParams
+import com.megaman.maverick.game.screens.menus.level.LevelPauseScreen
 import com.megaman.maverick.game.spawns.ISpawner
 import com.megaman.maverick.game.spawns.Spawn
 import com.megaman.maverick.game.spawns.SpawnsManager
@@ -140,7 +141,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     val controllerPoller: IControllerPoller
         get() = game.controllerPoller
 
-
     var music: MusicAsset? = null
 
     lateinit var screenOnCompletion: (MegamanMaverickGame) -> ScreenEnum
@@ -176,6 +176,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     private var camerasSetToGameCamera = false
 
     private val spawns = Array<Spawn>()
+
+    private val pauseScreen = LevelPauseScreen(game)
 
     private var initialized = false
 
@@ -302,6 +304,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         }
 
         gameCameraShaker = CameraShaker(gameCamera)
+
+        pauseScreen.init()
     }
 
     override fun show() {
@@ -674,7 +678,13 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     }
 
     override fun render(delta: Float) {
-        if (controllerPoller.isJustPressed(MegaControllerButton.START)) when {
+        if (!game.paused && controllerPoller.isJustReleased(MegaControllerButton.START)) {
+            GameLogger.debug(TAG, "render(): pause game")
+            game.runQueue.addLast { game.pause() }
+        }
+        // TODO: pause screen overlay is responsible to resume game
+        /*
+        if (controllerPoller.isJustReleased(MegaControllerButton.START)) when {
             game.paused -> {
                 GameLogger.debug(TAG, "render(): resume game")
                 game.resume()
@@ -685,6 +695,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 game.pause()
             }
         }
+         */
 
         if (!game.paused) {
             spawnsMan.update(delta / 2f)
@@ -748,6 +759,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         backgrounds.forEach { it.move(gameCamDeltaX, gameCamDeltaY) }
         gameCameraPriorPosition.set(gameCamera.position)
 
+        if (game.paused) pauseScreen.render(delta)
+
         // sort backgrounds in drawing order before calling draw()
         backgrounds.sort()
 
@@ -763,6 +776,13 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
     override fun draw(drawer: Batch) {
         drawer.begin()
+
+        if (game.paused) {
+            pauseScreen.draw(drawer)
+            drawables.values().forEach { it.clear() }
+            drawer.end()
+            return
+        }
 
         // each background has its own viewport instance which is applied when the background is drawn,
         // so wait until after all backgrounds are drawn before applying the game viewport
@@ -867,11 +887,19 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         disposables.forEach { it.dispose() }
         disposables.clear()
+
+        pauseScreen.dispose()
     }
 
-    override fun pause() = levelStateHandler.pause()
+    override fun pause() {
+        levelStateHandler.pause()
+        pauseScreen.show()
+    }
 
-    override fun resume() = levelStateHandler.resume()
+    override fun resume() {
+        levelStateHandler.resume()
+        pauseScreen.reset()
+    }
 
     override fun resize(width: Int, height: Int) =
         backgrounds.forEach { background -> background.updateViewportSize(width, height) }

@@ -173,11 +173,6 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        game.setDebugText(
-            "${body.getX().toInt()},${body.getY().toInt()};" +
-                "${megaman.body.getX().toInt()},${megaman.body.getY().toInt()}"
-        )
-
         if (enemyToSpawn != null) {
             timeToSpawnEnemyTimer.update(delta)
 

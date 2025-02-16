@@ -80,7 +80,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
 
             when (levelDef) {
                 LevelDefinition.MOON_MAN -> set.addAll(MegamanWeapon.MOON_SCYTHE, MegamanWeapon.RUSH_JETPACK)
-                LevelDefinition.INFERNO_MAN -> set.add(MegamanWeapon.FIREBALL)
+                LevelDefinition.INFERNO_MAN -> set.add(MegamanWeapon.FIRE_BALL)
                 else -> {}
             }
 
@@ -171,7 +171,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
     val shooting: Boolean
         get() = !shootAnimTimer.isFinished()
     val ammo: Int
-        get() = if (currentWeapon == MegamanWeapon.BUSTER) Int.MAX_VALUE
+        get() = if (currentWeapon == MegamanWeapon.MEGA_BUSTER) Int.MAX_VALUE
         else weaponsHandler.getAmmo(currentWeapon)
 
     var ready = false
@@ -369,10 +369,10 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
         // GameLogger.debug(TAG, "init(): weaponSpawns=$weaponSpawns")
 
         weaponsHandler = MegamanWeaponsHandler(this /* , weaponSpawns */)
-        weaponsHandler.putWeapon(MegamanWeapon.BUSTER)
+        weaponsHandler.putWeapon(MegamanWeapon.MEGA_BUSTER)
 
         aButtonTask = AButtonTask.JUMP
-        currentWeapon = MegamanWeapon.BUSTER
+        currentWeapon = MegamanWeapon.MEGA_BUSTER
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -394,7 +394,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
 
         aButtonTask = AButtonTask.JUMP
-        currentWeapon = MegamanWeapon.BUSTER
+        currentWeapon = MegamanWeapon.MEGA_BUSTER
 
         setHealth(getMaxHealth())
         weaponsHandler.setAllToMaxAmmo()
@@ -773,6 +773,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
     override fun onRemoveEnhancement(enhancement: MegaEnhancement) {
         enhancementsAttained.remove(enhancement)
     }
+
+    fun hasWeapon(weapon: MegamanWeapon) = weaponsHandler.hasWeapon(weapon)
 
     fun hasHeartTank(heartTank: MegaHeartTank) = heartTanksCollected.contains(heartTank)
 

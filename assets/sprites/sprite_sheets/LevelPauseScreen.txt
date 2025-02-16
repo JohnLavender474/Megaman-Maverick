@@ -1,0 +1,96 @@
+LevelPauseScreen.png
+size: 1544, 1930
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+background
+  rotate: false
+  xy: 2, 2
+  size: 512, 480
+  orig: 512, 480
+  offset: 0, 0
+  index: -1
+health_tanks/a
+  rotate: false
+  xy: 516, 2
+  size: 512, 480
+  orig: 512, 480
+  offset: 0, 0
+  index: -1
+health_tanks/b
+  rotate: false
+  xy: 1030, 2
+  size: 512, 480
+  orig: 512, 480
+  offset: 0, 0
+  index: -1
+health_tanks/c
+  rotate: false
+  xy: 2, 484
+  size: 512, 480
+  orig: 512, 480
+  offset: 0, 0
+  index: -1
+health_tanks/d
+  rotate: false
+  xy: 516, 484
+  size: 512, 480
+  orig: 512, 480
+  offset: 0, 0
+  index: -1
+weapons/fire_ball
+  rotate: false
+  xy: 1030, 484
+  size: 512, 480
+  orig: 512, 480
+  offset: 0, 0
+  index: -1
+weapons/fire_ball_selected
+  rotate: false
+  xy: 2, 966
+  size: 512, 480
+  orig: 512, 480
+  offset: 0, 0
+  index: -1
+weapons/mega_buster
+  rotate: false
+  xy: 516, 966
+  size: 512, 480
+  orig: 512, 480
+  offset: 0, 0
+  index: -1
+weapons/mega_buster_selected
+  rotate: false
+  xy: 1030, 966
+  size: 512, 480
+  orig: 512, 480
+  offset: 0, 0
+  index: -1
+weapons/moon_scythe
+  rotate: false
+  xy: 2, 1448
+  size: 512, 480
+  orig: 512, 480
+  offset: 0, 0
+  index: -1
+weapons/moon_scythe_selected
+  rotate: false
+  xy: 516, 1448
+  size: 512, 480
+  orig: 512, 480
+  offset: 0, 0
+  index: -1
+weapons/rush_jetpack
+  rotate: false
+  xy: 1030, 484
+  size: 512, 480
+  orig: 512, 480
+  offset: 0, 0
+  index: -1
+weapons/rush_jetpack_selected
+  rotate: false
+  xy: 2, 966
+  size: 512, 480
+  orig: 512, 480
+  offset: 0, 0
+  index: -1

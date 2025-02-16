@@ -7,13 +7,14 @@ import com.mega.game.engine.screens.BaseScreen
 abstract class AbstractMenuScreen(
     protected var buttons: ObjectMap<String, IMenuButton> = ObjectMap(),
     protected var pauseSupplier: () -> Boolean = { false },
-    protected var firstButtonKey: String? = null
-) : BaseScreen() {
-
-    var currentButtonKey: String? = firstButtonKey
+): BaseScreen() {
 
     var selectionMade = false
         protected set
+
+    abstract fun setCurrentButtonKey(key: String?)
+
+    abstract fun getCurrentButtonKey(): String?
 
     protected abstract fun getNavigationDirection(): Direction?
 
@@ -24,21 +25,25 @@ abstract class AbstractMenuScreen(
     protected open fun onAnySelection() {}
 
     override fun show() {
+        super.show()
         selectionMade = false
-        currentButtonKey = firstButtonKey
     }
 
     override fun reset() {
+        super.reset()
         selectionMade = false
-        currentButtonKey = firstButtonKey
     }
 
     override fun render(delta: Float) {
+        super.render(delta)
+
         if (selectionMade || pauseSupplier.invoke()) return
 
-        buttons[currentButtonKey]?.let { button ->
+        buttons[getCurrentButtonKey()]?.let { button ->
             getNavigationDirection()?.let {
-                currentButtonKey = button.onNavigate(it, delta)
+                val key = button.onNavigate(it, delta)
+                setCurrentButtonKey(key)
+
                 onAnyMovement(it)
             }
 

@@ -270,10 +270,10 @@ class ControllerSettingsScreen(
         delayOnChangeTimer.update(delta)
         if (delayOnChangeTimer.isJustFinished()) undoSelection()
 
-        val arrowY = when (currentButtonKey) {
+        val arrowY = when (buttonKey) {
             BACK -> 10.6f
             RESET_TO_DEFAULTS -> 9.6f
-            else -> 9.6f - (MegaControllerButton.valueOf(currentButtonKey!!).ordinal + 1)
+            else -> 9.6f - (MegaControllerButton.valueOf(buttonKey!!).ordinal + 1)
         }
         blinkingArrow.centerX = 2.5f * ConstVals.PPM
         blinkingArrow.centerY = arrowY * ConstVals.PPM

@@ -35,8 +35,8 @@ class MegamanAnimations(
     override fun init() {
         MegamanWeapon.entries.forEach { weapon ->
             val assetSource = when (weapon) {
-                MegamanWeapon.BUSTER -> TextureAsset.MEGAMAN_BUSTER.source
-                MegamanWeapon.FIREBALL -> TextureAsset.MEGAMAN_FIREBALL.source
+                MegamanWeapon.MEGA_BUSTER -> TextureAsset.MEGAMAN_BUSTER.source
+                MegamanWeapon.FIRE_BALL -> TextureAsset.MEGAMAN_FIREBALL.source
                 MegamanWeapon.MOON_SCYTHE -> TextureAsset.MEGAMAN_MOON_SCYTHE.source
                 MegamanWeapon.RUSH_JETPACK -> TextureAsset.MEGAMAN_RUSH_JETPACK.source
             }
