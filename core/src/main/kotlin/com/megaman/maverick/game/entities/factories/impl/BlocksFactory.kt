@@ -48,7 +48,7 @@ class BlocksFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(BREAKABLE_BLOCK, GameEntityPoolCreator.create { BreakableBlock(game) })
         pools.put(FEET_RISE_SINK_BLOCK, GameEntityPoolCreator.create { FeetRiseSinkBlock(game) })
         pools.put(LADDER_TOP, GameEntityPoolCreator.create { LadderTop(game) })
-        pools.put(DESTROYABLE_WOOD_PLANK, GameEntityPoolCreator.create { DestroyableWoodPlank(game) })
+        pools.put(DESTROYABLE_WOOD_PLANK, GameEntityPoolCreator.create { WoodPlank(game) })
         pools.put(PUSHABLE_BLOCK, GameEntityPoolCreator.create { PushableBlock(game) })
         pools.put(SWITCH_GATE, GameEntityPoolCreator.create { SwitchGate(game) })
         pools.put(GRAVITY_BLOCK, GameEntityPoolCreator.create { GravityBlock(game) })

@@ -243,6 +243,7 @@ class ControllerSettingsScreen(
     override fun show() {
         if (!initialized) init()
         super.show()
+        game.audioMan.stopMusic()
         game.getUiCamera().setToDefaultPosition()
     }
 

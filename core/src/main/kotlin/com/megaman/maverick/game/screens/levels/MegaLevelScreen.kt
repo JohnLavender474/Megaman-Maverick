@@ -221,18 +221,17 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         cameraManagerForRooms.beginTransition = {
             GameLogger.debug(TAG, "Begin transition logic for camera manager")
 
-            val room = cameraManagerForRooms.currentGameRoom
-
             eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
 
+            val current = cameraManagerForRooms.currentGameRoom!!
             val prior = cameraManagerForRooms.priorGameRoom
 
             eventsMan.submitEvent(
                 Event(
                     EventType.BEGIN_ROOM_TRANS, props(
-                        ConstKeys.ROOM pairTo room,
+                        ConstKeys.ROOM pairTo current,
                         ConstKeys.PRIOR pairTo prior,
-                        ConstKeys.NAME pairTo room?.name,
+                        ConstKeys.NAME pairTo current.name,
                         "${ConstKeys.PRIOR}_${ConstKeys.NAME}" pairTo prior?.name,
                         ConstKeys.POSITION pairTo cameraManagerForRooms.transitionInterpolation,
                     )
@@ -244,9 +243,12 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             game.getSystem(BehaviorsSystem::class).on = false
             game.putProperty(ConstKeys.ROOM_TRANSITION, true)
 
-            if (room?.name == ConstKeys.BOSS_ROOM) audioMan.fadeOutMusic(FADE_OUT_MUSIC_ON_BOSS_SPAWN)
+            val roomProps = current.properties.toProps()
+
+            if (roomProps.containsKey(ConstKeys.BOSS) && !roomProps.isProperty(ConstKeys.MINI, true))
+                audioMan.fadeOutMusic(FADE_OUT_MUSIC_ON_BOSS_SPAWN)
         }
-        cameraManagerForRooms.continueTransition = { _ ->
+        cameraManagerForRooms.continueTransition = {
             eventsMan.submitEvent(
                 Event(
                     EventType.CONTINUE_ROOM_TRANS,
@@ -517,8 +519,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 )
                 systemsToTurnOn.forEach { game.getSystem(it).on = true }
 
-                val roomName = cameraManagerForRooms.currentGameRoom?.name
-                if (roomName != null && roomName != ConstKeys.BOSS_ROOM && !roomName.contains(ConstKeys.MINI))
+                val room = cameraManagerForRooms.currentGameRoom!!
+
+                if (!room.properties.containsKey(ConstKeys.BOSS))
                     eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
             }
 
@@ -751,15 +754,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         // sort backgrounds in drawing order before calling draw()
         backgrounds.sort()
-
-        /*
-        debugPrintTimer.update(delta)
-        if (debugPrintTimer.isFinished()) {
-            debugPrintTimer.reset()
-            GameLogger.debug(TAG, "Game cam rotated bounds: ${gameCamera.getRotatedBounds()}")
-            GameLogger.debug(TAG, "Megaman center: ${megaman.body.getCenter()}")
-        }
-         */
     }
 
     override fun draw(drawer: Batch) {

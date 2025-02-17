@@ -1795,10 +1795,10 @@
   </object>
   <object id="659" name="Bat" x="10136" y="1888" width="16" height="16"/>
  </objectgroup>
- <objectgroup id="7" name="player">
+ <objectgroup id="7" name="temp">
   <object id="722" name="0" x="18496" y="2112" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="8" name="temp">
+ <objectgroup id="8" name="player">
   <object id="228" name="0" x="128" y="2880" width="32" height="32"/>
   <object id="389" name="1" x="6560" y="1888" width="32" height="32"/>
   <object id="390" name="2" x="10784" y="1984" width="32" height="32"/>

@@ -25,9 +25,11 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.BlockPiece
 import com.megaman.maverick.game.entities.decorations.BlockPiece.BlockPieceColor
 import com.megaman.maverick.game.entities.enemies.Wanaan
+import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
@@ -64,32 +66,40 @@ class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, I
         type = spawnProps.get(ConstKeys.TYPE, String::class)!!
     }
 
+    private fun explodeAndDie() {
+        destroy()
+
+        for (i in 0 until BRICK_PIECE_IMPULSES.size) {
+            val spawn = body.getCenter()
+
+            val impulse = BRICK_PIECE_IMPULSES[i].cpy().scl(ConstVals.PPM.toFloat())
+
+            val piece = MegaEntityFactory.fetch(BlockPiece::class)!!
+            piece.spawn(
+                props(
+                    ConstKeys.POSITION pairTo spawn,
+                    ConstKeys.IMPULSE pairTo impulse,
+                    ConstKeys.THUMP pairTo BRICK_TYPE_THUMP,
+                    ConstKeys.COLOR pairTo BlockPieceColor.RED
+                )
+            )
+        }
+
+        game.audioMan.playSound(SoundAsset.THUMP_SOUND, false)
+    }
+
+    override fun hitByProjectile(projectileFixture: IFixture) {
+        val entity = projectileFixture.getEntity()
+        if (entity is MoonScythe && entity.owner == megaman) explodeAndDie()
+    }
+
     override fun hitByHead(processState: ProcessState, headFixture: IFixture) {
         if (processState != ProcessState.BEGIN) return
 
         val entity = headFixture.getEntity()
         when (type) {
-            BRICK_TYPE -> if (entity is Wanaan) {
-                destroy()
-
-                for (i in 0 until BRICK_PIECE_IMPULSES.size) {
-                    val spawn = body.getCenter()
-
-                    val impulse = BRICK_PIECE_IMPULSES[i].cpy().scl(ConstVals.PPM.toFloat())
-
-                    val piece = MegaEntityFactory.fetch(BlockPiece::class)!!
-                    piece.spawn(
-                        props(
-                            ConstKeys.POSITION pairTo spawn,
-                            ConstKeys.IMPULSE pairTo impulse,
-                            ConstKeys.THUMP pairTo BRICK_TYPE_THUMP,
-                            ConstKeys.COLOR pairTo BlockPieceColor.RED
-                        )
-                    )
-                }
-
-                game.audioMan.playSound(SoundAsset.THUMP_SOUND, false)
-            }
+            BRICK_TYPE -> if (entity is Wanaan) explodeAndDie()
+            else -> {}
         }
     }
 

@@ -160,7 +160,6 @@ object ConstKeys {
     const val ROOM = "room"
     const val ROOMS = "${ROOM}${S}"
     const val BOSS = "boss"
-    const val BOSS_ROOM = "${BOSS}_${ROOM}"
     const val RETURN = "return"
     const val SPOT = "spot"
     const val FRAME = "frame"

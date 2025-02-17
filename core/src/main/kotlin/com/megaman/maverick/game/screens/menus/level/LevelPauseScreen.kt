@@ -54,8 +54,6 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initia
         private const val SCREWS_X = 13.5f
         private const val SCREWS_Y = 1.75f
 
-        private const val FADEOUT_DUR = 0.25f
-
         private const val BACKGROUND_SPRITE_TARGET_POS_Y = 0f
 
         private const val SLIDE_OFFSET_Y = ConstVals.VIEW_HEIGHT
