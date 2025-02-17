@@ -196,6 +196,13 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         body.addFixture(damagerFixture)
         debugShapes.add { damagerFixture }
 
+        val projectileFixture = Fixture(
+            body,
+            FixtureType.PROJECTILE,
+            GameRectangle().setSize(1.25f * body.getWidth(), 1.25f * body.getHeight())
+        )
+        body.addFixture(projectileFixture)
+
         body.preProcess.put(ConstKeys.DAMAGER) {
             damagerFixture.setActive(canDamage)
             damagerFixture.drawingColor = if (damagerFixture.isActive()) Color.RED else Color.GRAY
@@ -203,7 +210,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.PROJECTILE))
+        return BodyComponentCreator.create(this, body)
     }
 
     override fun defineSpritesComponent(): SpritesComponent {

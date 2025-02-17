@@ -182,7 +182,7 @@ class GameState : Resettable {
         val enhancements = enhancementsAttained.joinToString(",") { it.name }
         builder.append("$enhancements;")
 
-        builder.append(currency)
+        builder.append(currency.current)
 
         val s = builder.toString()
         GameLogger.debug(TAG, "toString(): s=$s")
