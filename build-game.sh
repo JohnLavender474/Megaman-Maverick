@@ -2,7 +2,7 @@
 
 # Check if platform argument is provided
 if [ -z "$1" ]; then
-    echo "Error: No platform specified. Please specify a platform (windows, mac, linux)."
+    echo "Error: No platform specified. Please specify a platform (windows64, mac, linux64)."
     exit 1
 fi
 
@@ -29,17 +29,39 @@ case "$PLATFORM" in
         ;;
 esac
 
-# Function to check and download JDK if not found
-check_jdk() {
+# Function to check and fetch the JDK if not found
+check_and_fetch_jdk() {
     if [ ! -d "$JDK_PATH" ]; then
         echo "JDK not found at $JDK_PATH"
         read -p "Would you like to download it? (y/n): " choice
         if [[ "$choice" == "y" || "$choice" == "Y" ]]; then
             echo "Downloading JDK..."
+
             # Download JDK from the appropriate URL
             mkdir -p "$JDK_PATH"
-            curl -L "$JDK_URL" -o "$JDK_PATH/jdk.zip"
+
+            # Download JDK based on the platform
+            case "$PLATFORM" in
+                windows64)
+                    curl -L "$JDK_URL" -o "$JDK_PATH/jdk.zip"
+                    unzip -q "$JDK_PATH/jdk.zip" -d "$JDK_PATH"
+                    ;;
+                mac)
+                    curl -L "$JDK_URL" -o "$JDK_PATH/jdk.zip"
+                    unzip -q "$JDK_PATH/jdk.zip" -d "$JDK_PATH"
+                    ;;
+                linux64)
+                    curl -L "$JDK_URL" -o "$JDK_PATH/jdk.tar.gz"
+                    tar -xzf "$JDK_PATH/jdk.tar.gz" -C "$JDK_PATH"
+                    ;;
+                *)
+                    echo "Error: Unsupported platform. Please use windows64, mac, or linux64."
+                    exit 1
+                    ;;
+            esac
+
             unzip -q "$JDK_PATH/jdk.zip" -d "$JDK_PATH"
+
             echo "JDK downloaded and extracted to $JDK_PATH"
         else
             echo "Exiting script. JDK is required."
@@ -50,7 +72,7 @@ check_jdk() {
     fi
 }
 
-check_jdk
+check_and_fetch_jdk
 
 # Clean up previous builds
 echo "Removing previous build folder for $PLATFORM"
