@@ -170,6 +170,9 @@ Thumbs.db
 
 ## Builds
 /game-builds/jdk
-/game-builds/out-linux
-/game-builds/out-windows
+/game-builds/out-linux64
+/game-builds/out-linux64.zip
+/game-builds/out-windows64
+/game-builds/out-windows64.zip
 /game-builds/out-mac
+/game-builds/out-mac.zip
