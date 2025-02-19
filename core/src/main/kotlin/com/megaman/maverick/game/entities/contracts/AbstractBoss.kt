@@ -36,6 +36,7 @@ import com.megaman.maverick.game.entities.megaman.contracts.IMegamanDamageListen
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.misc.HealthFillType
 import com.megaman.maverick.game.world.body.getCenter
@@ -78,7 +79,8 @@ abstract class AbstractBoss(
             ChargedShotExplosion::class pairTo dmgNeg {
                 it as ChargedShotExplosion
                 if (it.fullyCharged) 2 else 1
-            }
+            },
+            MoonScythe::class pairTo dmgNeg(1)
         )
     }
 

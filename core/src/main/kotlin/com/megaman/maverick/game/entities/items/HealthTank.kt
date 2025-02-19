@@ -56,7 +56,6 @@ class HealthTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity
         if (!this::healthTank.isInitialized) throw IllegalStateException("Heart tank value is not initialized")
         body.setSize(BODY_WIDTH * ConstVals.PPM, BODY_HEIGHT * ConstVals.PPM)
         super.onSpawn(spawnProps)
-        putProperty(ConstKeys.ENTITY_KILLED_BY_DEATH_FIXTURE, false)
     }
 
     override fun contactWithPlayer(megaman: Megaman) {

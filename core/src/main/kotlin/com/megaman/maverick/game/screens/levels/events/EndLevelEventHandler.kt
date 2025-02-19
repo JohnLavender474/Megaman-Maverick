@@ -71,6 +71,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
             val atlas = game.assMan.getTextureAtlas(TextureAsset.MEGAMAN_BUSTER.source)
 
             beamRegion = atlas.findRegion(ConstKeys.BEAM)
+
             val priority = DrawingPriority()
             beamSprite = GameSprite(beamRegion, megaman.getSpritePriority(priority))
             beamSprite.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
@@ -88,6 +89,8 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         megaman.setAllBehaviorsAllowed(false)
 
         game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
+
+        game.audioMan.stopMusic()
     }
 
     override fun update(delta: Float) {

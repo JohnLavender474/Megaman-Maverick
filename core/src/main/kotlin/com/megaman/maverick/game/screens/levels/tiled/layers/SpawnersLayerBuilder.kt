@@ -123,12 +123,11 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                         },
                         eventKeyMask = objectSetOf<Any>(
                             EventType.PLAYER_READY,
-                            EventType.SET_TO_ROOM_NO_TRANS,
-                            // EventType.END_ROOM_TRANS
-                            EventType.BEGIN_ROOM_TRANS
+                            EventType.BEGIN_ROOM_TRANS,
+                            EventType.SET_TO_ROOM_NO_TRANS
                         ),
-                        spawnSupplier = spawnSupplier,
                         respawnable = respawnable,
+                        spawnSupplier = spawnSupplier,
                         shouldTest = shouldTestSpawnerPredicate
                     )
                     spawners.add(spawner)
@@ -140,7 +139,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                 SpawnType.SPAWN_EVENT -> {
                     val events = ObjectSet<Any>()
 
-                    val eventNames = (spawnProps.get(ConstKeys.EVENTS) as String).split(",")
+                    val eventNames = spawnProps.get(ConstKeys.EVENTS, String::class)!!.split(",")
                     eventNames.forEach { eventName ->
                         val eventType = EventType.valueOf(eventName.uppercase())
                         events.add(eventType)
@@ -148,8 +147,8 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
 
                     val spawner = SpawnerFactory.spawnerForWhenEventCalled(
                         events = events,
-                        spawnSupplier = spawnSupplier,
                         respawnable = respawnable,
+                        spawnSupplier = spawnSupplier,
                         shouldTest = shouldTestSpawnerPredicate
                     )
                     spawners.add(spawner)
@@ -164,8 +163,8 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                     val spawner = SpawnerFactory.spawnerForWhenInCamera(
                         camera = game.getGameCamera(),
                         spawnShape = SpawnerShapeFactory.getSpawnShape(entityType, it),
-                        spawnSupplier = spawnSupplier,
                         respawnable = respawnable,
+                        spawnSupplier = spawnSupplier,
                         shouldTest = shouldTestSpawnerPredicate
                     )
                     spawners.add(spawner)

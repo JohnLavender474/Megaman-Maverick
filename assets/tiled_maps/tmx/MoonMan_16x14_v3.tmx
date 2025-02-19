@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="900" height="75" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="488">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="900" height="75" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="489">
  <tileset firstgid="1" source="../tsx/MoonManTiles.tsx"/>
  <tileset firstgid="65" source="../tsx/mm9endless.tsx"/>
  <layer id="2" name="tiles2" width="900" height="75">
@@ -788,11 +788,31 @@
   <object id="402" x="19936" y="1696" width="672" height="192"/>
   <object id="403" x="20608" y="1600" width="64" height="288"/>
   <object id="404" x="20448" y="1408" width="64" height="128"/>
-  <object id="405" x="20320" y="640" width="192" height="768"/>
-  <object id="406" x="20512" y="832" width="384" height="576"/>
+  <object id="405" x="20320" y="640" width="192" height="768">
+   <properties>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="spawn_type" value="spawn_now"/>
+   </properties>
+  </object>
+  <object id="406" x="20512" y="832" width="384" height="576">
+   <properties>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="spawn_type" value="spawn_now"/>
+   </properties>
+  </object>
   <object id="407" x="20896" y="864" width="32" height="544"/>
-  <object id="408" x="20512" y="640" width="736" height="128"/>
-  <object id="409" x="20992" y="768" width="160" height="640"/>
+  <object id="408" x="20512" y="640" width="736" height="128">
+   <properties>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="spawn_type" value="spawn_now"/>
+   </properties>
+  </object>
+  <object id="409" x="20992" y="768" width="160" height="640">
+   <properties>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="spawn_type" value="spawn_now"/>
+   </properties>
+  </object>
   <object id="410" x="20672" y="1632" width="352" height="256"/>
   <object id="411" x="21024" y="1664" width="128" height="224"/>
   <object id="412" x="21152" y="768" width="96" height="1120"/>
@@ -880,7 +900,7 @@
   <object id="334" name="Trigger1" x="13544" y="1528" width="16" height="16"/>
   <object id="335" name="Trigger2" x="13704" y="1560" width="16" height="16"/>
   <object id="336" name="Target1" x="18968" y="1480" width="16" height="16"/>
-  <object id="337" name="Target2" x="19096" y="1480" width="16" height="16"/>
+  <object id="337" name="Target2" x="19152" y="1480" width="16" height="16"/>
   <object id="432" name="MoonMan" x="23872" y="1568" width="32" height="32">
    <properties>
     <property name="asteroid" type="object" value="433"/>
@@ -1322,6 +1342,11 @@
   <object id="434" name="HeartTank" x="19416" y="1496" width="16" height="16">
    <properties>
     <property name="value" value="b"/>
+   </properties>
+  </object>
+  <object id="488" name="HealthTank" x="20640" y="768" width="32" height="32">
+   <properties>
+    <property name="value" value="d"/>
    </properties>
   </object>
  </objectgroup>

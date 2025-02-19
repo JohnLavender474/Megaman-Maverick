@@ -540,10 +540,12 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
                 val bossRoom = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!
                 val bossMapObject = bossRoom.properties.get(ConstKeys.OBJECT, RectangleMapObject::class.java)
-                val bossName = bossMapObject.name
 
                 val bossSpawnProps = bossMapObject.properties.toProps()
                 bossSpawnProps.put(ConstKeys.BOUNDS, bossMapObject.rectangle.toGameRectangle())
+
+                val bossName = bossMapObject.name
+
                 bossSpawnEventHandler.init(bossName, bossSpawnProps)
 
                 megaman.running = false

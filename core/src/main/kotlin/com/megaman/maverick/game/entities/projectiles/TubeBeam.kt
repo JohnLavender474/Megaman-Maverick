@@ -8,6 +8,7 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -19,6 +20,8 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.events.Event
+import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
@@ -29,10 +32,11 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 
-class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IDirectional {
+class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IDirectional, IEventListener {
 
     companion object {
         const val TAG = "TubeBeam"
@@ -40,7 +44,8 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         private var region: TextureRegion? = null
     }
 
-    override var direction = Direction.UP
+    override lateinit var direction: Direction
+    override val eventKeyMask = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS)
 
     private lateinit var cullTimer: Timer
     private lateinit var trajectory: Vector2
@@ -54,6 +59,8 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
+        game.eventsMan.addListener(this)
 
         direction = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
         trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
@@ -74,6 +81,15 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
         val cullTime = spawnProps.getOrDefault(ConstKeys.CULL_TIME, DEFAULT_CULL_TIME, Float::class)
         cullTimer = Timer(cullTime)
+    }
+
+    override fun onEvent(event: Event) {
+        if (event.key == EventType.BEGIN_ROOM_TRANS) destroy()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        game.eventsMan.removeListener(this)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->

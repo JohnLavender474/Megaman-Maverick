@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="200" height="120" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="504">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="200" height="120" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="506">
  <tileset firstgid="1" source="../tsx/sandy_pipes.tsx"/>
  <tileset firstgid="49" source="../tsx/Hardman.tsx"/>
  <tileset firstgid="177" source="../tsx/Tileset1.tsx"/>
@@ -278,7 +278,7 @@
     <property name="event" value="success"/>
    </properties>
   </object>
-  <object id="498" x="256" y="1504" width="576" height="448"/>
+  <object id="498" name="heart_room" x="256" y="1504" width="576" height="448"/>
  </objectgroup>
  <objectgroup id="9" name="backgrounds">
   <object id="15" name="UndergroundPipes" x="0" y="3808" width="32" height="32"/>
@@ -1050,12 +1050,12 @@
   <object id="502" name="Ratton" x="424" y="1872" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="3" name="items">
-  <object id="452" name="HeartTank" x="3632" y="3392" width="32" height="32">
+  <object id="504" name="HeartTank" x="672" y="1856" width="32" height="32">
    <properties>
     <property name="value" value="f"/>
    </properties>
   </object>
-  <object id="503" name="HealthTank" x="656" y="1856" width="32" height="32">
+  <object id="505" name="HealthTank" x="3632" y="3392" width="32" height="32">
    <properties>
     <property name="value" value="a"/>
    </properties>

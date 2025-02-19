@@ -72,6 +72,8 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
+        putProperty(ConstKeys.ENTITY_KILLED_BY_DEATH_FIXTURE, false)
+
         direction = Direction.valueOf(
             spawnProps.getOrDefault(ConstKeys.DIRECTION, megaman.direction.name, String::class).uppercase()
         )

@@ -20,13 +20,11 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.entities.projectiles.Bullet
-import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.entities.projectiles.TeardropBlast
+import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
 
@@ -70,13 +68,11 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
     }
 
     override fun hitByProjectile(projectileFixture: IFixture) {
-        val projectile = projectileFixture.getEntity() as AbstractProjectile
+        val projectile = projectileFixture.getEntity() as IProjectileEntity
         when (projectile) {
             is Bullet, is TeardropBlast -> hit()
-            is ChargedShot -> {
-                if (projectile.fullyCharged) explodeAndDie()
-                else hit(2)
-            }
+            is Fireball, is MoonScythe -> explodeAndDie()
+            is ChargedShot -> if (projectile.fullyCharged) explodeAndDie() else hit(2)
         }
     }
 

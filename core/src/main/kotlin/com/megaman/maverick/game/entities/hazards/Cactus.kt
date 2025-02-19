@@ -74,14 +74,16 @@ class Cactus(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntit
     override fun init() {
         damageOverrides.putAll(
             Bullet::class pairTo dmgNeg(10),
+            ArigockBall::class pairTo dmgNeg(10),
+            CactusMissile::class pairTo dmgNeg(10),
             ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             SmallGreenMissile::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-            ArigockBall::class pairTo dmgNeg(10),
             Explosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             Spiky::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             SpreadExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-            CactusMissile::class pairTo dmgNeg(10)
+            MoonScythe::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
         )
 
         if (regions.isEmpty) {

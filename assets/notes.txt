@@ -1,4 +1,4 @@
-Heart Locations
+Heart Tank Locations
 
 - A: Glacier Man
 - B: Moon Man
@@ -9,9 +9,10 @@ Heart Locations
 - G: Timber Woman
 - H: Precious Man
 
-Energy Tank Locations
+Health Tank Locations
 
 - A: Rodent Man
 - B: Inferno Man
-- C: Timber Woman
-- D: Precious Man
+- C: Reactor Man
+- D: Moon Man
+

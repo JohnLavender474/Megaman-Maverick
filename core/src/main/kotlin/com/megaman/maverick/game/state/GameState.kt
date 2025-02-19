@@ -246,10 +246,9 @@ class GameState : Resettable {
         GameLogger.debug(TAG, "fromString(): s=$s")
 
         val lines = s.split(";").map { it.split(",") }.toGdxArray()
-        if (lines.size != EXPECTED_STRING_LINES) throw IllegalArgumentException("Invalid game state string: $s")
         for (i in 0 until lines.size) lines[i] = lines[i].filter { !it.isBlank() }
 
-        if (!lines[0].isEmpty()) lines[0].forEach {
+        if (lines.size >= 1 && !lines[0].isEmpty()) lines[0].forEach {
             try {
                 val level = LevelDefinition.valueOf(it.uppercase())
                 addLevelDefeated(level)
@@ -258,7 +257,7 @@ class GameState : Resettable {
             }
         }
 
-        if (!lines[1].isEmpty()) lines[1].forEach {
+        if (lines.size >= 2 && !lines[1].isEmpty()) lines[1].forEach {
             try {
                 val heartTank = MegaHeartTank.valueOf(it.uppercase())
                 addHeartTank(heartTank)
@@ -267,7 +266,7 @@ class GameState : Resettable {
             }
         }
 
-        if (!lines[2].isEmpty()) lines[2].forEach {
+        if (lines.size >= 3 && !lines[2].isEmpty()) lines[2].forEach {
             try {
                 val healthTank = MegaHealthTank.valueOf(it.uppercase())
                 putHealthTank(healthTank)
@@ -276,7 +275,7 @@ class GameState : Resettable {
             }
         }
 
-        if (!lines[3].isEmpty()) lines[3].forEach {
+        if (lines.size >= 4 && !lines[3].isEmpty()) lines[3].forEach {
             try {
                 val enhancement = MegaEnhancement.valueOf(it.uppercase())
                 addEnhancement(enhancement)

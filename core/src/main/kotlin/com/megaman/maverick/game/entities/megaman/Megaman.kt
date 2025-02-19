@@ -465,7 +465,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
             EventType.BEGIN_ROOM_TRANS, EventType.CONTINUE_ROOM_TRANS -> {
                 if (event.key == EventType.BEGIN_ROOM_TRANS) roomTransPauseTimer.reset()
 
-                val position = event.properties.get(ConstKeys.POSITION, Vector2::class)!!
+                val position = event.getProperty(ConstKeys.POSITION, Vector2::class)!!
 
                 if (event.key == EventType.BEGIN_ROOM_TRANS) GameLogger.debug(
                     MEGAMAN_EVENT_LISTENER_TAG, "BEGIN ROOM TRANS: position=$position"
