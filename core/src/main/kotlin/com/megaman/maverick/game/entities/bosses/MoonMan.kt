@@ -48,15 +48,13 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
+import com.megaman.maverick.game.entities.projectiles.SharpStar
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -630,7 +628,8 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                     "${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}" pairTo MOON_SCYTHE_MOVEMENT_SCALAR,
                     ConstKeys.TRAJECTORY pairTo trajectory,
                     ConstKeys.ROTATION pairTo rotation,
-                    ConstKeys.FADE pairTo false
+                    ConstKeys.FADE pairTo false,
+                    ConstKeys.OWNER pairTo this
                 )
             )
         }
@@ -640,15 +639,17 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
     private fun shootStar() {
         val position = if (megaman.direction == Direction.UP) Position.TOP_CENTER else Position.BOTTOM_CENTER
+
         val trajectory =
             megaman.body.getPositionPoint(position).sub(body.getCenter()).nor().scl(SHARP_STAR_SPEED * ConstVals.PPM)
-        val sharpStar = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SHARP_STAR)!!
+
+        val sharpStar = MegaEntityFactory.fetch(SharpStar::class)!!
         sharpStar.spawn(
             props(
                 ConstKeys.POSITION pairTo body.getCenter().add(0.5f * ConstVals.PPM * facing.value, 0f),
                 "${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}" pairTo SHARP_STAR_MOVEMENT_SCALAR,
-                ConstKeys.TRAJECTORY pairTo trajectory,
                 ConstKeys.ROTATION pairTo trajectory.angleDeg(),
+                ConstKeys.TRAJECTORY pairTo trajectory
             )
         )
 

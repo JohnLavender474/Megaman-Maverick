@@ -38,8 +38,6 @@ fun Megaman.getSpriteDirection() = when {
 }
 
 fun Megaman.shouldFlipSpriteX(): Boolean {
-    if (maverick) return false
-
     val facing = when {
         getSpriteDirection() == Direction.RIGHT -> Facing.RIGHT
         else -> Facing.LEFT

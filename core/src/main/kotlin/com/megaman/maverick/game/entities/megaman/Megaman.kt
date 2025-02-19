@@ -102,24 +102,26 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
         private const val TRAIL_SPRITE_DELAY = 0.1f
     }
 
+    override val damageNegotiator = MegamanDamageNegotiator(this)
+
     val damaged: Boolean
         get() = !damageTimer.isFinished()
     val stunned: Boolean
         get() = !stunTimer.isFinished()
 
-    override val damageNegotiator = MegamanDamageNegotiator(this)
-
     override val invincible: Boolean
         get() = damaged || !damageRecoveryTimer.isFinished() || !canBeDamaged || dead || !ready
-    public override val damageTimer = Timer(MegamanValues.DAMAGE_DURATION).setToEnd()
+    override val damageTimer = Timer(MegamanValues.DAMAGE_DURATION).setToEnd()
 
     var canBeDamaged = true
+
     var canMove = true
         get() = field && !stunned && !damaged
 
     internal val stunTimer = Timer(MegamanValues.STUN_DUR)
     internal val damageRecoveryTimer = Timer(MegamanValues.DAMAGE_RECOVERY_TIME).setToEnd()
     internal val damageFlashTimer = Timer(MegamanValues.DAMAGE_FLASH_DURATION)
+    internal var recoveryFlash = false
 
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 
@@ -135,6 +137,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
     internal val groundSlideTimer = Timer(MegamanValues.MAX_GROUND_SLIDE_TIME)
 
     private val trailSpriteTimer = Timer(TRAIL_SPRITE_DELAY)
+
     private val underWaterBubbleTimer = Timer(UNDER_WATER_BUBBLE_DELAY)
 
     override val eventKeyMask = objectSetOf<Any>(
@@ -147,6 +150,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
     )
 
     internal lateinit var weaponsHandler: MegamanWeaponsHandler
+
     internal val lives = Points(ConstVals.MIN_LIVES, ConstVals.MAX_LIVES, ConstVals.START_LIVES)
 
     val hasAnyHealthTanks: Boolean
@@ -155,8 +159,11 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
     val canChargeCurrentWeapon: Boolean
         get() = weaponsHandler.isChargeable(currentWeapon)
     val chargeStatus: MegaChargeStatus
-        get() = if (fullyCharged) MegaChargeStatus.FULLY_CHARGED
-        else if (charging) MegaChargeStatus.HALF_CHARGED else MegaChargeStatus.NOT_CHARGED
+        get() = when {
+            fullyCharged -> MegaChargeStatus.FULLY_CHARGED
+            charging -> MegaChargeStatus.HALF_CHARGED
+            else -> MegaChargeStatus.NOT_CHARGED
+        }
     val charging: Boolean
         get() = canChargeCurrentWeapon && chargingTimer.time >= MegamanValues.TIME_TO_HALFWAY_CHARGED
     val halfCharged: Boolean
@@ -166,13 +173,12 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
     val shooting: Boolean
         get() = !shootAnimTimer.isFinished()
     val ammo: Int
-        get() = if (currentWeapon == MegamanWeapon.MEGA_BUSTER) Int.MAX_VALUE
-        else weaponsHandler.getAmmo(currentWeapon)
+        get() = when (currentWeapon) {
+            MegamanWeapon.MEGA_BUSTER -> Int.MAX_VALUE
+            else -> weaponsHandler.getAmmo(currentWeapon)
+        }
 
     var ready = false
-    var maverick = false
-
-    var recoveryFlash = false
 
     override var direction: Direction
         get() = body.direction
@@ -312,67 +318,19 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
         addComponent(defineSpritesComponent())
         addComponent(AudioComponent())
 
-        /*
-        val weaponSpawns = OrderedMap<String, IntPair>()
-
-        val weaponSpawnMagicColors = objectSetOf(MegamanValues.WEAPON_SPAWN_MAGIC_COLOR)
-        val magicColorsMap = OrderedMap<IntPair, Color>()
-        val regionProcessor: (TextureRegion, String, String, AnimationDef, Int) -> TextureRegion =
-            regionProcessor@{ frame, fullKey, defKey, def, index ->
-                GameLogger.debug(TAG, "init(): regionProcessor: defKey=$defKey")
-
-                // TODO: val magical = MagicPixels.get(frame, weaponSpawnMagicColors, magicColorsMap)
-                val file = Gdx.files.internal("sprites/frames/Megaman_v2/${defKey}.png")
-                val r = TextureRegion(Texture(file)).splitAndFlatten(def.rows, def.cols, Array())[index]
-                val magical = MagicPixels.get(Pixmap(file), weaponSpawnMagicColors, magicColorsMap)
-
-                val region = when {
-                    magical -> {
-                        GameLogger.debug(
-                            TAG,
-                            "init(): regionProcessor: magical region found: map=$magicColorsMap, index=$index"
-                        )
-
-                        val data = r.texture.textureData // TODO: frame.texture.textureData
-                        if (!data.isPrepared) data.prepare()
-
-                        val pixmap = data.consumePixmap()
-
-                        // there should only be at most one magic color pixel per frame, so we'll just pick the first one
-                        magicColorsMap.keys().forEach { position ->
-                            val key = MegamanAnimations.splitFullKey(fullKey)[0]
-                            weaponSpawns.put(key, position)
-
-                            val (x, y) = position
-                            pixmap.drawPixel(x, y, Color.rgba8888(0f, 0f, 0f, 0f))
-                        }
-
-                        TextureRegion(Texture(pixmap))
-                    }
-
-                    else -> frame
-                }
-
-                magicColorsMap.clear()
-
-                return@regionProcessor region
-            }
-         */
-
-        val animations = MegamanAnimations(game /* regionProcessor */).get()
+        val animations = MegamanAnimations(game).get()
         addComponent(defineAnimationsComponent(animations))
 
-        // GameLogger.debug(TAG, "init(): weaponSpawns=$weaponSpawns")
-
-        weaponsHandler = MegamanWeaponsHandler(this /* , weaponSpawns */)
+        weaponsHandler = MegamanWeaponsHandler(this)
         weaponsHandler.putWeapon(MegamanWeapon.MEGA_BUSTER)
 
-        aButtonTask = AButtonTask.JUMP
         currentWeapon = MegamanWeapon.MEGA_BUSTER
+
+        aButtonTask = AButtonTask.JUMP
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        // GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         game.eventsMan.addListener(this)
@@ -390,33 +348,37 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
 
         aButtonTask = AButtonTask.JUMP
-        currentWeapon = MegamanWeapon.MEGA_BUSTER
 
         setHealth(getMaxHealth())
+
         weaponsHandler.setAllToMaxAmmo()
+        currentWeapon = MegamanWeapon.MEGA_BUSTER
 
         running = false
-        recoveryFlash = false
         canMove = true
-        canBeDamaged = true
         teleporting = false
+        canBeDamaged = true
+        recoveryFlash = false
         canMakeLandSound = false
 
         gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
         movementScalar = spawnProps.getOrDefault("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", 1f, Float::class)
         applyMovementScalarToBullet = spawnProps.getOrDefault(ConstKeys.APPLY_SCALAR_TO_CHILDREN, false, Boolean::class)
 
+        stunTimer.setToEnd()
         damageTimer.setToEnd()
-        damageRecoveryTimer.setToEnd()
         damageFlashTimer.reset()
-        shootAnimTimer.reset()
+        damageRecoveryTimer.setToEnd()
+
         groundSlideTimer.reset()
+        shootAnimTimer.reset()
         wallJumpTimer.reset()
         chargingTimer.reset()
         airDashTimer.reset()
+
         spawningTimer.reset()
+
         roomTransPauseTimer.setToEnd()
-        stunTimer.setToEnd()
 
         putProperty(ConstKeys.ON_TELEPORT_START, {
             stopCharging()
@@ -438,7 +400,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
     }
 
     override fun onDestroy() {
-        // GameLogger.debug(TAG, "onDestroy()")
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
         body.removeProperty(ConstKeys.VELOCITY)
@@ -450,8 +412,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
         stopSoundNow(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
 
         if (getCurrentHealth() <= 0) explosionOrbTrajectories.forEach { trajectory ->
-            val explosionOrb = MegaEntityFactory.fetch(ExplosionOrb::class)!!
-            explosionOrb.spawn(
+            val orb = MegaEntityFactory.fetch(ExplosionOrb::class)!!
+            orb.spawn(
                 props(
                     ConstKeys.TRAJECTORY pairTo trajectory.cpy().scl(ConstVals.PPM.toFloat()),
                     ConstKeys.POSITION pairTo body.getCenter()
@@ -819,22 +781,12 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
         return health != temp
     }
 
-    fun useHealthTank(healthTank: MegaHealthTank) {
-
-    }
-
     fun translateAmmo(ammo: Int) {
         val weapon = megaman.currentWeapon
         megaman.weaponsHandler.translateAmmo(weapon, ammo)
     }
 
-    fun getCurrentLives() = lives.current
-
     fun isAtMinLives() = lives.isMin()
-
-    fun isAtMaxLives() = lives.isMax()
-
-    fun addOneLife() = lives.translate(1)
 
     fun removeOneLife() = lives.translate(-1)
 

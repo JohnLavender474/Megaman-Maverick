@@ -169,4 +169,7 @@ Thumbs.db
 /engine/build
 
 ## Builds
-/game-builds
+/game-builds/jdk
+/game-builds/out-linux
+/game-builds/out-windows
+/game-builds/out-mac
