@@ -1034,7 +1034,6 @@ class MegaContactListener(
             }
         }
 
-        // TODO: should this be in the continue contact phase?
         // body, gravity change
         else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.GRAVITY_CHANGE)) {
             val (bodyFixture, gravityChangeFixture) = contact.getFixturesInOrder(

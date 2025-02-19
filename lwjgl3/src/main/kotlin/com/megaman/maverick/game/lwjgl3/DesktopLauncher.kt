@@ -2,7 +2,6 @@ package com.megaman.maverick.game.lwjgl3
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter
 import com.beust.jcommander.JCommander
 import com.beust.jcommander.Parameter
 import com.beust.jcommander.ParameterException
@@ -83,15 +82,6 @@ object DesktopLauncher {
         }
 
         val game = MegamanMaverickGame(params)
-
-        config.setWindowListener(object : Lwjgl3WindowAdapter() {
-
-            override fun iconified(isIconified: Boolean) = game.pause()
-
-            override fun focusGained() = game.resume()
-
-            override fun focusLost() = game.pause()
-        })
 
         try {
             Lwjgl3Application(game, config)

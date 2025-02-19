@@ -9,7 +9,7 @@ import com.mega.game.engine.drawables.IDrawable
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
-import com.megaman.maverick.game.drawables.ui.BitsBar
+import com.megaman.maverick.game.drawables.ui.LargeBitsBar
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.utils.misc.HealthFillType
 
@@ -23,7 +23,7 @@ class BossHealthHandler(private val game: MegamanMaverickGame) : IDrawable<Batch
 
     private var entity: IHealthEntity? = null
     private var timer: Timer? = null
-    private var bar: BitsBar? = null
+    private var bar: LargeBitsBar? = null
     private var temp = 0
 
     override fun draw(drawer: Batch) {
@@ -43,7 +43,7 @@ class BossHealthHandler(private val game: MegamanMaverickGame) : IDrawable<Batch
         this.entity = entity
         temp = 0
 
-        bar = BitsBar(
+        bar = LargeBitsBar(
             game.assMan,
             "Bit",
             (ConstVals.VIEW_WIDTH - (ConstVals.HEALTH_BAR_X + ConstVals.STAT_BIT_WIDTH)) * ConstVals.PPM,
@@ -65,7 +65,7 @@ class BossHealthHandler(private val game: MegamanMaverickGame) : IDrawable<Batch
                         game.audioMan.playSound(SoundAsset.ENERGY_FILL_SOUND)
                     })
                 }
-                timer.addRunnables(runnables).setRunOnFirstupdate(runOnFirstUpdate).setRunOnFinished(runOnFinished)
+                timer.addRunnables(runnables).setRunOnFirstupdate(runOnFirstUpdate).setRunOnJustFinished(runOnFinished)
 
                 this.timer = timer
             }

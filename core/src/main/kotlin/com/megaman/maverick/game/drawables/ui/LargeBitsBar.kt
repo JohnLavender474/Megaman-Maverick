@@ -2,7 +2,6 @@ package com.megaman.maverick.game.drawables.ui
 
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.interfaces.Initializable
@@ -12,7 +11,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TextureAsset
 import kotlin.math.min
 
-class BitsBar(
+class LargeBitsBar(
     private val assMan: AssetManager,
     private val bitRegion: String,
     private val x: Float,
@@ -21,7 +20,7 @@ class BitsBar(
     private val maxSupplier: () -> Int = { ConstVals.STANDARD_MAX_STAT_BITS },
 ) : Initializable, IDrawable<Batch> {
 
-    private lateinit var blackBackground: Sprite
+    private lateinit var blackBackground: GameSprite
     private val bitSprites = Array<GameSprite>()
 
     private var initialized = false
@@ -36,7 +35,7 @@ class BitsBar(
             bitSprites.add(bit)
         }
 
-        blackBackground = Sprite(assMan.getTextureRegion(TextureAsset.COLORS.source, "Black"))
+        blackBackground = GameSprite(assMan.getTextureRegion(TextureAsset.COLORS.source, "Black"))
         blackBackground.setPosition(x, y)
 
         initialized = true

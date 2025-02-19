@@ -27,6 +27,7 @@ class Timer(duration: Float) : Updatable, Resettable, IJustFinishable {
     internal var runnableQueue = PriorityQueue<TimeMarkedRunnable>()
 
     private var runOnFirstUpdate: (() -> Unit)? = null
+    private var runOnJustFinished: (() -> Unit)? = null
     private var runOnFinished: (() -> Unit)? = null
 
     private var firstUpdate = true
@@ -67,7 +68,9 @@ class Timer(duration: Float) : Updatable, Resettable, IJustFinishable {
 
         justFinished = !finishedBefore && isFinished()
 
-        if (justFinished) runOnFinished?.invoke()
+        if (justFinished) runOnJustFinished?.invoke()
+
+        if (isFinished()) runOnFinished?.invoke()
     }
 
     override fun reset() {
@@ -82,6 +85,11 @@ class Timer(duration: Float) : Updatable, Resettable, IJustFinishable {
 
     fun setRunOnFirstupdate(runnable: (() -> Unit)?): Timer {
         runOnFirstUpdate = runnable
+        return this
+    }
+
+    fun setRunOnJustFinished(runnable: (() -> Unit)?): Timer {
+        runOnJustFinished = runnable
         return this
     }
 

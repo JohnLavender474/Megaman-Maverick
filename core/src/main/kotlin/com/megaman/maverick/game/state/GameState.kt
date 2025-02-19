@@ -77,6 +77,7 @@ class GameState : Resettable {
         GameLogger.debug(TAG, "addHealthTank(): healthTank=$healthTank")
 
         healthTanksCollected.put(healthTank, Points(ConstVals.MIN_HEALTH, ConstVals.MAX_HEALTH, value))
+
         listeners.forEach { it.onPutHealthTank(healthTank) }
     }
 
@@ -89,16 +90,56 @@ class GameState : Resettable {
         GameLogger.debug(TAG, "removeHealthTank(): healthTank=$healthTank")
 
         healthTanksCollected.remove(healthTank)
+
         listeners.forEach { it.onRemoveHealthTank(healthTank) }
     }
 
     fun getHealthTankValue(healthTank: MegaHealthTank) = healthTanksCollected[healthTank]?.current ?: 0
 
     fun addHealthToHealthTank(healthTank: MegaHealthTank, value: Int) {
-        if (!containsHealthTank(healthTank)) return
+        if (!containsHealthTank(healthTank)) {
+            GameLogger.error(
+                TAG,
+                "addHealthToHealthTank(): cannot add health because state does not contain health tank: $healthTank"
+            )
+            return
+        }
+
+        if (value <= 0) {
+            GameLogger.error(TAG, "addHealthToHealthTank(): value must be greater than 0: $value")
+            return
+        }
 
         val tank = healthTanksCollected[healthTank]
-        if (tank.translate(value)) listeners.forEach { it.onAddHealthToHealthTank(healthTank, value) }
+
+        if (tank.translate(value)) {
+            GameLogger.debug(TAG, "addHealthToHealthTank(): added $value to healthTank=$healthTank")
+            listeners.forEach { it.onAddHealthToHealthTank(healthTank, value) }
+        } else GameLogger.error(TAG, "addHealthToHealthTank(): failed to add $value to healthTank=$healthTank")
+    }
+
+    fun removeHealthFromHealthTank(healthTank: MegaHealthTank, value: Int) {
+        if (!containsHealthTank(healthTank)) {
+            GameLogger.error(
+                TAG,
+                "addHealthToHealthTank(): cannot add health because state does not contain health tank: $healthTank"
+            )
+            return
+        }
+
+        if (value <= 0) {
+            GameLogger.error(TAG, "addHealthToHealthTank(): value must be greater than 0: $value")
+            return
+        }
+
+        val tank = healthTanksCollected[healthTank]
+        if (tank.translate(-value)) {
+            GameLogger.debug(TAG, "removeHealthFromHealthTank(): removed $value to healthTank=$healthTank")
+            listeners.forEach { it.onRemoveHealthFromHealthTank(healthTank, value) }
+        } else GameLogger.error(
+            TAG,
+            "removeHealthFromHealthTank(): failed to remove $value from healthTank=$healthTank"
+        )
     }
 
     fun containsEnhancement(enhancement: MegaEnhancement) = enhancementsAttained.contains(enhancement)
@@ -121,16 +162,28 @@ class GameState : Resettable {
             return
         }
 
-        if (currency.translate(value)) listeners.forEach { it.onAddCurrency(value) }
+        if (currency.translate(value)) {
+            GameLogger.debug(TAG, "addCurrency(): added $value to currency")
+            listeners.forEach { it.onAddCurrency(value) }
+        } else GameLogger.debug(
+            TAG, "addCurrency(): did not add $value to currency. " +
+                "Not an error if currency is already at max: getCurrency=${getCurrency()}."
+        )
     }
 
     fun removeCurrency(value: Int) {
         if (value <= 0) {
-            GameLogger.error(TAG, "removeCurrency(): value must be greater than 0: $value")
+            GameLogger.error(TAG, "removeCurrency(): value must be greater than 0: $value.")
             return
         }
 
-        if (currency.translate(-value)) listeners.forEach { it.onRemoveCurrency(value) }
+        if (currency.translate(-value)) {
+            GameLogger.debug(TAG, "removeCurrency(): removed $value from currency")
+            listeners.forEach { it.onRemoveCurrency(value) }
+        } else GameLogger.debug(
+            TAG, "removeCurrency(): did not remove $value from currency. " +
+                "Not an error if currency is already at min: getCurrency=${getCurrency()}."
+        )
     }
 
     fun getCurrency() = currency.current

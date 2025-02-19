@@ -1772,6 +1772,7 @@ sprites/frames/Ui1/MegamanMaverick.png
 sprites/frames/Ui1/RedBit.png
 sprites/frames/Ui1/Canvas.png
 sprites/frames/Ui1/StageSelectBox_Blinking.png
+sprites/frames/Ui1/BitRotated.png
 sprites/frames/Ui1/Background.png
 sprites/frames/Ui1/Stars4.png
 sprites/frames/Ui1/StageSelectBox_Highlighted.png
@@ -1783,10 +1784,15 @@ sprites/frames/Ui1/Pane.png
 sprites/frames/Ui1/blue.png
 sprites/frames/Ui1/BlackBit.png
 sprites/frames/Ui1/ZeroSilhouette.png
+sprites/frames/LevelPauseScreen/enhancements/enhancements.png
 sprites/frames/LevelPauseScreen/health_tanks/b.png
+sprites/frames/LevelPauseScreen/health_tanks/c_selected.png
 sprites/frames/LevelPauseScreen/health_tanks/a.png
 sprites/frames/LevelPauseScreen/health_tanks/c.png
 sprites/frames/LevelPauseScreen/health_tanks/d.png
+sprites/frames/LevelPauseScreen/health_tanks/d_selected.png
+sprites/frames/LevelPauseScreen/health_tanks/a_selected.png
+sprites/frames/LevelPauseScreen/health_tanks/b_selected.png
 sprites/frames/LevelPauseScreen/background.png
 sprites/frames/LevelPauseScreen/weapons/fire_ball.png
 sprites/frames/LevelPauseScreen/weapons/fire_ball_selected.png

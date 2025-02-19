@@ -263,7 +263,7 @@ class MegamanMaverickGame(
         debugText = MegaFontHandle(
             ConstVals.EMPTY_STRING,
             positionX = ConstVals.PPM.toFloat(),
-            positionY = (ConstVals.VIEW_HEIGHT - 1) * ConstVals.PPM,
+            positionY = (ConstVals.VIEW_HEIGHT - 2) * ConstVals.PPM,
             centerX = false
         )
         // val fpsTextSupplier: () -> String = { "FPS: ${Gdx.graphics.framesPerSecond}" }

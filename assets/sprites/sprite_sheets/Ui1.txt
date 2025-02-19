@@ -1,5 +1,5 @@
 Ui1.png
-size: 956, 1677
+size: 974, 1770
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -12,23 +12,30 @@ Arrow
   index: -1
 Background
   rotate: false
-  xy: 204, 48
+  xy: 154, 50
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 bar
   rotate: false
-  xy: 268, 48
+  xy: 218, 50
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 Bit
   rotate: false
-  xy: 0, 240
+  xy: 592, 178
   size: 292, 76
   orig: 292, 76
+  offset: 0, 0
+  index: -1
+BitRotated
+  rotate: false
+  xy: 300, 890
+  size: 76, 292
+  orig: 76, 292
   offset: 0, 0
   index: -1
 black
@@ -40,7 +47,7 @@ black
   index: -1
 BlackBar
   rotate: false
-  xy: 524, 48
+  xy: 474, 50
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -54,14 +61,14 @@ BlackBit
   index: -1
 blinking_50x50
   rotate: false
-  xy: 420, 240
+  xy: 80, 274
   size: 50, 100
   orig: 50, 100
   offset: 0, 0
   index: -1
 blue
   rotate: false
-  xy: 588, 48
+  xy: 538, 50
   size: 80, 64
   orig: 80, 64
   offset: 0, 0
@@ -75,77 +82,77 @@ BorderBlock
   index: -1
 Canvas
   rotate: false
-  xy: 400, 1197
+  xy: 400, 1290
   size: 512, 480
   orig: 512, 480
   offset: 0, 0
   index: -1
 EmptyBit
   rotate: false
-  xy: 520, 240
+  xy: 180, 274
   size: 388, 102
   orig: 388, 102
   offset: 0, 0
   index: -1
 MegamanHelmet
   rotate: false
-  xy: 256, 797
+  xy: 0, 890
   size: 300, 284
   orig: 300, 284
   offset: 0, 0
   index: -1
 MegamanMaverick
   rotate: false
-  xy: 668, 48
+  xy: 618, 50
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 MegamanPose
   rotate: false
-  xy: 0, 460
+  xy: 846, 378
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 MugshotPane/blinking
   rotate: false
-  xy: 128, 460
+  xy: 0, 506
   size: 80, 128
   orig: 80, 128
   offset: 0, 0
   index: -1
 MugshotPane/blinking_48x48
   rotate: false
-  xy: 292, 240
+  xy: 884, 178
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 MugshotPane/blinking_50x50
   rotate: false
-  xy: 470, 240
+  xy: 130, 274
   size: 50, 100
   orig: 50, 100
   offset: 0, 0
   index: -1
 MugshotPane/blinking_52x52
   rotate: false
-  xy: 0, 342
+  xy: 568, 274
   size: 52, 104
   orig: 52, 104
   offset: 0, 0
   index: -1
 MugshotPane/blinking_80x48
   rotate: false
-  xy: 340, 240
+  xy: 0, 274
   size: 80, 96
   orig: 80, 96
   offset: 0, 0
   index: -1
 MugshotPane/highlighted
   rotate: false
-  xy: 732, 48
+  xy: 682, 50
   size: 80, 64
   orig: 80, 64
   offset: 0, 0
@@ -159,14 +166,14 @@ MugshotPane/highlighted_48x48
   index: -1
 MugshotPane/highlighted_50x50
   rotate: false
-  xy: 0, 48
+  xy: 908, 0
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 MugshotPane/highlighted_52x52
   rotate: false
-  xy: 100, 48
+  xy: 50, 50
   size: 52, 52
   orig: 52, 52
   offset: 0, 0
@@ -180,7 +187,7 @@ MugshotPane/highlighted_80x48
   index: -1
 MugshotPane/left
   rotate: false
-  xy: 812, 48
+  xy: 762, 50
   size: 80, 64
   orig: 80, 64
   offset: 0, 0
@@ -194,7 +201,7 @@ MugshotPane/left_80x48
   index: -1
 MugshotPane/none
   rotate: false
-  xy: 0, 112
+  xy: 842, 50
   size: 80, 64
   orig: 80, 64
   offset: 0, 0
@@ -208,14 +215,14 @@ MugshotPane/none_48x48
   index: -1
 MugshotPane/none_50x50
   rotate: false
-  xy: 50, 48
+  xy: 0, 50
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 MugshotPane/none_52x52
   rotate: false
-  xy: 152, 48
+  xy: 102, 50
   size: 52, 52
   orig: 52, 52
   offset: 0, 0
@@ -229,7 +236,7 @@ MugshotPane/none_80x48
   index: -1
 MugshotPane/right
   rotate: false
-  xy: 80, 112
+  xy: 0, 114
   size: 80, 64
   orig: 80, 64
   offset: 0, 0
@@ -243,56 +250,56 @@ MugshotPane/right_80x48
   index: -1
 MugshotPane/Text/DESERT_MAN
   rotate: false
-  xy: 160, 112
+  xy: 80, 114
   size: 80, 64
   orig: 80, 64
   offset: 0, 0
   index: -1
 MugshotPane/Text/GLACIER_MAN
   rotate: false
-  xy: 240, 112
+  xy: 160, 114
   size: 80, 64
   orig: 80, 64
   offset: 0, 0
   index: -1
 MugshotPane/Text/INFERNO_MAN
   rotate: false
-  xy: 320, 112
+  xy: 240, 114
   size: 80, 64
   orig: 80, 64
   offset: 0, 0
   index: -1
 MugshotPane/Text/MOON_MAN
   rotate: false
-  xy: 400, 112
+  xy: 320, 114
   size: 80, 64
   orig: 80, 64
   offset: 0, 0
   index: -1
 MugshotPane/Text/PRECIOUS_MAN
   rotate: false
-  xy: 480, 112
+  xy: 400, 114
   size: 80, 64
   orig: 80, 64
   offset: 0, 0
   index: -1
 MugshotPane/Text/REACTOR_MAN
   rotate: false
-  xy: 560, 112
+  xy: 480, 114
   size: 80, 64
   orig: 80, 64
   offset: 0, 0
   index: -1
 MugshotPane/Text/RODENT_MAN
   rotate: false
-  xy: 640, 112
+  xy: 560, 114
   size: 80, 64
   orig: 80, 64
   offset: 0, 0
   index: -1
 MugshotPane/Text/TIMBER_WOMAN
   rotate: false
-  xy: 720, 112
+  xy: 640, 114
   size: 80, 64
   orig: 80, 64
   offset: 0, 0
@@ -313,35 +320,35 @@ OrangeBit
   index: -1
 Pane
   rotate: false
-  xy: 800, 112
+  xy: 720, 114
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 PaneBlinking
   rotate: false
-  xy: 0, 176
+  xy: 784, 114
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 PaneHighlighted
   rotate: false
-  xy: 128, 176
+  xy: 0, 178
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 PaneShattered
   rotate: false
-  xy: 192, 176
+  xy: 64, 178
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 RedBit
   rotate: false
-  xy: 438, 342
+  xy: 386, 378
   size: 460, 118
   orig: 460, 118
   offset: 0, 0
@@ -425,77 +432,77 @@ ScreenController/start
   index: -1
 StageSelectBox_Blinking
   rotate: false
-  xy: 256, 176
+  xy: 128, 178
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 StageSelectBox_Highlighted
   rotate: false
-  xy: 556, 797
+  xy: 376, 890
   size: 400, 400
   orig: 400, 400
   offset: 0, 0
   index: -1
 StageSelectBox_Unhighlighted
   rotate: false
-  xy: 0, 1197
+  xy: 0, 1290
   size: 400, 400
   orig: 400, 400
   offset: 0, 0
   index: -1
 StandardBit
   rotate: false
-  xy: 52, 342
+  xy: 0, 378
   size: 386, 104
   orig: 386, 104
   offset: 0, 0
   index: -1
 Stars
   rotate: false
-  xy: 384, 176
+  xy: 256, 178
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 Stars1
   rotate: false
-  xy: 0, 605
+  xy: 626, 506
   size: 256, 192
   orig: 256, 192
   offset: 0, 0
   index: -1
 Stars2
   rotate: false
-  xy: 256, 605
+  xy: 0, 698
   size: 256, 192
   orig: 256, 192
   offset: 0, 0
   index: -1
 Stars3
   rotate: false
-  xy: 512, 605
+  xy: 256, 698
   size: 256, 192
   orig: 256, 192
   offset: 0, 0
   index: -1
 Stars4
   rotate: false
-  xy: 0, 797
+  xy: 512, 698
   size: 256, 192
   orig: 256, 192
   offset: 0, 0
   index: -1
 Subtitle8bit
   rotate: false
-  xy: 464, 460
+  xy: 336, 506
   size: 145, 145
   orig: 145, 145
   offset: 0, 0
   index: -1
 white
   rotate: false
-  xy: 640, 176
+  xy: 512, 178
   size: 80, 64
   orig: 80, 64
   offset: 0, 0
@@ -509,21 +516,21 @@ WhiteFrameBlackPane
   index: -1
 Z
   rotate: false
-  xy: 208, 460
+  xy: 80, 506
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 Z8bit
   rotate: false
-  xy: 609, 460
+  xy: 481, 506
   size: 145, 145
   orig: 145, 145
   offset: 0, 0
   index: -1
 ZeroSilhouette
   rotate: false
-  xy: 336, 460
+  xy: 208, 506
   size: 128, 128
   orig: 128, 128
   offset: 0, 0

@@ -16,7 +16,7 @@ class Screw(game: MegamanMaverickGame) : AbstractEnergyItem(game) {
     }
 
     override fun contactWithPlayer(megaman: Megaman) {
-        GameLogger.debug(TAG, "contactWithPlayer(): megaman=$megaman")
+        GameLogger.debug(TAG, "contactWithPlayer()")
 
         destroy()
 

@@ -32,6 +32,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
@@ -51,7 +52,7 @@ import com.megaman.maverick.game.utils.extensions.toGdxRectangle
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
+class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
     companion object {
         const val TAG = "Fireball"
@@ -61,6 +62,9 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         const val BURST_ON_HIT_BLOCK = "burst_on_hit_block"
 
         private const val BURST_CULL_DUR = 0.5f
+
+        private const val NORMAL_SIZE = 0.25f
+        private const val BURST_SIZE = 1f
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -192,18 +196,30 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         feetFixture.drawingColor = Color.GREEN
         debugShapes.add { feetFixture }
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
+        val damagerBounds = GameRectangle()
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, damagerBounds)
+        damagerFixture.attachedToBody = false
         body.addFixture(damagerFixture)
         debugShapes.add { damagerFixture }
 
-        val projectileFixture = Fixture(
-            body,
-            FixtureType.PROJECTILE,
-            GameRectangle().setSize(1.25f * body.getWidth(), 1.25f * body.getHeight())
-        )
+        val projectileBounds = GameRectangle()
+        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, projectileBounds)
+        projectileFixture.attachedToBody = false
         body.addFixture(projectileFixture)
 
-        body.preProcess.put(ConstKeys.DAMAGER) {
+        body.preProcess.put(ConstKeys.FIXTURES) {
+            val size = if (burst) BURST_SIZE else NORMAL_SIZE
+            damagerBounds.setSize(size * ConstVals.PPM)
+            projectileBounds.setSize(size * ConstVals.PPM)
+
+            val position = when {
+                burst -> DirectionPositionMapper.getInvertedPosition(burstDirection)
+                else -> Position.BOTTOM_CENTER
+            }
+            val bodyPoint = body.getPositionPoint(position)
+            damagerBounds.positionOnPoint(bodyPoint, position)
+            projectileBounds.positionOnPoint(bodyPoint, position)
+
             damagerFixture.setActive(canDamage)
             damagerFixture.drawingColor = if (damagerFixture.isActive()) Color.RED else Color.GRAY
         }

@@ -198,6 +198,39 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/LevelPauseScreen/enhancements/enhancements.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>128,112,256,224</rect>
+                <key>scale9Paddings</key>
+                <rect>128,112,256,224</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/LevelPauseScreen/health_tanks/a_selected.png</key>
+            <key type="filename">../frames/LevelPauseScreen/health_tanks/b_selected.png</key>
+            <key type="filename">../frames/LevelPauseScreen/health_tanks/c_selected.png</key>
+            <key type="filename">../frames/LevelPauseScreen/health_tanks/d_selected.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>64,56,128,112</rect>
+                <key>scale9Paddings</key>
+                <rect>64,56,128,112</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/LevelPauseScreen/weapons/rush_jetpack.png</key>
             <key type="filename">../frames/LevelPauseScreen/weapons/rush_jetpack_selected.png</key>
             <struct type="IndividualSpriteSettings">

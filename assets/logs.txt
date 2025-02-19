@@ -1,62 +1,795 @@
-===== SESSION STARTED: 2025-02-16T22:34:26.237103270 =====
-22:34:26 | DEBUG | MegamanMaverickGame | resize(): width=1920, height=1080
-22:34:26 | DEBUG | MegamanMaverickGame | resize(): width=1920, height=995
-22:34:26 | LOG | MegamanMaverickGame | resume()
-22:34:26 | LOG | MegamanMaverickGame | pause()
-22:34:27 | LOG | MegamanMaverickGame | resume()
-22:34:27 | DEBUG | Megaman | init()
-22:34:27 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=MEGA_BUSTER, entry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@12dae582, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x000076abb021d430@239b0f9d, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x000076abb021d650@619bfe29, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x000076abb021d870@5b057c8c, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x000076abb021da90@1eb6749b, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x000076abb021dcb0@652a7737), weapons=com.badlogic.gdx.utils.ObjectMap$Keys@5b7ea70d
-22:34:27 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=null
-22:34:27 | DEBUG | GameState | addListener(): listener={ Megaman:[mapObjId=0, dead=false, hashCode=1807176280] }, added=true
-22:34:27 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = SIMPLE_INIT_GAME_SCREEN
-22:34:27 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = LOGO_SCREEN
-22:34:28 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = MAIN_MENU_SCREEN
-22:34:28 | DEBUG | MainMenuScreen | current button key: START NEW GAME
-22:34:28 | DEBUG | MainMenuScreen | blinking arrows keys: [LOAD SAVE FILE, SETTINGS, EXIT, START NEW GAME, KEYBOARD SETTINGS, CREDITS, BACK, MUSIC VOLUME, CONTROLLER SETTINGS, SFX VOLUME]
-22:34:28 | DEBUG | MainMenuScreen | Current button: LOAD SAVE FILE
-22:34:29 | DEBUG | MegamanMaverickGame | loadSavedState(): loading state: state=INTRO_STAGE,GLACIER_MAN,REACTOR_MAN,TIMBER_WOMAN,RODENT_MAN,DESERT_MAN,INFERNO_MAN;G;;;200
-22:34:29 | DEBUG | GameState | reset()
-22:34:29 | DEBUG | GameState | fromString(): s=INTRO_STAGE,GLACIER_MAN,REACTOR_MAN,TIMBER_WOMAN,RODENT_MAN,DESERT_MAN,INFERNO_MAN;G;;;200
-22:34:29 | DEBUG | GameState | addLevelDefeated(): level=INTRO_STAGE, added=true
-22:34:29 | DEBUG | GameState | addLevelDefeated(): level=GLACIER_MAN, added=true
-22:34:29 | DEBUG | GameState | addLevelDefeated(): level=REACTOR_MAN, added=true
-22:34:29 | DEBUG | GameState | addLevelDefeated(): level=TIMBER_WOMAN, added=true
-22:34:29 | DEBUG | GameState | addLevelDefeated(): level=RODENT_MAN, added=true
-22:34:29 | DEBUG | GameState | addLevelDefeated(): level=DESERT_MAN, added=true
-22:34:29 | DEBUG | GameState | addLevelDefeated(): level=INFERNO_MAN, added=true
-22:34:29 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=FIRE_BALL, entry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@21694e53, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$286/0x000076abb0236c78@72b16078, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$287/0x000076abb0236e98@22c86919, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$288/0x000076abb02370b8@70fab835, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$289/0x000076abb02372d8@1b0a7baf, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$290/0x000076abb02374f8@62417a16), weapons=com.badlogic.gdx.utils.ObjectMap$Keys@32057e6
-22:34:29 | DEBUG | GameState | addHeartTank(): heartTank=G, added=true
-22:34:29 | DEBUG | MainMenuScreen | Loaded saved state
-22:34:29 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = LEVEL_SELECT_SCREEN
-22:34:29 | DEBUG | LevelSelectScreen | putBossMugshot(): put moon pieces for Moon Man
-22:34:32 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = LEVEL_SCREEN
-22:34:32 | DEBUG | CameraManagerForRooms | set focus to { Megaman:[mapObjId=0, dead=false, hashCode=1807176280] }
-22:34:32 | DEBUG | LevelPauseScreen | init(): buttonRegions={mega_buster=weapons/mega_buster, mega_buster_selected=weapons/mega_buster_selected, fire_ball=weapons/fire_ball, fire_ball_selected=weapons/fire_ball_selected, moon_scythe=weapons/moon_scythe, moon_scythe_selected=weapons/moon_scythe_selected, rush_jetpack=weapons/rush_jetpack, rush_jetpack_selected=weapons/rush_jetpack_selected, a=health_tanks/a, a_selected=null, b=health_tanks/b, b_selected=null, c=health_tanks/c, c_selected=null, d=health_tanks/d, d_selected=null}
-22:34:32 | LOG | MegaLevelScreen | event(): event.key=PLAYER_SPAWN
-22:34:32 | DEBUG | MegaLevelScreenEventListener | onEvent(): Player spawn --> reset camera manager for rooms and spawn megaman
-22:34:32 | DEBUG | MegaLevelScreen | onEvent(): Player spawn --> spawn Megaman: Properties({
-	[bounds=[64.0,1408.0,32.0,32.0]]
-	[x=64.0]
+===== SESSION STARTED: 2025-02-18T19:49:06.517627183 =====
+19:49:06 | DEBUG | MegamanMaverickGame | resize(): width=1920, height=1080
+19:49:06 | DEBUG | MegamanMaverickGame | resize(): width=1920, height=995
+19:49:07 | DEBUG | Megaman | init()
+19:49:07 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=MEGA_BUSTER, entry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966), weapons=com.badlogic.gdx.utils.ObjectMap$Keys@1dd0e7c4
+19:49:07 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=null
+19:49:07 | DEBUG | GameState | addListener(): listener={ Megaman:[mapObjId=0, dead=false, hashCode=1637613097] }, added=true
+19:49:08 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = SIMPLE_INIT_GAME_SCREEN
+19:49:08 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = LOGO_SCREEN
+19:49:08 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = MAIN_MENU_SCREEN
+19:49:08 | DEBUG | MainMenuScreen | current button key: START NEW GAME
+19:49:08 | DEBUG | MainMenuScreen | blinking arrows keys: [LOAD SAVE FILE, SETTINGS, EXIT, START NEW GAME, KEYBOARD SETTINGS, CREDITS, BACK, MUSIC VOLUME, CONTROLLER SETTINGS, SFX VOLUME]
+19:49:09 | DEBUG | MainMenuScreen | Current button: LOAD SAVE FILE
+19:49:09 | DEBUG | MegamanMaverickGame | loadSavedState(): loading state: state=INTRO_STAGE,GLACIER_MAN,REACTOR_MAN,TIMBER_WOMAN,RODENT_MAN,DESERT_MAN,INFERNO_MAN;G;;;200
+19:49:09 | DEBUG | GameState | reset()
+19:49:09 | DEBUG | GameState | fromString(): s=INTRO_STAGE,GLACIER_MAN,REACTOR_MAN,TIMBER_WOMAN,RODENT_MAN,DESERT_MAN,INFERNO_MAN;G;;;200
+19:49:09 | DEBUG | GameState | addLevelDefeated(): level=INTRO_STAGE, added=true
+19:49:09 | DEBUG | GameState | addLevelDefeated(): level=GLACIER_MAN, added=true
+19:49:09 | DEBUG | GameState | addLevelDefeated(): level=REACTOR_MAN, added=true
+19:49:09 | DEBUG | GameState | addLevelDefeated(): level=TIMBER_WOMAN, added=true
+19:49:09 | DEBUG | GameState | addLevelDefeated(): level=RODENT_MAN, added=true
+19:49:09 | DEBUG | GameState | addLevelDefeated(): level=DESERT_MAN, added=true
+19:49:09 | DEBUG | GameState | addLevelDefeated(): level=INFERNO_MAN, added=true
+19:49:09 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=FIRE_BALL, entry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@6b5176f2, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$286/0x00007ba378236a70@b672aa8, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$287/0x00007ba378236c90@2fab4aff, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$288/0x00007ba378236eb0@ec0c838, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$289/0x00007ba3782370d0@6e46d9f4, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$290/0x00007ba3782372f0@5cc69cfe), weapons=com.badlogic.gdx.utils.ObjectMap$Keys@29cfd92b
+19:49:09 | DEBUG | GameState | addHeartTank(): heartTank=G, added=true
+19:49:09 | DEBUG | MainMenuScreen | Loaded saved state
+19:49:09 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = LEVEL_SELECT_SCREEN
+19:49:09 | DEBUG | LevelSelectScreen | putBossMugshot(): put moon pieces for Moon Man
+19:49:11 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = LEVEL_SCREEN
+19:49:11 | DEBUG | PlayerStatsHandler | init()
+19:49:11 | DEBUG | CameraManagerForRooms | set focus to { Megaman:[mapObjId=0, dead=false, hashCode=1637613097] }
+19:49:11 | DEBUG | LevelPauseScreen | init(): buttonRegions={mega_buster=weapons/mega_buster, mega_buster_selected=weapons/mega_buster_selected, fire_ball=weapons/fire_ball, fire_ball_selected=weapons/fire_ball_selected, moon_scythe=weapons/moon_scythe, moon_scythe_selected=weapons/moon_scythe_selected, rush_jetpack=weapons/rush_jetpack, rush_jetpack_selected=weapons/rush_jetpack_selected, a=health_tanks/a, a_selected=health_tanks/a_selected, b=health_tanks/b, b_selected=health_tanks/b_selected, c=health_tanks/c, c_selected=health_tanks/c_selected, d=health_tanks/d, d_selected=health_tanks/d_selected}
+19:49:12 | LOG | MegaLevelScreen | event(): event.key=PLAYER_SPAWN
+19:49:12 | DEBUG | MegaLevelScreenEventListener | onEvent(): Player spawn --> reset camera manager for rooms and spawn megaman
+19:49:12 | DEBUG | MegaLevelScreen | onEvent(): Player spawn --> spawn Megaman: Properties({
+	[bounds=[96.0,2464.0,32.0,32.0]]
+	[x=96.0]
 	[height=32.0]
-	[id=9]
+	[id=14]
 	[name=0]
-	[y=1408.0]
+	[y=2464.0]
 	[width=32.0]
 })
-22:34:32 | DEBUG | Megaman | direction-set(): value=UP
-22:34:32 | DEBUG | Megaman | direction-set(): value same as field
-22:34:32 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=MEGA_BUSTER
-22:34:32 | DEBUG | CameraManagerForRooms | update(): reset
-22:34:32 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = com.badlogic.gdx.maps.objects.RectangleMapObject@7a7cc52c
-22:34:34 | LOG | MegaLevelScreen | event(): event.key=PLAYER_READY
-22:34:34 | DEBUG | MegaLevelScreenEventListener | onEvent(): Player ready
-22:34:34 | DEBUG | MegamanControllerComponent | right actuator just pressed
-22:34:36 | DEBUG | MegamanControllerComponent | right actuator just released
-22:34:38 | LOG | MegamanMaverickGame | pause()
-22:34:38 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
-22:34:38 | DEBUG | LevelPauseScreen | show(): currentButtonKey=mega_buster, node=TableNode{ element=MEGA_BUSTER, row=0, column=0 }, table=Table{
+19:49:12 | DEBUG | Megaman | direction-set(): value=UP
+19:49:12 | DEBUG | Megaman | direction-set(): value same as field
+19:49:12 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=MEGA_BUSTER
+19:49:12 | DEBUG | CameraManagerForRooms | update(): reset
+19:49:12 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = com.badlogic.gdx.maps.objects.RectangleMapObject@3724b43e
+19:49:14 | LOG | MegaLevelScreen | event(): event.key=PLAYER_READY
+19:49:14 | DEBUG | MegaLevelScreenEventListener | onEvent(): Player ready
+19:49:14 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:49:15 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:49:16 | DEBUG | MegamanControllerComponent | right actuator just released
+19:49:16 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = DOWN
+19:49:16 | DEBUG | MegaLevelScreen | Begin transition logic for camera manager
+19:49:16 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (572.51324,2560.0)
+19:49:16 | DEBUG | MegamanEventListener | BEGIN ROOM TRANS: position=(572.51324,2356.25)
+19:49:16 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:49:18 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (572.51324,2112.0)
+19:49:18 | DEBUG | MegaLevelScreen | End transition logic for camera manager
+19:49:18 | DEBUG | MegamanEventListener | endRoomTrans(): setVel=true
+19:49:18 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:49:18 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:49:18 | DEBUG | MegamanControllerComponent | right actuator just released
+19:49:18 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:49:19 | DEBUG | MegamanControllerComponent | left actuator just released
+19:49:19 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:49:19 | LOG | MegaLevelScreen | event(): event.key=ATTAIN_HEALTH_TANK
+19:49:19 | DEBUG | PlayerStatsHandler | attain(): healthTank=A
+19:49:20 | DEBUG | GameState | addHealthTank(): healthTank=A
+19:49:20 | DEBUG | PlayerStatsHandler | update(): timer just finished: pop timer from queue: queue.size=0
+19:49:20 | DEBUG | PlayerStatsHandler | update(): timer queue just emptied: turn on all systems
+19:49:20 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:49:20 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:49:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:49:20 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:49:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:49:20 | DEBUG | MegamanControllerComponent | left actuator just released
+19:49:20 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:49:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:49:20 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:49:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:49:20 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:49:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:49:20 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:49:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:49:20 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:49:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:49:20 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:49:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:49:21 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:49:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:49:21 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:49:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:49:21 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:49:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:49:21 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:49:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:49:21 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:49:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:49:21 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:49:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:49:22 | DEBUG | Megaman | takeDamageFrom(): healthDiff=3, damager={ Ratton:[mapObjId=502, dead=false, hashCode=1488608048] }
+19:49:22 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:49:23 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:49:23 | DEBUG | MegamanControllerComponent | left actuator just released
+19:49:23 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:49:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:49:23 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:49:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:49:23 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:49:23 | DEBUG | MegamanControllerComponent | right actuator just released
+19:49:23 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:49:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:49:23 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:49:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:49:23 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:49:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:49:23 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:49:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:49:23 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:49:24 | DEBUG | MegamanControllerComponent | left actuator just released
+19:49:24 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:49:24 | LOG | MegaLevelScreen | event(): event.key=ADD_CURRENCY
+19:49:24 | DEBUG | GameState | addCurrency(): added 3 to currency
+19:49:24 | DEBUG | MegamanControllerComponent | right actuator just released
+19:49:24 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:49:24 | DEBUG | MegamanControllerComponent | left actuator just released
+19:49:25 | DEBUG | MegaLevelScreen | render(): pause game
+19:49:25 | LOG | MegamanMaverickGame | pause()
+19:49:25 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:49:25 | DEBUG | LevelPauseScreen | show(): currentButtonKey=mega_buster, node=TableNode{ element=MEGA_BUSTER, row=0, column=0 }, table=Table{
 	[TableNode{ element=MEGA_BUSTER, row=0, column=0 }]
 	[TableNode{ element=FIRE_BALL, row=1, column=0 }]
-}, buttons=[fire_ball, mega_buster], buttonSprites=[mega_buster, fire_ball]
-22:34:38 | LOG | MegamanMaverickGame | dispose()
-22:34:38 | DEBUG | MegaLevelScreen | dispose(): Disposing level screen
+	[TableNode{ element=A, row=2, column=0 }]
+}, buttons=[fire_ball, mega_buster, a], buttonSprites=[mega_buster, fire_ball, a]
+19:49:26 | DEBUG | LevelPauseScreen | createWeaponButton(): onNavigate(): weapon=MEGA_BUSTER, direction=DOWN
+19:49:26 | DEBUG | LevelPauseScreen | navigate(): direction=DOWN, oldNode=TableNode{ element=MEGA_BUSTER, row=0, column=0 }, node=TableNode{ element=FIRE_BALL, row=1, column=0 }
+19:49:26 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:49:26 | DEBUG | LevelPauseScreen | createWeaponButton(): onNavigate(): weapon=FIRE_BALL, direction=DOWN
+19:49:26 | DEBUG | LevelPauseScreen | navigate(): direction=DOWN, oldNode=TableNode{ element=FIRE_BALL, row=1, column=0 }, node=TableNode{ element=A, row=2, column=0 }
+19:49:26 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:49:27 | DEBUG | LevelPauseScreen | createHealthTankButton(): onNavigate(): healthTank=A, direction=UP
+19:49:27 | DEBUG | LevelPauseScreen | navigate(): direction=UP, oldNode=TableNode{ element=A, row=2, column=0 }, node=TableNode{ element=FIRE_BALL, row=1, column=0 }
+19:49:27 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:49:27 | DEBUG | LevelPauseScreen | createWeaponButton(): onNavigate(): weapon=FIRE_BALL, direction=UP
+19:49:27 | DEBUG | LevelPauseScreen | navigate(): direction=UP, oldNode=TableNode{ element=FIRE_BALL, row=1, column=0 }, node=TableNode{ element=MEGA_BUSTER, row=0, column=0 }
+19:49:27 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:49:27 | DEBUG | LevelPauseScreen | createWeaponButton(): onSelect(): weapon=MEGA_BUSTER
+19:49:27 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=MEGA_BUSTER
+19:49:27 | DEBUG | LevelPauseScreen | onAnySelection()
+19:49:28 | LOG | MegamanMaverickGame | resume()
+19:49:28 | DEBUG | LevelPauseScreen | reset()
+19:49:28 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:49:28 | DEBUG | MegamanControllerComponent | left actuator just released
+19:49:30 | DEBUG | MegaLevelScreen | render(): pause game
+19:49:30 | LOG | MegamanMaverickGame | pause()
+19:49:30 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:49:30 | DEBUG | LevelPauseScreen | show(): currentButtonKey=mega_buster, node=TableNode{ element=MEGA_BUSTER, row=0, column=0 }, table=Table{
+	[TableNode{ element=MEGA_BUSTER, row=0, column=0 }]
+	[TableNode{ element=FIRE_BALL, row=1, column=0 }]
+	[TableNode{ element=A, row=2, column=0 }]
+}, buttons=[fire_ball, mega_buster, a], buttonSprites=[mega_buster, fire_ball, a]
+19:49:31 | DEBUG | LevelPauseScreen | createWeaponButton(): onNavigate(): weapon=MEGA_BUSTER, direction=DOWN
+19:49:31 | DEBUG | LevelPauseScreen | navigate(): direction=DOWN, oldNode=TableNode{ element=MEGA_BUSTER, row=0, column=0 }, node=TableNode{ element=FIRE_BALL, row=1, column=0 }
+19:49:31 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:49:31 | DEBUG | LevelPauseScreen | createWeaponButton(): onNavigate(): weapon=FIRE_BALL, direction=DOWN
+19:49:31 | DEBUG | LevelPauseScreen | navigate(): direction=DOWN, oldNode=TableNode{ element=FIRE_BALL, row=1, column=0 }, node=TableNode{ element=A, row=2, column=0 }
+19:49:31 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:49:32 | DEBUG | LevelPauseScreen | createHealthTankButton(): onSelect(): healthTank=A
+19:49:32 | DEBUG | LevelPauseScreen | createHealthTankButton(): onNavigate(): healthTank=A, direction=UP
+19:49:32 | DEBUG | LevelPauseScreen | navigate(): direction=UP, oldNode=TableNode{ element=A, row=2, column=0 }, node=TableNode{ element=FIRE_BALL, row=1, column=0 }
+19:49:32 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:49:33 | DEBUG | LevelPauseScreen | createWeaponButton(): onNavigate(): weapon=FIRE_BALL, direction=UP
+19:49:33 | DEBUG | LevelPauseScreen | navigate(): direction=UP, oldNode=TableNode{ element=FIRE_BALL, row=1, column=0 }, node=TableNode{ element=MEGA_BUSTER, row=0, column=0 }
+19:49:33 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:49:33 | DEBUG | LevelPauseScreen | createWeaponButton(): onSelect(): weapon=MEGA_BUSTER
+19:49:33 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=MEGA_BUSTER
+19:49:33 | DEBUG | LevelPauseScreen | onAnySelection()
+19:49:33 | LOG | MegamanMaverickGame | resume()
+19:49:33 | DEBUG | LevelPauseScreen | reset()
+19:49:33 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:49:34 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:49:34 | DEBUG | MegamanControllerComponent | left actuator just released
+19:49:34 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:49:36 | DEBUG | MegamanControllerComponent | right actuator just released
+19:49:37 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:49:39 | DEBUG | MegamanControllerComponent | right actuator just released
+19:49:40 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:49:43 | DEBUG | MegamanControllerComponent | right actuator just released
+19:49:43 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:49:45 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = UP
+19:49:45 | DEBUG | MegaLevelScreen | Begin transition logic for camera manager
+19:49:45 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (576.0,2112.0)
+19:49:45 | DEBUG | MegamanEventListener | BEGIN ROOM TRANS: position=(580.1801,2317.7402)
+19:49:46 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (576.0,2560.0)
+19:49:46 | DEBUG | MegaLevelScreen | End transition logic for camera manager
+19:49:46 | DEBUG | MegamanEventListener | endRoomTrans(): setVel=true
+19:49:46 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:49:46 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:49:46 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:49:47 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:49:47 | DEBUG | MegamanControllerComponent | right actuator just released
+19:49:49 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:49:49 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:49:49 | DEBUG | MegamanControllerComponent | left actuator just released
+19:49:49 | DEBUG | MegamanControllerComponent | right actuator just released
+19:49:49 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:49:49 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+19:49:49 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+19:49:49 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:49:49 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:49:49 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:49:50 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:49:50 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:49:51 | DEBUG | MegamanControllerComponent | right actuator just released
+19:49:51 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:49:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+19:49:51 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+19:49:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:49:52 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:49:52 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:49:53 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:49:53 | DEBUG | MegamanControllerComponent | right actuator just released
+19:49:54 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:49:54 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+19:49:54 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+19:49:54 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:49:54 | DEBUG | MegamanControllerComponent | left actuator just released
+19:49:54 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:49:54 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:49:54 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:49:54 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:49:54 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:49:54 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:49:54 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:49:54 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:49:54 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:49:54 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:49:55 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:49:56 | DEBUG | MegamanControllerComponent | left actuator just released
+19:49:56 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:49:57 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:49:57 | DEBUG | MegamanControllerComponent | right actuator just released
+19:49:57 | DEBUG | MegamanControllerComponent | left actuator just released
+19:49:57 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:49:57 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+19:49:57 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+19:49:57 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:49:58 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:49:58 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:49:58 | LOG | MegaLevelScreen | event(): event.key=ADD_PLAYER_HEALTH
+19:49:58 | DEBUG | PlayerStatsHandler | addHealth(): heathMegamanNeeds=3, value=3
+19:49:58 | DEBUG | PlayerStatsHandler | addHealth(): value less than what Megaman needs, don't add any to health tanks
+19:49:58 | DEBUG | PlayerStatsHandler | addHealth(): add runnable to timer: time=0.0
+19:49:58 | DEBUG | PlayerStatsHandler | addHealth(): add runnable to timer: time=0.075
+19:49:58 | DEBUG | PlayerStatsHandler | addHealth(): add runnable to timer: time=0.15
+19:49:58 | DEBUG | PlayerStatsHandler | addHealth(): add timer to queue: queue.size=1
+19:49:58 | DEBUG | PlayerStatsHandler | addHealth(): shut off all systems expect sprites system
+19:49:58 | DEBUG | PlayerStatsHandler | addHealth(): timer: translate health by one
+19:49:58 | DEBUG | PlayerStatsHandler | addHealth(): timer: translate health by one
+19:49:58 | DEBUG | PlayerStatsHandler | addHealth(): timer: translate health by one
+19:49:58 | DEBUG | PlayerStatsHandler | update(): timer just finished: pop timer from queue: queue.size=0
+19:49:58 | DEBUG | PlayerStatsHandler | update(): timer queue just emptied: turn on all systems
+19:49:59 | DEBUG | MegamanControllerComponent | left actuator just released
+19:49:59 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:50:01 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:50:01 | DEBUG | MegamanControllerComponent | right actuator just released
+19:50:01 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:50:01 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+19:50:01 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+19:50:01 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:50:01 | DEBUG | MegamanControllerComponent | left actuator just released
+19:50:01 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:50:01 | DEBUG | MegamanControllerComponent | right actuator just released
+19:50:01 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:50:02 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:50:03 | DEBUG | MegamanControllerComponent | left actuator just released
+19:50:03 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:50:03 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:50:04 | DEBUG | MegamanControllerComponent | right actuator just released
+19:50:04 | DEBUG | MegamanControllerComponent | left actuator just released
+19:50:04 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:50:04 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+19:50:04 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+19:50:04 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:50:04 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:50:04 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:50:05 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:50:05 | DEBUG | MegamanControllerComponent | left actuator just released
+19:50:06 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:50:06 | DEBUG | MegamanControllerComponent | right actuator just released
+19:50:06 | LOG | MegaLevelScreen | event(): event.key=ADD_WEAPON_ENERGY
+19:50:06 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): currentAmmo=2147483647, maxAmmo=30
+19:50:06 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:50:06 | DEBUG | MegamanControllerComponent | left actuator just released
+19:50:08 | DEBUG | MegamanControllerComponent | right actuator just released
+19:50:08 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:50:09 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:50:09 | DEBUG | MegamanControllerComponent | left actuator just released
+19:50:10 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:50:10 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+19:50:10 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+19:50:10 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:50:11 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:50:11 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:50:12 | DEBUG | MegamanControllerComponent | select actuator just released, attempt to set to next weapon
+19:50:12 | DEBUG | Megaman | setToNextWeapon(): set to next weapon: next=FIRE_BALL, current=MEGA_BUSTER
+19:50:12 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=FIRE_BALL, previous=MEGA_BUSTER
+19:50:14 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:50:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=FIRE_BALL, statToTry=NOT_CHARGED
+19:50:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+19:50:14 | DEBUG | MegamanWeaponsHandler | shootFireball(): stat=NOT_CHARGED
+19:50:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@6b5176f2, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$286/0x00007ba378236a70@b672aa8, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$287/0x00007ba378236c90@2fab4aff, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$288/0x00007ba378236eb0@ec0c838, ammo=27, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$289/0x00007ba3782370d0@6e46d9f4, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$290/0x00007ba3782372f0@5cc69cfe)
+19:50:14 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:50:14 | DEBUG | MegamanControllerComponent | left actuator just released
+19:50:15 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:50:15 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=FIRE_BALL, statToTry=NOT_CHARGED
+19:50:15 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+19:50:15 | DEBUG | MegamanWeaponsHandler | shootFireball(): stat=NOT_CHARGED
+19:50:15 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@6b5176f2, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$286/0x00007ba378236a70@b672aa8, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$287/0x00007ba378236c90@2fab4aff, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$288/0x00007ba378236eb0@ec0c838, ammo=24, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$289/0x00007ba3782370d0@6e46d9f4, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$290/0x00007ba3782372f0@5cc69cfe)
+19:50:16 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:50:16 | DEBUG | MegamanControllerComponent | right actuator just released
+19:50:17 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:50:17 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=FIRE_BALL, statToTry=NOT_CHARGED
+19:50:17 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+19:50:17 | DEBUG | MegamanWeaponsHandler | shootFireball(): stat=NOT_CHARGED
+19:50:17 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@6b5176f2, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$286/0x00007ba378236a70@b672aa8, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$287/0x00007ba378236c90@2fab4aff, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$288/0x00007ba378236eb0@ec0c838, ammo=21, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$289/0x00007ba3782370d0@6e46d9f4, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$290/0x00007ba3782372f0@5cc69cfe)
+19:50:17 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:50:18 | DEBUG | MegamanControllerComponent | left actuator just released
+19:50:18 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:50:18 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:50:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=FIRE_BALL, statToTry=NOT_CHARGED
+19:50:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+19:50:18 | DEBUG | MegamanWeaponsHandler | shootFireball(): stat=NOT_CHARGED
+19:50:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@6b5176f2, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$286/0x00007ba378236a70@b672aa8, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$287/0x00007ba378236c90@2fab4aff, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$288/0x00007ba378236eb0@ec0c838, ammo=18, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$289/0x00007ba3782370d0@6e46d9f4, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler$$Lambda$290/0x00007ba3782372f0@5cc69cfe)
+19:50:18 | DEBUG | MegamanControllerComponent | right actuator just released
+19:50:18 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:50:19 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:50:19 | DEBUG | MegamanControllerComponent | select actuator just released, attempt to set to next weapon
+19:50:19 | DEBUG | Megaman | setToNextWeapon(): set to next weapon: next=MEGA_BUSTER, current=FIRE_BALL
+19:50:19 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=FIRE_BALL
+19:50:19 | LOG | MegaLevelScreen | event(): event.key=ADD_CURRENCY
+19:50:19 | DEBUG | GameState | addCurrency(): added 3 to currency
+19:50:20 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:50:20 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:50:21 | DEBUG | MegamanControllerComponent | right actuator just released
+19:50:21 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:50:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+19:50:21 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+19:50:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:50:21 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:50:21 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:50:23 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:50:23 | DEBUG | MegamanControllerComponent | right actuator just released
+19:50:23 | DEBUG | MegamanControllerComponent | left actuator just released
+19:50:23 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:50:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+19:50:23 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+19:50:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:50:23 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:50:23 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:50:24 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:50:24 | DEBUG | MegamanControllerComponent | left actuator just released
+19:50:24 | LOG | MegaLevelScreen | event(): event.key=ADD_CURRENCY
+19:50:24 | DEBUG | GameState | addCurrency(): added 3 to currency
+19:50:24 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:50:26 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:50:27 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = RIGHT
+19:50:27 | DEBUG | MegaLevelScreen | Begin transition logic for camera manager
+19:50:27 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (1024.0,2560.0)
+19:50:27 | DEBUG | MegamanEventListener | BEGIN ROOM TRANS: position=(1265.024,2517.6)
+19:50:28 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (1536.0,2560.0)
+19:50:28 | DEBUG | MegaLevelScreen | End transition logic for camera manager
+19:50:28 | DEBUG | MegamanEventListener | endRoomTrans(): setVel=true
+19:50:28 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:50:28 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:50:29 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:50:29 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+19:50:29 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+19:50:29 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:50:29 | DEBUG | MegamanControllerComponent | right actuator just released
+19:50:30 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:50:30 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:50:31 | DEBUG | MegamanControllerComponent | right actuator just released
+19:50:31 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:50:33 | DEBUG | MegamanControllerComponent | left actuator just released
+19:50:34 | DEBUG | MegaLevelScreen | render(): pause game
+19:50:34 | LOG | MegamanMaverickGame | pause()
+19:50:34 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:50:34 | DEBUG | LevelPauseScreen | show(): currentButtonKey=mega_buster, node=TableNode{ element=MEGA_BUSTER, row=0, column=0 }, table=Table{
+	[TableNode{ element=MEGA_BUSTER, row=0, column=0 }]
+	[TableNode{ element=FIRE_BALL, row=1, column=0 }]
+	[TableNode{ element=A, row=2, column=0 }]
+}, buttons=[fire_ball, mega_buster, a], buttonSprites=[mega_buster, fire_ball, a]
+19:50:36 | DEBUG | LevelPauseScreen | createWeaponButton(): onSelect(): weapon=MEGA_BUSTER
+19:50:36 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=MEGA_BUSTER
+19:50:36 | DEBUG | LevelPauseScreen | onAnySelection()
+19:50:36 | LOG | MegamanMaverickGame | resume()
+19:50:36 | DEBUG | LevelPauseScreen | reset()
+19:50:36 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:50:37 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = LEFT
+19:50:37 | DEBUG | MegaLevelScreen | Begin transition logic for camera manager
+19:50:37 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (1536.0,2560.0)
+19:50:37 | DEBUG | MegamanEventListener | BEGIN ROOM TRANS: position=(1293.0929,2508.0)
+19:50:38 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (1024.0,2560.0)
+19:50:38 | DEBUG | MegaLevelScreen | End transition logic for camera manager
+19:50:38 | DEBUG | MegamanEventListener | endRoomTrans(): setVel=true
+19:50:38 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:50:38 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:50:38 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:50:39 | DEBUG | MegamanControllerComponent | left actuator just released
+19:50:39 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:50:39 | DEBUG | MegamanControllerComponent | right actuator just released
+19:50:39 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:50:40 | DEBUG | MegamanControllerComponent | left actuator just released
+19:50:40 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:50:40 | DEBUG | MegamanControllerComponent | right actuator just released
+19:50:40 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:50:40 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+19:50:40 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+19:50:40 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:50:40 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:50:41 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:50:41 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:50:41 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:50:41 | DEBUG | MegamanControllerComponent | left actuator just released
+19:50:41 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:50:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:50:41 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:50:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:50:41 | DEBUG | MegamanControllerComponent | right actuator just released
+19:50:41 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:50:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:50:41 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:50:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:50:41 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:50:41 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:50:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:50:41 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:50:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:50:42 | LOG | MegaLevelScreen | event(): event.key=ADD_WEAPON_ENERGY
+19:50:42 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): currentAmmo=2147483647, maxAmmo=30
+19:50:42 | LOG | MegaLevelScreen | event(): event.key=ADD_PLAYER_HEALTH
+19:50:42 | DEBUG | PlayerStatsHandler | addHealth(): heathMegamanNeeds=0, value=3
+19:50:42 | DEBUG | PlayerStatsHandler | addHealth(): value greater than what Megaman needs, try to add to health tanks
+19:50:42 | DEBUG | Megaman | addToHealthTanks(): healthTank=A: tankAmountToFill=30 is greater than temp=3: add to tank and exit loop for checking next health tanks
+19:50:42 | DEBUG | GameState | addHealthToHealthTank(): added 3 to healthTank=A
+19:50:42 | DEBUG | PlayerStatsHandler | addHealth(): hasAddedToTanks=true
+19:50:42 | DEBUG | PlayerStatsHandler | addHealth(): add timer to queue: queue.size=1
+19:50:42 | DEBUG | PlayerStatsHandler | addHealth(): shut off all systems expect sprites system
+19:50:42 | DEBUG | PlayerStatsHandler | addHealth(): timer: play life sound for adding health to tanks
+19:50:42 | DEBUG | PlayerStatsHandler | update(): timer just finished: pop timer from queue: queue.size=0
+19:50:42 | DEBUG | PlayerStatsHandler | update(): timer queue just emptied: turn on all systems
+19:50:42 | DEBUG | MegamanControllerComponent | right actuator just released
+19:50:42 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:50:42 | DEBUG | MegamanControllerComponent | left actuator just released
+19:50:42 | DEBUG | MegaLevelScreen | render(): pause game
+19:50:42 | LOG | MegamanMaverickGame | pause()
+19:50:42 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:50:42 | DEBUG | LevelPauseScreen | show(): currentButtonKey=mega_buster, node=TableNode{ element=MEGA_BUSTER, row=0, column=0 }, table=Table{
+	[TableNode{ element=MEGA_BUSTER, row=0, column=0 }]
+	[TableNode{ element=FIRE_BALL, row=1, column=0 }]
+	[TableNode{ element=A, row=2, column=0 }]
+}, buttons=[fire_ball, mega_buster, a], buttonSprites=[mega_buster, fire_ball, a]
+19:50:44 | DEBUG | LevelPauseScreen | createWeaponButton(): onSelect(): weapon=MEGA_BUSTER
+19:50:44 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=MEGA_BUSTER
+19:50:44 | DEBUG | LevelPauseScreen | onAnySelection()
+19:50:44 | LOG | MegamanMaverickGame | resume()
+19:50:44 | DEBUG | LevelPauseScreen | reset()
+19:50:44 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:50:45 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:50:46 | DEBUG | MegamanControllerComponent | left actuator just released
+19:50:46 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:50:47 | DEBUG | MegamanControllerComponent | right actuator just released
+19:50:47 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:50:47 | DEBUG | MegamanControllerComponent | left actuator just released
+19:50:47 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:50:47 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+19:50:47 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+19:50:47 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:50:47 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:50:47 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:50:48 | LOG | MegaLevelScreen | event(): event.key=ADD_PLAYER_HEALTH
+19:50:48 | DEBUG | PlayerStatsHandler | addHealth(): heathMegamanNeeds=0, value=3
+19:50:48 | DEBUG | PlayerStatsHandler | addHealth(): value greater than what Megaman needs, try to add to health tanks
+19:50:48 | DEBUG | Megaman | addToHealthTanks(): healthTank=A: tankAmountToFill=27 is greater than temp=3: add to tank and exit loop for checking next health tanks
+19:50:48 | DEBUG | GameState | addHealthToHealthTank(): added 3 to healthTank=A
+19:50:48 | DEBUG | PlayerStatsHandler | addHealth(): hasAddedToTanks=true
+19:50:48 | DEBUG | PlayerStatsHandler | addHealth(): add timer to queue: queue.size=1
+19:50:48 | DEBUG | PlayerStatsHandler | addHealth(): shut off all systems expect sprites system
+19:50:48 | DEBUG | PlayerStatsHandler | addHealth(): timer: play life sound for adding health to tanks
+19:50:48 | DEBUG | PlayerStatsHandler | update(): timer just finished: pop timer from queue: queue.size=0
+19:50:48 | DEBUG | PlayerStatsHandler | update(): timer queue just emptied: turn on all systems
+19:50:48 | DEBUG | MegamanControllerComponent | left actuator just released
+19:50:48 | DEBUG | MegaLevelScreen | render(): pause game
+19:50:48 | LOG | MegamanMaverickGame | pause()
+19:50:48 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:50:48 | DEBUG | LevelPauseScreen | show(): currentButtonKey=mega_buster, node=TableNode{ element=MEGA_BUSTER, row=0, column=0 }, table=Table{
+	[TableNode{ element=MEGA_BUSTER, row=0, column=0 }]
+	[TableNode{ element=FIRE_BALL, row=1, column=0 }]
+	[TableNode{ element=A, row=2, column=0 }]
+}, buttons=[fire_ball, mega_buster, a], buttonSprites=[mega_buster, fire_ball, a]
+19:50:50 | DEBUG | LevelPauseScreen | createWeaponButton(): onSelect(): weapon=MEGA_BUSTER
+19:50:50 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=MEGA_BUSTER
+19:50:50 | DEBUG | LevelPauseScreen | onAnySelection()
+19:50:50 | LOG | MegamanMaverickGame | resume()
+19:50:50 | DEBUG | LevelPauseScreen | reset()
+19:50:50 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:50:51 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:50:53 | DEBUG | MegamanControllerComponent | left actuator just released
+19:50:53 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:50:53 | DEBUG | MegamanControllerComponent | right actuator just released
+19:50:53 | DEBUG | MegaLevelScreen | render(): pause game
+19:50:53 | LOG | MegamanMaverickGame | pause()
+19:50:53 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:50:53 | DEBUG | LevelPauseScreen | show(): currentButtonKey=mega_buster, node=TableNode{ element=MEGA_BUSTER, row=0, column=0 }, table=Table{
+	[TableNode{ element=MEGA_BUSTER, row=0, column=0 }]
+	[TableNode{ element=FIRE_BALL, row=1, column=0 }]
+	[TableNode{ element=A, row=2, column=0 }]
+}, buttons=[fire_ball, mega_buster, a], buttonSprites=[mega_buster, fire_ball, a]
+19:50:54 | DEBUG | LevelPauseScreen | createWeaponButton(): onNavigate(): weapon=MEGA_BUSTER, direction=DOWN
+19:50:54 | DEBUG | LevelPauseScreen | navigate(): direction=DOWN, oldNode=TableNode{ element=MEGA_BUSTER, row=0, column=0 }, node=TableNode{ element=FIRE_BALL, row=1, column=0 }
+19:50:54 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:50:54 | DEBUG | LevelPauseScreen | createWeaponButton(): onNavigate(): weapon=FIRE_BALL, direction=DOWN
+19:50:54 | DEBUG | LevelPauseScreen | navigate(): direction=DOWN, oldNode=TableNode{ element=FIRE_BALL, row=1, column=0 }, node=TableNode{ element=A, row=2, column=0 }
+19:50:54 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:50:54 | DEBUG | LevelPauseScreen | createHealthTankButton(): onSelect(): healthTank=A
+19:50:55 | DEBUG | LevelPauseScreen | createHealthTankButton(): onSelect(): healthTank=A
+19:50:56 | DEBUG | LevelPauseScreen | createHealthTankButton(): onNavigate(): healthTank=A, direction=UP
+19:50:56 | DEBUG | LevelPauseScreen | navigate(): direction=UP, oldNode=TableNode{ element=A, row=2, column=0 }, node=TableNode{ element=FIRE_BALL, row=1, column=0 }
+19:50:56 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:50:56 | DEBUG | LevelPauseScreen | createWeaponButton(): onNavigate(): weapon=FIRE_BALL, direction=UP
+19:50:56 | DEBUG | LevelPauseScreen | navigate(): direction=UP, oldNode=TableNode{ element=FIRE_BALL, row=1, column=0 }, node=TableNode{ element=MEGA_BUSTER, row=0, column=0 }
+19:50:56 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:50:56 | DEBUG | LevelPauseScreen | createWeaponButton(): onSelect(): weapon=MEGA_BUSTER
+19:50:56 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=MEGA_BUSTER
+19:50:56 | DEBUG | LevelPauseScreen | onAnySelection()
+19:50:57 | LOG | MegamanMaverickGame | resume()
+19:50:57 | DEBUG | LevelPauseScreen | reset()
+19:50:57 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:50:57 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:50:58 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:50:58 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+19:50:58 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+19:50:58 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:50:58 | DEBUG | MegamanControllerComponent | right actuator just released
+19:50:59 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:50:59 | DEBUG | MegamanControllerComponent | left actuator just released
+19:50:59 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:51:00 | DEBUG | Megaman | takeDamageFrom(): healthDiff=2, damager={ Bat:[mapObjId=97, dead=false, hashCode=1753542873] }
+19:51:00 | DEBUG | MegamanControllerComponent | right actuator just released
+19:51:00 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:51:01 | DEBUG | MegamanControllerComponent | left actuator just released
+19:51:01 | DEBUG | MegaLevelScreen | render(): pause game
+19:51:01 | LOG | MegamanMaverickGame | pause()
+19:51:01 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:51:01 | DEBUG | LevelPauseScreen | show(): currentButtonKey=mega_buster, node=TableNode{ element=MEGA_BUSTER, row=0, column=0 }, table=Table{
+	[TableNode{ element=MEGA_BUSTER, row=0, column=0 }]
+	[TableNode{ element=FIRE_BALL, row=1, column=0 }]
+	[TableNode{ element=A, row=2, column=0 }]
+}, buttons=[fire_ball, mega_buster, a], buttonSprites=[mega_buster, fire_ball, a]
+19:51:02 | DEBUG | LevelPauseScreen | createWeaponButton(): onNavigate(): weapon=MEGA_BUSTER, direction=DOWN
+19:51:02 | DEBUG | LevelPauseScreen | navigate(): direction=DOWN, oldNode=TableNode{ element=MEGA_BUSTER, row=0, column=0 }, node=TableNode{ element=FIRE_BALL, row=1, column=0 }
+19:51:02 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:51:03 | DEBUG | LevelPauseScreen | createWeaponButton(): onNavigate(): weapon=FIRE_BALL, direction=DOWN
+19:51:03 | DEBUG | LevelPauseScreen | navigate(): direction=DOWN, oldNode=TableNode{ element=FIRE_BALL, row=1, column=0 }, node=TableNode{ element=A, row=2, column=0 }
+19:51:03 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:51:03 | DEBUG | LevelPauseScreen | createHealthTankButton(): onSelect(): healthTank=A
+19:51:03 | DEBUG | GameState | removeHealthFromHealthTank(): removed 1 to healthTank=A
+19:51:03 | DEBUG | GameState | removeHealthFromHealthTank(): removed 1 to healthTank=A
+19:51:04 | DEBUG | LevelPauseScreen | createHealthTankButton(): onNavigate(): healthTank=A, direction=UP
+19:51:04 | DEBUG | LevelPauseScreen | navigate(): direction=UP, oldNode=TableNode{ element=A, row=2, column=0 }, node=TableNode{ element=FIRE_BALL, row=1, column=0 }
+19:51:04 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:51:04 | DEBUG | LevelPauseScreen | createWeaponButton(): onNavigate(): weapon=FIRE_BALL, direction=UP
+19:51:04 | DEBUG | LevelPauseScreen | navigate(): direction=UP, oldNode=TableNode{ element=FIRE_BALL, row=1, column=0 }, node=TableNode{ element=MEGA_BUSTER, row=0, column=0 }
+19:51:04 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:51:05 | DEBUG | LevelPauseScreen | createWeaponButton(): onSelect(): weapon=MEGA_BUSTER
+19:51:05 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=MEGA_BUSTER
+19:51:05 | DEBUG | LevelPauseScreen | onAnySelection()
+19:51:05 | LOG | MegamanMaverickGame | resume()
+19:51:05 | DEBUG | LevelPauseScreen | reset()
+19:51:05 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:51:06 | DEBUG | MegamanControllerComponent | right actuator just released
+19:51:06 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = DOWN
+19:51:06 | DEBUG | MegaLevelScreen | Begin transition logic for camera manager
+19:51:06 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (563.7417,2560.0)
+19:51:06 | DEBUG | MegamanEventListener | BEGIN ROOM TRANS: position=(563.7417,2353.2207)
+19:51:06 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:51:07 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (563.7417,2112.0)
+19:51:07 | DEBUG | MegaLevelScreen | End transition logic for camera manager
+19:51:07 | DEBUG | MegamanEventListener | endRoomTrans(): setVel=true
+19:51:07 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:51:08 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:51:09 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:51:09 | DEBUG | MegamanControllerComponent | right actuator just released
+19:51:09 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:51:09 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:51:09 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:51:09 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:51:09 | DEBUG | MegamanControllerComponent | left actuator just released
+19:51:09 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:51:09 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:51:09 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:51:09 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:51:09 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:51:09 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:51:09 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:51:09 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:51:09 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:51:09 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:51:09 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:51:09 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:51:09 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:51:09 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:51:09 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:51:09 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:51:10 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:51:10 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:51:10 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:51:10 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:51:10 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:51:10 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:51:10 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:51:10 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:51:10 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:51:10 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:51:10 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:51:10 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:51:10 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:51:11 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:51:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:51:11 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:51:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:51:11 | LOG | MegaLevelScreen | event(): event.key=ADD_CURRENCY
+19:51:11 | DEBUG | GameState | addCurrency(): added 6 to currency
+19:51:11 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:51:14 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:51:14 | DEBUG | MegamanControllerComponent | right actuator just released
+19:51:14 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = UP
+19:51:14 | DEBUG | MegaLevelScreen | Begin transition logic for camera manager
+19:51:14 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (536.5891,2112.0)
+19:51:14 | DEBUG | MegamanEventListener | BEGIN ROOM TRANS: position=(536.5891,2318.026)
+19:51:16 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (536.5891,2560.0)
+19:51:16 | DEBUG | MegaLevelScreen | End transition logic for camera manager
+19:51:16 | DEBUG | MegamanEventListener | endRoomTrans(): setVel=true
+19:51:16 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:51:16 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:51:19 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:51:19 | DEBUG | MegamanControllerComponent | left actuator just released
+19:51:19 | DEBUG | MegamanControllerComponent | right actuator just released
+19:51:19 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:51:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:51:19 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:51:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:51:19 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:51:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:51:19 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:51:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:51:19 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:51:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:51:19 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:51:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:51:19 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:51:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:51:19 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:51:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:51:19 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:51:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:51:19 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:51:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:51:20 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:51:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:51:20 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:51:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:51:20 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:51:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:51:20 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:51:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:51:20 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:51:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:51:20 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:51:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:51:20 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:51:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:51:20 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:51:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:51:20 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:51:20 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:51:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:51:20 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:51:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:51:20 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:51:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:51:20 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:51:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:51:21 | LOG | MegaLevelScreen | event(): event.key=ADD_WEAPON_ENERGY
+19:51:21 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): currentAmmo=2147483647, maxAmmo=30
+19:51:21 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:51:21 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:51:22 | DEBUG | MegamanControllerComponent | left actuator just released
+19:51:22 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:51:22 | DEBUG | MegamanControllerComponent | right actuator just released
+19:51:22 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:51:23 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:51:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+19:51:23 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+19:51:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:51:23 | DEBUG | MegamanControllerComponent | right actuator just released
+19:51:23 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:51:23 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:51:24 | DEBUG | MegamanControllerComponent | right actuator just released
+19:51:24 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:51:25 | DEBUG | MegamanControllerComponent | right actuator just released
+19:51:25 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:51:27 | DEBUG | MegamanControllerComponent | left actuator just released
+19:51:27 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:51:28 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:51:29 | DEBUG | MegamanControllerComponent | right actuator just released
+19:51:29 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:51:30 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:51:31 | DEBUG | MegamanControllerComponent | left actuator just released
+19:51:31 | DEBUG | MegamanControllerComponent | right actuator just released
+19:51:31 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:51:31 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+19:51:31 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+19:51:31 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:51:31 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:51:31 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:51:32 | LOG | MegaLevelScreen | event(): event.key=ADD_PLAYER_HEALTH
+19:51:32 | DEBUG | PlayerStatsHandler | addHealth(): heathMegamanNeeds=0, value=6
+19:51:32 | DEBUG | PlayerStatsHandler | addHealth(): value greater than what Megaman needs, try to add to health tanks
+19:51:32 | DEBUG | Megaman | addToHealthTanks(): healthTank=A: tankAmountToFill=26 is greater than temp=6: add to tank and exit loop for checking next health tanks
+19:51:32 | DEBUG | GameState | addHealthToHealthTank(): added 6 to healthTank=A
+19:51:32 | DEBUG | PlayerStatsHandler | addHealth(): hasAddedToTanks=true
+19:51:32 | DEBUG | PlayerStatsHandler | addHealth(): add timer to queue: queue.size=1
+19:51:32 | DEBUG | PlayerStatsHandler | addHealth(): shut off all systems expect sprites system
+19:51:32 | DEBUG | PlayerStatsHandler | addHealth(): timer: play life sound for adding health to tanks
+19:51:32 | DEBUG | PlayerStatsHandler | update(): timer just finished: pop timer from queue: queue.size=0
+19:51:32 | DEBUG | PlayerStatsHandler | update(): timer queue just emptied: turn on all systems
+19:51:32 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:51:32 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:51:33 | DEBUG | MegamanControllerComponent | right actuator just released
+19:51:33 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:51:33 | DEBUG | MegaLevelScreen | render(): pause game
+19:51:33 | LOG | MegamanMaverickGame | pause()
+19:51:33 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:51:33 | DEBUG | LevelPauseScreen | show(): currentButtonKey=mega_buster, node=TableNode{ element=MEGA_BUSTER, row=0, column=0 }, table=Table{
+	[TableNode{ element=MEGA_BUSTER, row=0, column=0 }]
+	[TableNode{ element=FIRE_BALL, row=1, column=0 }]
+	[TableNode{ element=A, row=2, column=0 }]
+}, buttons=[fire_ball, mega_buster, a], buttonSprites=[mega_buster, fire_ball, a]
+19:51:34 | DEBUG | LevelPauseScreen | createWeaponButton(): onSelect(): weapon=MEGA_BUSTER
+19:51:34 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=MEGA_BUSTER
+19:51:34 | DEBUG | LevelPauseScreen | onAnySelection()
+19:51:34 | LOG | MegamanMaverickGame | resume()
+19:51:34 | DEBUG | LevelPauseScreen | reset()
+19:51:34 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:51:36 | LOG | MegaLevelScreen | event(): event.key=ADD_WEAPON_ENERGY
+19:51:36 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): currentAmmo=2147483647, maxAmmo=30
+19:51:36 | DEBUG | MegamanControllerComponent | right actuator just released
+19:51:36 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:51:36 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:51:36 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+19:51:36 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+19:51:36 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:51:36 | DEBUG | MegamanControllerComponent | left actuator just released
+19:51:36 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:51:37 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:51:37 | LOG | MegaLevelScreen | event(): event.key=ADD_CURRENCY
+19:51:37 | DEBUG | GameState | addCurrency(): added 3 to currency
+19:51:38 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+19:51:38 | DEBUG | MegamanControllerComponent | left actuator just released
+19:51:39 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:51:39 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:51:39 | DEBUG | MegamanControllerComponent | right actuator just released
+19:51:39 | DEBUG | MegamanControllerComponent | left actuator just released
+19:51:40 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:51:40 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+19:51:40 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+19:51:40 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@3918c187, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$276/0x00007ba37821d208@2c88b9fc, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$277/0x00007ba37821d428@64dafeed, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$278/0x00007ba37821d648@388ba540, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$279/0x00007ba37821d868@47605f2f, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$280/0x00007ba37821da88@2ece4966)
+19:51:40 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+19:51:40 | DEBUG | MegamanControllerComponent | left actuator just pressed
+19:51:41 | LOG | MegaLevelScreen | event(): event.key=ADD_CURRENCY
+19:51:41 | DEBUG | GameState | addCurrency(): added 3 to currency
+19:51:42 | DEBUG | MegamanControllerComponent | left actuator just released
+19:51:43 | LOG | MegamanMaverickGame | pause()
+19:51:43 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:51:43 | DEBUG | LevelPauseScreen | show(): currentButtonKey=mega_buster, node=TableNode{ element=MEGA_BUSTER, row=0, column=0 }, table=Table{
+	[TableNode{ element=MEGA_BUSTER, row=0, column=0 }]
+	[TableNode{ element=FIRE_BALL, row=1, column=0 }]
+	[TableNode{ element=A, row=2, column=0 }]
+}, buttons=[fire_ball, mega_buster, a], buttonSprites=[mega_buster, fire_ball, a]
+19:51:43 | LOG | MegamanMaverickGame | dispose()
+19:51:43 | DEBUG | MegaLevelScreen | dispose(): Disposing level screen

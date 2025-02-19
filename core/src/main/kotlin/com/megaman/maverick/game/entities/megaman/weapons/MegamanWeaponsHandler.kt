@@ -15,10 +15,12 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.time.Timer
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
+import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.explosions.MagmaExplosion
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.GROUND_SLIDE_SPRITE_OFFSET_Y
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
@@ -28,6 +30,7 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
+import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getCenter
@@ -95,6 +98,9 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
     companion object {
         const val TAG = "MegamanWeaponsHandler"
     }
+
+    private val game: MegamanMaverickGame
+        get() = megaman.game
 
     private val weaponHandlers = ObjectMap<MegamanWeapon, MegaWeaponHandler>()
 
@@ -284,7 +290,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
     fun getAmmo(weapon: MegamanWeapon) = when {
         !hasWeapon(weapon) -> 0
-        weapon == MegamanWeapon.MEGA_BUSTER -> Int.MAX_VALUE
+        weapon == MegamanWeapon.MEGA_BUSTER -> MegamanValues.MAX_WEAPON_AMMO
         else -> weaponHandlers[weapon].ammo
     }
 
@@ -347,9 +353,11 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         }
 
         when (weapon) {
-            MegamanWeapon.MEGA_BUSTER, MegamanWeapon.RUSH_JETPACK -> fireMegaBuster(stat)
-            MegamanWeapon.FIRE_BALL -> fireball(stat)
-            MegamanWeapon.MOON_SCYTHE -> fireMoonScythes(stat)
+            MegamanWeapon.MEGA_BUSTER,
+            MegamanWeapon.RUSH_JETPACK -> shootMegaBuster(stat)
+
+            MegamanWeapon.FIRE_BALL -> shootFireball(stat)
+            MegamanWeapon.MOON_SCYTHE -> shootMoonScythes(stat)
         }
 
         weaponEntry.cooldown.reset()
@@ -361,7 +369,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         return true
     }
 
-    private fun fireMegaBuster(stat: MegaChargeStatus) {
+    private fun shootMegaBuster(stat: MegaChargeStatus) {
         GameLogger.debug(TAG, "fireMegaBuster(): stat=$stat")
 
         val trajectory = GameObjectPools.fetch(Vector2::class)
@@ -404,12 +412,28 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         }
     }
 
-    private fun fireball(stat: MegaChargeStatus) {
-        GameLogger.debug(TAG, "fireFlameToss(): stat=$stat")
+    private fun shootFireball(stat: MegaChargeStatus) {
+        GameLogger.debug(TAG, "shootFireball(): stat=$stat")
+
+        val spawn = getSpawnPosition(MegamanWeapon.FIRE_BALL)
+
+        if (game.getCurrentLevelDef() == LevelDefinition.MOON_MAN) {
+            GameLogger.debug(TAG, "shootFireball(): in Moon Man's stage, fire cannot exist in outer space")
+
+            val explosion = MegaEntityFactory.fetch(MagmaExplosion::class)!!
+            explosion.spawn(
+                props(
+                    ConstKeys.OWNER pairTo megaman,
+                    ConstKeys.POSITION pairTo spawn,
+                    ConstKeys.SCALAR pairTo 3f // causes explosion to run slower
+                )
+            )
+            return
+        }
 
         val props = props(
             ConstKeys.OWNER pairTo megaman,
-            ConstKeys.POSITION pairTo getSpawnPosition(MegamanWeapon.FIRE_BALL)
+            ConstKeys.POSITION pairTo spawn
         )
 
         // TODO: spawned entity should change based on stat
@@ -441,7 +465,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         }
     }
 
-    private fun fireMoonScythes(stat: MegaChargeStatus) {
+    private fun shootMoonScythes(stat: MegaChargeStatus) {
         GameLogger.debug(TAG, "fireMoonScythes(): stat=$stat")
 
         // TODO: spawned entity should change based on stat

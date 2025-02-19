@@ -129,8 +129,8 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         const val SHIELD_GEM_MAX_DIST_FROM_ROOM_CENTER = 16f
 
         private const val CAN_SPAWN_SHIELD_GEMS_DELAY = 5f
-        private const val SPAWN_SHIELD_START_CHANCE = 10f
-        private const val SPAWN_SHIELD_CHANCE_DELTA = 2.5f
+        private const val SPAWN_SHIELD_START_CHANCE = 20f
+        private const val SPAWN_SHIELD_CHANCE_DELTA = 10f
         private const val SHIELD_GEM_START_OFFSET = 1.5f
 
         private val SHIELD_GEMS_ANGLES = gdxArrayOf(0f, 90f, 180f, 270f)
@@ -139,7 +139,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         // the amount of times she should enter stand/jump state before throwing gems
         private const val STATES_BETWEEN_THROW = 5
-        private const val MIN_THROW_COOLDOWN = 3f
+        private const val MIN_THROW_COOLDOWN = 5f
 
         private val animDefs = orderedMapOf(
             "airpunch1" pairTo AnimationDef(3, 1, 0.1f, false),
@@ -193,7 +193,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     private var statesSinceLastThrow = 0
 
     private val spawnShieldsDelay = Timer(CAN_SPAWN_SHIELD_GEMS_DELAY)
-    private var spawnShieldChance = SPAWN_SHIELD_START_CHANCE
+    private var spawnShieldsChance = SPAWN_SHIELD_START_CHANCE
 
     private val jumpUpdateFacingDelay = Timer(JUMP_UPDATE_FACING_DELAY)
 
@@ -248,7 +248,6 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         laughTimer.setToEnd()
         throwingTimer.setToEnd()
         throwMinCooldown.reset()
-        spawnShieldsDelay.reset()
         airpunchCooldown.reset()
         jumpUpdateFacingDelay.reset()
 
@@ -256,7 +255,8 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         statesSinceLastThrow = 0
 
-        spawnShieldChance = SPAWN_SHIELD_START_CHANCE
+        spawnShieldsDelay.reset()
+        spawnShieldsChance = SPAWN_SHIELD_START_CHANCE
 
         roomCenter.set(spawnProps.get(ConstKeys.ROOM, RectangleMapObject::class)!!.rectangle.getCenter())
 
@@ -287,6 +287,11 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            val delayText ="%.2f".format(1f - spawnShieldsDelay.getRatio())
+            val chanceText = spawnShieldsChance.toInt().toString()
+            val debugText = "delay=$delayText, chance=$chanceText"
+            game.setDebugText(debugText)
+
             if (betweenReadyAndEndBossSpawnEvent) return@add
 
             if (defeated) {
@@ -296,11 +301,11 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 return@add
             }
 
-            spawnShieldsDelay.update(delta)
+            if (shieldGems.isEmpty) spawnShieldsDelay.update(delta)
             if (spawnShieldsDelay.isJustFinished()) GameLogger.debug(TAG, "update(): spawn shields delay just finished")
             if (spawnShieldsDelay.isFinished()) {
-                spawnShieldChance += SPAWN_SHIELD_CHANCE_DELTA * delta
-                if (spawnShieldChance > 100f) spawnShieldChance = 100f
+                spawnShieldsChance += SPAWN_SHIELD_CHANCE_DELTA * delta
+                if (spawnShieldsChance > 100f) spawnShieldsChance = 100f
             }
 
             if (!shieldGems.isEmpty && shieldGems.keys().all { gem -> gem.targetReached }) updateShieldGems(delta)
@@ -730,9 +735,9 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             }
 
             PreciousWomanState.SPAWN_SHIELD_GEMS -> {
-                updateFacing()
-
                 GameLogger.debug(TAG, "onChangeState(): spawn shield gems")
+
+                updateFacing()
 
                 spawnShieldGems()
 
@@ -741,6 +746,9 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
                 throwMinCooldown.reset()
                 statesSinceLastThrow = 0
+
+                spawnShieldsDelay.reset()
+                spawnShieldsChance = SPAWN_SHIELD_START_CHANCE
             }
 
             PreciousWomanState.THROW_SHIELD_GEMS -> {
@@ -772,7 +780,8 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 throwMinCooldown.reset()
                 statesSinceLastThrow = 0
 
-                spawnShieldChance = SPAWN_SHIELD_START_CHANCE
+                spawnShieldsDelay.reset()
+                spawnShieldsChance = SPAWN_SHIELD_START_CHANCE
             }
 
             else -> GameLogger.debug(TAG, "onChangeState(): no action when current=$current")
@@ -833,7 +842,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     private fun shouldStartRunning() = getRandom(0f, 100f) <= RUN_CHANCE && !isTouchingFacingBlock()
 
     private fun shouldSpawnShieldGems() =
-        shieldGems.isEmpty && spawnShieldsDelay.isFinished() && getRandom(0f, 100f) <= spawnShieldChance
+        shieldGems.isEmpty && spawnShieldsDelay.isFinished() && getRandom(0f, 100f) <= spawnShieldsChance
 
     private fun shouldThrowShieldGems() = !shieldGems.isEmpty && shouldThrowGems()
 

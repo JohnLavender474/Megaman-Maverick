@@ -1319,9 +1319,8 @@
  </objectgroup>
  <objectgroup id="9" name="projectiles"/>
  <objectgroup id="10" name="items">
-  <object id="434" name="HeartTank" x="19416" y="1480" width="16" height="16">
+  <object id="434" name="HeartTank" x="19416" y="1496" width="16" height="16">
    <properties>
-    <property name="spawn_type" value="spawn_now"/>
     <property name="value" value="b"/>
    </properties>
   </object>

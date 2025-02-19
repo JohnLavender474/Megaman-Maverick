@@ -45,7 +45,7 @@ class Flame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         private var region: TextureRegion? = null
     }
 
-    override var direction = Direction.UP
+    override lateinit var direction: Direction
 
     private lateinit var cullTimer: Timer
     private var perpetual = true
@@ -62,7 +62,9 @@ class Flame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
         direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         when (direction) {
             Direction.UP -> body.setBottomCenterToPoint(spawn)
@@ -70,10 +72,15 @@ class Flame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
             Direction.LEFT -> body.setCenterRightToPoint(spawn)
             Direction.RIGHT -> body.setCenterLeftToPoint(spawn)
         }
-        if (spawnProps.containsKey(ConstKeys.CULL_TIME)) {
-            perpetual = false
-            cullTimer = Timer(spawnProps.get(ConstKeys.CULL_TIME, Float::class)!!)
-        } else perpetual = true
+
+        when {
+            spawnProps.containsKey(ConstKeys.CULL_TIME) -> {
+                perpetual = false
+                cullTimer = Timer(spawnProps.get(ConstKeys.CULL_TIME, Float::class)!!)
+            }
+
+            else -> perpetual = true
+        }
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -85,7 +92,7 @@ class Flame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat(), 0.75f * ConstVals.PPM)
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().set(body))
         body.addFixture(damagerFixture)
         return BodyComponentCreator.create(this, body)

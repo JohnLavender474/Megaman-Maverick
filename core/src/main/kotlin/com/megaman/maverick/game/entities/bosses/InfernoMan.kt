@@ -589,7 +589,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     private fun setMeteorToBeSpawned(targetMegaman: Boolean) {
         val spawnMeteorTimer = Timer(SPAWN_METEOR_DELAY)
-        spawnMeteorTimer.setRunOnFinished { spawnMeteor(targetMegaman) }
+        spawnMeteorTimer.setRunOnJustFinished { spawnMeteor(targetMegaman) }
         meteorSpawnDelays.add(spawnMeteorTimer)
     }
 

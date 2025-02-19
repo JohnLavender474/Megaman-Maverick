@@ -17,7 +17,7 @@ import com.mega.game.engine.events.Event
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.SoundAsset
-import com.megaman.maverick.game.drawables.ui.BitsBar
+import com.megaman.maverick.game.drawables.ui.LargeBitsBar
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
@@ -30,7 +30,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
     companion object {
         const val TAG = "PlayerStatsHandler"
 
-        private const val SPECIAL_ITEM_DUR = 0.35f
+        private const val SPECIAL_ITEM_DUR = 0.5f
     }
 
     private val state = megaman.game.state
@@ -41,8 +41,8 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
 
     private val timerQueue = Queue<Timer>()
 
-    private lateinit var healthBar: BitsBar
-    private lateinit var weaponBarSupplier: () -> BitsBar?
+    private lateinit var healthBar: LargeBitsBar
+    private lateinit var weaponBarSupplier: () -> LargeBitsBar?
 
     private var initialized = false
 
@@ -52,7 +52,9 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
     override fun init() {
         if (initialized) return
 
-        healthBar = BitsBar(
+        GameLogger.debug(TAG, "init()")
+
+        healthBar = LargeBitsBar(
             assMan,
             "Bit",
             ConstVals.HEALTH_BAR_X * ConstVals.PPM,
@@ -61,7 +63,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
             { megaman.getHealthPoints().max })
         healthBar.init()
 
-        val weaponBars = ObjectMap<MegamanWeapon, BitsBar>()
+        val weaponBars = ObjectMap<MegamanWeapon, LargeBitsBar>()
         MegamanWeapon.entries.forEach {
             if (it == MegamanWeapon.MEGA_BUSTER) return@forEach
 
@@ -75,7 +77,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
             }
              */
 
-            val weaponBar = BitsBar(
+            val weaponBar = LargeBitsBar(
                 assMan,
                 bitSource,
                 ConstVals.WEAPON_BAR_X * ConstVals.PPM,
@@ -115,7 +117,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
 
                 engine.systems.forEach { if (it !is SpritesSystem) it.on = false }
             }
-            .setRunOnFinished {
+            .setRunOnJustFinished {
                 state.addHeartTank(heartTank)
 
                 eventsMan.submitEvent(
@@ -128,11 +130,27 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
     }
 
     fun attain(healthTank: MegaHealthTank) {
-        check(finished) { "Cannot call attain if handler is not finished" }
+        if (megaman.hasHealthTank(healthTank)) {
+            GameLogger.error(TAG, "attain(): already has health tank: $healthTank")
+            audioMan.playSound(SoundAsset.ERROR_SOUND, false)
+            return
+        }
 
         GameLogger.debug(TAG, "attain(): healthTank=$healthTank")
 
-        // TODO
+        val timer = Timer(SPECIAL_ITEM_DUR)
+        timer
+            .setRunOnFirstupdate {
+                audioMan.playSound(SoundAsset.LIFE_SOUND, false)
+
+                engine.systems.forEach { if (it !is SpritesSystem) it.on = false }
+            }
+            .setRunOnJustFinished {
+                state.putHealthTank(healthTank, 0)
+
+                engine.systems.forEach { it.on = true }
+            }
+        timerQueue.addLast(timer)
     }
 
     fun addWeaponEnergy(energy: Int) {
@@ -148,37 +166,74 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
         audioMan.playSound(SoundAsset.ENERGY_FILL_SOUND, false)
     }
 
-    fun addHealth(health: Int) {
-        val healthNeeded = megaman.getHealthPoints().max - megaman.getHealthPoints().current
+    fun addHealth(value: Int) {
+        val healthMegamanNeeds = megaman.getHealthPoints().max - megaman.getHealthPoints().current
 
-        GameLogger.debug(TAG, "addHealth(): heathNeeded=$healthNeeded, healthToAdd=$health")
-
-        if (healthNeeded <= 0) return
+        GameLogger.debug(TAG, "addHealth(): heathMegamanNeeds=$healthMegamanNeeds, value=$value")
 
         val addToTanks: Boolean
-        val healthToAdd: Int
-        if (healthNeeded >= health) {
-            healthToAdd = health
-            addToTanks = false
-        } else {
-            healthToAdd = healthNeeded
-            addToTanks = if (megaman.hasAnyHealthTanks) megaman.addToHealthTanks(health) else false
+        val healthToAddNow: Int
+
+        when {
+            value <= healthMegamanNeeds -> {
+                GameLogger.debug(TAG, "addHealth(): value less than what Megaman needs, don't add any to health tanks")
+
+                healthToAddNow = value
+                addToTanks = false
+            }
+
+            else -> {
+                GameLogger.debug(TAG, "addHealth(): value greater than what Megaman needs, try to add to health tanks")
+
+                healthToAddNow = healthMegamanNeeds
+
+                when {
+                    megaman.hasAnyHealthTanks -> {
+                        val hasAddedToTanks = megaman.addToHealthTanks(value)
+
+                        GameLogger.debug(TAG, "addHealth(): hasAddedToTanks=$hasAddedToTanks")
+
+                        addToTanks = hasAddedToTanks
+                    }
+
+                    else -> {
+                        GameLogger.debug(TAG, "addHealth(): megaman has no health tanks")
+
+                        addToTanks = false
+                    }
+                }
+            }
         }
 
-        var dur = healthToAdd * ConstVals.DUR_PER_BIT
-        if (addToTanks) dur += ConstVals.DUR_PER_BIT
-
         val timeMarkedRunnables = Array<TimeMarkedRunnable>()
-        for (i in 0 until healthToAdd) {
+        for (i in 0 until healthToAddNow) {
             val time = i * ConstVals.DUR_PER_BIT
+
+            GameLogger.debug(TAG, "addHealth(): add runnable to timer: time=$time")
+
             timeMarkedRunnables.add(TimeMarkedRunnable(time) {
+                GameLogger.debug(TAG, "addHealth(): timer: translate health by one")
+
                 megaman.translateHealth(1)
+
                 audioMan.playSound(SoundAsset.ENERGY_FILL_SOUND)
             })
         }
+
+        val dur = healthToAddNow * ConstVals.DUR_PER_BIT
         val timer = Timer(dur, timeMarkedRunnables)
-        if (addToTanks) timer.setRunOnFinished { audioMan.playSound(SoundAsset.LIFE_SOUND) }
+
+        if (addToTanks) timer.setRunOnFinished {
+            GameLogger.debug(TAG, "addHealth(): timer: play life sound for adding health to tanks")
+
+            audioMan.playSound(SoundAsset.ENERGY_FILL_SOUND)
+        }
+
         timerQueue.addLast(timer)
+
+        GameLogger.debug(TAG, "addHealth(): add timer to queue: queue.size=${timerQueue.size}")
+
+        GameLogger.debug(TAG, "addHealth(): shut off all systems expect sprites system")
 
         engine.systems.forEach { if (it !is SpritesSystem) it.on = false }
     }
@@ -189,8 +244,16 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
         val timer = timerQueue.first()
         timer.update(delta)
 
-        if (timer.isJustFinished()) timerQueue.removeFirst()
-        if (timerQueue.isEmpty) engine.systems.forEach { it.on = true }
+        if (timer.isFinished()) {
+            timerQueue.removeFirst()
+            GameLogger.debug(TAG, "update(): timer just finished: pop timer from queue: queue.size=${timerQueue.size}")
+        }
+
+        if (timerQueue.isEmpty) {
+            GameLogger.debug(TAG, "update(): timer queue just emptied: turn on all systems")
+
+            engine.systems.forEach { it.on = true }
+        }
     }
 
     override fun draw(drawer: Batch) {

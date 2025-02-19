@@ -581,7 +581,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             val dur = STAND_SHOOT_DURS[i]
 
             val timer = Timer(dur)
-            timer.setRunOnFinished(
+            timer.setRunOnJustFinished(
                 when (i) {
                     2 -> this::shootMoonScythe
                     4 -> this::shootStar

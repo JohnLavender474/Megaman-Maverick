@@ -11,7 +11,7 @@ Heart Locations
 
 Energy Tank Locations
 
-- A: Glacier Man
+- A: Rodent Man
 - B: Inferno Man
 - C: Timber Woman
 - D: Precious Man

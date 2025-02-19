@@ -750,38 +750,67 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
         megaman.getHealthPoints().max -= MegaHeartTank.HEALTH_BUMP
     }
 
+    override fun onAddCurrency(value: Int) {
+        if (game.state.getCurrency() < game.state.getMaxCurrency())
+            requestToPlaySound(SoundAsset.CURRENCY_PICKUP_SOUND, false)
+    }
+
+    fun hasEnhancement(enhancement: MegaEnhancement) = game.state.containsEnhancement(enhancement)
+
     fun hasWeapon(weapon: MegamanWeapon) = weaponsHandler.hasWeapon(weapon)
 
     fun hasHeartTank(heartTank: MegaHeartTank) = game.state.containsHeartTank(heartTank)
 
     fun hasHealthTank(healthTank: MegaHealthTank) = game.state.containsHealthTank(healthTank)
 
-    fun hasEnhancement(enhancement: MegaEnhancement) = game.state.containsEnhancement(enhancement)
-
     fun addToHealthTanks(health: Int): Boolean {
         check(health >= 0) { "Cannot add negative amount of health" }
 
-        if (health == 0 || megaman.getHealthPoints().current == megaman.getHealthPoints().max) return false
-
         var temp = health
 
-        MegaHealthTank.entries.forEach { healthTank ->
-            if (!game.state.containsHealthTank(healthTank)) return@forEach
+        MegaHealthTank.entries.any { healthTank ->
+            if (!game.state.containsHealthTank(healthTank)) return@any false
 
             val tankAmountToFill = ConstVals.MAX_HEALTH - game.state.getHealthTankValue(healthTank)
 
             when {
                 // health tank is full so continue
-                tankAmountToFill <= 0 -> return@forEach
+                tankAmountToFill <= 0 -> {
+                    GameLogger.debug(
+                        TAG, "addToHealthTanks(): healthTank=$healthTank: " +
+                            "tankAmountToFill=$tankAmountToFill is not greater than 0: " +
+                            "keep checking next health tanks"
+                    )
+
+                    return@any false
+                }
                 // health is less than amount needed to fill the health tank
                 tankAmountToFill >= temp -> {
+                    GameLogger.debug(
+                        TAG, "addToHealthTanks(): healthTank=$healthTank: " +
+                            "tankAmountToFill=$tankAmountToFill is greater than temp=$temp: " +
+                            "add to tank and exit loop for checking next health tanks"
+                    )
+
                     game.state.addHealthToHealthTank(healthTank, temp)
-                    return true
+
+                    temp = 0
+
+                    return@any true
                 }
                 // health is greater than amount needed to fill the health tank
                 else -> {
-                    game.state.addHealthToHealthTank(healthTank, tankAmountToFill)
+                    GameLogger.debug(
+                        TAG, "addToHealthTanks(): healthTank=$healthTank: " +
+                            "tankAmountToFill=$tankAmountToFill is less than temp=$temp: " +
+                            "subtract from temp and keep checking next health tanks"
+                    )
+
                     temp -= tankAmountToFill
+
+                    game.state.addHealthToHealthTank(healthTank, tankAmountToFill)
+
+                    return@any false
                 }
             }
         }
@@ -790,9 +819,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
         return health != temp
     }
 
-    override fun onAddCurrency(value: Int) {
-        if (game.state.getCurrency() < game.state.getMaxCurrency())
-            requestToPlaySound(SoundAsset.CURRENCY_PICKUP_SOUND, false)
+    fun useHealthTank(healthTank: MegaHealthTank) {
+
     }
 
     fun translateAmmo(ammo: Int) {

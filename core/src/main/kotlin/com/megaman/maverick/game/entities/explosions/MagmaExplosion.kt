@@ -51,6 +51,7 @@ class MagmaExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
 
     companion object {
         const val TAG = "MagmaExplosion"
+        private const val ANIMATION_FRAME_DUR = 0.05f
         private const val EXPLOSION_DUR = 0.2f
         private var region: TextureRegion? = null
     }
@@ -58,6 +59,7 @@ class MagmaExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     override var owner: IGameEntity? = null
 
     private val timer = Timer(EXPLOSION_DUR)
+    private var scalar = 1f
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
@@ -78,11 +80,18 @@ class MagmaExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
 
         timer.reset()
 
+        scalar = spawnProps.getOrDefault(ConstKeys.SCALAR, 1f, Float::class)
+        val animator = animators.values().first() as Animator
+        animator.animations.values().forEach { animation ->
+            val frameDur = ANIMATION_FRAME_DUR * scalar
+            animation.setFrameDuration(frameDur)
+        }
+
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ASTEROID_EXPLODE_SOUND, false)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        timer.update(delta)
+        timer.update(delta / scalar)
         if (timer.isFinished()) destroy()
     })
 
@@ -103,7 +112,7 @@ class MagmaExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 15))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 15))
         sprite.setSize(4.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
@@ -111,10 +120,12 @@ class MagmaExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(region!!, 2, 2, 0.05f, false)
+        val animation = Animation(region!!, 2, 2, ANIMATION_FRAME_DUR, false)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
 
     override fun getType() = EntityType.EXPLOSION
+
+    override fun getTag() = TAG
 }

@@ -56,6 +56,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -107,6 +108,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         EventType.ADD_WEAPON_ENERGY,
         EventType.ADD_CURRENCY,
         EventType.ATTAIN_HEART_TANK,
+        EventType.ATTAIN_HEALTH_TANK,
 
         EventType.NEXT_ROOM_REQ,
         EventType.GATE_INIT_OPENING,
@@ -457,11 +459,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
 
             EventType.ADD_PLAYER_HEALTH -> {
-                val healthNeeded = megaman.getMaxHealth() - megaman.getCurrentHealth()
-                if (healthNeeded > 0) {
-                    val health = event.properties.get(ConstKeys.VALUE) as Int
-                    playerStatsHandler.addHealth(health)
-                }
+                val health = event.properties.get(ConstKeys.VALUE) as Int
+                playerStatsHandler.addHealth(health)
             }
 
             EventType.ADD_CURRENCY -> {
@@ -470,8 +469,13 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
 
             EventType.ATTAIN_HEART_TANK -> {
-                val heartTank = event.properties.get(ConstKeys.VALUE) as MegaHeartTank
+                val heartTank = event.getProperty(ConstKeys.VALUE, MegaHeartTank::class)!!
                 playerStatsHandler.attain(heartTank)
+            }
+
+            EventType.ATTAIN_HEALTH_TANK -> {
+                val healthTank = event.getProperty(ConstKeys.VALUE, MegaHealthTank::class)!!
+                playerStatsHandler.attain(healthTank)
             }
 
             EventType.NEXT_ROOM_REQ -> {
@@ -692,6 +696,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             game.runQueue.addLast { game.pause() }
         }
 
+        playerStatsHandler.update(delta)
+
         if (!game.paused) {
             spawnsMan.update(delta / 2f)
 
@@ -713,8 +719,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
 
             if (!megaman.dead) playerDeathEventHandler.setInactive()
-
-            playerStatsHandler.update(delta)
         }
 
         engine.update(delta)

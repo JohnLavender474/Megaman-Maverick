@@ -145,7 +145,7 @@ class MegaAudioManager(
 
     fun fadeOutMusic(time: Float) {
         fadeOutMusicTimer = Timer(time)
-        fadeOutMusicTimer!!.setRunOnFinished { currentMusic?.volume = musicVolume }
+        fadeOutMusicTimer!!.setRunOnJustFinished { currentMusic?.volume = musicVolume }
     }
 
     fun stopFadingOutMusic() {

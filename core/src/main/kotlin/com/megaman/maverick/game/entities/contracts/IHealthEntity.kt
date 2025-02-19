@@ -16,7 +16,7 @@ interface IHealthEntity : IPointsEntity {
 
     fun setHealthToMax() = setHealth(getMaxHealth())
 
-    fun translateHealth(health: Int) = getHealthPoints().set(getCurrentHealth() + health)
+    fun translateHealth(health: Int) = getHealthPoints().translate(health)
 
     fun getMinHealth() = getHealthPoints().min
 

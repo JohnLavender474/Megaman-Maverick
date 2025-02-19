@@ -21,6 +21,8 @@ interface IGameStateListener {
 
     fun onAddHealthToHealthTank(healthTank: MegaHealthTank, value: Int) {}
 
+    fun onRemoveHealthFromHealthTank(healthTank: MegaHealthTank, value: Int) {}
+
     fun onAddEnhancement(enhancement: MegaEnhancement) {}
 
     fun onRemoveEnhancement(enhancement: MegaEnhancement) {}
