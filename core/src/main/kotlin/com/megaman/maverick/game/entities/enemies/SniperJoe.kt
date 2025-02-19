@@ -442,6 +442,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         }
 
         val animator = Animator(keySupplier, animations)
+
         return AnimationsComponent(this, animator)
     }
 

@@ -297,7 +297,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
     fun isDepleted(weapon: MegamanWeapon) = getAmmo(weapon) == 0
 
     fun canFireWeapon(weapon: MegamanWeapon, stat: MegaChargeStatus): Boolean {
-        if (!megaman.ready || !hasWeapon(weapon)) return false
+        if (!megaman.ready || !hasWeapon(weapon) || megaman.frozen) return false
 
         val handler = weaponHandlers[weapon]
         if (!handler.cooldown.isFinished() || !handler.canFireWeapon(handler, stat)) return false

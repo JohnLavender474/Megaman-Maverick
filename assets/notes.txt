@@ -7,7 +7,7 @@ Heart Tank Locations
 - E: Reactor Man
 - F: Rodent Man
 - G: Timber Woman
-- H: Precious Man
+- H: Precious Woman
 
 Health Tank Locations
 

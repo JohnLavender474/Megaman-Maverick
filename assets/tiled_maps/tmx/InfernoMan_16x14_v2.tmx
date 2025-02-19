@@ -240,6 +240,7 @@
     <property name="left_hover_target_3" type="object" value="448"/>
     <property name="max" type="object" value="443"/>
     <property name="min" type="object" value="442"/>
+    <property name="mini" type="bool" value="true"/>
     <property name="right_charge_target_1" type="object" value="452"/>
     <property name="right_charge_target_2" type="object" value="453"/>
     <property name="right_hover_target_1" type="object" value="446"/>

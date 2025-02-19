@@ -9,7 +9,7 @@ fi
 # Platform argument
 PLATFORM=$1
 
-# Define platform-specific paths and URLs
+# Define platform-specific paths and URLs (JDK downloads MUST include JRE bundle)
 case "$PLATFORM" in
     windows64)
         JDK_PATH="./game-builds/jdk/windows64"

@@ -14,12 +14,15 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
     priorAnimKey != null && game.isProperty(ConstKeys.ROOM_TRANSITION, true) -> {
         var key = priorAnimKey
         if (key.contains("stand")) key = key.replace("stand", "run")
+        if (key.contains("slip")) key = key.replace("slip", "run")
         key
     }
 
     game.isCameraRotating() -> amendKey("jump")
 
     !ready -> "spawn"
+
+    frozen -> "frozen"
 
     stunned -> "stunned"
 

@@ -9,8 +9,6 @@ import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
-import com.badlogic.gdx.graphics.Pixmap
-import com.badlogic.gdx.graphics.PixmapIO
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
@@ -77,6 +75,7 @@ import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.bosses.*
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
@@ -116,8 +115,6 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.collisions.MegaCollisionHandler
 import com.megaman.maverick.game.world.contacts.MegaContactFilter
 import com.megaman.maverick.game.world.contacts.MegaContactListener
-import java.time.LocalDateTime
-import java.util.zip.Deflater
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
 
@@ -139,18 +136,19 @@ class MegamanMaverickGame(
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        const val VERSION = "ALPHA 1.0.0"
+        const val VERSION = "ALPHA 1.1.0"
         private const val LOG_FILE_NAME = "logs.txt"
         private const val ASSET_MILLIS = 17
         private const val LOADING = "LOADING"
         private const val SCREENSHOT_KEY = Input.Keys.P
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(
+        val PROD_TAGS_TO_LOG: ObjectSet<String> = objectSetOf(
             TAG, Megaman.TAG, GameState.TAG, AbstractBoss.TAG, AbstractEnemy.TAG, MegaLevelScreen.TAG,
             PlayerStatsHandler.TAG, MegamanWeaponsHandler.TAG, CameraManagerForRooms.TAG, MEGAMAN_EVENT_LISTENER_TAG,
             MEGAMAN_CONTROLLER_COMPONENT_TAG, MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, GlacierMan.TAG, MoonMan.TAG,
             InfernoMan.TAG, TimberWoman.TAG, DesertMan.TAG, ReactorMan.TAG, PreciousWoman.TAG, LevelPauseScreen.TAG,
             MainMenuScreen.TAG, LevelSelectScreen.TAG
         )
+        val DEV_TAGS_TO_LOG: ObjectSet<String> = objectSetOf(Block.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.oneFixtureMatches(FixtureType.CONSUMER)
         }
@@ -197,7 +195,10 @@ class MegamanMaverickGame(
     private var debugWindow: DebugWindow? = null
 
     override fun create() {
-        params.logLevels.forEach { GameLogger.setLogLevel(it, true) }
+        // TODO: for alpha builds, override log levels setting and put all log levels
+        // params.logLevels.forEach { GameLogger.setLogLevel(it, true) }
+        GameLogLevel.entries.forEach { GameLogger.setLogLevel(it, true) }
+
         // only print errors to terminal; all other log levels should only be displayed in the logger window
         GameLogger.logReceivers.add(object : LogReceiver {
 
@@ -212,7 +213,8 @@ class MegamanMaverickGame(
                 if (level == GameLogLevel.ERROR) println(fullMessage)
             }
         })
-        GameLogger.tagsToLog.addAll(TAGS_TO_LOG)
+        GameLogger.tagsToLog.addAll(PROD_TAGS_TO_LOG)
+        // GameLogger.tagsToLog.addAll(DEV_TAGS_TO_LOG)
         GameLogger.filterByTag = true
 
         GameLogger.log(TAG, "create(): appType=${Gdx.app.type}")
@@ -229,11 +231,6 @@ class MegamanMaverickGame(
         engine = createGameEngine()
 
         state = GameState()
-
-        MegaEntityFactory.init(this)
-
-        // TODO: should replace EntityFactories with MegaEntityFactory
-        EntityFactories.initialize(this)
 
         val gameWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
         val gameHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
@@ -321,6 +318,10 @@ class MegamanMaverickGame(
         audioMan.musicVolume = params.musicVolume
         audioMan.soundVolume = params.soundVolume
 
+        MegaEntityFactory.init(this)
+        // TODO: should replace EntityFactories with MegaEntityFactory
+        EntityFactories.initialize(this)
+
         megaman = Megaman(this)
         // manually call init and set initialized to true before megaman is spawned
         megaman.init()
@@ -389,6 +390,8 @@ class MegamanMaverickGame(
                 }
             }
 
+            // TODO: uncomment to take screenshots of the game screen
+            /*
             val takeScreenshot = Gdx.input.isKeyJustPressed(SCREENSHOT_KEY)
             if (takeScreenshot) {
                 val currentTime = LocalDateTime.now().toString()
@@ -398,6 +401,7 @@ class MegamanMaverickGame(
                 PixmapIO.writePNG(Gdx.files.external(filename), pixmap, Deflater.DEFAULT_COMPRESSION, true)
                 pixmap.dispose()
             }
+             */
 
             audioMan.update(delta)
             eventsMan.run()

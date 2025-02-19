@@ -1,11 +1,13 @@
 package com.megaman.maverick.game.entities.blocks
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.ProcessState
+import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -20,8 +22,11 @@ import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
+import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.*
 
 open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity,
@@ -53,14 +58,48 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        // TODO: if the bug where blocks do not always spawn persists, then the default value here can be set to false
+        GameLogger.debug(
+            TAG,
+            "onSpawn(): mapObjectId=$mapObjectId, " +
+                "blocks.size=${MegaGameEntities.getOfType(EntityType.BLOCK).size} " +
+                "tag=${getTag()}, " +
+                "spawnProps=$spawnProps"
+        )
+
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         when {
             cullOutOfBounds -> putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(this))
             else -> removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
+        }
+
+        val cullRoom = spawnProps.containsKey(ConstKeys.CULL_ROOM)
+        when {
+            cullRoom -> {
+                val room = spawnProps.get(ConstKeys.CULL_ROOM, String::class)!!
+
+                val cullable = getStandardEventCullingLogic(
+                    this,
+                    objectSetOf<Any>(EventType.END_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS),
+                    predicate@{ event ->
+                        val nextRoom = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)?.name
+                        return@predicate nextRoom != room
+                    }
+                )
+
+                game.eventsMan.addListener(cullable)
+
+                runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) {
+                    game.eventsMan.removeListener(cullable)
+
+                    runnablesOnDestroy.remove(ConstKeys.CULL_EVENTS)
+                }
+
+                putCullable(ConstKeys.CULL_ROOM, cullable)
+            }
+
+            else -> removeCullable(ConstKeys.CULL_ROOM)
         }
 
         body.physics.frictionToApply.x =
@@ -186,10 +225,15 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     }
 
     override fun onDestroy() {
-        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+
         fixturesToRemove.forEach { body.removeFixture(it) }
         fixturesToRemove.clear()
+
+        GameLogger.debug(
+            TAG,
+            "onDestroy(): mapObjectId=$mapObjectId, blocks.size=${MegaGameEntities.getOfType(EntityType.BLOCK).size}"
+        )
     }
 
     open fun hitByBody(bodyFixture: IFixture) {}

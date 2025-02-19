@@ -12,7 +12,7 @@ class DebugWindow : Disposable {
 
     companion object {
         const val TAG = "DebugWindow"
-        private const val MAX_LOGS = 200
+        private const val MAX_LOGS = 250
     }
 
     private val frame = JFrame("Debug Window")

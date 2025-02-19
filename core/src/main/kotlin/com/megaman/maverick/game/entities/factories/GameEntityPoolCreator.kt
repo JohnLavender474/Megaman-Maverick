@@ -6,7 +6,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
 object GameEntityPoolCreator {
 
-    private const val DEFAULT_START_AMOUNT = 0
+    const val DEFAULT_START_AMOUNT = 0
 
     fun create(supplier: () -> MegaGameEntity) = create(supplier, DEFAULT_START_AMOUNT)
 

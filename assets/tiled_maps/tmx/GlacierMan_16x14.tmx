@@ -1172,11 +1172,6 @@
    </properties>
   </object>
   <object id="229" name="Coldier" x="7288" y="912" width="16" height="16"/>
-  <object id="231" name="Bat" x="6168" y="736" width="16" height="16">
-   <properties>
-    <property name="type" value="Snow"/>
-   </properties>
-  </object>
   <object id="232" name="ShieldAttacker" x="6984" y="904" width="16" height="16">
    <properties>
     <property name="value" type="float" value="-5"/>
@@ -1284,22 +1279,12 @@
     <property name="type" value="Snow"/>
    </properties>
   </object>
-  <object id="382" name="Bat" x="12104" y="768" width="16" height="16">
-   <properties>
-    <property name="type" value="Snow"/>
-   </properties>
-  </object>
   <object id="383" name="Bat" x="13448" y="768" width="16" height="16">
    <properties>
     <property name="type" value="Snow"/>
    </properties>
   </object>
   <object id="384" name="Bat" x="12824" y="800" width="16" height="16">
-   <properties>
-    <property name="type" value="Snow"/>
-   </properties>
-  </object>
-  <object id="386" name="Bat" x="14008" y="832" width="16" height="16">
    <properties>
     <property name="type" value="Snow"/>
    </properties>
@@ -1370,10 +1355,10 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="5" name="temp">
+ <objectgroup id="5" name="player">
   <object id="609" name="0" x="17312" y="992" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="3" name="player">
+ <objectgroup id="3" name="temp">
   <object id="169" name="0" x="128" y="2288" width="32" height="32"/>
   <object id="473" name="2" x="5184" y="768" width="32" height="32"/>
   <object id="474" name="3" x="7360" y="1312" width="32" height="32">

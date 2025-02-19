@@ -17,7 +17,6 @@ class GameState : Resettable {
 
     companion object {
         const val TAG = "GameState"
-        private const val EXPECTED_STRING_LINES = 5
     }
 
     private val levelsDefeated = ObjectSet<LevelDefinition>()
@@ -190,33 +189,47 @@ class GameState : Resettable {
 
     fun getMaxCurrency() = currency.max
 
-    fun getMinCurrency() = currency.min
-
     override fun reset() {
         GameLogger.debug(TAG, "reset()")
 
-        val levelIter = levelsDefeated.iterator()
-        while (levelIter.hasNext) {
+        val levelIter = levelsDefeated.toGdxArray().iterator()
+        while (levelIter.hasNext()) {
             val level = levelIter.next()
-            removeLevelDefeated(level)
+            try {
+                removeLevelDefeated(level)
+            } catch (e: Exception) {
+                throw Exception("Failed to remove level: ${level}. Levels defeated: $levelsDefeated", e)
+            }
         }
 
-        val heartTankIter = heartTanksCollected.iterator()
-        while (heartTankIter.hasNext) {
+        val heartTankIter = heartTanksCollected.toGdxArray().iterator()
+        while (heartTankIter.hasNext()) {
             val heartTank = heartTankIter.next()
-            removeHeartTank(heartTank)
+            try {
+                removeHeartTank(heartTank)
+            } catch (e: Exception) {
+                throw Exception("Failed to remove heart tank: ${heartTank}. Levels defeated: $heartTanksCollected", e)
+            }
         }
 
-        val healthTankIter = healthTanksCollected.keys().iterator()
-        while (healthTankIter.hasNext) {
+        val healthTankIter = healthTanksCollected.keys().toGdxArray().iterator()
+        while (healthTankIter.hasNext()) {
             val healthTank = healthTankIter.next()
-            removeHealthTank(healthTank)
+            try {
+                removeHealthTank(healthTank)
+            } catch (e: Exception) {
+                throw Exception("Failed to remove health tank: ${healthTank}. Levels defeated: $healthTanksCollected", e)
+            }
         }
 
-        val enhancementIter = enhancementsAttained.iterator()
-        while (enhancementIter.hasNext) {
+        val enhancementIter = enhancementsAttained.toGdxArray().iterator()
+        while (enhancementIter.hasNext()) {
             val enhancement = enhancementIter.next()
-            removeEnhancement(enhancement)
+            try {
+                removeEnhancement(enhancement)
+            } catch (e: Exception) {
+                throw Exception("Failed to remove enhancement: ${enhancement}. Levels defeated: $enhancement", e)
+            }
         }
     }
 

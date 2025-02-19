@@ -78,6 +78,7 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         super.onSpawn(spawnProps)
+
         game.eventsMan.addListener(this)
 
         direction =

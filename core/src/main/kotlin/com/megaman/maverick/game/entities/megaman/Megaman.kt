@@ -32,12 +32,10 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
-import com.megaman.maverick.game.entities.contracts.IProjectileEntity
-import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.enemies.SpringHead
 import com.megaman.maverick.game.entities.explosions.ExplosionOrb
+import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.megaman.components.*
@@ -67,7 +65,7 @@ import kotlin.math.abs
 
 class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventListener, IFaceable, IDirectional,
     IBodyEntity, ISpritesEntity, IBehaviorsEntity, IPointsEntity, IAudioEntity, IAnimatedEntity, IScalableGravityEntity,
-    IFocusable, IGameStateListener {
+    IFocusable, IGameStateListener, IFreezableEntity {
 
     companion object {
         const val TAG = "Megaman"
@@ -115,8 +113,12 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
 
     var canBeDamaged = true
 
+    override var frozen = false
+    private var hitsToUnfreeze = 0
+    internal var frozenPushTimer = Timer(MegamanValues.FROZEN_PUSH_DUR)
+
     var canMove = true
-        get() = field && !stunned && !damaged
+        get() = field && !stunned && !damaged && !frozen
 
     internal val stunTimer = Timer(MegamanValues.STUN_DUR)
     internal val damageRecoveryTimer = Timer(MegamanValues.DAMAGE_RECOVERY_TIME).setToEnd()
@@ -200,6 +202,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
                     )
 
                     canMove = false
+
                     body.physics.gravityOn = false
                     body.physics.velocity.setZero()
 
@@ -303,8 +306,6 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
     internal val roomTransPauseTimer = Timer(ConstVals.ROOM_TRANS_DELAY_DURATION)
     internal val spawningTimer = Timer(MegamanValues.SPAWNING_DUR)
 
-    private var neverSpawnedBefore = true
-
     private val damageListeners = OrderedSet<IMegamanDamageListener>()
 
     override fun init() {
@@ -354,12 +355,16 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
         weaponsHandler.setAllToMaxAmmo()
         currentWeapon = MegamanWeapon.MEGA_BUSTER
 
-        running = false
         canMove = true
+        running = false
         teleporting = false
         canBeDamaged = true
         recoveryFlash = false
         canMakeLandSound = false
+
+        frozen = false
+        hitsToUnfreeze = 0
+        frozenPushTimer.setToEnd()
 
         gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
         movementScalar = spawnProps.getOrDefault("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", 1f, Float::class)
@@ -395,8 +400,6 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
             teleporting = false
             canBeDamaged = true
         })
-
-        neverSpawnedBefore = false
     }
 
     override fun onDestroy() {
@@ -571,6 +574,12 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
             }
         }
 
+        if (!frozen && damager is IFreezerEntity) {
+            frozen = true
+            hitsToUnfreeze = 0
+            frozenPushTimer.setToEnd()
+        }
+
         stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
 
         requestToPlaySound(SoundAsset.MEGAMAN_DAMAGE_SOUND, false)
@@ -639,7 +648,6 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
             }
 
             trailSpriteTimer.update(delta)
-
             if (trailSpriteTimer.isFinished()) {
                 val spawnTrailSprite = when {
                     isBehaviorActive(BehaviorType.GROUND_SLIDING) -> {
@@ -663,6 +671,28 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
             }
 
             if (ready) spawningTimer.update(delta)
+
+            frozenPushTimer.update(delta)
+            if (frozen) {
+                if (frozenPushTimer.isFinished() &&
+                    game.controllerPoller.isAnyJustReleased(MegamanValues.BUTTONS_TO_UNFREEZE)
+                ) {
+                    hitsToUnfreeze++
+                    frozenPushTimer.reset()
+                    requestToPlaySound(SoundAsset.ICE_SHARD_1_SOUND, false)
+                }
+
+                if (hitsToUnfreeze >= MegamanValues.HITS_TO_UNFREEZE) {
+                    frozen = false
+                    hitsToUnfreeze = 0
+                    frozenPushTimer.setToEnd()
+
+                    for (i in 0 until 5) {
+                        val shard = MegaEntityFactory.fetch(IceShard::class)!!
+                        shard.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.INDEX pairTo i))
+                    }
+                }
+            }
         }
     }
 

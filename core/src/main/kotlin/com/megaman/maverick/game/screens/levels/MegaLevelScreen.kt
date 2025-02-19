@@ -50,7 +50,6 @@ import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.drawables.backgrounds.Background
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IHazard
@@ -298,12 +297,15 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             game.getSystem(BehaviorsSystem::class).on = true
 
             game.putProperty(ConstKeys.ROOM_TRANSITION, false)
+
+            megaman.running = false
         }
         cameraManagerForRooms.onSetToRoomNoTrans = {
             GameLogger.debug(TAG, "On set to room no trans")
             eventsMan.submitEvent(
                 Event(
-                    EventType.SET_TO_ROOM_NO_TRANS, props(ConstKeys.ROOM pairTo cameraManagerForRooms.currentGameRoom)
+                    EventType.SET_TO_ROOM_NO_TRANS,
+                    props(ConstKeys.ROOM pairTo cameraManagerForRooms.currentGameRoom)
                 )
             )
         }
@@ -508,8 +510,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 systemsToTurnOff.forEach { game.getSystem(it).on = false }
 
                 megaman.body.physics.velocity.setZero()
-
-                eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
             }
 
             EventType.GATE_INIT_CLOSING -> {
@@ -522,59 +522,56 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                     SimplePathfindingSystem::class
                 )
                 systemsToTurnOn.forEach { game.getSystem(it).on = true }
-
-                val room = cameraManagerForRooms.currentGameRoom!!
-
-                if (!room.properties.containsKey(ConstKeys.BOSS))
-                    eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
             }
 
             EventType.ENTER_BOSS_ROOM -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Enter boss room")
 
+                val bossRoom = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!
+                val bossMapObject = bossRoom.properties.get(ConstKeys.OBJECT, RectangleMapObject::class.java)
+                val bossSpawnProps = bossMapObject.properties.toProps()
+
+                val mini = bossSpawnProps.getOrDefault(ConstKeys.MINI, false, Boolean::class)
+
                 val levelDef = game.getCurrentLevelDef()
-                if (game.state.isLevelDefeated(levelDef)) {
+                if (!mini && game.state.isLevelDefeated(levelDef)) {
                     eventsMan.submitEvent(Event(EventType.VICTORY_EVENT))
                     return
                 }
 
-                val bossRoom = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!
-                val bossMapObject = bossRoom.properties.get(ConstKeys.OBJECT, RectangleMapObject::class.java)
-
-                val bossSpawnProps = bossMapObject.properties.toProps()
                 bossSpawnProps.put(ConstKeys.BOUNDS, bossMapObject.rectangle.toGameRectangle())
 
                 val bossName = bossMapObject.name
-
                 bossSpawnEventHandler.init(bossName, bossSpawnProps)
-
-                megaman.running = false
             }
 
             EventType.BOSS_READY -> {
                 val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
-                if (boss.mini) eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN))
-                else {
-                    val type = event.getOrDefaultProperty(
-                        ConstKeys.HEALTH_FILL_TYPE,
-                        HealthFillType.BIT_BY_BIT,
-                        HealthFillType::class
-                    )
-                    val runOnFirstUpdate: (() -> Unit)? = when (type) {
-                        HealthFillType.BIT_BY_BIT -> {
-                            { game.audioMan.pauseMusic() }
+
+                when {
+                    boss.mini -> eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN))
+                    else -> {
+                        val type = event.getOrDefaultProperty(
+                            ConstKeys.HEALTH_FILL_TYPE,
+                            HealthFillType.BIT_BY_BIT,
+                            HealthFillType::class
+                        )
+                        val runOnFirstUpdate: (() -> Unit)? = when (type) {
+                            HealthFillType.BIT_BY_BIT -> {
+                                { game.audioMan.pauseMusic() }
+                            }
+
+                            else -> null
                         }
+                        val runOnFinished = {
+                            eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN))
+                            if (type == HealthFillType.BIT_BY_BIT) game.audioMan.playMusic()
+                        }
+                        bossHealthHandler.set(boss, type, runOnFirstUpdate, runOnFinished)
 
-                        else -> null
-                    }
-                    val runOnFinished = {
-                        eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN))
-                        if (type == HealthFillType.BIT_BY_BIT) game.audioMan.playMusic()
-                    }
-                    bossHealthHandler.set(boss, type, runOnFirstUpdate, runOnFinished)
-
-                    game.engine.systems.forEach {
-                        if (!it.isAny(SpritesSystem::class, AnimationsSystem::class)) it.on = false
+                        game.engine.systems.forEach {
+                            if (!it.isAny(SpritesSystem::class, AnimationsSystem::class)) it.on = false
+                        }
                     }
                 }
             }
@@ -837,10 +834,11 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         eventsMan.removeListener(this)
 
-        MegaEntityFactory.reset()
+        // TODO: disable clearing entity factories as an optimization
+        // MegaEntityFactory.reset()
 
         // TODO: should replace EntityFactories with MegaEntityFactory
-        EntityFactories.clear()
+        // EntityFactories.clear()
 
         engine.reset()
 

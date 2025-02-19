@@ -171,9 +171,9 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
             (body.isSensingAny(BodySense.SIDE_TOUCHING_ICE_LEFT, BodySense.SIDE_TOUCHING_ICE_RIGHT))
 
         var gravityValue = when {
-            body.isSensing(BodySense.IN_WATER) -> if (wallSlidingOnIce) waterIceGravity else waterGravity
+            body.isSensing(BodySense.IN_WATER) -> if (wallSlidingOnIce || frozen) waterIceGravity else waterGravity
             !feetGravitySet.isEmpty -> groundGravity
-            wallSlidingOnIce -> iceGravity
+            wallSlidingOnIce || frozen -> iceGravity
             else -> gravity
         }
         gravityValue *= gravityScalar

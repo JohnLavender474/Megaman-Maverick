@@ -108,18 +108,20 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                     GameLogger.debug(TAG, "build(): adding SPAWN_ROOM spawner: entity=${name}, room=$roomName")
 
                     val spawner = SpawnerFactory.spawnerForOnEvent(
-                        predicate = { event ->
-                            val currentRoom = game.getCurrentRoom()?.name
-                            val shouldSpawn = currentRoom == roomName
+                        predicate = predicate@{ event ->
+                            val currentRoomName = game.getCurrentRoom()?.name
+                            val shouldSpawn = currentRoomName == roomName
+
                             GameLogger.debug(
                                 TAG,
                                 "build(): " +
                                     "entity=$name, " +
                                     "shouldSpawn=$shouldSpawn, " +
                                     "entityRoom=$roomName, " +
-                                    "megamanRoom=$currentRoom"
+                                    "currentRoom=$currentRoomName"
                             )
-                            shouldSpawn
+
+                            return@predicate shouldSpawn
                         },
                         eventKeyMask = objectSetOf<Any>(
                             EventType.PLAYER_READY,

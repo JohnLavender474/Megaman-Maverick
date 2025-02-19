@@ -538,8 +538,10 @@ sprites/frames/Megaman_v2/wallslide_charge_half.png
 sprites/frames/Megaman_v2/beam.png
 sprites/frames/Megaman_v2/climb_still_charge_half.png
 sprites/frames/Megaman_v2/wallslide_charge_full.png
+sprites/frames/Megaman_v2/frozen_push.png
 sprites/frames/Megaman_v2/slip_charge_half.png
 sprites/frames/Megaman_v2/cartin.png
+sprites/frames/Megaman_v2/frozen.png
 sprites/frames/Megaman_v2/cartin_jump.png
 sprites/frames/Megaman_v2/run_charge_half.png
 sprites/frames/Megaman_v2/crouch_shoot.png
@@ -939,8 +941,10 @@ sprites/frames/Megaman_v2_Fire/wallslide_charge_half.png
 sprites/frames/Megaman_v2_Fire/beam.png
 sprites/frames/Megaman_v2_Fire/climb_still_charge_half.png
 sprites/frames/Megaman_v2_Fire/wallslide_charge_full.png
+sprites/frames/Megaman_v2_Fire/frozen_push.png
 sprites/frames/Megaman_v2_Fire/slip_charge_half.png
 sprites/frames/Megaman_v2_Fire/cartin.png
+sprites/frames/Megaman_v2_Fire/frozen.png
 sprites/frames/Megaman_v2_Fire/cartin_jump.png
 sprites/frames/Megaman_v2_Fire/run_charge_half.png
 sprites/frames/Megaman_v2_Fire/crouch_shoot.png
@@ -1000,8 +1004,10 @@ sprites/frames/Megaman_v2_Moon/wallslide_charge_half.png
 sprites/frames/Megaman_v2_Moon/beam.png
 sprites/frames/Megaman_v2_Moon/climb_still_charge_half.png
 sprites/frames/Megaman_v2_Moon/wallslide_charge_full.png
+sprites/frames/Megaman_v2_Moon/frozen_push.png
 sprites/frames/Megaman_v2_Moon/slip_charge_half.png
 sprites/frames/Megaman_v2_Moon/cartin.png
+sprites/frames/Megaman_v2_Moon/frozen.png
 sprites/frames/Megaman_v2_Moon/cartin_jump.png
 sprites/frames/Megaman_v2_Moon/run_charge_half.png
 sprites/frames/Megaman_v2_Moon/crouch_shoot.png
@@ -1058,6 +1064,8 @@ sprites/frames/Environs1/Leaves/SpringLeaf.png
 sprites/frames/Environs1/WindyGrass/Left.png
 sprites/frames/Environs1/WindyGrass/Right.png
 sprites/frames/Environs1/WindyGrass/Middle.png
+sprites/frames/Megaman_v2_Needle/frozen_push.png
+sprites/frames/Megaman_v2_Needle/frozen.png
 sprites/frames/MegamanRushJet/Stand.png
 sprites/frames/MegamanRushJet/Swim.png
 sprites/frames/MegamanRushJet/JumpShoot.png
@@ -1441,6 +1449,8 @@ sprites/frames/Megaman_v2_RushJet/airdash.png
 sprites/frames/Megaman_v2_RushJet/slip_shoot.png
 sprites/frames/Megaman_v2_RushJet/swim.png
 sprites/frames/Megaman_v2_RushJet/jump_shoot.png
+sprites/frames/Megaman_v2_RushJet/frozen_push.png
+sprites/frames/Megaman_v2_RushJet/frozen.png
 sprites/frames/Megaman_v2_RushJet/run_shoot.png
 sprites/frames/Megaman_v2_RushJet/slip.png
 sprites/frames/Megaman_v2_RushJet/run.png

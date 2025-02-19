@@ -146,11 +146,11 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         body.setCenter(megaman.body.getCenter())
         trajectory.setZero()
 
-        megaman.let { megaman ->
-            megaman.setAllBehaviorsAllowed(false)
-            megaman.body.physics.velocity.setZero()
-            megaman.body.physics.gravityOn = false
-            megaman.canMove = false
+        megaman.let {
+            it.setAllBehaviorsAllowed(false)
+            it.body.physics.velocity.setZero()
+            it.body.physics.gravityOn = false
+            it.canMove = false
         }
 
         WEBS_STUCK_TO_MEGAMAN.add(this)

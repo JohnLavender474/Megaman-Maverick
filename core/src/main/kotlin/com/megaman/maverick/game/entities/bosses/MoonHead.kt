@@ -110,6 +110,8 @@ class MoonHead(game: MegamanMaverickGame) : AbstractBoss(game, dmgDuration = DAM
 
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.ORB, false)
+        spawnProps.put(ConstKeys.MINI, true)
+
         super.onSpawn(spawnProps)
 
         loop.reset()

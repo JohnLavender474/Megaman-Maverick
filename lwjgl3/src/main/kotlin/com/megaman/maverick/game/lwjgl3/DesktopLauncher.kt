@@ -71,7 +71,7 @@ object DesktopLauncher {
         params.soundVolume = appArgs.soundVolume
         params.showScreenController = appArgs.showScreenController
 
-        val logLevels = appArgs.logLevels.replace("\\s+", "").split(",")
+        val logLevels = appArgs.logLevels.replace("\\s+", "").split(",").filter { !it.isBlank() }
         try {
             logLevels.forEach {
                 val logLevel = GameLogLevel.valueOf(it.uppercase())

@@ -25,6 +25,12 @@ fun <T> gdxFilledArrayOf(size: Int, value: T): Array<T> {
     return array
 }
 
+fun <T> gdxFlatArrayOf(vararg iterables: Iterable<T>): Array<T> {
+    val array = Array<T>()
+    iterables.forEach { it.forEach { element -> array.add(element) } }
+    return array
+}
+
 fun <T> Array<T>.fill(value: T): Array<T> {
     for (i in 0 until size) set(i, value)
     return this

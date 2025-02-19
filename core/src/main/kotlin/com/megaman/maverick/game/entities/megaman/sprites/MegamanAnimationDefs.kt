@@ -134,6 +134,8 @@ object MegamanAnimationDefs {
         "slip_charge_half_left" pairTo AnimationDef(3, 1, CHARGING_FRAME_DUR),
         "slip_shoot" pairTo AnimationDef(),
         "slip_shoot_left" pairTo AnimationDef(),
+
+        "frozen" pairTo AnimationDef()
     )
 
     fun get() = defs

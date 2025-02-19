@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.entities.megaman.constants
 
-import com.badlogic.gdx.graphics.Color
 import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.megaman.maverick.game.controllers.MegaControllerButton
 
 object MegamanValues {
 
@@ -88,5 +88,7 @@ object MegamanValues {
     const val STUN_IMPULSE_X = 2.5f
     const val STUM_IMPULSE_Y = 2f
 
-    val WEAPON_SPAWN_MAGIC_COLOR: Color = Color.valueOf("dd00ffff")
+    const val HITS_TO_UNFREEZE = 3
+    const val FROZEN_PUSH_DUR = 0.2f
+    val BUTTONS_TO_UNFREEZE = gdxArrayOf<Any>(MegaControllerButton.B)
 }

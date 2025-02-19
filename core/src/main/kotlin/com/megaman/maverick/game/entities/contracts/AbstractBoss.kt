@@ -109,7 +109,6 @@ abstract class AbstractBoss(
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-        GameLogger.log(getTag(), "onSpawn(): spawnProps=$spawnProps")
 
         game.eventsMan.addListener(this)
 
