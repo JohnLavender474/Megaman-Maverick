@@ -1,335 +1,74 @@
-===== SESSION STARTED: 2025-02-19T17:37:40.315325386 =====
-17:37:41 | DEBUG | Block | init()
-17:37:41 | DEBUG | Block | init()
-17:37:41 | DEBUG | Block | init()
-17:37:41 | DEBUG | Block | init()
-17:37:41 | DEBUG | Block | init()
-17:37:41 | DEBUG | Block | init()
-17:37:41 | DEBUG | Block | init()
-17:37:41 | DEBUG | Block | init()
-17:37:41 | DEBUG | Block | init()
-17:37:41 | DEBUG | Block | init()
-17:37:41 | DEBUG | Block | init()
-17:37:41 | DEBUG | Block | init()
-17:37:41 | DEBUG | Block | init()
-17:37:41 | DEBUG | Block | init()
-17:37:41 | DEBUG | Block | init()
-17:37:41 | DEBUG | Block | init()
-17:37:41 | DEBUG | Block | init()
-17:37:41 | DEBUG | Block | init()
-17:37:41 | DEBUG | Block | init()
-17:37:41 | DEBUG | Block | init()
-17:37:41 | DEBUG | Block | init()
-17:37:41 | DEBUG | Block | init()
-17:37:41 | DEBUG | Block | init()
-17:37:41 | DEBUG | Block | init()
-17:37:41 | DEBUG | Block | init()
-17:37:46 | DEBUG | Block | init()
-17:37:46 | DEBUG | Block | onSpawn(): mapObjectId=8, blocks.size=1 tag=Block, spawnProps=Properties({
-	[fixture_labels=no_side_touchie,no_projectile_collision,no_body_touchie]
-	[bounds=[0.0,640.0,3360.0,64.0]]
-	[x=0.0]
-	[height=64.0]
-	[spawn_type=spawn_now]
-	[cull_out_of_bounds=false]
-	[id=8]
-	[name=null]
-	[y=640.0]
-	[width=3360.0]
-	[block_filters=Snow]
-})
-17:37:46 | DEBUG | Block | init()
-17:37:46 | DEBUG | Block | onSpawn(): mapObjectId=11, blocks.size=2 tag=Block, spawnProps=Properties({
-	[bounds=[1728.0,0.0,256.0,256.0]]
-	[x=1728.0]
-	[height=256.0]
-	[spawn_type=spawn_now]
-	[cull_out_of_bounds=false]
-	[id=11]
-	[name=IceBlock]
-	[y=0.0]
-	[width=256.0]
-})
-17:37:46 | DEBUG | Block | init()
-17:37:46 | DEBUG | Block | onSpawn(): mapObjectId=21, blocks.size=3 tag=Block, spawnProps=Properties({
-	[bounds=[3840.0,160.0,320.0,128.0]]
-	[x=3840.0]
-	[height=128.0]
-	[spawn_type=spawn_now]
-	[cull_out_of_bounds=false]
-	[id=21]
-	[name=IceBlock]
-	[y=160.0]
-	[width=320.0]
-})
-17:37:46 | DEBUG | Block | init()
-17:37:46 | DEBUG | Block | onSpawn(): mapObjectId=22, blocks.size=4 tag=Block, spawnProps=Properties({
-	[bounds=[4128.0,288.0,64.0,96.0]]
-	[x=4128.0]
-	[height=96.0]
-	[spawn_type=spawn_now]
-	[cull_out_of_bounds=false]
-	[id=22]
-	[name=IceBlock]
-	[y=288.0]
-	[width=64.0]
-})
-17:37:46 | DEBUG | Block | init()
-17:37:46 | DEBUG | Block | onSpawn(): mapObjectId=46, blocks.size=5 tag=Block, spawnProps=Properties({
-	[bounds=[3776.0,160.0,64.0,224.0]]
-	[x=3776.0]
-	[height=224.0]
-	[spawn_type=spawn_now]
-	[cull_out_of_bounds=false]
-	[id=46]
-	[name=IceBlock]
-	[y=160.0]
-	[width=64.0]
-})
-17:37:46 | DEBUG | Block | init()
-17:37:46 | DEBUG | Block | onSpawn(): mapObjectId=48, blocks.size=6 tag=Block, spawnProps=Properties({
-	[bounds=[1632.0,0.0,96.0,352.0]]
-	[x=1632.0]
-	[height=352.0]
-	[spawn_type=spawn_now]
-	[cull_out_of_bounds=false]
-	[id=48]
-	[name=IceBlock]
-	[y=0.0]
-	[width=96.0]
-})
-17:37:46 | DEBUG | Block | init()
-17:37:46 | DEBUG | Block | onSpawn(): mapObjectId=52, blocks.size=7 tag=Block, spawnProps=Properties({
-	[bounds=[1984.0,0.0,96.0,368.0]]
-	[x=1984.0]
-	[height=368.0]
-	[spawn_type=spawn_now]
-	[cull_out_of_bounds=false]
-	[id=52]
-	[name=null]
-	[y=0.0]
-	[width=96.0]
-})
-17:37:46 | DEBUG | Block | init()
-17:37:46 | DEBUG | Block | onSpawn(): mapObjectId=338, blocks.size=8 tag=Block, spawnProps=Properties({
-	[bounds=[12800.0,1344.0,64.0,288.0]]
-	[x=12800.0]
-	[height=288.0]
-	[spawn_type=spawn_now]
-	[cull_out_of_bounds=false]
-	[id=338]
-	[name=IceBlock]
-	[y=1344.0]
-	[width=64.0]
-})
-17:37:46 | DEBUG | Block | init()
-17:37:46 | DEBUG | Block | onSpawn(): mapObjectId=339, blocks.size=9 tag=Block, spawnProps=Properties({
-	[bounds=[12864.0,1344.0,224.0,224.0]]
-	[x=12864.0]
-	[height=224.0]
-	[spawn_type=spawn_now]
-	[cull_out_of_bounds=false]
-	[id=339]
-	[name=IceBlock]
-	[y=1344.0]
-	[width=224.0]
-})
-17:37:46 | DEBUG | Block | init()
-17:37:46 | DEBUG | Block | onSpawn(): mapObjectId=400, blocks.size=10 tag=Block, spawnProps=Properties({
-	[bounds=[16448.0,1344.0,352.0,304.0]]
-	[x=16448.0]
-	[height=304.0]
-	[spawn_type=spawn_now]
-	[cull_out_of_bounds=false]
-	[id=400]
-	[name=null]
-	[y=1344.0]
-	[width=352.0]
-})
-17:37:46 | DEBUG | Block | init()
-17:37:46 | DEBUG | Block | onSpawn(): mapObjectId=409, blocks.size=11 tag=Block, spawnProps=Properties({
-	[bounds=[16992.0,1536.0,64.0,480.0]]
-	[x=16992.0]
-	[height=480.0]
-	[spawn_type=spawn_now]
-	[cull_out_of_bounds=false]
-	[id=409]
-	[name=IceBlock]
-	[y=1536.0]
-	[width=64.0]
-})
-17:37:46 | DEBUG | Block | init()
-17:37:46 | DEBUG | Block | onSpawn(): mapObjectId=412, blocks.size=12 tag=Block, spawnProps=Properties({
-	[fixture_labels=no_side_touchie,no_projectile_collision,no_body_touchie]
-	[bounds=[15136.0,1984.0,1664.0,32.0]]
-	[x=15136.0]
+===== SESSION STARTED: 2025-02-19T19:01:01.253822680 =====
+19:01:01 | DEBUG | MegamanMaverickGame | resize(): width=1920, height=1080
+19:01:02 | DEBUG | Megaman | init()
+19:01:02 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=MEGA_BUSTER, entry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@79767781, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$293/0x000071aaa0291c30@78411116, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$294/0x000071aaa0298000@aced190, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$295/0x000071aaa0298220@245a060f, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$296/0x000071aaa0298440@6edaa77a, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$297/0x000071aaa0298660@1e63d216), weapons=com.badlogic.gdx.utils.ObjectMap$Keys@62ddd21b
+19:01:02 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=null
+19:01:02 | DEBUG | GameState | addListener(): listener={ Megaman:[mapObjId=0, dead=false, hashCode=1532756055] }, added=true
+19:01:02 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = SIMPLE_INIT_GAME_SCREEN
+19:01:02 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = LOGO_SCREEN
+19:01:03 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = MAIN_MENU_SCREEN
+19:01:03 | DEBUG | MainMenuScreen | current button key: START NEW GAME
+19:01:03 | DEBUG | MainMenuScreen | blinking arrows keys: [LOAD SAVE FILE, SETTINGS, EXIT, START NEW GAME, KEYBOARD SETTINGS, CREDITS, BACK, MUSIC VOLUME, CONTROLLER SETTINGS, SFX VOLUME]
+19:01:03 | DEBUG | MainMenuScreen | Current button: LOAD SAVE FILE
+19:01:03 | DEBUG | MegamanMaverickGame | loadSavedState(): loading state: state=INTRO_STAGE,PRECIOUS_WOMAN;H;;;0
+19:01:03 | DEBUG | GameState | reset()
+19:01:03 | DEBUG | GameState | fromString(): s=INTRO_STAGE,PRECIOUS_WOMAN;H;;;0
+19:01:03 | DEBUG | GameState | addLevelDefeated(): level=INTRO_STAGE, added=true
+19:01:03 | DEBUG | GameState | addLevelDefeated(): level=PRECIOUS_WOMAN, added=true
+19:01:03 | DEBUG | GameState | addHeartTank(): heartTank=H, added=true
+19:01:03 | DEBUG | MainMenuScreen | Loaded saved state
+19:01:03 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = LEVEL_SELECT_SCREEN
+19:01:03 | DEBUG | LevelSelectScreen | putBossMugshot(): put moon pieces for Moon Man
+19:01:05 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = LEVEL_SCREEN
+19:01:05 | DEBUG | PlayerStatsHandler | init()
+19:01:05 | DEBUG | CameraManagerForRooms | set focus to { Megaman:[mapObjId=0, dead=false, hashCode=1532756055] }
+19:01:06 | DEBUG | LevelPauseScreen | init(): buttonRegions={mega_buster=weapons/mega_buster, mega_buster_selected=weapons/mega_buster_selected, fire_ball=weapons/fire_ball, fire_ball_selected=weapons/fire_ball_selected, moon_scythe=weapons/moon_scythe, moon_scythe_selected=weapons/moon_scythe_selected, rush_jetpack=weapons/rush_jetpack, rush_jetpack_selected=weapons/rush_jetpack_selected, a=health_tanks/a, a_selected=health_tanks/a_selected, b=health_tanks/b, b_selected=health_tanks/b_selected, c=health_tanks/c, c_selected=health_tanks/c_selected, d=health_tanks/d, d_selected=health_tanks/d_selected}
+19:01:06 | LOG | MegaLevelScreen | event(): event.key=PLAYER_SPAWN
+19:01:06 | DEBUG | MegaLevelScreenEventListener | onEvent(): Player spawn --> reset camera manager for rooms and spawn megaman
+19:01:06 | DEBUG | MegaLevelScreen | onEvent(): Player spawn --> spawn Megaman: Properties({
+	[bounds=[64.0,1408.0,32.0,32.0]]
+	[x=64.0]
 	[height=32.0]
-	[spawn_type=spawn_now]
-	[cull_out_of_bounds=false]
-	[id=412]
-	[name=null]
-	[y=1984.0]
-	[width=1664.0]
-	[block_filters=Snow]
-})
-17:37:46 | DEBUG | Block | init()
-17:37:46 | DEBUG | Block | onSpawn(): mapObjectId=599, blocks.size=13 tag=Block, spawnProps=Properties({
-	[bounds=[12768.0,1344.0,32.0,320.0]]
-	[x=12768.0]
-	[height=320.0]
-	[spawn_type=spawn_now]
-	[cull_out_of_bounds=false]
-	[id=599]
-	[name=IceBlock]
-	[y=1344.0]
+	[id=9]
+	[name=0]
+	[y=1408.0]
 	[width=32.0]
 })
-17:37:46 | DEBUG | Block | init()
-17:37:46 | DEBUG | Block | onSpawn(): mapObjectId=600, blocks.size=14 tag=Block, spawnProps=Properties({
-	[bounds=[13088.0,1344.0,32.0,320.0]]
-	[x=13088.0]
-	[height=320.0]
-	[spawn_type=spawn_now]
-	[cull_out_of_bounds=false]
-	[id=600]
-	[name=IceBlock]
-	[y=1344.0]
+19:01:06 | DEBUG | Megaman | onSpawn(): spawnProps=Properties({
+	[bounds=[64.0,1408.0,32.0,32.0]]
+	[x=64.0]
+	[height=32.0]
+	[id=9]
+	[name=0]
+	[y=1408.0]
 	[width=32.0]
 })
-17:37:46 | DEBUG | Block | init()
-17:37:46 | DEBUG | Block | onSpawn(): mapObjectId=1, blocks.size=15 tag=Block, spawnProps=Properties({
-	[bounds=[0.0,0.0,512.0,240.0]]
-	[x=0.0]
-	[height=240.0]
-	[id=1]
-	[name=null]
-	[y=0.0]
-	[width=512.0]
-})
-17:37:46 | DEBUG | Block | init()
-17:37:46 | DEBUG | Block | onSpawn(): mapObjectId=34, blocks.size=16 tag=Block, spawnProps=Properties({
-	[fixture_labels=no_side_touchie,no_projectile_collision]
-	[bounds=[0.0,240.0,32.0,400.0]]
-	[x=0.0]
-	[height=400.0]
-	[id=34]
-	[name=null]
-	[y=240.0]
-	[width=32.0]
-	[block_filters=Snow]
-})
-17:37:46 | DEBUG | Block | init()
-17:37:46 | DEBUG | Block | onSpawn(): mapObjectId=564, blocks.size=17 tag=Block, spawnProps=Properties({
-	[bounds=[320.0,224.0,96.0,112.0]]
-	[x=320.0]
-	[height=112.0]
-	[id=564]
-	[name=null]
-	[y=224.0]
-	[width=96.0]
-})
-17:37:46 | DEBUG | Block | init()
-17:37:46 | DEBUG | Block | onSpawn(): mapObjectId=401, blocks.size=18 tag=Block, spawnProps=Properties({
-	[bounds=[16800.0,1344.0,1312.0,192.0]]
-	[x=16800.0]
-	[height=192.0]
-	[id=401]
-	[name=IceBlock]
-	[y=1344.0]
-	[width=1312.0]
-})
-17:37:46 | DEBUG | Block | init()
-17:37:46 | DEBUG | Block | onSpawn(): mapObjectId=406, blocks.size=19 tag=Block, spawnProps=Properties({
-	[bounds=[17504.0,1536.0,64.0,480.0]]
-	[x=17504.0]
-	[height=480.0]
-	[id=406]
-	[name=IceBlock]
-	[y=1536.0]
-	[width=64.0]
-})
-17:37:46 | DEBUG | Block | init()
-17:37:46 | DEBUG | Block | onSpawn(): mapObjectId=407, blocks.size=20 tag=Block, spawnProps=Properties({
-	[bounds=[17472.0,1632.0,32.0,384.0]]
-	[x=17472.0]
-	[height=384.0]
-	[id=407]
-	[name=IceBlock]
-	[y=1632.0]
-	[width=32.0]
-})
-17:37:46 | DEBUG | Block | init()
-17:37:46 | DEBUG | Block | onSpawn(): mapObjectId=408, blocks.size=21 tag=Block, spawnProps=Properties({
-	[bounds=[17056.0,1824.0,416.0,192.0]]
-	[x=17056.0]
-	[height=192.0]
-	[id=408]
-	[name=IceBlock]
-	[y=1824.0]
-	[width=416.0]
-})
-17:37:47 | DEBUG | Block | onDestroy(): mapObjectId=1, blocks.size=20
-17:37:47 | DEBUG | Block | onDestroy(): mapObjectId=34, blocks.size=19
-17:37:47 | DEBUG | Block | onDestroy(): mapObjectId=564, blocks.size=18
-17:37:50 | DEBUG | Block | init()
-17:37:50 | DEBUG | Block | onSpawn(): mapObjectId=405, blocks.size=19 tag=Block, spawnProps=Properties({
-	[bounds=[17568.0,1792.0,64.0,224.0]]
-	[x=17568.0]
-	[height=224.0]
-	[id=405]
-	[name=IceBlock]
-	[y=1792.0]
-	[width=64.0]
-})
-17:37:51 | DEBUG | Block | init()
-17:37:51 | DEBUG | Block | onSpawn(): mapObjectId=404, blocks.size=20 tag=Block, spawnProps=Properties({
-	[bounds=[17632.0,1824.0,320.0,192.0]]
-	[x=17632.0]
-	[height=192.0]
-	[id=404]
-	[name=IceBlock]
-	[y=1824.0]
-	[width=320.0]
-})
-17:37:51 | DEBUG | Block | init()
-17:37:51 | DEBUG | Block | onSpawn(): mapObjectId=403, blocks.size=21 tag=Block, spawnProps=Properties({
-	[bounds=[17952.0,1792.0,64.0,224.0]]
-	[x=17952.0]
-	[height=224.0]
-	[id=403]
-	[name=IceBlock]
-	[y=1792.0]
-	[width=64.0]
-})
-17:37:51 | DEBUG | Block | init()
-17:37:51 | DEBUG | Block | onSpawn(): mapObjectId=402, blocks.size=22 tag=Block, spawnProps=Properties({
-	[bounds=[18016.0,1536.0,96.0,480.0]]
-	[x=18016.0]
-	[height=480.0]
-	[id=402]
-	[name=IceBlock]
-	[y=1536.0]
-	[width=96.0]
-})
-17:37:52 | DEBUG | Block | onDestroy(): mapObjectId=408, blocks.size=21
-17:37:52 | DEBUG | Block | onDestroy(): mapObjectId=407, blocks.size=20
-17:37:55 | DEBUG | Block | onDestroy(): mapObjectId=8, blocks.size=19
-17:37:55 | DEBUG | Block | onDestroy(): mapObjectId=11, blocks.size=18
-17:37:55 | DEBUG | Block | onDestroy(): mapObjectId=21, blocks.size=17
-17:37:55 | DEBUG | Block | onDestroy(): mapObjectId=22, blocks.size=16
-17:37:55 | DEBUG | Block | onDestroy(): mapObjectId=46, blocks.size=15
-17:37:55 | DEBUG | Block | onDestroy(): mapObjectId=48, blocks.size=14
-17:37:55 | DEBUG | Block | onDestroy(): mapObjectId=52, blocks.size=13
-17:37:55 | DEBUG | Block | onDestroy(): mapObjectId=338, blocks.size=12
-17:37:55 | DEBUG | Block | onDestroy(): mapObjectId=339, blocks.size=11
-17:37:55 | DEBUG | Block | onDestroy(): mapObjectId=400, blocks.size=10
-17:37:55 | DEBUG | Block | onDestroy(): mapObjectId=409, blocks.size=9
-17:37:55 | DEBUG | Block | onDestroy(): mapObjectId=412, blocks.size=8
-17:37:55 | DEBUG | Block | onDestroy(): mapObjectId=599, blocks.size=7
-17:37:55 | DEBUG | Block | onDestroy(): mapObjectId=600, blocks.size=6
-17:37:55 | DEBUG | Block | onDestroy(): mapObjectId=401, blocks.size=5
-17:37:55 | DEBUG | Block | onDestroy(): mapObjectId=406, blocks.size=4
-17:37:55 | DEBUG | Block | onDestroy(): mapObjectId=405, blocks.size=3
-17:37:55 | DEBUG | Block | onDestroy(): mapObjectId=404, blocks.size=2
-17:37:55 | DEBUG | Block | onDestroy(): mapObjectId=403, blocks.size=1
-17:37:55 | DEBUG | Block | onDestroy(): mapObjectId=402, blocks.size=0
+19:01:06 | DEBUG | Megaman | direction-set(): value=UP
+19:01:06 | DEBUG | Megaman | direction-set(): value same as field
+19:01:06 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=MEGA_BUSTER
+19:01:06 | DEBUG | CameraManagerForRooms | update(): reset
+19:01:06 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = com.badlogic.gdx.maps.objects.RectangleMapObject@9e2ad91
+19:01:08 | LOG | MegaLevelScreen | event(): event.key=PLAYER_READY
+19:01:08 | DEBUG | MegaLevelScreenEventListener | onEvent(): Player ready
+19:01:08 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:01:08 | DEBUG | MegamanControllerComponent | right actuator just released
+19:01:09 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:01:09 | DEBUG | MegamanControllerComponent | right actuator just released
+19:01:09 | DEBUG | MegamanControllerComponent | right actuator just pressed
+19:01:09 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:01:09 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+19:01:09 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+19:01:09 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@79767781, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$293/0x000071aaa0291c30@78411116, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$294/0x000071aaa0298000@aced190, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$295/0x000071aaa0298220@245a060f, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$296/0x000071aaa0298440@6edaa77a, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$297/0x000071aaa0298660@1e63d216)
+19:01:10 | DEBUG | MegamanControllerComponent | right actuator just released
+19:01:10 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+19:01:10 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+19:01:10 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+19:01:10 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler(cooldown=com.mega.game.engine.common.time.Timer@79767781, normalCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$293/0x000071aaa0291c30@78411116, halfChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$294/0x000071aaa0298000@aced190, fullyChargedCost=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$295/0x000071aaa0298220@245a060f, ammo=30, chargeable=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$296/0x000071aaa0298440@6edaa77a, canFireWeapon=com.megaman.maverick.game.entities.megaman.weapons.MegaWeaponHandler$$Lambda$297/0x000071aaa0298660@1e63d216)
+19:01:12 | LOG | MegamanMaverickGame | pause()
+19:01:12 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+19:01:12 | DEBUG | LevelPauseScreen | show(): currentButtonKey=mega_buster, node=TableNode{ element=MEGA_BUSTER, row=0, column=0 }, table=Table{
+	[TableNode{ element=MEGA_BUSTER, row=0, column=0 }]
+}, buttons=[mega_buster], buttonSprites=[mega_buster]
+19:01:12 | LOG | MegamanMaverickGame | dispose()
+19:01:12 | DEBUG | Megaman | onDestroy()
+19:01:12 | DEBUG | MegaLevelScreen | dispose(): Disposing level screen

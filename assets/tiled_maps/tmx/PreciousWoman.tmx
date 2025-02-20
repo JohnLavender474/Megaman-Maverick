@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="200" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="134">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="200" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="135">
  <tileset firstgid="1" source="../tsx/CrystalManTileset.tsx"/>
  <tileset firstgid="226" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1250" source="../tsx/mm9jewel.tsx"/>
@@ -224,7 +224,13 @@
   <object id="36" name="Ladder" x="672" y="1056" width="32" height="288"/>
   <object id="37" name="Ladder" x="800" y="1344" width="32" height="160"/>
  </objectgroup>
- <objectgroup id="8" name="items"/>
+ <objectgroup id="8" name="items">
+  <object id="134" name="HeartTank" x="4000" y="1376" width="32" height="32">
+   <properties>
+    <property name="value" value="h"/>
+   </properties>
+  </object>
+ </objectgroup>
  <objectgroup id="11" name="projectiles"/>
  <objectgroup id="12" name="hazards">
   <object id="7" name="Spike" x="512" y="1568" width="32" height="32">
