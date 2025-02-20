@@ -60,7 +60,7 @@ abstract class AbstractEnemy(
         const val LIFE_CHANCE = 10
         const val SCREW_CHANCE = 50
         const val HEALTH_CHANCE = 25
-        const val WEAPON_CHANCE = 35
+        const val WEAPON_CHANCE = 50
 
         const val LARGE_ITEM_CHANCE = 25
 
@@ -106,10 +106,7 @@ abstract class AbstractEnemy(
                             val large = getRandom(0, 100) <= LARGE_ITEM_CHANCE
                             val entity = MegaEntityFactory.fetch(type)!!
                             return@any entity.spawn(
-                                props(
-                                    ConstKeys.POSITION pairTo position,
-                                    ConstKeys.LARGE pairTo large
-                                )
+                                props(ConstKeys.LARGE pairTo large, ConstKeys.POSITION pairTo position)
                             )
                         }
 

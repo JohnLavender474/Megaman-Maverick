@@ -1496,7 +1496,7 @@
     <property name="gravity_scalar" type="float" value="0.25"/>
    </properties>
   </object>
-  <object id="263" name="AstroAssAssaulter" x="10392" y="1616" width="16" height="16">
+  <object id="263" name="AstroAssAssaulter" x="10456" y="1616" width="16" height="16">
    <properties>
     <property name="sensor" type="object" value="443"/>
    </properties>
