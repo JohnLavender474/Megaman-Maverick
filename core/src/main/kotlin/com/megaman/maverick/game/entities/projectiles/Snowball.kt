@@ -72,7 +72,7 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
     override fun hitWater(waterFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
     override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        if (projectileFixture.getFilter() != owner) explodeAndDie()
+        if (projectileFixture.getEntity() != owner) explodeAndDie()
     }
 
     override fun explodeAndDie(vararg params: Any?) {
