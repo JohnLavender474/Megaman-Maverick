@@ -7,7 +7,6 @@ import com.mega.game.engine.behaviors.FunctionalBehaviorImpl
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
-import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.pairTo
@@ -16,11 +15,10 @@ import com.mega.game.engine.controller.buttons.ButtonStatus
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.SoundAsset
-import com.megaman.maverick.game.com.megaman.maverick.game.behaviors.BehaviorType
+import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.*
-import com.megaman.maverick.game.entities.special.Cart
 import com.megaman.maverick.game.entities.special.Ladder
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
@@ -40,7 +38,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
     val wallSlide = FunctionalBehaviorImpl(
         evaluate = {
             if (dead || !ready || !canMove || body.isSensing(BodySense.FEET_ON_SAND) ||
-                isAnyBehaviorActive(BehaviorType.JETPACKING, BehaviorType.RIDING_CART)
+                isBehaviorActive(BehaviorType.JETPACKING)
             ) return@FunctionalBehaviorImpl false
 
             if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && game.controllerPoller.isPressed(
@@ -61,10 +59,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 }
                 if (isBehaviorActive(BehaviorType.CLIMBING)) {
                     GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "Climbing")
-                    return@FunctionalBehaviorImpl false
-                }
-                if (isBehaviorActive(BehaviorType.RIDING_CART)) {
-                    GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "Riding cart")
                     return@FunctionalBehaviorImpl false
                 }
                 if (body.isSensing(BodySense.FEET_ON_GROUND)) {
@@ -99,9 +93,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         evaluate = {
             if (dead || !ready || !canMove) return@FunctionalBehaviorImpl false
 
-            if (damaged || isBehaviorActive(BehaviorType.RIDING_CART) || !body.isSensing(BodySense.IN_WATER) ||
-                body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)
-            ) return@FunctionalBehaviorImpl false
+            if (damaged || !body.isSensing(BodySense.IN_WATER) || body.isSensing(BodySense.HEAD_TOUCHING_BLOCK))
+                return@FunctionalBehaviorImpl false
 
             return@FunctionalBehaviorImpl if (isBehaviorActive(BehaviorType.SWIMMING)) when (direction) {
                 Direction.UP -> body.physics.velocity.y > 0f
@@ -168,7 +161,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
                 Direction.LEFT, Direction.RIGHT -> ConstVals.PPM * when {
                     isBehaviorActive(BehaviorType.WALL_SLIDING) -> wallJumpVel
-                    isBehaviorActive(BehaviorType.RIDING_CART) -> cartJumpVel
                     hasEnhancement(MegaEnhancement.JUMP_BOOST) -> jumpVel * MegaEnhancement.JUMP_BOOST_SCALAR
                     else -> jumpVel
                 }
@@ -176,7 +168,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             v.y = when (direction) {
                 Direction.UP, Direction.DOWN -> ConstVals.PPM * when {
                     isBehaviorActive(BehaviorType.WALL_SLIDING) -> wallJumpVel
-                    isBehaviorActive(BehaviorType.RIDING_CART) -> cartJumpVel
                     hasEnhancement(MegaEnhancement.JUMP_BOOST) -> jumpVel * MegaEnhancement.JUMP_BOOST_SCALAR
                     else -> jumpVel
                 }
@@ -215,7 +206,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         override fun evaluate(delta: Float): Boolean {
             if (dead || !ready || !canMove || damaged || teleporting || airDashTimer.isFinished() ||
                 body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.TELEPORTING) || isAnyBehaviorActive(
-                    BehaviorType.WALL_SLIDING, BehaviorType.CLIMBING, BehaviorType.RIDING_CART, BehaviorType.JETPACKING
+                    BehaviorType.WALL_SLIDING, BehaviorType.CLIMBING, BehaviorType.JETPACKING
                 )
             ) return false
 
@@ -296,7 +287,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             }
 
             if (dead || damaged || !ready || !canMove || slipSliding || game.isCameraRotating() ||
-                isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.RIDING_CART, BehaviorType.JETPACKING) ||
+                isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.JETPACKING) ||
                 !body.isSensing(BodySense.FEET_ON_GROUND) || body.isSensing(BodySense.FEET_ON_SAND) ||
                 !game.controllerPoller.isPressed(MegaControllerButton.DOWN)
             ) return false
@@ -321,7 +312,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 return true
 
             if (damaged || groundSlideTimer.isFinished() ||
-                isAnyBehaviorActive(BehaviorType.RIDING_CART, BehaviorType.JETPACKING) ||
+                isBehaviorActive(BehaviorType.JETPACKING) ||
                 !body.isSensing(BodySense.FEET_ON_GROUND) ||
                 !game.controllerPoller.isPressed(MegaControllerButton.DOWN)
             ) return false
@@ -349,6 +340,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             val facingBlockLeft = (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT))
             val facingBlockRight = (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
+
             if (damaged) {
                 GameLogger.debug(
                     MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG, "blocked from act: " +
@@ -389,7 +381,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     BehaviorType.JUMPING,
                     BehaviorType.AIR_DASHING,
                     BehaviorType.GROUND_SLIDING,
-                    BehaviorType.RIDING_CART,
                     BehaviorType.SWIMMING,
                     BehaviorType.JETPACKING
                 ) || !body.properties.containsKey(ConstKeys.LADDER)
@@ -557,65 +548,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         }
     }
 
-    val ridingCart = object : AbstractBehaviorImpl() {
-
-        private lateinit var cart: Cart
-
-        override fun evaluate(delta: Float) =
-            !dead && ready && body.isSensing(BodySense.TOUCHING_CART) &&
-                !game.controllerPoller.areAllPressed(gdxArrayOf(MegaControllerButton.A, MegaControllerButton.UP))
-
-        override fun init() {
-            body.physics.velocity.setZero()
-            aButtonTask = AButtonTask.JUMP
-
-            cart = body.getProperty(ConstKeys.CART, Cart::class)!!
-            cart.sprites.values().forEach { it.hidden = true }
-
-            body.setBottomCenterToPoint(cart.body.getPositionPoint(Position.BOTTOM_CENTER))
-            body.preProcess.put(ConstKeys.CART) { cart.body.setCenter(body.getCenter()) }
-            gdxArrayOf(feetFixture, leftSideFixture, rightSideFixture, bodyFixture).forEach { fixture ->
-                fixture.putProperty(ConstKeys.DEATH_LISTENER, false)
-            }
-
-            requestToPlaySound(SoundAsset.CONVEYOR_LIFT_SOUND, true)
-        }
-
-        override fun act(delta: Float) {
-            when {
-                (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && isFacing(Facing.RIGHT)) ||
-                    (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && isFacing(Facing.LEFT)) ->
-                    body.physics.velocity.x = 0f
-
-                !body.isSensing(BodySense.FEET_ON_GROUND) ->
-                    body.physics.velocity.x += MegamanValues.CART_JUMP_ACCELERATION * facing.value * ConstVals.PPM
-
-                else -> body.physics.velocity.x += MegamanValues.CART_RIDE_ACCELERATION * facing.value * ConstVals.PPM
-            }
-
-            body.setCenter(cart.body.getCenter())
-        }
-
-        override fun end() {
-            cart.body.physics.gravityOn = true
-            cart.body.physics.velocity.x = body.physics.velocity.x
-            cart.body.physics.velocity.y = 0f
-            cart.sprites.values().forEach { it.hidden = false }
-
-            if (!dead) {
-                body.translate(0f, ConstVals.PPM / 1.75f)
-                body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM
-            }
-            body.preProcess.remove(ConstKeys.CART)
-            gdxArrayOf(feetFixture, leftSideFixture, rightSideFixture, bodyFixture).forEach { fixture ->
-                fixture.putProperty(ConstKeys.DEATH_LISTENER, true)
-            }
-
-            stopSoundNow(SoundAsset.CONVEYOR_LIFT_SOUND)
-            aButtonTask = AButtonTask.AIR_DASH
-        }
-    }
-
     val jetpacking = object : AbstractBehaviorImpl() {
 
         private val timePerBitTimer = Timer(MegamanValues.JETPACK_TIME_PER_BIT)
@@ -645,20 +577,17 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         }
 
         override fun act(delta: Float) {
+            val impulse = MegamanValues.JETPACK_Y_IMPULSE * ConstVals.PPM * movementScalar * delta
+
             when (direction) {
-                Direction.UP -> body.physics.velocity.y =
-                    MegamanValues.JETPACK_Y_IMPULSE * ConstVals.PPM * movementScalar
-
-                Direction.DOWN -> body.physics.velocity.y =
-                    -MegamanValues.JETPACK_Y_IMPULSE * ConstVals.PPM * movementScalar
-
-                Direction.LEFT -> body.physics.velocity.x =
-                    -MegamanValues.JETPACK_Y_IMPULSE * ConstVals.PPM * movementScalar
-
-                Direction.RIGHT -> body.physics.velocity.x =
-                    MegamanValues.JETPACK_Y_IMPULSE * ConstVals.PPM * movementScalar
+                Direction.UP -> body.physics.velocity.y += impulse
+                Direction.DOWN -> body.physics.velocity.y += -impulse
+                Direction.LEFT -> body.physics.velocity.x += -impulse
+                Direction.RIGHT -> body.physics.velocity.x += impulse
             }
+
             timePerBitTimer.update(delta)
+
             if (timePerBitTimer.isFinished()) {
                 weaponsHandler.translateAmmo(MegamanWeapon.RUSH_JETPACK, -1)
                 timePerBitTimer.reset()
@@ -678,7 +607,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
     behaviorsComponent.addBehavior(BehaviorType.CROUCHING, crouch)
     behaviorsComponent.addBehavior(BehaviorType.GROUND_SLIDING, groundSlide)
     behaviorsComponent.addBehavior(BehaviorType.CLIMBING, climb)
-    // TODO: behaviorsComponent.addBehavior(BehaviorType.RIDING_CART, ridingCart)
     behaviorsComponent.addBehavior(BehaviorType.JETPACKING, jetpacking)
 
     return behaviorsComponent

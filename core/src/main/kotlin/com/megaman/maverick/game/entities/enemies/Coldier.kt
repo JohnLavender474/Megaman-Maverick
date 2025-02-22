@@ -116,7 +116,7 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                 val blows = (BIG_BLOW_DUR / ICE_CUBE_DELAY).toInt()
                 for (i in 1..blows) {
                     val time = i * ICE_CUBE_DELAY
-                    val runnable = TimeMarkedRunnable(time) { spawnIceCube() }
+                    val runnable = TimeMarkedRunnable(time) { shootIceCube() }
                     runnables.add(runnable)
                 }
 
@@ -172,8 +172,8 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         }
     }
 
-    private fun spawnIceCube() {
-        val spawn = body.getCenter().add(0.5f * ConstVals.PPM * facing.value, 0.5f * ConstVals.PPM)
+    private fun shootIceCube() {
+        val spawn = body.getCenter().add(0.5f * ConstVals.PPM * facing.value, 0.1f * ConstVals.PPM)
 
         val trajectory = GameObjectPools.fetch(Vector2::class).set(ICE_CUBE_VEL * ConstVals.PPM * facing.value, 0f)
 
@@ -192,7 +192,7 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(2f * ConstVals.PPM, ConstVals.PPM.toFloat())
+        body.setSize(ConstVals.PPM.toFloat(), 1.75f * ConstVals.PPM)
         body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()

@@ -165,14 +165,14 @@ Thumbs.db
 ## You should delete or comment out the next line if you have configuration in a different resource-config.json .
 **/resource-config.json
 
-## Engine
+## Engine Builds
 /engine/build
 
-## Builds
+## Game Builds
 /game-builds/jdk
-/game-builds/out-linux64
-/game-builds/out-linux64.zip
-/game-builds/out-windows64
-/game-builds/out-windows64.zip
-/game-builds/out-mac
-/game-builds/out-mac.zip
+/game-builds/*-linux64
+/game-builds/*-linux64.zip
+/game-builds/*-windows64
+/game-builds/*-windows64.zip
+/game-builds/*-mac
+/game-builds/*-mac.zip

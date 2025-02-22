@@ -64,7 +64,7 @@ configure(subprojects) {
 
 subprojects {
   version = '$projectVersion'
-  ext.appName = 'MegamanMaverick'
+  ext.appName = 'Megaman-Maverick'
   repositories {
     mavenCentral()
     maven { url 'https://s01.oss.sonatype.org' }
@@ -76,4 +76,4 @@ subprojects {
   }
 }
 
-eclipse.project.name = 'MegamanMaverick' + '-parent'
+eclipse.project.name = 'Megaman-Maverick' + '-parent'

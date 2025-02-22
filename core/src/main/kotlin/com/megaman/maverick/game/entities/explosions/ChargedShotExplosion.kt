@@ -36,7 +36,6 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
@@ -50,6 +49,9 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
         private const val FULLY_CHARGED_DURATION = 0.6f
         private const val HALF_CHARGED_DURATION = 0.3f
         private const val SOUND_INTERVAL = 0.15f
+
+        private const val FULL_BODY_SIZE = 1.5f
+        private const val HALF_BODY_SIZE = 0.75f
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -89,7 +91,7 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
         )
         durationTimer = Timer(duration)
 
-        val size = if (fullyCharged) ChargedShot.FULL_BODY_SIZE else ChargedShot.HALF_BODY_SIZE
+        val size = (if (fullyCharged) FULL_BODY_SIZE else HALF_BODY_SIZE) * ConstVals.PPM
         body.setSize(size)
 
         (explosionFixture.rawShape as GameRectangle).setSize(size)

@@ -7,7 +7,7 @@ import com.mega.game.engine.world.body.IBody
 import com.mega.game.engine.world.collisions.ICollisionHandler
 import com.mega.game.engine.world.collisions.StandardCollisionHandler
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.com.megaman.maverick.game.behaviors.BehaviorType
+import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.world.body.*
 

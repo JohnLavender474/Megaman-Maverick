@@ -104,7 +104,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         set(value) {
             body.direction = value
         }
-    override var facing = Facing.RIGHT
+    override lateinit var facing: Facing
     override var gravityScalar = 1f
 
     private lateinit var type: String
@@ -199,6 +199,12 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
         gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
         scaleBullet = spawnProps.getOrDefault("${ConstKeys.SCALE}_${ConstKeys.BULLET}", true, Boolean::class)
+
+        facing = when (direction) {
+            Direction.UP, Direction.DOWN -> if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+            Direction.LEFT -> if (megaman.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
+            Direction.RIGHT -> if (megaman.body.getY() < body.getY()) Facing.RIGHT else Facing.LEFT
+        }
     }
 
     override fun defineBodyComponent(): BodyComponent {

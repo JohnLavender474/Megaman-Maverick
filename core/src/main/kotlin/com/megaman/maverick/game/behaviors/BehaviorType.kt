@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.com.megaman.maverick.game.behaviors
+package com.megaman.maverick.game.behaviors
 
 enum class BehaviorType {
     JUMPING,
@@ -8,6 +8,5 @@ enum class BehaviorType {
     AIR_DASHING,
     WALL_SLIDING,
     GROUND_SLIDING,
-    RIDING_CART,
     JETPACKING
 }

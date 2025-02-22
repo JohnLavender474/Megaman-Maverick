@@ -297,6 +297,7 @@
             <key type="filename">../frames/Enemies1/SniperJoe/Snow/StandNoShield.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/Snow/StandShielded.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/Snow/ThrowShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoeV2/orange/jump.png</key>
             <key type="filename">../frames/Enemies1/SnowBat/Hang.png</key>
             <key type="filename">../frames/Enemies1/SnowBat/OpenEyes.png</key>
             <key type="filename">../frames/Enemies1/SnowBat/OpenWings.png</key>
@@ -327,6 +328,7 @@
             <key type="filename">../frames/Enemies1/Beezee.png</key>
             <key type="filename">../frames/Enemies1/CryoMet/flash.png</key>
             <key type="filename">../frames/Enemies1/CryoMet/rise.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoeV2/orange/shoot.png</key>
             <key type="filename">../frames/Enemies1/SpikeCopter/drop_teeth.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -371,6 +373,8 @@
             <key type="filename">../frames/Enemies1/CannoHoney/closed_eyes.png</key>
             <key type="filename">../frames/Enemies1/CannoHoney/oepn_eyes.png</key>
             <key type="filename">../frames/Enemies1/CryoMet/run.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoeV2/orange/idle.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoeV2/orange/turn.png</key>
             <key type="filename">../frames/Enemies1/SpikeCopter/fly.png</key>
             <key type="filename">../frames/Enemies1/TellySaucer/hit.png</key>
             <struct type="IndividualSpriteSettings">

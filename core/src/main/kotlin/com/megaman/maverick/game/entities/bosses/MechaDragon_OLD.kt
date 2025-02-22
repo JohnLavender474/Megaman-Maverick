@@ -51,7 +51,7 @@ import com.megaman.maverick.game.entities.projectiles.SpitFireball
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.utils.misc.StandardFacingSetter
+import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
@@ -354,7 +354,7 @@ class MechaDragon_OLD(game: MegamanMaverickGame) : AbstractBoss(game, size = Siz
                             else -> CHARGE_FIRST_DELAY_SPEED * if (megamanCenterY > body.getMaxY()) 1f else -1f
                         }) * ConstVals.PPM
 
-                        StandardFacingSetter.set(this)
+                        FacingUtils.setFacing(this)
 
                         chargeFirstDelayTimer.update(delta)
 

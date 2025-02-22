@@ -29,7 +29,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
-import com.megaman.maverick.game.com.megaman.maverick.game.behaviors.BehaviorType
+import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.*
@@ -214,9 +214,9 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
                 Direction.UP, Direction.RIGHT -> {
                     jumpVel = MegamanValues.JUMP_VEL
                     wallJumpVel = MegamanValues.WALL_JUMP_VEL
-                    cartJumpVel = MegamanValues.CART_JUMP_VEL
 
-                    gravity = MegamanValues.GRAVITY
+                    jumpGravity = MegamanValues.JUMP_GRAVITY
+                    fallGravity = MegamanValues.FALL_GRAVITY
                     wallSlideGravity = MegamanValues.WALL_SLIDE_GRAVITY
                     groundGravity = MegamanValues.GROUND_GRAVITY
                     iceGravity = MegamanValues.ICE_GRAVITY
@@ -229,9 +229,9 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
                 Direction.DOWN, Direction.LEFT -> {
                     jumpVel = -MegamanValues.JUMP_VEL
                     wallJumpVel = -MegamanValues.WALL_JUMP_VEL
-                    cartJumpVel = -MegamanValues.CART_JUMP_VEL
 
-                    gravity = -MegamanValues.GRAVITY
+                    jumpGravity = -MegamanValues.JUMP_GRAVITY
+                    fallGravity = -MegamanValues.FALL_GRAVITY
                     wallSlideGravity = -MegamanValues.WALL_SLIDE_GRAVITY
                     groundGravity = -MegamanValues.GROUND_GRAVITY
                     iceGravity = -MegamanValues.ICE_GRAVITY
@@ -291,8 +291,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
 
     internal var jumpVel = 0f
     internal var wallJumpVel = 0f
-    internal var cartJumpVel = 0f
-    internal var gravity = 0f
+    internal var fallGravity = 0f
+    internal var jumpGravity = 0f
     internal var wallSlideGravity = 0f
     internal var groundGravity = 0f
     internal var iceGravity = 0f
@@ -456,7 +456,6 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
                     setVel && !isAnyBehaviorActive(
                         BehaviorType.CLIMBING,
                         BehaviorType.JETPACKING,
-                        BehaviorType.RIDING_CART,
                         BehaviorType.SWIMMING
                     ) -> {
                         val velocity = body.getProperty(ConstKeys.VELOCITY, Vector2::class)
@@ -544,7 +543,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
         val healthDiff = oldHealth - getCurrentHealth()
         GameLogger.debug(TAG, "takeDamageFrom(): healthDiff=$healthDiff, damager=$damager")
 
-        if (!isBehaviorActive(BehaviorType.RIDING_CART) && !noDmgBounce.contains(damager::class) && damager is IBodyEntity) {
+        if (!noDmgBounce.contains(damager::class) && damager is IBodyEntity) {
             val bounds = damager.body.getBounds()
 
             when (direction) {

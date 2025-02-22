@@ -45,7 +45,7 @@ import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.hazards.SpikeTeeth
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.utils.misc.StandardFacingSetter
+import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
 class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable {
@@ -101,7 +101,7 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
         state = SpikeCopterState.FLY
 
-        StandardFacingSetter.set(this)
+        FacingUtils.setFacing(this)
 
         dropTeethDelay.reset()
         dropTeethTimer.reset()
@@ -113,7 +113,7 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         updatablesComponent.add { delta ->
             when (state) {
                 SpikeCopterState.FLY -> {
-                    StandardFacingSetter.set(this)
+                    FacingUtils.setFacing(this)
 
                     body.physics.velocity.x = VEL_X * ConstVals.PPM * facing.value
 

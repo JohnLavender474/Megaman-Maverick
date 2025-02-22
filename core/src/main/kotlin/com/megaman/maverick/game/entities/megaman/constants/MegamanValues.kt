@@ -10,15 +10,10 @@ object MegamanValues {
 
     const val SLIP_SLIDE_VEL_THRESHOLD = 0.25f
 
-    const val CART_RIDE_MAX_SPEED = 15f
-    const val CART_RIDE_ACCELERATION = 1.25f
-    const val CART_JUMP_ACCELERATION = 0.35f
-    const val CART_JUMP_VEL = 25f
-
     const val CLAMP_X = 15f
     const val CLAMP_Y = 40f
 
-    const val RUN_SPEED = 4.5f
+    const val RUN_SPEED = 5f
     const val RUN_IMPULSE = 35f
     const val ICE_RUN_IMPULSE = 15f
     const val WATER_RUN_SPEED = 2.25f
@@ -26,7 +21,7 @@ object MegamanValues {
     const val WATER_GRAVITY_SCALAR = 0.5f
     const val SWIM_VEL_Y = 14f
 
-    const val JUMP_VEL = 26f
+    const val JUMP_VEL = 24f
     const val WALL_JUMP_VEL = 34f
 
     const val WALL_SLIDE_FRICTION_TO_APPLY = 2.5f
@@ -36,10 +31,11 @@ object MegamanValues {
 
     const val GROUND_GRAVITY = -0.001f
     const val WALL_SLIDE_GRAVITY = -0.1f
-    const val GRAVITY = -0.35f
-    const val ICE_GRAVITY = -0.5f
+    const val JUMP_GRAVITY = -0.2f
+    const val FALL_GRAVITY = -0.5f
+    const val ICE_GRAVITY = -0.75f
     const val WATER_GRAVITY = -0.25f
-    const val WATER_ICE_GRAVITY = -0.4f
+    const val WATER_ICE_GRAVITY = -0.5f
 
     const val MAX_AIR_DASH_TIME = 0.25f
     const val AIR_DASH_VEL = 8f
@@ -47,7 +43,7 @@ object MegamanValues {
     const val WATER_AIR_DASH_VEL = 5f
     const val WATER_AIR_DASH_END_BUMP = 1f
 
-    const val JETPACK_Y_IMPULSE = 2f
+    const val JETPACK_Y_IMPULSE = 15f
     const val JETPACK_TIME_PER_BIT = 0.25f
 
     const val GROUND_SLIDE_VEL = 10f
@@ -72,9 +68,11 @@ object MegamanValues {
 
     const val BULLET_VEL = 10f
 
-    const val FLAME_TOSS_Y_VEL = 7.5f
-    const val FLAME_TOSS_X_VEL = 10f
-    const val FLAME_TOSS_GRAVITY = -0.25f
+    const val ICE_CUBE_VEL = 8f
+
+    const val FIRE_BALL_Y_VEL = 7.5f
+    const val FIRE_BALL_X_VEL = 10f
+    const val FIRE_BALL_GRAVITY = -0.25f
 
     const val MOON_SCYTHE_SPEED = 8f
     const val MAX_MOONS_BEFORE_SHOOT_AGAIN = 1

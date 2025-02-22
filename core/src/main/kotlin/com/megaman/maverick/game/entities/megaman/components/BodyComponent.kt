@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
+import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.gdxArrayOf
@@ -13,7 +14,7 @@ import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.com.megaman.maverick.game.behaviors.BehaviorType
+import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
@@ -171,11 +172,19 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
             (body.isSensingAny(BodySense.SIDE_TOUCHING_ICE_LEFT, BodySense.SIDE_TOUCHING_ICE_RIGHT))
 
         var gravityValue = when {
-            body.isSensing(BodySense.IN_WATER) -> if (wallSlidingOnIce || frozen) waterIceGravity else waterGravity
+            body.isSensing(BodySense.IN_WATER) -> when {
+                wallSlidingOnIce || frozen -> waterIceGravity
+                else -> waterGravity
+            }
+
             !feetGravitySet.isEmpty -> groundGravity
             wallSlidingOnIce || frozen -> iceGravity
-            else -> gravity
+            isBehaviorActive(BehaviorType.JUMPING) -> jumpGravity
+            else -> fallGravity
         }
+
+        game.setDebugText(UtilMethods.roundFloat(gravityValue, 2).toString())
+
         gravityValue *= gravityScalar
 
         when (direction) {
@@ -184,12 +193,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                 body.physics.gravity.set(0f, gravityValue * ConstVals.PPM)
                 body.physics.defaultFrictionOnSelf.set(ConstVals.STANDARD_RESISTANCE_X, ConstVals.STANDARD_RESISTANCE_Y)
 
-                val clamp = GameObjectPools.fetch(Vector2::class)
-                body.physics.velocityClamp.set(
-                    if (isBehaviorActive(BehaviorType.RIDING_CART))
-                        clamp.set(MegamanValues.CART_RIDE_MAX_SPEED, MegamanValues.CLAMP_Y)
-                    else clamp.set(MegamanValues.CLAMP_X, MegamanValues.CLAMP_Y)
-                ).scl(ConstVals.PPM.toFloat())
+                body.physics.velocityClamp.set(MegamanValues.CLAMP_X, MegamanValues.CLAMP_Y).scl(ConstVals.PPM.toFloat())
 
                 damagableRect.let {
                     val size = GameObjectPools.fetch(Vector2::class)
@@ -210,12 +214,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                 body.physics.gravity.set(gravityValue * ConstVals.PPM, 0f)
                 body.physics.defaultFrictionOnSelf.set(ConstVals.STANDARD_RESISTANCE_Y, ConstVals.STANDARD_RESISTANCE_X)
 
-                val clamp = GameObjectPools.fetch(Vector2::class)
-                body.physics.velocityClamp.set(
-                    if (isBehaviorActive(BehaviorType.RIDING_CART))
-                        clamp.set(MegamanValues.CLAMP_Y, MegamanValues.CART_RIDE_MAX_SPEED)
-                    else clamp.set(MegamanValues.CLAMP_Y, MegamanValues.CLAMP_X)
-                ).scl(ConstVals.PPM.toFloat())
+                body.physics.velocityClamp.set(MegamanValues.CLAMP_Y, MegamanValues.CLAMP_X).scl(ConstVals.PPM.toFloat())
 
                 damagableRect.let {
                     val size = GameObjectPools.fetch(Vector2::class)

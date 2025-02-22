@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Check if platform argument is provided
-if [ -z "$1" ]; then
-    echo "Error: No platform specified. Please specify a platform (windows64, mac, linux64)."
+if [ $# -lt 2 ]; then
+    echo "Usage: $0 <platform> <executable-name>."
     exit 1
 fi
 
-# Platform argument
 PLATFORM=$1
+EXECUTABLE_NAME=$2
 
 # Define platform-specific paths and URLs (JDK downloads MUST include JRE bundle)
 case "$PLATFORM" in
@@ -78,34 +78,30 @@ check_and_fetch_jdk
 echo "Removing previous build folder for $PLATFORM"
 rm -rf ./game-builds/out-$PLATFORM
 
-# Build the project with Gradle
-echo "Building desktop JAR"
-./gradlew lwjgl3:build
-
 # Run the Packr tool for the specific platform
 echo "Running packr for platform=$PLATFORM, jdk=$JDK_PATH"
 java -jar ./game-builds/packr-all-4.0.0.jar \
      --platform $PLATFORM \
      --jdk $JDK_PATH \
      --useZgcIfSupportedOs \
-     --executable Megaman-Maverick \
-     --classpath ./lwjgl3/build/libs/MegamanMaverick-1.0.0.jar \
+     --executable $EXECUTABLE_NAME \
+     --classpath ./lwjgl3/build/libs/$EXECUTABLE_NAME.jar \
      --mainclass com.megaman.maverick.game.lwjgl3.DesktopLauncher \
      --vmargs Xmx1G \
      --resources assets/* \
-     --output ./game-builds/out-$PLATFORM \
+     --output ./game-builds/$EXECUTABLE_NAME-$PLATFORM \
      --verbose
 
 # Check if the output folder exists
 echo "Checking that game-build output exists for platform=$PLATFORM"
-if [ ! -d "./game-builds/out-$PLATFORM" ]; then
-    echo "The out-$PLATFORM folder does not exist. Exiting script."
+if [ ! -d "./game-builds/$EXECUTABLE_NAME-$PLATFORM" ]; then
+    echo "The $EXECUTABLE_NAME-$PLATFORM folder does not exist. Exiting script."
     exit 1
 fi
 
 # Zip the out-platform folder
-echo "Zipping the out-$PLATFORM folder..."
-zip -r "./game-builds/out-$PLATFORM.zip" "./game-builds/out-$PLATFORM"
+echo "Zipping the $EXECUTABLE_NAME-$PLATFORM folder..."
+zip -r "./game-builds/$EXECUTABLE_NAME-$PLATFORM.zip" "./game-builds/$EXECUTABLE_NAME-$PLATFORM"
 
 if [ $? -eq 0 ]; then
     echo "Zipping completed successfully."

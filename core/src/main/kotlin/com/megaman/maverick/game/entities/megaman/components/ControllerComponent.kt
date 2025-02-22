@@ -9,7 +9,7 @@ import com.mega.game.engine.controller.ControllerComponent
 import com.mega.game.engine.controller.buttons.ButtonActuator
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.com.megaman.maverick.game.behaviors.BehaviorType
+import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.Megaman.Companion.TAG
@@ -39,7 +39,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.RIGHT else Facing.LEFT
             if (direction.equalsAny(Direction.DOWN, Direction.RIGHT)) swapFacing()
 
-            if (isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.RIDING_CART)) return@ButtonActuator
+            if (isBehaviorActive(BehaviorType.CLIMBING)) return@ButtonActuator
             running = !isBehaviorActive(BehaviorType.WALL_SLIDING)
 
             val threshold =
@@ -79,7 +79,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.LEFT else Facing.RIGHT
             if (direction.equalsAny(Direction.DOWN, Direction.RIGHT)) swapFacing()
 
-            if (isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.RIDING_CART)) return@ButtonActuator
+            if (isBehaviorActive(BehaviorType.CLIMBING)) return@ButtonActuator
             running = !isBehaviorActive(BehaviorType.WALL_SLIDING)
 
             val threshold =

@@ -1609,6 +1609,10 @@ sprites/frames/Enemies1/NuttGlider/glide.png
 sprites/frames/Enemies1/TellySaucer/collapsed.png
 sprites/frames/Enemies1/TellySaucer/spin.png
 sprites/frames/Enemies1/TellySaucer/hit.png
+sprites/frames/Enemies1/SniperJoeV2/orange/jump.png
+sprites/frames/Enemies1/SniperJoeV2/orange/turn.png
+sprites/frames/Enemies1/SniperJoeV2/orange/shoot.png
+sprites/frames/Enemies1/SniperJoeV2/orange/idle.png
 sprites/frames/Enemies1/SnowBat/OpenEyes.png
 sprites/frames/Enemies1/SnowBat/Hang.png
 sprites/frames/Enemies1/SnowBat/OpenWings.png
@@ -2280,6 +2284,7 @@ sprites/piskel/MagmaExplosion.piskel
 sprites/piskel/CactusLauncher.piskel
 sprites/piskel/CannonHopper.piskel
 sprites/piskel/QuickSand_v2_BottomLeft.piskel
+sprites/piskel/SniperJoe_v2.piskel
 sprites/piskel/StagedMoonLandingFlag.piskel
 sprites/piskel/CountryKibbo.piskel
 sprites/piskel/Wanaan.piskel

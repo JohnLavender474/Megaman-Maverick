@@ -17,10 +17,11 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
-import com.megaman.maverick.game.com.megaman.maverick.game.behaviors.BehaviorType
+import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.explosions.MagmaExplosion
+import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.GROUND_SLIDE_SPRITE_OFFSET_Y
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
@@ -156,9 +157,6 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 1f
             megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> 0.75f
             megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.5f
-            megaman.isBehaviorActive(BehaviorType.RIDING_CART) ->
-                if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 1.5f else 1.25f
-
             megaman.isBehaviorActive(BehaviorType.CROUCHING) -> 1f
             !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> 1f
             megaman.slipSliding -> 1f
@@ -175,9 +173,6 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.25f
             megaman.isBehaviorActive(BehaviorType.CROUCHING) -> -0.1f
             megaman.isBehaviorActive(BehaviorType.CLIMBING) -> 0.25f
-            megaman.isBehaviorActive(BehaviorType.RIDING_CART) ->
-                if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) 0.6f else 0.3f
-
             !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> when (megaman.direction) {
                 Direction.UP -> 0.05f
                 else -> 0.2f
@@ -229,6 +224,14 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
     private fun createWeaponEntry(weapon: MegamanWeapon) = when (weapon) {
         MegamanWeapon.MEGA_BUSTER -> MegaWeaponHandler(cooldown = Timer(0.1f))
         MegamanWeapon.RUSH_JETPACK -> MegaWeaponHandler(cooldown = Timer(0.1f), chargeable = { false })
+        MegamanWeapon.ICE_CUBE -> MegaWeaponHandler(
+            cooldown = Timer(0.25f),
+            normalCost = { 3 },
+            halfChargedCost = { 5 },
+            fullyChargedCost = { 7 },
+            chargeable = { _ -> false /* TODO: true */ }
+        )
+
         MegamanWeapon.FIRE_BALL -> MegaWeaponHandler(
             cooldown = Timer(0.5f),
             normalCost = { 3 },
@@ -355,8 +358,8 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         when (weapon) {
             MegamanWeapon.MEGA_BUSTER,
             MegamanWeapon.RUSH_JETPACK -> shootMegaBuster(stat)
-
-            MegamanWeapon.FIRE_BALL -> shootFireball(stat)
+            MegamanWeapon.ICE_CUBE -> shootIceCube(stat)
+            MegamanWeapon.FIRE_BALL -> shootFireBall(stat)
             MegamanWeapon.MOON_SCYTHE -> shootMoonScythes(stat)
         }
 
@@ -412,8 +415,30 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         }
     }
 
-    private fun shootFireball(stat: MegaChargeStatus) {
-        GameLogger.debug(TAG, "shootFireball(): stat=$stat")
+    private fun shootIceCube(stat: MegaChargeStatus) {
+        GameLogger.debug(TAG, "shootIceCube(): stat=$stat")
+
+        val spawn = getSpawnPosition(MegamanWeapon.ICE_CUBE)
+
+        val trajectory = GameObjectPools.fetch(Vector2::class)
+            .set(MegamanValues.ICE_CUBE_VEL * ConstVals.PPM * megaman.facing.value, 0f)
+            .rotateDeg(megaman.direction.rotation)
+
+        val cube = MegaEntityFactory.fetch(SmallIceCube::class)!!
+        cube.spawn(
+            props(
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.GRAVITY_ON pairTo false,
+                ConstKeys.FRICTION_X pairTo false,
+                ConstKeys.FRICTION_Y pairTo false,
+                ConstKeys.HIT_BY_BLOCK pairTo true,
+                ConstKeys.TRAJECTORY pairTo trajectory
+            )
+        )
+    }
+
+    private fun shootFireBall(stat: MegaChargeStatus) {
+        GameLogger.debug(TAG, "shootFireBall(): stat=$stat")
 
         val spawn = getSpawnPosition(MegamanWeapon.FIRE_BALL)
 
@@ -442,11 +467,11 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             MegaChargeStatus.HALF_CHARGED,
             MegaChargeStatus.FULLY_CHARGED -> {
                 val trajectory = GameObjectPools.fetch(Vector2::class)
-                    .set(MegamanValues.FLAME_TOSS_X_VEL * megaman.facing.value, MegamanValues.FLAME_TOSS_Y_VEL)
+                    .set(MegamanValues.FIRE_BALL_X_VEL * megaman.facing.value, MegamanValues.FIRE_BALL_Y_VEL)
                     .scl(ConstVals.PPM.toFloat())
 
                 val gravity = GameObjectPools.fetch(Vector2::class)
-                    .set(0f, MegamanValues.FLAME_TOSS_GRAVITY * ConstVals.PPM)
+                    .set(0f, MegamanValues.FIRE_BALL_GRAVITY * ConstVals.PPM)
 
                 props.putAll(
                     ConstKeys.GRAVITY pairTo gravity,

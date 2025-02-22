@@ -43,7 +43,7 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.DuoBall
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
-import com.megaman.maverick.game.utils.misc.StandardFacingSetter
+import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
 class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
@@ -121,7 +121,7 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
-        StandardFacingSetter.set(this)
+        FacingUtils.setFacing(this)
 
         canonDirectionLoop.reset()
 
@@ -138,7 +138,7 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
 
             delayTimer.update(delta)
             if (!delayTimer.isFinished()) {
-                StandardFacingSetter.set(this)
+                FacingUtils.setFacing(this)
                 return@add
             }
 

@@ -553,7 +553,8 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         )
         .build()
 
-    private fun buildStateMachine() = EnumStateMachineBuilder.create<MechaDragonState>()
+    private fun buildStateMachine() = EnumStateMachineBuilder
+        .create<MechaDragonState>()
         .initialState(MechaDragonState.INIT)
         .setOnChangeState(this::onChangeState)
         // init

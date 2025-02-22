@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.entities.megaman.sprites
 
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.com.megaman.maverick.game.behaviors.BehaviorType
+import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.feetOnGround
 import com.megaman.maverick.game.entities.special.Ladder
@@ -26,14 +26,9 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
 
     stunned -> "stunned"
 
-    damaged -> if (isBehaviorActive(BehaviorType.RIDING_CART)) "cartin_damaged" else "damaged"
+    damaged -> "damaged"
 
     isBehaviorActive(BehaviorType.JETPACKING) -> amendKey("jetpack")
-
-    isBehaviorActive(BehaviorType.RIDING_CART) -> when {
-        isBehaviorActive(BehaviorType.JUMPING) || !feetOnGround -> amendKey("cartin_jump")
-        else -> amendKey("cartin")
-    }
 
     isBehaviorActive(BehaviorType.CLIMBING) -> {
         val ladder = body.getProperty(ConstKeys.LADDER, Ladder::class)
