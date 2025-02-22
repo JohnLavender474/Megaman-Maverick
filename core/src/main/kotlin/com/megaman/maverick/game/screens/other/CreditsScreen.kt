@@ -12,7 +12,6 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.screens.ScreenEnum
-import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
 
 object CreditsLoader {
@@ -23,14 +22,7 @@ object CreditsLoader {
         val credits = Queue<MegaFontHandle>()
         val inputStream = InternalFileHandleResolver().resolve(CREDITS_SOURCE).read()
         val reader = inputStream.reader()
-        reader.forEachLine { line ->
-            val fontSize = when {
-                line.startsWith("#") -> MegaUtilMethods.getLargeFontSize()
-                line.startsWith("##") -> MegaUtilMethods.getDefaultFontSize()
-                else -> MegaUtilMethods.getSmallFontSize()
-            }
-            credits.addLast(MegaFontHandle(text = line.replace("#", "").uppercase()))
-        }
+        reader.forEachLine { line -> credits.addLast(MegaFontHandle(text = line.replace("#", "").uppercase())) }
         return credits
     }
 }
@@ -54,10 +46,10 @@ class CreditsScreen(
     private var creditsComplete = false
 
     override fun show() {
-        creditsQueue = CreditsLoader.load()
         delayTimer.reset()
-        game.audioMan.playMusic(MusicAsset.MM2_CREDITS_MUSIC, false)
+        creditsQueue = CreditsLoader.load()
         game.getUiCamera().setToDefaultPosition()
+        game.audioMan.playMusic(MusicAsset.VINNYZ_WIP_1_MUSIC, true)
     }
 
     override fun render(delta: Float) {
@@ -109,7 +101,6 @@ class CreditsScreen(
 
     private fun handleFadeout(delta: Float) {
         fadeOutTimer.update(delta)
-        // TODO: update alpha of background images
         if (fadeOutTimer.isFinished()) onCompletion.invoke()
     }
 }

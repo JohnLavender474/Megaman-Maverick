@@ -101,7 +101,7 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
         state = SpikeCopterState.FLY
 
-        FacingUtils.setFacing(this)
+        FacingUtils.setFacingOf(this)
 
         dropTeethDelay.reset()
         dropTeethTimer.reset()
@@ -113,7 +113,7 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         updatablesComponent.add { delta ->
             when (state) {
                 SpikeCopterState.FLY -> {
-                    FacingUtils.setFacing(this)
+                    FacingUtils.setFacingOf(this)
 
                     body.physics.velocity.x = VEL_X * ConstVals.PPM * facing.value
 

@@ -14,7 +14,7 @@ object FacingUtils {
 
     const val TAG = "StandardFacingSetter"
 
-    fun getPreferredFacing(entity: MegaGameEntity): Facing {
+    fun getPreferredFacingFor(entity: MegaGameEntity): Facing {
         val megaman = entity.megaman
 
         entity as IBodyEntity
@@ -61,9 +61,9 @@ object FacingUtils {
         }
     }
 
-    fun setFacing(entity: MegaGameEntity) {
+    fun setFacingOf(entity: MegaGameEntity) {
         entity as IFaceable
 
-        entity.facing = getPreferredFacing(entity)
+        entity.facing = getPreferredFacingFor(entity)
     }
 }

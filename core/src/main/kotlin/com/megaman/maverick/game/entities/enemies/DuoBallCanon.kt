@@ -121,7 +121,7 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
-        FacingUtils.setFacing(this)
+        FacingUtils.setFacingOf(this)
 
         canonDirectionLoop.reset()
 
@@ -138,7 +138,7 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
 
             delayTimer.update(delta)
             if (!delayTimer.isFinished()) {
-                FacingUtils.setFacing(this)
+                FacingUtils.setFacingOf(this)
                 return@add
             }
 

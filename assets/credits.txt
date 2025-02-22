@@ -2,62 +2,59 @@
 
 ## Title Screen
 
-Megaman WG Pose - PixelBoy127
+Title Card - Samuel_X7
+MM Pose - PixelBoy127
 
-## Bosses
+## Robot Masters / Bosses
 
-Timber Woman - oldlavygenes
-Rodent Man - oldlavygenes
+Timber Woman - Samuel_X7
+Rodent Man - Samuel_X7
 Reactor Man - Balloon Cart
+Glacier Man - Balloon Cart
 Moon Man - boberatu
-Naval Man - boberatu
-Inferno Man - boberatu
 Desert Man - rcrdcat
-Distributor Man - oldlavygenes
-Bospider - Capcom
-Guts Tank - Capcom
-Sigma Rat Machine - Capcom
-Mecha Dragon - Capcom
+Precious Woman - Rodrigo
+Inferno Man - boberatu
+Inferno Dragon - Ansimuz
 Moon Head - oldlavygenes
-Penguin Machine - Capcom
-React Monkey - Balloon Cart
-Sphinx Miniboss - Mister Mike
+Reactor Monkey - Balloon Cart
+Bospider - Capcom
+
+## Enemies
+
+Samuel_X7
+MegaRed225
+Mister Mike
+Capcom
 
 ## Tilesets
 
 Reactor Man - Balloon Cart
-Naval Man - Balloon Cart
-MegaBot - ansimuz
-Mega 8-Bit - Super Icon Ltd
-All others - Capcom
+Glacier Man - Balloon Cart
+Rodent Man - Ansimuz
+Inferno Man - Ansimuz
+Timber Woman - Ansimuz
+Moon Man - Samuel_X7
+Precious Woman - oldlavygenes
+Desert Man - Super Icon Ltd
+Intro Stage - Super Icon Ltd
 
 --------------------------------------------
 
 # Music
 
-World Revolution - TrojanHorse711
-Duel of the Fates - Chips 'N Cellos
-FF7 Let the Battles Begin - Bulby
-MM11 Blast Man - 8-Bit Alchemy
-MM Omega Title Theme - 8-Bit Alchemy
-MMX2 Hunter State - Famitard
-MMX3 Intro Stage - Famitard
-MMX5 Dark Necrobat - Famitard
-MMX6 Blaze Heatnix - Famitard
-MMX6 Sigma 2 - Famitard
-Xenoblade Gaur Plains - Bulby
-MMX Stage Select - Walley Chantek
-MMX7 Vanish. Gung. - Famitard
-MMX8 Burn Rooster - Famitard
+Famitard
+Vinnyz29
+Capcom
 
 --------------------------------------------
 
 # Sound Effects
 
-All sounds by Capcom
+Capcom
 
 --------------------------------------------
 
-# Game Design
+# Level Design
 
-All levels by oldlavygenes
+oldlavygenes

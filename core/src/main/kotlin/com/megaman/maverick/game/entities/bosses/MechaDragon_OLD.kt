@@ -354,7 +354,7 @@ class MechaDragon_OLD(game: MegamanMaverickGame) : AbstractBoss(game, size = Siz
                             else -> CHARGE_FIRST_DELAY_SPEED * if (megamanCenterY > body.getMaxY()) 1f else -1f
                         }) * ConstVals.PPM
 
-                        FacingUtils.setFacing(this)
+                        FacingUtils.setFacingOf(this)
 
                         chargeFirstDelayTimer.update(delta)
 

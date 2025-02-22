@@ -1163,7 +1163,7 @@
   </object>
   <object id="198" name="SniperJoe" x="4952" y="1264" width="16" height="16">
    <properties>
-    <property name="type" value="Snow"/>
+    <property name="type" value="snow"/>
    </properties>
   </object>
   <object id="228" name="Bat" x="5704" y="736" width="16" height="16">
@@ -1351,7 +1351,7 @@
   <object id="604" name="Coldier" x="11624" y="944" width="16" height="16"/>
   <object id="611" name="SniperJoe" x="4744" y="1744" width="16" height="16">
    <properties>
-    <property name="type" value="Snow"/>
+    <property name="type" value="snow"/>
    </properties>
   </object>
  </objectgroup>

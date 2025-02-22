@@ -177,8 +177,8 @@ comprehensive listing of the credits for the artwork used in this game.
     - Fire Dispensenator
   - [Random Enemies Set 10](https://www.deviantart.com/megared225/art/Random-Enemy-Sprites-Set-10-571128501)
     - Nutt Glider
-- Aburtos
-  - [Enhance Sniper Joe](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/162288/)
+- Mister Mike
+  - [Sniper Joe Expanded](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/159822/)
 - All other enemy sprites made by Capcom and sourced from https://www.spriters-resource.com/
 
 ### Blocks / Platforms

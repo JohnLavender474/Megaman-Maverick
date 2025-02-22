@@ -276,7 +276,9 @@
             <key type="filename">../frames/Enemies1/PopupCanon/Down.png</key>
             <key type="filename">../frames/Enemies1/PopupCanon/Up.png</key>
             <key type="filename">../frames/Enemies1/RedScrewie/Down.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/fire/jump.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/orange/jump.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/snow/jump.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe_OLD/Lava/JumpNoShield.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe_OLD/Lava/JumpWithShield.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe_OLD/Lava/ShootingNoShield.png</key>
@@ -328,7 +330,9 @@
             <key type="filename">../frames/Enemies1/Beezee.png</key>
             <key type="filename">../frames/Enemies1/CryoMet/flash.png</key>
             <key type="filename">../frames/Enemies1/CryoMet/rise.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/fire/shoot.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/orange/shoot.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/snow/shoot.png</key>
             <key type="filename">../frames/Enemies1/SpikeCopter/drop_teeth.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -370,11 +374,53 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Enemies1/Cactus/big/idle.png</key>
+            <key type="filename">../frames/Enemies1/Cactus/big/left.png</key>
+            <key type="filename">../frames/Enemies1/Cactus/big/right.png</key>
+            <key type="filename">../frames/Enemies1/Cactus/small/idle.png</key>
+            <key type="filename">../frames/Enemies1/Cactus/small/left.png</key>
+            <key type="filename">../frames/Enemies1/Cactus/small/right.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,12,16,24</rect>
+                <key>scale9Paddings</key>
+                <rect>8,12,16,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/Cactus/big/turn_left.png</key>
+            <key type="filename">../frames/Enemies1/Cactus/big/turn_right.png</key>
+            <key type="filename">../frames/Enemies1/Cactus/small/turn_left.png</key>
+            <key type="filename">../frames/Enemies1/Cactus/small/turn_right.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,36,16,72</rect>
+                <key>scale9Paddings</key>
+                <rect>8,36,16,72</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Enemies1/CannoHoney/closed_eyes.png</key>
             <key type="filename">../frames/Enemies1/CannoHoney/oepn_eyes.png</key>
             <key type="filename">../frames/Enemies1/CryoMet/run.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/fire/idle.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/fire/turn.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/orange/idle.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/orange/turn.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/snow/idle.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/snow/turn.png</key>
             <key type="filename">../frames/Enemies1/SpikeCopter/fly.png</key>
             <key type="filename">../frames/Enemies1/TellySaucer/hit.png</key>
             <struct type="IndividualSpriteSettings">

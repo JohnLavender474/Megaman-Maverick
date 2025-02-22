@@ -1497,7 +1497,7 @@
     <property name="big" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="171" name="Cactus" x="480" y="2912" width="32" height="32">
+  <object id="171" name="Cactus" x="544" y="2912" width="32" height="32">
    <properties>
     <property name="big" type="bool" value="false"/>
    </properties>

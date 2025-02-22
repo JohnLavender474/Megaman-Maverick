@@ -718,8 +718,6 @@ sprites/frames/Hazards1/LavaBeamer/SwitchingOn.png
 sprites/frames/Hazards1/LavaBeamer/On.png
 sprites/frames/Hazards1/IceCubeMaker.png
 sprites/frames/Hazards1/Flame.png
-sprites/frames/Hazards1/Cactus/big.png
-sprites/frames/Hazards1/Cactus/small.png
 sprites/frames/Hazards1/CrystalSpikes.png
 sprites/frames/Hazards1/SpikeTeeth.png
 sprites/frames/Hazards1/SpikeBall/Chain.png
@@ -1558,6 +1556,24 @@ sprites/frames/Enemies1/Penguin/Slippin.png
 sprites/frames/Enemies1/Penguin/Stand.png
 sprites/frames/Enemies1/Penguin/Slide.png
 sprites/frames/Enemies1/Penguin/Jump.png
+sprites/frames/Enemies1/Cactus/small/turn_right.png
+sprites/frames/Enemies1/Cactus/small/turn_left.png
+sprites/frames/Enemies1/Cactus/small/left.png
+sprites/frames/Enemies1/Cactus/small/right.png
+sprites/frames/Enemies1/Cactus/small/idle.png
+sprites/frames/Enemies1/Cactus/big/turn_right.png
+sprites/frames/Enemies1/Cactus/big/turn_left.png
+sprites/frames/Enemies1/Cactus/big/left.png
+sprites/frames/Enemies1/Cactus/big/right.png
+sprites/frames/Enemies1/Cactus/big/idle.png
+sprites/frames/Enemies1/SniperJoe/snow/jump.png
+sprites/frames/Enemies1/SniperJoe/snow/turn.png
+sprites/frames/Enemies1/SniperJoe/snow/shoot.png
+sprites/frames/Enemies1/SniperJoe/snow/idle.png
+sprites/frames/Enemies1/SniperJoe/fire/jump.png
+sprites/frames/Enemies1/SniperJoe/fire/turn.png
+sprites/frames/Enemies1/SniperJoe/fire/shoot.png
+sprites/frames/Enemies1/SniperJoe/fire/idle.png
 sprites/frames/Enemies1/SniperJoe/orange/jump.png
 sprites/frames/Enemies1/SniperJoe/orange/turn.png
 sprites/frames/Enemies1/SniperJoe/orange/shoot.png
@@ -2850,6 +2866,7 @@ diagrams/.$Inferno Man - Design.drawio.bkp
 diagrams/.$Desert Man - Design.drawio.bkp
 libgdx.png
 credits.txt
+music/vinnyz_wip_1.mp3
 music/MMX5_DarkDizzy.txt
 music/MMX6_BossFight.txt
 music/MMZ_EnemyHall.txt
@@ -2910,5 +2927,6 @@ music/MM3_Magnet_Man.mp3
 music/vinnyz_inferno_track.mp3
 music/MMX3_NeonTiger.mp3
 music/MMX8_BurnRooster.txt
+music/vinnyz_inferno_track_v2.mp3
 music/MMX6_BossFight.mp3
 notes.txt

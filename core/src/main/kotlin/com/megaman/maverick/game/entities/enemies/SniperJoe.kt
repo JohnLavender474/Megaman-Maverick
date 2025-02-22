@@ -12,10 +12,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.orderedMapOf
-import com.mega.game.engine.common.extensions.toGdxArray
+import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
@@ -50,6 +47,8 @@ import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.MagmaGoop
+import com.megaman.maverick.game.entities.projectiles.Snowball
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
@@ -66,7 +65,15 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
         private const val BULLET_SPEED = 10f
 
+        private const val SNOWBALL_X = 8f
+        private const val SNOWBALL_Y = 5f
+        private const val SNOWBALL_GRAV = 0.15f
+
+        private const val FIREBALL_X = 10f
+
         private const val JUMP_IMPULSE = 15f
+
+        private const val SHIELD_OFFSET = 0.675f
 
         private const val IDLE_DUR = 2f
         private const val SHOOT_DUR = 2f
@@ -86,9 +93,9 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private enum class SniperJoeV2Type { ORANGE }
+    private enum class SniperJoeType { ORANGE, SNOW, FIRE }
 
-    private enum class SniperJoeV2State { IDLE, TURN, SHOOT, JUMP }
+    private enum class SniperJoeState { IDLE, TURN, SHOOT, JUMP }
 
     override var direction: Direction
         get() = body.direction
@@ -98,30 +105,30 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     override lateinit var facing: Facing
     override var gravityScalar = 1f
 
-    private lateinit var stateMachine: StateMachine<SniperJoeV2State>
-    private val currentState: SniperJoeV2State
+    private lateinit var stateMachine: StateMachine<SniperJoeState>
+    private val currentState: SniperJoeState
         get() = stateMachine.getCurrent()
     private val stateTimers = orderedMapOf(
-        SniperJoeV2State.IDLE pairTo Timer(IDLE_DUR),
-        SniperJoeV2State.TURN pairTo Timer(TURN_DUR),
-        SniperJoeV2State.SHOOT pairTo Timer(SHOOT_DUR).also { timer ->
+        SniperJoeState.IDLE pairTo Timer(IDLE_DUR),
+        SniperJoeState.TURN pairTo Timer(TURN_DUR),
+        SniperJoeState.SHOOT pairTo Timer(SHOOT_DUR).also { timer ->
             TIMES_TO_SHOOT.forEach { time -> timer.addRunnable(TimeMarkedRunnable(time) { shoot() }) }
         }
     )
 
-    private lateinit var type: SniperJoeV2Type
+    private lateinit var type: SniperJoeType
 
     private var scaleBullet = true
 
     private val shouldUpdate: Boolean
         get() = !game.isCameraRotating()
     private val shielded: Boolean
-        get() = currentState != SniperJoeV2State.SHOOT
+        get() = currentState != SniperJoeState.SHOOT
 
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            SniperJoeV2Type.entries.forEach { type ->
+            SniperJoeType.entries.forEach { type ->
                 animDefs.keys().forEach { key ->
                     val fullKey = "${type.name.lowercase()}/${key}"
                     regions.put(fullKey, atlas.findRegion("$TAG/$fullKey"))
@@ -148,8 +155,8 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         val position = DirectionPositionMapper.getInvertedPosition(direction)
         body.positionOnPoint(spawn, position)
 
-        type = SniperJoeV2Type.valueOf(
-            spawnProps.getOrDefault(ConstKeys.TYPE, SniperJoeV2Type.ORANGE.name, String::class).uppercase()
+        type = SniperJoeType.valueOf(
+            spawnProps.getOrDefault(ConstKeys.TYPE, SniperJoeType.ORANGE.name, String::class).uppercase()
         )
 
         gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
@@ -158,7 +165,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         stateMachine.reset()
         stateTimers.values().forEach { it.reset() }
 
-        FacingUtils.setFacing(this)
+        FacingUtils.setFacingOf(this)
     }
 
     override fun onDestroy() {
@@ -178,7 +185,9 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 if (timer.isFinished()) stateMachine.next()
             }
 
-            if (currentState == SniperJoeV2State.IDLE && shouldStartTurning()) stateMachine.next()
+            if (!currentState.equalsAny(SniperJoeState.JUMP, SniperJoeState.TURN) &&
+                (shouldStartTurning() || shouldStartJumping())
+            ) stateMachine.next()
         }
     }
 
@@ -218,7 +227,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             GravityUtils.setGravity(body, gravity)
 
             shieldFixture.setActive(shielded)
-            shieldFixture.offsetFromBodyAttachment.x = 0.5f * ConstVals.PPM * when (direction) {
+            shieldFixture.offsetFromBodyAttachment.x = SHIELD_OFFSET * ConstVals.PPM * when (direction) {
                 Direction.UP, Direction.LEFT -> facing.value
                 else -> -facing.value
             }
@@ -276,7 +285,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                     return@keySupplier key
                 }
                 .applyToAnimations { animations ->
-                    SniperJoeV2Type.entries.forEach { type ->
+                    SniperJoeType.entries.forEach { type ->
                         animDefs.forEach { entry ->
                             val key = entry.key
                             val (rows, columns, durations, loop) = entry.value
@@ -297,30 +306,37 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         .build()
 
     private fun buildStateMachine() = EnumStateMachineBuilder
-        .create<SniperJoeV2State>()
-        .initialState(SniperJoeV2State.IDLE)
+        .create<SniperJoeState>()
+        .initialState(SniperJoeState.IDLE)
         .setOnChangeState(this::onChangeState)
-        .transition(SniperJoeV2State.IDLE, SniperJoeV2State.TURN) { shouldStartTurning() }
-        .transition(SniperJoeV2State.IDLE, SniperJoeV2State.JUMP) { shouldStartJumping() }
-        .transition(SniperJoeV2State.IDLE, SniperJoeV2State.SHOOT) { true }
-        .transition(SniperJoeV2State.TURN, SniperJoeV2State.IDLE) { true }
-        .transition(SniperJoeV2State.JUMP, SniperJoeV2State.IDLE) { shouldEndJumping() }
-        .transition(SniperJoeV2State.SHOOT, SniperJoeV2State.IDLE) { true }
+        // idle
+        .transition(SniperJoeState.IDLE, SniperJoeState.JUMP) { shouldStartJumping() }
+        .transition(SniperJoeState.IDLE, SniperJoeState.TURN) { shouldStartTurning() }
+        .transition(SniperJoeState.IDLE, SniperJoeState.SHOOT) { true }
+        // turn
+        .transition(SniperJoeState.TURN, SniperJoeState.IDLE) { true }
+        // jump
+        .transition(SniperJoeState.JUMP, SniperJoeState.IDLE) { shouldEndJumping() }
+        // shoot
+        .transition(SniperJoeState.SHOOT, SniperJoeState.JUMP) { shouldStartJumping() }
+        .transition(SniperJoeState.SHOOT, SniperJoeState.TURN) { shouldStartTurning() }
+        .transition(SniperJoeState.SHOOT, SniperJoeState.IDLE) { true }
+        // build
         .build()
 
-    private fun onChangeState(current: SniperJoeV2State, previous: SniperJoeV2State) {
+    private fun onChangeState(current: SniperJoeState, previous: SniperJoeState) {
         GameLogger.debug(TAG, "onChangeState(): current=$current, previous=$previous")
 
         val timer = stateTimers[previous]
         timer?.reset()
 
-        if (previous == SniperJoeV2State.TURN) FacingUtils.setFacing(this)
+        if (previous == SniperJoeState.TURN) FacingUtils.setFacingOf(this)
 
-        if (current == SniperJoeV2State.JUMP) jump()
+        if (current == SniperJoeState.JUMP) jump()
     }
 
     private fun shouldStartTurning() =
-        currentState == SniperJoeV2State.IDLE && facing != FacingUtils.getPreferredFacing(this)
+        currentState == SniperJoeState.IDLE && facing != FacingUtils.getPreferredFacingFor(this)
 
     private fun shouldStartJumping() =
         body.isSensing(BodySense.FEET_ON_GROUND) &&
@@ -377,21 +393,51 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             ConstKeys.DIRECTION pairTo direction
         )
 
-        when (direction) {
-            Direction.UP, Direction.DOWN ->
-                trajectory.set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
+        when (type) {
+            SniperJoeType.ORANGE -> {
+                when (direction) {
+                    Direction.UP, Direction.DOWN ->
+                        trajectory.set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
 
-            Direction.LEFT ->
-                trajectory.set(0f, BULLET_SPEED * ConstVals.PPM * facing.value)
+                    Direction.LEFT ->
+                        trajectory.set(0f, BULLET_SPEED * ConstVals.PPM * facing.value)
 
-            Direction.RIGHT ->
-                trajectory.set(0f, -BULLET_SPEED * ConstVals.PPM * facing.value)
+                    Direction.RIGHT ->
+                        trajectory.set(0f, -BULLET_SPEED * ConstVals.PPM * facing.value)
+                }
+                if (scaleBullet) trajectory.scl(gravityScalar)
+
+                val bullet = MegaEntityFactory.fetch(Bullet::class)!!
+                bullet.spawn(props)
+
+                if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
+            }
+
+            SniperJoeType.SNOW -> {
+                trajectory.x = SNOWBALL_X * ConstVals.PPM * facing.value
+                trajectory.y = SNOWBALL_Y * ConstVals.PPM
+
+                val gravity = GameObjectPools.fetch(Vector2::class).set(0f, -SNOWBALL_GRAV * ConstVals.PPM)
+                props.put(ConstKeys.GRAVITY, gravity)
+                props.put(ConstKeys.GRAVITY_ON, true)
+
+                val snowball = MegaEntityFactory.fetch(Snowball::class)!!
+                snowball.spawn(props)
+
+                if (overlapsGameCamera()) requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
+            }
+
+            SniperJoeType.FIRE -> {
+                trajectory.x = FIREBALL_X * ConstVals.PPM * facing.value
+
+                val rotation = if (isFacing(Facing.LEFT)) 90f else 270f
+                props.put(ConstKeys.ROTATION, rotation)
+
+                val fireball = MegaEntityFactory.fetch(MagmaGoop::class)!!
+                fireball.spawn(props)
+
+                if (overlapsGameCamera()) requestToPlaySound(SoundAsset.BLAST_2_SOUND, false)
+            }
         }
-        if (scaleBullet) trajectory.scl(gravityScalar)
-
-        val bullet = MegaEntityFactory.fetch(Bullet::class)!!
-        bullet.spawn(props)
-
-        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
     }
 }
