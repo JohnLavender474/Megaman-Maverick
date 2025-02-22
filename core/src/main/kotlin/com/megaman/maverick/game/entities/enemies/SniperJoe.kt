@@ -1,19 +1,21 @@
 package com.megaman.maverick.game.entities.enemies
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
-import com.mega.game.engine.animations.AnimationsComponent
-import com.mega.game.engine.animations.Animator
-import com.mega.game.engine.animations.IAnimation
-import com.mega.game.engine.common.UtilMethods.normalizedTrajectory
-import com.mega.game.engine.common.enums.*
-import com.mega.game.engine.common.extensions.equalsAny
+import com.mega.game.engine.animations.AnimationsComponentBuilder
+import com.mega.game.engine.animations.AnimatorBuilder
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.orderedMapOf
+import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
@@ -25,10 +27,12 @@ import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
-import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
-import com.mega.game.engine.entities.GameEntity
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.state.EnumStateMachineBuilder
+import com.mega.game.engine.state.StateMachine
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
@@ -37,67 +41,54 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
-import com.megaman.maverick.game.entities.projectiles.SniperJoeShield
+import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
-import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
+import com.megaman.maverick.game.utils.misc.FacingUtils
+import com.megaman.maverick.game.utils.misc.GravityUtils
+import com.megaman.maverick.game.utils.misc.HeadUtils
 import com.megaman.maverick.game.world.body.*
 
-class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IScalableGravityEntity, IFaceable,
-    IDirectional {
+class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IScalableGravityEntity,
+    IDirectional, IFaceable {
 
     companion object {
         const val TAG = "SniperJoe"
 
-        private const val DEFAULT_TYPE = "Orange"
-        private const val SNOW_TYPE = "Snow"
-        private const val LAVA_TYPE = "Lava"
-
-        private val TIMES_TO_SHOOT = floatArrayOf(0.15f, 0.75f, 1.35f)
-
         private const val BULLET_SPEED = 10f
-        private const val SNOWBALL_X = 8f
-        private const val SNOWBALL_Y = 5f
-        private const val LAVA_X = 10f
-        private const val SNOWBALL_GRAV = 0.15f
+
         private const val JUMP_IMPULSE = 15f
 
-        private const val SHIELD_DUR = 1.75f
-        private const val SHOOT_DUR = 1.5f
-        private const val LAVA_SHOOT_DUR = 0.5f
-        private const val THROW_SHIELD_DUR = 0.5f
-        private const val SHIELD_VEL = 10f
+        private const val IDLE_DUR = 2f
+        private const val SHOOT_DUR = 2f
+        private const val TURN_DUR = 0.5f
 
         private const val GROUND_GRAVITY = 0.001f
         private const val GRAVITY = 0.375f
 
-        private val regions = ObjectMap<String, TextureRegion>()
-        private val joeTypes = gdxArrayOf(DEFAULT_TYPE, SNOW_TYPE, LAVA_TYPE)
-        private val regionKeys = gdxArrayOf(
-            "JumpNoShield",
-            "JumpWithShield",
-            "ShootingNoShield",
-            "ShootingWithShield",
-            "StandNoShield",
-            "StandShielded",
-            "ThrowShield"
+        private val TIMES_TO_SHOOT = floatArrayOf(0.5f, 1f, 1.5f)
+
+        private val animDefs = orderedMapOf<String, AnimationDef>(
+            "idle" pairTo AnimationDef(2, 1, gdxArrayOf(1f, 0.15f), true),
+            "shoot" pairTo AnimationDef(3, 1, 0.1f, false),
+            "turn" pairTo AnimationDef(2, 1, 0.1f, false),
+            "jump" pairTo AnimationDef(),
         )
+        private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    enum class SniperJoeState {
-        WAITING_SHIELDED, WAITING_NO_SHIELD, SHOOTING_WITH_SHIELD, SHOOTING_NO_SHIELD, THROWING_SHIELD
-    }
+    private enum class SniperJoeV2Type { ORANGE }
+
+    private enum class SniperJoeV2State { IDLE, TURN, SHOOT, JUMP }
 
     override var direction: Direction
         get() = body.direction
@@ -107,41 +98,39 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     override lateinit var facing: Facing
     override var gravityScalar = 1f
 
-    private lateinit var type: String
-    private lateinit var sniperJoeState: SniperJoeState
+    private lateinit var stateMachine: StateMachine<SniperJoeV2State>
+    private val currentState: SniperJoeV2State
+        get() = stateMachine.getCurrent()
+    private val stateTimers = orderedMapOf(
+        SniperJoeV2State.IDLE pairTo Timer(IDLE_DUR),
+        SniperJoeV2State.TURN pairTo Timer(TURN_DUR),
+        SniperJoeV2State.SHOOT pairTo Timer(SHOOT_DUR).also { timer ->
+            TIMES_TO_SHOOT.forEach { time -> timer.addRunnable(TimeMarkedRunnable(time) { shoot() }) }
+        }
+    )
 
-    private var throwShieldTrigger: GameRectangle? = null
+    private lateinit var type: SniperJoeV2Type
 
-    private val shielded: Boolean
-        get() = sniperJoeState == SniperJoeState.WAITING_SHIELDED
-    private val hasShield: Boolean
-        get() = sniperJoeState == SniperJoeState.WAITING_SHIELDED || sniperJoeState == SniperJoeState.SHOOTING_WITH_SHIELD
+    private var scaleBullet = true
 
     private val shouldUpdate: Boolean
         get() = !game.isCameraRotating()
-    private val waitTimer = Timer(SHIELD_DUR)
-    private val shootTimer = Timer(SHOOT_DUR)
-    private val throwShieldTimer = Timer(THROW_SHIELD_DUR)
-
-    private var canJump = true
-    private var canThrowShield = false
-    private var setToThrowShield = false
-    private var scaleBullet = true
-
-    override fun getTag() = TAG
+    private val shielded: Boolean
+        get() = currentState != SniperJoeV2State.SHOOT
 
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            joeTypes.forEach { joeType ->
-                regionKeys.forEach { regionKey ->
-                    val region = atlas.findRegion("$TAG/$joeType/$regionKey")
-                    regions.put("$joeType/$regionKey", region)
+            SniperJoeV2Type.entries.forEach { type ->
+                animDefs.keys().forEach { key ->
+                    val fullKey = "${type.name.lowercase()}/${key}"
+                    regions.put(fullKey, atlas.findRegion("$TAG/$fullKey"))
                 }
             }
         }
         super.init()
         addComponent(defineAnimationsComponent())
+        stateMachine = buildStateMachine()
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -159,242 +148,99 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         val position = DirectionPositionMapper.getInvertedPosition(direction)
         body.positionOnPoint(spawn, position)
 
-        when {
-            spawnProps.containsKey(ConstKeys.TRIGGER) -> {
-                canThrowShield = true
-                throwShieldTrigger =
-                    spawnProps.get(ConstKeys.TRIGGER, RectangleMapObject::class)!!.rectangle.toGameRectangle()
-            }
-
-            else -> {
-                canThrowShield = false
-                throwShieldTrigger = null
-            }
-        }
-
-        canJump = spawnProps.getOrDefault(ConstKeys.JUMP, true, Boolean::class)
-
-        type = spawnProps.getOrDefault(ConstKeys.TYPE, DEFAULT_TYPE, String::class)
-        sniperJoeState = SniperJoeState.WAITING_SHIELDED
-
-        waitTimer.reset()
-        throwShieldTimer.setToEnd()
-
-        shootTimer.clearRunnables()
-        when (type) {
-            LAVA_TYPE -> {
-                shootTimer.resetDuration(LAVA_SHOOT_DUR)
-                val shootRunnable = TimeMarkedRunnable(TIMES_TO_SHOOT[0]) { shoot() }
-                shootTimer.addRunnables(gdxArrayOf(shootRunnable))
-            }
-
-            else -> {
-                shootTimer.resetDuration(SHOOT_DUR)
-                val shootRunnables = Array<TimeMarkedRunnable>()
-                TIMES_TO_SHOOT.forEach { shootRunnables.add(TimeMarkedRunnable(it) { shoot() }) }
-                shootTimer.addRunnables(shootRunnables)
-            }
-        }
-        shootTimer.setToEnd()
+        type = SniperJoeV2Type.valueOf(
+            spawnProps.getOrDefault(ConstKeys.TYPE, SniperJoeV2Type.ORANGE.name, String::class).uppercase()
+        )
 
         gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
         scaleBullet = spawnProps.getOrDefault("${ConstKeys.SCALE}_${ConstKeys.BULLET}", true, Boolean::class)
 
-        facing = when (direction) {
-            Direction.UP, Direction.DOWN -> if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
-            Direction.LEFT -> if (megaman.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
-            Direction.RIGHT -> if (megaman.body.getY() < body.getY()) Facing.RIGHT else Facing.LEFT
+        stateMachine.reset()
+        stateTimers.values().forEach { it.reset() }
+
+        FacingUtils.setFacing(this)
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+    }
+
+    override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
+        super.defineUpdatablesComponent(updatablesComponent)
+        updatablesComponent.add { delta ->
+            if (!shouldUpdate) return@add
+
+            val timer = stateTimers[currentState]
+            if (timer != null) {
+                timer.update(delta)
+
+                if (timer.isFinished()) stateMachine.next()
+            }
+
+            if (currentState == SniperJoeV2State.IDLE && shouldStartTurning()) stateMachine.next()
         }
     }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(1.25f * ConstVals.PPM, 1.75f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat(), 1.5f * ConstVals.PPM)
+        body.drawingColor = Color.GRAY
 
         val shapes = Array<() -> IDrawableShape?>()
+        shapes.add { body.getBounds() }
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
-        body.addFixture(bodyFixture)
-
-        val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
+        val feetFixture =
+            Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         body.addFixture(feetFixture)
-        // shapes.add { feetFixture }
+        shapes.add { feetFixture }
 
-        val headFixture = Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.1f * ConstVals.PPM))
+        val headFixture =
+            Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
         body.addFixture(headFixture)
-        // shapes.add { headFixture }
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        body.addFixture(damagerFixture)
-        shapes.add { damagerFixture }
-
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
-        body.addFixture(damageableFixture)
-        // shapes.add { damageableFixture }
+        shapes.add { headFixture }
 
         val shieldFixture =
             Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(0.25f * ConstVals.PPM, 1.25f * ConstVals.PPM))
         body.addFixture(shieldFixture)
         shapes.add { shieldFixture }
 
-        val triggerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle())
-        triggerFixture.setFilter { fixture -> fixture.getType() == FixtureType.PLAYER }
-        triggerFixture.setConsumer { processState, fixture ->
-            if (hasShield && processState == ProcessState.BEGIN) setToThrowShield = true
-        }
-        triggerFixture.attachedToBody = false
-        body.addFixture(triggerFixture)
-        shapes.add { triggerFixture }
-
         body.preProcess.put(ConstKeys.DEFAULT) {
-            when {
-                canThrowShield && throwShieldTrigger != null -> {
-                    triggerFixture.setActive(true)
-                    triggerFixture.setShape(throwShieldTrigger!!)
-                }
-
-                else -> triggerFixture.setActive(false)
-            }
-
-            when {
-                direction.equalsAny(Direction.UP, Direction.DOWN) -> body.physics.velocity.x = 0f
+            when (direction) {
+                Direction.UP, Direction.DOWN -> body.physics.velocity.x = 0f
                 else -> body.physics.velocity.y = 0f
             }
 
-            val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
-            val gravityVec = GameObjectPools.fetch(Vector2::class)
-            when (direction) {
-                Direction.UP -> gravityVec.set(0f, -gravity)
-                Direction.DOWN -> gravityVec.set(0f, gravity)
-                Direction.LEFT -> gravityVec.set(gravity, 0f)
-                Direction.RIGHT -> gravityVec.set(-gravity, 0f)
-            }.scl(ConstVals.PPM.toFloat() * gravityScalar)
-            body.physics.gravity.set(gravityVec)
+            val gravity = (if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY)
+                .times(ConstVals.PPM * gravityScalar)
+            GravityUtils.setGravity(body, gravity)
 
             shieldFixture.setActive(shielded)
-            shieldFixture.offsetFromBodyAttachment.x = 0.75f * ConstVals.PPM * when {
-                direction.equalsAny(Direction.UP, Direction.LEFT) -> facing.value
+            shieldFixture.offsetFromBodyAttachment.x = 0.5f * ConstVals.PPM * when (direction) {
+                Direction.UP, Direction.LEFT -> facing.value
                 else -> -facing.value
             }
 
-            when {
-                shielded -> damageableFixture.offsetFromBodyAttachment.x = 0.25f * ConstVals.PPM * when {
-                    direction.equalsAny(Direction.UP, Direction.LEFT) -> -facing.value
-                    else -> facing.value
-                }
-
-                else -> damageableFixture.offsetFromBodyAttachment.x = 0f
-            }
+            if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) HeadUtils.stopJumpingIfHitHead(body)
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(
+            this,
+            body,
+            BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
+        )
     }
 
-    override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
-        super.defineUpdatablesComponent(updatablesComponent)
-        updatablesComponent.add {
-            if (!shouldUpdate) return@add
-
-            facing = when (direction) {
-                Direction.UP, Direction.DOWN -> if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
-                Direction.LEFT -> if (megaman.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
-                Direction.RIGHT -> if (megaman.body.getY() < body.getY()) Facing.RIGHT else Facing.LEFT
-            }
-
-            if (canJump && shouldJump()) jump()
-            when (direction) {
-                Direction.UP -> if (body.physics.velocity.y > 0f &&
-                    body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) &&
-                    !body.isSensing(BodySense.FEET_ON_GROUND)
-                ) body.physics.velocity.y = 0f
-
-                Direction.DOWN -> if (body.physics.velocity.y < 0f &&
-                    body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) &&
-                    !body.isSensing(BodySense.FEET_ON_GROUND)
-                ) body.physics.velocity.y = 0f
-
-                Direction.LEFT -> if (body.physics.velocity.x < 0f &&
-                    body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) &&
-                    !body.isSensing(BodySense.FEET_ON_GROUND)
-                ) body.physics.velocity.x = 0f
-
-                Direction.RIGHT -> if (body.physics.velocity.x > 0f &&
-                    body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) &&
-                    !body.isSensing(BodySense.FEET_ON_GROUND)
-                ) body.physics.velocity.x = 0f
-            }
-
-            if (!overlapsGameCamera()) {
-                sniperJoeState = if (hasShield) SniperJoeState.WAITING_SHIELDED else SniperJoeState.WAITING_NO_SHIELD
-                waitTimer.reset()
-                return@add
-            }
-
-            when (sniperJoeState) {
-                SniperJoeState.WAITING_SHIELDED -> {
-                    if (setToThrowShield) {
-                        throwShield()
-                        throwShieldTimer.reset()
-                        sniperJoeState = SniperJoeState.THROWING_SHIELD
-                        setToThrowShield = false
-                    } else if (body.isSensing(BodySense.FEET_ON_GROUND)) {
-                        waitTimer.update(it)
-                        if (waitTimer.isJustFinished()) {
-                            shootTimer.reset()
-                            sniperJoeState = SniperJoeState.SHOOTING_WITH_SHIELD
-                        }
-                    }
-                }
-
-                SniperJoeState.SHOOTING_WITH_SHIELD -> {
-                    shootTimer.update(it)
-                    if (shootTimer.isJustFinished()) {
-                        waitTimer.reset()
-                        sniperJoeState = SniperJoeState.WAITING_SHIELDED
-                    }
-                }
-
-                SniperJoeState.THROWING_SHIELD -> {
-                    throwShieldTimer.update(it)
-                    if (throwShieldTimer.isJustFinished()) {
-                        waitTimer.reset()
-                        sniperJoeState = SniperJoeState.WAITING_NO_SHIELD
-                    }
-                }
-
-                SniperJoeState.WAITING_NO_SHIELD -> {
-                    waitTimer.update(it)
-                    if (waitTimer.isJustFinished()) {
-                        shootTimer.reset()
-                        sniperJoeState = SniperJoeState.SHOOTING_NO_SHIELD
-                    }
-                }
-
-                SniperJoeState.SHOOTING_NO_SHIELD -> {
-                    shootTimer.update(it)
-                    if (shootTimer.isJustFinished()) {
-                        waitTimer.reset()
-                        sniperJoeState = SniperJoeState.WAITING_NO_SHIELD
-                    }
-                }
-            }
-        }
-    }
-
-    override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
-        sprite.setSize(2f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+    override fun defineSpritesComponent() = SpritesComponentBuilder()
+        .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
+        .updatable { _, sprite ->
             sprite.hidden = damageBlink
 
-            val flipX = facing == Facing.LEFT
-            val flipY = direction == Direction.DOWN
-            sprite.setFlip(flipX, flipY)
+            sprite.setFlip(isFacing(Facing.LEFT), false)
 
             val rotation = when (direction) {
                 Direction.UP, Direction.DOWN -> 0f
@@ -413,83 +259,89 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             val bodyPosition = body.getPositionPoint(position)
             sprite.setPosition(bodyPosition, position)
 
-            if (direction == Direction.LEFT) sprite.translateX(0.15f * ConstVals.PPM)
-            else if (direction == Direction.RIGHT) sprite.translateX(-0.15f * ConstVals.PPM)
-        }
-        return spritesComponent
-    }
-
-    private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = {
-            val regionKey = when (sniperJoeState) {
-                SniperJoeState.WAITING_SHIELDED ->
-                    if (body.isSensing(BodySense.FEET_ON_GROUND)) "StandShielded" else "JumpWithShield"
-
-                SniperJoeState.WAITING_NO_SHIELD ->
-                    if (body.isSensing(BodySense.FEET_ON_GROUND)) "StandNoShield" else "JumpNoShield"
-
-                SniperJoeState.SHOOTING_WITH_SHIELD ->
-                    if (body.isSensing(BodySense.FEET_ON_GROUND)) "ShootingWithShield" else "JumpWithShield"
-
-                SniperJoeState.SHOOTING_NO_SHIELD ->
-                    if (body.isSensing(BodySense.FEET_ON_GROUND)) "ShootingNoShield" else "JumpNoShield"
-
-                SniperJoeState.THROWING_SHIELD -> "ThrowShield"
-            }
-            "$type/$regionKey"
-        }
-
-        val animations = ObjectMap<String, IAnimation>()
-        joeTypes.forEach { joeType ->
-            regionKeys.forEach { regionKey ->
-                val region = regions.get("$joeType/$regionKey")
-                animations.put("$joeType/$regionKey", Animation(region))
+            when (direction) {
+                Direction.LEFT -> sprite.translateX(0.15f * ConstVals.PPM)
+                Direction.RIGHT -> sprite.translateX(-0.15f * ConstVals.PPM)
+                else -> {}
             }
         }
+        .build()
 
-        val animator = Animator(keySupplier, animations)
-
-        return AnimationsComponent(this, animator)
-    }
-
-    private fun throwShield() {
-        val trajectory = normalizedTrajectory(
-            body.getCenter(),
-            megaman.body.getCenter(),
-            SHIELD_VEL * ConstVals.PPM,
-            GameObjectPools.fetch(Vector2::class)
+    private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
+        .key(TAG)
+        .animator(
+            AnimatorBuilder()
+                .setKeySupplier keySupplier@{
+                    val key = "${type.name.lowercase()}/${currentState.name.lowercase()}"
+                    return@keySupplier key
+                }
+                .applyToAnimations { animations ->
+                    SniperJoeV2Type.entries.forEach { type ->
+                        animDefs.forEach { entry ->
+                            val key = entry.key
+                            val (rows, columns, durations, loop) = entry.value
+                            val fullKey = "${type.name.lowercase()}/$key"
+                            try {
+                                animations.put(fullKey, Animation(regions[fullKey], rows, columns, durations, loop))
+                            } catch (e: Exception) {
+                                throw Exception(
+                                    "Failed to put animation: fullKey=$fullKey, regions=${regions.keys().toGdxArray()}",
+                                    e
+                                )
+                            }
+                        }
+                    }
+                }
+                .build()
         )
+        .build()
 
-        val shield = MegaEntityFactory.fetch(SniperJoeShield::class)!!
-        shield.spawn(
-            props(
-                ConstKeys.POSITION pairTo body.getCenter(),
-                ConstKeys.TRAJECTORY pairTo trajectory,
-                ConstKeys.OWNER pairTo this
-            )
-        )
+    private fun buildStateMachine() = EnumStateMachineBuilder
+        .create<SniperJoeV2State>()
+        .initialState(SniperJoeV2State.IDLE)
+        .setOnChangeState(this::onChangeState)
+        .transition(SniperJoeV2State.IDLE, SniperJoeV2State.TURN) { shouldStartTurning() }
+        .transition(SniperJoeV2State.IDLE, SniperJoeV2State.JUMP) { shouldStartJumping() }
+        .transition(SniperJoeV2State.IDLE, SniperJoeV2State.SHOOT) { true }
+        .transition(SniperJoeV2State.TURN, SniperJoeV2State.IDLE) { true }
+        .transition(SniperJoeV2State.JUMP, SniperJoeV2State.IDLE) { shouldEndJumping() }
+        .transition(SniperJoeV2State.SHOOT, SniperJoeV2State.IDLE) { true }
+        .build()
+
+    private fun onChangeState(current: SniperJoeV2State, previous: SniperJoeV2State) {
+        GameLogger.debug(TAG, "onChangeState(): current=$current, previous=$previous")
+
+        val timer = stateTimers[previous]
+        timer?.reset()
+
+        if (previous == SniperJoeV2State.TURN) FacingUtils.setFacing(this)
+
+        if (current == SniperJoeV2State.JUMP) jump()
     }
 
-    private fun shouldJump(): Boolean {
-        if (!body.isSensing(BodySense.FEET_ON_GROUND)) return false
-        return when (direction) {
-            Direction.UP -> megaman.body.getY() > body.getMaxY() &&
-                megaman.body.getX() >= body.getX() &&
-                megaman.body.getMaxX() <= body.getMaxX()
+    private fun shouldStartTurning() =
+        currentState == SniperJoeV2State.IDLE && facing != FacingUtils.getPreferredFacing(this)
 
-            Direction.DOWN -> megaman.body.getMaxY() < body.getY() &&
-                megaman.body.getX() >= body.getX() &&
-                megaman.body.getMaxX() <= body.getMaxX()
+    private fun shouldStartJumping() =
+        body.isSensing(BodySense.FEET_ON_GROUND) &&
+            body.physics.velocity.y <= 0f &&
+            when (direction) {
+                Direction.UP -> megaman.body.getY() > body.getMaxY() &&
+                    megaman.body.getX() >= body.getX() &&
+                    megaman.body.getMaxX() <= body.getMaxX()
 
-            Direction.LEFT -> megaman.body.getMaxX() < body.getX() &&
-                megaman.body.getY() >= body.getY() &&
-                megaman.body.getMaxY() <= body.getMaxY()
+                Direction.DOWN -> megaman.body.getMaxY() < body.getY() &&
+                    megaman.body.getX() >= body.getX() &&
+                    megaman.body.getMaxX() <= body.getMaxX()
 
-            Direction.RIGHT -> megaman.body.getX() > body.getMaxX() &&
-                megaman.body.getY() >= body.getY() &&
-                megaman.body.getMaxY() <= body.getMaxY()
-        }
-    }
+                Direction.LEFT -> megaman.body.getMaxX() < body.getX() &&
+                    megaman.body.getY() >= body.getY() &&
+                    megaman.body.getMaxY() <= body.getMaxY()
+
+                Direction.RIGHT -> megaman.body.getX() > body.getMaxX() &&
+                    megaman.body.getY() >= body.getY() &&
+                    megaman.body.getMaxY() <= body.getMaxY()
+            }
 
     private fun jump() {
         val impulse = GameObjectPools.fetch(Vector2::class)
@@ -499,18 +351,20 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             Direction.DOWN -> impulse.set(0f, -JUMP_IMPULSE)
             Direction.LEFT -> impulse.set(-JUMP_IMPULSE, 0f)
             Direction.RIGHT -> impulse.set(JUMP_IMPULSE, 0f)
-        }.scl(ConstVals.PPM.toFloat())
+        }
 
-        body.physics.velocity.set(impulse)
+        body.physics.velocity.set(impulse).scl(ConstVals.PPM.toFloat())
     }
+
+    private fun shouldEndJumping() = body.isSensing(BodySense.FEET_ON_GROUND) && body.physics.velocity.y <= 0f
 
     private fun shoot() {
         val spawn = GameObjectPools.fetch(Vector2::class)
         when (direction) {
-            Direction.UP -> spawn.set(0.5f * facing.value, -0.2f)
-            Direction.DOWN -> spawn.set(0.5f * facing.value, 0.2f)
-            Direction.LEFT -> spawn.set(0.2f, 0.5f * facing.value)
-            Direction.RIGHT -> spawn.set(-0.2f, -0.5f * facing.value)
+            Direction.UP -> spawn.set(0.5f * facing.value, -0.1f)
+            Direction.DOWN -> spawn.set(0.5f * facing.value, 0.1f)
+            Direction.LEFT -> spawn.set(0.1f, 0.5f * facing.value)
+            Direction.RIGHT -> spawn.set(-0.1f, -0.5f * facing.value)
         }
         spawn.scl(ConstVals.PPM.toFloat()).add(body.getCenter())
 
@@ -523,50 +377,21 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             ConstKeys.DIRECTION pairTo direction
         )
 
-        val sound: SoundAsset
-        val entity: GameEntity = when (type) {
-            SNOW_TYPE -> {
-                trajectory.x = SNOWBALL_X * ConstVals.PPM * facing.value
-                trajectory.y = SNOWBALL_Y * ConstVals.PPM
+        when (direction) {
+            Direction.UP, Direction.DOWN ->
+                trajectory.set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
 
-                props.put(ConstKeys.GRAVITY_ON, true)
-                props.put(ConstKeys.GRAVITY, Vector2(0f, -SNOWBALL_GRAV * ConstVals.PPM))
+            Direction.LEFT ->
+                trajectory.set(0f, BULLET_SPEED * ConstVals.PPM * facing.value)
 
-                sound = SoundAsset.CHILL_SHOOT_SOUND
-
-                EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SNOWBALL)!!
-            }
-
-            LAVA_TYPE -> {
-                trajectory.x = LAVA_X * ConstVals.PPM * facing.value
-
-                val rotation = if (isFacing(Facing.LEFT)) 90f else 270f
-                props.put(ConstKeys.ROTATION, rotation)
-
-                sound = SoundAsset.BLAST_2_SOUND
-
-                EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_GOOP)!!
-            }
-
-            else -> {
-                when (direction) {
-                    Direction.UP, Direction.DOWN ->
-                        trajectory.set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
-
-                    Direction.LEFT ->
-                        trajectory.set(0f, BULLET_SPEED * ConstVals.PPM * facing.value)
-
-                    Direction.RIGHT ->
-                        trajectory.set(0f, -BULLET_SPEED * ConstVals.PPM * facing.value)
-                }
-                sound = SoundAsset.ENEMY_BULLET_SOUND
-                EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
-            }
+            Direction.RIGHT ->
+                trajectory.set(0f, -BULLET_SPEED * ConstVals.PPM * facing.value)
         }
-
         if (scaleBullet) trajectory.scl(gravityScalar)
-        if (overlapsGameCamera()) requestToPlaySound(sound, false)
 
-        entity.spawn(props)
+        val bullet = MegaEntityFactory.fetch(Bullet::class)!!
+        bullet.spawn(props)
+
+        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
     }
 }

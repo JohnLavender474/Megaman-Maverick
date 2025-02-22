@@ -35,9 +35,8 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.enemies.PicketJoe
-import com.megaman.maverick.game.entities.enemies.SniperJoe
+import com.megaman.maverick.game.entities.enemies.SniperJoe_OLD
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.events.EventType
@@ -189,7 +188,7 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
                     children.add(picketJoe)
                 }
 
-                SniperJoe.TAG -> {
+                SniperJoe_OLD.TAG -> {
                     val sniperJoe = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.SNIPER_JOE)!!
                     sniperJoe.spawn(
                         props(

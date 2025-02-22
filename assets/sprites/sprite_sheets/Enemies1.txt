@@ -934,179 +934,179 @@ ShieldAttacker/TurnAround
   orig: 160, 32
   offset: 0, 0
   index: -1
-SniperJoe/Lava/JumpNoShield
-  rotate: false
-  xy: 164, 274
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-SniperJoe/Lava/JumpWithShield
-  rotate: false
-  xy: 198, 274
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-SniperJoe/Lava/ShootingNoShield
-  rotate: false
-  xy: 232, 274
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-SniperJoe/Lava/ShootingWithShield
-  rotate: false
-  xy: 266, 274
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-SniperJoe/Lava/StandNoShield
-  rotate: false
-  xy: 300, 274
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-SniperJoe/Lava/StandShielded
-  rotate: false
-  xy: 334, 274
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-SniperJoe/Lava/ThrowShield
-  rotate: false
-  xy: 368, 274
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-SniperJoe/Orange/JumpNoShield
-  rotate: false
-  xy: 402, 274
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-SniperJoe/Orange/JumpWithShield
-  rotate: false
-  xy: 436, 274
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-SniperJoe/Orange/ShootingNoShield
-  rotate: false
-  xy: 2, 308
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-SniperJoe/Orange/ShootingWithShield
-  rotate: false
-  xy: 36, 308
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-SniperJoe/Orange/StandNoShield
-  rotate: false
-  xy: 70, 308
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-SniperJoe/Orange/StandShielded
-  rotate: false
-  xy: 104, 308
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-SniperJoe/Orange/ThrowShield
-  rotate: false
-  xy: 138, 308
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-SniperJoe/Snow/JumpNoShield
-  rotate: false
-  xy: 172, 308
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-SniperJoe/Snow/JumpWithShield
-  rotate: false
-  xy: 206, 308
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-SniperJoe/Snow/ShootingNoShield
-  rotate: false
-  xy: 240, 308
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-SniperJoe/Snow/ShootingWithShield
-  rotate: false
-  xy: 274, 308
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-SniperJoe/Snow/StandNoShield
-  rotate: false
-  xy: 308, 308
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-SniperJoe/Snow/StandShielded
-  rotate: false
-  xy: 342, 308
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-SniperJoe/Snow/ThrowShield
-  rotate: false
-  xy: 376, 308
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-SniperJoeV2/orange/idle
+SniperJoe/orange/idle
   rotate: false
   xy: 184, 820
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
-SniperJoeV2/orange/jump
+SniperJoe/orange/jump
   rotate: false
-  xy: 410, 308
+  xy: 164, 274
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-SniperJoeV2/orange/shoot
+SniperJoe/orange/shoot
   rotate: false
   xy: 202, 1098
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
-SniperJoeV2/orange/turn
+SniperJoe/orange/turn
   rotate: false
   xy: 218, 820
   size: 32, 64
   orig: 32, 64
+  offset: 0, 0
+  index: -1
+SniperJoe_OLD/Lava/JumpNoShield
+  rotate: false
+  xy: 198, 274
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+SniperJoe_OLD/Lava/JumpWithShield
+  rotate: false
+  xy: 232, 274
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+SniperJoe_OLD/Lava/ShootingNoShield
+  rotate: false
+  xy: 266, 274
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+SniperJoe_OLD/Lava/ShootingWithShield
+  rotate: false
+  xy: 300, 274
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+SniperJoe_OLD/Lava/StandNoShield
+  rotate: false
+  xy: 334, 274
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+SniperJoe_OLD/Lava/StandShielded
+  rotate: false
+  xy: 368, 274
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+SniperJoe_OLD/Lava/ThrowShield
+  rotate: false
+  xy: 402, 274
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+SniperJoe_OLD/Orange/JumpNoShield
+  rotate: false
+  xy: 436, 274
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+SniperJoe_OLD/Orange/JumpWithShield
+  rotate: false
+  xy: 2, 308
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+SniperJoe_OLD/Orange/ShootingNoShield
+  rotate: false
+  xy: 36, 308
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+SniperJoe_OLD/Orange/ShootingWithShield
+  rotate: false
+  xy: 70, 308
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+SniperJoe_OLD/Orange/StandNoShield
+  rotate: false
+  xy: 104, 308
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+SniperJoe_OLD/Orange/StandShielded
+  rotate: false
+  xy: 138, 308
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+SniperJoe_OLD/Orange/ThrowShield
+  rotate: false
+  xy: 172, 308
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+SniperJoe_OLD/Snow/JumpNoShield
+  rotate: false
+  xy: 206, 308
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+SniperJoe_OLD/Snow/JumpWithShield
+  rotate: false
+  xy: 240, 308
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+SniperJoe_OLD/Snow/ShootingNoShield
+  rotate: false
+  xy: 274, 308
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+SniperJoe_OLD/Snow/ShootingWithShield
+  rotate: false
+  xy: 308, 308
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+SniperJoe_OLD/Snow/StandNoShield
+  rotate: false
+  xy: 342, 308
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+SniperJoe_OLD/Snow/StandShielded
+  rotate: false
+  xy: 376, 308
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+SniperJoe_OLD/Snow/ThrowShield
+  rotate: false
+  xy: 410, 308
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
   index: -1
 SnowBat/Fly

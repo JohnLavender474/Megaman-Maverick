@@ -108,7 +108,7 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(MAG_FLY, GameEntityPoolCreator.create { MagFly(game) })
         pools.put(MATASABURO, GameEntityPoolCreator.create { Matasaburo(game) })
         pools.put(SWINGIN_JOE, GameEntityPoolCreator.create { SwinginJoe(game) })
-        pools.put(SNIPER_JOE, GameEntityPoolCreator.create { SniperJoe(game) })
+        pools.put(SNIPER_JOE, GameEntityPoolCreator.create { SniperJoe_OLD(game) })
         pools.put(CARTIN_JOE, GameEntityPoolCreator.create { CartinJoe(game) })
         pools.put(PENGUIN, GameEntityPoolCreator.create { Penguin(game) })
         pools.put(SHIELD_ATTACKER, GameEntityPoolCreator.create { ShieldAttacker(game) })
