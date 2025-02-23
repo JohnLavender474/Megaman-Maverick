@@ -3,7 +3,6 @@ package com.mega.game.engine.entities
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.GameEngine
 import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.components.IGameComponent
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
@@ -22,8 +21,6 @@ abstract class GameEntity(
     override var spawned = false
 
     override fun init() {}
-
-    fun spawn() = spawn(props())
 
     fun spawn(spawnProps: Properties) = engine.spawn(this, spawnProps)
 

@@ -333,24 +333,25 @@ open class GameRectangle() : IGameShape2D, IRectangle, IRotatableShape {
 
     override fun getMaxY() = getY() + getHeight()
 
-    override fun overlaps(other: IGameShape2D) =
-        when (other) {
-            is GameRectangle -> Intersector.overlaps(rectangle, other.rectangle)
-            is GameCircle -> Intersector.overlaps(other.libgdxCircle, rectangle)
-            is GameLine -> {
-                other.calculateWorldPoints(out1, out2)
-                Intersector.intersectSegmentRectangle(out1, out2, rectangle)
-            }
-
-            is GamePolygon -> {
-                val polygon = polygonPool.fetch()
-                val overlaps = Intersector.overlapConvexPolygons(toPolygon(polygon).libgdxPolygon, other.libgdxPolygon)
-                polygonPool.free(polygon)
-                overlaps
-            }
-
-            else -> OVERLAP_EXTENSION?.invoke(this, other) == true
+    override fun overlaps(other: IGameShape2D) = when (other) {
+        is GameRectangle -> Intersector.overlaps(rectangle, other.rectangle)
+        is GameCircle -> Intersector.overlaps(other.libgdxCircle, rectangle)
+        is GameLine -> {
+            other.calculateWorldPoints(out1, out2)
+            Intersector.intersectSegmentRectangle(out1, out2, rectangle)
         }
+
+        is GamePolygon -> {
+            val polygon = polygonPool.fetch()
+            val overlaps = Intersector.overlapConvexPolygons(
+                toPolygon(polygon).libgdxPolygon, other.libgdxPolygon
+            )
+            polygonPool.free(polygon)
+            overlaps
+        }
+
+        else -> OVERLAP_EXTENSION?.invoke(this, other) == true
+    }
 
     override fun getBoundingRectangle(out: GameRectangle) = out.set(this)
 

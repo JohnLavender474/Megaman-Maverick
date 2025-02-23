@@ -88,6 +88,8 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
     }
 
     constructor(line: GameLine) {
+        position.set(line.position)
+
         localPoint1.set(line.localPoint1)
         localPoint2.set(line.localPoint2)
 
@@ -111,6 +113,9 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
 
     override fun getProps(out: Properties): Properties {
         out.putAll(
+            "x" pairTo position.x,
+            "y" pairTo position.y,
+
             "local_point_1_x" pairTo localPoint1.x,
             "local_point_1_y" pairTo localPoint1.y,
             "local_point_2_x" pairTo localPoint2.x,
@@ -129,6 +134,9 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
     }
 
     override fun setWithProps(props: Properties): IGameShape2D {
+        position.x = props.getOrDefault("x", 0f, Float::class)
+        position.y = props.getOrDefault("y", 0f, Float::class)
+
         localPoint1.x = props.getOrDefault("local_point_1_x", localPoint1.x, Float::class)
         localPoint1.y = props.getOrDefault("local_point_1_y", localPoint1.y, Float::class)
         localPoint2.x = props.getOrDefault("local_point_2_x", localPoint2.x, Float::class)
@@ -141,6 +149,8 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
 
         originX = props.getOrDefault("origin_x", originX, Float::class)
         originY = props.getOrDefault("origin_y", originY, Float::class)
+
+        setToDirty()
 
         return this
     }
@@ -157,12 +167,13 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
     }
 
     fun set(line: GameLine): GameLine {
-        setPosition(line.position)
-        setOrigin(line.originX, line.originY)
         scaleX = line.scaleX
         scaleY = line.scaleY
         rotation = line.rotation
-        return set(line.localPoint1, line.localPoint2)
+        setPosition(line.position)
+        setOrigin(line.originX, line.originY)
+        setLocalPoints(line.localPoint1, line.localPoint2)
+        return this
     }
 
     fun set(point1: Vector2, point2: Vector2) = set(point1.x, point1.y, point2.x, point2.y)
@@ -395,9 +406,7 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
 
         return when (other) {
             is GameRectangle -> Intersector.intersectSegmentRectangle(
-                reusableVec1,
-                reusableVec2,
-                other.get(reusableRect)
+                reusableVec1, reusableVec2, other.get(reusableRect)
             )
 
             is GameCircle -> Intersector.intersectSegmentCircle(

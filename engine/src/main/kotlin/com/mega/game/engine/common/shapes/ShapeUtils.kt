@@ -24,24 +24,33 @@ object ShapeUtils {
         rectangle: GameRectangle, line: GameLine, intersections: ObjectSet<Vector2>
     ): Boolean {
         line.calculateWorldPoints(out1, out2)
+
         outLines.clear()
         val lines = rectangle.getAsLines(outLines, line1, line2, line3, line4)
+
         var intersects = false
+
         for (element in lines) {
-            val intersection = Vector2()
             element.calculateWorldPoints(out3, out4)
+
+            val intersection = Vector2()
             if (Intersector.intersectSegments(out1, out2, out3, out4, intersection)) {
-                intersects = true
                 intersections.add(intersection)
+
+                intersects = true
             }
         }
+
         return intersects
     }
 
     fun overlaps(circle: Circle, polygon: Polygon): Boolean {
         val vertices = polygon.transformedVertices
+
         val center = Vector2(circle.x, circle.y)
+
         val squareRadius = circle.radius * circle.radius
+
         for (i in vertices.indices step 2) {
             if (i == 0) {
                 if (Intersector.intersectSegmentCircle(
@@ -59,6 +68,7 @@ object ShapeUtils {
                 )
             ) return true
         }
+
         return polygon.contains(circle.x, circle.y)
     }
 }

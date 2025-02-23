@@ -18,7 +18,7 @@ import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
-import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IBodyEntity
@@ -38,6 +38,9 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getEndPoint
+import com.megaman.maverick.game.utils.extensions.getOrigin
+import com.megaman.maverick.game.utils.extensions.getStartPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import java.util.*
@@ -64,17 +67,15 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     private val laser = GameLine()
     private val contactGlow = GameCircle()
 
-    private val outVec = Vector2()
-
     private lateinit var rotatingLine: RotatingLine
 
     private lateinit var laserFixture: Fixture
     private lateinit var damagerFixture: Fixture
 
     private val contacts = PriorityQueue { p1: Vector2, p2: Vector2 ->
-        val origin = rotatingLine.getOrigin(outVec)
-        val d1 = p1.dst2(origin)
-        val d2 = p2.dst2(origin)
+        val startPoint = rotatingLine.getStartPoint()
+        val d1 = p1.dst2(startPoint)
+        val d2 = p2.dst2(startPoint)
         d1.compareTo(d2)
     }
 
@@ -86,7 +87,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
         addComponent(MotionComponent())
         addComponent(defineBodyComponent())
-        addComponent(defineSpritesCompoent())
+        addComponent(defineSpritesComponent())
         addComponent(defineUpdatablesComponent())
 
         contactGlow.drawingColor = Color.WHITE
@@ -106,6 +107,11 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
         contactTimer.reset()
         switchTimer.reset()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        contacts.clear()
     }
 
     private fun defineBodyComponent(): BodyComponent {
@@ -130,37 +136,33 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             laserFixture.putProperty(ConstKeys.LINE, rotatingLine.line)
-
             contacts.clear()
         }
 
         body.postProcess.put(ConstKeys.DEFAULT) {
-            val start = rotatingLine.getStartPoint(outVec)
+            val start = rotatingLine.getStartPoint()
             laser.setFirstLocalPoint(start)
             laser.setOrigin(start)
 
-            val end = if (contacts.isEmpty()) rotatingLine.getEndPoint(outVec) else contacts.poll()
+            val end = if (contacts.isEmpty()) rotatingLine.getEndPoint() else contacts.peek()
             laser.setSecondLocalPoint(end)
+
+            contactGlow.setCenter(end)
 
             laserFixture.setShape(laser)
             damagerFixture.setShape(laser)
-
-            contactGlow.setCenter(end.x, end.y)
         }
 
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineSpritesCompoent(): SpritesComponent {
-        val sprite = GameSprite(region!!)
-        sprite.setSize(1.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setPosition(rotatingLine.getOrigin(outVec), Position.BOTTOM_CENTER)
-            sprite.translateY(-0.06f * ConstVals.PPM)
+    private fun defineSpritesComponent() = SpritesComponentBuilder()
+        .sprite(GameSprite(region!!).also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
+        .updatable { _, sprite ->
+            sprite.setPosition(rotatingLine.getOrigin(), Position.BOTTOM_CENTER)
+            sprite.translateY(-0.1f * ConstVals.PPM)
         }
-        return spritesComponent
-    }
+        .build()
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
         contactTimer.update(it)
