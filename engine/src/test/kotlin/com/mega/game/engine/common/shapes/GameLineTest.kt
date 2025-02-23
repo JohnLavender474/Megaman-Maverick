@@ -82,9 +82,13 @@ class GameLineTest : DescribeSpec({
         }
 
         it("should provide correct local and world points") {
-            (0 until 10).forEach {
+            val testsToConduct = 10
+            (0 until testsToConduct).forEach {
+                val randomVarCount = 11
+
                 val random = Array<Float>()
-                (0 until 9).forEach { random.add(UtilMethods.getRandom(0, 359).toFloat()) }
+                (0 until randomVarCount).forEach { random.add(UtilMethods.getRandom(0, 359).toFloat()) }
+                println("Vars: $random")
 
                 // control line
                 val controlLine = Polyline()
@@ -92,24 +96,30 @@ class GameLineTest : DescribeSpec({
                 controlLine.setPosition(random[4], random[5])
                 controlLine.setOrigin(random[6], random[7])
                 controlLine.rotation = random[8]
+                controlLine.setScale(random[9], random[10])
 
                 // test line
                 val testLine = GameLine(random[0], random[1], random[2], random[3])
                 testLine.setPosition(random[4], random[5])
                 testLine.setOrigin(random[6], random[7])
                 testLine.rotation = random[8]
+                testLine.scaleX = random[9]
+                testLine.scaleY = random[10]
 
                 // test local points
                 val controlLocalPoints = controlLine.vertices
                 println("Control local points: ${controlLocalPoints.contentToString()}")
-                testLine.getFirstLocalPoint(out1) shouldBe Vector2(controlLocalPoints[0], controlLocalPoints[1])
-                testLine.getSecondLocalPoint(out1) shouldBe Vector2(controlLocalPoints[2], controlLocalPoints[3])
+                val testLocalPoint1 = testLine.getFirstLocalPoint(out1)
+                val testLocalPoint2 = testLine.getSecondLocalPoint(out2)
+                println("Test local points: $testLocalPoint1, $testLocalPoint2")
+                testLocalPoint1 shouldBe Vector2(controlLocalPoints[0], controlLocalPoints[1])
+                testLocalPoint2 shouldBe Vector2(controlLocalPoints[2], controlLocalPoints[3])
 
                 // test world points
                 val controlWorldPoints = controlLine.transformedVertices
                 println("Control world points: ${controlWorldPoints.contentToString()}")
-                val testWorldPoints = testLine.calculateWorldPoints(out1, out2)
-                println("Test world points: $testWorldPoints")
+                testLine.calculateWorldPoints(out1, out2)
+                println("Test world points: $out1, $out2")
                 out1 shouldBe Vector2(controlWorldPoints[0], controlWorldPoints[1])
                 out2 shouldBe Vector2(controlWorldPoints[2], controlWorldPoints[3])
             }

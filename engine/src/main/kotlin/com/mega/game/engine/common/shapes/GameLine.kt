@@ -90,11 +90,19 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
     constructor(line: GameLine) {
         localPoint1.set(line.localPoint1)
         localPoint2.set(line.localPoint2)
+
         scaleX = line.scaleX
         scaleY = line.scaleY
+
         rotation = line.rotation
+
         originX = line.originX
         originY = line.originY
+
+        drawingColor = line.drawingColor
+        drawingShapeType = line.drawingShapeType
+
+        setToDirty()
     }
 
     constructor(point1: Vector2, point2: Vector2) : this(point1.x, point1.y, point2.x, point2.y)
@@ -107,12 +115,16 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
             "local_point_1_y" pairTo localPoint1.y,
             "local_point_2_x" pairTo localPoint2.x,
             "local_point_2_y" pairTo localPoint2.y,
+
             "scale_x" pairTo scaleX,
             "scale_y" pairTo scaleY,
+
             "rotation" pairTo rotation,
+
             "origin_x" pairTo originX,
             "origin_y" pairTo originY
         )
+
         return out
     }
 
@@ -121,23 +133,25 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
         localPoint1.y = props.getOrDefault("local_point_1_y", localPoint1.y, Float::class)
         localPoint2.x = props.getOrDefault("local_point_2_x", localPoint2.x, Float::class)
         localPoint2.y = props.getOrDefault("local_point_2_y", localPoint2.y, Float::class)
+
         scaleX = props.getOrDefault("scale_x", scaleX, Float::class)
         scaleY = props.getOrDefault("scale_y", scaleX, Float::class)
+
         rotation = props.getOrDefault("rotation", rotation, Float::class)
+
         originX = props.getOrDefault("origin_x", originX, Float::class)
         originY = props.getOrDefault("origin_y", originY, Float::class)
+
         return this
     }
 
     fun getRawVertices(out: Array<Float>): Array<Float> {
-        out.clear()
         out.addAll(localPoint1.x, localPoint1.y, localPoint2.x, localPoint2.y)
         return out
     }
 
     fun getTransformedVertices(out: Array<Float>): Array<Float> {
         calculateWorldPoints(reusableVec1, reusableVec2)
-        out.clear()
         out.addAll(reusableVec1.x, reusableVec1.y, reusableVec2.x, reusableVec2.y)
         return out
     }
@@ -444,7 +458,7 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
 
     override fun toString(): String {
         calculateWorldPoints(reusableVec1, reusableVec2)
-        return "GameLine[$reusableVec1, $reusableVec2]"
+        return "GameLine[worldPoints=($reusableVec1, $reusableVec2), localPoints=($localPoint1, $localPoint2)]"
     }
 
     override fun reset() {

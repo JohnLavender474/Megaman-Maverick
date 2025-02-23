@@ -147,25 +147,27 @@ open class GamePolygon() : IGameShape2D, IRotatable, IRotatableShape, Resettable
         return this
     }
 
-    override fun overlaps(other: IGameShape2D): Boolean {
-        return when (other) {
-            is GamePolygon -> Intersector.overlapConvexPolygons(libgdxPolygon, other.libgdxPolygon)
-            is GameRectangle -> {
-                if (tempPolygon == null) tempPolygon = GamePolygon()
-                Intersector.overlapConvexPolygons(libgdxPolygon, other.toPolygon(tempPolygon!!).libgdxPolygon)
-            }
-
-            is GameLine -> {
-                val arr = other.getTransformedVertices(tempFloatArr)
-                if (tempPolygon == null) tempPolygon = GamePolygon()
-                tempPolygon!!.reset()
-                tempPolygon!!.setLocalVertices(arr.toArray().toFloatArray())
-                Intersector.overlapConvexPolygons(libgdxPolygon, tempPolygon!!.libgdxPolygon)
-            }
-
-            is GameCircle -> ShapeUtils.overlaps(other.libgdxCircle, libgdxPolygon)
-            else -> OVERLAP_EXTENSION?.invoke(this, other) == true
+    override fun overlaps(other: IGameShape2D) = when (other) {
+        is GamePolygon -> Intersector.overlapConvexPolygons(libgdxPolygon, other.libgdxPolygon)
+        is GameRectangle -> {
+            if (tempPolygon == null) tempPolygon = GamePolygon()
+            Intersector.overlapConvexPolygons(libgdxPolygon, other.toPolygon(tempPolygon!!).libgdxPolygon)
         }
+
+        is GameLine -> {
+            tempFloatArr.clear()
+            val arr = other.getTransformedVertices(tempFloatArr)
+
+            if (tempPolygon == null) tempPolygon = GamePolygon()
+
+            tempPolygon!!.reset()
+            tempPolygon!!.setLocalVertices(arr.toArray().toFloatArray())
+
+            Intersector.overlapConvexPolygons(libgdxPolygon, tempPolygon!!.libgdxPolygon)
+        }
+
+        is GameCircle -> ShapeUtils.overlaps(other.libgdxCircle, libgdxPolygon)
+        else -> OVERLAP_EXTENSION?.invoke(this, other) == true
     }
 
     override fun getBoundingRectangle(out: GameRectangle) = out.set(libgdxPolygon.boundingRectangle)

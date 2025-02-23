@@ -53,10 +53,9 @@ class Fixture(
         if (adjustedShape == null) adjustedShape = rawShape.copy()
 
         val copy = adjustedShape!!
-
         reusableShapeProps.clear()
-        rawShape.getProps(reusableShapeProps)
-        copy.setWithProps(reusableShapeProps)
+        val props = rawShape.getProps(reusableShapeProps)
+        copy.setWithProps(props)
 
         if (!attachedToBody) return adjustedShape!!
 

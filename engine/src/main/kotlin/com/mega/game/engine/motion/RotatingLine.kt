@@ -10,6 +10,17 @@ class RotatingLine(
     val line = GameLine()
     var degrees = degreesOnReset
 
+    var scaleX: Float
+        get() = line.scaleX
+        set(value) {
+            line.scaleX = value
+        }
+    var scaleY: Float
+        get() = line.scaleY
+        set(value) {
+            line.scaleY = value
+        }
+
     private val out1 = Vector2()
     private val out2 = Vector2()
 
@@ -77,4 +88,8 @@ class RotatingLine(
         line.originX += x
         line.originY += y
     }
+
+    override fun toString() =
+        "RotatingLine[line=$line, degrees=$degrees, origin=${getOrigin(out1)}, endPoint=${getEndPoint(out2)}, " +
+            "scaleX=$scaleX, scaleY=$scaleY]"
 }

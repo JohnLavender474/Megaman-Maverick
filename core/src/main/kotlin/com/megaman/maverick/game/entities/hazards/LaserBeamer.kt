@@ -137,6 +137,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         body.postProcess.put(ConstKeys.DEFAULT) {
             val start = rotatingLine.getStartPoint(outVec)
             laser.setFirstLocalPoint(start)
+            laser.setOrigin(start)
 
             val end = if (contacts.isEmpty()) rotatingLine.getEndPoint(outVec) else contacts.poll()
             laser.setSecondLocalPoint(end)

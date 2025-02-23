@@ -1,76 +1,207 @@
 package com.mega.game.engine.motion
 
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
+import com.mega.game.engine.common.UtilMethods
+import com.mega.game.engine.common.UtilMethods.getRandom
+import com.mega.game.engine.common.shapes.GameLine
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 
-class RotatingLineTest :
-    DescribeSpec({
-        describe("RotatingLine class") {
+class RotatingLineTest : DescribeSpec({
 
-            val out = Vector2()
+    describe("RotatingLine class") {
 
-            it("should calculate endpoint correctly") {
-                // Create a RotatingLine instance
-                val origin = Vector2(0f, 0f)
-                val radius = 5f
-                val speed = 45f
-                val rotatingLine = RotatingLine(origin, radius, speed)
+        val out1 = Vector2()
+        val out2 = Vector2()
+        val out3 = Vector2()
+        val out4 = Vector2()
+        val outFloatArr = Array<Float>()
 
-                // Calculate the expected endpoint position
-                val endpointY = 0f
+        it("should calculate endpoint correctly") {
+            val origin = Vector2(0f, 0f)
+            val radius = 5f
+            val speed = 45f
+            val rotatingLine = RotatingLine(origin, radius, speed)
 
-                // Get the actual endpoint position from the RotatingLine
-                val endpoint = rotatingLine.getEndPoint(out)
+            val endpointY = 0f
 
-                // Compare the actual and expected endpoint positions
-                endpoint.x shouldBe radius
-                endpoint.y shouldBe endpointY
-            }
+            val endpoint = rotatingLine.getEndPoint(out1)
 
-            it("should update rotation angle correctly") {
-                // Create a RotatingLine instance
-                val origin = Vector2(0f, 0f)
-                val radius = 5f
-                val speed = 45f
-                val rotatingLine = RotatingLine(origin, radius, speed)
+            endpoint.x shouldBe radius
+            endpoint.y shouldBe endpointY
+        }
 
-                // Set the initial rotation angle
-                val initialRotation = 30f
-                rotatingLine.degreesOnReset = initialRotation
-                rotatingLine.reset()
+        it("should update rotation angle correctly") {
+            val origin = Vector2(0f, 0f)
+            val radius = 5f
+            val speed = 45f
+            val rotatingLine = RotatingLine(origin, radius, speed)
 
-                // Update the rotation with a time delta
-                val delta = 0.1f
-                val expectedRotation = initialRotation + speed * delta
-                rotatingLine.update(delta)
+            val initialRotation = 30f
+            rotatingLine.degreesOnReset = initialRotation
+            rotatingLine.reset()
 
-                // Check if the rotation angle matches the expected value
-                rotatingLine.degrees shouldBe expectedRotation
-            }
+            val delta = 0.1f
+            val expectedRotation = initialRotation + speed * delta
+            rotatingLine.update(delta)
 
-            it("should translate origin correctly") {
-                // Create a RotatingLine instance
-                val origin = Vector2(0f, 0f)
-                val radius = 5f
-                val speed = 45f
-                val rotatingLine = RotatingLine(origin, radius, speed)
+            rotatingLine.degrees shouldBe expectedRotation
+        }
 
-                // Translate the origin
-                val translateX = 2.5f
-                val translateY = 3.0f
-                rotatingLine.translate(translateX, translateY)
+        it("should translate origin correctly") {
+            val origin = Vector2(0f, 0f)
+            val radius = 5f
+            val speed = 45f
+            val rotatingLine = RotatingLine(origin, radius, speed)
 
-                // Get the actual origin position
-                val originPosition = rotatingLine.getOrigin(out)
+            val translateX = 2.5f
+            val translateY = 3.0f
+            rotatingLine.translate(translateX, translateY)
 
-                // Calculate the expected origin position after translation
-                val expectedOriginX = origin.x + translateX
-                val expectedOriginY = origin.y + translateY
+            val originPosition = rotatingLine.getOrigin(out1)
 
-                // Compare the actual and expected origin positions
-                originPosition.x shouldBe expectedOriginX
-                originPosition.y shouldBe expectedOriginY
+            val expectedOriginX = origin.x + translateX
+            val expectedOriginY = origin.y + translateY
+
+            originPosition.x shouldBe expectedOriginX
+            originPosition.y shouldBe expectedOriginY
+        }
+
+        it("should calculate scaled position correctly") {
+            val origin = Vector2(0f, 0f)
+            val radius = 5f
+            val speed = 45f
+            val rotatingLine = RotatingLine(origin, radius, speed)
+
+            val scalar = 0.5f
+
+            val scaledPosition = rotatingLine.getScaledPosition(scalar, out1)
+
+            val expectedX = origin.x + (radius * scalar)
+            val expectedY = origin.y
+
+            scaledPosition.x shouldBe expectedX
+            scaledPosition.y shouldBe expectedY
+        }
+
+        it("should reset rotation to the initial value") {
+            val origin = Vector2(0f, 0f)
+            val radius = 5f
+            val speed = 45f
+            val rotatingLine = RotatingLine(origin, radius, speed)
+
+            val initialRotation = 30f
+            rotatingLine.degreesOnReset = initialRotation
+            rotatingLine.reset()
+
+            rotatingLine.update(0.1f)
+
+            rotatingLine.reset()
+            rotatingLine.degrees shouldBe initialRotation
+        }
+
+        it("should correctly set and get start and end points") {
+            val origin = Vector2(0f, 0f)
+            val radius = 5f
+            val speed = 45f
+            val rotatingLine = RotatingLine(origin, radius, speed)
+
+            val startPoint = Vector2(0f, 0f)
+            val endPoint = Vector2(radius, 0f)
+
+            rotatingLine.set(startPoint, endPoint)
+
+            val retrievedStartPoint = rotatingLine.getStartPoint(out1)
+            val retrievedEndPoint = rotatingLine.getEndPoint(out2)
+
+            retrievedStartPoint.x shouldBe startPoint.x
+            retrievedStartPoint.y shouldBe startPoint.y
+            retrievedEndPoint.x shouldBe endPoint.x
+            retrievedEndPoint.y shouldBe endPoint.y
+        }
+
+        it("should calculate local points correctly") {
+            val testCount = 10
+            val updatesPerTest = 10
+            val randomVarCount = 4
+            val deltaSupplier: () -> Float = { getRandom(0f, 0.5f, 1f) }
+            val scaleSupplier: (Int) -> Float = { if (it % 2 == 0) 1f else getRandom(0.5f, 2f) }
+            val updateTeardown: () -> Unit = { outFloatArr.clear() }
+
+            (1..testCount).forEach { testNum ->
+                println("Test$testNum: begin ---")
+
+                val randomVars = Array<Float>()
+                (0 until randomVarCount).forEach { randomVars.add(UtilMethods.getRandom(0, 359).toFloat()) }
+                println("Test$testNum: set up randomVars: $randomVars")
+
+                val origin = Vector2(randomVars[0], randomVars[1])
+                val speed = randomVars[2]
+                val radius = randomVars[3]
+                val scaleX = scaleSupplier.invoke(testCount)
+                val scaleY = scaleSupplier.invoke(testCount)
+
+                // Test line (RotatingLine)
+                val rotatingLine = RotatingLine(origin, radius, speed, 0f)
+                rotatingLine.scaleX = scaleX
+                rotatingLine.scaleY = scaleY
+                println("Test$testNum: set up rotatingLine: $rotatingLine")
+
+                // Control line (GameLine: use vars from test line to begin with)
+                val controlLine = GameLine(origin, rotatingLine.getEndPoint(out1))
+                controlLine.setOrigin(origin)
+                controlLine.rotation = 0f
+                controlLine.scaleX = scaleX
+                controlLine.scaleY = scaleY
+                println("Test$testNum: set up controlLine: $controlLine")
+
+                (1..updatesPerTest).forEach { updateNum ->
+                    val delta = deltaSupplier.invoke()
+                    val controlRotationDelta = speed * delta
+                    println("Test$testNum: update$updateNum: delta=$delta, controlRotationDelta=$controlRotationDelta")
+
+                    controlLine.rotation += controlRotationDelta
+                    println("Test$testNum: update$updateNum: conttrolLine after update: $controlLine")
+
+                    rotatingLine.update(delta)
+                    println("Test$testNum: update$updateNum: rotatingLine after update: $rotatingLine")
+
+                    val controlLocalPoint1 = controlLine.getFirstLocalPoint(out1)
+                    val controlLocalPoint2 = controlLine.getSecondLocalPoint(out2)
+                    println(
+                        "Test$testNum: update$updateNum: " +
+                            "controlLocalPoint1=$controlLocalPoint1, " +
+                            "controlLocalPoint2=$controlLocalPoint2"
+                    )
+                    val testLocalPoint1 = rotatingLine.line.getFirstLocalPoint(out3)
+                    val testLocalPoint2 = rotatingLine.line.getSecondLocalPoint(out4)
+                    println(
+                        "Test$testNum: update$updateNum: " +
+                            "testLocalPoint1=$testLocalPoint1, " +
+                            "testLocalPoint2=$testLocalPoint2"
+                    )
+                    testLocalPoint1 shouldBe controlLocalPoint1
+                    testLocalPoint2 shouldBe controlLocalPoint2
+
+                    val controlTransformedVerts = controlLine.getTransformedVertices(outFloatArr)
+                    println("Test$testNum: update$updateNum: controlTransformedVerts=$controlTransformedVerts")
+                    val testTransformedPoint1 = rotatingLine.getOrigin(out1)
+                    val testTransformedPoint2 = rotatingLine.getEndPoint(out2)
+                    println(
+                        "Test$testNum: update$updateNum: " +
+                            "testTransformedPoint1=$testTransformedPoint1 " +
+                            "testTransformedPoint2=$testTransformedPoint2"
+                    )
+                    testTransformedPoint1 shouldBe Vector2(controlTransformedVerts[0], controlTransformedVerts[1])
+                    testTransformedPoint2 shouldBe Vector2(controlTransformedVerts[2], controlTransformedVerts[3])
+
+                    println("Test$testNum: update$updateNum: invoking updateTeardown")
+                    updateTeardown.invoke()
+                }
+
+                println("Test$testNum: end ---\n")
             }
         }
-    })
+    }
+})
