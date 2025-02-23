@@ -1,0 +1,47 @@
+Bits.png
+size: 14, 44
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+fire
+  rotate: false
+  xy: 3, 3
+  size: 8, 2
+  orig: 8, 2
+  offset: 0, 0
+  index: -1
+ice
+  rotate: false
+  xy: 3, 9
+  size: 8, 2
+  orig: 8, 2
+  offset: 0, 0
+  index: -1
+moon
+  rotate: false
+  xy: 3, 15
+  size: 8, 2
+  orig: 8, 2
+  offset: 0, 0
+  index: -1
+rush_jet
+  rotate: false
+  xy: 3, 21
+  size: 8, 2
+  orig: 8, 2
+  offset: 0, 0
+  index: -1
+standard
+  rotate: false
+  xy: 3, 27
+  size: 8, 2
+  orig: 8, 2
+  offset: 0, 0
+  index: -1
+standard_rotated
+  rotate: false
+  xy: 3, 33
+  size: 2, 8
+  orig: 2, 8
+  offset: 0, 0
+  index: -1
