@@ -36,7 +36,8 @@ abstract class AbstractMenuScreen(protected var buttons: ObjectMap<String, IMenu
     override fun render(delta: Float) {
         super.render(delta)
 
-        if (isInteractionAllowed()) buttons[getCurrentButtonKey()]?.let { button ->
+        val key = getCurrentButtonKey()
+        if (isInteractionAllowed() && key != null) buttons[key]?.let { button ->
             getNavigationDirection()?.let {
                 val key = button.onNavigate(it, delta)
                 setCurrentButtonKey(key)

@@ -23,7 +23,7 @@ import com.megaman.maverick.game.screens.utils.Fade
 class LogoScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initializable {
 
     companion object {
-        private const val LOGO_REGION_KEY = "OldLavyLogo"
+        private const val LOGO_REGION_KEY = "logo"
         private const val LOGO_WIDTH = 6.25f
         private const val LOGO_HEIGHT = 2f
 
@@ -95,7 +95,7 @@ class LogoScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initiali
 
         fadeOut = Fade(Fade.FadeType.FADE_OUT, FADE_OUT_DUR)
 
-        val black = game.assMan.getTextureRegion(TextureAsset.UI_1.source, ConstKeys.BLACK)
+        val black = game.assMan.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
         fadeOut.setRegion(black)
         fadeOut.setPosition(0f, 0f)
         fadeOut.setWidth(ConstVals.VIEW_WIDTH * ConstVals.PPM)

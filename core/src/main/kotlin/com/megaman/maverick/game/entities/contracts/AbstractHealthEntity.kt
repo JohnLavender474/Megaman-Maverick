@@ -56,8 +56,9 @@ abstract class AbstractHealthEntity(
         wasHealthDepleted = false
     }
 
-    override fun canBeDamagedBy(damager: IDamager) = !invincible && (damageOverrides.containsKey(damager::class) ||
-        (damageNegotiator != null && damageNegotiator!!.get(damager) != 0))
+    override fun canBeDamagedBy(damager: IDamager) = !invincible &&
+        (damageOverrides.containsKey(damager::class) ||
+            (damageNegotiator != null && damageNegotiator!!.get(damager) != 0))
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
         val negotiation = when {
@@ -112,6 +113,7 @@ abstract class AbstractHealthEntity(
                         damageBlink = !damageBlink
                     }
                 }
+
                 else -> damageBlink = false
             }
         }

@@ -185,8 +185,9 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 if (timer.isFinished()) stateMachine.next()
             }
 
-            if (!currentState.equalsAny(SniperJoeState.JUMP, SniperJoeState.TURN) &&
-                (shouldStartTurning() || shouldStartJumping())
+            if ((currentState == SniperJoeState.JUMP && shouldEndJumping()) ||
+                (!currentState.equalsAny(SniperJoeState.JUMP, SniperJoeState.TURN) &&
+                    (shouldStartTurning() || shouldStartJumping()))
             ) stateMachine.next()
         }
     }
@@ -343,20 +344,20 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             body.physics.velocity.y <= 0f &&
             when (direction) {
                 Direction.UP -> megaman.body.getY() > body.getMaxY() &&
-                    megaman.body.getX() >= body.getX() &&
-                    megaman.body.getMaxX() <= body.getMaxX()
+                    megaman.body.getX() <= body.getMaxX() &&
+                    megaman.body.getMaxX() >= body.getX()
 
                 Direction.DOWN -> megaman.body.getMaxY() < body.getY() &&
-                    megaman.body.getX() >= body.getX() &&
-                    megaman.body.getMaxX() <= body.getMaxX()
+                    megaman.body.getX() <= body.getMaxX() &&
+                    megaman.body.getMaxX() >= body.getX()
 
                 Direction.LEFT -> megaman.body.getMaxX() < body.getX() &&
-                    megaman.body.getY() >= body.getY() &&
-                    megaman.body.getMaxY() <= body.getMaxY()
+                    megaman.body.getY() <= body.getMaxY() &&
+                    megaman.body.getMaxY() >= body.getY()
 
                 Direction.RIGHT -> megaman.body.getX() > body.getMaxX() &&
-                    megaman.body.getY() >= body.getY() &&
-                    megaman.body.getMaxY() <= body.getMaxY()
+                    megaman.body.getY() <= body.getMaxY() &&
+                    megaman.body.getMaxY() >= body.getY()
             }
 
     private fun jump() {
@@ -377,10 +378,10 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     private fun shoot() {
         val spawn = GameObjectPools.fetch(Vector2::class)
         when (direction) {
-            Direction.UP -> spawn.set(0.5f * facing.value, -0.1f)
-            Direction.DOWN -> spawn.set(0.5f * facing.value, 0.1f)
-            Direction.LEFT -> spawn.set(0.1f, 0.5f * facing.value)
-            Direction.RIGHT -> spawn.set(-0.1f, -0.5f * facing.value)
+            Direction.UP -> spawn.set(0.75f * facing.value, -0.15f)
+            Direction.DOWN -> spawn.set(0.75f * facing.value, 0.15f)
+            Direction.LEFT -> spawn.set(0.15f, 0.75f * facing.value)
+            Direction.RIGHT -> spawn.set(-0.15f, -0.75f * facing.value)
         }
         spawn.scl(ConstVals.PPM.toFloat()).add(body.getCenter())
 

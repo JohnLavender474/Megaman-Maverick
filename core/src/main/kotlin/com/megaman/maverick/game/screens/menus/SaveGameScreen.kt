@@ -12,6 +12,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
+import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
 import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
@@ -60,7 +61,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
             override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                 Direction.UP -> MAIN_MENU
                 Direction.DOWN -> CONTINUE
-                else -> null
+                else -> getCurrentButtonKey()
             }
 
             override fun onSelect(delta: Float): Boolean {
@@ -75,11 +76,17 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
             override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                 Direction.UP -> SAVE
                 Direction.DOWN -> MAIN_MENU
-                else -> null
+                else -> getCurrentButtonKey()
             }
 
             override fun onSelect(delta: Float): Boolean {
-                game.setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name)
+                when {
+                    game.state.isLevelDefeated(LevelDefinition.INTRO_STAGE) ->
+                        game.setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name)
+
+                    else -> game.startLevelScreen(LevelDefinition.INTRO_STAGE)
+                }
+
                 return true
             }
         })
@@ -89,7 +96,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
             override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                 Direction.UP -> CONTINUE
                 Direction.DOWN -> SAVE
-                else -> null
+                else -> getCurrentButtonKey()
             }
 
             override fun onSelect(delta: Float): Boolean {

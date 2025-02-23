@@ -40,7 +40,7 @@ class PlayerDeathEventHandler(private val game: MegamanMaverickGame) : Initializ
 
         deathTimer.reset()
 
-        val black = game.assMan.getTextureRegion(TextureAsset.UI_1.source, ConstKeys.BLACK)
+        val black = game.assMan.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
         fadeout.setRegion(black)
         fadeout.reset()
 

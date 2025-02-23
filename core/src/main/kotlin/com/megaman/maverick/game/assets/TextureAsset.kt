@@ -53,7 +53,8 @@ enum class TextureAsset(src: String) : IAsset {
     FREEZER_MAN("FreezerMan.txt"),
     PRECIOUS_MAN("PreciousMan.txt"),
     MICROWAVE_MAN("MicrowaveMan.txt"),
-    TEST("Test.txt");
+    TEST("Test.txt"),
+    BITS("Bits.txt");
 
     companion object {
         fun valuesAsIAssetArray(): Array<IAsset> {

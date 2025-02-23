@@ -288,13 +288,6 @@
   </object>
   <object id="575" name="Furnace" x="11360" y="704" width="64" height="64"/>
   <object id="576" name="Furnace" x="11584" y="704" width="64" height="64"/>
-  <object id="597" name="Smoke" x="10592" y="384" width="96" height="1408"/>
-  <object id="598" name="LavaFall" x="10464" y="384" width="64" height="1408">
-   <polygon points="0,0 64,0 64,1408 0,1408"/>
-  </object>
-  <object id="599" name="LavaFall" x="10816" y="384" width="64" height="1408">
-   <polygon points="0,0 64,0 64,1408 0,1408"/>
-  </object>
  </objectgroup>
  <objectgroup id="12" name="children">
   <object id="62" name="Target" x="2512" y="2768" width="32" height="32"/>

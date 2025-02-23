@@ -161,7 +161,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
             )
         )
 
-        val arrowRegion = game.assMan.getTextureRegion(TextureAsset.UI_1.source, "Arrow")
+        val arrowRegion = game.assMan.getTextureRegion(TextureAsset.UI_1.source, ConstKeys.ARROW)
         var y = 9.8f
         for (i in 0 until 4) {
             if (i != 0 && i % 2 == 0) y -= 0.85f

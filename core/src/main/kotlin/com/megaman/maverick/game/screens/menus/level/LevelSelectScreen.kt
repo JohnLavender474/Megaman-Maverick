@@ -106,7 +106,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
             return
         }
 
-        val blackRegion = game.assMan.getTextureRegion(TextureAsset.UI_1.source, ConstKeys.BLACK)
+        val blackRegion = game.assMan.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
         regions.put(ConstKeys.BLACK, blackRegion)
 
         val levelSelectScreenAtlas = game.assMan.getTextureAtlas(TextureAsset.LEVEL_SELECT_SCREEN.source)

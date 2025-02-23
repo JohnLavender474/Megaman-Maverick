@@ -27,6 +27,8 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.IProjectileEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.SnowballExplosion
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.world.body.*
@@ -72,7 +74,8 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
     override fun hitWater(waterFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
     override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        if (projectileFixture.getEntity() != owner) explodeAndDie()
+        val projectile = projectileFixture.getEntity() as IProjectileEntity
+        if (projectile.owner == megaman) explodeAndDie()
     }
 
     override fun explodeAndDie(vararg params: Any?) {

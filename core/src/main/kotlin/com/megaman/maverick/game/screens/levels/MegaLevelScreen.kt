@@ -245,8 +245,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             game.putProperty(ConstKeys.ROOM_TRANSITION, true)
 
             val roomProps = current.properties.toProps()
-
-            if (roomProps.containsKey(ConstKeys.BOSS) && !roomProps.isProperty(ConstKeys.MINI, true))
+            if (roomProps.isProperty(ConstKeys.EVENT, ConstKeys.BOSS) && !roomProps.isProperty(ConstKeys.MINI, true))
                 audioMan.fadeOutMusic(FADE_OUT_MUSIC_ON_BOSS_SPAWN)
         }
         cameraManagerForRooms.continueTransition = {

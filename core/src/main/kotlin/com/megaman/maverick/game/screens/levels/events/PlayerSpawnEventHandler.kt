@@ -89,7 +89,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
                 priority = DrawingPriority(DrawingSection.FOREGROUND, 15)
             )
 
-            val black = game.assMan.getTextureRegion(TextureAsset.UI_1.source, ConstKeys.BLACK)
+            val black = game.assMan.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
             fadein.setRegion(black)
 
             initialized = true

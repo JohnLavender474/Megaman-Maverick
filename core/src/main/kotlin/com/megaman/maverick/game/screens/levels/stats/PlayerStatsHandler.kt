@@ -17,7 +17,7 @@ import com.mega.game.engine.events.Event
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.SoundAsset
-import com.megaman.maverick.game.drawables.ui.LargeBitsBar
+import com.megaman.maverick.game.drawables.ui.BitsBar
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
@@ -29,7 +29,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
 
     companion object {
         const val TAG = "PlayerStatsHandler"
-
+        private const val RUSH_JET = "rush_jet"
         private const val SPECIAL_ITEM_DUR = 0.5f
     }
 
@@ -41,8 +41,8 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
 
     private val timerQueue = Queue<Timer>()
 
-    private lateinit var healthBar: LargeBitsBar
-    private lateinit var weaponBarSupplier: () -> LargeBitsBar?
+    private lateinit var healthBar: BitsBar
+    private lateinit var weaponBarSupplier: () -> BitsBar?
 
     private var initialized = false
 
@@ -54,30 +54,28 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
 
         GameLogger.debug(TAG, "init()")
 
-        healthBar = LargeBitsBar(
+        healthBar = BitsBar(
             assMan,
-            "Bit",
+            ConstKeys.STANDARD,
             ConstVals.HEALTH_BAR_X * ConstVals.PPM,
             ConstVals.STATS_BAR_Y * ConstVals.PPM,
             { megaman.getHealthPoints().current },
             { megaman.getHealthPoints().max })
         healthBar.init()
 
-        val weaponBars = ObjectMap<MegamanWeapon, LargeBitsBar>()
+        val weaponBars = ObjectMap<MegamanWeapon, BitsBar>()
         MegamanWeapon.entries.forEach {
             if (it == MegamanWeapon.MEGA_BUSTER) return@forEach
 
-            // TODO: set bit region source dynamically
-            val bitSource = "RedBit"
-            /*
             val bitSource = when (it) {
-                // TODO: MegamanWeapon.RUSH_JETPACK -> "RedBit"
-                // TODO: MegamanWeapon.FLAME_TOSS -> "OrangeBit"
+                MegamanWeapon.MOON_SCYTHE -> ConstKeys.MOON
+                MegamanWeapon.FIRE_BALL -> ConstKeys.FIRE
+                MegamanWeapon.ICE_CUBE -> ConstKeys.ICE
+                MegamanWeapon.RUSH_JETPACK -> RUSH_JET
                 else -> throw IllegalStateException("No bit source for weapon $it")
             }
-             */
 
-            val weaponBar = LargeBitsBar(
+            val weaponBar = BitsBar(
                 assMan,
                 bitSource,
                 ConstVals.WEAPON_BAR_X * ConstVals.PPM,

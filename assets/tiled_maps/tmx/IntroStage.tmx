@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="350" height="60" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="167">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="350" height="60" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="174">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <layer id="14" name="tiles4" width="350" height="60">
   <data encoding="csv">
@@ -518,7 +518,6 @@
    </properties>
   </object>
   <object id="73" name="SniperJoe" x="4568" y="752" width="16" height="16"/>
-  <object id="74" name="SniperJoe" x="4632" y="592" width="16" height="16"/>
   <object id="86" name="SuctionRoller" x="5560" y="720" width="16" height="16"/>
   <object id="95" name="SniperJoe" x="6648" y="1136" width="16" height="16"/>
   <object id="96" name="SniperJoe" x="5880" y="656" width="16" height="16"/>
@@ -543,6 +542,20 @@
   </object>
   <object id="157" name="SuctionRoller" x="608" y="1696" width="32" height="32"/>
   <object id="158" name="SuctionRoller" x="1280" y="1536" width="32" height="32"/>
+  <object id="167" name="DragonFly" x="4248" y="1336" width="16" height="16"/>
+  <object id="168" name="DragonFly" x="8984" y="888" width="16" height="16"/>
+  <object id="169" name="DragonFly" x="1560" y="1336" width="16" height="16"/>
+  <object id="170" name="DragonFly" x="4792" y="1368" width="16" height="16"/>
+  <object id="171" name="ShieldAttacker" x="4600" y="536" width="16" height="16">
+   <properties>
+    <property name="value" type="float" value="-5"/>
+   </properties>
+  </object>
+  <object id="173" name="ShieldAttacker" x="1880" y="1656" width="16" height="16">
+   <properties>
+    <property name="value" type="float" value="-5"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="13" name="temp">
   <object id="147" name="0" x="9472" y="1120" width="32" height="32"/>

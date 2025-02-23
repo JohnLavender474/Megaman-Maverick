@@ -9,7 +9,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
-import com.megaman.maverick.game.screens.ScreenEnum
+import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
 
 class SimpleInitGameScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initializable {
@@ -59,8 +59,8 @@ class SimpleInitGameScreen(private val game: MegamanMaverickGame) : BaseScreen()
         if (game.controllerPoller.isAnyJustReleased(START_BUTTONS)) {
             GameLogger.debug(TAG, "render(): set to next screen")
             game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
-            game.setCurrentScreen(ScreenEnum.LOGO_SCREEN.name)
-            // game.startLevelScreen(LevelDefinition.TEST_1)
+            // game.setCurrentScreen(ScreenEnum.LOGO_SCREEN.name)
+            game.startLevelScreen(LevelDefinition.TEST_1)
         }
     }
 }

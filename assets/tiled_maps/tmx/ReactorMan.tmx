@@ -795,8 +795,6 @@
    </properties>
   </object>
   <object id="33" name="SwinginJoe" x="1704" y="1680" width="16" height="16"/>
-  <object id="35" name="DragonFly" x="2040" y="1488" width="16" height="16"/>
-  <object id="38" name="DragonFly" x="2360" y="1488" width="16" height="16"/>
   <object id="65" name="ToxicBarrelBot" x="3304" y="1712" width="16" height="16"/>
   <object id="66" name="Bat" x="3512" y="1536" width="16" height="16"/>
   <object id="70" name="RollingBot" x="4080" y="1776" width="16" height="16"/>
@@ -813,7 +811,6 @@
   <object id="134" name="SwinginJoe" x="3856" y="976" width="16" height="16"/>
   <object id="135" name="SwinginJoe" x="2456" y="1712" width="16" height="16"/>
   <object id="150" name="ToxicBarrelBot" x="3912" y="1264" width="16" height="16"/>
-  <object id="153" name="DragonFly" x="1824" y="1488" width="16" height="16"/>
   <object id="160" name="TankBot" x="5296" y="688" width="16" height="16"/>
   <object id="161" name="SwinginJoe" x="4632" y="656" width="16" height="16"/>
   <object id="164" name="UFOhNoBot" x="4776" y="632" width="16" height="16">

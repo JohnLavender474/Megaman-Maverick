@@ -456,15 +456,19 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 Direction.UP, Direction.DOWN -> {
                     body.setCenterX(ladder.body.getCenter().x)
 
-                    if (body.getMaxY() <= ladder.body.getY()) body.setY(ladder.body.getY())
-                    else if (body.getY() >= ladder.body.getMaxY()) body.setMaxY(ladder.body.getMaxY())
+                    when {
+                        body.getMaxY() <= ladder.body.getY() -> body.setY(ladder.body.getY())
+                        body.getY() >= ladder.body.getMaxY() -> body.setMaxY(ladder.body.getMaxY())
+                    }
                 }
 
                 Direction.LEFT, Direction.RIGHT -> {
                     body.setCenterY(ladder.body.getCenter().y)
 
-                    if (body.getMaxX() <= ladder.body.getX()) body.setX(ladder.body.getX())
-                    else if (body.getX() >= ladder.body.getMaxX()) body.setMaxX(ladder.body.getMaxX())
+                    when {
+                        body.getMaxX() <= ladder.body.getX() -> body.setX(ladder.body.getX())
+                        body.getX() >= ladder.body.getMaxX() -> body.setMaxX(ladder.body.getMaxX())
+                    }
                 }
             }
             body.physics.velocity.setZero()
@@ -473,12 +477,11 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         override fun act(delta: Float) {
             when (direction) {
                 Direction.UP, Direction.DOWN -> body.setCenterX(ladder.body.getCenter().x)
-
                 Direction.LEFT, Direction.RIGHT -> body.setCenterY(ladder.body.getCenter().y)
             }
 
             if (shooting || game.isProperty(ConstKeys.ROOM_TRANSITION, true)) {
-                GameLogger.debug(MEGAMAN_CLIMB_BEHAVIOR_TAG, "Shooting or room transition")
+                GameLogger.debug(MEGAMAN_CLIMB_BEHAVIOR_TAG, "shooting or room transition")
                 body.physics.velocity.setZero()
                 return
             }
@@ -538,6 +541,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     else -> velocity.setZero()
                 }
             }.scl(ConstVals.PPM * movementScalar)
+
             body.physics.velocity.set(velocity)
         }
 
@@ -556,7 +560,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             if (dead || !ready || !canMove || damaged || teleporting || currentWeapon != MegamanWeapon.RUSH_JETPACK ||
                 !game.controllerPoller.areAllPressed(gdxArrayOf(MegaControllerButton.A, MegaControllerButton.UP)) ||
                 isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.AIR_DASHING, BehaviorType.GROUND_SLIDING) ||
-                body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.IN_WATER) ||
                 weaponsHandler.isDepleted(MegamanWeapon.RUSH_JETPACK)
             ) return false
 

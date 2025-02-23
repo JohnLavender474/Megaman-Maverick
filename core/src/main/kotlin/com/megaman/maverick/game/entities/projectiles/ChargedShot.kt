@@ -138,12 +138,12 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
-        if (damageable !is IHealthEntity || damageable.getCurrentHealth() > ConstVals.MIN_HEALTH) explodeAndDie()
+        if (damageable !is IHealthEntity || damageable.getCurrentHealth() > damageable.getMinHealth()) explodeAndDie()
     }
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = bodyFixture.getEntity()
-        if (entity != owner && entity is IDamageable && !entity.dead && !entity.canBeDamagedBy(this)) explodeAndDie()
+        if (entity != owner && !entity.dead && entity is IDamageable && !entity.canBeDamagedBy(this)) explodeAndDie()
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
@@ -205,8 +205,6 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
 
-        val e = MegaEntityFactory.fetch(ChargedShotExplosion::class)!!
-
         val direction = when {
             abs(trajectory.y) > abs(trajectory.x) -> (if (trajectory.y > 0f) Direction.UP else Direction.DOWN)
             trajectory.x > 0f -> Direction.RIGHT
@@ -215,12 +213,13 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
         val props = props(
             ConstKeys.OWNER pairTo owner,
-            ConstKeys.POSITION pairTo body.getCenter(),
             ConstKeys.DIRECTION pairTo direction,
             ConstKeys.BOOLEAN pairTo fullyCharged,
+            ConstKeys.POSITION pairTo body.getCenter()
         )
 
-        e.spawn(props)
+        val explosion = MegaEntityFactory.fetch(ChargedShotExplosion::class)!!
+        explosion.spawn(props)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({

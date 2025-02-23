@@ -123,7 +123,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.COLORS.source, "Black")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
         addComponent(SpritesComponent())
         addComponent(defineCullablesComponent())
         addComponent(defineUpdatablesComponent())

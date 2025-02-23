@@ -1,130 +1,144 @@
 LevelPauseScreen.png
-size: 776, 1808
+size: 1550, 1130
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 background
   rotate: false
-  xy: 2, 2
+  xy: 2, 680
   size: 512, 448
   orig: 512, 448
   offset: 0, 0
   index: -1
 enhancements/enhancements
   rotate: false
-  xy: 516, 2
+  xy: 2, 2
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 health_tanks/a
   rotate: false
-  xy: 2, 452
+  xy: 260, 2
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 health_tanks/a_selected
   rotate: false
-  xy: 260, 452
+  xy: 518, 2
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 health_tanks/b
   rotate: false
-  xy: 518, 452
+  xy: 776, 2
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 health_tanks/b_selected
   rotate: false
-  xy: 2, 678
+  xy: 1034, 2
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 health_tanks/c
   rotate: false
-  xy: 260, 678
+  xy: 1292, 2
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 health_tanks/c_selected
   rotate: false
-  xy: 518, 678
+  xy: 2, 228
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 health_tanks/d
   rotate: false
-  xy: 2, 904
+  xy: 260, 228
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 health_tanks/d_selected
   rotate: false
-  xy: 260, 904
+  xy: 518, 228
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
+options/exit
+  rotate: false
+  xy: 516, 680
+  size: 512, 448
+  orig: 512, 448
+  offset: 0, 0
+  index: -1
+options/exit_selected
+  rotate: false
+  xy: 1030, 680
+  size: 512, 448
+  orig: 512, 448
+  offset: 0, 0
+  index: -1
 weapons/fire_ball
   rotate: false
-  xy: 518, 904
+  xy: 776, 228
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/fire_ball_selected
   rotate: false
-  xy: 2, 1130
+  xy: 1034, 228
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/mega_buster
   rotate: false
-  xy: 260, 1130
+  xy: 1292, 228
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/mega_buster_selected
   rotate: false
-  xy: 518, 1130
+  xy: 2, 454
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/moon_scythe
   rotate: false
-  xy: 2, 1356
+  xy: 260, 454
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/moon_scythe_selected
   rotate: false
-  xy: 260, 1356
+  xy: 518, 454
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/rush_jetpack
   rotate: false
-  xy: 518, 1356
+  xy: 776, 454
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/rush_jetpack_selected
   rotate: false
-  xy: 2, 1582
+  xy: 1034, 454
   size: 256, 224
   orig: 256, 224
   offset: 0, 0

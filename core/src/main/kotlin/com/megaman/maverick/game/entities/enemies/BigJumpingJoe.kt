@@ -39,11 +39,11 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -100,13 +100,13 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
         addComponent(defineAnimationsComponent())
         runnablesOnDestroy.put(ConstKeys.CHILD) {
             if (isHealthDepleted()) {
-                val sniperJoe = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.SNIPER_JOE)!!
+                val joe = MegaEntityFactory.fetch(SniperJoe::class)!!
                 val spawnProps = props(
                     ConstKeys.POSITION pairTo body.getCenter().add(
                         0.15f * ConstVals.PPM * facing.value, 0.15f * ConstVals.PPM
                     )
                 )
-                sniperJoe.spawn(spawnProps)
+                joe.spawn(spawnProps)
             }
         }
     }

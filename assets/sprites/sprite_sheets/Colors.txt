@@ -3,28 +3,28 @@ size: 225, 489
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-Black
+black
   rotate: false
   xy: 0, 0
   size: 200, 200
   orig: 200, 200
   offset: 0, 0
   index: -1
-Blue
+blue
   rotate: false
   xy: 0, 200
   size: 225, 225
   orig: 225, 225
   offset: 0, 0
   index: -1
-DarkBlue
+dark_blue
   rotate: false
   xy: 0, 425
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-White
+white
   rotate: false
   xy: 32, 425
   size: 64, 64

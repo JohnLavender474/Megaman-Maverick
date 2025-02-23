@@ -47,6 +47,10 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val MOON = "moon"
+    const val FIRE = "fire"
+    const val OPTIONS = "options"
+    const val EXIT = "exit"
     const val LEVEL = "level"
     const val DEF = "def"
     const val SELECTOR = "selector"
@@ -289,6 +293,7 @@ object ConstKeys {
     const val PARENT = "parent"
     const val GRAVITY = "gravity"
     const val ROTATABLE = "rotatable"
+    const val ROTATED = "rotated"
     const val GRAVITY_ROTATABLE = "${GRAVITY}_${ROTATABLE}"
     const val HAZARDS = "hazards"
     const val PPM = "ppm"

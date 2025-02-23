@@ -3,7 +3,6 @@ package com.megaman.maverick.game.world.contacts
 import com.badlogic.gdx.math.Intersector
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
@@ -67,7 +66,7 @@ class MegaContactListener(
     private val out = GamePair<IFixture, IFixture>(DummyFixture(), DummyFixture())
     private val set1 = ObjectSet<Any>()
     private val set2 = ObjectSet<Any>()
-    private val tempVec2Arr = Array<Vector2>()
+    private val tempVec2Set = ObjectSet<Vector2>()
 
     override fun beginContact(contact: Contact, delta: Float) {
         // consumer
@@ -724,10 +723,10 @@ class MegaContactListener(
 
                 val intersections = laserFixture.getProperty(ConstKeys.COLLECTION) as MutableCollection<Vector2>
 
-                if (ShapeUtils.intersectRectangleAndLine(blockRectangle, laserLine, tempVec2Arr))
-                    intersections.addAll(tempVec2Arr)
+                if (ShapeUtils.intersectRectangleAndLine(blockRectangle, laserLine, tempVec2Set))
+                    intersections.addAll(tempVec2Set)
 
-                tempVec2Arr.clear()
+                tempVec2Set.clear()
             }
         }
 
@@ -1108,10 +1107,10 @@ class MegaContactListener(
 
                 val intersections = laserFixture.getProperty(ConstKeys.COLLECTION) as MutableCollection<Vector2>
 
-                if (ShapeUtils.intersectRectangleAndLine(blockRectangle, laserLine, tempVec2Arr))
-                    intersections.addAll(tempVec2Arr)
+                if (ShapeUtils.intersectRectangleAndLine(blockRectangle, laserLine, tempVec2Set))
+                    intersections.addAll(tempVec2Set)
 
-                tempVec2Arr.clear()
+                tempVec2Set.clear()
             }
         }
 

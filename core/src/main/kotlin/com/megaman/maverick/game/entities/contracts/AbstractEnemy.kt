@@ -57,18 +57,27 @@ abstract class AbstractEnemy(
         const val DEFAULT_CULL_TIME = 1f
         const val MEGAMAN_HEALTH_INFLUENCE_FACTOR = 0.25f
 
-        const val LIFE_CHANCE = 10
+        const val LIVES_THRESHOLD = 3
+        const val LOW_LIFE_CHANCE = 5
+        const val HIGH_LIFE_CHANCE = 15
+
         const val SCREW_CHANCE = 50
+
         const val HEALTH_CHANCE = 25
         const val WEAPON_CHANCE = 50
 
         const val LARGE_ITEM_CHANCE = 25
 
         private val DROP_ENTITIES = gdxArrayOf<GamePair<KClass<out MegaGameEntity>, (AbstractEnemy) -> Number>>(
-            Life::class pairTo { LIFE_CHANCE },
+            Life::class pairTo { it ->
+                when {
+                    it.megaman.lives.current < LIVES_THRESHOLD -> HIGH_LIFE_CHANCE
+                    else -> LOW_LIFE_CHANCE
+                }
+            },
             Screw::class pairTo { SCREW_CHANCE },
-            HealthBulb::class pairTo chance@{ enemy ->
-                val megaman = enemy.megaman
+            HealthBulb::class pairTo chance@{ it ->
+                val megaman = it.megaman
                 val playerHealthModifier = 100 - (100 * megaman.getHealthRatio())
                 return@chance HEALTH_CHANCE + (playerHealthModifier * MEGAMAN_HEALTH_INFLUENCE_FACTOR)
             },

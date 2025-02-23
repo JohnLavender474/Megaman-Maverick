@@ -47,7 +47,7 @@ class IceCubeMaker(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     companion object {
         const val TAG = "IceCubeMaker"
-        private const val DELAY_TIME = 1.5f
+        private const val DELAY_TIME = 2f
         private var region: TextureRegion? = null
     }
 

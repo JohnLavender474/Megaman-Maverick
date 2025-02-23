@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="1200" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="365">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="1200" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="367">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/Gravity Man Stage.tsx"/>
  <tileset firstgid="4609" source="../tsx/MM3Wily1.tsx"/>
@@ -489,6 +489,7 @@
     <property name="type" value="r"/>
    </properties>
   </object>
+  <object id="365" name="LaserBeamer" x="34616" y="152" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="12" name="projectiles">
   <object id="282" name="FallingIcicle" x="32272" y="96" width="32" height="32"/>
@@ -688,7 +689,7 @@
   <object id="364" name="SniperJoe" x="36216" y="400" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="4" name="player">
-  <object id="360" name="0" x="35968" y="384" width="32" height="32">
+  <object id="360" name="0" x="34160" y="352" width="32" height="32">
    <properties>
     <property name="direction" value="up"/>
    </properties>

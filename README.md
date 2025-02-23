@@ -158,6 +158,7 @@ comprehensive listing of the credits for the artwork used in this game.
   - Astro (Ass) Assaulter
   - Staged Moon Landing Flag
   - Lumber Joe (original by MegaRed225)
+  - Cactus
 - [MegaRed225](https://www.deviantart.com/megared225/gallery):
   - [Random Enemies Set 1](https://www.deviantart.com/megared225/art/Random-Enemies-Set-1-517309440)
     - Toriko Plundge 

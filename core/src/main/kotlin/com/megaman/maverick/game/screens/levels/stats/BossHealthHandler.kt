@@ -6,10 +6,11 @@ import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.IDrawable
+import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
-import com.megaman.maverick.game.drawables.ui.LargeBitsBar
+import com.megaman.maverick.game.drawables.ui.BitsBar
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.utils.misc.HealthFillType
 
@@ -23,7 +24,7 @@ class BossHealthHandler(private val game: MegamanMaverickGame) : IDrawable<Batch
 
     private var entity: IHealthEntity? = null
     private var timer: Timer? = null
-    private var bar: LargeBitsBar? = null
+    private var bar: BitsBar? = null
     private var temp = 0
 
     override fun draw(drawer: Batch) {
@@ -43,9 +44,9 @@ class BossHealthHandler(private val game: MegamanMaverickGame) : IDrawable<Batch
         this.entity = entity
         temp = 0
 
-        bar = LargeBitsBar(
+        bar = BitsBar(
             game.assMan,
-            "Bit",
+            ConstKeys.STANDARD,
             (ConstVals.VIEW_WIDTH - (ConstVals.HEALTH_BAR_X + ConstVals.STAT_BIT_WIDTH)) * ConstVals.PPM,
             ConstVals.STATS_BAR_Y * ConstVals.PPM,
             { health },

@@ -9,138 +9,139 @@ import io.mockk.clearAllMocks
 import io.mockk.spyk
 import io.mockk.verify
 
-class MenuScreenTest :
-    DescribeSpec({
-        describe("MenuScreen") {
-            lateinit var pauseSupplier: () -> Boolean
-            lateinit var standardMenuScreen: StandardMenuScreen
+class MenuScreenTest : DescribeSpec({
 
-            var direction: Direction?
-            var selectionRequested: Boolean
-            var onAnyMovement = false
+    describe("MenuScreen") {
 
-            val firstButtonKey = "firstButtonKey"
-            val secondButtonKey = "secondButtonKey"
-            val buttons =
-                objectMapOf(
-                    firstButtonKey pairTo
-                            spyk(
-                                object : IMenuButton {
-                                    override fun onSelect(delta: Float) = true
+        lateinit var standardMenuScreen: StandardMenuScreen
 
-                                    override fun onNavigate(direction: Direction, delta: Float) =
-                                        secondButtonKey
-                                }),
-                    secondButtonKey pairTo
-                            spyk(
-                                object : IMenuButton {
-                                    override fun onSelect(delta: Float) = false
+        var direction: Direction?
+        var selectionRequested: Boolean
+        var onAnyMovement = false
 
-                                    override fun onNavigate(direction: Direction, delta: Float) =
-                                        firstButtonKey
-                                })
-                )
-
-            beforeEach {
-                clearAllMocks()
-
-                direction = null
-                selectionRequested = false
-                onAnyMovement = false
-
-                pauseSupplier = { false }
-
-                standardMenuScreen =
+        val firstButtonKey = "firstButtonKey"
+        val secondButtonKey = "secondButtonKey"
+        val buttons =
+            objectMapOf(
+                firstButtonKey pairTo
                     spyk(
-                        object : StandardMenuScreen(buttons, pauseSupplier, firstButtonKey) {
+                        object : IMenuButton {
+                            override fun onSelect(delta: Float) = true
 
-                            override fun onAnyMovement(direction: Direction) {
-                                onAnyMovement = true
-                            }
+                            override fun onNavigate(direction: Direction, delta: Float) =
+                                secondButtonKey
+                        }),
+                secondButtonKey pairTo
+                    spyk(
+                        object : IMenuButton {
+                            override fun onSelect(delta: Float) = false
 
-                            override fun getNavigationDirection() = direction
-
-                            override fun selectionRequested() = selectionRequested
-
-                            override fun resize(width: Int, height: Int) {}
-
-                            override fun pause() {}
-
-                            override fun resume() {}
-
-                            override fun hide() {}
-
-                            override fun dispose() {}
+                            override fun onNavigate(direction: Direction, delta: Float) =
+                                firstButtonKey
                         })
-            }
+            )
 
-            it("should show the menu screen correctly") {
+        beforeEach {
+            clearAllMocks()
+
+            direction = null
+            selectionRequested = false
+            onAnyMovement = false
+
+            standardMenuScreen = spyk(
+                object : StandardMenuScreen(buttons, firstButtonKey) {
+
+                    init {
+                        setCurrentButtonKey(firstButtonKey)
+                    }
+
+                    override fun onAnyMovement(direction: Direction) {
+                        onAnyMovement = true
+                    }
+
+                    override fun getNavigationDirection() = direction
+
+                    override fun selectionRequested() = selectionRequested
+
+                    override fun resize(width: Int, height: Int) {}
+
+                    override fun pause() {}
+
+                    override fun resume() {}
+
+                    override fun hide() {}
+
+                    override fun dispose() {}
+                })
+        }
+
+        it("should show the menu screen correctly") {
+            // when
+            standardMenuScreen.show()
+
+            // then
+            standardMenuScreen.selectionMade shouldBe false
+            standardMenuScreen.getCurrentButtonKey() shouldBe firstButtonKey
+        }
+
+        describe("renderLevelMap") {
+            it("should renderLevelMap the menu screen correctly") {
                 // when
-                standardMenuScreen.show()
+                standardMenuScreen.render(0.0f)
 
                 // then
                 standardMenuScreen.selectionMade shouldBe false
-                standardMenuScreen.buttonKey shouldBe firstButtonKey
+                standardMenuScreen.getCurrentButtonKey() shouldBe firstButtonKey
             }
 
-            describe("renderLevelMap") {
-                it("should renderLevelMap the menu screen correctly") {
-                    // when
-                    standardMenuScreen.render(0.0f)
+            it("should call button 1 navigation") {
+                // if
+                direction = Direction.UP
 
-                    // then
-                    standardMenuScreen.selectionMade shouldBe false
-                    standardMenuScreen.buttonKey shouldBe firstButtonKey
-                }
+                // when
+                standardMenuScreen.render(0.0f)
 
-                it("should call button 1 navigation") {
-                    // if
-                    direction = Direction.UP
+                // then
+                standardMenuScreen.selectionMade shouldBe false
+                standardMenuScreen.getCurrentButtonKey() shouldBe secondButtonKey
+                verify(exactly = 1) { buttons[firstButtonKey]?.onNavigate(Direction.UP, 0.0f) }
+                verify(exactly = 0) { buttons[secondButtonKey]?.onNavigate(Direction.DOWN, 0.0f) }
+                verify(exactly = 0) { buttons[secondButtonKey]?.onSelect(0.0f) }
+                onAnyMovement shouldBe true
+            }
 
-                    // when
-                    standardMenuScreen.render(0.0f)
+            it("should call button 2 navigation") {
+                // given
+                direction = Direction.DOWN
+                standardMenuScreen.setCurrentButtonKey(secondButtonKey)
 
-                    // then
-                    standardMenuScreen.selectionMade shouldBe false
-                    standardMenuScreen.buttonKey shouldBe secondButtonKey
-                    verify(exactly = 1) { buttons[firstButtonKey]?.onNavigate(Direction.UP, 0.0f) }
-                    verify(exactly = 0) { buttons[secondButtonKey]?.onNavigate(Direction.DOWN, 0.0f) }
-                    verify(exactly = 0) { buttons[secondButtonKey]?.onSelect(0.0f) }
-                    onAnyMovement shouldBe true
-                }
+                // when
+                standardMenuScreen.render(0.0f)
 
-                it("should call button 2 navigation") {
-                    // given
-                    direction = Direction.DOWN
-                    standardMenuScreen.buttonKey = secondButtonKey
+                // then
+                standardMenuScreen.selectionMade shouldBe false
+                standardMenuScreen.getCurrentButtonKey() shouldBe firstButtonKey
+                verify(exactly = 1) { buttons[secondButtonKey]?.onNavigate(Direction.DOWN, 0.0f) }
+                verify(exactly = 0) { buttons[firstButtonKey]?.onNavigate(Direction.UP, 0.0f) }
+                verify(exactly = 0) { buttons[secondButtonKey]?.onSelect(0.0f) }
+                onAnyMovement shouldBe true
+            }
 
-                    // when
-                    standardMenuScreen.render(0.0f)
+            it("should make selection") {
+                // if
+                selectionRequested = true
 
-                    // then
-                    standardMenuScreen.selectionMade shouldBe false
-                    standardMenuScreen.buttonKey shouldBe firstButtonKey
-                    verify(exactly = 1) { buttons[secondButtonKey]?.onNavigate(Direction.DOWN, 0.0f) }
-                    verify(exactly = 0) { buttons[firstButtonKey]?.onNavigate(Direction.UP, 0.0f) }
-                    verify(exactly = 0) { buttons[secondButtonKey]?.onSelect(0.0f) }
-                    onAnyMovement shouldBe true
-                }
+                // when
+                standardMenuScreen.render(0.0f)
 
-                it("should make selection") {
-                    // if
-                    selectionRequested = true
-
-                    // when
-                    standardMenuScreen.render(0.0f)
-
-                    // then
-                    standardMenuScreen.selectionMade shouldBe true
-                    standardMenuScreen.buttonKey shouldBe firstButtonKey
-                    verify(exactly = 0) { buttons[firstButtonKey]?.onNavigate(any(), 0.0f) }
-                    verify(exactly = 1) { buttons[firstButtonKey]?.onSelect(0.0f) }
-                    verify(exactly = 0) { buttons[secondButtonKey]?.onSelect(0.0f) }
-                    onAnyMovement shouldBe false
-                }
+                // then
+                standardMenuScreen.selectionMade shouldBe true
+                standardMenuScreen.getCurrentButtonKey() shouldBe firstButtonKey
+                verify(exactly = 0) { buttons[firstButtonKey]?.onNavigate(any(), 0.0f) }
+                verify(exactly = 1) { buttons[firstButtonKey]?.onSelect(0.0f) }
+                verify(exactly = 0) { buttons[secondButtonKey]?.onSelect(0.0f) }
+                onAnyMovement shouldBe false
             }
         }
-    })
+    }
+})
