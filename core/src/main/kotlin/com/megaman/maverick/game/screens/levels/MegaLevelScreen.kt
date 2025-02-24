@@ -243,10 +243,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
             game.getSystem(BehaviorsSystem::class).on = false
             game.putProperty(ConstKeys.ROOM_TRANSITION, true)
-
-            val roomProps = current.properties.toProps()
-            if (roomProps.isProperty(ConstKeys.EVENT, ConstKeys.BOSS) && !roomProps.isProperty(ConstKeys.MINI, true))
-                audioMan.fadeOutMusic(FADE_OUT_MUSIC_ON_BOSS_SPAWN)
         }
         cameraManagerForRooms.continueTransition = {
             eventsMan.submitEvent(
@@ -481,23 +477,23 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
             EventType.NEXT_ROOM_REQ -> {
                 GameLogger.debug(
-                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Next room req --> start room transition"
+                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): next room req --> start room transition"
                 )
 
                 val roomName = event.properties.get(ConstKeys.ROOM) as String
                 val isTrans = cameraManagerForRooms.transitionToRoom(roomName)
                 if (isTrans) GameLogger.debug(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
-                    "onEvent(): Next room req --> successfully starting transition to room: $roomName"
+                    "onEvent(): next room req --> successfully starting transition to room: $roomName"
                 ) else GameLogger.error(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
-                    "onEvent(): Next room req --> could not start transition to room: $roomName"
+                    "onEvent(): next room req --> could not start transition to room: $roomName"
                 )
             }
 
             EventType.GATE_INIT_OPENING -> {
                 GameLogger.debug(
-                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Gate init opening --> start room transition"
+                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): gate init opening --> start room transition"
                 )
 
                 val systemsToTurnOff = gdxArrayOf(
@@ -512,7 +508,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
 
             EventType.GATE_INIT_CLOSING -> {
-                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Gate init closing")
+                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): gate init closing")
 
                 val systemsToTurnOn = gdxArrayOf(
                     WorldSystem::class,
@@ -524,22 +520,24 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
 
             EventType.ENTER_BOSS_ROOM -> {
-                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Enter boss room")
+                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): enter boss room")
 
                 val bossRoom = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!
                 val bossMapObject = bossRoom.properties.get(ConstKeys.OBJECT, RectangleMapObject::class.java)
                 val bossSpawnProps = bossMapObject.properties.toProps()
 
                 val mini = bossSpawnProps.getOrDefault(ConstKeys.MINI, false, Boolean::class)
+                if (!mini) {
+                    audioMan.fadeOutMusic(FADE_OUT_MUSIC_ON_BOSS_SPAWN)
 
-                val levelDef = game.getCurrentLevelDef()
-                if (!mini && game.state.isLevelDefeated(levelDef)) {
-                    eventsMan.submitEvent(Event(EventType.VICTORY_EVENT))
-                    return
+                    val levelDef = game.getCurrentLevelDef()
+                    if (game.state.isLevelDefeated(levelDef)) {
+                        eventsMan.submitEvent(Event(EventType.VICTORY_EVENT))
+                        return
+                    }
                 }
 
                 bossSpawnProps.put(ConstKeys.BOUNDS, bossMapObject.rectangle.toGameRectangle())
-
                 val bossName = bossMapObject.name
                 bossSpawnEventHandler.init(bossName, bossSpawnProps)
             }
@@ -582,7 +580,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
 
             EventType.BOSS_DEFEATED -> {
-                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Boss defeated")
+                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): boss defeated")
 
                 if (megaman.dead) {
                     GameLogger.debug(TAG, "onEvent(): Megaman dead when boss defeated, doing nothing...")
@@ -608,7 +606,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
 
             EventType.BOSS_DEAD -> {
-                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Boss dead")
+                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): boss dead")
 
                 if (megaman.dead) {
                     GameLogger.debug(TAG, "onEvent(): Megaman dead when boss dead, doing nothing...")
@@ -626,12 +624,12 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
 
             EventType.VICTORY_EVENT -> {
-                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Victory event")
+                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): victory event")
                 endLevelEventHandler.init()
             }
 
             EventType.SHAKE_CAM -> {
-                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Req shake cam")
+                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): request to shake game cam")
                 if (gameCameraShaker.isFinished) {
                     val duration = event.properties.get(ConstKeys.DURATION, Float::class)!!
                     val interval = event.properties.get(ConstKeys.INTERVAL, Float::class)!!
@@ -642,7 +640,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
 
             EventType.END_LEVEL -> {
-                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): End level")
+                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): end level")
 
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
 
@@ -654,10 +652,10 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
 
             EventType.EDIT_TILED_MAP -> {
-                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Edit tiled map")
+                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): edit tiled map")
                 val editor = event.getProperty(ConstKeys.EDIT)!! as (TiledMap) -> Unit
                 tiledMapLoadResult?.map?.let {
-                    GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Invoking editor")
+                    GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): invoking editor")
                     editor.invoke(it)
                 }
             }
@@ -776,10 +774,10 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         tiledMapLevelRenderer?.render(gameCamera)
 
-        val gameGroundSprites = drawables.get(DrawingSection.PLAYGROUND)
-        while (!gameGroundSprites.isEmpty()) {
-            val gameGroundSprite = gameGroundSprites.poll()
-            gameGroundSprite.draw(drawer)
+        val playgroundSprites = drawables.get(DrawingSection.PLAYGROUND)
+        while (!playgroundSprites.isEmpty()) {
+            val playgroundSprite = playgroundSprites.poll()
+            playgroundSprite.draw(drawer)
         }
 
         val foregroundSprites = drawables.get(DrawingSection.FOREGROUND)

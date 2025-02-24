@@ -684,12 +684,11 @@
   </object>
   <object id="336" name="GreenUziJoe" x="34616" y="304" width="16" height="16"/>
   <object id="353" name="TorikoPlundge" x="35504" y="288" width="32" height="32"/>
-  <object id="362" name="DuoBallCanon" x="36504" y="400" width="16" height="16"/>
   <object id="363" name="Coldier" x="33872" y="256" width="32" height="32"/>
-  <object id="364" name="SniperJoe" x="36216" y="400" width="16" height="16"/>
+  <object id="364" name="SniperJoe" x="36440" y="400" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="4" name="player">
-  <object id="360" name="0" x="34160" y="352" width="32" height="32">
+  <object id="360" name="0" x="36032" y="384" width="32" height="32">
    <properties>
     <property name="direction" value="up"/>
    </properties>

@@ -147,10 +147,15 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 "ice_blast_attack"
             ).forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
+
         super.init()
+
         addComponent(defineAnimationsComponent())
+
         stateMachine = buildStateMachine()
+
         buildTimers()
+
         damageOverrides.put(Fireball::class, dmgNeg(4))
     }
 
@@ -212,10 +217,12 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
         val takeDamage = super.takeDamageFrom(damager)
+
         if (takeDamage && damager is Fireball) {
             timers["fired"].reset()
             requestToPlaySound(SoundAsset.SOLAR_BLAZE_SOUND, false)
         }
+
         return takeDamage
     }
 

@@ -75,7 +75,6 @@ import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.bosses.*
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
@@ -147,7 +146,7 @@ class MegamanMaverickGame(
             InfernoMan.TAG, TimberWoman.TAG, DesertMan.TAG, ReactorMan.TAG, PreciousWoman.TAG, LevelPauseScreen.TAG,
             MainMenuScreen.TAG, LevelSelectScreen.TAG
         )
-        val DEV_TAGS_TO_LOG: ObjectSet<String> = objectSetOf(Block.TAG)
+        val DEV_TAGS_TO_LOG: ObjectSet<String> = objectSetOf(TimberWoman.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.oneFixtureMatches(FixtureType.CONSUMER)
         }
@@ -212,8 +211,8 @@ class MegamanMaverickGame(
                 if (level == GameLogLevel.ERROR) println(fullMessage)
             }
         })
-        GameLogger.tagsToLog.addAll(PROD_TAGS_TO_LOG)
-        // GameLogger.tagsToLog.addAll(DEV_TAGS_TO_LOG)
+        // GameLogger.tagsToLog.addAll(PROD_TAGS_TO_LOG)
+        GameLogger.tagsToLog.addAll(DEV_TAGS_TO_LOG)
         GameLogger.filterByTag = true
 
         GameLogger.log(TAG, "create(): appType=${Gdx.app.type}")

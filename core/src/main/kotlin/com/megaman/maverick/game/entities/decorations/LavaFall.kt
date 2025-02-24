@@ -86,7 +86,7 @@ class LavaFall(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
         val key = "${x}_${y}"
 
-        val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 0))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -10))
         sprite.setBounds(bounds)
         sprites.put(key, sprite)
 

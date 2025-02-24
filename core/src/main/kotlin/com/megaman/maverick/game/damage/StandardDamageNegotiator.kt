@@ -8,6 +8,7 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.damage.IDamager
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
+import com.megaman.maverick.game.entities.explosions.MagmaExplosion
 import com.megaman.maverick.game.entities.hazards.Saw
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
@@ -22,6 +23,7 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
         private val LARGE_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
             Bullet::class pairTo dmgNeg(3),
             Fireball::class pairTo dmgNeg(5),
+            MagmaExplosion::class pairTo dmgNeg(5),
             ChargedShot::class pairTo dmgNeg {
                 it as ChargedShot
                 if (it.fullyCharged) 5 else 3
@@ -31,12 +33,13 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
                 if (it.fullyCharged) 3 else 1
             },
             Saw::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-            MoonScythe::class pairTo dmgNeg(5)
+            MoonScythe::class pairTo dmgNeg(5),
         )
 
         private val MEDIUM_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
             Bullet::class pairTo dmgNeg(5),
             Fireball::class pairTo dmgNeg(15),
+            MagmaExplosion::class pairTo dmgNeg(15),
             ChargedShot::class pairTo dmgNeg {
                 it as ChargedShot
                 if (it.fullyCharged) 15 else 10
@@ -52,6 +55,7 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
         private val SMALL_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
             Bullet::class pairTo dmgNeg(15),
             Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            MagmaExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             ChargedShot::class pairTo dmgNeg {
                 it as ChargedShot
                 if (it.fullyCharged) ConstVals.MAX_HEALTH else 15

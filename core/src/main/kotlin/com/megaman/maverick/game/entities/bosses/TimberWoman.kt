@@ -17,10 +17,7 @@ import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.ProcessState
-import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.extensions.putAll
+import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -29,6 +26,7 @@ import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -53,6 +51,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
@@ -63,6 +62,7 @@ import com.megaman.maverick.game.entities.hazards.DeadlyLeaf
 import com.megaman.maverick.game.entities.megaman.components.damageableFixture
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.GroundPebble
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -98,6 +98,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         private const val STAND_SWING_DUR = 1f
         private const val STAND_POUND_DUR = 2f
         private const val MAX_JUMP_SPIN_DUR = 1f
+        private const val BURN_DUR = 0.5f
 
         // When Timber Woman transitions to the stand state, she might be sliding on the floor due to
         // velocity applied in a previous state. When this amount of time has passed in the state state,
@@ -189,7 +190,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
     }
 
     private enum class TimberWomanState {
-        INIT, STAND, STAND_SWING, STAND_POUND, WALLSLIDE, RUN, JUMP_UP, JUMP_DOWN, JUMP_SPIN
+        INIT, STAND, STAND_SWING, STAND_POUND, WALLSLIDE, RUN, JUMP_UP, JUMP_DOWN, JUMP_SPIN, BURN
     }
 
     private enum class VicinityProjectileType { DEFLECTABLE, OTHER }
@@ -203,6 +204,9 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
     private val stateTimers = OrderedMap<TimberWomanState, Timer>()
 
     private val otherTimers = OrderedMap<String, Timer>()
+
+    private val burning: Boolean
+        get() = !stateTimers[TimberWomanState.BURN].isFinished()
 
     // If Megaman overlaps this circle while Timber Woman is jumping, then she will perform a jump spin.
     private val jumpSpinScannerCircle = GameCircle().setRadius(JUMP_SPIN_SCANNER_RADIUS * ConstVals.PPM)
@@ -252,13 +256,10 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         }
 
         if (animDefs.isEmpty) animDefs.putAll(
-            TimberWomanState.INIT.name.lowercase() pairTo AnimationDef(7, 1, 0.2f, true), // TODO: replace init def
+            TimberWomanState.INIT.name.lowercase() pairTo AnimationDef(7, 1, 0.2f, true),
             TimberWomanState.STAND.name.lowercase() pairTo AnimationDef(7, 1, 0.2f, true),
             TimberWomanState.STAND_SWING.name.lowercase() pairTo AnimationDef(
-                2,
-                4,
-                gdxArrayOf(0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.25f, 0.1f, 0.1f),
-                false
+                2, 4, gdxArrayOf(0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.25f, 0.1f, 0.1f), false
             ),
             TimberWomanState.STAND_POUND.name.lowercase() pairTo AnimationDef(3, 2, 0.1f, true),
             TimberWomanState.JUMP_SPIN.name.lowercase() pairTo AnimationDef(4, 2, 0.025f, true),
@@ -266,6 +267,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
             TimberWomanState.JUMP_DOWN.name.lowercase() pairTo AnimationDef(2, 1, 0.1f, true),
             TimberWomanState.RUN.name.lowercase() pairTo AnimationDef(2, 2, 0.1f, true),
             TimberWomanState.WALLSLIDE.name.lowercase() pairTo AnimationDef(),
+            TimberWomanState.BURN.name.lowercase() pairTo AnimationDef(3, 1, 0.05f, true),
             ConstKeys.DEFEATED pairTo AnimationDef(3, 1, 0.1f, true)
         )
 
@@ -284,7 +286,8 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
                     }
                     timer.addRunnables(runnables)
                 },
-            TimberWomanState.JUMP_SPIN pairTo Timer(MAX_JUMP_SPIN_DUR)
+            TimberWomanState.JUMP_SPIN pairTo Timer(MAX_JUMP_SPIN_DUR),
+            TimberWomanState.BURN pairTo Timer(BURN_DUR)
         )
 
         if (otherTimers.isEmpty) otherTimers.putAll(STAND_STILL_DELAY_KEY pairTo Timer(STAND_STILL_DELAY))
@@ -297,6 +300,8 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
 
         jumpSpinScannerCircle.drawingColor = Color.WHITE
         addDebugShapeSupplier { jumpSpinScannerCircle }
+
+        damageOverrides.put(Fireball::class, dmgNeg(4))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -309,7 +314,11 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
 
         stateMachine.reset()
 
-        stateTimers.values().forEach { it.reset() }
+        stateTimers.forEach { entry ->
+            val state = entry.key
+            val timer = entry.value
+            if (state == TimberWomanState.BURN) timer.setToEnd() else timer.reset()
+        }
         otherTimers.values().forEach { it.reset() }
 
         spawnProps.forEach { key, value ->
@@ -337,6 +346,26 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
 
     override fun isReady(delta: Float) = stateTimers[TimberWomanState.INIT].isFinished()
 
+    override fun canBeDamagedBy(damager: IDamager) = super.canBeDamagedBy(damager) && !burning
+
+    override fun takeDamageFrom(damager: IDamager): Boolean {
+        val damaged = super.takeDamageFrom(damager)
+
+        if (damaged && damager is Fireball && damager.owner == megaman) {
+            GameLogger.debug(TAG, "takeDamageFrom(): damaged by fireball, start burning, set stand timer to end")
+            stateTimers[TimberWomanState.BURN].reset()
+
+            stateTimers[TimberWomanState.STAND].let { standTimer ->
+                standTimer.reset()
+
+                val standTime = STAND_DUR * 0.75f
+                standTimer.update(standTime)
+            }
+        }
+
+        return damaged
+    }
+
     override fun onDestroy() {
         super.onDestroy()
 
@@ -359,6 +388,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
             .transition(TimberWomanState.INIT.name, TimberWomanState.STAND.name) { ready }
 
             // stand
+            .transition(TimberWomanState.STAND.name, TimberWomanState.BURN.name) { burning }
             .transition(TimberWomanState.STAND.name, TimberWomanState.JUMP_UP.name) { shouldJump() }
             .transition(TimberWomanState.STAND.name, TimberWomanState.STAND_POUND.name) {
                 getRandom(0, 100) <= STAND_POUND_CHANCE
@@ -376,6 +406,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
             .transition(TimberWomanState.STAND.name, TimberWomanState.STAND_SWING.name) { true }
 
             // run
+            .transition(TimberWomanState.RUN.name, TimberWomanState.BURN.name) { burning }
             .transition(TimberWomanState.RUN.name, TimberWomanState.STAND_SWING.name) {
                 shouldTransFromRunningToSwing()
             }
@@ -383,26 +414,32 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
             .transition(TimberWomanState.RUN.name, TimberWomanState.STAND.name) { true }
 
             // stand swing / stand pound
+            .transition(TimberWomanState.STAND_SWING.name, TimberWomanState.BURN.name) { burning }
             .transition(TimberWomanState.STAND_SWING.name, TimberWomanState.STAND.name) { true }
+            .transition(TimberWomanState.STAND_POUND.name, TimberWomanState.BURN.name) { burning }
             .transition(TimberWomanState.STAND_POUND.name, TimberWomanState.STAND.name) { true }
 
             // jump up
+            .transition(TimberWomanState.JUMP_UP.name, TimberWomanState.BURN.name) { burning }
             .transition(TimberWomanState.JUMP_UP.name, TimberWomanState.WALLSLIDE.name) { shouldStartWallSliding() }
             .transition(TimberWomanState.JUMP_UP.name, TimberWomanState.JUMP_SPIN.name) { shouldJumpSpin() }
             .transition(TimberWomanState.JUMP_UP.name, TimberWomanState.JUMP_DOWN.name) { true }
 
             // jump down
+            .transition(TimberWomanState.JUMP_DOWN.name, TimberWomanState.BURN.name) { burning }
             .transition(TimberWomanState.JUMP_DOWN.name, TimberWomanState.WALLSLIDE.name) { shouldStartWallSliding() }
             .transition(TimberWomanState.JUMP_DOWN.name, TimberWomanState.JUMP_SPIN.name) { shouldJumpSpin() }
             .transition(TimberWomanState.JUMP_DOWN.name, TimberWomanState.STAND.name) { true }
 
             // wall slide
+            .transition(TimberWomanState.WALLSLIDE.name, TimberWomanState.BURN.name) { burning }
             .transition(TimberWomanState.WALLSLIDE.name, TimberWomanState.JUMP_UP.name) {
                 !body.isSensing(BodySense.FEET_ON_GROUND)
             }
             .transition(TimberWomanState.WALLSLIDE.name, TimberWomanState.STAND.name) { true }
 
             // jump spin
+            .transition(TimberWomanState.JUMP_SPIN.name, TimberWomanState.BURN.name) { burning }
             .transition(TimberWomanState.JUMP_SPIN.name, TimberWomanState.JUMP_UP.name) {
                 !body.isSensing(BodySense.FEET_ON_GROUND) && body.physics.velocity.y > 0f
             }
@@ -410,22 +447,50 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
                 !body.isSensing(BodySense.FEET_ON_GROUND) && body.physics.velocity.y <= 0f
             }
             .transition(TimberWomanState.JUMP_SPIN.name, TimberWomanState.STAND.name) { true }
+
+            // burn
+            .transition(TimberWomanState.BURN.name, TimberWomanState.STAND.name) { true }
         return builder.build()
     }
 
     private fun onChangeState(current: TimberWomanState, previous: TimberWomanState) {
         GameLogger.debug(TAG, "onChangeState(): current=$current, previous=$previous")
 
-        stateTimers.values().forEach { it.reset() }
-        otherTimers.values().forEach { it.reset() }
+        if (current != TimberWomanState.BURN &&
+            previous != TimberWomanState.BURN &&
+            stateTimers.containsKey(current)
+        ) {
+            GameLogger.debug(TAG, "onChangeState(): reset current timer")
+            stateTimers[current].reset()
+        }
 
-        if (previous != TimberWomanState.STAND) previousNonStandState = previous
+        if (current.equalsAny(
+                TimberWomanState.INIT,
+                TimberWomanState.STAND,
+                TimberWomanState.STAND_SWING
+            )
+        ) {
+            GameLogger.debug(TAG, "onChangeState(): reset stand still delay timer")
+            otherTimers[STAND_STILL_DELAY_KEY].reset()
+        }
+
+        if (previous != TimberWomanState.STAND) {
+            val old = previousNonStandState
+            previousNonStandState = previous
+            GameLogger.debug(TAG, "onChangeState(): set previousNonStandState=$previous, old=$old")
+        }
 
         when (previous) {
             TimberWomanState.JUMP_DOWN -> {
                 GameLogger.debug(TAG, "onChangeState(): apply friction x when previous=$previous")
 
                 body.physics.applyFrictionX = true
+            }
+
+            TimberWomanState.BURN -> {
+                GameLogger.debug(TAG, "onChangeState(): reset damage timer")
+
+                damageTimer.reset()
             }
 
             else -> GameLogger.debug(TAG, "onChangeState(): no action when previous=$previous")
@@ -501,6 +566,11 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
 
             jumpSpinScannerCircle.setCenter(body.getCenter())
 
+            if (currentState != TimberWomanState.BURN && burning) {
+                GameLogger.debug(TAG, "update(): start burning")
+                stateMachine.next()
+            }
+
             when (currentState) {
                 TimberWomanState.INIT, TimberWomanState.STAND, TimberWomanState.STAND_SWING -> {
                     updateFacing()
@@ -572,6 +642,17 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
                     updateFacing()
 
                     if (shouldJumpSpin() || shouldStopJumpingDown()) stateMachine.next()
+                }
+
+                TimberWomanState.BURN -> {
+                    body.physics.velocity.setZero()
+                    body.physics.gravityOn = false
+
+                    if (updateTimerFor(currentState, delta)) {
+                        stateMachine.next()
+
+                        body.physics.gravityOn = true
+                    }
                 }
             }
         }
@@ -1043,6 +1124,11 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
                         else -> when (currentState) {
                             TimberWomanState.INIT -> when {
                                 body.isSensing(BodySense.FEET_ON_GROUND) -> TimberWomanState.INIT.name.lowercase()
+                                else -> TimberWomanState.JUMP_DOWN.name.lowercase()
+                            }
+
+                            TimberWomanState.STAND -> when {
+                                body.isSensing(BodySense.FEET_ON_GROUND) -> TimberWomanState.STAND.name.lowercase()
                                 else -> TimberWomanState.JUMP_DOWN.name.lowercase()
                             }
 

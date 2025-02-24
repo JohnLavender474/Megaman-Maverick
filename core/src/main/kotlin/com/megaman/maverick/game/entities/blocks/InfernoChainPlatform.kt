@@ -127,7 +127,7 @@ class InfernoChainPlatform(game: MegamanMaverickGame) : FeetRiseSinkBlock(game),
         for (i in 0 until chainCount) {
             val key = "${CHAIN}_$i"
 
-            val chain = GameSprite(regions[CHAIN], DrawingPriority(DrawingSection.BACKGROUND, 1))
+            val chain = GameSprite(regions[CHAIN], DrawingPriority(DrawingSection.PLAYGROUND, 15))
             chain.setSize(CHAIN_WIDTH * ConstVals.PPM, CHAIN_HEIGHT * ConstVals.PPM)
 
             sprites.put(key, chain)

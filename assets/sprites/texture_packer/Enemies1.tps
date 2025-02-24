@@ -646,6 +646,10 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Enemies1/LumberJoe/burn.png</key>
+            <key type="filename">../frames/Enemies1/LumberJoe/burn_jump.png</key>
+            <key type="filename">../frames/Enemies1/LumberJoe/burn_jump_shielded.png</key>
+            <key type="filename">../frames/Enemies1/LumberJoe/burn_shielded.png</key>
             <key type="filename">../frames/Enemies1/LumberJoe/cooldown.png</key>
             <key type="filename">../frames/Enemies1/LumberJoe/cooldown_shielded.png</key>
             <key type="filename">../frames/Enemies1/LumberJoe/stand.png</key>

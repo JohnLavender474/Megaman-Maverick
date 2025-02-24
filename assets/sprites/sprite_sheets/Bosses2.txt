@@ -12,7 +12,7 @@ DesertMan/arm_extension
   index: -1
 DesertMan/arm_extension_punch
   rotate: false
-  xy: 0, 1072
+  xy: 128, 1072
   size: 128, 256
   orig: 128, 256
   offset: 0, 0
@@ -360,16 +360,23 @@ TimberWoman/axe_wallslide
   orig: 64, 64
   offset: 0, 0
   index: -1
-TimberWoman/defeated
+TimberWoman/burn
   rotate: false
   xy: 320, 880
   size: 64, 192
   orig: 64, 192
   offset: 0, 0
   index: -1
+TimberWoman/defeated
+  rotate: false
+  xy: 384, 880
+  size: 64, 192
+  orig: 64, 192
+  offset: 0, 0
+  index: -1
 TimberWoman/init
   rotate: false
-  xy: 256, 1072
+  xy: 384, 1072
   size: 64, 448
   orig: 64, 448
   offset: 0, 0
@@ -383,7 +390,7 @@ TimberWoman/jump_down
   index: -1
 TimberWoman/jump_spin
   rotate: false
-  xy: 128, 1072
+  xy: 256, 1072
   size: 128, 256
   orig: 128, 256
   offset: 0, 0
@@ -404,14 +411,14 @@ TimberWoman/run
   index: -1
 TimberWoman/stand
   rotate: false
-  xy: 320, 1072
+  xy: 448, 1072
   size: 64, 448
   orig: 64, 448
   offset: 0, 0
   index: -1
 TimberWoman/stand_pound
   rotate: false
-  xy: 384, 880
+  xy: 0, 1072
   size: 128, 192
   orig: 128, 192
   offset: 0, 0

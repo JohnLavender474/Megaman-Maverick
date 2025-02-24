@@ -75,7 +75,7 @@ class Smoke(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, I
         for (i in 0 until count) {
             val key = "$i"
 
-            val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
+            val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 20))
             sprite.setBounds(
                 bounds.getX(),
                 bounds.getY() + i * SPRITE_HEIGHT * ConstVals.PPM,

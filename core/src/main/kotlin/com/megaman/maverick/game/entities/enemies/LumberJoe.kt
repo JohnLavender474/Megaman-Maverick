@@ -25,6 +25,7 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -43,11 +44,13 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.projectiles.Axe
+import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -61,6 +64,7 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         private const val THROW_DUR = 0.5f
         private const val THROW_TIME = 0.125f
         private const val COOLDOWN_DUR = 1.5f
+        private const val BURN_DUR = 0.5f
 
         private const val AXES_BEFORE_COOLDOWN = 3
 
@@ -88,13 +92,14 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             "stand" pairTo AnimationDef(2, 1, gdxArrayOf(0.5f, 0.15f), true),
             "cooldown" pairTo AnimationDef(2, 1, gdxArrayOf(0.25f, 0.25f), true),
             "throw" pairTo AnimationDef(3, 1, gdxArrayOf(0.125f, 0.25f, 0.125f), false),
+            "burn" pairTo AnimationDef(2, 1, 0.05f, true),
             "jump" pairTo AnimationDef(),
         )
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private enum class LumberJoeState { STAND, JUMP, THROW, COOLDOWN }
+    private enum class LumberJoeState { STAND, JUMP, THROW, COOLDOWN, BURN }
 
     override lateinit var facing: Facing
 
@@ -131,6 +136,7 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
                 Timer(THROW_DUR).addRunnables(TimeMarkedRunnable(THROW_TIME) { throwAxe() })
             )
             stateTimers.put(LumberJoeState.COOLDOWN, Timer(COOLDOWN_DUR))
+            stateTimers.put(LumberJoeState.BURN, Timer(BURN_DUR))
         }
 
         super.init()
@@ -155,7 +161,11 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         body.physics.velocity.set(initImpulseX * facing.value, initImpulseY).scl(ConstVals.PPM.toFloat())
 
         stateMachine.reset()
-        stateTimers.values().forEach { it.reset() }
+        stateTimers.forEach { entry ->
+            val state = entry.key
+            val timer = entry.value
+            if (state == LumberJoeState.BURN) timer.setToEnd() else timer.reset()
+        }
 
         axesThrown = 0
 
@@ -167,24 +177,48 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         super.onDestroy()
     }
 
+    override fun takeDamageFrom(damager: IDamager): Boolean {
+        val damaged = super.takeDamageFrom(damager)
+
+        if (damaged && damager is Fireball && damager.owner == megaman) {
+            stateTimers[LumberJoeState.BURN].reset()
+            requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
+        }
+
+        return damaged
+    }
+
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             jumpSensor.setBottomCenterToPoint(body.getPositionPoint(Position.TOP_CENTER))
 
-            if (currentState.equalsAny(LumberJoeState.STAND, LumberJoeState.COOLDOWN)) updateFacing()
+            when {
+                currentState != LumberJoeState.BURN && isBurning() -> {
+                    GameLogger.debug(TAG, "update(): start burning")
+                    stateMachine.next()
+                }
+
+                currentState.equalsAny(LumberJoeState.STAND, LumberJoeState.COOLDOWN) -> updateFacing()
+            }
 
             when (currentState) {
-                LumberJoeState.JUMP -> if (shouldStopJump()) stateMachine.next()
+                LumberJoeState.JUMP -> if (shouldStopJump()) {
+                    GameLogger.debug(TAG, "update(): should stop jumping")
+                    stateMachine.next()
+                }
+
                 else -> {
                     val timer = stateTimers[currentState]
-
                     timer.update(delta)
 
                     if (timer.isFinished()) {
-                        stateMachine.next()
+                        if (currentState != LumberJoeState.BURN) {
+                            GameLogger.debug(TAG, "update(): reset timer: currentState=$currentState")
+                            timer.reset()
+                        }
 
-                        timer.reset()
+                        stateMachine.next()
                     }
                 }
             }
@@ -214,6 +248,12 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             FixtureType.SHIELD,
             GameRectangle().setSize(0.5f * ConstVals.PPM, ConstVals.PPM.toFloat())
         )
+        shieldFixture.setHitByProjectileReceiver { projectile ->
+            if (projectile is Fireball) {
+                GameLogger.debug(TAG, "defineBodyComponent(): hit by fireball, start burning")
+                stateTimers[LumberJoeState.BURN].reset()
+            }
+        }
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
         shieldFixture.drawingColor = Color.BLUE
@@ -245,7 +285,8 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(2.5f * ConstVals.PPM) })
         .updatable { _, sprite ->
-            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+            val position = Position.BOTTOM_CENTER
+            sprite.setPosition(body.getPositionPoint(position), position)
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.hidden = damageBlink
         }
@@ -256,6 +297,14 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         .animator(
             AnimatorBuilder()
                 .setKeySupplier keySupplier@{
+                    if (currentState == LumberJoeState.BURN) return@keySupplier when {
+                        body.isSensing(BodySense.FEET_ON_GROUND) ->
+                            if (hasShield) "burn${SHIELDED_REGION_SUFFIX}" else "burn"
+
+                        hasShield -> "burn_jump${SHIELDED_REGION_SUFFIX}"
+                        else -> "burn_jump"
+                    }
+
                     val key = currentState.name.lowercase()
                     return@keySupplier if (hasShield) "${key}${SHIELDED_REGION_SUFFIX}" else key
                 }
@@ -266,7 +315,10 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
                         gdxArrayOf(key, "${key}$SHIELDED_REGION_SUFFIX").forEach {
                             try {
-                                animations.put(it, Animation(regions[it]!!, def.rows, def.cols, def.durations, def.loop))
+                                animations.put(
+                                    it,
+                                    Animation(regions[it]!!, def.rows, def.cols, def.durations, def.loop)
+                                )
                             } catch (e: Exception) {
                                 throw Exception("Failed to add animation for key=$it", e)
                             }
@@ -300,25 +352,33 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         }
     }
 
+    private fun isBurning() = !stateTimers[LumberJoeState.BURN].isFinished()
+
     private fun buildStateMachine() = StateMachineBuilder<LumberJoeState>()
         .states { states -> LumberJoeState.entries.forEach { states.put(it.name, it) } }
         .setTriggerChangeWhenSameElement(false)
         .setOnChangeState(this::onChangeState)
         .initialState(LumberJoeState.JUMP.name)
         // stand
+        .transition(LumberJoeState.STAND.name, LumberJoeState.BURN.name) { isBurning() }
         .transition(LumberJoeState.STAND.name, LumberJoeState.JUMP.name) { shouldJump() }
         .transition(LumberJoeState.STAND.name, LumberJoeState.THROW.name) { true }
         // jump
+        .transition(LumberJoeState.JUMP.name, LumberJoeState.BURN.name) { isBurning() }
         .transition(LumberJoeState.JUMP.name, LumberJoeState.STAND.name) { shouldStopJump() }
         // throw
+        .transition(LumberJoeState.THROW.name, LumberJoeState.BURN.name) { isBurning() }
         .transition(LumberJoeState.THROW.name, LumberJoeState.COOLDOWN.name) { shouldCooldown() }
         .transition(LumberJoeState.THROW.name, LumberJoeState.STAND.name) { true }
         // cooldown
+        .transition(LumberJoeState.COOLDOWN.name, LumberJoeState.BURN.name) { isBurning() }
         .transition(
-            LumberJoeState.COOLDOWN.name,
-            LumberJoeState.JUMP.name
+            LumberJoeState.COOLDOWN.name, LumberJoeState.JUMP.name
         ) { !body.isSensing(BodySense.FEET_ON_GROUND) }
         .transition(LumberJoeState.COOLDOWN.name, LumberJoeState.STAND.name) { true }
+        // burn
+        .transition(LumberJoeState.BURN.name, LumberJoeState.STAND.name) { true }
+        // build
         .build()
 
     private fun onChangeState(current: LumberJoeState, previous: LumberJoeState) {
@@ -329,6 +389,11 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             LumberJoeState.THROW -> axesThrown++
             LumberJoeState.COOLDOWN -> axesThrown = 0
             else -> {}
+        }
+
+        if (previous == LumberJoeState.BURN && hasShield) {
+            GameLogger.debug(TAG, "onChangeState(): previous is BURN and had shield: set to have no shield")
+            hasShield = false
         }
     }
 
