@@ -66,8 +66,8 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         const val TAG = "Cactus"
 
         private const val TURN_DUR = 0.3f
-        private const val FLASH_DUR = 1f
-        private const val FACING_DUR = 3f
+        private const val FLASH_DUR = 1.25f
+        private const val FACING_DUR = 2.5f
 
         private const val NEEDLES = 5
         private const val NEEDLE_GRAV = -0.1f
@@ -90,7 +90,8 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
             Spiky::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             SpreadExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             MoonScythe::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-            Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
+            Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            SmallGreenMissile::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
         )
 
         private val animDefs = orderedMapOf(
