@@ -1,1 +1,137 @@
-===== SESSION STARTED: 2025-02-23T20:01:51.343002672 =====
+===== SESSION STARTED: 2025-02-24T19:50:26.754960984 =====
+19:50:36 | DEBUG | Cactus | init()
+19:50:36 | DEBUG | Cactus | onSpawn(): spawnProps=Properties({
+	[bounds=[36440.0,224.0,16.0,16.0]]
+	[x=36440.0]
+	[height=16.0]
+	[id=364]
+	[big=false]
+	[name=Cactus]
+	[y=224.0]
+	[width=16.0]
+})
+19:50:36 | DEBUG | Cactus | update(): currentState=IDLE, megaman is in scanner
+19:50:36 | DEBUG | Cactus | onChangeState(): current=FACING, previous=IDLE
+19:50:37 | DEBUG | Cactus | init()
+19:50:37 | DEBUG | Cactus | onSpawn(): spawnProps=Properties({
+	[bounds=[36536.0,352.0,16.0,16.0]]
+	[x=36536.0]
+	[height=16.0]
+	[id=368]
+	[big=true]
+	[name=Cactus]
+	[y=352.0]
+	[width=16.0]
+})
+19:50:37 | DEBUG | Cactus | update(): currentState=IDLE, megaman is in scanner
+19:50:37 | DEBUG | Cactus | onChangeState(): current=FACING, previous=IDLE
+19:50:39 | DEBUG | Cactus | update(): currentState=FACING, state timer is finished
+19:50:39 | DEBUG | Cactus | onChangeState(): current=FLASH, previous=FACING
+19:50:40 | DEBUG | Cactus | update(): currentState=FACING, state timer is finished
+19:50:40 | DEBUG | Cactus | onChangeState(): current=IDLE, previous=FACING
+19:50:40 | DEBUG | Cactus | update(): currentState=FLASH, state timer is finished
+19:50:40 | DEBUG | Cactus | onChangeState(): current=FACING, previous=FLASH
+19:50:40 | DEBUG | Cactus | onChangeState(): spawn needles
+19:50:40 | DEBUG | Cactus | spawnNeedles(): i=0, position=(36441.6,251.2), impulse=(-320.0,-1.3987645E-5)
+19:50:40 | DEBUG | Cactus | spawnNeedles(): i=2, position=(36448.0,251.2), impulse=(0.0,320.0)
+19:50:40 | DEBUG | Cactus | spawnNeedles(): i=4, position=(36454.4,251.2), impulse=(320.0,3.815962E-6)
+19:50:40 | DEBUG | Cactus | update(): currentState=IDLE, megaman is in scanner
+19:50:40 | DEBUG | Cactus | onChangeState(): current=FACING, previous=IDLE
+19:50:41 | DEBUG | Cactus | update(): currentState=FACING, megaman not in scanner OR should turn
+19:50:41 | DEBUG | Cactus | onChangeState(): current=TURN, previous=FACING
+19:50:42 | DEBUG | Cactus | update(): currentState=TURN, state timer is finished
+19:50:42 | DEBUG | Cactus | onChangeState(): current=FACING, previous=TURN
+19:50:42 | DEBUG | Cactus | onChangeState(): swap facing
+19:50:43 | DEBUG | Cactus | update(): currentState=FACING, megaman not in scanner OR should turn
+19:50:43 | DEBUG | Cactus | onChangeState(): current=TURN, previous=FACING
+19:50:43 | DEBUG | Cactus | update(): currentState=TURN, state timer is finished
+19:50:43 | DEBUG | Cactus | onChangeState(): current=FACING, previous=TURN
+19:50:43 | DEBUG | Cactus | onChangeState(): swap facing
+19:50:45 | DEBUG | Cactus | update(): currentState=FACING, state timer is finished
+19:50:45 | DEBUG | Cactus | onChangeState(): current=FLASH, previous=FACING
+19:50:46 | DEBUG | Cactus | update(): currentState=FLASH, state timer is finished
+19:50:46 | DEBUG | Cactus | onChangeState(): current=FACING, previous=FLASH
+19:50:46 | DEBUG | Cactus | onChangeState(): spawn needles
+19:50:46 | DEBUG | Cactus | spawnNeedles(): i=0, position=(36441.6,251.2), impulse=(-320.0,-1.3987645E-5)
+19:50:46 | DEBUG | Cactus | spawnNeedles(): i=2, position=(36448.0,251.2), impulse=(0.0,320.0)
+19:50:46 | DEBUG | Cactus | spawnNeedles(): i=4, position=(36454.4,251.2), impulse=(320.0,3.815962E-6)
+19:50:46 | DEBUG | Cactus | update(): currentState=FACING, state timer is finished
+19:50:46 | DEBUG | Cactus | onChangeState(): current=FLASH, previous=FACING
+19:50:47 | DEBUG | Cactus | update(): currentState=FLASH, state timer is finished
+19:50:47 | DEBUG | Cactus | onChangeState(): current=FACING, previous=FLASH
+19:50:47 | DEBUG | Cactus | onChangeState(): spawn needles
+19:50:47 | DEBUG | Cactus | spawnNeedles(): i=0, position=(36537.6,395.2), impulse=(-320.0,-1.3987645E-5)
+19:50:47 | DEBUG | Cactus | spawnNeedles(): i=1, position=(36540.8,395.2), impulse=(-226.27417,226.27417)
+19:50:47 | DEBUG | Cactus | spawnNeedles(): i=2, position=(36544.0,395.2), impulse=(0.0,320.0)
+19:50:47 | DEBUG | Cactus | spawnNeedles(): i=3, position=(36547.2,395.2), impulse=(226.2742,226.27412)
+19:50:47 | DEBUG | Cactus | spawnNeedles(): i=4, position=(36550.4,395.2), impulse=(320.0,3.815962E-6)
+19:50:48 | DEBUG | Cactus | update(): currentState=FACING, megaman not in scanner OR should turn
+19:50:48 | DEBUG | Cactus | onChangeState(): current=TURN, previous=FACING
+19:50:48 | DEBUG | Cactus | update(): currentState=TURN, state timer is finished
+19:50:48 | DEBUG | Cactus | onChangeState(): current=FACING, previous=TURN
+19:50:48 | DEBUG | Cactus | onChangeState(): swap facing
+19:50:49 | DEBUG | Cactus | spawnNeedles(): i=0, position=(36441.6,251.2), impulse=(-320.0,-1.3987645E-5)
+19:50:49 | DEBUG | Cactus | spawnNeedles(): i=2, position=(36448.0,251.2), impulse=(0.0,320.0)
+19:50:49 | DEBUG | Cactus | spawnNeedles(): i=4, position=(36454.4,251.2), impulse=(320.0,3.815962E-6)
+19:50:49 | DEBUG | Cactus | update(): currentState=FACING, state timer is finished
+19:50:49 | DEBUG | Cactus | onChangeState(): current=FLASH, previous=FACING
+19:50:51 | DEBUG | Cactus | update(): currentState=FACING, state timer is finished
+19:50:51 | DEBUG | Cactus | onChangeState(): current=FLASH, previous=FACING
+19:50:52 | DEBUG | Cactus | update(): currentState=FLASH, state timer is finished
+19:50:52 | DEBUG | Cactus | onChangeState(): current=FACING, previous=FLASH
+19:50:52 | DEBUG | Cactus | onChangeState(): spawn needles
+19:50:52 | DEBUG | Cactus | spawnNeedles(): i=0, position=(36537.6,395.2), impulse=(-320.0,-1.3987645E-5)
+19:50:52 | DEBUG | Cactus | spawnNeedles(): i=1, position=(36540.8,395.2), impulse=(-226.27417,226.27417)
+19:50:52 | DEBUG | Cactus | spawnNeedles(): i=2, position=(36544.0,395.2), impulse=(0.0,320.0)
+19:50:52 | DEBUG | Cactus | spawnNeedles(): i=3, position=(36547.2,395.2), impulse=(226.2742,226.27412)
+19:50:52 | DEBUG | Cactus | spawnNeedles(): i=4, position=(36550.4,395.2), impulse=(320.0,3.815962E-6)
+19:50:53 | DEBUG | Cactus | update(): currentState=FACING, megaman not in scanner OR should turn
+19:50:53 | DEBUG | Cactus | onChangeState(): current=TURN, previous=FACING
+19:50:53 | DEBUG | Cactus | update(): currentState=TURN, state timer is finished
+19:50:53 | DEBUG | Cactus | onChangeState(): current=FACING, previous=TURN
+19:50:53 | DEBUG | Cactus | onChangeState(): swap facing
+19:50:56 | DEBUG | Cactus | update(): currentState=FACING, state timer is finished
+19:50:56 | DEBUG | Cactus | onChangeState(): current=FLASH, previous=FACING
+19:50:57 | DEBUG | Cactus | update(): currentState=FLASH, state timer is finished
+19:50:57 | DEBUG | Cactus | onChangeState(): current=FACING, previous=FLASH
+19:50:57 | DEBUG | Cactus | onChangeState(): spawn needles
+19:50:57 | DEBUG | Cactus | spawnNeedles(): i=0, position=(36537.6,395.2), impulse=(-320.0,-1.3987645E-5)
+19:50:57 | DEBUG | Cactus | spawnNeedles(): i=1, position=(36540.8,395.2), impulse=(-226.27417,226.27417)
+19:50:57 | DEBUG | Cactus | spawnNeedles(): i=2, position=(36544.0,395.2), impulse=(0.0,320.0)
+19:50:57 | DEBUG | Cactus | spawnNeedles(): i=3, position=(36547.2,395.2), impulse=(226.2742,226.27412)
+19:50:57 | DEBUG | Cactus | spawnNeedles(): i=4, position=(36550.4,395.2), impulse=(320.0,3.815962E-6)
+19:50:57 | DEBUG | Cactus | update(): currentState=FACING, megaman not in scanner OR should turn
+19:50:57 | DEBUG | Cactus | onChangeState(): current=TURN, previous=FACING
+19:50:58 | DEBUG | Cactus | update(): currentState=TURN, state timer is finished
+19:50:58 | DEBUG | Cactus | onChangeState(): current=FACING, previous=TURN
+19:50:58 | DEBUG | Cactus | onChangeState(): swap facing
+19:50:58 | DEBUG | Cactus | update(): currentState=FACING, megaman not in scanner OR should turn
+19:50:58 | DEBUG | Cactus | onChangeState(): current=IDLE, previous=FACING
+19:51:06 | DEBUG | Cactus | onSpawn(): spawnProps=Properties({
+	[bounds=[36440.0,224.0,16.0,16.0]]
+	[x=36440.0]
+	[height=16.0]
+	[id=364]
+	[big=false]
+	[name=Cactus]
+	[y=224.0]
+	[width=16.0]
+})
+19:51:06 | DEBUG | Cactus | update(): currentState=IDLE, megaman is in scanner
+19:51:06 | DEBUG | Cactus | onChangeState(): current=FACING, previous=IDLE
+19:51:07 | DEBUG | Cactus | onSpawn(): spawnProps=Properties({
+	[bounds=[36536.0,352.0,16.0,16.0]]
+	[x=36536.0]
+	[height=16.0]
+	[id=368]
+	[big=true]
+	[name=Cactus]
+	[y=352.0]
+	[width=16.0]
+})
+19:51:07 | DEBUG | Cactus | update(): currentState=IDLE, megaman is in scanner
+19:51:07 | DEBUG | Cactus | onChangeState(): current=FACING, previous=IDLE
+19:51:08 | DEBUG | Cactus | update(): currentState=FACING, megaman not in scanner OR should turn
+19:51:08 | DEBUG | Cactus | onChangeState(): current=IDLE, previous=FACING
+19:51:09 | DEBUG | Cactus | update(): currentState=FACING, megaman not in scanner OR should turn
+19:51:09 | DEBUG | Cactus | onChangeState(): current=IDLE, previous=FACING

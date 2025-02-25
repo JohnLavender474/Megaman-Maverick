@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.entities.hazards
+package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
@@ -30,6 +31,8 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.state.EnumStateMachineBuilder
+import com.mega.game.engine.state.StateMachine
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
@@ -47,7 +50,6 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.enemies.Spiky
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.SpreadExplosion
@@ -64,6 +66,8 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         const val TAG = "Cactus"
 
         private const val TURN_DUR = 0.3f
+        private const val FLASH_DUR = 1f
+        private const val FACING_DUR = 3f
 
         private const val NEEDLES = 5
         private const val NEEDLE_GRAV = -0.1f
@@ -94,10 +98,14 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
             "turn_left" pairTo AnimationDef(3, 1, 0.1f, false),
             "turn_right" pairTo AnimationDef(3, 1, 0.1f, false),
             "left" pairTo AnimationDef(1, 2, gdxArrayOf(1f, 0.15f), true),
-            "right" pairTo AnimationDef(1, 2, gdxArrayOf(1f, 0.15f), true)
+            "right" pairTo AnimationDef(1, 2, gdxArrayOf(1f, 0.15f), true),
+            "flash_left" pairTo AnimationDef(1, 3, 0.05f, true),
+            "flash_right" pairTo AnimationDef(1, 3, 0.05f, true)
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }
+
+    private enum class CactusState { IDLE, TURN, FACING, FLASH }
 
     private enum class CactusType { BIG, SMALL }
 
@@ -108,15 +116,22 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
     override lateinit var facing: Facing
 
+    private lateinit var stateMachine: StateMachine<CactusState>
+    private val currentState: CactusState
+        get() = stateMachine.getCurrent()
+    private val stateTimers = orderedMapOf(
+        CactusState.TURN pairTo Timer(TURN_DUR),
+        CactusState.FLASH pairTo Timer(FLASH_DUR),
+        CactusState.FACING pairTo Timer(FACING_DUR)
+    )
+
     private lateinit var type: CactusType
 
-    private val turnTimer = Timer(TURN_DUR)
-
     private val scanner = GameCircle().setRadius(SCANNER_RADIUS * ConstVals.PPM).also { it.drawingColor = Color.GRAY }
-    private val idle: Boolean
-        get() = turnTimer.isFinished() && !megaman.body.getBounds().overlaps(scanner)
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
+
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             CactusType.entries.forEach { type ->
@@ -129,11 +144,14 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
         super.init()
 
+        stateMachine = buildStateMachine()
+
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val big = spawnProps.getOrDefault(ConstKeys.BIG, true, Boolean::class)
@@ -144,7 +162,8 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
-        turnTimer.setToEnd(false)
+        stateMachine.reset()
+        stateTimers.values().forEach { it.reset() }
 
         FacingUtils.setFacingOf(this)
     }
@@ -155,43 +174,33 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         playSoundNow(SoundAsset.THUMP_SOUND, false)
     }
 
-    private fun spawnNeedles() {
-        val indexStep = when (type) {
-            CactusType.BIG -> 1
-            CactusType.SMALL -> 2
-        }
-
-        for (i in 0 until NEEDLES step indexStep) {
-            val xOffset = xOffsets[i]
-
-            val position = body.getCenter().add(xOffset * ConstVals.PPM, NEEDLE_Y_OFFSET * ConstVals.PPM)
-
-            val angle = angles[i]
-
-            val impulse = GameObjectPools.fetch(Vector2::class)
-                .set(0f, NEEDLE_IMPULSE * ConstVals.PPM)
-                .rotateDeg(angle)
-
-            val needle = MegaEntityFactory.fetch(Needle::class)!!
-            needle.spawn(
-                props(
-                    ConstKeys.OWNER pairTo this,
-                    ConstKeys.IMPULSE pairTo impulse,
-                    ConstKeys.POSITION pairTo position,
-                    ConstKeys.GRAVITY pairTo NEEDLE_GRAV * ConstVals.PPM
-                )
-            )
-        }
-    }
-
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (turnTimer.isFinished() && facing != FacingUtils.getPreferredFacingFor(this)) turnTimer.reset()
-            turnTimer.update(delta)
-            if (turnTimer.isJustFinished()) swapFacing()
-
             scanner.setCenter(body.getCenter())
+
+            if (stateTimers.containsKey(currentState)) {
+                val stateTimer = stateTimers[currentState]!!
+                stateTimer.update(delta)
+                if (stateTimer.isFinished()) {
+                    GameLogger.debug(TAG, "update(): currentState=$currentState, state timer is finished")
+                    stateMachine.next()
+                }
+            }
+
+            when (currentState) {
+                CactusState.IDLE -> if (isMegamanInScanner()) {
+                    GameLogger.debug(TAG, "update(): currentState=$currentState, megaman is in scanner")
+                    stateMachine.next()
+                }
+
+                CactusState.FACING -> if (!isMegamanInScanner() || shouldTurn()) {
+                    GameLogger.debug(TAG, "update(): currentState=$currentState, megaman not in scanner OR should turn")
+                    stateMachine.next()
+                }
+
+                else -> {}
+            }
         }
     }
 
@@ -209,7 +218,7 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(
-            this, body, BodyFixtureDef.of(
+            this, body, BodyFixtureDef.Companion.of(
                 FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE
             )
         )
@@ -233,15 +242,14 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         .animator(
             AnimatorBuilder()
                 .setKeySupplier keySupplier@{
-                    val typePart = type.name.lowercase()
-
-                    if (idle) return@keySupplier "$typePart/idle"
-
-                    val facingPart = when {
-                        turnTimer.isFinished() -> facing.name.lowercase()
-                        else -> "turn_${facing.opposite().name.lowercase()}"
+                    val part1 = type.name.lowercase()
+                    val part2 = when (currentState) {
+                        CactusState.IDLE -> "idle"
+                        CactusState.TURN -> "turn_${facing.opposite().name.lowercase()}"
+                        CactusState.FLASH -> "flash_${facing.name.lowercase()}"
+                        else -> facing.name.lowercase()
                     }
-                    return@keySupplier "$typePart/$facingPart"
+                    return@keySupplier "$part1/$part2"
                 }
                 .applyToAnimations { animations ->
                     animDefs.forEach { entry ->
@@ -265,6 +273,78 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
                 .build()
         )
         .build()
+
+    private fun buildStateMachine() = EnumStateMachineBuilder.create<CactusState>()
+        .setOnChangeState(this::onChangeState)
+        .initialState(CactusState.IDLE)
+        // idle
+        .transition(CactusState.IDLE, CactusState.IDLE) { !isMegamanInScanner() }
+        .transition(CactusState.IDLE, CactusState.TURN) { shouldTurn() }
+        .transition(CactusState.IDLE, CactusState.FACING) { true }
+        // turn
+        .transition(CactusState.TURN, CactusState.FACING) { true }
+        // facing
+        .transition(CactusState.FACING, CactusState.IDLE) { !isMegamanInScanner() }
+        .transition(CactusState.FACING, CactusState.TURN) { shouldTurn() }
+        .transition(CactusState.FACING, CactusState.FLASH) { true }
+        // flash
+        .transition(CactusState.FLASH, CactusState.IDLE) { !isMegamanInScanner() }
+        .transition(CactusState.FLASH, CactusState.TURN) { shouldTurn() }
+        .transition(CactusState.FLASH, CactusState.FACING) { true }
+        // build
+        .build()
+
+    private fun onChangeState(current: CactusState, previous: CactusState) {
+        GameLogger.debug(TAG, "onChangeState(): current=$current, previous=$previous")
+
+        stateTimers[current]?.reset()
+        stateTimers[previous]?.reset()
+
+        if (current == CactusState.FACING && previous == CactusState.TURN) {
+            GameLogger.debug(TAG, "onChangeState(): swap facing")
+            swapFacing()
+        }
+
+        if (previous == CactusState.FLASH) {
+            GameLogger.debug(TAG, "onChangeState(): spawn needles")
+            spawnNeedles()
+        }
+    }
+
+    private fun shouldTurn() = facing != FacingUtils.getPreferredFacingFor(this)
+
+    private fun isMegamanInScanner() = megaman.body.getBounds().overlaps(scanner)
+
+    private fun spawnNeedles() {
+        val indexStep = when (type) {
+            CactusType.BIG -> 1
+            CactusType.SMALL -> 2
+        }
+
+        for (i in 0 until NEEDLES step indexStep) {
+            val xOffset = xOffsets[i]
+
+            val position = body.getCenter().add(xOffset * ConstVals.PPM, NEEDLE_Y_OFFSET * ConstVals.PPM)
+
+            val angle = angles[i]
+
+            val impulse = GameObjectPools.fetch(Vector2::class)
+                .set(0f, NEEDLE_IMPULSE * ConstVals.PPM)
+                .rotateDeg(angle)
+
+            GameLogger.debug(TAG, "spawnNeedles(): i=$i, position=$position, impulse=$impulse")
+
+            val needle = MegaEntityFactory.fetch(Needle::class)!!
+            needle.spawn(
+                props(
+                    ConstKeys.OWNER pairTo this,
+                    ConstKeys.IMPULSE pairTo impulse,
+                    ConstKeys.POSITION pairTo position,
+                    ConstKeys.GRAVITY pairTo NEEDLE_GRAV * ConstVals.PPM
+                )
+            )
+        }
+    }
 
     override fun getTag() = TAG
 }

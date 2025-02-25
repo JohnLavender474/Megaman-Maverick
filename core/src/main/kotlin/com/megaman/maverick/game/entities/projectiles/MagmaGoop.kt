@@ -73,11 +73,8 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         rotation = spawnProps.get(ConstKeys.ROTATION, Float::class)!!
     }
 
-    override fun hitBlock(
-        blockFixture: IFixture,
-        thisShape: IGameShape2D,
-        otherShape: IGameShape2D
-    ) = explodeAndDie(thisShape, otherShape)
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
+        explodeAndDie(thisShape, otherShape)
 
     override fun explodeAndDie(vararg params: Any?) {
         GameLogger.debug(TAG, "explodeAndDie(): params=$params")
@@ -110,7 +107,7 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.5f * ConstVals.PPM)
+        body.setSize(0.85f * ConstVals.PPM, 0.65f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
 
