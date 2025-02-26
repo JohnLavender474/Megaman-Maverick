@@ -37,15 +37,16 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.BreakableIce
 import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.explosions.IceShard
+import com.megaman.maverick.game.entities.explosions.SmokePuff
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -69,7 +70,18 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         private var region1: TextureRegion? = null
         private var region2: TextureRegion? = null
 
-        private val INSTANT_DEATH_ENTITIES = objectSetOf(Megaman::class, ChargedShot::class)
+        private val INSTANT_DEATH_ENTITIES = objectSetOf(
+            Bullet::class,
+            Megaman::class,
+            ChargedShot::class,
+        )
+        private val SMOKE_PUFF_ENTITIES = objectSetOf(
+            MagmaGoop::class,
+            MagmaWave::class,
+            MagmaMeteor::class,
+            MagmaFlame::class,
+            Fireball::class,
+        )
     }
 
     private var hitTimes = 0
@@ -128,20 +140,30 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         hitTimes = 0
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) = getHit(damageable as IGameEntity)
+    override fun onDamageInflictedTo(damageable: IDamageable) = shatterAndDie()
 
     private fun shatterAndDie() {
         destroy()
 
         for (i in 0 until 5) {
-            val iceShard = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.ICE_SHARD)!!
+            val iceShard = MegaEntityFactory.fetch(IceShard::class)!!
             iceShard.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.INDEX pairTo i))
         }
+    }
+
+    private fun smokePuff() {
+        destroy()
+
+        val puff = MegaEntityFactory.fetch(SmokePuff::class)!!
+        puff.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+
+        playSoundNow(SoundAsset.WHOOSH_SOUND, false)
     }
 
     private fun getHit(entity: IGameEntity) {
         GameLogger.debug(TAG, "getHit(): entity=$entity")
         when {
+            SMOKE_PUFF_ENTITIES.contains(entity::class) -> smokePuff()
             INSTANT_DEATH_ENTITIES.contains(entity::class) -> shatterAndDie()
             else -> {
                 hitTimes++

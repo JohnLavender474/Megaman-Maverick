@@ -471,9 +471,9 @@ class MegamanMaverickGame(
         logFileWriter?.dispose()
     }
 
-    fun setCurrentLevelDef(levelDef: LevelDefinition) = putProperty("${ConstKeys.LEVEL}_${ConstKeys.DEF}", levelDef)
+    fun setCurrentLevel(levelDef: LevelDefinition) = putProperty("${ConstKeys.LEVEL}_${ConstKeys.DEF}", levelDef)
 
-    fun getCurrentLevelDef() = getProperty("${ConstKeys.LEVEL}_${ConstKeys.DEF}", LevelDefinition::class)!!
+    fun getCurrentLevel() = getProperty("${ConstKeys.LEVEL}_${ConstKeys.DEF}", LevelDefinition::class)!!
 
     fun saveState() {
         val state = this.state.toString()
@@ -651,7 +651,7 @@ class MegamanMaverickGame(
 
         setCurrentScreen(ScreenEnum.LEVEL_SCREEN.name)
 
-        setCurrentLevelDef(levelDef)
+        setCurrentLevel(levelDef)
     }
 
     fun getGameCamera() = viewports.get(ConstKeys.GAME).camera as RotatableCamera

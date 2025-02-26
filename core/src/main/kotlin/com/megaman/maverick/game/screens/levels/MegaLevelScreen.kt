@@ -530,7 +530,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 if (!mini) {
                     audioMan.fadeOutMusic(FADE_OUT_MUSIC_ON_BOSS_SPAWN)
 
-                    val levelDef = game.getCurrentLevelDef()
+                    val levelDef = game.getCurrentLevel()
                     if (game.state.isLevelDefeated(levelDef)) {
                         eventsMan.submitEvent(Event(EventType.VICTORY_EVENT))
                         return
@@ -647,7 +647,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 val nextScreen = screenOnCompletion.invoke(game)
                 game.setCurrentScreen(nextScreen.name)
 
-                val level = game.getCurrentLevelDef()
+                val level = game.getCurrentLevel()
                 game.state.addLevelDefeated(level)
             }
 

@@ -23,7 +23,6 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
-import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
@@ -51,24 +50,20 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
 
     companion object {
         const val TAG = "SmokePuff"
-        private var smokePuffRegion: TextureRegion? = null
+        private var region: TextureRegion? = null
     }
 
-    override var owner: IGameEntity? = null
     override var direction: Direction
         get() = body.direction
         set(value) {
             body.direction = value
         }
+    override var owner: IGameEntity? = null
 
     private lateinit var animation: IAnimation
 
-    override fun getType() = EntityType.EXPLOSION
-
     override fun init() {
-        if (smokePuffRegion == null)
-            smokePuffRegion =
-                game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "SmokePuff")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
         addComponent(defineBodyComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
@@ -78,7 +73,7 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
+        owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
         direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -97,7 +92,6 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
         (damageable is Megaman && owner is AbstractEnemy) ||
                 (damageable.isAny(AbstractEnemy::class, IHazard::class) && owner is Megaman)
 
-
     private fun defineUpdatablesComponent() = UpdatablesComponent({
         if (animation.isFinished()) destroy()
     })
@@ -115,7 +109,7 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        animation = Animation(smokePuffRegion!!, 1, 7, 0.025f, false)
+        animation = Animation(region!!, 1, 7, 0.025f, false)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
@@ -138,4 +132,6 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
         }
         return spritesComponent
     }
+
+    override fun getType() = EntityType.EXPLOSION
 }

@@ -201,6 +201,8 @@
             <key type="filename">../frames/LevelPauseScreen/enhancements/enhancements.png</key>
             <key type="filename">../frames/LevelPauseScreen/options/exit.png</key>
             <key type="filename">../frames/LevelPauseScreen/options/exit_selected.png</key>
+            <key type="filename">../frames/LevelPauseScreen/weapons/ice_cube.png</key>
+            <key type="filename">../frames/LevelPauseScreen/weapons/ice_cube_selected.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

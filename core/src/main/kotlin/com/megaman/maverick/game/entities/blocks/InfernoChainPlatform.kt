@@ -20,6 +20,8 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setBounds
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -29,7 +31,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
-import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.*
 
 class InfernoChainPlatform(game: MegamanMaverickGame) : FeetRiseSinkBlock(game), ICullableEntity, ISpritesEntity {
 
@@ -99,8 +101,30 @@ class InfernoChainPlatform(game: MegamanMaverickGame) : FeetRiseSinkBlock(game),
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+
         spawnPropsCopy.clear()
+
         sprites.clear()
+    }
+
+    override fun shouldMoveDown() = super.shouldMoveDown() && !body.isSensing(BodySense.FEET_ON_GROUND)
+
+    override fun defineBodyComponent(): BodyComponent {
+        val component = super.defineBodyComponent()
+        val body = component.body
+
+        val feetBounds = GameRectangle().setHeight(0.1f * ConstVals.PPM)
+        val feetFixture = Fixture(body, FixtureType.FEET, feetBounds)
+        body.addFixture(feetFixture)
+
+        body.preProcess.put(ConstKeys.FEET) {
+            val width = 0.75f * body.getWidth()
+            feetBounds.setWidth(width)
+
+            feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
+        }
+
+        return BodyComponentCreator.amend(this, component)
     }
 
     private fun defineCullablesComponent() = CullablesComponent(

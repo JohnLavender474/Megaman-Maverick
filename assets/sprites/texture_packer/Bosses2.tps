@@ -175,6 +175,7 @@
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">../frames/Bosses2/DesertMan/arm_extension.png</key>
             <key type="filename">../frames/Bosses2/DesertMan/wall_slide.png</key>
+            <key type="filename">../frames/Bosses2/InfernoMan/frozen.png</key>
             <key type="filename">../frames/Bosses2/InfernoMan/jump_down.png</key>
             <key type="filename">../frames/Bosses2/InfernoMan/jump_up.png</key>
             <key type="filename">../frames/Bosses2/InfernoMan/slide.png</key>

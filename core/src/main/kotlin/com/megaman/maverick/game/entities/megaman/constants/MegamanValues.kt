@@ -68,7 +68,7 @@ object MegamanValues {
 
     const val BULLET_VEL = 10f
 
-    const val ICE_CUBE_VEL = 8f
+    const val ICE_CUBE_VEL = 12f
 
     const val FIRE_BALL_Y_VEL = 7.5f
     const val FIRE_BALL_X_VEL = 10f

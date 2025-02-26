@@ -136,7 +136,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        block!!.setSize(BLOCK_WIDTH * ConstVals.PPM, BLOCK_HEIGHT * ConstVals.PPM)
+        block!!.body.setSize(BLOCK_WIDTH * ConstVals.PPM, BLOCK_HEIGHT * ConstVals.PPM)
 
         switchDelay.update(delta)
         if (switchDelay.isJustFinished()) {

@@ -31,6 +31,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.levels.LevelUtils
 import com.megaman.maverick.game.utils.extensions.splitIntoGameRectanglesBasedOnCenter
 import com.megaman.maverick.game.utils.extensions.toGdxRectangle
 
@@ -56,6 +57,8 @@ class LavaFall(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ polygon }), debug = true))
     }
 
+    override fun canSpawn(spawnProps: Properties) = !LevelUtils.isInfernoManLevelFrozen(game.state)
+
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
@@ -72,6 +75,7 @@ class LavaFall(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+
         sprites.clear()
         animators.clear()
         clearSpriteUpdateFunctions()

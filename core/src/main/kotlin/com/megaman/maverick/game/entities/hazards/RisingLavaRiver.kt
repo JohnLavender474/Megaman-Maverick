@@ -42,6 +42,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.utils.extensions.getPosition
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -124,6 +125,8 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         addComponent(AnimationsComponent())
         addComponent(AudioComponent())
     }
+
+    override fun canSpawn(spawnProps: Properties) = !game.state.isLevelDefeated(LevelDefinition.GLACIER_MAN)
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")

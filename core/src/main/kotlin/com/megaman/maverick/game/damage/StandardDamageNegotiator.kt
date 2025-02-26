@@ -10,6 +10,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.MagmaExplosion
 import com.megaman.maverick.game.entities.hazards.Saw
+import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
@@ -34,6 +35,7 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             },
             Saw::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             MoonScythe::class pairTo dmgNeg(5),
+            SmallIceCube::class pairTo dmgNeg(3)
         )
 
         private val MEDIUM_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -49,7 +51,8 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
                 if (it.fullyCharged) 10 else 5
             },
             Saw::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-            MoonScythe::class pairTo dmgNeg(15)
+            MoonScythe::class pairTo dmgNeg(15),
+            SmallIceCube::class pairTo dmgNeg(5)
         )
 
         private val SMALL_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -65,7 +68,8 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
                 if (it.fullyCharged) 15 else 10
             },
             Saw::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-            MoonScythe::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
+            MoonScythe::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            SmallIceCube::class pairTo dmgNeg(15)
         )
 
         // damage is determined by the damageable's size instead of the damager's size

@@ -21,12 +21,13 @@ open class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
         const val TAG = "FeetRiseSinkBlock"
     }
 
-    private val feetSet = OrderedSet<IFixture>()
+    protected val feetSet = OrderedSet<IFixture>()
 
-    private var maxY = 0f
-    private var minY = 0f
-    private var risingSpeed = 0f
-    private var fallingSpeed = 0f
+    protected var maxY = 0f
+    protected var minY = 0f
+
+    protected var risingSpeed = 0f
+    protected var fallingSpeed = 0f
 
     override fun init() {
         super.init()
@@ -49,12 +50,12 @@ open class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
             }
 
             when {
-                !feetSet.isEmpty -> when {
+                shouldMoveDown() -> when {
                     body.getY() > minY -> body.physics.velocity.y = fallingSpeed * ConstVals.PPM
                     else -> body.physics.velocity.y = 0f
                 }
 
-                body.getMaxY() < maxY -> body.physics.velocity.y = risingSpeed * ConstVals.PPM
+                shouldMoveUp() -> body.physics.velocity.y = risingSpeed * ConstVals.PPM
                 else -> body.physics.velocity.y = 0f
             }
 
@@ -66,6 +67,10 @@ open class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
 
         body.drawingColor = Color.BLUE
     }
+
+    protected open fun shouldMoveDown() = !feetSet.isEmpty
+
+    protected open fun shouldMoveUp() = feetSet.isEmpty && body.getMaxY() < maxY
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
@@ -85,6 +90,7 @@ open class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
 
     override fun onDestroy() {
         super.onDestroy()
+
         feetSet.clear()
     }
 

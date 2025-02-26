@@ -37,7 +37,6 @@ class HazardsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val CACTUS = "Cactus"
         const val MAGMA_FLAME = "MagmaFlame"
         const val DEADLY_LEAF = "DeadlyLeaf"
-        const val LAVA_RIVER = "LavaRiver"
         const val INFERNO_OVEN = "InfernoOven"
         const val INFERNO_METEOR_SHOWER = "InfernoMeteorShower"
         const val RISING_LAVA_RIVER = "RisingLavaRiver"
@@ -72,7 +71,6 @@ class HazardsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(CACTUS, GameEntityPoolCreator.create { Cactus(game) })
         pools.put(MAGMA_FLAME, GameEntityPoolCreator.create { MagmaFlame(game) })
         pools.put(DEADLY_LEAF, GameEntityPoolCreator.create { DeadlyLeaf(game) })
-        pools.put(LAVA_RIVER, GameEntityPoolCreator.create { LavaRiver(game) })
         pools.put(INFERNO_OVEN, GameEntityPoolCreator.create { InfernoOven(game) })
         pools.put(INFERNO_METEOR_SHOWER, GameEntityPoolCreator.create { InfernoMeteorShower(game) })
         pools.put(RISING_LAVA_RIVER, GameEntityPoolCreator.create { RisingLavaRiver(game) })

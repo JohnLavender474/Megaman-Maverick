@@ -29,6 +29,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.ExplosionOrb
+import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
@@ -80,7 +81,8 @@ abstract class AbstractBoss(
                 it as ChargedShotExplosion
                 if (it.fullyCharged) 2 else 1
             },
-            MoonScythe::class pairTo dmgNeg(1)
+            MoonScythe::class pairTo dmgNeg(1),
+            SmallIceCube::class pairTo dmgNeg(1)
         )
     }
 

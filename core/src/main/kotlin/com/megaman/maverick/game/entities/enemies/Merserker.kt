@@ -23,6 +23,7 @@ import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
@@ -89,18 +90,18 @@ class Merserker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     private fun shouldChopDown() =
         megaman.body.getX() >= body.getX() &&
-            megaman.body.getMaxX() <= body.getMaxX() &&
-            megaman.getY() <= body.getMaxY()
+            megaman.body.getBounds().getMaxX() <= body.getBounds().getMaxX() &&
+            megaman.body.getBounds().getY() <= body.getBounds().getMaxY()
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             when (state) {
                 MerserkerState.FLY -> TODO()
-                MerserkerState.PRE_CHOP_DOWN -> TODO()
                 MerserkerState.CHOP_DOWN -> TODO()
                 MerserkerState.ON_GROUND -> TODO()
                 MerserkerState.RETURN_UP -> TODO()
+                MerserkerState.PRE_CHOP_DOWN -> TODO()
             }
         }
     }
@@ -127,7 +128,7 @@ class Merserker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     }
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
-        .sprite(TAG, GameSprite().apply { setSize(SPRITE_SIZE * ConstVals.PPM) })
+        .sprite(TAG, GameSprite().also { it.setSize(SPRITE_SIZE * ConstVals.PPM) })
         .updatable { _, sprite ->
             sprite.hidden = damageBlink
             sprite.setCenter(body.getCenter())

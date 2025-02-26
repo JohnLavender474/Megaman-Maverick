@@ -89,7 +89,7 @@ fun Megaman.getSpritePriority(out: DrawingPriority): DrawingPriority {
     return out
 }
 
-fun Megaman.shouldHideSprite() = !ready || teleporting
+fun Megaman.shouldHideSprite() = !frozen && (!ready || teleporting)
 
 internal fun Megaman.defineSpritesComponent(): SpritesComponent {
     val component = SpritesComponent()

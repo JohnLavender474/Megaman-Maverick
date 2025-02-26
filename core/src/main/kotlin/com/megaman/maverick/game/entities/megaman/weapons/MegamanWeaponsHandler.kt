@@ -442,7 +442,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
         val spawn = getSpawnPosition(MegamanWeapon.FIRE_BALL)
 
-        if (game.getCurrentLevelDef() == LevelDefinition.MOON_MAN) {
+        if (game.getCurrentLevel() == LevelDefinition.MOON_MAN) {
             GameLogger.debug(TAG, "shootFireball(): in Moon Man's stage, fire cannot exist in outer space")
 
             val explosion = MegaEntityFactory.fetch(MagmaExplosion::class)!!

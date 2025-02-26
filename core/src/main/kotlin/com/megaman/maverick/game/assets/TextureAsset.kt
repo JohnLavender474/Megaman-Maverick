@@ -30,7 +30,7 @@ enum class TextureAsset(src: String) : IAsset {
     LEVEL_SELECT_SCREEN("LevelSelectScreen.txt"),
     LEVEL_PAUSE_SCREEN("LevelPauseScreen.txt"),
     MEGAMAN_BUSTER("Megaman_v2_BUSTER.txt"),
-    // TODO: MEGAMAN_ICE_CUBE("Megaman_v2_ICECUBE.txt"),
+    MEGAMAN_ICE_CUBE("Megaman_v2_ICE.txt"),
     MEGAMAN_MOON_SCYTHE("Megaman_v2_MOON.txt"),
     MEGAMAN_FIRE_BALL("Megaman_v2_FIREBALL.txt"),
     MEGAMAN_RUSH_JETPACK("Megaman_v2_RUSH_JET.txt"),

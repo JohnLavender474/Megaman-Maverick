@@ -92,7 +92,7 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         private const val CHARGE_BEGIN_MAX_DELAY = 2f
         private const val CHARGE_BEGIN_MIN_DELAY = 1f
         private const val CHARGE_END_DELAY = 0.1f
-        private const val CHARGE_CHANCE_DELTA = 25
+        private const val CHARGE_CHANCE_DELTA = 35
 
         private const val FIRE_DUR = 2.5f
         private const val FIRE_TIME = 1.6f
@@ -151,7 +151,7 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
 
     private val fireDelay = Timer()
     private val fireTimer = Timer(FIRE_DUR)
-        .addRunnable(TimeMarkedRunnable(FIRE_TIME) { spitFireball() }.setToRunOnlyWhenJustPassedTime(true))
+        .addRunnable(TimeMarkedRunnable(FIRE_TIME) { spitFireballs() }.setToRunOnlyWhenJustPassedTime(true))
     private val firing: Boolean
         get() = !fireTimer.isFinished()
 
@@ -594,7 +594,6 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
             currentTarget.set(target)
 
             chargeState = ProcessState.BEGIN
-
             chargeChance = 0
 
             GameLogger.debug(
@@ -638,7 +637,7 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
 
     private fun getRoomSideOf(target: Vector2) = if (target.x < roomCenter.x) RoomSide.LEFT else RoomSide.RIGHT
 
-    private fun spitFireball() {
+    private fun spitFireballs() {
         val fireballsToLaunch = when {
             getHealthRatio() > 0.5f -> 1
             getHealthRatio() > 0.25f -> 2

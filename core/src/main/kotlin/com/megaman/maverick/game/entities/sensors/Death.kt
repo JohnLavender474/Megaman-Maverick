@@ -14,7 +14,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
-class Death(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
+open class Death(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
 
     companion object {
         const val TAG = "Death"

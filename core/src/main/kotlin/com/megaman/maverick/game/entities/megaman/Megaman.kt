@@ -77,6 +77,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
             when (levelDef) {
                 LevelDefinition.MOON_MAN -> set.addAll(MegamanWeapon.MOON_SCYTHE, MegamanWeapon.RUSH_JETPACK)
                 LevelDefinition.INFERNO_MAN -> set.add(MegamanWeapon.FIRE_BALL)
+                LevelDefinition.GLACIER_MAN -> set.add(MegamanWeapon.ICE_CUBE)
                 else -> {}
             }
 

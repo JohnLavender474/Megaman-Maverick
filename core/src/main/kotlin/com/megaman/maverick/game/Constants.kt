@@ -47,6 +47,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val FROZEN = "frozen"
     const val MOON = "moon"
     const val FIRE = "fire"
     const val OPTIONS = "options"

@@ -26,6 +26,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.levels.LevelUtils
 import kotlin.math.ceil
 
 class Smoke(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, ICullableEntity {
@@ -54,6 +55,8 @@ class Smoke(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, I
         addComponent(AnimationsComponent())
         addComponent(defineCullablesComponent())
     }
+
+    override fun canSpawn(spawnProps: Properties) = !LevelUtils.isInfernoManLevelFrozen(game.state)
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")

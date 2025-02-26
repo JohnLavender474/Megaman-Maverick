@@ -22,7 +22,6 @@ class BlocksFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val SWINGING_PLATFORM = "SwingingPlatform"
         const val RAIL_TRACK_PLATFORM = "RailTrackPlatform"
         const val BREAKABLE_ICE = "BreakableIce"
-        const val BREAKABLE_BLOCK = "BreakableBlock"
         const val FEET_RISE_SINK_BLOCK = "FeetRiseSinkBlock"
         const val LADDER_TOP = "LadderTop"
         const val DESTROYABLE_WOOD_PLANK = "DestroyableWoodPlank"
@@ -45,7 +44,6 @@ class BlocksFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(SWINGING_PLATFORM, GameEntityPoolCreator.create { SwingingPlatform(game) })
         pools.put(RAIL_TRACK_PLATFORM, GameEntityPoolCreator.create { RailTrackPlatform(game) })
         pools.put(BREAKABLE_ICE, GameEntityPoolCreator.create { BreakableIce(game) })
-        pools.put(BREAKABLE_BLOCK, GameEntityPoolCreator.create { BreakableBlock(game) })
         pools.put(FEET_RISE_SINK_BLOCK, GameEntityPoolCreator.create { FeetRiseSinkBlock(game) })
         pools.put(LADDER_TOP, GameEntityPoolCreator.create { LadderTop(game) })
         pools.put(DESTROYABLE_WOOD_PLANK, GameEntityPoolCreator.create { WoodPlank(game) })

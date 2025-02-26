@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="400" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="621">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="400" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="633">
  <tileset firstgid="1" source="../tsx/InfernoManTileset.tsx"/>
  <tileset firstgid="46" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1070" source="../tsx/MagmaMan.tsx"/>
@@ -279,6 +279,8 @@
   <object id="610" name="Smoke" x="10592" y="384" width="96" height="1344"/>
   <object id="611" name="Smoke" x="5408" y="1152" width="96" height="608"/>
   <object id="613" name="Smoke" x="10240" y="384" width="96" height="1344"/>
+  <object id="621" name="Smoke" x="9024" y="736" width="96" height="928"/>
+  <object id="622" name="Smoke" x="8768" y="736" width="96" height="928"/>
  </objectgroup>
  <objectgroup id="12" name="children">
   <object id="62" name="Target" x="2512" y="2768" width="32" height="32"/>
@@ -760,6 +762,15 @@
   <object id="618" x="4448" y="2272" width="128" height="96"/>
   <object id="619" x="4288" y="1856" width="128" height="160"/>
   <object id="620" x="4416" y="1888" width="64" height="128"/>
+  <object id="623" name="InfernoIceBlock" x="936" y="3016" width="408" height="184"/>
+  <object id="624" name="InfernoIceBlock" x="1728" y="3016" width="408" height="184"/>
+  <object id="625" name="InfernoIceBlock" x="3336" y="3016" width="600" height="184"/>
+  <object id="626" name="InfernoIceBlock" x="5024" y="1672" width="416" height="184"/>
+  <object id="627" name="InfernoIceBlock" x="9376" y="1640" width="512" height="152"/>
+  <object id="629" name="FrozenBlock" x="11072" y="672" width="32" height="32"/>
+  <object id="630" name="FrozenBlock" x="11072" y="704" width="32" height="32"/>
+  <object id="631" name="FrozenBlock" x="5312" y="1280" width="32" height="32"/>
+  <object id="632" name="FrozenBlock" x="5312" y="1312" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="10" name="enemies">
   <object id="61" name="Popoheli" x="2512" y="2656" width="32" height="32">
@@ -1446,12 +1457,12 @@
     <property name="instant" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="31" name="Death" x="928" y="3040" width="416" height="160">
+  <object id="31" name="InfernoDeath" x="928" y="3040" width="416" height="160">
    <properties>
     <property name="instant" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="59" name="Death" x="1728" y="3040" width="416" height="160">
+  <object id="59" name="InfernoDeath" x="1728" y="3040" width="416" height="160">
    <properties>
     <property name="instant" type="bool" value="true"/>
    </properties>
@@ -1471,15 +1482,13 @@
     <property name="instant" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="108" name="Death" x="3328" y="3008" width="608" height="192">
+  <object id="108" name="InfernoDeath" x="3328" y="3040" width="608" height="160">
    <properties>
     <property name="instant" type="bool" value="true"/>
-    <property name="spawn_room" value="room1"/>
-    <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
   <object id="160" name="Death" x="4160" y="1984" width="128" height="32"/>
-  <object id="220" name="Death" x="5024" y="1664" width="416" height="192">
+  <object id="220" name="InfernoDeath" x="5024" y="1696" width="416" height="160">
    <properties>
     <property name="instant" type="bool" value="true"/>
    </properties>
@@ -1507,7 +1516,7 @@
    </properties>
   </object>
   <object id="465" name="Death" x="3968" y="1984" width="64" height="32"/>
-  <object id="504" name="Death" x="9376" y="1632" width="512" height="160">
+  <object id="504" name="InfernoDeath" x="9376" y="1664" width="512" height="128">
    <properties>
     <property name="instant" type="bool" value="true"/>
    </properties>
@@ -1559,14 +1568,14 @@
     <property name="value" value="d"/>
    </properties>
   </object>
-  <object id="605" name="HealthTank" x="11104" y="704" width="32" height="32">
+  <object id="605" name="HealthTank" x="11120" y="704" width="32" height="32">
    <properties>
     <property name="value" value="b"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup id="9" name="temp">
-  <object id="410" name="0" x="9280" y="1568" width="32" height="32"/>
+  <object id="628" name="0" x="11520" y="608" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="8" name="player">
   <object id="10" name="0" x="128" y="2912" width="32" height="32"/>

@@ -1,5 +1,5 @@
 Platforms1.png
-size: 492, 1012
+size: 506, 1012
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -145,7 +145,7 @@ ConveyorBelt/MiddlePart-MoveLeft-Green
   index: -1
 ConveyorBelt/MiddlePart-MoveRight-Green
   rotate: false
-  xy: 0, 34
+  xy: 474, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -159,7 +159,7 @@ ConveyorBelt/MiddlePart
   index: -1
 ConveyorBelt/RightPart-MoveLeft-Green
   rotate: false
-  xy: 34, 34
+  xy: 0, 34
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -173,14 +173,14 @@ ConveyorBelt/RightPart-MoveLeft
   index: -1
 ConveyorBelt/RightPart-MoveRight-Green
   rotate: false
-  xy: 68, 34
+  xy: 34, 34
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 CrumblingBlock
   rotate: false
-  xy: 102, 34
+  xy: 68, 34
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -246,6 +246,13 @@ FlipperPlatform/RightDelay
   xy: 0, 366
   size: 384, 64
   orig: 384, 64
+  offset: 0, 0
+  index: -1
+FrozenBlock
+  rotate: false
+  xy: 102, 34
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
   index: -1
 GearTrolleyPlatform

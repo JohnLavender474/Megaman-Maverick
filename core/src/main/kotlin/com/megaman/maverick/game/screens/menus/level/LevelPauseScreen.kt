@@ -49,7 +49,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initia
             .row(gdxArrayOf(MegamanWeapon.MEGA_BUSTER, null))
             .row(gdxArrayOf(MegamanWeapon.MOON_SCYTHE, null))
             .row(gdxArrayOf(MegamanWeapon.FIRE_BALL, null))
-            .row(gdxArrayOf(null, null))
+            .row(gdxArrayOf(MegamanWeapon.ICE_CUBE, null))
             .row(gdxArrayOf(null, MegamanWeapon.RUSH_JETPACK))
             .row(gdxArrayOf(MegaHealthTank.A, MegaHealthTank.C, null))
             .row(gdxArrayOf(MegaHealthTank.B, MegaHealthTank.D, ConstKeys.EXIT))
