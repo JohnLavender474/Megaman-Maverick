@@ -45,6 +45,7 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getOpposingPosition
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
@@ -67,7 +68,7 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     enum class FlameThrowerState { COOL, BLINK, HOT }
 
-    override var direction = Direction.UP
+    override lateinit var direction: Direction
 
     private val loop = Loop(FlameThrowerState.entries.toTypedArray().toGdxArray(), false)
     private val initDelayTimer = Timer(0f)
@@ -97,7 +98,7 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         super.onSpawn(spawnProps)
 
         direction =
-            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
+            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
 
         val size = GameObjectPools.fetch(Vector2::class)
         body.setSize(
@@ -163,7 +164,14 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         body.addFixture(damagerFixture)
-        debugShapes.add { damagerFixture }
+        damagerFixture.drawingColor = Color.RED
+        // debugShapes.add { damagerFixture }
+
+        val explosionFixture = Fixture(body, FixtureType.EXPLOSION, GameRectangle())
+        explosionFixture.attachedToBody = false
+        body.addFixture(explosionFixture)
+        explosionFixture.drawingColor = Color.ORANGE
+        debugShapes.add { explosionFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             val size = GameObjectPools.fetch(Vector2::class)
@@ -175,14 +183,20 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             )
 
             damagerFixture.setActive(loop.getCurrent() == FlameThrowerState.HOT)
-            damagerFixture.drawingColor = if (damagerFixture.isActive()) Color.RED else Color.YELLOW
+            damagerFixture.drawingColor = if (damagerFixture.isActive()) Color.RED else Color.DARK_GRAY
 
-            damagerFixture.offsetFromBodyAttachment = (when (direction) {
-                Direction.UP -> Vector2(0f, DAMAGER_FIXTURE_VERT_OFFSET)
-                Direction.DOWN -> Vector2(0f, -DAMAGER_FIXTURE_VERT_OFFSET)
-                Direction.LEFT -> Vector2(-DAMAGER_FIXTURE_HORIZ_OFFSET, 0.1f)
-                Direction.RIGHT -> Vector2(DAMAGER_FIXTURE_HORIZ_OFFSET, 0.1f)
-            }).scl(ConstVals.PPM.toFloat())
+            damagerFixture.offsetFromBodyAttachment.let {
+                when (direction) {
+                    Direction.UP -> it.set(0f, DAMAGER_FIXTURE_VERT_OFFSET)
+                    Direction.DOWN -> it.set(0f, -DAMAGER_FIXTURE_VERT_OFFSET)
+                    Direction.LEFT -> it.set(-DAMAGER_FIXTURE_HORIZ_OFFSET, 0.1f)
+                    Direction.RIGHT -> it.set(DAMAGER_FIXTURE_HORIZ_OFFSET, 0.1f)
+                }
+                it.scl(ConstVals.PPM.toFloat())
+            }
+
+            explosionFixture.setActive(damagerFixture.isActive())
+            (explosionFixture.rawShape as GameRectangle).set(damagerFixture.getShape().getBoundingRectangle())
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="1200" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="369">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="1200" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="370">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/Gravity Man Stage.tsx"/>
  <tileset firstgid="4609" source="../tsx/MM3Wily1.tsx"/>
@@ -686,14 +686,19 @@
   <object id="336" name="GreenUziJoe" x="34616" y="304" width="16" height="16"/>
   <object id="353" name="TorikoPlundge" x="35504" y="288" width="32" height="32"/>
   <object id="363" name="Coldier" x="33872" y="256" width="32" height="32"/>
-  <object id="364" name="Cactus" x="36440" y="400" width="16" height="16">
+  <object id="364" name="SniperJoe" x="35640" y="272" width="16" height="16">
    <properties>
-    <property name="big" type="bool" value="false"/>
+    <property name="type" value="fire"/>
    </properties>
   </object>
   <object id="368" name="Cactus" x="36536" y="272" width="16" height="16">
    <properties>
     <property name="big" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="369" name="Cactus" x="36440" y="400" width="16" height="16">
+   <properties>
+    <property name="big" type="bool" value="false"/>
    </properties>
   </object>
  </objectgroup>

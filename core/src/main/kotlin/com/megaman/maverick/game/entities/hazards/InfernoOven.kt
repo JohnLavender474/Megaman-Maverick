@@ -51,6 +51,7 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
+import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getOpposingPosition
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
@@ -170,11 +171,20 @@ class InfernoOven(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
         )
         damagerFixture.offsetFromBodyAttachment.y = DAMAGER_HEIGHT * ConstVals.PPM / 2f
         body.addFixture(damagerFixture)
-        debugShapes.add { damagerFixture }
+        // debugShapes.add { damagerFixture }
+
+        val explosionFixture= Fixture(body, FixtureType.EXPLOSION, GameRectangle())
+        explosionFixture.attachedToBody = false
+        body.addFixture(explosionFixture)
+        explosionFixture.drawingColor = Color.ORANGE
+        debugShapes.add { explosionFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             damagerFixture.setActive(currentState == InfernoOvenState.HOT)
             damagerFixture.drawingColor = if (damagerFixture.isActive()) Color.RED else Color.WHITE
+
+            explosionFixture.setActive(damagerFixture.isActive())
+            (explosionFixture.rawShape as GameRectangle).set(damagerFixture.getShape().getBoundingRectangle())
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

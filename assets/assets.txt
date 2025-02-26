@@ -333,6 +333,7 @@ sprites/frames/Enemies2/Togglee/SwitchToRight.png
 sprites/frames/Enemies2/Togglee/SwitchToLeft.png
 sprites/frames/Enemies2/DemonMet/stand.png
 sprites/frames/Enemies2/DemonMet/fly.png
+sprites/frames/Enemies2/DemonMet/frozen.png
 sprites/frames/Enemies2/DemonMet/angel.png
 sprites/frames/Enemies2/UnderwaterPenguinBot.png
 sprites/frames/Enemies2/StagedMoonLandingFlag/fall.png
@@ -343,6 +344,7 @@ sprites/frames/Enemies2/StagedMoonLandingFlag/shield.png
 sprites/frames/Enemies2/FireDispensenator/close.png
 sprites/frames/Enemies2/FireDispensenator/open.png
 sprites/frames/Enemies2/FireDispensenator/fire.png
+sprites/frames/Enemies2/FireDispensenator/frozen.png
 sprites/frames/Enemies2/FireDispensenator/sleep.png
 sprites/frames/Enemies2/UnderwaterPenguinBot/swim.png
 sprites/frames/Enemies2/UnderwaterPenguinBot/bent.png
@@ -1598,7 +1600,6 @@ sprites/frames/Enemies1/CanonHopper/stand.png
 sprites/frames/Enemies1/CanonHopper/hop.png
 sprites/frames/Enemies1/PicketJoe/Stand.png
 sprites/frames/Enemies1/PicketJoe/Throw.png
-sprites/frames/Enemies1/Popoheli.png
 sprites/frames/Enemies1/FlyBoy/Stand.png
 sprites/frames/Enemies1/FlyBoy/Fly.png
 sprites/frames/Enemies1/RedScrewie/Down.png
@@ -1623,6 +1624,8 @@ sprites/frames/Enemies1/GreenUziJoe/jump_shoot.png
 sprites/frames/Enemies1/GreenUziJoe/jump_shoot_blast.png
 sprites/frames/Enemies1/GreenUziJoe/jump_shoot_start.png
 sprites/frames/Enemies1/DragonFly.png
+sprites/frames/Enemies1/Popoheli/fly.png
+sprites/frames/Enemies1/Popoheli/frozen.png
 sprites/frames/Enemies1/GapingFish/Chomping.png
 sprites/frames/Enemies1/GapingFish/Swimming.png
 sprites/frames/Enemies1/GapingFish/Gaping.png
@@ -1636,6 +1639,7 @@ sprites/frames/Enemies1/Cactus/small/turn_left.png
 sprites/frames/Enemies1/Cactus/small/left.png
 sprites/frames/Enemies1/Cactus/small/right.png
 sprites/frames/Enemies1/Cactus/small/flash_right.png
+sprites/frames/Enemies1/Cactus/small/frozen.png
 sprites/frames/Enemies1/Cactus/small/idle.png
 sprites/frames/Enemies1/Cactus/big/flash_left.png
 sprites/frames/Enemies1/Cactus/big/turn_right.png
@@ -1643,12 +1647,14 @@ sprites/frames/Enemies1/Cactus/big/turn_left.png
 sprites/frames/Enemies1/Cactus/big/left.png
 sprites/frames/Enemies1/Cactus/big/right.png
 sprites/frames/Enemies1/Cactus/big/flash_right.png
+sprites/frames/Enemies1/Cactus/big/frozen.png
 sprites/frames/Enemies1/Cactus/big/idle.png
 sprites/frames/Enemies1/SniperJoe/snow/jump.png
 sprites/frames/Enemies1/SniperJoe/snow/turn.png
 sprites/frames/Enemies1/SniperJoe/snow/shoot.png
 sprites/frames/Enemies1/SniperJoe/snow/idle.png
 sprites/frames/Enemies1/SniperJoe/fire/jump.png
+sprites/frames/Enemies1/SniperJoe/fire/frozen.png
 sprites/frames/Enemies1/SniperJoe/fire/turn.png
 sprites/frames/Enemies1/SniperJoe/fire/shoot.png
 sprites/frames/Enemies1/SniperJoe/fire/idle.png

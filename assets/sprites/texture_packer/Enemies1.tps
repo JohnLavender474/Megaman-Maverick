@@ -232,7 +232,7 @@
             <key type="filename">../frames/Enemies1/MagFly.png</key>
             <key type="filename">../frames/Enemies1/Met/Run.png</key>
             <key type="filename">../frames/Enemies1/Penguin/Stand.png</key>
-            <key type="filename">../frames/Enemies1/Popoheli.png</key>
+            <key type="filename">../frames/Enemies1/Popoheli/fly.png</key>
             <key type="filename">../frames/Enemies1/ShieldAttacker/Attack.png</key>
             <key type="filename">../frames/Enemies1/SnowBat/Fly.png</key>
             <key type="filename">../frames/Enemies1/SnowMet/Run.png</key>
@@ -273,9 +273,11 @@
             <key type="filename">../frames/Enemies1/Penguin/Slide.png</key>
             <key type="filename">../frames/Enemies1/Penguin/Slippin.png</key>
             <key type="filename">../frames/Enemies1/PicketJoe/Stand.png</key>
+            <key type="filename">../frames/Enemies1/Popoheli/frozen.png</key>
             <key type="filename">../frames/Enemies1/PopupCanon/Down.png</key>
             <key type="filename">../frames/Enemies1/PopupCanon/Up.png</key>
             <key type="filename">../frames/Enemies1/RedScrewie/Down.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/fire/frozen.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/fire/jump.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/orange/jump.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/snow/jump.png</key>
@@ -399,9 +401,11 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Enemies1/Cactus/big/frozen.png</key>
             <key type="filename">../frames/Enemies1/Cactus/big/idle.png</key>
             <key type="filename">../frames/Enemies1/Cactus/big/left.png</key>
             <key type="filename">../frames/Enemies1/Cactus/big/right.png</key>
+            <key type="filename">../frames/Enemies1/Cactus/small/frozen.png</key>
             <key type="filename">../frames/Enemies1/Cactus/small/idle.png</key>
             <key type="filename">../frames/Enemies1/Cactus/small/left.png</key>
             <key type="filename">../frames/Enemies1/Cactus/small/right.png</key>

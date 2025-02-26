@@ -10,6 +10,7 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
@@ -26,6 +27,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.BreakableIce
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
@@ -49,6 +51,13 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
             Vector2(3f, 7f),
             Vector2(7f, 5f),
         )
+
+        fun spawn5(center: Vector2) {
+            for (i in 0 until 5) {
+                val shard = MegaEntityFactory.fetch(IceShard::class)!!
+                shard.spawn(props(ConstKeys.POSITION pairTo center, ConstKeys.INDEX pairTo i))
+            }
+        }
     }
 
     override fun init() {

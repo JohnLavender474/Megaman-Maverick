@@ -42,6 +42,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.IFireEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.SmokePuff
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -52,7 +53,7 @@ import com.megaman.maverick.game.utils.extensions.toGdxRectangle
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
+class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFireEntity {
 
     companion object {
         const val TAG = "Fireball"
@@ -114,7 +115,6 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
         canDamage = spawnProps.getOrDefault(ConstKeys.DAMAGER, true, Boolean::class)
     }
-
 
     override fun explodeAndDie(vararg params: Any?) {
         burst = true

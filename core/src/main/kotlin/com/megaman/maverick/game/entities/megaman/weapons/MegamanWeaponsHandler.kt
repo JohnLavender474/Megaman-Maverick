@@ -358,6 +358,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         when (weapon) {
             MegamanWeapon.MEGA_BUSTER,
             MegamanWeapon.RUSH_JETPACK -> shootMegaBuster(stat)
+
             MegamanWeapon.ICE_CUBE -> shootIceCube(stat)
             MegamanWeapon.FIRE_BALL -> shootFireBall(stat)
             MegamanWeapon.MOON_SCYTHE -> shootMoonScythes(stat)
@@ -424,9 +425,10 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             .set(MegamanValues.ICE_CUBE_VEL * ConstVals.PPM * megaman.facing.value, 0f)
             .rotateDeg(megaman.direction.rotation)
 
-        val cube = MegaEntityFactory.fetch(SmallIceCube::class)!!
-        cube.spawn(
+        val icecube = MegaEntityFactory.fetch(SmallIceCube::class)!!
+        icecube.spawn(
             props(
+                ConstKeys.OWNER pairTo megaman,
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.GRAVITY_ON pairTo false,
                 ConstKeys.FRICTION_X pairTo false,
@@ -435,6 +437,8 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 ConstKeys.TRAJECTORY pairTo trajectory
             )
         )
+
+        megaman.requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
     }
 
     private fun shootFireBall(stat: MegaChargeStatus) {

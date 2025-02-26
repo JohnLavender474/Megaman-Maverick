@@ -4,7 +4,6 @@ import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.interfaces.ISizable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.damage.IDamageable
-import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.events.IEventListener
@@ -31,7 +30,7 @@ abstract class AbstractProjectile(game: MegamanMaverickGame, override var size: 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
+        owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
         onDamageInflictedTo = spawnProps.get(ConstKeys.ON_DAMAGE_INFLICTED_TO) as ((IDamageable) -> Unit)?
         movementScalar = spawnProps.getOrDefault("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", 1f, Float::class)
 

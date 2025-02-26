@@ -216,6 +216,7 @@
             <key type="filename">../frames/Enemies2/AstroAssAssaulter/stand.png</key>
             <key type="filename">../frames/Enemies2/Coldier/before_big_blow.png</key>
             <key type="filename">../frames/Enemies2/Coldier/before_small_blow.png</key>
+            <key type="filename">../frames/Enemies2/FireDispensenator/frozen.png</key>
             <key type="filename">../frames/Enemies2/FireDispensenator/sleep.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -480,6 +481,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Enemies2/CactusLauncher/wait.png</key>
+            <key type="filename">../frames/Enemies2/DemonMet/frozen.png</key>
             <key type="filename">../frames/Enemies2/DemonMet/stand.png</key>
             <key type="filename">../frames/Enemies2/RatRobot/still.png</key>
             <key type="filename">../frames/Enemies2/Shotman/Launch.png</key>

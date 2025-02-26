@@ -48,11 +48,12 @@ import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.IDamageNegotiator
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
+import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.explosions.SpreadExplosion
+import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -60,7 +61,7 @@ import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
-class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFreezableEntity, IFaceable {
 
     companion object {
         const val TAG = "Cactus"
@@ -68,6 +69,7 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         private const val TURN_DUR = 0.3f
         private const val FLASH_DUR = 1.25f
         private const val FACING_DUR = 2.5f
+        private const val FROZEN_DUR = 1f
 
         private const val NEEDLES = 5
         private const val NEEDLE_GRAV = -0.1f
@@ -91,7 +93,8 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
             SpreadExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             MoonScythe::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-            SmallGreenMissile::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
+            SmallGreenMissile::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            SmallIceCube::class pairTo dmgNeg(5)
         )
 
         private val animDefs = orderedMapOf(
@@ -101,12 +104,13 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
             "left" pairTo AnimationDef(1, 2, gdxArrayOf(1f, 0.15f), true),
             "right" pairTo AnimationDef(1, 2, gdxArrayOf(1f, 0.15f), true),
             "flash_left" pairTo AnimationDef(1, 3, 0.05f, true),
-            "flash_right" pairTo AnimationDef(1, 3, 0.05f, true)
+            "flash_right" pairTo AnimationDef(1, 3, 0.05f, true),
+            "frozen" pairTo AnimationDef()
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private enum class CactusState { IDLE, TURN, FACING, FLASH }
+    private enum class CactusState { IDLE, TURN, FACING, FLASH, FROZEN }
 
     private enum class CactusType { BIG, SMALL }
 
@@ -116,6 +120,19 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     }
 
     override lateinit var facing: Facing
+    override var frozen: Boolean
+        get() = !stateTimers[CactusState.FROZEN].isFinished()
+        set(value) {
+            GameLogger.debug(TAG, "frozen.set: value=$value")
+
+            if (value) {
+                stateTimers[CactusState.FROZEN].reset()
+                if (currentState != CactusState.FROZEN) stateMachine.next()
+            } else {
+                stateTimers[CactusState.FROZEN].setToEnd()
+                if (currentState == CactusState.FROZEN) stateMachine.next()
+            }
+        }
 
     private lateinit var stateMachine: StateMachine<CactusState>
     private val currentState: CactusState
@@ -123,7 +140,8 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     private val stateTimers = orderedMapOf(
         CactusState.TURN pairTo Timer(TURN_DUR),
         CactusState.FLASH pairTo Timer(FLASH_DUR),
-        CactusState.FACING pairTo Timer(FACING_DUR)
+        CactusState.FACING pairTo Timer(FACING_DUR),
+        CactusState.FROZEN pairTo Timer(FROZEN_DUR)
     )
 
     private lateinit var type: CactusType
@@ -166,6 +184,8 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         stateMachine.reset()
         stateTimers.values().forEach { it.reset() }
 
+        frozen = false
+
         FacingUtils.setFacingOf(this)
     }
 
@@ -173,6 +193,16 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         spawnNeedles()
         super.onHealthDepleted()
         playSoundNow(SoundAsset.THUMP_SOUND, false)
+    }
+
+    override fun takeDamageFrom(damager: IDamager): Boolean {
+        GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
+        val damaged = super.takeDamageFrom(damager)
+        if (damaged) when {
+            damager is IFreezerEntity && !frozen -> frozen = true
+            damager is IFireEntity && frozen -> frozen = false
+        }
+        return damaged
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -208,13 +238,18 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setWidth(ConstVals.PPM.toFloat())
-        body.preProcess.put(ConstKeys.DEFAULT) {
-            body.forEachFixture { ((it as Fixture).rawShape as GameRectangle).set(body) }
-        }
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
         debugShapes.add { scanner }
+
+        val frozenFixture = Fixture(body, FixtureType.SHIELD, GameRectangle())
+        body.addFixture(frozenFixture)
+
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            body.forEachFixture { ((it as Fixture).rawShape as GameRectangle).set(body) }
+            frozenFixture.setActive(frozen)
+        }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -248,6 +283,7 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
                         CactusState.IDLE -> "idle"
                         CactusState.TURN -> "turn_${facing.opposite().name.lowercase()}"
                         CactusState.FLASH -> "flash_${facing.name.lowercase()}"
+                        CactusState.FROZEN -> "frozen"
                         else -> facing.name.lowercase()
                     }
                     return@keySupplier "$part1/$part2"
@@ -279,19 +315,26 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         .setOnChangeState(this::onChangeState)
         .initialState(CactusState.IDLE)
         // idle
+        .transition(CactusState.IDLE, CactusState.FROZEN) { frozen }
         .transition(CactusState.IDLE, CactusState.IDLE) { !isMegamanInScanner() }
         .transition(CactusState.IDLE, CactusState.TURN) { shouldTurn() }
         .transition(CactusState.IDLE, CactusState.FACING) { true }
         // turn
+        .transition(CactusState.TURN, CactusState.FROZEN) { frozen }
         .transition(CactusState.TURN, CactusState.FACING) { true }
         // facing
+        .transition(CactusState.FACING, CactusState.FROZEN) { frozen }
         .transition(CactusState.FACING, CactusState.IDLE) { !isMegamanInScanner() }
         .transition(CactusState.FACING, CactusState.TURN) { shouldTurn() }
         .transition(CactusState.FACING, CactusState.FLASH) { true }
         // flash
+        .transition(CactusState.FLASH, CactusState.FROZEN) { frozen }
         .transition(CactusState.FLASH, CactusState.IDLE) { !isMegamanInScanner() }
         .transition(CactusState.FLASH, CactusState.TURN) { shouldTurn() }
         .transition(CactusState.FLASH, CactusState.FACING) { true }
+        // frozen
+        .transition(CactusState.FROZEN, CactusState.IDLE) { !isMegamanInScanner() }
+        .transition(CactusState.FROZEN, CactusState.FACING) { true }
         // build
         .build()
 
@@ -299,7 +342,7 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         GameLogger.debug(TAG, "onChangeState(): current=$current, previous=$previous")
 
         stateTimers[current]?.reset()
-        stateTimers[previous]?.reset()
+        if (previous != CactusState.FROZEN) stateTimers[previous]?.reset()
 
         if (current == CactusState.FACING && previous == CactusState.TURN) {
             GameLogger.debug(TAG, "onChangeState(): swap facing")
@@ -309,6 +352,9 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         if (previous == CactusState.FLASH) {
             GameLogger.debug(TAG, "onChangeState(): spawn needles")
             spawnNeedles()
+        } else if (previous == CactusState.FROZEN) {
+            IceShard.spawn5(body.getCenter())
+            damageTimer.reset()
         }
     }
 

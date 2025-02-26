@@ -367,9 +367,16 @@ DemonMet/fly
   orig: 64, 64
   offset: 0, 0
   index: -1
-DemonMet/stand
+DemonMet/frozen
   rotate: false
   xy: 944, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+DemonMet/stand
+  rotate: false
+  xy: 978, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -430,6 +437,13 @@ FireDispensenator/fire
   orig: 96, 192
   offset: 0, 0
   index: -1
+FireDispensenator/frozen
+  rotate: false
+  xy: 440, 104
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
 FireDispensenator/open
   rotate: false
   xy: 150, 614
@@ -439,7 +453,7 @@ FireDispensenator/open
   index: -1
 FireDispensenator/sleep
   rotate: false
-  xy: 440, 104
+  xy: 490, 104
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -565,7 +579,7 @@ IceSkaterPeng/skate
   index: -1
 Imorm
   rotate: false
-  xy: 490, 104
+  xy: 540, 104
   size: 192, 48
   orig: 192, 48
   offset: 0, 0
@@ -1062,14 +1076,14 @@ Tropish/swim
   index: -1
 UFOBombBot/Closed
   rotate: false
-  xy: 684, 104
+  xy: 734, 104
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 UFOBombBot/Dropping
   rotate: false
-  xy: 782, 104
+  xy: 832, 104
   size: 144, 48
   orig: 144, 48
   offset: 0, 0
@@ -1090,7 +1104,7 @@ UnderwaterPenguinBot/bent
   index: -1
 UnderwaterPenguinBot/swim
   rotate: false
-  xy: 928, 104
+  xy: 978, 104
   size: 32, 48
   orig: 32, 48
   offset: 0, 0

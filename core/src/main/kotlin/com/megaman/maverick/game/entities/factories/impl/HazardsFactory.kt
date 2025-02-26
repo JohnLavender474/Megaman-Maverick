@@ -30,7 +30,6 @@ class HazardsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val ASTEROIDS_SPAWNER = "AsteroidsSpawner"
         const val LAVA_BEAM = "LavaBeam"
         const val LAVA_BEAMER = "LavaBeamer"
-        const val SMALL_ICE_CUBE = "SmallIceCube"
         const val ICE_CUBE_MAKER = "IceCubeMaker"
         const val UNDERWATER_FAN = "UnderwaterFan"
         const val SEA_MINE = "SeaMine"
@@ -64,7 +63,6 @@ class HazardsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         pools.put(ASTEROIDS_SPAWNER, GameEntityPoolCreator.create { AsteroidsSpawner(game) })
         pools.put(LAVA_BEAM, GameEntityPoolCreator.create { LavaBeam(game) })
         pools.put(LAVA_BEAMER, GameEntityPoolCreator.create { LavaBeamer(game) })
-        pools.put(SMALL_ICE_CUBE, GameEntityPoolCreator.create { SmallIceCube(game) })
         pools.put(ICE_CUBE_MAKER, GameEntityPoolCreator.create { IceCubeMaker(game) })
         pools.put(UNDERWATER_FAN, GameEntityPoolCreator.create { UnderwaterFan(game) })
         pools.put(SEA_MINE, GameEntityPoolCreator.create { SeaMine(game) })

@@ -15,7 +15,6 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.damage.IDamageable
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -23,10 +22,6 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.IGameEntity
-import com.mega.game.engine.entities.contracts.IAudioEntity
-import com.mega.game.engine.entities.contracts.IBodyEntity
-import com.mega.game.engine.entities.contracts.ICullableEntity
-import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
@@ -39,9 +34,8 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.BreakableIce
+import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IFreezerEntity
-import com.megaman.maverick.game.entities.contracts.IHazard
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.explosions.SmokePuff
@@ -52,8 +46,7 @@ import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 
-class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
-    IAudioEntity, IHazard, IDamager, IFreezerEntity {
+class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreezerEntity {
 
     companion object {
         const val TAG = "SmallIceCube"
@@ -81,6 +74,8 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             MagmaMeteor::class,
             MagmaFlame::class,
             Fireball::class,
+            FlameThrower::class,
+            FireWall::class
         )
     }
 
@@ -176,12 +171,14 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         }
     }
 
-    private fun defineBodyComponent(): BodyComponent {
+    override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(BODY_SIZE * ConstVals.PPM)
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(body.getSize().scl(1.25f)))
-        bodyFixture.setHitByExplosionReceiver { shatterAndDie() }
+        bodyFixture.setHitByExplosionReceiver { entity ->
+            if (SMOKE_PUFF_ENTITIES.contains(entity::class)) smokePuff() else shatterAndDie()
+        }
         bodyFixture.setHitByBodyReceiver { entity, state ->
             if (state == ProcessState.BEGIN && entity is SmallIceCube) shatterAndDie()
         }
@@ -241,14 +238,16 @@ class SmallIceCube(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         )
     }
 
-    private fun defineSpritesComponent(): SpritesComponent {
+    override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
         sprite.setSize(BODY_SIZE * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             val region = if (hitTimes == 0) region1 else region2
             sprite.setRegion(region)
-            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+
+            val position = Position.BOTTOM_CENTER
+            sprite.setPosition(body.getPositionPoint(position), position)
         }
         return spritesComponent
     }

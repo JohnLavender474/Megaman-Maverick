@@ -585,6 +585,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         val cube = MegaEntityFactory.fetch(SmallIceCube::class)!!
         cube.spawn(
             props(
+                ConstKeys.OWNER pairTo this,
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.TRAJECTORY pairTo trajectory,
                 ConstKeys.GRAVITY_ON pairTo gravityOn,

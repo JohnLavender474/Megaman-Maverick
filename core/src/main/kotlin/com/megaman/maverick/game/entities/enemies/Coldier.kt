@@ -180,6 +180,7 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         val cube = MegaEntityFactory.fetch(SmallIceCube::class)!!
         cube.spawn(
             props(
+                ConstKeys.OWNER pairTo this,
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.TRAJECTORY pairTo trajectory,
                 ConstKeys.HIT_BY_BLOCK pairTo true,
