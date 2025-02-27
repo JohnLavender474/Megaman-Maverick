@@ -335,7 +335,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             if (!afterShootDelayTimer.isFinished()) "still"
             else if (!shootTimer.isFinished()) "shoot"
             else "roll"

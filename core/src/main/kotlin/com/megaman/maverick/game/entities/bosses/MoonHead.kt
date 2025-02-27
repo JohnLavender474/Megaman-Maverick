@@ -349,7 +349,7 @@ class MoonHead(game: MegamanMaverickGame) : AbstractBoss(game, dmgDuration = DAM
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             if (defeated) "damaged"
             else when (loop.getCurrent()) {
                 MoonHeadState.DELAY, MoonHeadState.DARK -> "dark"

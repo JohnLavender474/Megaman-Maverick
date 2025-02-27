@@ -449,7 +449,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             if (defeated) "defeated" else when (currentState) {
                 MoonManState.INIT -> if (body.isSensing(BodySense.FEET_ON_GROUND)) "gravity_change_begin" else "jump"
                 MoonManState.STAND -> when {

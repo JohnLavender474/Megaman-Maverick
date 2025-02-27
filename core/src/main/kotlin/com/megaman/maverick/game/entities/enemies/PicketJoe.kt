@@ -190,7 +190,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         .build()
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (standing) "stand" else "throw" }
+        val keySupplier: (String?) -> String? = { if (standing) "stand" else "throw" }
         val animations = objectMapOf<String, IAnimation>(
             "stand" pairTo Animation(regions["stand"]),
             "throw" pairTo Animation(regions["throw"], 1, 4, 0.125f, false)

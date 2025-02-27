@@ -302,7 +302,7 @@
   <object id="125" name="room8" x="9120" y="864" width="512" height="448"/>
   <object id="126" name="boss_room" x="9632" y="864" width="512" height="448">
    <properties>
-    <property name="event" value="success"/>
+    <property name="event" value="boss"/>
     <property name="object" type="object" value="144"/>
    </properties>
   </object>
@@ -318,14 +318,14 @@
   <object id="45" name="Target1" x="3392" y="1472" width="32" height="32"/>
   <object id="107" name="Start" x="7488" y="1296" width="32" height="32"/>
   <object id="108" name="Target" x="7488" y="1024" width="32" height="32"/>
-  <object id="144" name="BigAssMaverickRobot" x="9792" y="928" width="224" height="320">
+  <object id="144" name="BigAssMaverickRobot" x="9760" y="928" width="256" height="384">
    <properties>
     <property name="left" type="object" value="145"/>
     <property name="right" type="object" value="146"/>
    </properties>
   </object>
-  <object id="145" name="Left" x="9776" y="1072" width="32" height="32"/>
-  <object id="146" name="Right" x="10000" y="1072" width="32" height="32"/>
+  <object id="145" name="Left" x="9776" y="1088" width="32" height="32"/>
+  <object id="146" name="Right" x="9968" y="1088" width="32" height="32"/>
   <object id="155" name="Target" x="896" y="1440" width="32" height="32"/>
   <object id="156" name="Start" x="896" y="1744" width="32" height="32"/>
  </objectgroup>

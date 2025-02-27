@@ -498,7 +498,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
 
         val mainSprite = sprites["main"]
-        val mainSpriteKeySupplier: () -> String? = {
+        val mainSpriteKeySupplier: (String?) -> String? = {
             if (defeated) "defeated"
             else when (currentState) {
                 DesertManState.INIT -> if (body.isSensing(BodySense.FEET_ON_GROUND)) "dance" else "jump"
@@ -529,7 +529,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
 
         for (i in 1..ARM_EXTENSIONS_COUNT) {
             val armSprite = sprites["arm_$i"]
-            val armSpriteKeySupplier: () -> String? = {
+            val armSpriteKeySupplier: (String?) -> String? = {
                 if (i == longPunchExtensionCount) {
                     if (longPunchingForward) "forward" else "back"
                 } else "middle"

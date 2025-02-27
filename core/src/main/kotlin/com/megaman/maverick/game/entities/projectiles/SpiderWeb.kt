@@ -205,7 +205,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier = { if (blinkWhiteTimer.isFinished()) "gray" else "blink_white" }
+        val keySupplier: (String?) -> String? = { if (blinkWhiteTimer.isFinished()) "gray" else "blink_white" }
         val animations = objectMapOf<String, IAnimation>(
             "gray" pairTo Animation(grayRegion!!),
             "blink_white" pairTo Animation(blinkWhiteRegion!!, 1, 2, 0.1f, true)

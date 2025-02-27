@@ -143,7 +143,7 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (body.isSensing(BodySense.FEET_ON_GROUND)) "Stand" else "Jump" }
+        val keySupplier: (String?) -> String? = { if (body.isSensing(BodySense.FEET_ON_GROUND)) "Stand" else "Jump" }
         val animations = objectMapOf<String, IAnimation>(
             "Stand" pairTo Animation(regions["stand"], 1, 2, gdxArrayOf(0.5f, 0.15f), true),
             "Jump" pairTo Animation(regions["jump"], 1, 2, 0.1f, false)

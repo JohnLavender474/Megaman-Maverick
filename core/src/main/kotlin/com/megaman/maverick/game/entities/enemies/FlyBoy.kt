@@ -173,7 +173,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
             "fly" pairTo Animation(atlas.findRegion("FlyBoy/Fly"), 1, 4, 0.1f),
             "stand" pairTo Animation(atlas.findRegion("FlyBoy/Stand"))
         )
-        val keySupplier = { if (flying) "fly" else "stand" }
+        val keySupplier: (String?) -> String? = { if (flying) "fly" else "stand" }
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }

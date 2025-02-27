@@ -133,7 +133,7 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { "$type" }
+        val keySupplier: (String?) -> String? = { "$type" }
         val animations = objectMapOf<String, IAnimation>(
             "0" pairTo Animation(purpleRegion!!, 1, 2, 0.1f, true),
             "1" pairTo Animation(blueRegion!!, 1, 2, 0.1f, true),

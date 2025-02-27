@@ -582,7 +582,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
     internal fun laugh() = laughTimer.reset()
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             if (laughing) "laughing"
             else if (attackState == GutsTankAttackState.CHUNK_BULLETS ||
                 attackState == GutsTankAttackState.SHOOT_BLASTS

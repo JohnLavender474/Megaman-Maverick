@@ -412,7 +412,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             "stop" pairTo Animation(regions["stop"], 3, 3, 0.075f, false),
             "ice_blast_attack" pairTo Animation(regions["ice_blast_attack"], 2, 1, 0.1f, true)
         )
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             if (defeated) "defeated" else if (fired) "fired" else {
                 val state = stateMachine.getCurrent()
 

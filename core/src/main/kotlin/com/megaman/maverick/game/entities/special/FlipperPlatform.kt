@@ -217,7 +217,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             when (flipperPlatformState) {
                 FlipperPlatformState.LEFT -> if (switchDelay.isFinished()) "left" else "leftDelay"
                 FlipperPlatformState.RIGHT -> if (switchDelay.isFinished()) "right" else "rightDelay"

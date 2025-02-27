@@ -253,7 +253,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (dropped) "no_bomb" else "with_bomb" }
+        val keySupplier: (String?) -> String? = { if (dropped) "no_bomb" else "with_bomb" }
         val animations = objectMapOf<String, IAnimation>(
             "no_bomb" pairTo Animation(regions["no_bomb"], 2, 2, 0.1f, true),
             "with_bomb" pairTo Animation(regions["with_bomb"], 2, 2, 0.1f, true)

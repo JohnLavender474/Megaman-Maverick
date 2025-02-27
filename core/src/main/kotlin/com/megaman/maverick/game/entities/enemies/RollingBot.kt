@@ -241,7 +241,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier = { rollingBotState.name }
+        val keySupplier: (String?) -> String? = { rollingBotState.name }
         val animations = objectMapOf<String, IAnimation>(
             RollingBotState.ROLLING.name pairTo Animation(rollRegion!!, 2, 4, 0.1f, true),
             RollingBotState.OPENING.name pairTo Animation(openRegion!!, 1, 3, 0.1f, false),

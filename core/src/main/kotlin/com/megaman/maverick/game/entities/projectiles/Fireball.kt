@@ -247,7 +247,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = { if (burst) "burst" else "fireball" }
+        val keySupplier: (String?) -> String? = { if (burst) "burst" else "fireball" }
         val animations = objectMapOf<String, IAnimation>(
             "burst" pairTo Animation(regions["burst"], 1, 4, 0.1f, true),
             "fireball" pairTo Animation(regions["fireball"], 2, 2, 0.1f, true)

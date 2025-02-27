@@ -198,7 +198,7 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { (bounces.coerceIn(0, MAX_BOUNCES)).toString() }
+        val keySupplier: (String?) -> String? = { (bounces.coerceIn(0, MAX_BOUNCES)).toString() }
 
         val animations = ObjectMap<String, IAnimation>()
         for (i in 0..MAX_BOUNCES) {

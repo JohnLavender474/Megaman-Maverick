@@ -272,7 +272,7 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier = {
+        val keySupplier: (String?) -> String? = {
             when (loop.getCurrent()) {
                 PopupCanonState.REST -> "rest"
                 PopupCanonState.RISE -> "rise"

@@ -175,7 +175,7 @@ class SwitchGate(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnim
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (state == SwitchGateState.OPEN) null else state.name.lowercase() }
+        val keySupplier: (String?) -> String? = { if (state == SwitchGateState.OPEN) null else state.name.lowercase() }
         val animation = objectMapOf<String, IAnimation>(
             "closed" pairTo Animation(regions["closed"]),
             "opening" pairTo Animation(regions["opening"], 1, 5, 0.125f, false),

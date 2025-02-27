@@ -227,7 +227,7 @@ class ReactorMonkey(game: MegamanMaverickGame) :
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             var key = reactorMonkeyState.name.lowercase()
             if (!damageTimer.isFinished()) key += "_damaged"
             key

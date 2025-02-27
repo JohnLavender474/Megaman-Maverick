@@ -165,7 +165,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListen
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = { if (light) "light" else "dark" }
+        val keySupplier: (String?) -> String? = { if (light) "light" else "dark" }
         val animations = objectMapOf<String, IAnimation>(
             "light" pairTo Animation(lightRegion!!, 1, 4, 0.1f, true),
             "dark" pairTo Animation(darkRegion!!, 1, 4, 0.1f, true)

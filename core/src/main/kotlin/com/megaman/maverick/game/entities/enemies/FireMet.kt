@@ -308,7 +308,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             when {
                 !body.isSensing(BodySense.FEET_ON_GROUND) -> "jump"
                 !shootTimer.isFinished() -> "shoot"

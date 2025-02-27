@@ -115,7 +115,7 @@ class MegamanTrailSpriteV2(game: MegamanMaverickGame) : MegaGameEntity(game), IS
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { animKey }
+        val keySupplier: (String?) -> String? = { animKey }
 
         val animations = ObjectMap<String, IAnimation>()
 

@@ -176,7 +176,7 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? =
+        val keySupplier: (String?) -> String? =
             { if (state == TropishState.WAIT) null else state.name.lowercase() }
         val animations = objectMapOf<String, IAnimation>(
             "swim" pairTo Animation(regions["swim"], 2, 1, 0.1f, true),

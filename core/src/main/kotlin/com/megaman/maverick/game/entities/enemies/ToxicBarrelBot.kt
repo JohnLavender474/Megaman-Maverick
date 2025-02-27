@@ -296,7 +296,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier = {
+        val keySupplier: (String?) -> String? = {
             when (toxicBarrelBotState) {
                 ToxicBarrelBotState.CLOSED -> "closed"
                 ToxicBarrelBotState.OPENING_TOP, ToxicBarrelBotState.OPEN_TOP -> "open_top"

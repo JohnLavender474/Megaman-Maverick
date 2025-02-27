@@ -164,7 +164,7 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (crouchTimer.isFinished()) "shoot" else "launch" }
+        val keySupplier: (String?) -> String? = { if (crouchTimer.isFinished()) "shoot" else "launch" }
         val animations = objectMapOf<String, IAnimation>(
             "shoot" pairTo Animation(shootRegion!!, 1, 2, 0.1f, true),
             "launch" pairTo Animation(launchRegion!!)

@@ -209,7 +209,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (shooting) "shoot" else "move" }
+        val keySupplier: (String?) -> String? = { if (shooting) "shoot" else "move" }
         val animations = objectMapOf<String, IAnimation>(
             "shoot" pairTo Animation(regions["shoot"], 1, 2, 0.1f, true),
             "move" pairTo Animation(regions["move"], 1, 2, 0.1f, true)

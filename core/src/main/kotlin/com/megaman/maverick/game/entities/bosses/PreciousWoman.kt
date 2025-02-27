@@ -287,11 +287,6 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            val delayText ="%.2f".format(1f - spawnShieldsDelay.getRatio())
-            val chanceText = spawnShieldsChance.toInt().toString()
-            val debugText = "delay=$delayText, chance=$chanceText"
-            game.setDebugText(debugText)
-
             if (betweenReadyAndEndBossSpawnEvent) return@add
 
             if (defeated) {

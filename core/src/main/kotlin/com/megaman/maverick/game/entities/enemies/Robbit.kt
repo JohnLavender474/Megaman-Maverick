@@ -164,7 +164,7 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.LARGE)
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             if (!body.isSensing(BodySense.FEET_ON_GROUND)) "jump"
             else when (robbitLoop.getCurrent()) {
                 RobbitState.STANDING -> "stand"

@@ -211,7 +211,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = { stateMachine.getCurrent().name.lowercase() }
+        val keySupplier: (String?) -> String? = { stateMachine.getCurrent().name.lowercase() }
         val animations = objectMapOf<String, IAnimation>(
             "sleep" pairTo Animation(regions["sleep"]),
             "open" pairTo Animation(regions["open"], 2, 1, 0.1f, false),

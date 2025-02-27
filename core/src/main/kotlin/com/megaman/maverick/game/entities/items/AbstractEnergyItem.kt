@@ -140,7 +140,7 @@ abstract class AbstractEnergyItem(game: MegamanMaverickGame) : AbstractItem(game
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = { "${getTag()}/${if (large) "large" else "small"}" }
+        val keySupplier: (String?) -> String? = { "${getTag()}/${if (large) "large" else "small"}" }
 
         val animations = ObjectMap<String, IAnimation>()
         animDefs.forEach { entry ->

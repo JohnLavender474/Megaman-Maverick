@@ -290,7 +290,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? =
+        val keySupplier: (String?) -> String? =
             { if (!incomingBodies.isEmpty || !outgoingBodies.isEmpty) "active" else "inactive" }
         val animations = objectMapOf<String, IAnimation>(
             "active" pairTo Animation(regions["active"]!!, 1, 2, 0.05f, true),

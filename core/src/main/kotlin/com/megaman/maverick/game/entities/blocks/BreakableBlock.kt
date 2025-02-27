@@ -114,7 +114,7 @@ class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, I
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { type }
+        val keySupplier: (String?) -> String? = { type }
         val animations = objectMapOf<String, IAnimation>(
             BRICK_TYPE pairTo Animation(regions[BRICK_TYPE])
         )

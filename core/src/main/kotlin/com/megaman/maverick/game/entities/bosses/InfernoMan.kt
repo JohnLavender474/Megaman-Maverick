@@ -413,7 +413,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             "defeated" pairTo Animation(regions["defeated"], 3, 1, 0.1f, true),
             "frozen" pairTo Animation(regions["frozen"])
         )
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             when {
                 frozen -> "frozen"
                 defeated -> "defeated"

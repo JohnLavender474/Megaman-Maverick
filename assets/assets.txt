@@ -929,6 +929,14 @@ sprites/frames/Specials1/ToxicWater/water.png
 sprites/frames/Specials1/ToxicWater/waves.png
 sprites/frames/Specials1/Cart.png
 sprites/frames/Backgrounds5/GlacierCloudsBKG.png
+sprites/frames/Bosses3/BigAssMaverickRobot/Body/body.png
+sprites/frames/Bosses3/BigAssMaverickRobot/Hand/still.png
+sprites/frames/Bosses3/BigAssMaverickRobot/Hand/rocket.png
+sprites/frames/Bosses3/BigAssMaverickRobot/Head/stunned.png
+sprites/frames/Bosses3/BigAssMaverickRobot/Head/down.png
+sprites/frames/Bosses3/BigAssMaverickRobot/Head/turn_up.png
+sprites/frames/Bosses3/BigAssMaverickRobot/Head/turn.png
+sprites/frames/Bosses3/BigAssMaverickRobot/Head/defeated.png
 sprites/frames/Bosses3/PreciousWoman/stand_throw.png
 sprites/frames/Bosses3/PreciousWoman/wallslide.png
 sprites/frames/Bosses3/PreciousWoman/damaged.png

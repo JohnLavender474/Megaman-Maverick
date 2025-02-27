@@ -143,7 +143,7 @@ class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (!laughTimer.isFinished()) "laugh" else "swim" }
+        val keySupplier: (String?) -> String? = { if (!laughTimer.isFinished()) "laugh" else "swim" }
         val animations = objectMapOf<String, IAnimation>(
             "swim" pairTo Animation(regions["swim"]!!, 2, 2, 0.2f, true),
             "laugh" pairTo Animation(regions["laugh"]!!, 2, 2, 0.1f, true)

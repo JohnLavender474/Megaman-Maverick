@@ -250,7 +250,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             when (fistState) {
                 GutsTankFistState.ATTACHED -> "fist"
                 else -> "launched"

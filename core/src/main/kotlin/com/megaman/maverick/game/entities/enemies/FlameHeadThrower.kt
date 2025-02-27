@@ -150,7 +150,7 @@ class FlameHeadThrower(game: MegamanMaverickGame) : AbstractEnemy(game, size = S
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (!standTimer.isFinished()) "stand" else "throw" }
+        val keySupplier: (String?) -> String? = { if (!standTimer.isFinished()) "stand" else "throw" }
         val animations = objectMapOf<String, IAnimation>(
             "stand" pairTo Animation(regions.get("stand")),
             "throw" pairTo Animation(regions.get("throw"), 1, 3, 0.1f, false)

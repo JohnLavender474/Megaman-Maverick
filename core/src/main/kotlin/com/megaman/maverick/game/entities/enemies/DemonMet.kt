@@ -267,7 +267,7 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = { state.name.lowercase() }
+        val keySupplier: (String?) -> String? = { state.name.lowercase() }
         val animations = objectMapOf<String, IAnimation>(
             "frozen" pairTo Animation(regions["frozen"]),
             "stand" pairTo Animation(regions["stand"]),

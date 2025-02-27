@@ -155,7 +155,7 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (hit) "hit" else "ball" }
+        val keySupplier: (String?) -> String? = { if (hit) "hit" else "ball" }
         val animations = objectMapOf<String, IAnimation>(
             "ball" pairTo Animation(ballRegion!!, 1, 2, 0.1f, true), "hit" pairTo Animation(hitRegion!!)
         )

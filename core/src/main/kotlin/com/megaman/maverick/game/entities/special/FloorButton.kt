@@ -214,7 +214,7 @@ class FloorButton(game: MegamanMaverickGame) : Switch(game), IBodyEntity, ISprit
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = { state.name.lowercase() }
+        val keySupplier: (String?) -> String? = { state.name.lowercase() }
         val animations = objectMapOf<String, IAnimation>(
             "up" pairTo Animation(regions["up"]),
             "down" pairTo Animation(regions["down"]),

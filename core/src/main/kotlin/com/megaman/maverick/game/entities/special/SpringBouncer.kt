@@ -117,7 +117,7 @@ class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = { if (bounceTimer.isFinished()) "still" else "bounce" }
+        val keySupplier: (String?) -> String? = { if (bounceTimer.isFinished()) "still" else "bounce" }
         val animations =
             objectMapOf<String, IAnimation>(
                 "still" pairTo Animation(atlas!!.findRegion("SpringBounceStill")),

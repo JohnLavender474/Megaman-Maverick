@@ -308,7 +308,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             when (type) {
                 ENEMY_TYPE -> "${type}/${state.name}"
                 LEVER_TYPE -> "${type}/${if (on) "on" else "off"}"

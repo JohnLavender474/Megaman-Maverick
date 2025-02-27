@@ -154,7 +154,7 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         .build()
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             /*
             val vel = abs(body.physics.velocity.x)
             if (vel > 0.5f * ConstVals.PPM) "moving_fast"

@@ -257,7 +257,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             when {
                 !stillTimer.isFinished() -> "still"
                 !body.isSensing(BodySense.FEET_ON_GROUND) -> "jump"

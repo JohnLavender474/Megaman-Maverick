@@ -142,7 +142,7 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM),
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (hasEgg) "with_egg" else "no_egg" }
+        val keySupplier: (String?) -> String? = { if (hasEgg) "with_egg" else "no_egg" }
         val animations = objectMapOf<String, IAnimation>(
             "with_egg" pairTo Animation(regions["with_egg"], 2, 1, 0.1f, true),
             "no_egg" pairTo Animation(regions["no_egg"], 2, 1, 0.1f, true)

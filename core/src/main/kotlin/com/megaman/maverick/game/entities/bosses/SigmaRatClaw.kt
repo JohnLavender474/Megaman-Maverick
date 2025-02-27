@@ -338,7 +338,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             when (clawState) {
                 SigmaRatClawState.ROTATE, SigmaRatClawState.TITTY_GRAB -> "closed"
                 SigmaRatClawState.LAUNCH -> "open"

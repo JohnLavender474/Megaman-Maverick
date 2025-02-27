@@ -216,7 +216,7 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             if (!turnDelayTimer.isFinished() || stopped) "stop"
             else if (!turnTimer.isFinished()) "turn"
             else "roll"

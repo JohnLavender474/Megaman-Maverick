@@ -176,7 +176,7 @@ class LavaBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             when (loop.getCurrent()) {
                 LavaBeamerState.IDLE -> "off"
                 LavaBeamerState.SWITCHING_ON -> "switch"

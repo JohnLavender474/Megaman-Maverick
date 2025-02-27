@@ -179,7 +179,7 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (shootTimer.isFinished()) "stand" else "shoot" }
+        val keySupplier: (String?) -> String? = { if (shootTimer.isFinished()) "stand" else "shoot" }
         val animations = objectMapOf<String, IAnimation>(
             "stand" pairTo Animation(regions.get("stand"), 2, 1, gdxArrayOf(0.75f, 0.15f), true),
             "shoot" pairTo Animation(regions.get("shoot"), 5, 1, 0.1f, false)

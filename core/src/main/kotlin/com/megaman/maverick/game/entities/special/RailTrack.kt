@@ -268,7 +268,7 @@ class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), ISpritesEntity
         .build()
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (body.physics.collisionOn) "platform" else "drop" }
+        val keySupplier: (String?) -> String? = { if (body.physics.collisionOn) "platform" else "drop" }
         val animations = objectMapOf<String, IAnimation>(
             "platform" pairTo Animation(regions["platform"]),
             "drop" pairTo Animation(regions["platform_drop"], 1, 3, 0.025f, false)

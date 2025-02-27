@@ -358,7 +358,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { "${distanceType.name.lowercase()}_thrust" }
+        val keySupplier: (String?) -> String? = { "${distanceType.name.lowercase()}_thrust" }
         val animations = objectMapOf<String, IAnimation>()
         DistanceType.entries.forEach { d ->
             val regionKey = "${d.name.lowercase()}_thrust"

@@ -244,7 +244,7 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val flameColumnAnim = Animation(regions.get("flame_column"), 2, 3, 0.05f, true)
         val flameColumnAnimator = Animator(flameColumnAnim)
 
-        val throwerKeySupplier: () -> String? = { loop.getCurrent().name }
+        val throwerKeySupplier: (String?) -> String? = { loop.getCurrent().name }
         val throwerAnims = objectMapOf<String, IAnimation>(
             FlameThrowerState.COOL.name pairTo Animation(regions.get("cool_thrower")),
             FlameThrowerState.BLINK.name pairTo Animation(regions.get("blink_thrower"), 1, 2, 0.1f, true),

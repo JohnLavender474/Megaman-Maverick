@@ -196,7 +196,7 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = {
+        val keySupplier: (String?) -> String? = {
             when (fallingIcicleState) {
                 FallingIcicleState.STILL, FallingIcicleState.FALL -> "still"
                 FallingIcicleState.SHAKE -> "shake"

@@ -119,7 +119,7 @@ class PurpleBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (!chargeDelayTimer.isFinished()) "charge" else "blast" }
+        val keySupplier: (String?) -> String? = { if (!chargeDelayTimer.isFinished()) "charge" else "blast" }
         val animations = objectMapOf<String, IAnimation>(
             "charge" pairTo Animation(chargeRegion!!, 1, 7, 0.025f, false),
             "blast" pairTo Animation(blastRegion!!, 1, 2, 0.1f, true)

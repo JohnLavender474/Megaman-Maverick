@@ -201,7 +201,7 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = { if (bouncing) "unleashed" else "compressed" }
+        val keySupplier: (String?) -> String? = { if (bouncing) "unleashed" else "compressed" }
         val animations = objectMapOf<String, IAnimation>(
             "unleashed" pairTo Animation(regions["unleashed"], 1, 6, 0.1f, true),
             "compressed" pairTo Animation(regions["compressed"])

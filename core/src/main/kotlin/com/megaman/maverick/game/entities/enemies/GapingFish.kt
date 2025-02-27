@@ -202,7 +202,7 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = {
+        val keySupplier: (String?) -> String? = {
             if (chomping) "chomp" else if (invincible) "gaping" else "swimming"
         }
         val animations = objectMapOf<String, IAnimation>(

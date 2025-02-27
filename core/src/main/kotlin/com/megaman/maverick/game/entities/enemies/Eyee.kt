@@ -172,7 +172,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? =
+        val keySupplier: (String?) -> String? =
             { if (currentState.equalsAny(EyeeState.MOVING_TO_START, EyeeState.MOVING_TO_END)) "open" else "blink" }
         val animations = objectMapOf<String, IAnimation>(
             "open" pairTo Animation(openRegion!!),

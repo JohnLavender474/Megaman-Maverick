@@ -128,7 +128,7 @@ class DropperLift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAni
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { currentState.name }
+        val keySupplier: (String?) -> String? = { currentState.name }
         val animations = objectMapOf<String, IAnimation>(
             DropperLiftState.CLOSED.name pairTo Animation(closedRegion!!),
             DropperLiftState.OPENING.name pairTo Animation(openingRegion!!, 2, 2, 0.1f, false),

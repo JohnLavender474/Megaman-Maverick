@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
-import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.gdxArrayOf
@@ -182,8 +181,6 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
             isBehaviorActive(BehaviorType.JUMPING) -> jumpGravity
             else -> fallGravity
         }
-
-        game.setDebugText(UtilMethods.roundFloat(gravityValue, 2).toString())
 
         gravityValue *= gravityScalar
 

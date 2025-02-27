@@ -171,7 +171,7 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (triggered) "blow" else "wait" }
+        val keySupplier: (String?) -> String? = { if (triggered) "blow" else "wait" }
         val animations = objectMapOf<String, IAnimation>(
             "blow" pairTo Animation(regions["blow"], 1, 2, 0.1f, true), "wait" pairTo Animation(regions["wait"])
         )

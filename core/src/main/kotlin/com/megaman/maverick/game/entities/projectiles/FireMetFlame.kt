@@ -132,7 +132,7 @@ class FireMetFlame(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (whooshing) "whooshing" else "still" }
+        val keySupplier: (String?) -> String? = { if (whooshing) "whooshing" else "still" }
         val animations = objectMapOf<String, IAnimation>(
             "still" pairTo Animation(regions["still"], 1, 3, 0.1f, true),
             "whooshing" pairTo Animation(regions["whoosh"], 1, 3, 0.1f, true)

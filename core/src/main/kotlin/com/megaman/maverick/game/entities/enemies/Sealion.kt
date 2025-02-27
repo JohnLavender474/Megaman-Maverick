@@ -241,7 +241,7 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             when (sealionState) {
                 SealionState.THROW -> if (ballInHands) "before_throw_ball" else "after_throw_ball"
                 else -> when (sealionState) {

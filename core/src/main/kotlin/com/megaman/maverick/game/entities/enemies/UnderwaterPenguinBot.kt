@@ -179,7 +179,7 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game, size
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? =
+        val keySupplier: (String?) -> String? =
             { if (state == UnderwaterPenguinBotState.WAIT) null else state.name.lowercase() }
         val animations = objectMapOf<String, IAnimation>(
             "swim" pairTo Animation(regions["swim"], 3, 1, 0.1f, true),

@@ -213,7 +213,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = {
+        val keySupplier: (String?) -> String? = {
             val (gachappanState, _) = loop.getCurrent()
             gachappanState.name
         }

@@ -296,7 +296,7 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, size = Size
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             if (defeated) "defeated"
             else if (!timers["laugh"].isFinished()) "laugh"
             else when (loop.getCurrent()) {

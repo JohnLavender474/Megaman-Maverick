@@ -213,7 +213,7 @@ class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { walrusBotState.name.lowercase() }
+        val keySupplier: (String?) -> String? = { walrusBotState.name.lowercase() }
         val animations = objectMapOf<String, IAnimation>(
             "stand" pairTo Animation(regions["stand"], 2, 1, gdxArrayOf(1f, 0.15f), true),
             "shoot" pairTo Animation(regions["shoot"], 7, 1, 0.1f, false),

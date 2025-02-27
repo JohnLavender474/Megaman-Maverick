@@ -143,7 +143,7 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             if (standing) {
                 if (abs(body.physics.velocity.x) > 0.25f * ConstVals.PPM) "slippin" else "stand"
             } else if (jumping) "jump" else "slide"

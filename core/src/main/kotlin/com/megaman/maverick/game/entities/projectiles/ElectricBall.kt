@@ -116,7 +116,7 @@ class ElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (large) "large" else "small" }
+        val keySupplier: (String?) -> String? = { if (large) "large" else "small" }
         val animations = objectMapOf<String, IAnimation>(
             "large" pairTo Animation(largeRegion!!, 1, 2, 0.15f, true),
             "small" pairTo Animation(smallRegion!!, 1, 2, 0.15f, true)

@@ -139,7 +139,7 @@ class AcidGoop(game: MegamanMaverickGame) : MegaGameEntity(game), IDamager, IHaz
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier = { if (dissipating) "dissipating" else "falling" }
+        val keySupplier: (String?) -> String? = { if (dissipating) "dissipating" else "falling" }
         val animations = objectMapOf<String, IAnimation>(
             "dissipating" pairTo Animation(splatRegion!!, 1, 2, 0.1f, false),
             "falling" pairTo Animation(fallingRegion!!, 1, 3, 0.1f, true)

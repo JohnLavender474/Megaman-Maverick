@@ -147,7 +147,7 @@ class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (!shootingTimer.isFinished()) "shooting" else "closed" }
+        val keySupplier: (String?) -> String? = { if (!shootingTimer.isFinished()) "shooting" else "closed" }
         val animations = objectMapOf<String, IAnimation>(
             "shooting" pairTo Animation(regions.get("shooting"), 2, 1, 0.1f, true),
             "closed" pairTo Animation(regions.get("closed"), 2, 1, gdxArrayOf(1f, 0.15f), true)

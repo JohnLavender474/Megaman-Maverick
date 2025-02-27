@@ -172,7 +172,7 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = { if (body.isSensing(BodySense.FEET_ON_GROUND)) "run" else "jump" }
+        val keySupplier: (String?) -> String? = { if (body.isSensing(BodySense.FEET_ON_GROUND)) "run" else "jump" }
         val animations = objectMapOf<String, IAnimation>(
             "run" pairTo Animation(runRegion!!, 1, 4, 0.125f, true),
             "jump" pairTo Animation(jumpRegion!!, 1, 2, 0.125f, true)

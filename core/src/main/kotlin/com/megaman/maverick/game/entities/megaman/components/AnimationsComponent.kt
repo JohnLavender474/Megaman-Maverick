@@ -18,7 +18,7 @@ var Megaman.currentAnimKey: String?
     }
 
 internal fun Megaman.defineAnimationsComponent(animations: OrderedMap<String, IAnimation>): AnimationsComponent {
-    val megamanAnimKeySupplier = supplier@{
+    val megamanAnimKeySupplier: (String?) -> String? = supplier@{
         val key = getAnimationKey(currentAnimKey)
         return@supplier when {
             key != null -> {

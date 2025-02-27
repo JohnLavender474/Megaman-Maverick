@@ -157,7 +157,7 @@ class ElectrocutieChild(game: MegamanMaverickGame) : MegaGameEntity(game), IHaza
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { (parent as Electrocutie).currentState.name }
+        val keySupplier: (String?) -> String? = { (parent as Electrocutie).currentState.name }
         val animations = objectMapOf<String, IAnimation>(
             ElectrocutieState.MOVE.name pairTo Animation(moveRegion!!),
             ElectrocutieState.CHARGE.name pairTo Animation(chargeRegion!!, 1, 2, 0.1f, true),

@@ -223,7 +223,7 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (!waitTimer.isFinished()) "stand" else "jump" }
+        val keySupplier: (String?) -> String? = { if (!waitTimer.isFinished()) "stand" else "jump" }
         animations = objectMapOf(
             "stand" pairTo Animation(standRegion!!),
             "jump" pairTo Animation(jumpRegion!!, 1, 2, 0.2f, false)

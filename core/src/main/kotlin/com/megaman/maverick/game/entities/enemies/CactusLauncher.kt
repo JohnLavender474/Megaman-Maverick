@@ -161,7 +161,7 @@ class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             when (loop.getCurrent()) {
                 WAIT -> "wait"
                 FIRE -> "fire"

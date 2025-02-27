@@ -235,7 +235,7 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (blink) "blink" else "fly" }
+        val keySupplier: (String?) -> String? = { if (blink) "blink" else "fly" }
         val animations = objectMapOf<String, IAnimation>(
             "blink" pairTo Animation(regions["blink"], 2, 2, 0.05f, true),
             "fly" pairTo Animation(regions["fly"], 2, 1, 0.1f, true)

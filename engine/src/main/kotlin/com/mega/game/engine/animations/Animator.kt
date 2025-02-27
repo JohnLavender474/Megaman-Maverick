@@ -7,7 +7,7 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.drawables.sprites.GameSprite
 
 open class Animator(
-    val keySupplier: () -> String?,
+    val keySupplier: (String?) -> String?,
     val animations: ObjectMap<String, IAnimation>,
     var updateScalar: Float = 1f,
     var onChangeKey: ((String?, String?) -> Unit)? = null,
@@ -29,7 +29,7 @@ open class Animator(
     override fun shouldAnimate(delta: Float) = shouldAnimatePredicate.invoke(delta)
 
     override fun animate(sprite: GameSprite, delta: Float) {
-        val nextKey = keySupplier()
+        val nextKey = keySupplier(currentKey)
         if (currentKey != nextKey) {
             onChangeKey?.invoke(currentKey, nextKey)
             currentAnimation?.reset()
@@ -50,12 +50,12 @@ open class Animator(
 
 class AnimatorBuilder {
 
-    private var keySupplier: (() -> String?) = { Animator.DEFAULT_KEY }
+    private var keySupplier: ((String?) -> String?) = { Animator.DEFAULT_KEY }
     private val animations: ObjectMap<String, IAnimation> = ObjectMap()
     private var updateScalar: Float = 1f
     private var onChangeKey: ((String?, String?) -> Unit)? = null
 
-    fun setKeySupplier(supplier: () -> String?) = apply {
+    fun setKeySupplier(supplier: (String?) -> String?) = apply {
         this.keySupplier = supplier
     }
 

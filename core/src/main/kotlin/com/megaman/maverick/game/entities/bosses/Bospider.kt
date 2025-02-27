@@ -359,7 +359,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             when (stateLoop.getCurrent()) {
                 BospiderState.SPAWN -> "still"
                 BospiderState.CLIMB -> "climb"

@@ -196,7 +196,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (type == ConstKeys.GREEN) "LargeGreen" else "LargeOrange" }
+        val keySupplier: (String?) -> String? = { if (type == ConstKeys.GREEN) "LargeGreen" else "LargeOrange" }
         val animations = objectMapOf<String, IAnimation>(
             "LargeGreen" pairTo Animation(greenRegion!!, 1, 4, gdxArrayOf(1f, 0.1f, 0.1f, 0.1f), true),
             "LargeOrange" pairTo Animation(orangeRegion!!, 1, 4, gdxArrayOf(1f, 0.1f, 0.1f, 0.1f), true)
@@ -323,7 +323,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game, size = Si
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (type == ConstKeys.GREEN) "SmallGreen" else "SmallOrange" }
+        val keySupplier: (String?) -> String? = { if (type == ConstKeys.GREEN) "SmallGreen" else "SmallOrange" }
         val animations = objectMapOf<String, IAnimation>(
             "SmallGreen" pairTo Animation(greenRegion!!, 1, 4, gdxArrayOf(1f, 0.1f, 0.1f, 0.1f), true),
             "SmallOrange" pairTo Animation(orangeRegion!!, 1, 4, gdxArrayOf(1f, 0.1f, 0.1f, 0.1f), true)

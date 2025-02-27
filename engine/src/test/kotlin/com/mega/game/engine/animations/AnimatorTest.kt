@@ -68,7 +68,7 @@ class AnimatorTest :
             }
 
             var key = "idle"
-            val keySupplier: () -> String? = { key }
+            val keySupplier: (String?) -> String? = { key }
             val animations = ObjectMap<String, IAnimation>()
 
             lateinit var mockSprite: GameSprite

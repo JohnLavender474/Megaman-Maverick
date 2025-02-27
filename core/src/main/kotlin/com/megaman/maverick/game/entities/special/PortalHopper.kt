@@ -254,7 +254,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (launch) "launch" else "wait" }
+        val keySupplier: (String?) -> String? = { if (launch) "launch" else "wait" }
         val animations = objectMapOf<String, IAnimation>(
             "launch" pairTo Animation(launchRegion!!, 1, 3, 0.05f, true),
             "wait" pairTo Animation(waitRegion!!, 1, 2, 0.1f, true)

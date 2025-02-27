@@ -420,7 +420,7 @@ class SniperJoe_OLD(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = {
+        val keySupplier: (String?) -> String? = {
             val regionKey = when (sniperJoeState) {
                 SniperJoeState.WAITING_SHIELDED ->
                     if (body.isSensing(BodySense.FEET_ON_GROUND)) "StandShielded" else "JumpWithShield"

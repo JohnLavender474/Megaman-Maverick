@@ -226,7 +226,7 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             when (babySpiderState) {
                 BabySpiderState.FALLING -> "still"
                 else -> "running"

@@ -274,7 +274,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = { if (turningAround) "turn" else "attack" }
+        val keySupplier: (String?) -> String? = { if (turningAround) "turn" else "attack" }
         animations = objectMapOf(
             "turn" pairTo Animation(regions["turn"], 1, 5, 0.1f, false),
             "attack" pairTo Animation(regions["attack"], 1, 2, 0.1f, true)

@@ -270,7 +270,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier = { type + status.region }
+        val keySupplier: (String?) -> String? = { type + status.region }
         animations = objectMapOf(
             "Hang" pairTo Animation(atlas!!.findRegion("Bat/Hang")),
             "Fly" pairTo Animation(atlas!!.findRegion("Bat/Fly"), 1, 2, 0.1f, true),

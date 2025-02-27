@@ -197,7 +197,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = {
+        val keySupplier: (String?) -> String? = {
             val key = if (down) "down" else if (shooting) "shoot" else if (rising) "rise" else "drop"
             "$type-$key"
         }

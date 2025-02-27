@@ -207,7 +207,7 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             when (loop.getCurrent()) {
                 TotemPolemState.EYES_CLOSED -> "eyes_closed"
                 TotemPolemState.EYES_OPENING -> "eyes_opening"

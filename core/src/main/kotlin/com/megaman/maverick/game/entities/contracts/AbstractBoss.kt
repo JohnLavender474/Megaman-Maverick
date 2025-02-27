@@ -268,20 +268,23 @@ abstract class AbstractBoss(
     protected open fun explodeOnDefeat(delta: Float) {
         explosionTimer.update(delta)
         if (explosionTimer.isFinished()) {
-            val position = Position.entries.random()
-
-            val explosion = MegaEntityFactory.fetch(Explosion::class)!!
-            explosion.spawn(
-                props(
-                    ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND,
-                    ConstKeys.POSITION pairTo body.getCenter().add(
-                        (position.x - 1) * 0.75f * ConstVals.PPM, (position.y - 1) * 0.75f * ConstVals.PPM
-                    )
-                )
-            )
-
+            spawnDefeatExplosion()
             explosionTimer.reset()
         }
+    }
+
+    protected open fun spawnDefeatExplosion() {
+        val position = Position.entries.random()
+
+        val explosion = MegaEntityFactory.fetch(Explosion::class)!!
+        explosion.spawn(
+            props(
+                ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND,
+                ConstKeys.POSITION pairTo body.getCenter().add(
+                    (position.x - 1) * 0.75f * ConstVals.PPM, (position.y - 1) * 0.75f * ConstVals.PPM
+                )
+            )
+        )
     }
 
     override fun getType() = EntityType.BOSS

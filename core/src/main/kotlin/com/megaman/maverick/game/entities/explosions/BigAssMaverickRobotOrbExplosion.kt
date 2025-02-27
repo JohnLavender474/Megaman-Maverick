@@ -130,7 +130,7 @@ class BigAssMaverickRobotOrbExplosion(game: MegamanMaverickGame) : MegaGameEntit
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySuppplier: () -> String? = { if (shockTimer.isFinished()) "dissipate" else "pulse" }
+        val keySuppplier: (String?) -> String? = { if (shockTimer.isFinished()) "dissipate" else "pulse" }
         val animations = objectMapOf<String, IAnimation>(
             "dissipate" pairTo Animation(dissipateRegion!!, 1, 3, 0.1f, false),
             "pulse" pairTo Animation(explosionRegion!!, 1, 3, 0.1f, true)

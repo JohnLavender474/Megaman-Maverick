@@ -154,7 +154,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = {
+        val keySupplier: (String?) -> String? = {
             when (currentState) {
                 SwinginJoeState.SWING_EYES_CLOSED -> "swing1"
                 SwinginJoeState.SWING_EYES_OPEN -> "swing2"

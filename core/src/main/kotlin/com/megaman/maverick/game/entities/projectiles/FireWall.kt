@@ -137,7 +137,7 @@ class FireWall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = { if (disintegrating) "disintegrate" else "fire" }
+        val keySupplier: (String?) -> String? = { if (disintegrating) "disintegrate" else "fire" }
         val animations = objectMapOf<String, IAnimation>(
             "disintegrate" pairTo Animation(regions["disintegrate"], 2, 2, 0.1f, false),
             "fire" pairTo Animation(regions["fire"], 3, 1, 0.1f, true)

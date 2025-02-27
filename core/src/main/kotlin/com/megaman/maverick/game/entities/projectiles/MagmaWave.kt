@@ -135,7 +135,7 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (disintegrating) "disintegrate" else "wave" }
+        val keySupplier: (String?) -> String? = { if (disintegrating) "disintegrate" else "wave" }
         val animations = objectMapOf<String, IAnimation>(
             "disintegrate" pairTo Animation(regions["disintegrate"], 3, 1, 0.1f, false),
             "wave" pairTo Animation(regions["wave"], 2, 1, 0.1f, true)

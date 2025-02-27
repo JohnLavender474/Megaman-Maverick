@@ -189,7 +189,7 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM)
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             when (elecnLoop.getCurrent()) {
                 ElecnState.MOVING -> "moving"
                 ElecnState.CHARGING -> "charging"

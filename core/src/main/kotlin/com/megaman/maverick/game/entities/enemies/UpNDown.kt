@@ -132,7 +132,7 @@ class UpNDown(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier = { type }
+        val keySupplier: (String?) -> String? = { type }
         val animations = objectMapOf<String, IAnimation>(
             RED_TYPE pairTo Animation(redRegion!!, 1, 2, 0.1f, true),
             BLUE_TYPE pairTo Animation(blueRegion!!, 1, 2, 0.1f, true)

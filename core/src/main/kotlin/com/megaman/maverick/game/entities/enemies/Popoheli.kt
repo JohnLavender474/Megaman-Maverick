@@ -325,7 +325,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.LARG
 
         val heliAnimation = Animation(heliRegion!!, 1, 2, 0.1f, true)
         val frozenAnimation = Animation(frozenRegion!!)
-        val keySupplier: () -> String = { if (state == PopoheliState.FROZEN) "frozen" else "heli" }
+        val keySupplier: (String?) -> String? = { if (state == PopoheliState.FROZEN) "frozen" else "heli" }
         val heliAnimator = Animator(
             keySupplier, objectMapOf(
                 "heli" pairTo heliAnimation,

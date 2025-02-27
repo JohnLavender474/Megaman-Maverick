@@ -126,7 +126,7 @@ class PenguinBot(game: MegamanMaverickGame): AbstractEnemy(game, size = Size.MED
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { penguinBotState.name.lowercase() }
+        val keySupplier: (String?) -> String? = { penguinBotState.name.lowercase() }
         val animations = objectMapOf<String, IAnimation>(
             "waddle" pairTo Animation(regions["waddle"], 2, 2, 0.1f, true),
             "throw_bomb" pairTo Animation(regions["throw_bomb"], 3, 1, 0.1f, false),

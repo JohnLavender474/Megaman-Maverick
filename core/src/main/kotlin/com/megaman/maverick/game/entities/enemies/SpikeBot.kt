@@ -300,7 +300,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = {
+        val keySupplier: (String?) -> String? = {
             val key = when {
                 !body.isSensing(BodySense.FEET_ON_GROUND) -> "jump"
                 else -> when (loop.getCurrent()) {

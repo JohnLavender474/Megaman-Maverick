@@ -221,7 +221,7 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         .build()
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (!shakeTimer.isFinished()) "shake" else "ride" }
+        val keySupplier: (String?) -> String? = { if (!shakeTimer.isFinished()) "shake" else "ride" }
         val animations = objectMapOf<String, IAnimation>(
             "shake" pairTo Animation(regions.get("shake"), 2, 1, 0.1f, true),
             "ride" pairTo Animation(regions.get("ride"), 2, 1, 0.1f, true)

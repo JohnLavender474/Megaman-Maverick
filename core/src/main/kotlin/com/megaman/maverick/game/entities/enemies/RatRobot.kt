@@ -154,7 +154,7 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = { if (body.isSensing(BodySense.FEET_ON_GROUND)) "run" else "still" }
+        val keySupplier: (String?) -> String? = { if (body.isSensing(BodySense.FEET_ON_GROUND)) "run" else "still" }
         val animations = objectMapOf<String, IAnimation>(
             "still" pairTo Animation(regions["still"]),
             "run" pairTo Animation(regions["run"], 3, 1, 0.1f, true)

@@ -118,7 +118,7 @@ class ChargedShotResidual(game: MegamanMaverickGame) : MegaGameEntity(game), ISp
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = { if (fullyCharged) "full" else "half" }
+        val keySupplier: (String?) -> String? = { if (fullyCharged) "full" else "half" }
         val duration = FULL_CHARGED_DUR / 4
         val animations = objectMapOf<String, IAnimation>(
             "full" pairTo Animation(regions["full"], 2, 2, duration, false),

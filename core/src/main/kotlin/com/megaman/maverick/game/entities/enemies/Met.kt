@@ -294,7 +294,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier = {
+        val keySupplier: (String?) -> String? = {
             "$type${
                 when (behavior) {
                     MetBehavior.SHIELDING -> "LayDown"

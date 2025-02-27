@@ -161,7 +161,7 @@ class FireMetSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentE
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = {
+        val keySupplier: (String?) -> String? = {
             if (children.size < maxToSpawn) when (loop.getCurrent()) {
                 FireMetSpawnerState.CLOSED -> "closed"
                 FireMetSpawnerState.OPENING -> "opening"

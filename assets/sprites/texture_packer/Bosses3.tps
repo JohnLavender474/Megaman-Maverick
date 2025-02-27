@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.5.0</string>
+        <string>7.6.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -173,6 +173,92 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">../frames/Bosses3/BigAssMaverickRobot/Body/body.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>32,48,64,96</rect>
+                <key>scale9Paddings</key>
+                <rect>32,48,64,96</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses3/BigAssMaverickRobot/Hand/rocket.png</key>
+            <key type="filename">../frames/Bosses3/PreciousWoman/damaged.png</key>
+            <key type="filename">../frames/Bosses3/PreciousWoman/defeated.png</key>
+            <key type="filename">../frames/Bosses3/PreciousWoman/run.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>24,24,48,48</rect>
+                <key>scale9Paddings</key>
+                <rect>24,24,48,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses3/BigAssMaverickRobot/Hand/still.png</key>
+            <key type="filename">../frames/Bosses3/PreciousWoman/groundslide.png</key>
+            <key type="filename">../frames/Bosses3/PreciousWoman/jump.png</key>
+            <key type="filename">../frames/Bosses3/PreciousWoman/jump_throw.png</key>
+            <key type="filename">../frames/Bosses3/PreciousWoman/stand_throw.png</key>
+            <key type="filename">../frames/Bosses3/PreciousWoman/wallslide.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,12,24,24</rect>
+                <key>scale9Paddings</key>
+                <rect>12,12,24,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses3/BigAssMaverickRobot/Head/defeated.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>20,20,40,40</rect>
+                <key>scale9Paddings</key>
+                <rect>20,20,40,40</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses3/BigAssMaverickRobot/Head/down.png</key>
+            <key type="filename">../frames/Bosses3/BigAssMaverickRobot/Head/stunned.png</key>
+            <key type="filename">../frames/Bosses3/BigAssMaverickRobot/Head/turn.png</key>
+            <key type="filename">../frames/Bosses3/BigAssMaverickRobot/Head/turn_up.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>20,40,40,80</rect>
+                <key>scale9Paddings</key>
+                <rect>20,40,40,80</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Bosses3/PreciousWoman/airpunch1.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -203,42 +289,6 @@
                 <rect>12,24,24,48</rect>
                 <key>scale9Paddings</key>
                 <rect>12,24,24,48</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Bosses3/PreciousWoman/damaged.png</key>
-            <key type="filename">../frames/Bosses3/PreciousWoman/defeated.png</key>
-            <key type="filename">../frames/Bosses3/PreciousWoman/run.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>24,24,48,48</rect>
-                <key>scale9Paddings</key>
-                <rect>24,24,48,48</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Bosses3/PreciousWoman/groundslide.png</key>
-            <key type="filename">../frames/Bosses3/PreciousWoman/jump.png</key>
-            <key type="filename">../frames/Bosses3/PreciousWoman/jump_throw.png</key>
-            <key type="filename">../frames/Bosses3/PreciousWoman/stand_throw.png</key>
-            <key type="filename">../frames/Bosses3/PreciousWoman/wallslide.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>12,12,24,24</rect>
-                <key>scale9Paddings</key>
-                <rect>12,12,24,24</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

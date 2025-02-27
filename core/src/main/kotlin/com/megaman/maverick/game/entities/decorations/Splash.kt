@@ -145,7 +145,7 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
     })
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { type.name }
+        val keySupplier: (String?) -> String? = { type.name }
         val animations = ObjectMap<String, IAnimation>()
         SplashType.entries.forEach { t -> animations.put(t.name, Animation(regions[t.name], 1, 5, 0.075f, false)) }
         val animator = Animator(keySupplier, animations)

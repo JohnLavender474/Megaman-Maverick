@@ -167,7 +167,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String? = { if (throwing) "throw" else "stand" }
+        val keySupplier: (String?) -> String? = { if (throwing) "throw" else "stand" }
         val animations = objectMapOf<String, IAnimation>(
             "stand" pairTo Animation(standingRegion!!, 1, 2, gdxArrayOf(0.5f, 0.15f), true),
             "throw" pairTo Animation(throwingRegion!!, 1, 3, 0.05f, false)

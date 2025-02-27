@@ -149,7 +149,7 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: () -> String = { if (fullyCharged) "full" else "half" }
+        val keySupplier: (String?) -> String? = { if (fullyCharged) "full" else "half" }
         val animations = objectMapOf<String, IAnimation>(
             "full" pairTo Animation(regions["full"], 3, 1, 0.05f, true),
             "half" pairTo Animation(regions["half"], 3, 1, 0.05f, true)
