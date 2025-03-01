@@ -44,7 +44,7 @@ object ShapeUtils {
         return intersects
     }
 
-    fun overlaps(circle: Circle, polygon: Polygon): Boolean {
+    fun overlapCircleAndPolygon(circle: Circle, polygon: Polygon): Boolean {
         val vertices = polygon.transformedVertices
 
         val center = Vector2(circle.x, circle.y)

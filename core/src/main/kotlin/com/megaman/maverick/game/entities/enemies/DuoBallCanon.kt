@@ -195,7 +195,7 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.BODY))
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER))
     }
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
@@ -207,7 +207,8 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
             sprite.setFlip(isFacing(Facing.LEFT), false)
 
             sprite.hidden = damageBlink
-        }.build()
+        }
+        .build()
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
         .key(TAG)

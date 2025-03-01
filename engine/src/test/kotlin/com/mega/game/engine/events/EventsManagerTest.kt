@@ -27,7 +27,7 @@ class EventsManagerTest :
                 eventsManager.submitEvent(event)
 
                 // then
-                eventsManager.events.containsKey(event.key) shouldBe true
+                eventsManager.eventsMap.containsKey(event.key) shouldBe true
             }
 
             it("should add and remove a listener") {
@@ -101,7 +101,7 @@ class EventsManagerTest :
 
                 // then
                 eventHandled shouldBe true
-                eventsManager.events.shouldBeEmpty()
+                eventsManager.eventsMap.shouldBeEmpty()
             }
 
             it("should handle multiple listeners") {

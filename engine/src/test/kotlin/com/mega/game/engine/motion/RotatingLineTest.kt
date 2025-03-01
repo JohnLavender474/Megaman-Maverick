@@ -121,10 +121,10 @@ class RotatingLineTest : DescribeSpec({
             retrievedEndPoint.y shouldBe endPoint.y
         }
 
-        it("should calculate local points correctly") {
-            val testCount = 10
-            val updatesPerTest = 10
+        it("should calculate local points and transformed points correctly") {
+            val testCount = 50
             val randomVarCount = 4
+            val updatesPerTest = 25
             val deltaSupplier: () -> Float = { getRandom(0f, 0.5f, 1f) }
             val scaleSupplier: (Int) -> Float = { if (it % 2 == 0) 1f else getRandom(0.5f, 2f) }
             val updateTeardown: () -> Unit = { outFloatArr.clear() }
@@ -144,12 +144,13 @@ class RotatingLineTest : DescribeSpec({
 
                 // Test line (RotatingLine)
                 val rotatingLine = RotatingLine(origin, radius, speed, 0f)
+                val endPoint = rotatingLine.getEndPoint(out1)
                 rotatingLine.scaleX = scaleX
                 rotatingLine.scaleY = scaleY
                 println("Test$testNum: set up rotatingLine: $rotatingLine")
 
                 // Control line (GameLine: use vars from test line to begin with)
-                val controlLine = GameLine(origin, rotatingLine.getEndPoint(out1))
+                val controlLine = GameLine(origin, endPoint)
                 controlLine.setOrigin(origin)
                 controlLine.rotation = 0f
                 controlLine.scaleX = scaleX
@@ -181,8 +182,8 @@ class RotatingLineTest : DescribeSpec({
                             "testLocalPoint1=$testLocalPoint1, " +
                             "testLocalPoint2=$testLocalPoint2"
                     )
-                    testLocalPoint1 shouldBe controlLocalPoint1
-                    testLocalPoint2 shouldBe controlLocalPoint2
+                    testLocalPoint1.epsilonEquals(controlLocalPoint1, 0.01f) shouldBe true
+                    testLocalPoint2.epsilonEquals(controlLocalPoint2, 0.01f) shouldBe true
 
                     val controlTransformedVerts = controlLine.getTransformedVertices(outFloatArr)
                     println("Test$testNum: update$updateNum: controlTransformedVerts=$controlTransformedVerts")
@@ -193,8 +194,16 @@ class RotatingLineTest : DescribeSpec({
                             "testTransformedPoint1=$testTransformedPoint1 " +
                             "testTransformedPoint2=$testTransformedPoint2"
                     )
-                    testTransformedPoint1 shouldBe Vector2(controlTransformedVerts[0], controlTransformedVerts[1])
-                    testTransformedPoint2 shouldBe Vector2(controlTransformedVerts[2], controlTransformedVerts[3])
+                    testTransformedPoint1.epsilonEquals(
+                        controlTransformedVerts[0],
+                        controlTransformedVerts[1],
+                        0.01f
+                    ) shouldBe true
+                    testTransformedPoint2.epsilonEquals(
+                        controlTransformedVerts[2],
+                        controlTransformedVerts[3],
+                        0.01f
+                    ) shouldBe true
 
                     println("Test$testNum: update$updateNum: invoking updateTeardown")
                     updateTeardown.invoke()

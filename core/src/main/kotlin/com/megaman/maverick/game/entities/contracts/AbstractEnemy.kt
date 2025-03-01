@@ -58,8 +58,8 @@ abstract class AbstractEnemy(
         const val MEGAMAN_HEALTH_INFLUENCE_FACTOR = 0.25f
 
         const val LIVES_THRESHOLD = 3
-        const val LOW_LIFE_CHANCE = 5
-        const val HIGH_LIFE_CHANCE = 15
+        const val LOW_LIFE_CHANCE = 4
+        const val HIGH_LIFE_CHANCE = 8
 
         const val SCREW_CHANCE = 50
 
@@ -109,10 +109,11 @@ abstract class AbstractEnemy(
                     DROP_ENTITIES.any { (type, chanceFunction) ->
                         val random = getRandom(0, 100)
                         val chance = chanceFunction.invoke(this)
-
                         if (random <= chance.toInt()) {
                             val position = body.getCenter()
+
                             val large = getRandom(0, 100) <= LARGE_ITEM_CHANCE
+
                             val entity = MegaEntityFactory.fetch(type)!!
                             return@any entity.spawn(
                                 props(ConstKeys.LARGE pairTo large, ConstKeys.POSITION pairTo position)

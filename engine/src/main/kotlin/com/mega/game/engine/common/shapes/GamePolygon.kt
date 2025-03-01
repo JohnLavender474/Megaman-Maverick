@@ -166,7 +166,7 @@ open class GamePolygon() : IGameShape2D, IRotatable, IRotatableShape, Resettable
             Intersector.overlapConvexPolygons(libgdxPolygon, tempPolygon!!.libgdxPolygon)
         }
 
-        is GameCircle -> ShapeUtils.overlaps(other.libgdxCircle, libgdxPolygon)
+        is GameCircle -> ShapeUtils.overlapCircleAndPolygon(other.libgdxCircle, libgdxPolygon)
         else -> OVERLAP_EXTENSION?.invoke(this, other) == true
     }
 

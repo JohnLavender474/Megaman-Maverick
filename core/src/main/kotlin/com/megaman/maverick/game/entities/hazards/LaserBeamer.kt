@@ -118,12 +118,12 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat())
 
-        laserFixture = Fixture(body, FixtureType.LASER, GameLine())
+        laserFixture = Fixture(body, FixtureType.LASER, laser)
         laserFixture.putProperty(ConstKeys.COLLECTION, contacts)
         laserFixture.attachedToBody = false
         body.addFixture(laserFixture)
 
-        damagerFixture = Fixture(body, FixtureType.DAMAGER, GameLine())
+        damagerFixture = Fixture(body, FixtureType.DAMAGER, laser)
         damagerFixture.attachedToBody = false
         body.addFixture(damagerFixture)
 
@@ -142,15 +142,14 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         body.postProcess.put(ConstKeys.DEFAULT) {
             val start = rotatingLine.getStartPoint()
             laser.setFirstLocalPoint(start)
-            laser.setOrigin(start)
 
             val end = if (contacts.isEmpty()) rotatingLine.getEndPoint() else contacts.peek()
             laser.setSecondLocalPoint(end)
 
-            contactGlow.setCenter(end)
-
             laserFixture.setShape(laser)
             damagerFixture.setShape(laser)
+
+            contactGlow.setCenter(end)
         }
 
         return BodyComponentCreator.create(this, body)

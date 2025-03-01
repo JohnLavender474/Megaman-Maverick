@@ -77,7 +77,7 @@ open class GameCircle(x: Float, y: Float, radius: Float) : IGameShape2D {
                 )
             }
 
-            is GamePolygon -> ShapeUtils.overlaps(this.libgdxCircle, other.libgdxPolygon)
+            is GamePolygon -> ShapeUtils.overlapCircleAndPolygon(this.libgdxCircle, other.libgdxPolygon)
             else -> OVERLAP_EXTENSION?.invoke(this, other) == true
         }
 

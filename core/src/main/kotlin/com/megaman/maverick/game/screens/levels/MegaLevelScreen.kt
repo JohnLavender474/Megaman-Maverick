@@ -602,7 +602,10 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                     audioMan.unsetMusic()
                 }
 
-                MegaGameEntities.forEach { if (it is IBossListener) it.onBossDefeated(boss) }
+                MegaGameEntities.forEach {
+                    if (it is IBossListener && it.getType() != EntityType.BOSS)
+                        it.onBossDefeated(boss)
+                }
 
                 bossHealthHandler.unset()
             }

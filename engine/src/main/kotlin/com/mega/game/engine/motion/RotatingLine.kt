@@ -84,9 +84,10 @@ class RotatingLine(
         return out.set(x, y)
     }
 
-    fun translate(x: Float, y: Float) {
-        line.originX += x
-        line.originY += y
+    fun translate(deltaX: Float, deltaY: Float) {
+        val x = line.originX + deltaX
+        val y = line.originY + deltaY
+        setOrigin(x, y)
     }
 
     override fun toString() =

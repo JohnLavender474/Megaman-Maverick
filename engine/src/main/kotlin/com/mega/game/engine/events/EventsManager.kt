@@ -3,9 +3,9 @@ package com.mega.game.engine.events
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.OrderedSet
+import com.badlogic.gdx.utils.Queue
 import com.mega.game.engine.common.extensions.putIfAbsentAndGet
 import com.mega.game.engine.common.objects.SimpleQueueSet
-import java.util.*
 
 class EventsManager : Runnable {
 
@@ -17,8 +17,8 @@ class EventsManager : Runnable {
     internal val listenersToAdd = SimpleQueueSet<IEventListener>()
     internal val listenersToRemove = SimpleQueueSet<IEventListener>()
 
-    internal val events = OrderedMap<Any, Array<Event>>()
-    internal val eventsToAdd = LinkedList<Event>()
+    internal val eventsMap = OrderedMap<Any, Array<Event>>()
+    internal val eventsToAdd = Queue<Event>()
 
     internal var running = false
         private set
@@ -27,12 +27,12 @@ class EventsManager : Runnable {
 
 
     fun submitEvent(event: Event) {
-        if (running) eventsToAdd.add(event) else submitEventNow(event)
+        if (running) eventsToAdd.addLast(event) else submitEventNow(event)
     }
 
     private fun submitEventNow(event: Event) {
         val eventKey = event.key
-        events.putIfAbsentAndGet(eventKey) { Array() }.add(event)
+        eventsMap.putIfAbsentAndGet(eventKey) { Array() }.add(event)
     }
 
     fun isListener(listener: IEventListener) = listeners.contains(listener)
@@ -58,23 +58,25 @@ class EventsManager : Runnable {
     override fun run() {
         running = true
 
-        while (!eventsToAdd.isEmpty()) submitEventNow(eventsToAdd.poll())
+        while (!eventsToAdd.isEmpty) submitEventNow(eventsToAdd.removeFirst())
         while (!listenersToAdd.isEmpty()) addListenerNow(listenersToAdd.remove())
         while (!listenersToRemove.isEmpty()) removeListenerNow(listenersToRemove.remove())
+
         if (setToClearListeners) {
             clearListenersNow()
+
             setToClearListeners = false
         }
 
         listeners.forEach { listener ->
-            val eventKeyMask = listener.eventKeyMask
-            events.forEach {
-                val eventKey = it.key
-                val eventsArray = it.value
-                if (eventKeyMask.contains(eventKey)) eventsArray.forEach { event -> listener.onEvent(event) }
+            listener.eventKeyMask.forEach { eventKey ->
+                val events = eventsMap[eventKey]
+                events?.forEach { event -> listener.onEvent(event) }
             }
         }
-        events.clear()
+
+        eventsMap.clear()
+
         running = false
     }
 }

@@ -1,11 +1,16 @@
 package com.mega.game.engine.common.shapes
 
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.OrderedSet
 import io.kotest.core.spec.style.DescribeSpec
+import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 
 class ShapeUtilsTest : DescribeSpec({
+
+    val out1 = Vector2()
+    val out2 = Vector2()
 
     describe("ShapeUtils") {
 
@@ -83,6 +88,70 @@ class ShapeUtilsTest : DescribeSpec({
 
                 result shouldBe false
                 intersections.size shouldBe 0 // No intersection as the line is inside the rectangle
+            }
+
+            describe("should intersect line world points") {
+
+                it("test 1") {
+                    val line = GameLine(1f, 1f, 3f, 3f)
+                    line.rotation = 90f
+                    line.calculateWorldPoints(out1, out2)
+                    println("out1=$out1, out2=$out2")
+                    out1 shouldBe Vector2(-1f, 1f)
+                    out2 shouldBe Vector2(-3f, 3f)
+
+                    val rectangle = GameRectangle(-3f, 2f, 2f, 2f)
+                    println("rectangle=$rectangle")
+
+                    val intersections = ObjectSet<Vector2>()
+                    ShapeUtils.intersectRectangleAndLine(rectangle, line, intersections)
+                    println("intersections=$intersections")
+
+                    intersections.size shouldBe 2
+                    intersections shouldContain Vector2(-3f, 3f)
+                    intersections shouldContain Vector2(-2f, 2f)
+                }
+
+                it("test 2") {
+                    val line = GameLine(1f, 1f, 3f, 3f)
+                    line.rotation = 180f
+                    line.calculateWorldPoints(out1, out2)
+                    println("out1=$out1, out2=$out2")
+                    out1 shouldBe Vector2(-1f, -1f)
+                    out2 shouldBe Vector2(-3f, -3f)
+
+                    val rectangle = GameRectangle(-3f, -3f, 2f, 2f)
+                    println("rectangle=$rectangle")
+
+                    val intersections = ObjectSet<Vector2>()
+                    ShapeUtils.intersectRectangleAndLine(rectangle, line, intersections)
+                    println("intersections=$intersections")
+
+                    intersections.size shouldBe 2
+                    intersections shouldContain Vector2(-3f, -3f)
+                    intersections shouldContain Vector2(-1f, -1f)
+                }
+
+                it("test 3") {
+                    val line = GameLine(1f, 1f, 3f, 3f)
+                    line.setOrigin(3f, 3f)
+                    line.rotation = 270f
+                    line.calculateWorldPoints(out1, out2)
+                    println("out1=$out1, out2=$out2")
+                    out1 shouldBe Vector2(1f, 5f)
+                    out2 shouldBe Vector2(3f, 3f)
+
+                    val rectangle = GameRectangle(1f, 3f, 2f, 1f)
+                    println("rectangle=$rectangle")
+
+                    val intersections = ObjectSet<Vector2>()
+                    ShapeUtils.intersectRectangleAndLine(rectangle, line, intersections)
+                    println("intersections=$intersections")
+
+                    intersections.size shouldBe 2
+                    intersections shouldContain Vector2(2f, 4f)
+                    intersections shouldContain Vector2(3f, 3f)
+                }
             }
         }
     }

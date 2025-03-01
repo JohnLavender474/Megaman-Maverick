@@ -13,6 +13,8 @@ class GameLineTest : DescribeSpec({
 
         val out1 = Vector2()
         val out2 = Vector2()
+        val out3 = Vector2()
+        val out4 = Vector2()
 
         it("should construct a line with specified points") {
             val line = GameLine(0f, 0f, 3f, 4f)
@@ -81,8 +83,30 @@ class GameLineTest : DescribeSpec({
             (localPoint2 == worldPoint2) shouldBe true
         }
 
+        it("should have equal local and world points when local point 1 and origin are the same") {
+            val testsToConduct = 100
+            (0 until testsToConduct).forEach {
+                val x1 = UtilMethods.getRandom(0f, 10f)
+                val y1 = UtilMethods.getRandom(0f, 10f)
+                val x2 = UtilMethods.getRandom(0f, 10f)
+                val y2 = UtilMethods.getRandom(0f, 10f)
+
+                val line = GameLine()
+                line.setOrigin(x1, y1)
+                line.setFirstLocalPoint(x1, y1)
+                line.setSecondLocalPoint(x2, y2)
+
+                line.getFirstLocalPoint(out1)
+                line.getSecondLocalPoint(out2)
+                line.calculateWorldPoints(out3, out4)
+
+                out1.epsilonEquals(out3, 0.0001f) shouldBe true
+                out2.epsilonEquals(out4, 0.0001f) shouldBe true
+            }
+        }
+
         it("should provide correct local and world points") {
-            val testsToConduct = 10
+            val testsToConduct = 25
             (0 until testsToConduct).forEach {
                 val randomVarCount = 11
 
