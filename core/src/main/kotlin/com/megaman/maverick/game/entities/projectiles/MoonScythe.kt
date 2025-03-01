@@ -23,6 +23,7 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
@@ -32,12 +33,9 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.utils.GameObjectPools
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodyFixtureDef
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.*
 
-class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game) {
+class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
     companion object {
         const val TAG = "MoonScythe"
@@ -87,16 +85,28 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game) {
         if (shouldDebug) GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
     }
 
-    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
+        hit(thisShape, otherShape)
+
+    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        val entity = shieldFixture.getEntity()
+        if (entity is MoonScythe) return
+
+        hit(thisShape, otherShape)
+    }
+
+    private fun hit(thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        if (shouldDebug) GameLogger.debug(TAG, "hit(): thisShape=$thisShape, otherShape=$otherShape")
+
         bounces++
 
         if (bounces > MAX_BOUNCES) {
-            if (shouldDebug) GameLogger.debug(TAG, "hitBlock(): start to fade")
+            if (shouldDebug) GameLogger.debug(TAG, "hit(): start to fade")
 
             fade = true
         }
 
-        if (shouldDebug) GameLogger.debug(TAG, "hitBlock(): old trajectory = $trajectory")
+        if (shouldDebug) GameLogger.debug(TAG, "hit(): old trajectory = $trajectory")
 
         val direction = getOverlapPushDirection(thisShape, otherShape)
         when {
@@ -105,7 +115,7 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game) {
             else -> trajectory.x *= -1f
         }
 
-        if (shouldDebug) GameLogger.debug(TAG, "hitBlock(): direction=$direction, trajectory=$trajectory")
+        if (shouldDebug) GameLogger.debug(TAG, "hit(): direction=$direction, trajectory=$trajectory")
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->

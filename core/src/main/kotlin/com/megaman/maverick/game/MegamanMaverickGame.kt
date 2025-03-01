@@ -328,7 +328,10 @@ class MegamanMaverickGame(
         // add megaman as a game state listener
         state.addListener(megaman)
 
-        screens.put(ScreenEnum.LEVEL_SCREEN.name, MegaLevelScreen(this))
+        val levelScreen = MegaLevelScreen(this)
+        levelScreen.init()
+        screens.put(ScreenEnum.LEVEL_SCREEN.name, levelScreen)
+
         screens.put(ScreenEnum.LOGO_SCREEN.name, LogoScreen(this))
         screens.put(ScreenEnum.MAIN_MENU_SCREEN.name, MainMenuScreen(this))
         screens.put(ScreenEnum.SAVE_GAME_SCREEN.name, SaveGameScreen(this))
@@ -646,12 +649,13 @@ class MegamanMaverickGame(
         val levelScreen = screens.get(ScreenEnum.LEVEL_SCREEN.name) as MegaLevelScreen
 
         levelScreen.music = levelDef.music
-        levelScreen.tmxMapSource = levelDef.source
         levelScreen.screenOnCompletion = levelDef.screenOnCompletion
 
-        setCurrentScreen(ScreenEnum.LEVEL_SCREEN.name)
+        levelScreen.start(levelDef.source)
 
         setCurrentLevel(levelDef)
+
+        setCurrentScreen(ScreenEnum.LEVEL_SCREEN.name)
     }
 
     fun getGameCamera() = viewports.get(ConstKeys.GAME).camera as RotatableCamera

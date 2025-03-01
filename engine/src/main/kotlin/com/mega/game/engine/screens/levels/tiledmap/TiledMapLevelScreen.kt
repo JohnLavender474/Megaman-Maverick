@@ -6,12 +6,8 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.screens.BaseScreen
 import com.mega.game.engine.screens.levels.tiledmap.builders.TiledMapLayerBuilders
 
-abstract class TiledMapLevelScreen(
-    val batch: Batch,
-    var tiledMapLoader: ITiledMapLoader,
-    var tmxMapSource: String? = null,
-    properties: Properties = props()
-) : BaseScreen(properties) {
+abstract class TiledMapLevelScreen(val batch: Batch, var mapLoader: ITiledMapLoader, props: Properties = props()) :
+    BaseScreen(props) {
 
     protected var tiledMapLoadResult: TiledMapLoadResult? = null
         private set
@@ -22,18 +18,14 @@ abstract class TiledMapLevelScreen(
 
     protected abstract fun buildLevel(result: Properties)
 
-    override fun show() {
-        super.show()
+    open fun start(tmxMapSource: String) {
+        tiledMapLoadResult = mapLoader.load(tmxMapSource)
 
-        tmxMapSource?.let {
-            tiledMapLoadResult = tiledMapLoader.load(it)
+        val returnProps = Properties()
+        val layerBuilders = getLayerBuilders()
+        layerBuilders.build(tiledMapLoadResult!!.map.layers, returnProps)
+        buildLevel(returnProps)
 
-            val returnProps = Properties()
-            val layerBuilders = getLayerBuilders()
-            layerBuilders.build(tiledMapLoadResult!!.map.layers, returnProps)
-            buildLevel(returnProps)
-
-            tiledMapLevelRenderer = TiledMapLevelRenderer(tiledMapLoadResult!!.map, batch)
-        } ?: throw IllegalStateException("Tmx map source must be set before calling show()")
+        tiledMapLevelRenderer = TiledMapLevelRenderer(tiledMapLoadResult!!.map, batch)
     }
 }

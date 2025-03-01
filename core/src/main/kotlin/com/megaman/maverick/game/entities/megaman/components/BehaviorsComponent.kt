@@ -580,13 +580,30 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         }
 
         override fun act(delta: Float) {
+            body.physics.gravityOn = false
+
             val impulse = MegamanValues.JETPACK_Y_IMPULSE * ConstVals.PPM * movementScalar * delta
 
             when (direction) {
-                Direction.UP -> body.physics.velocity.y += impulse
-                Direction.DOWN -> body.physics.velocity.y += -impulse
-                Direction.LEFT -> body.physics.velocity.x += -impulse
-                Direction.RIGHT -> body.physics.velocity.x += impulse
+                Direction.UP -> {
+                    if (body.physics.velocity.y < 0f) body.physics.velocity.y = 0f
+                    body.physics.velocity.y += impulse
+                }
+
+                Direction.DOWN -> {
+                    if (body.physics.velocity.y > 0f) body.physics.velocity.y = 0f
+                    body.physics.velocity.y += -impulse
+                }
+
+                Direction.LEFT -> {
+                    if (body.physics.velocity.x > 0f) body.physics.velocity.x = 0f
+                    body.physics.velocity.x += -impulse
+                }
+
+                Direction.RIGHT -> {
+                    if (body.physics.velocity.x < 0f) body.physics.velocity.x = 0f
+                    body.physics.velocity.x += impulse
+                }
             }
 
             timePerBitTimer.update(delta)

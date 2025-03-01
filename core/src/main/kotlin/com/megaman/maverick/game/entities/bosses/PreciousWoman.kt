@@ -43,12 +43,14 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.PreciousGem
 import com.megaman.maverick.game.entities.PreciousGem.PreciousGemColor
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.entities.projectiles.PreciousGemCluster
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -73,7 +75,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private const val VEL_CLAMP_X = 50f
         private const val VEL_CLAMP_Y = 25f
 
-        private const val GRAVITY = -0.1f
+        private const val GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.01f
 
         private const val DEFAULT_FRICTION_X = 1f
@@ -93,6 +95,9 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private const val THROW_TIME = 0.1f
         private const val SPAWN_SHIELDS_DUR = 1f
         private const val JUMP_UPDATE_FACING_DELAY = 0.5f
+
+        private const val STUNNED_DUR = 0.5f
+        private const val STUNNED_IMPULSE_X = 2f
 
         private const val GROUNDSLIDE_CHANCE = 20f
         private const val GROUNDSLIDE_VEL_X = 8f
@@ -173,6 +178,9 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
     }
 
+    override val invincible: Boolean
+        get() = super.invincible || stunned
+
     override lateinit var facing: Facing
 
     private lateinit var stateMachine: StateMachine<PreciousWomanState>
@@ -192,6 +200,13 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     private val throwMinCooldown = Timer(MIN_THROW_COOLDOWN)
     private var statesSinceLastThrow = 0
 
+    private val stunnedTimer = Timer(STUNNED_DUR)
+    private var stunned: Boolean
+        get() = !stunnedTimer.isFinished()
+        set(value) {
+            if (value) stunnedTimer.reset() else stunnedTimer.setToEnd()
+        }
+
     private val spawnShieldsDelay = Timer(CAN_SPAWN_SHIELD_GEMS_DELAY)
     private var spawnShieldsChance = SPAWN_SHIELD_START_CHANCE
 
@@ -208,12 +223,10 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_3.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
-
         if (stateTimers.isEmpty) stateTimers.putAll(
             PreciousWomanState.RUN pairTo Timer(RUN_DUR),
             PreciousWomanState.INIT pairTo Timer(INIT_DUR),
@@ -224,17 +237,14 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             PreciousWomanState.SPAWN_SHIELD_GEMS pairTo Timer(SPAWN_SHIELDS_DUR),
             PreciousWomanState.THROW_SHIELD_GEMS pairTo Timer(THROW_SHIELD_GEMS_DUR)
         )
-
         super.init()
-
         stateMachine = buildStateMachine()
-
         addComponent(defineAnimationsComponent())
+        damageOverrides.put(MoonScythe::class, dmgNeg(4))
     }
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-
         super.onSpawn(spawnProps)
 
         val position = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
@@ -247,6 +257,9 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         laughTimer.setToEnd()
         throwingTimer.setToEnd()
+
+        stunnedTimer.setToEnd()
+
         throwMinCooldown.reset()
         airpunchCooldown.reset()
         jumpUpdateFacingDelay.reset()
@@ -274,13 +287,25 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         if (currentState == PreciousWomanState.STAND) laughTimer.reset()
     }
 
+    override fun takeDamageFrom(damager: IDamager): Boolean {
+        val damaged = super.takeDamageFrom(damager)
+        if (damaged && damager is MoonScythe && !stunned) {
+            stunned = true
+            if (!body.isSensing(BodySense.FEET_ON_GROUND)) {
+                val damagerX = damager.body.getBounds().getX()
+                val thisX = body.getBounds().getX()
+                val impulseX = if (damagerX < thisX) STUNNED_IMPULSE_X else -STUNNED_IMPULSE_X
+                body.physics.velocity.x = impulseX * ConstVals.PPM
+            } else body.physics.velocity.x = 0f
+        }
+        return damaged
+    }
+
     override fun isReady(delta: Float) = stateTimers[PreciousWomanState.INIT].isFinished()
 
     override fun onReady() {
         GameLogger.debug(TAG, "onReady()")
-
         super.onReady()
-
         body.physics.gravityOn = true
     }
 
@@ -302,10 +327,16 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 spawnShieldsChance += SPAWN_SHIELD_CHANCE_DELTA * delta
                 if (spawnShieldsChance > 100f) spawnShieldsChance = 100f
             }
-
             if (!shieldGems.isEmpty && shieldGems.keys().all { gem -> gem.targetReached }) updateShieldGems(delta)
 
             airpunchCooldown.update(delta)
+
+            stunnedTimer.update(delta)
+            if (stunned) {
+                if (body.physics.velocity.y > 0f) body.physics.velocity.y = 0f
+                if (stunnedTimer.isJustFinished()) damageTimer.reset()
+                return@add
+            }
 
             if (!THROW_NOT_ALLOWED_STATES.contains(currentState)) {
                 throwingTimer.update(delta)
@@ -589,6 +620,8 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 .setKeySupplier {
                     when {
                         defeated -> "defeated"
+
+                        stunned -> "damaged"
 
                         !ready || betweenReadyAndEndBossSpawnEvent -> when {
                             !body.isSensing(BodySense.FEET_ON_GROUND) -> "jump"

@@ -243,9 +243,9 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
         MegamanWeapon.MOON_SCYTHE -> MegaWeaponHandler(
             cooldown = Timer(0.1f),
-            normalCost = { 3 },
-            halfChargedCost = { 5 },
-            fullyChargedCost = { 7 },
+            normalCost = { 6 },
+            halfChargedCost = { 12 },
+            fullyChargedCost = { 12 },
             chargeable = chargeable@{ it ->
                 false
                 // TODO:

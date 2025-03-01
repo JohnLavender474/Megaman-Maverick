@@ -307,15 +307,14 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         gameCameraShaker = CameraShaker(gameCamera)
 
         pauseScreen.init()
+
+        EntityFactories.init()
     }
 
-    override fun show() {
-        // TODO: should replace EntityFactories with MegaEntityFactory
-        EntityFactories.init()
+    override fun start(tmxMapSource: String) {
+        if (!initialized) throw IllegalStateException("Must call init() before start()")
 
-        if (!initialized) init()
-
-        super.show()
+        super.start(tmxMapSource)
 
         eventsMan.addListener(this)
         engine.systems.forEach { it.on = true }
@@ -344,7 +343,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         if (DISPLAY_ROOMS_DEBUG_TEXT) {
             val roomsTextSupplier: () -> String = {
                 "current=${cameraManagerForRooms.currentGameRoom?.name} / " +
-                    "prior=${cameraManagerForRooms.priorGameRoom?.name}"
+                        "prior=${cameraManagerForRooms.priorGameRoom?.name}"
             }
             game.setDebugTextSupplier(roomsTextSupplier)
         }
