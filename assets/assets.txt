@@ -209,6 +209,7 @@ sounds/quake.mp3
 sounds/floating_portal.wav
 sounds/whoosh.mp3
 sounds/one_up.wav
+Megaman.png
 badlogic.jpg
 logs.txt
 sprites/frames/MegamanTrailSprite/airdash.png

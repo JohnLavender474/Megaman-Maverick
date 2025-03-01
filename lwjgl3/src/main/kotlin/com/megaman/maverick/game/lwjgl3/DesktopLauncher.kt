@@ -14,19 +14,25 @@ import kotlin.system.exitProcess
 // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument
 object DesktopLauncher {
 
-    private const val DEFAULT_WIDTH = 800
-    private const val DEFAULT_HEIGHT = 600
+    private const val TITLE = "Megaman Maverick"
+    private const val WINDOW_ICON_PATH = "Megaman.png"
+
+    private const val DEFAULT_WIDTH = 1920
+    private const val DEFAULT_HEIGHT = 1080
+    private const val DEFAULT_RESIZABLE = true
+    private const val DEFAULT_MAXIMIZED = true
     private const val DEFAULT_FULLSCREEN = false
     private const val DEFAULT_WRITE_LOGS_TO_FILE = false
+    private const val DEFAULT_PAUSE_ON_MINIMIZED = false
+    private const val DEFAULT_PAUSE_ON_FOCUS_LOST = false
     private const val DEFAULT_DEBUG_WINDOW = false
     private const val DEFAULT_DEBUG_SHAPES = false
     private const val DEFAULT_DEBUG_TEXT = false
     private const val DEFAULT_LOG_LEVELS = ""
     private const val DEFAULT_FIXED_STEP_SCALAR = 1.0f
-    private const val DEFAULT_MUSIC_VOLUME = 0.5f
-    private const val DEFAULT_SOUND_VOLUME = 0.5f
+    private const val DEFAULT_MUSIC_VOLUME = 0.8f
+    private const val DEFAULT_SOUND_VOLUME = 0.8f
     private const val DEFAULT_SHOW_SCREEN_CONTROLLER = false
-    private const val TITLE = "Megaman Maverick"
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -58,8 +64,15 @@ object DesktopLauncher {
         config.setTitle(TITLE)
         config.setIdleFPS(ConstVals.FPS)
         config.setForegroundFPS(ConstVals.FPS)
-        config.setWindowedMode(appArgs.width, appArgs.height)
-        if (appArgs.fullScreen) config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode())
+        config.setResizable(appArgs.resizable)
+        config.setPauseWhenLostFocus(appArgs.pauseOnFocusLost)
+        config.setPauseWhenMinimized(appArgs.pauseOnMinimized)
+        config.setWindowIcon(WINDOW_ICON_PATH)
+        when {
+            appArgs.fullScreen -> config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode())
+            appArgs.maximized -> config.setMaximized(true)
+            else -> config.setWindowedMode(appArgs.width, appArgs.height)
+        }
 
         val params = MegamanMaverickGameParams()
         params.writeLogsToFile = appArgs.writeLogsToFile
@@ -105,10 +118,36 @@ object DesktopLauncher {
         var height = DEFAULT_HEIGHT
 
         @Parameter(
+            names = ["--maximized"],
+            description = "Whether the game should start maximized. Default value = $DEFAULT_MAXIMIZED"
+        )
+        var maximized = DEFAULT_MAXIMIZED
+
+        @Parameter(
             names = ["--fullScreen"],
             description = "Enable fullscreen. Default value = $DEFAULT_FULLSCREEN."
         )
         var fullScreen = DEFAULT_FULLSCREEN
+
+        @Parameter(
+            names = ["--resizable"],
+            description = "Whether to enable the game window to be resized. Default value = $DEFAULT_RESIZABLE"
+        )
+        var resizable = DEFAULT_RESIZABLE
+
+        @Parameter(
+            names = ["--pauseOnFocusLost"],
+            description = "Whether to pause the application when the window loses focus. " +
+                "Default value = $DEFAULT_PAUSE_ON_FOCUS_LOST"
+        )
+        var pauseOnFocusLost = DEFAULT_PAUSE_ON_FOCUS_LOST
+
+        @Parameter(
+            names = ["--pauseOnMinimized"],
+            description = "Whether to pause the application when the window is minimized. " +
+                "Default value = $DEFAULT_PAUSE_ON_MINIMIZED"
+        )
+        var pauseOnMinimized = DEFAULT_PAUSE_ON_MINIMIZED
 
         @Parameter(
             names = ["--writeLogsToFile"],
