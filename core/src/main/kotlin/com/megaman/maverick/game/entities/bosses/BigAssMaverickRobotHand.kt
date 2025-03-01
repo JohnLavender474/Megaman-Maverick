@@ -9,6 +9,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectSetOf
@@ -21,6 +22,7 @@ import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setPosition
@@ -42,11 +44,10 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.Block
-import com.megaman.maverick.game.entities.contracts.IHazard
-import com.megaman.maverick.game.entities.contracts.IOwnable
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.megaman.components.feetFixture
+import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.world.body.*
 
@@ -59,17 +60,26 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
         private const val BODY_WIDTH = 2f
         private const val BODY_HEIGHT = 2f
 
+        private const val SHIELD_WIDTH = 2f
+        private const val SHIELD_HEIGHT = 1f
+
         private const val SPRITE_SIZE = 3f
 
         private const val BLOCK_WIDTH = 1.5f
         private const val BLOCK_HEIGHT = 0.25f
         private val BLOCK_POSITION = Position.TOP_CENTER
 
+        private const val GRAVITY = -0.15f
+
         private const val LAUNCH_DELAY = 1f
         private const val LAUNCH_SPEED = 8f
 
         private const val RETURN_DELAY = 1f
         private const val RETURN_SPEED = 4f
+
+        private const val ARM_ORBS = 4
+
+        private const val BLINK_DELAY = 0.05f
 
         private val animDefs = orderedMapOf<String, AnimationDef>(
             "still" pairTo AnimationDef(),
@@ -85,6 +95,8 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
     lateinit var state: BigAssMaverickRobotHandState
         private set
 
+    internal var defeated = false
+
     private var block: Block? = null
     private val blockTarget: Vector2
         get() = body.getPositionPoint(Position.TOP_CENTER).sub(0f, 0.5f * ConstVals.PPM)
@@ -95,6 +107,12 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
 
     private val returnDelay = Timer(RETURN_DELAY)
     private val returnTarget = Vector2()
+
+    private val armOrbs = Array<BigAssMaverickRobotOrb>()
+    private val armOrigin = Vector2()
+
+    private val blinkDelay = Timer(BLINK_DELAY)
+    private var blink = false
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -115,6 +133,8 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
 
         owner = spawnProps.get(ConstKeys.OWNER, BigAssMaverickRobot::class)!!
 
+        defeated = false
+
         val origin = spawnProps.get(ConstKeys.ORIGIN, Vector2::class)!!
         val radius = spawnProps.get(ConstKeys.RADIUS, Float::class)!!
         val speed = spawnProps.get(ConstKeys.SPEED, Float::class)!!
@@ -124,6 +144,9 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
 
         launchDelay.reset()
         returnDelay.reset()
+
+        blinkDelay.reset()
+        blink = false
 
         val block = MegaEntityFactory.fetch(Block::class)!!
         block.spawn(
@@ -136,10 +159,47 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
                 "${ConstKeys.FEET}_${ConstKeys.SOUND}" pairTo false,
                 ConstKeys.WIDTH pairTo BLOCK_WIDTH * ConstVals.PPM,
                 ConstKeys.HEIGHT pairTo BLOCK_HEIGHT * ConstVals.PPM,
-                ConstKeys.BODY_LABELS pairTo objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY),
+                ConstKeys.BODY_LABELS pairTo objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY)
             )
         )
         this.block = block
+
+        armOrigin.set(spawnProps.get("${ConstKeys.ARM}_${ConstKeys.ORIGIN}", Vector2::class))
+        (0 until ARM_ORBS).forEach { it ->
+            val armOrb = MegaEntityFactory.fetch(BigAssMaverickRobotOrb::class)!!
+            armOrb.spawn(
+                props(
+                    ConstKeys.OWNER pairTo this,
+                    ConstKeys.TRAJECTORY pairTo Vector2.Zero,
+                    ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
+                    ConstKeys.CAN_BE_HIT pairTo false,
+                    ConstKeys.ACTIVE pairTo false,
+                    ConstKeys.PRIORITY pairTo -1,
+                    ConstKeys.SECTION pairTo DrawingSection.PLAYGROUND
+                )
+            )
+            armOrbs.add(armOrb)
+        }
+    }
+
+    override fun onBossDefeated(boss: AbstractBoss) {
+        GameLogger.debug(TAG, "onBossDefeated(): boss=$boss")
+
+        defeated = true
+
+        block?.destroy()
+        block = null
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+
+        armOrbs.forEach { if (!it.dead) it.destroy() }
+        armOrbs.clear()
+
+        block?.destroy()
+        block = null
     }
 
     internal fun launch() {
@@ -153,15 +213,24 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
 
     internal fun isBeingStoodUpon() = megaman.feetFixture.getShape().overlaps(block!!.body.getBounds())
 
-    override fun onDestroy() {
-        GameLogger.debug(TAG, "onDestroy()")
-        super.onDestroy()
-
-        block?.destroy()
-        block = null
-    }
-
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        if (!defeated) for (i in 0 until armOrbs.size) {
+            val scalar = i.toFloat() / armOrbs.size.toFloat()
+            val center =
+                UtilMethods.interpolate(armOrigin, body.getCenter(), scalar, GameObjectPools.fetch(Vector2::class))
+            armOrbs[i].body.setCenter(center)
+        }
+
+        if (defeated) {
+            blinkDelay.update(delta)
+            if (blinkDelay.isFinished()) {
+                blink = !blink
+                blinkDelay.reset()
+            }
+
+            return@UpdatablesComponent
+        }
+
         when (state) {
             BigAssMaverickRobotHandState.ROTATE -> {
                 rotatingLine.update(delta)
@@ -214,6 +283,7 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(BODY_WIDTH * ConstVals.PPM, BODY_HEIGHT * ConstVals.PPM)
+        body.physics.gravity.y = GRAVITY * ConstVals.PPM
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         body.drawingColor = Color.GRAY
@@ -221,21 +291,42 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
+        val shieldFixture = Fixture(
+            body,
+            FixtureType.SHIELD,
+            GameRectangle().setSize(SHIELD_WIDTH * ConstVals.PPM, SHIELD_HEIGHT * ConstVals.PPM)
+
+        )
+        body.addFixture(shieldFixture)
+        shieldFixture.drawingColor = Color.BLUE
+        debugShapes.add { shieldFixture }
+
+        val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
+        feetFixture.offsetFromBodyAttachment.y = (-body.getHeight() / 2f) + 0.5f * ConstVals.PPM.toFloat()
+        body.addFixture(feetFixture)
+        feetFixture.drawingColor = Color.GREEN
+        debugShapes.add { feetFixture }
+
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            block!!.body.physics.velocity
-                .set(blockTarget)
-                .sub(block!!.body.getPositionPoint(BLOCK_POSITION))
-                .scl(1f / ConstVals.FIXED_TIME_STEP)
+            if (defeated && body.isSensing(BodySense.FEET_ON_GROUND)) body.physics.velocity.setZero()
+            body.physics.gravityOn = defeated && !body.isSensing(BodySense.FEET_ON_GROUND)
+
+            block?.let { block ->
+                block.body.physics.velocity
+                    .set(blockTarget)
+                    .sub(block.body.getPositionPoint(BLOCK_POSITION))
+                    .scl(1f / ConstVals.FIXED_TIME_STEP)
+            }
 
             damagerFixture.setActive(state != BigAssMaverickRobotHandState.ROTATE)
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.BODY, FixtureType.SHIELD))
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.BODY))
     }
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
@@ -243,6 +334,8 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
         .updatable { _, sprite ->
             val position = Position.TOP_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
+
+            sprite.hidden = defeated && blink
         }
         .build()
 
@@ -250,7 +343,7 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { if (state == BigAssMaverickRobotHandState.ROTATE) "still" else "rocket" }
+                .setKeySupplier { if (state == BigAssMaverickRobotHandState.ROTATE || defeated) "still" else "rocket" }
                 .applyToAnimations { animations ->
                     animDefs.forEach { entry ->
                         val key = entry.key

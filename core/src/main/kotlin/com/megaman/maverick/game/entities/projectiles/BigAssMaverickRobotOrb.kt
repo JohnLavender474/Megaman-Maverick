@@ -34,6 +34,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -54,11 +55,15 @@ class BigAssMaverickRobotOrb(game: MegamanMaverickGame) : AbstractProjectile(gam
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
+    internal var hit = false
+
     private val moveDelay = Timer()
     private val trajectory = Vector2()
 
+    private var active = true
+
+    private var canBeHit = true
     private val hitTimer = Timer(HIT_DUR)
-    private var hit = false
 
     override fun init() {
         if (regions.isEmpty) {
@@ -76,7 +81,7 @@ class BigAssMaverickRobotOrb(game: MegamanMaverickGame) : AbstractProjectile(gam
 
         body.setSize(BALL_SIZE * ConstVals.PPM)
 
-        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        val spawn = spawnProps.getOrDefault(ConstKeys.POSITION, Vector2.Zero, Vector2::class)
         body.setCenter(spawn)
 
         trajectory.set(spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!)
@@ -85,12 +90,38 @@ class BigAssMaverickRobotOrb(game: MegamanMaverickGame) : AbstractProjectile(gam
         moveDelay.resetDuration(delay)
 
         hit = false
+        active = spawnProps.getOrDefault(ConstKeys.ACTIVE, true, Boolean::class)
+        canBeHit = spawnProps.getOrDefault(ConstKeys.CAN_BE_HIT, true, Boolean::class)
+
         hitTimer.reset()
+
+        val drawingSection =
+            spawnProps.getOrDefault(ConstKeys.SECTION, DrawingSection.PLAYGROUND, DrawingSection::class)
+        val drawingPriority = spawnProps.getOrDefault(ConstKeys.PRIORITY, 5, Int::class)
+        sprites[TAG].priority.let {
+            it.value = drawingPriority
+            it.section = drawingSection
+        }
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        hit = true
+        if (!canBeHit) {
+            GameLogger.debug(TAG, "hitBlock(): canBeHit=false, do nothing")
+            return
+        }
+        GameLogger.debug(TAG, "hitBlock(): blockFixture=$blockFixture, thisShape=$thisShape, otherShape=$otherShape")
+        getHit()
+    }
 
+    override fun onBossDefeated(boss: AbstractBoss) {
+        GameLogger.debug(TAG, "onBossDefeated(): boss=$boss")
+        getHit()
+    }
+
+    private fun getHit() {
+        GameLogger.debug(TAG, "onHit()")
+
+        hit = true
         body.physics.velocity.setZero()
 
         val center = body.getCenter()
@@ -101,9 +132,11 @@ class BigAssMaverickRobotOrb(game: MegamanMaverickGame) : AbstractProjectile(gam
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        moveDelay.update(delta)
-        if (moveDelay.isFinished() && !hit) body.physics.velocity.set(trajectory)
-        if (moveDelay.isJustFinished()) requestToPlaySound(SoundAsset.BLAST_1_SOUND, false)
+        if (!trajectory.isZero) {
+            moveDelay.update(delta)
+            if (moveDelay.isFinished() && !hit) body.physics.velocity.set(trajectory)
+            if (moveDelay.isJustFinished()) requestToPlaySound(SoundAsset.BLAST_1_SOUND, false)
+        }
 
         if (hit) {
             hitTimer.update(delta)
@@ -134,6 +167,8 @@ class BigAssMaverickRobotOrb(game: MegamanMaverickGame) : AbstractProjectile(gam
 
             val damagerCircle = damagerFixture.rawShape as GameCircle
             damagerCircle.setRadius(body.getWidth() / 2f)
+
+            body.forEachFixture { it.setActive(active) }
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

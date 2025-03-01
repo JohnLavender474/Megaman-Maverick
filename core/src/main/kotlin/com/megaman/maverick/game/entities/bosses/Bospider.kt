@@ -22,6 +22,7 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -44,17 +45,22 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.IDamageNegotiator
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.contracts.IFireEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
+import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
@@ -63,6 +69,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
+import kotlin.reflect.KClass
 
 class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE), IAnimatedEntity, IParentEntity {
 
@@ -70,6 +77,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         const val TAG = "Bospider"
         private const val INIT_DUR = 5f
         private const val SPAWN_DELAY = 2f
+        private const val BURN_DUR = 0.5f
         private const val MAX_CHILDREN = 4
         private const val MIN_SPEED = 7f
         private const val MAX_SPEED = 14f
@@ -80,13 +88,33 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         private const val DEBUG_TIMER = 1f
         private const val WEB_SPEED = 10f
         private const val ANGLE_X = 25f
+
+        private val BOSS_DMG_NEG = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+            Bullet::class pairTo dmgNeg(2),
+            Fireball::class pairTo dmgNeg(8),
+            ChargedShot::class pairTo dmgNeg {
+                it as ChargedShot
+                if (it.fullyCharged) 3 else 2
+            },
+            ChargedShotExplosion::class pairTo dmgNeg {
+                it as ChargedShotExplosion
+                if (it.fullyCharged) 2 else 1
+            },
+            MoonScythe::class pairTo dmgNeg(3),
+            SmallIceCube::class pairTo dmgNeg(1)
+        )
+
         private var climbRegion: TextureRegion? = null
         private var stillRegion: TextureRegion? = null
         private var openEyeRegion: TextureRegion? = null
+        private var burnRegion: TextureRegion? = null
     }
 
     private enum class BospiderState { SPAWN, CLIMB, OPEN_EYE, CLOSE_EYE, RETREAT }
 
+    override val damageNegotiator = object : IDamageNegotiator {
+        override fun get(damager: IDamager) = BOSS_DMG_NEG[damager::class]?.get(damager) ?: 0
+    }
     override var children = Array<IGameEntity>()
 
     private val paths = Array<Array<Vector2>>()
@@ -102,15 +130,20 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
     private val initTimer = Timer(INIT_DUR)
     private val openEyeTimer = Timer()
 
+    private val burnTimer = Timer(BURN_DUR)
+    private val burning: Boolean
+        get() = !burnTimer.isFinished()
+
     private val spawn = Vector2()
     private var firstSpawn = true
 
     override fun init() {
         if (climbRegion == null || stillRegion == null || openEyeRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
-            climbRegion = atlas.findRegion("$TAG/Climb")
-            stillRegion = atlas.findRegion("$TAG/Still")
-            openEyeRegion = atlas.findRegion("$TAG/OpenEye")
+            climbRegion = atlas.findRegion("$TAG/climb")
+            stillRegion = atlas.findRegion("$TAG/still")
+            openEyeRegion = atlas.findRegion("$TAG/open_eye")
+            burnRegion = atlas.findRegion("$TAG/burn")
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -136,46 +169,10 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         stateLoop.reset()
         spawnDelayTimer.reset()
 
+        initTimer.setToEnd()
+        burnTimer.setToEnd()
+
         firstSpawn = true
-
-        when {
-            mini -> {
-                initTimer.setToEnd()
-
-                damageOverrides.putAll(
-                    objectMapOf(
-                        Bullet::class pairTo dmgNeg(2),
-                        Fireball::class pairTo dmgNeg(5),
-                        ChargedShot::class pairTo dmgNeg {
-                            it as ChargedShot
-                            if (it.fullyCharged) 3 else 2
-                        },
-                        ChargedShotExplosion::class pairTo dmgNeg {
-                            it as ChargedShotExplosion
-                            if (it.fullyCharged) 2 else 1
-                        })
-                )
-            }
-
-            else -> {
-                initTimer.reset()
-
-                damageOverrides.putAll(
-                    objectMapOf(
-                        Bullet::class pairTo dmgNeg(1),
-                        Fireball::class pairTo dmgNeg(2),
-                        ChargedShot::class pairTo dmgNeg {
-                            it as ChargedShot
-                            if (it.fullyCharged) 2 else 1
-                        },
-                        ChargedShotExplosion::class pairTo dmgNeg {
-                            it as ChargedShotExplosion
-                            if (it.fullyCharged) 2 else 1
-                        }
-                    )
-                )
-            }
-        }
     }
 
     override fun isReady(delta: Float) = mini || initTimer.isFinished()
@@ -185,9 +182,14 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         if (!mini) game.audioMan.playMusic(MusicAsset.MM7_FINAL_BOSS_LOOP_MUSIC, true)
     }
 
+    override fun takeDamageFrom(damager: IDamager): Boolean {
+        val damaged = super.takeDamageFrom(damager)
+        if (damaged && damager is IFireEntity && !burning) burnTimer.reset()
+        return damaged
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-        damageOverrides.clear()
         children.forEach { (it as GameEntity).destroy() }
         children.clear()
         paths.clear()
@@ -220,6 +222,15 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
             while (childIter.hasNext()) {
                 val child = childIter.next() as MegaGameEntity
                 if (child.dead) childIter.remove()
+            }
+
+            if (burning) {
+                body.physics.velocity.setZero()
+
+                burnTimer.update(delta)
+                if (burnTimer.isJustFinished()) damageTimer.reset()
+
+                return@add
             }
 
             when (stateLoop.getCurrent()) {
@@ -348,7 +359,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
@@ -359,8 +370,8 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = {
-            when (stateLoop.getCurrent()) {
+        val keySupplier: (String?) -> String? = keySupplier@{
+            return@keySupplier if (burning) "burn" else when (stateLoop.getCurrent()) {
                 BospiderState.SPAWN -> "still"
                 BospiderState.CLIMB -> "climb"
                 BospiderState.OPEN_EYE -> "open_eye"
@@ -372,7 +383,8 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
             "still" pairTo Animation(stillRegion!!),
             "climb" pairTo Animation(climbRegion!!, 1, 5, 0.1f, true),
             "open_eye" pairTo Animation(openEyeRegion!!, 1, 4, 0.1f, false),
-            "close_eye" pairTo Animation(openEyeRegion!!, 1, 4, 0.1f, false).reversed()
+            "close_eye" pairTo Animation(openEyeRegion!!, 1, 4, 0.1f, false).reversed(),
+            "burn" pairTo Animation(burnRegion!!, 3, 1, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

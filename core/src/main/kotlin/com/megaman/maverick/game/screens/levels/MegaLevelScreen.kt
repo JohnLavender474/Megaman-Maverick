@@ -27,7 +27,6 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.controller.polling.IControllerPoller
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sorting.IComparableDrawable
@@ -52,7 +51,7 @@ import com.megaman.maverick.game.drawables.backgrounds.Background
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.IHazard
+import com.megaman.maverick.game.entities.contracts.IBossListener
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
@@ -320,7 +319,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         eventsMan.addListener(this)
         engine.systems.forEach { it.on = true }
-        music?.let { audioMan.playMusic(it, true) }
+        music?.let { audioMan.playMusic(it, it.loop) }
 
         game.setCameraRotating(false)
         game.setRoomsSupplier { cameraManagerForRooms.gameRooms }
@@ -588,20 +587,23 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 }
 
                 val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
-                if (!boss.mini) audioMan.unsetMusic()
 
-                MegaGameEntities.forEach {
-                    if (it.isAny(IDamager::class, IHazard::class) && it != boss) it.destroy()
-                }
-
-                eventsMan.submitEvent(
-                    Event(
-                        EventType.TURN_CONTROLLER_OFF, props(
-                            "${ConstKeys.CONTROLLER}_${ConstKeys.SYSTEM}_${ConstKeys.OFF}" pairTo false
+                if (!boss.mini) {
+                    eventsMan.submitEvent(
+                        Event(
+                            EventType.TURN_CONTROLLER_OFF, props(
+                                "${ConstKeys.CONTROLLER}_${ConstKeys.SYSTEM}_${ConstKeys.OFF}" pairTo false
+                            )
                         )
                     )
-                )
-                megaman.canBeDamaged = false
+
+                    megaman.canBeDamaged = false
+
+                    audioMan.unsetMusic()
+                }
+
+                MegaGameEntities.forEach { if (it is IBossListener) it.onBossDefeated(boss) }
+
                 bossHealthHandler.unset()
             }
 

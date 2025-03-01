@@ -11,7 +11,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 
 abstract class AbstractProjectile(game: MegamanMaverickGame, override var size: Size = Size.MEDIUM) :
-    MegaGameEntity(game), IProjectileEntity, ISpritesEntity, ISizable {
+    MegaGameEntity(game), IProjectileEntity, ISpritesEntity, IBossListener, ISizable {
 
     override var owner: IGameEntity? = null
 

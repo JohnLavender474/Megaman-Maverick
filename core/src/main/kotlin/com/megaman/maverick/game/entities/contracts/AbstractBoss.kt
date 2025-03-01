@@ -236,7 +236,6 @@ abstract class AbstractBoss(
 
     protected open fun onReady() {
         GameLogger.debug(TAG, "onReady()")
-        GameLogger.log(getTag(), "onReady()")
 
         val event = Event(
             EventType.BOSS_READY, props(
@@ -251,13 +250,11 @@ abstract class AbstractBoss(
 
     protected open fun onEndBossSpawnEvent() {
         GameLogger.debug(TAG, "onEndBossSpawnEvent()")
-        GameLogger.log(getTag(), "onEndBossSpawnEvent()")
         betweenReadyAndEndBossSpawnEvent = false
     }
 
     protected open fun triggerDefeat() {
         GameLogger.debug(TAG, "triggerDefeat()")
-        GameLogger.log(getTag(), "triggerDefeat()")
         game.eventsMan.submitEvent(Event(EventType.BOSS_DEFEATED, props(ConstKeys.BOSS pairTo this)))
         defeatTimer.reset()
         defeated = true

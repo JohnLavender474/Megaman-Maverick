@@ -110,10 +110,10 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
 
     override val damageNegotiator = StandardDamageNegotiator(
         objectMapOf(
-            Bullet::class pairTo dmgNeg(3),
+            Bullet::class pairTo dmgNeg(2),
             ChargedShot::class pairTo dmgNeg {
                 it as ChargedShot
-                if (it.fullyCharged) 5 else 4
+                if (it.fullyCharged) 4 else 3
             },
             ChargedShotExplosion::class pairTo dmgNeg {
                 it as ChargedShotExplosion
@@ -188,25 +188,35 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         shootOrbsTimer.setToEnd()
 
         val leftHandPosition = spawnProps.get(ConstKeys.LEFT, RectangleMapObject::class)!!.rectangle.getCenter()
+        val leftArmOrigin = spawnProps.get(
+            "${ConstKeys.LEFT}_${ConstKeys.ARM}_${ConstKeys.ORIGIN}",
+            RectangleMapObject::class
+        )!!.rectangle.getCenter()
         val leftHand = MegaEntityFactory.fetch(BigAssMaverickRobotHand::class)!!
         leftHand.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.ORIGIN pairTo leftHandPosition,
                 ConstKeys.RADIUS pairTo HAND_RADIUS * ConstVals.PPM,
-                ConstKeys.SPEED pairTo -HAND_ROTATION_SPEED * ConstVals.PPM
+                ConstKeys.SPEED pairTo -HAND_ROTATION_SPEED * ConstVals.PPM,
+                "${ConstKeys.ARM}_${ConstKeys.ORIGIN}" pairTo leftArmOrigin
             )
         )
         allHands.add(leftHand)
 
         val rightHandPosition = spawnProps.get(ConstKeys.RIGHT, RectangleMapObject::class)!!.rectangle.getCenter()
+        val rightArmOrigin = spawnProps.get(
+            "${ConstKeys.RIGHT}_${ConstKeys.ARM}_${ConstKeys.ORIGIN}",
+            RectangleMapObject::class
+        )!!.rectangle.getCenter()
         val rightHand = MegaEntityFactory.fetch(BigAssMaverickRobotHand::class)!!
         rightHand.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.ORIGIN pairTo rightHandPosition,
                 ConstKeys.RADIUS pairTo HAND_RADIUS * ConstVals.PPM,
-                ConstKeys.SPEED pairTo HAND_ROTATION_SPEED * ConstVals.PPM
+                ConstKeys.SPEED pairTo HAND_ROTATION_SPEED * ConstVals.PPM,
+                "${ConstKeys.ARM}_${ConstKeys.ORIGIN}" pairTo rightArmOrigin
             )
         )
         allHands.add(rightHand)

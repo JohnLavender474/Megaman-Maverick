@@ -149,6 +149,7 @@ object ConstKeys {
     const val HIT_BY_BODY = "hit_by_body"
     const val HIT_BY_EXPLOSION = "hit_by_explosion"
     const val FOOT = "foot"
+    const val CAN_BE_HIT = "can_be_hit"
     const val HIT_BY_BLOCK = "hit_by_block"
     const val DAMAGEABLE = "damageable"
     const val SPIN = "spin"

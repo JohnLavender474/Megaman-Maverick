@@ -1,6 +1,8 @@
 package com.megaman.maverick.game.entities.items
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -21,10 +23,14 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.extensions.toProps
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getPositionPoint
 
@@ -38,6 +44,8 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
 
     lateinit var heartTank: MegaHeartTank
         private set
+
+    private val spawnOnContact = Array<RectangleMapObject>()
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ITEMS_1.source, TAG)
@@ -55,11 +63,26 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
         if (!this::heartTank.isInitialized) throw IllegalStateException("Heart tank value is not initialized")
         body.setSize(BODY_SIZE * ConstVals.PPM)
         super.onSpawn(spawnProps)
+
+        spawnProps.forEach { key, value ->
+            if (key.toString().contains(ConstKeys.SPAWN) && value is RectangleMapObject) spawnOnContact.add(value)
+        }
     }
 
     override fun contactWithPlayer(megaman: Megaman) {
         destroy()
+
         game.eventsMan.submitEvent(Event(EventType.ATTAIN_HEART_TANK, props(ConstKeys.VALUE pairTo heartTank)))
+
+        spawnOnContact.forEach {
+            val props = it.properties.toProps()
+
+            val entityType = EntityType.valueOf(props.get(ConstKeys.ENTITY_TYPE, String::class)!!.uppercase())
+            val key = entityType.getFullyQualifiedName(it.name)
+
+            val entity = MegaEntityFactory.fetch(key, MegaGameEntity::class)!!
+            entity.spawn(props)
+        }
     }
 
     private fun defineSpritesCompoent(): SpritesComponent {

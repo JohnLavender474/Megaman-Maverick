@@ -11,8 +11,8 @@ import com.megaman.maverick.game.screens.ScreenEnum
 
 enum class LevelDefinition(
     val type: LevelType,
-    val tmxMapSource: String,
     val music: MusicAsset,
+    val tmxMapSource: String,
     val screenOnCompletion: (MegamanMaverickGame) -> ScreenEnum,
     val mugshotAtlas: String? = null,
     val mugshotRegion: String? = null
@@ -60,7 +60,7 @@ enum class LevelDefinition(
         mugshotAtlas = "FACES_1",
         mugshotRegion = "Inferno Man",
         tmxMapSource = "InfernoMan_16x14_v2.tmx",
-        music = MusicAsset.INFERNO_MAN_MUSIC,
+        music = MusicAsset.INFERNO_MAN_MUSIC_OLD,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),
     REACTOR_MAN(

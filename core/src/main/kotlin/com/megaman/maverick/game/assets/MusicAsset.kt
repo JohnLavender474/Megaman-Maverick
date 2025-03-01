@@ -2,10 +2,12 @@ package com.megaman.maverick.game.assets
 
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.utils.Array
+import com.megaman.maverick.game.audio.MegaAudioManager
 
 const val MUSIC_ASSET_PREFIX = "music/"
 
-enum class MusicAsset(src: String) : IAsset {
+enum class MusicAsset(src: String, val loop: Boolean = true, val onCompletion: ((MegaAudioManager) -> Unit)? = null) :
+    IAsset {
     MM6_CAPCOM_LOGO_MUSIC("MM6_CapcomLogo.mp3"),
     MM3_GAME_OVER_MUSIC("MM3_GameOver.mp3"),
     MMX6_SIGMA_2_BATTLE_MUSIC("MMX6_Sigma.mp3"),
@@ -41,7 +43,13 @@ enum class MusicAsset(src: String) : IAsset {
     MMX3_NEON_TIGER_MUSIC("MMX3_NeonTiger.mp3"),
     MMX2_CRYSTAL_SNAIL_MUSIC("MMX2_CrystalSnail.mp3"),
     MMX5_STAGE_SELECT_MUSIC("MMX5_StageSelect.mp3"),
-    INFERNO_MAN_MUSIC("vinnyz_inferno_track.mp3"),
+    INFERNO_MAN_MUSIC_OLD("vinnyz_inferno_track_OLD.mp3"),
+    INFERNO_MAN_INTRO_MUSIC(
+        src = "vinnyz_inferno_intro_track.mp3",
+        loop = false,
+        onCompletion = { it.playMusic(INFERNO_MAN_LOOP_MUSIC) }
+    ),
+    INFERNO_MAN_LOOP_MUSIC("vinnyz_inferno_loop_track.mp3"),
     MMX5_BOSS_FIGHT_MUSIC("MMX5_BossFight.mp3"),
     MMX7_BOSS_FIGHT_MUSIC("MMX7_BossFight.mp3"),
     MMX_SIGMA_FORTRESS_1_MUSIC("MMX_Sigma1st.mp3"),

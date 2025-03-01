@@ -15,6 +15,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.IFaceable
@@ -53,19 +54,20 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
+import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
+import com.megaman.maverick.game.entities.explosions.IceShard
+import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.SpitFireball
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getBounds
-import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.*
 
-class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IFaceable {
+class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IFreezableEntity, IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "MechaDragon"
@@ -103,14 +105,17 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
 
         private const val SUBSEQUENT_FIRE_ANGLE_DIFF = 10f
 
+        private const val FROZEN_DUR = 0.5f
+
         private val animDefs = orderedMapOf(
             "init" pairTo AnimationDef(),
             "fly" pairTo AnimationDef(3, 2, 0.1f, true),
             "fire1" pairTo AnimationDef(4, 4, 0.1f, false),
             "fire2" pairTo AnimationDef(3, 2, 0.1f, true),
             "turning" pairTo AnimationDef(5, 1, 0.1f, false),
+            "charging" pairTo AnimationDef(3, 2, 0.05f, true),
             "defeated" pairTo AnimationDef(2, 2, 0.1f, true),
-            "charging" pairTo AnimationDef(3, 2, 0.05f, true)
+            "frozen" pairTo AnimationDef(),
         )
         private val regions = ObjectMap<String, TextureRegion>()
 
@@ -122,11 +127,19 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
     private enum class RoomSide { LEFT, RIGHT }
 
     override lateinit var facing: Facing
+    override var frozen: Boolean
+        get() = !frozenTimer.isFinished()
+        set(value) {
+            GameLogger.debug(TAG, "frozen: set=$value")
+            if (value) frozenTimer.reset() else frozenTimer.setToEnd()
+        }
 
     private lateinit var stateMachine: StateMachine<MechaDragonState>
     private val currentState: MechaDragonState
         get() = stateMachine.getCurrent()
     private val stateTimers = OrderedMap<MechaDragonState, Timer>()
+
+    private val frozenTimer = Timer(FROZEN_DUR)
 
     private val hoverScalar = SmoothOscillationTimer(duration = HOVER_SWAY_DUR, start = -1f, end = 1f)
 
@@ -178,6 +191,7 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         stateMachine = buildStateMachine()
 
         damageOverrides.put(ChargedShotExplosion::class, dmgNeg(1))
+        damageOverrides.put(SmallIceCube::class, dmgNeg(4))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -236,6 +250,8 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         val block = MegaEntityFactory.fetch(Block::class)!!
         block.spawn(props(ConstKeys.BOUNDS pairTo blockOnSpawn))
 
+        frozen = false
+
         GameLogger.debug(
             TAG, "onSpawn():\n" +
                 "spawnProps=$spawnProps,\n" +
@@ -252,7 +268,14 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
     override fun takeDamageFrom(damager: IDamager): Boolean {
         val oldHealth = getCurrentHealth()
         val damageTaken = super.takeDamageFrom(damager)
+
         GameLogger.debug(TAG, "takeDamageFrom(): health=${getCurrentHealth()}, oldHealth=$oldHealth, damager=$damager")
+
+        if (damageTaken && damager is IFreezerEntity && !frozen) {
+            GameLogger.debug(TAG, "takeDamageFrom(): hit by freezer entity")
+            frozen = true
+        }
+
         return damageTaken
     }
 
@@ -271,7 +294,22 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             if (defeated) {
+                body.physics.velocity.setZero()
                 explodeOnDefeat(delta)
+                return@add
+            }
+
+            if (frozen) {
+                body.physics.velocity.setZero()
+
+                frozenTimer.update(delta)
+                if (frozenTimer.isJustFinished()) {
+                    damageTimer.reset()
+
+                    IceShard.spawn5(body.getCenter())
+                    IceShard.spawn5(body.getPositionPoint(Position.TOP_CENTER))
+                }
+
                 return@add
             }
 
@@ -467,11 +505,14 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         body.addFixture(tailDamageableFixture2)
         // debugShapes.add { tailDamageableFixture2 }
 
+        val shieldFixtures = Array<Fixture>()
         gdxArrayOf(
-            tailDamageableFixture1,
-            bodyDamageableFixture,
+            headDamageableFixture,
             neckDamageableFixture,
-            headDamageableFixture
+            tailDamageableFixture1,
+            tailDamageableFixture2,
+            bodyDamageableFixture
+
         ).forEach { t ->
             val bodyFixture1 = Fixture(
                 body = body,
@@ -479,30 +520,43 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
                 rawShape = t.rawShape.copy(),
                 offsetFromBodyAttachment = t.offsetFromBodyAttachment.cpy()
             )
-
             val width = bodyFixture1.getShape().getBoundingRectangle().getWidth() * 0.9f
             val height = bodyFixture1.getShape().getBoundingRectangle().getHeight() * 0.9f
             bodyFixture1.rawShape.setWithProps(props(ConstKeys.WIDTH pairTo width, ConstKeys.HEIGHT pairTo height))
-
             body.addFixture(bodyFixture1)
+
+            val shieldFixture = Fixture(
+                body = body,
+                type = FixtureType.SHIELD,
+                rawShape = t.rawShape.copy(),
+                offsetFromBodyAttachment = t.offsetFromBodyAttachment.cpy()
+            )
+            body.addFixture(shieldFixture)
+            shieldFixtures.add(shieldFixture)
         }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             val headOffsetX = 2.5f * ConstVals.PPM * facing.value
             headDamagerFixture.offsetFromBodyAttachment.x = headOffsetX
             headDamageableFixture.offsetFromBodyAttachment.x = headOffsetX
+            shieldFixtures[0].offsetFromBodyAttachment.x = headOffsetX
 
             val neckOffsetX = 0.25f * ConstVals.PPM * facing.value
             neckDamagerFixture.offsetFromBodyAttachment.x = neckOffsetX
             neckDamageableFixture.offsetFromBodyAttachment.x = neckOffsetX
+            shieldFixtures[1].offsetFromBodyAttachment.x = neckOffsetX
 
             val tail1OffsetX = 2f * ConstVals.PPM * -facing.value
             tailDamagerFixture1.offsetFromBodyAttachment.x = tail1OffsetX
             tailDamageableFixture1.offsetFromBodyAttachment.x = tail1OffsetX
+            shieldFixtures[2].offsetFromBodyAttachment.x = tail1OffsetX
 
             val tail2OffsetX = 3f * ConstVals.PPM * -facing.value
             tailDamagerFixture2.offsetFromBodyAttachment.x = tail2OffsetX
             tailDamageableFixture2.offsetFromBodyAttachment.x = tail2OffsetX
+            shieldFixtures[3].offsetFromBodyAttachment.x = tail2OffsetX
+
+            shieldFixtures.forEach { it.setActive(frozen) }
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -516,8 +570,8 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
                 .also { sprite -> sprite.setSize(8f * ConstVals.PPM) }
         )
         .updatable { _, sprite ->
-            sprite.hidden = damageBlink
             sprite.setCenter(body.getCenter())
+            sprite.hidden = damageBlink && !frozen
             sprite.setFlip(isFacing(Facing.LEFT), false)
             sprite.setAlpha(if (defeated) 1f - defeatTimer.getRatio() else 1f)
         }
@@ -528,7 +582,7 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         .animator(
             AnimatorBuilder()
                 .setKeySupplier {
-                    if (defeated) "defeated" else when (currentState) {
+                    if (defeated) "defeated" else if (frozen) "frozen" else when (currentState) {
                         MechaDragonState.INIT -> if (isTargetReached(currentTarget)) "init" else "fly"
                         MechaDragonState.CHARGE_TO_OTHER_SIDE -> "charging"
                         MechaDragonState.TURNING_AROUND -> "turning"

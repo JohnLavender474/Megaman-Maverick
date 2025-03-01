@@ -1292,14 +1292,16 @@ sprites/frames/Megaman/AirDashCharging.png
 sprites/frames/Megaman/StandThrow.png
 sprites/frames/Megaman/GroundSlide.png
 sprites/frames/Megaman/Spawn.png
-sprites/frames/Bosses1/Bospider/Climb.png
-sprites/frames/Bosses1/Bospider/Still.png
-sprites/frames/Bosses1/Bospider/OpenEye.png
+sprites/frames/Bosses1/Bospider/climb.png
+sprites/frames/Bosses1/Bospider/open_eye.png
+sprites/frames/Bosses1/Bospider/still.png
+sprites/frames/Bosses1/Bospider/burn.png
 sprites/frames/Bosses1/MechaDragon/charging.png
 sprites/frames/Bosses1/MechaDragon/init.png
 sprites/frames/Bosses1/MechaDragon/fire2.png
 sprites/frames/Bosses1/MechaDragon/fly.png
 sprites/frames/Bosses1/MechaDragon/fire1.png
+sprites/frames/Bosses1/MechaDragon/frozen.png
 sprites/frames/Bosses1/MechaDragon/turning.png
 sprites/frames/Bosses1/MechaDragon/defeated.png
 sprites/frames/Bosses1/ReactorMan/throw.png
@@ -2906,7 +2908,9 @@ music/MMX7_BossFight.mp3
 music/MM3_GameOver.mp3
 music/MMX_Sigma_2_Stage.mp3
 music/MMX_ChillPenguin_Famitard.mp3
+music/vinnyz_inferno_intro_track.mp3
 music/MMX_Sigma1st.mp3
+music/vinnyz_inferno_loop_track.mp3
 music/MM8_FrostMan_Alt.mp3
 music/MMX2_X-Hunter.mp3
 music/MMX7_VanishingGungaroo.txt
@@ -2946,6 +2950,7 @@ music/vinnyz_timber_track.mp3
 music/MMX6_Gate_Stage.txt
 music/MMX6_Sigma.txt
 music/MM2_Credits.mp3
+music/vinnyz_inferno_track_OLD.mp3
 music/MMX_Sigma_2_Stage.txt
 music/MM8_FrostMan.mp3
 music/MMX_LevelSelectScreen.mp3
@@ -2956,7 +2961,6 @@ music/MMX5_VoltKraken.txt
 music/MM10_Wily1.mp3
 music/MMX6_Sigma.mp3
 music/MM3_Magnet_Man.mp3
-music/vinnyz_inferno_track.mp3
 music/MMX3_NeonTiger.mp3
 music/MMX8_BurnRooster.txt
 music/vinnyz_inferno_track_v2.mp3

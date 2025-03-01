@@ -27,7 +27,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.projectiles.MagmaMeteor
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.levels.LevelDefinition
+import com.megaman.maverick.game.levels.LevelUtils
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
@@ -74,7 +74,7 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
         addComponent(defineCullablesComponent())
     }
 
-    override fun canSpawn(spawnProps: Properties) = !game.state.isLevelDefeated(LevelDefinition.GLACIER_MAN)
+    override fun canSpawn(spawnProps: Properties) = !LevelUtils.isInfernoManLevelFrozen(game.state)
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")

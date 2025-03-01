@@ -37,12 +37,13 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.IFireEntity
 import com.megaman.maverick.game.entities.explosions.MagmaExplosion
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class SpitFireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
+class SpitFireball(game: MegamanMaverickGame) : AbstractProjectile(game), IFireEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "SpitFireball"

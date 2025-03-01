@@ -91,11 +91,16 @@ class MegaAudioManager(
         }
         if (currentMusic?.isPlaying == true) currentMusic?.stop()
 
-        currentMusic = music.get(key as MusicAsset)
+        key as MusicAsset
+        currentMusic = music.get(key)
         if (currentMusic == null) return
 
         currentMusic!!.isLooping = loop
         currentMusic!!.volume = musicVolume
+
+        if (key.onCompletion == null) currentMusic!!.setOnCompletionListener(null)
+        else currentMusic!!.setOnCompletionListener { key.onCompletion.invoke(this) }
+
         currentMusic!!.play()
 
         musicPaused = false

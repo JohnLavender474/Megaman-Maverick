@@ -51,7 +51,7 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
     companion object {
         const val TAG = "SmallIceCube"
 
-        const val BODY_SIZE = 0.5f
+        const val BODY_SIZE = 0.65f
 
         private const val DEFAULT_GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.01f
@@ -75,7 +75,8 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
             MagmaFlame::class,
             Fireball::class,
             FlameThrower::class,
-            FireWall::class
+            FireWall::class,
+            SpitFireball::class
         )
     }
 

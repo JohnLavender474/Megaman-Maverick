@@ -15,7 +15,7 @@ import kotlin.system.exitProcess
 object DesktopLauncher {
 
     private const val DEFAULT_WIDTH = 800
-    private const val DEFAULT_HEIGHT = 700
+    private const val DEFAULT_HEIGHT = 600
     private const val DEFAULT_FULLSCREEN = false
     private const val DEFAULT_WRITE_LOGS_TO_FILE = false
     private const val DEFAULT_DEBUG_WINDOW = false
