@@ -13,6 +13,7 @@ import com.mega.game.engine.common.interfaces.IScalable
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
@@ -424,13 +425,13 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
     }
 
     fun getMinsAndMaxes(min: Vector2, max: Vector2) {
-        calculateWorldPoints(reusableVec1, reusableVec2)
+        calculateWorldPoints(reusableVec3, reusableVec4)
 
-        min.x = min(reusableVec1.x, reusableVec2.x)
-        min.y = min(reusableVec1.y, reusableVec2.y)
+        min.x = min(reusableVec3.x, reusableVec4.x)
+        min.y = min(reusableVec3.y, reusableVec4.y)
 
-        max.x = max(reusableVec1.x, reusableVec2.x)
-        max.y = max(reusableVec1.y, reusableVec2.y)
+        max.x = max(reusableVec3.x, reusableVec4.x)
+        max.y = max(reusableVec3.y, reusableVec4.y)
     }
 
     fun getBoundingRectangle(out: Rectangle): Rectangle {
@@ -442,19 +443,13 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
         val maxX = reusableVec2.x
         val maxY = reusableVec2.y
 
-        return out.set(minX, minY, maxX - minX, maxY - minY)
+        return out.set(minX, minY, abs(maxX - minX), abs(maxY - minY))
     }
 
     override fun getBoundingRectangle(out: GameRectangle): GameRectangle {
-        getMinsAndMaxes(reusableVec1, reusableVec2)
-
-        val minX = reusableVec1.x
-        val minY = reusableVec1.y
-
-        val maxX = reusableVec2.x
-        val maxY = reusableVec2.y
-
-        return out.set(minX, minY, maxX - minX, maxY - minY)
+        val bounds = getBoundingRectangle(out.rectangle)
+        out.set(bounds)
+        return out
     }
 
     override fun draw(renderer: ShapeRenderer): GameLine {

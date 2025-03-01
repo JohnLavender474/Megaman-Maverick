@@ -40,7 +40,6 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getEndPoint
 import com.megaman.maverick.game.utils.extensions.getOrigin
-import com.megaman.maverick.game.utils.extensions.getStartPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import java.util.*
@@ -73,9 +72,9 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     private lateinit var damagerFixture: Fixture
 
     private val contacts = PriorityQueue { p1: Vector2, p2: Vector2 ->
-        val startPoint = rotatingLine.getStartPoint()
-        val d1 = p1.dst2(startPoint)
-        val d2 = p2.dst2(startPoint)
+        val origin = rotatingLine.getOrigin()
+        val d1 = p1.dst2(origin)
+        val d2 = p2.dst2(origin)
         d1.compareTo(d2)
     }
 
@@ -136,12 +135,13 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             laserFixture.putProperty(ConstKeys.LINE, rotatingLine.line)
+
             contacts.clear()
         }
 
         body.postProcess.put(ConstKeys.DEFAULT) {
-            val start = rotatingLine.getStartPoint()
-            laser.setFirstLocalPoint(start)
+            val origin = rotatingLine.getOrigin()
+            laser.setFirstLocalPoint(origin)
 
             val end = if (contacts.isEmpty()) rotatingLine.getEndPoint() else contacts.peek()
             laser.setSecondLocalPoint(end)

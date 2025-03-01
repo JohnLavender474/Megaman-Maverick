@@ -15,6 +15,7 @@ class GameLineTest : DescribeSpec({
         val out2 = Vector2()
         val out3 = Vector2()
         val out4 = Vector2()
+        val outRect = GameRectangle()
 
         it("should construct a line with specified points") {
             val line = GameLine(0f, 0f, 3f, 4f)
@@ -215,6 +216,31 @@ class GameLineTest : DescribeSpec({
             val line = GameLine(0f, 0f, 1f, 1f)
             val circle = GameCircle(3f, 3f, 1f)
             line.overlaps(circle) shouldBe false
+        }
+
+        describe("getBoundingRectangle()") {
+
+            it("test 1") {
+                val line = GameLine(1f, 1f, 3f, 3f)
+                println(line)
+                val bounds = line.getBoundingRectangle(outRect)
+                bounds shouldBe GameRectangle(1f, 1f, 2f, 2f)
+            }
+
+            it("test 2") {
+                val line = GameLine(-2f, -3f, 1f, 5f)
+                println(line)
+                val bounds = line.getBoundingRectangle(outRect)
+                bounds shouldBe GameRectangle(-2f, -3f, 3f, 8f)
+            }
+
+            it("test 3") {
+                val line = GameLine(1f, 2f, 3f, 4f)
+                line.rotation = 90f
+                println(line)
+                val bounds = line.getBoundingRectangle(outRect)
+                bounds shouldBe GameRectangle(-4f, 1f, 2f, 2f)
+            }
         }
     }
 })
