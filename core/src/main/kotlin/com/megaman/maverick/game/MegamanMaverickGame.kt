@@ -136,9 +136,9 @@ class MegamanMaverickGame(
     companion object {
         const val TAG = "MegamanMaverickGame"
         const val VERSION = "ALPHA 1.3.2"
-        private const val LOG_FILE_NAME = "logs.txt"
         private const val ASSET_MILLIS = 17
         private const val LOADING = "LOADING"
+        private const val LOG_FILE_NAME = "logs.txt"
         private const val SCREENSHOT_KEY = Input.Keys.P
         val PROD_TAGS_TO_LOG: ObjectSet<String> = objectSetOf(
             TAG, Megaman.TAG, GameState.TAG, AbstractBoss.TAG, AbstractEnemy.TAG, MegaLevelScreen.TAG,
@@ -194,9 +194,7 @@ class MegamanMaverickGame(
     private var debugWindow: DebugWindow? = null
 
     override fun create() {
-        // TODO: for alpha builds, override log levels setting and put all log levels
-        // params.logLevels.forEach { GameLogger.setLogLevel(it, true) }
-        GameLogLevel.entries.forEach { GameLogger.setLogLevel(it, true) }
+        params.logLevels.forEach { GameLogger.setLogLevel(it, true) }
 
         // only print errors to terminal; all other log levels should only be displayed in the logger window
         GameLogger.logReceivers.add(object : LogReceiver {
@@ -212,8 +210,7 @@ class MegamanMaverickGame(
                 if (level == GameLogLevel.ERROR) println(fullMessage)
             }
         })
-        // GameLogger.tagsToLog.addAll(PROD_TAGS_TO_LOG)
-        GameLogger.tagsToLog.addAll(DEV_TAGS_TO_LOG)
+        GameLogger.tagsToLog.addAll(PROD_TAGS_TO_LOG)
         GameLogger.filterByTag = true
 
         GameLogger.log(TAG, "create(): appType=${Gdx.app.type}")

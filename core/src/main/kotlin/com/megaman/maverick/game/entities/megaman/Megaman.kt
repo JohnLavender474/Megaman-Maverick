@@ -759,12 +759,10 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
         check(health >= 0) { "Cannot add negative amount of health" }
 
         var temp = health
-
         MegaHealthTank.entries.any { healthTank ->
             if (!game.state.containsHealthTank(healthTank)) return@any false
 
             val tankAmountToFill = ConstVals.MAX_HEALTH - game.state.getHealthTankValue(healthTank)
-
             when {
                 // health tank is full so continue
                 tankAmountToFill <= 0 -> {
@@ -773,7 +771,6 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
                             "tankAmountToFill=$tankAmountToFill is not greater than 0: " +
                             "keep checking next health tanks"
                     )
-
                     return@any false
                 }
                 // health is less than amount needed to fill the health tank
@@ -783,11 +780,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
                             "tankAmountToFill=$tankAmountToFill is greater than temp=$temp: " +
                             "add to tank and exit loop for checking next health tanks"
                     )
-
                     game.state.addHealthToHealthTank(healthTank, temp)
-
                     temp = 0
-
                     return@any true
                 }
                 // health is greater than amount needed to fill the health tank
@@ -797,11 +791,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
                             "tankAmountToFill=$tankAmountToFill is less than temp=$temp: " +
                             "subtract from temp and keep checking next health tanks"
                     )
-
                     temp -= tankAmountToFill
-
                     game.state.addHealthToHealthTank(healthTank, tankAmountToFill)
-
                     return@any false
                 }
             }

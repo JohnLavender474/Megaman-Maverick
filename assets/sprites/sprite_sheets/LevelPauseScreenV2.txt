@@ -1,0 +1,152 @@
+LevelPauseScreenV2.png
+size: 1806, 678
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+background
+  rotate: false
+  xy: 1, 1
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+health_tanks/a
+  rotate: false
+  xy: 259, 1
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+health_tanks/a_selected
+  rotate: false
+  xy: 517, 1
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+health_tanks/b
+  rotate: false
+  xy: 775, 1
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+health_tanks/b_selected
+  rotate: false
+  xy: 1033, 1
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+health_tanks/c
+  rotate: false
+  xy: 1291, 1
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+health_tanks/c_selected
+  rotate: false
+  xy: 1549, 1
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+health_tanks/d
+  rotate: false
+  xy: 1, 227
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+health_tanks/d_selected
+  rotate: false
+  xy: 259, 227
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+options/exit
+  rotate: false
+  xy: 517, 227
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+options/exit_selected
+  rotate: false
+  xy: 775, 227
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+weapons/fire_ball
+  rotate: false
+  xy: 1033, 227
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+weapons/fire_ball_selected
+  rotate: false
+  xy: 1291, 227
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+weapons/ice_cube
+  rotate: false
+  xy: 1549, 227
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+weapons/ice_cube_selected
+  rotate: false
+  xy: 1, 453
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+weapons/mega_buster
+  rotate: false
+  xy: 259, 453
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+weapons/mega_buster_selected
+  rotate: false
+  xy: 517, 453
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+weapons/moon_scythe
+  rotate: false
+  xy: 775, 453
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+weapons/moon_scythe_selected
+  rotate: false
+  xy: 1033, 453
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+weapons/rush_jetpack
+  rotate: false
+  xy: 1291, 453
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+weapons/rush_jetpack_selected
+  rotate: false
+  xy: 1549, 453
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1

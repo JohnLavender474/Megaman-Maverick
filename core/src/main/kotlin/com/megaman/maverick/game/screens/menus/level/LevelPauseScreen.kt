@@ -45,15 +45,11 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initia
     companion object {
         const val TAG = "LevelPauseScreen"
 
-        private val FULL_TABLE = TableBuilder<Any>()
-            .row(gdxArrayOf(MegamanWeapon.MEGA_BUSTER, null))
-            .row(gdxArrayOf(MegamanWeapon.MOON_SCYTHE, null))
-            .row(gdxArrayOf(MegamanWeapon.FIRE_BALL, null))
-            .row(gdxArrayOf(MegamanWeapon.ICE_CUBE, null))
-            .row(gdxArrayOf(null, MegamanWeapon.RUSH_JETPACK))
+        private val FULL_TABLE = TableBuilder<Any>().row(gdxArrayOf(MegamanWeapon.MEGA_BUSTER, null))
+            .row(gdxArrayOf(MegamanWeapon.MOON_SCYTHE, null)).row(gdxArrayOf(MegamanWeapon.FIRE_BALL, null))
+            .row(gdxArrayOf(MegamanWeapon.ICE_CUBE, MegamanWeapon.RUSH_JETPACK)).row(gdxArrayOf(null, null))
             .row(gdxArrayOf(MegaHealthTank.A, MegaHealthTank.C, null))
-            .row(gdxArrayOf(MegaHealthTank.B, MegaHealthTank.D, ConstKeys.EXIT))
-            .build()
+            .row(gdxArrayOf(MegaHealthTank.B, MegaHealthTank.D, ConstKeys.EXIT)).build()
 
         private const val OPTIONS_PREFIX = "options"
         private const val WEAPONS_PREFIX = "weapons"
@@ -61,26 +57,26 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initia
 
         private const val SELECTED_SUFFIX = "_selected"
 
-        private const val LIVES_X = 13.5f
-        private const val LIVES_Y = 2f
+        private const val LIVES_X = 13.15f
+        private const val LIVES_Y = 3.75f
 
-        private const val SCREWS_X = 13.5f
-        private const val SCREWS_Y = 0.875f
+        private const val SCREWS_X = 13.15f
+        private const val SCREWS_Y = 2.75f
 
         private const val BACKGROUND_SPRITE_TARGET_POS_Y = 0f
 
         private const val SLIDE_OFFSET_Y = ConstVals.VIEW_HEIGHT
         private const val SLIDE_DUR = 0.5f
 
-        private const val WEAPON_ROWS = 4
-        private const val WEAPON_BITS_COLUMN_1_X = 3.5f
-        private const val WEAPON_BITS_ROWS_1_Y = 7.75f
-        private const val WEAPON_BITS_ROW_OFFSET = 1.05f
-        private const val WEAPON_BITS_COLUMN_OFFSET = 7f
+        private const val WEAPON_ROWS = 5
+        private const val WEAPON_BITS_COLUMN_1_X = 3.45f
+        private const val WEAPON_BITS_ROWS_1_Y = 6.6f
+        private const val WEAPON_BITS_ROW_OFFSET = 1.075f
+        private const val WEAPON_BITS_COLUMN_OFFSET = 6.675f
 
         private const val HEALTH_TANK_ROWS = 2
-        private const val HEALTH_TANK_BITS_COLUMN_1_X = 2.25f
-        private const val HEALTH_TANK_BITS_ROW_1_Y = 0.25f
+        private const val HEALTH_TANK_BITS_COLUMN_1_X = 2.275f
+        private const val HEALTH_TANK_BITS_ROW_1_Y = 2.125f
         private const val HEALTH_TANK_BITS_ROW_OFFSET = 1.375f
         private const val HEALTH_TANK_BITS_COLUMN_OFFSET = 4.625f
 
@@ -120,12 +116,11 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initia
 
         val blackRegion = game.assMan.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
         fadeout.setRegion(blackRegion)
-        fadeout.setX(0f)
-        fadeout.setY(0f)
+        fadeout.setPosition(0f, 0f)
         fadeout.setWidth(ConstVals.VIEW_WIDTH * ConstVals.PPM)
         fadeout.setHeight(ConstVals.VIEW_HEIGHT * ConstVals.PPM)
 
-        val levelPauseScreenAtlas = game.assMan.getTextureAtlas(TextureAsset.LEVEL_PAUSE_SCREEN.source)
+        val levelPauseScreenAtlas = game.assMan.getTextureAtlas(TextureAsset.LEVEL_PAUSE_SCREEN_V2.source)
 
         val backgroundRegion = levelPauseScreenAtlas.findRegion(ConstKeys.BACKGROUND)
         backgroundSprite.setBounds(0f, 0f, ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
@@ -142,7 +137,9 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initia
 
             if (levelPauseScreenAtlas.containsRegion("$WEAPONS_PREFIX/$key")) {
                 buttonRegions.put(key, levelPauseScreenAtlas.findRegion("$WEAPONS_PREFIX/$key"))
-                buttonRegions.put("$key$SELECTED_SUFFIX", levelPauseScreenAtlas.findRegion("$WEAPONS_PREFIX/$key$SELECTED_SUFFIX"))
+                buttonRegions.put(
+                    "$key$SELECTED_SUFFIX", levelPauseScreenAtlas.findRegion("$WEAPONS_PREFIX/$key$SELECTED_SUFFIX")
+                )
             }
         }
 
@@ -151,7 +148,10 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initia
 
             if (levelPauseScreenAtlas.containsRegion("$HEALTH_TANKS_PREFIX/$key")) {
                 buttonRegions.put(key, levelPauseScreenAtlas.findRegion("$HEALTH_TANKS_PREFIX/$key"))
-                buttonRegions.put("$key$SELECTED_SUFFIX", levelPauseScreenAtlas.findRegion("$HEALTH_TANKS_PREFIX/$key$SELECTED_SUFFIX"))
+                buttonRegions.put(
+                    "$key$SELECTED_SUFFIX",
+                    levelPauseScreenAtlas.findRegion("$HEALTH_TANKS_PREFIX/$key$SELECTED_SUFFIX")
+                )
             }
         }
 
@@ -162,8 +162,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initia
                 positionY = LIVES_Y * ConstVals.PPM,
                 centerX = false,
                 centerY = false
-            ),
-            MegaFontHandle(
+            ), MegaFontHandle(
                 textSupplier = { state.getCurrency().toString().padStart(3, '0') },
                 positionX = SCREWS_X * ConstVals.PPM,
                 positionY = SCREWS_Y * ConstVals.PPM,
@@ -205,6 +204,8 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initia
                             val button = createWeaponButton(element)
                             buttons.put(element.toString().lowercase(), button)
 
+                            val bitsBarX = WEAPON_BITS_COLUMN_1_X + j * WEAPON_BITS_COLUMN_OFFSET
+                            val bitsBarY = WEAPON_BITS_ROWS_1_Y + (WEAPON_ROWS - i - 1) * WEAPON_BITS_ROW_OFFSET
                             val bitsSupplier: () -> Int = when (element) {
                                 MegamanWeapon.MEGA_BUSTER -> {
                                     { megaman.getCurrentHealth() }
@@ -214,13 +215,9 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initia
                                     { megaman.weaponsHandler.getAmmo(element) }
                                 }
                             }
-
-                            val bitsBarX = (WEAPON_BITS_COLUMN_1_X + j * WEAPON_BITS_COLUMN_OFFSET) * ConstVals.PPM
-                            val bitsBarY =
-                                (WEAPON_BITS_ROWS_1_Y + (WEAPON_ROWS - i - 1) * WEAPON_BITS_ROW_OFFSET) * ConstVals.PPM
-
-                            val bitsBar = LevelPauseScreenBitsBar(game.assMan, bitsBarX, bitsBarY, bitsSupplier)
-
+                            val bitsBar = LevelPauseScreenBitsBar(
+                                game.assMan, bitsBarX * ConstVals.PPM, bitsBarY * ConstVals.PPM, bitsSupplier
+                            )
                             bitsBars.add(bitsBar)
                         }
                     }
@@ -232,15 +229,13 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initia
                             val button = createHealthTankButton(element)
                             buttons.put(element.toString().lowercase(), button)
 
+                            val bitsBarX = HEALTH_TANK_BITS_COLUMN_1_X + j * HEALTH_TANK_BITS_COLUMN_OFFSET
+                            val bitsBarY =
+                                HEALTH_TANK_BITS_ROW_1_Y + (WEAPON_ROWS + HEALTH_TANK_ROWS - i - 1) * HEALTH_TANK_BITS_ROW_OFFSET
                             val bitsSupplier: () -> Int = { game.state.getHealthTankValue(element) }
-
-                            val bitsBarX =
-                                (HEALTH_TANK_BITS_COLUMN_1_X + j * HEALTH_TANK_BITS_COLUMN_OFFSET) * ConstVals.PPM
-                            val bitsBarY = (HEALTH_TANK_BITS_ROW_1_Y + (HEALTH_TANK_ROWS - i - 1)
-                                .times(HEALTH_TANK_BITS_ROW_OFFSET) * ConstVals.PPM)
-
-                            val bitsBar = LevelPauseScreenBitsBar(game.assMan, bitsBarX, bitsBarY, bitsSupplier)
-
+                            val bitsBar = LevelPauseScreenBitsBar(
+                                game.assMan, bitsBarX * ConstVals.PPM, bitsBarY * ConstVals.PPM, bitsSupplier
+                            )
                             bitsBars.add(bitsBar)
                         }
                     }
@@ -292,10 +287,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initia
             try {
                 val buttonSprite = GameSprite(buttonRegions[key])
                 buttonSprite.setBounds(
-                    0f,
-                    0f,
-                    ConstVals.VIEW_WIDTH * ConstVals.PPM,
-                    ConstVals.VIEW_HEIGHT * ConstVals.PPM
+                    0f, 0f, ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM
                 )
                 buttonSprites.put(key, buttonSprite)
             } catch (e: Exception) {
@@ -310,10 +302,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initia
             try {
                 val buttonSprite = GameSprite(buttonRegions[key])
                 buttonSprite.setBounds(
-                    0f,
-                    0f,
-                    ConstVals.VIEW_WIDTH * ConstVals.PPM,
-                    ConstVals.VIEW_HEIGHT * ConstVals.PPM
+                    0f, 0f, ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM
                 )
                 buttonSprites.put(key, buttonSprite)
             } catch (e: Exception) {
@@ -323,11 +312,9 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initia
 
         GameLogger.debug(
             TAG,
-            "show(): currentButtonKey=${getCurrentButtonKey()}, " +
-                "node=$node, " +
-                "table=$table, " +
-                "buttons=${buttons.keys().toGdxArray()}, " +
-                "buttonSprites=${buttonSprites.keys().toGdxArray()}"
+            "show(): currentButtonKey=${getCurrentButtonKey()}, " + "node=$node, " + "table=$table, " + "buttons=${
+                buttons.keys().toGdxArray()
+            }, " + "buttonSprites=${buttonSprites.keys().toGdxArray()}"
         )
     }
 
@@ -460,8 +447,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initia
             }
 
             val healthToUse = min(
-                megaman.getMaxHealth() - megaman.getCurrentHealth(),
-                state.getHealthTankValue(healthTank)
+                megaman.getMaxHealth() - megaman.getCurrentHealth(), state.getHealthTankValue(healthTank)
             )
 
             val duration = healthToUse * ConstVals.DUR_PER_BIT
@@ -472,9 +458,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initia
 
                 fillHealthTimer.addRunnable(TimeMarkedRunnable(time) {
                     megaman.translateHealth(1)
-
                     state.removeHealthFromHealthTank(healthTank, 1)
-
                     game.audioMan.playSound(SoundAsset.ENERGY_FILL_SOUND, false)
                 })
             }
@@ -484,8 +468,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initia
 
         override fun onNavigate(direction: Direction, delta: Float): String? {
             GameLogger.debug(
-                TAG,
-                "createHealthTankButton(): onNavigate(): healthTank=$healthTank, direction=$direction"
+                TAG, "createHealthTankButton(): onNavigate(): healthTank=$healthTank, direction=$direction"
             )
             navigate(direction)
             return null
@@ -511,10 +494,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initia
 }
 
 private class LevelPauseScreenBitsBar(
-    private val assMan: AssetManager,
-    private val x: Float,
-    private val y: Float,
-    private val countSupplier: () -> Int
+    private val assMan: AssetManager, private val x: Float, private val y: Float, private val countSupplier: () -> Int
 ) : Initializable, IDrawable<Batch> {
 
     private val bitSprites = Array<GameSprite>()

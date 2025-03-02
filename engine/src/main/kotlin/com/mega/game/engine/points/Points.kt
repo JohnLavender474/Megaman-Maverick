@@ -1,6 +1,5 @@
 package com.mega.game.engine.points
 
-
 class Points(min: Int, max: Int, current: Int) {
 
     var min: Int = min
@@ -8,13 +7,11 @@ class Points(min: Int, max: Int, current: Int) {
             field = value
             if (current < value) set(value)
         }
-
     var max: Int = max
         set(value) {
             field = value
             if (current > value) set(value)
         }
-
     var current: Int = current
         private set
 
@@ -38,4 +35,6 @@ class Points(min: Int, max: Int, current: Int) {
     fun isMin() = current == min
 
     fun isMax() = current == max
+
+    override fun toString() = "Points{current=$current, min=$min, max=$max}"
 }

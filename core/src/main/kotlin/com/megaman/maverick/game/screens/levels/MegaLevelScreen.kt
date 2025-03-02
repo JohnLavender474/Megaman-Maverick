@@ -699,10 +699,14 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     }
 
     override fun render(delta: Float) {
-        if (!game.paused && controllerPoller.isJustReleased(MegaControllerButton.START)) {
+        // do not allow pausing if Megaman is dead
+        if (!game.paused && !megaman.dead && controllerPoller.isJustReleased(MegaControllerButton.START)) {
             GameLogger.debug(TAG, "render(): pause game")
             game.runQueue.addLast { game.pause() }
         }
+
+        // force resume game if megaman is dead
+        if (game.paused && megaman.dead) game.runQueue.addLast { game.resume() }
 
         playerStatsHandler.update(delta)
 

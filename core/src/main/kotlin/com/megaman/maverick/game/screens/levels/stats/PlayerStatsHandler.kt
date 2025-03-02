@@ -165,9 +165,9 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
     }
 
     fun addHealth(value: Int) {
-        val healthMegamanNeeds = megaman.getHealthPoints().max - megaman.getHealthPoints().current
+        val healthMegamanNeeds = megaman.getMaxHealth() - megaman.getCurrentHealth()
 
-        GameLogger.debug(TAG, "addHealth(): heathMegamanNeeds=$healthMegamanNeeds, value=$value")
+        GameLogger.debug(TAG, "addHealth(): healthMegamanNeeds=$healthMegamanNeeds, value=$value")
 
         val addToTanks: Boolean
         val healthToAddNow: Int
@@ -187,16 +187,14 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
 
                 when {
                     megaman.hasAnyHealthTanks -> {
-                        val hasAddedToTanks = megaman.addToHealthTanks(value)
-
-                        GameLogger.debug(TAG, "addHealth(): hasAddedToTanks=$hasAddedToTanks")
-
+                        val valueToAddToTanks = value - healthMegamanNeeds
+                        val hasAddedToTanks = megaman.addToHealthTanks(valueToAddToTanks)
                         addToTanks = hasAddedToTanks
+                        GameLogger.debug(TAG, "addHealth(): hasAddedToTanks=$hasAddedToTanks")
                     }
 
                     else -> {
                         GameLogger.debug(TAG, "addHealth(): megaman has no health tanks")
-
                         addToTanks = false
                     }
                 }
@@ -206,14 +204,11 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
         val timeMarkedRunnables = Array<TimeMarkedRunnable>()
         for (i in 0 until healthToAddNow) {
             val time = i * ConstVals.DUR_PER_BIT
-
             GameLogger.debug(TAG, "addHealth(): add runnable to timer: time=$time")
 
             timeMarkedRunnables.add(TimeMarkedRunnable(time) {
                 GameLogger.debug(TAG, "addHealth(): timer: translate health by one")
-
                 megaman.translateHealth(1)
-
                 audioMan.playSound(SoundAsset.ENERGY_FILL_SOUND)
             })
         }
@@ -223,17 +218,14 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
 
         if (addToTanks) timer.setRunOnFinished {
             GameLogger.debug(TAG, "addHealth(): timer: play life sound for adding health to tanks")
-
             audioMan.playSound(SoundAsset.ENERGY_FILL_SOUND)
         }
 
         timerQueue.addLast(timer)
-
         GameLogger.debug(TAG, "addHealth(): add timer to queue: queue.size=${timerQueue.size}")
 
-        GameLogger.debug(TAG, "addHealth(): shut off all systems expect sprites system")
-
         engine.systems.forEach { if (it !is SpritesSystem) it.on = false }
+        GameLogger.debug(TAG, "addHealth(): shut off all systems expect sprites system")
     }
 
     override fun update(delta: Float) {

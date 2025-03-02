@@ -11,7 +11,6 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -21,15 +20,12 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.ISpritesEntity
-import com.mega.game.engine.events.Event
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getPositionPoint
 
@@ -111,16 +107,6 @@ abstract class AbstractEnergyItem(game: MegamanMaverickGame) : AbstractItem(game
 
         blinkTimer.setToEnd()
         cullTimer.reset()
-    }
-
-    override fun contactWithPlayer(megaman: Megaman) {
-        GameLogger.debug(TAG, "contactWithPlayer()")
-        destroy()
-        game.eventsMan.submitEvent(
-            Event(
-                EventType.ADD_PLAYER_HEALTH, props(ConstKeys.VALUE pairTo if (large) LARGE_AMOUNT else SMALL_AMOUNT)
-            )
-        )
     }
 
     private fun defineSpritesCompoent(): SpritesComponent {

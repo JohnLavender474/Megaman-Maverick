@@ -21,8 +21,8 @@ class GameState : Resettable {
 
     private val levelsDefeated = ObjectSet<LevelDefinition>()
     private val heartTanksCollected = ObjectSet<MegaHeartTank>()
-    private val healthTanksCollected = ObjectMap<MegaHealthTank, Points>()
     private val enhancementsAttained = ObjectSet<MegaEnhancement>()
+    private val healthTanksCollected = ObjectMap<MegaHealthTank, Points>()
     private var currency = Points(ConstVals.MIN_CURRENCY, ConstVals.MAX_CURRENCY, ConstVals.MIN_CURRENCY)
 
     private val listeners = OrderedSet<IGameStateListener>()
@@ -87,9 +87,7 @@ class GameState : Resettable {
         }
 
         GameLogger.debug(TAG, "removeHealthTank(): healthTank=$healthTank")
-
         healthTanksCollected.remove(healthTank)
-
         listeners.forEach { it.onRemoveHealthTank(healthTank) }
     }
 
@@ -110,11 +108,12 @@ class GameState : Resettable {
         }
 
         val tank = healthTanksCollected[healthTank]
-
         if (tank.translate(value)) {
             GameLogger.debug(TAG, "addHealthToHealthTank(): added $value to healthTank=$healthTank")
             listeners.forEach { it.onAddHealthToHealthTank(healthTank, value) }
         } else GameLogger.error(TAG, "addHealthToHealthTank(): failed to add $value to healthTank=$healthTank")
+
+        GameLogger.debug(TAG, "addHealthToHealthTank(): all tanks: $healthTanksCollected")
     }
 
     fun removeHealthFromHealthTank(healthTank: MegaHealthTank, value: Int) {
