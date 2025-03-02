@@ -370,12 +370,12 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     }
 
     override fun onEvent(event: Event) {
-        GameLogger.log(TAG, "event(): event.key=${event.key}")
+        GameLogger.log(TAG, "event(): event=$event")
 
         when (event.key) {
             EventType.GAME_PAUSE -> {
                 GameLogger.debug(
-                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Game pause --> pause the game"
+                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): game pause --> pause the game"
                 )
 
                 game.pause()
@@ -383,7 +383,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
             EventType.GAME_RESUME -> {
                 GameLogger.debug(
-                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Game resume --> resume the game"
+                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): game resume --> resume the game"
                 )
 
                 game.resume()
@@ -392,7 +392,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             EventType.PLAYER_SPAWN -> {
                 GameLogger.debug(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
-                    "onEvent(): Player spawn --> reset camera manager for rooms and spawn megaman"
+                    "onEvent(): player spawn --> reset camera manager for rooms and spawn megaman"
                 )
 
                 backgrounds.forEach { background -> background.immediateRotation(Direction.UP) }
@@ -408,32 +408,40 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 val spawnProps = playerSpawnsMan.currentSpawnProps
                 if (spawnProps == null) throw IllegalStateException("Megaman spawn props are null")
 
-                GameLogger.debug(TAG, "onEvent(): Player spawn --> spawn Megaman: $spawnProps")
+                GameLogger.debug(TAG, "onEvent(): player spawn --> spawn Megaman: $spawnProps")
 
                 megaman.spawn(spawnProps)
             }
 
             EventType.PLAYER_READY -> {
-                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Player ready")
+                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): player ready")
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
             }
 
             EventType.PLAYER_JUST_DIED -> {
                 GameLogger.debug(
-                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Player just died --> init death handler"
+                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): player just died --> init death handler"
                 )
-
-                megaman.removeOneLife()
 
                 audioMan.unsetMusic()
                 audioMan.stopAllLoopingSounds()
 
+                megaman.removeOneLife()
+
                 playerDeathEventHandler.init()
+
+                if (game.paused) {
+                    GameLogger.debug(
+                        MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
+                        "onEvent(): force resume game when Megaman dies"
+                    )
+                    game.resume()
+                }
             }
 
             EventType.PLAYER_DONE_DYIN -> {
                 GameLogger.debug(
-                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): Player done dying --> respawn player"
+                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): player done dying --> respawn player"
                 )
 
                 music?.let { audioMan.playMusic(it, true) }

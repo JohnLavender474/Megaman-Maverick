@@ -91,9 +91,9 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initia
 
     private val megaman: Megaman
         get() = game.megaman
-    val state: GameState
+    private val state: GameState
         get() = game.state
-    val audioMan: MegaAudioManager
+    private val audioMan: MegaAudioManager
         get() = game.audioMan
 
     private lateinit var table: Table<Any>
@@ -331,8 +331,6 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initia
         )
     }
 
-    private fun resetFillHealthTimer() = fillHealthTimer.clearRunnables().resetDuration(0f).setToEnd(false)
-
     override fun isInteractionAllowed() =
         super.isInteractionAllowed() && slideTimer.isFinished() && fillHealthTimer.isFinished() && !closing && !exiting
 
@@ -367,7 +365,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initia
 
             backgroundSprite.y = UtilMethods.interpolate(start, target, slideTimer.getRatio())
 
-            if (closing && slideTimer.isJustFinished()) game.runQueue.addLast { game.resume() }
+            if (closing && slideTimer.isFinished()) game.runQueue.addLast { game.resume() }
         }
 
         buttonSprites.forEach { entry ->
@@ -406,6 +404,35 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initia
 
         if (!drawing) drawer.end()
     }
+
+    override fun getCurrentButtonKey() = node.element.toString().lowercase()
+
+    override fun setCurrentButtonKey(key: String?) =
+        GameLogger.debug(TAG, "setCurrentButtonKey(): ignore setting button key: $key")
+
+    override fun onAnySelection() {
+        GameLogger.debug(TAG, "onAnySelection()")
+
+        super.onAnySelection()
+
+        if (!exiting) {
+            closing = true
+            slideTimer.reset()
+        }
+    }
+
+    override fun reset() {
+        GameLogger.debug(TAG, "reset()")
+
+        super.reset()
+
+        buttons.clear()
+        buttonSprites.clear()
+
+        bitsBars.clear()
+    }
+
+    private fun resetFillHealthTimer() = fillHealthTimer.clearRunnables().resetDuration(0f).setToEnd(false)
 
     private fun createWeaponButton(weapon: MegamanWeapon) = object : IMenuButton {
 
@@ -480,33 +507,6 @@ class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initia
             )
         }
         GameLogger.debug(TAG, "navigate(): direction=$direction, oldNode=$oldNode, node=$node")
-    }
-
-    override fun getCurrentButtonKey() = node.element.toString().lowercase()
-
-    override fun setCurrentButtonKey(key: String?) =
-        GameLogger.debug(TAG, "setCurrentButtonKey(): ignore setting button key: $key")
-
-    override fun onAnySelection() {
-        GameLogger.debug(TAG, "onAnySelection()")
-
-        super.onAnySelection()
-
-        if (!exiting) {
-            closing = true
-            slideTimer.reset()
-        }
-    }
-
-    override fun reset() {
-        GameLogger.debug(TAG, "reset()")
-
-        super.reset()
-
-        buttons.clear()
-        buttonSprites.clear()
-
-        bitsBars.clear()
     }
 }
 
