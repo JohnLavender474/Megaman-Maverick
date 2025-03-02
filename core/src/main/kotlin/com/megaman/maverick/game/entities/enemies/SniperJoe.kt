@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
@@ -86,11 +87,26 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
         private val TIMES_TO_SHOOT = floatArrayOf(0.5f, 1f, 1.5f)
 
-        private val animDefs = orderedMapOf<String, AnimationDef>(
-            "idle" pairTo AnimationDef(2, 1, gdxArrayOf(1f, 0.15f), true),
-            "shoot" pairTo AnimationDef(3, 1, 0.1f, false),
-            "turn" pairTo AnimationDef(2, 1, 0.1f, false),
-            "jump" pairTo AnimationDef(),
+        private val animDefs = orderedMapOf<SniperJoeType, OrderedMap<String, AnimationDef>>(
+            SniperJoeType.ORANGE pairTo orderedMapOf(
+                "idle" pairTo AnimationDef(2, 1, gdxArrayOf(1f, 0.15f), true),
+                "shoot" pairTo AnimationDef(3, 1, 0.1f, false),
+                "turn" pairTo AnimationDef(2, 1, 0.1f, false),
+                "jump" pairTo AnimationDef(),
+            ),
+            SniperJoeType.SNOW pairTo orderedMapOf(
+                "idle" pairTo AnimationDef(2, 1, gdxArrayOf(1f, 0.15f), true),
+                "shoot" pairTo AnimationDef(3, 1, 0.1f, false),
+                "turn" pairTo AnimationDef(2, 1, 0.1f, false),
+                "jump" pairTo AnimationDef(),
+            ),
+            SniperJoeType.FIRE pairTo orderedMapOf(
+                "idle" pairTo AnimationDef(2, 1, gdxArrayOf(1f, 0.15f), true),
+                "shoot" pairTo AnimationDef(3, 1, 0.1f, false),
+                "turn" pairTo AnimationDef(),
+                "jump" pairTo AnimationDef(2, 1, 0.1f, false),
+                "frozen" pairTo AnimationDef()
+            )
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -147,12 +163,13 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            SniperJoeType.entries.forEach { type ->
-                animDefs.keys().forEach { key ->
-                    val fullKey = "${type.name.lowercase()}/${key}"
+            animDefs.forEach { entry1 ->
+                val type = entry1.key
+                val map = entry1.value
+                map.keys().forEach { key ->
+                    val fullKey = "${type.name.lowercase()}/$key"
                     regions.put(fullKey, atlas.findRegion("$TAG/$fullKey"))
                 }
-                regions.put("fire/frozen", atlas.findRegion("$TAG/fire/frozen"))
             }
         }
         super.init()
@@ -344,10 +361,12 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                     GameLogger.debug(TAG, "defineAnimationsComponent(): currentKey=$currentKey, oldKey=$oldKey")
                 }
                 .applyToAnimations { animations ->
-                    SniperJoeType.entries.forEach { type ->
-                        animDefs.forEach { entry ->
-                            val key = entry.key
-                            val (rows, columns, durations, loop) = entry.value
+                    animDefs.forEach { entry1 ->
+                        val type = entry1.key
+                        val map = entry1.value
+                        map.forEach { entry2 ->
+                            val key = entry2.key
+                            val (rows, columns, durations, loop) = entry2.value
                             val fullKey = "${type.name.lowercase()}/$key"
                             try {
                                 animations.put(fullKey, Animation(regions[fullKey], rows, columns, durations, loop))
@@ -357,13 +376,6 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                                     e
                                 )
                             }
-                        }
-
-                        val frozenKey = "fire/frozen"
-                        try {
-                            animations.put(frozenKey, Animation(regions[frozenKey]))
-                        } catch (e: Exception) {
-                            throw Exception("Failed to put animation for $frozenKey", e)
                         }
                     }
                 }
@@ -376,18 +388,18 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         .initialState(SniperJoeState.IDLE)
         .setOnChangeState(this::onChangeState)
         // idle
-        .transition(SniperJoeState.IDLE, SniperJoeState.FROZEN) { frozen }
+        .transition(SniperJoeState.IDLE, SniperJoeState.FROZEN) { type == SniperJoeType.FIRE && frozen }
         .transition(SniperJoeState.IDLE, SniperJoeState.JUMP) { shouldStartJumping() }
         .transition(SniperJoeState.IDLE, SniperJoeState.TURN) { shouldStartTurning() }
         .transition(SniperJoeState.IDLE, SniperJoeState.SHOOT) { true }
         // turn
-        .transition(SniperJoeState.TURN, SniperJoeState.FROZEN) { frozen }
+        .transition(SniperJoeState.TURN, SniperJoeState.FROZEN) { type == SniperJoeType.FIRE && frozen }
         .transition(SniperJoeState.TURN, SniperJoeState.IDLE) { true }
         // jump
-        .transition(SniperJoeState.JUMP, SniperJoeState.FROZEN) { frozen }
+        .transition(SniperJoeState.JUMP, SniperJoeState.FROZEN) { type == SniperJoeType.FIRE && frozen }
         .transition(SniperJoeState.JUMP, SniperJoeState.IDLE) { shouldEndJumping() }
         // shoot
-        .transition(SniperJoeState.SHOOT, SniperJoeState.FROZEN) { frozen }
+        .transition(SniperJoeState.SHOOT, SniperJoeState.FROZEN) { type == SniperJoeType.FIRE && frozen }
         .transition(SniperJoeState.SHOOT, SniperJoeState.JUMP) { shouldStartJumping() }
         .transition(SniperJoeState.SHOOT, SniperJoeState.TURN) { shouldStartTurning() }
         .transition(SniperJoeState.SHOOT, SniperJoeState.IDLE) { true }
@@ -426,24 +438,24 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     private fun shouldStartJumping() =
         body.isSensing(BodySense.FEET_ON_GROUND) &&
-            body.physics.velocity.y <= 0f &&
-            when (direction) {
-                Direction.UP -> megaman.body.getY() > body.getMaxY() &&
-                    megaman.body.getX() <= body.getMaxX() &&
-                    megaman.body.getMaxX() >= body.getX()
+                body.physics.velocity.y <= 0f &&
+                when (direction) {
+                    Direction.UP -> megaman.body.getY() > body.getMaxY() &&
+                            megaman.body.getX() <= body.getMaxX() &&
+                            megaman.body.getMaxX() >= body.getX()
 
-                Direction.DOWN -> megaman.body.getMaxY() < body.getY() &&
-                    megaman.body.getX() <= body.getMaxX() &&
-                    megaman.body.getMaxX() >= body.getX()
+                    Direction.DOWN -> megaman.body.getMaxY() < body.getY() &&
+                            megaman.body.getX() <= body.getMaxX() &&
+                            megaman.body.getMaxX() >= body.getX()
 
-                Direction.LEFT -> megaman.body.getMaxX() < body.getX() &&
-                    megaman.body.getY() <= body.getMaxY() &&
-                    megaman.body.getMaxY() >= body.getY()
+                    Direction.LEFT -> megaman.body.getMaxX() < body.getX() &&
+                            megaman.body.getY() <= body.getMaxY() &&
+                            megaman.body.getMaxY() >= body.getY()
 
-                Direction.RIGHT -> megaman.body.getX() > body.getMaxX() &&
-                    megaman.body.getY() <= body.getMaxY() &&
-                    megaman.body.getMaxY() >= body.getY()
-            }
+                    Direction.RIGHT -> megaman.body.getX() > body.getMaxX() &&
+                            megaman.body.getY() <= body.getMaxY() &&
+                            megaman.body.getMaxY() >= body.getY()
+                }
 
     private fun jump() {
         val impulse = GameObjectPools.fetch(Vector2::class)
@@ -463,10 +475,10 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     private fun shoot() {
         val spawn = GameObjectPools.fetch(Vector2::class)
         when (direction) {
-            Direction.UP -> spawn.set(0.75f * facing.value, -0.15f)
-            Direction.DOWN -> spawn.set(0.75f * facing.value, 0.15f)
-            Direction.LEFT -> spawn.set(0.15f, 0.75f * facing.value)
-            Direction.RIGHT -> spawn.set(-0.15f, -0.75f * facing.value)
+            Direction.UP -> spawn.set(0.75f * facing.value, -0.1f)
+            Direction.DOWN -> spawn.set(0.75f * facing.value, 0.1f)
+            Direction.LEFT -> spawn.set(0.1f, 0.75f * facing.value)
+            Direction.RIGHT -> spawn.set(-0.1f, -0.75f * facing.value)
         }
         spawn.scl(ConstVals.PPM.toFloat()).add(body.getCenter())
 

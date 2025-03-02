@@ -1,1 +1,46 @@
-===== SESSION STARTED: 2025-03-01T17:24:43.093367415 =====
+===== SESSION STARTED: 2025-03-01T19:49:43.146897615 =====
+19:50:23 | DEBUG | SniperJoe | init()
+19:50:23 | DEBUG | SniperJoe | onSpawn(): spawnProps=Properties({
+	[bounds=[4216.0,352.0,16.0,16.0]]
+	[x=4216.0]
+	[height=16.0]
+	[id=131]
+	[type=fire]
+	[name=SniperJoe]
+	[y=352.0]
+	[width=16.0]
+})
+19:50:23 | DEBUG | SniperJoe | frozen.set: value=false
+19:50:23 | DEBUG | SniperJoe | defineAnimationsComponent(): currentKey=fire/idle, oldKey=null
+19:50:25 | DEBUG | SniperJoe | update(): timer finished, go to next state
+19:50:25 | DEBUG | SniperJoe | onChangeState(): current=SHOOT, previous=IDLE
+19:50:25 | DEBUG | SniperJoe | defineAnimationsComponent(): currentKey=fire/shoot, oldKey=fire/idle
+19:50:26 | DEBUG | SniperJoe | takeDamageFrom(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=1940737740] }
+19:50:26 | DEBUG | SniperJoe | takeDamageFrom(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1380361139] }
+19:50:26 | DEBUG | SniperJoe | takeDamageFrom(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1380361139] }
+19:50:26 | DEBUG | SniperJoe | onDestroy()
+19:50:33 | DEBUG | SniperJoe | onSpawn(): spawnProps=Properties({
+	[bounds=[4184.0,768.0,16.0,16.0]]
+	[x=4184.0]
+	[height=16.0]
+	[id=126]
+	[type=fire]
+	[name=SniperJoe]
+	[y=768.0]
+	[width=16.0]
+})
+19:50:33 | DEBUG | SniperJoe | frozen.set: value=false
+19:50:33 | DEBUG | SniperJoe | defineAnimationsComponent(): currentKey=fire/idle, oldKey=null
+19:50:35 | DEBUG | SniperJoe | update(): timer finished, go to next state
+19:50:35 | DEBUG | SniperJoe | onChangeState(): current=SHOOT, previous=IDLE
+19:50:35 | DEBUG | SniperJoe | defineAnimationsComponent(): currentKey=fire/shoot, oldKey=fire/idle
+19:50:37 | DEBUG | SniperJoe | update(): timer finished, go to next state
+19:50:37 | DEBUG | SniperJoe | onChangeState(): current=IDLE, previous=SHOOT
+19:50:37 | DEBUG | SniperJoe | defineAnimationsComponent(): currentKey=fire/idle, oldKey=fire/shoot
+19:50:39 | DEBUG | SniperJoe | update(): timer finished, go to next state
+19:50:39 | DEBUG | SniperJoe | onChangeState(): current=SHOOT, previous=IDLE
+19:50:39 | DEBUG | SniperJoe | defineAnimationsComponent(): currentKey=fire/shoot, oldKey=fire/idle
+19:50:39 | DEBUG | SniperJoe | takeDamageFrom(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=1940737740] }
+19:50:39 | DEBUG | SniperJoe | takeDamageFrom(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1380361139] }
+19:50:39 | DEBUG | SniperJoe | takeDamageFrom(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1380361139] }
+19:50:39 | DEBUG | SniperJoe | onDestroy()

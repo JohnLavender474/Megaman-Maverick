@@ -1097,9 +1097,9 @@ SniperJoe/fire/idle
   index: -1
 SniperJoe/fire/jump
   rotate: false
-  xy: 198, 274
-  size: 32, 32
-  orig: 32, 32
+  xy: 134, 922
+  size: 32, 64
+  orig: 32, 64
   offset: 0, 0
   index: -1
 SniperJoe/fire/shoot
@@ -1111,9 +1111,9 @@ SniperJoe/fire/shoot
   index: -1
 SniperJoe/fire/turn
   rotate: false
-  xy: 134, 922
-  size: 32, 64
-  orig: 32, 64
+  xy: 198, 274
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
   index: -1
 SniperJoe/orange/idle

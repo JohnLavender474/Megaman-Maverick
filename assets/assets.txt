@@ -2377,6 +2377,7 @@ sprites/piskel/AngryFlameBall.piskel
 sprites/piskel/ChargedShot_v2.piskel
 sprites/piskel/SpikeCopter.piskel
 sprites/piskel/Dropper Lift.piskel
+sprites/piskel/VandalJoe.piskel
 sprites/piskel/AirConditioner.piskel
 sprites/piskel/SpikeBall.piskel
 sprites/piskel/QuickSand_v2_Left.piskel
