@@ -54,9 +54,9 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
         private const val TURN_DUR = 0.5f
         private const val FROZEN_DUR = 0.5f
         private val animDefs = orderedMapOf(
+            "frozen" pairTo AnimationDef(),
             "turn" pairTo AnimationDef(1, 5, 0.1f, false),
-            "attack" pairTo AnimationDef(1, 2, 0.1f, false),
-            "frozen" pairTo AnimationDef()
+            "attack" pairTo AnimationDef(1, 2, 0.1f, true)
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }

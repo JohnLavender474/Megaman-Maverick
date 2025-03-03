@@ -176,7 +176,6 @@ class MegamanMaverickGame(
     lateinit var audioMan: MegaAudioManager
 
     lateinit var engine: GameEngine
-
     lateinit var state: GameState
 
     lateinit var megaman: Megaman

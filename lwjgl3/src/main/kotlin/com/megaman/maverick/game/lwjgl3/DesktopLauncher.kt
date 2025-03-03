@@ -2,6 +2,7 @@ package com.megaman.maverick.game.lwjgl3
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter
 import com.beust.jcommander.JCommander
 import com.beust.jcommander.Parameter
 import com.beust.jcommander.ParameterException
@@ -23,8 +24,8 @@ object DesktopLauncher {
     private const val DEFAULT_MAXIMIZED = true
     private const val DEFAULT_FULLSCREEN = false
     private const val DEFAULT_WRITE_LOGS_TO_FILE = false
-    private const val DEFAULT_PAUSE_ON_MINIMIZED = false
-    private const val DEFAULT_PAUSE_ON_FOCUS_LOST = false
+    private const val DEFAULT_PAUSE_ON_MINIMIZED = true
+    private const val DEFAULT_PAUSE_ON_FOCUS_LOST = true
     private const val DEFAULT_DEBUG_WINDOW = false
     private const val DEFAULT_DEBUG_SHAPES = false
     private const val DEFAULT_DEBUG_TEXT = false
@@ -95,6 +96,17 @@ object DesktopLauncher {
         }
 
         val game = MegamanMaverickGame(params)
+
+        config.setWindowListener(object : Lwjgl3WindowAdapter() {
+
+            override fun focusLost() {
+                if (!game.paused) game.pause()
+            }
+
+            override fun focusGained() {
+                if (game.paused) game.resume()
+            }
+        })
 
         try {
             Lwjgl3Application(game, config)

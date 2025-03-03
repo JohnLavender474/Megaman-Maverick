@@ -11,7 +11,9 @@ import com.megaman.maverick.game.controllers.MegaControllerButton
 abstract class MegaMenuScreen(
     protected val game: MegamanMaverickGame,
     firstButtonKey: String? = null,
-    buttons: ObjectMap<String, IMenuButton> = ObjectMap()
+    buttons: ObjectMap<String, IMenuButton> = ObjectMap(),
+    var pauseMusicOnPause: Boolean = true,
+    var playMusicOnResume: Boolean = true
 ) : StandardMenuScreen(buttons, firstButtonKey) {
 
     protected val selectionButtons = gdxArrayOf<Any>(MegaControllerButton.START, MegaControllerButton.A)
@@ -30,5 +32,15 @@ abstract class MegaMenuScreen(
 
     protected open fun undoSelection() {
         selectionMade = false
+    }
+
+    override fun pause() {
+        super.pause()
+        if (pauseMusicOnPause) game.audioMan.pauseMusic()
+    }
+
+    override fun resume() {
+        super.resume()
+        if (playMusicOnResume) game.audioMan.playMusic()
     }
 }

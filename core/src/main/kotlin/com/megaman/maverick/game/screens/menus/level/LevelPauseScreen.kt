@@ -40,7 +40,8 @@ import com.megaman.maverick.game.screens.utils.Fade.FadeType
 import com.megaman.maverick.game.state.GameState
 import kotlin.math.min
 
-class LevelPauseScreen(game: MegamanMaverickGame) : MegaMenuScreen(game), Initializable {
+class LevelPauseScreen(game: MegamanMaverickGame) :
+    MegaMenuScreen(game, pauseMusicOnPause = false, playMusicOnResume = false), Initializable {
 
     companion object {
         const val TAG = "LevelPauseScreen"

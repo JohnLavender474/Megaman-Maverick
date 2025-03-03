@@ -1,5 +1,5 @@
 Megaman_v2_BUSTER.png
-size: 960, 1824
+size: 1008, 384
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -131,7 +131,7 @@ climb_finish
   index: -1
 climb_finish_charge_full
   rotate: false
-  xy: 0, 144
+  xy: 960, 48
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -152,7 +152,7 @@ climb_still
   index: -1
 climb_still_charge_full
   rotate: false
-  xy: 48, 144
+  xy: 0, 144
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -180,7 +180,7 @@ crouch
   index: -1
 crouch_charge_full
   rotate: false
-  xy: 96, 144
+  xy: 48, 144
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -208,28 +208,28 @@ damaged
   index: -1
 frozen
   rotate: false
-  xy: 0, 384
-  size: 480, 480
-  orig: 480, 480
+  xy: 480, 0
+  size: 48, 48
+  orig: 48, 48
   offset: 0, 0
   index: -1
 frozen_push
   rotate: false
-  xy: 0, 864
-  size: 960, 960
-  orig: 960, 960
+  xy: 96, 144
+  size: 96, 96
+  orig: 96, 96
   offset: 0, 0
   index: -1
 groundslide
   rotate: false
-  xy: 480, 0
+  xy: 528, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 groundslide_charge_full
   rotate: false
-  xy: 144, 144
+  xy: 192, 144
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -243,21 +243,21 @@ groundslide_charge_half
   index: -1
 groundslide_shoot
   rotate: false
-  xy: 528, 0
+  xy: 576, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 jump
   rotate: false
-  xy: 576, 0
+  xy: 624, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 jump_charge_full
   rotate: false
-  xy: 192, 144
+  xy: 240, 144
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -271,63 +271,63 @@ jump_charge_half
   index: -1
 jump_shoot
   rotate: false
-  xy: 624, 0
+  xy: 672, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 run
   rotate: false
-  xy: 240, 144
+  xy: 288, 144
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 run_charge_full
   rotate: false
-  xy: 336, 144
+  xy: 384, 144
   size: 192, 96
   orig: 192, 96
   offset: 0, 0
   index: -1
 run_charge_half
   rotate: false
-  xy: 528, 144
+  xy: 576, 144
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 run_shoot
   rotate: false
-  xy: 624, 144
+  xy: 672, 144
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 run_start
   rotate: false
-  xy: 672, 0
+  xy: 720, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 run_start_shoot
   rotate: false
-  xy: 720, 0
+  xy: 768, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 slip
   rotate: false
-  xy: 768, 0
+  xy: 816, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 slip_charge_full
   rotate: false
-  xy: 720, 144
+  xy: 768, 144
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -341,7 +341,7 @@ slip_charge_half
   index: -1
 slip_shoot
   rotate: false
-  xy: 816, 0
+  xy: 864, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -355,14 +355,14 @@ spawn
   index: -1
 stand
   rotate: false
-  xy: 768, 144
+  xy: 816, 144
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 stand_charge_full
   rotate: false
-  xy: 816, 144
+  xy: 864, 144
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -383,7 +383,7 @@ stand_shoot
   index: -1
 stunned
   rotate: false
-  xy: 864, 144
+  xy: 912, 144
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -397,7 +397,7 @@ swim
   index: -1
 swim_charge_full
   rotate: false
-  xy: 912, 144
+  xy: 960, 144
   size: 48, 96
   orig: 48, 96
   offset: 0, 0

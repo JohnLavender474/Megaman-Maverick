@@ -2454,6 +2454,7 @@ sprites/piskel/RailTrack.piskel
 sprites/piskel/MegamanElectric.piskel
 sprites/piskel/SmallEnemies1.piskel
 sprites/piskel/DemonAngelMet.piskel
+sprites/piskel/HealthBulb.piskel
 sprites/piskel/MisterMan.piskel
 sprites/piskel/TimberStuff.piskel
 sprites/piskel/Megaman.piskel
