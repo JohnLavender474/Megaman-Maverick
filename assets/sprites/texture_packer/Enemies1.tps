@@ -233,7 +233,7 @@
             <key type="filename">../frames/Enemies1/Met/Run.png</key>
             <key type="filename">../frames/Enemies1/Penguin/Stand.png</key>
             <key type="filename">../frames/Enemies1/Popoheli/fly.png</key>
-            <key type="filename">../frames/Enemies1/ShieldAttacker/Attack.png</key>
+            <key type="filename">../frames/Enemies1/ShieldAttacker/attack.png</key>
             <key type="filename">../frames/Enemies1/SnowBat/Fly.png</key>
             <key type="filename">../frames/Enemies1/SnowMet/Run.png</key>
             <key type="filename">../frames/Enemies1/Spiky.png</key>
@@ -256,6 +256,7 @@
             <key type="filename">../frames/Enemies1/Bat/Hang.png</key>
             <key type="filename">../frames/Enemies1/Bat/OpenEyes.png</key>
             <key type="filename">../frames/Enemies1/Bat/OpenWings.png</key>
+            <key type="filename">../frames/Enemies1/Bat/frozen.png</key>
             <key type="filename">../frames/Enemies1/BlueScrewie/Down.png</key>
             <key type="filename">../frames/Enemies1/CanonHopper/hop.png</key>
             <key type="filename">../frames/Enemies1/CanonHopper/stand.png</key>
@@ -277,6 +278,7 @@
             <key type="filename">../frames/Enemies1/PopupCanon/Down.png</key>
             <key type="filename">../frames/Enemies1/PopupCanon/Up.png</key>
             <key type="filename">../frames/Enemies1/RedScrewie/Down.png</key>
+            <key type="filename">../frames/Enemies1/ShieldAttacker/frozen.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/fire/frozen.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/fire/jump.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/orange/jump.png</key>
@@ -733,6 +735,7 @@
             <key type="filename">../frames/Enemies1/NuttGlider/stand_nutt.png</key>
             <key type="filename">../frames/Enemies1/PreciousJoe/Shoot.png</key>
             <key type="filename">../frames/Enemies1/PreciousJoe/Stand.png</key>
+            <key type="filename">../frames/Enemies1/Ratton/frozen.png</key>
             <key type="filename">../frames/Enemies1/SwinginJoe/throw.png</key>
             <key type="filename">../frames/Enemies1/WispyWasp/Nest.png</key>
             <struct type="IndividualSpriteSettings">
@@ -878,7 +881,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Enemies1/ShieldAttacker/TurnAround.png</key>
+            <key type="filename">../frames/Enemies1/ShieldAttacker/turn.png</key>
             <key type="filename">../frames/Enemies1/SuctionRoller.png</key>
             <key type="filename">../frames/Enemies1/SwimmingMet/Swim.png</key>
             <struct type="IndividualSpriteSettings">

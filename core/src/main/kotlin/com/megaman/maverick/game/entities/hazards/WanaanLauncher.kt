@@ -39,11 +39,11 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.enemies.Wanaan
 import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getObjectProps
@@ -196,7 +196,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
             Direction.RIGHT -> body.getPositionPoint(Position.CENTER_RIGHT).sub(0.5f * ConstVals.PPM, 0f)
         }
 
-        wanaan = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.WANAAN) as Wanaan
+        wanaan = MegaEntityFactory.fetch(Wanaan::class)!!
         wanaan!!.spawn(
             props(
                 ConstKeys.POSITION pairTo spawn,
@@ -218,8 +218,8 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
         }.scl(ConstVals.PPM.toFloat())
 
         wanaan!!.body.physics.let {
-            it.velocity.set(impulse)
             it.gravityOn = true
+            it.velocity.set(impulse)
         }
 
         requestToPlaySound(SoundAsset.CHOMP_SOUND, false)

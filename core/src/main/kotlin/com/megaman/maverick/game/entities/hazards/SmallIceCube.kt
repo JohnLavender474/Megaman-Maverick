@@ -138,7 +138,7 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
 
     override fun onDamageInflictedTo(damageable: IDamageable) = shatterAndDie()
 
-    private fun shatterAndDie() {
+    override fun shatterAndDie() {
         destroy()
 
         for (i in 0 until 5) {
@@ -190,9 +190,6 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
         }
         body.addFixture(bodyFixture)
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        body.addFixture(damagerFixture)
-
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
@@ -225,7 +222,7 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
             }
         }
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.DAMAGER, FixtureType.PROJECTILE))
     }
 
     private fun defineCullablesComponent(): CullablesComponent {

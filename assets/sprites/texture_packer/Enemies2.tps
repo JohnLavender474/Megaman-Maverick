@@ -181,7 +181,6 @@
             <key type="filename">../frames/Enemies2/Taketenko/Propeller.png</key>
             <key type="filename">../frames/Enemies2/Togglee/Left.png</key>
             <key type="filename">../frames/Enemies2/Togglee/Right.png</key>
-            <key type="filename">../frames/Enemies2/Wanaan.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -396,6 +395,7 @@
             <key type="filename">../frames/Enemies2/TorikoPlundge/idle.png</key>
             <key type="filename">../frames/Enemies2/TorikoPlundge/plunge2.png</key>
             <key type="filename">../frames/Enemies2/TorikoPlundge/plunge3.png</key>
+            <key type="filename">../frames/Enemies2/Wanaan/chomp.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -483,6 +483,7 @@
             <key type="filename">../frames/Enemies2/CactusLauncher/wait.png</key>
             <key type="filename">../frames/Enemies2/DemonMet/frozen.png</key>
             <key type="filename">../frames/Enemies2/DemonMet/stand.png</key>
+            <key type="filename">../frames/Enemies2/RatRobot/frozen.png</key>
             <key type="filename">../frames/Enemies2/RatRobot/still.png</key>
             <key type="filename">../frames/Enemies2/Shotman/Launch.png</key>
             <key type="filename">../frames/Enemies2/SnowheadThrower/headless.png</key>
@@ -493,6 +494,7 @@
             <key type="filename">../frames/Enemies2/Taketenko/Spin.png</key>
             <key type="filename">../frames/Enemies2/WallTeck/angry.png</key>
             <key type="filename">../frames/Enemies2/WallTeck/still.png</key>
+            <key type="filename">../frames/Enemies2/Wanaan/frozen.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

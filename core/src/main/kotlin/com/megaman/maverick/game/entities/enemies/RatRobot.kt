@@ -11,13 +11,14 @@ import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
-import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -33,24 +34,42 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
+import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.utils.getObjectProps
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
 
-class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable {
+class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFreezableEntity,
+    IFaceable {
 
     companion object {
         const val TAG = "RatRobot"
         private const val SPEED = 4f
         private const val GRAVITY = 0.375f
+        private const val FROZEN_DUR = 0.5f
+        private val animDefs = orderedMapOf(
+            "run" pairTo AnimationDef(3, 1, 0.1f, true),
+            "still" pairTo AnimationDef(),
+            "frozen" pairTo AnimationDef()
+        )
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
     override lateinit var facing: Facing
+    override var frozen: Boolean
+        get() = !frozenTimer.isFinished()
+        set(value) {
+            if (value) frozenTimer.reset() else frozenTimer.setToEnd()
+        }
+
+    private val frozenTimer = Timer(FROZEN_DUR)
 
     private val triggers = Array<GameRectangle>()
     private var triggered = false
@@ -60,7 +79,7 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            gdxArrayOf("run", "still").forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
+            animDefs.keys().forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -75,7 +94,14 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         getObjectProps(spawnProps, objs).forEach { triggers.add(it.rectangle.toGameRectangle(false)) }
         triggered = triggers.isEmpty
 
+        frozen = false
         facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+    }
+
+    override fun takeDamageFrom(damager: IDamager): Boolean {
+        val damaged = super.takeDamageFrom(damager)
+        if (damaged && !frozen && damager is IFreezerEntity) frozen = true
+        return damaged
     }
 
     override fun onDestroy() {
@@ -85,10 +111,16 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
-        updatablesComponent.add {
+        updatablesComponent.add { delta ->
+            if (frozen) {
+                frozenTimer.update(delta)
+                if (frozenTimer.isJustFinished()) IceShard.spawn5(body.getCenter())
+                return@add
+            }
+
             if (!triggered && triggers.any { it.overlaps(megaman.body.getBounds()) }) {
-                facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
                 triggered = true
+                facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
             }
         }
     }
@@ -120,11 +152,14 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         debugShapes.add { rightFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.physics.gravityOn = triggered
             body.physics.gravity.y = if (body.isSensing(BodySense.FEET_ON_GROUND)) 0f else -GRAVITY * ConstVals.PPM
+            body.physics.gravityOn = triggered
 
             body.physics.velocity.x =
-                if (body.isSensing(BodySense.FEET_ON_GROUND)) SPEED * ConstVals.PPM * facing.value else 0f
+                when {
+                    frozen || !body.isSensing(BodySense.FEET_ON_GROUND) -> 0f
+                    else -> SPEED * ConstVals.PPM * facing.value
+                }
 
             body.forEachFixture { it.setActive(triggered) }
 
@@ -154,11 +189,20 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = { if (body.isSensing(BodySense.FEET_ON_GROUND)) "run" else "still" }
-        val animations = objectMapOf<String, IAnimation>(
-            "still" pairTo Animation(regions["still"]),
-            "run" pairTo Animation(regions["run"], 3, 1, 0.1f, true)
-        )
+        val keySupplier: (String?) -> String? = {
+            when {
+                frozen -> "frozen"
+                body.isSensing(BodySense.FEET_ON_GROUND) -> "run"
+                else -> "still"
+            }
+        }
+        val animations = ObjectMap<String, IAnimation>().also { animations ->
+            animDefs.forEach { entry ->
+                val key = entry.key
+                val (rows, columns, durations, loop) = entry.value
+                animations.put(key, Animation(regions[key], rows, columns, durations, loop))
+            }
+        }
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }

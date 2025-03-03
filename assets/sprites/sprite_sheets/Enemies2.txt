@@ -75,14 +75,14 @@ AxeJoe/cooldown_shielded
   index: -1
 AxeJoe/jump
   rotate: false
-  xy: 2, 104
+  xy: 36, 104
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 AxeJoe/jump_shielded
   rotate: false
-  xy: 44, 104
+  xy: 78, 104
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
@@ -145,42 +145,42 @@ BigFishNeo/swim
   index: -1
 BigJumpingJoe/Jump
   rotate: false
-  xy: 2, 154
+  xy: 36, 154
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 BigJumpingJoe/Stand
   rotate: false
-  xy: 132, 154
+  xy: 166, 154
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 BombChute/down
   rotate: false
-  xy: 198, 154
+  xy: 232, 154
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 BombChute/turn
   rotate: false
-  xy: 264, 154
+  xy: 298, 154
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 BombChute/up
   rotate: false
-  xy: 330, 154
+  xy: 364, 154
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 BombPotton
   rotate: false
-  xy: 364, 154
+  xy: 398, 154
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
@@ -222,14 +222,14 @@ BunbyTank/Still
   index: -1
 CactusLauncher/fire
   rotate: false
-  xy: 398, 154
+  xy: 432, 154
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 CactusLauncher/reload
   rotate: false
-  xy: 432, 154
+  xy: 466, 154
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
@@ -257,14 +257,14 @@ CarriCarry/shake
   index: -1
 CartinJoe/move
   rotate: false
-  xy: 178, 104
+  xy: 212, 104
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 CartinJoe/shoot
   rotate: false
-  xy: 276, 104
+  xy: 310, 104
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
@@ -320,7 +320,7 @@ Coldier/small_blow
   index: -1
 Coldier/stand
   rotate: false
-  xy: 374, 104
+  xy: 408, 104
   size: 64, 48
   orig: 64, 48
   offset: 0, 0
@@ -341,7 +341,7 @@ ColtonJoe/stand
   index: -1
 CrystalSpiky/blink
   rotate: false
-  xy: 466, 154
+  xy: 500, 154
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
@@ -355,14 +355,14 @@ CrystalSpiky/shoot
   index: -1
 DemonMet/angel
   rotate: false
-  xy: 500, 154
+  xy: 534, 154
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 DemonMet/fly
   rotate: false
-  xy: 566, 154
+  xy: 600, 154
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -439,7 +439,7 @@ FireDispensenator/fire
   index: -1
 FireDispensenator/frozen
   rotate: false
-  xy: 440, 104
+  xy: 474, 104
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -453,98 +453,98 @@ FireDispensenator/open
   index: -1
 FireDispensenator/sleep
   rotate: false
-  xy: 490, 104
+  xy: 524, 104
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Gachappan/Open
   rotate: false
-  xy: 632, 154
+  xy: 666, 154
   size: 192, 64
   orig: 192, 64
   offset: 0, 0
   index: -1
 Gachappan/Shoot
   rotate: false
-  xy: 826, 154
+  xy: 2, 220
   size: 192, 64
   orig: 192, 64
   offset: 0, 0
   index: -1
 Gachappan/Wait
   rotate: false
-  xy: 2, 220
+  xy: 196, 220
   size: 192, 64
   orig: 192, 64
   offset: 0, 0
   index: -1
 Hanabiran/1PetalSpin
   rotate: false
-  xy: 196, 220
+  xy: 390, 220
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 Hanabiran/1PetalStand
   rotate: false
-  xy: 454, 220
+  xy: 648, 220
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Hanabiran/2PetalsSpin
   rotate: false
-  xy: 520, 220
+  xy: 714, 220
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 Hanabiran/2PetalsStand
   rotate: false
-  xy: 778, 220
+  xy: 2, 286
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Hanabiran/3PetalsSpin
   rotate: false
-  xy: 2, 286
+  xy: 68, 286
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 Hanabiran/3PetalsStand
   rotate: false
-  xy: 260, 286
+  xy: 326, 286
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Hanabiran/4PetalsSpin
   rotate: false
-  xy: 326, 286
+  xy: 392, 286
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 Hanabiran/4PetalsStand
   rotate: false
-  xy: 456, 286
+  xy: 522, 286
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Hanabiran/Drop
   rotate: false
-  xy: 522, 286
+  xy: 588, 286
   size: 192, 64
   orig: 192, 64
   offset: 0, 0
   index: -1
 Hanabiran/NoPetalsSpin
   rotate: false
-  xy: 716, 286
+  xy: 782, 286
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
@@ -579,7 +579,7 @@ IceSkaterPeng/skate
   index: -1
 Imorm
   rotate: false
-  xy: 540, 104
+  xy: 574, 104
   size: 192, 48
   orig: 192, 48
   offset: 0, 0
@@ -684,7 +684,7 @@ PenguinBot/rise
   index: -1
 PenguinBot/stand
   rotate: false
-  xy: 86, 104
+  xy: 120, 104
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
@@ -710,6 +710,13 @@ PenguinBot/wait
   orig: 40, 80
   offset: 0, 0
   index: -1
+RatRobot/frozen
+  rotate: false
+  xy: 362, 36
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 RatRobot/run
   rotate: false
   xy: 200, 614
@@ -719,7 +726,7 @@ RatRobot/run
   index: -1
 RatRobot/still
   rotate: false
-  xy: 362, 36
+  xy: 396, 36
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -733,14 +740,14 @@ RedTiggerSquirt
   index: -1
 RingRing/Pink
   rotate: false
-  xy: 396, 36
+  xy: 430, 36
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
   index: -1
 RingRing/Red
   rotate: false
-  xy: 526, 36
+  xy: 560, 36
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
@@ -768,77 +775,77 @@ Robbit/Stand
   index: -1
 Shotman/Launch
   rotate: false
-  xy: 656, 36
+  xy: 690, 36
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Shotman/Shoot
   rotate: false
-  xy: 690, 36
+  xy: 724, 36
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 SnowheadThrower/headless
   rotate: false
-  xy: 756, 36
+  xy: 790, 36
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SnowheadThrower/spawn_head
   rotate: false
-  xy: 790, 36
+  xy: 824, 36
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SnowheadThrower/throw_head
   rotate: false
-  xy: 824, 36
+  xy: 858, 36
   size: 160, 32
   orig: 160, 32
   offset: 0, 0
   index: -1
 SpikeBot/jump
   rotate: false
-  xy: 986, 36
+  xy: 2, 70
   size: 24, 32
   orig: 24, 32
   offset: 0, 0
   index: -1
 SpikeBot/jump_snow
   rotate: false
-  xy: 2, 70
+  xy: 28, 70
   size: 24, 32
   orig: 24, 32
   offset: 0, 0
   index: -1
 SpikeBot/shoot
   rotate: false
-  xy: 28, 70
+  xy: 54, 70
   size: 120, 32
   orig: 120, 32
   offset: 0, 0
   index: -1
 SpikeBot/shoot_snow
   rotate: false
-  xy: 150, 70
+  xy: 176, 70
   size: 120, 32
   orig: 120, 32
   offset: 0, 0
   index: -1
 SpikeBot/stand
   rotate: false
-  xy: 272, 70
+  xy: 298, 70
   size: 24, 32
   orig: 24, 32
   offset: 0, 0
   index: -1
 SpikeBot/stand_snow
   rotate: false
-  xy: 298, 70
+  xy: 324, 70
   size: 24, 32
   orig: 24, 32
   offset: 0, 0
@@ -866,7 +873,7 @@ StagedMoonLandingFlag/fall
   index: -1
 StagedMoonLandingFlag/hidden
   rotate: false
-  xy: 324, 70
+  xy: 350, 70
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -887,28 +894,28 @@ StagedMoonLandingFlag/shield
   index: -1
 StagedMoonLandingFlag/stand
   rotate: false
-  xy: 358, 70
+  xy: 384, 70
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Taketenko/Fly
   rotate: false
-  xy: 392, 70
+  xy: 418, 70
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Taketenko/Propeller
   rotate: false
-  xy: 426, 70
+  xy: 452, 70
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Taketenko/Spin
   rotate: false
-  xy: 492, 70
+  xy: 518, 70
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
@@ -922,7 +929,7 @@ TankBot/roll
   index: -1
 TankBot/stop
   rotate: false
-  xy: 128, 104
+  xy: 162, 104
   size: 48, 40
   orig: 48, 40
   offset: 0, 0
@@ -936,28 +943,28 @@ TankBot/turn
   index: -1
 Togglee/Left
   rotate: false
-  xy: 590, 70
+  xy: 616, 70
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Togglee/Right
   rotate: false
-  xy: 656, 70
+  xy: 682, 70
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Togglee/SwitchToLeft
   rotate: false
-  xy: 722, 70
+  xy: 748, 70
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 Togglee/SwitchToRight
   rotate: false
-  xy: 820, 70
+  xy: 846, 70
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
@@ -1076,14 +1083,14 @@ Tropish/swim
   index: -1
 UFOBombBot/Closed
   rotate: false
-  xy: 734, 104
+  xy: 768, 104
   size: 96, 48
   orig: 96, 48
   offset: 0, 0
   index: -1
 UFOBombBot/Dropping
   rotate: false
-  xy: 832, 104
+  xy: 866, 104
   size: 144, 48
   orig: 144, 48
   offset: 0, 0
@@ -1104,7 +1111,7 @@ UnderwaterPenguinBot/bent
   index: -1
 UnderwaterPenguinBot/swim
   rotate: false
-  xy: 978, 104
+  xy: 2, 154
   size: 32, 48
   orig: 32, 48
   offset: 0, 0
@@ -1125,14 +1132,14 @@ UpNDown/Red
   index: -1
 WallTeck/angry
   rotate: false
-  xy: 918, 70
+  xy: 944, 70
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 WallTeck/still
   rotate: false
-  xy: 952, 70
+  xy: 978, 70
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -1172,11 +1179,18 @@ WalrusBot/stand
   orig: 64, 80
   offset: 0, 0
   index: -1
-Wanaan
+Wanaan/chomp
   rotate: false
   xy: 630, 352
   size: 32, 64
   orig: 32, 64
+  offset: 0, 0
+  index: -1
+Wanaan/frozen
+  rotate: false
+  xy: 2, 104
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
   index: -1
 YellowTiggerSquirt

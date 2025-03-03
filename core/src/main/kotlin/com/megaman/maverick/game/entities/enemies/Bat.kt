@@ -26,6 +26,7 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
@@ -42,7 +43,10 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
+import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
 import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
@@ -52,15 +56,8 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toGridCoordinate
 import com.megaman.maverick.game.world.body.*
 
-class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IDirectional {
-
-    enum class BatStatus(val region: String) {
-        HANGING("Hang"),
-        OPEN_EYES("OpenEyes"),
-        OPEN_WINGS("OpenWings"),
-        FLYING_TO_ATTACK("Fly"),
-        FLYING_TO_RETREAT("Fly")
-    }
+class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFreezableEntity,
+    IDirectional {
 
     companion object {
         const val TAG = "Bat"
@@ -68,10 +65,19 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         private const val DEBUG_PATHFINDING = false
         private const val DEBUG_PATHFINDING_DURATION = 1f
         private const val HANG_DURATION = 0.75f
+        private const val FROZEN_DURATION = 0.5f
         private const val RELEASE_FROM_PERCH_DURATION = 0.25f
         private const val DEFAULT_FLY_TO_ATTACK_SPEED = 3f
         private const val DEFAULT_FLY_TO_RETREAT_SPEED = 8f
         private const val PATHFINDING_UPDATE_INTERVAL = 0.05f
+    }
+
+    private enum class BatState(val region: String) {
+        HANGING("Hang"),
+        OPEN_EYES("OpenEyes"),
+        OPEN_WINGS("OpenWings"),
+        FLYING_TO_ATTACK("Fly"),
+        FLYING_TO_RETREAT("Fly")
     }
 
     override var direction: Direction
@@ -79,16 +85,22 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         set(value) {
             body.direction = value
         }
+    override var frozen: Boolean
+        get() = !frozenTimer.isFinished()
+        set(value) {
+            if (value) frozenTimer.reset() else frozenTimer.setToEnd()
+        }
 
     private val hangTimer = Timer(HANG_DURATION)
+    private val frozenTimer = Timer(FROZEN_DURATION)
     private val releasePerchTimer = Timer(RELEASE_FROM_PERCH_DURATION)
     private val debugPathfindingTimer = Timer(DEBUG_PATHFINDING_DURATION)
 
     private val canMove: Boolean
-        get() = !game.isCameraRotating()
+        get() = !game.isCameraRotating() && !frozen
 
     private lateinit var type: String
-    private lateinit var status: BatStatus
+    private lateinit var state: BatState
     private lateinit var animations: ObjectMap<String, IAnimation>
 
     private var flyToAttackSpeed = DEFAULT_FLY_TO_ATTACK_SPEED
@@ -113,7 +125,10 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
 
         hangTimer.reset()
         releasePerchTimer.reset()
-        status = BatStatus.HANGING
+
+        state = BatState.HANGING
+
+        frozen = false
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.setTopCenterToPoint(bounds.getPositionPoint(Position.TOP_CENTER))
@@ -132,7 +147,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         )
 
         direction =
-            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())
+            Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
 
         debugPathfindingTimer.reset()
         printDebugFilter = DEBUG_PATHFINDING
@@ -141,8 +156,14 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         triggered = trigger == null
     }
 
+    override fun takeDamageFrom(damager: IDamager): Boolean {
+        val damaged = super.takeDamageFrom(damager)
+        if (damaged && type.lowercase() != ConstKeys.SNOW && !frozen && damager is IFreezerEntity) frozen = true
+        return damaged
+    }
+
     override fun onDamageInflictedTo(damageable: IDamageable) {
-        if (damageable is Megaman) status = BatStatus.FLYING_TO_RETREAT
+        if (damageable is Megaman) state = BatState.FLYING_TO_RETREAT
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -169,8 +190,18 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
                 }
             }
 
-            when (status) {
-                BatStatus.HANGING -> {
+            if (frozen) {
+                frozenTimer.update(delta)
+                if (frozenTimer.isJustFinished()) {
+                    damageTimer.reset()
+                    IceShard.spawn5(body.getCenter())
+                    state = BatState.FLYING_TO_RETREAT
+                }
+                return@add
+            }
+
+            when (state) {
+                BatState.HANGING -> {
                     if (!triggered) trigger?.let {
                         if (megaman.body.getBounds().overlaps(it)) {
                             GameLogger.debug(TAG, "update(): Megaman touched trigger")
@@ -179,26 +210,27 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
                     }
 
                     hangTimer.update(delta)
+
                     if (triggered && (hangTimer.isFinished() || !body.isSensing(BodySense.HEAD_TOUCHING_BLOCK))) {
-                        status = BatStatus.OPEN_EYES
-                        GameLogger.debug(TAG, "update(): set status to $status")
+                        state = BatState.OPEN_EYES
+
+                        GameLogger.debug(TAG, "update(): set status to $state")
 
                         hangTimer.reset()
+                        releasePerchTimer.reset()
                     }
                 }
 
-                BatStatus.OPEN_EYES, BatStatus.OPEN_WINGS -> {
+                BatState.OPEN_EYES, BatState.OPEN_WINGS -> {
                     releasePerchTimer.update(delta)
                     if (releasePerchTimer.isFinished()) {
-                        if (status == BatStatus.OPEN_EYES) {
-                            status = BatStatus.OPEN_WINGS
-                            releasePerchTimer.reset()
-                        } else status = BatStatus.FLYING_TO_ATTACK
+                        state = if (state == BatState.OPEN_EYES) BatState.OPEN_WINGS else BatState.FLYING_TO_ATTACK
+                        releasePerchTimer.reset()
                     }
                 }
 
-                BatStatus.FLYING_TO_RETREAT ->
-                    if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) status = BatStatus.HANGING
+                BatState.FLYING_TO_RETREAT ->
+                    if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) state = BatState.HANGING
 
                 else -> {}
             }
@@ -231,12 +263,13 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         body.addFixture(shieldFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            shieldFixture.setActive(status == BatStatus.HANGING)
-            damageableFixture.setActive(status != BatStatus.HANGING)
+            shieldFixture.setActive(frozen || state == BatState.HANGING)
+            damageableFixture.setActive(!frozen && state != BatState.HANGING)
 
             when {
                 !canMove -> body.physics.velocity.setZero()
-                status == BatStatus.FLYING_TO_RETREAT -> {
+
+                state == BatState.FLYING_TO_RETREAT -> {
                     val velocity = GameObjectPools.fetch(Vector2::class)
                     when (direction) {
                         Direction.UP -> velocity.set(0f, flyToRetreatSpeed)
@@ -247,7 +280,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
                     body.physics.velocity.set(velocity)
                 }
 
-                status != BatStatus.FLYING_TO_ATTACK -> body.physics.velocity.setZero()
+                state != BatState.FLYING_TO_ATTACK -> body.physics.velocity.setZero()
             }
         }
 
@@ -261,22 +294,25 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
+
             sprite.setOriginCenter()
             sprite.rotation = megaman.direction.rotation
-            sprite.hidden = damageBlink
+
             sprite.setPosition(body.getCenter(), Position.CENTER)
         }
         return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = { type + status.region }
+        val keySupplier: (String?) -> String? = { type + if (frozen) "frozen" else state.region }
         animations = objectMapOf(
             "Hang" pairTo Animation(atlas!!.findRegion("Bat/Hang")),
             "Fly" pairTo Animation(atlas!!.findRegion("Bat/Fly"), 1, 2, 0.1f, true),
             "OpenEyes" pairTo Animation(atlas!!.findRegion("Bat/OpenEyes")),
             "OpenWings" pairTo Animation(atlas!!.findRegion("Bat/OpenWings")),
             "SnowHang" pairTo Animation(atlas!!.findRegion("SnowBat/Hang")),
+            "frozen" pairTo Animation(atlas!!.findRegion("$TAG/frozen")),
             "SnowFly" pairTo Animation(atlas!!.findRegion("SnowBat/Fly"), 1, 2, 0.1f, true),
             "SnowOpenEyes" pairTo Animation(atlas!!.findRegion("SnowBat/OpenEyes")),
             "SnowOpenWings" pairTo Animation(atlas!!.findRegion("SnowBat/OpenWings"))
@@ -324,7 +360,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
                     shapes = if (DEBUG_PATHFINDING) game.getShapes() else null
                 )
             },
-            { canMove && status == BatStatus.FLYING_TO_ATTACK },
+            { canMove && state == BatState.FLYING_TO_ATTACK },
             intervalTimer = Timer(PATHFINDING_UPDATE_INTERVAL)
         )
         return pathfindingComponent
