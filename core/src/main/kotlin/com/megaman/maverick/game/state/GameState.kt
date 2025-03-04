@@ -11,7 +11,9 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
+import com.megaman.maverick.game.levels.LevelDefMap
 import com.megaman.maverick.game.levels.LevelDefinition
+import com.megaman.maverick.game.levels.LevelType
 
 class GameState : Resettable {
 
@@ -50,6 +52,17 @@ class GameState : Resettable {
         GameLogger.debug(TAG, "removeLevelDefeated(): level=$level, removed=$removed")
         if (removed) listeners.forEach { it.onRemoveLevelDefeated(level) }
     }
+
+    fun allRobotMasterLevelsDefeated() =
+        LevelDefMap.getDefsOfLevelType(LevelType.ROBOT_MASTER_LEVEL).all { level -> isLevelDefeated(level) }
+
+    fun getNextWilyStage(): LevelDefinition? {
+        if (!allRobotMasterLevelsDefeated()) return null
+        val wilyStages = LevelDefMap.getDefsOfLevelType(LevelType.WILY_LEVEL)
+        return wilyStages.firstOrNull { wilyStage -> !isLevelDefeated(wilyStage) }
+    }
+
+    fun allLevelsDefeated() = allRobotMasterLevelsDefeated() && getNextWilyStage() == null
 
     fun containsHeartTank(heartTank: MegaHeartTank) = heartTanksCollected.contains(heartTank)
 
@@ -217,7 +230,10 @@ class GameState : Resettable {
             try {
                 removeHealthTank(healthTank)
             } catch (e: Exception) {
-                throw Exception("Failed to remove health tank: ${healthTank}. Levels defeated: $healthTanksCollected", e)
+                throw Exception(
+                    "Failed to remove health tank: ${healthTank}. Levels defeated: $healthTanksCollected",
+                    e
+                )
             }
         }
 

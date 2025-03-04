@@ -118,8 +118,7 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
                     body.physics.velocity.x = VEL_X * ConstVals.PPM * facing.value
 
                     if (shouldDrop()) {
-                        body.physics.velocity.setZero()
-                        state = SpikeCopterState.DROP
+                        setToDrop()
                         return@add
                     }
 
@@ -149,6 +148,11 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         }
     }
 
+    private fun setToDrop() {
+        body.physics.velocity.setZero()
+        state = SpikeCopterState.DROP
+    }
+
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(ConstVals.PPM.toFloat())
@@ -159,8 +163,23 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        val feetFixture =
-            Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
+        val leftFixture =
+            Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
+        leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
+        leftFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ -> setToDrop() }
+        body.addFixture(leftFixture)
+        leftFixture.drawingColor = Color.YELLOW
+        debugShapes.add { leftFixture }
+
+        val rightFixture =
+            Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
+        rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
+        rightFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ -> setToDrop() }
+        body.addFixture(rightFixture)
+        rightFixture.drawingColor = Color.YELLOW
+        debugShapes.add { rightFixture }
+
+        val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setHeight(0.1f * ConstVals.PPM))
         feetFixture.bodyAttachmentPosition = Position.BOTTOM_CENTER
         feetFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ -> explodeAndDie() }
         body.addFixture(feetFixture)
@@ -171,6 +190,8 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
             body.physics.gravity.y =
                 ConstVals.PPM * if (state == SpikeCopterState.DROP && dropDelay.isFinished()) GRAVITY else 0f
 
+            val feetWidth = if (state == SpikeCopterState.DROP) body.getWidth() else 0.5f * ConstVals.PPM
+            (feetFixture.rawShape as GameRectangle).setWidth(feetWidth)
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -232,12 +253,5 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     private fun explodeAndDie() {
         explode()
         destroy()
-    }
-
-    private fun updateFacing() {
-        when {
-            megaman.body.getMaxX() < body.getX() -> facing = Facing.LEFT
-            megaman.body.getX() > body.getMaxX() -> facing = Facing.RIGHT
-        }
     }
 }

@@ -183,7 +183,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
 
             val pos = posIter.next()
             when (pos) {
-                Position.CENTER -> putMegamanMugshot()
+                Position.CENTER -> putCenterScreenshot()
                 else -> {
                     val levelDef = levelDefIter.next()
                     levelDefGrid.put(pos, levelDef)
@@ -213,18 +213,23 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         return out.set(x, y)
     }
 
-    private fun putMegamanMugshot() {
+    private fun putCenterScreenshot() {
         val atlas = game.assMan.getTextureAtlas(TextureAsset.FACES_1.source)
 
-        val faces = ObjectMap<Position, TextureRegion>()
+        val megamanFaces = ObjectMap<Position, TextureRegion>()
         Position.entries.forEach { pos ->
             val region = atlas.findRegion("${Megaman.TAG}/${pos.name.lowercase()}")
-            faces.put(pos, region)
+            megamanFaces.put(pos, region)
         }
 
-        val faceSupplier: () -> TextureRegion = {
+        val wilyFace = atlas.findRegion("Wily")
+
+        val faceSupplier: () -> TextureRegion = faceSupplier@{
+            if (game.state.allRobotMasterLevelsDefeated()) return@faceSupplier wilyFace
+
             val position = Position.entries.find { it.name == buttonKey } ?: Position.CENTER
-            faces[position]
+            val megamanFace = megamanFaces[position]
+            return@faceSupplier megamanFace
         }
 
         val pos = getMugshotPosition(Position.CENTER, out)
@@ -240,7 +245,22 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
 
         buttons.put(Position.CENTER.name, object : IMenuButton {
 
-            override fun onSelect(delta: Float) = false
+            override fun onSelect(delta: Float): Boolean {
+                if (game.state.allRobotMasterLevelsDefeated()) {
+                    val wilyStage = game.state.getNextWilyStage()
+
+                    if (wilyStage == null) {
+                        GameLogger.error(TAG, "Next Wily stage is null")
+                        return false
+                    }
+
+                    select(wilyStage)
+
+                    return true
+                }
+
+                return false
+            }
 
             override fun onNavigate(direction: Direction, delta: Float) = Position.CENTER.move(direction).name
         })
@@ -262,6 +282,15 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         if (x > 2) x = 0
 
         return Position.get(x, y).name
+    }
+
+    private fun select(levelDef: LevelDefinition) {
+        game.audioMan.playSound(SoundAsset.BEAM_OUT_SOUND, false)
+        game.audioMan.stopMusic(null)
+
+        selectedLevelDef = levelDef
+
+        outro = true
     }
 
     private fun putBossMugshot(position: Position, levelDef: LevelDefinition) {
@@ -291,12 +320,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         buttons.put(position.name, object : IMenuButton {
 
             override fun onSelect(delta: Float): Boolean {
-                game.audioMan.playSound(SoundAsset.BEAM_OUT_SOUND, false)
-                game.audioMan.stopMusic(null)
-
-                selectedLevelDef = levelDef
-                outro = true
-
+                select(levelDef)
                 return true
             }
 

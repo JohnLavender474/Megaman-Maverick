@@ -58,7 +58,7 @@ class GreenUziJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGra
         const val TAG = "GreenUziJoe"
 
         private const val BLAST_START_DELAY = 0.125f
-        private const val BLAST_DUR = 2.25f
+        private const val BLAST_DUR = 2.5f
         private const val BLAST_END_DELAY = 0.125f
         private const val BLAST_COUNT = 10
         private const val BLAST_SPEED = 10f

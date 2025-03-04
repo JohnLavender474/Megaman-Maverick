@@ -175,6 +175,7 @@ comprehensive listing of the credits for the artwork used in this game.
     - Telly Saucer
   - [Random Enemies Set 7](https://www.deviantart.com/megared225/art/Random-Enemies-Set-7-539684729)
     - Iceskate Peng
+    - Duo-Ball Cannon
   - [Random Enemies Set 9](https://www.deviantart.com/megared225/art/Random-Enemy-Sprites-Set-9-557171615):
     - Fire Dispensenator
   - [Random Enemies Set 10](https://www.deviantart.com/megared225/art/Random-Enemy-Sprites-Set-10-571128501)
@@ -205,6 +206,7 @@ comprehensive listing of the credits for the artwork used in this game.
   - [Megaman 3 - Wily Stage 1 Tileset](https://www.spriters-resource.com/nes/mm3/sheet/16388/)
 - AxeW1eld3r
   - [Megaman 9 - Endless Attack Tileset](https://www.spriters-resource.com/wii/mm9/sheet/166545/)
+  - [Megaman 10 - Endless Attack Tileset](https://www.spriters-resource.com/wii/mm10/sheet/166546/)
 - Rabbid4240
   - [Megaman 9 - Magma Man Tileset](https://www.spriters-resource.com/wii/mm9/sheet/197901/)
 - Megaman Maker
