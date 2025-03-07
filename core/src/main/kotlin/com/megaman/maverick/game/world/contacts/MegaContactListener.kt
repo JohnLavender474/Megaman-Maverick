@@ -714,10 +714,10 @@ class MegaContactListener(
             printDebugLog(contact, "beginContact(): Laser-Block, contact=$contact")
             val (laserFixture, blockFixture) = contact.getFixturesInOrder(FixtureType.LASER, FixtureType.BLOCK, out)!!
 
-            val laserEntity = laserFixture.getEntity()
-            val blockEntity = blockFixture.getEntity()
+            val laserEntity = laserFixture.getEntity() as ILaserEntity
+            val blockEntity = blockFixture.getEntity() as Block
 
-            if (laserEntity != blockEntity) {
+            if (laserEntity != blockEntity && !laserEntity.isIgnoringBlock(blockEntity)) {
                 val blockRectangle = blockFixture.getShape() as GameRectangle
                 val laserLine = laserFixture.getProperty(ConstKeys.LINE, GameLine::class)!!
 
@@ -1098,10 +1098,10 @@ class MegaContactListener(
             printDebugLog(contact, "continueContact(): Laser-Block, contact=$contact")
             val (laserFixture, blockFixture) = contact.getFixturesInOrder(FixtureType.LASER, FixtureType.BLOCK, out)!!
 
-            val laserEntity = laserFixture.getEntity()
-            val blockEntity = blockFixture.getEntity()
+            val laserEntity = laserFixture.getEntity() as ILaserEntity
+            val blockEntity = blockFixture.getEntity() as Block
 
-            if (laserEntity != blockEntity) {
+            if (laserEntity != blockEntity && !laserEntity.isIgnoringBlock(blockEntity)) {
                 val blockRectangle = blockFixture.getShape() as GameRectangle
                 val laserLine = laserFixture.getProperty(ConstKeys.LINE, GameLine::class)!!
 

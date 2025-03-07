@@ -13,6 +13,7 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.enums.Size
+import com.mega.game.engine.common.extensions.epsilonEquals
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
@@ -246,8 +247,9 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     }
 
     private fun shouldDrop(): Boolean {
-        val center = megaman.body.getCenter()
-        return center.x >= body.getX() && center.x <= body.getMaxX() && center.y <= body.getMaxY()
+        val bodyCenter = body.getCenter()
+        val megamanCenter = megaman.body.getCenter()
+        return megamanCenter.y <= bodyCenter.y && bodyCenter.x.epsilonEquals(megamanCenter.x, 0.25f * ConstVals.PPM)
     }
 
     private fun explodeAndDie() {

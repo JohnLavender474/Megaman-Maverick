@@ -3,17 +3,24 @@ package com.megaman.maverick.game.entities.hazards
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectSet
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameLine
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -22,6 +29,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.motion.MotionComponent
@@ -36,23 +44,30 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.blocks.Block
+import com.megaman.maverick.game.entities.contracts.ILaserEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
+import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getEndPoint
 import com.megaman.maverick.game.utils.extensions.getOrigin
+import com.megaman.maverick.game.utils.extensions.toProps
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
 import java.util.*
 
 class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IBodyEntity, IDrawableShapesEntity,
-    IDamager {
+    ICullableEntity, ILaserEntity, IDamager {
 
     companion object {
         const val TAG = "LaserBeamer"
         private var region: TextureRegion? = null
         private val CONTACT_RADII = floatArrayOf(2f, 5f, 8f)
-        private const val SPEED = 2f
-        private const val RADIUS = 10f
+        private const val DEFAULT_SPEED = 2f
+        private const val DEFAULT_RADIUS = 10f
         private const val CONTACT_TIME = 0.05f
         private const val SWITCH_TIME = 1f
         private const val MIN_DEGREES = 200f
@@ -64,12 +79,17 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     private val switchTimer = Timer(SWITCH_TIME)
 
     private val laser = GameLine()
-    private val contactGlow = GameCircle()
+    private val contactGlow = GameCircle().also {
+        it.drawingColor = Color.WHITE
+        it.drawingShapeType = ShapeType.Filled
+    }
 
     private lateinit var rotatingLine: RotatingLine
 
     private lateinit var laserFixture: Fixture
     private lateinit var damagerFixture: Fixture
+
+    private lateinit var spawnRoom: String
 
     private val contacts = PriorityQueue { p1: Vector2, p2: Vector2 ->
         val origin = rotatingLine.getOrigin()
@@ -81,41 +101,71 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     private var clockwise = false
     private var contactIndex = 0
 
+    private var speed = 0f
+
+    private val blocksToIgnore = ObjectSet<Int>()
+
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
 
-        addComponent(MotionComponent())
+        val prodShapeSuppliers: Array<() -> IDrawableShape?> = gdxArrayOf({ contactGlow }, { damagerFixture })
+        addComponent(DrawableShapesComponent(prodShapeSuppliers = prodShapeSuppliers, debug = true))
+
+        addComponent(defineCullablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineUpdatablesComponent())
-
-        contactGlow.drawingColor = Color.WHITE
-        contactGlow.drawingShapeType = ShapeType.Filled
-
-        val prodShapeSuppliers: Array<() -> IDrawableShape?> = gdxArrayOf({ contactGlow }, { damagerFixture })
-        addComponent(DrawableShapesComponent(prodShapeSuppliers = prodShapeSuppliers, debug = true))
+        addComponent(MotionComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        rotatingLine = RotatingLine(spawn, RADIUS * ConstVals.PPM, SPEED * ConstVals.PPM, INIT_DEGREES)
+        val radius = spawnProps.getOrDefault(ConstKeys.RADIUS, DEFAULT_RADIUS, Float::class)
+        speed = spawnProps.getOrDefault(ConstKeys.SPEED, DEFAULT_SPEED, Float::class)
+        rotatingLine = RotatingLine(spawn, radius * ConstVals.PPM, speed * ConstVals.PPM, INIT_DEGREES)
 
         contactTimer.reset()
         switchTimer.reset()
+
+        spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
+
+        spawnProps.forEach { key, value ->
+            if (key.toString().contains(ConstKeys.BLOCK)) {
+                val id = (value as RectangleMapObject).toProps().get(ConstKeys.ID, Int::class)!!
+                blocksToIgnore.add(id)
+            }
+        }
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         contacts.clear()
+        blocksToIgnore.clear()
     }
+
+    override fun isIgnoringBlock(block: Block) = blocksToIgnore.contains(block.mapObjectId)
+
+    private fun defineCullablesComponent() = CullablesComponent(
+        objectMapOf(
+            ConstKeys.CULL_ROOM pairTo getStandardEventCullingLogic(
+                this,
+                objectSetOf(EventType.BEGIN_ROOM_TRANS),
+                predicate@{ event -> return@predicate !event.isProperty(ConstKeys.NAME, spawnRoom) }
+            )
+        )
+    )
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat())
+        body.drawingColor = Color.GRAY
+        addDebugShapeSupplier { body.getBounds() }
 
         laserFixture = Fixture(body, FixtureType.LASER, laser)
         laserFixture.putProperty(ConstKeys.COLLECTION, contacts)
@@ -127,11 +177,13 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         body.addFixture(damagerFixture)
 
         val shieldFixture = Fixture(
-            body, FixtureType.SHIELD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.85f * ConstVals.PPM)
+            body, FixtureType.SHIELD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.75f * ConstVals.PPM)
         )
         shieldFixture.offsetFromBodyAttachment.y = 0.5f * ConstVals.PPM
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
+        shieldFixture.drawingColor = Color.BLUE
+        addDebugShapeSupplier { shieldFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             laserFixture.putProperty(ConstKeys.LINE, rotatingLine.line)
@@ -177,7 +229,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
         if (switchTimer.isJustFinished()) {
             clockwise = !clockwise
-            var speed = SPEED * ConstVals.PPM
+            var speed = this.speed * ConstVals.PPM
             if (clockwise) speed *= -1f
             rotatingLine.speed = speed
 

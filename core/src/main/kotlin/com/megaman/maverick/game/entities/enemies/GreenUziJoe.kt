@@ -342,7 +342,7 @@ class GreenUziJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGra
                     if (direction.equalsAny(Direction.UP, Direction.LEFT)) facing.value else -facing.value
 
             when {
-                shielded -> damageableFixture.offsetFromBodyAttachment.x = 0.25f * ConstVals.PPM * when {
+                shielded -> damageableFixture.offsetFromBodyAttachment.x = 0.15f * ConstVals.PPM * when {
                     direction.equalsAny(Direction.UP, Direction.LEFT) -> -facing.value
                     else -> facing.value
                 }

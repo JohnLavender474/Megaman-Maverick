@@ -67,10 +67,10 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
-
         super.onSpawn(spawnProps)
+
+        putProperty("${ConstKeys.FEET}_${ConstKeys.SOUND}", false)
 
         val center = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         val bounds = GameRectangle().setSize(BODY_WIDTH * ConstVals.PPM, BODY_HEIGHT * ConstVals.PPM).setCenter(center)

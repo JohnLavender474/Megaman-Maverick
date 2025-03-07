@@ -79,6 +79,8 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         super.onSpawn(spawnProps)
 
+        putProperty("${ConstKeys.FEET}_${ConstKeys.SOUND}", false)
+
         game.eventsMan.addListener(this)
 
         direction =
