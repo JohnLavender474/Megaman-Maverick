@@ -219,7 +219,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         )
         cameraManagerForRooms.focus = megaman
         cameraManagerForRooms.beginTransition = {
-            GameLogger.debug(TAG, "Begin transition logic for camera manager")
+            GameLogger.debug(TAG, "begin transition logic for camera manager")
 
             eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
 
@@ -262,7 +262,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             game.putProperty(ConstKeys.ROOM_TRANSITION, true)
         }
         cameraManagerForRooms.endTransition = {
-            GameLogger.debug(TAG, "End transition logic for camera manager")
+            GameLogger.debug(TAG, "end transition logic for camera manager")
 
             val currentRoom = cameraManagerForRooms.currentGameRoom
             val hasEvent = currentRoom?.properties?.containsKey(ConstKeys.EVENT) == true
@@ -299,7 +299,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             megaman.running = false
         }
         cameraManagerForRooms.onSetToRoomNoTrans = {
-            GameLogger.debug(TAG, "On set to room no trans")
+            GameLogger.debug(TAG, "on set to room no trans")
             eventsMan.submitEvent(
                 Event(
                     EventType.SET_TO_ROOM_NO_TRANS,
@@ -316,7 +316,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     }
 
     override fun start(tmxMapSource: String) {
-        if (!initialized) throw IllegalStateException("Must call init() before start()")
+        if (!initialized) throw IllegalStateException("must call init() before start()")
 
         super.start(tmxMapSource)
 
@@ -328,7 +328,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         game.setRoomsSupplier { cameraManagerForRooms.gameRooms }
         game.setCurrentRoomSupplier { cameraManagerForRooms.currentGameRoom }
 
-        if (tiledMapLoadResult == null) throw IllegalStateException("No tiled map load result found in level screen")
+        if (tiledMapLoadResult == null) throw IllegalStateException("no tiled map load result found in level screen")
         game.setTiledMapLoadResult(tiledMapLoadResult!!)
 
         val worldContainer = SimpleGridWorldContainer(ConstVals.PPM)
