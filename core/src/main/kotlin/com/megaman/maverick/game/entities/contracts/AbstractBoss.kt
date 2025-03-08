@@ -109,12 +109,16 @@ abstract class AbstractBoss(
     var betweenReadyAndEndBossSpawnEvent = false
         private set
 
+    private var end = true
+
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
 
         game.eventsMan.addListener(this)
 
+        bossKey = spawnProps.getOrDefault("${ConstKeys.BOSS}_${ConstKeys.KEY}", "NO_BOSS_KEY", String::class)
         mini = spawnProps.getOrDefault(ConstKeys.MINI, false, Boolean::class)
+        end = spawnProps.getOrDefault(ConstKeys.END, true, Boolean::class)
 
         spawnProps.put(ConstKeys.DROP_ITEM_ON_DEATH, false)
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
@@ -124,12 +128,6 @@ abstract class AbstractBoss(
         betweenReadyAndEndBossSpawnEvent = false
 
         defeatTimer.setToEnd()
-
-        bossKey = spawnProps.getOrDefault(
-            "${ConstKeys.BOSS}_${ConstKeys.KEY}",
-            "NO_BOSS_KEY_FOR_ABSTRACT_BOSS",
-            String::class
-        )
 
         orbs = spawnProps.getOrDefault(ConstKeys.ORB, !mini, Boolean::class)
 
@@ -227,6 +225,8 @@ abstract class AbstractBoss(
         }
         return pointsComponent
     }
+
+    fun isEndLevelBoss() = !mini && end
 
     protected open fun playMusicOnSpawn() = !mini
 

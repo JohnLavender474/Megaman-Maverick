@@ -76,7 +76,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
     enum class GateType { STANDARD }
 
     override val eventKeyMask = objectSetOf<Any>(
-        EventType.PLAYER_SPAWN, EventType.END_ROOM_TRANS, EventType.MINI_BOSS_DEAD
+        EventType.PLAYER_SPAWN, EventType.END_ROOM_TRANS, EventType.INTERMEDIATE_BOSS_DEAD
     )
     override lateinit var direction: Direction
 
@@ -84,15 +84,13 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
     private lateinit var state: GateState
 
     private lateinit var nextRoomKey: String
-    private lateinit var thisBossKey: String
+    private var thisBossKey: String? = null
 
     private val center = Vector2()
-
     private val timer = Timer(DURATION)
 
     private var triggerable = true
     private var resettable = false
-    private var miniBossGate = false
     private var showCloseEvent = true
     private var transitionFinished = false
 
@@ -135,13 +133,13 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
         val typeString = spawnProps.getOrDefault(ConstKeys.TYPE, ConstKeys.STANDARD, String::class)
         type = GateType.valueOf(typeString.uppercase())
 
-        miniBossGate = spawnProps.getOrDefault("${ConstKeys.MINI}_${ConstKeys.BOSS}", false, Boolean::class)
-
-        thisBossKey = if (miniBossGate)
-            spawnProps.get("${ConstKeys.BOSS}_${ConstKeys.KEY}", String::class)!! else "NO_BOSS_KEY_FOR_GATE"
         nextRoomKey = spawnProps.get(ConstKeys.ROOM, String::class)!!
 
-        triggerable = spawnProps.getOrDefault(ConstKeys.TRIGGER, !miniBossGate, Boolean::class)
+        // If this gate has a boss key, then that means that it cannot be triggered until the boss with the boss key
+        // has been defeated. Conversely, if there is no boss key, then this gate is always triggerable.
+        thisBossKey = spawnProps.get("${ConstKeys.BOSS}_${ConstKeys.KEY}", String::class)
+        triggerable = spawnProps.getOrDefault(ConstKeys.TRIGGER, thisBossKey == null, Boolean::class)
+
         resettable = spawnProps.getOrDefault(ConstKeys.RESET, true, Boolean::class)
         showCloseEvent = spawnProps.getOrDefault(ConstKeys.CLOSE, true, Boolean::class)
 
@@ -165,14 +163,14 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
                 if (nextRoomKey == room.name) transitionFinished = true
             }
 
-            EventType.MINI_BOSS_DEAD -> {
-                if (miniBossGate) {
+            EventType.INTERMEDIATE_BOSS_DEAD -> {
+                thisBossKey?.let { it ->
                     val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
                     GameLogger.debug(
-                        TAG, "onEvent(): MINI_BOSS_DEAD: " +
+                        TAG, "onEvent(): INTERMEDIATE_BOSS_DEAD: " +
                             "this_boss_key=$thisBossKey, other_boss_key=${boss.bossKey}"
                     )
-                    if (thisBossKey == boss.bossKey) triggerable = true
+                    if (it == boss.bossKey) triggerable = true
                 }
             }
         }
@@ -180,9 +178,9 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
 
     override fun reset() {
         timer.reset()
-        transitionFinished = false
         state = GateState.OPENABLE
-        triggerable = !miniBossGate
+        transitionFinished = false
+        triggerable = thisBossKey == null
     }
 
     fun isTriggerable() = state == GateState.OPENABLE

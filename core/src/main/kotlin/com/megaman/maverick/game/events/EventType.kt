@@ -35,7 +35,8 @@ enum class EventType {
 
     BOSS_DEFEATED,
     BOSS_DEAD,
-    MINI_BOSS_DEAD,
+    // called when the boss that just died is NOT the end-level boss
+    INTERMEDIATE_BOSS_DEAD,
     VICTORY_EVENT,
     END_LEVEL,
 

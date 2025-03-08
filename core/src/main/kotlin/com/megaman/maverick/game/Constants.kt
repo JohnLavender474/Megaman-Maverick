@@ -93,6 +93,7 @@ object ConstKeys {
     const val DEFEATED = "defeated"
     const val STAND = "stand"
     const val FADE = "fade"
+    const val FADE_OUT_MUSIC = "fade_out_music"
     const val AMPLITUDE = "amplitude"
     const val DRIFT = "drift"
     const val SELECT = "select"

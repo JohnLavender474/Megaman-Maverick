@@ -89,7 +89,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         const val MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG = "MegaLevelScreenEventListener"
         private const val ROOM_DISTANCE_ON_TRANSITION = 2f
         private const val TRANSITION_SCANNER_SIZE = 5f
-        private const val FADE_OUT_MUSIC_ON_BOSS_SPAWN = 1f
+        private const val FADE_OUT_MUSIC_DUR = 1f
         private const val DISPLAY_ROOMS_DEBUG_TEXT = false
     }
 
@@ -117,7 +117,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         EventType.END_BOSS_SPAWN,
         EventType.BOSS_DEFEATED,
         EventType.BOSS_DEAD,
-        EventType.MINI_BOSS_DEAD,
+        EventType.INTERMEDIATE_BOSS_DEAD,
 
         EventType.VICTORY_EVENT,
         EventType.END_LEVEL,
@@ -224,13 +224,17 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
 
             val current = cameraManagerForRooms.currentGameRoom!!
+
+            if (current.properties.get(ConstKeys.FADE_OUT_MUSIC, Boolean::class.java) == true)
+                audioMan.fadeOutMusic(FADE_OUT_MUSIC_DUR)
+
             val prior = cameraManagerForRooms.priorGameRoom
 
             eventsMan.submitEvent(
                 Event(
                     EventType.BEGIN_ROOM_TRANS, props(
-                        ConstKeys.ROOM pairTo current,
                         ConstKeys.PRIOR pairTo prior,
+                        ConstKeys.ROOM pairTo current,
                         ConstKeys.NAME pairTo current.name,
                         "${ConstKeys.PRIOR}_${ConstKeys.NAME}" pairTo prior?.name,
                         ConstKeys.POSITION pairTo cameraManagerForRooms.transitionInterpolation,
@@ -248,8 +252,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 Event(
                     EventType.CONTINUE_ROOM_TRANS,
                     props(
-                        ConstKeys.ROOM pairTo cameraManagerForRooms.currentGameRoom,
                         ConstKeys.PRIOR pairTo cameraManagerForRooms.priorGameRoom,
+                        ConstKeys.ROOM pairTo cameraManagerForRooms.currentGameRoom,
                         ConstKeys.POSITION pairTo cameraManagerForRooms.transitionInterpolation
                     )
                 )
@@ -343,7 +347,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         if (DISPLAY_ROOMS_DEBUG_TEXT) {
             val roomsTextSupplier: () -> String = {
                 "current=${cameraManagerForRooms.currentGameRoom?.name} / " +
-                        "prior=${cameraManagerForRooms.priorGameRoom?.name}"
+                    "prior=${cameraManagerForRooms.priorGameRoom?.name}"
             }
             game.setDebugTextSupplier(roomsTextSupplier)
         }
@@ -532,10 +536,13 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 val bossMapObject = bossRoom.properties.get(ConstKeys.OBJECT, RectangleMapObject::class.java)
                 val bossSpawnProps = bossMapObject.properties.toProps()
 
+                // if this is a mini-boss
                 val mini = bossSpawnProps.getOrDefault(ConstKeys.MINI, false, Boolean::class)
-                if (!mini) {
-                    audioMan.fadeOutMusic(FADE_OUT_MUSIC_ON_BOSS_SPAWN)
-
+                // if this boss is at the end of the level
+                val end = bossSpawnProps.getOrDefault(ConstKeys.END, true, Boolean::class)
+                // if this is NOT a mini-boss AND this is the end of the level, then check if the
+                // victory event should be triggered (when the boss is already defeated)
+                if (!mini && end) {
                     val levelDef = game.getCurrentLevel()
                     if (game.state.isLevelDefeated(levelDef)) {
                         eventsMan.submitEvent(Event(EventType.VICTORY_EVENT))
@@ -626,13 +633,16 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 }
 
                 val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
-                val eventType = if (boss.mini) EventType.MINI_BOSS_DEAD else EventType.VICTORY_EVENT
+                val eventType = if (boss.isEndLevelBoss()) EventType.VICTORY_EVENT else EventType.INTERMEDIATE_BOSS_DEAD
                 eventsMan.submitEvent(Event(eventType, props(ConstKeys.BOSS pairTo boss)))
             }
 
-            EventType.MINI_BOSS_DEAD -> {
+            EventType.INTERMEDIATE_BOSS_DEAD -> {
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
                 megaman.canBeDamaged = true
+
+                val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
+                if (!boss.mini) audioMan.playMusic(music)
             }
 
             EventType.VICTORY_EVENT -> {
