@@ -719,7 +719,7 @@ class MegaContactListener(
 
             if (laserEntity != blockEntity && !laserEntity.isIgnoringBlock(blockEntity)) {
                 val blockRectangle = blockFixture.getShape() as GameRectangle
-                val laserLine = laserFixture.getProperty(ConstKeys.LINE, GameLine::class)!!
+                val laserLine = laserFixture.getShape() as GameLine
 
                 val intersections = laserFixture.getProperty(ConstKeys.COLLECTION) as MutableCollection<Vector2>
 
@@ -1103,7 +1103,7 @@ class MegaContactListener(
 
             if (laserEntity != blockEntity && !laserEntity.isIgnoringBlock(blockEntity)) {
                 val blockRectangle = blockFixture.getShape() as GameRectangle
-                val laserLine = laserFixture.getProperty(ConstKeys.LINE, GameLine::class)!!
+                val laserLine = laserFixture.getShape() as GameLine
 
                 val intersections = laserFixture.getProperty(ConstKeys.COLLECTION) as MutableCollection<Vector2>
 

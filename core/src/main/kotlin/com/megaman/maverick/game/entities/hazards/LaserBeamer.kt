@@ -78,7 +78,6 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     private val contactTimer = Timer(CONTACT_TIME)
     private val switchTimer = Timer(SWITCH_TIME)
 
-    private val laser = GameLine()
     private val contactGlow = GameCircle().also {
         it.drawingColor = Color.WHITE
         it.drawingShapeType = ShapeType.Filled
@@ -147,6 +146,8 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         super.onDestroy()
         contacts.clear()
         blocksToIgnore.clear()
+        laserFixture.setShape(GameLine())
+        damagerFixture.setShape(GameLine())
     }
 
     override fun isIgnoringBlock(block: Block) = blocksToIgnore.contains(block.mapObjectId)
@@ -167,12 +168,12 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         body.drawingColor = Color.GRAY
         addDebugShapeSupplier { body.getBounds() }
 
-        laserFixture = Fixture(body, FixtureType.LASER, laser)
+        laserFixture = Fixture(body, FixtureType.LASER, GameLine())
         laserFixture.putProperty(ConstKeys.COLLECTION, contacts)
         laserFixture.attachedToBody = false
         body.addFixture(laserFixture)
 
-        damagerFixture = Fixture(body, FixtureType.DAMAGER, laser)
+        damagerFixture = Fixture(body, FixtureType.DAMAGER, GameLine())
         damagerFixture.attachedToBody = false
         body.addFixture(damagerFixture)
 
@@ -186,20 +187,19 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         addDebugShapeSupplier { shieldFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            laserFixture.putProperty(ConstKeys.LINE, rotatingLine.line)
+            laserFixture.setShape(rotatingLine.line)
 
             contacts.clear()
         }
 
         body.postProcess.put(ConstKeys.DEFAULT) {
+            val laser = damagerFixture.rawShape as GameLine
+
             val origin = rotatingLine.getOrigin()
             laser.setFirstLocalPoint(origin)
 
             val end = if (contacts.isEmpty()) rotatingLine.getEndPoint() else contacts.peek()
             laser.setSecondLocalPoint(end)
-
-            laserFixture.setShape(laser)
-            damagerFixture.setShape(laser)
 
             contactGlow.setCenter(end)
         }

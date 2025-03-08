@@ -21,8 +21,8 @@ object MegamanValues {
     const val WATER_GRAVITY_SCALAR = 0.5f
     const val SWIM_VEL_Y = 14f
 
-    const val JUMP_VEL = 22f
-    const val WALL_JUMP_VEL = 30f
+    const val JUMP_VEL = 25f
+    const val WALL_JUMP_VEL = 35f
 
     const val WALL_SLIDE_FRICTION_TO_APPLY = 2.5f
 
@@ -30,8 +30,8 @@ object MegamanValues {
     const val WALL_JUMP_IMPETUS_TIME = 0.1f
 
     const val GROUND_GRAVITY = -0.001f
-    const val WALL_SLIDE_GRAVITY = -0.1f
-    const val JUMP_GRAVITY = -0.2f
+    const val WALL_SLIDE_GRAVITY = -0.125f
+    const val JUMP_GRAVITY = -0.25f
     const val FALL_GRAVITY = -0.5f
     const val ICE_GRAVITY = -0.75f
     const val WATER_GRAVITY = -0.25f

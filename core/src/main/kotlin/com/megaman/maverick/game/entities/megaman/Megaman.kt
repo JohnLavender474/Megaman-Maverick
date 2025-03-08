@@ -581,7 +581,6 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
         }
 
         stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
-
         requestToPlaySound(SoundAsset.MEGAMAN_DAMAGE_SOUND, false)
 
         damageListeners.forEach { it.onMegamanDamaged(damager, this) }
@@ -613,8 +612,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
                 body.getMaxX() > (game.getTiledMapLoadResult().map.properties.get(ConstKeys.WIDTH) as Int + DEATH_X_OFFSET) * ConstVals.PPM ||
                 body.getMaxY() > (game.getTiledMapLoadResult().map.properties.get(ConstKeys.HEIGHT) as Int + DEATH_Y_OFFSET) * ConstVals.PPM
             ) {
-                GameLogger.error(TAG, "Megaman is below game bounds, killing him")
-
+                GameLogger.error(TAG, "Megaman is below game bounds, kill him")
                 destroy()
             }
 

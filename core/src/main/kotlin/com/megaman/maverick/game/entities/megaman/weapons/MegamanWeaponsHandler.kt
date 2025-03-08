@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.equalsAny
@@ -91,6 +92,10 @@ data class MegaWeaponHandler(
         cullAllDead()
         cooldown.update(delta)
     }
+
+    override fun toString() = "MegaWeaponHandler{" +
+        "cooldown=${UtilMethods.roundFloat(cooldown.getRatio() * 100, 2)}%," +
+        "ammo=$ammo"
 }
 
 class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponSpawns: OrderedMap<String, IntPair> */) :
@@ -111,7 +116,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             entry.cooldown.setToEnd()
         }
 
-        GameLogger.debug(TAG, "reset(): weapons=$weaponHandlers")
+        GameLogger.debug(TAG, "reset()")
     }
 
     override fun update(delta: Float) = weaponHandlers.values().forEach { entry -> entry.update(delta) }
