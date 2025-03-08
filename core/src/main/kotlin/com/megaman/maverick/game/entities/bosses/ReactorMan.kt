@@ -59,6 +59,8 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val STAND_MAX_DUR = 0.75f
         private const val STAND_MIN_DUR = 0.25f
 
+        private const val INIT_DUR = 1f
+
         private const val RUN_DUR = 0.5f
         private const val RUN_MIN_SPEED = 8f
         private const val RUN_MAX_SPEED = 14f
@@ -84,6 +86,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     override lateinit var facing: Facing
 
     private val runTimer = Timer(RUN_DUR)
+    private val initTimer = Timer(INIT_DUR)
     private val throwTimer = Timer(THROW_DELAY)
     private val standTimer = Timer(STAND_MAX_DUR)
 
@@ -117,18 +120,19 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
         standTimer.reset()
         throwTimer.reset()
+        initTimer.reset()
         runTimer.reset()
 
         jumped = false
         throwOnJump = true
+        body.physics.gravityOn = true
 
         currentState = ReactorManState.STAND
-        facing = if (megaman.body.getX() <= body.getX()) Facing.LEFT else Facing.RIGHT
 
-        body.physics.gravityOn = true
+        facing = if (megaman.body.getX() <= body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
-    override fun isReady(delta: Float) = body.isSensing(BodySense.FEET_ON_GROUND)
+    override fun isReady(delta: Float) = initTimer.isFinished()
 
     override fun onReady() {
         GameLogger.debug(TAG, "onReady()")
@@ -154,6 +158,11 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 body.physics.velocity.setZero()
                 body.physics.gravityOn = false
                 explodeOnDefeat(delta)
+                return@add
+            }
+
+            if (!ready && body.isSensing(BodySense.FEET_ON_GROUND)) {
+                initTimer.update(delta)
                 return@add
             }
 
