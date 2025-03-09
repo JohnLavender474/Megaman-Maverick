@@ -642,7 +642,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 megaman.canBeDamaged = true
 
                 val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
-                if (!boss.mini) audioMan.playMusic(music)
+                if (!boss.mini) audioMan.playMusic(music, true)
             }
 
             EventType.VICTORY_EVENT -> {
