@@ -5,6 +5,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.animations.*
 import com.mega.game.engine.common.GameLogger
@@ -12,9 +13,7 @@ import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.UtilMethods.getRandomBool
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.interfaces.UpdateFunction
 import com.mega.game.engine.common.objects.GamePair
@@ -47,6 +46,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.contracts.ILightSourceEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.Splash.SplashType
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -56,10 +56,11 @@ import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
+import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IFaceable {
+class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, ILightSourceEntity, IFaceable {
 
     companion object {
         const val TAG = "DesertMan"
@@ -116,12 +117,20 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         private val NEEDLE_ANGLES = gdxArrayOf(90f, 70f, 45f, 15f, 0f, 345f, 315f, 290f, 270f)
         private val NEEDLE_X_OFFSETS = gdxArrayOf(-0.2f, -0.15f, -0.1f, -0.05f, 0f, 0.05f, 0.1f, 0.15f, 0.2f)
 
+        private const val LIGHT_SOURCE_RADIUS = 2
+        private const val LIGHT_SOURCE_RADIANCE = 1.5f
+
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
     private enum class DesertManState { INIT, STAND, JUMP, WALL_SLIDE, DANCE, PUNCH, TORNADO }
 
     override lateinit var facing: Facing
+    override val lightSourceKeys = ObjectSet<Int>()
+    override val lightSourceCenter: Vector2
+        get() = body.getCenter()
+    override var lightSourceRadius = LIGHT_SOURCE_RADIUS
+    override var lightSourceRadiance = LIGHT_SOURCE_RADIANCE
 
     private val timers = OrderedMap<String, Timer>()
 
@@ -140,6 +149,8 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
     private var longPunchingForward = false
 
     private var danceFlash = false
+
+    private var inDarkness = false
 
     override fun init() {
         if (regions.isEmpty) {
@@ -188,13 +199,30 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         rightWallBounds = spawnProps.get(
             "${ConstKeys.RIGHT}_${ConstKeys.WALL}", RectangleMapObject::class
         )!!.rectangle.toGameRectangle()
+
+        inDarkness = spawnProps.getOrDefault(ConstKeys.DARKNESS, false, Boolean::class)
+        if (inDarkness) lightSourceKeys.addAll(
+            spawnProps.get("${ConstKeys.LIGHT}_${ConstKeys.SOURCE}_${ConstKeys.KEYS}", String::class)!!
+                .replace("\\s+", "")
+                .split(",")
+                .filter { it.isNotBlank() }
+                .map { it.toInt() }
+                .toObjectSet()
+        )
     }
 
     override fun isReady(delta: Float) = timers[ConstKeys.INIT].isFinished()
 
     override fun onReady() {
+        GameLogger.debug(TAG, "onReady()")
         super.onReady()
         body.physics.gravityOn = true
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        lightSourceKeys.clear()
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -224,10 +252,13 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
                     if (danceFlash) {
                         val danceNeedlesTimer = timers["dance_needles"]
                         danceNeedlesTimer.update(delta)
+
                         if (danceNeedlesTimer.isFinished()) {
                             spawnNeedles()
                             danceNeedlesTimer.reset()
                         }
+
+                        if (inDarkness) LightSourceUtils.sendLightSourceEvent(game, this)
                     }
 
                     val danceTimer = timers["dance"]

@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.sensors
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
@@ -11,7 +12,6 @@ import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -52,6 +52,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
 class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudioEntity, ISpritesEntity, IEventListener,
@@ -227,6 +228,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
+        body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
@@ -234,6 +236,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
         val gateFixture = Fixture(body, FixtureType.GATE, GameRectangle())
         gateFixture.attachedToBody = false
         body.addFixture(gateFixture)
+        gateFixture.drawingColor = Color.WHITE
         debugShapes.add { gateFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
@@ -251,31 +254,26 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
             }
             size.scl(ConstVals.PPM.toFloat())
             body.setSize(size.x, size.y)
-
             body.setCenter(center)
 
-            val gateShape = gateFixture.rawShape as GameRectangle
+            val gate = gateFixture.rawShape as GameRectangle
             val gateSize = GameObjectPools.fetch(Vector2::class)
             when {
                 direction.isHorizontal() -> {
                     gateSize.x = 1f
-                    gateSize.y = 3f
+                    gateSize.y = 1.5f
                 }
 
                 else -> {
-                    gateSize.x = 3f
+                    gateSize.x = 1.5f
                     gateSize.y = 1f
                 }
             }
             gateSize.scl(ConstVals.PPM.toFloat())
-            gateShape.setSize(gateSize)
+            gate.setSize(gateSize)
 
-            when (direction) {
-                Direction.UP -> gateShape.setTopCenterToPoint(body.getPositionPoint(Position.TOP_CENTER))
-                Direction.DOWN -> gateShape.setBottomCenterToPoint(body.getPositionPoint(Position.BOTTOM_CENTER))
-                Direction.LEFT -> gateShape.setCenterLeftToPoint(body.getPositionPoint(Position.CENTER_LEFT))
-                Direction.RIGHT -> gateShape.setCenterRightToPoint(body.getPositionPoint(Position.CENTER_RIGHT))
-            }
+            val position = DirectionPositionMapper.getPosition(direction)
+            gate.positionOnPoint(body.getPositionPoint(position), position)
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

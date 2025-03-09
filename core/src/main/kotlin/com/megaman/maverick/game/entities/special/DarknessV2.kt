@@ -96,7 +96,6 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                 it as ChargedShotExplosion
                 if (it.fullyCharged) BRIGHTEST_LIGHT_SOURCE else BRIGHTER_LIGHT_SOURCE
             },
-            Needle::class pairTo { STANDARD_LIGHT_SOURCE },
             MoonScythe::class pairTo { BRIGHTEST_LIGHT_SOURCE },
             Fireball::class pairTo { BRIGHTER_LIGHT_SOURCE },
             DuoBall::class pairTo { STANDARD_LIGHT_SOURCE },

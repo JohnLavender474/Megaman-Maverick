@@ -62,10 +62,10 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), ILightSource
 
     override val eventKeyMask = objectSetOf<Any>(EventType.END_ROOM_TRANS)
     override var invincible = false // bulb blaster can never be damaged
-    override val keys = ObjectSet<Int>()
-    override var radius = RADIUS
-    override var radiance = RADIANCE
-    override val center: Vector2
+    override val lightSourceKeys = ObjectSet<Int>()
+    override var lightSourceRadius = RADIUS
+    override var lightSourceRadiance = RADIANCE
+    override val lightSourceCenter: Vector2
         get() = body.getCenter()
 
     private lateinit var spawnRoom: String
@@ -95,7 +95,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), ILightSource
         body.setCenter(spawn)
 
         light = spawnProps.getOrDefault(ConstKeys.LIGHT, false, Boolean::class)
-        keys.addAll(
+        lightSourceKeys.addAll(
             spawnProps.get(ConstKeys.KEYS, String::class)!!
             .replace("\\s+", "")
             .split(",")
@@ -124,7 +124,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), ILightSource
         game.eventsMan.removeListener(this)
         clearMotionDefinitions()
         light = false
-        keys.clear()
+        lightSourceKeys.clear()
     }
 
     override fun onEvent(event: Event) {

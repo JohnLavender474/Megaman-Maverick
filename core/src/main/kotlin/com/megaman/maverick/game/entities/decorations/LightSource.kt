@@ -31,11 +31,11 @@ open class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ILight
         private const val DEFAULT_RADIANCE = 1f
     }
 
-    override val keys = ObjectSet<Int>()
-    override val center: Vector2
+    override val lightSourceKeys = ObjectSet<Int>()
+    override val lightSourceCenter: Vector2
         get() = bounds.getCenter()
-    override var radiance = 0f
-    override var radius = 0
+    override var lightSourceRadiance = 0f
+    override var lightSourceRadius = 0
 
     protected lateinit var type: String
     protected lateinit var bounds: GameRectangle
@@ -52,15 +52,15 @@ open class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ILight
         super.onSpawn(spawnProps)
 
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-        keys.addAll(
+        lightSourceKeys.addAll(
             spawnProps.get(ConstKeys.KEYS, String::class)!!
                 .replace("\\s+", "")
                 .split(",")
                 .map { it.toInt() }
                 .toObjectSet()
         )
-        radiance = spawnProps.getOrDefault(ConstKeys.RADIANCE, DEFAULT_RADIANCE, Float::class)
-        radius = spawnProps.getOrDefault(ConstKeys.RADIUS, DEFAULT_RADIUS, Int::class)
+        lightSourceRadiance = spawnProps.getOrDefault(ConstKeys.RADIANCE, DEFAULT_RADIANCE, Float::class)
+        lightSourceRadius = spawnProps.getOrDefault(ConstKeys.RADIUS, DEFAULT_RADIUS, Int::class)
 
         val rawSpritePos = spawnProps.get("${ConstKeys.SPRITE}_${ConstKeys.POSITION}")
         spritePos = when (rawSpritePos) {
@@ -83,7 +83,7 @@ open class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ILight
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        keys.clear()
+        lightSourceKeys.clear()
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ LightSourceUtils.sendLightSourceEvent(game, this) })

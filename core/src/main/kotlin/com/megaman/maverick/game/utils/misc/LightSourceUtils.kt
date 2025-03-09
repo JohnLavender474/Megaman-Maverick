@@ -14,7 +14,7 @@ import com.megaman.maverick.game.events.EventType
 object LightSourceUtils {
 
     fun sendLightSourceEvent(game: MegamanMaverickGame, lightSource: ILightSourceEntity) =
-        sendLightSourceEvent(game, lightSource.keys, lightSource.center, lightSource.radiance, lightSource.radius)
+        sendLightSourceEvent(game, lightSource.lightSourceKeys, lightSource.lightSourceCenter, lightSource.lightSourceRadiance, lightSource.lightSourceRadius)
 
     fun sendLightSourceEvent(
         game: MegamanMaverickGame,

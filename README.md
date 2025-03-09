@@ -226,6 +226,7 @@ comprehensive listing of the credits for the artwork used in this game.
   - Main Menu - [MMX3 Intro Stage 8-Bit](https://youtu.be/jEPimSadiRE)
   - Intro Stage - [MMX2 Intro Stage 8-Bit](https://youtu.be/7omZK5SjNms)
   - Stage Select Menu - [MMX5 Stage Select 8-Bit](https://youtu.be/NooP1Ir2jp0)
+  - Stage Select (Wily) - [MMX5 Zero Stage 1 8-Bit](https://youtu.be/LegA_I5t5js)
   - Desert Man Stage - [MMX7 Vanishing Gungaroo 8-Bit](https://youtu.be/MFfZ-LEwcMo)
   - Moon Man Stage - [MMX5 Dark Necrobat 8-Bit](https://youtu.be/RosxPCxVOyk)
   - Glacier Man Stage - [MMX Chill Penguin 8-Bit](https://youtu.be/QWmsNV18S1g)
@@ -233,7 +234,7 @@ comprehensive listing of the credits for the artwork used in this game.
   - Rodent Man Stage - [MM7 Slash Man 8-Bit](https://youtu.be/24ECwWnh6Es)
   - Timber Woman Stage - [MMX3 Neon Tiger 8-Bit](https://youtu.be/cXiyGW0ulIY)
   - Precious Woman Stage - [MMX2 Crystal Snail 8-Bit](https://youtu.be/1qrbYy9qQdE)
-  - Robot Master Fight - [MMX6 Boss Fight 8-Bit](https://youtu.be/IeySHEF5U_8) 
+  - Robot Master Fight - [MMX6 Boss Fight 8-Bit](https://youtu.be/IeySHEF5U_8)
 - [vinnyz29](https://soundcloud.com/mega-vinnyz279)
   - Inferno Man Stage
 - Capcom

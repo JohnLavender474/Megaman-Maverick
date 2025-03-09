@@ -47,6 +47,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val DARKNESS = "darkness"
     const val FROZEN = "frozen"
     const val MOON = "moon"
     const val FIRE = "fire"
@@ -238,6 +239,7 @@ object ConstKeys {
     const val CENTER = "center"
     const val RADIUS = "radius"
     const val LIGHT = "light"
+    const val SOURCE = "source"
     const val KEYS = "keys"
     const val HIDDEN = "hidden"
     const val SOUND = "sound"

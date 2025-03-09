@@ -6,9 +6,8 @@ import com.mega.game.engine.entities.IGameEntity
 
 interface ILightSourceEntity : IGameEntity {
 
-    val keys: ObjectSet<Int>
-    val center: Vector2
-
-    var radius: Int
-    var radiance: Float
+    val lightSourceKeys: ObjectSet<Int>
+    val lightSourceCenter: Vector2
+    var lightSourceRadius: Int
+    var lightSourceRadiance: Float
 }
