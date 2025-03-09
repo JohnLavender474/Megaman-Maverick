@@ -303,6 +303,7 @@
   <object id="126" name="boss_room" x="9632" y="864" width="512" height="448">
    <properties>
     <property name="event" value="boss"/>
+    <property name="fade_out_music" type="bool" value="true"/>
     <property name="object" type="object" value="144"/>
    </properties>
   </object>

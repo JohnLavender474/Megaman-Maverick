@@ -47,6 +47,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val IGNORE = "ignore"
     const val DARKNESS = "darkness"
     const val FROZEN = "frozen"
     const val MOON = "moon"

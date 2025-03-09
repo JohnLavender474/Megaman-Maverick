@@ -253,6 +253,7 @@
   <object id="368" name="boss_room" x="11360" y="1472" width="512" height="448">
    <properties>
     <property name="event" value="boss"/>
+    <property name="fade_out_music" type="bool" value="true"/>
     <property name="object" type="object" value="375"/>
    </properties>
   </object>
@@ -268,6 +269,7 @@
   <object id="460" name="alt_path_boss_room" x="8256" y="2080" width="512" height="448">
    <properties>
     <property name="event" value="boss"/>
+    <property name="fade_out_music" type="bool" value="true"/>
     <property name="object" type="object" value="461"/>
    </properties>
   </object>

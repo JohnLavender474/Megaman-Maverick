@@ -2,6 +2,8 @@ package com.megaman.maverick.game.entities.hazards
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Position
@@ -36,6 +38,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.BreakableIce
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IFreezerEntity
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.explosions.SmokePuff
@@ -80,6 +83,8 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
         )
     }
 
+    private val ignoreHitsFromIds = ObjectSet<Int>()
+
     private var hitTimes = 0
     private var destroyOnHitBlock = false
     private var gravity = DEFAULT_GRAVITY
@@ -98,6 +103,7 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -134,11 +140,16 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
         destroyOnHitBlock = spawnProps.getOrDefault(ConstKeys.HIT_BY_BLOCK, false, Boolean::class)
         maxHitTimes = spawnProps.getOrDefault(ConstKeys.MAX, DEFAULT_MAX_HIT_TIMES, Int::class)
         hitTimes = 0
+
+        val blockIds = spawnProps.getOrDefault("${ConstKeys.IGNORE}_${ConstKeys.HIT}", Array<Int>()) as Iterable<Int>
+        blockIds.forEach { ignoreHitsFromIds.add(it) }
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) = shatterAndDie()
 
     override fun shatterAndDie() {
+        GameLogger.debug(TAG, "shatterAndDie()")
+
         destroy()
 
         for (i in 0 until 5) {
@@ -147,7 +158,15 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
         }
     }
 
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        ignoreHitsFromIds.clear()
+    }
+
     private fun smokePuff() {
+        GameLogger.debug(TAG, "smokePuff()")
+
         destroy()
 
         val puff = MegaEntityFactory.fetch(SmokePuff::class)!!
@@ -158,12 +177,23 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
 
     private fun getHit(entity: IGameEntity) {
         GameLogger.debug(TAG, "getHit(): entity=$entity")
+
+        if (entity == owner) {
+            GameLogger.debug(TAG, "getHit(): ignoring hit from owner")
+            return
+        }
+
+        val id = (entity as MegaGameEntity).mapObjectId
+        if (ignoreHitsFromIds.contains(id)) {
+            GameLogger.debug(TAG, "getHit(): ignoring hit from id=$id")
+            return
+        }
+
         when {
             SMOKE_PUFF_ENTITIES.contains(entity::class) -> smokePuff()
             INSTANT_DEATH_ENTITIES.contains(entity::class) -> shatterAndDie()
             else -> {
                 hitTimes++
-
                 when {
                     hitTimes > maxHitTimes -> shatterAndDie()
                     overlapsGameCamera() -> requestToPlaySound(SoundAsset.ICE_SHARD_1_SOUND, false)

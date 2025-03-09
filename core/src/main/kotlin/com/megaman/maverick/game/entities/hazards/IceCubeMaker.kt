@@ -3,7 +3,9 @@ package com.megaman.maverick.game.entities.hazards
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.collision.BoundingBox
+import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
@@ -53,6 +55,7 @@ class IceCubeMaker(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private val delayTimer = Timer(DELAY_TIME)
     private var runBounds: GameRectangle? = null
+    private var blockIds = ObjectSet<Int>()
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
@@ -63,6 +66,7 @@ class IceCubeMaker(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.TOP_CENTER)
@@ -73,14 +77,35 @@ class IceCubeMaker(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             RectangleMapObject::class
         )?.rectangle?.toGameRectangle(false)
 
+        spawnProps.forEach { key, value ->
+            if (key.toString().contains("${ConstKeys.IGNORE}_${ConstKeys.HIT}")) {
+                val id = (value as RectangleMapObject).properties.get(ConstKeys.ID, Int::class.java)!!
+                blockIds.add(id)
+            }
+        }
+
         delayTimer.reset()
     }
 
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        blockIds.clear()
+    }
+
     private fun dropIceCube() {
+        GameLogger.debug(TAG, "dropIceCube()")
+
         val spawn = body.getPositionPoint(Position.BOTTOM_CENTER).sub(0f, 0.2f * ConstVals.PPM)
 
         val icecube = MegaEntityFactory.fetch(SmallIceCube::class)!!
-        icecube.spawn(props(ConstKeys.POSITION pairTo spawn))
+        icecube.spawn(
+            props(
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.POSITION pairTo spawn,
+                "${ConstKeys.IGNORE}_${ConstKeys.HIT}" pairTo blockIds
+            )
+        )
 
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
     }

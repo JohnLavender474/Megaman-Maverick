@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="600" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="663">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="600" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="664">
  <tileset firstgid="1" source="../tsx/Blizzardman.tsx"/>
  <tileset firstgid="225" source="../tsx/GlacierManTileset.tsx"/>
  <layer id="12" name="tiles2" width="600" height="100">
@@ -544,6 +544,8 @@
  <objectgroup id="4" name="hazards">
   <object id="218" name="IceCubeMaker" x="5824" y="1504" width="32" height="32">
    <properties>
+    <property name="ignore_hit_1" type="object" value="216"/>
+    <property name="ignore_hit_2" type="object" value="217"/>
     <property name="run_bounds" type="object" value="215"/>
     <property name="spawn_room" value="room5"/>
     <property name="spawn_type" value="spawn_room"/>
@@ -551,6 +553,8 @@
   </object>
   <object id="270" name="IceCubeMaker" x="6688" y="1504" width="32" height="32">
    <properties>
+    <property name="ignore_hit_1" type="object" value="268"/>
+    <property name="ignore_hit_2" type="object" value="269"/>
     <property name="run_bounds" type="object" value="262"/>
     <property name="spawn_room" value="room5"/>
     <property name="spawn_type" value="spawn_room"/>
@@ -591,6 +595,8 @@
   </object>
   <object id="506" name="IceCubeMaker" x="12480" y="1536" width="32" height="32">
    <properties>
+    <property name="ignore_hit_1" type="object" value="517"/>
+    <property name="ignore_hit_2" type="object" value="518"/>
     <property name="run_bounds" type="object" value="504"/>
     <property name="spawn_room" value="room9"/>
     <property name="spawn_type" value="spawn_room"/>
@@ -598,6 +604,8 @@
   </object>
   <object id="508" name="IceCubeMaker" x="11872" y="1536" width="32" height="32">
    <properties>
+    <property name="ignore_hit_1" type="object" value="515"/>
+    <property name="ignore_hit_2" type="object" value="519"/>
     <property name="let" type="bool" value="true"/>
     <property name="run_bounds" type="object" value="509"/>
     <property name="spawn_room" value="room9"/>
@@ -1329,10 +1337,10 @@
   <object id="651" name="Init4" x="17816" y="1752" width="16" height="16"/>
   <object id="652" name="Init1" x="17848" y="1560" width="16" height="16"/>
  </objectgroup>
- <objectgroup id="8" name="temp">
-  <object id="623" name="0" x="17312" y="1792" width="32" height="32"/>
+ <objectgroup id="8" name="player">
+  <object id="663" name="0" x="5216" y="1568" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="6" name="player">
+ <objectgroup id="6" name="temp">
   <object id="12" name="0" x="128" y="2944" width="32" height="32"/>
   <object id="237" name="1" x="5184" y="1568" width="32" height="32"/>
   <object id="320" name="2" x="7360" y="2080" width="32" height="32">

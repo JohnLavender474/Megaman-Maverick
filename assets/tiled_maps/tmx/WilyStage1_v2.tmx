@@ -248,7 +248,11 @@
    </properties>
   </object>
   <object id="422" name="room10" x="17376" y="1440" width="512" height="448"/>
-  <object id="429" name="boss_room" x="17888" y="1440" width="512" height="448"/>
+  <object id="429" name="boss_room" x="17888" y="1440" width="512" height="448">
+   <properties>
+    <property name="fade_out_music" type="bool" value="true"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="10" name="children">
   <object id="52" name="Sensor" x="2224" y="2496" width="32" height="288"/>
@@ -754,7 +758,7 @@
     <property name="spawn_type" value="spawn_now"/>
    </properties>
   </object>
-  <object id="349" name="DarknessV2" x="14016" y="1440" width="4384" height="448">
+  <object id="349" name="DarknessV2" x="14208" y="1440" width="4192" height="448">
    <properties>
     <property name="key" type="int" value="1"/>
     <property name="room" value="room8,room9,desert_man_room,room10,boss_room"/>
