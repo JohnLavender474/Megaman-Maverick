@@ -122,6 +122,7 @@ comprehensive listing of the credits for the artwork used in this game.
   - Updated by [SamuelX4](https://www.deviantart.com/samuelx4)
 
 #### Megaman
+
 - Megaman complete spritesheet - [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/1137567721)
 
 #### Robot Masters
@@ -145,6 +146,7 @@ comprehensive listing of the credits for the artwork used in this game.
 - Desert Man - [rcrdcat](https://www.deviantart.com/rcrdcat/art/Desert-Man-Spritesheet-Mugshot-332165249)
 
 #### Other Bosses
+
 - Moon Head - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/MoonHead-Miniboss-Megaman-Maverick-1090151707)
 - Nuclear Monkey - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
 - Mecha Dragon - [Ansimuz](https://ansimuz.itch.io/mega-bot)
@@ -153,7 +155,12 @@ comprehensive listing of the credits for the artwork used in this game.
 - Penpen Maker - [Mister Mike](https://www.spriters-resource.com/nes/mm3/sheet/77911/) (currently not used)
 - Sphinx - [Mister Mike](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/108177/) (currently not used)
 
+### Dr. Wily
+
+- Wily Mugshot - [Toni](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/161866/?source=genre)
+
 #### Enemies
+
 - [Samuel_X7](https://www.deviantart.com/samuelx4)
   - Astro (Ass) Assaulter
   - Staged Moon Landing Flag
@@ -185,6 +192,7 @@ comprehensive listing of the credits for the artwork used in this game.
 - All other enemy sprites made by Capcom and sourced from https://www.spriters-resource.com/
 
 ### Blocks / Platforms
+
 - [Samuel_X7](https://www.deviantart.com/samuelx4):
   - Robot Master Entry Gate
   - Rocket Platform (Jeff Bezos' Little Dick Rocket)

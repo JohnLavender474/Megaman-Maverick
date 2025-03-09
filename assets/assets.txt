@@ -1506,6 +1506,7 @@ sprites/frames/Projectiles1/CaveRock/Burst.png
 sprites/frames/Projectiles1/SealionBall.png
 sprites/frames/Faces1/Rodent Man.png
 sprites/frames/Faces1/Glacier Man.png
+sprites/frames/Faces1/Wily.png
 sprites/frames/Faces1/Megaman/center.png
 sprites/frames/Faces1/Megaman/center_right.png
 sprites/frames/Faces1/Megaman/bottom_left.png
@@ -2393,6 +2394,7 @@ sprites/piskel/StageSelectScreen.piskel
 sprites/piskel/PauseMenu.piskel
 sprites/piskel/Electrocutie.piskel
 sprites/piskel/MaverickFaces.piskel
+sprites/piskel/Wily.piskel
 sprites/piskel/Arigock.piskel
 sprites/piskel/RocketBomb.piskel
 sprites/piskel/FireDispensenator.piskel
@@ -2943,6 +2945,7 @@ music/vinnyz_wip_1.mp3
 music/MMX5_DarkDizzy.txt
 music/MMX6_BossFight.txt
 music/MMZ_EnemyHall.txt
+music/MMX5_Zero_Stage_1.mp3
 music/MMX7_BossFight.mp3
 music/MM3_GameOver.mp3
 music/MMX_Sigma_2_Stage.mp3

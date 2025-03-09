@@ -12,119 +12,126 @@ Desert Man
   index: -1
 extras/MoonPieces
   rotate: false
-  xy: 0, 32
+  xy: 0, 288
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Glacier Man
   rotate: false
-  xy: 0, 80
+  xy: 32, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Inferno Man
   rotate: false
-  xy: 32, 80
+  xy: 0, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Megaman/bottom_center
   rotate: false
-  xy: 0, 112
+  xy: 32, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Megaman/bottom_left
   rotate: false
-  xy: 32, 112
+  xy: 0, 64
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Megaman/bottom_right
   rotate: false
-  xy: 0, 144
+  xy: 32, 64
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Megaman/center
   rotate: false
-  xy: 32, 144
+  xy: 0, 96
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Megaman/center_left
   rotate: false
-  xy: 0, 176
+  xy: 32, 96
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Megaman/center_right
   rotate: false
-  xy: 32, 176
+  xy: 0, 128
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Megaman/top_center
   rotate: false
-  xy: 0, 208
+  xy: 32, 128
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Megaman/top_left
   rotate: false
-  xy: 32, 208
+  xy: 0, 160
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Megaman/top_right
   rotate: false
-  xy: 0, 240
+  xy: 32, 160
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Moon Man
   rotate: false
-  xy: 32, 240
+  xy: 0, 192
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Precious Woman
   rotate: false
-  xy: 0, 272
+  xy: 32, 192
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Reactor Man
   rotate: false
-  xy: 32, 272
+  xy: 0, 224
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Rodent Man
   rotate: false
-  xy: 0, 304
+  xy: 32, 224
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Timber Woman
   rotate: false
-  xy: 32, 304
+  xy: 0, 256
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Wily
+  rotate: false
+  xy: 32, 256
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

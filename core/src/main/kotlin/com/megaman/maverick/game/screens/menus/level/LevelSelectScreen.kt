@@ -46,6 +46,8 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         private const val DEBUG_TEXT_BOUNDS = false
 
         private const val PRESS_START = "PRESS START"
+
+        private const val DR_WILY = "DR. WILY"
         private const val MEGA_MAN = "MEGA MAN"
 
         private const val BOSS_NAME_TEXT_X = 2f
@@ -148,7 +150,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
                 val key = buttonKey
                 when (key) {
                     BACK_BUTTON_KEY, null -> PRESS_START
-                    Position.CENTER.name -> MEGA_MAN
+                    Position.CENTER.name -> if (game.state.allRobotMasterLevelsDefeated()) DR_WILY else MEGA_MAN
                     else -> {
                         val position = Position.valueOf(key)
                         levelDefGrid[position].getFormattedName()
@@ -183,7 +185,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
 
             val pos = posIter.next()
             when (pos) {
-                Position.CENTER -> putCenterScreenshot()
+                Position.CENTER -> putCenterMugshot()
                 else -> {
                     val levelDef = levelDefIter.next()
                     levelDefGrid.put(pos, levelDef)
@@ -213,7 +215,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         return out.set(x, y)
     }
 
-    private fun putCenterScreenshot() {
+    private fun putCenterMugshot() {
         val atlas = game.assMan.getTextureAtlas(TextureAsset.FACES_1.source)
 
         val megamanFaces = ObjectMap<Position, TextureRegion>()
@@ -300,7 +302,6 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         )
         val faceSupplier: () -> TextureRegion = {
             when {
-                // TODO: replace with more interesting "defeated" mugshot region
                 game.state.isLevelDefeated(levelDef) -> regions[ConstKeys.BLACK]
                 else -> mugshotRegion
             }
@@ -362,7 +363,11 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
 
         game.getUiCamera().position.set(ConstFuncs.getUiCamInitPos())
 
-        game.audioMan.playMusic(MusicAsset.MMX5_STAGE_SELECT_MUSIC, true)
+        val musicAsset = when {
+            game.state.allRobotMasterLevelsDefeated() -> MusicAsset.MMX5_STAGE_SELECT_2_MUSIC
+            else -> MusicAsset.MMX5_STAGE_SELECT_1_MUSIC
+        }
+        game.audioMan.playMusic(musicAsset, true)
     }
 
     override fun onAnyMovement(direction: Direction) =
@@ -375,7 +380,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
             if (outro) outroTimer.update(delta)
             if (outroTimer.isJustFinished()) {
                 /*
-                TODO:
+                TODO
                 val bIntroScreen = game.screens.get(ScreenEnum.BOSS_INTRO_SCREEN.name) as BossIntroScreen
                 bIntroScreen.set(bSelect!!)
                 game.setCurrentScreen(ScreenEnum.BOSS_INTRO_SCREEN.name)

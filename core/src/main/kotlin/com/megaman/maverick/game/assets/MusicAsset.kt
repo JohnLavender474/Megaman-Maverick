@@ -42,7 +42,6 @@ enum class MusicAsset(src: String, val loop: Boolean = true, val onCompletion: (
     MM7_SLASH_MAN_MUSIC("MM7_SlashMan.mp3"),
     MMX3_NEON_TIGER_MUSIC("MMX3_NeonTiger.mp3"),
     MMX2_CRYSTAL_SNAIL_MUSIC("MMX2_CrystalSnail.mp3"),
-    MMX5_STAGE_SELECT_MUSIC("MMX5_StageSelect.mp3"),
     INFERNO_MAN_MUSIC_OLD("vinnyz_inferno_track_OLD.mp3"),
     INFERNO_MAN_INTRO_MUSIC(
         src = "vinnyz_inferno_intro_track.mp3",
@@ -53,7 +52,9 @@ enum class MusicAsset(src: String, val loop: Boolean = true, val onCompletion: (
     MMX5_BOSS_FIGHT_MUSIC("MMX5_BossFight.mp3"),
     MMX7_BOSS_FIGHT_MUSIC("MMX7_BossFight.mp3"),
     MMX_SIGMA_FORTRESS_1_MUSIC("MMX_Sigma1st.mp3"),
-    VINNYZ_WIP_1_MUSIC("vinnyz_wip_1.mp3");
+    VINNYZ_WIP_1_MUSIC("vinnyz_wip_1.mp3"),
+    MMX5_STAGE_SELECT_1_MUSIC("MMX5_StageSelect.mp3"),
+    MMX5_STAGE_SELECT_2_MUSIC("MMX5_Zero_Stage_1.mp3");
 
     companion object {
         fun valuesAsIAssetArray(): Array<IAsset> {
