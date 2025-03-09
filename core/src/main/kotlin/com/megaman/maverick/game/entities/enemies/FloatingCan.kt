@@ -43,6 +43,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
 
+// implements `IBossListener` to ensure is destroyed after each Reactor Monkey is defeated
 class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IBossListener, IAnimatedEntity {
 
     companion object {

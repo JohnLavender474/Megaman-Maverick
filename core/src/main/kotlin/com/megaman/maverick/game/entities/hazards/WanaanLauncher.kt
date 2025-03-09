@@ -3,7 +3,6 @@ package com.megaman.maverick.game.entities.hazards
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
@@ -40,23 +39,23 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
+import com.megaman.maverick.game.entities.contracts.IBossListener
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.enemies.Wanaan
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
-import com.megaman.maverick.game.entities.utils.getObjectProps
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 
+// implements `IBossListener` to ensure is destroyed after 2nd Reactor Man fight
 class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntity, IAudioEntity,
-    ICullableEntity, IDrawableShapesEntity, IDirectional {
+    ICullableEntity, IDrawableShapesEntity, IBossListener, IDirectional {
 
     companion object {
         const val TAG = "WanaanLauncher"
@@ -73,10 +72,8 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
 
     private val newWanaanDelay = Timer(NEW_WANAAN_DELAY)
     private val launchDelay = Timer(LAUNCH_DELAY)
-    private val sensors = Array<GameRectangle>()
+    private val sensor = GameRectangle()
     private var wanaan: Wanaan? = null
-
-    private val objs = Array<RectangleMapObject>()
 
     override fun init() {
         if (regions.isEmpty) {
@@ -96,8 +93,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        val children = getObjectProps(spawnProps, objs)
-        children.forEach { sensors.add(it.rectangle.toGameRectangle(false)) }
+        sensor.set(spawnProps.get(ConstKeys.SENSOR, RectangleMapObject::class)!!.rectangle)
 
         this.direction = when {
             spawnProps.containsKey(ConstKeys.DIRECTION) -> {
@@ -117,12 +113,14 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
         wanaan?.destroy()
         wanaan = null
 
-        sensors.clear()
-
-        val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
+        val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
 
         requestToPlaySound(SoundAsset.EXPLOSION_2_SOUND, false)
+    }
+
+    override fun onBossDefeated(boss: AbstractBoss) {
+        depleteHealth()
     }
 
     override fun onDestroy() {
@@ -130,8 +128,6 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
 
         wanaan?.destroy()
         wanaan = null
-
-        sensors.clear()
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -152,10 +148,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
 
             newWanaanDelay.update(delta)
 
-            if (wanaan == null &&
-                newWanaanDelay.isFinished() &&
-                sensors.any { it.overlaps(megaman.body.getBounds()) }
-            ) {
+            if (wanaan == null && newWanaanDelay.isFinished() && sensor.overlaps(megaman.body.getBounds())) {
                 spawnWanaan()
                 launchDelay.reset()
             } else if (wanaan != null) {

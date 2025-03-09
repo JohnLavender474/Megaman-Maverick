@@ -96,6 +96,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                 it as ChargedShotExplosion
                 if (it.fullyCharged) BRIGHTEST_LIGHT_SOURCE else BRIGHTER_LIGHT_SOURCE
             },
+            Needle::class pairTo { STANDARD_LIGHT_SOURCE },
             MoonScythe::class pairTo { BRIGHTEST_LIGHT_SOURCE },
             Fireball::class pairTo { BRIGHTER_LIGHT_SOURCE },
             DuoBall::class pairTo { STANDARD_LIGHT_SOURCE },
@@ -324,35 +325,31 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         val entities = MegaGameEntities.getOfTypes(
-            EntityType.MEGAMAN,
             EntityType.PROJECTILE,
             EntityType.EXPLOSION,
             EntityType.ENEMY
         )
         entities.forEach { entity -> tryToLightUp(entity) }
 
-        if (megaman.body.getBounds().overlaps(bounds)) {
+        if (megaman.ready && megaman.body.getBounds().overlaps(bounds)) {
+            val lightSourceDef = lightSourcePool.fetch()
+            lightSourceDef.center = megaman.body.getCenter()
+
             if (megaman.charging) {
                 val fullCharged = megaman.fullyCharged
-
-                val lightSourceDef = lightSourcePool.fetch()
-
-                lightSourceDef.center = megaman.body.getCenter()
                 lightSourceDef.radius =
                     (if (fullCharged) MEGAMAN_FULL_CHARGING_RADIUS else MEGAMAN_HALF_CHARGING_RADIUS) * ConstVals.PPM
                 lightSourceDef.radiance =
                     if (fullCharged) MEGAMAN_FULL_CHARGING_RADIANCE else MEGAMAN_HALF_CHARGING_RADIANCE
-
-                lightSourceQueue.addLast(lightSourceDef)
             } else if (megaman.isBehaviorActive(BehaviorType.JETPACKING)) {
-                val lightSourceDef = lightSourcePool.fetch()
-
-                lightSourceDef.center = megaman.body.getCenter()
                 lightSourceDef.radius = MEGAMAN_HALF_CHARGING_RADIUS * ConstVals.PPM
                 lightSourceDef.radiance = MEGAMAN_HALF_CHARGING_RADIANCE
-
-                lightSourceQueue.addLast(lightSourceDef)
+            } else {
+                lightSourceDef.radius = STANDARD_LIGHT_SOURCE.first * ConstVals.PPM
+                lightSourceDef.radiance = STANDARD_LIGHT_SOURCE.second
             }
+
+            lightSourceQueue.addLast(lightSourceDef)
         }
 
         val beaming = game.isProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)

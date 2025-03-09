@@ -617,8 +617,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 }
 
                 MegaGameEntities.forEach {
-                    if (it is IBossListener && it.getType() != EntityType.BOSS)
-                        it.onBossDefeated(boss)
+                    if (it is IBossListener && it.getType() != EntityType.BOSS) it.onBossDefeated(boss)
                 }
 
                 bossHealthHandler.unset()
