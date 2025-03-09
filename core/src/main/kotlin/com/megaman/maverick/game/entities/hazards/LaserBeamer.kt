@@ -15,6 +15,7 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameLine
+import com.mega.game.engine.common.shapes.GameLine.GameLineRenderingType
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
@@ -152,6 +153,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
             spawnProps.getOrDefault("${ConstKeys.LIGHT}_${ConstKeys.KEYS}", "", String::class)
                 .replace("\\s+", "")
                 .split(",")
+                .filter { it.isNotBlank() }
                 .map { it.toInt() }
                 .toObjectSet()
         )
@@ -219,6 +221,11 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
             laser.setSecondLocalPoint(end)
 
             contactGlow.setCenter(end)
+
+            laser.drawingColor = Color.RED
+            laser.drawingShapeType = ShapeType.Filled
+            laser.drawingThickness = 0.05f * ConstVals.PPM
+            laser.drawingRenderType = GameLineRenderingType.BOTH
         }
 
         return BodyComponentCreator.create(this, body)

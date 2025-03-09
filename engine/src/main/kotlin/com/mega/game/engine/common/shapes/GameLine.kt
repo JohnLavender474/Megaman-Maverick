@@ -29,6 +29,8 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
         }
     }
 
+    enum class GameLineRenderingType { LINE, RECT_LINE, BOTH }
+
     private val position = Vector2()
     private val localPoint1 = Vector2()
     private val localPoint2 = Vector2()
@@ -69,6 +71,8 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
 
     override var drawingColor: Color = Color.RED
     override var drawingShapeType = ShapeType.Line
+    var drawingRenderType = GameLineRenderingType.LINE
+    var drawingThickness = 0.1f
 
     private var dirty = true
 
@@ -128,7 +132,12 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
             "rotation" pairTo rotation,
 
             "origin_x" pairTo originX,
-            "origin_y" pairTo originY
+            "origin_y" pairTo originY,
+
+            "drawing_color" pairTo drawingColor,
+            "drawing_thickness" pairTo drawingThickness,
+            "drawing_shape_type" pairTo drawingShapeType,
+            "drawing_render_type" pairTo drawingRenderType
         )
 
         return out
@@ -150,6 +159,11 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
 
         originX = props.getOrDefault("origin_x", originX, Float::class)
         originY = props.getOrDefault("origin_y", originY, Float::class)
+
+        drawingColor = props.getOrDefault("drawing_color", drawingColor, Color::class)
+        drawingThickness = props.getOrDefault("drawing_thickness", drawingThickness, Float::class)
+        drawingShapeType = props.getOrDefault("drawing_shape_type", drawingShapeType, ShapeType::class)
+        drawingRenderType = props.getOrDefault("drawing_render_type", drawingRenderType, GameLineRenderingType::class)
 
         setToDirty()
 
@@ -324,7 +338,7 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
     override fun contains(point: Vector2): Boolean {
         calculateWorldPoints(reusableVec1, reusableVec2)
         return Intersector.pointLineSide(reusableVec1, reusableVec2, point) == 0 &&
-                point.x <= getMaxX() && point.x >= getX()
+            point.x <= getMaxX() && point.x >= getX()
     }
 
     override fun contains(x: Float, y: Float) = contains(reusableVec3.set(x, y))
@@ -455,8 +469,18 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
     override fun draw(renderer: ShapeRenderer): GameLine {
         renderer.color = drawingColor
         renderer.set(drawingShapeType)
+
         calculateWorldPoints(reusableVec1, reusableVec2)
-        renderer.line(reusableVec1, reusableVec2)
+
+        when (drawingRenderType) {
+            GameLineRenderingType.RECT_LINE -> renderer.rectLine(reusableVec1, reusableVec2, drawingThickness)
+            GameLineRenderingType.LINE -> renderer.line(reusableVec1, reusableVec2)
+            GameLineRenderingType.BOTH -> {
+                renderer.rectLine(reusableVec1, reusableVec2, drawingThickness)
+                renderer.line(reusableVec1, reusableVec2)
+            }
+        }
+
         return this
     }
 

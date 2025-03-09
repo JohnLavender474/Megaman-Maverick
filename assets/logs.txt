@@ -1,177 +1,833 @@
-===== SESSION STARTED: 2025-03-08T20:30:57.832047494 =====
-20:30:58 | DEBUG | MegamanMaverickGame | resize(): width=640, height=480
-20:30:58 | DEBUG | MegamanMaverickGame | resize(): width=1920, height=995
-20:30:58 | LOG | MegamanMaverickGame | pause()
-20:30:58 | LOG | MegamanMaverickGame | pause()
-20:30:58 | LOG | MegamanMaverickGame | resume()
-20:30:59 | DEBUG | Megaman | init()
-20:31:00 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=MEGA_BUSTER, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@c4c0b41
-20:31:00 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=null
-20:31:00 | DEBUG | GameState | addListener(): listener={ Megaman:[mapObjId=0, dead=false, hashCode=602830277] }, added=true
-20:31:00 | DEBUG | PlayerStatsHandler | init()
-20:31:00 | DEBUG | CameraManagerForRooms | set focus to { Megaman:[mapObjId=0, dead=false, hashCode=602830277] }
-20:31:00 | DEBUG | LevelPauseScreen | init(): buttonRegions={exit=options/exit, exit_selected=options/exit_selected, mega_buster=weapons/mega_buster, mega_buster_selected=weapons/mega_buster_selected, ice_cube=weapons/ice_cube, ice_cube_selected=weapons/ice_cube_selected, fire_ball=weapons/fire_ball, fire_ball_selected=weapons/fire_ball_selected, moon_scythe=weapons/moon_scythe, moon_scythe_selected=weapons/moon_scythe_selected, rush_jetpack=weapons/rush_jetpack, rush_jetpack_selected=weapons/rush_jetpack_selected, a=health_tanks/a, a_selected=health_tanks/a_selected, b=health_tanks/b, b_selected=health_tanks/b_selected, c=health_tanks/c, c_selected=health_tanks/c_selected, d=health_tanks/d, d_selected=health_tanks/d_selected}
-20:31:00 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = SIMPLE_INIT_GAME_SCREEN
-20:31:00 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = LEVEL_SCREEN
-20:31:00 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_SPAWN, properties=Properties({
+===== SESSION STARTED: 2025-03-08T20:57:41.943168870 =====
+20:57:42 | DEBUG | MegamanMaverickGame | resize(): width=640, height=480
+20:57:42 | DEBUG | MegamanMaverickGame | resize(): width=1920, height=995
+20:57:42 | LOG | MegamanMaverickGame | pause()
+20:57:42 | LOG | MegamanMaverickGame | pause()
+20:57:42 | LOG | MegamanMaverickGame | resume()
+20:57:43 | DEBUG | Megaman | init()
+20:57:43 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=MEGA_BUSTER, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@5dc3fcb7
+20:57:43 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=null
+20:57:43 | DEBUG | GameState | addListener(): listener={ Megaman:[mapObjId=0, dead=false, hashCode=1457148583] }, added=true
+20:57:43 | DEBUG | PlayerStatsHandler | init()
+20:57:43 | DEBUG | CameraManagerForRooms | set focus to { Megaman:[mapObjId=0, dead=false, hashCode=1457148583] }
+20:57:43 | DEBUG | LevelPauseScreen | init(): buttonRegions={exit=options/exit, exit_selected=options/exit_selected, mega_buster=weapons/mega_buster, mega_buster_selected=weapons/mega_buster_selected, ice_cube=weapons/ice_cube, ice_cube_selected=weapons/ice_cube_selected, fire_ball=weapons/fire_ball, fire_ball_selected=weapons/fire_ball_selected, moon_scythe=weapons/moon_scythe, moon_scythe_selected=weapons/moon_scythe_selected, rush_jetpack=weapons/rush_jetpack, rush_jetpack_selected=weapons/rush_jetpack_selected, a=health_tanks/a, a_selected=health_tanks/a_selected, b=health_tanks/b, b_selected=health_tanks/b_selected, c=health_tanks/c, c_selected=health_tanks/c_selected, d=health_tanks/d, d_selected=health_tanks/d_selected}
+20:57:43 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = SIMPLE_INIT_GAME_SCREEN
+20:57:44 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = LEVEL_SCREEN
+20:57:44 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_SPAWN, properties=Properties({
 }))
-20:31:00 | DEBUG | MegaLevelScreenEventListener | onEvent(): player spawn --> reset camera manager for rooms and spawn megaman
-20:31:00 | DEBUG | MegaLevelScreen | onEvent(): player spawn --> spawn Megaman: Properties({
-	[bounds=[13936.0,1408.0,32.0,32.0]]
-	[x=13936.0]
+20:57:44 | DEBUG | MegaLevelScreenEventListener | onEvent(): player spawn --> reset camera manager for rooms and spawn megaman
+20:57:44 | DEBUG | MegaLevelScreen | onEvent(): player spawn --> spawn Megaman: Properties({
+	[bounds=[7584.0,1568.0,32.0,32.0]]
+	[x=7584.0]
 	[height=32.0]
 	[id=345]
 	[name=0]
-	[y=1408.0]
+	[y=1568.0]
 	[width=32.0]
 })
-20:31:00 | DEBUG | Megaman | onSpawn(): spawnProps=Properties({
-	[bounds=[13936.0,1408.0,32.0,32.0]]
-	[x=13936.0]
+20:57:44 | DEBUG | Megaman | onSpawn(): spawnProps=Properties({
+	[bounds=[7584.0,1568.0,32.0,32.0]]
+	[x=7584.0]
 	[height=32.0]
 	[id=345]
 	[name=0]
-	[y=1408.0]
+	[y=1568.0]
 	[width=32.0]
 })
-20:31:00 | DEBUG | Megaman | direction-set(): value=UP
-20:31:00 | DEBUG | Megaman | direction-set(): value same as field
-20:31:00 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=MEGA_BUSTER
-20:31:00 | DEBUG | CameraManagerForRooms | update(): reset
-20:31:00 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = com.badlogic.gdx.maps.objects.RectangleMapObject@1108adc8
-20:31:02 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_READY, properties=Properties({
+20:57:44 | DEBUG | Megaman | direction-set(): value=UP
+20:57:44 | DEBUG | Megaman | direction-set(): value same as field
+20:57:44 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=MEGA_BUSTER
+20:57:44 | DEBUG | CameraManagerForRooms | update(): reset
+20:57:44 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = com.badlogic.gdx.maps.objects.RectangleMapObject@20011bf
+20:57:46 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_READY, properties=Properties({
 }))
-20:31:02 | DEBUG | MegaLevelScreenEventListener | onEvent(): player ready
-20:31:02 | DEBUG | MegamanControllerComponent | right actuator just pressed
-20:31:02 | DEBUG | MegamanControllerComponent | select actuator just released, attempt to set to next weapon
-20:31:02 | DEBUG | Megaman | setToNextWeapon(): no next weapon, stay on current weapon: MEGA_BUSTER
-20:31:03 | DEBUG | MegamanControllerComponent | select actuator just released, attempt to set to next weapon
-20:31:03 | DEBUG | Megaman | setToNextWeapon(): no next weapon, stay on current weapon: MEGA_BUSTER
-20:31:03 | DEBUG | MegamanControllerComponent | select actuator just released, attempt to set to next weapon
-20:31:03 | DEBUG | Megaman | setToNextWeapon(): no next weapon, stay on current weapon: MEGA_BUSTER
-20:31:03 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = RIGHT
-20:31:03 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
-20:31:03 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (13952.0,1536.0)
-20:31:03 | DEBUG | MegamanEventListener | BEGIN ROOM TRANS: position=(14194.077,1429.6)
-20:31:05 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (14464.0,1536.0)
-20:31:05 | DEBUG | MegaLevelScreen | end transition logic for camera manager
-20:31:05 | DEBUG | MegamanEventListener | endRoomTrans(): setVel=true
-20:31:05 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
-20:31:05 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
-20:31:05 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
-20:31:05 | DEBUG | MegamanControllerComponent | right actuator just pressed
-20:31:06 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-20:31:06 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-20:31:06 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-20:31:06 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-20:31:06 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-20:31:06 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-20:31:06 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-20:31:06 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-20:31:07 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-20:31:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-20:31:07 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-20:31:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-20:31:07 | DEBUG | MegamanControllerComponent | right actuator just released
-20:31:07 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-20:31:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-20:31:07 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-20:31:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-20:31:07 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-20:31:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-20:31:07 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-20:31:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-20:31:07 | DEBUG | MegamanControllerComponent | right actuator just pressed
-20:31:07 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-20:31:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-20:31:07 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-20:31:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-20:31:07 | DEBUG | MegamanControllerComponent | right actuator just released
-20:31:08 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-20:31:08 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-20:31:08 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-20:31:08 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-20:31:08 | DEBUG | MegamanControllerComponent | right actuator just pressed
-20:31:08 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
-20:31:08 | DEBUG | MegamanControllerComponent | right actuator just released
-20:31:16 | DEBUG | MegamanControllerComponent | right actuator just pressed
-20:31:17 | DEBUG | MegamanControllerComponent | right actuator just released
-20:31:17 | DEBUG | MegamanControllerComponent | right actuator just pressed
-20:31:18 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-20:31:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-20:31:18 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-20:31:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-20:31:18 | DEBUG | MegamanControllerComponent | right actuator just released
-20:31:18 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-20:31:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-20:31:18 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-20:31:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-20:31:19 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-20:31:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-20:31:19 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-20:31:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-20:31:19 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-20:31:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-20:31:19 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-20:31:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-20:31:19 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-20:31:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-20:31:19 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-20:31:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-20:31:21 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-20:31:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-20:31:21 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-20:31:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-20:31:21 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
-20:31:21 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-20:31:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-20:31:21 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-20:31:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-20:31:21 | DEBUG | MegamanControllerComponent | right actuator just pressed
-20:31:22 | DEBUG | MegamanControllerComponent | right actuator just released
-20:31:22 | DEBUG | MegamanControllerComponent | left actuator just pressed
-20:31:23 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
+20:57:46 | DEBUG | MegaLevelScreenEventListener | onEvent(): player ready
+20:57:46 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:57:46 | DEBUG | MegamanControllerComponent | right actuator just released
+20:57:47 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:57:47 | DEBUG | MegamanControllerComponent | right actuator just released
+20:57:48 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:57:48 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+20:57:49 | DEBUG | MegamanControllerComponent | right actuator just released
+20:57:49 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:57:49 | DEBUG | MegamanControllerComponent | right actuator just released
+20:57:50 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:57:50 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:57:50 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:57:50 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:57:50 | DEBUG | Megaman | takeDamageFrom(): healthDiff=3, damager={ Bullet:[mapObjId=0, dead=false, hashCode=724525007] }
+20:57:50 | DEBUG | MegamanControllerComponent | attack actuator just released, do not shoot: stunned=false, damaged=true, game.isCameraRotating=false, teleporting=false, ready=true, canFireWeapon=true
+20:57:50 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:57:51 | DEBUG | MegamanControllerComponent | attack actuator just released, do not shoot: stunned=false, damaged=true, game.isCameraRotating=false, teleporting=false, ready=true, canFireWeapon=true
+20:57:51 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:57:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:57:51 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:57:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:57:51 | DEBUG | MegamanControllerComponent | right actuator just released
+20:57:51 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:57:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:57:51 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:57:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:57:51 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:57:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:57:51 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:57:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:57:51 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:57:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:57:51 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:57:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:57:51 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:57:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:57:51 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:57:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:57:51 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:57:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:57:51 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:57:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:57:52 | DEBUG | MegamanControllerComponent | attack actuator just released, do not shoot: stunned=false, damaged=false, game.isCameraRotating=false, teleporting=false, ready=true, canFireWeapon=false
+20:57:52 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:57:52 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:57:52 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:57:52 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:57:52 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:57:52 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:57:52 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:57:52 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:57:52 | DEBUG | Megaman | takeDamageFrom(): healthDiff=3, damager={ DuoBall:[mapObjId=0, dead=false, hashCode=789885174] }
+20:57:52 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+20:57:52 | DEBUG | MegamanControllerComponent | attack actuator just released, do not shoot: stunned=false, damaged=true, game.isCameraRotating=false, teleporting=false, ready=true, canFireWeapon=true
+20:57:53 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:57:54 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
 	[value=3]
 }))
-20:31:23 | DEBUG | GameState | addCurrency(): added 3 to currency
-20:31:23 | DEBUG | MegamanControllerComponent | right actuator just pressed
-20:31:23 | DEBUG | MegamanControllerComponent | left actuator just released
-20:31:24 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-20:31:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-20:31:24 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-20:31:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-20:31:24 | DEBUG | MegamanControllerComponent | right actuator just released
-20:31:24 | DEBUG | MegamanControllerComponent | right actuator just pressed
-20:31:25 | DEBUG | MegamanControllerComponent | right actuator just released
-20:31:25 | DEBUG | MegamanControllerComponent | right actuator just pressed
-20:31:25 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
-20:31:26 | DEBUG | MegamanControllerComponent | right actuator just released
-20:31:32 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-20:31:32 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-20:31:32 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-20:31:32 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-20:31:33 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
-20:31:34 | DEBUG | MegamanControllerComponent | right actuator just pressed
-20:31:34 | DEBUG | MegamanControllerComponent | right actuator just released
-20:31:36 | DEBUG | MegamanControllerComponent | left actuator just pressed
-20:31:36 | DEBUG | MegamanControllerComponent | left actuator just released
-20:31:36 | DEBUG | MegamanControllerComponent | right actuator just pressed
-20:31:36 | DEBUG | MegamanControllerComponent | right actuator just released
-20:31:40 | DEBUG | MegamanControllerComponent | right actuator just pressed
-20:31:41 | DEBUG | MegamanControllerComponent | right actuator just released
-20:31:41 | DEBUG | MegamanControllerComponent | left actuator just pressed
-20:31:41 | DEBUG | MegamanControllerComponent | left actuator just released
-20:31:42 | DEBUG | MegamanControllerComponent | right actuator just pressed
-20:31:42 | DEBUG | MegamanControllerComponent | right actuator just released
-20:31:46 | LOG | MegamanMaverickGame | pause()
-20:31:46 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
-20:31:46 | DEBUG | LevelPauseScreen | show(): currentButtonKey=mega_buster, node=TableNode{ element=MEGA_BUSTER, row=0, column=0 }, table=Table{
+20:57:54 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): currentAmmo=2147483647, maxAmmo=30
+20:57:54 | DEBUG | MegamanControllerComponent | right actuator just released
+20:57:55 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:57:55 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+20:57:56 | DEBUG | MegamanControllerComponent | right actuator just released
+20:57:56 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:57:56 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:57:56 | DEBUG | MegamanControllerComponent | left actuator just released
+20:57:56 | DEBUG | MegamanControllerComponent | right actuator just released
+20:57:58 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:57:58 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:57:58 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:57:58 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:57:58 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:57:58 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+20:57:59 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
+	[value=6]
+}))
+20:57:59 | DEBUG | GameState | addCurrency(): added 6 to currency
+20:58:00 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+20:58:00 | DEBUG | MegamanControllerComponent | right actuator just released
+20:58:00 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:58:01 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+20:58:01 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:58:01 | DEBUG | MegamanControllerComponent | left actuator just released
+20:58:01 | DEBUG | MegamanControllerComponent | right actuator just released
+20:58:02 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:58:02 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:58:02 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:58:02 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:58:02 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:58:03 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+20:58:04 | DEBUG | MegamanControllerComponent | right actuator just released
+20:58:04 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+20:58:05 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:58:05 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_OPENING, properties=Properties({
+}))
+20:58:05 | DEBUG | MegaLevelScreenEventListener | onEvent(): gate init opening --> start room transition
+20:58:05 | DEBUG | MegamanEventListener | GATE_INIT_OPENING
+20:58:06 | DEBUG | MegamanControllerComponent | right actuator just released
+20:58:06 | LOG | MegaLevelScreen | event(): event=Event(key=NEXT_ROOM_REQ, properties=Properties({
+	[room=room6]
+}))
+20:58:06 | DEBUG | MegaLevelScreenEventListener | onEvent(): next room req --> start room transition
+20:58:06 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = RIGHT
+20:58:06 | DEBUG | MegaLevelScreenEventListener | onEvent(): next room req --> successfully starting transition to room: room6
+20:58:06 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+20:58:06 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (8928.0,1536.0)
+20:58:06 | DEBUG | MegamanEventListener | BEGIN ROOM TRANS: position=(9136.0,1516.0)
+20:58:07 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (9440.0,1536.0)
+20:58:07 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+20:58:07 | DEBUG | MegamanEventListener | endRoomTrans(): setVel=true
+20:58:07 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:58:07 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_CLOSING, properties=Properties({
+}))
+20:58:07 | DEBUG | MegaLevelScreenEventListener | onEvent(): gate init closing
+20:58:08 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:58:08 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:58:08 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:58:08 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:58:09 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_OPENING, properties=Properties({
+}))
+20:58:09 | DEBUG | MegaLevelScreenEventListener | onEvent(): gate init opening --> start room transition
+20:58:09 | DEBUG | MegamanEventListener | GATE_INIT_OPENING
+20:58:09 | DEBUG | MegamanControllerComponent | right actuator just released
+20:58:09 | LOG | MegaLevelScreen | event(): event=Event(key=NEXT_ROOM_REQ, properties=Properties({
+	[room=reactor_man_room]
+}))
+20:58:09 | DEBUG | MegaLevelScreenEventListener | onEvent(): next room req --> start room transition
+20:58:09 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = RIGHT
+20:58:09 | DEBUG | MegaLevelScreenEventListener | onEvent(): next room req --> successfully starting transition to room: reactor_man_room
+20:58:09 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+20:58:09 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (9440.0,1536.0)
+20:58:09 | DEBUG | MegamanEventListener | BEGIN ROOM TRANS: position=(9645.062,1516.0)
+20:58:11 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (9952.0,1536.0)
+20:58:11 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+20:58:11 | LOG | MegaLevelScreen | event(): event=Event(key=ENTER_BOSS_ROOM, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@67c2b55d]
+}))
+20:58:11 | DEBUG | MegaLevelScreenEventListener | onEvent(): enter boss room
+20:58:11 | DEBUG | MegamanEventListener | endRoomTrans(): setVel=false
+20:58:11 | DEBUG | AbstractBoss | onSpawn(): spawnProps=Properties({
+	[boss_key=1]
+	[bounds=[10112.0,1664.0,32.0,32.0]]
+	[x=10112.0]
+	[height=32.0]
+	[end=false]
+	[id=263]
+	[y=1664.0]
+	[width=32.0]
+})
+20:58:11 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+20:58:11 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_CLOSING, properties=Properties({
+}))
+20:58:11 | DEBUG | MegaLevelScreenEventListener | onEvent(): gate init closing
+20:58:13 | DEBUG | ReactorMan | onReady()
+20:58:13 | DEBUG | AbstractBoss | onReady()
+20:58:13 | LOG | MegaLevelScreen | event(): event=Event(key=BOSS_READY, properties=Properties({
+	[boss={ ReactorMan:[mapObjId=263, dead=false, hashCode=1640056267] }]
+	[health_fill_type=BIT_BY_BIT]
+}))
+20:58:15 | LOG | MegaLevelScreen | event(): event=Event(key=END_BOSS_SPAWN, properties=Properties({
+}))
+20:58:15 | DEBUG | AbstractBoss | onEvent: event=Event(key=END_BOSS_SPAWN, properties=Properties({
+}))
+20:58:15 | LOG | ReactorMan | onEvent: event=Event(key=END_BOSS_SPAWN, properties=Properties({
+}))
+20:58:15 | DEBUG | AbstractBoss | onEndBossSpawnEvent()
+20:58:16 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:58:17 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:58:17 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+20:58:17 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+20:58:17 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:58:17 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:58:17 | DEBUG | MegamanControllerComponent | left actuator just released
+20:58:18 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:58:18 | DEBUG | MegamanControllerComponent | right actuator just released
+20:58:19 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:58:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:58:19 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:58:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:58:19 | DEBUG | MegamanControllerComponent | left actuator just released
+20:58:19 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:58:20 | DEBUG | MegamanControllerComponent | right actuator just released
+20:58:20 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:58:20 | DEBUG | MegamanControllerComponent | left actuator just released
+20:58:20 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:58:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+20:58:20 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+20:58:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:58:20 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:58:21 | DEBUG | MegamanControllerComponent | right actuator just released
+20:58:21 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:58:21 | DEBUG | MegamanControllerComponent | right actuator just released
+20:58:21 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:58:22 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:58:22 | DEBUG | MegamanControllerComponent | left actuator just released
+20:58:22 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:58:22 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:58:22 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:58:22 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:58:22 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:58:22 | DEBUG | MegamanControllerComponent | right actuator just released
+20:58:24 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:58:24 | DEBUG | MegamanControllerComponent | left actuator just released
+20:58:24 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:58:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:58:24 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:58:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:58:26 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:58:26 | DEBUG | MegamanControllerComponent | right actuator just released
+20:58:26 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:58:26 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:58:26 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:58:26 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:58:26 | DEBUG | MegamanControllerComponent | left actuator just released
+20:58:26 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:58:27 | DEBUG | MegamanControllerComponent | left actuator just released
+20:58:27 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:58:27 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:58:27 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:58:27 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:58:27 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:58:27 | DEBUG | MegamanControllerComponent | right actuator just released
+20:58:28 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:58:29 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:58:29 | DEBUG | MegamanControllerComponent | left actuator just released
+20:58:29 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:58:29 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+20:58:29 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+20:58:29 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:58:31 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:58:31 | DEBUG | MegamanControllerComponent | right actuator just released
+20:58:31 | DEBUG | MegamanControllerComponent | left actuator just released
+20:58:31 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:58:31 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:58:31 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:58:31 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:58:32 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:58:33 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:58:33 | DEBUG | MegamanControllerComponent | left actuator just released
+20:58:33 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:58:33 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:58:33 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:58:33 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:58:33 | DEBUG | MegamanControllerComponent | right actuator just released
+20:58:33 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:58:34 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:58:34 | DEBUG | MegamanControllerComponent | left actuator just released
+20:58:34 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:58:34 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+20:58:34 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+20:58:34 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:58:36 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:58:36 | DEBUG | MegamanControllerComponent | right actuator just released
+20:58:36 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:58:36 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+20:58:36 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+20:58:36 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:58:36 | DEBUG | MegamanControllerComponent | left actuator just released
+20:58:36 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:58:37 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:58:37 | DEBUG | MegamanControllerComponent | left actuator just released
+20:58:37 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:58:37 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:58:37 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:58:37 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:58:38 | DEBUG | MegamanControllerComponent | right actuator just released
+20:58:38 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:58:39 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:58:39 | DEBUG | MegamanControllerComponent | left actuator just released
+20:58:39 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:58:39 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+20:58:39 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+20:58:39 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:58:40 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:58:40 | DEBUG | MegamanControllerComponent | right actuator just released
+20:58:41 | DEBUG | MegamanControllerComponent | left actuator just released
+20:58:41 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:58:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+20:58:41 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+20:58:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:58:41 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:58:42 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:58:42 | DEBUG | MegamanControllerComponent | left actuator just released
+20:58:42 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:58:42 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:58:42 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:58:42 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:58:42 | DEBUG | MegamanControllerComponent | right actuator just released
+20:58:42 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:58:44 | DEBUG | MegamanControllerComponent | left actuator just released
+20:58:44 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:58:44 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:58:44 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+20:58:44 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+20:58:44 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:58:45 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:58:45 | DEBUG | MegamanControllerComponent | right actuator just released
+20:58:45 | DEBUG | MegamanControllerComponent | left actuator just released
+20:58:45 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:58:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:58:45 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:58:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:58:46 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:58:47 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:58:47 | DEBUG | MegamanControllerComponent | left actuator just released
+20:58:47 | DEBUG | MegamanControllerComponent | right actuator just released
+20:58:47 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:58:47 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:58:47 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:58:47 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:58:47 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:58:48 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:58:48 | DEBUG | MegamanControllerComponent | left actuator just released
+20:58:48 | DEBUG | MegamanControllerComponent | right actuator just released
+20:58:49 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:58:49 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+20:58:49 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+20:58:49 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:58:49 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:58:49 | DEBUG | AbstractBoss | triggerDefeat()
+20:58:49 | LOG | MegaLevelScreen | event(): event=Event(key=BOSS_DEFEATED, properties=Properties({
+	[boss={ ReactorMan:[mapObjId=263, dead=false, hashCode=1640056267] }]
+}))
+20:58:49 | DEBUG | MegaLevelScreenEventListener | onEvent(): boss defeated
+20:58:49 | DEBUG | MegamanControllerComponent | right actuator just released
+20:58:49 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:58:49 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:58:49 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:58:49 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:58:52 | DEBUG | AbstractBoss | update(): defeat timer finished
+20:58:52 | LOG | MegaLevelScreen | event(): event=Event(key=BOSS_DEAD, properties=Properties({
+	[boss={ ReactorMan:[mapObjId=263, dead=true, hashCode=1640056267] }]
+}))
+20:58:52 | DEBUG | MegaLevelScreenEventListener | onEvent(): boss dead
+20:58:52 | DEBUG | ReactorMan | onDestroy()
+20:58:52 | DEBUG | AbstractBoss | onDestroy()
+20:58:52 | LOG | ReactorMan | onDestroy()
+20:58:52 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+20:58:52 | LOG | MegaLevelScreen | event(): event=Event(key=INTERMEDIATE_BOSS_DEAD, properties=Properties({
+	[boss={ ReactorMan:[mapObjId=263, dead=true, hashCode=1640056267] }]
+}))
+20:58:52 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:58:55 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_OPENING, properties=Properties({
+}))
+20:58:55 | DEBUG | MegaLevelScreenEventListener | onEvent(): gate init opening --> start room transition
+20:58:55 | DEBUG | MegamanEventListener | GATE_INIT_OPENING
+20:58:55 | DEBUG | MegamanControllerComponent | right actuator just released
+20:58:55 | LOG | MegaLevelScreen | event(): event=Event(key=NEXT_ROOM_REQ, properties=Properties({
+	[room=room7]
+}))
+20:58:55 | DEBUG | MegaLevelScreenEventListener | onEvent(): next room req --> start room transition
+20:58:55 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = RIGHT
+20:58:55 | DEBUG | MegaLevelScreenEventListener | onEvent(): next room req --> successfully starting transition to room: room7
+20:58:55 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+20:58:55 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (9952.0,1536.0)
+20:58:55 | DEBUG | MegamanEventListener | BEGIN ROOM TRANS: position=(10157.332,1388.0)
+20:58:57 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (10464.0,1536.0)
+20:58:57 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+20:58:57 | DEBUG | MegamanEventListener | endRoomTrans(): setVel=true
+20:58:57 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_CLOSING, properties=Properties({
+}))
+20:58:57 | DEBUG | MegaLevelScreenEventListener | onEvent(): gate init closing
+20:58:57 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:01 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:01 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:01 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:01 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:01 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+20:59:01 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+20:59:01 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:01 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:02 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+20:59:02 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:03 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:04 | DEBUG | Megaman | takeDamageFrom(): healthDiff=3, damager={ GreenUziJoe:[mapObjId=291, dead=false, hashCode=627677863] }
+20:59:04 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:04 | DEBUG | MegamanControllerComponent | attack actuator just released, do not shoot: stunned=false, damaged=true, game.isCameraRotating=false, teleporting=false, ready=true, canFireWeapon=true
+20:59:04 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+20:59:04 | DEBUG | MegamanControllerComponent | attack actuator just released, do not shoot: stunned=false, damaged=true, game.isCameraRotating=false, teleporting=false, ready=true, canFireWeapon=true
+20:59:04 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:04 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:04 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:04 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:04 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:04 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:04 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:04 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:04 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:04 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:05 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:05 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:05 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:05 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:05 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:05 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:05 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:05 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:05 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:05 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:06 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:06 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:06 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:06 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:06 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:06 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:06 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:06 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:06 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+20:59:06 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:06 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:06 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:06 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:06 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:07 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+	[value=3]
+}))
+20:59:07 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): currentAmmo=2147483647, maxAmmo=30
+20:59:07 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:59:07 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:07 | DEBUG | MegamanControllerComponent | left actuator just released
+20:59:07 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+20:59:07 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+20:59:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:07 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:59:08 | DEBUG | MegamanControllerComponent | left actuator just released
+20:59:08 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:08 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:08 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:08 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:08 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:08 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:08 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:08 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:08 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:08 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:08 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:08 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:08 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:08 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:08 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:08 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:08 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:09 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+20:59:09 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:09 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:09 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:09 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:09 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:09 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:09 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:09 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:59:09 | DEBUG | MegamanControllerComponent | left actuator just released
+20:59:10 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:10 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:59:10 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:59:10 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:11 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+20:59:11 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:59:12 | DEBUG | MegamanControllerComponent | left actuator just released
+20:59:12 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
+	[value=3]
+}))
+20:59:12 | DEBUG | PlayerStatsHandler | addHealth(): healthMegamanNeeds=9, value=3
+20:59:12 | DEBUG | PlayerStatsHandler | addHealth(): value less than what Megaman needs, don't add any to health tanks
+20:59:12 | DEBUG | PlayerStatsHandler | addHealth(): add runnable to timer: time=0.0
+20:59:12 | DEBUG | PlayerStatsHandler | addHealth(): add runnable to timer: time=0.075
+20:59:12 | DEBUG | PlayerStatsHandler | addHealth(): add runnable to timer: time=0.15
+20:59:12 | DEBUG | PlayerStatsHandler | addHealth(): add timer to queue: queue.size=1
+20:59:12 | DEBUG | PlayerStatsHandler | addHealth(): shut off all systems expect sprites system
+20:59:12 | DEBUG | PlayerStatsHandler | addHealth(): timer: translate health by one
+20:59:12 | DEBUG | PlayerStatsHandler | addHealth(): timer: translate health by one
+20:59:12 | DEBUG | PlayerStatsHandler | addHealth(): timer: translate health by one
+20:59:12 | DEBUG | PlayerStatsHandler | update(): timer just finished: pop timer from queue: queue.size=0
+20:59:12 | DEBUG | PlayerStatsHandler | update(): timer queue just emptied: turn on all systems
+20:59:13 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+20:59:13 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+20:59:13 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:15 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:15 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+20:59:15 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:15 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:15 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:59:15 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:59:15 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:16 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:16 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:17 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:17 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+20:59:17 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+20:59:17 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:17 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+20:59:19 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:59:19 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:59:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:19 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+20:59:19 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:21 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:22 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:23 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+20:59:23 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:24 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:59:24 | DEBUG | MegamanControllerComponent | left actuator just released
+20:59:25 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:25 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:59:25 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:59:25 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:25 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+20:59:25 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:26 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:27 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:27 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:27 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:27 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:27 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:27 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:27 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:27 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:27 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:27 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:27 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:27 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:28 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:28 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:28 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+20:59:28 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:28 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:28 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:59:28 | DEBUG | MegamanControllerComponent | left actuator just released
+20:59:29 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:29 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:29 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:59:29 | DEBUG | MegamanControllerComponent | left actuator just released
+20:59:30 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:30 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:59:30 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:59:30 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:30 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:30 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+20:59:31 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+20:59:33 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+20:59:33 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+20:59:33 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+20:59:34 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:34 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:59:34 | DEBUG | MegamanControllerComponent | left actuator just released
+20:59:35 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:35 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+20:59:35 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+20:59:35 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:35 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:35 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:35 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:35 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:35 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:35 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:35 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:35 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:35 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+20:59:35 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:35 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:35 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:35 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:35 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:35 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:35 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:35 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:36 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:59:37 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
+	[value=3]
+}))
+20:59:37 | DEBUG | PlayerStatsHandler | addHealth(): healthMegamanNeeds=6, value=3
+20:59:37 | DEBUG | PlayerStatsHandler | addHealth(): value less than what Megaman needs, don't add any to health tanks
+20:59:37 | DEBUG | PlayerStatsHandler | addHealth(): add runnable to timer: time=0.0
+20:59:37 | DEBUG | PlayerStatsHandler | addHealth(): add runnable to timer: time=0.075
+20:59:37 | DEBUG | PlayerStatsHandler | addHealth(): add runnable to timer: time=0.15
+20:59:37 | DEBUG | PlayerStatsHandler | addHealth(): add timer to queue: queue.size=1
+20:59:37 | DEBUG | PlayerStatsHandler | addHealth(): shut off all systems expect sprites system
+20:59:37 | DEBUG | PlayerStatsHandler | addHealth(): timer: translate health by one
+20:59:37 | DEBUG | PlayerStatsHandler | addHealth(): timer: translate health by one
+20:59:37 | DEBUG | PlayerStatsHandler | addHealth(): timer: translate health by one
+20:59:37 | DEBUG | PlayerStatsHandler | update(): timer just finished: pop timer from queue: queue.size=0
+20:59:37 | DEBUG | PlayerStatsHandler | update(): timer queue just emptied: turn on all systems
+20:59:39 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:39 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:39 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:59:39 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:59:39 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:39 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:39 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:39 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:39 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:40 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:40 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:40 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:40 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:40 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:40 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:40 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:40 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:40 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:40 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:40 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:40 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:40 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:40 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:40 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:40 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:40 | DEBUG | Megaman | takeDamageFrom(): healthDiff=2, damager={ GreenPelletBlast:[mapObjId=0, dead=false, hashCode=811410552] }
+20:59:40 | DEBUG | MegamanControllerComponent | attack actuator just released, do not shoot: stunned=false, damaged=true, game.isCameraRotating=false, teleporting=false, ready=true, canFireWeapon=true
+20:59:40 | DEBUG | MegamanControllerComponent | attack actuator just released, do not shoot: stunned=false, damaged=true, game.isCameraRotating=false, teleporting=false, ready=true, canFireWeapon=true
+20:59:40 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:41 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:41 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:41 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:41 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:41 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:41 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:41 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:41 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:41 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:41 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:41 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:41 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:42 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+20:59:42 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:42 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:42 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:42 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:42 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:42 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:42 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:42 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:42 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:42 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:42 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:59:42 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:59:42 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:42 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:42 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
+	[value=3]
+}))
+20:59:42 | DEBUG | PlayerStatsHandler | addHealth(): healthMegamanNeeds=5, value=3
+20:59:42 | DEBUG | PlayerStatsHandler | addHealth(): value less than what Megaman needs, don't add any to health tanks
+20:59:42 | DEBUG | PlayerStatsHandler | addHealth(): add runnable to timer: time=0.0
+20:59:42 | DEBUG | PlayerStatsHandler | addHealth(): add runnable to timer: time=0.075
+20:59:42 | DEBUG | PlayerStatsHandler | addHealth(): add runnable to timer: time=0.15
+20:59:42 | DEBUG | PlayerStatsHandler | addHealth(): add timer to queue: queue.size=1
+20:59:42 | DEBUG | PlayerStatsHandler | addHealth(): shut off all systems expect sprites system
+20:59:42 | DEBUG | PlayerStatsHandler | addHealth(): timer: translate health by one
+20:59:42 | DEBUG | PlayerStatsHandler | addHealth(): timer: translate health by one
+20:59:42 | DEBUG | PlayerStatsHandler | addHealth(): timer: translate health by one
+20:59:42 | DEBUG | PlayerStatsHandler | update(): timer just finished: pop timer from queue: queue.size=0
+20:59:42 | DEBUG | PlayerStatsHandler | update(): timer queue just emptied: turn on all systems
+20:59:43 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+20:59:43 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+20:59:44 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:45 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:59:45 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:59:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:45 | DEBUG | Megaman | takeDamageFrom(): healthDiff=2, damager={ GreenPelletBlast:[mapObjId=0, dead=false, hashCode=811410552] }
+20:59:45 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+20:59:46 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:49 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:49 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:50 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+20:59:51 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+20:59:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:59:51 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:59:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:59:52 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = RIGHT
+20:59:52 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+20:59:52 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (13952.0,1536.0)
+20:59:52 | DEBUG | MegamanEventListener | BEGIN ROOM TRANS: position=(14192.074,1429.6)
+20:59:53 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (14464.0,1536.0)
+20:59:53 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+20:59:53 | DEBUG | MegamanEventListener | endRoomTrans(): setVel=true
+20:59:53 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+20:59:53 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+20:59:53 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+20:59:53 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:55 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:55 | DEBUG | MegamanControllerComponent | left actuator just pressed
+20:59:55 | DEBUG | MegamanControllerComponent | left actuator just released
+20:59:55 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:55 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:56 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:57 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:57 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:58 | DEBUG | MegamanControllerComponent | right actuator just released
+20:59:58 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+20:59:58 | DEBUG | MegamanControllerComponent | right actuator just pressed
+20:59:58 | DEBUG | MegamanControllerComponent | right actuator just released
+21:00:04 | DEBUG | MegamanControllerComponent | right actuator just pressed
+21:00:05 | DEBUG | MegamanControllerComponent | right actuator just released
+21:00:05 | DEBUG | Megaman | takeDamageFrom(): healthDiff=3, damager={ Explosion:[mapObjId=0, dead=false, hashCode=548108014] }
+21:00:05 | DEBUG | MegamanControllerComponent | right actuator just pressed
+21:00:05 | DEBUG | MegamanControllerComponent | attack actuator just released, do not shoot: stunned=false, damaged=true, game.isCameraRotating=false, teleporting=false, ready=true, canFireWeapon=true
+21:00:06 | DEBUG | MegamanControllerComponent | right actuator just released
+21:00:06 | DEBUG | MegamanControllerComponent | right actuator just pressed
+21:00:06 | DEBUG | MegamanControllerComponent | right actuator just released
+21:00:07 | DEBUG | MegamanControllerComponent | right actuator just pressed
+21:00:07 | DEBUG | MegamanControllerComponent | right actuator just released
+21:00:07 | DEBUG | Megaman | takeDamageFrom(): healthDiff=3, damager={ DuoBall:[mapObjId=0, dead=false, hashCode=789885174] }
+21:00:07 | DEBUG | MegamanControllerComponent | attack actuator just released, do not shoot: stunned=false, damaged=true, game.isCameraRotating=false, teleporting=false, ready=true, canFireWeapon=true
+21:00:08 | DEBUG | MegamanControllerComponent | attack actuator just released, do not shoot: stunned=false, damaged=true, game.isCameraRotating=false, teleporting=false, ready=true, canFireWeapon=true
+21:00:08 | DEBUG | MegamanControllerComponent | right actuator just pressed
+21:00:09 | DEBUG | MegamanControllerComponent | right actuator just released
+21:00:12 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+21:00:12 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+21:00:12 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+21:00:12 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+21:00:12 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+21:00:12 | DEBUG | MegamanControllerComponent | right actuator just pressed
+21:00:13 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+	[value=6]
+}))
+21:00:13 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): currentAmmo=2147483647, maxAmmo=30
+21:00:14 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+21:00:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+21:00:14 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+21:00:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+21:00:15 | DEBUG | MegamanControllerComponent | right actuator just released
+21:00:15 | DEBUG | MegamanControllerComponent | right actuator just pressed
+21:00:16 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
+21:00:17 | DEBUG | MegamanControllerComponent | right actuator just released
+21:00:17 | DEBUG | MegamanControllerComponent | right actuator just pressed
+21:00:17 | DEBUG | MegamanControllerComponent | right actuator just released
+21:00:18 | DEBUG | MegamanControllerComponent | left actuator just pressed
+21:00:18 | DEBUG | MegamanControllerComponent | right actuator just pressed
+21:00:18 | DEBUG | MegamanControllerComponent | left actuator just released
+21:00:18 | DEBUG | MegamanControllerComponent | right actuator just released
+21:00:18 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
+21:00:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+21:00:18 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+21:00:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+21:00:19 | DEBUG | Megaman | takeDamageFrom(): healthDiff=2, damager={ GreenPelletBlast:[mapObjId=0, dead=false, hashCode=1954507866] }
+21:00:19 | DEBUG | MegamanControllerComponent | attack actuator just released, do not shoot: stunned=false, damaged=true, game.isCameraRotating=false, teleporting=false, ready=true, canFireWeapon=true
+21:00:19 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+21:00:19 | DEBUG | MegamanControllerComponent | right actuator just pressed
+21:00:20 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
+	[value=3]
+}))
+21:00:20 | DEBUG | GameState | addCurrency(): added 3 to currency
+21:00:20 | DEBUG | MegamanControllerComponent | right actuator just released
+21:00:21 | DEBUG | MegamanControllerComponent | left actuator just pressed
+21:00:21 | DEBUG | MegamanControllerComponent | left actuator just released
+21:00:21 | DEBUG | MegamanControllerComponent | right actuator just pressed
+21:00:21 | DEBUG | MegamanControllerComponent | right actuator just released
+21:00:23 | DEBUG | MegamanControllerComponent | left actuator just pressed
+21:00:23 | DEBUG | MegamanControllerComponent | left actuator just released
+21:00:23 | DEBUG | MegamanControllerComponent | right actuator just pressed
+21:00:23 | DEBUG | MegamanControllerComponent | right actuator just released
+21:00:26 | LOG | MegamanMaverickGame | pause()
+21:00:26 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
+21:00:26 | DEBUG | LevelPauseScreen | show(): currentButtonKey=mega_buster, node=TableNode{ element=MEGA_BUSTER, row=0, column=0 }, table=Table{
 	[TableNode{ element=MEGA_BUSTER, row=0, column=0 }]
 	[TableNode{ element=exit, row=1, column=0 }]
 }, buttons=[mega_buster, exit], buttonSprites=[exit, mega_buster]
-20:31:46 | LOG | MegamanMaverickGame | dispose()
-20:31:46 | DEBUG | Megaman | onDestroy()
-20:31:46 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
-20:31:46 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
-20:31:46 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
-20:31:46 | DEBUG | MegaLevelScreen | dispose(): Disposing level screen
+21:00:26 | LOG | MegamanMaverickGame | dispose()
+21:00:26 | DEBUG | Megaman | onDestroy()
+21:00:26 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+21:00:26 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+21:00:26 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
+21:00:26 | DEBUG | MegaLevelScreen | dispose(): Disposing level screen
