@@ -12,6 +12,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -29,6 +30,7 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -91,7 +93,8 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), ILightSource
         body.setCenter(spawn)
 
         light = spawnProps.getOrDefault(ConstKeys.LIGHT, false, Boolean::class)
-        keys.addAll(spawnProps.get(ConstKeys.KEYS, String::class)!!
+        keys.addAll(
+            spawnProps.get(ConstKeys.KEYS, String::class)!!
             .replace("\\s+", "")
             .split(",")
             .map { it.toInt() }
@@ -145,12 +148,15 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), ILightSource
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(ConstVals.PPM.toFloat())
-        return BodyComponentCreator.create(
-            this,
-            body,
-            BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.SHIELD)
-        )
+        body.setSize(1.5f * ConstVals.PPM)
+
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(0.75f * ConstVals.PPM))
+        body.addFixture(shieldFixture)
+
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.75f * ConstVals.PPM))
+        body.addFixture(damagerFixture)
+
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.BODY))
     }
 
     override fun defineSpritesComponent(): SpritesComponent {

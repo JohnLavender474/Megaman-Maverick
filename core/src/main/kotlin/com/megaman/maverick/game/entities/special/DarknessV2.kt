@@ -40,10 +40,7 @@ import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.ExplosionOrb
 import com.megaman.maverick.game.entities.explosions.SpreadExplosion
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.projectiles.ArigockBall
-import com.megaman.maverick.game.entities.projectiles.Bullet
-import com.megaman.maverick.game.entities.projectiles.CactusMissile
-import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.getBounds
@@ -100,6 +97,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                 it as ChargedShotExplosion
                 if (it.fullyCharged) BRIGHTEST_LIGHT_SOURCE else BRIGHTER_LIGHT_SOURCE
             },
+            DuoBall::class pairTo { STANDARD_LIGHT_SOURCE },
             ArigockBall::class pairTo { STANDARD_LIGHT_SOURCE },
             CactusMissile::class pairTo { BRIGHTER_LIGHT_SOURCE },
             Explosion::class pairTo { BRIGHTER_LIGHT_SOURCE },
