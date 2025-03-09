@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.utils
 
 import com.badlogic.gdx.math.Vector2
+import com.mega.game.engine.common.UtilMethods
 import com.megaman.maverick.game.ConstVals
 import kotlin.math.roundToInt
 
@@ -45,4 +46,7 @@ object MegaUtilMethods {
 
         return out.set(impulseX, impulseY)
     }
+
+    fun interpolate(start: Vector2, target: Vector2, delta: Float) =
+        UtilMethods.interpolate(start, target, delta, GameObjectPools.fetch(Vector2::class))
 }

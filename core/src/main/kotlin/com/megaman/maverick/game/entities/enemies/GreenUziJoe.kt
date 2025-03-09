@@ -116,7 +116,7 @@ class GreenUziJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGra
                 val increment = (BLAST_DUR - BLAST_START_DELAY - BLAST_END_DELAY) / BLAST_COUNT
                 for (i in 0 until BLAST_COUNT) {
                     val time = BLAST_START_DELAY + i * increment
-                    val blast = TimeMarkedRunnable(time) { this@GreenUziJoe.blast() }
+                    val blast = TimeMarkedRunnable(time) { blast() }
                     runnables.add(blast)
                 }
 

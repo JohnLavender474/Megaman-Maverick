@@ -6,13 +6,11 @@ import com.mega.game.engine.common.interfaces.ICopyable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 
-interface IGameShape2D : Shape2D, IDrawableShape, ICopyable<IGameShape2D> {
+interface IGameShape2D : Shape2D, IGameShapeOverlappable, IDrawableShape, ICopyable<IGameShape2D> {
 
     fun getProps(out: Properties): Properties
 
     fun setWithProps(props: Properties): IGameShape2D
-
-    fun overlaps(other: IGameShape2D): Boolean
 
     fun getBoundingRectangle(out: GameRectangle): GameRectangle
 

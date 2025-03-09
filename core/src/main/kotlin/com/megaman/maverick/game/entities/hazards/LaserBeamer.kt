@@ -10,10 +10,7 @@ import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.extensions.getTextureRegion
-import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameCircle
@@ -44,16 +41,17 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.ILaserEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.special.DarknessV2
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
-import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.utils.extensions.getEndPoint
-import com.megaman.maverick.game.utils.extensions.getOrigin
-import com.megaman.maverick.game.utils.extensions.toProps
+import com.megaman.maverick.game.utils.MegaUtilMethods
+import com.megaman.maverick.game.utils.extensions.*
+import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
@@ -64,15 +62,24 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
     companion object {
         const val TAG = "LaserBeamer"
-        private var region: TextureRegion? = null
+
         private val CONTACT_RADII = floatArrayOf(2f, 5f, 8f)
+
         private const val DEFAULT_SPEED = 2f
         private const val DEFAULT_RADIUS = 10f
+
         private const val CONTACT_TIME = 0.05f
         private const val SWITCH_TIME = 1f
+
         private const val MIN_DEGREES = 200f
         private const val MAX_DEGREES = 340f
         private const val INIT_DEGREES = 270f
+
+        private const val LIGHT_SOURCE_OFFSET = 0.5f
+        private const val LIGHT_SOURCE_RADIUS = 1
+        private const val LIGHT_SOURCE_RADIANCE = 1.5f
+
+        private var region: TextureRegion? = null
     }
 
     private val contactTimer = Timer(CONTACT_TIME)
@@ -99,10 +106,11 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
     private var clockwise = false
     private var contactIndex = 0
-
     private var speed = 0f
 
     private val blocksToIgnore = ObjectSet<Int>()
+
+    private val lightSourceKeys = ObjectSet<Int>()
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
@@ -139,6 +147,14 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
                 blocksToIgnore.add(id)
             }
         }
+
+        lightSourceKeys.addAll(
+            spawnProps.getOrDefault("${ConstKeys.LIGHT}_${ConstKeys.KEYS}", "", String::class)
+                .replace("\\s+", "")
+                .split(",")
+                .map { it.toInt() }
+                .toObjectSet()
+        )
     }
 
     override fun onDestroy() {
@@ -146,6 +162,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         super.onDestroy()
         contacts.clear()
         blocksToIgnore.clear()
+        lightSourceKeys.clear()
         laserFixture.setShape(GameLine())
         damagerFixture.setShape(GameLine())
     }
@@ -216,6 +233,8 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         .build()
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
+        if (shouldSendLightSourceEvents()) sendLightSourceEvents()
+
         contactTimer.update(it)
         if (contactTimer.isFinished()) {
             contactIndex++
@@ -232,8 +251,6 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
             var speed = this.speed * ConstVals.PPM
             if (clockwise) speed *= -1f
             rotatingLine.speed = speed
-
-            // GameLogger.debug(TAG, "update(): switchTimer.isJustFinished(), clockwise=$clockwise")
         }
 
         rotatingLine.update(it)
@@ -241,15 +258,31 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         if (clockwise && rotatingLine.degrees <= MIN_DEGREES) {
             rotatingLine.degrees = MIN_DEGREES
             switchTimer.reset()
-            // GameLogger.debug(TAG, "update(): clockwise && rotatingLine.degrees <= MIN_DEGREES")
         } else if (!clockwise && rotatingLine.degrees >= MAX_DEGREES) {
             rotatingLine.degrees = MAX_DEGREES
             switchTimer.reset()
-            // GameLogger.debug(TAG, "update(): !clockwise && rotatingLine.degrees >= MAX_DEGREES")
         }
-
-        // GameLogger.debug(TAG, "update(): rawLine=${rotatingLine.line}, gameLine=$laser")
     })
+
+    private fun shouldSendLightSourceEvents() = MegaGameEntities.getOfTag(DarknessV2.TAG).any { it ->
+        (it as DarknessV2).overlaps(damagerFixture.getShape())
+    }
+
+    private fun sendLightSourceEvents() {
+        val line = damagerFixture.getShape() as GameLine
+        val (worldPoint1, worldPoint2) = line.getWorldPoints()
+        val parts = line.getLength().div(LIGHT_SOURCE_OFFSET * ConstVals.PPM).toInt()
+        for (point in 0..parts) {
+            val position = MegaUtilMethods.interpolate(worldPoint1, worldPoint2, point.toFloat() / parts.toFloat())
+            LightSourceUtils.sendLightSourceEvent(
+                game,
+                lightSourceKeys,
+                position,
+                LIGHT_SOURCE_RADIANCE,
+                LIGHT_SOURCE_RADIUS
+            )
+        }
+    }
 
     override fun getTag() = TAG
 

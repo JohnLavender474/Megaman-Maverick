@@ -37,10 +37,10 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.ILightSourceEntity
-import com.megaman.maverick.game.entities.contracts.sendLightEvent
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
@@ -102,7 +102,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), ILightSource
         )
         timer.reset()
 
-        if (light) sendLightEvent(game, this)
+        if (light) LightSourceUtils.sendLightSourceEvent(game, this)
 
         if (spawnProps.containsKey(ConstKeys.TRAJECTORY)) {
             val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY) as String, ConstVals.PPM)
@@ -142,7 +142,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), ILightSource
                 light = !light
                 timer.reset()
             }
-            if (light) sendLightEvent(game, this)
+            if (light) LightSourceUtils.sendLightSourceEvent(game, this)
         }
     }
 

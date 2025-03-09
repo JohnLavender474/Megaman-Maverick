@@ -17,11 +17,11 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.ILightSourceEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.sendLightEvent
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.misc.LightSourceUtils
 
 open class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ILightSourceEntity, ICullableEntity {
 
@@ -54,10 +54,10 @@ open class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ILight
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         keys.addAll(
             spawnProps.get(ConstKeys.KEYS, String::class)!!
-            .replace("\\s+", "")
-            .split(",")
-            .map { it.toInt() }
-            .toObjectSet()
+                .replace("\\s+", "")
+                .split(",")
+                .map { it.toInt() }
+                .toObjectSet()
         )
         radiance = spawnProps.getOrDefault(ConstKeys.RADIANCE, DEFAULT_RADIANCE, Float::class)
         radius = spawnProps.getOrDefault(ConstKeys.RADIUS, DEFAULT_RADIUS, Int::class)
@@ -86,12 +86,7 @@ open class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ILight
         keys.clear()
     }
 
-    open fun sendLightEvent() {
-        GameLogger.debug(TAG, "sendLightEvent()")
-        sendLightEvent(game, this)
-    }
-
-    private fun defineUpdatablesComponent() = UpdatablesComponent({ sendLightEvent() })
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ LightSourceUtils.sendLightSourceEvent(game, this) })
 
     override fun getType() = EntityType.DECORATION
 

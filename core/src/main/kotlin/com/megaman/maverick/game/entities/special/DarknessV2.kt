@@ -11,9 +11,7 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.*
-import com.mega.game.engine.common.shapes.GameCircle
-import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.MinsAndMaxes
+import com.mega.game.engine.common.shapes.*
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -49,7 +47,8 @@ import kotlin.math.ceil
 import kotlin.math.min
 import kotlin.reflect.KClass
 
-class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IEventListener {
+class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IEventListener,
+    IGameShapeOverlappable {
 
     data class LightSourceDef(var center: Vector2, var radius: Int, var radiance: Float)
 
@@ -97,6 +96,8 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                 it as ChargedShotExplosion
                 if (it.fullyCharged) BRIGHTEST_LIGHT_SOURCE else BRIGHTER_LIGHT_SOURCE
             },
+            MoonScythe::class pairTo { BRIGHTEST_LIGHT_SOURCE },
+            Fireball::class pairTo { BRIGHTER_LIGHT_SOURCE },
             DuoBall::class pairTo { STANDARD_LIGHT_SOURCE },
             ArigockBall::class pairTo { STANDARD_LIGHT_SOURCE },
             CactusMissile::class pairTo { BRIGHTER_LIGHT_SOURCE },
@@ -105,6 +106,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             ShieldAttacker::class pairTo { BRIGHTER_LIGHT_SOURCE },
             SpreadExplosion::class pairTo { BRIGHTEST_LIGHT_SOURCE },
             PicketJoe::class pairTo { BRIGHTER_LIGHT_SOURCE },
+            GreenPelletBlast::class pairTo { STANDARD_LIGHT_SOURCE }
         )
 
         private const val DEBUG_THRESHOLD_SECS = 0.025f
@@ -185,7 +187,6 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
-
         super.onDestroy()
 
         game.eventsMan.removeListener(this)
@@ -371,9 +372,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
         while (!lightSourceQueue.isEmpty) {
             val lightSourceDef = lightSourceQueue.removeFirst()
-
             handleLightSource(lightSourceDef)
-
             lightSourcePool.free(lightSourceDef)
         }
 
@@ -412,6 +411,8 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
         debugTime(startTime) { "update(): updating tiles took too long: time=$it, size=${(maxX - minX) * (maxY - minY)}" }
     })
+
+    override fun overlaps(shape: IGameShape2D) = this.bounds.overlaps(shape)
 
     override fun getType() = EntityType.SPECIAL
 
