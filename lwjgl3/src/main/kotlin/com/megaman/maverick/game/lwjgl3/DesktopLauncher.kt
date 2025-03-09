@@ -55,7 +55,7 @@ object DesktopLauncher {
         println("- Height: " + appArgs.height)
         println("- Fullscreen: " + appArgs.fullScreen)
         println("- Debug Shapes: " + appArgs.debugShapes)
-        println("- Debug FPS: " + appArgs.debugText)
+        println("- Debug Text: " + appArgs.debugText)
         println("- Log Level: " + appArgs.logLevels)
         println("- Fixed Step Scalar: " + appArgs.fixedStepScalar)
         println("- Music volume: " + appArgs.musicVolume)
@@ -63,7 +63,7 @@ object DesktopLauncher {
 
         val config = Lwjgl3ApplicationConfiguration()
         config.setTitle(TITLE)
-        config.setIdleFPS(ConstVals.FPS)
+        config.setIdleFPS(0)
         config.setForegroundFPS(ConstVals.FPS)
         config.setResizable(appArgs.resizable)
         config.setPauseWhenLostFocus(appArgs.pauseOnFocusLost)

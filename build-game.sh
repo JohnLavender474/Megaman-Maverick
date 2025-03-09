@@ -87,7 +87,7 @@ java -jar ./game-builds/packr-all-4.0.0.jar \
      --executable $EXECUTABLE_NAME \
      --classpath ./lwjgl3/build/libs/$EXECUTABLE_NAME.jar \
      --mainclass com.megaman.maverick.game.lwjgl3.DesktopLauncher \
-     --vmargs Xmx1G \
+     --vmargs Xms2G \
      --resources assets/* \
      --output ./game-builds/$EXECUTABLE_NAME-$PLATFORM \
      --verbose
