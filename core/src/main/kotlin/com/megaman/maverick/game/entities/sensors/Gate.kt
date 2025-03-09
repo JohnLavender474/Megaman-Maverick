@@ -72,7 +72,6 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
 
     private enum class GateState { OPENABLE, OPENING, OPEN, CLOSING, CLOSED }
 
-    // TODO: add other gate types
     enum class GateType { STANDARD }
 
     override val eventKeyMask = objectSetOf<Any>(

@@ -10,10 +10,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.objects.Matrix
-import com.mega.game.engine.common.objects.Pool
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.objects.*
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.MinsAndMaxes
@@ -88,32 +85,28 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
         private var region: TextureRegion? = null
 
-        private val standardProjLightDef: (IBodyEntity) -> LightSourceDef =
-            { LightSourceDef(it.body.getCenter(), 2 * ConstVals.PPM, 1.5f) }
+        private val STANDARD_LIGHT_SOURCE = GamePair.of(2, 1.5f)
+        private val BRIGHTER_LIGHT_SOURCE = GamePair.of(3, 2f)
+        private val BRIGHTEST_LIGHT_SOURCE = GamePair.of(4, 2.5f)
 
-        private val brighterProjLightDef: (IBodyEntity) -> LightSourceDef =
-            { LightSourceDef(it.body.getCenter(), 3 * ConstVals.PPM, 2f) }
-
-        private val brightestProjLightDef: (IBodyEntity) -> LightSourceDef =
-            { LightSourceDef(it.body.getCenter(), 4 * ConstVals.PPM, 2.5f) }
-
-        private val lightUpEntities = objectMapOf<KClass<out IBodyEntity>, (IBodyEntity) -> LightSourceDef>(
-            Bullet::class pairTo standardProjLightDef,
+        private val lightUpEntities = objectMapOf<KClass<out IBodyEntity>, (IBodyEntity) -> GamePair<Int, Float>>(
+            Megaman::class pairTo { STANDARD_LIGHT_SOURCE },
+            Bullet::class pairTo { STANDARD_LIGHT_SOURCE },
             ChargedShot::class pairTo {
                 it as ChargedShot
-                if (it.fullyCharged) brightestProjLightDef.invoke(it) else brighterProjLightDef.invoke(it)
+                if (it.fullyCharged) BRIGHTEST_LIGHT_SOURCE else BRIGHTER_LIGHT_SOURCE
             },
             ChargedShotExplosion::class pairTo {
                 it as ChargedShotExplosion
-                if (it.fullyCharged) brightestProjLightDef.invoke(it) else brighterProjLightDef.invoke(it)
+                if (it.fullyCharged) BRIGHTEST_LIGHT_SOURCE else BRIGHTER_LIGHT_SOURCE
             },
-            ArigockBall::class pairTo standardProjLightDef,
-            CactusMissile::class pairTo brighterProjLightDef,
-            Explosion::class pairTo brighterProjLightDef,
-            ExplosionOrb::class pairTo standardProjLightDef,
-            ShieldAttacker::class pairTo brighterProjLightDef,
-            SpreadExplosion::class pairTo brightestProjLightDef,
-            PicketJoe::class pairTo brighterProjLightDef
+            ArigockBall::class pairTo { STANDARD_LIGHT_SOURCE },
+            CactusMissile::class pairTo { BRIGHTER_LIGHT_SOURCE },
+            Explosion::class pairTo { BRIGHTER_LIGHT_SOURCE },
+            ExplosionOrb::class pairTo { STANDARD_LIGHT_SOURCE },
+            ShieldAttacker::class pairTo { BRIGHTER_LIGHT_SOURCE },
+            SpreadExplosion::class pairTo { BRIGHTEST_LIGHT_SOURCE },
+            PicketJoe::class pairTo { BRIGHTER_LIGHT_SOURCE },
         )
 
         private const val DEBUG_THRESHOLD_SECS = 0.025f
@@ -144,8 +137,8 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     private lateinit var bounds: GameRectangle
 
     private var key = -1
-    private var darkMode = false
     private var dividedPPM = 0f
+    private var darkMode = false
 
     private val reusableCircle = GameCircle()
     private val reusableRect = GameRectangle()
@@ -171,7 +164,6 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-
         super.onSpawn(spawnProps)
 
         game.eventsMan.addListener(this)
@@ -298,10 +290,10 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         ) {
             val lightSourceDef = lightSourcePool.fetch()
 
-            lightUpEntities[entity::class].invoke(entity).let {
-                lightSourceDef.center = it.center
-                lightSourceDef.radiance = it.radiance
-                lightSourceDef.radius = it.radius
+            lightUpEntities[entity::class].invoke(entity).let { (first, second) ->
+                lightSourceDef.center = entity.body.getCenter()
+                lightSourceDef.radius = first * ConstVals.PPM
+                lightSourceDef.radiance = second
             }
 
             lightSourceQueue.addLast(lightSourceDef)
@@ -332,8 +324,12 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        val entities =
-            MegaGameEntities.getOfTypes(EntityType.PROJECTILE, EntityType.EXPLOSION, EntityType.ENEMY)
+        val entities = MegaGameEntities.getOfTypes(
+            EntityType.MEGAMAN,
+            EntityType.PROJECTILE,
+            EntityType.EXPLOSION,
+            EntityType.ENEMY
+        )
         entities.forEach { entity -> tryToLightUp(entity) }
 
         if (megaman.body.getBounds().overlaps(bounds)) {

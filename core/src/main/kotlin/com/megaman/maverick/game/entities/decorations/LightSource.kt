@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.decorations
 
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Position
@@ -7,24 +8,22 @@ import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.extensions.toInt
 import com.mega.game.engine.common.extensions.toObjectSet
 import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.entities.contracts.ICullableEntity
-import com.mega.game.engine.events.Event
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.contracts.ILightSourceEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.sendLightEvent
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getCenter
 
-open class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity {
+open class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ILightSourceEntity, ICullableEntity {
 
     companion object {
         const val TAG = "LightSource"
@@ -32,12 +31,15 @@ open class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ICulla
         private const val DEFAULT_RADIANCE = 1f
     }
 
+    override val keys = ObjectSet<Int>()
+    override val center: Vector2
+        get() = bounds.getCenter()
+    override var radiance = 0f
+    override var radius = 0
+
     protected lateinit var type: String
     protected lateinit var bounds: GameRectangle
-    protected lateinit var keys: ObjectSet<Int>
     protected lateinit var spritePos: Position
-    protected var radiance = 0f
-    protected var radius = 0
 
     override fun init() {
         super.init()
@@ -50,11 +52,13 @@ open class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ICulla
         super.onSpawn(spawnProps)
 
         bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-        keys = spawnProps.get(ConstKeys.KEYS, String::class)!!
+        keys.addAll(
+            spawnProps.get(ConstKeys.KEYS, String::class)!!
             .replace("\\s+", "")
             .split(",")
             .map { it.toInt() }
             .toObjectSet()
+        )
         radiance = spawnProps.getOrDefault(ConstKeys.RADIANCE, DEFAULT_RADIANCE, Float::class)
         radius = spawnProps.getOrDefault(ConstKeys.RADIUS, DEFAULT_RADIUS, Int::class)
 
@@ -79,23 +83,15 @@ open class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ICulla
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        keys.clear()
     }
 
-    open fun sendAddLightSourceEvent() {
-        GameLogger.debug(TAG, "sendAddLightSourceEvent()")
-        game.eventsMan.submitEvent(
-            Event(
-                EventType.ADD_LIGHT_SOURCE, props(
-                    ConstKeys.KEYS pairTo keys,
-                    ConstKeys.CENTER pairTo bounds.getCenter(),
-                    ConstKeys.RADIUS pairTo radius * ConstVals.PPM,
-                    ConstKeys.RADIANCE pairTo radiance
-                )
-            )
-        )
+    open fun sendLightEvent() {
+        GameLogger.debug(TAG, "sendLightEvent()")
+        sendLightEvent(game, this)
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent({ sendAddLightSourceEvent() })
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ sendLightEvent() })
 
     override fun getType() = EntityType.DECORATION
 

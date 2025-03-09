@@ -26,7 +26,7 @@ class Lantern(game: MegamanMaverickGame) : LightSource(game), ISpritesEntity, IA
     companion object {
         const val TAG = "Lantern"
         const val RADIUS = 6
-        const val RADIANCE = 1.15f
+        const val RADIANCE = 1.25f
         private var region: TextureRegion? = null
     }
 

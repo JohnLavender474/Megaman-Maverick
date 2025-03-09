@@ -26,6 +26,11 @@ temp/Aburtos/megaman_spritesheet.png
 temp/Aburtos/Link
 temp/PixelBoy127/MegamanWeaponGet.png
 temp/PixelBoy127/Link
+temp/Gate/closing.png
+temp/Gate/open.png
+temp/Gate/opening.png
+temp/Gate/openable.png
+temp/Gate/closed.png
 temp/boberatu/Moon Man/Link
 temp/boberatu/Moon Man/moon_man_v2.png
 temp/boberatu/Naval Man/Link
@@ -2323,6 +2328,7 @@ sprites/piskel/WhiteShards.piskel
 sprites/piskel/Asteroid.piskel
 sprites/piskel/AcidGoop.piskel
 sprites/piskel/Nuclear_Monkey_Boss_Jump.piskel
+sprites/piskel/Gate_v2.piskel
 sprites/piskel/Smoke.piskel
 sprites/piskel/Explosion.piskel
 sprites/piskel/ChargeOrbs.piskel

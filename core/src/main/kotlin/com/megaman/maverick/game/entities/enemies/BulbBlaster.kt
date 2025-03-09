@@ -8,10 +8,10 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -33,11 +33,9 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.decorations.LightSource
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
+import com.megaman.maverick.game.entities.contracts.ILightSourceEntity
+import com.megaman.maverick.game.entities.contracts.sendLightEvent
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -46,25 +44,28 @@ import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
-class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListener, IAnimatedEntity, IMotionEntity {
+class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), ILightSourceEntity, IAnimatedEntity, IMotionEntity,
+    IEventListener {
 
     companion object {
         const val TAG = "BulbBlaster"
         private const val STATE_DUR = 3f
-        private const val LIGHT_RADIUS = 5
-        private const val RADIANCE_FACTOR = 2f
+        private const val RADIUS = 5
+        private const val RADIANCE = 2f
         private var lightRegion: TextureRegion? = null
         private var darkRegion: TextureRegion? = null
     }
 
     override val eventKeyMask = objectSetOf<Any>(EventType.END_ROOM_TRANS)
-    // bulb blaster can never be damaged
-    override var invincible = false
+    override var invincible = false // bulb blaster can never be damaged
+    override val keys = ObjectSet<Int>()
+    override var radius = RADIUS
+    override var radiance = RADIANCE
+    override val center: Vector2
+        get() = body.getCenter()
 
-    private val timer = Timer(STATE_DUR)
-    private var lightSource: LightSource? = null
-    private lateinit var keys: ObjectSet<Int>
     private lateinit var spawnRoom: String
+    private val timer = Timer(STATE_DUR)
     private var light = false
 
     override fun init() {
@@ -89,18 +90,16 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListen
         else spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        lightSource = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.LIGHT_SOURCE)!! as LightSource
-        lightSource!!.spawn(props(ConstKeys.BOUNDS pairTo body))
-
         light = spawnProps.getOrDefault(ConstKeys.LIGHT, false, Boolean::class)
-        keys = spawnProps.get(ConstKeys.KEYS, String::class)!!
+        keys.addAll(spawnProps.get(ConstKeys.KEYS, String::class)!!
             .replace("\\s+", "")
             .split(",")
             .map { it.toInt() }
             .toObjectSet()
+        )
         timer.reset()
 
-        sendEvent()
+        if (light) sendLightEvent(game, this)
 
         if (spawnProps.containsKey(ConstKeys.TRAJECTORY)) {
             val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY) as String, ConstVals.PPM)
@@ -115,11 +114,12 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListen
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         game.eventsMan.removeListener(this)
         clearMotionDefinitions()
         light = false
-        sendEvent()
+        keys.clear()
     }
 
     override fun onEvent(event: Event) {
@@ -139,13 +139,13 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListen
                 light = !light
                 timer.reset()
             }
-            sendEvent()
+            if (light) sendLightEvent(game, this)
         }
     }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.65f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat())
         return BodyComponentCreator.create(
             this,
             body,
@@ -155,13 +155,13 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListen
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(ConstVals.PPM.toFloat())
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        sprite.setSize(2f * ConstVals.PPM)
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.hidden = damageBlink
             sprite.setCenter(body.getCenter())
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
@@ -172,19 +172,5 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IEventListen
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
-    }
-
-    private fun sendEvent() {
-        game.eventsMan.submitEvent(
-            Event(
-                EventType.ADD_LIGHT_SOURCE, props(
-                    ConstKeys.KEYS pairTo keys,
-                    ConstKeys.LIGHT pairTo light,
-                    ConstKeys.CENTER pairTo body.getCenter(),
-                    ConstKeys.RADIUS pairTo LIGHT_RADIUS,
-                    ConstKeys.RADIANCE pairTo RADIANCE_FACTOR
-                )
-            )
-        )
     }
 }
