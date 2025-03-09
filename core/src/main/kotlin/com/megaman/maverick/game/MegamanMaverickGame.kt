@@ -79,8 +79,8 @@ import com.megaman.maverick.game.entities.bosses.*
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.enemies.SniperJoe
 import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.hazards.TubeBeamer
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.Megaman.Companion.MEGAMAN_EVENT_LISTENER_TAG
 import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_CONTROLLER_COMPONENT_TAG
@@ -147,7 +147,7 @@ class MegamanMaverickGame(
             InfernoMan.TAG, TimberWoman.TAG, DesertMan.TAG, ReactorMan.TAG, PreciousWoman.TAG, LevelPauseScreen.TAG,
             MainMenuScreen.TAG, LevelSelectScreen.TAG
         )
-        val DEV_TAGS_TO_LOG: ObjectSet<String> = objectSetOf(SniperJoe.TAG)
+        val DEV_TAGS_TO_LOG: ObjectSet<String> = objectSetOf(TubeBeamer.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.oneFixtureMatches(FixtureType.CONSUMER)
         }
@@ -210,6 +210,7 @@ class MegamanMaverickGame(
             }
         })
         GameLogger.tagsToLog.addAll(PROD_TAGS_TO_LOG)
+        // GameLogger.tagsToLog.addAll(DEV_TAGS_TO_LOG)
         GameLogger.filterByTag = true
 
         GameLogger.log(TAG, "create(): appType=${Gdx.app.type}")

@@ -1,742 +1,384 @@
-===== SESSION STARTED: 2025-03-09T11:20:02.873975420 =====
-11:20:03 | DEBUG | MegamanMaverickGame | resize(): width=640, height=480
-11:20:03 | DEBUG | MegamanMaverickGame | resize(): width=1920, height=995
-11:20:03 | LOG | MegamanMaverickGame | pause()
-11:20:03 | LOG | MegamanMaverickGame | pause()
-11:20:04 | DEBUG | Megaman | init()
-11:20:04 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=MEGA_BUSTER, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@27aae97b
-11:20:04 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=null
-11:20:04 | DEBUG | GameState | addListener(): listener={ Megaman:[mapObjId=0, dead=false, hashCode=1798861270] }, added=true
-11:20:04 | DEBUG | PlayerStatsHandler | init()
-11:20:04 | DEBUG | CameraManagerForRooms | set focus to { Megaman:[mapObjId=0, dead=false, hashCode=1798861270] }
-11:20:04 | DEBUG | LevelPauseScreen | init(): buttonRegions={exit=options/exit, exit_selected=options/exit_selected, mega_buster=weapons/mega_buster, mega_buster_selected=weapons/mega_buster_selected, ice_cube=weapons/ice_cube, ice_cube_selected=weapons/ice_cube_selected, fire_ball=weapons/fire_ball, fire_ball_selected=weapons/fire_ball_selected, moon_scythe=weapons/moon_scythe, moon_scythe_selected=weapons/moon_scythe_selected, rush_jetpack=weapons/rush_jetpack, rush_jetpack_selected=weapons/rush_jetpack_selected, a=health_tanks/a, a_selected=health_tanks/a_selected, b=health_tanks/b, b_selected=health_tanks/b_selected, c=health_tanks/c, c_selected=health_tanks/c_selected, d=health_tanks/d, d_selected=health_tanks/d_selected}
-11:20:04 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = SIMPLE_INIT_GAME_SCREEN
-11:20:04 | LOG | MegamanMaverickGame | resume()
-11:20:05 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = LEVEL_SCREEN
-11:20:05 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_SPAWN, properties=Properties({
-}))
-11:20:05 | DEBUG | MegaLevelScreenEventListener | onEvent(): player spawn --> reset camera manager for rooms and spawn megaman
-11:20:05 | DEBUG | MegaLevelScreen | onEvent(): player spawn --> spawn Megaman: Properties({
-	[bounds=[16640.0,1440.0,32.0,32.0]]
-	[x=16640.0]
+===== SESSION STARTED: 2025-03-09T14:01:33.215663426 =====
+14:01:41 | DEBUG | TubeBeamer | onSpawn(): spawnProps=Properties({
+	[direction=right]
+	[bounds=[8736.0,1856.0,32.0,32.0]]
+	[spawn_room=room9]
+	[x=8736.0]
 	[height=32.0]
-	[id=446]
-	[name=0]
+	[spawn_type=spawn_room]
+	[id=329]
+	[name=TubeBeamer]
+	[y=1856.0]
+	[width=32.0]
+})
+14:01:41 | DEBUG | TubeBeamer | onSpawn(): spawnProps=Properties({
+	[direction=right]
+	[bounds=[8832.0,1760.0,32.0,32.0]]
+	[spawn_room=room9]
+	[x=8832.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[delay=0.5]
+	[id=330]
+	[name=TubeBeamer]
+	[y=1760.0]
+	[width=32.0]
+})
+14:01:41 | DEBUG | TubeBeamer | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[8896.0,1584.0,32.0,32.0]]
+	[spawn_room=room9]
+	[x=8896.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[delay=1.0]
+	[id=331]
+	[name=TubeBeamer]
+	[y=1584.0]
+	[width=32.0]
+})
+14:01:41 | DEBUG | TubeBeamer | onSpawn(): spawnProps=Properties({
+	[direction=left]
+	[bounds=[8896.0,1600.0,32.0,32.0]]
+	[spawn_room=room9]
+	[x=8896.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[delay=0.5]
+	[id=332]
+	[name=TubeBeamer]
+	[y=1600.0]
+	[width=32.0]
+})
+14:01:41 | DEBUG | TubeBeamer | onSpawn(): spawnProps=Properties({
+	[direction=right]
+	[bounds=[8768.0,1440.0,32.0,32.0]]
+	[spawn_room=room9]
+	[x=8768.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[delay=1.0]
+	[id=333]
+	[name=TubeBeamer]
 	[y=1440.0]
 	[width=32.0]
 })
-11:20:05 | DEBUG | Megaman | onSpawn(): spawnProps=Properties({
-	[bounds=[16640.0,1440.0,32.0,32.0]]
-	[x=16640.0]
+14:02:22 | DEBUG | TubeBeamer | defineCullablesComponent(): predicate: eventRoom=room9, spawnRoom=room9, shouldCull=false, event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@1b4ae4e0]
+	[name=room9]
+	[prior_name=room8]
+	[position=(8995.578,2226.5513)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@99407c2]
+}))
+14:02:22 | DEBUG | TubeBeamer | defineCullablesComponent(): predicate: eventRoom=room9, spawnRoom=room9, shouldCull=false, event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@1b4ae4e0]
+	[name=room9]
+	[prior_name=room8]
+	[position=(8995.578,2226.5513)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@99407c2]
+}))
+14:02:22 | DEBUG | TubeBeamer | defineCullablesComponent(): predicate: eventRoom=room9, spawnRoom=room9, shouldCull=false, event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@1b4ae4e0]
+	[name=room9]
+	[prior_name=room8]
+	[position=(8995.578,2226.5513)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@99407c2]
+}))
+14:02:22 | DEBUG | TubeBeamer | defineCullablesComponent(): predicate: eventRoom=room9, spawnRoom=room9, shouldCull=false, event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@1b4ae4e0]
+	[name=room9]
+	[prior_name=room8]
+	[position=(8995.578,2226.5513)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@99407c2]
+}))
+14:02:22 | DEBUG | TubeBeamer | defineCullablesComponent(): predicate: eventRoom=room9, spawnRoom=room9, shouldCull=false, event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@1b4ae4e0]
+	[name=room9]
+	[prior_name=room8]
+	[position=(8995.578,2226.5513)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@99407c2]
+}))
+14:02:37 | DEBUG | TubeBeamer | defineCullablesComponent(): predicate: eventRoom=room10, spawnRoom=room9, shouldCull=true, event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@2924f1d8]
+	[name=room10]
+	[prior_name=room9]
+	[position=(9136.674,1397.6)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@1b4ae4e0]
+}))
+14:02:37 | DEBUG | TubeBeamer | defineCullablesComponent(): predicate: eventRoom=room10, spawnRoom=room9, shouldCull=true, event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@2924f1d8]
+	[name=room10]
+	[prior_name=room9]
+	[position=(9136.674,1397.6)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@1b4ae4e0]
+}))
+14:02:37 | DEBUG | TubeBeamer | defineCullablesComponent(): predicate: eventRoom=room10, spawnRoom=room9, shouldCull=true, event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@2924f1d8]
+	[name=room10]
+	[prior_name=room9]
+	[position=(9136.674,1397.6)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@1b4ae4e0]
+}))
+14:02:37 | DEBUG | TubeBeamer | defineCullablesComponent(): predicate: eventRoom=room10, spawnRoom=room9, shouldCull=true, event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@2924f1d8]
+	[name=room10]
+	[prior_name=room9]
+	[position=(9136.674,1397.6)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@1b4ae4e0]
+}))
+14:02:37 | DEBUG | TubeBeamer | defineCullablesComponent(): predicate: eventRoom=room10, spawnRoom=room9, shouldCull=true, event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@2924f1d8]
+	[name=room10]
+	[prior_name=room9]
+	[position=(9136.674,1397.6)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@1b4ae4e0]
+}))
+14:02:37 | DEBUG | TubeBeamer | onSpawn(): spawnProps=Properties({
+	[direction=right]
+	[bounds=[9664.0,1440.0,32.0,32.0]]
+	[spawn_room=room10]
+	[x=9664.0]
 	[height=32.0]
-	[id=446]
-	[name=0]
+	[spawn_type=spawn_room]
+	[delay=1.0]
+	[id=357]
+	[name=TubeBeamer]
 	[y=1440.0]
 	[width=32.0]
 })
-11:20:05 | DEBUG | Megaman | direction-set(): value=UP
-11:20:05 | DEBUG | Megaman | direction-set(): value same as field
-11:20:05 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=MEGA_BUSTER
-11:20:05 | DEBUG | CameraManagerForRooms | update(): reset
-11:20:05 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = com.badlogic.gdx.maps.objects.RectangleMapObject@1e530163
-11:20:07 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_READY, properties=Properties({
-}))
-11:20:07 | DEBUG | MegaLevelScreenEventListener | onEvent(): player ready
-11:20:07 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:20:08 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_OPENING, properties=Properties({
-}))
-11:20:08 | DEBUG | MegaLevelScreenEventListener | onEvent(): gate init opening --> start room transition
-11:20:08 | DEBUG | MegamanEventListener | GATE_INIT_OPENING
-11:20:08 | DEBUG | MegamanControllerComponent | right actuator just released
-11:20:08 | LOG | MegaLevelScreen | event(): event=Event(key=NEXT_ROOM_REQ, properties=Properties({
-	[room=desert_man_room]
-}))
-11:20:08 | DEBUG | MegaLevelScreenEventListener | onEvent(): next room req --> start room transition
-11:20:08 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = RIGHT
-11:20:08 | DEBUG | MegaLevelScreenEventListener | onEvent(): next room req --> successfully starting transition to room: desert_man_room
-11:20:08 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
-11:20:08 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (16608.0,1536.0)
-11:20:08 | DEBUG | MegamanEventListener | BEGIN ROOM TRANS: position=(16815.65,1452.0)
-11:20:10 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (17120.0,1536.0)
-11:20:10 | DEBUG | MegaLevelScreen | end transition logic for camera manager
-11:20:10 | LOG | MegaLevelScreen | event(): event=Event(key=ENTER_BOSS_ROOM, properties=Properties({
-	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@31e76a8d]
-}))
-11:20:10 | DEBUG | MegaLevelScreenEventListener | onEvent(): enter boss room
-11:20:10 | DEBUG | MegamanEventListener | endRoomTrans(): setVel=false
-11:20:10 | DEBUG | DesertMan | onSpawn(): spawnProps=Properties({
-	[boss_key=2]
-	[bounds=[17280.0,1632.0,32.0,32.0]]
-	[x=17280.0]
+14:02:37 | DEBUG | TubeBeamer | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[9728.0,1568.0,32.0,32.0]]
+	[spawn_room=room10]
+	[x=9728.0]
 	[height=32.0]
-	[end=false]
-	[darkness=true]
-	[id=420]
+	[spawn_type=spawn_room]
+	[delay=1.0]
+	[id=356]
+	[name=TubeBeamer]
+	[y=1568.0]
+	[width=32.0]
+})
+14:02:37 | DEBUG | TubeBeamer | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[9536.0,1632.0,32.0,32.0]]
+	[spawn_room=room10]
+	[x=9536.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[delay=1.0]
+	[id=354]
+	[name=TubeBeamer]
 	[y=1632.0]
 	[width=32.0]
-	[light_source_keys=1]
-	[left_wall=com.badlogic.gdx.maps.objects.RectangleMapObject@1e79d43]
-	[right_wall=com.badlogic.gdx.maps.objects.RectangleMapObject@343e225a]
 })
-11:20:10 | DEBUG | AbstractBoss | onSpawn(): spawnProps=Properties({
-	[boss_key=2]
-	[bounds=[17280.0,1632.0,32.0,32.0]]
-	[x=17280.0]
+14:02:37 | DEBUG | TubeBeamer | onSpawn(): spawnProps=Properties({
+	[direction=up]
+	[bounds=[9504.0,1376.0,32.0,32.0]]
+	[spawn_room=room10]
+	[x=9504.0]
 	[height=32.0]
-	[end=false]
-	[darkness=true]
-	[id=420]
+	[spawn_type=spawn_room]
+	[delay=1.0]
+	[id=355]
+	[name=TubeBeamer]
+	[y=1376.0]
+	[width=32.0]
+})
+14:02:37 | DEBUG | TubeBeamer | onDestroy()
+14:02:37 | DEBUG | TubeBeamer | onDestroy()
+14:02:37 | DEBUG | TubeBeamer | onDestroy()
+14:02:37 | DEBUG | TubeBeamer | onDestroy()
+14:02:37 | DEBUG | TubeBeamer | onDestroy()
+14:02:39 | DEBUG | TubeBeamer | defineCullablesComponent(): predicate: eventRoom=room9, spawnRoom=room10, shouldCull=true, event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@1b4ae4e0]
+	[name=room9]
+	[prior_name=room10]
+	[position=(9165.035,1388.0)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@2924f1d8]
+}))
+14:02:39 | DEBUG | TubeBeamer | defineCullablesComponent(): predicate: eventRoom=room9, spawnRoom=room10, shouldCull=true, event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@1b4ae4e0]
+	[name=room9]
+	[prior_name=room10]
+	[position=(9165.035,1388.0)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@2924f1d8]
+}))
+14:02:39 | DEBUG | TubeBeamer | defineCullablesComponent(): predicate: eventRoom=room9, spawnRoom=room10, shouldCull=true, event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@1b4ae4e0]
+	[name=room9]
+	[prior_name=room10]
+	[position=(9165.035,1388.0)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@2924f1d8]
+}))
+14:02:39 | DEBUG | TubeBeamer | defineCullablesComponent(): predicate: eventRoom=room9, spawnRoom=room10, shouldCull=true, event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@1b4ae4e0]
+	[name=room9]
+	[prior_name=room10]
+	[position=(9165.035,1388.0)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@2924f1d8]
+}))
+14:02:39 | DEBUG | TubeBeamer | onSpawn(): spawnProps=Properties({
+	[direction=right]
+	[bounds=[8736.0,1856.0,32.0,32.0]]
+	[spawn_room=room9]
+	[x=8736.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[id=329]
+	[name=TubeBeamer]
+	[y=1856.0]
+	[width=32.0]
+})
+14:02:39 | DEBUG | TubeBeamer | onSpawn(): spawnProps=Properties({
+	[direction=right]
+	[bounds=[8832.0,1760.0,32.0,32.0]]
+	[spawn_room=room9]
+	[x=8832.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[delay=0.5]
+	[id=330]
+	[name=TubeBeamer]
+	[y=1760.0]
+	[width=32.0]
+})
+14:02:39 | DEBUG | TubeBeamer | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[8896.0,1584.0,32.0,32.0]]
+	[spawn_room=room9]
+	[x=8896.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[delay=1.0]
+	[id=331]
+	[name=TubeBeamer]
+	[y=1584.0]
+	[width=32.0]
+})
+14:02:39 | DEBUG | TubeBeamer | onSpawn(): spawnProps=Properties({
+	[direction=left]
+	[bounds=[8896.0,1600.0,32.0,32.0]]
+	[spawn_room=room9]
+	[x=8896.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[delay=0.5]
+	[id=332]
+	[name=TubeBeamer]
+	[y=1600.0]
+	[width=32.0]
+})
+14:02:39 | DEBUG | TubeBeamer | onSpawn(): spawnProps=Properties({
+	[direction=right]
+	[bounds=[8768.0,1440.0,32.0,32.0]]
+	[spawn_room=room9]
+	[x=8768.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[delay=1.0]
+	[id=333]
+	[name=TubeBeamer]
+	[y=1440.0]
+	[width=32.0]
+})
+14:02:39 | DEBUG | TubeBeamer | onDestroy()
+14:02:39 | DEBUG | TubeBeamer | onDestroy()
+14:02:39 | DEBUG | TubeBeamer | onDestroy()
+14:02:39 | DEBUG | TubeBeamer | onDestroy()
+14:02:42 | DEBUG | TubeBeamer | defineCullablesComponent(): predicate: eventRoom=room10, spawnRoom=room9, shouldCull=true, event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@2924f1d8]
+	[name=room10]
+	[prior_name=room9]
+	[position=(9141.603,1388.0)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@1b4ae4e0]
+}))
+14:02:42 | DEBUG | TubeBeamer | defineCullablesComponent(): predicate: eventRoom=room10, spawnRoom=room9, shouldCull=true, event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@2924f1d8]
+	[name=room10]
+	[prior_name=room9]
+	[position=(9141.603,1388.0)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@1b4ae4e0]
+}))
+14:02:42 | DEBUG | TubeBeamer | defineCullablesComponent(): predicate: eventRoom=room10, spawnRoom=room9, shouldCull=true, event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@2924f1d8]
+	[name=room10]
+	[prior_name=room9]
+	[position=(9141.603,1388.0)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@1b4ae4e0]
+}))
+14:02:42 | DEBUG | TubeBeamer | defineCullablesComponent(): predicate: eventRoom=room10, spawnRoom=room9, shouldCull=true, event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@2924f1d8]
+	[name=room10]
+	[prior_name=room9]
+	[position=(9141.603,1388.0)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@1b4ae4e0]
+}))
+14:02:43 | DEBUG | TubeBeamer | defineCullablesComponent(): predicate: eventRoom=room10, spawnRoom=room9, shouldCull=true, event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@2924f1d8]
+	[name=room10]
+	[prior_name=room9]
+	[position=(9141.603,1388.0)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@1b4ae4e0]
+}))
+14:02:43 | DEBUG | TubeBeamer | onSpawn(): spawnProps=Properties({
+	[direction=right]
+	[bounds=[9664.0,1440.0,32.0,32.0]]
+	[spawn_room=room10]
+	[x=9664.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[delay=1.0]
+	[id=357]
+	[name=TubeBeamer]
+	[y=1440.0]
+	[width=32.0]
+})
+14:02:43 | DEBUG | TubeBeamer | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[9728.0,1568.0,32.0,32.0]]
+	[spawn_room=room10]
+	[x=9728.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[delay=1.0]
+	[id=356]
+	[name=TubeBeamer]
+	[y=1568.0]
+	[width=32.0]
+})
+14:02:43 | DEBUG | TubeBeamer | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[9536.0,1632.0,32.0,32.0]]
+	[spawn_room=room10]
+	[x=9536.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[delay=1.0]
+	[id=354]
+	[name=TubeBeamer]
 	[y=1632.0]
 	[width=32.0]
-	[light_source_keys=1]
-	[left_wall=com.badlogic.gdx.maps.objects.RectangleMapObject@1e79d43]
-	[right_wall=com.badlogic.gdx.maps.objects.RectangleMapObject@343e225a]
 })
-11:20:10 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
-11:20:10 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
-11:20:10 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
-11:20:10 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_CLOSING, properties=Properties({
-}))
-11:20:10 | DEBUG | MegaLevelScreenEventListener | onEvent(): gate init closing
-11:20:12 | DEBUG | DesertMan | onReady()
-11:20:12 | DEBUG | AbstractBoss | onReady()
-11:20:12 | LOG | MegaLevelScreen | event(): event=Event(key=BOSS_READY, properties=Properties({
-	[boss={ DesertMan:[mapObjId=420, dead=false, hashCode=812229472] }]
-	[health_fill_type=BIT_BY_BIT]
-}))
-11:20:14 | LOG | MegaLevelScreen | event(): event=Event(key=END_BOSS_SPAWN, properties=Properties({
-}))
-11:20:14 | DEBUG | AbstractBoss | onEvent: event=Event(key=END_BOSS_SPAWN, properties=Properties({
-}))
-11:20:14 | LOG | DesertMan | onEvent: event=Event(key=END_BOSS_SPAWN, properties=Properties({
-}))
-11:20:14 | DEBUG | AbstractBoss | onEndBossSpawnEvent()
-11:20:14 | DEBUG | DesertMan | onChangeState: current=STAND, previous=INIT
-11:20:14 | DEBUG | DesertMan | onChangeState(): ending INIT state: body gravity turned on
-11:20:14 | DEBUG | DesertMan | onChangeState(): setting up STAND state: stand timer reset
-11:20:14 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:20:14 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:20:14 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:20:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:14 | DEBUG | MegamanControllerComponent | right actuator just released
-11:20:14 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:20:14 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:20:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:14 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:20:14 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:20:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:15 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:20:15 | DEBUG | DesertMan | onChangeState: current=TORNADO, previous=STAND
-11:20:15 | DEBUG | DesertMan | onChangeState(): setting up TORNADO state: tornado timer reset, tornado_punch timer reset, tornado_start timer reset, tornado_sand timer reset, play wind 1 sound
-11:20:15 | DEBUG | DesertMan | spawnSandSplash()
-11:20:15 | DEBUG | DesertMan | spawnSandSplash()
-11:20:15 | DEBUG | DesertMan | spawnSandSplash()
-11:20:15 | DEBUG | DesertMan | spawnSandSplash()
-11:20:15 | DEBUG | DesertMan | spawnSandSplash()
-11:20:16 | DEBUG | DesertMan | spawnSandSplash()
-11:20:16 | DEBUG | DesertMan | spawnSandSplash()
-11:20:16 | DEBUG | DesertMan | spawnSandSplash()
-11:20:16 | DEBUG | DesertMan | spawnSandSplash()
-11:20:16 | DEBUG | DesertMan | spawnSandSplash()
-11:20:16 | DEBUG | DesertMan | spawnSandSplash()
-11:20:16 | DEBUG | DesertMan | spawnSandSplash()
-11:20:16 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:20:16 | DEBUG | DesertMan | spawnSandSplash()
-11:20:16 | DEBUG | MegamanControllerComponent | left actuator just released
-11:20:16 | DEBUG | DesertMan | onChangeState: current=STAND, previous=TORNADO
-11:20:16 | DEBUG | DesertMan | onChangeState: ending TORNADO state: nothing to do
-11:20:16 | DEBUG | DesertMan | onChangeState(): setting up STAND state: stand timer reset
-11:20:17 | DEBUG | DesertMan | onChangeState: current=JUMP, previous=STAND
-11:20:17 | DEBUG | DesertMan | onChangeState(): setting up JUMP state: body.physics.applyFrictionX=false, body.physics.velocity=(184.66016,468.932), facing=RIGHT
-11:20:18 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:20:18 | DEBUG | MegamanControllerComponent | right actuator just released
-11:20:18 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-11:20:18 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-11:20:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:18 | DEBUG | MegamanControllerComponent | left actuator just released
-11:20:18 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:20:19 | DEBUG | DesertMan | onChangeState: current=STAND, previous=JUMP
-11:20:19 | DEBUG | DesertMan | onChangeState(): ending JUMP state: body.physics.applyFrictionX=true
-11:20:19 | DEBUG | DesertMan | onChangeState(): setting up STAND state: stand timer reset
-11:20:19 | DEBUG | MegamanControllerComponent | right actuator just released
-11:20:19 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:20:20 | DEBUG | DesertMan | onChangeState: current=PUNCH, previous=STAND
-11:20:20 | DEBUG | DesertMan | onChangeState(): setting up PUNCH state: update facing=RIGHT, updated arm extensions punch timer reset, longPunchExtensionCount=0, longPunchingForward=true, [leftArmExtensions=[[17015.469,1409.1565,3.5,3.5], [16903.469,1409.1565,3.5,3.5], [0.0,0.0,3.5,3.5]], rightArmExtensions=[[17283.969,1409.1565,3.5,3.5], [17395.969,1409.1565,3.5,3.5], [0.0,0.0,3.5,3.5]]]
-11:20:20 | DEBUG | DesertMan | update(): PUNCH: timer finished
-11:20:20 | DEBUG | DesertMan | update(): PUNCH: increment longPunchExtensionCount=1
-11:20:20 | DEBUG | DesertMan | update(): PUNCH: timer finished
-11:20:20 | DEBUG | DesertMan | update(): PUNCH: increment longPunchExtensionCount=2
-11:20:20 | DEBUG | DesertMan | update(): PUNCH: timer finished
-11:20:20 | DEBUG | DesertMan | update(): PUNCH: set longPunchingForward=false
-11:20:20 | DEBUG | DesertMan | update(): PUNCH: decrement longPunchExtensionCount=1
-11:20:20 | DEBUG | MegamanControllerComponent | right actuator just released
-11:20:20 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:20:20 | DEBUG | DesertMan | update(): PUNCH: timer finished
-11:20:20 | DEBUG | DesertMan | update(): PUNCH: decrement longPunchExtensionCount=0
-11:20:20 | DEBUG | DesertMan | update(): PUNCH: set state machine to next
-11:20:20 | DEBUG | DesertMan | onChangeState: current=STAND, previous=PUNCH
-11:20:20 | DEBUG | DesertMan | onChangeState: ending PUNCH state: nothing to do
-11:20:20 | DEBUG | DesertMan | onChangeState(): setting up STAND state: stand timer reset
-11:20:20 | DEBUG | MegamanControllerComponent | left actuator just released
-11:20:21 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-11:20:21 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-11:20:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:21 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:20:21 | DEBUG | DesertMan | onChangeState: current=TORNADO, previous=STAND
-11:20:21 | DEBUG | DesertMan | onChangeState(): setting up TORNADO state: tornado timer reset, tornado_punch timer reset, tornado_start timer reset, tornado_sand timer reset, play wind 1 sound
-11:20:21 | DEBUG | DesertMan | spawnSandSplash()
-11:20:22 | DEBUG | DesertMan | spawnSandSplash()
-11:20:22 | DEBUG | DesertMan | spawnSandSplash()
-11:20:22 | DEBUG | DesertMan | spawnSandSplash()
-11:20:22 | DEBUG | DesertMan | spawnSandSplash()
-11:20:22 | DEBUG | MegamanControllerComponent | right actuator just released
-11:20:22 | DEBUG | DesertMan | spawnSandSplash()
-11:20:22 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:20:22 | DEBUG | DesertMan | spawnSandSplash()
-11:20:22 | DEBUG | DesertMan | spawnSandSplash()
-11:20:22 | DEBUG | DesertMan | onChangeState: current=STAND, previous=TORNADO
-11:20:22 | DEBUG | DesertMan | onChangeState: ending TORNADO state: nothing to do
-11:20:22 | DEBUG | DesertMan | onChangeState(): setting up STAND state: stand timer reset
-11:20:23 | DEBUG | DesertMan | onChangeState: current=PUNCH, previous=STAND
-11:20:23 | DEBUG | DesertMan | onChangeState(): setting up PUNCH state: update facing=LEFT, updated arm extensions punch timer reset, longPunchExtensionCount=0, longPunchingForward=true, [leftArmExtensions=[[17184.0,1409.1565,3.5,3.5], [17072.0,1409.1565,3.5,3.5], [0.0,0.0,3.5,3.5]], rightArmExtensions=[[17452.5,1409.1565,3.5,3.5], [17564.5,1409.1565,3.5,3.5], [0.0,0.0,3.5,3.5]]]
-11:20:24 | DEBUG | DesertMan | update(): PUNCH: timer finished
-11:20:24 | DEBUG | DesertMan | update(): PUNCH: increment longPunchExtensionCount=1
-11:20:24 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:20:24 | DEBUG | MegamanControllerComponent | left actuator just released
-11:20:24 | DEBUG | DesertMan | update(): PUNCH: timer finished
-11:20:24 | DEBUG | DesertMan | update(): PUNCH: increment longPunchExtensionCount=2
-11:20:24 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-11:20:24 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-11:20:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:24 | DEBUG | Megaman | takeDamageFrom(): healthDiff=3, damager={ DesertMan:[mapObjId=420, dead=false, hashCode=812229472] }
-11:20:24 | DEBUG | MegamanControllerComponent | right actuator just released
-11:20:24 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:20:24 | DEBUG | DesertMan | update(): PUNCH: timer finished
-11:20:24 | DEBUG | DesertMan | update(): PUNCH: set longPunchingForward=false
-11:20:24 | DEBUG | DesertMan | update(): PUNCH: decrement longPunchExtensionCount=1
-11:20:24 | DEBUG | DesertMan | update(): PUNCH: timer finished
-11:20:24 | DEBUG | DesertMan | update(): PUNCH: decrement longPunchExtensionCount=0
-11:20:24 | DEBUG | DesertMan | update(): PUNCH: set state machine to next
-11:20:24 | DEBUG | DesertMan | onChangeState: current=STAND, previous=PUNCH
-11:20:24 | DEBUG | DesertMan | onChangeState: ending PUNCH state: nothing to do
-11:20:24 | DEBUG | DesertMan | onChangeState(): setting up STAND state: stand timer reset
-11:20:24 | DEBUG | MegamanControllerComponent | attack actuator just released, do not shoot: stunned=false, damaged=true, game.isCameraRotating=false, teleporting=false, ready=true, canFireWeapon=true
-11:20:25 | DEBUG | DesertMan | onChangeState: current=JUMP, previous=STAND
-11:20:25 | DEBUG | DesertMan | onChangeState(): setting up JUMP state: body.physics.applyFrictionX=false, body.physics.velocity=(-320.0,493.1161), facing=LEFT
-11:20:26 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:20:26 | DEBUG | MegamanControllerComponent | left actuator just released
-11:20:26 | DEBUG | DesertMan | onChangeState: current=STAND, previous=JUMP
-11:20:26 | DEBUG | DesertMan | onChangeState(): ending JUMP state: body.physics.applyFrictionX=true
-11:20:26 | DEBUG | DesertMan | onChangeState(): setting up STAND state: stand timer reset
-11:20:27 | DEBUG | DesertMan | onChangeState: current=DANCE, previous=STAND
-11:20:27 | DEBUG | DesertMan | onChangeState(): setting up DANCE state: dance timer reset, dance_needles timer reset
-11:20:28 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:20:28 | DEBUG | MegamanControllerComponent | right actuator just released
-11:20:28 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-11:20:28 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-11:20:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:28 | DEBUG | MegamanControllerComponent | left actuator just released
-11:20:28 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:20:30 | DEBUG | DesertMan | onChangeState: current=STAND, previous=DANCE
-11:20:30 | DEBUG | DesertMan | onChangeState: ending DANCE state: nothing to do
-11:20:30 | DEBUG | DesertMan | onChangeState(): setting up STAND state: stand timer reset
-11:20:30 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:20:30 | DEBUG | MegamanControllerComponent | right actuator just released
-11:20:30 | DEBUG | MegamanControllerComponent | left actuator just released
-11:20:30 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:30 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-11:20:30 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-11:20:30 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:30 | DEBUG | Megaman | takeDamageFrom(): healthDiff=3, damager={ Needle:[mapObjId=0, dead=false, hashCode=1465541952] }
-11:20:31 | DEBUG | DesertMan | onChangeState: current=JUMP, previous=STAND
-11:20:31 | DEBUG | DesertMan | onChangeState(): setting up JUMP state: body.physics.applyFrictionX=false, body.physics.velocity=(320.0,433.22937), facing=RIGHT
-11:20:31 | DEBUG | MegamanControllerComponent | attack actuator just released, do not shoot: stunned=false, damaged=true, game.isCameraRotating=false, teleporting=false, ready=true, canFireWeapon=true
-11:20:31 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:20:32 | DEBUG | DesertMan | onChangeState: current=STAND, previous=JUMP
-11:20:32 | DEBUG | DesertMan | onChangeState(): ending JUMP state: body.physics.applyFrictionX=true
-11:20:32 | DEBUG | DesertMan | onChangeState(): setting up STAND state: stand timer reset
-11:20:32 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:20:32 | DEBUG | MegamanControllerComponent | right actuator just released
-11:20:33 | DEBUG | DesertMan | onChangeState: current=DANCE, previous=STAND
-11:20:33 | DEBUG | DesertMan | onChangeState(): setting up DANCE state: dance timer reset, dance_needles timer reset
-11:20:34 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:20:34 | DEBUG | MegamanControllerComponent | left actuator just released
-11:20:34 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:34 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-11:20:34 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-11:20:34 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:34 | DEBUG | MegamanControllerComponent | right actuator just released
-11:20:34 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:20:35 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:20:35 | DEBUG | MegamanControllerComponent | left actuator just released
-11:20:35 | DEBUG | MegamanControllerComponent | right actuator just released
-11:20:35 | DEBUG | DesertMan | onChangeState: current=STAND, previous=DANCE
-11:20:35 | DEBUG | DesertMan | onChangeState: ending DANCE state: nothing to do
-11:20:35 | DEBUG | DesertMan | onChangeState(): setting up STAND state: stand timer reset
-11:20:36 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:36 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-11:20:36 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-11:20:36 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:36 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:20:36 | DEBUG | DesertMan | onChangeState: current=TORNADO, previous=STAND
-11:20:36 | DEBUG | DesertMan | onChangeState(): setting up TORNADO state: tornado timer reset, tornado_punch timer reset, tornado_start timer reset, tornado_sand timer reset, play wind 1 sound
-11:20:37 | DEBUG | DesertMan | spawnSandSplash()
-11:20:37 | DEBUG | DesertMan | spawnSandSplash()
-11:20:37 | DEBUG | DesertMan | spawnSandSplash()
-11:20:37 | DEBUG | DesertMan | spawnSandSplash()
-11:20:37 | DEBUG | DesertMan | spawnSandSplash()
-11:20:37 | DEBUG | DesertMan | spawnSandSplash()
-11:20:37 | DEBUG | DesertMan | spawnSandSplash()
-11:20:37 | DEBUG | DesertMan | spawnSandSplash()
-11:20:37 | DEBUG | DesertMan | spawnSandSplash()
-11:20:38 | DEBUG | DesertMan | spawnSandSplash()
-11:20:38 | DEBUG | DesertMan | spawnSandSplash()
-11:20:38 | DEBUG | DesertMan | spawnSandSplash()
-11:20:38 | DEBUG | DesertMan | spawnSandSplash()
-11:20:38 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:20:38 | DEBUG | DesertMan | onChangeState: current=STAND, previous=TORNADO
-11:20:38 | DEBUG | DesertMan | onChangeState: ending TORNADO state: nothing to do
-11:20:38 | DEBUG | DesertMan | onChangeState(): setting up STAND state: stand timer reset
-11:20:38 | DEBUG | MegamanControllerComponent | left actuator just released
-11:20:39 | DEBUG | DesertMan | onChangeState: current=JUMP, previous=STAND
-11:20:39 | DEBUG | DesertMan | onChangeState(): setting up JUMP state: body.physics.applyFrictionX=false, body.physics.velocity=(182.875,445.80115), facing=RIGHT
-11:20:40 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:20:40 | DEBUG | MegamanControllerComponent | right actuator just released
-11:20:40 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:40 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-11:20:40 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-11:20:40 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:40 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:20:40 | DEBUG | MegamanControllerComponent | left actuator just released
-11:20:40 | DEBUG | DesertMan | onChangeState: current=STAND, previous=JUMP
-11:20:40 | DEBUG | DesertMan | onChangeState(): ending JUMP state: body.physics.applyFrictionX=true
-11:20:40 | DEBUG | DesertMan | onChangeState(): setting up STAND state: stand timer reset
-11:20:40 | DEBUG | MegamanControllerComponent | right actuator just released
-11:20:41 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:20:41 | DEBUG | DesertMan | onChangeState: current=TORNADO, previous=STAND
-11:20:41 | DEBUG | DesertMan | onChangeState(): setting up TORNADO state: tornado timer reset, tornado_punch timer reset, tornado_start timer reset, tornado_sand timer reset, play wind 1 sound
-11:20:41 | DEBUG | DesertMan | spawnSandSplash()
-11:20:41 | DEBUG | DesertMan | spawnSandSplash()
-11:20:41 | DEBUG | DesertMan | spawnSandSplash()
-11:20:41 | DEBUG | DesertMan | spawnSandSplash()
-11:20:41 | DEBUG | DesertMan | spawnSandSplash()
-11:20:42 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:20:42 | DEBUG | MegamanControllerComponent | right actuator just released
-11:20:42 | DEBUG | DesertMan | spawnSandSplash()
-11:20:42 | DEBUG | DesertMan | spawnSandSplash()
-11:20:42 | DEBUG | DesertMan | spawnSandSplash()
-11:20:42 | DEBUG | DesertMan | spawnSandSplash()
-11:20:42 | DEBUG | DesertMan | onChangeState: current=STAND, previous=TORNADO
-11:20:42 | DEBUG | DesertMan | onChangeState: ending TORNADO state: nothing to do
-11:20:42 | DEBUG | DesertMan | onChangeState(): setting up STAND state: stand timer reset
-11:20:43 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:20:43 | DEBUG | MegamanControllerComponent | left actuator just released
-11:20:43 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:43 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-11:20:43 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-11:20:43 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:43 | DEBUG | MegamanControllerComponent | right actuator just released
-11:20:43 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:20:43 | DEBUG | DesertMan | onChangeState: current=DANCE, previous=STAND
-11:20:43 | DEBUG | DesertMan | onChangeState(): setting up DANCE state: dance timer reset, dance_needles timer reset
-11:20:44 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:20:44 | DEBUG | MegamanControllerComponent | left actuator just released
-11:20:44 | DEBUG | MegamanControllerComponent | right actuator just released
-11:20:44 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:44 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-11:20:44 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-11:20:44 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:45 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:20:45 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:20:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:45 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:20:45 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:20:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:45 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:20:45 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:20:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:45 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:20:45 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:20:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:45 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:20:45 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:20:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:45 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:20:45 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:20:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:45 | DEBUG | DesertMan | onChangeState: current=STAND, previous=DANCE
-11:20:45 | DEBUG | DesertMan | onChangeState: ending DANCE state: nothing to do
-11:20:45 | DEBUG | DesertMan | onChangeState(): setting up STAND state: stand timer reset
-11:20:46 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:20:46 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:20:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:46 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:20:46 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:20:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:46 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:20:46 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:20:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:46 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:20:46 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:20:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:46 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:20:46 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:20:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:46 | DEBUG | DesertMan | onChangeState: current=JUMP, previous=STAND
-11:20:46 | DEBUG | DesertMan | onChangeState(): setting up JUMP state: body.physics.applyFrictionX=false, body.physics.velocity=(-320.0,425.31335), facing=LEFT
-11:20:47 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:20:47 | DEBUG | DesertMan | onChangeState: current=STAND, previous=JUMP
-11:20:47 | DEBUG | DesertMan | onChangeState(): ending JUMP state: body.physics.applyFrictionX=true
-11:20:47 | DEBUG | DesertMan | onChangeState(): setting up STAND state: stand timer reset
-11:20:48 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:20:48 | DEBUG | MegamanControllerComponent | left actuator just released
-11:20:49 | DEBUG | DesertMan | onChangeState: current=TORNADO, previous=STAND
-11:20:49 | DEBUG | DesertMan | onChangeState(): setting up TORNADO state: tornado timer reset, tornado_punch timer reset, tornado_start timer reset, tornado_sand timer reset, play wind 1 sound
-11:20:49 | DEBUG | DesertMan | spawnSandSplash()
-11:20:49 | DEBUG | DesertMan | spawnSandSplash()
-11:20:49 | DEBUG | DesertMan | spawnSandSplash()
-11:20:49 | DEBUG | DesertMan | spawnSandSplash()
-11:20:49 | DEBUG | DesertMan | spawnSandSplash()
-11:20:49 | DEBUG | DesertMan | spawnSandSplash()
-11:20:49 | DEBUG | DesertMan | spawnSandSplash()
-11:20:49 | DEBUG | DesertMan | spawnSandSplash()
-11:20:49 | DEBUG | DesertMan | spawnSandSplash()
-11:20:50 | DEBUG | DesertMan | spawnSandSplash()
-11:20:50 | DEBUG | Megaman | takeDamageFrom(): healthDiff=3, damager={ DesertMan:[mapObjId=420, dead=false, hashCode=812229472] }
-11:20:50 | DEBUG | DesertMan | spawnSandSplash()
-11:20:50 | DEBUG | DesertMan | spawnSandSplash()
-11:20:50 | DEBUG | DesertMan | spawnSandSplash()
-11:20:50 | DEBUG | DesertMan | onChangeState: current=STAND, previous=TORNADO
-11:20:50 | DEBUG | DesertMan | onChangeState: ending TORNADO state: nothing to do
-11:20:50 | DEBUG | DesertMan | onChangeState(): setting up STAND state: stand timer reset
-11:20:50 | DEBUG | MegamanControllerComponent | attack actuator just released, do not shoot: stunned=false, damaged=true, game.isCameraRotating=false, teleporting=false, ready=true, canFireWeapon=true
-11:20:50 | DEBUG | MegamanControllerComponent | right actuator just released
-11:20:50 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:20:51 | DEBUG | DesertMan | onChangeState: current=PUNCH, previous=STAND
-11:20:51 | DEBUG | DesertMan | onChangeState(): setting up PUNCH state: update facing=LEFT, updated arm extensions punch timer reset, longPunchExtensionCount=0, longPunchingForward=true, [leftArmExtensions=[[17184.0,1408.5298,3.5,3.5], [17072.0,1408.5298,3.5,3.5], [0.0,0.0,3.5,3.5]], rightArmExtensions=[[17452.5,1408.5298,3.5,3.5], [17564.5,1408.5298,3.5,3.5], [0.0,0.0,3.5,3.5]]]
-11:20:51 | DEBUG | DesertMan | update(): PUNCH: timer finished
-11:20:51 | DEBUG | DesertMan | update(): PUNCH: increment longPunchExtensionCount=1
-11:20:51 | DEBUG | DesertMan | update(): PUNCH: timer finished
-11:20:51 | DEBUG | DesertMan | update(): PUNCH: increment longPunchExtensionCount=2
-11:20:52 | DEBUG | DesertMan | update(): PUNCH: timer finished
-11:20:52 | DEBUG | DesertMan | update(): PUNCH: set longPunchingForward=false
-11:20:52 | DEBUG | DesertMan | update(): PUNCH: decrement longPunchExtensionCount=1
-11:20:52 | DEBUG | DesertMan | update(): PUNCH: timer finished
-11:20:52 | DEBUG | DesertMan | update(): PUNCH: decrement longPunchExtensionCount=0
-11:20:52 | DEBUG | DesertMan | update(): PUNCH: set state machine to next
-11:20:52 | DEBUG | DesertMan | onChangeState: current=STAND, previous=PUNCH
-11:20:52 | DEBUG | DesertMan | onChangeState: ending PUNCH state: nothing to do
-11:20:52 | DEBUG | DesertMan | onChangeState(): setting up STAND state: stand timer reset
-11:20:52 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:20:52 | DEBUG | MegamanControllerComponent | left actuator just released
-11:20:52 | DEBUG | MegamanControllerComponent | right actuator just released
-11:20:52 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:52 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-11:20:52 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-11:20:52 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:52 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:20:53 | DEBUG | DesertMan | onChangeState: current=JUMP, previous=STAND
-11:20:53 | DEBUG | DesertMan | onChangeState(): setting up JUMP state: body.physics.applyFrictionX=false, body.physics.velocity=(-320.0,480.60095), facing=LEFT
-11:20:54 | DEBUG | DesertMan | onChangeState: current=STAND, previous=JUMP
-11:20:54 | DEBUG | DesertMan | onChangeState(): ending JUMP state: body.physics.applyFrictionX=true
-11:20:54 | DEBUG | DesertMan | onChangeState(): setting up STAND state: stand timer reset
-11:20:54 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:20:54 | DEBUG | MegamanControllerComponent | left actuator just released
-11:20:55 | DEBUG | DesertMan | onChangeState: current=JUMP, previous=STAND
-11:20:55 | DEBUG | DesertMan | onChangeState(): setting up JUMP state: body.physics.applyFrictionX=false, body.physics.velocity=(160.54102,549.1051), facing=RIGHT
-11:20:56 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:20:56 | DEBUG | MegamanControllerComponent | right actuator just released
-11:20:56 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:56 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-11:20:56 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-11:20:56 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:56 | DEBUG | MegamanControllerComponent | left actuator just released
-11:20:56 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:20:56 | DEBUG | DesertMan | onChangeState: current=STAND, previous=JUMP
-11:20:56 | DEBUG | DesertMan | onChangeState(): ending JUMP state: body.physics.applyFrictionX=true
-11:20:56 | DEBUG | DesertMan | onChangeState(): setting up STAND state: stand timer reset
-11:20:57 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:20:57 | DEBUG | MegamanControllerComponent | right actuator just released
-11:20:57 | DEBUG | MegamanControllerComponent | left actuator just released
-11:20:57 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:57 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
-11:20:57 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
-11:20:57 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:57 | DEBUG | DesertMan | onChangeState: current=TORNADO, previous=STAND
-11:20:57 | DEBUG | DesertMan | onChangeState(): setting up TORNADO state: tornado timer reset, tornado_punch timer reset, tornado_start timer reset, tornado_sand timer reset, play wind 1 sound
-11:20:57 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:20:57 | DEBUG | DesertMan | spawnSandSplash()
-11:20:57 | DEBUG | DesertMan | spawnSandSplash()
-11:20:58 | DEBUG | DesertMan | spawnSandSplash()
-11:20:58 | DEBUG | DesertMan | spawnSandSplash()
-11:20:58 | DEBUG | DesertMan | spawnSandSplash()
-11:20:58 | DEBUG | DesertMan | spawnSandSplash()
-11:20:58 | DEBUG | DesertMan | spawnSandSplash()
-11:20:58 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:20:58 | DEBUG | DesertMan | spawnSandSplash()
-11:20:58 | DEBUG | MegamanControllerComponent | right actuator just released
-11:20:58 | DEBUG | DesertMan | onChangeState: current=STAND, previous=TORNADO
-11:20:58 | DEBUG | DesertMan | onChangeState: ending TORNADO state: nothing to do
-11:20:58 | DEBUG | DesertMan | onChangeState(): setting up STAND state: stand timer reset
-11:20:59 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:20:59 | DEBUG | MegamanControllerComponent | left actuator just released
-11:20:59 | DEBUG | DesertMan | onChangeState: current=JUMP, previous=STAND
-11:20:59 | DEBUG | DesertMan | onChangeState(): setting up JUMP state: body.physics.applyFrictionX=false, body.physics.velocity=(-195.2461,490.59094), facing=LEFT
-11:20:59 | DEBUG | MegamanControllerComponent | right actuator just released
-11:20:59 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:20:59 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-11:20:59 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-11:20:59 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:20:59 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:21:00 | DEBUG | DesertMan | onChangeState: current=STAND, previous=JUMP
-11:21:00 | DEBUG | DesertMan | onChangeState(): ending JUMP state: body.physics.applyFrictionX=true
-11:21:00 | DEBUG | DesertMan | onChangeState(): setting up STAND state: stand timer reset
-11:21:01 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:21:01 | DEBUG | MegamanControllerComponent | left actuator just released
-11:21:01 | DEBUG | MegamanControllerComponent | right actuator just released
-11:21:01 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:01 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
-11:21:01 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
-11:21:01 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:01 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:21:01 | DEBUG | DesertMan | onChangeState: current=JUMP, previous=STAND
-11:21:01 | DEBUG | DesertMan | onChangeState(): setting up JUMP state: body.physics.applyFrictionX=false, body.physics.velocity=(-151.92578,544.407), facing=LEFT
-11:21:02 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:21:02 | DEBUG | MegamanControllerComponent | left actuator just released
-11:21:02 | DEBUG | DesertMan | onChangeState: current=WALL_SLIDE, previous=JUMP
-11:21:02 | DEBUG | DesertMan | onChangeState(): ending JUMP state: body.physics.applyFrictionX=true
-11:21:02 | DEBUG | DesertMan | onChangeState(): setting up WALL_SLIDE state: wall_slide timer reset, body.physics.defaultFrictionOnSelf.y=6.0
-11:21:03 | DEBUG | DesertMan | onChangeState: current=JUMP, previous=WALL_SLIDE
-11:21:03 | DEBUG | DesertMan | onChangeState(): ending WALL_SLIDE state: body.physics.defaultFrictionOnSelf.y=1.0
-11:21:03 | DEBUG | DesertMan | onChangeState(): setting up JUMP state: body.physics.applyFrictionX=false, body.physics.velocity=(160.0,503.8994), facing=RIGHT
-11:21:04 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:21:04 | DEBUG | MegamanControllerComponent | right actuator just released
-11:21:04 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:04 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-11:21:04 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-11:21:04 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:04 | DEBUG | MegamanControllerComponent | left actuator just released
-11:21:04 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:21:04 | DEBUG | DesertMan | onChangeState: current=STAND, previous=JUMP
-11:21:04 | DEBUG | DesertMan | onChangeState(): ending JUMP state: body.physics.applyFrictionX=true
-11:21:04 | DEBUG | DesertMan | onChangeState(): setting up STAND state: stand timer reset
-11:21:05 | DEBUG | DesertMan | onChangeState: current=TORNADO, previous=STAND
-11:21:05 | DEBUG | DesertMan | onChangeState(): setting up TORNADO state: tornado timer reset, tornado_punch timer reset, tornado_start timer reset, tornado_sand timer reset, play wind 1 sound
-11:21:05 | DEBUG | DesertMan | spawnSandSplash()
-11:21:05 | DEBUG | DesertMan | spawnSandSplash()
-11:21:05 | DEBUG | DesertMan | spawnSandSplash()
-11:21:06 | DEBUG | DesertMan | spawnSandSplash()
-11:21:06 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:21:06 | DEBUG | DesertMan | spawnSandSplash()
-11:21:06 | DEBUG | MegamanControllerComponent | right actuator just released
-11:21:06 | DEBUG | DesertMan | spawnSandSplash()
-11:21:06 | DEBUG | DesertMan | spawnSandSplash()
-11:21:06 | DEBUG | DesertMan | spawnSandSplash()
-11:21:06 | DEBUG | DesertMan | spawnSandSplash()
-11:21:06 | DEBUG | DesertMan | spawnSandSplash()
-11:21:06 | DEBUG | DesertMan | spawnSandSplash()
-11:21:06 | DEBUG | DesertMan | spawnSandSplash()
-11:21:07 | DEBUG | DesertMan | spawnSandSplash()
-11:21:07 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:21:07 | DEBUG | DesertMan | onChangeState: current=STAND, previous=TORNADO
-11:21:07 | DEBUG | DesertMan | onChangeState: ending TORNADO state: nothing to do
-11:21:07 | DEBUG | DesertMan | onChangeState(): setting up STAND state: stand timer reset
-11:21:07 | DEBUG | MegamanControllerComponent | left actuator just released
-11:21:07 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-11:21:07 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-11:21:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:07 | DEBUG | MegamanControllerComponent | right actuator just released
-11:21:07 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:21:08 | DEBUG | DesertMan | onChangeState: current=DANCE, previous=STAND
-11:21:08 | DEBUG | DesertMan | onChangeState(): setting up DANCE state: dance timer reset, dance_needles timer reset
-11:21:08 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:21:08 | DEBUG | MegamanControllerComponent | left actuator just released
-11:21:08 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:08 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
-11:21:08 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
-11:21:08 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:08 | DEBUG | MegamanControllerComponent | right actuator just released
-11:21:09 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:09 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:21:09 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:21:09 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:09 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:21:09 | DEBUG | MegamanControllerComponent | right actuator just released
-11:21:09 | DEBUG | AbstractBoss | triggerDefeat()
-11:21:09 | LOG | MegaLevelScreen | event(): event=Event(key=BOSS_DEFEATED, properties=Properties({
-	[boss={ DesertMan:[mapObjId=420, dead=false, hashCode=812229472] }]
-}))
-11:21:09 | DEBUG | MegaLevelScreenEventListener | onEvent(): boss defeated
-11:21:09 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
-11:21:09 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
-11:21:12 | DEBUG | AbstractBoss | update(): defeat timer finished
-11:21:12 | LOG | MegaLevelScreen | event(): event=Event(key=BOSS_DEAD, properties=Properties({
-	[boss={ DesertMan:[mapObjId=420, dead=true, hashCode=812229472] }]
-}))
-11:21:12 | DEBUG | MegaLevelScreenEventListener | onEvent(): boss dead
-11:21:12 | DEBUG | DesertMan | onDestroy()
-11:21:12 | DEBUG | AbstractBoss | onDestroy()
-11:21:12 | LOG | DesertMan | onDestroy()
-11:21:12 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
-11:21:12 | LOG | MegaLevelScreen | event(): event=Event(key=INTERMEDIATE_BOSS_DEAD, properties=Properties({
-	[boss={ DesertMan:[mapObjId=420, dead=true, hashCode=812229472] }]
-}))
-11:21:13 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:21:16 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_OPENING, properties=Properties({
-}))
-11:21:16 | DEBUG | MegaLevelScreenEventListener | onEvent(): gate init opening --> start room transition
-11:21:16 | DEBUG | MegamanEventListener | GATE_INIT_OPENING
-11:21:17 | DEBUG | MegamanControllerComponent | right actuator just released
-11:21:17 | LOG | MegaLevelScreen | event(): event=Event(key=NEXT_ROOM_REQ, properties=Properties({
-	[room=room10]
-}))
-11:21:17 | DEBUG | MegaLevelScreenEventListener | onEvent(): next room req --> start room transition
-11:21:17 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = RIGHT
-11:21:17 | DEBUG | MegaLevelScreenEventListener | onEvent(): next room req --> successfully starting transition to room: room10
-11:21:17 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
-11:21:17 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (17120.0,1536.0)
-11:21:17 | DEBUG | MegamanEventListener | BEGIN ROOM TRANS: position=(17328.0,1450.4438)
-11:21:18 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (17632.0,1536.0)
-11:21:18 | DEBUG | MegaLevelScreen | end transition logic for camera manager
-11:21:18 | DEBUG | MegamanEventListener | endRoomTrans(): setVel=true
-11:21:18 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:21:18 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_CLOSING, properties=Properties({
-}))
-11:21:18 | DEBUG | MegaLevelScreenEventListener | onEvent(): gate init closing
-11:21:19 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:21:19 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:21:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:19 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:21:19 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:21:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:20 | DEBUG | MegamanControllerComponent | right actuator just released
-11:21:20 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:21:20 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:21:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:21 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:21:21 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:21:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:21 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:21:21 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:21:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:21 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:21:21 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:21:21 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:21:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:21 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:21:21 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:21:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:23 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:21:23 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:21:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:23 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:21:23 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:21:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:24 | DEBUG | MegamanControllerComponent | attack actuator just released, do not shoot: stunned=false, damaged=false, game.isCameraRotating=false, teleporting=false, ready=true, canFireWeapon=false
-11:21:24 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:21:24 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:21:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:24 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:21:24 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:21:24 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:21:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:24 | DEBUG | MegamanControllerComponent | left actuator just released
-11:21:24 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:21:24 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:21:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:24 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:21:24 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:21:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:24 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:21:24 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:21:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:25 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:25 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:21:25 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:21:25 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:25 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:25 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:21:25 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:21:25 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:26 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_OPENING, properties=Properties({
-}))
-11:21:26 | DEBUG | MegaLevelScreenEventListener | onEvent(): gate init opening --> start room transition
-11:21:26 | DEBUG | MegamanEventListener | GATE_INIT_OPENING
-11:21:26 | DEBUG | MegamanControllerComponent | right actuator just released
-11:21:26 | LOG | MegaLevelScreen | event(): event=Event(key=NEXT_ROOM_REQ, properties=Properties({
-	[room=boss_room]
-}))
-11:21:26 | DEBUG | MegaLevelScreenEventListener | onEvent(): next room req --> start room transition
-11:21:26 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = RIGHT
-11:21:26 | DEBUG | MegaLevelScreenEventListener | onEvent(): next room req --> successfully starting transition to room: boss_room
-11:21:26 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
-11:21:26 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (17632.0,1536.0)
-11:21:26 | DEBUG | MegamanEventListener | BEGIN ROOM TRANS: position=(17840.0,1397.6)
-11:21:28 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (18144.0,1536.0)
-11:21:28 | DEBUG | MegaLevelScreen | end transition logic for camera manager
-11:21:28 | DEBUG | MegamanEventListener | endRoomTrans(): setVel=true
-11:21:28 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_CLOSING, properties=Properties({
-}))
-11:21:28 | DEBUG | MegaLevelScreenEventListener | onEvent(): gate init closing
-11:21:28 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:21:28 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:21:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:28 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:21:28 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:21:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:28 | DEBUG | MegamanControllerComponent | left actuator just pressed
-11:21:30 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:30 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:21:30 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:21:30 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:30 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-11:21:30 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-11:21:30 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-11:21:30 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-11:21:30 | DEBUG | MegamanControllerComponent | right actuator just pressed
-11:21:30 | DEBUG | MegamanControllerComponent | left actuator just released
-11:21:30 | DEBUG | MegamanControllerComponent | right actuator just released
-11:21:32 | LOG | MegamanMaverickGame | pause()
-11:21:32 | DEBUG | LevelPauseScreen | setCurrentButtonKey(): ignore setting button key: null
-11:21:32 | DEBUG | LevelPauseScreen | show(): currentButtonKey=mega_buster, node=TableNode{ element=MEGA_BUSTER, row=0, column=0 }, table=Table{
-	[TableNode{ element=MEGA_BUSTER, row=0, column=0 }]
-	[TableNode{ element=exit, row=1, column=0 }]
-}, buttons=[mega_buster, exit], buttonSprites=[exit, mega_buster]
-11:21:32 | LOG | MegamanMaverickGame | dispose()
-11:21:32 | DEBUG | Megaman | onDestroy()
-11:21:32 | DEBUG | MegaLevelScreen | dispose(): Disposing level screen
+14:02:43 | DEBUG | TubeBeamer | onSpawn(): spawnProps=Properties({
+	[direction=up]
+	[bounds=[9504.0,1376.0,32.0,32.0]]
+	[spawn_room=room10]
+	[x=9504.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[delay=1.0]
+	[id=355]
+	[name=TubeBeamer]
+	[y=1376.0]
+	[width=32.0]
+})
+14:02:43 | DEBUG | TubeBeamer | onDestroy()
+14:02:43 | DEBUG | TubeBeamer | onDestroy()
+14:02:43 | DEBUG | TubeBeamer | onDestroy()
+14:02:43 | DEBUG | TubeBeamer | onDestroy()
+14:02:43 | DEBUG | TubeBeamer | onDestroy()
+14:02:44 | DEBUG | TubeBeamer | onDestroy()
+14:02:44 | DEBUG | TubeBeamer | onDestroy()
+14:02:44 | DEBUG | TubeBeamer | onDestroy()
+14:02:44 | DEBUG | TubeBeamer | onDestroy()

@@ -1,7 +1,9 @@
 package com.megaman.maverick.game.entities.hazards
 
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -26,15 +28,17 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.TubeBeam
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
 class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity, IBodyEntity, ICullableEntity,
@@ -46,11 +50,10 @@ class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity
         private const val SPAWN_DELAY = 1.25f
     }
 
-    override var direction = Direction.UP
+    override lateinit var direction: Direction
 
     private val spawnTimer = Timer(SPAWN_DELAY)
-
-    override fun getType() = EntityType.HAZARD
+    private lateinit var spawnRoom: String
 
     override fun init() {
         addComponent(AudioComponent())
@@ -60,28 +63,40 @@ class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
+
         direction = Direction.valueOf(spawnProps.get(ConstKeys.DIRECTION, String::class)!!.uppercase())
+
+        spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
         spawnTimer.reset()
     }
 
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+    }
+
     private fun beamTube() {
-        val tubeBeam = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.TUBE_BEAM)!!
         val trajectory = (when (direction) {
             Direction.RIGHT -> Vector2(VELOCITY, 0f)
             Direction.LEFT -> Vector2(-VELOCITY, 0f)
             Direction.UP -> Vector2(0f, VELOCITY)
             Direction.DOWN -> Vector2(0f, -VELOCITY)
         }).scl(ConstVals.PPM.toFloat())
-        tubeBeam.spawn(
+
+        val beam = MegaEntityFactory.fetch(TubeBeam::class)!!
+        beam.spawn(
             props(
                 ConstKeys.POSITION pairTo body.getCenter(),
                 ConstKeys.DIRECTION pairTo direction,
                 ConstKeys.TRAJECTORY pairTo trajectory
             )
         )
+
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.BURST_SOUND, false)
     }
 
@@ -98,13 +113,28 @@ class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat())
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
         return BodyComponentCreator.create(this, body)
     }
 
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
-            ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(this, objectSetOf(EventType.BEGIN_ROOM_TRANS))
+            ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
+                this, objectSetOf(EventType.BEGIN_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS), predicate@{ event ->
+                    val eventRoom = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
+                    val shouldCull = eventRoom != spawnRoom
+                    GameLogger.debug(
+                        TAG,
+                        "defineCullablesComponent(): predicate: " +
+                            "eventRoom=$eventRoom, spawnRoom=$spawnRoom, shouldCull=$shouldCull, event=$event"
+                    )
+                    return@predicate shouldCull
+                }
+            )
         )
     )
+
+    override fun getType() = EntityType.HAZARD
+
+    override fun getTag() = TAG
 }
