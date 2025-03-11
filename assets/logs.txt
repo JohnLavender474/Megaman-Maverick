@@ -1,936 +1,430 @@
-===== SESSION STARTED: 2025-03-11T00:00:45.344098383 =====
-00:00:45 | DEBUG | MegamanMaverickGame | resize(): width=640, height=480
-00:00:45 | DEBUG | MegamanMaverickGame | resize(): width=1920, height=995
-00:00:45 | LOG | MegamanMaverickGame | pause()
-00:00:45 | LOG | MegamanMaverickGame | pause()
-00:00:45 | LOG | MegamanMaverickGame | resume()
-00:00:47 | DEBUG | Megaman | init()
-00:00:47 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=MEGA_BUSTER, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@c4c0b41
-00:00:47 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=null
-00:00:47 | DEBUG | GameState | addListener(): listener={ Megaman:[mapObjId=0, dead=false, hashCode=602830277] }, added=true
-00:00:47 | DEBUG | PlayerStatsHandler | init()
-00:00:47 | DEBUG | CameraManagerForRooms | set focus to { Megaman:[mapObjId=0, dead=false, hashCode=602830277] }
-00:00:47 | DEBUG | LevelPauseScreen | init(): buttonRegions={exit=options/exit, exit_selected=options/exit_selected, mega_buster=weapons/mega_buster, mega_buster_selected=weapons/mega_buster_selected, ice_cube=weapons/ice_cube, ice_cube_selected=weapons/ice_cube_selected, fire_ball=weapons/fire_ball, fire_ball_selected=weapons/fire_ball_selected, moon_scythe=weapons/moon_scythe, moon_scythe_selected=weapons/moon_scythe_selected, rush_jetpack=weapons/rush_jetpack, rush_jetpack_selected=weapons/rush_jetpack_selected, a=health_tanks/a, a_selected=health_tanks/a_selected, b=health_tanks/b, b_selected=health_tanks/b_selected, c=health_tanks/c, c_selected=health_tanks/c_selected, d=health_tanks/d, d_selected=health_tanks/d_selected}
-00:00:47 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = SIMPLE_INIT_GAME_SCREEN
-00:00:47 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = LOGO_SCREEN
-00:00:47 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = MAIN_MENU_SCREEN
-00:00:47 | DEBUG | MainMenuScreen | current button key: START NEW GAME
-00:00:47 | DEBUG | MainMenuScreen | blinking arrows keys: [LOAD SAVE FILE, SETTINGS, EXIT, START NEW GAME, KEYBOARD SETTINGS, CREDITS, BACK, MUSIC VOLUME, CONTROLLER SETTINGS, SFX VOLUME]
-00:00:48 | DEBUG | MainMenuScreen | Current button: LOAD SAVE FILE
-00:00:48 | DEBUG | MegamanMaverickGame | loadSavedState(): loading state: state=DESERT_MAN,RODENT_MAN,MOON_MAN,TIMBER_WOMAN,REACTOR_MAN,INTRO_STAGE;E,C,B,D,A,G,H;B,C;;852
-00:00:48 | DEBUG | GameState | reset()
-00:00:48 | DEBUG | GameState | fromString(): s=DESERT_MAN,RODENT_MAN,MOON_MAN,TIMBER_WOMAN,REACTOR_MAN,INTRO_STAGE;E,C,B,D,A,G,H;B,C;;852
-00:00:48 | DEBUG | GameState | addLevelDefeated(): level=DESERT_MAN, added=true
-00:00:48 | DEBUG | GameState | addLevelDefeated(): level=RODENT_MAN, added=true
-00:00:48 | DEBUG | GameState | addLevelDefeated(): level=MOON_MAN, added=true
-00:00:48 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=MOON_SCYTHE, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@15ac59c2
-00:00:48 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=RUSH_JETPACK, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@c4c0b41
-00:00:48 | DEBUG | GameState | addLevelDefeated(): level=TIMBER_WOMAN, added=true
-00:00:48 | DEBUG | GameState | addLevelDefeated(): level=REACTOR_MAN, added=true
-00:00:48 | DEBUG | GameState | addLevelDefeated(): level=INTRO_STAGE, added=true
-00:00:48 | DEBUG | GameState | addHeartTank(): heartTank=E, added=true
-00:00:48 | DEBUG | GameState | addHeartTank(): heartTank=C, added=true
-00:00:48 | DEBUG | GameState | addHeartTank(): heartTank=B, added=true
-00:00:48 | DEBUG | GameState | addHeartTank(): heartTank=D, added=true
-00:00:48 | DEBUG | GameState | addHeartTank(): heartTank=A, added=true
-00:00:48 | DEBUG | GameState | addHeartTank(): heartTank=G, added=true
-00:00:48 | DEBUG | GameState | addHeartTank(): heartTank=H, added=true
-00:00:48 | DEBUG | GameState | addHealthTank(): healthTank=B
-00:00:48 | DEBUG | GameState | addHealthTank(): healthTank=C
-00:00:48 | DEBUG | MainMenuScreen | Loaded saved state
-00:00:48 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = LEVEL_SELECT_SCREEN
-00:00:48 | DEBUG | LevelSelectScreen | putBossMugshot(): put moon pieces for Moon Man
-00:00:50 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = LEVEL_SCREEN
-00:00:50 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_SPAWN, properties=Properties({
-}))
-00:00:50 | DEBUG | MegaLevelScreenEventListener | onEvent(): player spawn --> reset camera manager for rooms and spawn megaman
-00:00:50 | DEBUG | MegaLevelScreen | onEvent(): player spawn --> spawn Megaman: Properties({
-	[bounds=[3504.0,192.0,32.0,32.0]]
-	[x=3504.0]
-	[height=32.0]
-	[id=87]
-	[name=0]
-	[y=192.0]
-	[width=32.0]
-})
-00:00:50 | DEBUG | Megaman | onSpawn(): spawnProps=Properties({
-	[bounds=[3504.0,192.0,32.0,32.0]]
-	[x=3504.0]
-	[height=32.0]
-	[id=87]
-	[name=0]
-	[y=192.0]
-	[width=32.0]
-})
-00:00:50 | DEBUG | Megaman | direction-set(): value=UP
-00:00:50 | DEBUG | Megaman | direction-set(): value same as field
-00:00:50 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=MEGA_BUSTER
-00:00:50 | DEBUG | CameraManagerForRooms | update(): reset
-00:00:50 | DEBUG | CameraManagerForRooms | nextGameRoom(): next room = com.badlogic.gdx.maps.objects.RectangleMapObject@77774571
-00:00:52 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_READY, properties=Properties({
-}))
-00:00:52 | DEBUG | MegaLevelScreenEventListener | onEvent(): player ready
-00:00:52 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:00:54 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:00:54 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:00:54 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:00:54 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:00:55 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_OPENING, properties=Properties({
-}))
-00:00:55 | DEBUG | MegaLevelScreenEventListener | onEvent(): gate init opening --> start room transition
-00:00:55 | DEBUG | MegamanEventListener | GATE_INIT_OPENING
-00:00:55 | DEBUG | MegamanControllerComponent | right actuator just released
-00:00:55 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:00:55 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:00:55 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:00:55 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:00:55 | LOG | MegaLevelScreen | event(): event=Event(key=NEXT_ROOM_REQ, properties=Properties({
-	[room=temp_room_2]
-}))
-00:00:55 | DEBUG | MegaLevelScreenEventListener | onEvent(): next room req --> start room transition
-00:00:55 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = RIGHT
-00:00:55 | DEBUG | MegaLevelScreenEventListener | onEvent(): next room req --> successfully starting transition to room: temp_room_2
-00:00:55 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
-00:00:55 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (3872.0,352.0)
-00:00:55 | DEBUG | MegamanEventListener | BEGIN ROOM TRANS: position=(4077.0222,204.0)
-00:00:57 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (4384.0,352.0)
-00:00:57 | DEBUG | MegaLevelScreen | end transition logic for camera manager
-00:00:57 | DEBUG | MegamanEventListener | endRoomTrans(): setVel=true
-00:00:57 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:00:57 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_CLOSING, properties=Properties({
-}))
-00:00:57 | DEBUG | MegaLevelScreenEventListener | onEvent(): gate init closing
-00:00:58 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:00:58 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:00:58 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:00:58 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:00:59 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_OPENING, properties=Properties({
-}))
-00:00:59 | DEBUG | MegaLevelScreenEventListener | onEvent(): gate init opening --> start room transition
-00:00:59 | DEBUG | MegamanEventListener | GATE_INIT_OPENING
-00:00:59 | DEBUG | MegamanControllerComponent | right actuator just released
-00:00:59 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:00:59 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:00:59 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:00:59 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:00:59 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:00:59 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:00:59 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:00:59 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:00:59 | LOG | MegaLevelScreen | event(): event=Event(key=NEXT_ROOM_REQ, properties=Properties({
-	[room=boss_room]
-}))
-00:00:59 | DEBUG | MegaLevelScreenEventListener | onEvent(): next room req --> start room transition
-00:00:59 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = RIGHT
-00:00:59 | DEBUG | MegaLevelScreenEventListener | onEvent(): next room req --> successfully starting transition to room: boss_room
-00:00:59 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
-00:00:59 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (4384.0,352.0)
-00:00:59 | DEBUG | MegamanEventListener | BEGIN ROOM TRANS: position=(4592.0,204.0)
-00:01:00 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (4896.0,352.0)
-00:01:00 | DEBUG | MegaLevelScreen | end transition logic for camera manager
-00:01:00 | LOG | MegaLevelScreen | event(): event=Event(key=ENTER_BOSS_ROOM, properties=Properties({
-	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@2ab09943]
-}))
-00:01:00 | DEBUG | MegaLevelScreenEventListener | onEvent(): enter boss room
-00:01:01 | DEBUG | MegamanEventListener | endRoomTrans(): setVel=false
-00:01:01 | DEBUG | PreciousWoman | init()
-00:01:01 | DEBUG | PreciousWoman | onSpawn(): spawnProps=Properties({
-	[bounds=[5056.0,384.0,32.0,32.0]]
-	[x=5056.0]
-	[height=32.0]
-	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@2ab09943]
-	[id=86]
-	[y=384.0]
-	[width=32.0]
-})
-00:01:01 | DEBUG | AbstractBoss | onSpawn(): spawnProps=Properties({
-	[bounds=[5056.0,384.0,32.0,32.0]]
-	[x=5056.0]
-	[height=32.0]
-	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@2ab09943]
-	[id=86]
-	[y=384.0]
-	[width=32.0]
-})
-00:01:01 | DEBUG | AbstractEnemy | Added CullableOnEvent from EventsManager
-00:01:01 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_CLOSING, properties=Properties({
-}))
-00:01:01 | DEBUG | MegaLevelScreenEventListener | onEvent(): gate init closing
-00:01:02 | DEBUG | PreciousWoman | onChangeState(): current=STAND, previous=INIT
-00:01:02 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=1
-00:01:02 | DEBUG | PreciousWoman | onChangeState(): no action when previous=INIT
-00:01:02 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=STAND
-00:01:02 | DEBUG | PreciousWoman | onReady()
-00:01:02 | DEBUG | AbstractBoss | onReady()
-00:01:02 | LOG | MegaLevelScreen | event(): event=Event(key=BOSS_READY, properties=Properties({
-	[boss={ PreciousWoman:[mapObjId=86, dead=false, hashCode=1808679232] }]
-	[health_fill_type=BIT_BY_BIT]
-}))
-00:01:05 | LOG | MegaLevelScreen | event(): event=Event(key=END_BOSS_SPAWN, properties=Properties({
-}))
-00:01:05 | DEBUG | AbstractBoss | onEvent: event=Event(key=END_BOSS_SPAWN, properties=Properties({
-}))
-00:01:05 | LOG | PreciousWoman | onEvent: event=Event(key=END_BOSS_SPAWN, properties=Properties({
-}))
-00:01:05 | DEBUG | AbstractBoss | onEndBossSpawnEvent()
-00:01:05 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:05 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:05 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:05 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:05 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:06 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=STAND
-00:01:06 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=2
-00:01:06 | DEBUG | PreciousWoman | onChangeState(): no action when previous=STAND
-00:01:06 | DEBUG | PreciousWoman | jump(): target=(4690.4116,307.09622)
-00:01:06 | DEBUG | PreciousWoman | onChangeState(): jump vel=(-256.0,403.09622)
-00:01:06 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=JUMP
-00:01:07 | DEBUG | PreciousWoman | onChangeState(): current=STAND, previous=JUMP
-00:01:07 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=3
-00:01:07 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:01:07 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=STAND
-00:01:07 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:07 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:07 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:07 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-00:01:07 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-00:01:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:08 | DEBUG | PreciousWoman | update(): spawn shields delay just finished
-00:01:08 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:09 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:09 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=STAND
-00:01:09 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=4
-00:01:09 | DEBUG | PreciousWoman | onChangeState(): no action when previous=STAND
-00:01:09 | DEBUG | PreciousWoman | jump(): target=(4688.0,364.8477)
-00:01:09 | DEBUG | PreciousWoman | onChangeState(): jump vel=(-131.63135,460.8477)
-00:01:09 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=JUMP
-00:01:09 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:09 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=JUMP
-00:01:09 | DEBUG | PreciousWoman | onChangeState(): current=SPAWN_SHIELD_GEMS, previous=JUMP
-00:01:09 | DEBUG | PreciousWoman | onChangeState(): spawn shield gems
-00:01:09 | DEBUG | PreciousWoman | spawnShieldGems()
-00:01:09 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:01:09 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=SPAWN_SHIELD_GEMS
-00:01:09 | DEBUG | Megaman | takeDamageFrom(): healthDiff=3, damager={ PreciousGem:[mapObjId=0, dead=false, hashCode=1440250739] }
-00:01:10 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=SPAWN_SHIELD_GEMS
-00:01:10 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=1
-00:01:10 | DEBUG | PreciousWoman | onChangeState(): turn on gravity
-00:01:10 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=JUMP
-00:01:10 | DEBUG | PreciousWoman | onChangeState(): current=AIRPUNCH, previous=JUMP
-00:01:10 | DEBUG | PreciousWoman | onChangeState(): set vel y to zero when air punching
-00:01:10 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:01:10 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=AIRPUNCH
-00:01:10 | DEBUG | MegamanControllerComponent | attack actuator just released, do not shoot: stunned=false, damaged=true, game.isCameraRotating=false, teleporting=false, ready=true, canFireWeapon=true
-00:01:10 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:10 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:10 | DEBUG | MegamanControllerComponent | attack actuator just released, do not shoot: stunned=false, damaged=true, game.isCameraRotating=false, teleporting=false, ready=true, canFireWeapon=true
-00:01:10 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:10 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:11 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:11 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:11 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:11 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:11 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=AIRPUNCH
-00:01:11 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=2
-00:01:11 | DEBUG | PreciousWoman | onChangeState(): turn gravity back on, reset air punch cooldown
-00:01:11 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=JUMP
-00:01:11 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:11 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:11 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:11 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:11 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:11 | DEBUG | PreciousWoman | onChangeState(): current=STAND, previous=JUMP
-00:01:11 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=3
-00:01:11 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:01:11 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=STAND
-00:01:11 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:11 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:11 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:11 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:12 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:12 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:12 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:12 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:12 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:13 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:13 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:13 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=STAND
-00:01:13 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=4
-00:01:13 | DEBUG | PreciousWoman | onChangeState(): no action when previous=STAND
-00:01:13 | DEBUG | PreciousWoman | jump(): target=(4740.2095,213.6)
-00:01:13 | DEBUG | PreciousWoman | onChangeState(): jump vel=(-256.0,309.6)
-00:01:13 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=JUMP
-00:01:13 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:13 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:13 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
-00:01:13 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
-00:01:13 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:13 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:13 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:13 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:13 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:13 | DEBUG | PreciousWoman | onChangeState(): current=STAND, previous=JUMP
-00:01:13 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=5
-00:01:13 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:01:13 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=STAND
-00:01:14 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:14 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:14 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:14 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:14 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:14 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:14 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:15 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=STAND
-00:01:15 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=6
-00:01:15 | DEBUG | PreciousWoman | onChangeState(): no action when previous=STAND
-00:01:15 | DEBUG | PreciousWoman | jump(): target=(4688.7603,374.33856)
-00:01:15 | DEBUG | PreciousWoman | onChangeState(): jump vel=(-215.6748,470.33856)
-00:01:15 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=JUMP
-00:01:16 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:16 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:16 | DEBUG | PreciousWoman | onChangeState(): current=STAND, previous=JUMP
-00:01:16 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=7
-00:01:16 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:01:16 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=STAND
-00:01:16 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:16 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:17 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:17 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:17 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-00:01:17 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-00:01:17 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:17 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:17 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:17 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:17 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:17 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:17 | DEBUG | PreciousWoman | update(): throw min cooldown just finished
-00:01:18 | DEBUG | PreciousWoman | onChangeState(): current=GROUNDSLIDE, previous=STAND
-00:01:18 | DEBUG | PreciousWoman | onChangeState(): no action when current=GROUNDSLIDE
-00:01:18 | DEBUG | PreciousWoman | onChangeState(): no action when previous=STAND
-00:01:18 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=GROUNDSLIDE
-00:01:18 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:18 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:18 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
-00:01:18 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
-00:01:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:18 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:18 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=GROUNDSLIDE
-00:01:18 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=8
-00:01:18 | DEBUG | PreciousWoman | onChangeState(): no action when previous=GROUNDSLIDE
-00:01:18 | DEBUG | PreciousWoman | jump(): target=(5091.7583,213.6)
-00:01:18 | DEBUG | PreciousWoman | onChangeState(): jump vel=(256.0,309.6)
-00:01:18 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=JUMP
-00:01:18 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=JUMP
-00:01:18 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=JUMP
-00:01:18 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=JUMP
-00:01:18 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:18 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:18 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:18 | DEBUG | PreciousWoman | onChangeState(): current=AIRPUNCH, previous=JUMP
-00:01:18 | DEBUG | PreciousWoman | onChangeState(): set vel y to zero when air punching
-00:01:18 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:01:18 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=AIRPUNCH
-00:01:19 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=AIRPUNCH
-00:01:19 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=9
-00:01:19 | DEBUG | PreciousWoman | onChangeState(): turn gravity back on, reset air punch cooldown
-00:01:19 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:19 | DEBUG | PreciousWoman | onChangeState(): current=WALLSLIDE, previous=JUMP
-00:01:19 | DEBUG | PreciousWoman | onChangeState(): no action when current=WALLSLIDE
-00:01:19 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:01:19 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=WALLSLIDE
-00:01:19 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:20 | DEBUG | PreciousWoman | onChangeState(): current=STAND, previous=WALLSLIDE
-00:01:20 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=10
-00:01:20 | DEBUG | PreciousWoman | onChangeState(): no action when previous=WALLSLIDE
-00:01:20 | DEBUG | PreciousWoman | update(): ended wall slide, set state machine to next=STAND
-00:01:20 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:20 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:20 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-00:01:20 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-00:01:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:20 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:20 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:21 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:21 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:21 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:21 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:21 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:21 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:21 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:21 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:21 | DEBUG | PreciousWoman | onChangeState(): current=THROW_SHIELD_GEMS, previous=STAND
-00:01:21 | DEBUG | PreciousWoman | onChangeState(): setting all shield gems to be released
-00:01:21 | DEBUG | PreciousWoman | onChangeState(): no action when previous=STAND
-00:01:21 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=THROW_SHIELD_GEMS
-00:01:21 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:21 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:21 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:21 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:21 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:22 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:22 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:22 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:22 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:22 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:22 | DEBUG | PreciousWoman | onChangeState(): current=STAND, previous=THROW_SHIELD_GEMS
-00:01:22 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=1
-00:01:22 | DEBUG | PreciousWoman | onChangeState(): no action when previous=THROW_SHIELD_GEMS
-00:01:22 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=STAND
-00:01:22 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:22 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:23 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:23 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:23 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:23 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:23 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=STAND
-00:01:23 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=2
-00:01:23 | DEBUG | PreciousWoman | onChangeState(): no action when previous=STAND
-00:01:23 | DEBUG | PreciousWoman | jump(): target=(4859.2734,213.6)
-00:01:23 | DEBUG | PreciousWoman | onChangeState(): jump vel=(-244.72656,309.6)
-00:01:23 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=JUMP
-00:01:23 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-00:01:23 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-00:01:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:24 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:24 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:24 | DEBUG | PreciousWoman | onChangeState(): current=STAND, previous=JUMP
-00:01:24 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=3
-00:01:24 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:01:24 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=STAND
-00:01:24 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:25 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:25 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:25 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:25 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
-00:01:25 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
-00:01:25 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:25 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:26 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=STAND
-00:01:26 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=4
-00:01:26 | DEBUG | PreciousWoman | onChangeState(): no action when previous=STAND
-00:01:26 | DEBUG | PreciousWoman | jump(): target=(4693.7197,384.02264)
-00:01:26 | DEBUG | PreciousWoman | onChangeState(): jump vel=(-217.97217,480.02264)
-00:01:26 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=JUMP
-00:01:26 | DEBUG | PreciousWoman | onChangeState(): current=AIRPUNCH, previous=JUMP
-00:01:26 | DEBUG | PreciousWoman | onChangeState(): set vel y to zero when air punching
-00:01:26 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:01:26 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=AIRPUNCH
-00:01:26 | DEBUG | PreciousWoman | update(): spawn shields delay just finished
-00:01:26 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:26 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:27 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=AIRPUNCH
-00:01:27 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=5
-00:01:27 | DEBUG | PreciousWoman | onChangeState(): turn gravity back on, reset air punch cooldown
-00:01:27 | DEBUG | PreciousWoman | onChangeState(): current=SPAWN_SHIELD_GEMS, previous=JUMP
-00:01:27 | DEBUG | PreciousWoman | onChangeState(): spawn shield gems
-00:01:27 | DEBUG | PreciousWoman | spawnShieldGems()
-00:01:27 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:01:27 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=SPAWN_SHIELD_GEMS
-00:01:27 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:27 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:27 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:27 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:27 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-00:01:27 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-00:01:27 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:27 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:28 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=SPAWN_SHIELD_GEMS
-00:01:28 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=1
-00:01:28 | DEBUG | PreciousWoman | onChangeState(): turn on gravity
-00:01:28 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=JUMP
-00:01:28 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:28 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:28 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
-00:01:28 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
-00:01:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:28 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:28 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:28 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:28 | DEBUG | PreciousWoman | onChangeState(): current=STAND, previous=JUMP
-00:01:28 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=2
-00:01:28 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:01:28 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=STAND
-00:01:28 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:28 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:29 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:29 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:29 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:29 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:29 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:29 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:29 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:29 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:29 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:29 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:29 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:29 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:29 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:29 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:29 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:29 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:29 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:29 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:29 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:29 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:29 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:29 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:29 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:29 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:29 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:30 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=STAND
-00:01:30 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=3
-00:01:30 | DEBUG | PreciousWoman | onChangeState(): no action when previous=STAND
-00:01:30 | DEBUG | PreciousWoman | jump(): target=(5044.279,204.0)
-00:01:30 | DEBUG | PreciousWoman | onChangeState(): jump vel=(256.0,300.0)
-00:01:30 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=JUMP
-00:01:31 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:31 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:31 | DEBUG | PreciousWoman | onChangeState(): current=STAND, previous=JUMP
-00:01:31 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=4
-00:01:31 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:01:31 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=STAND
-00:01:31 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:31 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:31 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-00:01:31 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-00:01:31 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:31 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:31 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:31 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:31 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:31 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:31 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:31 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:31 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:32 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:32 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:32 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:32 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:32 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:32 | DEBUG | PreciousWoman | onChangeState(): current=AIRPUNCH, previous=STAND
-00:01:32 | DEBUG | PreciousWoman | onChangeState(): set vel y to zero when air punching
-00:01:32 | DEBUG | PreciousWoman | onChangeState(): no action when previous=STAND
-00:01:32 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=AIRPUNCH
-00:01:33 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:33 | DEBUG | PreciousWoman | onChangeState(): current=STAND, previous=AIRPUNCH
-00:01:33 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=5
-00:01:33 | DEBUG | PreciousWoman | onChangeState(): turn gravity back on, reset air punch cooldown
-00:01:33 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:34 | DEBUG | PreciousWoman | update(): throw min cooldown just finished
-00:01:34 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:34 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:34 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:34 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:34 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-00:01:34 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-00:01:34 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:34 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:34 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:34 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:34 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:34 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=STAND
-00:01:34 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=6
-00:01:34 | DEBUG | PreciousWoman | onChangeState(): no action when previous=STAND
-00:01:34 | DEBUG | PreciousWoman | jump(): target=(4892.2495,213.6)
-00:01:34 | DEBUG | PreciousWoman | onChangeState(): jump vel=(-211.75049,309.6)
-00:01:34 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=JUMP
-00:01:34 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:35 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:35 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:35 | DEBUG | PreciousWoman | onChangeState(): current=STAND, previous=JUMP
-00:01:35 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=7
-00:01:35 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:01:35 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=STAND
-00:01:35 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:35 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:35 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:35 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:35 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:35 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:35 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:35 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:35 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:36 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:36 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:36 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:36 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:36 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:36 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:36 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:36 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:36 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:37 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=STAND
-00:01:37 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=8
-00:01:37 | DEBUG | PreciousWoman | onChangeState(): no action when previous=STAND
-00:01:37 | DEBUG | PreciousWoman | jump(): target=(4699.9106,351.96814)
-00:01:37 | DEBUG | PreciousWoman | onChangeState(): jump vel=(-237.6831,447.96814)
-00:01:37 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=JUMP
-00:01:37 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:38 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:38 | DEBUG | PreciousWoman | onChangeState(): current=STAND, previous=JUMP
-00:01:38 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=9
-00:01:38 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:01:38 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=STAND
-00:01:38 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:38 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:38 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:38 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-00:01:38 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-00:01:38 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:38 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:38 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:39 | DEBUG | PreciousWoman | onChangeState(): current=THROW_SHIELD_GEMS, previous=STAND
-00:01:39 | DEBUG | PreciousWoman | onChangeState(): setting all shield gems to be released
-00:01:39 | DEBUG | PreciousWoman | onChangeState(): no action when previous=STAND
-00:01:39 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=THROW_SHIELD_GEMS
-00:01:40 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:40 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:40 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:40 | DEBUG | PreciousWoman | onChangeState(): current=STAND, previous=THROW_SHIELD_GEMS
-00:01:40 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=1
-00:01:40 | DEBUG | PreciousWoman | onChangeState(): no action when previous=THROW_SHIELD_GEMS
-00:01:40 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=STAND
-00:01:40 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:41 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-00:01:41 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-00:01:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:41 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:41 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:41 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:41 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:41 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:41 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:41 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:41 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:41 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:41 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:42 | DEBUG | PreciousWoman | onChangeState(): current=AIRPUNCH, previous=STAND
-00:01:42 | DEBUG | PreciousWoman | onChangeState(): set vel y to zero when air punching
-00:01:42 | DEBUG | PreciousWoman | onChangeState(): no action when previous=STAND
-00:01:42 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=AIRPUNCH
-00:01:42 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:42 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:42 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:42 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:43 | DEBUG | PreciousWoman | onChangeState(): current=STAND, previous=AIRPUNCH
-00:01:43 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=2
-00:01:43 | DEBUG | PreciousWoman | onChangeState(): turn gravity back on, reset air punch cooldown
-00:01:43 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=STAND
-00:01:43 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:43 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:43 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:43 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-00:01:43 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-00:01:43 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:43 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:43 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:44 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=STAND
-00:01:44 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=3
-00:01:44 | DEBUG | PreciousWoman | onChangeState(): no action when previous=STAND
-00:01:44 | DEBUG | PreciousWoman | jump(): target=(4801.575,204.0)
-00:01:44 | DEBUG | PreciousWoman | onChangeState(): jump vel=(-177.30518,300.0)
-00:01:44 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=JUMP
-00:01:44 | DEBUG | PreciousWoman | update(): spawn shields delay just finished
-00:01:44 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=JUMP
-00:01:45 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=JUMP
-00:01:45 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=JUMP
-00:01:45 | DEBUG | PreciousWoman | onChangeState(): current=STAND, previous=JUMP
-00:01:45 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=4
-00:01:45 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:01:45 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=STAND
-00:01:45 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:45 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:45 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:45 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-00:01:45 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-00:01:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:45 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:46 | DEBUG | PreciousWoman | update(): throw min cooldown just finished
-00:01:46 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=STAND
-00:01:46 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=5
-00:01:46 | DEBUG | PreciousWoman | onChangeState(): should throw gems
-00:01:46 | DEBUG | PreciousWoman | onChangeState(): no action when previous=STAND
-00:01:46 | DEBUG | PreciousWoman | jump(): target=(4688.0,363.8269)
-00:01:46 | DEBUG | PreciousWoman | onChangeState(): jump vel=(-155.00537,459.8269)
-00:01:46 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=JUMP
-00:01:46 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=JUMP
-00:01:46 | DEBUG | PreciousWoman | onChangeState(): current=SPAWN_SHIELD_GEMS, previous=JUMP
-00:01:46 | DEBUG | PreciousWoman | onChangeState(): spawn shield gems
-00:01:46 | DEBUG | PreciousWoman | spawnShieldGems()
-00:01:46 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:01:46 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=SPAWN_SHIELD_GEMS
-00:01:46 | DEBUG | PreciousWoman | throwGems(): facing=LEFT
-00:01:47 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:47 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:47 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:47 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:47 | DEBUG | Megaman | takeDamageFrom(): healthDiff=3, damager={ PreciousGem:[mapObjId=0, dead=false, hashCode=1510561387] }
-00:01:47 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=SPAWN_SHIELD_GEMS
-00:01:47 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=1
-00:01:47 | DEBUG | PreciousWoman | onChangeState(): turn on gravity
-00:01:47 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=JUMP
-00:01:48 | DEBUG | PreciousWoman | onChangeState(): current=STAND, previous=JUMP
-00:01:48 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=2
-00:01:48 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:01:48 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=STAND
-00:01:48 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:48 | DEBUG | MegamanControllerComponent | attack actuator just released, do not shoot: stunned=false, damaged=true, game.isCameraRotating=false, teleporting=false, ready=true, canFireWeapon=true
-00:01:48 | DEBUG | PreciousWoman | update(): throwing timer just finished
-00:01:48 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:48 | DEBUG | MegamanControllerComponent | attack actuator just released, do not shoot: stunned=false, damaged=true, game.isCameraRotating=false, teleporting=false, ready=true, canFireWeapon=true
-00:01:48 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:48 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:48 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:48 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:48 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:48 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:48 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:48 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:48 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:48 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:49 | DEBUG | PreciousWoman | onChangeState(): current=RUN, previous=STAND
-00:01:49 | DEBUG | PreciousWoman | onChangeState(): no action when current=RUN
-00:01:49 | DEBUG | PreciousWoman | onChangeState(): no action when previous=STAND
-00:01:49 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=RUN
-00:01:50 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:50 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:51 | DEBUG | Megaman | takeDamageFrom(): healthDiff=3, damager={ PreciousGem:[mapObjId=0, dead=false, hashCode=1254073087] }
-00:01:51 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=RUN
-00:01:51 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=3
-00:01:51 | DEBUG | PreciousWoman | onChangeState(): no action when previous=RUN
-00:01:51 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=JUMP
-00:01:51 | DEBUG | PreciousWoman | onChangeState(): current=STAND, previous=JUMP
-00:01:51 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=4
-00:01:51 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:01:51 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=STAND
-00:01:51 | DEBUG | MegamanControllerComponent | attack actuator just released, do not shoot: stunned=false, damaged=true, game.isCameraRotating=false, teleporting=false, ready=true, canFireWeapon=true
-00:01:51 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:51 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:52 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:52 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:52 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:52 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:52 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:52 | DEBUG | PreciousWoman | update(): throw min cooldown just finished
-00:01:52 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:52 | DEBUG | PreciousWoman | onChangeState(): current=GROUNDSLIDE, previous=STAND
-00:01:52 | DEBUG | PreciousWoman | onChangeState(): no action when current=GROUNDSLIDE
-00:01:52 | DEBUG | PreciousWoman | onChangeState(): no action when previous=STAND
-00:01:52 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=GROUNDSLIDE
-00:01:53 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=GROUNDSLIDE
-00:01:53 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=5
-00:01:53 | DEBUG | PreciousWoman | onChangeState(): no action when previous=GROUNDSLIDE
-00:01:53 | DEBUG | PreciousWoman | jump(): target=(5104.0,301.27658)
-00:01:53 | DEBUG | PreciousWoman | onChangeState(): jump vel=(113.97119,397.27658)
-00:01:53 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=JUMP
-00:01:53 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=JUMP
-00:01:53 | DEBUG | Megaman | takeDamageFrom(): healthDiff=3, damager={ PreciousGem:[mapObjId=0, dead=false, hashCode=585967750] }
-00:01:53 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:53 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:53 | DEBUG | PreciousWoman | onChangeState(): current=AIRPUNCH, previous=JUMP
-00:01:53 | DEBUG | PreciousWoman | onChangeState(): set vel y to zero when air punching
-00:01:53 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:01:53 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=AIRPUNCH
-00:01:54 | DEBUG | MegamanControllerComponent | attack actuator just released, do not shoot: stunned=false, damaged=true, game.isCameraRotating=false, teleporting=false, ready=true, canFireWeapon=true
-00:01:54 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=AIRPUNCH
-00:01:54 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=6
-00:01:54 | DEBUG | PreciousWoman | onChangeState(): turn gravity back on, reset air punch cooldown
-00:01:54 | DEBUG | PreciousWoman | onChangeState(): current=WALLSLIDE, previous=JUMP
-00:01:54 | DEBUG | PreciousWoman | onChangeState(): no action when current=WALLSLIDE
-00:01:54 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:01:54 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=WALLSLIDE
-00:01:55 | DEBUG | PreciousWoman | onChangeState(): current=STAND, previous=WALLSLIDE
-00:01:55 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=7
-00:01:55 | DEBUG | PreciousWoman | onChangeState(): no action when previous=WALLSLIDE
-00:01:55 | DEBUG | PreciousWoman | update(): ended wall slide, set state machine to next=STAND
-00:01:55 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:55 | DEBUG | MegamanControllerComponent | left actuator just released
-00:01:55 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:55 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
-00:01:55 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
-00:01:55 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:55 | DEBUG | MegamanControllerComponent | right actuator just released
-00:01:56 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:56 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:56 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:56 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:56 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:56 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:56 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:56 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:56 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:56 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:56 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:56 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:56 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:56 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:56 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:56 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:56 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:01:56 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-00:01:56 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-00:01:56 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-00:01:56 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=STAND
-00:01:56 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=8
-00:01:56 | DEBUG | PreciousWoman | onChangeState(): no action when previous=STAND
-00:01:56 | DEBUG | PreciousWoman | jump(): target=(4773.3696,213.6)
-00:01:56 | DEBUG | PreciousWoman | onChangeState(): jump vel=(-256.0,309.6)
-00:01:56 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=JUMP
-00:01:56 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:01:57 | DEBUG | PreciousWoman | onChangeState(): current=STAND, previous=JUMP
-00:01:57 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=9
-00:01:57 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:01:57 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=STAND
-00:01:59 | DEBUG | PreciousWoman | onChangeState(): current=RUN, previous=STAND
-00:01:59 | DEBUG | PreciousWoman | onChangeState(): no action when current=RUN
-00:01:59 | DEBUG | PreciousWoman | onChangeState(): no action when previous=STAND
-00:01:59 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=RUN
-00:01:59 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:01:59 | DEBUG | MegamanControllerComponent | left actuator just released
-00:02:00 | DEBUG | Megaman | takeDamageFrom(): healthDiff=3, damager={ PreciousGem:[mapObjId=0, dead=false, hashCode=818570949] }
-00:02:00 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=RUN
-00:02:00 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=10
-00:02:00 | DEBUG | PreciousWoman | onChangeState(): no action when previous=RUN
-00:02:00 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=JUMP
-00:02:00 | DEBUG | PreciousWoman | onChangeState(): current=STAND, previous=JUMP
-00:02:00 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=11
-00:02:00 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:02:00 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=STAND
-00:02:00 | DEBUG | MegamanControllerComponent | attack actuator just released, do not shoot: stunned=false, damaged=true, game.isCameraRotating=false, teleporting=false, ready=true, canFireWeapon=true
-00:02:01 | DEBUG | MegamanControllerComponent | select actuator just released, attempt to set to next weapon
-00:02:01 | DEBUG | Megaman | setToNextWeapon(): set to next weapon: next=MOON_SCYTHE, current=MEGA_BUSTER
-00:02:01 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MOON_SCYTHE, previous=MEGA_BUSTER
-00:02:01 | DEBUG | MegamanControllerComponent | right actuator just released
-00:02:01 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:02:01 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-00:02:01 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-00:02:01 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-00:02:01 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-00:02:02 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-00:02:02 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:02:02 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MOON_SCYTHE, statToTry=NOT_CHARGED
-00:02:02 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-00:02:02 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
-00:02:02 | DEBUG | MegamanWeaponsHandler | fireMoonScythes(): stat=NOT_CHARGED
-00:02:02 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=24
-00:02:02 | DEBUG | MegamanControllerComponent | left actuator just released
-00:02:02 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:02:02 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=STAND
-00:02:02 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=12
-00:02:02 | DEBUG | PreciousWoman | onChangeState(): no action when previous=STAND
-00:02:02 | DEBUG | PreciousWoman | jump(): target=(4926.6562,204.0)
-00:02:02 | DEBUG | PreciousWoman | onChangeState(): jump vel=(122.18945,300.0)
-00:02:02 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=JUMP
-00:02:02 | DEBUG | PreciousWoman | onChangeState(): current=AIRPUNCH, previous=JUMP
-00:02:02 | DEBUG | PreciousWoman | onChangeState(): set vel y to zero when air punching
-00:02:02 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:02:02 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=AIRPUNCH
-00:02:03 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:02:03 | DEBUG | MegamanControllerComponent | right actuator just released
-00:02:04 | DEBUG | PreciousWoman | onChangeState(): current=JUMP, previous=AIRPUNCH
-00:02:04 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=13
-00:02:04 | DEBUG | PreciousWoman | onChangeState(): turn gravity back on, reset air punch cooldown
-00:02:04 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=JUMP
-00:02:04 | DEBUG | PreciousWoman | onChangeState(): current=STAND, previous=JUMP
-00:02:04 | DEBUG | PreciousWoman | onChangeState(): statesSinceLastThrow=14
-00:02:04 | DEBUG | PreciousWoman | onChangeState(): turn on friction x
-00:02:04 | DEBUG | PreciousWoman | update(): ended jump, set state machine to next=STAND
-00:02:05 | DEBUG | MegamanControllerComponent | right actuator just pressed
-00:02:05 | DEBUG | MegamanControllerComponent | left actuator just released
-00:02:05 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-00:02:05 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-00:02:05 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-00:02:05 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-00:02:05 | DEBUG | MegamanControllerComponent | attack actuator just released, shoot
-00:02:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MOON_SCYTHE, statToTry=NOT_CHARGED
-00:02:05 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-00:02:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
-00:02:05 | DEBUG | MegamanWeaponsHandler | fireMoonScythes(): stat=NOT_CHARGED
-00:02:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=18
-00:02:05 | DEBUG | MegamanControllerComponent | right actuator just released
-00:02:05 | DEBUG | MegamanControllerComponent | left actuator just pressed
-00:02:05 | DEBUG | PreciousWoman | onChangeState(): current=RUN, previous=STAND
-00:02:05 | DEBUG | PreciousWoman | onChangeState(): no action when current=RUN
-00:02:05 | DEBUG | PreciousWoman | onChangeState(): no action when previous=STAND
-00:02:05 | DEBUG | PreciousWoman | update(): state timer finished, set state machine to next=RUN
-00:02:06 | DEBUG | AbstractBoss | triggerDefeat()
-00:02:06 | LOG | MegaLevelScreen | event(): event=Event(key=BOSS_DEFEATED, properties=Properties({
-	[boss={ PreciousWoman:[mapObjId=86, dead=false, hashCode=1808679232] }]
-}))
-00:02:06 | DEBUG | MegaLevelScreenEventListener | onEvent(): boss defeated
-00:02:06 | DEBUG | MegamanControllerComponent | left actuator just released
-00:02:09 | DEBUG | AbstractBoss | update(): defeat timer finished
-00:02:09 | LOG | MegaLevelScreen | event(): event=Event(key=BOSS_DEAD, properties=Properties({
-	[boss={ PreciousWoman:[mapObjId=86, dead=true, hashCode=1808679232] }]
-}))
-00:02:09 | DEBUG | MegaLevelScreenEventListener | onEvent(): boss dead
-00:02:09 | DEBUG | AbstractBoss | onDestroy()
-00:02:09 | LOG | PreciousWoman | onDestroy()
-00:02:09 | DEBUG | AbstractEnemy | Removed CullableOnEvent from EventsManager
-00:02:09 | LOG | MegaLevelScreen | event(): event=Event(key=VICTORY_EVENT, properties=Properties({
-	[boss={ PreciousWoman:[mapObjId=86, dead=true, hashCode=1808679232] }]
-}))
-00:02:09 | DEBUG | MegaLevelScreenEventListener | onEvent(): victory event
-00:02:20 | LOG | MegaLevelScreen | event(): event=Event(key=END_LEVEL, properties=Properties({
-	[level=PRECIOUS_WOMAN]
-}))
-00:02:20 | DEBUG | MegaLevelScreenEventListener | onEvent(): end level
-00:02:20 | DEBUG | GameState | addLevelDefeated(): level=PRECIOUS_WOMAN, added=true
-00:02:20 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = SAVE_GAME_SCREEN
-00:02:20 | DEBUG | MegaLevelScreen | reset(): Resetting level screen
-00:02:20 | DEBUG | Megaman | onDestroy()
-00:02:21 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = LEVEL_SELECT_SCREEN
-00:02:24 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = SAVE_GAME_SCREEN
-00:02:26 | LOG | MegamanMaverickGame | setCurrentScreen(): set to screen with key = MAIN_MENU_SCREEN
-00:02:26 | DEBUG | MainMenuScreen | current button key: START NEW GAME
-00:02:26 | DEBUG | MainMenuScreen | blinking arrows keys: [LOAD SAVE FILE, SETTINGS, EXIT, START NEW GAME, KEYBOARD SETTINGS, CREDITS, BACK, MUSIC VOLUME, CONTROLLER SETTINGS, SFX VOLUME]
-00:02:26 | DEBUG | MainMenuScreen | Current button: LOAD SAVE FILE
-00:02:26 | DEBUG | MainMenuScreen | Current button: SETTINGS
-00:02:27 | DEBUG | MainMenuScreen | Current button: CREDITS
-00:02:27 | DEBUG | MainMenuScreen | Current button: EXIT
-00:02:27 | LOG | MegamanMaverickGame | pause()
-00:02:27 | LOG | MegamanMaverickGame | dispose()
-00:02:27 | DEBUG | MegaLevelScreen | dispose(): Disposing level screen
+===== SESSION STARTED: 2025-03-11T17:53:57.024335183 =====
+17:54:03 | DEBUG | MegamanControllerComponent | left actuator just pressed
+17:54:03 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:03 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:03 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:03 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:03 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:03 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:03 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:03 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:03 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:03 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:03 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:03 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:03 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:03 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:03 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:03 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:03 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:03 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:03 | DEBUG | MegamanControllerComponent | left actuator just released
+17:54:03 | DEBUG | MegamanControllerComponent | right actuator just pressed
+17:54:03 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:03 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:04 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:05 | DEBUG | MegamanControllerComponent | left actuator just pressed
+17:54:05 | DEBUG | MegamanControllerComponent | right actuator just released
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:05 | DEBUG | MegamanControllerComponent | left actuator just released
+17:54:05 | DEBUG | MegamanControllerComponent | right actuator just pressed
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:05 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:05 | DEBUG | MegamanControllerComponent | right actuator just released
+17:54:06 | DEBUG | MegamanControllerComponent | left actuator just pressed
+17:54:06 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:06 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:06 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:06 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:06 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:06 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:06 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:06 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:06 | DEBUG | MegamanControllerComponent | left actuator just released
+17:54:06 | DEBUG | MegamanControllerComponent | right actuator just pressed
+17:54:06 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:06 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:06 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:06 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:06 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:06 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:06 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:06 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:06 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:07 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:07 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:07 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:07 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:07 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:07 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:07 | DEBUG | MegamanControllerComponent | right actuator just released
+17:54:07 | DEBUG | MegamanControllerComponent | right actuator just pressed
+17:54:07 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:07 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:07 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:07 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:07 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:08 | DEBUG | MegamanControllerComponent | right actuator just released
+17:54:09 | DEBUG | MegamanControllerComponent | left actuator just pressed
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:09 | DEBUG | MegamanControllerComponent | left actuator just released
+17:54:10 | DEBUG | MegamanControllerComponent | right actuator just pressed
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:10 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:11 | DEBUG | MegamanControllerComponent | right actuator just released
+17:54:11 | DEBUG | MegamanControllerComponent | left actuator just pressed
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:11 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:12 | DEBUG | MegamanControllerComponent | left actuator just released
+17:54:12 | DEBUG | MegamanControllerComponent | right actuator just pressed
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:12 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:13 | DEBUG | MegamanControllerComponent | right actuator just released
+17:54:13 | DEBUG | MegamanControllerComponent | left actuator just pressed
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:13 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:13 | DEBUG | MegamanControllerComponent | left actuator just released
+17:54:14 | DEBUG | MegamanControllerComponent | right actuator just pressed
+17:54:14 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:14 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:14 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:14 | DEBUG | MegamanControllerComponent | right actuator just released
+17:54:15 | DEBUG | MegamanControllerComponent | left actuator just pressed
+17:54:15 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:15 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:15 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:15 | DEBUG | MegamanControllerComponent | left actuator just released
+17:54:15 | DEBUG | MegamanControllerComponent | right actuator just pressed
+17:54:15 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:15 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:15 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:15 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:15 | DEBUG | MegamanControllerComponent | right actuator just released
+17:54:16 | DEBUG | MegamanControllerComponent | left actuator just pressed
+17:54:16 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:16 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:16 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:16 | DEBUG | MegamanControllerComponent | run(): speed=-160.0
+17:54:16 | DEBUG | MegamanControllerComponent | left actuator just released
+17:54:16 | DEBUG | MegamanControllerComponent | right actuator just pressed
+17:54:16 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:16 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:16 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:16 | DEBUG | MegamanControllerComponent | run(): speed=160.0
+17:54:16 | DEBUG | MegamanControllerComponent | right actuator just released

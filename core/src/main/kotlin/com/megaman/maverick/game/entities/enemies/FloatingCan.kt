@@ -1,12 +1,12 @@
 package com.megaman.maverick.game.entities.enemies
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
-import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.objects.Properties
@@ -17,15 +17,20 @@ import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
-import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.pathfinding.PathfinderParams
 import com.mega.game.engine.pathfinding.PathfindingComponent
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.body.*
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.IBody
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -38,10 +43,7 @@ import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
 import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGridCoordinate
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getCenter
-import com.megaman.maverick.game.world.body.getEntity
+import com.megaman.maverick.game.world.body.*
 
 // implements `IBossListener` to ensure is destroyed after each Reactor Monkey is defeated
 class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IBossListener, IAnimatedEntity {
@@ -80,7 +82,6 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
         spawnDelayTimer.reset()
         spawningBlinkTimer.reset()
-
         spawnDelayBlink = false
     }
 
@@ -92,7 +93,6 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
             spawnDelayTimer.update(delta)
             if (!spawnDelayTimer.isFinished()) {
                 spawningBlinkTimer.update(delta)
-
                 if (spawningBlinkTimer.isFinished()) {
                     spawnDelayBlink = !spawnDelayBlink
                     spawningBlinkTimer.reset()
@@ -104,36 +104,31 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat())
+        body.physics.applyFrictionX = false
+        body.physics.applyFrictionY = false
+        body.drawingColor = Color.GRAY
 
-        val shapes = Array<() -> IDrawableShape?>()
+        val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBounds() }
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
-        body.addFixture(bodyFixture)
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.75f * ConstVals.PPM))
-        body.addFixture(damageableFixture)
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.75f * ConstVals.PPM))
-        body.addFixture(damagerFixture)
-        shapes.add { damageableFixture }
-
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true))
-
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(
+            this,
+            body,
+            BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGEABLE, FixtureType.DAMAGER)
+        )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 2))
         sprite.setSize(2f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setPosition(body.getCenter(), Position.CENTER)
-            when {
-                !spawnDelayTimer.isFinished() -> sprite.hidden = spawnDelayBlink
-                else -> sprite.hidden = damageBlink
-            }
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
+            sprite.setCenter(body.getCenter())
+            sprite.hidden = if (!spawnDelayTimer.isFinished()) spawnDelayBlink else damageBlink
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

@@ -36,10 +36,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
     val behaviorsComponent = BehaviorsComponent()
 
     val wallSlide = FunctionalBehaviorImpl(
-        evaluate = {
+        evaluate = evaluate@{
             if (dead || !ready || !canMove || body.isSensing(BodySense.FEET_ON_SAND) ||
                 isBehaviorActive(BehaviorType.JETPACKING)
-            ) return@FunctionalBehaviorImpl false
+            ) return@evaluate false
 
             if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && game.controllerPoller.isPressed(
                     /* if (direction == Direction.DOWN || isDirectionRotatedRight()) MegaControllerButtons.RIGHT
@@ -51,52 +51,55 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             ) {
                 if (damaged) {
                     GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "Damaged")
-                    return@FunctionalBehaviorImpl false
+                    return@evaluate false
                 }
                 if (isBehaviorActive(BehaviorType.JUMPING)) {
                     GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "Jumping")
-                    return@FunctionalBehaviorImpl false
+                    return@evaluate false
                 }
                 if (isBehaviorActive(BehaviorType.CLIMBING)) {
                     GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "Climbing")
-                    return@FunctionalBehaviorImpl false
+                    return@evaluate false
                 }
                 if (body.isSensing(BodySense.FEET_ON_GROUND)) {
                     GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "Feet on ground")
-                    return@FunctionalBehaviorImpl false
+                    return@evaluate false
                 }
                 if (!wallJumpTimer.isFinished()) {
                     GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "Wall jump timer not finished")
-                    return@FunctionalBehaviorImpl false
+                    return@evaluate false
                 }
-                return@FunctionalBehaviorImpl true
-            } else return@FunctionalBehaviorImpl false
+                return@evaluate true
+            } else return@evaluate false
         },
         init = {
             aButtonTask = AButtonTask.JUMP
-            GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "Init method called")
+            GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "init()")
         },
         act = {
             aButtonTask = AButtonTask.JUMP
             // TODO: this logic is tied to the FPS and breaks as it deviates from 60 FPS
             //  an alternative that is FPS-agnostic needs to be found
             val wallSlideFriction = MegamanValues.WALL_SLIDE_FRICTION_TO_APPLY * ConstVals.PPM
-            if (direction.isVertical()) body.physics.frictionOnSelf.y = wallSlideFriction
-            else body.physics.frictionOnSelf.x = wallSlideFriction
+
+            when {
+                direction.isVertical() -> body.physics.frictionOnSelf.y = wallSlideFriction
+                else -> body.physics.frictionOnSelf.x = wallSlideFriction
+            }
         },
         end = {
             if (!body.isSensing(BodySense.IN_WATER)) aButtonTask = AButtonTask.AIR_DASH
-            GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "End method called")
+            GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "end()")
         })
 
     val swim = FunctionalBehaviorImpl(
-        evaluate = {
-            if (dead || !ready || !canMove) return@FunctionalBehaviorImpl false
+        evaluate = evaluate@{
+            if (dead || !ready || !canMove) return@evaluate false
 
             if (damaged || !body.isSensing(BodySense.IN_WATER) || body.isSensing(BodySense.HEAD_TOUCHING_BLOCK))
-                return@FunctionalBehaviorImpl false
+                return@evaluate false
 
-            return@FunctionalBehaviorImpl if (isBehaviorActive(BehaviorType.SWIMMING)) when (direction) {
+            return@evaluate if (isBehaviorActive(BehaviorType.SWIMMING)) when (direction) {
                 Direction.UP -> body.physics.velocity.y > 0f
                 Direction.DOWN -> body.physics.velocity.y < 0f
                 Direction.LEFT -> body.physics.velocity.x < 0f
@@ -351,16 +354,16 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 return
             }
 
-            var impulse = (when {
+            var vel = (when {
                 body.isSensing(BodySense.IN_WATER) -> MegamanValues.WATER_GROUND_SLIDE_VEL
                 else -> MegamanValues.GROUND_SLIDE_VEL
             }) * ConstVals.PPM * movementScalar * facing.value
 
-            if (hasEnhancement(MegaEnhancement.GROUND_SLIDE_BOOST)) impulse *= MegaEnhancement.GROUND_SLIDE_BOOST_SCALAR
+            if (hasEnhancement(MegaEnhancement.GROUND_SLIDE_BOOST)) vel *= MegaEnhancement.GROUND_SLIDE_BOOST_SCALAR
 
             when (direction) {
-                Direction.UP, Direction.DOWN -> body.physics.velocity.x = impulse
-                Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y = impulse
+                Direction.UP, Direction.DOWN -> body.physics.velocity.x = vel
+                Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y = vel
             }
         }
 

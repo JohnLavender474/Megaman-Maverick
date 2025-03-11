@@ -173,7 +173,22 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../frames/Hazards1/AcidGoop/Falling.png</key>
+            <key type="filename">../frames/Hazards1/AcidGoop/falling.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>360,120,720,240</rect>
+                <key>scale9Paddings</key>
+                <rect>360,120,720,240</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Hazards1/AcidGoop/falling_old.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -188,7 +203,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Hazards1/AcidGoop/Landed.png</key>
+            <key type="filename">../frames/Hazards1/AcidGoop/landed.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -197,9 +212,24 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>24,12,48,24</rect>
+                <rect>120,240,240,480</rect>
                 <key>scale9Paddings</key>
-                <rect>24,12,48,24</rect>
+                <rect>120,240,240,480</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Hazards1/AcidGoop/landed_old.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,24,24,48</rect>
+                <key>scale9Paddings</key>
+                <rect>12,24,24,48</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

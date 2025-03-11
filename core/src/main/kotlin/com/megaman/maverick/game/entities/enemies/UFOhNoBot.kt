@@ -63,7 +63,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
     override lateinit var facing: Facing
 
-    private val dropDurationTimer = Timer(DROP_DURATION)
+    private val dropTimer = Timer(DROP_DURATION)
     private val triggers = Array<GameRectangle>()
 
     private lateinit var start: Vector2
@@ -105,7 +105,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             start = spawnProps.get(ConstKeys.START, RectangleMapObject::class)!!.rectangle.getCenter(false)
             target = spawnProps.get(ConstKeys.TARGET, RectangleMapObject::class)!!.rectangle.getCenter(false)
 
-            dropDurationTimer.reset()
+            dropTimer.reset()
 
             body.forEachFixture { it.setActive(false) }
         } else setToHover()
@@ -173,13 +173,13 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             if (!dropped && isMegamanUnderMe()) {
                 dropBomb()
                 dropped = true
-                dropDurationTimer.reset()
+                dropTimer.reset()
                 body.physics.velocity.setZero()
             }
 
-            if (!dropDurationTimer.isFinished()) {
-                dropDurationTimer.update(delta)
-                if (dropDurationTimer.isFinished()) moveX()
+            if (!dropTimer.isFinished()) {
+                dropTimer.update(delta)
+                if (dropTimer.isFinished()) moveX()
             }
         }
     }

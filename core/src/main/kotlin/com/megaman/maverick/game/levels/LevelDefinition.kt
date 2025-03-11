@@ -67,7 +67,7 @@ enum class LevelDefinition(
         type = LevelType.ROBOT_MASTER_LEVEL,
         mugshotAtlas = "FACES_1",
         mugshotRegion = "Reactor Man",
-        tmxMapSource = "ReactorMan.tmx",
+        tmxMapSource = "ReactorMan_v2.tmx",
         music = MusicAsset.MMX8_BURN_ROOSTER_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),

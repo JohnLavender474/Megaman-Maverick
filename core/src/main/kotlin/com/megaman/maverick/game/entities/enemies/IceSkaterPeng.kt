@@ -12,8 +12,10 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.coerceIn
 import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -32,6 +34,7 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
@@ -50,6 +53,7 @@ class IceSkaterPeng(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
 
         private const val JUMP_IMPULSE_Y = 10f
         private const val JUMP_MAX_VEL_X = 2f
+        private const val JUMP_DELAY = 0.2f
 
         private const val SENSOR_WIDTH = 1.5f
         private const val SENSOR_HEIGHT = 2f
@@ -62,6 +66,12 @@ class IceSkaterPeng(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
 
         private const val CULL_TIME = 1f
 
+        private val animDefs = orderedMapOf(
+            "jump1" pairTo AnimationDef(2, 1, 0.1f, true),
+            "jump2" pairTo AnimationDef(2, 1, 0.1f, true),
+            "brake" pairTo AnimationDef(2, 1, 0.1f, true),
+            "skate" pairTo AnimationDef(2, 1, 0.1f, true)
+        )
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -73,40 +83,34 @@ class IceSkaterPeng(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
     private val currentState: IceSkaterPengState
         get() = stateMachine.getCurrent()
 
+    private val jumpDelay = Timer(JUMP_DELAY)
     private val brakeTimer = Timer(BRAKE_MAX_DUR)
 
     private val sensor = GameRectangle().setSize(SENSOR_WIDTH * ConstVals.PPM, SENSOR_HEIGHT * ConstVals.PPM)
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            IceSkaterPengState.entries.forEach { state ->
-                val key = state.name.lowercase()
-                regions.put(key, atlas.findRegion("$TAG/$key"))
-            }
+            animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
-
         super.init()
-
         addComponent(defineAnimationsComponent())
-
         stateMachine = buildStateMachine()
     }
 
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
-
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
         stateMachine.reset()
+
         brakeTimer.reset()
+        jumpDelay.reset()
 
         facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
@@ -154,17 +158,21 @@ class IceSkaterPeng(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
                 }
 
                 IceSkaterPengState.JUMP -> {
+                    jumpDelay.update(delta)
+                    if (jumpDelay.isJustFinished()) jump()
+
                     updateFacing()
 
                     if ((isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
                         (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
                     ) body.physics.velocity.x = 0f
 
-                    body.physics.velocity.let { velocity ->
-                        velocity.x = velocity.x.coerceIn(JUMP_MAX_VEL_X * ConstVals.PPM)
+                    if (jumpDelay.isFinished()) {
+                        body.physics.velocity.let { velocity ->
+                            velocity.x = velocity.x.coerceIn(JUMP_MAX_VEL_X * ConstVals.PPM)
+                        }
+                        if (body.isSensing(BodySense.FEET_ON_GROUND) && body.physics.velocity.y <= 0f) stateMachine.next()
                     }
-
-                    if (body.isSensing(BodySense.FEET_ON_GROUND) && body.physics.velocity.y <= 0f) stateMachine.next()
                 }
             }
         }
@@ -238,11 +246,17 @@ class IceSkaterPeng(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { currentState.name.lowercase() }
+                .setKeySupplier {
+                    when (currentState) {
+                        IceSkaterPengState.JUMP -> if (jumpDelay.isFinished()) "jump2" else "jump1"
+                        else -> currentState.name.lowercase()
+                    }
+                }
                 .applyToAnimations { animations ->
-                    IceSkaterPengState.entries.forEach { state ->
-                        val key = state.name.lowercase()
-                        animations.put(key, Animation(regions[key], 1, 2, 0.1f, true))
+                    animDefs.forEach { entry ->
+                        val key = entry.key
+                        val (rows, columns, durations, loop) = entry.value
+                        animations.put(key, Animation(regions[key], rows, columns, durations, loop))
                     }
                 }
                 .build()
@@ -267,9 +281,7 @@ class IceSkaterPeng(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
                 body.physics.defaultFrictionOnSelf.x = BRAKE_FRICTION_X
                 brakeTimer.reset()
             }
-
-            IceSkaterPengState.JUMP -> jump()
-
+            IceSkaterPengState.JUMP -> jumpDelay.reset()
             else -> {}
         }
 

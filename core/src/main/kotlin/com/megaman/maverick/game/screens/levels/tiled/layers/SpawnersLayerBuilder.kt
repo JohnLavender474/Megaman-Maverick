@@ -9,6 +9,7 @@ import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.Block
@@ -26,6 +27,10 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
 
     companion object {
         const val TAG = "SpawnersLayerBuilder"
+        private val ALWAYS_TRUE_PRED: (Float) -> Boolean = { true }
+        private fun PRED_BASED_ON_ROOMS_TRANS_FALSE(game: MegamanMaverickGame): (Float) -> Boolean {
+            return { !game.isProperty(ConstKeys.ROOM_TRANSITION, true) }
+        }
     }
 
     override fun build(layer: MapLayer, returnProps: Properties) {
@@ -47,19 +52,13 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
             ConstKeys.PROJECTILES -> EntityType.PROJECTILE
             else -> throw IllegalArgumentException("Unknown spawner type: ${layer.name}")
         }
-        val shouldTestSpawnerPredicate: (Float) -> Boolean = when (entityType) {
-            EntityType.BLOCK,
-            EntityType.HAZARD,
-            EntityType.DECORATION -> {
-                { true }
-            }
-
-            else -> {
-                { !game.isProperty(ConstKeys.ROOM_TRANSITION, true) }
-            }
-        }
 
         GameLogger.debug(TAG, "build(): layerName=${layer.name}, entityType=$entityType")
+
+        val shouldTestSpawnerPredicate: (Float) -> Boolean = when (entityType) {
+            EntityType.BLOCK, EntityType.HAZARD, EntityType.SPECIAL, EntityType.DECORATION -> ALWAYS_TRUE_PRED
+            else -> PRED_BASED_ON_ROOMS_TRANS_FALSE(game)
+        }
 
         layer.objects.forEach {
             val spawnProps = it.convertToProps()

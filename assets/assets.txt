@@ -312,7 +312,8 @@ sprites/frames/Enemies2/CartinJoe/shoot.png
 sprites/frames/Enemies2/WallTeck/still.png
 sprites/frames/Enemies2/WallTeck/angry.png
 sprites/frames/Enemies2/WallTeck/walk.png
-sprites/frames/Enemies2/IceSkaterPeng/jump.png
+sprites/frames/Enemies2/IceSkaterPeng/jump1.png
+sprites/frames/Enemies2/IceSkaterPeng/jump2.png
 sprites/frames/Enemies2/IceSkaterPeng/brake.png
 sprites/frames/Enemies2/IceSkaterPeng/skate.png
 sprites/frames/Enemies2/AstroAssAssaulter/throw.png
@@ -863,8 +864,10 @@ sprites/frames/Hazards1/UnderwaterFan.png
 sprites/frames/Hazards1/GreenSpikeBall.piskel
 sprites/frames/Hazards1/WanaanLauncher/launcher.png
 sprites/frames/Hazards1/WanaanLauncher/bust.png
-sprites/frames/Hazards1/AcidGoop/Falling.png
-sprites/frames/Hazards1/AcidGoop/Landed.png
+sprites/frames/Hazards1/AcidGoop/falling.png
+sprites/frames/Hazards1/AcidGoop/landed.png
+sprites/frames/Hazards1/AcidGoop/falling_old.png
+sprites/frames/Hazards1/AcidGoop/landed_old.png
 sprites/frames/Hazards1/SeaMine/blow.png
 sprites/frames/Hazards1/SeaMine/wait.png
 sprites/frames/Hazards1/Spike6.png
@@ -2481,6 +2484,7 @@ sprites/piskel/QuickSand_v2_BottomCenter.piskel
 sprites/piskel/Robbit.piskel
 sprites/piskel/TimberWoman.piskel
 sprites/piskel/MegamanFaces.piskel
+sprites/piskel/BlobTool.piskel
 sprites/piskel/MugshotPane_48x48.piskel
 sprites/piskel/mm9jewel.piskel
 sprites/piskel/ChargedShot_Residual.piskel

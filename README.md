@@ -141,7 +141,9 @@ comprehensive listing of the credits for the artwork used in this game.
 - Inferno Man 
   - Original by [boberatu](https://www.deviantart.com/boberatu/art/MPN-000-Volcano-Man-313694441)
   - Updated by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/1137570993)
-- Reactor Man - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
+- Reactor Man
+  - Original by [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
+  - Updated by [SamuelX4](https://www.deviantart.com/samuelx4)
 - Glacier Man - [Balloon Cart](https://balloon-cart.itch.io/glacier-man-asset-pack)
 - Desert Man - [rcrdcat](https://www.deviantart.com/rcrdcat/art/Desert-Man-Spritesheet-Mugshot-332165249)
 

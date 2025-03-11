@@ -20,12 +20,10 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
-
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
@@ -67,7 +65,7 @@ class AcidGoopSupplier(game: MegamanMaverickGame) : MegaGameEntity(game), IHazar
     }
 
     private fun createAcidGoop() {
-        acidGoop = EntityFactories.fetch(EntityType.HAZARD, HazardsFactory.ACID_GOOP) as AcidGoop
+        acidGoop = MegaEntityFactory.fetch(AcidGoop::class)!!
         acidGoop!!.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
