@@ -1443,6 +1443,8 @@ sprites/frames/Backgrounds2/BKG10.png
 sprites/frames/Projectiles1/Asteroid/Regular.png
 sprites/frames/Projectiles1/Asteroid/Blue.png
 sprites/frames/Projectiles1/Snowball.png
+sprites/frames/Projectiles1/SmallIceCube/1.png
+sprites/frames/Projectiles1/SmallIceCube/2.png
 sprites/frames/Projectiles1/CacaFlame/fall.png
 sprites/frames/Projectiles1/CacaFlame/burst.png
 sprites/frames/Projectiles1/CryoPellet.png
@@ -2516,6 +2518,7 @@ sprites/piskel/CrystalSpikes.piskel
 sprites/piskel/InfernoMan.piskel
 sprites/piskel/SmokePuff.piskel
 sprites/piskel/NukeMan.piskel
+sprites/piskel/1MiniIce.piskel
 sprites/piskel/Buddies.piskel
 sprites/piskel/CaveRocker.piskel
 sprites/piskel/CryoPellet.piskel
@@ -2881,6 +2884,7 @@ tiled_maps/tmx/ReactMan.tmx
 tiled_maps/tmx/TimberWoman.tmx
 tiled_maps/tmx/MagnetMan.tmx
 tiled_maps/tmx/TimberWoman_v2.tmx
+tiled_maps/tmx/ReactorMan_v2.tmx
 tiled_maps/tmx/DesertMan_16x14_v2.tmx
 tiled_maps/tmx/WilyStage3.tmx
 tiled_maps/tmx/MoonMan_16x14_v2.tmx

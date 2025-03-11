@@ -50,8 +50,6 @@ class Flame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     private lateinit var cullTimer: Timer
     private var perpetual = true
 
-    override fun getType() = EntityType.HAZARD
-
     override fun init() {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, "Flame")
         addComponent(defineUpdatablesComponent())
@@ -122,4 +120,6 @@ class Flame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
+
+    override fun getType() = EntityType.HAZARD
 }

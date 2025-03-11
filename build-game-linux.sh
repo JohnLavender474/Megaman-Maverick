@@ -2,4 +2,4 @@
 
 # Run `./gradlew lwjgl3:build` before running this script
 
-./build-game.sh linux64 Megaman-Maverick-alpha-1.4.1
+./build-game.sh linux64 Megaman-Maverick-alpha-1.5.0

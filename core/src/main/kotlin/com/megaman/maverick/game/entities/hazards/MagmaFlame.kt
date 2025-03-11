@@ -14,6 +14,7 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameCircle
+import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -43,9 +44,8 @@ import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getPositionPoint
+import com.megaman.maverick.game.utils.misc.GravityUtils
+import com.megaman.maverick.game.world.body.*
 
 class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     IAudioEntity, IDamager, IHazard, IDirectional {
@@ -53,10 +53,16 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     companion object {
         const val TAG = "MagmaFlame"
         private const val DURATION = 0.2f
+        private const val GRAVITY = 0.15f
+        private const val GROUND_GRAVITY = 0.01f
         private var region: TextureRegion? = null
     }
 
-    override lateinit var direction: Direction
+    override var direction: Direction
+        get() = body.direction
+        set(value) {
+            body.direction = value
+        }
 
     private val timer = Timer(DURATION)
 
@@ -64,10 +70,10 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
         super.init()
         addComponent(AudioComponent())
-        addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
+        addComponent(defineUpdatablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -93,13 +99,29 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(0.5f * ConstVals.PPM)
+        body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBounds() }
+
+        val feetFixture =
+            Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
+        body.addFixture(feetFixture)
+        feetFixture.drawingColor = Color.GREEN
+        debugShapes.add { feetFixture }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.5f * ConstVals.PPM))
         body.addFixture(damagerFixture)
         damagerFixture.drawingColor = Color.BLUE
-        debugShapes.add { damagerFixture}
+        debugShapes.add { damagerFixture }
+
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            GravityUtils.setGravity(
+                body,
+                ConstVals.PPM * if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
+            )
+        }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -107,16 +129,17 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 15))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(ConstVals.PPM.toFloat())
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             val position = DirectionPositionMapper.getInvertedPosition(direction)
             sprite.setPosition(body.getPositionPoint(position), position)
+
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
@@ -126,4 +149,6 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     }
 
     override fun getType() = EntityType.HAZARD
+
+    override fun getTag() = TAG
 }

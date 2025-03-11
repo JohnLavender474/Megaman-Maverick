@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="400" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="639">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="400" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="640">
  <tileset firstgid="1" source="../tsx/InfernoManTileset.tsx"/>
  <tileset firstgid="46" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1070" source="../tsx/MagmaMan.tsx"/>
@@ -252,33 +252,33 @@
  <objectgroup id="3" name="decorations">
   <object id="2" name="Furnace" x="352" y="2656" width="64" height="64"/>
   <object id="3" name="Furnace" x="608" y="2912" width="64" height="64"/>
-  <object id="13" name="Smoke" x="832" y="2496" width="96" height="544"/>
-  <object id="26" name="LavaFall" x="1248" y="2496" width="64" height="544">
-   <polygon points="0,0 64,0 64,544 0,544"/>
+  <object id="13" name="Smoke" x="832" y="2496" width="96" height="608"/>
+  <object id="26" name="LavaFall" x="1248" y="2496" width="64" height="608">
+   <polygon points="0,0 64,0 64,608 0,608"/>
   </object>
-  <object id="42" name="LavaFall" x="1856" y="2496" width="64" height="544">
-   <polygon points="0,0 64,0 64,544 0,544"/>
+  <object id="42" name="LavaFall" x="1856" y="2496" width="64" height="608">
+   <polygon points="0,0 64,0 64,608 0,608"/>
   </object>
-  <object id="54" name="Smoke" x="2208" y="2496" width="96" height="544"/>
-  <object id="89" name="Smoke" x="3408" y="2496" width="96" height="544"/>
-  <object id="94" name="Smoke" x="3200" y="2496" width="96" height="544"/>
-  <object id="109" name="LavaFall" x="2720" y="2496" width="64" height="544">
-   <polygon points="0,0 64,0 64,544 0,544"/>
+  <object id="54" name="Smoke" x="2208" y="2496" width="96" height="608"/>
+  <object id="89" name="Smoke" x="3408" y="2496" width="96" height="608"/>
+  <object id="94" name="Smoke" x="3200" y="2496" width="96" height="608"/>
+  <object id="109" name="LavaFall" x="2720" y="2496" width="64" height="608">
+   <polygon points="0,0 64,0 64,608 0,608"/>
   </object>
   <object id="132" name="Furnace" x="1536" y="2944" width="64" height="64"/>
   <object id="134" name="Furnace" x="4416" y="2912" width="64" height="64"/>
   <object id="135" name="Furnace" x="4064" y="2912" width="64" height="64"/>
-  <object id="227" name="Smoke" x="5216" y="1152" width="96" height="608"/>
-  <object id="228" name="Smoke" x="5760" y="1152" width="96" height="608"/>
-  <object id="229" name="Smoke" x="6336" y="1152" width="96" height="608"/>
+  <object id="227" name="Smoke" x="5216" y="1152" width="96" height="672"/>
+  <object id="228" name="Smoke" x="5760" y="1152" width="96" height="672"/>
+  <object id="229" name="Smoke" x="6336" y="1152" width="96" height="672"/>
   <object id="241" name="Furnace" x="6944" y="1600" width="64" height="64"/>
   <object id="242" name="Furnace" x="7072" y="1600" width="64" height="64"/>
-  <object id="263" name="Smoke" x="6080" y="1152" width="96" height="608"/>
+  <object id="263" name="Smoke" x="6080" y="1152" width="96" height="672"/>
   <object id="546" name="Smoke" x="9504" y="1152" width="96" height="544"/>
   <object id="575" name="Furnace" x="11360" y="704" width="64" height="64"/>
   <object id="576" name="Furnace" x="11584" y="704" width="64" height="64"/>
   <object id="610" name="Smoke" x="10592" y="384" width="96" height="1344"/>
-  <object id="611" name="Smoke" x="5408" y="1152" width="96" height="608"/>
+  <object id="611" name="Smoke" x="5408" y="1152" width="96" height="672"/>
   <object id="613" name="Smoke" x="10240" y="384" width="96" height="1344"/>
  </objectgroup>
  <objectgroup id="12" name="children">
@@ -1580,7 +1580,7 @@
   </object>
  </objectgroup>
  <objectgroup id="9" name="temp">
-  <object id="638" name="0" x="8864" y="1120" width="32" height="32"/>
+  <object id="639" name="0" x="11544" y="608" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="8" name="player">
   <object id="10" name="0" x="128" y="2912" width="32" height="32"/>

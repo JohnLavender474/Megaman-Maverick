@@ -274,7 +274,11 @@ class ControllerSettingsScreen(
         val arrowY = when (buttonKey) {
             BACK -> 10.6f
             RESET_TO_DEFAULTS -> 9.6f
-            else -> 9.6f - (MegaControllerButton.valueOf(buttonKey!!).ordinal + 1)
+            else -> try {
+                9.6f - (MegaControllerButton.valueOf(buttonKey!!).ordinal + 1)
+            } catch (e: Exception) {
+                throw Exception("Failed to set arrow Y position: buttonKey=$buttonKey", e)
+            }
         }
         blinkingArrow.centerX = 2.5f * ConstVals.PPM
         blinkingArrow.centerY = arrowY * ConstVals.PPM

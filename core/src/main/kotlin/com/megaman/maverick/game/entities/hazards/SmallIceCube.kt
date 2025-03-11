@@ -35,7 +35,6 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.blocks.BreakableIce
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -54,7 +53,7 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
     companion object {
         const val TAG = "SmallIceCube"
 
-        const val BODY_SIZE = 0.65f
+        const val BODY_SIZE = 0.75f
 
         private const val DEFAULT_GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.01f
@@ -83,18 +82,18 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
         )
     }
 
-    private val ignoreHitsFromIds = ObjectSet<Int>()
-
     private var hitTimes = 0
     private var destroyOnHitBlock = false
-    private var gravity = DEFAULT_GRAVITY
     private var maxHitTimes = DEFAULT_MAX_HIT_TIMES
+    private val ignoreHitsFromIds = ObjectSet<Int>()
+
+    private var gravity = DEFAULT_GRAVITY
 
     override fun init() {
         if (region1 == null || region2 == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
-            region1 = atlas.findRegion("${BreakableIce.TAG}/1")
-            region2 = atlas.findRegion("${BreakableIce.TAG}/3")
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            region1 = atlas.findRegion("${TAG}/1")
+            region2 = atlas.findRegion("${TAG}/2")
         }
         addComponent(defineBodyComponent())
         addComponent(defineCullablesComponent())
@@ -149,13 +148,8 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
 
     override fun shatterAndDie() {
         GameLogger.debug(TAG, "shatterAndDie()")
-
+        IceShard.spawn5(body.getCenter())
         destroy()
-
-        for (i in 0 until 5) {
-            val iceShard = MegaEntityFactory.fetch(IceShard::class)!!
-            iceShard.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.INDEX pairTo i))
-        }
     }
 
     override fun onDestroy() {
@@ -269,15 +263,15 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
         sprite.setSize(BODY_SIZE * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             val region = if (hitTimes == 0) region1 else region2
             sprite.setRegion(region)
 
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
         }
-        return spritesComponent
+        return component
     }
 
     override fun getTag() = TAG

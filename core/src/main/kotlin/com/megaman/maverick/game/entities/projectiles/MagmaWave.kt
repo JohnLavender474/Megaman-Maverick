@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.projectiles
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -10,11 +11,13 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -35,7 +38,9 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.world.body.*
 
 class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFaceable {
@@ -43,10 +48,13 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     companion object {
         const val TAG = "MagmaWave"
         private const val DISINTEGRATE_TIME = 0.3f
+        private const val DROP_FLAME_DELAY = 0.25f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
     override lateinit var facing: Facing
+
+    private val dropFlameDelay = Timer(DROP_FLAME_DELAY)
 
     private val disintegrationTimer = Timer(DISINTEGRATE_TIME)
     private var disintegrating = false
@@ -73,6 +81,8 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
         facing = if (trajectory.x < 0f) Facing.LEFT else Facing.RIGHT
 
+        dropFlameDelay.reset()
+
         disintegrating = false
         disintegrationTimer.reset()
     }
@@ -81,16 +91,29 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         if (disintegrating) {
             disintegrationTimer.update(delta)
             if (disintegrationTimer.isFinished()) destroy()
+        } else {
+            dropFlameDelay.update(delta)
+            if (dropFlameDelay.isFinished()) {
+                dropFlame()
+                dropFlameDelay.reset()
+            }
         }
     })
+
+    private fun dropFlame() {
+        val flame = MegaEntityFactory.fetch(MagmaFlame::class)!!
+        flame.spawn(props(ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)))
+    }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.25f * ConstVals.PPM, 2f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
+        body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBounds() }
 
         val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFixture.offsetFromBodyAttachment.x = -0.125f * ConstVals.PPM

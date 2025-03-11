@@ -110,14 +110,14 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
 
     override val damageNegotiator = StandardDamageNegotiator(
         objectMapOf(
-            Bullet::class pairTo dmgNeg(2),
+            Bullet::class pairTo dmgNeg(1),
             ChargedShot::class pairTo dmgNeg {
                 it as ChargedShot
-                if (it.fullyCharged) 4 else 3
+                if (it.fullyCharged) 3 else 2
             },
             ChargedShotExplosion::class pairTo dmgNeg {
                 it as ChargedShotExplosion
-                if (it.fullyCharged) 3 else 2
+                if (it.fullyCharged) 2 else 1
             }
         )
     )

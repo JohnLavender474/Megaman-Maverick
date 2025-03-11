@@ -135,7 +135,7 @@ class MegamanMaverickGame(
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        const val VERSION = "ALPHA 1.4.1"
+        const val VERSION = "ALPHA 1.5.0"
         private const val ASSET_MILLIS = 17
         private const val LOADING = "LOADING"
         private const val LOG_FILE_NAME = "logs.txt"
@@ -181,6 +181,7 @@ class MegamanMaverickGame(
     lateinit var megaman: Megaman
 
     var paused = false
+        private set
 
     private var currentScreenKey: String? = null
     private var screenController: ScreenController? = null
