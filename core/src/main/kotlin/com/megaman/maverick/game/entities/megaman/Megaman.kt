@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
@@ -608,6 +609,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            game.setDebugText("x: ${UtilMethods.roundFloat(body.physics.velocity.x, 2)}")
+
             if (body.getX() < -DEATH_X_OFFSET * ConstVals.PPM || body.getY() < -DEATH_Y_OFFSET * ConstVals.PPM ||
                 body.getMaxX() > (game.getTiledMapLoadResult().map.properties.get(ConstKeys.WIDTH) as Int + DEATH_X_OFFSET) * ConstVals.PPM ||
                 body.getMaxY() > (game.getTiledMapLoadResult().map.properties.get(ConstKeys.HEIGHT) as Int + DEATH_Y_OFFSET) * ConstVals.PPM
