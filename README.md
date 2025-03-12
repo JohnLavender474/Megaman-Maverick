@@ -149,11 +149,12 @@ comprehensive listing of the credits for the artwork used in this game.
 
 #### Other Bosses
 
+- Big Ass Maverick (Intro Boss) - [Ansimuz](https://ansimuz.itch.io/mega-bot)
+- Inferno Dragon - [Ansimuz](https://ansimuz.itch.io/mega-bot)
 - Moon Head - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/MoonHead-Miniboss-Megaman-Maverick-1090151707)
 - Nuclear Monkey - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
-- Mecha Dragon - [Ansimuz](https://ansimuz.itch.io/mega-bot)
 - Bospider - [Bean and Shawn](https://www.spriters-resource.com/game_boy_gbc/mmxtreme/sheet/480/?source=genre)
-- Guts Tank - [Mister Mike](https://www.spriters-resource.com/nes/mm2/sheet/2317/)
+- Guts Tank - [Mister Mike](https://www.spriters-resource.com/nes/mm2/sheet/2317/) (currently not used)
 - Penpen Maker - [Mister Mike](https://www.spriters-resource.com/nes/mm3/sheet/77911/) (currently not used)
 - Sphinx - [Mister Mike](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/108177/) (currently not used)
 
@@ -205,6 +206,7 @@ comprehensive listing of the credits for the artwork used in this game.
   - [Reactor Man tileset](https://balloon-cart.itch.io/reactor-man-asset-pack)
   - [Glacier Man tileset](https://balloon-cart.itch.io/glacier-man-asset-pack)
 - [Ansimuz](https://ansimuz.itch.io)
+  - [Intro Stage Tileset](https://ansimuz.itch.io/mega-bot) 
   - [Rodent Man tileset](https://ansimuz.itch.io/mega-bot)
   - [Inferno Man tileset (commissioned by oldlavygenes)](https://www.deviantart.com/oldlavygenes474/art/1142906425)
 - [Super Icon Ltd](https://assetstore.unity.com/publishers/5990) 
