@@ -145,8 +145,6 @@ abstract class AbstractBoss(
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
-        GameLogger.log(getTag(), "onDestroy()")
-
         super.onDestroy()
 
         ready = false
@@ -155,18 +153,20 @@ abstract class AbstractBoss(
         game.eventsMan.removeListener(this)
         removeProperty("${ConstKeys.BOSS}_${ConstKeys.KEY}")
 
-        if (getCurrentHealth() <= 0) {
-            if (orbs) EXPLOSION_ORB_TRAJS.forEach { trajectory ->
-                val explosionOrb = MegaEntityFactory.fetch(ExplosionOrb::class)!!
-                explosionOrb.spawn(
-                    props(
-                        ConstKeys.POSITION pairTo body.getCenter(),
-                        ConstKeys.TRAJECTORY pairTo trajectory.cpy().scl(ConstVals.PPM.toFloat())
-                    )
-                )
-            }
+        if (isHealthDepleted() && orbs) spawnExplosionOrbs(body.getCenter())
+    }
 
-            playSoundNow(SoundAsset.DEFEAT_SOUND, false)
+    protected open fun spawnExplosionOrbs(spawn: Vector2) {
+        playSoundNow(SoundAsset.DEFEAT_SOUND, false)
+
+        EXPLOSION_ORB_TRAJS.forEach { trajectory ->
+            val explosionOrb = MegaEntityFactory.fetch(ExplosionOrb::class)!!
+            explosionOrb.spawn(
+                props(
+                    ConstKeys.POSITION pairTo spawn,
+                    ConstKeys.TRAJECTORY pairTo trajectory.cpy().scl(ConstVals.PPM.toFloat())
+                )
+            )
         }
     }
 
@@ -180,7 +180,7 @@ abstract class AbstractBoss(
     }
 
     override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when {
-        damager is IOwnable && damager.owner == megaman && megaman.hasEnhancement(MegaEnhancement.DAMAGE_INCREASE)->
+        damager is IOwnable && damager.owner == megaman && megaman.hasEnhancement(MegaEnhancement.DAMAGE_INCREASE) ->
             MegaEnhancement.scaleDamage(baseDamage, MegaEnhancement.BOSS_DAMAGE_INCREASE_SCALAR)
 
         else -> baseDamage
@@ -191,9 +191,12 @@ abstract class AbstractBoss(
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (!ready && isReady(delta)) {
-                ready = true
-                onReady()
+            if (!ready) {
+                preReady(delta)
+                if (isReady(delta)) {
+                    ready = true
+                    onReady()
+                }
             }
 
             if (defeated) {
@@ -233,6 +236,8 @@ abstract class AbstractBoss(
     protected open fun getHealthFillType() = HealthFillType.BIT_BY_BIT
 
     protected abstract fun isReady(delta: Float): Boolean
+
+    protected open fun preReady(delta: Float) {}
 
     protected open fun onReady() {
         GameLogger.debug(TAG, "onReady()")

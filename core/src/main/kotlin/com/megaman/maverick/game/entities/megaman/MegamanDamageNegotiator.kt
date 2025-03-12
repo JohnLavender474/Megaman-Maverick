@@ -23,8 +23,8 @@ class MegamanDamageNegotiator(private val megaman: Megaman) : IDamageNegotiator 
 
     companion object {
         private val custom = objectMapOf<String, DamageNegotiation>(
-            BigAssMaverickRobotHand.TAG pairTo dmgNeg(1),
-            BigAssMaverickRobot.TAG pairTo dmgNeg(1),
+            BigAssMaverickRobotHand.TAG pairTo dmgNeg(2),
+            BigAssMaverickRobot.TAG pairTo dmgNeg(2),
             PropellerPlatform.TAG pairTo dmgNeg(1),
             RocketPlatform.TAG pairTo dmgNeg(1),
             LaserBeamer.TAG pairTo dmgNeg(3)

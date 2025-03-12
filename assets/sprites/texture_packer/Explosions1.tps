@@ -314,6 +314,7 @@
             </struct>
             <key type="filename">../frames/Explosions1/MagmaExplosion.png</key>
             <key type="filename">../frames/Explosions1/StarExplosion.png</key>
+            <key type="filename">../frames/Explosions1/TubeBeamExplosion.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

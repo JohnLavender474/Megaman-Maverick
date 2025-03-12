@@ -48,6 +48,8 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
         BLUE(0.5f, DrawingSection.PLAYGROUND, -1, 2f * ConstVals.PPM, "Water/Splash_v2"),
         WHITE(0.5f, DrawingSection.PLAYGROUND, -1, 2f * ConstVals.PPM, "Water/WhiteSplash"),
         TOXIC(0.5f, DrawingSection.PLAYGROUND, -1, 2f * ConstVals.PPM, "Water/ToxicSplash"),
+        BLUE_RAIN(1f, DrawingSection.PLAYGROUND, -1, ConstVals.PPM.toFloat(), "Water/BlueRainSplash"),
+        PURPLE_RAIN(1f, DrawingSection.PLAYGROUND, -1, ConstVals.PPM.toFloat(), "Water/PurpleRainSplash"),
         SAND(1f, DrawingSection.PLAYGROUND, 10, 2f * ConstVals.PPM, "SandSplash")
     }
 
@@ -130,12 +132,11 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
         cullTimer.reset()
 
         val makeSound = spawnProps.getOrDefault(ConstKeys.SOUND, true, Boolean::class)
-        if (makeSound) {
-            val sound = when (type) {
-                SplashType.BLUE, SplashType.WHITE, SplashType.TOXIC -> SoundAsset.SPLASH_SOUND
-                SplashType.SAND -> SoundAsset.BRUSH_SOUND
-            }
-            requestToPlaySound(sound, false)
+        if (makeSound) when (type) {
+            SplashType.BLUE, SplashType.WHITE, SplashType.TOXIC ->
+                requestToPlaySound(SoundAsset.SPLASH_SOUND, false)
+            SplashType.SAND -> requestToPlaySound(SoundAsset.BRUSH_SOUND, false)
+            else -> {}
         }
     }
 

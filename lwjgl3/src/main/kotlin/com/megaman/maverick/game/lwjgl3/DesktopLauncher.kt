@@ -24,8 +24,9 @@ object DesktopLauncher {
     private const val DEFAULT_MAXIMIZED = true
     private const val DEFAULT_FULLSCREEN = false
     private const val DEFAULT_WRITE_LOGS_TO_FILE = false
-    private const val DEFAULT_PAUSE_ON_MINIMIZED = true
-    private const val DEFAULT_PAUSE_ON_FOCUS_LOST = true
+    private const val DEFAULT_PAUSE_ON_MINIMIZED = false
+    private const val DEFAULT_PAUSE_ON_FOCUS_LOST = false
+    private const val DEFAULT_RESUME_ON_FOCUS_GAINED = false
     private const val DEFAULT_DEBUG_WINDOW = false
     private const val DEFAULT_DEBUG_SHAPES = false
     private const val DEFAULT_DEBUG_TEXT = false
@@ -63,12 +64,11 @@ object DesktopLauncher {
 
         val config = Lwjgl3ApplicationConfiguration()
         config.setTitle(TITLE)
-        config.setIdleFPS(0)
         config.setForegroundFPS(ConstVals.FPS)
         config.setResizable(appArgs.resizable)
-        config.setPauseWhenLostFocus(appArgs.pauseOnFocusLost)
-        config.setPauseWhenMinimized(appArgs.pauseOnMinimized)
         config.setWindowIcon(WINDOW_ICON_PATH)
+        config.setPauseWhenMinimized(false)
+        config.setPauseWhenMinimized(false)
         when {
             appArgs.fullScreen -> config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode())
             appArgs.maximized -> config.setMaximized(true)
@@ -100,11 +100,15 @@ object DesktopLauncher {
         config.setWindowListener(object : Lwjgl3WindowAdapter() {
 
             override fun focusLost() {
-                if (!game.paused) game.pause()
+                if (appArgs.pauseOnFocusLost && !game.paused) game.pause()
             }
 
             override fun focusGained() {
-                if (game.paused) game.resume()
+                if (appArgs.resumeOnFocusGained && game.paused) game.resume()
+            }
+
+            override fun iconified(isIconified: Boolean) {
+                if (appArgs.pauseOnMinimized && !game.paused) game.pause()
             }
         })
 
@@ -153,6 +157,13 @@ object DesktopLauncher {
                 "Default value = $DEFAULT_PAUSE_ON_FOCUS_LOST"
         )
         var pauseOnFocusLost = DEFAULT_PAUSE_ON_FOCUS_LOST
+
+        @Parameter(
+            names = ["--resumeOnFocusGained"],
+            description = "Whether to resume the application when the window gains focus. " +
+                "Default value = $DEFAULT_RESUME_ON_FOCUS_GAINED"
+        )
+        var resumeOnFocusGained = DEFAULT_RESUME_ON_FOCUS_GAINED
 
         @Parameter(
             names = ["--pauseOnMinimized"],

@@ -53,7 +53,7 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "TubeBeam")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
         addComponent(defineUpdatablesComponent())
         addComponent(defineAnimationsComponent())

@@ -221,6 +221,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Platforms1/BlockPiece/brown.png</key>
             <key type="filename">../frames/Platforms1/BlockPiece/gold.png</key>
             <key type="filename">../frames/Platforms1/BlockPiece/red.png</key>
             <key type="filename">../frames/Platforms1/Boulder/Large.png</key>

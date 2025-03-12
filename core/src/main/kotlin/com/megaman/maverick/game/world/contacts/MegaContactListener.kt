@@ -717,7 +717,7 @@ class MegaContactListener(
             val laserEntity = laserFixture.getEntity() as ILaserEntity
             val blockEntity = blockFixture.getEntity() as Block
 
-            if (laserEntity != blockEntity && !laserEntity.isIgnoringBlock(blockEntity)) {
+            if (laserEntity != blockEntity && !laserEntity.isLaserIgnoring(blockEntity)) {
                 val blockRectangle = blockFixture.getShape() as GameRectangle
                 val laserLine = laserFixture.getShape() as GameLine
 
@@ -1101,7 +1101,7 @@ class MegaContactListener(
             val laserEntity = laserFixture.getEntity() as ILaserEntity
             val blockEntity = blockFixture.getEntity() as Block
 
-            if (laserEntity != blockEntity && !laserEntity.isIgnoringBlock(blockEntity)) {
+            if (laserEntity != blockEntity && !laserEntity.isLaserIgnoring(blockEntity)) {
                 val blockRectangle = blockFixture.getShape() as GameRectangle
                 val laserLine = laserFixture.getShape() as GameLine
 

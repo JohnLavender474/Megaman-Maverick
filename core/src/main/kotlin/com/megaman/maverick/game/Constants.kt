@@ -47,6 +47,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val PIECE = "piece"
     const val IGNORE = "ignore"
     const val DARKNESS = "darkness"
     const val FROZEN = "frozen"
@@ -312,6 +313,7 @@ object ConstKeys {
     const val TIMED = "timed"
     const val PENDULUM = "pendulum"
     const val ROTATION = "rotation"
+    const val LAUNCH = "launch"
     const val VALUE = "value"
     const val DIRECTION = "direction"
     const val MASK = "mask"

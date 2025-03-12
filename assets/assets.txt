@@ -337,13 +337,13 @@ sprites/frames/Enemies2/ColtonJoe/shoot.png
 sprites/frames/Enemies2/RatRobot/still.png
 sprites/frames/Enemies2/RatRobot/frozen.png
 sprites/frames/Enemies2/RatRobot/run.png
-sprites/frames/Enemies2/JetpackIceBlaster/under_fall.png
-sprites/frames/Enemies2/JetpackIceBlaster/mid_fall.png
-sprites/frames/Enemies2/JetpackIceBlaster/under_thrust.png
-sprites/frames/Enemies2/JetpackIceBlaster/mid_thrust.png
-sprites/frames/Enemies2/JetpackIceBlaster/far_thrust.png
-sprites/frames/Enemies2/JetpackIceBlaster/far_fall.png
-sprites/frames/Enemies2/JetpackIceBlaster/straight_thrust.png
+sprites/frames/Enemies2/JetpackBlaster/under_fall.png
+sprites/frames/Enemies2/JetpackBlaster/mid_fall.png
+sprites/frames/Enemies2/JetpackBlaster/under_thrust.png
+sprites/frames/Enemies2/JetpackBlaster/mid_thrust.png
+sprites/frames/Enemies2/JetpackBlaster/far_thrust.png
+sprites/frames/Enemies2/JetpackBlaster/far_fall.png
+sprites/frames/Enemies2/JetpackBlaster/straight_thrust.png
 sprites/frames/Enemies2/TankBot/roll.png
 sprites/frames/Enemies2/TankBot/stop.png
 sprites/frames/Enemies2/TankBot/turn.png
@@ -398,7 +398,6 @@ sprites/frames/Enemies2/TotemPolem/shoot3.png
 sprites/frames/Enemies2/Eyee/OpeningEyes.png
 sprites/frames/Enemies2/Eyee/Blink.png
 sprites/frames/Enemies2/Eyee/Open.png
-sprites/frames/Enemies2/RedTiggerSquirt.png
 sprites/frames/Enemies2/CactusLauncher/reload.png
 sprites/frames/Enemies2/CactusLauncher/wait.png
 sprites/frames/Enemies2/CactusLauncher/fire.png
@@ -498,6 +497,7 @@ sprites/frames/Explosions1/ChargedShotExplosion.png
 sprites/frames/Explosions1/MagmaExplosion.png
 sprites/frames/Explosions1/SnowballExplode.png
 sprites/frames/Explosions1/HalfChargedShotExplosion.png
+sprites/frames/Explosions1/TubeBeamExplosion.png
 sprites/frames/Explosions1/StarExplosion.png
 sprites/frames/Explosions1/DeathBombExplosion.png
 sprites/frames/Decorations1/AirConditioner/pipe.png
@@ -507,10 +507,12 @@ sprites/frames/Decorations1/LavaFall.png
 sprites/frames/Decorations1/ToxicWaterfall.png
 sprites/frames/Decorations1/Thread.png
 sprites/frames/Decorations1/SandSplash.png
+sprites/frames/Decorations1/RainDrop/purple.png
+sprites/frames/Decorations1/RainDrop/blue.png
 sprites/frames/Decorations1/CrystalConveyorBKG.png
 sprites/frames/Decorations1/BreathBubbles.png
+sprites/frames/Decorations1/RainSplash.png
 sprites/frames/Decorations1/UnderWaterBubble.png
-sprites/frames/Decorations1/RainDrop.png
 sprites/frames/Decorations1/Furnace.png
 sprites/frames/Decorations1/JetpackFlame.png
 sprites/frames/Decorations1/BlinkingArrow.png
@@ -1166,7 +1168,9 @@ sprites/frames/Environs1/QuickSand_v2/top_center.png
 sprites/frames/Environs1/QuickSand_v2/center_left.png
 sprites/frames/Environs1/Water/WhiteSplash.png
 sprites/frames/Environs1/Water/Surface.png
+sprites/frames/Environs1/Water/BlueRainSplash.png
 sprites/frames/Environs1/Water/Splash_v2.png
+sprites/frames/Environs1/Water/PurpleRainSplash.png
 sprites/frames/Environs1/Water/Water.png
 sprites/frames/Environs1/Water/Splash.png
 sprites/frames/Environs1/Water/ToxicSplash.png
@@ -1486,6 +1490,7 @@ sprites/frames/Projectiles1/FireWall/disintegrate.png
 sprites/frames/Projectiles1/FireWall/fire.png
 sprites/frames/Projectiles1/FirePellet.png
 sprites/frames/Projectiles1/DuoBall.png
+sprites/frames/Projectiles1/TubeBeam_short.png
 sprites/frames/Projectiles1/Electric/Zap.png
 sprites/frames/Projectiles1/Electric/PurpleShockBalls.png
 sprites/frames/Projectiles1/Electric/BigElectric.png
@@ -1530,10 +1535,13 @@ sprites/frames/Faces1/Timber Woman.png
 sprites/frames/Faces1/Inferno Man.png
 sprites/frames/Backgrounds6/UndergroundPipes.png
 sprites/frames/Backgrounds6/InfernoBKG.png
+sprites/frames/Backgrounds6/PunkCityAnimated.png
 sprites/frames/Backgrounds6/CrystalBKG.png
+sprites/frames/Backgrounds6/PunkCityAnimated_3frames.png
 sprites/frames/Backgrounds6/Desert/NoSunSky.png
 sprites/frames/Backgrounds6/Desert/Canyon.png
 sprites/frames/Backgrounds6/Desert/SunSky.png
+sprites/frames/Backgrounds6/PunkCity.png
 sprites/frames/Backgrounds6/EarthBackdrop.png
 sprites/frames/Backgrounds6/Wily1.png
 sprites/frames/Backgrounds6/Space.png
@@ -1634,6 +1642,7 @@ sprites/frames/Platforms1/Boulder/Medium.png
 sprites/frames/Platforms1/Boulder/Large.png
 sprites/frames/Platforms1/BlockPiece/red.png
 sprites/frames/Platforms1/BlockPiece/gold.png
+sprites/frames/Platforms1/BlockPiece/brown.png
 sprites/frames/Platforms1/AppearingBrick2.png
 sprites/frames/Platforms1/FlipperPlatform/RightDelay.png
 sprites/frames/Platforms1/FlipperPlatform/FlipToRight.png
@@ -2326,6 +2335,7 @@ sprites/piskel/Bullet.piskel
 sprites/piskel/OldLavyLogo.piskel
 sprites/piskel/Breath_Bubbles.piskel
 sprites/piskel/CapsuleTeleporter.piskel
+sprites/piskel/PunkCityBackground.piskel
 sprites/piskel/TimberWoman_v2.piskel
 sprites/piskel/TurnBlaster.piskel
 sprites/piskel/SeaMine.piskel
@@ -2545,6 +2555,7 @@ tiled_maps/tsx/tomahawk_man_stage_tileset.tsx
 tiled_maps/tsx/MM3Wily4.tsx
 tiled_maps/tsx/pipe forest preview.tsx
 tiled_maps/tsx/mm9plug.tsx
+tiled_maps/tsx/PunkCityTileset.tsx
 tiled_maps/tsx/Magnetman.tsx
 tiled_maps/tsx/mm9endless.tsx
 tiled_maps/tsx/pipe_forest.tsx
@@ -2816,6 +2827,7 @@ tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstTengu.png
 tiled_maps/png/MMM MegaMan 8 tille sets/credits.txt
 tiled_maps/png/tstMagnetman.png
 tiled_maps/png/pipe forest preview.png
+tiled_maps/png/PunkCity.png
 tiled_maps/png/mm9jewel.png
 tiled_maps/png/Reactor_Man_3.png
 tiled_maps/png/1 - Main Menu Backgrounds.png
@@ -2883,6 +2895,7 @@ tiled_maps/png/tstMM3Wily2.png
 tiled_maps/png/GlacierMan_old.png
 tiled_maps/tmx/DesertMan_16x12.tmx
 tiled_maps/tmx/GlacierMan_16x12_test_groundsnow_boss.tmx
+tiled_maps/tmx/IntroStage_v2.tmx
 tiled_maps/tmx/PreciousWoman.tmx
 tiled_maps/tmx/ReactMan.tmx
 tiled_maps/tmx/TimberWoman.tmx

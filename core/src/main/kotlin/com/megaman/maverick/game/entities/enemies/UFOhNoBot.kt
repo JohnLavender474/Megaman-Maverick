@@ -92,11 +92,11 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         body.setCenter(spawn)
 
         facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
-        waiting = spawnProps.getOrDefault(ConstKeys.WAIT, true, Boolean::class)
 
         dropped = false
         rising = false
 
+        waiting = spawnProps.getOrDefault(ConstKeys.WAIT, true, Boolean::class)
         if (waiting) {
             spawnProps.getAllMatching { it.toString().contains(ConstKeys.TRIGGER) }.forEach {
                 val trigger = (it.second as RectangleMapObject).rectangle.toGameRectangle(false)
@@ -214,7 +214,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
         val leftSideFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
-        leftSideFixture.offsetFromBodyAttachment.x = -0.5f * ConstVals.PPM
+        leftSideFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
         leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftSideFixture)
         leftSideFixture.drawingColor = Color.YELLOW
@@ -222,7 +222,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
         val rightSideFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
-        rightSideFixture.offsetFromBodyAttachment.x = 0.5f * ConstVals.PPM
+        rightSideFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
         rightSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightSideFixture)
         rightSideFixture.drawingColor = Color.YELLOW

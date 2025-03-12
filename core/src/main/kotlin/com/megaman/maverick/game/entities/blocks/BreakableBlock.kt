@@ -40,6 +40,22 @@ class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, I
         const val TAG = "BreakableBlock"
         const val BRICK_TYPE = "Brick"
 
+        fun breakApart(center: Vector2, color: BlockPieceColor) {
+            for (i in 0 until BRICK_PIECE_IMPULSES.size) {
+                val impulse = BRICK_PIECE_IMPULSES[i].cpy().scl(ConstVals.PPM.toFloat())
+
+                val piece = MegaEntityFactory.fetch(BlockPiece::class)!!
+                piece.spawn(
+                    props(
+                        ConstKeys.COLOR pairTo color,
+                        ConstKeys.POSITION pairTo center,
+                        ConstKeys.IMPULSE pairTo impulse,
+                        ConstKeys.THUMP pairTo BRICK_TYPE_THUMP,
+                    )
+                )
+            }
+        }
+
         // set this to true to make brick pieces "thump" on blocks, else false
         private const val BRICK_TYPE_THUMP = false
 
@@ -50,6 +66,7 @@ class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, I
     }
 
     private lateinit var type: String
+    private lateinit var color: BlockPieceColor
 
     override fun init() {
         if (regions.isEmpty) {
@@ -64,27 +81,14 @@ class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, I
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
         type = spawnProps.get(ConstKeys.TYPE, String::class)!!
+        color = BlockPieceColor.valueOf(
+            spawnProps.getOrDefault(ConstKeys.COLOR, BlockPieceColor.RED.name, String::class).uppercase()
+        )
     }
 
     private fun explodeAndDie() {
         destroy()
-
-        for (i in 0 until BRICK_PIECE_IMPULSES.size) {
-            val spawn = body.getCenter()
-
-            val impulse = BRICK_PIECE_IMPULSES[i].cpy().scl(ConstVals.PPM.toFloat())
-
-            val piece = MegaEntityFactory.fetch(BlockPiece::class)!!
-            piece.spawn(
-                props(
-                    ConstKeys.POSITION pairTo spawn,
-                    ConstKeys.IMPULSE pairTo impulse,
-                    ConstKeys.THUMP pairTo BRICK_TYPE_THUMP,
-                    ConstKeys.COLOR pairTo BlockPieceColor.RED
-                )
-            )
-        }
-
+        breakApart(body.getCenter(), color)
         game.audioMan.playSound(SoundAsset.THUMP_SOUND, false)
     }
 

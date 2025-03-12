@@ -458,6 +458,13 @@ TubeBeam
   orig: 32, 32
   offset: 0, 0
   index: -1
+TubeBeam_short
+  rotate: false
+  xy: 288, 96
+  size: 4, 32
+  orig: 4, 32
+  offset: 0, 0
+  index: -1
 UFOBomb
   rotate: false
   xy: 232, 0

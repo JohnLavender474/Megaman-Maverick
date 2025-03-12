@@ -259,13 +259,13 @@
             <key type="filename">../frames/Enemies2/AxeJoe/stand_shielded.png</key>
             <key type="filename">../frames/Enemies2/AxeJoe/throw.png</key>
             <key type="filename">../frames/Enemies2/AxeJoe/throw_shielded.png</key>
-            <key type="filename">../frames/Enemies2/JetpackIceBlaster/far_fall.png</key>
-            <key type="filename">../frames/Enemies2/JetpackIceBlaster/far_thrust.png</key>
-            <key type="filename">../frames/Enemies2/JetpackIceBlaster/mid_fall.png</key>
-            <key type="filename">../frames/Enemies2/JetpackIceBlaster/mid_thrust.png</key>
-            <key type="filename">../frames/Enemies2/JetpackIceBlaster/straight_thrust.png</key>
-            <key type="filename">../frames/Enemies2/JetpackIceBlaster/under_fall.png</key>
-            <key type="filename">../frames/Enemies2/JetpackIceBlaster/under_thrust.png</key>
+            <key type="filename">../frames/Enemies2/JetpackBlaster/far_fall.png</key>
+            <key type="filename">../frames/Enemies2/JetpackBlaster/far_thrust.png</key>
+            <key type="filename">../frames/Enemies2/JetpackBlaster/mid_fall.png</key>
+            <key type="filename">../frames/Enemies2/JetpackBlaster/mid_thrust.png</key>
+            <key type="filename">../frames/Enemies2/JetpackBlaster/straight_thrust.png</key>
+            <key type="filename">../frames/Enemies2/JetpackBlaster/under_fall.png</key>
+            <key type="filename">../frames/Enemies2/JetpackBlaster/under_thrust.png</key>
             <key type="filename">../frames/Enemies2/PenguinBot/fly.png</key>
             <key type="filename">../frames/Enemies2/PenguinBot/rise.png</key>
             <key type="filename">../frames/Enemies2/PenguinBot/wait.png</key>
@@ -880,22 +880,6 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Enemies2/RedTiggerSquirt.png</key>
-            <key type="filename">../frames/Enemies2/YellowTiggerSquirt.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>36,18,72,36</rect>
-                <key>scale9Paddings</key>
-                <rect>36,18,72,36</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
             <key type="filename">../frames/Enemies2/RingRing/Pink.png</key>
             <key type="filename">../frames/Enemies2/RingRing/Red.png</key>
             <struct type="IndividualSpriteSettings">
@@ -1112,6 +1096,21 @@
                 <rect>16,10,32,20</rect>
                 <key>scale9Paddings</key>
                 <rect>16,10,32,20</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies2/YellowTiggerSquirt.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>36,18,72,36</rect>
+                <key>scale9Paddings</key>
+                <rect>36,18,72,36</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

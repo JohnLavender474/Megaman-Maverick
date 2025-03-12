@@ -22,6 +22,7 @@ import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
@@ -60,19 +61,18 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
         private const val BODY_WIDTH = 2f
         private const val BODY_HEIGHT = 2f
 
+        private const val BLOCK_WIDTH = 1.5f
+        private const val BLOCK_HEIGHT = 0.25f
+        private val BLOCK_POSITION = Position.TOP_CENTER
+
         private const val SHIELD_WIDTH = 2f
         private const val SHIELD_HEIGHT = 1f
 
         private const val SPRITE_SIZE = 3f
 
-        private const val BLOCK_WIDTH = 1.5f
-        private const val BLOCK_HEIGHT = 0.25f
-        private val BLOCK_POSITION = Position.TOP_CENTER
-
         private const val GRAVITY = -0.15f
 
         private const val LAUNCH_DELAY = 1f
-        private const val LAUNCH_SPEED = 8f
 
         private const val RETURN_DELAY = 1f
         private const val RETURN_SPEED = 4f
@@ -100,10 +100,13 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
     private var block: Block? = null
     private val blockTarget: Vector2
         get() = body.getPositionPoint(Position.TOP_CENTER).sub(0f, 0.5f * ConstVals.PPM)
-    private lateinit var rotatingLine: RotatingLine
 
-    private val launchDelay = Timer(LAUNCH_DELAY)
+    private lateinit var rotatingLine: RotatingLine
+    private lateinit var rotateSpeedSupplier: () -> Float
+
     private val launchTarget = Vector2()
+    private val launchDelay = Timer(LAUNCH_DELAY)
+    private lateinit var launchSpeedSupplier: () -> Float
 
     private val returnDelay = Timer(RETURN_DELAY)
     private val returnTarget = Vector2()
@@ -133,11 +136,15 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
 
         owner = spawnProps.get(ConstKeys.OWNER, BigAssMaverickRobot::class)!!
 
-        defeated = false
+        rotateSpeedSupplier =
+            spawnProps.get("${ConstKeys.ROTATION}_${ConstKeys.SPEED}_${ConstKeys.SUPPLIER}") as () -> Float
+
+        launchSpeedSupplier =
+            spawnProps.get("${ConstKeys.LAUNCH}_${ConstKeys.SPEED}_${ConstKeys.SUPPLIER}") as () -> Float
 
         val origin = spawnProps.get(ConstKeys.ORIGIN, Vector2::class)!!
         val radius = spawnProps.get(ConstKeys.RADIUS, Float::class)!!
-        val speed = spawnProps.get(ConstKeys.SPEED, Float::class)!!
+        val speed = rotateSpeedSupplier.invoke()
         rotatingLine = RotatingLine(origin.cpy(), radius, speed)
 
         state = BigAssMaverickRobotHandState.ROTATE
@@ -180,6 +187,8 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
             )
             armOrbs.add(armOrb)
         }
+
+        defeated = false
     }
 
     override fun onBossDefeated(boss: AbstractBoss) {
@@ -233,6 +242,7 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
 
         when (state) {
             BigAssMaverickRobotHandState.ROTATE -> {
+                rotatingLine.speed = rotateSpeedSupplier.invoke()
                 rotatingLine.update(delta)
                 val center = rotatingLine.getMotionValue()!!
                 body.setCenter(center.x, center.y)
@@ -250,7 +260,8 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
                     blockBody.forEachFixture { fixture -> fixture.setActive(false) }
                 }
 
-                body.physics.velocity.set(launchTarget).sub(body.getCenter()).nor().scl(LAUNCH_SPEED * ConstVals.PPM)
+                val launchSpeed = launchSpeedSupplier.invoke()
+                body.physics.velocity.set(launchTarget).sub(body.getCenter()).nor().scl(launchSpeed)
 
                 if (body.getCenter().epsilonEquals(launchTarget, 0.1f * ConstVals.PPM)) {
                     state = BigAssMaverickRobotHandState.RETURN
@@ -330,10 +341,19 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
     }
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
-        .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(SPRITE_SIZE * ConstVals.PPM) })
+        .sprite(
+            TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
+                .also { sprite -> sprite.setSize(SPRITE_SIZE * ConstVals.PPM) }
+        )
         .updatable { _, sprite ->
             val position = Position.TOP_CENTER
-            sprite.setPosition(body.getPositionPoint(position), position)
+            val point = when (block) {
+                null -> body.getPositionPoint(position)
+                else -> block!!.body.getPositionPoint(position)
+            }
+            sprite.setPosition(point, position)
+
+            sprite.translateY(0.25f * ConstVals.PPM)
 
             sprite.hidden = defeated && blink
         }

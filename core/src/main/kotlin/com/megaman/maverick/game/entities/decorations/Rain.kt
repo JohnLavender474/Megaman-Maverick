@@ -4,14 +4,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
 import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.ProcessState
-import com.mega.game.engine.common.extensions.getTextureRegion
-import com.mega.game.engine.common.extensions.isAny
-import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -37,12 +36,12 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.PreciousGem
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
+import com.megaman.maverick.game.entities.decorations.RainDrop.RainDropType
+import com.megaman.maverick.game.entities.decorations.Splash.SplashType
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
@@ -52,42 +51,79 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
     companion object {
         const val TAG = "RainDrop"
         private const val SPLASH_DUR = 0.3f
-        private var region: TextureRegion? = null
+        private val regions = ObjectMap<String, TextureRegion>()
     }
+
+    internal enum class RainDropType { BLUE, PURPLE }
+
+    private lateinit var type: RainDropType
+
+    private val ignoreIds = ObjectSet<Int>()
 
     private val splashTimer = Timer(SPLASH_DUR)
     private var splashed = false
+
     private var deathY = 0f
 
     override fun init() {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
+        if (regions.isEmpty) {
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
+            RainDropType.entries.forEach { type ->
+                val key = type.name.lowercase()
+                regions.put(key, atlas.findRegion("$TAG/$key"))
+            }
+        }
         super.init()
-        addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
+        addComponent(defineUpdatablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
+
+        val ignoreIds = spawnProps.get(ConstKeys.IGNORE) as ObjectSet<Int>
+        this.ignoreIds.addAll(ignoreIds)
+
+        type = spawnProps.get(ConstKeys.TYPE, RainDropType::class)!!
+
         val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
         body.physics.velocity.set(trajectory)
+
         body.physics.gravityOn = true
+
         splashTimer.setToEnd()
         splashed = false
+
         deathY = spawnProps.get("${ConstKeys.DEATH}_${ConstKeys.Y}", Float::class)!!
     }
 
-    private fun splash(rotation: Float = 0f) {
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        ignoreIds.clear()
+    }
+
+    private fun splash() {
         GameLogger.debug(TAG, "splash()")
+
         destroy()
-        val splash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)!!
+
+        val splashType = when (type) {
+            RainDropType.BLUE -> SplashType.BLUE_RAIN
+            RainDropType.PURPLE -> SplashType.PURPLE_RAIN
+        }
+
+        val splash = MegaEntityFactory.fetch(Splash::class)!!
         splash.spawn(
             props(
-                ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER),
-                ConstKeys.TYPE pairTo Splash.SplashType.WHITE
+                ConstKeys.SOUND pairTo false,
+                ConstKeys.TYPE pairTo splashType,
+                ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)
             )
         )
     }
@@ -101,23 +137,20 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.1f * ConstVals.PPM)
+        body.setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM)
         body.physics.applyFrictionX = false
+        body.physics.applyFrictionY = false
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         bodyFixture.setHitByBlockReceiver(ProcessState.BEGIN) { block, _ ->
-            GameLogger.debug(TAG, "hit block $block")
-            val direction = getOverlapPushDirection(bodyFixture.getShape(), block.body.getBounds())
-            splash(direction?.rotation ?: 0f)
+            if (!ignoreIds.contains(block.mapObjectId)) splash()
         }
         bodyFixture.setHitByBodyReceiver receiver@{ it, state ->
-            if (state != ProcessState.BEGIN) return@receiver
-
-            if (!it.isAny(RainFall::class, RainDrop::class)) {
-                GameLogger.debug(TAG, "hit body $it")
-                val direction = getOverlapPushDirection(bodyFixture.getShape(), it.body.getBounds())
-                splash(direction?.rotation ?: 0f)
-            }
+            val mapObjId = (it as MegaGameEntity).mapObjectId
+            if (state == ProcessState.BEGIN &&
+                !ignoreIds.contains(mapObjId) &&
+                !it.isAny(RainFall::class, RainDrop::class)
+            ) splash()
         }
         body.addFixture(bodyFixture)
 
@@ -125,13 +158,20 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 10))
-        sprite.setSize(0.1f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
-            _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
+        sprite.setSize(ConstVals.PPM.toFloat())
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
+            val region = regions[type.name.lowercase()]
+            sprite.setRegion(region)
+
+            val position = Position.BOTTOM_CENTER
+            sprite.setPosition(body.getPositionPoint(position), position)
+
+            sprite.setOriginCenter()
+            sprite.rotation = body.physics.velocity.angleDeg() + 90f
         }
-        return spritesComponent
+        return component
     }
 
     override fun getTag() = TAG
@@ -144,14 +184,17 @@ class RainFall(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntit
     companion object {
         const val TAG = "RainFall"
         private const val VELOCITY = 15f
-        private const val ANGLE = 140f
+        private const val DEFAULT_ANGLE = 180f
         private const val MIN_DELAY_DUR = 0.025f
         private const val MAX_DELAY_DUR = 0.1f
     }
 
     private val rainSpawners = Array<GameRectangle>()
+    private lateinit var rainDropType: RainDropType
+    private val ignoreIds = ObjectSet<Int>()
+    private val cullBounds = GameRectangle()
     private lateinit var delayTimer: Timer
-    private lateinit var cullBounds: GameRectangle
+    private var angle = DEFAULT_ANGLE
     private var deathY = 0f
 
     override fun init() {
@@ -162,32 +205,58 @@ class RainFall(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntit
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-        GameLogger.debug(TAG, "onSpawn(): Megaman's position = ${megaman.body.getCenter()}")
         super.onSpawn(spawnProps)
-        cullBounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+
+        rainDropType = RainDropType.valueOf(
+            spawnProps.getOrDefault(ConstKeys.TYPE, RainDropType.BLUE.name, String::class).uppercase()
+        )
+
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.SPAWN) && value is RectangleMapObject) {
-                val rainSpawner = value.rectangle.toGameRectangle()
+                val rainSpawner = value.rectangle.toGameRectangle(false)
                 GameLogger.debug(TAG, "onSpawn(): adding rain spawner $rainSpawner")
                 rainSpawners.add(rainSpawner)
+            } else if (key.toString().contains(ConstKeys.IGNORE) && value is RectangleMapObject) {
+                val id = value.properties.get(ConstKeys.ID, Int::class.java)
+                ignoreIds.add(id)
             }
         }
-        deathY = spawnProps.getOrDefault("${ConstKeys.DEATH}_${ConstKeys.Y}", cullBounds.getY(), Float::class)
+
+        angle = spawnProps.getOrDefault(ConstKeys.ANGLE, DEFAULT_ANGLE, Float::class)
+
         delayTimer = Timer(getRandom(MIN_DELAY_DUR, MAX_DELAY_DUR))
+
+        cullBounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
+        deathY = spawnProps.getOrDefault("${ConstKeys.DEATH}_${ConstKeys.Y}", cullBounds.getY(), Float::class)
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        ignoreIds.clear()
+        rainSpawners.clear()
     }
 
     private fun spawnRainDrops() {
         GameLogger.debug(TAG, "spawnRainDrops()")
+
         rainSpawners.forEach { rainSpawner ->
-            val rainDrop = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.RAIN_DROP)!!
+            val spawn = GameObjectPools.fetch(Vector2::class)
+                .setX(getRandom(rainSpawner.getX(), rainSpawner.getMaxX()))
+                .setY(rainSpawner.getPositionPoint(Position.TOP_CENTER).y)
+
+            val trajectory = GameObjectPools.fetch(Vector2::class)
+                .set(0f, VELOCITY * ConstVals.PPM)
+                .rotateDeg(angle)
+
+            val rainDrop = MegaEntityFactory.fetch(RainDrop::class)!!
             rainDrop.spawn(
                 props(
-                    ConstKeys.POSITION pairTo Vector2(
-                        getRandom(rainSpawner.getX(), rainSpawner.getMaxX()),
-                        rainSpawner.getPositionPoint(Position.TOP_CENTER).y
-                    ),
-                    ConstKeys.TRAJECTORY pairTo Vector2(0f, VELOCITY * ConstVals.PPM).rotateDeg(ANGLE),
-                    "${ConstKeys.DEATH}_${ConstKeys.Y}" pairTo deathY
+                    ConstKeys.POSITION pairTo spawn,
+                    ConstKeys.IGNORE pairTo ignoreIds,
+                    ConstKeys.TYPE pairTo rainDropType,
+                    ConstKeys.TRAJECTORY pairTo trajectory,
+                    "${ConstKeys.DEATH}_${ConstKeys.Y}" pairTo deathY,
                 )
             )
         }
@@ -210,3 +279,5 @@ class RainFall(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntit
 
     override fun getType() = EntityType.DECORATION
 }
+
+

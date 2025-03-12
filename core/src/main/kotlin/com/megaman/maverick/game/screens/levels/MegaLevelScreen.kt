@@ -551,8 +551,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 }
 
                 bossSpawnProps.put(ConstKeys.BOUNDS, bossMapObject.rectangle.toGameRectangle())
-                val bossName = bossMapObject.name
-                bossSpawnEventHandler.init(bossName, bossSpawnProps)
+                bossSpawnEventHandler.init(bossMapObject.name, bossSpawnProps)
             }
 
             EventType.BOSS_READY -> {

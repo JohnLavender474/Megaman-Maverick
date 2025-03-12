@@ -40,7 +40,7 @@ class BlockPiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    enum class BlockPieceColor { RED, GOLD }
+    enum class BlockPieceColor { RED, GOLD, BROWN }
 
     private lateinit var color: BlockPieceColor
     private val cullTimer = Timer(CULL_TIME)

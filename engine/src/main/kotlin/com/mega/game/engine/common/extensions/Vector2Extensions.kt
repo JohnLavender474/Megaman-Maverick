@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.mega.game.engine.common.UtilMethods.getRandom
+import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.objects.IntPair
 
 fun Vector2.rotateAroundOrigin(degrees: Float, originX: Float, originY: Float): Vector2 {
@@ -48,6 +49,16 @@ fun Vector2.coerce(min: Vector2, max: Vector2): Vector2 {
 fun Vector2.setX(x: Float): Vector2 = set(x, y)
 
 fun Vector2.setY(y: Float): Vector2 = set(x, y)
+
+fun Vector2.add(length: Float, direction: Direction): Vector2 {
+    when (direction) {
+        Direction.UP -> y += length
+        Direction.DOWN -> y -= length
+        Direction.LEFT -> x -= length
+        Direction.RIGHT -> x += length
+    }
+    return this
+}
 
 fun randomVector2(min: Float, max: Float, out: Vector2) = out.set(getRandom(min, max), getRandom(min, max))
 

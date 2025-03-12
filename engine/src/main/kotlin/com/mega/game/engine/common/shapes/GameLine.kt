@@ -338,7 +338,8 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
     override fun contains(point: Vector2): Boolean {
         calculateWorldPoints(reusableVec1, reusableVec2)
         return Intersector.pointLineSide(reusableVec1, reusableVec2, point) == 0 &&
-            point.x <= getMaxX() && point.x >= getX()
+            point.x <= getMaxX() && point.x >= getX() &&
+            point.y <= getMaxY() && point.y >= getY()
     }
 
     override fun contains(x: Float, y: Float) = contains(reusableVec3.set(x, y))
@@ -385,9 +386,15 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
         return this
     }
 
-    override fun getX() = position.x
+    override fun getX(): Float {
+        calculateWorldPoints(reusableVec1, reusableVec2)
+        return min(reusableVec1.x, reusableVec2.x)
+    }
 
-    override fun getY() = position.y
+    override fun getY(): Float {
+        calculateWorldPoints(reusableVec1, reusableVec2)
+        return min(reusableVec1.y, reusableVec2.y)
+    }
 
     override fun getMaxX(): Float {
         calculateWorldPoints(reusableVec1, reusableVec2)

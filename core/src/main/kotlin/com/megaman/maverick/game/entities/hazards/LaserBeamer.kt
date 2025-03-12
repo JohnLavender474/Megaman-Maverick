@@ -169,7 +169,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         damagerFixture.setShape(GameLine())
     }
 
-    override fun isIgnoringBlock(block: Block) = blocksToIgnore.contains(block.mapObjectId)
+    override fun isLaserIgnoring(block: Block) = blocksToIgnore.contains(block.mapObjectId)
 
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(

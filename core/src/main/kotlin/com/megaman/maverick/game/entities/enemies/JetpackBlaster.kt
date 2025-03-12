@@ -55,11 +55,11 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity,
+class JetpackBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity,
     IDrawableShapesEntity, IFaceable {
 
     companion object {
-        const val TAG = "JetpackIceBlaster"
+        const val TAG = "JetpackBlaster"
 
         private const val FLY_TO_TARGET_SPEED = 6f
         private const val FLY_TO_TARGET_MAX_DUR = 1.25f
@@ -76,7 +76,8 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private enum class JetpackIceShooterState { FLY_TO_TARGET, ADJUST_AIM, SHOOT }
+    private enum class JetpackBlasterState { FLY_TO_TARGET, ADJUST_AIM, SHOOT }
+
     private enum class DistanceType(val angle: Float) {
         STRAIGHT(STRAIGHT_LINE_OF_SIGHT_ANGLE),
         FAR(FAR_LINE_OF_SIGHT_ANGLE),
@@ -86,7 +87,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
 
     override lateinit var facing: Facing
 
-    private val loop = Loop(JetpackIceShooterState.entries.toTypedArray().toGdxArray())
+    private val loop = Loop(JetpackBlasterState.entries.toGdxArray())
     private val flyToTargetTimer = Timer(FLY_TO_TARGET_MAX_DUR)
     private val shootTimer = Timer(SHOOT_DUR, gdxArrayOf(TimeMarkedRunnable(0.25f) { shoot() }))
 
@@ -106,7 +107,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
             DistanceType.entries.forEach { d ->
                 val regionKey = "${d.name.lowercase()}_thrust"
                 val region =
-                    atlas.findRegion("$TAG/$regionKey") ?: throw IllegalStateException("Region is null: $regionKey")
+                    atlas.findRegion("$TAG/$regionKey") ?: throw IllegalStateException("region is null: $regionKey")
                 regions.put(regionKey, region)
             }
         }
@@ -122,19 +123,26 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
         body.setCenter(spawn)
 
         facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+
         distanceType = DistanceType.FAR
 
-        target =
-            if (spawnProps.containsKey(ConstKeys.TARGET))
-                spawnProps.get(ConstKeys.TARGET, RectangleMapObject::class)!!.rectangle.getCenter(false)
-            else {
+        target = when {
+            spawnProps.containsKey(ConstKeys.TARGET) -> spawnProps.get(
+                ConstKeys.TARGET,
+                RectangleMapObject::class
+            )!!.rectangle.getCenter(false)
+
+            else -> {
                 val target1 =
                     spawnProps.get("${ConstKeys.TARGET}_1", RectangleMapObject::class)!!.rectangle.getCenter(false)
                 val target2 =
                     spawnProps.get("${ConstKeys.TARGET}_2", RectangleMapObject::class)!!.rectangle.getCenter(false)
+
                 val megamanCenter = megaman.body.getCenter()
+
                 if (target1.dst2(megamanCenter) < target2.dst2(megamanCenter)) target1 else target2
             }
+        }
         setVelocityToTarget()
 
         loop.reset()
@@ -143,13 +151,13 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
 
     private fun shoot() {
         val originOffsetX = (calculateAimLineOriginOffset(distanceType).x + when (distanceType) {
-            DistanceType.STRAIGHT, DistanceType.FAR -> 0.5f
-            DistanceType.MID -> 0.35f
-            DistanceType.UNDER -> 0.05f
+            DistanceType.STRAIGHT, DistanceType.FAR -> 0.75f
+            DistanceType.MID -> 0.5f
+            DistanceType.UNDER -> 0.25f
         }) * facing.value
 
         val originOffsetY = when (distanceType) {
-            DistanceType.STRAIGHT -> 0.15f
+            DistanceType.STRAIGHT -> 0.25f
             DistanceType.FAR -> -0.1f
             DistanceType.MID -> -0.25f
             DistanceType.UNDER -> -0.5f
@@ -267,7 +275,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
             }
 
             when (loop.getCurrent()) {
-                JetpackIceShooterState.FLY_TO_TARGET -> {
+                JetpackBlasterState.FLY_TO_TARGET -> {
                     flyToTargetTimer.update(delta)
                     if (body.getCenter().epsilonEquals(target, 0.1f * ConstVals.PPM) || flyToTargetTimer.isFinished()) {
                         loop.next()
@@ -287,7 +295,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
                     }
                 }
 
-                JetpackIceShooterState.ADJUST_AIM -> {
+                JetpackBlasterState.ADJUST_AIM -> {
                     aimLine = calculateAimLine(distanceType)
                     flyToTargetTimer.update(delta)
                     if (body.getCenter().epsilonEquals(target, 0.1f * ConstVals.PPM) || flyToTargetTimer.isFinished()) {
@@ -298,7 +306,7 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
                     }
                 }
 
-                JetpackIceShooterState.SHOOT -> {
+                JetpackBlasterState.SHOOT -> {
                     shootTimer.update(delta)
                     if (shootTimer.isFinished()) {
                         loop.next()
@@ -312,49 +320,44 @@ class JetpackIceBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(1.15f * ConstVals.PPM, 1.5f * ConstVals.PPM)
+        body.setSize(1.25f * ConstVals.PPM, 1.5f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
-        body.addFixture(bodyFixture)
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        body.addFixture(damagerFixture)
-
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
-        body.addFixture(damageableFixture)
-
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyAttachment.y = -0.575f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         body.addFixture(feetFixture)
         debugShapes.add { feetFixture }
 
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        headFixture.offsetFromBodyAttachment.y = 0.575f * ConstVals.PPM
+        headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
         body.addFixture(headFixture)
         debugShapes.add { headFixture }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(
+            this,
+            body,
+            BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
+        )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.75f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setCenter(body.getCenter())
+        sprite.setSize(2.5f * ConstVals.PPM)
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.hidden = damageBlink
+            sprite.setCenter(body.getCenter())
             sprite.setFlip(isFacing(Facing.LEFT), false)
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.Predicate
 import com.mega.game.engine.common.objects.Properties
 import kotlin.reflect.KClass
+import kotlin.reflect.cast
 
 interface IPropertizable {
 
@@ -38,6 +39,8 @@ interface IPropertizable {
     fun isProperty(key: Any, value: Any) = properties.isProperty(key, value)
 
     fun removeProperty(key: Any) = properties.remove(key)
+
+    fun <T: Any> removeProperty(key: Any, type: KClass<T>) = type.cast(properties.remove(key))
 
     fun clearProperties() = properties.clear()
 }
