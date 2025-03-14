@@ -243,6 +243,7 @@ sprites/frames/MegamanTrailSprite/groundslide_shoot.png
 sprites/frames/MegamanTrailSprite/groundslide.png
 sprites/frames/Colors/black.png
 sprites/frames/Colors/white.png
+sprites/frames/Colors/pink.png
 sprites/frames/Colors/dark_blue.png
 sprites/frames/Colors/blue.png
 sprites/frames/Enemies2/Peat.png

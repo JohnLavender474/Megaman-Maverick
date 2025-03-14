@@ -90,9 +90,9 @@ class SnowFluff(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 1))
         sprite.setSize(0.1f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
-        return spritesComponent
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
+        return component
     }
 
     override fun getType() = EntityType.DECORATION

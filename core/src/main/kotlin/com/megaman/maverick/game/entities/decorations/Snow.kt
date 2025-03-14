@@ -39,10 +39,10 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
 
     companion object {
         const val TAG = "Snow"
+        private const val FADE_DUR = 0.5f
         private const val SWITCH_DELAY = 0.5f
         private const val PLAYGROUND_SIZE = 0.15f
         private const val BACKGROUND_SIZE = 0.075f
-        private const val FADE_DUR = 0.5f
         private const val MAX_SPAWNED_ALLOWED = 50
         private var region: TextureRegion? = null
     }

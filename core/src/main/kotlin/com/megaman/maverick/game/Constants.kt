@@ -47,6 +47,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val PINK = "pink"
     const val PIECE = "piece"
     const val IGNORE = "ignore"
     const val DARKNESS = "darkness"
@@ -111,6 +112,7 @@ object ConstKeys {
     const val RUN = "run"
     const val LISTENER = "listener"
     const val BEAM = "beam"
+    const val BEAMER = "beamer"
     const val SCREEN = "screen"
     const val SPRITE = "sprite"
     const val SUPPLIER = "supplier"

@@ -8,17 +8,11 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.OrderedMap
-import com.mega.game.engine.animations.Animation
-import com.mega.game.engine.animations.AnimationsComponent
-import com.mega.game.engine.animations.Animator
-import com.mega.game.engine.animations.IAnimator
+import com.mega.game.engine.animations.*
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.extensions.add
-import com.mega.game.engine.common.extensions.getTextureRegion
-import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.UpdateFunction
 import com.mega.game.engine.common.objects.Properties
@@ -35,6 +29,7 @@ import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.setBounds
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.entities.contracts.*
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -57,9 +52,7 @@ import com.megaman.maverick.game.entities.explosions.TubeBeamExplosion
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
-import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.utils.extensions.getPositionPoint
-import com.megaman.maverick.game.utils.extensions.getWorldPoints
+import com.megaman.maverick.game.utils.extensions.*
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -75,7 +68,7 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         private const val MAX_LENGTH = 20f
         private const val BODY_SIZE = 1f
 
-        private const val BEAM_DELAY = 2f
+        private const val BEAM_DELAY = 1.5f
         private const val BEAM_DUR = 1f
 
         private const val SPAWN_EXPLOSION_DELAY = 0.2f
@@ -83,8 +76,9 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         private const val BEAM_WIDTH = 0.125f
         private const val BEAM_HEIGHT = 1f
         private const val BEAM_REGION_KEY = "TubeBeam_short"
+        private const val BEAM_DELAY_FLASH_RATIO = 0.5f
 
-        private var region: TextureRegion? = null
+        private val regions = ObjectMap<String, TextureRegion>()
     }
 
     override lateinit var direction: Direction
@@ -112,7 +106,15 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, BEAM_REGION_KEY)
+        if (regions.isEmpty) {
+            regions.put(
+                BEAM_REGION_KEY,
+                game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, BEAM_REGION_KEY)
+            )
+            gdxArrayOf(ConstKeys.BLACK, ConstKeys.WHITE, ConstKeys.PINK).forEach { color ->
+                regions.put(color, game.assMan.getTextureRegion(TextureAsset.COLORS.source, color))
+            }
+        }
         super.init()
         defineDrawableComponents()
         addComponent(AudioComponent())
@@ -146,7 +148,7 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         beamDelay.reset()
         beamTimer.setToEnd()
-        spawnExplosionDelay.reset()
+        spawnExplosionDelay.setToEnd()
     }
 
     override fun onDestroy() {
@@ -162,27 +164,35 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     override fun isLaserIgnoring(block: Block) = ignoreIds.contains(block.mapObjectId)
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (beaming) {
-            beamTimer.update(delta)
-            if (beamTimer.isFinished()) beamDelay.reset()
+        when {
+            beaming -> {
+                beamTimer.update(delta)
+                if (beamTimer.isFinished()) beamDelay.reset()
 
-            spawnExplosionDelay.update(delta)
-            if (spawnExplosionDelay.isFinished()) {
-                val explosion = MegaEntityFactory.fetch(TubeBeamExplosion::class)!!
-                explosion.spawn(
-                    props(
-                        ConstKeys.OWNER pairTo this,
-                        ConstKeys.POSITION pairTo beam.getWorldPoints().second
+                spawnExplosionDelay.update(delta)
+                if (spawnExplosionDelay.isFinished()) {
+                    val explosion = MegaEntityFactory.fetch(TubeBeamExplosion::class)!!
+                    explosion.spawn(
+                        props(
+                            ConstKeys.OWNER pairTo this,
+                            ConstKeys.POSITION pairTo beam.getWorldPoints().second
+                        )
                     )
-                )
 
-                spawnExplosionDelay.reset()
+                    spawnExplosionDelay.reset()
+                }
             }
-        } else {
-            beamDelay.update(delta)
-            if (beamDelay.isFinished()) {
-                beamTimer.reset()
-                requestToPlaySound(SoundAsset.BURST_SOUND, false)
+
+            else -> {
+                beamDelay.update(delta)
+                if (beamDelay.isFinished()) {
+                    beamTimer.reset()
+
+                    spawnExplosionDelay.setToEnd()
+
+                    if (game.getGameCamera().overlaps(beam.getBoundingRectangle()))
+                        requestToPlaySound(SoundAsset.BURST_SOUND, false)
+                }
             }
         }
     })
@@ -249,9 +259,9 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         val beamCount = MAX_LENGTH.div(BEAM_WIDTH).toInt()
         for (i in 0 until beamCount) {
-            val key = i.toString()
+            val key = "${ConstKeys.BEAM}_$i"
 
-            val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 1))
+            val sprite = GameSprite()
             sprite.setSize(BEAM_WIDTH * ConstVals.PPM, BEAM_HEIGHT * ConstVals.PPM)
             sprites.put(key, sprite)
 
@@ -267,10 +277,29 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
                 sprite.hidden = !beaming || !beam.contains(center)
             }
 
-            val animation = Animation(region!!, 2, 2, 0.05f, true)
+            val animation = Animation(regions[BEAM_REGION_KEY], 2, 2, 0.05f, true)
             val animator = Animator(animation)
             animators.put(key, animator)
         }
+
+        val beamer = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 1))
+        sprites.put(ConstKeys.BEAMER, beamer)
+        updaters.put(ConstKeys.BEAMER) { _, _ -> beamer.setBounds(body.getBounds()) }
+
+        val beamerAnims = objectMapOf<String, IAnimation>(
+            ConstKeys.BLACK pairTo Animation(regions[ConstKeys.BLACK]),
+            ConstKeys.PRIOR pairTo Animation(gdxArrayOf(regions[ConstKeys.PINK], regions[ConstKeys.WHITE]), 0.1f, true),
+            ConstKeys.BEAM pairTo Animation(gdxArrayOf(regions[ConstKeys.PINK], regions[ConstKeys.WHITE]), 0.05f, true)
+        )
+        val beamerKeySupplier: (String?) -> String? = key@{
+            return@key when {
+                beaming -> ConstKeys.BEAM
+                beamDelay.getRatio() >= BEAM_DELAY_FLASH_RATIO -> ConstKeys.PRIOR
+                else -> ConstKeys.BLACK
+            }
+        }
+        val beamerAnimator = Animator(beamerKeySupplier, beamerAnims)
+        animators.put(ConstKeys.BEAMER, beamerAnimator)
 
         addComponent(SpritesComponent(sprites, updaters))
         addComponent(AnimationsComponent(animators, sprites))

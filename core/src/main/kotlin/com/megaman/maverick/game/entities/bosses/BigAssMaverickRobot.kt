@@ -484,10 +484,6 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         headDamageable.drawingColor = Color.PURPLE
         debugShapes.add { headDamageable }
 
-        val headDamager = Fixture(body, FixtureType.DAMAGER, circle.copy())
-        headDamager.offsetFromBodyAttachment.y = offsetY
-        body.addFixture(headDamager)
-
         val headFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(HEAD_RADIUS * ConstVals.PPM))
         headFixture.offsetFromBodyAttachment.y = offsetY
         body.addFixture(headFixture)

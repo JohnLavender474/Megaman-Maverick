@@ -1,33 +1,40 @@
 Colors.png
-size: 225, 489
+size: 160, 32
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 black
   rotate: false
   xy: 0, 0
-  size: 200, 200
-  orig: 200, 200
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
   index: -1
 blue
   rotate: false
-  xy: 0, 200
-  size: 225, 225
-  orig: 225, 225
+  xy: 32, 0
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
   index: -1
 dark_blue
   rotate: false
-  xy: 0, 425
+  xy: 64, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+pink
+  rotate: false
+  xy: 96, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 white
   rotate: false
-  xy: 32, 425
-  size: 64, 64
-  orig: 64, 64
+  xy: 128, 0
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
   index: -1

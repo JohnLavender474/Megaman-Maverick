@@ -15,9 +15,8 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -134,13 +133,13 @@ class Snowfall(game: MegamanMaverickGame) : MegaGameEntity(game) {
         var maxAmpl = MAX_AMPLITUDE * ConstVals.PPM
         if (background) maxAmpl *= BACKGROUND_SCALAR
 
-        val snow = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SNOW)!!
+        val snow = MegaEntityFactory.fetch(Snow::class)!!
         snow.spawn(
             props(
-                ConstKeys.POSITION pairTo spawnPos,
-                ConstKeys.BACKGROUND pairTo background,
                 ConstKeys.SPEED pairTo speed,
                 ConstKeys.DRIFT pairTo drift,
+                ConstKeys.POSITION pairTo spawnPos,
+                ConstKeys.BACKGROUND pairTo background,
                 "${ConstKeys.MIN}_${ConstKeys.Y}" pairTo minY,
                 "${ConstKeys.MIN}_${ConstKeys.FREQUENCY}" pairTo minFreq,
                 "${ConstKeys.MAX}_${ConstKeys.FREQUENCY}" pairTo maxFreq,

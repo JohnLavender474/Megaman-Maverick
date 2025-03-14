@@ -26,6 +26,8 @@ import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.events.Event
+import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
@@ -37,16 +39,19 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.RainDrop.RainDropType
 import com.megaman.maverick.game.entities.decorations.Splash.SplashType
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
 
-class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity {
+class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IEventListener {
 
     companion object {
         const val TAG = "RainDrop"
@@ -55,6 +60,8 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
     }
 
     internal enum class RainDropType { BLUE, PURPLE }
+
+    override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.GATE_INIT_OPENING)
 
     private lateinit var type: RainDropType
 
@@ -108,6 +115,10 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         ignoreIds.clear()
     }
 
+    override fun onEvent(event: Event) {
+        if (event.key.equalsAny(EventType.PLAYER_SPAWN, EventType.GATE_INIT_OPENING)) destroy()
+    }
+
     private fun splash() {
         GameLogger.debug(TAG, "splash()")
 
@@ -129,8 +140,8 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        if (body.getY() <= deathY) {
-            GameLogger.debug(TAG, "update(): below death y $deathY, destroying $this")
+        if (body.getBounds().getY() <= deathY) {
+            GameLogger.debug(TAG, "update(): destroy: body below death y")
             destroy()
         }
     })
@@ -185,16 +196,27 @@ class RainFall(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntit
         const val TAG = "RainFall"
         private const val VELOCITY = 15f
         private const val DEFAULT_ANGLE = 180f
-        private const val MIN_DELAY_DUR = 0.025f
         private const val MAX_DELAY_DUR = 0.1f
+        private const val MIN_DELAY_DUR = 0.025f
+        private const val MAX_RAIN_DROPS = 30
+        private const val SPAWN_AREA_BUFFER_WIDTH = 5f
+        private const val SPAWN_AREA_BUFFER_HEIGHT = 10f
     }
 
-    private val rainSpawners = Array<GameRectangle>()
     private lateinit var rainDropType: RainDropType
-    private val ignoreIds = ObjectSet<Int>()
-    private val cullBounds = GameRectangle()
-    private lateinit var delayTimer: Timer
-    private var angle = DEFAULT_ANGLE
+
+    private val rainSpawners = Array<GameRectangle>()
+    private val rainSpawnArea = GameRectangle().setSize(
+        (ConstVals.VIEW_WIDTH + SPAWN_AREA_BUFFER_WIDTH) * ConstVals.PPM,
+        (ConstVals.VIEW_HEIGHT + SPAWN_AREA_BUFFER_HEIGHT) * ConstVals.PPM
+    )
+    private lateinit var rainSpawnDelay: Timer
+
+    private val rainFallBounds = GameRectangle()
+    private var rainFallAngle = DEFAULT_ANGLE
+
+    private val ignoreHitIds = ObjectSet<Int>()
+
     private var deathY = 0f
 
     override fun init() {
@@ -218,42 +240,46 @@ class RainFall(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntit
                 rainSpawners.add(rainSpawner)
             } else if (key.toString().contains(ConstKeys.IGNORE) && value is RectangleMapObject) {
                 val id = value.properties.get(ConstKeys.ID, Int::class.java)
-                ignoreIds.add(id)
+                ignoreHitIds.add(id)
             }
         }
 
-        angle = spawnProps.getOrDefault(ConstKeys.ANGLE, DEFAULT_ANGLE, Float::class)
+        rainFallAngle = spawnProps.getOrDefault(ConstKeys.ANGLE, DEFAULT_ANGLE, Float::class)
 
-        delayTimer = Timer(getRandom(MIN_DELAY_DUR, MAX_DELAY_DUR))
+        rainSpawnDelay = Timer(getRandom(MIN_DELAY_DUR, MAX_DELAY_DUR))
 
-        cullBounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
-        deathY = spawnProps.getOrDefault("${ConstKeys.DEATH}_${ConstKeys.Y}", cullBounds.getY(), Float::class)
+        rainFallBounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
+        deathY = spawnProps.getOrDefault("${ConstKeys.DEATH}_${ConstKeys.Y}", rainFallBounds.getY(), Float::class)
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        ignoreIds.clear()
+        ignoreHitIds.clear()
         rainSpawners.clear()
     }
 
     private fun spawnRainDrops() {
         GameLogger.debug(TAG, "spawnRainDrops()")
 
+        rainSpawnArea.setCenter(megaman.body.getCenter())
+
         rainSpawners.forEach { rainSpawner ->
+            if (!rainSpawner.overlaps(rainSpawnArea)) return@forEach
+
             val spawn = GameObjectPools.fetch(Vector2::class)
                 .setX(getRandom(rainSpawner.getX(), rainSpawner.getMaxX()))
                 .setY(rainSpawner.getPositionPoint(Position.TOP_CENTER).y)
 
             val trajectory = GameObjectPools.fetch(Vector2::class)
                 .set(0f, VELOCITY * ConstVals.PPM)
-                .rotateDeg(angle)
+                .rotateDeg(rainFallAngle)
 
             val rainDrop = MegaEntityFactory.fetch(RainDrop::class)!!
             rainDrop.spawn(
                 props(
                     ConstKeys.POSITION pairTo spawn,
-                    ConstKeys.IGNORE pairTo ignoreIds,
+                    ConstKeys.IGNORE pairTo ignoreHitIds,
                     ConstKeys.TYPE pairTo rainDropType,
                     ConstKeys.TRAJECTORY pairTo trajectory,
                     "${ConstKeys.DEATH}_${ConstKeys.Y}" pairTo deathY,
@@ -263,15 +289,17 @@ class RainFall(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntit
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        delayTimer.update(delta)
-        if (delayTimer.isFinished()) {
+        val canSpawn = MegaGameEntities.getOfTag(RainDrop.TAG).size < MAX_RAIN_DROPS
+
+        rainSpawnDelay.update(delta)
+        if (canSpawn && rainSpawnDelay.isFinished()) {
             spawnRainDrops()
-            delayTimer.resetDuration(getRandom(MIN_DELAY_DUR, MAX_DELAY_DUR))
+            rainSpawnDelay.resetDuration(getRandom(MIN_DELAY_DUR, MAX_DELAY_DUR))
         }
     })
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cullOutOfBounds = getGameCameraCullingLogic(game.getGameCamera(), { cullBounds })
+        val cullOutOfBounds = getGameCameraCullingLogic(game.getGameCamera(), { rainFallBounds })
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOutOfBounds))
     }
 

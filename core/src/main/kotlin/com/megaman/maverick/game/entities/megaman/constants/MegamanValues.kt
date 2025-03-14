@@ -13,7 +13,7 @@ object MegamanValues {
     const val CLAMP_X = 15f
     const val CLAMP_Y = 40f
 
-    const val RUN_SPEED = 5f
+    const val RUN_SPEED = 5.25f
     const val RUN_IMPULSE = 35f
     const val ICE_RUN_IMPULSE = 15f
     const val WATER_RUN_SPEED = 2.25f
