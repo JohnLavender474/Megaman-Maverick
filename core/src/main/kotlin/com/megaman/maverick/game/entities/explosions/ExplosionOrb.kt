@@ -20,6 +20,8 @@ import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.events.Event
+import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
@@ -37,7 +39,8 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
 
 
-class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity {
+class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity,
+    IEventListener {
 
     companion object {
         const val TAG = "ExplosionOrb"
@@ -45,7 +48,7 @@ class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         private var region: TextureRegion? = null
     }
 
-    override fun getType() = EntityType.EXPLOSION
+    override val eventKeyMask = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS)
 
     override fun init() {
         if (region == null) region =
@@ -63,6 +66,10 @@ class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         body.setCenter(spawn)
 
         body.physics.velocity = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!.cpy()
+    }
+
+    override fun onEvent(event: Event) {
+        if (event.key == EventType.BEGIN_ROOM_TRANS) destroy()
     }
 
     private fun defineBodyComponent(): BodyComponent {
@@ -100,4 +107,8 @@ class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             )
         )
     }
+
+    override fun getType() = EntityType.EXPLOSION
+
+    override fun getTag() = TAG
 }

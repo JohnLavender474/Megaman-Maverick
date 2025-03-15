@@ -1599,6 +1599,7 @@ sprites/frames/Platforms1/SwingingPlatform/other_small_platform.png
 sprites/frames/Platforms1/SwingingPlatform/ring.png
 sprites/frames/Platforms1/SwingingPlatform/small_platform.png
 sprites/frames/Platforms1/SwingingPlatform/platform.png
+sprites/frames/Platforms1/PropellerPlatform_OLD.png
 sprites/frames/Platforms1/RocketPlatform_v2.png
 sprites/frames/Platforms1/GearTrolleyPlatform.png
 sprites/frames/Platforms1/PropellerPlatform.png
@@ -2444,6 +2445,7 @@ sprites/piskel/ColdGust.piskel
 sprites/piskel/BossFaces.piskel
 sprites/piskel/WoodPlank.piskel
 sprites/piskel/DarkSamus993-FireManTileset.piskel
+sprites/piskel/PropellerPlatform.piskel
 sprites/piskel/QuickSand_v2_TopLeft.piskel
 sprites/piskel/SprBGTomahawk_v2.piskel
 sprites/piskel/UF_Oh_No_Bot_1.piskel

@@ -96,7 +96,7 @@ class ReactorMonkey(game: MegamanMaverickGame) :
         super.init()
         addComponent(defineAnimationsComponent())
         damageOverrides.put(Fireball::class, dmgNeg(4))
-        damageOverrides.put(MoonScythe::class, dmgNeg(4))
+        damageOverrides.put(MoonScythe::class, dmgNeg(2))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -219,23 +219,23 @@ class ReactorMonkey(game: MegamanMaverickGame) :
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
         sprite.setSize(7.5f * ConstVals.PPM, 8f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.hidden = damageBlink || !ready
             sprite.setAlpha(if (defeated) 1f - defeatTimer.getRatio() else 1f)
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = {
+        val keySupplier: (String?) -> String? = key@{
             var key = reactorMonkeyState.name.lowercase()
             if (!damageTimer.isFinished()) key += "_damaged"
-            key
+            return@key key
         }
         val animations = objectMapOf<String, IAnimation>(
             "stand" pairTo Animation(regions["stand"], 1, 2, gdxArrayOf(1f, 0.1f), true),
