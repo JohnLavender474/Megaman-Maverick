@@ -52,7 +52,7 @@ Explosion
   orig: 704, 64
   offset: 0, 0
   index: -1
-ExplosionOrbs
+ExplosionOrb
   rotate: false
   xy: 704, 64
   size: 128, 64

@@ -485,13 +485,13 @@ sprites/frames/Explosions1/BigAssMaverickRobotOrbExplosion/ElectricDissipate.png
 sprites/frames/Explosions1/BigAssMaverickRobotOrbExplosion/ElectricPulse.png
 sprites/frames/Explosions1/ToxicGoopSplash.png
 sprites/frames/Explosions1/AsteroidExplosion.png
+sprites/frames/Explosions1/ExplosionOrb.png
 sprites/frames/Explosions1/SmokePuff.png
 sprites/frames/Explosions1/MagmaGoopExplosion.png
 sprites/frames/Explosions1/SpreadExplosion/default.png
 sprites/frames/Explosions1/SpreadExplosion/green.png
 sprites/frames/Explosions1/Explosion.png
 sprites/frames/Explosions1/Disintegration.png
-sprites/frames/Explosions1/ExplosionOrbs.png
 sprites/frames/Explosions1/PreciousExplosion.png
 sprites/frames/Explosions1/IcicleShards.png
 sprites/frames/Explosions1/ChargedShotExplosion.png
