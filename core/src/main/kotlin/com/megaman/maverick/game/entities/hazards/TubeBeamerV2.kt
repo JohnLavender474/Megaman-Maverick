@@ -237,10 +237,25 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         damagerFixture.drawingColor = Color.RED
         debugShapes.add { damagerFixture }
 
+        val updateDamager = {
+            damagerFixture.setActive(beaming)
+
+            val damagerBounds = damagerFixture.rawShape as GameRectangle
+            when {
+                beaming -> {
+                    damagerBounds.setSize(actualLine.getLength(), BEAM_HEIGHT * ConstVals.PPM)
+                    val origin = actualLine.getCenter()
+                    damagerBounds.setCenter(origin)
+                    damagerBounds.rotate(direction.rotation + 90f, origin.x, origin.y)
+                }
+
+                else -> damagerBounds.set(-100f * ConstVals.PPM, -100f * ConstVals.PPM, 0f, 0f)
+            }
+        }
+
         body.preProcess.put(ConstKeys.DEFAULT) {
             contacts.clear()
-
-            damagerFixture.setActive(beaming)
+            updateDamager()
         }
 
         body.postProcess.put(ConstKeys.DEFAULT) {
@@ -250,13 +265,7 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             val end = if (contacts.isEmpty()) lineEnd else contacts.peek()
             maxLine.setSecondLocalPoint(end)
 
-            damagerFixture.setActive(beaming)
-
-            val damager = damagerFixture.rawShape as GameRectangle
-            damager.setSize(actualLine.getLength(), BEAM_HEIGHT * ConstVals.PPM)
-            val origin = actualLine.getCenter()
-            damager.setCenter(origin)
-            damager.rotate(direction.rotation + 90f, origin.x, origin.y)
+            updateDamager()
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
