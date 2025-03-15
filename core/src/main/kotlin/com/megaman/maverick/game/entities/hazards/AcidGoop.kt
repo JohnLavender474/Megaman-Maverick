@@ -6,6 +6,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
@@ -75,19 +76,33 @@ class AcidGoop(game: MegamanMaverickGame) : MegaGameEntity(game), IDamager, IHaz
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        game.eventsMan.addListener(this)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setTopCenterToPoint(spawn)
+
         body.physics.gravityOn = false
+
         dissipateTimer.reset()
         dissipating = false
     }
 
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        game.eventsMan.removeListener(this)
+    }
+
     override fun onEvent(event: Event) {
+        GameLogger.debug(TAG, "onEvent(): event=$event")
         if (event.key == EventType.BEGIN_ROOM_TRANS) destroy()
     }
 
     fun setToFall() {
+        GameLogger.debug(TAG, "setToFall()")
         body.physics.gravityOn = true
     }
 
