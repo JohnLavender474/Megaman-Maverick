@@ -38,48 +38,15 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
     private val worldPoint2 = Vector2()
 
     override var rotation = 0f
-        set(value) {
-            field = value
-            dirty = true
-        }
-
     override var originX = 0f
-        set(value) {
-            field = value
-            dirty = true
-        }
-
     override var originY = 0f
-        set(value) {
-            field = value
-            dirty = true
-        }
-
     override var scaleX = 1f
-        set(value) {
-            field = value
-            dirty = true
-            calculateScaledLength = true
-        }
-
     override var scaleY = 1f
-        set(value) {
-            field = value
-            dirty = true
-            calculateScaledLength = true
-        }
 
     override var drawingColor: Color = Color.RED
     override var drawingShapeType = ShapeType.Line
     var drawingRenderType = GameLineRenderingType.LINE
     var drawingThickness = 0.1f
-
-    private var dirty = true
-
-    private var length = 0f
-    private var calculateLength = true
-
-    private var calculateScaledLength = true
 
     private val reusableVec1 = Vector2()
     private val reusableVec2 = Vector2()
@@ -108,8 +75,6 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
 
         drawingColor = line.drawingColor
         drawingShapeType = line.drawingShapeType
-
-        setToDirty()
     }
 
     constructor(point1: Vector2, point2: Vector2) : this(point1.x, point1.y, point2.x, point2.y)
@@ -165,8 +130,6 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
         drawingShapeType = props.getOrDefault("drawing_shape_type", drawingShapeType, ShapeType::class)
         drawingRenderType = props.getOrDefault("drawing_render_type", drawingRenderType, GameLineRenderingType::class)
 
-        setToDirty()
-
         return this
     }
 
@@ -198,8 +161,6 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
         localPoint1.y = y1
         localPoint2.x = x2
         localPoint2.y = y2
-        dirty = true
-        calculateLength = true
         return this
     }
 
@@ -207,16 +168,6 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
         val center = getCenter(reusableVec1)
         originX = center.x
         originY = center.y
-        return this
-    }
-
-    fun setToDirty(): GameLine {
-        dirty = true
-        return this
-    }
-
-    fun setToRecalculateLength(): GameLine {
-        calculateLength = true
         return this
     }
 
@@ -229,14 +180,10 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
     }
 
     fun getLength(): Float {
-        if (calculateLength) {
-            calculateLength = false
-            calculateWorldPoints(reusableVec1, reusableVec2)
-            val x = worldPoint1.x - worldPoint2.x
-            val y = worldPoint1.y - worldPoint2.y
-            length = sqrt((x * x + y * y).toDouble()).toFloat()
-        }
-        return length
+        calculateWorldPoints(reusableVec1, reusableVec2)
+        val x = worldPoint1.x - worldPoint2.x
+        val y = worldPoint1.y - worldPoint2.y
+        return sqrt((x * x + y * y).toDouble()).toFloat()
     }
 
     fun setFirstLocalPoint(point: Vector2) = setFirstLocalPoint(point.x, point.y)
@@ -256,8 +203,6 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
     fun setLocalPoints(x1: Float, y1: Float, x2: Float, y2: Float): GameLine {
         localPoint1.set(x1, y1)
         localPoint2.set(x2, y2)
-        dirty = true
-        calculateLength = true
         return this
     }
 
@@ -268,32 +213,28 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
     fun getSecondLocalPoint(out: Vector2): Vector2 = out.set(localPoint2)
 
     fun calculateWorldPoints(out1: Vector2, out2: Vector2): GameLine {
-        if (dirty) {
-            dirty = false
+        val cos = MathUtils.cosDeg(rotation)
+        val sin = MathUtils.sinDeg(rotation)
 
-            val cos = MathUtils.cosDeg(rotation)
-            val sin = MathUtils.sinDeg(rotation)
+        var first = true
+        forEachLocalPoint {
+            var x = it.x - originX
+            var y = it.y - originY
 
-            var first = true
-            forEachLocalPoint {
-                var x = it.x - originX
-                var y = it.y - originY
+            x *= scaleX
+            y *= scaleY
 
-                x *= scaleX
-                y *= scaleY
-
-                if (rotation != 0f) {
-                    val oldX = x
-                    x = cos * x - sin * y
-                    y = sin * oldX + cos * y
-                }
-
-                val worldPoint = if (first) worldPoint1 else worldPoint2
-                first = false
-
-                worldPoint.x = position.x + x + originX
-                worldPoint.y = position.y + y + originY
+            if (rotation != 0f) {
+                val oldX = x
+                x = cos * x - sin * y
+                y = sin * oldX + cos * y
             }
+
+            val worldPoint = if (first) worldPoint1 else worldPoint2
+            first = false
+
+            worldPoint.x = position.x + x + originX
+            worldPoint.y = position.y + y + originY
         }
 
         out1.set(worldPoint1)
@@ -354,9 +295,6 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
         position.x += centerDeltaX
         position.y += centerDeltaY
 
-        dirty = true
-        calculateLength = true
-
         return this
     }
 
@@ -371,18 +309,12 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
         out.set((localPoint1.x + localPoint2.x) / 2f, (localPoint1.y + localPoint2.y) / 2f)
 
     override fun setX(x: Float): GameLine {
-        if (position.x != x) {
-            position.x = x
-            dirty = true
-        }
+        position.x = x
         return this
     }
 
     override fun setY(y: Float): GameLine {
-        if (position.y != y) {
-            position.y = y
-            dirty = true
-        }
+        position.y = y
         return this
     }
 
@@ -409,7 +341,6 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
     override fun translate(translateX: Float, translateY: Float): GameLine {
         position.x += translateX
         position.y += translateY
-        dirty = true
         return this
     }
 

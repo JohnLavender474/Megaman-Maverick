@@ -75,6 +75,7 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         private const val BEAM_WIDTH = 0.125f
         private const val BEAM_HEIGHT = 1f
+        private const val BEAM_GROWTH_RATE = 12f
         private const val BEAM_REGION_KEY = "TubeBeam_short"
         private const val BEAM_DELAY_FLASH_RATIO = 0.5f
 
@@ -83,11 +84,12 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     override lateinit var direction: Direction
 
-    private val line = GameLine()
-    private val beam = GameLine()
+    private val rawLine = GameLine()
+    private val maxLine = GameLine()
+    private val actualLine = GameLine()
 
     private val contacts = PriorityQueue { p1: Vector2, p2: Vector2 ->
-        val (origin, _) = line.getWorldPoints()
+        val (origin, _) = rawLine.getWorldPoints()
         val d1 = p1.dst2(origin)
         val d2 = p2.dst2(origin)
         d1.compareTo(d2)
@@ -133,9 +135,9 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(position)
         body.positionOnPoint(spawn, position)
 
-        line.setFirstLocalPoint(spawn)
+        rawLine.setFirstLocalPoint(spawn)
         val endPoint = spawn.add(MAX_LENGTH * ConstVals.PPM, direction)
-        line.setSecondLocalPoint(endPoint)
+        rawLine.setSecondLocalPoint(endPoint)
 
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.IGNORE)) {
@@ -157,8 +159,9 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         ignoreIds.clear()
 
-        beam.reset()
-        line.reset()
+        rawLine.reset()
+        maxLine.reset()
+        actualLine.reset()
     }
 
     override fun isLaserIgnoring(block: Block) = ignoreIds.contains(block.mapObjectId)
@@ -169,28 +172,44 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
                 beamTimer.update(delta)
                 if (beamTimer.isFinished()) beamDelay.reset()
 
-                spawnExplosionDelay.update(delta)
-                if (spawnExplosionDelay.isFinished()) {
-                    val explosion = MegaEntityFactory.fetch(TubeBeamExplosion::class)!!
-                    explosion.spawn(
-                        props(
-                            ConstKeys.OWNER pairTo this,
-                            ConstKeys.POSITION pairTo beam.getWorldPoints().second
-                        )
-                    )
+                when {
+                    actualLine.getLength() < maxLine.getLength() -> {
+                        val nextEndPoint = actualLine.getSecondLocalPoint()
+                            .add(BEAM_GROWTH_RATE * delta * ConstVals.PPM, direction)
+                        actualLine.setSecondLocalPoint(nextEndPoint)
+                    }
 
-                    spawnExplosionDelay.reset()
+                    else -> {
+                        actualLine.set(maxLine)
+
+                        spawnExplosionDelay.update(delta)
+                        if (spawnExplosionDelay.isFinished()) {
+                            val spawn = actualLine.getWorldPoints().second
+
+                            val explosion = MegaEntityFactory.fetch(TubeBeamExplosion::class)!!
+                            explosion.spawn(
+                                props(
+                                    ConstKeys.OWNER pairTo this,
+                                    ConstKeys.POSITION pairTo spawn
+                                )
+                            )
+
+                            spawnExplosionDelay.reset()
+                        }
+                    }
                 }
             }
 
             else -> {
                 beamDelay.update(delta)
                 if (beamDelay.isFinished()) {
-                    beamTimer.reset()
+                    val start = rawLine.getFirstLocalPoint()
+                    actualLine.setLocalPoints(start, start)
 
+                    beamTimer.reset()
                     spawnExplosionDelay.setToEnd()
 
-                    if (game.getGameCamera().overlaps(beam.getBoundingRectangle()))
+                    if (game.getGameCamera().overlaps(maxLine.getBoundingRectangle()))
                         requestToPlaySound(SoundAsset.BURST_SOUND, false)
                 }
             }
@@ -205,7 +224,7 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        val laserFixture = Fixture(body, FixtureType.LASER, line)
+        val laserFixture = Fixture(body, FixtureType.LASER, rawLine)
         laserFixture.putProperty(ConstKeys.COLLECTION, contacts)
         laserFixture.attachedToBody = false
         body.addFixture(laserFixture)
@@ -220,19 +239,22 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             contacts.clear()
+
+            damagerFixture.setActive(beaming)
         }
 
         body.postProcess.put(ConstKeys.DEFAULT) {
-            val (lineStart, lineEnd) = line.getWorldPoints()
-            beam.setFirstLocalPoint(lineStart)
+            val (lineStart, lineEnd) = rawLine.getWorldPoints()
+            maxLine.setFirstLocalPoint(lineStart)
+            actualLine.setFirstLocalPoint(lineStart)
             val end = if (contacts.isEmpty()) lineEnd else contacts.peek()
-            beam.setSecondLocalPoint(end)
+            maxLine.setSecondLocalPoint(end)
 
             damagerFixture.setActive(beaming)
 
             val damager = damagerFixture.rawShape as GameRectangle
-            damager.setSize(beam.getLength(), BEAM_HEIGHT * ConstVals.PPM)
-            val origin = beam.getCenter()
+            damager.setSize(actualLine.getLength(), BEAM_HEIGHT * ConstVals.PPM)
+            val origin = actualLine.getCenter()
             damager.setCenter(origin)
             damager.rotate(direction.rotation + 90f, origin.x, origin.y)
         }
@@ -269,12 +291,12 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
                 sprite.setOriginCenter()
                 sprite.rotation = direction.rotation + 90f
 
-                val center = line.getWorldPoints().first
+                val center = rawLine.getWorldPoints().first
                     .add(i * BEAM_WIDTH * ConstVals.PPM.toFloat(), direction)
                     .add(BEAM_WIDTH * ConstVals.PPM / 2f, direction)
                 sprite.setCenter(center)
 
-                sprite.hidden = !beaming || !beam.contains(center)
+                sprite.hidden = !beaming || !actualLine.contains(center)
             }
 
             val animation = Animation(regions[BEAM_REGION_KEY], 2, 2, 0.05f, true)
