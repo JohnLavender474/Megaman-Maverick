@@ -51,7 +51,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
                 else MegamanValues.RUN_IMPULSE
 
             val impulse = rawImpulse * delta * movementScalar * ConstVals.PPM * facing.value *
-                if (isBehaviorActive(BehaviorType.WALL_SLIDING)) -1f else 1f
+                (if (isBehaviorActive(BehaviorType.WALL_SLIDING)) -1f else 1f)
 
             if (direction.isVertical() && abs(body.physics.velocity.x) < threshold)
                 body.physics.velocity.x += impulse
@@ -63,7 +63,9 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
 
             if (!poller.isPressed(MegaControllerButton.RIGHT)) running = false
         },
-        onReleaseContinued = { poller, _ -> if (!poller.isPressed(MegaControllerButton.RIGHT)) running = false }
+        onReleaseContinued = { poller, _ ->
+            if (!poller.isPressed(MegaControllerButton.RIGHT)) running = false
+        }
     )
 
     val right = ButtonActuator(
@@ -91,7 +93,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
                 else MegamanValues.RUN_IMPULSE
 
             val impulse = rawImpulse * delta * movementScalar * ConstVals.PPM * facing.value *
-                if (isBehaviorActive(BehaviorType.WALL_SLIDING)) -1f else 1f
+                (if (isBehaviorActive(BehaviorType.WALL_SLIDING)) -1f else 1f)
 
             if (direction.isVertical() && abs(body.physics.velocity.x) < threshold)
                 body.physics.velocity.x += impulse
@@ -130,11 +132,12 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
                 !weaponsHandler.canFireWeapon(currentWeapon, chargeStatus) ||
                 game.isProperty(ConstKeys.ROOM_TRANSITION, true)
             ) {
-                GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG,
+                GameLogger.debug(
+                    MEGAMAN_CONTROLLER_COMPONENT_TAG,
                     "attack actuator just released, do not shoot: " +
-                    "stunned=$stunned, damaged=$damaged, game.isCameraRotating=${game.isCameraRotating()}, " +
-                    "teleporting=$teleporting, ready=$ready, " +
-                    "canFireWeapon=${weaponsHandler.canFireWeapon(currentWeapon, chargeStatus)}"
+                        "stunned=$stunned, damaged=$damaged, game.isCameraRotating=${game.isCameraRotating()}, " +
+                        "teleporting=$teleporting, ready=$ready, " +
+                        "canFireWeapon=${weaponsHandler.canFireWeapon(currentWeapon, chargeStatus)}"
                 )
 
                 stopCharging()

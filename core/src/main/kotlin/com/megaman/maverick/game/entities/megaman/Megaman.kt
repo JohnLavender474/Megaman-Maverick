@@ -267,10 +267,15 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
         }
 
     var running: Boolean
-        get() = ready && getProperty(ConstKeys.RUNNING) as Boolean
+        get() = ready && getProperty(ConstKeys.RUNNING, Boolean::class)!!
         set(value) {
             putProperty(ConstKeys.RUNNING, value)
         }
+
+    val slipSliding: Boolean
+        get() = body.isSensing(BodySense.FEET_ON_GROUND) &&
+            abs(if (direction.isVertical()) body.physics.velocity.x else body.physics.velocity.y) >=
+            (MegamanValues.SLIP_SLIDE_THRESHOLD * ConstVals.PPM)
 
     var teleporting = false
         private set
@@ -283,11 +288,6 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
                 animator.updateScalar = value
             }
         }
-
-    val slipSliding: Boolean
-        get() = body.isSensing(BodySense.FEET_ON_GROUND) && abs(
-            if (direction.isVertical()) body.physics.velocity.x else body.physics.velocity.y
-        ) >= MegamanValues.SLIP_SLIDE_VEL_THRESHOLD * ConstVals.PPM
 
     override var gravityScalar = 1f
 
@@ -357,8 +357,9 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
         weaponsHandler.setAllToMaxAmmo()
         currentWeapon = MegamanWeapon.MEGA_BUSTER
 
-        canMove = true
         running = false
+
+        canMove = true
         teleporting = false
         canBeDamaged = true
         recoveryFlash = false

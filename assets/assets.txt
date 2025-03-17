@@ -2552,6 +2552,7 @@ tiled_maps/tsx/ForestTiles.tsx
 tiled_maps/tsx/GlacierManTileset.tsx
 tiled_maps/tsx/ShadowMan.tsx
 tiled_maps/tsx/InfernoManTileset.tsx
+tiled_maps/tsx/Wily2.tsx
 tiled_maps/tsx/ColorsTileset.tsx
 tiled_maps/tsx/MagnetMan2.tsx
 tiled_maps/tsx/tomahawk_man_stage_tileset.tsx
@@ -2721,6 +2722,7 @@ tiled_maps/png/LeafCanopy.png
 tiled_maps/png/tstElecman.png
 tiled_maps/png/tstMM10Enker.png
 tiled_maps/png/tstChillMan.png
+tiled_maps/png/TileSet_Factory_stage_1.png
 tiled_maps/png/tstFlashmanAnimated3.png
 tiled_maps/png/MoonManTiles.png
 tiled_maps/png/tstFlashmanAnimated.png
@@ -2957,6 +2959,7 @@ tiled_maps/tmx/ReactMan_v2.tmx
 tiled_maps/tmx/WilyStage3_v2.tmx
 tiled_maps/tmx/Test2.tmx
 tiled_maps/tmx/InfernoMan_16x14_v2.tmx
+tiled_maps/tmx/WilyStage2_v2.tmx
 diagrams/Guts Tank - Design.drawio
 diagrams/Inferno Man - Design.drawio
 diagrams/Desert Man - Design.drawio

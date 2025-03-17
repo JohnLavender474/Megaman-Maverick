@@ -8,13 +8,14 @@ object MegamanValues {
     const val START_HEALTH = 14
     const val MAX_WEAPON_AMMO = 30
 
-    const val SLIP_SLIDE_VEL_THRESHOLD = 0.25f
+    const val SLIP_SLIDE_THRESHOLD = 0.35f
 
     const val CLAMP_X = 15f
     const val CLAMP_Y = 40f
 
     const val RUN_SPEED = 5.25f
     const val RUN_IMPULSE = 35f
+    const val RUN_START_DUR = 0.15f
     const val ICE_RUN_IMPULSE = 15f
     const val WATER_RUN_SPEED = 2.25f
 

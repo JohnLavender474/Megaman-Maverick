@@ -56,7 +56,7 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
 
     isBehaviorActive(BehaviorType.JUMPING) || !feetOnGround -> amendKey("jump")
 
-    running -> amendKey("run")
+    running ->amendKey("run")
 
     slipSliding -> amendKey("slip")
 

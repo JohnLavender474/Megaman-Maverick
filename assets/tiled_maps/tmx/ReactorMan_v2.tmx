@@ -1354,10 +1354,10 @@
   <object id="416" name="ToxicBarrelBot" x="18424" y="1296" width="16" height="16"/>
   <object id="502" name="FloatingCanHole" x="8192" y="2848" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="13" name="player">
+ <objectgroup id="13" name="temp">
   <object id="509" name="0" x="15008" y="1312" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="9" name="temp">
+ <objectgroup id="9" name="player">
   <object id="62" name="0" x="96" y="1760" width="32" height="32"/>
   <object id="150" name="1" x="5152" y="1696" width="32" height="32"/>
   <object id="151" name="2" x="8400" y="1056" width="32" height="32"/>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="200" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="139">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="200" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="140">
  <tileset firstgid="1" source="../tsx/CrystalManTileset.tsx"/>
  <tileset firstgid="226" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1250" source="../tsx/mm9jewel.tsx"/>
@@ -163,7 +163,7 @@
   <object id="42" x="640" y="640" width="256" height="320"/>
   <object id="43" x="896" y="640" width="128" height="256"/>
   <object id="44" x="1024" y="640" width="64" height="192"/>
-  <object id="45" x="1088" y="480" width="1856" height="288"/>
+  <object id="45" x="1088" y="640" width="1216" height="128"/>
   <object id="46" x="832" y="1088" width="128" height="512"/>
   <object id="48" x="1152" y="768" width="128" height="192"/>
   <object id="49" name="SwingingPlatform" x="1200" y="1088" width="32" height="32">
@@ -224,6 +224,7 @@
   <object id="136" x="4800" y="1120" width="64" height="32"/>
   <object id="137" x="4928" y="1120" width="64" height="32"/>
   <object id="138" x="5056" y="1120" width="64" height="32"/>
+  <object id="139" x="2304" y="480" width="640" height="288"/>
  </objectgroup>
  <objectgroup id="15" name="specials">
   <object id="36" name="Ladder" x="672" y="1056" width="32" height="288"/>
@@ -457,10 +458,10 @@
   <object id="126" name="DuoBallCanon" x="3080" y="560" width="16" height="16"/>
   <object id="133" name="DuoBallCanon" x="3976" y="464" width="16" height="16"/>
  </objectgroup>
- <objectgroup id="5" name="player">
+ <objectgroup id="5" name="temp">
   <object id="87" name="0" x="3504" y="1376" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="3" name="temp">
+ <objectgroup id="3" name="player">
   <object id="6" name="0" x="128" y="1504" width="32" height="32"/>
  </objectgroup>
 </map>
