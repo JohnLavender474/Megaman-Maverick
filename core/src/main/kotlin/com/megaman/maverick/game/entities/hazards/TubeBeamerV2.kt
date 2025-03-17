@@ -75,7 +75,7 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         private const val BEAM_WIDTH = 0.125f
         private const val BEAM_HEIGHT = 1f
-        private const val BEAM_GROWTH_RATE = 12f
+        private const val BEAM_GROWTH_RATE = 16f
         private const val BEAM_REGION_KEY = "TubeBeam_short"
         private const val BEAM_DELAY_FLASH_RATIO = 0.5f
 

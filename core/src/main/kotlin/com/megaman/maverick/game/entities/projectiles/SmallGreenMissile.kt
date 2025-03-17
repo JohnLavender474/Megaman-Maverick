@@ -33,8 +33,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.IProjectileEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.SpreadExplosion
 import com.megaman.maverick.game.entities.explosions.SpreadExplosion.SpreadExplosionColor
@@ -85,11 +83,6 @@ class SmallGreenMissile(game: MegamanMaverickGame) : AbstractProjectile(game), I
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
         if (explosionType == DEFAULT_EXPLOSION && damageable is IBodyEntity) explodeAndDie()
-    }
-
-    override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        val projectile = projectileFixture.getEntity() as IProjectileEntity
-        if (explosionType == DEFAULT_EXPLOSION && projectile.owner == megaman) explodeAndDie()
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()

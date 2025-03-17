@@ -1,5 +1,7 @@
 #!/bin/bash
 
-# Run `./gradlew lwjgl3:build` before running this script
+# Do the following before running this script
+# - in `gradle.properties`, set `projectVersion` to the correct version
+# - run `./gradlew lwjgl3:dist` to create the JAR corresponding to the name below
 
-./build-game.sh windows64 Megaman-Maverick-alpha-1.5.1
+./build-game.sh windows64 Megaman-Maverick-alpha-1.6.0
