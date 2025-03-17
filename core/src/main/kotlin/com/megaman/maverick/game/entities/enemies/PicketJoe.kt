@@ -55,8 +55,8 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         const val TAG = "PicketJoe"
 
         private const val STAND_DUR = 1f
-        private const val THROW_DUR = 1f
-        private const val THROW_TIME = 0.6f
+        private const val THROW_DUR = 0.5f
+        private const val THROW_TIME = 0.15f
 
         private const val MAX_IMPULSE_X = 6f
         private const val PICKET_IMPULSE_Y = 10f
@@ -73,15 +73,14 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
     private val standTimer = Timer(STAND_DUR)
     private val throwTimer = Timer(THROW_DUR)
+        .addRunnable(TimeMarkedRunnable(THROW_TIME) { throwPicket() })
 
     override fun init() {
-        super.init()
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            regions.put("stand", atlas.findRegion("$TAG/Stand"))
-            regions.put("throw", atlas.findRegion("$TAG/Throw"))
+            gdxArrayOf("stand", "throw").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
-        throwTimer.addRunnables(gdxArrayOf(TimeMarkedRunnable(THROW_TIME) { throwPicket() }))
+        super.init()
         addComponent(defineAnimationsComponent())
     }
 
@@ -197,7 +196,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         val keySupplier: (String?) -> String? = { if (standing) "stand" else "throw" }
         val animations = objectMapOf<String, IAnimation>(
             "stand" pairTo Animation(regions["stand"]),
-            "throw" pairTo Animation(regions["throw"], 1, 4, 0.25f, false)
+            "throw" pairTo Animation(regions["throw"], 1, 3, gdxArrayOf(0.15f, 0.25f, 0.1f), false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

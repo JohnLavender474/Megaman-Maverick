@@ -1654,8 +1654,8 @@ sprites/frames/Platforms1/FlipperPlatform/FlipToLeft.png
 sprites/frames/Platforms1/FlipperPlatform/LeftDelay.png
 sprites/frames/Enemies1/CanonHopper/stand.png
 sprites/frames/Enemies1/CanonHopper/hop.png
-sprites/frames/Enemies1/PicketJoe/Stand.png
-sprites/frames/Enemies1/PicketJoe/Throw.png
+sprites/frames/Enemies1/PicketJoe/throw.png
+sprites/frames/Enemies1/PicketJoe/stand.png
 sprites/frames/Enemies1/FlyBoy/Stand.png
 sprites/frames/Enemies1/FlyBoy/Fly.png
 sprites/frames/Enemies1/RedScrewie/Down.png

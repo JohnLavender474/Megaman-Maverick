@@ -273,7 +273,7 @@
             <key type="filename">../frames/Enemies1/Penguin/Jump.png</key>
             <key type="filename">../frames/Enemies1/Penguin/Slide.png</key>
             <key type="filename">../frames/Enemies1/Penguin/Slippin.png</key>
-            <key type="filename">../frames/Enemies1/PicketJoe/Stand.png</key>
+            <key type="filename">../frames/Enemies1/PicketJoe/stand.png</key>
             <key type="filename">../frames/Enemies1/Popoheli/frozen.png</key>
             <key type="filename">../frames/Enemies1/PopupCanon/Down.png</key>
             <key type="filename">../frames/Enemies1/PopupCanon/Up.png</key>
@@ -360,7 +360,6 @@
             <key type="filename">../frames/Enemies1/PetitDevil/LargeOrange.png</key>
             <key type="filename">../frames/Enemies1/PetitDevil/SmallGreen.png</key>
             <key type="filename">../frames/Enemies1/PetitDevil/SmallOrange.png</key>
-            <key type="filename">../frames/Enemies1/PicketJoe/Throw.png</key>
             <key type="filename">../frames/Enemies1/RedScrewie/Drop.png</key>
             <key type="filename">../frames/Enemies1/RedScrewie/Rise.png</key>
             <key type="filename">../frames/Enemies1/RedScrewie/Shoot.png</key>
@@ -749,6 +748,21 @@
                 <rect>12,12,24,24</rect>
                 <key>scale9Paddings</key>
                 <rect>12,12,24,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/PicketJoe/throw.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>96,32,192,64</rect>
+                <key>scale9Paddings</key>
+                <rect>96,32,192,64</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

@@ -42,6 +42,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.IFreezerEntity
@@ -62,6 +63,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
     companion object {
         const val TAG = "Bat"
         private var atlas: TextureAtlas? = null
+        private const val MAX_ALLOWED = 3
         private const val DEBUG_PATHFINDING = false
         private const val DEBUG_PATHFINDING_DURATION = 1f
         private const val HANG_DURATION = 0.75f
@@ -118,6 +120,9 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         addComponent(defineAnimationsComponent())
         addComponent(definePathfindingComponent())
     }
+
+    override fun canSpawn(spawnProps: Properties) =
+        MegaGameEntities.getOfTag(TAG).size < MAX_ALLOWED && super.canSpawn(spawnProps)
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
