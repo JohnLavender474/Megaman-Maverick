@@ -203,24 +203,26 @@ comprehensive listing of the credits for the artwork used in this game.
 #### Tilesets
 
 - [Balloon Cart](https://balloon-cart.itch.io)
-  - [Reactor Man tileset](https://balloon-cart.itch.io/reactor-man-asset-pack)
-  - [Glacier Man tileset](https://balloon-cart.itch.io/glacier-man-asset-pack)
+  - [Reactor Man](https://balloon-cart.itch.io/reactor-man-asset-pack)
+  - [Glacier Man](https://balloon-cart.itch.io/glacier-man-asset-pack)
 - [Ansimuz](https://ansimuz.itch.io)
-  - [Intro Stage Tileset](https://ansimuz.itch.io/mega-bot) 
-  - [Rodent Man tileset](https://ansimuz.itch.io/mega-bot)
-  - [Inferno Man tileset (commissioned by oldlavygenes)](https://www.deviantart.com/oldlavygenes474/art/1142906425)
+  - [Intro Stage](https://ansimuz.itch.io/mega-bot) 
+  - [Rodent Man](https://ansimuz.itch.io/mega-bot)
+  - [Inferno Man](https://www.deviantart.com/oldlavygenes474/art/1142906425)
 - [Super Icon Ltd](https://assetstore.unity.com/publishers/5990) 
   - [Mega 8-Bit Pixel Pack](https://assetstore.unity.com/packages/2d/environments/mega-8-bit-pixel-pack-60158)
+- [Gektorne](https://gektorne.itch.io/)
+  - [Wily Stage 2](https://gektorne.itch.io/8bit-tileset-for-action-platformer)
 - [Bongwater-bandit](https://www.deviantart.com/bongwater-bandit:
   - [MM6 Plant Man edit](https://www.deviantart.com/bongwater-bandit/art/MM6-Plant-Man-edit-875037908)
 - Mister Mike
-  - [Megaman 6 - Tomahawk Man Tileset](https://www.spriters-resource.com/nes/mm6/sheet/16402/)
-  - [Megaman 3 - Wily Stage 1 Tileset](https://www.spriters-resource.com/nes/mm3/sheet/16388/)
+  - [Megaman 6 - Tomahawk Man](https://www.spriters-resource.com/nes/mm6/sheet/16402/)
+  - [Megaman 3 - Wily Stage 1](https://www.spriters-resource.com/nes/mm3/sheet/16388/)
 - AxeW1eld3r
-  - [Megaman 9 - Endless Attack Tileset](https://www.spriters-resource.com/wii/mm9/sheet/166545/)
-  - [Megaman 10 - Endless Attack Tileset](https://www.spriters-resource.com/wii/mm10/sheet/166546/)
+  - [Megaman 9 - Endless Attack](https://www.spriters-resource.com/wii/mm9/sheet/166545/)
+  - [Megaman 10 - Endless Attack](https://www.spriters-resource.com/wii/mm10/sheet/166546/)
 - Rabbid4240
-  - [Megaman 9 - Magma Man Tileset](https://www.spriters-resource.com/wii/mm9/sheet/197901/)
+  - [Megaman 9 - Magma Man](https://www.spriters-resource.com/wii/mm9/sheet/197901/)
 - Megaman Maker
   - [Crystal Cave Background](https://wiki.megamanmaker.com/index.php/File:SprBGCrystal5_0.png)
 
