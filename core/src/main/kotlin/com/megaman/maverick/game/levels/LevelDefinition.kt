@@ -28,7 +28,7 @@ enum class LevelDefinition(
         mugshotAtlas = "FACES_1",
         mugshotRegion = "Timber Woman",
         tmxMapSource = "TimberWoman_16x14_v2.tmx",
-        music = MusicAsset.MMX3_NEON_TIGER_MUSIC,
+        music = MusicAsset.MEGA_QUEST_2_LEVEL_1_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),
     MOON_MAN(
@@ -44,7 +44,7 @@ enum class LevelDefinition(
         mugshotAtlas = "FACES_1",
         mugshotRegion = "Rodent Man",
         tmxMapSource = "RodentMan_16x14.tmx",
-        music = MusicAsset.MM7_SLASH_MAN_MUSIC,
+        music = MusicAsset.FAMITARD_OC_2_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),
     DESERT_MAN(
@@ -52,7 +52,7 @@ enum class LevelDefinition(
         mugshotAtlas = "FACES_1",
         mugshotRegion = "Desert Man",
         tmxMapSource = "DesertMan_16x14_v3.tmx",
-        music = MusicAsset.MMX7_VANISHING_GUNGAROO_MUSIC,
+        music = MusicAsset.CODY_O_QUINN_BATTLE_MAN_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),
     INFERNO_MAN(
@@ -68,7 +68,7 @@ enum class LevelDefinition(
         mugshotAtlas = "FACES_1",
         mugshotRegion = "Reactor Man",
         tmxMapSource = "ReactorMan_v2.tmx",
-        music = MusicAsset.MMX8_BURN_ROOSTER_MUSIC,
+        music = MusicAsset.FAMITARD_OC_1_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),
     GLACIER_MAN(
@@ -96,7 +96,7 @@ enum class LevelDefinition(
     WILY_STAGE_2(
         type = LevelType.WILY_LEVEL,
         tmxMapSource = "WilyStage2_v2.tmx",
-        music = MusicAsset.MMZ_ENEMY_HALL_MUSIC,
+        music = MusicAsset.CYBERNETIC_FACTORY_MUSIC,
         screenOnCompletion = { ScreenEnum.WILY_CASTLE_SCREEN }
     ),
     WILY_STAGE_3(

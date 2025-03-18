@@ -35,7 +35,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.IDamageNegotiator
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.*
-import com.megaman.maverick.game.entities.decorations.FallingLeaf
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
@@ -77,11 +76,8 @@ class DeadlyLeaf(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyE
     private var minY = 0f
 
     override fun init() {
-        if (region == null)
-            region = game.assMan.getTextureRegion(TextureAsset.ENVIRONS_1.source, "Wood/${FallingLeaf.Companion.TAG}")
-
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
         super.init()
-
         addComponent(AudioComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())

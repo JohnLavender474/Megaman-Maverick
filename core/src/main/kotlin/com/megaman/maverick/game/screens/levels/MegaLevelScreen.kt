@@ -513,8 +513,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                     SimplePathfindingSystem::class
                 )
                 systemsToTurnOff.forEach { game.getSystem(it).on = false }
-
-                megaman.body.physics.velocity.setZero()
             }
 
             EventType.GATE_INIT_CLOSING -> {

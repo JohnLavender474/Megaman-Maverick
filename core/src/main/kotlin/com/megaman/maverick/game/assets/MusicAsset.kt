@@ -54,7 +54,19 @@ enum class MusicAsset(src: String, val loop: Boolean = true, val onCompletion: (
     MMX_SIGMA_FORTRESS_1_MUSIC("MMX_Sigma1st.mp3"),
     VINNYZ_WIP_1_MUSIC("vinnyz_wip_1.mp3"),
     MMX5_STAGE_SELECT_1_MUSIC("MMX5_StageSelect.mp3"),
-    MMX5_STAGE_SELECT_2_MUSIC("MMX5_Zero_Stage_1.mp3");
+    MMX5_STAGE_SELECT_2_MUSIC("MMX5_Zero_Stage_1.mp3"),
+    FAMITARD_OC_1_MUSIC("Famitard_OC_1.mp3"),
+    FAMITARD_OC_2_MUSIC("Famitard_OC_2.mp3"),
+    CODY_O_QUINN_BATTLE_MAN_MUSIC("Cody_O_Quinn_Battle_Man.mp3"),
+    CODY_O_QUINN_ACTION_MAN_MUSIC("Cody_O_Quinn_Action_Man.mp3"),
+    MEGA_QUEST_2_LEVEL_1_MUSIC("Mega_Quest_2_Level_1.mp3"),
+    MEGA_QUEST_2_LEVEL_2_MUSIC("Mega_Quest_2_Level_2.mp3"),
+    MEGA_QUEST_2_LEVEL_5_MUSIC("Mega_Quest_2_Level_5.mp3"),
+    MEGA_QUEST_2_LEVEL_6_MUSIC("Mega_Quest_2_Level_6.mp3"),
+    MEGA_QUEST_2_BOSS_BATTLE_MUSIC("Mega_Quest_2_Boss_Battle.mp3"),
+    CRYSTAL_MINES_MUSIC("Crystal_Mines.mp3"),
+    CYBERNETIC_FACTORY_MUSIC("Cybernetic_Factory.mp3"),
+    ROBOT_CITY_MUSIC("Robot_City.mp3");
 
     companion object {
         fun valuesAsIAssetArray(): Array<IAsset> {

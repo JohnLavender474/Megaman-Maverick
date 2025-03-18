@@ -504,10 +504,10 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="13" name="temp">
-  <object id="147" name="0" x="9472" y="1120" width="32" height="32"/>
+ <objectgroup id="13" name="player">
+  <object id="147" name="0" x="8960" y="1120" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="7" name="player">
+ <objectgroup id="7" name="temp">
   <object id="5" name="0" x="128" y="1696" width="32" height="32"/>
   <object id="161" name="1" x="2560" y="1600" width="32" height="32"/>
   <object id="162" name="2" x="4448" y="1664" width="32" height="32"/>

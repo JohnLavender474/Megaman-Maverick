@@ -84,6 +84,8 @@ abstract class AbstractBoss(
             MoonScythe::class pairTo dmgNeg(1),
             SmallIceCube::class pairTo dmgNeg(1)
         )
+
+        private val DEFAULT_BOSS_BATTLE_MUSIC = MusicAsset.MMX6_BOSS_FIGHT_MUSIC.name
     }
 
     protected open class BossDamageNegotiator : IDamageNegotiator {
@@ -104,7 +106,7 @@ abstract class AbstractBoss(
         private set
     var bossKey = ""
         private set
-    var orbs = true
+    var spawnDefeatOrbs = true
 
     var betweenReadyAndEndBossSpawnEvent = false
         private set
@@ -115,6 +117,7 @@ abstract class AbstractBoss(
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
 
         game.eventsMan.addListener(this)
+        megaman.addDamageListener(this)
 
         bossKey = spawnProps.getOrDefault("${ConstKeys.BOSS}_${ConstKeys.KEY}", "NO_BOSS_KEY", String::class)
         mini = spawnProps.getOrDefault(ConstKeys.MINI, false, Boolean::class)
@@ -128,19 +131,11 @@ abstract class AbstractBoss(
         betweenReadyAndEndBossSpawnEvent = false
 
         defeatTimer.setToEnd()
+        spawnDefeatOrbs = spawnProps.getOrDefault(ConstKeys.ORB, !mini, Boolean::class)
 
-        orbs = spawnProps.getOrDefault(ConstKeys.ORB, !mini, Boolean::class)
-
-        if (playMusicOnSpawn()) {
-            val musicStr =
-                spawnProps.getOrDefault(ConstKeys.MUSIC, MusicAsset.MMX6_BOSS_FIGHT_MUSIC.name, String::class)
-            val music = MusicAsset.valueOf(musicStr.uppercase())
-            game.audioMan.playMusic(music, true)
-        }
+        if (spawnProps.containsKey(ConstKeys.MUSIC)) putProperty(ConstKeys.MUSIC, spawnProps.get(ConstKeys.MUSIC))
 
         super.onSpawn(spawnProps)
-
-        megaman.addDamageListener(this)
     }
 
     override fun onDestroy() {
@@ -153,15 +148,15 @@ abstract class AbstractBoss(
         game.eventsMan.removeListener(this)
         removeProperty("${ConstKeys.BOSS}_${ConstKeys.KEY}")
 
-        if (isHealthDepleted() && orbs) spawnExplosionOrbs(body.getCenter())
+        if (isHealthDepleted() && spawnDefeatOrbs) spawnExplosionOrbs(body.getCenter())
     }
 
     protected open fun spawnExplosionOrbs(spawn: Vector2) {
         playSoundNow(SoundAsset.DEFEAT_SOUND, false)
 
         EXPLOSION_ORB_TRAJS.forEach { trajectory ->
-            val explosionOrb = MegaEntityFactory.fetch(ExplosionOrb::class)!!
-            explosionOrb.spawn(
+            val orb = MegaEntityFactory.fetch(ExplosionOrb::class)!!
+            orb.spawn(
                 props(
                     ConstKeys.POSITION pairTo spawn,
                     ConstKeys.TRAJECTORY pairTo trajectory.cpy().scl(ConstVals.PPM.toFloat())
@@ -231,7 +226,7 @@ abstract class AbstractBoss(
 
     fun isEndLevelBoss() = !mini && end
 
-    protected open fun playMusicOnSpawn() = !mini
+    protected open fun playBossMusic() = !mini
 
     protected open fun getHealthFillType() = HealthFillType.BIT_BY_BIT
 
@@ -256,6 +251,16 @@ abstract class AbstractBoss(
     protected open fun onEndBossSpawnEvent() {
         GameLogger.debug(TAG, "onEndBossSpawnEvent()")
         betweenReadyAndEndBossSpawnEvent = false
+
+        if (playBossMusic()) {
+            try {
+                val musicStr = getOrDefaultProperty(ConstKeys.MUSIC, DEFAULT_BOSS_BATTLE_MUSIC, String::class)
+                val music = MusicAsset.valueOf(musicStr.uppercase())
+                game.audioMan.playMusic(music, true)
+            } catch (e: Exception) {
+                throw Exception("Failed to play music. Music prop: ${getProperty(ConstKeys.MUSIC)}.", e)
+            }
+        }
     }
 
     protected open fun triggerDefeat() {

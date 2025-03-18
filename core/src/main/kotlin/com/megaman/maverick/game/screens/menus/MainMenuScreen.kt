@@ -37,7 +37,7 @@ import com.megaman.maverick.game.utils.interfaces.IShapeDebuggable
 class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScreenButton.START_NEW_GAME.text),
     Initializable, IShapeDebuggable {
 
-    enum class MainScreenButton(val text: String) {
+    private enum class MainScreenButton(val text: String) {
         START_NEW_GAME("START NEW GAME"),
         LOAD_SAVE_FILE("LOAD SAVE FILE"),
         SETTINGS("SETTINGS"),
@@ -45,7 +45,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         EXIT("EXIT")
     }
 
-    enum class MainScreenSettingsButton(val text: String) {
+    private enum class MainScreenSettingsButton(val text: String) {
         BACK("BACK"),
         MUSIC_VOLUME("MUSIC VOLUME"),
         EFFECTS_VOLUME("SFX VOLUME"),
@@ -60,6 +60,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         private const val SETTINGS_TEXT_START_ROW = 11f
         private const val SETTINGS_TRANS_DUR = 0.5f
         private val SETTINGS_TRAJ = Vector3(15f * ConstVals.PPM, 0f, 0f)
+        private val MAIN_MENU_MUSIC = MusicAsset.MMX3_INTRO_STAGE_MUSIC
     }
 
     private lateinit var background: Sprite
@@ -397,7 +398,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         screenSlide.reset()
 
         game.getUiCamera().setToDefaultPosition()
-        game.audioMan.playMusic(MusicAsset.MMX3_INTRO_STAGE_MUSIC)
+        game.audioMan.playMusic(MAIN_MENU_MUSIC, true)
 
         GameLogger.debug(TAG, "current button key: $buttonKey")
         GameLogger.debug(TAG, "blinking arrows keys: ${blinkArrows.keys().toGdxArray()}")

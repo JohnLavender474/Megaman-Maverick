@@ -3,6 +3,7 @@ package com.megaman.maverick.game.screens.other
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.Queue
+import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.putAll
 import com.mega.game.engine.common.interfaces.Initializable
@@ -13,6 +14,7 @@ import com.mega.game.engine.screens.BaseScreen
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.controllers.MegaControllerButton
@@ -23,7 +25,7 @@ import com.megaman.maverick.game.screens.utils.Fade
 class LogoScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initializable {
 
     companion object {
-        private const val LOGO_REGION_KEY = "logo"
+        private const val LOGO_REGION_KEY = "logo_v2"
         private const val LOGO_WIDTH = 6.25f
         private const val LOGO_HEIGHT = 2f
 
@@ -36,6 +38,8 @@ class LogoScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initiali
         private const val BOTTOM_LINE_1 = "MEGAMAN IS A CAPCOM TRADEMARK."
         private const val BOTTOM_LINE_2 = "THIS IS A FAN-MADE GAME"
         private const val BOTTOM_LINE_3 = "NOT ENDORSED BY CAPCOM."
+
+        private val logoAnimDef = AnimationDef(10, 4, 0.1f, false)
     }
 
     private enum class LogoScreenState { INIT, FADE_IN_LOGO, SHOW_LOGO, FADE_OUT }
@@ -46,8 +50,10 @@ class LogoScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initiali
 
     private val timers = OrderedMap<LogoScreenState, Timer>()
 
+    private val logoSprite = GameSprite()
+    private lateinit var logoAnim: Animation
+
     private val text = Array<MegaFontHandle>()
-    private val oldLavyLogo = GameSprite()
     private lateinit var fadeOut: Fade
 
     private var initialized = false
@@ -88,10 +94,12 @@ class LogoScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initiali
         )
         text.add(byFansText)
 
-        val logo = game.assMan.getTextureRegion(TextureAsset.UI_1.source, LOGO_REGION_KEY)
-        oldLavyLogo.setRegion(logo)
-        oldLavyLogo.setSize(LOGO_WIDTH * ConstVals.PPM, LOGO_HEIGHT * ConstVals.PPM)
-        oldLavyLogo.setCenter(ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f, ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f)
+        val logoRegion = game.assMan.getTextureRegion(TextureAsset.UI_1.source, LOGO_REGION_KEY)
+        val (rows, columns, durations, loop) = logoAnimDef
+        logoAnim = Animation(logoRegion, rows, columns, durations, loop)
+
+        logoSprite.setSize(LOGO_WIDTH * ConstVals.PPM, LOGO_HEIGHT * ConstVals.PPM)
+        logoSprite.setCenter(ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f, ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f)
 
         fadeOut = Fade(Fade.FadeType.FADE_OUT, FADE_OUT_DUR)
 
@@ -107,7 +115,8 @@ class LogoScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initiali
     override fun show() {
         if (!initialized) init()
 
-        oldLavyLogo.setAlpha(0f)
+        logoAnim.reset()
+        logoSprite.setAlpha(0f)
 
         fadeOut.reset()
         timers.values().forEach { it.reset() }
@@ -132,18 +141,30 @@ class LogoScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initiali
         when (currentState) {
             LogoScreenState.FADE_IN_LOGO -> {
                 val alpha = timer.getRatio()
-                oldLavyLogo.setAlpha(alpha)
-                oldLavyLogo.draw(batch)
+                logoSprite.setAlpha(alpha)
+
+                logoAnim.update(delta)
+                val region = logoAnim.getCurrentRegion()
+                logoSprite.setRegion(region)
+                logoSprite.draw(batch)
             }
 
             LogoScreenState.SHOW_LOGO -> {
                 text.forEach { it.draw(batch) }
-                oldLavyLogo.draw(batch)
+
+                logoAnim.update(delta)
+                val region = logoAnim.getCurrentRegion()
+                logoSprite.setRegion(region)
+                logoSprite.draw(batch)
             }
 
             LogoScreenState.FADE_OUT -> {
                 text.forEach { it.draw(batch) }
-                oldLavyLogo.draw(batch)
+
+                logoAnim.update(delta)
+                val region = logoAnim.getCurrentRegion()
+                logoSprite.setRegion(region)
+                logoSprite.draw(batch)
 
                 fadeOut.update(delta)
                 fadeOut.draw(batch)
@@ -160,7 +181,6 @@ class LogoScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initiali
             stateQueue.removeFirst()
 
             when {
-                // TODO: set to intro cutscenes screen instead of main menu
                 stateQueue.isEmpty -> game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
 
                 currentState == LogoScreenState.FADE_IN_LOGO ->

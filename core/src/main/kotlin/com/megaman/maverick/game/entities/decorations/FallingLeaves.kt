@@ -14,9 +14,8 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.CullBoundsType
@@ -72,7 +71,7 @@ class FallingLeaves(game: MegamanMaverickGame) : MegaGameEntity(game), ICullable
     private fun spawnLeaf() {
         val x = getRandom(bounds.getX(), bounds.getMaxX())
         val y = bounds.getMaxY()
-        val leaf = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.FALLING_LEAF)!!
+        val leaf = MegaEntityFactory.fetch(FallingLeaf::class)!!
         leaf.spawn(props(ConstKeys.X pairTo x, ConstKeys.Y pairTo y))
     }
 

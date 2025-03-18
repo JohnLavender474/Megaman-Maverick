@@ -87,7 +87,7 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         private val HEAD_ANGLES_LEFT = gdxArrayOf(180f, 135f, 90f)
         private val HEAD_ANGLES_RIGHT = gdxArrayOf(180f, 225f, 270f)
 
-        private const val INIT_DUR = 5f
+        private const val INIT_DUR = 1f
         private const val STUNNED_DUR = 0.5f
 
         private const val SHOOT_ORBS_DELAY = 3f
@@ -243,7 +243,7 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         requestToPlaySound(SoundAsset.SHAKE_SOUND, false)
     }
 
-    override fun playMusicOnSpawn() = false
+    override fun playBossMusic() = false
 
     override fun preReady(delta: Float) {
         if (fallTargetReached) {
@@ -255,10 +255,7 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
 
             shakeTimer.update(delta)
             if (shakeTimer.isFinished()) initTimer.update(delta)
-            if (shakeTimer.isJustFinished()) {
-                GameLogger.debug(TAG, "preReady(): shake timer just finished")
-                requestToPlayMusic(MusicAsset.MMX7_BOSS_FIGHT_MUSIC, true, null)
-            }
+            if (shakeTimer.isJustFinished()) GameLogger.debug(TAG, "preReady(): shake timer just finished")
 
             body.setY(fallTargetY)
             body.physics.gravity.y = 0f
@@ -349,6 +346,12 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
     override fun onReady() {
         GameLogger.debug(TAG, "onReady()")
         super.onReady()
+    }
+
+    override fun onEndBossSpawnEvent() {
+        GameLogger.debug(TAG, "onEndBossSpawnEvent()")
+        super.onEndBossSpawnEvent()
+        requestToPlayMusic(MusicAsset.MEGA_QUEST_2_BOSS_BATTLE_MUSIC, true, null)
     }
 
     override fun spawnExplosionOrbs(spawn: Vector2) {

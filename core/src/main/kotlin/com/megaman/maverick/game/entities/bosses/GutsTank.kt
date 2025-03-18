@@ -232,7 +232,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         heliMetsLaunched = 0
     }
 
-    override fun playMusicOnSpawn() = false
+    override fun playBossMusic() = false
 
     override fun isReady(delta: Float) = megaman.body.isSensing(BodySense.FEET_ON_GROUND)
 

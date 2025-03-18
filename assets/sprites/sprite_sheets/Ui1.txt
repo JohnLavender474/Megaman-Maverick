@@ -1,5 +1,5 @@
 Ui1.png
-size: 138, 36
+size: 404, 358
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -15,5 +15,12 @@ logo
   xy: 36, 2
   size: 100, 32
   orig: 100, 32
+  offset: 0, 0
+  index: -1
+logo_v2
+  rotate: false
+  xy: 2, 36
+  size: 400, 320
+  orig: 400, 320
   offset: 0, 0
   index: -1

@@ -3,7 +3,6 @@ package com.megaman.maverick.game.entities.bosses
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.PolylineMapObject
 import com.badlogic.gdx.maps.objects.RectangleMapObject
-import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Queue
@@ -52,7 +51,6 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IFireEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
@@ -86,27 +84,25 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         private const val OPEN_EYE_MIN_DURATION = 0.75f
         private const val CLOSE_EYE_DURATION = 0.35f
         private const val DEBUG_TIMER = 1f
-        private const val WEB_SPEED = 10f
-        private const val ANGLE_X = 25f
 
         private val BOSS_DMG_NEG = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
             Bullet::class pairTo dmgNeg(2),
             Fireball::class pairTo dmgNeg(8),
             ChargedShot::class pairTo dmgNeg {
                 it as ChargedShot
-                if (it.fullyCharged) 3 else 2
+                if (it.fullyCharged) 4 else 3
             },
             ChargedShotExplosion::class pairTo dmgNeg {
                 it as ChargedShotExplosion
-                if (it.fullyCharged) 2 else 1
+                if (it.fullyCharged) 3 else 2
             },
             MoonScythe::class pairTo dmgNeg(3),
             SmallIceCube::class pairTo dmgNeg(1)
         )
 
+        private var openEyeRegion: TextureRegion? = null
         private var climbRegion: TextureRegion? = null
         private var stillRegion: TextureRegion? = null
-        private var openEyeRegion: TextureRegion? = null
         private var burnRegion: TextureRegion? = null
     }
 
@@ -241,11 +237,6 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
                     }
 
                     body.physics.velocity.setZero()
-
-                    if (!firstSpawn && spawnDelayTimer.isAtBeginning()) {
-                        val shootWeb = MathUtils.random.nextBoolean()
-                        if (shootWeb) shootWebs()
-                    }
 
                     spawnDelayTimer.update(delta)
                     if (spawnDelayTimer.isFinished()) {
@@ -409,33 +400,4 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
     }
 
     private fun getCurrentSpeed() = ConstVals.PPM * (MIN_SPEED + (MAX_SPEED - MIN_SPEED) * (1 - getHealthRatio()))
-
-    private fun shootWebs() {
-        val centerTrajectory = megaman.body.getCenter().sub(body.getCenter()).nor()
-        shootWeb(centerTrajectory)
-
-        val leftTrajectory = centerTrajectory.cpy().rotateDeg(-ANGLE_X)
-        shootWeb(leftTrajectory)
-
-        val rightTrajectory = centerTrajectory.cpy().rotateDeg(ANGLE_X)
-        shootWeb(rightTrajectory)
-
-        // TODO: requestToPlaySound(SoundAsset.SPLASH_SOUND, false)
-    }
-
-    private fun shootWeb(trajectory: Vector2) {
-        // TODO: Web shooting works, but has been removed from this boss's attack set.
-        //   Uncomment this code to add web shooting back to her attack set (yes, Bospider is a she).
-        /*
-        val scaledTrajectory = trajectory.cpy().scl(WEB_SPEED * ConstVals.PPM)
-
-        val web = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SPIDER_WEB)!!
-        val props = props(
-            ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER),
-            ConstKeys.TRAJECTORY pairTo scaledTrajectory,
-            ConstKeys.OWNER pairTo this
-        )
-        web.spawn(props)
-         */
-    }
 }
