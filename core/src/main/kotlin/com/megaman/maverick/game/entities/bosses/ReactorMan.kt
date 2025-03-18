@@ -56,20 +56,20 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.001f
 
-        private const val STAND_MAX_DUR = 0.75f
-        private const val STAND_MIN_DUR = 0.25f
+        private const val STAND_MAX_DUR = 1f
+        private const val STAND_MIN_DUR = 0.5f
 
         private const val INIT_DUR = 1f
 
         private const val RUN_DUR = 0.5f
-        private const val RUN_MIN_SPEED = 8f
-        private const val RUN_MAX_SPEED = 14f
+        private const val RUN_MIN_SPEED = 6f
+        private const val RUN_MAX_SPEED = 12f
 
         private const val JUMP_IMPULSE = 16f
 
         private const val THROW_DELAY = 0.25f
-        private const val PROJECTILE_MIN_SPEED = 8f
-        private const val PROJECTILE_MAX_SPEED = 14f
+        private const val PROJECTILE_MIN_SPEED = 6f
+        private const val PROJECTILE_MAX_SPEED = 12f
 
         private val animDefs = orderedMapOf(
             "stand" pairTo AnimationDef(1, 3, gdxArrayOf(1f, 0.1f, 0.1f), true),

@@ -76,6 +76,7 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
     private lateinit var type: String
 
     private var left = false
+    private var active = true
     private var frozen = false
     private var hidden = false
 
@@ -107,6 +108,7 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
 
         type = spawnProps.get(ConstKeys.TYPE, String::class)!!
         left = spawnProps.getOrDefault(ConstKeys.LEFT, false, Boolean::class)
+        active = spawnProps.getOrDefault(ConstKeys.ACTIVE, true, Boolean::class)
         hidden = spawnProps.getOrDefault(ConstKeys.HIDDEN, false, Boolean::class)
         frozen = spawnProps.getOrDefault(
             ConstKeys.FROZEN, LevelUtils.isInfernoManLevelFrozen(game.state), Boolean::class
@@ -183,7 +185,7 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         body.addFixture(deathFixture)
 
         body.preProcess.put(ConstKeys.DEATH) {
-            deathFixture.setActive(!frozen)
+            deathFixture.setActive(active && !frozen)
             deathBounds.set(body)
         }
 

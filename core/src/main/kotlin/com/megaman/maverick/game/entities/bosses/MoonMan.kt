@@ -75,8 +75,8 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         private const val BODY_WIDTH = 1.25f
         private const val BODY_HEIGHT = 1.75f
 
-        private const val JUMP_IMPULSE_Y = 6f
-        private const val JUMP_MAX_IMPULSE_X = 8f
+        private const val JUMP_IMPULSE_Y = 12f
+        private const val JUMP_MAX_IMPULSE_X = 12f
         private const val JUMP_MIN_HORIZONTAL_SCALAR = 0.5f
         private const val JUMP_MAX_HORIZONTAL_SCALAR = 0.75f
         private const val JUMP_HORIZONTAL_SCALAR_DENOMINATOR = 8

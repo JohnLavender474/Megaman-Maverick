@@ -48,6 +48,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -69,7 +70,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val SPRITE_SIZE = 3.5f
 
         private const val INIT_DUR = 1f
-        private const val STAND_DUR = 1.25f
+        private const val STAND_DUR = 1.5f
         private const val WALL_SLIDE_DUR = 0.75f
         private const val SHOOT_DUR = 0.25f
         private const val SHOOT_COOLDOWN_DUR = 0.5f
@@ -140,7 +141,6 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_2.source)
             InfernoManState.entries.forEach { state ->
@@ -161,13 +161,9 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 "frozen"
             ).forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
-
         super.init()
-
         addComponent(defineAnimationsComponent())
-
         stateMachine = buildStateMachine()
-
         damageOverrides.put(SmallIceCube::class, dmgNeg(5))
     }
 
@@ -193,7 +189,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             val key = entry.key
             val timer = entry.value
             when (key) {
-                "frozen", "shoot_cooldown", "shoot_delay" -> timer.setToEnd()
+                "frozen" -> timer.setToEnd()
                 else -> timer.reset()
             }
         }
@@ -231,21 +227,19 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     override fun isReady(delta: Float) = timers["init"].isFinished()
 
     override fun onReady() {
+        GameLogger.debug(TAG, "onReady()")
         super.onReady()
-
         body.physics.gravityOn = true
     }
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
+        GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
         val damaged = super.takeDamageFrom(damager)
-
-        if (damager is SmallIceCube && !isHealthDepleted()) {
+        if (damager is IFreezerEntity && !isHealthDepleted() && !frozen) {
             timers["frozen"].reset()
-
             body.physics.velocity.setZero()
             body.physics.gravityOn = false
         }
-
         return damaged
     }
 
