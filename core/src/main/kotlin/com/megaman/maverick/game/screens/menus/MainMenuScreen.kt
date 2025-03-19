@@ -2,7 +2,6 @@ package com.megaman.maverick.game.screens.menus
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
@@ -63,7 +62,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         private val MAIN_MENU_MUSIC = MusicAsset.MMX3_INTRO_STAGE_MUSIC
     }
 
-    private lateinit var background: Sprite
+    private lateinit var background: GameSprite
 
     private var screenSlide = ScreenSlide(
         game.getUiCamera(),
@@ -74,7 +73,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
     )
 
     private val fontHandles = Array<MegaFontHandle>()
-    private val settingsArrows = Array<Sprite>()
+    private val settingsArrows = Array<GameSprite>()
 
     private val settingsArrowBlinkTimer = Timer(ConstVals.UI_ARROW_BLINK_DUR)
     private val blinkArrows = ObjectMap<String, BlinkingArrow>()

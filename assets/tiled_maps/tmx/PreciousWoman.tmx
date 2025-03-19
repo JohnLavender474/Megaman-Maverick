@@ -458,10 +458,10 @@
   <object id="126" name="DuoBallCanon" x="3080" y="560" width="16" height="16"/>
   <object id="133" name="DuoBallCanon" x="3976" y="464" width="16" height="16"/>
  </objectgroup>
- <objectgroup id="5" name="temp">
+ <objectgroup id="5" name="player">
   <object id="87" name="0" x="3504" y="1376" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="3" name="player">
+ <objectgroup id="3" name="temp">
   <object id="6" name="0" x="128" y="1504" width="32" height="32"/>
  </objectgroup>
 </map>

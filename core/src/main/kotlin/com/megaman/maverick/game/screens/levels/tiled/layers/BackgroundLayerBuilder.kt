@@ -169,6 +169,44 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 parallaxY = 0f
             )
         },
+        "SunriseHills" pairTo {
+            Background(
+                it.name,
+                startX = it.rectangle.x,
+                startY = it.rectangle.y,
+                model = params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "SunriseHills"),
+                modelWidth = it.rectangle.width,
+                modelHeight = it.rectangle.height,
+                rows = 1,
+                columns = 50,
+                priority = DrawingPriority(DrawingSection.BACKGROUND, 2),
+                initPos = Vector2(
+                    it.rectangle.getCenter().x + 5f * ConstVals.PPM,
+                    it.rectangle.getCenter().y
+                ),
+                parallaxX = 0.1f,
+                parallaxY = 0f
+            )
+        },
+        "SunsetHills" pairTo {
+            Background(
+                it.name,
+                startX = it.rectangle.x,
+                startY = it.rectangle.y,
+                model = params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "SunsetHills"),
+                modelWidth = it.rectangle.width,
+                modelHeight = it.rectangle.height,
+                rows = 1,
+                columns = 50,
+                priority = DrawingPriority(DrawingSection.BACKGROUND, 1),
+                initPos = Vector2(
+                    it.rectangle.getCenter().x + 5f * ConstVals.PPM,
+                    it.rectangle.getCenter().y
+                ),
+                parallaxX = 0.1f,
+                parallaxY = 0f
+            )
+        },
     )
 
     override fun build(layer: MapLayer, returnProps: Properties) {

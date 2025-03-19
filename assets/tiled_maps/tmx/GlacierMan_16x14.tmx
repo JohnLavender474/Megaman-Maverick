@@ -1161,9 +1161,9 @@
   <object id="158" name="Sealion" x="2896" y="2272" width="16" height="16"/>
   <object id="159" name="Sealion" x="3600" y="2304" width="16" height="16"/>
   <object id="160" name="Sealion" x="4240" y="2304" width="16" height="16"/>
-  <object id="163" name="ShieldAttacker" x="5024" y="1752" width="16" height="16">
+  <object id="163" name="ShieldAttacker" x="4856" y="1752" width="16" height="16">
    <properties>
-    <property name="value" type="float" value="-5"/>
+    <property name="value" type="float" value="5"/>
    </properties>
   </object>
   <object id="167" name="SpikeBot" x="3168" y="2144" width="16" height="16">
@@ -1193,9 +1193,9 @@
     <property name="value" type="float" value="-5"/>
    </properties>
   </object>
-  <object id="235" name="ShieldAttacker" x="4984" y="904" width="16" height="16">
+  <object id="235" name="ShieldAttacker" x="4824" y="904" width="16" height="16">
    <properties>
-    <property name="value" type="float" value="-5"/>
+    <property name="value" type="float" value="5"/>
    </properties>
   </object>
   <object id="275" name="GapingFish" x="8000" y="1688" width="16" height="16"/>

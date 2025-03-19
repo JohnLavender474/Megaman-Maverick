@@ -44,6 +44,7 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
         private const val PLAYGROUND_SIZE = 0.15f
         private const val BACKGROUND_SIZE = 0.075f
         private const val MAX_SPAWNED_ALLOWED = 50
+        private const val ROTATION_PER_SECOND = 1f
         private var region: TextureRegion? = null
     }
 
@@ -218,11 +219,13 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(GameSprite(region!!))
-        .updatable { _, sprite ->
+        .updatable { delta, sprite ->
             sprite.setBounds(body.getBounds())
             val alpha = if (fadingOut) 1f - fadeTimer.getRatio() else 1f
             sprite.setAlpha(alpha)
             sprite.priority.section = if (background) DrawingSection.BACKGROUND else DrawingSection.PLAYGROUND
+            sprite.setOriginCenter()
+            sprite.rotation += ROTATION_PER_SECOND * 360f * delta
         }.build()
 
     override fun getType() = EntityType.DECORATION

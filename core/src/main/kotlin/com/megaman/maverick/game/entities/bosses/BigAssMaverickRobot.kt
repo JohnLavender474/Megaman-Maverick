@@ -195,6 +195,7 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.MUSIC, MusicAsset.MMX7_BOSS_FIGHT_MUSIC.name)
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
@@ -242,8 +243,6 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         requestToPlaySound(SoundAsset.THUMP_SOUND, false)
         requestToPlaySound(SoundAsset.SHAKE_SOUND, false)
     }
-
-    override fun playBossMusic() = false
 
     override fun preReady(delta: Float) {
         if (fallTargetReached) {
@@ -346,12 +345,6 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
     override fun onReady() {
         GameLogger.debug(TAG, "onReady()")
         super.onReady()
-    }
-
-    override fun onEndBossSpawnEvent() {
-        GameLogger.debug(TAG, "onEndBossSpawnEvent()")
-        super.onEndBossSpawnEvent()
-        requestToPlayMusic(MusicAsset.MEGA_QUEST_2_BOSS_BATTLE_MUSIC, true, null)
     }
 
     override fun spawnExplosionOrbs(spawn: Vector2) {

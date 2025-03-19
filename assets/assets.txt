@@ -1539,10 +1539,12 @@ sprites/frames/Backgrounds6/UndergroundPipes.png
 sprites/frames/Backgrounds6/InfernoBKG.png
 sprites/frames/Backgrounds6/PunkCityAnimated.png
 sprites/frames/Backgrounds6/CrystalBKG.png
+sprites/frames/Backgrounds6/SunriseHills.png
 sprites/frames/Backgrounds6/PunkCityAnimated_3frames.png
 sprites/frames/Backgrounds6/Desert/NoSunSky.png
 sprites/frames/Backgrounds6/Desert/Canyon.png
 sprites/frames/Backgrounds6/Desert/SunSky.png
+sprites/frames/Backgrounds6/SunsetHills.png
 sprites/frames/Backgrounds6/PunkCity.png
 sprites/frames/Backgrounds6/EarthBackdrop.png
 sprites/frames/Backgrounds6/Wily1.png
