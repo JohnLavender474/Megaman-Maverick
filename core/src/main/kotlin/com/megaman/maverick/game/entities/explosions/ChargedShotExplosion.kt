@@ -7,7 +7,6 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
-import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -65,7 +64,7 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
     private lateinit var explosionFixture: Fixture
     private lateinit var damagerFixture: Fixture
 
-    private lateinit var direction: Direction
+    private var rotation = 0f
 
     override fun init() {
         if (regions.isEmpty) {
@@ -83,8 +82,8 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
         soundTimer.reset()
 
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
-        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         fullyCharged = spawnProps.get(ConstKeys.BOOLEAN, Boolean::class)!!
+        rotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f, Float::class)
 
         val duration = spawnProps.getOrDefault(
             ConstKeys.DURATION, if (fullyCharged) FULLY_CHARGED_DURATION else HALF_CHARGED_DURATION, Float::class
@@ -133,19 +132,13 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.setOriginCenter()
-            val rotation = when (direction) {
-                Direction.RIGHT -> 0f
-                Direction.UP -> 90f
-                Direction.LEFT -> 180f
-                Direction.DOWN -> 270f
-            }
             sprite.rotation = rotation
             sprite.setCenter(body.getCenter())
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

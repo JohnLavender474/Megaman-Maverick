@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
@@ -21,7 +20,7 @@ import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
-import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
@@ -32,7 +31,9 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.decorations.BulletResidual
 import com.megaman.maverick.game.entities.explosions.Disintegration
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.VelocityAlterator
 import com.megaman.maverick.game.world.body.*
 
@@ -41,7 +42,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
     companion object {
         const val TAG = "Bullet"
         private const val CLAMP = 10f
-        private const val BOUNCE_LIMIT = 3
+        private const val BOUNCE_MAX = 1
         private var region: TextureRegion? = null
     }
 
@@ -74,6 +75,22 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
         body.physics.gravity.set(gravity)
 
         bounced = 0
+
+        spawnResidual()
+    }
+
+    private fun spawnResidual() {
+        val rotation = body.physics.velocity.angleDeg()
+
+        val spawn = GameObjectPools.fetch(Vector2::class)
+            .set(1f, 0f)
+            .rotateDeg(rotation)
+            .nor()
+            .scl(body.getWidth() / 2f)
+            .add(body.getCenter())
+
+        val residual = MegaEntityFactory.fetch(BulletResidual::class)!!
+        residual.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.ROTATION pairTo rotation))
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
@@ -92,14 +109,19 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
         if (owner == shieldFixture.getEntity()) return
 
         bounced++
-        if (bounced >= BOUNCE_LIMIT) {
+        if (bounced > BOUNCE_MAX) {
             explodeAndDie()
             return
         }
 
+        bounce(shieldFixture.getProperty(ConstKeys.DIRECTION, Direction::class))
+    }
+
+    private fun bounce(deflectNullable: Direction? = null) {
         val velocity = if (followTraj) trajectory else body.physics.velocity
         if (direction.isVertical()) velocity.x *= -1f else velocity.y *= -1f
-        val deflection = shieldFixture.getOrDefaultProperty(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+
+        val deflection = deflectNullable ?: Direction.UP
         when (deflection) {
             Direction.UP -> {
                 when (direction) {
@@ -170,13 +192,12 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(2f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setPosition(body.getCenter(), Position.CENTER)
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
+            sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
-            val rotation = body.physics.velocity.angleDeg()
-            sprite.rotation = rotation
+            sprite.rotation = body.physics.velocity.angleDeg()
         }
-        return spritesComponent
+        return component
     }
 }

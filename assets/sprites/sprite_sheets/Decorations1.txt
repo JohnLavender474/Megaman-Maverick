@@ -12,7 +12,7 @@ AirConditioner/machine
   index: -1
 AirConditioner/pipe
   rotate: false
-  xy: 254, 0
+  xy: 266, 0
   size: 64, 16
   orig: 64, 16
   offset: 0, 0
@@ -26,9 +26,16 @@ BlinkingArrow
   index: -1
 BreathBubbles
   rotate: false
-  xy: 190, 0
+  xy: 202, 0
   size: 16, 48
   orig: 16, 48
+  offset: 0, 0
+  index: -1
+BulletResidual
+  rotate: false
+  xy: 100, 0
+  size: 12, 24
+  orig: 12, 24
   offset: 0, 0
   index: -1
 Candle
@@ -54,7 +61,7 @@ CrystalConveyorBKG
   index: -1
 DrippingToxicGoop
   rotate: false
-  xy: 318, 0
+  xy: 330, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -131,14 +138,14 @@ LavaFall
   index: -1
 MegamanDamageBurst
   rotate: false
-  xy: 350, 0
+  xy: 362, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 MuzzleFlash
   rotate: false
-  xy: 206, 0
+  xy: 218, 0
   size: 48, 16
   orig: 48, 16
   offset: 0, 0
@@ -173,14 +180,14 @@ SandSplash
   index: -1
 SmallGrass/brush
   rotate: false
-  xy: 382, 0
+  xy: 394, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SmallGrass/still
   rotate: false
-  xy: 414, 0
+  xy: 426, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -229,14 +236,14 @@ SpaceSatellite
   index: -1
 Thread
   rotate: false
-  xy: 446, 0
+  xy: 458, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ToxicWaterfall
   rotate: false
-  xy: 100, 0
+  xy: 112, 0
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
@@ -250,14 +257,14 @@ ToxicWaterSplash
   index: -1
 UnderWaterBubble
   rotate: false
-  xy: 132, 0
+  xy: 144, 0
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 WhiteArrow
   rotate: false
-  xy: 164, 0
+  xy: 176, 0
   size: 26, 26
   orig: 26, 26
   offset: 0, 0

@@ -40,8 +40,7 @@ class ChargedShotResidual(game: MegamanMaverickGame) : MegaGameEntity(game), ISp
 
     companion object {
         const val TAG = "ChargedShotResidual"
-        private const val FULL_CHARGED_DUR = 0.1f
-        private const val HALF_CHARGED_DUR = FULL_CHARGED_DUR / 2f
+        private const val DUR = 0.2f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -53,7 +52,7 @@ class ChargedShotResidual(game: MegamanMaverickGame) : MegaGameEntity(game), ISp
 
     private lateinit var position: Position
     private val spawn = Vector2()
-    private val timer = Timer()
+    private val timer = Timer(DUR)
 
     override fun init() {
         if (regions.isEmpty) {
@@ -78,8 +77,7 @@ class ChargedShotResidual(game: MegamanMaverickGame) : MegaGameEntity(game), ISp
 
         spawn.set(spawnProps.get(ConstKeys.SPAWN, Vector2::class)!!)
 
-        val duration = if (fullyCharged) FULL_CHARGED_DUR else HALF_CHARGED_DUR
-        timer.resetDuration(duration)
+        timer.reset()
 
         val dimensions = if (fullyCharged) 1.5f * ConstVals.PPM else ConstVals.PPM.toFloat()
         defaultSprite.setSize(dimensions)
@@ -97,8 +95,8 @@ class ChargedShotResidual(game: MegamanMaverickGame) : MegaGameEntity(game), ISp
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
             sprite.setFlip(
@@ -114,15 +112,14 @@ class ChargedShotResidual(game: MegamanMaverickGame) : MegaGameEntity(game), ISp
                 else -> sprite.translateY(0.25f * ConstVals.PPM * facing.value)
             }
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: (String?) -> String? = { if (fullyCharged) "full" else "half" }
-        val duration = FULL_CHARGED_DUR / 4
         val animations = objectMapOf<String, IAnimation>(
-            "full" pairTo Animation(regions["full"], 2, 2, duration, false),
-            "half" pairTo Animation(regions["half"], 2, 1, duration, false)
+            "full" pairTo Animation(regions["full"], 2, 2, 0.05f, false),
+            "half" pairTo Animation(regions["half"], 2, 1, 0.1f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

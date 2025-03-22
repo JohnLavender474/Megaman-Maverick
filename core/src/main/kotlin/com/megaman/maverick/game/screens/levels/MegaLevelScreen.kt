@@ -799,7 +799,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         // sort backgrounds in drawing order before calling draw()
         backgrounds.sort()
 
-        if (!game.isProperty(ConstKeys.ROOM_TRANSITION, true)) checkpointTimer.update(delta)
+        checkpointTimer.update(delta)
     }
 
     override fun draw(drawer: Batch) {
@@ -844,7 +844,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         if (game.paused) pauseScreen.draw(drawer)
 
-        if (!game.isProperty(ConstKeys.ROOM_TRANSITION, true) && !checkpointTimer.isFinished()) {
+        if (!checkpointTimer.isFinished()) {
             val alpha = when {
                 checkpointTimer.time < CHECKPOINT_ALPHA_DELAY -> 1f
                 else -> ConstVals.ONE.minus(

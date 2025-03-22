@@ -1,5 +1,5 @@
 Projectiles1.png
-size: 512, 756
+size: 512, 900
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -33,7 +33,7 @@ BigAssMaverickRobotOrb/ball
   index: -1
 BigAssMaverickRobotOrb/hit
   rotate: false
-  xy: 240, 564
+  xy: 0, 708
   size: 192, 192
   orig: 192, 192
   offset: 0, 0
@@ -75,14 +75,14 @@ CannonBall
   index: -1
 CaveRock/Burst
   rotate: false
-  xy: 0, 436
+  xy: 96, 436
   size: 384, 128
   orig: 384, 128
   offset: 0, 0
   index: -1
 CaveRock/Rock
   rotate: false
-  xy: 384, 436
+  xy: 0, 564
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
@@ -173,7 +173,7 @@ FireWall/disintegrate
   index: -1
 FireWall/fire
   rotate: false
-  xy: 192, 564
+  xy: 320, 564
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -225,6 +225,13 @@ JoeBall
   xy: 0, 64
   size: 128, 32
   orig: 128, 32
+  offset: 0, 0
+  index: -1
+MeanTorpedo
+  rotate: false
+  xy: 0, 436
+  size: 96, 96
+  orig: 96, 96
   offset: 0, 0
   index: -1
 Monkey_Ball
@@ -341,21 +348,21 @@ ReactorMonkeyBall/0
   index: -1
 ReactorMonkeyBall/1
   rotate: false
-  xy: 0, 564
+  xy: 128, 564
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 ReactorMonkeyBall/2
   rotate: false
-  xy: 64, 564
+  xy: 192, 564
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 ReactorMonkeyBall/3
   rotate: false
-  xy: 128, 564
+  xy: 256, 564
   size: 64, 128
   orig: 64, 128
   offset: 0, 0

@@ -78,6 +78,9 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         if (projectile.owner == megaman) explodeAndDie()
     }
 
+    override fun hitExplosion(explosionFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
+        explodeAndDie()
+
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
 

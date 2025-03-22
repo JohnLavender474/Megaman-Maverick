@@ -762,10 +762,10 @@
   <object id="272" x="10928" y="1760" width="368" height="32"/>
   <object id="273" x="11296" y="1312" width="128" height="480"/>
   <object id="274" x="11072" y="1792" width="352" height="288"/>
-  <object id="326" x="10784" y="1312" width="256" height="64"/>
+  <object id="326" x="10912" y="1312" width="128" height="64"/>
   <object id="327" x="11136" y="1216" width="288" height="96"/>
   <object id="332" x="10944" y="960" width="256" height="256"/>
-  <object id="333" x="10784" y="768" width="128" height="544"/>
+  <object id="333" x="10784" y="768" width="128" height="608"/>
   <object id="334" name="IceBlock" x="11520" y="960" width="192" height="256"/>
   <object id="335" name="IceBlock" x="12032" y="896" width="192" height="320"/>
   <object id="337" name="IceBlock" x="12704" y="1024" width="64" height="192"/>

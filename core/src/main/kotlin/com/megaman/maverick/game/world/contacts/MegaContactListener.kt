@@ -586,7 +586,8 @@ class MegaContactListener(
                     FixtureType.SHIELD,
                     FixtureType.WATER,
                     FixtureType.SAND,
-                    FixtureType.PROJECTILE
+                    FixtureType.PROJECTILE,
+                    FixtureType.EXPLOSION
                 ),
             )
         ) {
@@ -601,7 +602,8 @@ class MegaContactListener(
                     FixtureType.SHIELD,
                     FixtureType.WATER,
                     FixtureType.SAND,
-                    FixtureType.PROJECTILE
+                    FixtureType.PROJECTILE,
+                    FixtureType.EXPLOSION
                 ),
                 out
             )!!
@@ -664,6 +666,11 @@ class MegaContactListener(
 
                     val projectile2 = otherFixture.getEntity() as IProjectileEntity
                     projectile2.hitProjectile(projectileFixture, otherShape, thisShape)
+                }
+
+                FixtureType.EXPLOSION -> {
+                    printDebugLog(contact, "beginContact(): Projectile-Explosion, contact=$contact")
+                    projectile1.hitExplosion(otherFixture, otherShape, thisShape)
                 }
             }
         }

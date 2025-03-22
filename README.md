@@ -186,6 +186,8 @@ comprehensive listing of the credits for the artwork used in this game.
   - [Random Enemies Set 7](https://www.deviantart.com/megared225/art/Random-Enemies-Set-7-539684729)
     - Iceskate Peng
     - Duo-Ball Cannon
+  - [Random Enemies Set 8](https://www.deviantart.com/megared225/art/Random-Enemies-Set-8-543327890)
+    - Cool Telly
   - [Random Enemies Set 9](https://www.deviantart.com/megared225/art/Random-Enemy-Sprites-Set-9-557171615):
     - Fire Dispensenator
   - [Random Enemies Set 10](https://www.deviantart.com/megared225/art/Random-Enemy-Sprites-Set-10-571128501)
@@ -236,7 +238,7 @@ comprehensive listing of the credits for the artwork used in this game.
   - Reactor Man Stage - [Original Composition 1 8-Bit](https://youtu.be/UwyhXokv8zw?si=arpFaqewqTtV1PXJ)
   - Rodent Man Stage - [Original Composition 2 8-Bit](https://youtu.be/x8RDDcdzs-4)
   - Moon Man Stage - [MMX5 Dark Necrobat 8-Bit](https://youtu.be/RosxPCxVOyk)
-  - Glacier Man Stage - [MMX Chill Penguin 8-Bit](https://youtu.be/QWmsNV18S1g)
+  - Glacier Man Stage - [MMZ3 Glacier le Cactank 8-Bit](https://youtu.be/Vez2dltcOvw)
   - Precious Woman Stage - [MMX2 Crystal Snail 8-Bit](https://youtu.be/1qrbYy9qQdE)
   - Robot Master Fight - [MMX6 Boss Fight 8-Bit](https://youtu.be/IeySHEF5U_8)
 - [vinnyz29](https://soundcloud.com/mega-vinnyz279)

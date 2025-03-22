@@ -50,6 +50,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Needle.NeedleType
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
 class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable {
@@ -181,30 +182,34 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
             movementScalar = if (body.isSensing(BodySense.IN_WATER)) WATER_MOVEMENT_SCALAR else NORMAL_MOVEMENT_SCALAR
             animator.updateScalar = movementScalar
 
-            if (!body.isSensing(BodySense.FEET_ON_GROUND)) return@add
+            if (!body.isSensing(BodySense.FEET_ON_GROUND) && loop.getCurrent() != SpikeBotState.SHOOT) {
+                body.physics.velocity.x = WALK_SPEED * ConstVals.PPM * facing.value * movementScalar
+                return@add
+            }
 
             when (loop.getCurrent()) {
                 SpikeBotState.STAND, SpikeBotState.SHOOT -> body.physics.velocity.x = 0f
-                SpikeBotState.WALK -> when {
-                    (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
-                        (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) ->
-                        swapFacing()
+                SpikeBotState.WALK -> {
+                    if (body.isSensing(BodySense.FEET_ON_GROUND))
+                        body.physics.velocity.x = WALK_SPEED * ConstVals.PPM * facing.value * movementScalar
 
-                    isFacing(Facing.LEFT) && !body.isProperty(LEFT_FOOT, true) ->
-                        if (megaman.body.getX() < body.getX()) jump() else swapFacing()
+                    when {
+                        FacingUtils.isFacingBlock(this) -> swapFacing()
 
-                    isFacing(Facing.RIGHT) && !body.isProperty(RIGHT_FOOT, true) ->
-                        if (megaman.body.getX() > body.getX()) jump() else swapFacing()
+                        isFacing(Facing.LEFT) && !body.isProperty(LEFT_FOOT, true) ->
+                            if (megaman.body.getX() < body.getX()) jump() else swapFacing()
 
-                    else -> body.physics.velocity.x = WALK_SPEED * ConstVals.PPM * facing.value * movementScalar
+                        isFacing(Facing.RIGHT) && !body.isProperty(RIGHT_FOOT, true) ->
+                            if (megaman.body.getX() > body.getX()) jump() else swapFacing()
+                    }
                 }
             }
 
             val timer = timers[loop.getCurrent().name.lowercase()]
             timer.update(delta)
+
             if (timer.isFinished()) {
                 timer.reset()
-
                 loop.next()
                 if (loop.getCurrent() != SpikeBotState.WALK)
                     facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT

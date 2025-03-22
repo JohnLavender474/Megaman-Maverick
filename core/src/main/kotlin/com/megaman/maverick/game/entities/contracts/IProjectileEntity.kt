@@ -25,7 +25,8 @@ import com.megaman.maverick.game.events.EventType
 
 const val PROJECTILE_DEFAULT_CULL_TIME = 0.05f
 
-interface IProjectileEntity : IMegaGameEntity, IBodyEntity, IAudioEntity, ICullableEntity, IOwnable, IDamager, ISizable {
+interface IProjectileEntity : IMegaGameEntity, IBodyEntity, IAudioEntity, ICullableEntity, IOwnable, IDamager,
+    ISizable {
 
     override fun getType() = EntityType.PROJECTILE
 
@@ -71,6 +72,8 @@ interface IProjectileEntity : IMegaGameEntity, IBodyEntity, IAudioEntity, ICulla
     fun hitSand(sandFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {}
 
     fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {}
+
+    fun hitExplosion(explosionFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {}
 
     fun defineBodyComponent(): BodyComponent
 

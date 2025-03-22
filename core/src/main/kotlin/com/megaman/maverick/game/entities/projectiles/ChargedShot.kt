@@ -12,7 +12,6 @@ import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.interfaces.IDirectional
@@ -29,7 +28,7 @@ import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
-import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -46,7 +45,6 @@ import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.decorations.ChargedShotResidual
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.world.body.*
-import kotlin.math.abs
 
 class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFaceable, IDirectional {
 
@@ -58,7 +56,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
         private const val HALF_CHARGED_SHOT_REGION_PREFIX = "Half"
         private const val CHARGED_SHOT_REGION_SUFFIX = "_v2"
-        private const val BOUNCE_LIMIT = 3
+        private const val BOUNCE_MAX = 1
 
         private val SPRITE_SIZE = Vector2(2f, 2f).scl(ConstVals.PPM.toFloat())
 
@@ -103,7 +101,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         trajectory.set(spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!)
 
         facing = when {
-            direction.isVertical() == true -> if (trajectory.x > 0f) Facing.RIGHT else Facing.LEFT
+            direction.isVertical() -> if (trajectory.x > 0f) Facing.RIGHT else Facing.LEFT
             trajectory.y > 0f -> Facing.RIGHT
             else -> Facing.LEFT
         }
@@ -128,7 +126,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         val residual = MegaEntityFactory.fetch(ChargedShotResidual::class)!!
         residual.spawn(
             props(
-                ConstKeys.SPAWN pairTo body.getCenter(),
+                ConstKeys.SPAWN pairTo body.getPositionPoint(position),
                 ConstKeys.POSITION pairTo position,
                 ConstKeys.DIRECTION pairTo direction,
                 ConstKeys.FACING pairTo facing,
@@ -146,7 +144,8 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         if (entity != owner && !entity.dead && entity is IDamageable && !entity.canBeDamagedBy(this)) explodeAndDie()
     }
 
-    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
+        bounce(Direction.UP)
 
     override fun hitSand(sandFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
@@ -154,17 +153,21 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         val shieldEntity = shieldFixture.getEntity()
         if (shieldEntity == owner || (shieldEntity is IOwnable && shieldEntity.owner == owner)) return
 
+        bounce(shieldFixture.getProperty(ConstKeys.DIRECTION, Direction::class))
+    }
+
+    private fun bounce(deflectNullable: Direction? = null) {
         bounced++
-        if (bounced >= BOUNCE_LIMIT) {
+        if (bounced > BOUNCE_MAX) {
             explodeAndDie()
             return
         }
 
         swapFacing()
 
-        if (direction.isVertical() == true) trajectory.x *= -1f else trajectory.y *= -1f
+        if (direction.isVertical()) trajectory.x *= -1f else trajectory.y *= -1f
 
-        val deflection = shieldFixture.getOrDefaultProperty(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+        val deflection = deflectNullable ?: Direction.UP
         when (direction) {
             Direction.UP -> {
                 when (deflection) {
@@ -205,17 +208,11 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
 
-        val direction = when {
-            abs(trajectory.y) > abs(trajectory.x) -> (if (trajectory.y > 0f) Direction.UP else Direction.DOWN)
-            trajectory.x > 0f -> Direction.RIGHT
-            else -> Direction.LEFT
-        }
-
         val props = props(
             ConstKeys.OWNER pairTo owner,
-            ConstKeys.DIRECTION pairTo direction,
             ConstKeys.BOOLEAN pairTo fullyCharged,
-            ConstKeys.POSITION pairTo body.getCenter()
+            ConstKeys.POSITION pairTo body.getCenter(),
+            ConstKeys.ROTATION pairTo body.physics.velocity.angleDeg()
         )
 
         val explosion = MegaEntityFactory.fetch(ChargedShotExplosion::class)!!
@@ -246,16 +243,9 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
             GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10)).also { sprite -> sprite.setSize(SPRITE_SIZE) }
         )
         .updatable { _, sprite ->
-            sprite.setPosition(body.getCenter(), Position.CENTER)
-
-            val flipX = when {
-                direction.equalsAny(Direction.UP, Direction.LEFT) -> isFacing(Facing.LEFT)
-                else -> isFacing(Facing.RIGHT)
-            }
-            sprite.setFlip(flipX, false)
-
+            sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
-            sprite.rotation = direction.rotation
+            sprite.rotation = body.physics.velocity.angleDeg()
         }
         .build()
 

@@ -65,7 +65,6 @@ object FacingUtils {
 
     fun setFacingOf(entity: MegaGameEntity) {
         entity as IFaceable
-
         entity.facing = getPreferredFacingFor(entity)
     }
 

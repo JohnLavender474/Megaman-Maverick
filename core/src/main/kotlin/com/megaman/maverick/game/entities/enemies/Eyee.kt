@@ -45,16 +45,16 @@ import com.megaman.maverick.game.world.body.getCenter
 
 class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity {
 
-    enum class EyeeState { MOVING_TO_END, WAITING_AT_END, MOVING_TO_START, WAITING_AT_START }
-
     companion object {
         const val TAG = "Eyee"
-        private const val WAIT_DURATION = 1f
         private const val SPEED = 10f
+        private const val WAIT_DUR = 1f
         private const val CULL_TIME = 2f
         private var openRegion: TextureRegion? = null
         private var blinkRegion: TextureRegion? = null
     }
+
+    private enum class EyeeState { MOVING_TO_END, WAITING_AT_END, MOVING_TO_START, WAITING_AT_START }
 
     private val loop = Loop(EyeeState.entries.toGdxArray())
     private val currentState: EyeeState
@@ -63,7 +63,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
     private val canMove: Boolean
         get() = !game.isCameraRotating()
 
-    private val waitTimer = Timer(WAIT_DURATION)
+    private val waitTimer = Timer(WAIT_DUR)
 
     private lateinit var start: Vector2
     private lateinit var end: Vector2
@@ -94,6 +94,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
 
         loop.reset()
         waitTimer.reset()
+
         progress = 0f
 
         GameLogger.debug(TAG, "Movement scalar = $movementScalar")
@@ -161,14 +162,14 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = megaman.direction.rotation
             sprite.setCenter(body.getCenter())
             sprite.hidden = damageBlink
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

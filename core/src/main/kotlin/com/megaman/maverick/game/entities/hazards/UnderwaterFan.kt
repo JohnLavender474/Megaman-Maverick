@@ -128,7 +128,7 @@ class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         val spawnBounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.positionOnPoint(spawnBounds.getPositionPoint(position), position)
 
-        forceOrigin.set(body.getPositionPoint(position.opposite()))
+        forceOrigin.set(spawnBounds.getPositionPoint(position.opposite()))
         when {
             direction.isVertical() -> forceBounds.setSize(
                 FORCE_FIXTURE_WIDTH * ConstVals.PPM, FORCE_FIXTURE_HEIGHT * ConstVals.PPM
@@ -146,17 +146,16 @@ class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     private fun spawnBubbles() {
         val random = UtilMethods.getRandom(MIN_BUBBLES_TO_SPAWN, MAX_BUBBLES_TO_SPAWN)
         (0 until random).forEach {
-            val x = when {
-                direction.isVertical() -> UtilMethods.getRandom(forceBounds.getX(), forceBounds.getMaxX())
-                else -> UtilMethods.getRandom(forceBounds.getY(), forceBounds.getMaxY())
+            val x = when (direction) {
+                Direction.UP, Direction.DOWN -> UtilMethods.getRandom(forceBounds.getX(), forceBounds.getMaxX())
+                Direction.LEFT -> forceBounds.getMaxX() - 0.5f * ConstVals.PPM
+                Direction.RIGHT -> forceBounds.getX() + 0.5f * ConstVals.PPM
             }
             val y = when (direction) {
                 Direction.UP -> body.getBounds().getMaxY()
                 Direction.DOWN -> body.getBounds().getY()
-                Direction.LEFT -> body.getBounds().getX()
-                Direction.RIGHT -> body.getBounds().getMaxX()
+                Direction.LEFT, Direction.RIGHT -> UtilMethods.getRandom(forceBounds.getY(), forceBounds.getMaxY())
             }
-
             val position = GameObjectPools.fetch(Vector2::class).set(x, y)
 
             val bubble = MegaEntityFactory.fetch(UnderWaterBubble::class)!!

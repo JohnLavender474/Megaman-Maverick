@@ -54,7 +54,8 @@ class MegaContactFilter : IContactFilter {
             FixtureType.WATER,
             FixtureType.SHIELD,
             FixtureType.SAND,
-            FixtureType.PROJECTILE
+            FixtureType.PROJECTILE,
+            FixtureType.EXPLOSION
         ),
         FixtureType.LASER pairTo objectSetOf(FixtureType.BLOCK, FixtureType.BODY),
         FixtureType.TELEPORTER pairTo objectSetOf(FixtureType.TELEPORTER_LISTENER)
