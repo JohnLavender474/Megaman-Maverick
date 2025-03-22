@@ -75,8 +75,8 @@ enum class LevelDefinition(
         type = LevelType.ROBOT_MASTER_LEVEL,
         mugshotAtlas = "FACES_1",
         mugshotRegion = "Glacier Man",
-        tmxMapSource = "GlacierMan_16x14.tmx",
-        music = MusicAsset.MMX_CHILL_PENGUIN_MUSIC,
+        tmxMapSource = "GlacierMan_16x14_v2.tmx",
+        music = MusicAsset.MMZ3_GLACIER_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),
     PRECIOUS_WOMAN(
@@ -89,7 +89,7 @@ enum class LevelDefinition(
     ),
     WILY_STAGE_1(
         type = LevelType.WILY_LEVEL,
-        tmxMapSource = "WilyStage1_v2.tmx",
+        tmxMapSource = "WilyStage1_v3.tmx",
         music = MusicAsset.MMX_SIGMA_FORTRESS_1_MUSIC,
         screenOnCompletion = { ScreenEnum.WILY_CASTLE_SCREEN }
     ),

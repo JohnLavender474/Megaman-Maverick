@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="400" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="643">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="400" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="644">
  <tileset firstgid="1" source="../tsx/InfernoManTileset.tsx"/>
  <tileset firstgid="46" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1070" source="../tsx/MagmaMan.tsx"/>
@@ -279,7 +279,9 @@
   <object id="576" name="Furnace" x="11584" y="704" width="64" height="64"/>
   <object id="610" name="Smoke" x="10592" y="384" width="96" height="1344"/>
   <object id="611" name="Smoke" x="5408" y="1152" width="96" height="672"/>
-  <object id="613" name="Smoke" x="10240" y="384" width="96" height="1344"/>
+  <object id="643" name="LavaFall" x="5888" y="1152" width="64" height="672">
+   <polygon points="0,0 64,0 64,672 0,672"/>
+  </object>
  </objectgroup>
  <objectgroup id="12" name="children">
   <object id="62" name="Target" x="2512" y="2768" width="32" height="32"/>

@@ -1,1 +1,26 @@
-===== SESSION STARTED: 2025-03-19T00:01:13.162123183 =====
+===== SESSION STARTED: 2025-03-21T21:08:42.126144487 =====
+21:08:48 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_SPAWN, properties=Properties({
+}))
+21:08:48 | DEBUG | MegaLevelScreen | onEvent(): player spawn --> spawn Megaman: Properties({
+	[bounds=[7168.0,1600.0,32.0,32.0]]
+	[x=7168.0]
+	[height=32.0]
+	[id=699]
+	[name=0]
+	[y=1600.0]
+	[width=32.0]
+})
+21:08:50 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_READY, properties=Properties({
+}))
+21:08:52 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+	[value=6]
+}))
+21:08:53 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+21:08:54 | DEBUG | MegaLevelScreen | playerSpawnsMan(): onChangeSpawn(): current=1, old=0
+21:08:55 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+21:08:57 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+21:08:58 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+21:09:20 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+	[value=6]
+}))
+21:09:22 | DEBUG | MegaLevelScreen | dispose(): Disposing level screen

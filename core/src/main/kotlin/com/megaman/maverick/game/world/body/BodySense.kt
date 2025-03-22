@@ -34,6 +34,10 @@ fun IBody.isSensingAny(bodySenses: Iterable<BodySense>) = bodySenses.any { isSen
 
 fun IBody.isSensingAny(vararg bodySenses: BodySense) = isSensingAny(bodySenses.asIterable())
 
+fun IBody.isSensingAll(vararg bodySenses: BodySense) = isSensingAll(bodySenses.asIterable())
+
+fun IBody.isSensingAll(bodySenses: Iterable<BodySense>) = bodySenses.all { isSensing(it) }
+
 fun IBody.setBodySense(bodySense: BodySense, value: Boolean) {
     val old = putProperty(bodySense, value) as Boolean?
     val listener = getBodySenseListener()

@@ -47,10 +47,10 @@ class Lantern(game: MegamanMaverickGame) : LightSource(game), ISpritesEntity, IA
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
-        sprite.setSize(1.65f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ -> sprite.setPosition(bounds.getPositionPoint(spritePos), spritePos) }
-        return spritesComponent
+        sprite.setSize(2f * ConstVals.PPM)
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ -> sprite.setPosition(bounds.getPositionPoint(spritePos), spritePos) }
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

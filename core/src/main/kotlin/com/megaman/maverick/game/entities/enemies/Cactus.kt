@@ -78,7 +78,7 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
         private const val SCANNER_RADIUS = 8f
 
-        private val angles = gdxArrayOf(90f, 45f, 0f, 315f, 270f)
+        private val angles = gdxArrayOf(80f, 45f, 0f, 315f, 280f)
         private val xOffsets = gdxArrayOf(-0.2f, -0.1f, 0f, 0.1f, 0.2f)
 
         private val damagers = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -119,7 +119,6 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         override fun get(damager: IDamager) = damagers[damager::class]?.get(damager) ?: 0
     }
 
-    override lateinit var facing: Facing
     override var frozen: Boolean
         get() = !stateTimers[CactusState.FROZEN].isFinished()
         set(value) {
@@ -133,6 +132,7 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
                 if (currentState == CactusState.FROZEN) stateMachine.next()
             }
         }
+    override lateinit var facing: Facing
 
     private lateinit var stateMachine: StateMachine<CactusState>
     private val currentState: CactusState
@@ -194,6 +194,8 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         super.onHealthDepleted()
         playSoundNow(SoundAsset.THUMP_SOUND, false)
     }
+
+    override fun canBeDamagedBy(damager: IDamager) = damager is SmallGreenMissile || super.canBeDamagedBy(damager)
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
         GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")

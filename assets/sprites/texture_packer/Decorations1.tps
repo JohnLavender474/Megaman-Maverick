@@ -298,6 +298,21 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Decorations1/DustPuff.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>30,4,60,8</rect>
+                <key>scale9Paddings</key>
+                <rect>30,4,60,8</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Decorations1/Furnace.png</key>
             <key type="filename">../frames/Decorations1/JetpackFlame.png</key>
             <struct type="IndividualSpriteSettings">

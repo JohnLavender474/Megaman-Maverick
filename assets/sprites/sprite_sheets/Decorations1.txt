@@ -1,207 +1,214 @@
 Decorations1.png
-size: 416, 812
+size: 498, 792
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 AirConditioner/machine
   rotate: false
-  xy: 0, 116
+  xy: 0, 144
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 AirConditioner/pipe
   rotate: false
-  xy: 4, 0
+  xy: 254, 0
   size: 64, 16
   orig: 64, 16
   offset: 0, 0
   index: -1
 BlinkingArrow
   rotate: false
-  xy: 366, 64
+  xy: 80, 48
   size: 26, 52
   orig: 26, 52
   offset: 0, 0
   index: -1
 BreathBubbles
   rotate: false
-  xy: 350, 64
+  xy: 190, 0
   size: 16, 48
   orig: 16, 48
   offset: 0, 0
   index: -1
 Candle
   rotate: false
-  xy: 224, 64
+  xy: 0, 208
   size: 126, 42
   orig: 126, 42
   offset: 0, 0
   index: -1
 ChargedShot_Residual_Half
   rotate: false
-  xy: 64, 116
+  xy: 242, 48
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 CrystalConveyorBKG
   rotate: false
-  xy: 0, 428
+  xy: 318, 208
   size: 128, 384
   orig: 128, 384
   offset: 0, 0
   index: -1
 DrippingToxicGoop
   rotate: false
-  xy: 382, 0
+  xy: 318, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
+DustPuff
+  rotate: false
+  xy: 122, 48
+  size: 120, 16
+  orig: 120, 16
+  offset: 0, 0
+  index: -1
 FullChargedShotResidual
   rotate: false
-  xy: 96, 116
+  xy: 64, 144
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Furnace
   rotate: false
-  xy: 0, 32
+  xy: 306, 48
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 GroundSnow/back
   rotate: false
-  xy: 68, 0
+  xy: 4, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 GroundSnow/left
   rotate: false
-  xy: 84, 0
+  xy: 20, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 GroundSnow/middle
   rotate: false
-  xy: 100, 0
+  xy: 36, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 GroundSnow/right
   rotate: false
-  xy: 116, 0
+  xy: 52, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 JetpackFlame
   rotate: false
-  xy: 96, 32
+  xy: 402, 48
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 Lantern
   rotate: false
-  xy: 160, 116
+  xy: 274, 48
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 LavaFall
   rotate: false
-  xy: 192, 116
+  xy: 106, 48
   size: 16, 96
   orig: 16, 96
   offset: 0, 0
   index: -1
 MegamanDamageBurst
   rotate: false
-  xy: 192, 32
+  xy: 350, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 MuzzleFlash
   rotate: false
-  xy: 132, 0
+  xy: 206, 0
   size: 48, 16
   orig: 48, 16
   offset: 0, 0
   index: -1
 RainDrop/blue
   rotate: false
-  xy: 180, 0
+  xy: 68, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 RainDrop/purple
   rotate: false
-  xy: 196, 0
+  xy: 84, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 RainSplash
   rotate: false
-  xy: 212, 0
+  xy: 0, 48
   size: 80, 16
   orig: 80, 16
   offset: 0, 0
   index: -1
 SandSplash
   rotate: false
-  xy: 224, 32
+  xy: 128, 144
   size: 160, 32
   orig: 160, 32
   offset: 0, 0
   index: -1
 SmallGrass/brush
   rotate: false
-  xy: 384, 32
+  xy: 382, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SmallGrass/still
   rotate: false
-  xy: 0, 64
+  xy: 414, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Smoke/0
   rotate: false
-  xy: 208, 116
+  xy: 126, 208
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
   index: -1
 Smoke/1
   rotate: false
-  xy: 256, 116
+  xy: 174, 208
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
   index: -1
 Smoke/2
   rotate: false
-  xy: 304, 116
+  xy: 222, 208
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
   index: -1
 Smoke/3
   rotate: false
-  xy: 352, 116
+  xy: 270, 208
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
@@ -215,42 +222,42 @@ Snow
   index: -1
 SpaceSatellite
   rotate: false
-  xy: 0, 228
+  xy: 0, 592
   size: 400, 200
   orig: 400, 200
   offset: 0, 0
   index: -1
 Thread
   rotate: false
-  xy: 32, 64
+  xy: 446, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ToxicWaterfall
   rotate: false
-  xy: 292, 0
+  xy: 100, 0
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ToxicWaterSplash
   rotate: false
-  xy: 64, 64
+  xy: 288, 144
   size: 160, 32
   orig: 160, 32
   offset: 0, 0
   index: -1
 UnderWaterBubble
   rotate: false
-  xy: 324, 0
+  xy: 132, 0
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 WhiteArrow
   rotate: false
-  xy: 356, 0
+  xy: 164, 0
   size: 26, 26
   orig: 26, 26
   offset: 0, 0

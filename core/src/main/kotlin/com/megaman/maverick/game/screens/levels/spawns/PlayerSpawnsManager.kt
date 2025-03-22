@@ -12,15 +12,17 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toProps
 import java.util.*
 
-class PlayerSpawnsManager(private val camera: Camera) : Runnable, Resettable {
+class PlayerSpawnsManager(
+    private val camera: Camera,
+    private val onChangeSpawn: ((RectangleMapObject?, RectangleMapObject?) -> Unit)? = null
+) : Runnable, Resettable {
 
     val currentSpawnProps: Properties?
-        get() =
-            current?.let {
-                val props = it.toProps()
-                props.put(ConstKeys.BOUNDS, current?.rectangle?.toGameRectangle())
-                props
-            }
+        get() = current?.let {
+            val props = it.toProps()
+            props.put(ConstKeys.BOUNDS, current?.rectangle?.toGameRectangle())
+            props
+        }
 
     private var current: RectangleMapObject? = null
     private var spawns = PriorityQueue(Comparator.comparing { p: RectangleMapObject -> p.name })
@@ -33,8 +35,11 @@ class PlayerSpawnsManager(private val camera: Camera) : Runnable, Resettable {
     override fun run() {
         if (spawns.isEmpty()) return
         spawns.peek()?.let {
-            if (camera.overlaps(it.rectangle.toGameRectangle(), GameObjectPools.fetch(BoundingBox::class)))
+            if (camera.overlaps(it.rectangle.toGameRectangle(), GameObjectPools.fetch(BoundingBox::class))) {
+                val old = current
                 current = spawns.poll()
+                onChangeSpawn?.invoke(current, old)
+            }
         }
     }
 

@@ -145,20 +145,15 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
-
         super.init()
-
         addComponent(SpritesComponent())
         addComponent(defineUpdatablesComponent())
-
         tileSpritesPool = Pool(
             startAmount = 0,
-            supplier = { GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 1)) },
+            supplier = { GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 5)) },
             onFree = { sprite -> sprite.hidden = true },
             onFetch = { sprite -> sprite.hidden = false })
-
         lightSourcePool = Pool(startAmount = 0, supplier = { LightSourceDef(Vector2(), 0, 0f) })
     }
 

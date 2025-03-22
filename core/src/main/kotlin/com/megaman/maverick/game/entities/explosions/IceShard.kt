@@ -41,8 +41,8 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
 
     companion object {
         const val TAG = "IceShard"
+
         private const val GRAVITY = -0.15f
-        private val TEXTURES = ObjectMap<String, Array<TextureRegion>>()
         private val SCALARS = ObjectMap<String, Float>()
         private val TRAJECTORIES = gdxArrayOf(
             Vector2(-7f, 5f),
@@ -52,10 +52,12 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
             Vector2(7f, 5f),
         )
 
-        fun spawn5(center: Vector2) {
+        private val TEXTURES = ObjectMap<String, Array<TextureRegion>>()
+
+        fun spawn5(center: Vector2, tag: String = BreakableIce.TAG) {
             for (i in 0 until 5) {
                 val shard = MegaEntityFactory.fetch(IceShard::class)!!
-                shard.spawn(props(ConstKeys.POSITION pairTo center, ConstKeys.INDEX pairTo i))
+                shard.spawn(props(ConstKeys.POSITION pairTo center, ConstKeys.INDEX pairTo i, ConstKeys.TAG pairTo tag))
             }
         }
     }

@@ -2,7 +2,6 @@ package com.megaman.maverick.game.drawables.fonts
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType
 import com.mega.game.engine.common.enums.Position
@@ -19,20 +18,36 @@ class MegaFontHandle : IComparableDrawable<Batch>, IPositional, IDrawableShape {
 
     companion object {
         const val TAG = "MegaFontHandle"
-        private var font: BitmapFont? = null
     }
 
     override val priority: DrawingPriority
         get() = fontHandle.priority
-    override var drawingColor: Color = Color.RED
-    override var drawingShapeType: ShapeType = ShapeType.Line
+
+    override var drawingColor: Color
+        get() = fontHandle.drawingColor
+        set(value) {
+            fontHandle.drawingColor = value
+        }
+
+    override var drawingShapeType: ShapeType
+        get() = fontHandle.drawingShapeType
+        set(value) {
+            fontHandle.drawingShapeType = value
+        }
 
     var positionX: Float
         get() = fontHandle.getX()
         set(value) = fontHandle.setX(value)
+
     var positionY: Float
         get() = fontHandle.getY()
         set(value) = fontHandle.setY(value)
+
+    var attachment: Position
+        get() = fontHandle.attachment
+        set(value) {
+            fontHandle.attachment = value
+        }
 
     private val fontHandle: BitmapFontHandle
 
@@ -44,10 +59,10 @@ class MegaFontHandle : IComparableDrawable<Batch>, IPositional, IDrawableShape {
         hidden: Boolean = false,
         priority: DrawingPriority = DrawingPriority(DrawingSection.FOREGROUND, 0)
     ) {
-        if (font == null) font = BitmapFontHandle.loadFont(ConstVals.MEGAMAN_MAVERICK_FONT, getDefaultFontSize())
+        val font = BitmapFontHandle.loadFont(ConstVals.MEGAMAN_MAVERICK_FONT, getDefaultFontSize())
         fontHandle = BitmapFontHandle(
+            font = font,
             textSupplier = { text },
-            font = font!!,
             positionX = positionX,
             positionY = positionY,
             attachment = attachment,
@@ -65,11 +80,11 @@ class MegaFontHandle : IComparableDrawable<Batch>, IPositional, IDrawableShape {
         hidden: Boolean = false,
         priority: DrawingPriority = DrawingPriority(DrawingSection.FOREGROUND, 10)
     ) {
-        if (font == null) font = BitmapFontHandle.loadFont(ConstVals.MEGAMAN_MAVERICK_FONT, getDefaultFontSize())
+        val font = BitmapFontHandle.loadFont(ConstVals.MEGAMAN_MAVERICK_FONT, getDefaultFontSize())
         val attachment = BitmapFontHandle.getAttachment(centerX, centerY)
         fontHandle = BitmapFontHandle(
+            font = font,
             textSupplier = textSupplier,
-            font = font!!,
             positionX = positionX,
             positionY = positionY,
             attachment = attachment,
@@ -79,7 +94,7 @@ class MegaFontHandle : IComparableDrawable<Batch>, IPositional, IDrawableShape {
     }
 
     constructor(
-        text: String,
+        text: String = "",
         positionX: Float = (ConstVals.VIEW_WIDTH - 5) * ConstVals.PPM,
         positionY: Float = (ConstVals.VIEW_HEIGHT - 1) * ConstVals.PPM,
         centerX: Boolean = true,
@@ -120,6 +135,10 @@ class MegaFontHandle : IComparableDrawable<Batch>, IPositional, IDrawableShape {
     override fun setX(x: Float) = fontHandle.setX(x)
 
     override fun setY(y: Float) = fontHandle.setY(y)
+
+    fun setAlpha(alpha: Float) {
+        fontHandle.alpha = alpha
+    }
 
     fun getFontWidth() = fontHandle.getFontWidth()
 

@@ -20,6 +20,7 @@ object MegamanValues {
 
     const val WATER_GRAVITY_SCALAR = 0.5f
     const val SWIM_VEL_Y = 15f
+    const val SWIM_TIMER = 0.25f
 
     const val JUMP_VEL = 25f
     const val WALL_JUMP_VEL = 35f
@@ -35,7 +36,8 @@ object MegamanValues {
     const val WATER_GRAVITY = -0.25f
     const val WATER_ICE_GRAVITY = -0.5f
 
-    const val MAX_AIR_DASH_TIME = 0.25f
+    const val AIR_DASH_MIN_TIME = 0.1f
+    const val AIR_DASH_MAX_TIME = 0.25f
     const val AIR_DASH_VEL = 8f
     const val AIR_DASH_END_BUMP = 2f
     const val WATER_AIR_DASH_VEL = 5f
@@ -44,9 +46,10 @@ object MegamanValues {
     const val JETPACK_Y_IMPULSE = 15f
     const val JETPACK_TIME_PER_BIT = 0.25f
 
+    const val GROUND_SLIDE_MIN_TIME = 0.25f
+    const val GROUND_SLIDE_MAX_TIME = 0.5f
     const val GROUND_SLIDE_VEL = 10f
     const val WATER_GROUND_SLIDE_VEL = 6f
-    const val MAX_GROUND_SLIDE_TIME = 0.35f
 
     const val CLIMB_VEL = 3.25f
 

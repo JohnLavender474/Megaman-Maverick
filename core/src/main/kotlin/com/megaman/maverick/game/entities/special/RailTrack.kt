@@ -19,8 +19,6 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
-import com.mega.game.engine.drawables.sorting.DrawingPriority
-import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.*
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
@@ -124,8 +122,8 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
         platformRight = spawnProps.get(ConstKeys.RIGHT, Boolean::class)!!
         platform!!.spawn(
             props(
-                ConstKeys.POSITION pairTo Vector2(spawn.x + platformSpawn * ConstVals.PPM, spawn.y),
                 ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
+                ConstKeys.POSITION pairTo Vector2(spawn.x + platformSpawn * ConstVals.PPM, spawn.y),
                 ConstKeys.TRAJECTORY pairTo PLATFORM_SPEED * ConstVals.PPM * if (platformRight) 1 else -1
             )
         )
@@ -230,6 +228,7 @@ class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), ISpritesEntity
             objectSetOf(FixtureLabel.NO_SIDE_TOUCHIE, FixtureLabel.NO_PROJECTILE_COLLISION)
         )
         spawnProps.put(ConstKeys.RESIST_ON, false)
+        spawnProps.put("${ConstKeys.FEET}_${ConstKeys.SOUND}", false)
 
         super.onSpawn(spawnProps)
 
@@ -256,13 +255,9 @@ class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), ISpritesEntity
     })
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
-        .sprite(
-            GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
-                .also { sprite -> sprite.setSize(2f * ConstVals.PPM) }
-        )
+        .sprite(GameSprite().also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
         .updatable { _, sprite ->
             val position = body.getPositionPoint(Position.TOP_CENTER)
-            position.y += 0.1f * ConstVals.PPM
             sprite.setPosition(position, Position.TOP_CENTER)
         }
         .build()

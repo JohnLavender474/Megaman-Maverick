@@ -41,13 +41,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 isBehaviorActive(BehaviorType.JETPACKING)
             ) return@evaluate false
 
-            if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && game.controllerPoller.isPressed(
-                    /* if (direction == Direction.DOWN || isDirectionRotatedRight()) MegaControllerButtons.RIGHT
-                    else */ MegaControllerButton.LEFT
-                )) || body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && game.controllerPoller.isPressed(
-                    /* if (direction == Direction.DOWN || isDirectionRotatedRight()) MegaControllerButtons.LEFT
-                    else */ MegaControllerButton.RIGHT
-                )
+            if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) &&
+                    game.controllerPoller.isPressed(MegaControllerButton.LEFT)) ||
+                (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) &&
+                    game.controllerPoller.isPressed(MegaControllerButton.RIGHT))
             ) {
                 if (damaged) {
                     GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "Damaged")
@@ -78,13 +75,11 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         },
         act = {
             aButtonTask = AButtonTask.JUMP
-            // TODO: this logic is tied to the FPS and breaks as it deviates from 60 FPS
-            //  an alternative that is FPS-agnostic needs to be found
-            val wallSlideFriction = MegamanValues.WALL_SLIDE_FRICTION_TO_APPLY * ConstVals.PPM
 
+            val friction = MegamanValues.WALL_SLIDE_FRICTION_TO_APPLY * ConstVals.PPM
             when {
-                direction.isVertical() -> body.physics.frictionOnSelf.y = wallSlideFriction
-                else -> body.physics.frictionOnSelf.x = wallSlideFriction
+                direction.isVertical() -> body.physics.frictionOnSelf.y = friction
+                else -> body.physics.frictionOnSelf.x = friction
             }
         },
         end = {
@@ -92,41 +87,45 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "end()")
         })
 
-    val swim = FunctionalBehaviorImpl(
-        evaluate = evaluate@{
-            if (dead || !ready || !canMove) return@evaluate false
+    val swim = object : AbstractBehaviorImpl() {
+
+        private val timer = Timer(MegamanValues.SWIM_TIMER)
+
+        override fun evaluate(delta: Float): Boolean {
+            if (dead || !ready || !canMove) return false
 
             if (damaged || !body.isSensing(BodySense.IN_WATER) || body.isSensing(BodySense.HEAD_TOUCHING_BLOCK))
-                return@evaluate false
+                return false
 
-            return@evaluate if (isBehaviorActive(BehaviorType.SWIMMING)) when (direction) {
-                Direction.UP -> body.physics.velocity.y > 0f
-                Direction.DOWN -> body.physics.velocity.y < 0f
-                Direction.LEFT -> body.physics.velocity.x < 0f
-                Direction.RIGHT -> body.physics.velocity.x > 0f
-            } else {
-                val aButtonJustPressed = game.controllerPoller.isJustPressed(MegaControllerButton.A)
-                val doSwim = aButtonJustPressed && aButtonTask == AButtonTask.SWIM
-                doSwim
+            return when {
+                isBehaviorActive(BehaviorType.SWIMMING) -> return !timer.isFinished()
+                else -> game.controllerPoller.isJustPressed(MegaControllerButton.A) && aButtonTask == AButtonTask.SWIM
             }
-        },
-        init = {
+        }
+
+        override fun init() {
+            GameLogger.debug(MEGAMAN_SWIM_BEHAVIOR_TAG, "Init method called")
+
+            timer.reset()
+
             val impulse = GameObjectPools.fetch(Vector2::class)
+
             when (direction) {
                 Direction.UP -> impulse.set(0f, swimVel)
                 Direction.DOWN -> impulse.set(0f, -swimVel)
                 Direction.LEFT -> impulse.set(swimVel, 0f)
                 Direction.RIGHT -> impulse.set(-swimVel, 0f)
             }.scl(ConstVals.PPM.toFloat())
+
             if (hasEnhancement(MegaEnhancement.JUMP_BOOST)) impulse.scl(MegaEnhancement.JUMP_BOOST_SCALAR)
+
             body.physics.velocity.add(impulse)
-            // add instead of set because when Megaman jumps, he's grounded, but when he swims, the applied gravity
-            // should weigh down his swimming impulse
+        }
 
-            requestToPlaySound(SoundAsset.SWIM_SOUND, false)
+        override fun act(delta: Float) = timer.update(delta)
 
-            GameLogger.debug(MEGAMAN_SWIM_BEHAVIOR_TAG, "Init method called")
-        })
+        override fun end() = timer.reset()
+    }
 
     val jump = FunctionalBehaviorImpl(
         evaluate = {
@@ -186,7 +185,12 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     else -> body.physics.velocity.y
                 }
             }
-            body.physics.velocity.set(v)
+            body.physics.velocity.let {
+                when {
+                    body.isSensingAll(BodySense.IN_WATER, BodySense.FORCE_APPLIED) -> it.add(v)
+                    else -> it.set(v)
+                }
+            }
 
             canMakeLandSound = true
 
@@ -203,27 +207,32 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
     val airDash = object : AbstractBehaviorImpl() {
 
-        private var lastFacing = Facing.RIGHT
+        private val minTimer = Timer(MegamanValues.AIR_DASH_MIN_TIME)
+        private val maxTimer = Timer(MegamanValues.AIR_DASH_MAX_TIME)
         private val impulse = Vector2()
+        private var lastFacing = Facing.RIGHT
 
         override fun evaluate(delta: Float): Boolean {
-            if (dead || !ready || !canMove || damaged || teleporting || airDashTimer.isFinished() ||
+            if (dead || !ready || !canMove || damaged || teleporting || maxTimer.isFinished() ||
                 body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.TELEPORTING) || isAnyBehaviorActive(
                     BehaviorType.WALL_SLIDING, BehaviorType.CLIMBING, BehaviorType.JETPACKING
                 )
             ) return false
 
             return if (isBehaviorActive(BehaviorType.AIR_DASHING))
-                game.controllerPoller.isPressed(MegaControllerButton.A)
+                !minTimer.isFinished() || game.controllerPoller.isPressed(MegaControllerButton.A)
             else aButtonTask == AButtonTask.AIR_DASH &&
                 game.controllerPoller.isJustPressed(MegaControllerButton.A) &&
-                game.controllerPoller.isReleased(MegaControllerButton.DOWN) &&
                 (if (currentWeapon == MegamanWeapon.RUSH_JETPACK)
                     game.controllerPoller.isReleased(MegaControllerButton.UP) else true)
         }
 
         override fun init() {
             GameLogger.debug(MEGAMAN_AIR_DASH_BEHAVIOR_TAG, "init()")
+
+            minTimer.reset()
+            maxTimer.reset()
+
             body.physics.gravityOn = false
             aButtonTask = AButtonTask.JUMP
 
@@ -240,11 +249,14 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             }
 
             lastFacing = facing
+
             putProperty(MegamanKeys.DIRECTION_ON_AIR_DASH, direction)
         }
 
         override fun act(delta: Float) {
-            airDashTimer.update(delta)
+            minTimer.update(delta)
+            maxTimer.update(delta)
+
             if (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) ||
                 isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)
             ) return
@@ -257,9 +269,13 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
         override fun end() {
             GameLogger.debug(MEGAMAN_AIR_DASH_BEHAVIOR_TAG, "end()")
-            airDashTimer.reset()
+
+            minTimer.reset()
+            maxTimer.reset()
+
             if (!game.isCameraRotating()) {
                 body.physics.gravityOn = true
+
                 if (!body.isSensing(BodySense.TELEPORTING) && !teleporting) {
                     val impulseOnEnd =
                         facing.value * ConstVals.PPM * if (body.isSensing(BodySense.IN_WATER))
@@ -305,27 +321,37 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
     val groundSlide = object : AbstractBehaviorImpl() {
 
+        private val minTimer = Timer(MegamanValues.GROUND_SLIDE_MIN_TIME)
+        private val maxTimer = Timer(MegamanValues.GROUND_SLIDE_MAX_TIME)
         private var directionOnInit: Direction? = null
 
         override fun evaluate(delta: Float): Boolean {
-            if (dead || !ready || !canMove || game.isCameraRotating() || body.isSensing(BodySense.FEET_ON_SAND))
-                return false
+            if (dead || !ready || !canMove || game.isCameraRotating() || body.isSensing(BodySense.FEET_ON_SAND) ||
+                isBehaviorActive(BehaviorType.JETPACKING) || !body.isSensing(BodySense.FEET_ON_GROUND)
+            ) return false
 
             if (isBehaviorActive(BehaviorType.GROUND_SLIDING) && body.isSensing(BodySense.HEAD_TOUCHING_BLOCK))
                 return true
 
-            if (damaged || groundSlideTimer.isFinished() ||
-                isBehaviorActive(BehaviorType.JETPACKING) ||
-                !body.isSensing(BodySense.FEET_ON_GROUND) ||
-                !game.controllerPoller.isPressed(MegaControllerButton.DOWN)
+            if (damaged || maxTimer.isFinished() ||
+                (minTimer.isFinished() && !game.controllerPoller.isPressed(MegaControllerButton.DOWN))
             ) return false
 
-            return if (isBehaviorActive(BehaviorType.GROUND_SLIDING))
-                game.controllerPoller.isPressed(MegaControllerButton.A) && directionOnInit == direction
-            else game.controllerPoller.isJustPressed(MegaControllerButton.A)
+            return when {
+                isBehaviorActive(BehaviorType.GROUND_SLIDING) -> !minTimer.isFinished() ||
+                    (game.controllerPoller.isPressed(MegaControllerButton.A) && directionOnInit == direction)
+
+                else -> game.controllerPoller.isPressed(MegaControllerButton.DOWN) &&
+                    game.controllerPoller.isJustPressed(MegaControllerButton.A)
+            }
         }
 
         override fun init() {
+            GameLogger.debug(MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG, "init()")
+
+            minTimer.reset()
+            maxTimer.reset()
+
             when (direction) {
                 Direction.UP -> {}
                 Direction.DOWN -> body.translate(0f, ConstVals.PPM / 2f)
@@ -333,13 +359,12 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 Direction.RIGHT -> body.translate(-ConstVals.PPM / 2f, 0f)
             }
 
-            GameLogger.debug(MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG, "init()")
-
             directionOnInit = direction
         }
 
         override fun act(delta: Float) {
-            groundSlideTimer.update(delta)
+            minTimer.update(delta)
+            maxTimer.update(delta)
 
             val facingBlockLeft = (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT))
             val facingBlockRight = (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
@@ -368,7 +393,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         }
 
         override fun end() {
-            groundSlideTimer.reset()
+            minTimer.reset()
+            maxTimer.reset()
             GameLogger.debug(MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG, "end()")
         }
     }

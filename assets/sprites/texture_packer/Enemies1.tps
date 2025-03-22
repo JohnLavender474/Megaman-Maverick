@@ -352,6 +352,22 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Enemies1/BikerKibbo/jump.png</key>
+            <key type="filename">../frames/Enemies1/BikerKibbo/ride.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,32,32,64</rect>
+                <key>scale9Paddings</key>
+                <rect>16,32,32,64</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Enemies1/BlueScrewie/Drop.png</key>
             <key type="filename">../frames/Enemies1/BlueScrewie/Rise.png</key>
             <key type="filename">../frames/Enemies1/BlueScrewie/Shoot.png</key>
@@ -381,6 +397,8 @@
             <key type="filename">../frames/Enemies1/Cactus/big/flash_right.png</key>
             <key type="filename">../frames/Enemies1/Cactus/small/flash_left.png</key>
             <key type="filename">../frames/Enemies1/Cactus/small/flash_right.png</key>
+            <key type="filename">../frames/Enemies1/IcicleTelly/drop_icicle.png</key>
+            <key type="filename">../frames/Enemies1/IcicleTelly/spawn_icicle.png</key>
             <key type="filename">../frames/Enemies1/PreciousJoe/Charge.png</key>
             <key type="filename">../frames/Enemies1/Ratton/jump.png</key>
             <key type="filename">../frames/Enemies1/Ratton/stand.png</key>
@@ -676,6 +694,22 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Enemies1/IcicleTelly/spin.png</key>
+            <key type="filename">../frames/Enemies1/TellySaucer/spin.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,24,32,48</rect>
+                <key>scale9Paddings</key>
+                <rect>16,24,32,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Enemies1/LumberJoe/burn.png</key>
             <key type="filename">../frames/Enemies1/LumberJoe/burn_jump.png</key>
             <key type="filename">../frames/Enemies1/LumberJoe/burn_jump_shielded.png</key>
@@ -955,21 +989,6 @@
                 <rect>24,24,48,48</rect>
                 <key>scale9Paddings</key>
                 <rect>24,24,48,48</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies1/TellySaucer/spin.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>16,24,32,48</rect>
-                <key>scale9Paddings</key>
-                <rect>16,24,32,48</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

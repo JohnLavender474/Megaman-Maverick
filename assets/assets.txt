@@ -157,6 +157,7 @@ sounds/teleport.wav
 sounds/whip.wav
 sounds/enemy_damage.mp3
 sounds/brush.wav
+sounds/rev.wav
 sounds/time_stopper.wav
 sounds/energy_fill_mm9.mp3
 sounds/buster_bullet_shot.mp3
@@ -169,6 +170,7 @@ sounds/conveyor_lift.mp3
 sounds/cursor_move_bloop.mp3
 sounds/megaman_defeat.mp3
 sounds/enemy_shoot.mp3
+sounds/rev.mp3
 sounds/blast2.wav
 sounds/mm2_victory.mp3
 sounds/buster_charging_fadeout.wav
@@ -533,6 +535,7 @@ sprites/frames/Decorations1/ChargedShot_Residual_Half.png
 sprites/frames/Decorations1/Snow.png
 sprites/frames/Decorations1/MegamanDamageBurst.png
 sprites/frames/Decorations1/SpaceSatellite.png
+sprites/frames/Decorations1/DustPuff.png
 sprites/frames/Decorations1/GroundSnow/middle.png
 sprites/frames/Decorations1/GroundSnow/left.png
 sprites/frames/Decorations1/GroundSnow/right.png
@@ -1751,6 +1754,9 @@ sprites/frames/Enemies1/NuttGlider/glide.png
 sprites/frames/Enemies1/TellySaucer/collapsed.png
 sprites/frames/Enemies1/TellySaucer/spin.png
 sprites/frames/Enemies1/TellySaucer/hit.png
+sprites/frames/Enemies1/IcicleTelly/drop_icicle.png
+sprites/frames/Enemies1/IcicleTelly/spawn_icicle.png
+sprites/frames/Enemies1/IcicleTelly/spin.png
 sprites/frames/Enemies1/SnowBat/OpenEyes.png
 sprites/frames/Enemies1/SnowBat/Hang.png
 sprites/frames/Enemies1/SnowBat/OpenWings.png
@@ -1796,6 +1802,8 @@ sprites/frames/Enemies1/ShieldAttacker/attack.png
 sprites/frames/Enemies1/ShieldAttacker/frozen.png
 sprites/frames/Enemies1/ShieldAttacker/turn.png
 sprites/frames/Enemies1/Beezee.png
+sprites/frames/Enemies1/BikerKibbo/jump.png
+sprites/frames/Enemies1/BikerKibbo/ride.png
 sprites/frames/Enemies1/SpikeCopter/drop_teeth.png
 sprites/frames/Enemies1/SpikeCopter/fly.png
 sprites/frames/Enemies1/SpikeCopter/drop.png
@@ -2313,6 +2321,7 @@ sprites/piskel/MechaDragon.piskel
 sprites/piskel/PreciousWoman.piskel
 sprites/piskel/LavaFall.piskel
 sprites/piskel/Lava.piskel
+sprites/piskel/IcicleTelly.piskel
 sprites/piskel/DesertMan_v2.piskel
 sprites/piskel/Grass.piskel
 sprites/piskel/Toxic_Water.piskel
@@ -2527,6 +2536,7 @@ sprites/piskel/DistributorMan.piskel
 sprites/piskel/LavaBeam.piskel
 sprites/piskel/Big_Propeller_Bot.piskel
 sprites/piskel/TitleScreen_v2.piskel
+sprites/piskel/BikerKibbo.piskel
 sprites/piskel/SpringHead.piskel
 sprites/piskel/Platforms1.piskel
 sprites/piskel/LargePlatforms.piskel
@@ -2930,6 +2940,7 @@ tiled_maps/tmx/DesertMan_v2.tmx
 tiled_maps/tmx/Test3.tmx
 tiled_maps/tmx/InfernoMan_16x14.tmx
 tiled_maps/tmx/Test4.tmx
+tiled_maps/tmx/GlacierMan_16x14_v2.tmx
 tiled_maps/tmx/RodentMan_16x12.tmx
 tiled_maps/tmx/WilyStage2.tmx
 tiled_maps/tmx/TilesetSizeTest.tmx
@@ -2952,6 +2963,7 @@ tiled_maps/tmx/MoonMan_16x12.tmx
 tiled_maps/tmx/MoonMan_16x14_v3.tmx
 tiled_maps/tmx/Test6.tmx
 tiled_maps/tmx/DesertMan_v3.tmx
+tiled_maps/tmx/WilyStage1_v3.tmx
 tiled_maps/tmx/PreciousMan.tmx
 tiled_maps/tmx/InfernoMan_16x12_v2.tmx
 tiled_maps/tmx/TimberWoman_16x14.tmx
@@ -2977,6 +2989,7 @@ libgdx.png
 credits.txt
 music/vinnyz_wip_1.mp3
 music/MMX5_DarkDizzy.txt
+music/MMZero3_Glacier.mp3
 music/MMX6_BossFight.txt
 music/MMZ_EnemyHall.txt
 music/Mega_Quest_2_Boss_Battle.mp3

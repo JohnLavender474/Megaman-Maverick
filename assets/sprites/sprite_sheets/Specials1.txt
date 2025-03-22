@@ -1,256 +1,256 @@
 Specials1.png
-size: 1024, 166
+size: 392, 335
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 CapsuleTeleporter/Active
   rotate: false
-  xy: 0, 0
+  xy: 192, 233
   size: 100, 102
   orig: 100, 102
   offset: 0, 0
   index: -1
 CapsuleTeleporter/Frame
   rotate: false
-  xy: 100, 0
+  xy: 292, 233
   size: 50, 102
   orig: 50, 102
   offset: 0, 0
   index: -1
 CapsuleTeleporter/Inactive
   rotate: false
-  xy: 150, 0
+  xy: 342, 233
   size: 50, 102
   orig: 50, 102
   offset: 0, 0
   index: -1
 Cart
   rotate: false
-  xy: 200, 0
+  xy: 32, 65
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Cart/idle
   rotate: false
-  xy: 248, 0
+  xy: 80, 65
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Cart/move
   rotate: false
-  xy: 296, 0
+  xy: 64, 233
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 CartV2/idle
   rotate: false
-  xy: 344, 0
+  xy: 128, 65
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 CartV2/move
   rotate: false
-  xy: 392, 0
+  xy: 112, 233
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 FloorButton/down
   rotate: false
-  xy: 440, 0
+  xy: 80, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 FloorButton/switch
   rotate: false
-  xy: 472, 0
+  xy: 0, 169
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 FloorButton/up
   rotate: false
-  xy: 504, 0
+  xy: 112, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Force
   rotate: false
-  xy: 536, 0
+  xy: 32, 169
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 GravitySwitcharoo/arrow
   rotate: false
-  xy: 600, 0
+  xy: 160, 233
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 GravitySwitcharoo/aura
   rotate: false
-  xy: 632, 0
+  xy: 144, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 LightSwitch/Off
   rotate: false
-  xy: 664, 0
+  xy: 176, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 LightSwitch/On
   rotate: false
-  xy: 696, 0
+  xy: 208, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 LightSwitch/SwitchOff
   rotate: false
-  xy: 728, 0
+  xy: 240, 0
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 PortalHopper/Launch
   rotate: false
-  xy: 824, 0
+  xy: 0, 32
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 PortalHopper/Wait
   rotate: false
-  xy: 920, 0
+  xy: 96, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 RailTrack/drop
   rotate: false
-  xy: 984, 0
-  size: 32, 32
-  orig: 32, 32
+  xy: 16, 0
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
 RailTrack/left
   rotate: false
-  xy: 0, 102
+  xy: 160, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 RailTrack/middle
   rotate: false
-  xy: 32, 102
+  xy: 192, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 RailTrack/platform
   rotate: false
-  xy: 64, 102
+  xy: 96, 169
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 RailTrack/platform_drop
   rotate: false
-  xy: 128, 102
+  xy: 160, 169
   size: 192, 64
   orig: 192, 64
   offset: 0, 0
   index: -1
 RailTrack/right
   rotate: false
-  xy: 320, 102
+  xy: 224, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SpringBounce
   rotate: false
-  xy: 352, 102
+  xy: 0, 113
   size: 320, 56
   orig: 320, 56
   offset: 0, 0
   index: -1
 SpringBounceStill
   rotate: false
-  xy: 672, 102
+  xy: 320, 113
   size: 64, 56
   orig: 64, 56
   offset: 0, 0
   index: -1
 SwitcharooArrow
   rotate: false
-  xy: 736, 102
+  xy: 0, 233
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Togglee/Left
   rotate: false
-  xy: 800, 102
+  xy: 352, 32
   size: 32, 33
   orig: 32, 33
   offset: 0, 0
   index: -1
 Togglee/Right
   rotate: false
-  xy: 832, 102
+  xy: 0, 65
   size: 32, 33
   orig: 32, 33
   offset: 0, 0
   index: -1
 ToxicWater/water
   rotate: false
-  xy: 864, 102
+  xy: 0, 0
   size: 16, 8
   orig: 16, 8
   offset: 0, 0
   index: -1
 ToxicWater/waves
   rotate: false
-  xy: 880, 102
+  xy: 32, 0
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 Water_v2/surface_background
   rotate: false
-  xy: 912, 102
+  xy: 256, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Water_v2/surface_foreground
   rotate: false
-  xy: 944, 102
+  xy: 288, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Water_v2/surface_waves_outline
   rotate: false
-  xy: 976, 102
+  xy: 320, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Water_v2/under
   rotate: false
-  xy: 1008, 102
+  xy: 64, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

@@ -837,6 +837,8 @@ class MegaContactListener(
             body.setBodySense(BodySense.FEET_ON_GROUND, true)
 
             block.hitByFeet(ProcessState.CONTINUE, feetFixture)
+            if (feetFixture.hasHitByBlockReceiver(ProcessState.CONTINUE))
+                feetFixture.getHitByBlock(ProcessState.CONTINUE, block, delta)
         }
 
         // feet, ladder
@@ -1226,6 +1228,8 @@ class MegaContactListener(
             }
 
             block.hitByFeet(ProcessState.END, feetFixture)
+            if (feetFixture.hasHitByBlockReceiver(ProcessState.END))
+                feetFixture.getHitByBlock(ProcessState.END, block, delta)
         }
 
         // feet, ice

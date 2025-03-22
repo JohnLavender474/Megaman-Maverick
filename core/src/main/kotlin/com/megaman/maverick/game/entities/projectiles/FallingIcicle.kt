@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.projectiles
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
@@ -8,22 +9,21 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
-import com.mega.game.engine.drawables.sorting.DrawingPriority
-import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
@@ -35,16 +35,14 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.Snow
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
+class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "FallingIcicle"
@@ -57,11 +55,14 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private enum class FallingIcicleState { STILL, SHAKE, FALL }
+    enum class FallingIcicleState { STILL, SHAKE, FALL }
+
+    override lateinit var facing: Facing
 
     private val shakeTimer = Timer(SHAKE_DUR)
     private val shatterTimer = Timer(SHATTER_DUR)
-    private lateinit var fallingIcicleState: FallingIcicleState
+
+    private lateinit var state: FallingIcicleState
 
     override fun init() {
         if (regions.isEmpty) {
@@ -77,16 +78,33 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        val spawn = spawnProps
-            .get(ConstKeys.BOUNDS, GameRectangle::class)!!
-            .getPositionPoint(Position.TOP_CENTER)
+        val spawn = when {
+            spawnProps.containsKey(ConstKeys.BOUNDS) -> spawnProps
+                .get(ConstKeys.BOUNDS, GameRectangle::class)!!
+                .getPositionPoint(Position.TOP_CENTER)
+
+            else -> spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        }
         body.setTopCenterToPoint(spawn)
 
         body.physics.gravityOn = false
-        fallingIcicleState = FallingIcicleState.STILL
+
+        val state = spawnProps.get(ConstKeys.STATE)
+        this.state = when (state) {
+            is FallingIcicleState -> state
+            is String -> FallingIcicleState.valueOf(state.uppercase())
+            else -> FallingIcicleState.STILL
+        }
 
         shakeTimer.reset()
         shatterTimer.reset()
+
+        val facing = spawnProps.get(ConstKeys.FACING)
+        this.facing = when (facing) {
+            is String -> Facing.valueOf(facing.uppercase())
+            is Facing -> facing
+            else -> Facing.RIGHT
+        }
     }
 
     override fun onDestroy() {
@@ -112,39 +130,25 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
 
     override fun explodeAndDie(vararg params: Any?) {
         GameLogger.debug(TAG, "explodeAndDie(): params=$params")
-
+        IceShard.spawn5(body.getCenter(), TAG)
         destroy()
-
-        for (i in 0 until 5) {
-            val iceShard = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.ICE_SHARD)!!
-            iceShard.spawn(
-                props(
-                    ConstKeys.POSITION pairTo body.getCenter(),
-                    ConstKeys.INDEX pairTo i,
-                    ConstKeys.TAG pairTo TAG
-                )
-            )
-        }
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        when (fallingIcicleState) {
+        when (state) {
             FallingIcicleState.STILL -> {
                 if (megaman.body.getY() < body.getMaxY() &&
                     megaman.body.getMaxX() > body.getX() &&
                     megaman.body.getX() < body.getMaxX()
-                ) fallingIcicleState = FallingIcicleState.SHAKE
+                ) state = FallingIcicleState.SHAKE
             }
 
             FallingIcicleState.SHAKE -> {
                 shakeTimer.update(delta)
-                if (shakeTimer.isFinished()) {
-                    body.physics.gravityOn = true
-                    fallingIcicleState = FallingIcicleState.FALL
-                }
+                if (shakeTimer.isFinished()) state = FallingIcicleState.FALL
             }
 
-            else -> {}
+            else -> body.physics.gravityOn = true
         }
     })
 
@@ -160,17 +164,13 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
             Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.75f * ConstVals.PPM))
         body.addFixture(bodyFixture)
 
-        val projectileFixture =
-            Fixture(
-                body,
-                FixtureType.PROJECTILE,
-                GameRectangle().setSize(0.25f * ConstVals.PPM, ConstVals.PPM.toFloat())
-            )
+        val projectileFixture = Fixture(
+            body,
+            FixtureType.PROJECTILE,
+            GameRectangle().setSize(0.25f * ConstVals.PPM, ConstVals.PPM.toFloat())
+        )
         projectileFixture.offsetFromBodyAttachment.y = -0.1f * ConstVals.PPM
         body.addFixture(projectileFixture)
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        body.addFixture(damagerFixture)
 
         val waterListener = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle().setSize(0.1f * ConstVals.PPM))
         body.addFixture(waterListener)
@@ -182,22 +182,24 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.DAMAGER))
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
+        val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setPosition(body.getPositionPoint(Position.TOP_CENTER), Position.TOP_CENTER)
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
+            val position = Position.TOP_CENTER
+            sprite.setPosition(body.getPositionPoint(position), position)
+            sprite.setFlip(isFacing(Facing.RIGHT), false)
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: (String?) -> String? = {
-            when (fallingIcicleState) {
+            when (state) {
                 FallingIcicleState.STILL, FallingIcicleState.FALL -> "still"
                 FallingIcicleState.SHAKE -> "shake"
             }

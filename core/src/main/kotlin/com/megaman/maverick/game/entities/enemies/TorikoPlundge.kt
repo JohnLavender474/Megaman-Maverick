@@ -309,7 +309,8 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        val triggerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f))
+        val triggerFixture =
+            Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.25f * ConstVals.PPM))
         triggerFixture.setFilter filter@{ fixture ->
             return@filter when (direction) {
                 Direction.UP -> fixture.getType() == FixtureType.FEET

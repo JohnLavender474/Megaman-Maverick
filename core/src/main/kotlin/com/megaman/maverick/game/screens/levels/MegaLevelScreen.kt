@@ -18,6 +18,7 @@ import com.mega.game.engine.animations.AnimationsSystem
 import com.mega.game.engine.behaviors.BehaviorsSystem
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.isAny
 import com.mega.game.engine.common.extensions.objectSetOf
@@ -26,6 +27,7 @@ import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.controller.polling.IControllerPoller
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingSection
@@ -48,6 +50,7 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.drawables.backgrounds.Background
+import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
@@ -91,6 +94,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         private const val TRANSITION_SCANNER_SIZE = 5f
         private const val FADE_OUT_MUSIC_DUR = 1f
         private const val DISPLAY_ROOMS_DEBUG_TEXT = false
+        private const val CHECKPOINT_TIMER = 2f
+        private const val CHECKPOINT_ALPHA_DELAY = 1.5f
     }
 
     override val eventKeyMask = objectSetOf<Any>(
@@ -166,12 +171,13 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     private lateinit var backgrounds: Array<Background>
     private lateinit var backgroundsToHide: ObjectSet<String>
 
+    private lateinit var checkpointText: MegaFontHandle
+    private val checkpointTimer = Timer(CHECKPOINT_TIMER)
+
     private lateinit var gameCamera: RotatableCamera
     private lateinit var cameraManagerForRooms: CameraManagerForRooms
     private lateinit var gameCameraShaker: CameraShaker
     private lateinit var uiCamera: OrthographicCamera
-
-    private val disposables = Array<Disposable>()
 
     private val gameCameraPriorPosition = Vector3()
     private var camerasSetToGameCamera = false
@@ -179,6 +185,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     private val spawns = Array<Spawn>()
 
     private val pauseScreen = LevelPauseScreen(game)
+
+    private val disposables = Array<Disposable>()
 
     private var initialized = false
 
@@ -195,8 +203,22 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         gameCamera = game.getGameCamera()
         uiCamera = game.getUiCamera()
 
+        checkpointText = MegaFontHandle(
+            ConstVals.EMPTY_STRING,
+            positionX = (ConstVals.VIEW_WIDTH - 0.5f) * ConstVals.PPM,
+            positionY = ConstVals.PPM.toFloat(),
+            attachment = Position.BOTTOM_RIGHT
+        )
+        checkpointTimer.setToEnd()
+
         spawnsMan = SpawnsManager(spawns)
-        playerSpawnsMan = PlayerSpawnsManager(gameCamera)
+        playerSpawnsMan = PlayerSpawnsManager(gameCamera) { current, old ->
+            if (current != null) {
+                GameLogger.debug(TAG, "playerSpawnsMan(): onChangeSpawn(): current=${current.name}, old=${old?.name}")
+                checkpointText.setText("CHECKPOINT ${current.name}")
+                checkpointTimer.reset()
+            }
+        }
 
         playerSpawnEventHandler = PlayerSpawnEventHandler(game)
         playerDeathEventHandler = PlayerDeathEventHandler(game)
@@ -776,6 +798,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         // sort backgrounds in drawing order before calling draw()
         backgrounds.sort()
+
+        if (!game.isProperty(ConstKeys.ROOM_TRANSITION, true)) checkpointTimer.update(delta)
     }
 
     override fun draw(drawer: Batch) {
@@ -819,6 +843,18 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         if (megaman.dead) playerDeathEventHandler.draw(drawer)
 
         if (game.paused) pauseScreen.draw(drawer)
+
+        if (!game.isProperty(ConstKeys.ROOM_TRANSITION, true) && !checkpointTimer.isFinished()) {
+            val alpha = when {
+                checkpointTimer.time < CHECKPOINT_ALPHA_DELAY -> 1f
+                else -> ConstVals.ONE.minus(
+                    (checkpointTimer.time.minus(CHECKPOINT_ALPHA_DELAY))
+                        .div(checkpointTimer.duration.minus(CHECKPOINT_ALPHA_DELAY))
+                )
+            }
+            checkpointText.setAlpha(alpha)
+            checkpointText.draw(drawer)
+        }
 
         drawer.end()
     }

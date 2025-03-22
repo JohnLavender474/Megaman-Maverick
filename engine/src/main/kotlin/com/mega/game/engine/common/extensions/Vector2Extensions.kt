@@ -64,3 +64,10 @@ fun randomVector2(min: Float, max: Float, out: Vector2) = out.set(getRandom(min,
 
 fun randomVector2(minX: Float, maxX: Float, minY: Float, maxY: Float, out: Vector2) =
     out.set(getRandom(minX, maxX), getRandom(minY, maxY))
+
+fun Vector2.setToDirection(direction: Direction) = when (direction) {
+    Direction.UP -> set(0f, 1f)
+    Direction.DOWN -> set(0f, -1f)
+    Direction.LEFT -> set(-1f, 0f)
+    Direction.RIGHT -> set(1f, 0f)
+}

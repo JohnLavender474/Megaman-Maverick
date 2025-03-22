@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.utils
 
 import com.badlogic.gdx.math.Vector2
+import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.world.body.IBody
 
 enum class VelocityAlterationType {
@@ -18,6 +19,13 @@ data class VelocityAlteration(
     companion object {
         fun add(forceX: Float, forceY: Float) =
             VelocityAlteration(forceX, forceY, VelocityAlterationType.ADD, VelocityAlterationType.ADD)
+
+        fun add(force: Float, direction: Direction) = when (direction) {
+            Direction.UP -> VelocityAlteration(0f, force, VelocityAlterationType.ADD, VelocityAlterationType.ADD)
+            Direction.DOWN -> VelocityAlteration(0f, -force, VelocityAlterationType.ADD, VelocityAlterationType.ADD)
+            Direction.LEFT -> VelocityAlteration(-force, 0f, VelocityAlterationType.ADD, VelocityAlterationType.ADD)
+            Direction.RIGHT -> VelocityAlteration(force, 0f, VelocityAlterationType.ADD, VelocityAlterationType.ADD)
+        }
 
         fun addNone() = add(0f, 0f)
 

@@ -5,10 +5,10 @@ import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.Speed
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IDirectional
@@ -34,11 +34,10 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.*
+import com.megaman.maverick.game.entities.decorations.UnderWaterBubble
 import com.megaman.maverick.game.entities.enemies.SpringHead
 import com.megaman.maverick.game.entities.explosions.ExplosionOrb
 import com.megaman.maverick.game.entities.explosions.IceShard
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
@@ -136,9 +135,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
             requestToPlaySound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND, false)
         }
     ).setToEnd()
-    internal val airDashTimer = Timer(MegamanValues.MAX_AIR_DASH_TIME)
     internal val wallJumpTimer = Timer(MegamanValues.WALL_JUMP_IMPETUS_TIME).setToEnd()
-    internal val groundSlideTimer = Timer(MegamanValues.MAX_GROUND_SLIDE_TIME)
 
     private val trailSpriteTimer = Timer(TRAIL_SPRITE_DELAY)
 
@@ -378,11 +375,9 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
         damageFlashTimer.reset()
         damageRecoveryTimer.setToEnd()
 
-        groundSlideTimer.reset()
         shootAnimTimer.reset()
         wallJumpTimer.reset()
         chargingTimer.reset()
-        airDashTimer.reset()
 
         spawningTimer.reset()
 
@@ -610,8 +605,6 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            game.setDebugText("x: ${UtilMethods.roundFloat(body.physics.velocity.x, 2)}")
-
             if (body.getX() < -DEATH_X_OFFSET * ConstVals.PPM || body.getY() < -DEATH_Y_OFFSET * ConstVals.PPM ||
                 body.getMaxX() > (game.getTiledMapLoadResult().map.properties.get(ConstKeys.WIDTH) as Int + DEATH_X_OFFSET) * ConstVals.PPM ||
                 body.getMaxY() > (game.getTiledMapLoadResult().map.properties.get(ConstKeys.HEIGHT) as Int + DEATH_Y_OFFSET) * ConstVals.PPM
@@ -641,10 +634,10 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
             wallJumpTimer.update(delta)
             roomTransPauseTimer.update(delta)
 
-            if (body.isSensing(BodySense.IN_WATER)) {
+            if (body.isSensing(BodySense.IN_WATER) && !body.isSensing(BodySense.FORCE_APPLIED)) {
                 underWaterBubbleTimer.update(delta)
                 if (underWaterBubbleTimer.isFinished()) {
-                    spawnBubbles()
+                    spawnBubble()
                     underWaterBubbleTimer.reset()
                 }
             }
@@ -704,12 +697,20 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
         return trailSprite.spawn(props(ConstKeys.KEY pairTo key))
     }
 
-    private fun spawnBubbles() {
-        val bubbles = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.UNDER_WATER_BUBBLE)!!
+    private fun spawnBubble() {
         val offsetY = if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) 0.05f else 0.1f
         val offsetX = 0.2f * facing.value
+
         val spawn = body.getCenter().add(offsetX * ConstVals.PPM, offsetY * ConstVals.PPM)
-        bubbles.spawn(props(ConstKeys.POSITION pairTo spawn))
+
+        val bubble = MegaEntityFactory.fetch(UnderWaterBubble::class)!!
+        bubble.spawn(
+            props(
+                ConstKeys.DIRECTION pairTo direction,
+                ConstKeys.SPEED pairTo Speed.SLOW,
+                ConstKeys.POSITION pairTo spawn
+            )
+        )
     }
 
     override fun getFocusBounds() = body.getBounds()

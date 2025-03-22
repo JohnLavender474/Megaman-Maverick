@@ -8,7 +8,9 @@ import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.isSensing
 
 object FacingUtils {
 
@@ -65,5 +67,11 @@ object FacingUtils {
         entity as IFaceable
 
         entity.facing = getPreferredFacingFor(entity)
+    }
+
+    fun isFacingBlock(entity: IBodyEntity): Boolean {
+        entity as IFaceable
+        return (entity.body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && entity.isFacing(Facing.LEFT)) ||
+            (entity.body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && entity.isFacing(Facing.RIGHT))
     }
 }

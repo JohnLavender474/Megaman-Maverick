@@ -23,8 +23,9 @@ class BitmapFontHandle(
     var attachment: Position,
     val font: BitmapFont = BitmapFont(),
     var hidden: Boolean = false,
+    var alpha: Float = 1f,
     override val priority: DrawingPriority = DrawingPriority(DrawingSection.FOREGROUND, 0),
-    override var drawingColor: Color = Color.RED,
+    override var drawingColor: Color = Color.WHITE,
     override var drawingShapeType: ShapeType = ShapeType.Line
 ) : IComparableDrawable<Batch>, IPositional, IDrawableShape {
 
@@ -184,16 +185,14 @@ class BitmapFontHandle(
         renderer.color = drawingColor
         renderer.set(drawingShapeType)
         renderer.rect(position.x, position.y, getFontWidth(), getFontHeight())
-
         return this
     }
 
     override fun draw(drawer: Batch) {
         if (hidden) return
-
         layout.setText(font, textSupplier())
-
         val position = getFontPosition(out)
+        font.setColor(drawingColor.r, drawingColor.g, drawingColor.b, alpha)
         font.draw(drawer, layout, position.x, position.y)
     }
 

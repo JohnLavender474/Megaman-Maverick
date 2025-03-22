@@ -9,6 +9,7 @@ object PreferenceFiles {
 }
 
 object ConstVals {
+    const val ONE = 1f
     const val VIEW_WIDTH = 16f
     const val VIEW_HEIGHT = 14f
     const val PPM = 32
@@ -47,6 +48,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val CHECKPOINT = "checkpoint"
     const val PINK = "pink"
     const val PIECE = "piece"
     const val IGNORE = "ignore"

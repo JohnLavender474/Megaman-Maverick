@@ -177,7 +177,6 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
 
         val angleToMegaman =
             body.getPositionPoint(Position.TOP_CENTER).sub(megaman.body.getCenter()).nor().angleDeg() + 90f
-        game.setDebugText("ANGLE: ${UtilMethods.roundFloat(angleToMegaman, 2)}")
         val valToCompare1 = abs(angle1 - angleToMegaman)
         var valToCompare2 = abs(angle2 - angleToMegaman)
 

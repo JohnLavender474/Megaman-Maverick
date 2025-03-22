@@ -6,6 +6,9 @@ import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.common.UtilMethods
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.extensions.add
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.IGameShape2D
@@ -24,7 +27,10 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.blocks.BreakableBlock
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.decorations.BlockPiece.BlockPieceColor
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
 class Picket(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
@@ -52,7 +58,11 @@ class Picket(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEnt
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        // TODO: certain blocks breakable with picket
+        destroy()
+
+        val direction = UtilMethods.getOverlapPushDirection(thisShape, otherShape) ?: Direction.UP
+        val position = thisShape.getCenter().add(0.5f * ConstVals.PPM, direction.getOpposite())
+        BreakableBlock.breakApart(position, BlockPieceColor.BROWN)
     }
 
     override fun defineBodyComponent(): BodyComponent {

@@ -59,9 +59,9 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
         private const val VEL_X = 5f
 
         private const val GROUND_GRAVITY = -0.0015f
-        private const val GRAVITY = -0.5f
+        private const val GRAVITY = -0.25f
 
-        private const val WAIT_DURATION = 0.5f
+        private const val WAIT_DURATION = 0.75f
         private const val SHOOT_DURATION = 0.25f
 
         private const val BULLET_SPEED = 10f
@@ -196,8 +196,8 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(3f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.hidden = damageBlink
 
             val position = body.getPositionPoint(Position.BOTTOM_CENTER)
@@ -205,7 +205,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
 
             sprite.setFlip(isFacing(Facing.RIGHT), false)
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

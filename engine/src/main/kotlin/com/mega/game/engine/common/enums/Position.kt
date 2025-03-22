@@ -16,6 +16,8 @@ enum class Position(val x: Int, val y: Int) {
 
     companion object {
 
+        private val cardinals = listOf(TOP_CENTER, CENTER_LEFT, BOTTOM_CENTER, CENTER_RIGHT)
+
         fun get(x: Int, y: Int): Position {
             if (x < 0 || x > 2 || y < 0 || y > 2)
                 throw IndexOutOfBoundsException("No position value for x=$x and y=$y")
@@ -23,6 +25,8 @@ enum class Position(val x: Int, val y: Int) {
             val index = x + y * 3
             return entries[index]
         }
+
+        fun getCardinalPositions() = cardinals
     }
 
     fun move(direction: Direction) = when (direction) {
