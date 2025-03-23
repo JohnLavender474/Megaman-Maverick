@@ -4,10 +4,10 @@ package com.mega.game.engine.world.container
 class QuadtreeWorldContainer : IWorldContainer {
 
     private val ppm: Int
-    private val maxObjectsPerNode: Int
     private val maxDepth: Int
     private var root: QuadtreeNode
-    
+    private val maxObjectsPerNode: Int
+
     constructor(
         ppm: Int,
         x: Int,
@@ -18,8 +18,8 @@ class QuadtreeWorldContainer : IWorldContainer {
         maxDepth: Int
     ) {
         this.ppm = ppm
-        this.maxObjectsPerNode = maxObjectsPerNode
         this.maxDepth = maxDepth
+        this.maxObjectsPerNode = maxObjectsPerNode
         root = QuadtreeNode(0, x, y, width, height)
     }
 
@@ -31,39 +31,39 @@ class QuadtreeWorldContainer : IWorldContainer {
     ) {
         this.ppm = ppm
         this.root = root
-        this.maxObjectsPerNode = maxObjectsPerNode
         this.maxDepth = maxDepth
+        this.maxObjectsPerNode = maxObjectsPerNode
     }
 
-    override fun addBody(body: Body): Boolean {
-        val bounds = body.getBounds()
-        val scaledBounds = scaleToGrid(bounds)
-        return root.insert(body, scaledBounds)
+    override fun addBody(body: IBody): Boolean {
+        val bounds = body.getBounds(GameRectangle())
+        val rounded = round(bounds)
+        return root.insert(body, rounded)
     }
 
     override fun addFixture(fixture: IFixture): Boolean {
-        val bounds = fixture.getShape().getBoundingRectangle()
-        val scaledBounds = scaleToGrid(bounds)
-        return root.insert(fixture, scaledBounds)
+        val bounds = fixture.getShape().getBoundingRectangle(GameRectangle())
+        val rounded = round(bounds)
+        return root.insert(fixture, rounded)
     }
 
-    private fun scaleToGrid(bounds: GameRectangle): GameRectangle {
-        val minX = MathUtils.floor(bounds.x / ppm).toFloat()
-        val minY = MathUtils.floor(bounds.y / ppm).toFloat()
+    private fun round(bounds: GameRectangle): GameRectangle {
+        val minX = MathUtils.floor(bounds.getX() / ppm).toFloat()
+        val minY = MathUtils.floor(bounds.getY() / ppm).toFloat()
         val maxX = MathUtils.floor(bounds.getMaxX() / ppm).toFloat()
         val maxY = MathUtils.floor(bounds.getMaxY() / ppm).toFloat()
-        return GameRectangle(minX, minY, maxX - minX, maxY - minY)
+        return bounds.set(minX, minY, maxX - minX, maxY - minY)
     }
 
-    override fun getBodies(x: Int, y: Int): HashSet<Body> {
-        val result = HashSet<Body>()
+    override fun getBodies(x: Int, y: Int): HashSet<IBody> {
+        val result = HashSet<IBody>()
         val point = GameRectangle(x.toFloat(), y.toFloat(), 0.1f, 0.1f)
         root.retrieveBodies(result, point)
         return result
     }
 
-    override fun getBodies(minX: Int, minY: Int, maxX: Int, maxY: Int): HashSet<Body> {
-        val result = HashSet<Body>()
+    override fun getBodies(minX: Int, minY: Int, maxX: Int, maxY: Int): HashSet<IBody> {
+        val result = HashSet<IBody>()
         root.retrieveBodies(
             result,
             GameRectangle(
@@ -123,10 +123,14 @@ class QuadtreeWorldContainer : IWorldContainer {
     override fun copy() = QuadtreeWorldContainer(ppm, root, maxObjectsPerNode, maxDepth)
 
     private inner class QuadtreeNode(
-        private val level: Int, private val x: Int, private val y: Int, private val width: Int, private val height: Int
+        private val level: Int,
+        private val x: Int,
+        private val y: Int,
+        private val width: Int,
+        private val height: Int
     ) {
 
-        private val bodies = HashSet<Body>()
+        private val bodies = HashSet<IBody>()
         private val fixtures = HashSet<IFixture>()
         private var subNodes: Array<QuadtreeNode>? = null
         private val bounds = GameRectangle(x.toFloat(), y.toFloat(), width.toFloat(), height.toFloat())
@@ -138,14 +142,14 @@ class QuadtreeWorldContainer : IWorldContainer {
             }
 
             when (obj) {
-                is Body -> bodies.add(obj)
+                is IBody -> bodies.add(obj)
                 is IFixture -> fixtures.add(obj)
                 else -> throw IllegalArgumentException("Only bodies and fixtures are accepted")
             }
 
-            if ((bodies.size + fixtures.size) > maxObjectsPerNode && level < maxDepth) {
+            if (bodies.size + fixtures.size > maxObjectsPerNode && level < maxDepth) {
                 if (subNodes == null) subdivide()
-                bodies.forEach { body -> insertIntoSubnodes(body, body.getBounds()) }
+                bodies.forEach { body -> insertIntoSubnodes(body, body.getBounds(GameRectangle())) }
                 fixtures.forEach { fixture -> insertIntoSubnodes(fixture, fixture.getShape()) }
                 bodies.clear()
                 fixtures.clear()
@@ -158,7 +162,7 @@ class QuadtreeWorldContainer : IWorldContainer {
             val subWidth = width / 2
             val subHeight = height / 2
             val nextLevel = level + 1
-            val subNodes = Array<QuadtreeNode>(4)
+            val subNodes = Array<QuadtreeNode>()
             subNodes[0] = QuadtreeNode(nextLevel, x, y, subWidth, subHeight)
             subNodes[1] = QuadtreeNode(nextLevel, x + subWidth, y, subWidth, subHeight)
             subNodes[2] = QuadtreeNode(nextLevel, x, y + subHeight, subWidth, subHeight)
@@ -166,22 +170,22 @@ class QuadtreeWorldContainer : IWorldContainer {
             this.subNodes = subNodes
         }
 
-        fun retrieveBodies(result: HashSet<Body>, area: GameRectangle) {
-            if (!bounds.overlaps(area as Rectangle)) return
+        fun retrieveBodies(result: HashSet<IBody>, area: GameRectangle) {
+            if (!bounds.overlaps(area)) return
 
             bodies.forEach { result.add(it) }
             subNodes?.forEach { it.retrieveBodies(result, area) }
         }
 
         fun retrieveFixtures(result: HashSet<IFixture>, area: GameRectangle) {
-            if (!bounds.overlaps(area as Rectangle)) return
+            if (!bounds.overlaps(area)) return
 
             fixtures.forEach { result.add(it) }
             subNodes?.forEach { it.retrieveFixtures(result, area) }
         }
 
         fun retrieveAllObjects(result: HashSet<Any>, area: GameRectangle) {
-            if (!bounds.overlaps(area as Rectangle)) return
+            if (!bounds.overlaps(area)) return
 
             bodies.forEach { result.add(it) }
             fixtures.forEach { result.add(it) }
@@ -215,8 +219,7 @@ class QuadtreeWorldContainer : IWorldContainer {
 
         private fun insertIntoSubnodes(obj: Any, shape: IGameShape2D): Boolean {
             val index = getIndex(shape)
-            return if (index != -1) subNodes!![index].insert(obj, shape)
-            else false
+            return if (index != -1) subNodes!![index].insert(obj, shape) else false
         }
     }
 }

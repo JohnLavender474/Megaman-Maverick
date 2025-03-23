@@ -11,15 +11,15 @@ interface IWorldContainer : IClearable, ICopyable<IWorldContainer> {
 
     fun addFixture(fixture: IFixture): Boolean
 
-    fun getBodies(x: Int, y: Int): Collection<IBody>
+    fun getBodies(x: Int, y: Int, out: MutableCollection<IBody>)
 
-    fun getBodies(minX: Int, minY: Int, maxX: Int, maxY: Int): Collection<IBody>
+    fun getBodies(minX: Int, minY: Int, maxX: Int, maxY: Int, out: MutableCollection<IBody>)
 
-    fun getFixtures(x: Int, y: Int): Collection<IFixture>
+    fun getFixtures(x: Int, y: Int, out: MutableCollection<IFixture>)
 
-    fun getFixtures(minX: Int, minY: Int, maxX: Int, maxY: Int): Collection<IFixture>
+    fun getFixtures(minX: Int, minY: Int, maxX: Int, maxY: Int, out: MutableCollection<IFixture>)
 
-    fun getObjects(x: Int, y: Int): Collection<Any>
+    fun getObjects(x: Int, y: Int, out: MutableCollection<Any>)
 
-    fun getObjects(minX: Int, minY: Int, maxX: Int, maxY: Int): Collection<Any>
+    fun getObjects(minX: Int, minY: Int, maxX: Int, maxY: Int, out: MutableCollection<Any>)
 }

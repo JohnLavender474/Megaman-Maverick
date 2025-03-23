@@ -50,8 +50,6 @@ import kotlin.reflect.KClass
 class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IEventListener,
     IGameShapeOverlappable {
 
-    data class LightSourceDef(var center: Vector2, var radius: Int, var radiance: Float)
-
     private class BlackTile(val bounds: GameRectangle, var step: Float = 1f, var currentAlpha: Float = 1f) {
 
         fun update(delta: Float, darken: Boolean) {
@@ -63,6 +61,8 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             currentAlpha = if (dark) MAX_ALPHA else MIN_ALPHA
         }
     }
+
+    private data class LightSourceDef(var center: Vector2, var radius: Int, var radiance: Float)
 
     companion object {
         const val TAG = "DarknessV2"

@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.common.objects.ImmutableCollection
+import com.mega.game.engine.common.objects.MutableOrderedSet
 import com.mega.game.engine.common.objects.Pool
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -69,6 +70,8 @@ class WorldSystem(
 
     private val reusableBodyArray = Array<IBody>()
     private val reusableGameRect = GameRectangle()
+    private val reusableBodySet = MutableOrderedSet<IBody>()
+    private val reusableFixtureSet = MutableOrderedSet<IFixture>()
     private val out1 = GameRectangle()
     private val out2 = GameRectangle()
 
@@ -153,36 +156,42 @@ class WorldSystem(
         if (fixture.isActive() && contactFilter.shouldProceedFiltering(fixture)) {
             fixture.getShape().getBoundingRectangle(reusableGameRect)
 
-            val worldGraphResults = worldContainer.getFixtures(
+            worldContainer.getFixtures(
                 MathUtils.floor(reusableGameRect.getX() / ppm),
                 MathUtils.floor(reusableGameRect.getY() / ppm),
                 MathUtils.floor(reusableGameRect.getMaxX() / ppm),
-                MathUtils.floor(reusableGameRect.getMaxY() / ppm)
+                MathUtils.floor(reusableGameRect.getMaxY() / ppm),
+                reusableFixtureSet
             )
 
-            worldGraphResults.forEach {
+            reusableFixtureSet.forEach {
                 if (it.isActive() && filterContact(fixture, it) && fixture.getShape().overlaps(it.getShape())) {
                     val contact = contactPool.fetch()
                     contact.set(fixture, it)
                     currentContactSet.add(contact)
                 }
             }
+
+            reusableFixtureSet.clear()
         }
     }
 
     internal fun resolveCollisions(body: IBody) {
         val bounds = body.getBounds(out1)
 
-        val bodies = worldContainer.getBodies(
+        worldContainer.getBodies(
             MathUtils.floor(bounds.getX() / ppm),
             MathUtils.floor(bounds.getY() / ppm),
             MathUtils.floor(bounds.getMaxX() / ppm),
-            MathUtils.floor(bounds.getMaxY() / ppm)
+            MathUtils.floor(bounds.getMaxY() / ppm),
+            reusableBodySet
         )
 
-        bodies.forEach {
+        reusableBodySet.forEach {
             if (it != body && it.getBounds(out2).overlaps(bounds))
                 collisionHandler.handleCollision(body, it)
         }
+
+        reusableBodySet.clear()
     }
 }

@@ -1,10 +1,9 @@
 package com.mega.game.engine.world.container
 
 import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.objects.MutableOrderedSet
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.world.body.Body
-import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
+import com.mega.game.engine.world.body.*
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldNotContain
@@ -16,9 +15,15 @@ class SimpleGridWorldContainerTest : DescribeSpec({
 
         val ppm = 10
         lateinit var grid: SimpleGridWorldContainer
+        val outBodies1 = MutableOrderedSet<IBody>()
+        val outBodies2 = MutableOrderedSet<IBody>()
+        val outFixtures = MutableOrderedSet<IFixture>()
 
         beforeEach {
             grid = SimpleGridWorldContainer(ppm)
+            outBodies1.clear()
+            outBodies2.clear()
+            outFixtures.clear()
         }
 
         it("should add bodies to the correct cells") {
@@ -37,31 +42,29 @@ class SimpleGridWorldContainerTest : DescribeSpec({
             bodies.forEach { grid.addBody(it) }
 
             // then
-            for (x in 0..width) {
-                for (y in 0..height) {
-                    val cellBodies = grid.getBodies(x, y)
+            for (x in 0..width) for (y in 0..height) {
+                grid.getBodies(x, y, outBodies1)
 
-                    when {
-                        x in 0..1 && y in 0..1 -> {
-                            cellBodies.size shouldBe 1
-                            cellBodies shouldContain bodies[0]
-                        }
-
-                        x in 4..5 && y in 4..5 -> {
-                            cellBodies.size shouldBe 1
-                            cellBodies shouldContain bodies[1]
-                        }
-
-                        x == 9 && y == 9 -> {
-                            cellBodies.size shouldBe 1
-                            cellBodies shouldContain bodies[2]
-                        }
-
-                        else -> {
-                            cellBodies.size shouldBe 0
-                        }
+                when {
+                    x in 0..1 && y in 0..1 -> {
+                        outBodies1.size shouldBe 1
+                        outBodies1 shouldContain bodies[0]
                     }
+
+                    x in 4..5 && y in 4..5 -> {
+                        outBodies1.size shouldBe 1
+                        outBodies1 shouldContain bodies[1]
+                    }
+
+                    x == 9 && y == 9 -> {
+                        outBodies1.size shouldBe 1
+                        outBodies1 shouldContain bodies[2]
+                    }
+
+                    else -> outBodies1.size shouldBe 0
                 }
+
+                outBodies1.clear()
             }
         }
 
@@ -82,31 +85,29 @@ class SimpleGridWorldContainerTest : DescribeSpec({
             fixtures.forEach { grid.addFixture(it) }
 
             // then
-            for (x in 0..width) {
-                for (y in 0..height) {
-                    val cellFixtures = grid.getFixtures(x, y)
+            for (x in 0..width) for (y in 0..height) {
+                grid.getFixtures(x, y, outFixtures)
 
-                    when {
-                        x in 0..1 && y in 0..1 -> {
-                            cellFixtures.size shouldBe 1
-                            cellFixtures shouldContain fixtures[0]
-                        }
-
-                        x in 4..5 && y in 4..5 -> {
-                            cellFixtures.size shouldBe 1
-                            cellFixtures shouldContain fixtures[1]
-                        }
-
-                        x == 9 && y == 9 -> {
-                            cellFixtures.size shouldBe 1
-                            cellFixtures shouldContain fixtures[2]
-                        }
-
-                        else -> {
-                            cellFixtures.size shouldBe 0
-                        }
+                when {
+                    x in 0..1 && y in 0..1 -> {
+                        outFixtures.size shouldBe 1
+                        outFixtures shouldContain fixtures[0]
                     }
+
+                    x in 4..5 && y in 4..5 -> {
+                        outFixtures.size shouldBe 1
+                        outFixtures shouldContain fixtures[1]
+                    }
+
+                    x == 9 && y == 9 -> {
+                        outFixtures.size shouldBe 1
+                        outFixtures shouldContain fixtures[2]
+                    }
+
+                    else -> outFixtures.size shouldBe 0
                 }
+
+                outFixtures.clear()
             }
         }
 
@@ -126,13 +127,13 @@ class SimpleGridWorldContainerTest : DescribeSpec({
             val maxY = 3
 
             // when
-            val retrievedBodies = grid.getBodies(minX, minY, maxX, maxY)
-            println(retrievedBodies)
+            grid.getBodies(minX, minY, maxX, maxY, outBodies1)
+            println(outBodies1)
 
             // then
-            retrievedBodies shouldContain bodies[0]
-            retrievedBodies shouldNotContain bodies[1]
-            retrievedBodies shouldNotContain bodies[2]
+            outBodies1 shouldContain bodies[0]
+            outBodies1 shouldNotContain bodies[1]
+            outBodies1 shouldNotContain bodies[2]
         }
 
         it("should retrieve fixtures in the specified area") {
@@ -152,12 +153,12 @@ class SimpleGridWorldContainerTest : DescribeSpec({
             val maxY = 3
 
             // when
-            val retrievedFixtures = grid.getFixtures(minX, minY, maxX, maxY)
+            grid.getFixtures(minX, minY, maxX, maxY, outFixtures)
 
             // then
-            retrievedFixtures shouldContain fixtures[0]
-            retrievedFixtures shouldNotContain fixtures[1]
-            retrievedFixtures shouldNotContain fixtures[2]
+            outFixtures shouldContain fixtures[0]
+            outFixtures shouldNotContain fixtures[1]
+            outFixtures shouldNotContain fixtures[2]
         }
 
         it("should clear the grid") {
@@ -179,8 +180,8 @@ class SimpleGridWorldContainerTest : DescribeSpec({
             // then
             for (x in 0 until width) {
                 for (y in 0 until height) {
-                    val cellBodies = grid.getBodies(x, y)
-                    cellBodies.count() shouldBe 0
+                    grid.getBodies(x, y, outBodies1)
+                    outBodies1.count() shouldBe 0
                 }
             }
         }
@@ -197,12 +198,12 @@ class SimpleGridWorldContainerTest : DescribeSpec({
             bodies.forEach { grid.addBody(it) }
 
             // Then
-            val cellBodies1 = grid.getBodies(1, 1)
-            val cellBodies2 = grid.getBodies(3, 3)
-            cellBodies1.size shouldBe 1
-            cellBodies2.size shouldBe 2
-            cellBodies1 shouldContain bodies[0]
-            cellBodies2 shouldContain bodies[1]
+            grid.getBodies(1, 1, outBodies1)
+            grid.getBodies(3, 3, outBodies2)
+            outBodies1.size shouldBe 1
+            outBodies2.size shouldBe 2
+            outBodies1 shouldContain bodies[0]
+            outBodies2 shouldContain bodies[1]
         }
 
         it("should subtract on exact integers when subtractOnExactInteger=true - 1") {
@@ -216,18 +217,24 @@ class SimpleGridWorldContainerTest : DescribeSpec({
 
             // Then
             // Without subtraction, it would have occupied (1,1). With subtraction, it will stay at (0,0)
-            var cellBodies = grid.getBodies(0, 0)
-            cellBodies.size shouldBe 1
-            cellBodies shouldContain body
+            grid.getBodies(0, 0, outBodies1)
+            outBodies1.size shouldBe 1
+            outBodies1 shouldContain body
 
-            cellBodies = grid.getBodies(1, 0)
-            cellBodies.size shouldBe 0
+            outBodies1.clear()
 
-            cellBodies = grid.getBodies(0, 1)
-            cellBodies.size shouldBe 0
+            grid.getBodies(1, 0, outBodies1)
+            outBodies1.size shouldBe 0
 
-            cellBodies = grid.getBodies(1, 1)
-            cellBodies.size shouldBe 0
+            outBodies1.clear()
+
+            grid.getBodies(0, 1, outBodies1)
+            outBodies1.size shouldBe 0
+
+            outBodies1.clear()
+
+            grid.getBodies(1, 1, outBodies1)
+            outBodies1.size shouldBe 0
         }
 
         it("should add bodies to the correct cells with subtractOnExactInteger=true- 2") {
@@ -242,12 +249,12 @@ class SimpleGridWorldContainerTest : DescribeSpec({
             bodies.forEach { grid.addBody(it) }
 
             // Then
-            val cellBodies1 = grid.getBodies(1, 1)
-            val cellBodies2 = grid.getBodies(3, 3)
-            cellBodies1.size shouldBe 1
-            cellBodies2.size shouldBe 1
-            cellBodies1 shouldContain bodies[0]
-            cellBodies2 shouldContain bodies[1]
+            grid.getBodies(1, 1, outBodies1)
+            grid.getBodies(3, 3, outBodies2)
+            outBodies1.size shouldBe 1
+            outBodies2.size shouldBe 1
+            outBodies1 shouldContain bodies[0]
+            outBodies2 shouldContain bodies[1]
         }
 
         it("should handle negative values with subtractOnExactInteger=true") {
@@ -259,18 +266,24 @@ class SimpleGridWorldContainerTest : DescribeSpec({
             grid.addBody(body)
 
             // Then
-            var cellBodies = grid.getBodies(-1, -1)
-            cellBodies.size shouldBe 1
-            cellBodies shouldContain body
+            grid.getBodies(-1, -1, outBodies1)
+            outBodies1.size shouldBe 1
+            outBodies1 shouldContain body
 
-            cellBodies = grid.getBodies(0, 0)
-            cellBodies.size shouldBe 0
+            outBodies1.clear()
 
-            cellBodies = grid.getBodies(0, 1)
-            cellBodies.size shouldBe 0
+            grid.getBodies(0, 0, outBodies1)
+            outBodies1.size shouldBe 0
 
-            cellBodies = grid.getBodies(1, 0)
-            cellBodies.size shouldBe 0
+            outBodies1.clear()
+
+            grid.getBodies(0, 1, outBodies1)
+            outBodies1.size shouldBe 0
+
+            outBodies1.clear()
+
+            grid.getBodies(1, 0, outBodies1)
+            outBodies1.size shouldBe 0
         }
 
         it("should not adjust when subtractOnExactInteger=false") {
@@ -284,9 +297,9 @@ class SimpleGridWorldContainerTest : DescribeSpec({
 
             // Then
             // It should occupy the (1,1) cell, since we are not subtracting from exact integers
-            val cellBodies = grid.getBodies(1, 1)
-            cellBodies.size shouldBe 1
-            cellBodies shouldContain body
+            grid.getBodies(1, 1, outBodies1)
+            outBodies1.size shouldBe 1
+            outBodies1 shouldContain body
         }
 
         it("should retrieve bodies in the specified area and apply subtractOnExactInteger=true") {
@@ -301,12 +314,12 @@ class SimpleGridWorldContainerTest : DescribeSpec({
             bodies.forEach { grid.addBody(it) }
 
             // When
-            val retrievedBodies = grid.getBodies(0, 0, 1, 1)
+            grid.getBodies(0, 0, 1, 1, outBodies1)
 
             // Then
-            retrievedBodies.size shouldBe 1
-            retrievedBodies shouldContain bodies[0]
-            retrievedBodies shouldNotContain bodies[1]
+            outBodies1.size shouldBe 1
+            outBodies1 shouldContain bodies[0]
+            outBodies1 shouldNotContain bodies[1]
         }
 
         it("should retrieve fixtures in the specified area and apply subtractOnExactInteger=false") {
@@ -318,9 +331,9 @@ class SimpleGridWorldContainerTest : DescribeSpec({
             grid.addFixture(fixture)
 
             // Then
-            val retrievedFixtures = grid.getFixtures(1, 1)
-            retrievedFixtures.size shouldBe 1
-            retrievedFixtures shouldContain fixture
+            grid.getFixtures(1, 1, outFixtures)
+            outFixtures.size shouldBe 1
+            outFixtures shouldContain fixture
         }
 
         it("should clear the grid") {
@@ -336,11 +349,9 @@ class SimpleGridWorldContainerTest : DescribeSpec({
             grid.clear()
 
             // Then
-            for (x in 0 until 10) {
-                for (y in 0 until 10) {
-                    val cellBodies = grid.getBodies(x, y)
-                    cellBodies.count() shouldBe 0
-                }
+            for (x in 0 until 10) for (y in 0 until 10) {
+                grid.getBodies(x, y, outBodies1)
+                outBodies1.count() shouldBe 0
             }
         }
     }

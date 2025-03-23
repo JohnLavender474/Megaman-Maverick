@@ -9,6 +9,7 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.objects.MutableOrderedSet
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -59,6 +60,8 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     private val spawnDelayTimer = Timer(SPAWN_DELAY)
     private val spawningBlinkTimer = Timer(SPAWN_BLINK)
     private var spawnDelayBlink = false
+
+    private val reusableBodySet = MutableOrderedSet<IBody>()
 
     override fun init() {
         if (region == null) region = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source).findRegion(TAG)
@@ -142,18 +145,20 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
             startCoordinateSupplier = { body.getCenter().toGridCoordinate() },
             targetCoordinateSupplier = { megaman.body.getCenter().toGridCoordinate() },
             allowDiagonal = { true },
-            filter = { coordinate ->
-                val bodies = game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y)
+            filter = filter@{ coordinate ->
+                game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y, reusableBodySet)
                 var passable = true
                 var blockingBody: IBody? = null
 
-                for (otherBody in bodies) if (otherBody.getEntity().getType() == EntityType.BLOCK) {
+                for (otherBody in reusableBodySet) if (otherBody.getEntity().getType() == EntityType.BLOCK) {
                     passable = false
                     blockingBody = otherBody
                     break
                 }
 
-                passable
+                reusableBodySet.clear()
+
+                return@filter passable
             },
             properties = props(ConstKeys.HEURISTIC pairTo DynamicBodyHeuristic(game))
         )

@@ -4,8 +4,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
-import com.badlogic.gdx.utils.ObjectSet
-import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -17,9 +15,8 @@ import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.extensions.toObjectSet
 import com.mega.game.engine.common.interfaces.IDirectional
-import com.mega.game.engine.common.objects.IntPair
+import com.mega.game.engine.common.objects.MutableOrderedSet
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -65,7 +62,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         private var atlas: TextureAtlas? = null
         private const val MAX_ALLOWED = 3
         private const val DEBUG_PATHFINDING = false
-        private const val DEBUG_PATHFINDING_DURATION = 1f
         private const val HANG_DURATION = 0.75f
         private const val FROZEN_DURATION = 0.5f
         private const val RELEASE_FROM_PERCH_DURATION = 0.25f
@@ -96,7 +92,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
     private val hangTimer = Timer(HANG_DURATION)
     private val frozenTimer = Timer(FROZEN_DURATION)
     private val releasePerchTimer = Timer(RELEASE_FROM_PERCH_DURATION)
-    private val debugPathfindingTimer = Timer(DEBUG_PATHFINDING_DURATION)
 
     private val canMove: Boolean
         get() = !game.isCameraRotating() && !frozen
@@ -111,8 +106,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
     private var trigger: GameRectangle? = null
     private var triggered = false
 
-    @Volatile
-    private var printDebugFilter = false
+    private val reusableBodySet = MutableOrderedSet<IBody>()
 
     override fun init() {
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
@@ -154,9 +148,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
 
-        debugPathfindingTimer.reset()
-        printDebugFilter = DEBUG_PATHFINDING
-
         trigger = spawnProps.get(ConstKeys.TRIGGER, RectangleMapObject::class)?.rectangle?.toGameRectangle(false)
         triggered = trigger == null
     }
@@ -174,27 +165,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (DEBUG_PATHFINDING) {
-                debugPathfindingTimer.update(delta)
-                if (debugPathfindingTimer.isFinished()) {
-                    printDebugFilter = true
-                    val coordinate = body.getCenter().toGridCoordinate()
-                    val surroundingEntityTypes = OrderedMap<IntPair, ObjectSet<EntityType>>()
-                    for (i in -1..1) for (j in -1..1) {
-                        val entityTypes =
-                            game.getWorldContainer()!!
-                                .getBodies(coordinate.x + i, coordinate.y + j)
-                                .map { body -> body.getEntity().getType() }
-                                .toObjectSet()
-                        surroundingEntityTypes.put(IntPair(coordinate.x + i, coordinate.y + j), entityTypes)
-                    }
-
-                    GameLogger.debug(TAG, "Current coordinate: $coordinate")
-                    GameLogger.debug(TAG, "Surrounding coordinates: $surroundingEntityTypes")
-                    debugPathfindingTimer.reset()
-                }
-            }
-
             if (frozen) {
                 frozenTimer.update(delta)
                 if (frozenTimer.isJustFinished()) {
@@ -331,23 +301,21 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
             startCoordinateSupplier = { body.getCenter().toGridCoordinate() },
             targetCoordinateSupplier = { megaman.body.getCenter().toGridCoordinate() },
             allowDiagonal = { true },
-            filter = { coordinate ->
-                val bodies = game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y)
+            filter = filter@{ coordinate ->
+                game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y, reusableBodySet)
+
                 var passable = true
                 var blockingBody: IBody? = null
 
-                for (otherBody in bodies) if (otherBody.getEntity().getType() == EntityType.BLOCK) {
+                for (otherBody in reusableBodySet) if (otherBody.getEntity().getType() == EntityType.BLOCK) {
                     passable = false
                     blockingBody = otherBody
                     break
                 }
 
-                if (printDebugFilter) {
-                    GameLogger.debug(TAG, "Can pass $coordinate: $passable")
-                    printDebugFilter = false
-                }
+                reusableBodySet.clear()
 
-                passable
+                return@filter passable
             },
             properties = props(ConstKeys.HEURISTIC pairTo DynamicBodyHeuristic(game))
         )

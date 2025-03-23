@@ -1,7 +1,9 @@
 package com.megaman.maverick.game.entities.utils
 
+import com.mega.game.engine.common.objects.MutableOrderedSet
 import com.mega.game.engine.pathfinding.heuristics.EuclideanHeuristic
 import com.mega.game.engine.pathfinding.heuristics.IHeuristic
+import com.mega.game.engine.world.body.IBody
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.world.body.getEntity
@@ -13,10 +15,18 @@ class DynamicBodyHeuristic(private val game: MegamanMaverickGame) : IHeuristic {
     }
 
     private val defaultHeuristic = EuclideanHeuristic()
+    private val reusableBodySet = MutableOrderedSet<IBody>()
 
     private fun containsBlock(x: Int, y: Int): Boolean {
-        val bodies = game.getWorldContainer()!!.getBodies(x, y)
-        for (body in bodies) if (body.getEntity().getType() == EntityType.BLOCK) return true
+        game.getWorldContainer()!!.getBodies(x, y, reusableBodySet)
+
+        for (body in reusableBodySet) if (body.getEntity().getType() == EntityType.BLOCK) {
+            reusableBodySet.clear()
+            return true
+        }
+
+        reusableBodySet.clear()
+
         return false
     }
 

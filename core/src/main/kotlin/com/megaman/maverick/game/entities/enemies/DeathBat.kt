@@ -14,10 +14,7 @@ import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.toGdxArray
-import com.mega.game.engine.common.objects.Loop
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.objects.*
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamageable
@@ -80,6 +77,8 @@ class DeathBat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
     private var trigger: GameRectangle? = null
     private var triggered = false
+
+    private val reusableBodySet = MutableOrderedSet<IBody>()
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -251,18 +250,20 @@ class DeathBat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
             startCoordinateSupplier = { body.getCenter().toGridCoordinate() },
             targetCoordinateSupplier = { megaman.body.getCenter().toGridCoordinate() },
             allowDiagonal = { true },
-            filter = { coordinate ->
-                val bodies = game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y)
+            filter = fitler@{ coordinate ->
+                game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y, reusableBodySet)
                 var passable = true
                 var blockingBody: IBody? = null
 
-                for (otherBody in bodies) if (otherBody.getEntity().getType() == EntityType.BLOCK) {
+                for (otherBody in reusableBodySet) if (otherBody.getEntity().getType() == EntityType.BLOCK) {
                     passable = false
                     blockingBody = otherBody
                     break
                 }
 
-                passable
+                reusableBodySet.clear()
+
+                return@fitler passable
             },
             properties = props(ConstKeys.HEURISTIC pairTo DynamicBodyHeuristic(game))
         )
