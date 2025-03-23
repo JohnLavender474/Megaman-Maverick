@@ -9,7 +9,6 @@ import com.mega.game.engine.common.shapes.MinsAndMaxes
 import com.mega.game.engine.world.body.IBody
 import com.mega.game.engine.world.body.IFixture
 
-
 class SimpleGridWorldContainer(
     var ppm: Int,
     var bufferOffset: Int = 0,
@@ -119,12 +118,10 @@ class SimpleGridWorldContainer(
         val nonEmptyBodies = bodyMap.filter { it.value.isNotEmpty() }.map { "${it.key}=${it.value.size} bodies" }
         val nonEmptyFixtures = fixtureMap.filter { it.value.isNotEmpty() }.map { "${it.key}=${it.value.size} fixtures" }
         // Construct the final string with filtered entries
-        return "SimpleGridWorldContainer[" + "ppm=$ppm, " +
-                "bodies={${nonEmptyBodies.joinToString(separator = ", ")}}, " +
-                "fixtures={${
-                    nonEmptyFixtures.joinToString(
-                        separator = ", "
-                    )
-                }}]"
+        return "SimpleGridWorldContainer{\n" +
+                "\tppm=$ppm,\n" +
+                "\tbodies=[${nonEmptyBodies.joinToString(separator = ", ")}],\n" +
+                "\tfixtures=[${nonEmptyFixtures.joinToString(separator = ", ")}]\n" +
+            "}"
     }
 }

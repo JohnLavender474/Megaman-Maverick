@@ -27,8 +27,10 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
 
     companion object {
         const val TAG = "SpawnersLayerBuilder"
+
         private val ALWAYS_TRUE_PRED: (Float) -> Boolean = { true }
-        private fun PRED_BASED_ON_ROOMS_TRANS_FALSE(game: MegamanMaverickGame): (Float) -> Boolean {
+
+        private fun predBasedOnRoomTrans(game: MegamanMaverickGame): (Float) -> Boolean {
             return { !game.isProperty(ConstKeys.ROOM_TRANSITION, true) }
         }
     }
@@ -57,7 +59,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
 
         val shouldTestSpawnerPredicate: (Float) -> Boolean = when (entityType) {
             EntityType.BLOCK, EntityType.HAZARD, EntityType.SPECIAL, EntityType.DECORATION -> ALWAYS_TRUE_PRED
-            else -> PRED_BASED_ON_ROOMS_TRANS_FALSE(game)
+            else -> predBasedOnRoomTrans(game)
         }
 
         layer.objects.forEach {

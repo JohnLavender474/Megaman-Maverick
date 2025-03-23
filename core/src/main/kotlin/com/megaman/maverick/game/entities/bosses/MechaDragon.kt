@@ -172,24 +172,18 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IFreezableEnt
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
-
         if (stateTimers.isEmpty) stateTimers.putAll(
             MechaDragonState.INIT pairTo Timer(INIT_DUR),
             MechaDragonState.HOVER_IN_PLACE pairTo Timer(HOVER_IN_PLACE_DUR),
             MechaDragonState.TURNING_AROUND pairTo Timer(TURNING_AROUND_DUR)
         )
-
         super.init()
-
         addComponent(defineAnimationsComponent())
-
         stateMachine = buildStateMachine()
-
         damageOverrides.put(ChargedShotExplosion::class, dmgNeg(1))
         damageOverrides.put(SmallIceCube::class, dmgNeg(4))
     }
@@ -197,7 +191,6 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IFreezableEnt
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.MINI, true)
         spawnProps.put(ConstKeys.ORB, false)
-
         super.onSpawn(spawnProps)
 
         putProperty(ConstKeys.ENTITY_KILLED_BY_DEATH_FIXTURE, false)

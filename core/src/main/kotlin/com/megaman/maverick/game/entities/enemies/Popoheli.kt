@@ -53,7 +53,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
 import java.util.*
 
-class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.LARGE), IAnimatedEntity, IFaceable {
+class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "Popoheli"

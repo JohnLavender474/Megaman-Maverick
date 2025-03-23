@@ -38,13 +38,13 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
         const val TAG = "InfernoMeteorShower"
 
         private const val COOLDOWN_DUR = 3f
-        private const val METEOR_SHOWER_DUR = 3f
+        private const val METEOR_SHOWER_DUR = 4f
 
         private const val INIT_SPAWN_DELAY = 0.5f
         private const val MIN_CONTINUE_SPAWN_DELAY = 0.5f
         private const val MAX_CONTINUE_SPAWN_DELAY = 1f
 
-        private const val SHAKE_DUR = 1f
+        private const val SHAKE_DUR = 2f
         private const val SHAKE_INTERVAL = 0.1f
         private const val SHAKE_X = 0f
         private const val SHAKE_Y = 0.003125f
@@ -78,7 +78,6 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-
         super.onSpawn(spawnProps)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
@@ -104,9 +103,7 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
-
         super.onDestroy()
-
         spawners.clear()
     }
 
@@ -196,14 +193,14 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
             ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
-                this, objectSetOf(EventType.END_ROOM_TRANS), { event ->
+                this, objectSetOf(EventType.END_ROOM_TRANS), event@{ event ->
                     val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
                     val cull = room != spawnRoom
                     GameLogger.debug(
                         TAG,
                         "defineCullablesComponent(): currentRoom=$room, spawnRoom=$spawnRoom, cull=$cull"
                     )
-                    cull
+                    return@event cull
                 }
             )
         )

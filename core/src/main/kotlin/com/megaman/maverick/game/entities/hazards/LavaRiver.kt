@@ -82,14 +82,11 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             animDefs.keys().forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
-
         super.init()
-
         addComponent(defineBodyComponent())
         addComponent(defineCullablesComponent())
         addComponent(defineSpritesComponent())
@@ -98,7 +95,6 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-
         super.onSpawn(spawnProps)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!

@@ -46,7 +46,7 @@ object MegamanValues {
     const val JETPACK_Y_IMPULSE = 15f
     const val JETPACK_TIME_PER_BIT = 0.25f
 
-    const val GROUND_SLIDE_MIN_TIME = 0.25f
+    const val GROUND_SLIDE_MIN_TIME = 0.2f
     const val GROUND_SLIDE_MAX_TIME = 0.5f
     const val GROUND_SLIDE_VEL = 10f
     const val WATER_GROUND_SLIDE_VEL = 6f
