@@ -13,6 +13,7 @@ import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -37,6 +38,7 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -58,8 +60,11 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
         const val TAG = "SeaMine"
         private const val SENSOR_RADIUS = 2f
         private const val TIME_TO_BLOW = 1f
-        private const val CULL_TIME = 1f
         private const val SPEED = 1.5f
+        private val animDefs = orderedMapOf(
+            "wait" pairTo AnimationDef(1, 3, 0.2f, true),
+            "blow" pairTo AnimationDef(1, 2, 0.1f, true)
+        )
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -67,13 +72,10 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
     private val sensor = GameCircle().setRadius(SENSOR_RADIUS * ConstVals.PPM)
     private var triggered = false
 
-    override fun getType() = EntityType.HAZARD
-
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
-            regions.put("wait", atlas.findRegion("$TAG/wait"))
-            regions.put("blow", atlas.findRegion("$TAG/blow"))
+            animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         addComponent(defineBodyComponent())
         addComponent(defineUpdatablesComponent())
@@ -165,17 +167,24 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
-        return spritesComponent
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: (String?) -> String? = { if (triggered) "blow" else "wait" }
-        val animations = objectMapOf<String, IAnimation>(
-            "blow" pairTo Animation(regions["blow"], 1, 2, 0.1f, true), "wait" pairTo Animation(regions["wait"])
-        )
+        val animations = ObjectMap<String, IAnimation>()
+        animDefs.forEach { entry ->
+            val key = entry.key
+            val (rows, columns, durations, loop) = entry.value
+            animations.put(key, Animation(regions[key], rows, columns, durations, loop))
+        }
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
+
+    override fun getType() = EntityType.HAZARD
+
+    override fun getTag() = TAG
 }

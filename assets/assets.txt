@@ -324,14 +324,14 @@ sprites/frames/Enemies2/AstroAssAssaulter/shoot_up.png
 sprites/frames/Enemies2/AstroAssAssaulter/stand.png
 sprites/frames/Enemies2/AstroAssAssaulter/shoot.png
 sprites/frames/Enemies2/AngryFlameBall.png
-sprites/frames/Enemies2/SpikeBot/shoot_snow.png
-sprites/frames/Enemies2/SpikeBot/stand_snow.png
-sprites/frames/Enemies2/SpikeBot/stand.png
-sprites/frames/Enemies2/SpikeBot/jump.png
-sprites/frames/Enemies2/SpikeBot/jump_snow.png
-sprites/frames/Enemies2/SpikeBot/walk_snow.png
-sprites/frames/Enemies2/SpikeBot/shoot.png
-sprites/frames/Enemies2/SpikeBot/walk.png
+sprites/frames/Enemies2/SpikeBot/snow/stand.png
+sprites/frames/Enemies2/SpikeBot/snow/jump.png
+sprites/frames/Enemies2/SpikeBot/snow/shoot.png
+sprites/frames/Enemies2/SpikeBot/snow/walk.png
+sprites/frames/Enemies2/SpikeBot/cactus/stand.png
+sprites/frames/Enemies2/SpikeBot/cactus/jump.png
+sprites/frames/Enemies2/SpikeBot/cactus/shoot.png
+sprites/frames/Enemies2/SpikeBot/cactus/walk.png
 sprites/frames/Enemies2/ToxicBarrelBot/OpenTop.png
 sprites/frames/Enemies2/ToxicBarrelBot/Closed.png
 sprites/frames/Enemies2/ToxicBarrelBot/OpenCenter.png
@@ -497,6 +497,7 @@ sprites/frames/Explosions1/Disintegration.png
 sprites/frames/Explosions1/PreciousExplosion.png
 sprites/frames/Explosions1/IcicleShards.png
 sprites/frames/Explosions1/ChargedShotExplosion.png
+sprites/frames/Explosions1/IceBombExplosion.png
 sprites/frames/Explosions1/MagmaExplosion.png
 sprites/frames/Explosions1/SnowballExplode.png
 sprites/frames/Explosions1/HalfChargedShotExplosion.png
@@ -1491,6 +1492,7 @@ sprites/frames/Projectiles1/PreciousShot/Form.png
 sprites/frames/Projectiles1/PreciousShot/Shoot.png
 sprites/frames/Projectiles1/GreenPelletBlast/burst.png
 sprites/frames/Projectiles1/GreenPelletBlast/blast.png
+sprites/frames/Projectiles1/IceBomb.png
 sprites/frames/Projectiles1/BigAssMaverickRobotOrb/ball.png
 sprites/frames/Projectiles1/BigAssMaverickRobotOrb/hit.png
 sprites/frames/Projectiles1/FireWall/disintegrate.png
@@ -1713,6 +1715,8 @@ sprites/frames/Enemies1/Cactus/big/right.png
 sprites/frames/Enemies1/Cactus/big/flash_right.png
 sprites/frames/Enemies1/Cactus/big/frozen.png
 sprites/frames/Enemies1/Cactus/big/idle.png
+sprites/frames/Enemies1/IceFox/stand.png
+sprites/frames/Enemies1/IceFox/shoot.png
 sprites/frames/Enemies1/SniperJoe/snow/jump.png
 sprites/frames/Enemies1/SniperJoe/snow/turn.png
 sprites/frames/Enemies1/SniperJoe/snow/shoot.png
@@ -2471,6 +2475,7 @@ sprites/piskel/DarkSamus993-FireManTileset.piskel
 sprites/piskel/PropellerPlatform.piskel
 sprites/piskel/QuickSand_v2_TopLeft.piskel
 sprites/piskel/SprBGTomahawk_v2.piskel
+sprites/piskel/IceFox.piskel
 sprites/piskel/UF_Oh_No_Bot_1.piskel
 sprites/piskel/AstroAss.piskel
 sprites/piskel/Death_Bomb.piskel

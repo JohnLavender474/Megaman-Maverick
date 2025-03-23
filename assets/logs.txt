@@ -1,354 +1,147 @@
-===== SESSION STARTED: 2025-03-22T01:34:13.188125030 =====
-01:34:19 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_SPAWN, properties=Properties({
+===== SESSION STARTED: 2025-03-23T00:55:06.170779288 =====
+00:55:11 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_SPAWN, properties=Properties({
 }))
-01:34:19 | DEBUG | MegaLevelScreen | onEvent(): player spawn --> spawn Megaman: Properties({
-	[bounds=[160.0,192.0,32.0,32.0]]
-	[x=160.0]
+00:55:11 | DEBUG | MegaLevelScreen | onEvent(): player spawn --> spawn Megaman: Properties({
+	[bounds=[128.0,240.0,32.0,32.0]]
+	[x=128.0]
 	[height=32.0]
-	[id=228]
+	[id=169]
 	[name=0]
-	[y=192.0]
+	[y=240.0]
 	[width=32.0]
 })
-01:34:19 | LOG | MegaLevelScreen | event(): event=Event(key=HIDE_BACKGROUNDS, properties=Properties({
-	[bounds=[96.0,224.0,32.0,32.0]]
-	[x=96.0]
-	[height=32.0]
-	[id=198]
-	[name=EventTrigger]
-	[y=224.0]
-	[width=32.0]
-	[backgrounds=DesertSunSky]
+00:55:13 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_READY, properties=Properties({
 }))
-01:34:19 | LOG | MegaLevelScreen | event(): event=Event(key=HIDE_BACKGROUNDS, properties=Properties({
-	[bounds=[96.0,256.0,32.0,32.0]]
-	[x=96.0]
-	[height=32.0]
-	[id=765]
-	[name=EventTrigger]
-	[y=256.0]
-	[width=32.0]
-	[backgrounds=SunsetHills]
+00:55:31 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+	[value=3]
 }))
-01:34:19 | LOG | MegaLevelScreen | event(): event=Event(key=SHOW_BACKGROUNDS, properties=Properties({
-	[bounds=[96.0,192.0,32.0,32.0]]
-	[x=96.0]
-	[height=32.0]
-	[id=197]
-	[name=EventTrigger]
-	[y=192.0]
-	[width=32.0]
-	[backgrounds=SunriseHills]
+00:55:37 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
+	[value=3]
 }))
-01:34:21 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_READY, properties=Properties({
+00:55:46 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
+	[value=3]
 }))
-01:34:21 | DEBUG | MegaLevelScreen | render(): pause game
-01:34:24 | DEBUG | MegaLevelScreen | reset(): Resetting level screen
-01:34:41 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_SPAWN, properties=Properties({
+00:56:07 | DEBUG | MegaLevelScreen | render(): pause game
+00:56:17 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+00:56:17 | DEBUG | MegaLevelScreen | playerSpawnsMan(): onChangeSpawn(): current=1, old=0
+00:56:18 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+00:56:22 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+00:56:23 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+00:56:29 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+	[value=3]
 }))
-01:34:41 | DEBUG | MegaLevelScreen | onEvent(): player spawn --> spawn Megaman: Properties({
-	[bounds=[160.0,192.0,32.0,32.0]]
-	[x=160.0]
-	[height=32.0]
-	[id=228]
-	[name=0]
-	[y=192.0]
-	[width=32.0]
-})
-01:34:41 | LOG | MegaLevelScreen | event(): event=Event(key=HIDE_BACKGROUNDS, properties=Properties({
-	[bounds=[96.0,224.0,32.0,32.0]]
-	[x=96.0]
-	[height=32.0]
-	[id=198]
-	[name=EventTrigger]
-	[y=224.0]
-	[width=32.0]
-	[backgrounds=DesertSunSky]
+00:56:31 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+00:56:32 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+00:56:45 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+	[value=3]
 }))
-01:34:41 | LOG | MegaLevelScreen | event(): event=Event(key=HIDE_BACKGROUNDS, properties=Properties({
-	[bounds=[96.0,256.0,32.0,32.0]]
-	[x=96.0]
-	[height=32.0]
-	[id=765]
-	[name=EventTrigger]
-	[y=256.0]
-	[width=32.0]
-	[backgrounds=SunsetHills]
+00:56:46 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+00:56:48 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+00:56:54 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+00:56:54 | DEBUG | MegaLevelScreen | playerSpawnsMan(): onChangeSpawn(): current=2, old=1
+00:56:55 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+00:57:00 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
+	[value=3]
 }))
-01:34:41 | LOG | MegaLevelScreen | event(): event=Event(key=SHOW_BACKGROUNDS, properties=Properties({
-	[bounds=[96.0,192.0,32.0,32.0]]
-	[x=96.0]
-	[height=32.0]
-	[id=197]
-	[name=EventTrigger]
-	[y=192.0]
-	[width=32.0]
-	[backgrounds=SunriseHills]
+00:57:07 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+	[value=3]
 }))
-01:34:43 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_READY, properties=Properties({
-}))
-01:34:47 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
+00:57:15 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
 	[value=6]
 }))
-01:34:51 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+00:57:18 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
 	[value=3]
 }))
-01:34:54 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
+00:57:19 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+	[value=3]
+}))
+00:57:20 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+00:57:20 | DEBUG | MegaLevelScreen | playerSpawnsMan(): onChangeSpawn(): current=3, old=2
+00:57:21 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+00:57:23 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+00:57:24 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+00:57:48 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
+	[value=3]
+}))
+00:58:36 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+00:58:37 | DEBUG | MegaLevelScreen | playerSpawnsMan(): onChangeSpawn(): current=4, old=3
+00:58:38 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+00:58:43 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+00:58:44 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+00:58:47 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
 	[value=6]
 }))
-01:35:01 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
+00:58:53 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
 	[value=6]
 }))
-01:35:07 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
+00:58:54 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
 	[value=3]
 }))
-01:35:15 | DEBUG | MegaLevelScreen | on set to room no trans
-01:35:16 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+00:58:58 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
 	[value=3]
 }))
-01:35:16 | DEBUG | MegaLevelScreen | playerSpawnsMan(): onChangeSpawn(): current=1, old=0
-01:35:25 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+00:59:01 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
+	[value=3]
+}))
+00:59:07 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
+	[value=3]
+}))
+00:59:20 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
+	[value=3]
+}))
+00:59:31 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
 	[value=6]
 }))
-01:35:31 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
-	[value=3]
-}))
-01:35:36 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+00:59:36 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
 	[value=6]
 }))
-01:35:40 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
-	[value=3]
-}))
-01:35:45 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
-	[value=3]
-}))
-01:35:49 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
-	[value=3]
-}))
-01:35:52 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
-01:35:53 | DEBUG | MegaLevelScreen | end transition logic for camera manager
-01:35:57 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
-	[value=3]
-}))
-01:36:03 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
-	[value=3]
-}))
-01:36:04 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
-01:36:05 | DEBUG | MegaLevelScreen | end transition logic for camera manager
-01:36:10 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
-	[value=3]
-}))
-01:36:22 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
+00:59:44 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
 	[value=6]
 }))
-01:36:23 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
-01:36:25 | DEBUG | MegaLevelScreen | end transition logic for camera manager
-01:36:31 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
-01:36:31 | LOG | MegaLevelScreen | event(): event=Event(key=HIDE_BACKGROUNDS, properties=Properties({
-	[bounds=[7040.0,1120.0,32.0,32.0]]
-	[x=7040.0]
-	[height=32.0]
-	[id=335]
-	[name=EventTrigger]
-	[y=1120.0]
-	[width=32.0]
-	[backgrounds=DesertSunSky]
-}))
-01:36:31 | LOG | MegaLevelScreen | event(): event=Event(key=HIDE_BACKGROUNDS, properties=Properties({
-	[bounds=[7040.0,1184.0,32.0,32.0]]
-	[x=7040.0]
-	[height=32.0]
-	[id=767]
-	[name=EventTrigger]
-	[y=1184.0]
-	[width=32.0]
-	[backgrounds=SunsetHills]
-}))
-01:36:31 | LOG | MegaLevelScreen | event(): event=Event(key=SHOW_BACKGROUNDS, properties=Properties({
-	[bounds=[7040.0,1152.0,32.0,32.0]]
-	[x=7040.0]
-	[height=32.0]
-	[id=334]
-	[name=EventTrigger]
-	[y=1152.0]
-	[width=32.0]
-	[backgrounds=SunriseHills]
-}))
-01:36:32 | DEBUG | MegaLevelScreen | playerSpawnsMan(): onChangeSpawn(): current=2, old=1
-01:36:32 | DEBUG | MegaLevelScreen | end transition logic for camera manager
-01:36:37 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+00:59:45 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+00:59:45 | DEBUG | MegaLevelScreen | playerSpawnsMan(): onChangeSpawn(): current=5, old=4
+00:59:46 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+00:59:55 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
 	[value=3]
 }))
-01:36:42 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+00:59:56 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
+	[value=3]
+}))
+00:59:59 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
 	[value=6]
 }))
-01:36:54 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+01:00:05 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
 	[value=3]
 }))
-01:37:04 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
+01:00:10 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
 	[value=3]
 }))
-01:37:10 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
-	[value=3]
+01:00:10 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_OPENING, properties=Properties({
 }))
-01:37:20 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
-	[value=3]
+01:00:11 | LOG | MegaLevelScreen | event(): event=Event(key=NEXT_ROOM_REQ, properties=Properties({
+	[room=room12]
 }))
-01:37:24 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
-	[value=3]
+01:00:11 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+01:00:11 | DEBUG | MegaLevelScreen | playerSpawnsMan(): onChangeSpawn(): current=6, old=5
+01:00:12 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+01:00:12 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_CLOSING, properties=Properties({
 }))
-01:37:27 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
-	[value=3]
+01:00:13 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_OPENING, properties=Properties({
 }))
-01:37:27 | LOG | MegaLevelScreen | event(): event=Event(key=HIDE_BACKGROUNDS, properties=Properties({
-	[bounds=[10656.0,1216.0,32.0,32.0]]
-	[x=10656.0]
-	[height=32.0]
-	[id=721]
-	[name=EventTrigger]
-	[y=1216.0]
-	[width=32.0]
-	[backgrounds=SunriseHills]
+01:00:14 | LOG | MegaLevelScreen | event(): event=Event(key=NEXT_ROOM_REQ, properties=Properties({
+	[room=boss_room]
 }))
-01:37:27 | LOG | MegaLevelScreen | event(): event=Event(key=SHOW_BACKGROUNDS, properties=Properties({
-	[bounds=[10656.0,1184.0,32.0,32.0]]
-	[x=10656.0]
-	[height=32.0]
-	[id=720]
-	[name=EventTrigger]
-	[y=1184.0]
-	[width=32.0]
-	[backgrounds=DesertSunSky]
+01:00:14 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+01:00:15 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+01:00:15 | LOG | MegaLevelScreen | event(): event=Event(key=ENTER_BOSS_ROOM, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@7661e474]
 }))
-01:37:27 | LOG | MegaLevelScreen | event(): event=Event(key=SHOW_BACKGROUNDS, properties=Properties({
-	[bounds=[10656.0,1248.0,32.0,32.0]]
-	[x=10656.0]
-	[height=32.0]
-	[id=768]
-	[name=EventTrigger]
-	[y=1248.0]
-	[width=32.0]
-	[backgrounds=SunsetHills]
+01:00:15 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_CLOSING, properties=Properties({
 }))
-01:37:28 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
-01:37:29 | DEBUG | MegaLevelScreen | playerSpawnsMan(): onChangeSpawn(): current=3, old=2
-01:37:30 | DEBUG | MegaLevelScreen | end transition logic for camera manager
-01:37:35 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
-	[value=6]
+01:00:16 | LOG | MegaLevelScreen | event(): event=Event(key=BOSS_READY, properties=Properties({
+	[boss={ GlacierMan:[mapObjId=445, dead=false, hashCode=751262501] }]
+	[health_fill_type=BIT_BY_BIT]
 }))
-01:37:39 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
-	[value=3]
+01:00:19 | LOG | MegaLevelScreen | event(): event=Event(key=END_BOSS_SPAWN, properties=Properties({
 }))
-01:37:51 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
-	[value=3]
-}))
-01:37:55 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
-	[value=6]
-}))
-01:38:02 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_JUST_DIED, properties=Properties({
-}))
-01:38:06 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_DONE_DYIN, properties=Properties({
-}))
-01:38:06 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_SPAWN, properties=Properties({
-}))
-01:38:06 | DEBUG | MegaLevelScreen | onEvent(): player spawn --> spawn Megaman: Properties({
-	[bounds=[10784.0,1184.0,32.0,32.0]]
-	[x=10784.0]
-	[height=32.0]
-	[id=390]
-	[name=3]
-	[y=1184.0]
-	[width=32.0]
-})
-01:38:06 | LOG | MegaLevelScreen | event(): event=Event(key=HIDE_BACKGROUNDS, properties=Properties({
-	[bounds=[10656.0,1216.0,32.0,32.0]]
-	[x=10656.0]
-	[height=32.0]
-	[id=721]
-	[name=EventTrigger]
-	[y=1216.0]
-	[width=32.0]
-	[backgrounds=SunriseHills]
-}))
-01:38:06 | LOG | MegaLevelScreen | event(): event=Event(key=SHOW_BACKGROUNDS, properties=Properties({
-	[bounds=[10656.0,1184.0,32.0,32.0]]
-	[x=10656.0]
-	[height=32.0]
-	[id=720]
-	[name=EventTrigger]
-	[y=1184.0]
-	[width=32.0]
-	[backgrounds=DesertSunSky]
-}))
-01:38:06 | LOG | MegaLevelScreen | event(): event=Event(key=SHOW_BACKGROUNDS, properties=Properties({
-	[bounds=[10656.0,1248.0,32.0,32.0]]
-	[x=10656.0]
-	[height=32.0]
-	[id=768]
-	[name=EventTrigger]
-	[y=1248.0]
-	[width=32.0]
-	[backgrounds=SunsetHills]
-}))
-01:38:08 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_READY, properties=Properties({
-}))
-01:38:14 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
-	[value=3]
-}))
-01:38:18 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
-	[value=3]
-}))
-01:38:27 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
-	[value=3]
-}))
-01:38:31 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
-	[value=3]
-}))
-01:38:43 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_JUST_DIED, properties=Properties({
-}))
-01:38:47 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_DONE_DYIN, properties=Properties({
-}))
-01:38:47 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_SPAWN, properties=Properties({
-}))
-01:38:47 | DEBUG | MegaLevelScreen | onEvent(): player spawn --> spawn Megaman: Properties({
-	[bounds=[10784.0,1184.0,32.0,32.0]]
-	[x=10784.0]
-	[height=32.0]
-	[id=390]
-	[name=3]
-	[y=1184.0]
-	[width=32.0]
-})
-01:38:47 | LOG | MegaLevelScreen | event(): event=Event(key=HIDE_BACKGROUNDS, properties=Properties({
-	[bounds=[10656.0,1216.0,32.0,32.0]]
-	[x=10656.0]
-	[height=32.0]
-	[id=721]
-	[name=EventTrigger]
-	[y=1216.0]
-	[width=32.0]
-	[backgrounds=SunriseHills]
-}))
-01:38:47 | LOG | MegaLevelScreen | event(): event=Event(key=SHOW_BACKGROUNDS, properties=Properties({
-	[bounds=[10656.0,1184.0,32.0,32.0]]
-	[x=10656.0]
-	[height=32.0]
-	[id=720]
-	[name=EventTrigger]
-	[y=1184.0]
-	[width=32.0]
-	[backgrounds=DesertSunSky]
-}))
-01:38:47 | LOG | MegaLevelScreen | event(): event=Event(key=SHOW_BACKGROUNDS, properties=Properties({
-	[bounds=[10656.0,1248.0,32.0,32.0]]
-	[x=10656.0]
-	[height=32.0]
-	[id=768]
-	[name=EventTrigger]
-	[y=1248.0]
-	[width=32.0]
-	[backgrounds=SunsetHills]
-}))
-01:38:49 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_READY, properties=Properties({
-}))
-01:38:52 | DEBUG | MegaLevelScreen | dispose(): Disposing level screen
+01:00:23 | DEBUG | MegaLevelScreen | dispose(): Disposing level screen

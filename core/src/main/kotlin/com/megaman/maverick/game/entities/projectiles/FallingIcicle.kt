@@ -1,9 +1,11 @@
 package com.megaman.maverick.game.entities.projectiles
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -64,6 +66,8 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
 
     private lateinit var state: FallingIcicleState
 
+    private val ignore = ObjectSet<Int>()
+
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
@@ -99,6 +103,13 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         shakeTimer.reset()
         shatterTimer.reset()
 
+        spawnProps.forEach { key, value ->
+            if (key.toString().contains(ConstKeys.IGNORE)) {
+                val id = (value as RectangleMapObject).properties.get(ConstKeys.ID, Int::class.java)
+                ignore.add(id)
+            }
+        }
+
         val facing = spawnProps.get(ConstKeys.FACING)
         this.facing = when (facing) {
             is String -> Facing.valueOf(facing.uppercase())
@@ -110,6 +121,7 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        ignore.clear()
     }
 
     override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
@@ -118,13 +130,20 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         explodeAndDie()
     }
 
-    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        val id = blockFixture.getEntity().mapObjectId
+        if (ignore.contains(id)) return
+        explodeAndDie()
+    }
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = bodyFixture.getEntity()
         if ((entity is IDamageable && canDamage(entity)) || BODIES_TO_IGNORE.contains(entity.getTag())) return
         explodeAndDie()
     }
+
+    override fun hitExplosion(explosionFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
+        explodeAndDie()
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 

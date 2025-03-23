@@ -5,21 +5,21 @@ filter: Nearest,Nearest
 repeat: none
 Asteroid
   rotate: false
-  xy: 312, 0
+  xy: 320, 0
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 Asteroid/Blue
   rotate: false
-  xy: 336, 0
+  xy: 344, 0
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 Asteroid/Regular
   rotate: false
-  xy: 360, 0
+  xy: 368, 0
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
@@ -47,7 +47,7 @@ BouncingPebble
   index: -1
 Bullet
   rotate: false
-  xy: 440, 0
+  xy: 448, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -68,7 +68,7 @@ CacaFlame/fall
   index: -1
 CannonBall
   rotate: false
-  xy: 472, 0
+  xy: 480, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -103,7 +103,7 @@ ChargedShot_v2
   index: -1
 CryoPellet
   rotate: false
-  xy: 384, 0
+  xy: 392, 0
   size: 8, 24
   orig: 8, 24
   offset: 0, 0
@@ -220,6 +220,13 @@ HoneyDrip/splash
   orig: 32, 96
   offset: 0, 0
   index: -1
+IceBomb
+  rotate: false
+  xy: 88, 0
+  size: 8, 16
+  orig: 8, 16
+  offset: 0, 0
+  index: -1
 JoeBall
   rotate: false
   xy: 0, 64
@@ -320,14 +327,14 @@ PurpleBlast/Charge
   index: -1
 ReactorManProjectile/big
   rotate: false
-  xy: 88, 0
+  xy: 96, 0
   size: 48, 16
   orig: 48, 16
   offset: 0, 0
   index: -1
 ReactorManProjectile/die
   rotate: false
-  xy: 136, 0
+  xy: 144, 0
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
@@ -383,7 +390,7 @@ RollingBotShot
   index: -1
 SealionBall
   rotate: false
-  xy: 392, 0
+  xy: 400, 0
   size: 48, 30
   orig: 48, 30
   offset: 0, 0
@@ -411,7 +418,7 @@ Snowball
   index: -1
 Snowball2
   rotate: false
-  xy: 168, 0
+  xy: 176, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -453,7 +460,7 @@ SpiderWeb/White
   index: -1
 ToxicGoopShot
   rotate: false
-  xy: 184, 0
+  xy: 192, 0
   size: 48, 16
   orig: 48, 16
   offset: 0, 0
@@ -474,7 +481,7 @@ TubeBeam_short
   index: -1
 UFOBomb
   rotate: false
-  xy: 232, 0
+  xy: 240, 0
   size: 80, 16
   orig: 80, 16
   offset: 0, 0

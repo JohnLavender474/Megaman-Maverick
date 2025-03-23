@@ -345,6 +345,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Projectiles1/DuoBall.png</key>
+            <key type="filename">../frames/Projectiles1/IceBomb.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

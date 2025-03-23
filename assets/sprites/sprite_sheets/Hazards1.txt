@@ -110,14 +110,14 @@ Flame2
   index: -1
 Flame3/Still
   rotate: false
-  xy: 511, 32
+  xy: 575, 32
   size: 100, 33
   orig: 100, 33
   offset: 0, 0
   index: -1
 Flame3/Whoosh
   rotate: false
-  xy: 611, 32
+  xy: 675, 32
   size: 100, 33
   orig: 100, 33
   offset: 0, 0
@@ -208,7 +208,7 @@ Lava/FallBlack
   index: -1
 Lava/Flow
   rotate: false
-  xy: 711, 32
+  xy: 775, 32
   size: 100, 33
   orig: 100, 33
   offset: 0, 0
@@ -271,14 +271,14 @@ LavaBeamer
   index: -1
 LavaBeamer/Off
   rotate: false
-  xy: 811, 32
+  xy: 875, 32
   size: 64, 44
   orig: 64, 44
   offset: 0, 0
   index: -1
 LavaBeamer/On
   rotate: false
-  xy: 875, 32
+  xy: 939, 32
   size: 64, 44
   orig: 64, 44
   offset: 0, 0
@@ -391,8 +391,8 @@ SeaMine/blow
 SeaMine/wait
   rotate: false
   xy: 128, 32
-  size: 32, 32
-  orig: 32, 32
+  size: 96, 32
+  orig: 96, 32
   offset: 0, 0
   index: -1
 Spike1
@@ -404,42 +404,42 @@ Spike1
   index: -1
 Spike2
   rotate: false
-  xy: 160, 32
+  xy: 224, 32
   size: 30, 32
   orig: 30, 32
   offset: 0, 0
   index: -1
 Spike3
   rotate: false
-  xy: 190, 32
+  xy: 254, 32
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: -1
 Spike4
   rotate: false
-  xy: 223, 32
+  xy: 287, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Spike5
   rotate: false
-  xy: 255, 32
+  xy: 319, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Spike6
   rotate: false
-  xy: 287, 32
+  xy: 351, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Spike7
   rotate: false
-  xy: 319, 32
+  xy: 383, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -453,7 +453,7 @@ SpikeBall/Chain
   index: -1
 SpikeBall/SpikeBall
   rotate: false
-  xy: 351, 32
+  xy: 415, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -495,14 +495,14 @@ UnderwaterFan
   index: -1
 WanaanLauncher/bust
   rotate: false
-  xy: 383, 32
+  xy: 447, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 WanaanLauncher/launcher
   rotate: false
-  xy: 447, 32
+  xy: 511, 32
   size: 64, 32
   orig: 64, 32
   offset: 0, 0

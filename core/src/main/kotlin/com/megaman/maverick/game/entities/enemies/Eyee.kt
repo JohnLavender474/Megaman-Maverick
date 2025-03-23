@@ -42,12 +42,14 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
+import kotlin.math.min
 
 class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity {
 
     companion object {
         const val TAG = "Eyee"
-        private const val SPEED = 10f
+        private const val MAX_SPEED = 10f
+        private const val SPEED_DELTA = 20f
         private const val WAIT_DUR = 1f
         private const val CULL_TIME = 2f
         private var openRegion: TextureRegion? = null
@@ -68,6 +70,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
     private lateinit var start: Vector2
     private lateinit var end: Vector2
 
+    private var speed = 0f
     private var progress = 0f
 
     override fun init() {
@@ -95,6 +98,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
         loop.reset()
         waitTimer.reset()
 
+        speed = 0f
         progress = 0f
 
         GameLogger.debug(TAG, "Movement scalar = $movementScalar")
@@ -105,12 +109,14 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
         updatablesComponent.add { delta ->
             if (!canMove) {
                 body.physics.velocity.setZero()
+                speed = 0f
                 return@add
             }
 
             when (currentState) {
                 EyeeState.MOVING_TO_END -> {
-                    progress += SPEED * movementScalar * ConstVals.PPM * (delta / start.dst(end))
+                    speed = min(MAX_SPEED, speed + SPEED_DELTA * delta)
+                    progress += speed * movementScalar * ConstVals.PPM * (delta / start.dst(end))
                     if (progress >= 1f) {
                         progress = 1f
                         loop.next()
@@ -122,12 +128,14 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
                     waitTimer.update(delta)
                     if (waitTimer.isFinished()) {
                         loop.next()
+                        speed = 0f
                         progress = 1f
                     }
                 }
 
                 EyeeState.MOVING_TO_START -> {
-                    progress -= SPEED * movementScalar * ConstVals.PPM * (delta / start.dst(end))
+                    speed = min(MAX_SPEED, speed + SPEED_DELTA * delta)
+                    progress -= speed * movementScalar * ConstVals.PPM * (delta / start.dst(end))
                     if (progress <= 0f) {
                         progress = 0f
                         loop.next()
@@ -139,6 +147,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
                     waitTimer.update(delta)
                     if (waitTimer.isFinished()) {
                         loop.next()
+                        speed = 0f
                         progress = 0f
                     }
                 }

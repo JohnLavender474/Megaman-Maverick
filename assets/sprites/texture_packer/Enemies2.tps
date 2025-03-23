@@ -755,9 +755,8 @@
             <key type="filename">../frames/Enemies2/IceSkaterPeng/brake.png</key>
             <key type="filename">../frames/Enemies2/IceSkaterPeng/jump2.png</key>
             <key type="filename">../frames/Enemies2/IceSkaterPeng/skate.png</key>
-            <key type="filename">../frames/Enemies2/SpikeBot/shoot.png</key>
-            <key type="filename">../frames/Enemies2/SpikeBot/walk.png</key>
-            <key type="filename">../frames/Enemies2/SpikeBot/walk_snow.png</key>
+            <key type="filename">../frames/Enemies2/SpikeBot/cactus/walk.png</key>
+            <key type="filename">../frames/Enemies2/SpikeBot/snow/walk.png</key>
             <key type="filename">../frames/Enemies2/Tropish/swim.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -911,10 +910,10 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Enemies2/SpikeBot/jump.png</key>
-            <key type="filename">../frames/Enemies2/SpikeBot/jump_snow.png</key>
-            <key type="filename">../frames/Enemies2/SpikeBot/stand.png</key>
-            <key type="filename">../frames/Enemies2/SpikeBot/stand_snow.png</key>
+            <key type="filename">../frames/Enemies2/SpikeBot/cactus/jump.png</key>
+            <key type="filename">../frames/Enemies2/SpikeBot/cactus/stand.png</key>
+            <key type="filename">../frames/Enemies2/SpikeBot/snow/jump.png</key>
+            <key type="filename">../frames/Enemies2/SpikeBot/snow/stand.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -929,7 +928,8 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Enemies2/SpikeBot/shoot_snow.png</key>
+            <key type="filename">../frames/Enemies2/SpikeBot/cactus/shoot.png</key>
+            <key type="filename">../frames/Enemies2/SpikeBot/snow/shoot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -938,9 +938,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>6,40,12,80</rect>
+                <rect>30,8,60,16</rect>
                 <key>scale9Paddings</key>
-                <rect>6,40,12,80</rect>
+                <rect>30,8,60,16</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

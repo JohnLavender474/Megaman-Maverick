@@ -545,6 +545,8 @@
             <key type="filename">../frames/Enemies1/GreenUziJoe/stand.png</key>
             <key type="filename">../frames/Enemies1/GreenUziJoe/stand_shoot.png</key>
             <key type="filename">../frames/Enemies1/GreenUziJoe/stand_shoot_start.png</key>
+            <key type="filename">../frames/Enemies1/IceFox/shoot.png</key>
+            <key type="filename">../frames/Enemies1/IceFox/stand.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -568,6 +570,11 @@
             <key type="filename">../frames/Enemies1/NuttGlider/glide_nutt.png</key>
             <key type="filename">../frames/Enemies1/NuttGlider/jump.png</key>
             <key type="filename">../frames/Enemies1/NuttGlider/jump_nutt.png</key>
+            <key type="filename">../frames/Enemies1/SubmarineJoe/idle.png</key>
+            <key type="filename">../frames/Enemies1/SubmarineJoe/open2.png</key>
+            <key type="filename">../frames/Enemies1/SubmarineJoe/open3.png</key>
+            <key type="filename">../frames/Enemies1/SubmarineJoe/open4.png</key>
+            <key type="filename">../frames/Enemies1/SubmarineJoe/open6.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -769,6 +776,7 @@
             <key type="filename">../frames/Enemies1/PreciousJoe/Shoot.png</key>
             <key type="filename">../frames/Enemies1/PreciousJoe/Stand.png</key>
             <key type="filename">../frames/Enemies1/Ratton/frozen.png</key>
+            <key type="filename">../frames/Enemies1/SubmarineJoe/open1.png</key>
             <key type="filename">../frames/Enemies1/SwinginJoe/throw.png</key>
             <key type="filename">../frames/Enemies1/WispyWasp/Nest.png</key>
             <struct type="IndividualSpriteSettings">

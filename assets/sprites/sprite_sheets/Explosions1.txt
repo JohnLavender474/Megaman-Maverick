@@ -1,11 +1,11 @@
 Explosions1.png
-size: 832, 608
+size: 1008, 584
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 AsteroidExplosion
   rotate: false
-  xy: 32, 128
+  xy: 960, 32
   size: 48, 72
   orig: 48, 72
   offset: 0, 0
@@ -26,7 +26,7 @@ BigAssMaverickRobotOrbExplosion/ElectricPulse
   index: -1
 ChargedShotExplosion
   rotate: false
-  xy: 80, 128
+  xy: 0, 104
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
@@ -47,23 +47,30 @@ Disintegration
   index: -1
 Explosion
   rotate: false
-  xy: 0, 64
+  xy: 96, 32
   size: 704, 64
   orig: 704, 64
   offset: 0, 0
   index: -1
 ExplosionOrb
   rotate: false
-  xy: 704, 64
+  xy: 800, 32
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 HalfChargedShotExplosion
   rotate: false
-  xy: 112, 128
+  xy: 32, 104
   size: 32, 96
   orig: 32, 96
+  offset: 0, 0
+  index: -1
+IceBombExplosion
+  rotate: false
+  xy: 64, 104
+  size: 192, 192
+  orig: 192, 192
   offset: 0, 0
   index: -1
 IcicleShards
@@ -75,14 +82,14 @@ IcicleShards
   index: -1
 MagmaExplosion
   rotate: false
-  xy: 144, 128
+  xy: 256, 104
   size: 192, 192
   orig: 192, 192
   offset: 0, 0
   index: -1
 MagmaGoopExplosion
   rotate: false
-  xy: 0, 128
+  xy: 928, 32
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
@@ -96,35 +103,35 @@ PreciousExplosion
   index: -1
 SmokePuff
   rotate: false
-  xy: 0, 32
+  xy: 784, 0
   size: 224, 32
   orig: 224, 32
   offset: 0, 0
   index: -1
 SnowballExplode
   rotate: false
-  xy: 224, 32
+  xy: 0, 32
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 SpreadExplosion/default
   rotate: false
-  xy: 0, 320
+  xy: 0, 296
   size: 384, 288
   orig: 384, 288
   offset: 0, 0
   index: -1
 SpreadExplosion/green
   rotate: false
-  xy: 384, 320
+  xy: 384, 296
   size: 384, 288
   orig: 384, 288
   offset: 0, 0
   index: -1
 StarExplosion
   rotate: false
-  xy: 336, 128
+  xy: 448, 104
   size: 192, 192
   orig: 192, 192
   offset: 0, 0
@@ -138,7 +145,7 @@ ToxicGoopSplash
   index: -1
 TubeBeamExplosion
   rotate: false
-  xy: 528, 128
+  xy: 640, 104
   size: 192, 192
   orig: 192, 192
   offset: 0, 0

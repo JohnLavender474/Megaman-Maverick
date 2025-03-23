@@ -75,14 +75,14 @@ AxeJoe/cooldown_shielded
   index: -1
 AxeJoe/jump
   rotate: false
-  xy: 750, 70
+  xy: 846, 70
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 AxeJoe/jump_shielded
   rotate: false
-  xy: 792, 70
+  xy: 888, 70
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
@@ -691,7 +691,7 @@ PenguinBot/rise
   index: -1
 PenguinBot/stand
   rotate: false
-  xy: 834, 70
+  xy: 930, 70
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
@@ -808,56 +808,56 @@ SnowheadThrower/throw_head
   orig: 160, 32
   offset: 0, 0
   index: -1
-SpikeBot/jump
+SpikeBot/cactus/jump
   rotate: false
   xy: 726, 36
   size: 24, 32
   orig: 24, 32
   offset: 0, 0
   index: -1
-SpikeBot/jump_snow
+SpikeBot/cactus/shoot
   rotate: false
   xy: 752, 36
-  size: 24, 32
-  orig: 24, 32
-  offset: 0, 0
-  index: -1
-SpikeBot/shoot
-  rotate: false
-  xy: 778, 36
   size: 120, 32
   orig: 120, 32
   offset: 0, 0
   index: -1
-SpikeBot/shoot_snow
+SpikeBot/cactus/stand
   rotate: false
-  xy: 900, 36
-  size: 120, 32
-  orig: 120, 32
-  offset: 0, 0
-  index: -1
-SpikeBot/stand
-  rotate: false
-  xy: 2, 70
+  xy: 874, 36
   size: 24, 32
   orig: 24, 32
   offset: 0, 0
   index: -1
-SpikeBot/stand_snow
-  rotate: false
-  xy: 28, 70
-  size: 24, 32
-  orig: 24, 32
-  offset: 0, 0
-  index: -1
-SpikeBot/walk
+SpikeBot/cactus/walk
   rotate: false
   xy: 396, 376
   size: 48, 64
   orig: 48, 64
   offset: 0, 0
   index: -1
-SpikeBot/walk_snow
+SpikeBot/snow/jump
+  rotate: false
+  xy: 900, 36
+  size: 24, 32
+  orig: 24, 32
+  offset: 0, 0
+  index: -1
+SpikeBot/snow/shoot
+  rotate: false
+  xy: 2, 70
+  size: 120, 32
+  orig: 120, 32
+  offset: 0, 0
+  index: -1
+SpikeBot/snow/stand
+  rotate: false
+  xy: 124, 70
+  size: 24, 32
+  orig: 24, 32
+  offset: 0, 0
+  index: -1
+SpikeBot/snow/walk
   rotate: false
   xy: 446, 376
   size: 48, 64
@@ -873,7 +873,7 @@ StagedMoonLandingFlag/fall
   index: -1
 StagedMoonLandingFlag/hidden
   rotate: false
-  xy: 54, 70
+  xy: 150, 70
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -894,28 +894,28 @@ StagedMoonLandingFlag/shield
   index: -1
 StagedMoonLandingFlag/stand
   rotate: false
-  xy: 88, 70
+  xy: 184, 70
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Taketenko/Fly
   rotate: false
-  xy: 122, 70
+  xy: 218, 70
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Taketenko/Propeller
   rotate: false
-  xy: 156, 70
+  xy: 252, 70
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Taketenko/Spin
   rotate: false
-  xy: 222, 70
+  xy: 318, 70
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
@@ -929,7 +929,7 @@ TankBot/roll
   index: -1
 TankBot/stop
   rotate: false
-  xy: 876, 70
+  xy: 972, 70
   size: 48, 40
   orig: 48, 40
   offset: 0, 0
@@ -943,28 +943,28 @@ TankBot/turn
   index: -1
 Togglee/Left
   rotate: false
-  xy: 320, 70
+  xy: 416, 70
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Togglee/Right
   rotate: false
-  xy: 386, 70
+  xy: 482, 70
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Togglee/SwitchToLeft
   rotate: false
-  xy: 452, 70
+  xy: 548, 70
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 Togglee/SwitchToRight
   rotate: false
-  xy: 550, 70
+  xy: 646, 70
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
@@ -1132,14 +1132,14 @@ UpNDown/Red
   index: -1
 WallTeck/angry
   rotate: false
-  xy: 648, 70
+  xy: 744, 70
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 WallTeck/still
   rotate: false
-  xy: 682, 70
+  xy: 778, 70
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -1188,7 +1188,7 @@ Wanaan/chomp
   index: -1
 Wanaan/frozen
   rotate: false
-  xy: 716, 70
+  xy: 812, 70
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

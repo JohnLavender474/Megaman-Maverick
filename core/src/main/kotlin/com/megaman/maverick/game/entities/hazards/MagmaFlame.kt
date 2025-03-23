@@ -52,7 +52,7 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     companion object {
         const val TAG = "MagmaFlame"
-        private const val DURATION = 0.2f
+        private const val DURATION = 0.75f
         private const val GRAVITY = 0.15f
         private const val GROUND_GRAVITY = 0.01f
         private var region: TextureRegion? = null
@@ -67,6 +67,7 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     private val timer = Timer(DURATION)
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
         super.init()
         addComponent(AudioComponent())
