@@ -1,75 +1,147 @@
-===== SESSION STARTED: 2025-03-25T12:33:12.512811136 =====
-12:33:27 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_SPAWN, properties=Properties({
+===== SESSION STARTED: 2025-03-25T13:17:25.405836348 =====
+13:17:30 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_SPAWN, properties=Properties({
 }))
-12:33:27 | DEBUG | MegaLevelScreen | onEvent(): player spawn --> spawn Megaman: Properties({
-	[bounds=[96.0,64.0,32.0,32.0]]
+13:17:30 | DEBUG | MegaLevelScreen | onEvent(): player spawn --> spawn Megaman: Properties({
+	[bounds=[96.0,2464.0,32.0,32.0]]
 	[x=96.0]
 	[height=32.0]
-	[id=12]
+	[id=14]
 	[name=0]
-	[y=64.0]
+	[y=2464.0]
 	[width=32.0]
 })
-12:33:30 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_READY, properties=Properties({
+13:17:32 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_READY, properties=Properties({
 }))
-12:33:34 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
-	[value=3]
+13:17:35 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
+	[value=4]
 }))
-12:33:36 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
-12:33:38 | DEBUG | MegaLevelScreen | end transition logic for camera manager
-12:33:47 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
-12:33:48 | DEBUG | MegaLevelScreen | end transition logic for camera manager
-12:33:54 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
-	[value=3]
+13:17:40 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+13:17:41 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+13:17:46 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+13:17:48 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+13:17:55 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+13:17:56 | DEBUG | MegaLevelScreen | playerSpawnsMan(): onChangeSpawn(): current=1, old=0
+13:17:57 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+13:18:01 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
+	[value=4]
 }))
-12:34:05 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_JUST_DIED, properties=Properties({
+13:18:01 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
+	[value=4]
 }))
-12:34:09 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_DONE_DYIN, properties=Properties({
+13:18:08 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+13:18:10 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+13:18:13 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+	[value=4]
 }))
-12:34:09 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_SPAWN, properties=Properties({
+13:18:13 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+	[value=4]
 }))
-12:34:09 | DEBUG | MegaLevelScreen | onEvent(): player spawn --> spawn Megaman: Properties({
-	[bounds=[96.0,64.0,32.0,32.0]]
-	[x=96.0]
-	[height=32.0]
-	[id=12]
-	[name=0]
-	[y=64.0]
-	[width=32.0]
-})
-12:34:11 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_READY, properties=Properties({
+13:18:14 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+13:18:16 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+13:18:24 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+	[value=4]
 }))
-12:34:15 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
-	[value=6]
+13:18:25 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+13:18:26 | DEBUG | MegaLevelScreen | playerSpawnsMan(): onChangeSpawn(): current=2, old=1
+13:18:26 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+13:18:31 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
+	[value=4]
 }))
-12:34:17 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
-12:34:19 | DEBUG | MegaLevelScreen | end transition logic for camera manager
-12:34:24 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
-	[value=3]
+13:18:36 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+	[value=4]
 }))
-12:34:27 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
-12:34:29 | DEBUG | MegaLevelScreen | end transition logic for camera manager
-12:34:33 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
-	[value=3]
+13:18:42 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+	[value=4]
 }))
-12:34:39 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
-	[value=3]
+13:18:42 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
+	[value=4]
 }))
-12:34:46 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
-	[value=3]
+13:18:43 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
+	[value=4]
 }))
-12:34:53 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
-12:34:54 | DEBUG | MegaLevelScreen | playerSpawnsMan(): onChangeSpawn(): current=1, old=0
-12:34:55 | DEBUG | MegaLevelScreen | end transition logic for camera manager
-12:34:57 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
-12:34:58 | DEBUG | MegaLevelScreen | end transition logic for camera manager
-12:35:08 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
-	[value=3]
+13:18:44 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+13:18:45 | DEBUG | MegaLevelScreen | playerSpawnsMan(): onChangeSpawn(): current=3, old=2
+13:18:46 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+13:18:47 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+	[value=4]
 }))
-12:35:13 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
-	[value=3]
+13:18:48 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+13:18:50 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+13:18:53 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
+	[value=8]
 }))
-12:35:19 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
-	[value=6]
+13:18:58 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+13:18:59 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+13:19:12 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+	[value=4]
 }))
-12:35:28 | DEBUG | MegaLevelScreen | dispose(): Disposing level screen
+13:19:19 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+13:19:21 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+13:19:25 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+	[value=8]
+}))
+13:19:36 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
+	[value=4]
+}))
+13:19:43 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+13:19:44 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+13:19:53 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+13:19:54 | DEBUG | MegaLevelScreen | playerSpawnsMan(): onChangeSpawn(): current=4, old=3
+13:19:54 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+13:20:07 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
+	[value=8]
+}))
+13:20:14 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
+	[value=8]
+}))
+13:20:15 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+	[value=4]
+}))
+13:20:20 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
+	[value=4]
+}))
+13:20:21 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+13:20:23 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+13:20:26 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+	[value=4]
+}))
+13:20:27 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+	[value=4]
+}))
+13:20:27 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
+	[value=4]
+}))
+13:20:28 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
+	[value=8]
+}))
+13:20:29 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+13:20:31 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+13:20:34 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_WEAPON_ENERGY, properties=Properties({
+	[value=4]
+}))
+13:20:34 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
+	[value=4]
+}))
+13:20:35 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_OPENING, properties=Properties({
+}))
+13:20:36 | LOG | MegaLevelScreen | event(): event=Event(key=NEXT_ROOM_REQ, properties=Properties({
+	[room=room16]
+}))
+13:20:36 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+13:20:36 | DEBUG | MegaLevelScreen | playerSpawnsMan(): onChangeSpawn(): current=5, old=4
+13:20:37 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+13:20:37 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_CLOSING, properties=Properties({
+}))
+13:20:39 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_OPENING, properties=Properties({
+}))
+13:20:39 | LOG | MegaLevelScreen | event(): event=Event(key=NEXT_ROOM_REQ, properties=Properties({
+	[room=boss_room]
+}))
+13:20:39 | DEBUG | MegaLevelScreen | begin transition logic for camera manager
+13:20:41 | DEBUG | MegaLevelScreen | end transition logic for camera manager
+13:20:41 | LOG | MegaLevelScreen | event(): event=Event(key=VICTORY_EVENT, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@4ee8051c]
+}))
+13:20:41 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_CLOSING, properties=Properties({
+}))
+13:20:42 | DEBUG | MegaLevelScreen | dispose(): Disposing level screen

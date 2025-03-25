@@ -151,9 +151,11 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
         frozen = false
     }
 
+    override fun canBeDamagedBy(damager: IDamager) = !frozen && super.canBeDamagedBy(damager)
+
     override fun takeDamageFrom(damager: IDamager): Boolean {
         val damaged = super.takeDamageFrom(damager)
-        if (damaged && !frozen && damager is IFreezerEntity) frozen = true
+        if (damaged && damager is IFreezerEntity) frozen = true
         return damaged
     }
 
@@ -251,10 +253,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            if (frozen) {
-                frozenFixture.setActive(true)
-                damageableFixture.setActive(false)
-            } else frozenFixture.setActive(false)
+            frozenFixture.setActive(frozen)
 
             bodyFixture.setShape(body.getBounds())
             damagerFixture.setShape(body.getBounds())
@@ -306,15 +305,15 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
         sprite.setSize(2f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.hidden = damageBlink
             sprite.setFlip(turning != switch, flipY)
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
             sprite.rotation = if (vertical) 90f else 0f
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

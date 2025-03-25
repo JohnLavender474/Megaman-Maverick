@@ -23,8 +23,8 @@ abstract class AbstractEnergyItem(game: MegamanMaverickGame) : AbstractItem(game
     companion object {
         const val TAG = "AbstractItem"
 
-        const val SMALL_AMOUNT = 3
-        const val LARGE_AMOUNT = 6
+        const val SMALL_AMOUNT = 4
+        const val LARGE_AMOUNT = 8
 
         private const val SMALL_WIDTH = 0.5f
         private const val SMALL_HEIGHT = 0.5f
@@ -82,8 +82,8 @@ abstract class AbstractEnergyItem(game: MegamanMaverickGame) : AbstractItem(game
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(2f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
 
@@ -92,7 +92,7 @@ abstract class AbstractEnergyItem(game: MegamanMaverickGame) : AbstractItem(game
 
             sprite.hidden = blink
         }
-        return spritesComponent
+        return component
     }
 
     override fun defineUpdatablesComponent(component: UpdatablesComponent) {
