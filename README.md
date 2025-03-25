@@ -152,7 +152,7 @@ comprehensive listing of the credits for the artwork used in this game.
 - Big Ass Maverick (Intro Boss) - [Ansimuz](https://ansimuz.itch.io/mega-bot)
 - Inferno Dragon - [Ansimuz](https://ansimuz.itch.io/mega-bot)
 - Moon Head - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/MoonHead-Miniboss-Megaman-Maverick-1090151707)
-- Nuclear Monkey - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
+- Reactor Monkey - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
 - Bospider - [Bean and Shawn](https://www.spriters-resource.com/game_boy_gbc/mmxtreme/sheet/480/?source=genre)
 - Guts Tank - [Mister Mike](https://www.spriters-resource.com/nes/mm2/sheet/2317/) (currently not used)
 - Penpen Maker - [Mister Mike](https://www.spriters-resource.com/nes/mm3/sheet/77911/) (currently not used)
@@ -170,6 +170,10 @@ comprehensive listing of the credits for the artwork used in this game.
   - Lumber Joe (original by MegaRed225)
   - Punk Fire Joe
   - Cactus
+- [Balloon Cart](https://balloon-cart.itch.io)
+  - Toxic Barrel Bot
+  - UFOhNo Bot
+  - Tank Bot
 - [MegaRed225](https://www.deviantart.com/megared225/gallery):
   - [Random Enemies Set 1](https://www.deviantart.com/megared225/art/Random-Enemies-Set-1-517309440)
     - Toriko Plundge 
