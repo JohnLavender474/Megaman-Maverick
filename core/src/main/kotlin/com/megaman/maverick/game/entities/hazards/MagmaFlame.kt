@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -11,6 +12,7 @@ import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameCircle
@@ -25,6 +27,7 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
@@ -40,21 +43,26 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.IHazard
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.MegaGameEntities
+import com.megaman.maverick.game.entities.contracts.*
+import com.megaman.maverick.game.entities.special.ToxicWater
+import com.megaman.maverick.game.entities.special.Water
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.utils.misc.GravityUtils
 import com.megaman.maverick.game.world.body.*
 
-class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    IAudioEntity, IDamager, IHazard, IDirectional {
+class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IFireEntity, IBodyEntity, ISpritesEntity,
+    IAnimatedEntity, IAudioEntity, IOwnable, IDamager, IHazard, IDirectional {
 
     companion object {
         const val TAG = "MagmaFlame"
         private const val DURATION = 0.75f
         private const val GRAVITY = 0.15f
         private const val GROUND_GRAVITY = 0.01f
+        private const val BODY_SIZE = 0.5f
+        private val DO_NOT_SPAWN_TAGS = objectSetOf(Water.TAG, ToxicWater.TAG)
+        private val DO_NOT_ENTITY_TYPES = objectSetOf(EntityType.BLOCK)
         private var region: TextureRegion? = null
     }
 
@@ -63,8 +71,10 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         set(value) {
             body.direction = value
         }
+    override var owner: IGameEntity? = null
 
     private val timer = Timer(DURATION)
+    private val outEntities = OrderedSet<MegaGameEntity>()
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -77,10 +87,31 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         addComponent(defineUpdatablesComponent())
     }
 
+    override fun canSpawn(spawnProps: Properties): Boolean {
+        val bounds = GameObjectPools.fetch(GameRectangle::class)
+            .setSize(BODY_SIZE * ConstVals.PPM)
+            .also {
+                val direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+                val position = DirectionPositionMapper.getPosition(direction).opposite()
+                val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+                it.positionOnPoint(spawn, position)
+            }
+
+        val set = outEntities.let {
+            MegaGameEntities.getOfTypes(it, DO_NOT_ENTITY_TYPES)
+            MegaGameEntities.getOfTags(it, DO_NOT_SPAWN_TAGS)
+        }
+        val canSpawn = set.none { it is IBodyEntity && it.body.getBounds().overlaps(bounds) }
+        set.clear()
+
+        return canSpawn
+    }
+
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
+        owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
         direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
 
         val position = DirectionPositionMapper.getPosition(direction).opposite()
@@ -99,7 +130,9 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(0.5f * ConstVals.PPM)
+        body.setSize(BODY_SIZE * ConstVals.PPM)
+        body.physics.applyFrictionX = false
+        body.physics.applyFrictionY = false
         body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -122,11 +155,16 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
                 body,
                 ConstVals.PPM * if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
             )
+
+            if (body.isSensing(BodySense.IN_WATER)) {
+                destroy()
+                playSoundNow(SoundAsset.WHOOSH_SOUND, false)
+            }
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.WATER_LISTENER))
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
@@ -136,7 +174,6 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         component.putUpdateFunction { _, _ ->
             val position = DirectionPositionMapper.getInvertedPosition(direction)
             sprite.setPosition(body.getPositionPoint(position), position)
-
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
         }

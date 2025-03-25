@@ -54,16 +54,11 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
-import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.IProjectileEntity
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.hazards.DeadlyLeaf
+import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.megaman.components.damageableFixture
-import com.megaman.maverick.game.entities.projectiles.Bullet
-import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.entities.projectiles.GroundPebble
+import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -73,7 +68,8 @@ import com.megaman.maverick.game.utils.misc.StunType
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IDrawableShapesEntity, IFaceable {
+class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEntity, IAnimatedEntity,
+    IDrawableShapesEntity, IFaceable {
 
     companion object {
         const val TAG = "TimberWoman"
@@ -185,6 +181,8 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
 
         private const val SECOND_LEAF_OFFSET = 1.5f
 
+        private val DESTROY_TAGS = orderedSetOf(GroundPebble.TAG, DeadlyLeaf.TAG)
+
         private val regions = ObjectMap<String, TextureRegion>()
         private val animDefs = ObjectMap<String, AnimationDef>()
     }
@@ -195,6 +193,11 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
 
     private enum class VicinityProjectileType { DEFLECTABLE, OTHER }
 
+    override var burning: Boolean
+        get() = !stateTimers[TimberWomanState.BURN].isFinished()
+        set(value) {
+            if (value) stateTimers[TimberWomanState.BURN].reset() else stateTimers[TimberWomanState.BURN].setToEnd()
+        }
     override lateinit var facing: Facing
 
     private lateinit var stateMachine: StateMachine<TimberWomanState>
@@ -204,9 +207,6 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
     private val stateTimers = OrderedMap<TimberWomanState, Timer>()
 
     private val otherTimers = OrderedMap<String, Timer>()
-
-    private val burning: Boolean
-        get() = !stateTimers[TimberWomanState.BURN].isFinished()
 
     // If Megaman overlaps this circle while Timber Woman is jumping, then she will perform a jump spin.
     private val jumpSpinScannerCircle = GameCircle().setRadius(JUMP_SPIN_SCANNER_RADIUS * ConstVals.PPM)
@@ -289,7 +289,6 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
             TimberWomanState.JUMP_SPIN pairTo Timer(MAX_JUMP_SPIN_DUR),
             TimberWomanState.BURN pairTo Timer(BURN_DUR)
         )
-
         if (otherTimers.isEmpty) otherTimers.putAll(STAND_STILL_DELAY_KEY pairTo Timer(STAND_STILL_DELAY))
 
         stateMachine = buildStateMachine()
@@ -302,18 +301,18 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         addDebugShapeSupplier { jumpSpinScannerCircle }
 
         damageOverrides.put(Fireball::class, dmgNeg(4))
+        damageOverrides.put(MagmaWave::class, dmgNeg(4))
+        damageOverrides.put(MagmaFlame::class, dmgNeg(4))
     }
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "spawnProps=$spawnProps")
-
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
         stateMachine.reset()
-
         stateTimers.forEach { entry ->
             val state = entry.key
             val timer = entry.value
@@ -349,24 +348,25 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
     override fun canBeDamagedBy(damager: IDamager) = super.canBeDamagedBy(damager) && !burning
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
+        GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
+
         val damaged = super.takeDamageFrom(damager)
 
-        if (damaged && damager is Fireball && damager.owner == megaman) {
+        if (damaged && damager is IFireEntity) {
             GameLogger.debug(TAG, "takeDamageFrom(): damaged by fireball, start burning, set stand timer to end")
-            stateTimers[TimberWomanState.BURN].reset()
-
             stateTimers[TimberWomanState.STAND].let { standTimer ->
                 standTimer.reset()
-
                 val standTime = STAND_DUR * 0.75f
                 standTimer.update(standTime)
             }
+            burning = true
         }
 
         return damaged
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
         walls.clear()
@@ -374,7 +374,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnti
         projectilesInVicinity.values().forEach { it.clear() }
 
         // Destroy all ground pebbles and deadly leaves when Timber Woman is destroyed
-        val entitiesToDestroy = MegaGameEntities.getOfTags(outSet, GroundPebble.TAG, DeadlyLeaf.TAG)
+        val entitiesToDestroy = MegaGameEntities.getOfTags(outSet, DESTROY_TAGS)
         entitiesToDestroy.forEach { entity -> entity.destroy() }
         entitiesToDestroy.clear()
     }

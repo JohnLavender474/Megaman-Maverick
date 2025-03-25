@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -11,6 +12,7 @@ import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
@@ -27,7 +29,7 @@ import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
-import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.pathfinding.PathfinderParams
@@ -40,12 +42,12 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
+import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.IceShard
-import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
 import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -106,6 +108,8 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
     private var trigger: GameRectangle? = null
     private var triggered = false
 
+    private val blocksToIgnore = ObjectSet<Int>()
+
     private val reusableBodySet = MutableOrderedSet<IBody>()
 
     override fun init() {
@@ -150,16 +154,31 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
 
         trigger = spawnProps.get(ConstKeys.TRIGGER, RectangleMapObject::class)?.rectangle?.toGameRectangle(false)
         triggered = trigger == null
+
+        spawnProps.forEach { key, value ->
+            if (key.toString().contains(ConstKeys.IGNORE)) {
+                val id = (value as RectangleMapObject).properties.get(ConstKeys.ID, Int::class.java)
+                blocksToIgnore.add(id)
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        blocksToIgnore.clear()
     }
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
+        GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
         val damaged = super.takeDamageFrom(damager)
         if (damaged && type.lowercase() != ConstKeys.SNOW && !frozen && damager is IFreezerEntity) frozen = true
         return damaged
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
-        if (damageable is Megaman) state = BatState.FLYING_TO_RETREAT
+        GameLogger.debug(TAG, "onDamageInflictedTo(): damageable=$damageable")
+        if (damageable == megaman) state = BatState.FLYING_TO_RETREAT
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -204,9 +223,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
                     }
                 }
 
-                BatState.FLYING_TO_RETREAT ->
-                    if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) state = BatState.HANGING
-
                 else -> {}
             }
         }
@@ -218,20 +234,24 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
-        body.addFixture(bodyFixture)
-
         val headFixture = Fixture(
             body, FixtureType.HEAD, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.175f * ConstVals.PPM)
         )
+        val hitHeadOnBlock: (Block) -> Unit = hit@{ block ->
+            if (state != BatState.FLYING_TO_RETREAT) return@hit
+
+            val id = block.mapObjectId
+            if (blocksToIgnore.contains(id)) return@hit
+
+            state = BatState.HANGING
+        }
+        headFixture.setHitByBlockReceiver(ProcessState.BEGIN) { block, _ -> hitHeadOnBlock.invoke(block) }
+        headFixture.setHitByBlockReceiver(ProcessState.CONTINUE) { block, _ -> hitHeadOnBlock.invoke(block) }
         headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
         body.addFixture(headFixture)
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
         body.addFixture(damageableFixture)
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        body.addFixture(damagerFixture)
 
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle(body))
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
@@ -261,22 +281,20 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER))
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.hidden = damageBlink
-
             sprite.setOriginCenter()
             sprite.rotation = megaman.direction.rotation
-
-            sprite.setPosition(body.getCenter(), Position.CENTER)
+            sprite.setCenter(body.getCenter())
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

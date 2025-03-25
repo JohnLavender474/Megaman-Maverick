@@ -8,6 +8,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
@@ -30,12 +31,13 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.entities.projectiles.MagmaWave
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.isSensing
 
 data class MegaWeaponHandler(
@@ -237,7 +239,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             chargeable = { _ -> false /* TODO: true */ }
         )
 
-        MegamanWeapon.FIRE_BALL -> MegaWeaponHandler(
+        MegamanWeapon.MAGMA_WAVE -> MegaWeaponHandler(
             cooldown = Timer(0.5f),
             normalCost = { 3 },
             halfChargedCost = { 5 },
@@ -365,7 +367,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             MegamanWeapon.RUSH_JETPACK -> shootMegaBuster(stat)
 
             MegamanWeapon.ICE_CUBE -> shootIceCube(stat)
-            MegamanWeapon.FIRE_BALL -> shootFireBall(stat)
+            MegamanWeapon.MAGMA_WAVE -> shootFireBall(stat)
             MegamanWeapon.MOON_SCYTHE -> shootMoonScythes(stat)
         }
 
@@ -449,50 +451,55 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
     private fun shootFireBall(stat: MegaChargeStatus) {
         GameLogger.debug(TAG, "shootFireBall(): stat=$stat")
 
-        val spawn = getSpawnPosition(MegamanWeapon.FIRE_BALL)
-
         if (game.getCurrentLevel() == LevelDefinition.MOON_MAN) {
             GameLogger.debug(TAG, "shootFireball(): in Moon Man's stage, fire cannot exist in outer space")
 
             val explosion = MegaEntityFactory.fetch(MagmaExplosion::class)!!
             explosion.spawn(
                 props(
+                    ConstKeys.SCALAR pairTo 3f,
                     ConstKeys.OWNER pairTo megaman,
-                    ConstKeys.POSITION pairTo spawn,
-                    ConstKeys.SCALAR pairTo 3f // causes explosion to run slower
+                    ConstKeys.POSITION pairTo getSpawnPosition(MegamanWeapon.MEGA_BUSTER),
                 )
             )
             return
         }
-
-        val props = props(
-            ConstKeys.OWNER pairTo megaman,
-            ConstKeys.POSITION pairTo spawn
-        )
 
         // TODO: spawned entity should change based on stat
         when (stat) {
             MegaChargeStatus.NOT_CHARGED,
             MegaChargeStatus.HALF_CHARGED,
             MegaChargeStatus.FULLY_CHARGED -> {
+                val spawn = megaman.body.getPositionPoint(Position.BOTTOM_CENTER)
+                    .add(ConstVals.PPM.toFloat() * megaman.facing.value, 0f)
+
+                /*
                 val trajectory = GameObjectPools.fetch(Vector2::class)
                     .set(MegamanValues.FIRE_BALL_X_VEL * megaman.facing.value, MegamanValues.FIRE_BALL_Y_VEL)
                     .scl(ConstVals.PPM.toFloat())
+                 */
+                val trajectory = GameObjectPools.fetch(Vector2::class)
+                    .set(MegamanValues.FIRE_BALL_X_VEL * megaman.facing.value * ConstVals.PPM, 0f)
 
+                /*
                 val gravity = GameObjectPools.fetch(Vector2::class)
                     .set(0f, MegamanValues.FIRE_BALL_GRAVITY * ConstVals.PPM)
+                 */
 
-                props.putAll(
-                    ConstKeys.GRAVITY pairTo gravity,
-                    ConstKeys.TRAJECTORY pairTo trajectory,
-                    Fireball.BURST_ON_HIT_BODY pairTo true,
-                    Fireball.BURST_ON_DAMAGE_INFLICTED pairTo true
-                )
-
+                /*
                 val fireball = MegaEntityFactory.fetch(Fireball::class)!!
                 fireball.spawn(props)
+                 */
+                val fireWave = MegaEntityFactory.fetch(MagmaWave::class)!!
+                fireWave.spawn(
+                    props(
+                        ConstKeys.OWNER pairTo megaman,
+                        ConstKeys.POSITION pairTo spawn,
+                        ConstKeys.TRAJECTORY pairTo trajectory
+                    )
+                )
 
-                weaponHandlers[MegamanWeapon.FIRE_BALL].addSpawned(stat, fireball)
+                weaponHandlers[MegamanWeapon.MAGMA_WAVE].addSpawned(stat, fireWave)
 
                 megaman.requestToPlaySound(SoundAsset.CRASH_BOMBER_SOUND, false)
             }

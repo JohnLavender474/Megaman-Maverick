@@ -48,6 +48,8 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFireEntity
+import com.megaman.maverick.game.entities.contracts.IFireableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.Fireball
@@ -55,7 +57,8 @@ import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
+class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFireableEntity,
+    IFaceable {
 
     companion object {
         const val TAG = "LumberJoe"
@@ -102,6 +105,11 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     private enum class LumberJoeState { STAND, JUMP, THROW, COOLDOWN, BURN }
 
     override lateinit var facing: Facing
+    override var burning: Boolean
+        get() = !stateTimers[LumberJoeState.BURN].isFinished()
+        set(value) {
+            if (value) stateTimers[LumberJoeState.BURN].reset() else stateTimers[LumberJoeState.BURN].setToEnd()
+        }
 
     private lateinit var stateMachine: StateMachine<LumberJoeState>
     private val currentState: LumberJoeState
@@ -148,7 +156,6 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-
         super.onSpawn(spawnProps)
 
         val position = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
@@ -180,8 +187,8 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     override fun takeDamageFrom(damager: IDamager): Boolean {
         val damaged = super.takeDamageFrom(damager)
 
-        if (damaged && damager is Fireball && damager.owner == megaman) {
-            stateTimers[LumberJoeState.BURN].reset()
+        if (damaged && damager is IFireEntity) {
+            burning = true
             requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
         }
 

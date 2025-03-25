@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.*
@@ -20,6 +21,7 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -39,6 +41,8 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFireEntity
+import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -98,6 +102,7 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         get() = if (currentState == ColdierState.SMALL_BLOW) SMALL_BLOW_FORCE else BIG_BLOW_FORCE
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             val keys = Array<String>().also { it ->
@@ -106,7 +111,6 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             }
             keys.forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
-
         if (timers.isEmpty) timers.putAll(
             "stand" pairTo Timer(STAND_DUR),
             "small_blow" pairTo Timer(SMALL_BLOW_DUR),
@@ -126,13 +130,12 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             "before_big_blow" pairTo Timer(BEFORE_BIG_BLOW_DUR),
             "cooldown" pairTo Timer(COOLDOWN_DUR)
         )
-
         super.init()
-
         addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
@@ -142,6 +145,12 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
         loop.reset()
         timers.values().forEach { it.reset() }
+    }
+
+    override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when (damager) {
+        is IFireEntity -> ConstVals.MAX_HEALTH
+        is IFreezerEntity -> 1
+        else -> baseDamage
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

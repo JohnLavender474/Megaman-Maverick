@@ -184,10 +184,10 @@
             <key type="filename">../frames/LevelPauseScreenV2/health_tanks/d_selected.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/options/exit.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/options/exit_selected.png</key>
-            <key type="filename">../frames/LevelPauseScreenV2/weapons/fire_ball.png</key>
-            <key type="filename">../frames/LevelPauseScreenV2/weapons/fire_ball_selected.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/weapons/ice_cube.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/weapons/ice_cube_selected.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/weapons/magma_wave.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/weapons/magma_wave_selected.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/weapons/mega_buster.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/weapons/mega_buster_selected.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/weapons/moon_scythe.png</key>

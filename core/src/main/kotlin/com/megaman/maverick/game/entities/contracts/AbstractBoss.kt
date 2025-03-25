@@ -29,15 +29,13 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.ExplosionOrb
+import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
 import com.megaman.maverick.game.entities.megaman.contracts.IMegamanDamageListener
-import com.megaman.maverick.game.entities.projectiles.Bullet
-import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.entities.projectiles.Fireball
-import com.megaman.maverick.game.entities.projectiles.MoonScythe
+import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.misc.HealthFillType
 import com.megaman.maverick.game.world.body.getCenter
@@ -73,6 +71,8 @@ abstract class AbstractBoss(
         protected val BOSS_DMG_NEG = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
             Bullet::class pairTo dmgNeg(1),
             Fireball::class pairTo dmgNeg(1),
+            MagmaFlame::class pairTo dmgNeg(1),
+            MagmaWave::class pairTo dmgNeg(1),
             ChargedShot::class pairTo dmgNeg {
                 it as ChargedShot
                 if (it.fullyCharged) 2 else 1

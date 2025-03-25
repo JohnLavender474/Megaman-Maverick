@@ -80,28 +80,28 @@ options/exit_selected
   orig: 256, 224
   offset: 0, 0
   index: -1
-weapons/fire_ball
+weapons/ice_cube
   rotate: false
   xy: 1033, 227
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-weapons/fire_ball_selected
+weapons/ice_cube_selected
   rotate: false
   xy: 1291, 227
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-weapons/ice_cube
+weapons/magma_wave
   rotate: false
   xy: 1549, 227
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-weapons/ice_cube_selected
+weapons/magma_wave_selected
   rotate: false
   xy: 1, 453
   size: 256, 224

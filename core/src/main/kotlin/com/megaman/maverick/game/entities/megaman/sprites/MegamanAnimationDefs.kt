@@ -144,4 +144,6 @@ object MegamanAnimationDefs {
     fun get(key: String): AnimationDef = get().get(key)
 
     fun getKeys(): ObjectMap.Keys<String> = get().keys()
+
+    fun has(key: String) = defs.containsKey(key)
 }

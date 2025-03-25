@@ -69,7 +69,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
 
             val bitSource = when (it) {
                 MegamanWeapon.MOON_SCYTHE -> ConstKeys.MOON
-                MegamanWeapon.FIRE_BALL -> ConstKeys.FIRE
+                MegamanWeapon.MAGMA_WAVE -> ConstKeys.FIRE
                 MegamanWeapon.ICE_CUBE -> ConstKeys.ICE
                 MegamanWeapon.RUSH_JETPACK -> RUSH_JET
                 else -> throw IllegalStateException("No bit source for weapon $it")

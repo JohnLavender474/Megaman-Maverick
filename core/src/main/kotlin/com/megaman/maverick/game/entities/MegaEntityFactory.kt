@@ -33,10 +33,7 @@ object MegaEntityFactory : ArgsInitializable<MegamanMaverickGame>, Resettable {
 
     override fun init(game: MegamanMaverickGame) {
         this.game = game
-
         initialized = true
-
-        // TODO: should `init` be responsible for pre-loading entities?
         ENTITIES_TO_PRELOAD.forEach { entry ->
             val key = entry.key
             val amount = entry.value
@@ -68,14 +65,11 @@ object MegaEntityFactory : ArgsInitializable<MegamanMaverickGame>, Resettable {
     private fun <K: MegaGameEntity> putPoolIfAbsentAndGet(key: KClass<K>): Pool<MegaGameEntity> {
         if (!pools.containsKey(key)) {
             val constructor = constructors.putIfAbsentAndGet(key) { key.primaryConstructor!! }
-
             val pool = GameEntityPoolCreator.create create@{
                 return@create constructor.call(game)
             }
-
             pools.put(key, pool)
         }
-
         return pools[key]
     }
 

@@ -10,6 +10,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.extensions.orderedSetOf
 import com.mega.game.engine.common.objects.*
 import com.mega.game.engine.common.shapes.*
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -85,7 +86,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         private val BRIGHTER_LIGHT_SOURCE = GamePair.of(3, 2f)
         private val BRIGHTEST_LIGHT_SOURCE = GamePair.of(4, 2.5f)
 
-        private val lightUpEntities = objectMapOf<KClass<out IBodyEntity>, (IBodyEntity) -> GamePair<Int, Float>>(
+        private val LIGHT_UP_ENTITIES = objectMapOf<KClass<out IBodyEntity>, (IBodyEntity) -> GamePair<Int, Float>>(
             Megaman::class pairTo { STANDARD_LIGHT_SOURCE },
             Bullet::class pairTo { STANDARD_LIGHT_SOURCE },
             ChargedShot::class pairTo {
@@ -107,6 +108,9 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             SpreadExplosion::class pairTo { BRIGHTEST_LIGHT_SOURCE },
             PicketJoe::class pairTo { BRIGHTER_LIGHT_SOURCE },
             GreenPelletBlast::class pairTo { STANDARD_LIGHT_SOURCE }
+        )
+        private val LIGHT_UP_ENTITY_TYPES = orderedSetOf(
+            EntityType.PROJECTILE, EntityType.EXPLOSION, EntityType.ENEMY
         )
 
         private const val DEBUG_THRESHOLD_SECS = 0.025f
@@ -142,6 +146,9 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
     private val reusableCircle = GameCircle()
     private val reusableRect = GameRectangle()
+
+    private val reusableEntitiesSet = ObjectSet<MegaGameEntity>()
+    private val reusableMnMs = MinsAndMaxes()
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -235,7 +242,6 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
             EventType.ADD_LIGHT_SOURCE -> {
                 val keys = event.getProperty(ConstKeys.KEYS) as ObjectSet<Int>
-
                 if (keys.contains(key)) {
                     GameLogger.debug(TAG, "onEvent(): ADD_LIGHT_SOURCE: keys=$key")
 
@@ -263,7 +269,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         val minY = ((rect.getY() - bounds.getY()) / dividedPPM).toInt().coerceIn(0, allTiles.rows - 1)
         val maxX = (ceil((rect.getMaxX() - bounds.getX()) / dividedPPM)).toInt().coerceIn(0, allTiles.columns - 1)
         val maxY = (ceil((rect.getMaxY() - bounds.getY()) / dividedPPM)).toInt().coerceIn(0, allTiles.rows - 1)
-        return MinsAndMaxes(minX, minY, maxX, maxY)
+        return reusableMnMs.set(minX, minY, maxX, maxY)
     }
 
     private fun getTile(x: Int, y: Int): BlackTile {
@@ -280,11 +286,11 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     private fun tryToLightUp(entity: IGameEntity) {
         if (entity is IBodyEntity &&
             entity.body.getBounds().overlaps(bounds) &&
-            lightUpEntities.containsKey(entity::class)
+            LIGHT_UP_ENTITIES.containsKey(entity::class)
         ) {
             val lightSourceDef = lightSourcePool.fetch()
 
-            lightUpEntities[entity::class].invoke(entity).let { (first, second) ->
+            LIGHT_UP_ENTITIES[entity::class].invoke(entity).let { (first, second) ->
                 lightSourceDef.center = entity.body.getCenter()
                 lightSourceDef.radius = first * ConstVals.PPM
                 lightSourceDef.radiance = second
@@ -318,12 +324,9 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        val entities = MegaGameEntities.getOfTypes(
-            EntityType.PROJECTILE,
-            EntityType.EXPLOSION,
-            EntityType.ENEMY
-        )
+        val entities = MegaGameEntities.getOfTypes(reusableEntitiesSet, LIGHT_UP_ENTITY_TYPES)
         entities.forEach { entity -> tryToLightUp(entity) }
+        entities.clear()
 
         if (megaman.ready && megaman.body.getBounds().overlaps(bounds)) {
             val lightSourceDef = lightSourcePool.fetch()

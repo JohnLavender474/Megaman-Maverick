@@ -4,7 +4,6 @@ import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.common.extensions.putIfAbsentAndGet
-import com.mega.game.engine.common.objects.MultiCollectionIterable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
 object MegaGameEntities {
@@ -34,7 +33,7 @@ object MegaGameEntities {
 
     fun getOfTag(tag: String): OrderedSet<MegaGameEntity> = entityTagToEntities.get(tag, OrderedSet())
 
-    fun getOfTags(out: ObjectSet<MegaGameEntity>, vararg tags: String): ObjectSet<MegaGameEntity> {
+    fun getOfTags(out: ObjectSet<MegaGameEntity>, tags: Iterable<String>): ObjectSet<MegaGameEntity> {
         tags.forEach { tag ->
             val set = getOfTag(tag)
             out.addAll(set)
@@ -44,15 +43,12 @@ object MegaGameEntities {
 
     fun getOfType(type: EntityType): OrderedSet<MegaGameEntity> = entityTypeToEntities.get(type, OrderedSet())
 
-    fun getOfTypes(vararg types: EntityType): Iterable<MegaGameEntity> {
-        val iterable = MultiCollectionIterable<MegaGameEntity>()
-
+    fun getOfTypes(out: ObjectSet<MegaGameEntity>, types: Iterable<EntityType>): ObjectSet<MegaGameEntity> {
         types.forEach { type ->
             val set = getOfType(type)
-            iterable.add(set)
+            out.addAll(set)
         }
-
-        return iterable
+        return out
     }
 
     fun hasAnyOfMapObjectId(mapObjectId: Int) = !getOfMapObjectId(mapObjectId).isEmpty

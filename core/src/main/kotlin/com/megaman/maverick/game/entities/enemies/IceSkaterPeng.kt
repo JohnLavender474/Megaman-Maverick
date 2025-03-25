@@ -18,6 +18,7 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -37,6 +38,8 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFireEntity
+import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -117,9 +120,14 @@ class IceSkaterPeng(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
         body.physics.defaultFrictionOnSelf.x = DEFAULT_FRICTION_X
     }
 
+    override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when (damager) {
+        is IFireEntity -> ConstVals.MAX_HEALTH
+        is IFreezerEntity -> 1
+        else -> baseDamage
+    }
+
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
-
         super.onDestroy()
     }
 

@@ -9,6 +9,8 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimator
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.GamePair
@@ -29,9 +31,8 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.SpecialsFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 
 
@@ -44,30 +45,34 @@ class ToxicWater(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     }
 
     private var water: Water? = null
-    private lateinit var bounds: GameRectangle
+    private val bounds = GameRectangle()
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
-            regions.put("waves", atlas.findRegion("$TAG/waves"))
-            regions.put("water", atlas.findRegion("$TAG/water"))
+            gdxArrayOf("waves", "water").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
         addComponent(defineCullablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
         defineDrawables(bounds)
 
-        water = EntityFactories.fetch(EntityType.SPECIAL, SpecialsFactory.WATER)!! as Water
-        water!!.spawn(props(ConstKeys.BOUNDS pairTo bounds, ConstKeys.HIDDEN pairTo true))
+        val water = MegaEntityFactory.fetch(Water::class)!!
+        water.spawn(props(ConstKeys.BOUNDS pairTo bounds, ConstKeys.HIDDEN pairTo true))
+        this.water = water
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+
         water?.destroy()
         water = null
     }
@@ -79,27 +84,28 @@ class ToxicWater(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         val rows = (bounds.getHeight() / (0.5f * ConstVals.PPM)).toInt()
         val columns = (bounds.getWidth() / (0.5f * ConstVals.PPM)).toInt()
 
-        for (x in 0 until columns) {
-            for (y in 0 until rows) {
-                val pos = Vector2(
-                    bounds.getX() + (0.5f * x * ConstVals.PPM),
-                    bounds.getY() + (0.5f * y * ConstVals.PPM)
-                )
-                val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
-                sprite.setBounds(pos.x, pos.y, 0.5f * ConstVals.PPM, 0.5f * ConstVals.PPM)
-                sprite.setAlpha(WATER_ALPHA)
-                sprites.put("${x}_${y}", sprite)
-                if (y == rows - 1) {
-                    val region = regions["waves"]!!
-                    val animation = Animation(region, 2, 2, 0.15f, true)
-                    val animator = Animator(animation)
-                    animators.add({ sprite } pairTo animator)
-                } else {
-                    val region = regions["water"]!!
-                    sprite.setRegion(region)
-                }
+        for (x in 0 until columns) for (y in 0 until rows) {
+            val pos = Vector2(
+                bounds.getX() + (0.5f * x * ConstVals.PPM),
+                bounds.getY() + (0.5f * y * ConstVals.PPM)
+            )
+
+            val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
+            sprite.setBounds(pos.x, pos.y, 0.5f * ConstVals.PPM, 0.5f * ConstVals.PPM)
+            sprite.setAlpha(WATER_ALPHA)
+            sprites.put("${x}_${y}", sprite)
+
+            if (y == rows - 1) {
+                val region = regions["waves"]!!
+                val animation = Animation(region, 2, 2, 0.15f, true)
+                val animator = Animator(animation)
+                animators.add({ sprite } pairTo animator)
+            } else {
+                val region = regions["water"]!!
+                sprite.setRegion(region)
             }
         }
+
         addComponent(SpritesComponent(sprites))
         addComponent(AnimationsComponent(animators))
     }
@@ -110,4 +116,6 @@ class ToxicWater(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     }
 
     override fun getType() = EntityType.SPECIAL
+
+    override fun getTag() = TAG
 }

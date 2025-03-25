@@ -45,7 +45,6 @@ import com.megaman.maverick.game.entities.megaman.contracts.IMegamanDamageListen
 import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanTrailSpriteV2
-import com.megaman.maverick.game.entities.megaman.sprites.amendKey
 import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportContinueProp
 import com.megaman.maverick.game.entities.utils.standardOnTeleportEnd
@@ -63,9 +62,9 @@ import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.abs
 
-class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventListener, IFaceable, IDirectional,
-    IBodyEntity, ISpritesEntity, IBehaviorsEntity, IPointsEntity, IAudioEntity, IAnimatedEntity, IScalableGravityEntity,
-    IFocusable, IGameStateListener, IFreezableEntity {
+class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntity, ISpritesEntity, IBehaviorsEntity,
+    IPointsEntity, IAudioEntity, IAnimatedEntity, IScalableGravityEntity, IFreezableEntity, IGameStateListener,
+    IEventListener, IFaceable, IDirectional, IFocusable {
 
     companion object {
         const val TAG = "Megaman"
@@ -76,7 +75,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
 
             when (levelDef) {
                 LevelDefinition.MOON_MAN -> set.addAll(MegamanWeapon.MOON_SCYTHE, MegamanWeapon.RUSH_JETPACK)
-                LevelDefinition.INFERNO_MAN -> set.add(MegamanWeapon.FIRE_BALL)
+                LevelDefinition.INFERNO_MAN -> set.add(MegamanWeapon.MAGMA_WAVE)
                 LevelDefinition.GLACIER_MAN -> set.add(MegamanWeapon.ICE_CUBE)
                 else -> {}
             }
@@ -644,25 +643,22 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
 
             trailSpriteTimer.update(delta)
             if (trailSpriteTimer.isFinished()) {
-                val spawnTrailSprite = when {
+                val trailSpriteSpawned = when {
                     isBehaviorActive(BehaviorType.GROUND_SLIDING) -> {
                         var key = "groundslide"
-                        if (currentWeapon == MegamanWeapon.RUSH_JETPACK) key += "_jetpack"
                         if (shooting) key += "_shoot"
                         spawnTrailSprite(key)
                     }
 
                     isBehaviorActive(BehaviorType.AIR_DASHING) -> {
                         var key = "airdash"
-                        if (currentWeapon == MegamanWeapon.RUSH_JETPACK) key += "_jetpack"
                         if (shooting) key += "_shoot"
                         spawnTrailSprite(key)
                     }
 
                     else -> false
                 }
-
-                if (spawnTrailSprite) trailSpriteTimer.reset()
+                if (trailSpriteSpawned) trailSpriteTimer.reset()
             }
 
             if (ready) spawningTimer.update(delta)
@@ -692,9 +688,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
     }
 
     private fun spawnTrailSprite(animKey: String? = null): Boolean {
-        val key = if (animKey != null) amendKey(animKey) else null
         val trailSprite = MegaEntityFactory.fetch(MegamanTrailSpriteV2::class)!!
-        return trailSprite.spawn(props(ConstKeys.KEY pairTo key))
+        return trailSprite.spawn(props(ConstKeys.KEY pairTo animKey))
     }
 
     private fun spawnBubble() {
@@ -817,4 +812,6 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IEventLis
     fun resetLives() = lives.set(ConstVals.START_LIVES)
 
     override fun getType() = EntityType.MEGAMAN
+
+    override fun getTag() = TAG
 }

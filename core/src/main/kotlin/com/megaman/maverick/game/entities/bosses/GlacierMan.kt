@@ -46,9 +46,12 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.contracts.IFireEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.entities.projectiles.MagmaWave
 import com.megaman.maverick.game.entities.projectiles.Snowhead
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -147,16 +150,13 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 "ice_blast_attack"
             ).forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
-
         super.init()
-
         addComponent(defineAnimationsComponent())
-
         stateMachine = buildStateMachine()
-
         buildTimers()
-
         damageOverrides.put(Fireball::class, dmgNeg(4))
+        damageOverrides.put(MagmaWave::class, dmgNeg(4))
+        damageOverrides.put(MagmaFlame::class, dmgNeg(4))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -218,7 +218,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     override fun takeDamageFrom(damager: IDamager): Boolean {
         val takeDamage = super.takeDamageFrom(damager)
 
-        if (takeDamage && damager is Fireball) {
+        if (takeDamage && damager is IFireEntity) {
             timers["fired"].reset()
             requestToPlaySound(SoundAsset.SOLAR_BLAZE_SOUND, false)
         }

@@ -39,9 +39,10 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.IProjectileEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.SnowballExplosion
-import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 
@@ -148,37 +149,30 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
-
         val explosion = MegaEntityFactory.fetch(SnowballExplosion::class)!!
         explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         bounceBullets(blockFixture.getShape())
-
         explodeAndDie()
     }
 
     override fun hitWater(waterFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         bounceBullets(waterFixture.getShape())
-
         explodeAndDie()
     }
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (shieldFixture.getEntity() == owner) return
-
         bounceBullets(shieldFixture.getShape())
-
         explodeAndDie()
     }
 
     override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        val projectile = projectileFixture.getEntity() as AbstractProjectile
-
+        val projectile = projectileFixture.getEntity() as IProjectileEntity
         if (projectile.owner == owner) return
-
-        if (projectile.owner is Megaman) explodeAndDie()
+        if (projectile.owner == megaman) explodeAndDie()
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -191,7 +185,6 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         body.preProcess.put(ConstKeys.DEFAULT) {
             val size = bodySizes[type]!!
             body.setSize(size * ConstVals.PPM)
-
             body.forEachFixture { fixture -> ((fixture as Fixture).rawShape as GameRectangle).set(body) }
         }
 
@@ -207,9 +200,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
                 .set(spriteSizes[type]!!)
                 .scl(ConstVals.PPM.toFloat())
             sprite.setSize(size)
-
             sprite.setCenter(body.getCenter())
-
             sprite.setFlip(isFacing(Facing.RIGHT), false)
         }
         .build()

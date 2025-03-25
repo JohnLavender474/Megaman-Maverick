@@ -23,6 +23,7 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -41,6 +42,8 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFireEntity
+import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.projectiles.IceBomb
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -114,6 +117,12 @@ class IceFox(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         super.onDestroy()
     }
 
+    override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when (damager) {
+        is IFireEntity -> ConstVals.MAX_HEALTH
+        is IFreezerEntity -> 1
+        else -> baseDamage
+    }
+
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
@@ -123,7 +132,6 @@ class IceFox(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
                 loop.next()
                 timer.reset()
             }
-
             if (currentState == IceFoxState.STAND) FacingUtils.setFacingOf(this)
         }
     }

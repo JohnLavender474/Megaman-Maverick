@@ -37,7 +37,7 @@ class MegamanAnimations(
             val assetSource = when (weapon) {
                 MegamanWeapon.MEGA_BUSTER -> TextureAsset.MEGAMAN_BUSTER.source
                 MegamanWeapon.ICE_CUBE -> TextureAsset.MEGAMAN_ICE_CUBE.source
-                MegamanWeapon.FIRE_BALL -> TextureAsset.MEGAMAN_FIRE_BALL.source
+                MegamanWeapon.MAGMA_WAVE -> TextureAsset.MEGAMAN_MAGMA_WAVE.source
                 MegamanWeapon.MOON_SCYTHE -> TextureAsset.MEGAMAN_MOON_SCYTHE.source
                 MegamanWeapon.RUSH_JETPACK -> TextureAsset.MEGAMAN_RUSH_JETPACK.source
             }

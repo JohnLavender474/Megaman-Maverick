@@ -1,5 +1,5 @@
 Hazards1.png
-size: 1024, 504
+size: 1024, 472
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -61,7 +61,7 @@ CeilingCrusher/Crusher
   index: -1
 CrystalSpikes
   rotate: false
-  xy: 928, 140
+  xy: 0, 236
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
@@ -124,7 +124,7 @@ Flame3/Whoosh
   index: -1
 FlameColumn
   rotate: false
-  xy: 538, 268
+  xy: 602, 236
   size: 96, 236
   orig: 96, 236
   offset: 0, 0
@@ -257,7 +257,7 @@ Lava/TopFlow3
   index: -1
 LavaBeam
   rotate: false
-  xy: 388, 268
+  xy: 452, 236
   size: 150, 134
   orig: 150, 134
   offset: 0, 0
@@ -367,6 +367,13 @@ MagmaFlame
   orig: 16, 32
   offset: 0, 0
   index: -1
+PipePuff
+  rotate: false
+  xy: 928, 140
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
 Saw/ring
   rotate: false
   xy: 324, 0
@@ -376,7 +383,7 @@ Saw/ring
   index: -1
 Saw/saw
   rotate: false
-  xy: 128, 268
+  xy: 192, 236
   size: 260, 130
   orig: 260, 130
   offset: 0, 0
@@ -474,7 +481,7 @@ SwingingAxe
   index: -1
 SwingingAxe_HandleEndCentered
   rotate: false
-  xy: 0, 268
+  xy: 64, 236
   size: 128, 128
   orig: 128, 128
   offset: 0, 0

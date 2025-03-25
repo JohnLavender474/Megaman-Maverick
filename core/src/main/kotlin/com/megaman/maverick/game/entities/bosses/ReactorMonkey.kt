@@ -41,7 +41,9 @@ import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.entities.projectiles.MagmaWave
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.entities.projectiles.ReactorMonkeyBall
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -96,6 +98,8 @@ class ReactorMonkey(game: MegamanMaverickGame) :
         super.init()
         addComponent(defineAnimationsComponent())
         damageOverrides.put(Fireball::class, dmgNeg(4))
+        damageOverrides.put(MagmaWave::class, dmgNeg(4))
+        damageOverrides.put(MagmaFlame::class, dmgNeg(4))
         damageOverrides.put(MoonScythe::class, dmgNeg(2))
     }
 

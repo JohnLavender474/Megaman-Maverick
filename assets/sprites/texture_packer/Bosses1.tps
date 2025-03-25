@@ -203,6 +203,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Bosses1/Bospider/close_eye.png</key>
             <key type="filename">../frames/Bosses1/Bospider/open_eye.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -218,6 +219,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Bosses1/Bospider/frozen.png</key>
             <key type="filename">../frames/Bosses1/Bospider/still.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
