@@ -971,6 +971,7 @@ sprites/frames/Specials1/ToxicWater/water.png
 sprites/frames/Specials1/ToxicWater/waves.png
 sprites/frames/Specials1/Cart.png
 sprites/frames/Backgrounds5/GlacierCloudsBKG.png
+sprites/frames/Bosses3/RodentMan/slash.png
 sprites/frames/Bosses3/BigAssMaverickRobot/Body/body.png
 sprites/frames/Bosses3/BigAssMaverickRobot/Hand/still.png
 sprites/frames/Bosses3/BigAssMaverickRobot/Hand/rocket.png
@@ -2542,6 +2543,7 @@ sprites/piskel/Zero.piskel
 sprites/piskel/Popoheli.piskel
 sprites/piskel/InfernoMan_v2.piskel
 sprites/piskel/DrLight.piskel
+sprites/piskel/RodentMan_temp.piskel
 sprites/piskel/SinkSand.piskel
 sprites/piskel/UFOBombBot.piskel
 sprites/piskel/SpikeTeeth.piskel

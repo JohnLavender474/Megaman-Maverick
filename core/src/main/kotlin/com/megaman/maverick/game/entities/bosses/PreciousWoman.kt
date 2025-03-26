@@ -70,7 +70,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private const val RUN_DUR = 1.5f
         private const val RUN_CHANCE = 20f
         private const val RUN_IMPULSE_X = 35f
-        private const val MAX_RUN_SPEED = 9f
+        private const val MAX_RUN_SPEED = 10f
 
         private const val VEL_CLAMP_X = 50f
         private const val VEL_CLAMP_Y = 25f

@@ -53,6 +53,7 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.explosions.SpreadExplosion
+import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -85,6 +86,8 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
             Bullet::class pairTo dmgNeg(10),
             ArigockBall::class pairTo dmgNeg(10),
             CactusMissile::class pairTo dmgNeg(10),
+            MagmaFlame::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            MagmaWave::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             ChargedShotExplosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             SmallGreenMissile::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
@@ -150,7 +153,6 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             CactusType.entries.forEach { type ->
@@ -160,11 +162,8 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
                 }
             }
         }
-
         super.init()
-
         stateMachine = buildStateMachine()
-
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
     }

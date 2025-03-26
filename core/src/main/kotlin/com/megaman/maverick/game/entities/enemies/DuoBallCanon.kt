@@ -203,9 +203,7 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         .updatable { _, sprite ->
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
-
             sprite.setFlip(isFacing(Facing.LEFT), false)
-
             sprite.hidden = damageBlink
         }
         .build()
@@ -235,7 +233,7 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
     private fun shootBullet() {
         val spawn = GameObjectPools.fetch(Vector2::class)
             .set(body.getCenter())
-            .add(0.25f * facing.value * ConstVals.PPM, 0.6f * ConstVals.PPM)
+            .add(0.75f * facing.value * ConstVals.PPM, 0.6f * ConstVals.PPM)
 
         val trajectory = GameObjectPools.fetch(Vector2::class).set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
 
