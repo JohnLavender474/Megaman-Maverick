@@ -217,8 +217,10 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     // declared as var so that reference can be detached when passed to shield gem cluster
     private var shieldGems = OrderedMap<PreciousGem, ShieldGemDef>()
 
+    // launched gems are culled once they reach a certain distance away from the boss room's center
     private val roomCenter = Vector2()
 
+    // if the current update is the first update for this spawned boss
     private var firstUpdate = true
 
     override fun init() {
@@ -277,6 +279,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
         shieldGems.keys().forEach { gem -> gem.destroy() }
@@ -284,13 +287,18 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     }
 
     override fun onMegamanDamaged(damager: IDamager, megaman: Megaman) {
+        GameLogger.debug(TAG, "onMegamanDamaged(): damager=$damager, megaman=$megaman")
         if (currentState == PreciousWomanState.STAND) laughTimer.reset()
     }
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
+        GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
+
         val damaged = super.takeDamageFrom(damager)
+
         if (damaged && damager is MoonScythe && !stunned) {
             stunned = true
+
             if (!body.isSensing(BodySense.FEET_ON_GROUND)) {
                 val damagerX = damager.body.getBounds().getX()
                 val thisX = body.getBounds().getX()
@@ -298,6 +306,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 body.physics.velocity.x = impulseX * ConstVals.PPM
             } else body.physics.velocity.x = 0f
         }
+
         return damaged
     }
 
@@ -802,7 +811,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     )
                 )
 
-                // redeclare to detach from reference passed to `cluster`
+                // re-initialize to detach this class's ref from the ref passed into the `cluster`
                 shieldGems = OrderedMap()
 
                 throwMinCooldown.reset()
@@ -876,6 +885,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
     private fun shouldThrowGems() = throwMinCooldown.isFinished() && statesSinceLastThrow >= STATES_BETWEEN_THROW
 
+    // Precious Woman's very first attack when spawned should always be to jump towards Megaman
     private fun shouldJump() = firstUpdate || (getRandom(0f, 100f) <= JUMP_CHANCE_FIRST_CHECK && !isTouchingFacingBlock())
 
     private fun jump(target: Vector2): Vector2 {
