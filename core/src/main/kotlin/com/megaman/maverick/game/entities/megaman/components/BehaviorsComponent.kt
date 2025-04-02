@@ -38,7 +38,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
     val wallSlide = FunctionalBehaviorImpl(
         evaluate = evaluate@{
             if (dead || !ready || !canMove || body.isSensing(BodySense.FEET_ON_SAND) ||
-                isBehaviorActive(BehaviorType.JETPACKING)
+                isBehaviorActive(BehaviorType.JETPACKING) || !wallSlideNotAllowedTimer.isFinished()
             ) return@evaluate false
 
             if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) &&
@@ -47,23 +47,23 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     game.controllerPoller.isPressed(MegaControllerButton.RIGHT))
             ) {
                 if (damaged) {
-                    GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "Damaged")
+                    GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "damaged")
                     return@evaluate false
                 }
                 if (isBehaviorActive(BehaviorType.JUMPING)) {
-                    GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "Jumping")
+                    GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "jumping")
                     return@evaluate false
                 }
                 if (isBehaviorActive(BehaviorType.CLIMBING)) {
-                    GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "Climbing")
+                    GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "climbing")
                     return@evaluate false
                 }
                 if (body.isSensing(BodySense.FEET_ON_GROUND)) {
-                    GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "Feet on ground")
+                    GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "feet on ground")
                     return@evaluate false
                 }
                 if (!wallJumpTimer.isFinished()) {
-                    GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "Wall jump timer not finished")
+                    GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "wall jump timer not finished")
                     return@evaluate false
                 }
                 return@evaluate true

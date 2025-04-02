@@ -479,7 +479,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                     .scl(ConstVals.PPM.toFloat())
                  */
                 val trajectory = GameObjectPools.fetch(Vector2::class)
-                    .set(MegamanValues.FIRE_BALL_X_VEL * megaman.facing.value * ConstVals.PPM, 0f)
+                    .set(MegamanValues.MAGMA_WAVE_VEL * megaman.facing.value * ConstVals.PPM, 0f)
 
                 /*
                 val gravity = GameObjectPools.fetch(Vector2::class)

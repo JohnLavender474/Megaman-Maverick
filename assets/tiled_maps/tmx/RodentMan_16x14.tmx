@@ -727,12 +727,12 @@
   </object>
   <object id="516" name="RodentMan" x="4640" y="3392" width="32" height="32">
    <properties>
+    <property name="child_1" type="object" value="519"/>
+    <property name="child_2" type="object" value="520"/>
     <property name="left" type="object" value="442"/>
     <property name="max_wall_run_jump_y" type="object" value="522"/>
     <property name="min_wall_run_jump_y" type="object" value="521"/>
     <property name="right" type="object" value="446"/>
-    <property name="spawner_1" type="object" value="519"/>
-    <property name="spawner_2" type="object" value="520"/>
    </properties>
   </object>
   <object id="519" name="RatRobotSpawner" x="4680" y="3360" width="16" height="16"/>

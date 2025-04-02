@@ -1,5 +1,5 @@
 Decorations1.png
-size: 498, 792
+size: 510, 792
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -54,7 +54,7 @@ ChargedShot_Residual_Half
   index: -1
 CrystalConveyorBKG
   rotate: false
-  xy: 318, 208
+  xy: 382, 208
   size: 128, 384
   orig: 128, 384
   offset: 0, 0
@@ -176,6 +176,13 @@ SandSplash
   xy: 128, 144
   size: 160, 32
   orig: 160, 32
+  offset: 0, 0
+  index: -1
+SlashDissipation
+  rotate: false
+  xy: 318, 208
+  size: 64, 144
+  orig: 64, 144
   offset: 0, 0
   index: -1
 SmallGrass/brush

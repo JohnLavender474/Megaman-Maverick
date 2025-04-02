@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.6.0</string>
+        <string>7.6.2</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -307,6 +307,21 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Bosses3/RodentMan/defeated.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,36,32,72</rect>
+                <key>scale9Paddings</key>
+                <rect>16,36,32,72</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Bosses3/RodentMan/jump_down_look_down.png</key>
             <key type="filename">../frames/Bosses3/RodentMan/jump_down_look_straight.png</key>
             <key type="filename">../frames/Bosses3/RodentMan/jump_up_look_down.png</key>
@@ -327,6 +342,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Bosses3/RodentMan/jump_slash.png</key>
+            <key type="filename">../frames/Bosses3/RodentMan/shielded.png</key>
             <key type="filename">../frames/Bosses3/RodentMan/stand.png</key>
             <key type="filename">../frames/Bosses3/RodentMan/stand_slash.png</key>
             <struct type="IndividualSpriteSettings">

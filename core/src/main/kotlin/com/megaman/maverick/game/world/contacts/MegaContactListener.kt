@@ -371,17 +371,17 @@ class MegaContactListener(
                 snowFixture.getHitByFeet(ProcessState.BEGIN, feetFixture, delta)
         }
 
-        // bouncer, feet or head or side
+        // bouncer, body, feet or head or side
         else if (contact.fixtureSetsMatch(
                 typesSet1(FixtureType.BOUNCER),
-                typesSet2(FixtureType.FEET, FixtureType.HEAD, FixtureType.SIDE)
+                typesSet2(FixtureType.BODY, FixtureType.FEET, FixtureType.HEAD, FixtureType.SIDE)
             )
         ) {
-            printDebugLog(contact, "beginContact(): Bouncer-Feet/Head/Side, contact=$contact")
+            printDebugLog(contact, "beginContact(): Bouncer-Body/Feet/Head/Side, contact=$contact")
 
             val (bouncerFixture, bounceableFixture) = contact.getFixtureSetsInOrder(
                 typesSet1(FixtureType.BOUNCER),
-                typesSet2(FixtureType.FEET, FixtureType.HEAD, FixtureType.SIDE),
+                typesSet2(FixtureType.BODY, FixtureType.FEET, FixtureType.HEAD, FixtureType.SIDE),
                 out
             )!!
 

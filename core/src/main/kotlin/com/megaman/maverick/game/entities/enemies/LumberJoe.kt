@@ -33,8 +33,8 @@ import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.state.EnumStateMachineBuilder
 import com.mega.game.engine.state.StateMachine
-import com.mega.game.engine.state.StateMachineBuilder
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
@@ -55,6 +55,7 @@ import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
 class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFireableEntity,
@@ -161,7 +162,12 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         val position = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(position)
 
-        updateFacing()
+        facing = when {
+            spawnProps.containsKey(ConstKeys.FACING) ->
+                Facing.valueOf(spawnProps.get(ConstKeys.FACING, String::class)!!.uppercase())
+
+            else -> FacingUtils.getPreferredFacingFor(this)
+        }
 
         val initImpulseX = spawnProps.getOrDefault("${ConstKeys.IMPULSE}_${ConstKeys.X}", 0f, Float::class)
         val initImpulseY = spawnProps.getOrDefault("${ConstKeys.IMPULSE}_${ConstKeys.Y}", 0f, Float::class)
@@ -206,7 +212,7 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
                     stateMachine.next()
                 }
 
-                currentState.equalsAny(LumberJoeState.STAND, LumberJoeState.COOLDOWN) -> updateFacing()
+                currentState.equalsAny(LumberJoeState.STAND, LumberJoeState.COOLDOWN) -> FacingUtils.setFacingOf(this)
             }
 
             when (currentState) {
@@ -352,39 +358,29 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         return true
     }
 
-    private fun updateFacing() {
-        when {
-            megaman.body.getMaxX() <= body.getX() -> facing = Facing.LEFT
-            megaman.body.getX() >= body.getMaxX() -> facing = Facing.RIGHT
-        }
-    }
-
     private fun isBurning() = !stateTimers[LumberJoeState.BURN].isFinished()
 
-    private fun buildStateMachine() = StateMachineBuilder<LumberJoeState>()
-        .states { states -> LumberJoeState.entries.forEach { states.put(it.name, it) } }
+    private fun buildStateMachine() = EnumStateMachineBuilder.create<LumberJoeState>()
         .setTriggerChangeWhenSameElement(false)
         .setOnChangeState(this::onChangeState)
-        .initialState(LumberJoeState.JUMP.name)
+        .initialState(LumberJoeState.JUMP)
         // stand
-        .transition(LumberJoeState.STAND.name, LumberJoeState.BURN.name) { isBurning() }
-        .transition(LumberJoeState.STAND.name, LumberJoeState.JUMP.name) { shouldJump() }
-        .transition(LumberJoeState.STAND.name, LumberJoeState.THROW.name) { true }
+        .transition(LumberJoeState.STAND, LumberJoeState.BURN) { isBurning() }
+        .transition(LumberJoeState.STAND, LumberJoeState.JUMP) { shouldJump() }
+        .transition(LumberJoeState.STAND, LumberJoeState.THROW) { true }
         // jump
-        .transition(LumberJoeState.JUMP.name, LumberJoeState.BURN.name) { isBurning() }
-        .transition(LumberJoeState.JUMP.name, LumberJoeState.STAND.name) { shouldStopJump() }
+        .transition(LumberJoeState.JUMP, LumberJoeState.BURN) { isBurning() }
+        .transition(LumberJoeState.JUMP, LumberJoeState.STAND) { shouldStopJump() }
         // throw
-        .transition(LumberJoeState.THROW.name, LumberJoeState.BURN.name) { isBurning() }
-        .transition(LumberJoeState.THROW.name, LumberJoeState.COOLDOWN.name) { shouldCooldown() }
-        .transition(LumberJoeState.THROW.name, LumberJoeState.STAND.name) { true }
+        .transition(LumberJoeState.THROW, LumberJoeState.BURN) { isBurning() }
+        .transition(LumberJoeState.THROW, LumberJoeState.COOLDOWN) { shouldCooldown() }
+        .transition(LumberJoeState.THROW, LumberJoeState.STAND) { true }
         // cooldown
-        .transition(LumberJoeState.COOLDOWN.name, LumberJoeState.BURN.name) { isBurning() }
-        .transition(
-            LumberJoeState.COOLDOWN.name, LumberJoeState.JUMP.name
-        ) { !body.isSensing(BodySense.FEET_ON_GROUND) }
-        .transition(LumberJoeState.COOLDOWN.name, LumberJoeState.STAND.name) { true }
+        .transition(LumberJoeState.COOLDOWN, LumberJoeState.BURN) { isBurning() }
+        .transition(LumberJoeState.COOLDOWN, LumberJoeState.JUMP) { !body.isSensing(BodySense.FEET_ON_GROUND) }
+        .transition(LumberJoeState.COOLDOWN, LumberJoeState.STAND) { true }
         // burn
-        .transition(LumberJoeState.BURN.name, LumberJoeState.STAND.name) { true }
+        .transition(LumberJoeState.BURN, LumberJoeState.STAND) { true }
         // build
         .build()
 

@@ -304,11 +304,12 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
     internal val roomTransPauseTimer = Timer(ConstVals.ROOM_TRANS_DELAY_DURATION)
     internal val spawningTimer = Timer(MegamanValues.SPAWNING_DUR)
 
+    internal val wallSlideNotAllowedTimer = Timer()
+
     private val damageListeners = OrderedSet<IMegamanDamageListener>()
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-
         super.init()
 
         addComponent(defineBodyComponent())
@@ -377,10 +378,11 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         shootAnimTimer.reset()
         wallJumpTimer.reset()
         chargingTimer.reset()
-
         spawningTimer.reset()
 
         roomTransPauseTimer.setToEnd()
+
+        wallSlideNotAllowedTimer.resetDuration(0f)
 
         putProperty(ConstKeys.ON_TELEPORT_START, {
             stopCharging()
@@ -684,6 +686,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
                     }
                 }
             }
+
+            wallSlideNotAllowedTimer.update(delta)
         }
     }
 

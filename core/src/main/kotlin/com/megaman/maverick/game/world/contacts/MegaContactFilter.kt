@@ -21,6 +21,7 @@ class MegaContactFilter : IContactFilter {
             FixtureType.SIDE,
             FixtureType.BLOCK,
             FixtureType.FORCE,
+            FixtureType.BOUNCER,
             FixtureType.GRAVITY_CHANGE
         ),
         FixtureType.EXPLOSION pairTo objectSetOf(

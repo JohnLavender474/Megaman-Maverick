@@ -129,7 +129,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         private const val GROUND_GRAVITY = -0.01f
         private const val WALL_SLIDE_GRAVITY = -0.075f
 
-        private const val STAND_FRICTION_X = 7.5f
+        private const val STAND_FRICTION_X = 10f
         private const val RUN_FRICTION_X = 2.75f
         private const val JUMP_FRICTION_X = 1.15f
         private const val DEFAULT_FRICTION_Y = 1f

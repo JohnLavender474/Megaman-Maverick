@@ -1,5 +1,5 @@
 Projectiles1.png
-size: 512, 900
+size: 512, 852
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -33,7 +33,7 @@ BigAssMaverickRobotOrb/ball
   index: -1
 BigAssMaverickRobotOrb/hit
   rotate: false
-  xy: 0, 708
+  xy: 240, 660
   size: 192, 192
   orig: 192, 192
   offset: 0, 0
@@ -75,14 +75,14 @@ CannonBall
   index: -1
 CaveRock/Burst
   rotate: false
-  xy: 96, 436
+  xy: 0, 532
   size: 384, 128
   orig: 384, 128
   offset: 0, 0
   index: -1
 CaveRock/Rock
   rotate: false
-  xy: 0, 564
+  xy: 384, 532
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
@@ -173,7 +173,7 @@ FireWall/disintegrate
   index: -1
 FireWall/fire
   rotate: false
-  xy: 320, 564
+  xy: 192, 660
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -355,21 +355,21 @@ ReactorMonkeyBall/0
   index: -1
 ReactorMonkeyBall/1
   rotate: false
-  xy: 128, 564
+  xy: 0, 660
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 ReactorMonkeyBall/2
   rotate: false
-  xy: 192, 564
+  xy: 64, 660
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 ReactorMonkeyBall/3
   rotate: false
-  xy: 256, 564
+  xy: 128, 660
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
@@ -393,6 +393,13 @@ SealionBall
   xy: 400, 0
   size: 48, 30
   orig: 48, 30
+  offset: 0, 0
+  index: -1
+SlashWave
+  rotate: false
+  xy: 96, 436
+  size: 64, 96
+  orig: 64, 96
   offset: 0, 0
   index: -1
 SmallIceCube/1

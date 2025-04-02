@@ -68,13 +68,8 @@ object MegamanValues {
     const val EXPLOSION_ORB_SPEED = 3.5f
 
     const val BULLET_VEL = 10f
-
     const val ICE_CUBE_VEL = 12f
-
-    const val FIRE_BALL_Y_VEL = 7.5f
-    const val FIRE_BALL_X_VEL = 10f
-    const val FIRE_BALL_GRAVITY = -0.25f
-
+    const val MAGMA_WAVE_VEL = 10f
     const val MOON_SCYTHE_SPEED = 8f
     const val MAX_MOONS_BEFORE_SHOOT_AGAIN = 1
     val MOON_SCYTHE_DEG_OFFSETS = gdxArrayOf(10f, 40f, 70f)
@@ -86,6 +81,8 @@ object MegamanValues {
     const val STUN_DUR = 0.25f
     const val STUN_IMPULSE_X = 2.5f
     const val STUM_IMPULSE_Y = 2f
+
+    const val WALLSLIDE_NOT_ALLOWED_DELAY_ON_BOUNCE = 0.1f
 
     const val HITS_TO_UNFREEZE = 3
     const val FROZEN_PUSH_DUR = 0.2f

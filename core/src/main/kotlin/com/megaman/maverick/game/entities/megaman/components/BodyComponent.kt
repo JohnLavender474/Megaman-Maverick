@@ -76,13 +76,15 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.addFixture(bodyFixture)
     body.putProperty(ConstKeys.BODY, bodyFixture)
 
-    val onBounce = {
+    val onBounce: () -> Unit = {
         BEHAVIORS_TO_END_ON_BOUNCE.forEach { behaviorType ->
             if (isBehaviorActive(behaviorType)) {
                 val behavior = getBehavior(behaviorType)
                 if (behavior?.isActive() == true) behavior.reset()
             }
         }
+
+        wallSlideNotAllowedTimer.resetDuration(MegamanValues.WALLSLIDE_NOT_ALLOWED_DELAY_ON_BOUNCE)
     }
 
     val feetFixture =

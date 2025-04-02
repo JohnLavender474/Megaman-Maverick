@@ -63,6 +63,7 @@ enum class SoundAsset(src: String, val seconds: Int) : IAsset {
     WHEE_SOUND("whee.wav", 1),
     WIND_1_SOUND("wind_1.wav", 3),
     WHIP_SOUND("whip.wav", 1),
+    WHIP_V2_SOUND("whip_v2.mp3", 1),
     ASTEROID_EXPLODE_SOUND("asteroid_explode.wav", 1),
     SOLAR_BLAZE_SOUND("solar_blaze.wav", 1),
     BRUSH_SOUND("brush.wav", 1),

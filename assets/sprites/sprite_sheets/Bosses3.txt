@@ -1,18 +1,18 @@
 Bosses3.png
-size: 446, 700
+size: 464, 748
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 BigAssMaverickRobot/Body/body
   rotate: false
-  xy: 165, 459
+  xy: 165, 507
   size: 128, 192
   orig: 128, 192
   offset: 0, 0
   index: -1
 BigAssMaverickRobot/Hand/rocket
   rotate: false
-  xy: 67, 101
+  xy: 1, 101
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -26,63 +26,63 @@ BigAssMaverickRobot/Hand/still
   index: -1
 BigAssMaverickRobot/Head/defeated
   rotate: false
-  xy: 197, 297
+  xy: 213, 345
   size: 80, 160
   orig: 80, 160
   offset: 0, 0
   index: -1
 BigAssMaverickRobot/Head/down
   rotate: false
-  xy: 279, 297
+  xy: 295, 345
   size: 80, 160
   orig: 80, 160
   offset: 0, 0
   index: -1
 BigAssMaverickRobot/Head/stunned
   rotate: false
-  xy: 361, 297
+  xy: 377, 345
   size: 80, 160
   orig: 80, 160
   offset: 0, 0
   index: -1
 BigAssMaverickRobot/Head/turn
   rotate: false
-  xy: 1, 459
+  xy: 1, 507
   size: 80, 160
   orig: 80, 160
   offset: 0, 0
   index: -1
 BigAssMaverickRobot/Head/turn_up
   rotate: false
-  xy: 83, 459
+  xy: 83, 507
   size: 80, 160
   orig: 80, 160
   offset: 0, 0
   index: -1
 PreciousWoman/airpunch1
   rotate: false
-  xy: 1, 297
+  xy: 415, 199
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
   index: -1
 PreciousWoman/airpunch2
   rotate: false
-  xy: 165, 101
+  xy: 99, 101
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 PreciousWoman/damaged
   rotate: false
-  xy: 215, 101
+  xy: 149, 101
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 PreciousWoman/defeated
   rotate: false
-  xy: 313, 101
+  xy: 247, 101
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -103,42 +103,42 @@ PreciousWoman/jump
   index: -1
 PreciousWoman/jump_throw
   rotate: false
-  xy: 295, 459
+  xy: 295, 507
   size: 48, 240
   orig: 48, 240
   offset: 0, 0
   index: -1
 PreciousWoman/run
   rotate: false
-  xy: 1, 199
+  xy: 345, 101
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 PreciousWoman/stand
   rotate: false
-  xy: 99, 199
+  xy: 1, 199
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 PreciousWoman/stand_laugh1
   rotate: false
-  xy: 149, 199
+  xy: 51, 199
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 PreciousWoman/stand_laugh2
   rotate: false
-  xy: 199, 199
+  xy: 101, 199
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 PreciousWoman/stand_throw
   rotate: false
-  xy: 345, 459
+  xy: 345, 507
   size: 48, 240
   orig: 48, 240
   offset: 0, 0
@@ -152,9 +152,16 @@ PreciousWoman/wallslide
   index: -1
 PreciousWoman/wink
   rotate: false
-  xy: 51, 297
+  xy: 1, 345
   size: 144, 144
   orig: 144, 144
+  offset: 0, 0
+  index: -1
+RodentMan/defeated
+  rotate: false
+  xy: 147, 345
+  size: 64, 144
+  orig: 64, 144
   offset: 0, 0
   index: -1
 RodentMan/jump_down_look_down
@@ -173,7 +180,7 @@ RodentMan/jump_down_look_straight
   index: -1
 RodentMan/jump_slash
   rotate: false
-  xy: 249, 199
+  xy: 151, 199
   size: 64, 96
   orig: 64, 96
   offset: 0, 0
@@ -187,35 +194,42 @@ RodentMan/jump_up_look_down
   index: -1
 RodentMan/jump_up_look_up
   rotate: false
-  xy: 1, 51
+  xy: 399, 1
   size: 64, 48
   orig: 64, 48
   offset: 0, 0
   index: -1
 RodentMan/run
   rotate: false
-  xy: 67, 51
+  xy: 1, 51
   size: 320, 48
   orig: 320, 48
   offset: 0, 0
   index: -1
+RodentMan/shielded
+  rotate: false
+  xy: 217, 199
+  size: 64, 96
+  orig: 64, 96
+  offset: 0, 0
+  index: -1
 RodentMan/stand
   rotate: false
-  xy: 315, 199
+  xy: 283, 199
   size: 64, 96
   orig: 64, 96
   offset: 0, 0
   index: -1
 RodentMan/stand_slash
   rotate: false
-  xy: 381, 199
+  xy: 349, 199
   size: 64, 96
   orig: 64, 96
   offset: 0, 0
   index: -1
 RodentMan/wallslide
   rotate: false
-  xy: 1, 101
+  xy: 323, 51
   size: 64, 48
   orig: 64, 48
   offset: 0, 0

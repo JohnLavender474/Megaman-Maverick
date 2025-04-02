@@ -191,6 +191,7 @@ sounds/explosion2.wav
 sounds/mm1_victory.mp3
 sounds/disappearing_block.mp3
 sounds/megaman_damage.mp3
+sounds/whip_v2.mp3
 sounds/water_splash.wav
 sounds/buster_charging.mp3
 sounds/jetpack.mp3
@@ -214,6 +215,7 @@ sounds/jump.mp3
 sounds/burst.wav
 sounds/quake.mp3
 sounds/floating_portal.wav
+sounds/whip_v2.wav
 sounds/whoosh.mp3
 sounds/one_up.wav
 Megaman.png
@@ -513,6 +515,7 @@ sprites/frames/Decorations1/Thread.png
 sprites/frames/Decorations1/SandSplash.png
 sprites/frames/Decorations1/RainDrop/purple.png
 sprites/frames/Decorations1/RainDrop/blue.png
+sprites/frames/Decorations1/SlashDissipation.png
 sprites/frames/Decorations1/BulletResidual.png
 sprites/frames/Decorations1/CrystalConveyorBKG.png
 sprites/frames/Decorations1/BreathBubbles.png
@@ -971,6 +974,7 @@ sprites/frames/Specials1/ToxicWater/water.png
 sprites/frames/Specials1/ToxicWater/waves.png
 sprites/frames/Specials1/Cart.png
 sprites/frames/Backgrounds5/GlacierCloudsBKG.png
+sprites/frames/Bosses3/RodentMan/shielded.png
 sprites/frames/Bosses3/RodentMan/stand_slash.png
 sprites/frames/Bosses3/RodentMan/jump_down_look_straight.png
 sprites/frames/Bosses3/RodentMan/wallslide.png
@@ -980,6 +984,7 @@ sprites/frames/Bosses3/RodentMan/jump_up_look_down.png
 sprites/frames/Bosses3/RodentMan/jump_down_look_down.png
 sprites/frames/Bosses3/RodentMan/jump_up_look_up.png
 sprites/frames/Bosses3/RodentMan/run.png
+sprites/frames/Bosses3/RodentMan/defeated.png
 sprites/frames/Bosses3/BigAssMaverickRobot/Body/body.png
 sprites/frames/Bosses3/BigAssMaverickRobot/Hand/still.png
 sprites/frames/Bosses3/BigAssMaverickRobot/Hand/rocket.png
