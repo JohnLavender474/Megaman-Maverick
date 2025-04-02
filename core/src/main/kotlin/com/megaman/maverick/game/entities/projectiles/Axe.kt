@@ -7,8 +7,12 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.extensions.add
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -21,11 +25,16 @@ import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.blocks.BreakableBlock
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.decorations.BlockPiece.BlockPieceColor
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
 class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
@@ -46,9 +55,7 @@ class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity
 
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
-
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -61,6 +68,18 @@ class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+    }
+
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        GameLogger.debug(TAG, "hitBlock()")
+
+        destroy()
+
+        val direction = UtilMethods.getOverlapPushDirection(thisShape, otherShape) ?: Direction.UP
+        val position = thisShape.getCenter().add(0.5f * ConstVals.PPM, direction.getOpposite())
+        BreakableBlock.breakApart(position, BlockPieceColor.BROWN)
+
+        playSoundNow(SoundAsset.THUMP_SOUND, false)
     }
 
     override fun defineBodyComponent(): BodyComponent {

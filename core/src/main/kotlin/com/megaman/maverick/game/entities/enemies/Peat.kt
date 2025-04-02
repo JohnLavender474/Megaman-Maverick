@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.gdxArrayOf
@@ -29,6 +30,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -45,6 +47,7 @@ class Peat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
         private const val DELAY_DUR = 0.5f
         private const val SPEED = 8f
         private const val MIN_SPEED = 2f
+        private const val MAX_SPAWNED = 2
         private var region: TextureRegion? = null
     }
 
@@ -57,12 +60,16 @@ class Peat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
     private var moving = false
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }
 
+    override fun canSpawn(spawnProps: Properties) = MegaGameEntities.getOfTag(TAG).size < MAX_SPAWNED
+
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()

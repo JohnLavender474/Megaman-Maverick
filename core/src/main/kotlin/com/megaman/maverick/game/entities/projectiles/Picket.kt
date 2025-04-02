@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.add
@@ -26,6 +27,7 @@ import com.mega.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.blocks.BreakableBlock
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
@@ -42,12 +44,14 @@ class Picket(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEnt
     }
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -57,12 +61,21 @@ class Picket(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEnt
         body.physics.velocity.set(impulse)
     }
 
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+    }
+
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        GameLogger.debug(TAG, "hitBlock()")
+
         destroy()
 
         val direction = UtilMethods.getOverlapPushDirection(thisShape, otherShape) ?: Direction.UP
         val position = thisShape.getCenter().add(0.5f * ConstVals.PPM, direction.getOpposite())
         BreakableBlock.breakApart(position, BlockPieceColor.BROWN)
+
+        playSoundNow(SoundAsset.THUMP_SOUND, false)
     }
 
     override fun defineBodyComponent(): BodyComponent {

@@ -162,19 +162,19 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
         val xOffset = megaman.facing.value * when {
             megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 1f
-            megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> 0.75f
+            megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> 1f
             megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.5f
             megaman.isBehaviorActive(BehaviorType.CROUCHING) -> 1f
             !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> 1f
             megaman.slipSliding -> 1f
-            megaman.running -> 1.5f
+            megaman.running -> 1.75f
             else -> 1.25f
         }
 
         var yOffset = when {
             megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 0.1f
             megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) ->
-                if (megaman.direction == Direction.LEFT) 0.3f else 0.35f
+                if (megaman.direction == Direction.LEFT) 0.2f else 0.25f
 
             megaman.isBehaviorActive(BehaviorType.JETPACKING) -> 0.2f
             megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.25f

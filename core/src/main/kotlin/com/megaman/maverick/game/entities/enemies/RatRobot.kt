@@ -2,12 +2,14 @@ package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
@@ -77,6 +79,7 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     private val objs = Array<RectangleMapObject>()
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             animDefs.keys().forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
@@ -86,15 +89,20 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
+        val spawn = when {
+            spawnProps.containsKey(ConstKeys.POSITION) -> spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+            else -> spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
+        }
         body.setCenter(spawn)
 
         getObjectProps(spawnProps, objs).forEach { triggers.add(it.rectangle.toGameRectangle(false)) }
         triggered = triggers.isEmpty
 
         frozen = false
+
         facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 

@@ -27,7 +27,7 @@ enum class LevelDefinition(
         type = LevelType.ROBOT_MASTER_LEVEL,
         mugshotAtlas = "FACES_1",
         mugshotRegion = "Timber Woman",
-        tmxMapSource = "TimberWoman_16x14_v2.tmx",
+        tmxMapSource = "TimberWoman_16x14_v3.tmx",
         music = MusicAsset.MEGA_QUEST_2_LEVEL_1_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),

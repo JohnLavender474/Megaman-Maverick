@@ -493,8 +493,8 @@
   <object id="40" name="SpikeCopter" x="952" y="2616" width="16" height="16"/>
   <object id="107" name="DragonFly" x="4480" y="1552" width="32" height="32"/>
   <object id="108" name="DragonFly" x="4800" y="1408" width="32" height="32"/>
-  <object id="109" name="DragonFly" x="5024" y="1248" width="32" height="32"/>
-  <object id="110" name="DragonFly" x="4960" y="1344" width="32" height="32"/>
+  <object id="109" name="DragonFly" x="5024" y="1200" width="32" height="32"/>
+  <object id="110" name="DragonFly" x="4960" y="1328" width="32" height="32"/>
   <object id="111" name="ShieldAttacker" x="5224" y="1352" width="16" height="16">
    <properties>
     <property name="value" type="float" value="-6"/>

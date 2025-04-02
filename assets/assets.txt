@@ -935,7 +935,6 @@ sprites/frames/Projectiles2/MagmaMeteor.png
 sprites/frames/Projectiles2/Nutt.png
 sprites/frames/Projectiles2/SpitFireball.png
 sprites/frames/Specials1/SwitcharooArrow.png
-sprites/frames/Specials1/SpringBounce.png
 sprites/frames/Specials1/GravitySwitcharoo/arrow.png
 sprites/frames/Specials1/GravitySwitcharoo/aura.png
 sprites/frames/Specials1/Cart/move.png
@@ -956,7 +955,8 @@ sprites/frames/Specials1/FloorButton/down.png
 sprites/frames/Specials1/LightSwitch/Off.png
 sprites/frames/Specials1/LightSwitch/On.png
 sprites/frames/Specials1/LightSwitch/SwitchOff.png
-sprites/frames/Specials1/SpringBounceStill.png
+sprites/frames/Specials1/SpringBouncer/still.png
+sprites/frames/Specials1/SpringBouncer/bounce.png
 sprites/frames/Specials1/CartV2/move.png
 sprites/frames/Specials1/CartV2/idle.png
 sprites/frames/Specials1/RailTrack/middle.png
@@ -971,7 +971,15 @@ sprites/frames/Specials1/ToxicWater/water.png
 sprites/frames/Specials1/ToxicWater/waves.png
 sprites/frames/Specials1/Cart.png
 sprites/frames/Backgrounds5/GlacierCloudsBKG.png
-sprites/frames/Bosses3/RodentMan/slash.png
+sprites/frames/Bosses3/RodentMan/stand_slash.png
+sprites/frames/Bosses3/RodentMan/jump_down_look_straight.png
+sprites/frames/Bosses3/RodentMan/wallslide.png
+sprites/frames/Bosses3/RodentMan/stand.png
+sprites/frames/Bosses3/RodentMan/jump_slash.png
+sprites/frames/Bosses3/RodentMan/jump_up_look_down.png
+sprites/frames/Bosses3/RodentMan/jump_down_look_down.png
+sprites/frames/Bosses3/RodentMan/jump_up_look_up.png
+sprites/frames/Bosses3/RodentMan/run.png
 sprites/frames/Bosses3/BigAssMaverickRobot/Body/body.png
 sprites/frames/Bosses3/BigAssMaverickRobot/Hand/still.png
 sprites/frames/Bosses3/BigAssMaverickRobot/Hand/rocket.png
@@ -1485,6 +1493,7 @@ sprites/frames/Projectiles1/ReactorMonkeyBall/3.png
 sprites/frames/Projectiles1/ReactorMonkeyBall/0.png
 sprites/frames/Projectiles1/ReactorMonkeyBall/1.png
 sprites/frames/Projectiles1/ReactorMonkeyBall/2.png
+sprites/frames/Projectiles1/SlashWave.png
 sprites/frames/Projectiles1/HalfChargedShot.png
 sprites/frames/Projectiles1/Asteroid.png
 sprites/frames/Projectiles1/PreciousGem/purple.png
@@ -2976,6 +2985,7 @@ tiled_maps/tmx/GlacierMan_16x12_v2.tmx
 tiled_maps/tmx/TimberWoman_16x14_v2.tmx
 tiled_maps/tmx/MoonMan_v3.tmx
 tiled_maps/tmx/MoonMan_16x14.tmx
+tiled_maps/tmx/TimberWoman_16x14_v3.tmx
 tiled_maps/tmx/DesertMan_v2.tmx
 tiled_maps/tmx/Test3.tmx
 tiled_maps/tmx/InfernoMan_16x14.tmx

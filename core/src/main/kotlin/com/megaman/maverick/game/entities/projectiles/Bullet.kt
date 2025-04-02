@@ -76,7 +76,9 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
 
         bounced = 0
 
-        spawnResidual()
+        val shouldSpawnResidual =
+            spawnProps.getOrDefault("${ConstKeys.SPAWN}_${ConstKeys.RESIDUAL}", true, Boolean::class)
+        if (shouldSpawnResidual) spawnResidual()
     }
 
     private fun spawnResidual() {
@@ -156,7 +158,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.25f * ConstVals.PPM)
+        body.setSize(0.5f * ConstVals.PPM, 0.35f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         body.physics.velocityClamp.set(CLAMP * ConstVals.PPM)
@@ -170,10 +172,9 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
             VelocityAlterator.alterate(body, alteration)
         }
         bodyFixture.setForceAlterationForState(ProcessState.END) { _ ->
-            val newVelocity = body.getProperty("${ConstKeys.START}_${ConstKeys.VELOCITY}", Vector2::class)
+            val newVelocity = body.removeProperty("${ConstKeys.START}_${ConstKeys.VELOCITY}", Vector2::class)
             GameLogger.debug(TAG, "end force alteration: newVel=$newVelocity")
             newVelocity?.let { body.physics.velocity.set(it) }
-            body.removeProperty("${ConstKeys.START}_${ConstKeys.VELOCITY}")
         }
         body.addFixture(bodyFixture)
 

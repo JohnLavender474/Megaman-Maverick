@@ -284,10 +284,10 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
     private fun spawnHands() {
         GameLogger.debug(TAG, "spawnHands()")
 
-        val leftHandPosition = removeProperty(ConstKeys.LEFT, RectangleMapObject::class).rectangle.getCenter()
+        val leftHandPosition = removeProperty(ConstKeys.LEFT, RectangleMapObject::class)!!.rectangle.getCenter()
         val leftArmOrigin = removeProperty(
             "${ConstKeys.LEFT}_${ConstKeys.ARM}_${ConstKeys.ORIGIN}", RectangleMapObject::class
-        ).rectangle.getCenter()
+        )!!.rectangle.getCenter()
         val leftLaunchSpeedSupplier: () -> Float = speed@{
             return@speed ConstVals.PPM * UtilMethods.interpolate(
                 HAND_LAUNCH_MIN_SPEED, HAND_LAUNCH_MAX_SPEED, 1f - getHealthRatio()
@@ -311,10 +311,10 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         )
         allHands.add(leftHand)
 
-        val rightHandPosition = removeProperty(ConstKeys.RIGHT, RectangleMapObject::class).rectangle.getCenter()
+        val rightHandPosition = removeProperty(ConstKeys.RIGHT, RectangleMapObject::class)!!.rectangle.getCenter()
         val rightArmOrigin = removeProperty(
             "${ConstKeys.RIGHT}_${ConstKeys.ARM}_${ConstKeys.ORIGIN}", RectangleMapObject::class
-        ).rectangle.getCenter()
+        )!!.rectangle.getCenter()
         val rightLaunchSpeedSupplier: () -> Float = speed@{
             return@speed ConstVals.PPM * UtilMethods.interpolate(
                 HAND_LAUNCH_MIN_SPEED, HAND_LAUNCH_MAX_SPEED, 1f - getHealthRatio()

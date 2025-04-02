@@ -307,6 +307,57 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Bosses3/RodentMan/jump_down_look_down.png</key>
+            <key type="filename">../frames/Bosses3/RodentMan/jump_down_look_straight.png</key>
+            <key type="filename">../frames/Bosses3/RodentMan/jump_up_look_down.png</key>
+            <key type="filename">../frames/Bosses3/RodentMan/jump_up_look_up.png</key>
+            <key type="filename">../frames/Bosses3/RodentMan/wallslide.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,12,32,24</rect>
+                <key>scale9Paddings</key>
+                <rect>16,12,32,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses3/RodentMan/jump_slash.png</key>
+            <key type="filename">../frames/Bosses3/RodentMan/stand.png</key>
+            <key type="filename">../frames/Bosses3/RodentMan/stand_slash.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,24,32,48</rect>
+                <key>scale9Paddings</key>
+                <rect>16,24,32,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses3/RodentMan/run.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>80,12,160,24</rect>
+                <key>scale9Paddings</key>
+                <rect>80,12,160,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
         </map>
         <key>fileLists</key>
         <map type="SpriteSheetMap">

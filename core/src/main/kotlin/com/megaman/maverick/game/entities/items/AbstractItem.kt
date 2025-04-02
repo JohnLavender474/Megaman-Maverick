@@ -43,8 +43,8 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
         private const val GRAVITY = 0.25f
         private const val WATER_GRAVITY = 0.1f
 
-        private const val VEL_CLAMP = 5f
-        private const val WATER_VEL_CLAMP = 1.5f
+        private const val VEL_CLAMP = 10f
+        private const val WATER_VEL_CLAMP = 2.5f
     }
 
     override var direction: Direction
@@ -100,6 +100,8 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
 
     open fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
+        body.physics.applyFrictionX = false
+        body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
 

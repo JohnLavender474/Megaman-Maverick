@@ -1,5 +1,6 @@
 package com.mega.game.engine.state
 
+import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.interfaces.Resettable
 
 class StateMachine<T>(
@@ -17,8 +18,8 @@ class StateMachine<T>(
         if (callOnChangeState) onChangeState?.invoke(currentState.element, previousState.element)
     }
 
-    fun next(): T {
-        val nextState = currentState.getNextState()
+    fun next(params: Array<Any?> = Array()): T {
+        val nextState = currentState.getNextState(params)
         if (nextState != null && (currentState != nextState || triggerChangeWhenSameElement)) {
             val previousStateElement = currentState.element
             currentState = nextState

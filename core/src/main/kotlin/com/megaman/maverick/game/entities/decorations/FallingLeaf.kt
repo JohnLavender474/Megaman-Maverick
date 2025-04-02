@@ -37,6 +37,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.getCenter
 
@@ -51,6 +52,7 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
         private const val DEFAULT_MAX_TRAJECTORY_Y = -3f
         private const val DEFAULT_MIN_ELAPSE_DURATION = 0.5f
         private const val DEFAULT_MAX_ELAPSE_DURATION = 2f
+        private const val TRANS_DUR = 0.5f
         private const val FADE_OUT_TIME = 1f
         private const val MIN_Y_OFFSET = 20f
         private const val MAX_SPAWNED_ALLOWED = 20
@@ -59,10 +61,12 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
     private val spawnPosition = Vector2()
     private val currentPosition = Vector2()
 
+    private val prevTrajectory = Vector2()
     private val currentTrajectory = Vector2()
     private val minTrajectory = Vector2()
     private val maxTrajectory = Vector2()
 
+    private val transTimer = Timer(TRANS_DUR)
     private val elapseTimer = Timer()
 
     private val fadeTimer = Timer(FADE_OUT_TIME)
@@ -74,7 +78,9 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
     private var minY = 0f
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENVIRONS_1.source, "Wood/$TAG")
+        super.init()
         addComponent(defineCullablesComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineSpritesComponent())
@@ -115,12 +121,15 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
         maxTrajectory.set(maxX, maxY)
 
         currentTrajectory.set(getRandom(minTrajectory.x, maxTrajectory.x), getRandom(minTrajectory.y, maxTrajectory.y))
+        prevTrajectory.set(currentTrajectory)
 
         minElapseDuration =
             spawnProps.getOrDefault("${ConstKeys.MIN}_${ConstKeys.ELAPSE}", DEFAULT_MIN_ELAPSE_DURATION, Float::class)
         maxElapseDuration =
             spawnProps.getOrDefault("${ConstKeys.MAX}_${ConstKeys.ELAPSE}", DEFAULT_MAX_ELAPSE_DURATION, Float::class)
         elapseTimer.resetDuration(getRandom(minElapseDuration, maxElapseDuration))
+
+        transTimer.setToEnd()
 
         fadeTimer.reset()
         fading = false
@@ -151,6 +160,7 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
     }
 
     fun fadeOutToDestroy() {
+        GameLogger.debug(TAG, "fadeOutToDestroy()")
         fading = true
         fadeTimer.reset()
     }
@@ -166,17 +176,34 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
     )
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        elapseTimer.update(delta)
-        if (elapseTimer.isFinished()) {
-            val duration = getRandom(minElapseDuration, maxElapseDuration)
-            elapseTimer.resetDuration(duration)
+        if (transTimer.isFinished()) {
+            currentPosition.add(
+                currentTrajectory.x * delta * ConstVals.PPM,
+                currentTrajectory.y * delta * ConstVals.PPM
+            )
 
-            val trajX = getRandom(minTrajectory.x, maxTrajectory.x)
-            val trajY = getRandom(minTrajectory.y, maxTrajectory.y)
-            currentTrajectory.set(trajX, trajY)
+            elapseTimer.update(delta)
+            if (elapseTimer.isFinished()) {
+                val duration = getRandom(minElapseDuration, maxElapseDuration)
+                elapseTimer.resetDuration(duration)
+
+                prevTrajectory.set(currentTrajectory)
+
+                val trajX = getRandom(minTrajectory.x, maxTrajectory.x)
+                val trajY = getRandom(minTrajectory.y, maxTrajectory.y)
+                currentTrajectory.set(trajX, trajY)
+
+                transTimer.reset()
+            }
+        } else {
+            transTimer.update(delta)
+
+            val transTraj = MegaUtilMethods.interpolate(prevTrajectory, currentTrajectory, transTimer.getRatio())
+            currentPosition.add(
+                transTraj.x * ConstVals.PPM * delta,
+                transTraj.y * ConstVals.PPM * delta
+            )
         }
-
-        currentPosition.add(currentTrajectory.cpy().scl(delta * ConstVals.PPM))
 
         if (fading) {
             fadeTimer.update(delta)
@@ -189,8 +216,8 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 1))
         sprite.setSize(4f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.setCenter(currentPosition)
             val alpha = when {
                 fading -> 1f - fadeTimer.getRatio()
@@ -198,7 +225,7 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
             }
             sprite.setAlpha(alpha)
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

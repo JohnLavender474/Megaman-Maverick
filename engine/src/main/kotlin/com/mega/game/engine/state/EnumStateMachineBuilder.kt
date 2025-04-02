@@ -1,5 +1,6 @@
 package com.mega.game.engine.state
 
+import com.badlogic.gdx.utils.Array
 import kotlin.enums.EnumEntries
 
 class EnumStateMachineBuilder<E : Enum<E>>() {
@@ -31,7 +32,7 @@ class EnumStateMachineBuilder<E : Enum<E>>() {
         return this
     }
 
-    fun transition(fromState: E, toState: E, condition: () -> Boolean): EnumStateMachineBuilder<E> {
+    fun transition(fromState: E, toState: E, condition: (Array<Any?>) -> Boolean): EnumStateMachineBuilder<E> {
         builder.transition(fromState.name, toState.name, condition)
         return this
     }

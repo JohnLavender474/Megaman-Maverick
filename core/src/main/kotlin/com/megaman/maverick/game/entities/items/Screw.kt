@@ -31,12 +31,11 @@ class Screw(game: MegamanMaverickGame) : AbstractEnergyItem(game) {
     }
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (!regions.containsKey(getTag())) {
             val map = ObjectMap<String, TextureRegion>()
-
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ITEMS_1.source)
             animDefs.keys().forEach { key -> map.put(key, atlas.findRegion("${getTag()}/$key")) }
-
             regions.put(getTag(), map)
         }
         super.init()
@@ -45,9 +44,7 @@ class Screw(game: MegamanMaverickGame) : AbstractEnergyItem(game) {
 
     override fun contactWithPlayer(megaman: Megaman) {
         GameLogger.debug(TAG, "contactWithPlayer()")
-
         destroy()
-
         game.eventsMan.submitEvent(
             Event(
                 EventType.ADD_CURRENCY, props(ConstKeys.VALUE pairTo if (large) LARGE_AMOUNT else SMALL_AMOUNT)
@@ -62,7 +59,6 @@ class Screw(game: MegamanMaverickGame) : AbstractEnergyItem(game) {
         animDefs.forEach { entry ->
             val key = entry.key
             val fullKey = "${getTag()}/$key"
-
             try {
                 val region = regions[getTag()][key]
                 val (rows, columns, durations, loop) = entry.value
@@ -76,7 +72,6 @@ class Screw(game: MegamanMaverickGame) : AbstractEnergyItem(game) {
         }
 
         val animator = Animator(keySupplier, animations)
-
         return AnimationsComponent(this, animator)
     }
 

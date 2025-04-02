@@ -48,6 +48,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val RESIDUAL = "residual"
     const val CHECKPOINT = "checkpoint"
     const val PINK = "pink"
     const val PIECE = "piece"

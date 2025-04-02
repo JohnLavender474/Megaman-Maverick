@@ -41,11 +41,10 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
@@ -199,12 +198,13 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         val props = props(
             ConstKeys.OWNER pairTo this,
             ConstKeys.POSITION pairTo spawn,
+            ConstKeys.DIRECTION pairTo direction,
             ConstKeys.TRAJECTORY pairTo trajectory,
-            ConstKeys.DIRECTION pairTo direction
+            "${ConstKeys.SPAWN}_${ConstKeys.RESIDUAL}" pairTo false
         )
         if (applyMovementScalarToBullet) props.put("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", movementScalar)
 
-        val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
+        val bullet = MegaEntityFactory.fetch(Bullet::class)!!
         bullet.spawn(props)
 
         requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)

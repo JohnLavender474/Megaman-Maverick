@@ -35,11 +35,10 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -219,8 +218,6 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
         requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
 
         BULLET_TRAJECTORIES.forEach {
-            val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
-
             val spawn = body.getCenter()
             when {
                 it.x > 0 -> spawn.x += 0.2f * ConstVals.PPM
@@ -234,12 +231,14 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
             val trajectory = it.cpy().scl(movementScalar * ConstVals.PPM)
             if (upsideDown) trajectory.y *= -1f
 
+            val bullet = MegaEntityFactory.fetch(Bullet::class)!!
             bullet.spawn(
                 props(
+                    "${ConstKeys.SPAWN}_${ConstKeys.RESIDUAL}" pairTo false,
+                    ConstKeys.DIRECTION pairTo megaman.direction,
                     ConstKeys.TRAJECTORY pairTo trajectory,
                     ConstKeys.POSITION pairTo spawn,
                     ConstKeys.OWNER pairTo this,
-                    ConstKeys.DIRECTION pairTo megaman.direction
                 )
             )
         }

@@ -28,6 +28,16 @@ const val MEGAMAN_BODY_HEIGHT = 1.35f
 
 const val GROUNDSLIDE_HEIGHT = 0.75f
 
+val BEHAVIORS_TO_END_ON_BOUNCE = gdxArrayOf(
+    BehaviorType.WALL_SLIDING,
+    BehaviorType.AIR_DASHING,
+    BehaviorType.GROUND_SLIDING,
+    BehaviorType.SWIMMING,
+    BehaviorType.JETPACKING,
+    BehaviorType.CLIMBING,
+    BehaviorType.CROUCHING
+)
+
 val Megaman.feetFixture: Fixture
     get() = body.getProperty(ConstKeys.FEET) as Fixture
 
@@ -66,12 +76,22 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.addFixture(bodyFixture)
     body.putProperty(ConstKeys.BODY, bodyFixture)
 
-    val onBounce = { if (!body.isSensing(BodySense.IN_WATER)) aButtonTask = AButtonTask.AIR_DASH }
+    val onBounce = {
+        BEHAVIORS_TO_END_ON_BOUNCE.forEach { behaviorType ->
+            if (isBehaviorActive(behaviorType)) {
+                val behavior = getBehavior(behaviorType)
+                if (behavior?.isActive() == true) behavior.reset()
+            }
+        }
+    }
 
     val feetFixture =
         Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.25f * ConstVals.PPM))
     feetFixture.offsetFromBodyAttachment.y = -MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
-    feetFixture.setRunnable(onBounce)
+    feetFixture.setRunnable {
+        onBounce.invoke()
+        if (!body.isSensing(BodySense.IN_WATER)) aButtonTask = AButtonTask.AIR_DASH
+    }
     body.addFixture(feetFixture)
     feetFixture.drawingColor = Color.GREEN
     debugShapes.add { feetFixture }

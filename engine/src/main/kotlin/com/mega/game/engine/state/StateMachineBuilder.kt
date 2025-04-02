@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.ObjectMap
 open class StateMachineBuilder<T> {
 
     private val stateDefinitions = ObjectMap<String, T>()
-    private val transitionDefinitions = Array<Triple<String, String, () -> Boolean>>()
+    private val transitionDefinitions = Array<Triple<String, String, (Array<Any?>) -> Boolean>>()
     private var initialStateName: String? = null
     private var onChangeState: ((T, T) -> Unit)? = null
     private var triggerChangeWhenSameElement = false
@@ -22,14 +22,14 @@ open class StateMachineBuilder<T> {
         return this
     }
 
-    fun transitionForAll(toState: String, condition: () -> Boolean): StateMachineBuilder<T> {
+    fun transitionForAll(toState: String, condition: (Array<Any?>) -> Boolean): StateMachineBuilder<T> {
         stateDefinitions.keys().filter { key -> key != toState }.forEach { fromState ->
             transitionDefinitions.add(Triple(fromState, toState, condition))
         }
         return this
     }
 
-    fun transition(fromState: String, toState: String, condition: () -> Boolean): StateMachineBuilder<T> {
+    fun transition(fromState: String, toState: String, condition: (Array<Any?>) -> Boolean): StateMachineBuilder<T> {
         transitionDefinitions.add(Triple(fromState, toState, condition))
         return this
     }

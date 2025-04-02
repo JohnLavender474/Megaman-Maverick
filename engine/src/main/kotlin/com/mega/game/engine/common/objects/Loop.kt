@@ -16,10 +16,7 @@ class Loop<T> : Iterable<T>, Resettable {
         index = 0
     }
 
-    constructor(
-        elements: Array<T>,
-        startBeforeFirst: Boolean = false,
-    ) {
+    constructor(elements: Array<T>, startBeforeFirst: Boolean = false) {
         array = Array(elements)
         index = if (startBeforeFirst) -1 else 0
     }
@@ -42,12 +39,15 @@ class Loop<T> : Iterable<T>, Resettable {
 
     fun isBeforeFirst() = index == -1
 
+    fun isFirst() = index == 0
+
+    fun isLast() = index == size - 1
+
     fun getCurrent(): T {
         if (size == 0) throw NoSuchElementException("The loop is empty.")
-        if (isBeforeFirst())
-            throw NoSuchElementException(
-                "The loop is before the first element. Must call 'next()' first"
-            )
+        if (isBeforeFirst()) throw NoSuchElementException(
+            "The loop is set to before the first element. Must call 'next()' first."
+        )
         return array[index]
     }
 
