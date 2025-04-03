@@ -1,166 +1,130 @@
-===== SESSION STARTED: 2025-04-02T19:26:37.409921721 =====
-19:26:46 | DEBUG | RodentMan | init()
-19:26:46 | DEBUG | RodentMan | onSpawn(): spawnProps=Properties({
+===== SESSION STARTED: 2025-04-02T23:30:50.231015755 =====
+23:34:45 | DEBUG | RodentMan | init()
+23:34:45 | DEBUG | RodentMan | onSpawn(): spawnProps=Properties({
 	[bounds=[4640.0,416.0,32.0,32.0]]
 	[x=4640.0]
-	[child_2=com.badlogic.gdx.maps.objects.RectangleMapObject@5918c260]
+	[child_2=com.badlogic.gdx.maps.objects.RectangleMapObject@26d41711]
 	[height=32.0]
-	[min_wall_run_jump_y=com.badlogic.gdx.maps.objects.RectangleMapObject@3d7b1f1c]
-	[right=com.badlogic.gdx.maps.objects.RectangleMapObject@51ce6f85]
-	[max_wall_run_jump_y=com.badlogic.gdx.maps.objects.RectangleMapObject@1f44ddab]
+	[min_wall_run_jump_y=com.badlogic.gdx.maps.objects.RectangleMapObject@298f0a0b]
+	[right=com.badlogic.gdx.maps.objects.RectangleMapObject@2b960a7]
+	[max_wall_run_jump_y=com.badlogic.gdx.maps.objects.RectangleMapObject@31dfc6f5]
 	[id=516]
-	[child_1=com.badlogic.gdx.maps.objects.RectangleMapObject@5017e1]
-	[left=com.badlogic.gdx.maps.objects.RectangleMapObject@65b66b08]
+	[child_1=com.badlogic.gdx.maps.objects.RectangleMapObject@37b52340]
+	[left=com.badlogic.gdx.maps.objects.RectangleMapObject@663bb8ef]
 	[y=416.0]
 	[width=32.0]
 })
-19:26:48 | DEBUG | RodentMan | update(): timer finished for currentState=INIT
-19:26:48 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=INIT
-19:26:48 | DEBUG | RodentMan | onReady()
-19:26:51 | LOG | RodentMan | onEvent: event=Event(key=END_BOSS_SPAWN, properties=Properties({
+23:34:46 | DEBUG | RodentMan | update(): timer finished for currentState=INIT
+23:34:46 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=INIT
+23:34:46 | DEBUG | RodentMan | onReady()
+23:34:49 | LOG | RodentMan | onEvent: event=Event(key=END_BOSS_SPAWN, properties=Properties({
 }))
-19:26:51 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
-19:26:51 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=STAND
-19:26:51 | DEBUG | RodentMan | jump(): impulseX=-339.43896, impulseY=629.39557
-19:26:53 | DEBUG | RodentMan | update(): end jump
-19:26:53 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
-19:26:55 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
-19:26:55 | DEBUG | RodentMan | onChangeState(): current=RUN, previous=STAND
-19:26:55 | DEBUG | RodentMan | update(): onWallState: null --> BEGIN
-19:26:55 | DEBUG | RodentMan | update(): onWallState: BEGIN
-19:26:55 | DEBUG | RodentMan | update(): onWallState: CONTINUE --> END: should jump from wall running
-19:26:55 | DEBUG | RodentMan | update(): onWallState: END
-19:26:55 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=RUN
-19:26:55 | DEBUG | RodentMan | jump(): impulseX=256.0, impulseY=384.0
-19:26:55 | DEBUG | RodentMan | onEndRunning()
-19:26:56 | DEBUG | RodentMan | update(): end jump
-19:26:56 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
-19:26:57 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
-19:26:57 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=STAND
-19:26:57 | DEBUG | RodentMan | jump(): impulseX=223.68506, impulseY=619.2
-19:26:59 | DEBUG | RodentMan | update(): end jump
-19:26:59 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
-19:27:01 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
-19:27:01 | DEBUG | RodentMan | onChangeState(): current=RUN, previous=STAND
-19:27:02 | DEBUG | RodentMan | update(): onWallState: null --> BEGIN
-19:27:02 | DEBUG | RodentMan | update(): onWallState: BEGIN
-19:27:02 | DEBUG | RodentMan | update(): onWallState: CONTINUE --> END: should jump from wall running
-19:27:02 | DEBUG | RodentMan | update(): onWallState: END
-19:27:02 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=RUN
-19:27:02 | DEBUG | RodentMan | jump(): impulseX=256.0, impulseY=384.0
-19:27:02 | DEBUG | RodentMan | onEndRunning()
-19:27:03 | DEBUG | RodentMan | update(): end jump
-19:27:03 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
-19:27:04 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
-19:27:04 | DEBUG | RodentMan | onChangeState(): current=SHIELDED, previous=STAND
-19:27:05 | DEBUG | RodentMan | update(): timer finished for currentState=SHIELDED
-19:27:05 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=SHIELDED
-19:27:07 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
-19:27:07 | DEBUG | RodentMan | onChangeState(): current=RUN, previous=STAND
-19:27:08 | DEBUG | RodentMan | update(): onWallState: null --> BEGIN
-19:27:08 | DEBUG | RodentMan | update(): onWallState: BEGIN
-19:27:08 | DEBUG | RodentMan | update(): onWallState: CONTINUE --> END: should jump from wall running
-19:27:08 | DEBUG | RodentMan | update(): onWallState: END
-19:27:08 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=RUN
-19:27:08 | DEBUG | RodentMan | jump(): impulseX=256.0, impulseY=384.0
-19:27:08 | DEBUG | RodentMan | onEndRunning()
-19:27:09 | DEBUG | RodentMan | update(): end jump
-19:27:09 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
-19:27:10 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
-19:27:10 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=STAND
-19:27:10 | DEBUG | RodentMan | jump(): impulseX=201.59473, impulseY=712.876
-19:27:11 | DEBUG | RodentMan | update(): end jump
-19:27:11 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
-19:27:13 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
-19:27:13 | DEBUG | RodentMan | onChangeState(): current=RUN, previous=STAND
-19:27:14 | DEBUG | RodentMan | update(): onWallState: null --> BEGIN
-19:27:15 | DEBUG | RodentMan | update(): onWallState: BEGIN
-19:27:15 | DEBUG | RodentMan | update(): onWallState: CONTINUE --> END: should jump from wall running
-19:27:15 | DEBUG | RodentMan | update(): onWallState: END
-19:27:15 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=RUN
-19:27:15 | DEBUG | RodentMan | jump(): impulseX=256.0, impulseY=384.0
-19:27:15 | DEBUG | RodentMan | onEndRunning()
-19:27:16 | DEBUG | RodentMan | update(): end jump
-19:27:16 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
-19:27:16 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
-19:27:16 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=STAND
-19:27:16 | DEBUG | RodentMan | jump(): impulseX=223.68408, impulseY=619.2
-19:27:18 | DEBUG | RodentMan | update(): end jump
-19:27:18 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
-19:27:20 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
-19:27:20 | DEBUG | RodentMan | onChangeState(): current=SHIELDED, previous=STAND
-19:27:21 | DEBUG | RodentMan | update(): timer finished for currentState=SHIELDED
-19:27:21 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=SHIELDED
-19:27:22 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
-19:27:22 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=STAND
-19:27:22 | DEBUG | RodentMan | jump(): impulseX=-301.43555, impulseY=619.2
-19:27:24 | DEBUG | RodentMan | update(): end jump
-19:27:24 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
-19:27:26 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
-19:27:26 | DEBUG | RodentMan | onChangeState(): current=RUN, previous=STAND
-19:27:27 | DEBUG | RodentMan | update(): onWallState: null --> BEGIN
-19:27:27 | DEBUG | RodentMan | update(): onWallState: BEGIN
-19:27:27 | DEBUG | RodentMan | update(): onWallState: CONTINUE --> END: should jump from wall running
-19:27:27 | DEBUG | RodentMan | update(): onWallState: END
-19:27:27 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=RUN
-19:27:27 | DEBUG | RodentMan | jump(): impulseX=-256.0, impulseY=384.0
-19:27:27 | DEBUG | RodentMan | onEndRunning()
-19:27:28 | DEBUG | RodentMan | update(): end jump
-19:27:28 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
-19:27:29 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
-19:27:29 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=STAND
-19:27:29 | DEBUG | RodentMan | jump(): impulseX=-223.68506, impulseY=619.2
-19:27:30 | DEBUG | RodentMan | update(): end jump
-19:27:30 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
-19:27:32 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
-19:27:32 | DEBUG | RodentMan | onChangeState(): current=RUN, previous=STAND
-19:27:34 | DEBUG | RodentMan | update(): onWallState: null --> BEGIN
-19:27:34 | DEBUG | RodentMan | update(): onWallState: BEGIN
-19:27:34 | DEBUG | RodentMan | update(): onWallState: CONTINUE --> END: should jump from wall running
-19:27:34 | DEBUG | RodentMan | update(): onWallState: END
-19:27:34 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=RUN
-19:27:34 | DEBUG | RodentMan | jump(): impulseX=-256.0, impulseY=384.0
-19:27:34 | DEBUG | RodentMan | onEndRunning()
-19:27:35 | DEBUG | RodentMan | update(): end jump
-19:27:35 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
-19:27:36 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
-19:27:36 | DEBUG | RodentMan | onChangeState(): current=SHIELDED, previous=STAND
-19:27:37 | DEBUG | RodentMan | update(): timer finished for currentState=SHIELDED
-19:27:37 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=SHIELDED
-19:27:39 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
-19:27:39 | DEBUG | RodentMan | onChangeState(): current=RUN, previous=STAND
-19:27:40 | DEBUG | RodentMan | update(): onWallState: null --> BEGIN
-19:27:40 | DEBUG | RodentMan | update(): onWallState: BEGIN
-19:27:40 | DEBUG | RodentMan | update(): onWallState: CONTINUE --> END: should jump from wall running
-19:27:40 | DEBUG | RodentMan | update(): onWallState: END
-19:27:40 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=RUN
-19:27:40 | DEBUG | RodentMan | jump(): impulseX=256.0, impulseY=384.0
-19:27:40 | DEBUG | RodentMan | onEndRunning()
-19:27:41 | DEBUG | RodentMan | update(): end jump
-19:27:41 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
-19:27:42 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
-19:27:42 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=STAND
-19:27:42 | DEBUG | RodentMan | jump(): impulseX=196.77832, impulseY=619.2
-19:27:43 | DEBUG | RodentMan | update(): end jump
-19:27:43 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
-19:27:45 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
-19:27:45 | DEBUG | RodentMan | onChangeState(): current=RUN, previous=STAND
-19:27:46 | DEBUG | RodentMan | update(): onWallState: null --> BEGIN
-19:27:46 | DEBUG | RodentMan | update(): onWallState: BEGIN
-19:27:47 | DEBUG | RodentMan | update(): onWallState: CONTINUE --> END: should jump from wall running
-19:27:47 | DEBUG | RodentMan | update(): onWallState: END
-19:27:47 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=RUN
-19:27:47 | DEBUG | RodentMan | jump(): impulseX=256.0, impulseY=384.0
-19:27:47 | DEBUG | RodentMan | onEndRunning()
-19:27:48 | DEBUG | RodentMan | update(): end jump
-19:27:48 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
-19:27:48 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
-19:27:48 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=STAND
-19:27:48 | DEBUG | RodentMan | jump(): impulseX=223.68408, impulseY=697.67346
-19:27:50 | DEBUG | RodentMan | update(): end jump
-19:27:50 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
-19:27:52 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
-19:27:52 | DEBUG | RodentMan | onChangeState(): current=SHIELDED, previous=STAND
-19:27:52 | LOG | RodentMan | onEvent: event=Event(key=PLAYER_SPAWN, properties=Properties({
-}))
-19:27:52 | DEBUG | RodentMan | onDestroy()
+23:34:49 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
+23:34:49 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=STAND
+23:34:49 | DEBUG | RodentMan | jump(): impulseX=-263.78174, impulseY=619.2
+23:34:51 | DEBUG | RodentMan | update(): end jump
+23:34:51 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
+23:34:53 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
+23:34:53 | DEBUG | RodentMan | onChangeState(): current=RUN, previous=STAND
+23:34:54 | DEBUG | RodentMan | update(): onWallState: null --> BEGIN
+23:34:54 | DEBUG | RodentMan | update(): onWallState: BEGIN
+23:34:55 | DEBUG | RodentMan | update(): onWallState: CONTINUE --> END: should jump from wall running
+23:34:55 | DEBUG | RodentMan | update(): onWallState: END
+23:34:55 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=RUN
+23:34:55 | DEBUG | RodentMan | jump(): impulseX=-256.0, impulseY=384.0
+23:34:55 | DEBUG | RodentMan | onEndRunning()
+23:34:56 | DEBUG | RodentMan | update(): end jump
+23:34:56 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
+23:34:56 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
+23:34:56 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=STAND
+23:34:56 | DEBUG | RodentMan | jump(): impulseX=168.43115, impulseY=619.2
+23:34:58 | DEBUG | RodentMan | update(): end jump
+23:34:58 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
+23:35:00 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
+23:35:00 | DEBUG | RodentMan | onChangeState(): current=RUN, previous=STAND
+23:35:01 | DEBUG | RodentMan | update(): onWallState: null --> BEGIN
+23:35:01 | DEBUG | RodentMan | update(): onWallState: BEGIN
+23:35:01 | DEBUG | RodentMan | update(): onWallState: CONTINUE --> END: should jump from wall running
+23:35:01 | DEBUG | RodentMan | update(): onWallState: END
+23:35:01 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=RUN
+23:35:01 | DEBUG | RodentMan | jump(): impulseX=256.0, impulseY=384.0
+23:35:01 | DEBUG | RodentMan | onEndRunning()
+23:35:02 | DEBUG | RodentMan | update(): end jump
+23:35:02 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
+23:35:03 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
+23:35:03 | DEBUG | RodentMan | onChangeState(): current=SHIELDED, previous=STAND
+23:35:04 | DEBUG | RodentMan | update(): timer finished for currentState=SHIELDED
+23:35:04 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=SHIELDED
+23:35:06 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
+23:35:06 | DEBUG | RodentMan | onChangeState(): current=RUN, previous=STAND
+23:35:07 | DEBUG | RodentMan | update(): onWallState: null --> BEGIN
+23:35:07 | DEBUG | RodentMan | update(): onWallState: BEGIN
+23:35:08 | DEBUG | RodentMan | update(): onWallState: CONTINUE --> END: should jump from wall running
+23:35:08 | DEBUG | RodentMan | update(): onWallState: END
+23:35:08 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=RUN
+23:35:08 | DEBUG | RodentMan | jump(): impulseX=-256.0, impulseY=384.0
+23:35:08 | DEBUG | RodentMan | onEndRunning()
+23:35:09 | DEBUG | RodentMan | update(): end jump
+23:35:09 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
+23:35:10 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
+23:35:10 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=STAND
+23:35:10 | DEBUG | RodentMan | jump(): impulseX=145.61475, impulseY=634.2134
+23:35:11 | DEBUG | RodentMan | update(): end jump
+23:35:11 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
+23:35:13 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
+23:35:13 | DEBUG | RodentMan | onChangeState(): current=RUN, previous=STAND
+23:35:14 | DEBUG | RodentMan | update(): onWallState: null --> BEGIN
+23:35:14 | DEBUG | RodentMan | update(): onWallState: BEGIN
+23:35:15 | DEBUG | RodentMan | update(): onWallState: CONTINUE --> END: should jump from wall running
+23:35:15 | DEBUG | RodentMan | update(): onWallState: END
+23:35:15 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=RUN
+23:35:15 | DEBUG | RodentMan | jump(): impulseX=256.0, impulseY=384.0
+23:35:15 | DEBUG | RodentMan | onEndRunning()
+23:35:16 | DEBUG | RodentMan | update(): end jump
+23:35:16 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
+23:35:17 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
+23:35:17 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=STAND
+23:35:17 | DEBUG | RodentMan | jump(): impulseX=185.71045, impulseY=783.72974
+23:35:19 | DEBUG | RodentMan | update(): end jump
+23:35:19 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
+23:35:21 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
+23:35:21 | DEBUG | RodentMan | onChangeState(): current=SHIELDED, previous=STAND
+23:35:22 | DEBUG | RodentMan | update(): timer finished for currentState=SHIELDED
+23:35:22 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=SHIELDED
+23:35:23 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
+23:35:23 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=STAND
+23:35:23 | DEBUG | RodentMan | jump(): impulseX=-152.65381, impulseY=619.2
+23:35:24 | DEBUG | RodentMan | update(): end jump
+23:35:24 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
+23:35:26 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
+23:35:26 | DEBUG | RodentMan | onChangeState(): current=RUN, previous=STAND
+23:35:29 | DEBUG | RodentMan | update(): onWallState: null --> BEGIN
+23:35:29 | DEBUG | RodentMan | update(): onWallState: BEGIN
+23:35:29 | DEBUG | RodentMan | update(): onWallState: CONTINUE --> END: should jump from wall running
+23:35:29 | DEBUG | RodentMan | update(): onWallState: END
+23:35:29 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=RUN
+23:35:29 | DEBUG | RodentMan | jump(): impulseX=256.0, impulseY=384.0
+23:35:29 | DEBUG | RodentMan | onEndRunning()
+23:35:30 | DEBUG | RodentMan | update(): end jump
+23:35:30 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
+23:35:31 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
+23:35:31 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=STAND
+23:35:31 | DEBUG | RodentMan | jump(): impulseX=195.15723, impulseY=705.94836
+23:35:33 | DEBUG | RodentMan | update(): end jump
+23:35:33 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
+23:35:35 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
+23:35:35 | DEBUG | RodentMan | onChangeState(): current=RUN, previous=STAND
+23:35:36 | DEBUG | RodentMan | update(): onWallState: null --> BEGIN
+23:35:36 | DEBUG | RodentMan | update(): onWallState: BEGIN
+23:35:36 | DEBUG | RodentMan | update(): onWallState: CONTINUE --> END: should jump from wall running
+23:35:36 | DEBUG | RodentMan | update(): onWallState: END
+23:35:36 | DEBUG | RodentMan | onChangeState(): current=JUMP, previous=RUN
+23:35:36 | DEBUG | RodentMan | jump(): impulseX=256.0, impulseY=384.0
+23:35:36 | DEBUG | RodentMan | onEndRunning()
+23:35:38 | DEBUG | RodentMan | update(): end jump
+23:35:38 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=JUMP
+23:35:39 | DEBUG | RodentMan | update(): timer finished for currentState=STAND
+23:35:39 | DEBUG | RodentMan | onChangeState(): current=SHIELDED, previous=STAND
+23:35:40 | DEBUG | RodentMan | update(): timer finished for currentState=SHIELDED
+23:35:40 | DEBUG | RodentMan | onChangeState(): current=STAND, previous=SHIELDED
+23:35:43 | DEBUG | RodentMan | onDestroy()

@@ -107,12 +107,14 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     }
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
+        GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
         val damaged = super.takeDamageFrom(damager)
         if (damaged && !frozen && damager is IFreezerEntity) frozen = true
         return damaged
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         triggers.clear()
     }
