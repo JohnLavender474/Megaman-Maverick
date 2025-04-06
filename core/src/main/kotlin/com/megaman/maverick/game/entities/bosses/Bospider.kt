@@ -47,13 +47,12 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.IDamageNegotiator
 import com.megaman.maverick.game.damage.dmgNeg
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.BreakableIce
 import com.megaman.maverick.game.entities.contracts.*
+import com.megaman.maverick.game.entities.enemies.BabySpider
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.IceShard
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.*
@@ -68,21 +67,27 @@ import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
 class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE), IAnimatedEntity, IParentEntity,
-    IFreezableEntity {
+    IFreezableEntity, IFireableEntity {
 
     companion object {
         const val TAG = "Bospider"
+
         private const val INIT_DUR = 5f
         private const val SPAWN_DELAY = 2f
         private const val BURN_DUR = 0.5f
         private const val FROZEN_DUR = 0.5f
+
         private const val MAX_CHILDREN = 4
+
         private const val MIN_SPEED = 7f
         private const val MAX_SPEED = 14f
+
         private const val START_POINT_OFFSET = 2f
+
         private const val OPEN_EYE_MAX_DURATION = 2f
         private const val OPEN_EYE_MIN_DURATION = 0.75f
         private const val CLOSE_EYE_DURATION = 0.35f
+
         private const val DEBUG_TIMER = 1f
 
         private val BOSS_DMG_NEG = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -92,23 +97,23 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
             MagmaFlame::class pairTo dmgNeg(8),
             ChargedShot::class pairTo dmgNeg {
                 it as ChargedShot
-                if (it.fullyCharged) 4 else 3
+                if (it.fullyCharged) 5 else 4
             },
             ChargedShotExplosion::class pairTo dmgNeg {
                 it as ChargedShotExplosion
                 if (it.fullyCharged) 3 else 2
             },
-            MoonScythe::class pairTo dmgNeg(3),
-            SmallIceCube::class pairTo dmgNeg(1)
+            MoonScythe::class pairTo dmgNeg(5),
+            SmallIceCube::class pairTo dmgNeg(2)
         )
 
         private val animDefs = orderedMapOf(
             "still" pairTo AnimationDef(),
+            "frozen" pairTo AnimationDef(),
+            "burn" pairTo AnimationDef(3, 1, 0.1f, true),
             "climb" pairTo AnimationDef(1, 5, 0.1f, true),
             "open_eye" pairTo AnimationDef(1, 4, 0.1f, false),
             "close_eye" pairTo AnimationDef(1, 4, 0.1f, false),
-            "burn" pairTo AnimationDef(3, 1, 0.1f, true),
-            "frozen" pairTo AnimationDef()
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -119,17 +124,24 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         override fun get(damager: IDamager) = BOSS_DMG_NEG[damager::class]?.get(damager) ?: 0
     }
     override var children = Array<IGameEntity>()
+    override var burning: Boolean
+        get() = !burnTimer.isFinished()
+        set(value) {
+            if (value) burnTimer.reset() else burnTimer.setToEnd()
+        }
     override var frozen: Boolean
         get() = !frozenTimer.isFinished()
         set(value) {
             if (value) frozenTimer.reset() else frozenTimer.setToEnd()
         }
+
+    private val burnTimer = Timer(BURN_DUR)
     private val frozenTimer = Timer(FROZEN_DUR)
 
     private val paths = Array<Array<Vector2>>()
     private val currentPath = Queue<Vector2>()
 
-    private val stateLoop = Loop(BospiderState.entries.toTypedArray().toGdxArray())
+    private val stateLoop = Loop(BospiderState.entries.toGdxArray())
 
     private val childrenSpawnPoints = Array<RectangleMapObject>()
 
@@ -139,14 +151,11 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
     private val initTimer = Timer(INIT_DUR)
     private val openEyeTimer = Timer()
 
-    private val burnTimer = Timer(BURN_DUR)
-    private val burning: Boolean
-        get() = !burnTimer.isFinished()
-
     private val spawn = Vector2()
     private var firstSpawn = true
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
@@ -156,6 +165,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         spawn.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter())
@@ -164,52 +174,62 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         paths.clear()
         childrenSpawnPoints.clear()
         spawnProps.forEach { _, value ->
-            if (value is PolylineMapObject) {
-                val rawPath = value.polyline.transformedVertices
-                val path = Array<Vector2>()
-                for (i in rawPath.indices step 2) path.add(Vector2(rawPath[i], rawPath[i + 1]))
-                paths.add(path)
-            } else if (value is RectangleMapObject) childrenSpawnPoints.add(value)
+            when (value) {
+                is PolylineMapObject -> {
+                    val rawPath = value.polyline.transformedVertices
+                    val path = Array<Vector2>()
+                    for (i in rawPath.indices step 2) path.add(Vector2(rawPath[i], rawPath[i + 1]))
+                    paths.add(path)
+                }
+
+                is RectangleMapObject -> childrenSpawnPoints.add(value)
+            }
         }
 
         stateLoop.reset()
         spawnDelayTimer.reset()
-
         initTimer.setToEnd()
-        burnTimer.setToEnd()
 
         firstSpawn = true
 
+        burning = false
         frozen = false
     }
 
     override fun isReady(delta: Float) = mini || initTimer.isFinished()
 
     override fun onReady() {
+        GameLogger.debug(TAG, "onReady()")
         super.onReady()
         if (!mini) game.audioMan.playMusic(MusicAsset.MM7_FINAL_BOSS_LOOP_MUSIC, true)
     }
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
         val damaged = super.takeDamageFrom(damager)
-
+        GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager, damaged=$damaged")
         if (damaged) when {
             damager is IFireEntity && !burning -> {
+                GameLogger.debug(TAG, "takeDamageFrom(): set burning")
                 frozen = false
-                burnTimer.reset()
+                burning = true
                 requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
             }
 
-            damager is IFreezerEntity && !burning && !frozen -> frozen = true
+            damager is IFreezerEntity && !burning && !frozen -> {
+                GameLogger.debug(TAG, "takeDamageFrom(): set frozen")
+                frozen = true
+            }
         }
-
         return damaged
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+
         children.forEach { (it as GameEntity).destroy() }
         children.clear()
+
         paths.clear()
     }
 
@@ -279,7 +299,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
                             val spawnProps = spawnRectObject.properties.toProps()
                             spawnProps.put(ConstKeys.BOUNDS, spawnRectObject.rectangle.toGameRectangle())
 
-                            val babySpider = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.BABY_SPIDER)!!
+                            val babySpider = MegaEntityFactory.fetch(BabySpider::class)!!
                             babySpider.spawn(spawnProps)
 
                             children.add(babySpider)
@@ -343,7 +363,10 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
     }
 
     override fun triggerDefeat() {
+        GameLogger.debug(TAG, "triggerDefeat()")
+
         super.triggerDefeat()
+
         children.forEach { (it as GameEntity).destroy() }
         children.clear()
     }
@@ -370,10 +393,15 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         body.addFixture(shieldFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            val shielded =
-                stateLoop.getCurrent().equalsAny(BospiderState.SPAWN, BospiderState.CLIMB, BospiderState.RETREAT)
-            shieldFixture.setActive(shielded)
-            damageableFixture.setActive(!shielded)
+            val shielded = stateLoop.getCurrent().equalsAny(
+                BospiderState.SPAWN, BospiderState.CLIMB, BospiderState.RETREAT
+            )
+
+            shieldFixture.setActive(shielded && !defeated)
+            damageableFixture.setActive(!shielded && !defeated)
+
+            bodyFixture.setActive(!defeated)
+            damagerFixture.setActive(!defeated)
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

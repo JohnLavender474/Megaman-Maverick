@@ -194,7 +194,7 @@ class RainFall(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntit
 
     companion object {
         const val TAG = "RainFall"
-        private const val VELOCITY = 15f
+        private const val VELOCITY = 16f
         private const val DEFAULT_ANGLE = 180f
         private const val MAX_DELAY_DUR = 0.1f
         private const val MIN_DELAY_DUR = 0.025f

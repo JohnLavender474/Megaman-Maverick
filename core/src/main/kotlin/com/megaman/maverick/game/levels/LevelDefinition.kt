@@ -20,7 +20,7 @@ enum class LevelDefinition(
     INTRO_STAGE(
         type = LevelType.INTRO_LEVEL,
         tmxMapSource = "IntroStage_v2.tmx",
-        music = MusicAsset.MMX2_INTRO_STAGE_MUSIC,
+        music = MusicAsset.VINNYZ_INTRO_STAGE_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),
     TIMBER_WOMAN(
@@ -89,7 +89,7 @@ enum class LevelDefinition(
     ),
     WILY_STAGE_1(
         type = LevelType.WILY_LEVEL,
-        tmxMapSource = "WilyStage1_v3.tmx",
+        tmxMapSource = "WilyStage1_v2.tmx",
         music = MusicAsset.MMX_SIGMA_FORTRESS_1_MUSIC,
         screenOnCompletion = { ScreenEnum.WILY_CASTLE_SCREEN }
     ),

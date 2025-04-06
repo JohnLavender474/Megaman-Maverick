@@ -160,7 +160,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
         val out = GameObjectPools.fetch(Vector2::class).set(megaman.body.getCenter())
 
-        val xOffset = megaman.facing.value * when {
+        var xOffset = megaman.facing.value * when {
             megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 1f
             megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> 1f
             megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.5f
@@ -192,6 +192,11 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         }
 
         if (megaman.direction.isVertical()) {
+            if (megaman.direction == Direction.UP &&
+                megaman.isFacing(Facing.LEFT) &&
+                weapon == MegamanWeapon.MEGA_BUSTER
+            ) xOffset -= 0.35f
+
             out.x += xOffset * ConstVals.PPM
             out.y += (if (megaman.direction == Direction.DOWN) -yOffset else yOffset) * ConstVals.PPM
 

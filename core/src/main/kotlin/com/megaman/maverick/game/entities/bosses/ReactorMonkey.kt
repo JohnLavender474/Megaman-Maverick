@@ -209,12 +209,16 @@ class ReactorMonkey(game: MegamanMaverickGame) :
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(3.5f * ConstVals.PPM, 4.25f * ConstVals.PPM)
+
+        body.preProcess.put(ConstKeys.DEFAULT) { body.forEachFixture { fixture -> fixture.setActive(!defeated) } }
+
         addComponent(
             DrawableShapesComponent(
                 debugShapeSuppliers = gdxArrayOf({ body.getBounds() }, { ballCatchArea }),
                 debug = true
             )
         )
+
         return BodyComponentCreator.create(
             this,
             body,

@@ -3046,6 +3046,7 @@ music/vinnyz_wip_1.mp3
 music/MMX5_DarkDizzy.txt
 music/MMZero3_Glacier.mp3
 music/MMX6_BossFight.txt
+music/vinnyz_intro_stage_edited.mp3
 music/MMZ_EnemyHall.txt
 music/Mega_Quest_2_Boss_Battle.mp3
 music/MMX5_Zero_Stage_1.mp3
@@ -3076,6 +3077,7 @@ music/MMX5_BossFight.mp3
 music/MMX2_X-Hunter.txt
 music/Mega_Quest_2_Level_6.ogg
 music/MMX_StormEagle.txt
+music/vinnyz_intro_stage.mp3
 music/Mega_Quest_2_Level_5.mp3
 music/MM7_Final_Boss_Intro.mp3
 music/Mega_Quest_2_Boss_Battle.ogg

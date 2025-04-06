@@ -50,12 +50,17 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
 
     companion object {
         const val TAG = "DuoBallCanon"
-        private const val DELAY = 0.5f
 
+        private const val SWITCH_STATE_DELAY = 0.5f
+
+        private const val SHOOT_BULLET_OFFSET_X = 1f
+        private const val SHOOT_BULLET_OFFSET_Y = 0.6f
         private const val BULLETS_TO_SHOOT = 3
         private const val EACH_BULLET_DUR = 0.25f
         private const val BULLET_SPEED = 10f
 
+        private const val LAUNCH_BALL_OFFSET_X = 0.15f
+        private const val LAUNCH_BALL_OFFSET_Y = 1f
         private const val BALLS_TO_LAUNCH = 2
         private const val EACH_BALL_DUR = 0.5f
         private const val BALL_IMPULSE = 8f
@@ -74,7 +79,7 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
     private val canonDirection: DuoBallCanonDirection
         get() = canonDirectionLoop.getCurrent()
 
-    private val delayTimer = Timer(DELAY)
+    private val switchStateDelay = Timer(SWITCH_STATE_DELAY)
     private val bulletsTimer = Timer(BULLETS_TO_SHOOT * EACH_BALL_DUR).also { timer ->
         for (i in 0 until BULLETS_TO_SHOOT) {
             val time = i * EACH_BULLET_DUR
@@ -125,7 +130,7 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
 
         canonDirectionLoop.reset()
 
-        delayTimer.reset()
+        switchStateDelay.reset()
         ballsTimer.reset()
         bulletsTimer.reset()
         shootAnimTimer.setToEnd()
@@ -136,8 +141,8 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         updatablesComponent.add { delta ->
             shootAnimTimer.update(delta)
 
-            delayTimer.update(delta)
-            if (!delayTimer.isFinished()) {
+            switchStateDelay.update(delta)
+            if (!switchStateDelay.isFinished()) {
                 FacingUtils.setFacingOf(this)
                 return@add
             }
@@ -146,7 +151,7 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
             attackTimer.update(delta)
 
             if (attackTimer.isFinished()) {
-                delayTimer.reset()
+                switchStateDelay.reset()
                 attackTimer.reset()
                 canonDirectionLoop.next()
             }
@@ -233,7 +238,7 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
     private fun shootBullet() {
         val spawn = GameObjectPools.fetch(Vector2::class)
             .set(body.getCenter())
-            .add(0.75f * facing.value * ConstVals.PPM, 0.6f * ConstVals.PPM)
+            .add(SHOOT_BULLET_OFFSET_X * facing.value * ConstVals.PPM, SHOOT_BULLET_OFFSET_Y * ConstVals.PPM)
 
         val trajectory = GameObjectPools.fetch(Vector2::class).set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
 
@@ -252,7 +257,7 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
     private fun launchBall() {
         val spawn = GameObjectPools.fetch(Vector2::class)
             .set(body.getCenter())
-            .add(0.15f * facing.value * ConstVals.PPM, ConstVals.PPM.toFloat())
+            .add(LAUNCH_BALL_OFFSET_X * facing.value * ConstVals.PPM, LAUNCH_BALL_OFFSET_Y * ConstVals.PPM)
 
         val impulse = GameObjectPools.fetch(Vector2::class)
             .set(BALL_IMPULSE * facing.value, BALL_IMPULSE)

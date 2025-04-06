@@ -505,7 +505,6 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IFreezableEnt
             tailDamageableFixture1,
             tailDamageableFixture2,
             bodyDamageableFixture
-
         ).forEach { t ->
             val bodyFixture1 = Fixture(
                 body = body,
@@ -549,7 +548,9 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IFreezableEnt
             tailDamageableFixture2.offsetFromBodyAttachment.x = tail2OffsetX
             shieldFixtures[3].offsetFromBodyAttachment.x = tail2OffsetX
 
-            shieldFixtures.forEach { it.setActive(frozen) }
+            shieldFixtures.forEach { it.setActive(frozen && !defeated) }
+
+            body.forEachFixture { fixture -> if (!shieldFixtures.contains(fixture)) fixture.setActive(!defeated) }
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

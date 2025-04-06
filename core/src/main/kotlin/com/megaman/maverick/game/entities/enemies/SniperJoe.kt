@@ -65,6 +65,9 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     companion object {
         const val TAG = "SniperJoe"
 
+        private const val SHOOT_OFFSET_X = 1f
+        private const val SHOOT_OFFSET_Y = 0.1f
+
         private const val BULLET_SPEED = 10f
 
         private const val SNOWBALL_X = 8f
@@ -475,10 +478,10 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     private fun shoot() {
         val spawn = GameObjectPools.fetch(Vector2::class)
         when (direction) {
-            Direction.UP -> spawn.set(0.75f * facing.value, -0.1f)
-            Direction.DOWN -> spawn.set(0.75f * facing.value, 0.1f)
-            Direction.LEFT -> spawn.set(0.1f, 0.75f * facing.value)
-            Direction.RIGHT -> spawn.set(-0.1f, -0.75f * facing.value)
+            Direction.UP -> spawn.set(SHOOT_OFFSET_X * facing.value, -SHOOT_OFFSET_Y)
+            Direction.DOWN -> spawn.set(SHOOT_OFFSET_X * facing.value, SHOOT_OFFSET_Y)
+            Direction.LEFT -> spawn.set(SHOOT_OFFSET_Y, SHOOT_OFFSET_X * facing.value)
+            Direction.RIGHT -> spawn.set(-SHOOT_OFFSET_Y, -SHOOT_OFFSET_X * facing.value)
         }
         spawn.scl(ConstVals.PPM.toFloat()).add(body.getCenter())
 

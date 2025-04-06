@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.projectiles
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
@@ -64,13 +65,10 @@ class GroundPebble(game: MegamanMaverickGame) : AbstractHealthEntity(game, dmgDu
     override val damageNegotiator = CustomMapDamageNegotiator(
         objectMapOf(
             Bullet::class pairTo dmgNeg(15),
-            ChargedShot::class pairTo dmgNeg {
-                it as ChargedShot
-                if (it.fullyCharged) 20 else 15
-            },
+            ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             ChargedShotExplosion::class pairTo dmgNeg {
                 it as ChargedShotExplosion
-                if (it.fullyCharged) 10 else 5
+                if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
             },
             Fireball::class pairTo null
         )
@@ -79,6 +77,7 @@ class GroundPebble(game: MegamanMaverickGame) : AbstractHealthEntity(game, dmgDu
     private val spriteRotationDelay = Timer(SPRITE_ROTATE_DELAY)
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
         addComponent(defineBodyComponent())
@@ -87,6 +86,7 @@ class GroundPebble(game: MegamanMaverickGame) : AbstractHealthEntity(game, dmgDu
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
@@ -102,8 +102,8 @@ class GroundPebble(game: MegamanMaverickGame) : AbstractHealthEntity(game, dmgDu
     }
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
+        GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
         requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
-
         return super.takeDamageFrom(damager)
     }
 
