@@ -46,7 +46,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
 class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
-    IAnimatedEntity, IOwnable, IFaceable {
+    IAnimatedEntity, IOwnable<IGameEntity>, IFaceable {
 
     companion object {
         const val TAG = "Cart"

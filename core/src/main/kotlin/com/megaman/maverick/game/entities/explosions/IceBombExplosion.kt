@@ -46,7 +46,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
 class IceBombExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    IAudioEntity, IFreezerEntity, IDamager, IHazard, IOwnable {
+    IAudioEntity, IFreezerEntity, IDamager, IHazard, IOwnable<IGameEntity> {
 
     companion object {
         const val TAG = "IceBombExplosion"

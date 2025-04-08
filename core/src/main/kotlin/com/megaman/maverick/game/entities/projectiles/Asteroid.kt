@@ -43,7 +43,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
-class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
+class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<IGameEntity> {
 
     companion object {
         const val TAG = "Asteroid"
@@ -92,9 +92,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
 
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
-
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-
         super.onSpawn(spawnProps)
 
         val spawn = when {
@@ -162,7 +160,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable {
         val entity = bodyFixture.getEntity()
 
         if (entity == owner ||
-            (entity is IOwnable && entity.owner == owner) ||
+            (entity is IOwnable<*> && entity.owner == owner) ||
             (entity is IDamageable && canDamage(entity))
         ) return
 

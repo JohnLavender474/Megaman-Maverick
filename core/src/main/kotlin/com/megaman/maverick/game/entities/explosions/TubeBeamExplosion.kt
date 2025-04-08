@@ -44,7 +44,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
 class TubeBeamExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    IDamager, IOwnable {
+    IDamager, IOwnable<IGameEntity> {
 
     companion object {
         const val TAG = "TubeBeamExplosion"

@@ -259,6 +259,139 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Bosses3/ElecDevil/appear.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/stand.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>50,38,100,75</rect>
+                <key>scale9Paddings</key>
+                <rect>50,38,100,75</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses3/ElecDevil/charge.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>25,56,50,113</rect>
+                <key>scale9Paddings</key>
+                <rect>25,56,50,113</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses3/ElecDevil/grid.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/hand.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>25,19,50,37</rect>
+                <key>scale9Paddings</key>
+                <rect>25,19,50,37</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row0column0.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row0column1.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row0column2.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row0column3.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row1column0.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row1column1.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row1column2.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row1column3.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row2column0.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row2column1.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row2column2.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row2column3.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row2column4.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row3column0.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row3column1.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row3column2.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row3column3.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row3column4.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row4column0.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row4column1.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row4column2.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row4column3.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row5column1.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row5column2.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/green/row0column0.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/green/row0column1.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/green/row0column2.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/green/row0column3.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/green/row1column0.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/green/row1column1.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/green/row1column2.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/green/row1column3.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/green/row2column0.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/green/row2column1.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/green/row2column2.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/green/row2column3.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/green/row2column4.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/green/row3column0.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/green/row3column1.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/green/row3column2.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/green/row3column3.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/green/row3column4.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/green/row4column0.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/green/row4column1.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/green/row4column2.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/green/row4column3.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/green/row5column1.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/green/row5column2.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/white/row0column0.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/white/row0column1.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/white/row0column2.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/white/row0column3.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/white/row1column0.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/white/row1column1.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/white/row1column2.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/white/row1column3.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/white/row2column0.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/white/row2column1.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/white/row2column2.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/white/row2column3.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/white/row2column4.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/white/row3column0.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/white/row3column1.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/white/row3column2.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/white/row3column3.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/white/row3column4.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/white/row4column0.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/white/row4column1.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/white/row4column2.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/white/row4column3.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/white/row5column1.png</key>
+            <key type="filename">../frames/Bosses3/ElecDevil/pieces/white/row5column2.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>32,24,64,48</rect>
+                <key>scale9Paddings</key>
+                <rect>32,24,64,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Bosses3/PreciousWoman/airpunch1.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

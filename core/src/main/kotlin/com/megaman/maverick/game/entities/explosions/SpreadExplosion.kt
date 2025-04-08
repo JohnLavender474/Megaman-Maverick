@@ -51,7 +51,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
 
 class SpreadExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    IDirectional, IOwnable, IDamager, IHazard {
+    IDirectional, IOwnable<IGameEntity>, IDamager, IHazard {
 
     companion object {
         const val TAG = "SpreadExplosion"

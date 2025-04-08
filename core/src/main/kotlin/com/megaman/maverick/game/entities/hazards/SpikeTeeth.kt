@@ -49,7 +49,7 @@ import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.body.*
 
 class SpikeTeeth(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
-    IAudioEntity, IDamager, IHazard, IOwnable {
+    IAudioEntity, IDamager, IHazard, IOwnable<IGameEntity> {
 
     companion object {
         const val TAG = "SpikeTeeth"

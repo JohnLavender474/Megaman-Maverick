@@ -53,7 +53,7 @@ import com.megaman.maverick.game.utils.misc.GravityUtils
 import com.megaman.maverick.game.world.body.*
 
 class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IFireEntity, IBodyEntity, ISpritesEntity,
-    IAnimatedEntity, IAudioEntity, IOwnable, IDamager, IHazard, IDirectional {
+    IAnimatedEntity, IAudioEntity, IOwnable<IGameEntity>, IDamager, IHazard, IDirectional {
 
     companion object {
         const val TAG = "MagmaFlame"

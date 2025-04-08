@@ -28,7 +28,6 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
-import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.motion.RotatingLine
@@ -53,7 +52,7 @@ import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.world.body.*
 
 class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IDamager,
-    IHazard, IOwnable {
+    IHazard, IOwnable<BigAssMaverickRobot> {
 
     companion object {
         const val TAG = "BigAssMaverickRobot/Hand"
@@ -90,7 +89,7 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
 
     enum class BigAssMaverickRobotHandState { ROTATE, LAUNCH, RETURN }
 
-    override var owner: IGameEntity? = null
+    override var owner: BigAssMaverickRobot? = null
 
     lateinit var state: BigAssMaverickRobotHandState
         private set

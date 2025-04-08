@@ -691,7 +691,7 @@ class MegaContactListener(
             val (feetFixture, cartFixture) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.CART, out)!!
 
             val feetEntity = feetFixture.getEntity()
-            val cartEntity = cartFixture.getEntity() as IOwnable
+            val cartEntity = cartFixture.getEntity() as IOwnable<*>
 
             if (feetEntity is Megaman && cartEntity is Cart) {
                 cartEntity.owner = feetEntity
@@ -1373,7 +1373,7 @@ class MegaContactListener(
             val (feetFixture, cartFixture) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.CART, out)!!
 
             val feetEntity = feetFixture.getEntity()
-            val cartEntity = cartFixture.getEntity() as IOwnable
+            val cartEntity = cartFixture.getEntity() as IOwnable<*>
             cartEntity.owner = null
 
             if (feetEntity is Megaman && cartEntity is Cart) {

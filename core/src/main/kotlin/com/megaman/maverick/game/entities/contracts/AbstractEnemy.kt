@@ -168,7 +168,7 @@ abstract class AbstractEnemy(
     protected abstract fun defineSpritesComponent(): SpritesComponent
 
     override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when {
-        damager is IOwnable && damager.owner == megaman && megaman.hasEnhancement(MegaEnhancement.DAMAGE_INCREASE) ->
+        damager is IOwnable<*> && damager.owner == megaman && megaman.hasEnhancement(MegaEnhancement.DAMAGE_INCREASE) ->
             MegaEnhancement.scaleDamage(baseDamage, MegaEnhancement.ENEMY_DAMAGE_INCREASE_SCALAR)
 
         else -> baseDamage
@@ -178,7 +178,7 @@ abstract class AbstractEnemy(
         val canBeDamaged = super.canBeDamagedBy(damager)
         if (!canBeDamaged) return false
 
-        if (damager is IOwnable) return damager.owner == megaman || damager.owner == null
+        if (damager is IOwnable<*>) return damager.owner == megaman || damager.owner == null
 
         return true
     }

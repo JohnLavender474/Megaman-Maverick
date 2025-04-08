@@ -44,8 +44,8 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
-class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwnable, IBodyEntity, ISpritesEntity,
-    IAudioEntity, IDamager {
+class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwnable<IGameEntity>, IBodyEntity,
+    ISpritesEntity, IAudioEntity, IDamager {
 
     companion object {
         const val TAG = "Explosion"

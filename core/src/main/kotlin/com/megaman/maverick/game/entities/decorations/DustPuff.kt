@@ -31,7 +31,7 @@ import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 
 class DustPuff(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IDirectional,
-    IOwnable {
+    IOwnable<IGameEntity> {
 
     companion object {
         const val TAG = "DustPuff"

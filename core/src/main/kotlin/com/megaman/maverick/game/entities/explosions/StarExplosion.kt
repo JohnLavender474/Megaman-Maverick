@@ -48,7 +48,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
 class StarExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    IAudioEntity, IDamager, IHazard, IOwnable {
+    IAudioEntity, IDamager, IHazard, IOwnable<IGameEntity> {
 
     companion object {
         const val TAG = "StarExplosion"

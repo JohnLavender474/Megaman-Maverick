@@ -48,10 +48,13 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val GRID = "grid"
+    const val HAND = "hand"
     const val RESIDUAL = "residual"
     const val CHECKPOINT = "checkpoint"
     const val PINK = "pink"
     const val PIECE = "piece"
+    const val PIECES = "pieces"
     const val IGNORE = "ignore"
     const val DARKNESS = "darkness"
     const val FROZEN = "frozen"
@@ -290,7 +293,9 @@ object ConstKeys {
     const val KEY = "key"
     const val ANIMATION_KEY = "${ANIMATION}_${KEY}"
     const val FACING = "facing"
+    const val ROW = "row"
     const val ROWS = "rows"
+    const val COLUMN = "column"
     const val COLUMNS = "columns"
     const val RESET = "reset"
     const val SUCCESS = "success"
@@ -353,6 +358,7 @@ object ConstKeys {
     const val LEFT = "left"
     const val RIGHT = "right"
     const val SPECIALS = "specials"
+    const val FROM = "from"
     const val BACKGROUNDS = "backgrounds"
     const val POSITION = "position"
     const val PRIOR = "prior"

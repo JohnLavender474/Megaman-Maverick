@@ -13,6 +13,7 @@ import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
@@ -25,8 +26,8 @@ import com.megaman.maverick.game.events.EventType
 
 const val PROJECTILE_DEFAULT_CULL_TIME = 0.05f
 
-interface IProjectileEntity : IMegaGameEntity, IBodyEntity, IAudioEntity, ICullableEntity, IOwnable, IDamager,
-    ISizable {
+interface IProjectileEntity : IMegaGameEntity, IBodyEntity, IAudioEntity, ICullableEntity, IOwnable<IGameEntity>,
+    IDamager, ISizable {
 
     override fun getType() = EntityType.PROJECTILE
 

@@ -151,7 +151,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val shieldEntity = shieldFixture.getEntity()
-        if (shieldEntity == owner || (shieldEntity is IOwnable && shieldEntity.owner == owner)) return
+        if (shieldEntity == owner || (shieldEntity is IOwnable<*> && shieldEntity.owner == owner)) return
 
         bounce(shieldFixture.getProperty(ConstKeys.DIRECTION, Direction::class))
     }
