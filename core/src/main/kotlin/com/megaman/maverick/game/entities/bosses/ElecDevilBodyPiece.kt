@@ -109,6 +109,8 @@ class ElecDevilBodyPiece(game: MegamanMaverickGame) : AbstractProjectile(game), 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
+        // TODO: create damager fixtures for body pieces
+
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body, BodyFixtureDef.Companion.of(FixtureType.PROJECTILE, FixtureType.DAMAGER))
