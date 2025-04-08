@@ -1,17 +1,16 @@
 package com.megaman.maverick.game.entities.bosses
 
 import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Queue
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.extensions.setX
+import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.interfaces.IStateable
-import com.mega.game.engine.common.objects.Loop
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.objects.*
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.sprites.SpritesComponent
@@ -43,6 +42,8 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
         private const val FROM_LEFT = "${ConstKeys.FROM}_${ConstKeys.LEFT}"
     }
 
+    private data class ElecDevilPieceQueueElement(val position: IntPair, val start: Vector2, val target: Vector2)
+
     private var leftBody: ElecDevilBody? = null
     private var leftBodyPieces: ElecDevilBodyPieces? = null
 
@@ -52,20 +53,11 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
     // if true, then the left body should be active, and pieces should come from the left, and vice versa if false
     private var fromLeft = true
 
-    private val loop = Loop(
-        ElecDevilState.LAUNCH,
-        ElecDevilState.APPEAR,
-        ElecDevilState.STAND,
-        ElecDevilState.CHARGE,
-        ElecDevilState.STAND,
-        ElecDevilState.HAND,
-        ElecDevilState.STAND,
-        ElecDevilState.TURN_TO_PIECES
-    )
+    private val loop = Loop(ElecDevilState.entries.toGdxArray())
     private val stateTimers = orderedMapOf(
         ElecDevilState.APPEAR pairTo Timer(APPEAR_DUR),
-        ElecDevilState.STAND pairTo Timer(STAND_DUR),
-        ElecDevilState.CHARGE pairTo Timer(CHARGE_DUR).setRunOnFinished { shootFromEye() },
+        ElecDevilState.STAND pairTo Timer(STAND_DUR).setRunOnFirstupdate { spawnBodyEye() },
+        ElecDevilState.CHARGE pairTo Timer(CHARGE_DUR).setRunOnFinished { shootFromBodyEye() },
         ElecDevilState.HAND pairTo Timer(HAND_DUR).also { timer ->
             val shots = HAND_DUR.div(HAND_SHOT_DELAY).toInt()
             for (i in 1..shots) {
@@ -74,7 +66,9 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
                 timer.addRunnable(runnable)
             }
         },
-        ElecDevilState.TURN_TO_PIECES pairTo Timer(TURN_TO_PIECES_DUR).setRunOnFinished { loadLaunchQueue() }
+        ElecDevilState.TURN_TO_PIECES pairTo Timer(TURN_TO_PIECES_DUR)
+            .setRunOnFirstupdate { destroyBodyEye() }
+            .setRunOnFinished { loadLaunchQueue() }
     )
 
     private val launchPositionQueue = Queue<ElecDevilPieceQueueElement>()
@@ -85,8 +79,9 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
         super.init()
     }
 
+    // On spawn, both bodies should be inactive, all body pieces should be inactive, and body pieces should be queued
+    // to spawn from off-screen via the "start" object property.
     override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val room = spawnProps.get(ConstKeys.ROOM, RectangleMapObject::class)!!.rectangle
@@ -143,6 +138,16 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
         }
 
         launchDelay.reset()
+
+        GameLogger.debug(
+            TAG,
+            "onSpawn(): " +
+                "leftBody=${leftBody.hashCode()}, " +
+                "rightBody=${rightBody.hashCode()}, " +
+                "leftBodyPieces=${leftBodyPieces.hashCode()}, " +
+                "rightBodyPieces=${rightBodyPieces.hashCode()}, " +
+                "spawnProps=$spawnProps"
+        )
     }
 
     override fun isReady(delta: Float) = true
@@ -177,13 +182,19 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             when (getCurrentState()) {
+                // During the "launch" state, both bodies should be inactive (hidden) and all body pieces should be
+                // active. The "start" body pieces entity should have its pieces hidden one by one as they're launched,
+                // while the "target" entity should have its pieces shown as each projectile hits its target.
                 ElecDevilState.LAUNCH -> {
                     setBothBodiesInactive()
                     setBodyPiecesActive(true)
 
                     if (launchPositionQueue.isEmpty) {
                         fromLeft = !fromLeft
-                        loop.next()
+
+                        val next = loop.next()
+                        GameLogger.debug(TAG, "update(): next=$next")
+
                         return@add
                     }
 
@@ -207,8 +218,8 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
 
                         val onEnd: () -> Unit = { targetBodyPieces.setStateOfPiece(row, column, true) }
 
-                        val projectile = MegaEntityFactory.fetch(ElecDevilProjectilePiece::class)!!
-                        projectile.spawn(
+                        val bodyPiece = MegaEntityFactory.fetch(ElecDevilBodyPiece::class)!!
+                        bodyPiece.spawn(
                             props(
                                 ConstKeys.END pairTo onEnd,
                                 ConstKeys.OWNER pairTo this,
@@ -219,6 +230,8 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
                     }
                 }
 
+                // For all other states, update the state's corresponding timer. If the timer is finished and the next
+                // state is "launch", then set up the initial "active" values for the "start" and "target" entities.
                 else -> {
                     setOneBodyActive()
                     setBodyPiecesActive(false)
@@ -227,6 +240,7 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
                     timer.update(delta)
                     if (timer.isFinished()) {
                         val next = loop.next()
+                        GameLogger.debug(TAG, "update(): next=$next")
 
                         if (next == ElecDevilState.LAUNCH) {
                             val startBodyPieces: ElecDevilBodyPieces
@@ -240,6 +254,13 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
                                 targetBodyPieces = leftBodyPieces!!
                             }
 
+                            GameLogger.debug(
+                                TAG,
+                                "update(): set body pieces active states: " +
+                                    "startBodyPieces=${startBodyPieces.hashCode()}, " +
+                                    "targetBodyPieces=${targetBodyPieces.hashCode()}"
+                            )
+
                             startBodyPieces.setStateOfAllPieces(true)
                             targetBodyPieces.setStateOfAllPieces(false)
                         }
@@ -251,9 +272,10 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
         }
     }
 
+    // No need for this entity to have a body. Contacts will be made from the "body" and "pieces" entities.
     override fun defineBodyComponent() = BodyComponentCreator.create(this, Body(BodyType.ABSTRACT))
 
-    // no sprites for this entity; sprites will be in the "body" entities
+    // No sprites for this entity. Sprites will be shown from the "body" and "pieces" entities.
     override fun defineSpritesComponent() = SpritesComponent()
 
     private fun loadLaunchQueue() {
@@ -273,6 +295,14 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
             val target = targetBody.getPositionOf(row, column)
             launchPositionQueue.addLast(ElecDevilPieceQueueElement(row pairTo column, start, target))
         }
+
+        GameLogger.debug(
+            TAG,
+            "loadLaunchQueue(): " +
+                "startBody=${startBody.hashCode()}, " +
+                "targetBody=${targetBody.hashCode()}, " +
+                "launchPositionQueue=$launchPositionQueue"
+        )
     }
 
     private fun setOneBodyActive() {
@@ -301,11 +331,23 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
         rightBodyPieces!!.on = active
     }
 
-    private fun shootFromEye() {
+    private fun spawnBodyEye() {
+        GameLogger.debug(TAG, "spawnBodyEye()")
+        // TODO
+    }
+
+    private fun shootFromBodyEye() {
+        GameLogger.debug(TAG, "shootFromEye()")
+        // TODO
+    }
+
+    private fun destroyBodyEye() {
+        GameLogger.debug(TAG, "destroyBodyEye()")
         // TODO
     }
 
     private fun shootFromHand() {
+        GameLogger.debug(TAG, "shootFromHand()")
         // TODO
     }
 }

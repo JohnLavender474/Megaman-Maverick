@@ -36,7 +36,7 @@ import com.megaman.maverick.game.entities.explosions.ElecExplosion
 import com.megaman.maverick.game.utils.extensions.pooledCopy
 import com.megaman.maverick.game.world.body.*
 
-class ElecDevilProjectilePiece(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
+class ElecDevilBodyPiece(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
     companion object {
         const val TAG = "ElecDevilProjectilePiece"

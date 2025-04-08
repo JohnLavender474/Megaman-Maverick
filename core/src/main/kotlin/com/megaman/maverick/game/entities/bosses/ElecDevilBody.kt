@@ -10,6 +10,7 @@ import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.interfaces.IActivatable
@@ -25,6 +26,7 @@ import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
@@ -77,6 +79,7 @@ class ElecDevilBody(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
             }
         }
         super.init()
+        addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
@@ -111,6 +114,12 @@ class ElecDevilBody(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         val y = body.getY().plus(row * ConstVals.PPM)
         return out.set(x, y)
     }
+
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        if (owner!!.getCurrentState().equalsAny(ElecDevilState.STAND, ElecDevilState.HAND, ElecDevilState.CHARGE)) {
+
+        }
+    })
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
