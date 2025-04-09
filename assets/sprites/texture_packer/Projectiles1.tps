@@ -360,7 +360,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Projectiles1/ElecDevilPieceProjectile.png</key>
+            <key type="filename">../frames/Projectiles1/ElecDevilBodyPiece.png</key>
             <key type="filename">../frames/Projectiles1/Monkey_Ball.png</key>
             <key type="filename">../frames/Projectiles1/Nuclear_Monkey_Ball.png</key>
             <key type="filename">../frames/Projectiles1/PreciousGem/blue.png</key>

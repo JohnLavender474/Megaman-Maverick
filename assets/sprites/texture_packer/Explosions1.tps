@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.6.0</string>
+        <string>7.6.2</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -267,6 +267,25 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Explosions1/ElecExplosion.png</key>
+            <key type="filename">../frames/Explosions1/IceBombExplosion.png</key>
+            <key type="filename">../frames/Explosions1/MagmaExplosion.png</key>
+            <key type="filename">../frames/Explosions1/StarExplosion.png</key>
+            <key type="filename">../frames/Explosions1/TubeBeamExplosion.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>48,48,96,96</rect>
+                <key>scale9Paddings</key>
+                <rect>48,48,96,96</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Explosions1/Explosion.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -294,24 +313,6 @@
                 <rect>32,16,64,32</rect>
                 <key>scale9Paddings</key>
                 <rect>32,16,64,32</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Explosions1/IceBombExplosion.png</key>
-            <key type="filename">../frames/Explosions1/MagmaExplosion.png</key>
-            <key type="filename">../frames/Explosions1/StarExplosion.png</key>
-            <key type="filename">../frames/Explosions1/TubeBeamExplosion.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>48,48,96,96</rect>
-                <key>scale9Paddings</key>
-                <rect>48,48,96,96</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

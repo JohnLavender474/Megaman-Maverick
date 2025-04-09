@@ -146,7 +146,12 @@ class MegamanMaverickGame(
             InfernoMan.TAG, TimberWoman.TAG, DesertMan.TAG, ReactorMan.TAG, PreciousWoman.TAG, LevelPauseScreen.TAG,
             MainMenuScreen.TAG, LevelSelectScreen.TAG
         )
-        val DEV_TAGS_TO_LOG: ObjectSet<String> = objectSetOf(RodentMan.TAG)
+        val DEV_TAGS_TO_LOG: ObjectSet<String> = objectSetOf(
+            ElecDevil.TAG,
+            ElecDevilBody.TAG,
+            ElecDevilBodyPieces.TAG,
+            ElecDevilBodyPiece.TAG
+        )
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.oneFixtureMatches(FixtureType.CONSUMER)
         }

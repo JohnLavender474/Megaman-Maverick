@@ -45,6 +45,13 @@ Disintegration
   orig: 96, 32
   offset: 0, 0
   index: -1
+ElecExplosion
+  rotate: false
+  xy: 64, 104
+  size: 192, 192
+  orig: 192, 192
+  offset: 0, 0
+  index: -1
 Explosion
   rotate: false
   xy: 96, 32
@@ -68,7 +75,7 @@ HalfChargedShotExplosion
   index: -1
 IceBombExplosion
   rotate: false
-  xy: 64, 104
+  xy: 256, 104
   size: 192, 192
   orig: 192, 192
   offset: 0, 0
@@ -82,7 +89,7 @@ IcicleShards
   index: -1
 MagmaExplosion
   rotate: false
-  xy: 256, 104
+  xy: 448, 104
   size: 192, 192
   orig: 192, 192
   offset: 0, 0
@@ -117,21 +124,21 @@ SnowballExplode
   index: -1
 SpreadExplosion/default
   rotate: false
-  xy: 0, 296
+  xy: 192, 296
   size: 384, 288
   orig: 384, 288
   offset: 0, 0
   index: -1
 SpreadExplosion/green
   rotate: false
-  xy: 384, 296
+  xy: 576, 296
   size: 384, 288
   orig: 384, 288
   offset: 0, 0
   index: -1
 StarExplosion
   rotate: false
-  xy: 448, 104
+  xy: 640, 104
   size: 192, 192
   orig: 192, 192
   offset: 0, 0
@@ -145,7 +152,7 @@ ToxicGoopSplash
   index: -1
 TubeBeamExplosion
   rotate: false
-  xy: 640, 104
+  xy: 0, 296
   size: 192, 192
   orig: 192, 192
   offset: 0, 0

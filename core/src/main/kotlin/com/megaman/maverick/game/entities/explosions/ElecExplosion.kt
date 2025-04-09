@@ -38,14 +38,17 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.*
+import com.megaman.maverick.game.entities.contracts.IHazard
+import com.megaman.maverick.game.entities.contracts.IOwnable
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
 class ElecExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    IAudioEntity, IFreezerEntity, IDamager, IHazard, IOwnable<IGameEntity> {
+    IAudioEntity, IDamager, IHazard, IOwnable<IGameEntity> {
 
     companion object {
         const val TAG = "ElecExplosion"
@@ -78,7 +81,8 @@ class ElecExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
         timer.reset()
 
-        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.BLAST_1_SOUND, false)
+        val sound = spawnProps.getOrDefault(ConstKeys.SOUND, false, Boolean::class)
+        if (overlapsGameCamera() || sound) requestToPlaySound(SoundAsset.BLAST_1_SOUND, false)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->

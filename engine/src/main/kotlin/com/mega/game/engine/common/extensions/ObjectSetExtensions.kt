@@ -69,7 +69,7 @@ fun <T> OrderedSet<T>.random(): T {
     val randomIndex = MathUtils.random(0, size - 1)
 
     // TODO: OrderedSet doesn't allow fetching elements by index without removing,
-    //   so remove the elemnt and then add it back to the set
+    //   so remove the element and then add it back to the set
     val item = removeIndex(randomIndex)
     add(item)
 

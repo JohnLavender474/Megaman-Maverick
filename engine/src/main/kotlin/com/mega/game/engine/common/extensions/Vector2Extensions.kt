@@ -60,12 +60,14 @@ fun Vector2.add(length: Float, direction: Direction): Vector2 {
     return this
 }
 
+fun Vector2.add(delta: Float): Vector2 = add(delta, delta)
+
 fun randomVector2(min: Float, max: Float, out: Vector2) = out.set(getRandom(min, max), getRandom(min, max))
 
 fun randomVector2(minX: Float, maxX: Float, minY: Float, maxY: Float, out: Vector2) =
     out.set(getRandom(minX, maxX), getRandom(minY, maxY))
 
-fun Vector2.setToDirection(direction: Direction) = when (direction) {
+fun Vector2.setToDirection(direction: Direction): Vector2 = when (direction) {
     Direction.UP -> set(0f, 1f)
     Direction.DOWN -> set(0f, -1f)
     Direction.LEFT -> set(-1f, 0f)

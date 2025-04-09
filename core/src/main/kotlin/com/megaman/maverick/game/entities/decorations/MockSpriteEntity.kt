@@ -3,6 +3,9 @@ package com.megaman.maverick.game.entities.decorations
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.animations.AnimationsComponentBuilder
+import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
@@ -40,7 +43,7 @@ class MockSpriteEntity(game: MegamanMaverickGame) : MegaGameEntity(game), ISprit
 
     private val position = Vector2()
     private val bounds = GameRectangle().also {
-        it.setSize(9.7f * ConstVals.PPM, 9f * ConstVals.PPM)
+        it.setSize(5f * ConstVals.PPM, 4.75f * ConstVals.PPM)
         it.drawingColor = Color.YELLOW
     }
     private val swapFacingTimer = Timer(1f)
@@ -53,6 +56,7 @@ class MockSpriteEntity(game: MegamanMaverickGame) : MegaGameEntity(game), ISprit
         super.init()
         addComponent(defineUpdatablesComponent())
         addComponent(defineSpritesComponent())
+        addComponent(defineAnimationsComponent())
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ bounds }), debug = true))
     }
 
@@ -77,16 +81,16 @@ class MockSpriteEntity(game: MegamanMaverickGame) : MegaGameEntity(game), ISprit
     })
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
-        .sprite(
-            TAG, GameSprite(region!!).also { sprite ->
-                sprite.setSize(12f * ConstVals.PPM, 9f * ConstVals.PPM)
-            }
-        )
+        .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(8f * ConstVals.PPM, 6f * ConstVals.PPM) })
         .updatable { _, sprite ->
             sprite.setPosition(position, Position.BOTTOM_CENTER)
-            sprite.translateX(0.425f * -facing.value * ConstVals.PPM)
+            sprite.translateX(0.15f * facing.value * ConstVals.PPM)
             sprite.setFlip(isFacing(Facing.RIGHT), false)
         }
+        .build()
+
+    private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
+        .key(TAG).animator(Animator(Animation(region!!)))
         .build()
 
     override fun getType() = EntityType.DECORATION

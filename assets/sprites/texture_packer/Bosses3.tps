@@ -291,21 +291,6 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Bosses3/ElecDevil/grid.png</key>
-            <key type="filename">../frames/Bosses3/ElecDevil/hand.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>25,19,50,37</rect>
-                <key>scale9Paddings</key>
-                <rect>25,19,50,37</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
             <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row0column0.png</key>
             <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row0column1.png</key>
             <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row0column2.png</key>
@@ -389,6 +374,36 @@
                 <rect>32,24,64,48</rect>
                 <key>scale9Paddings</key>
                 <rect>32,24,64,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses3/ElecDevil/hand.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>25,19,50,37</rect>
+                <key>scale9Paddings</key>
+                <rect>25,19,50,37</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses3/ElecDevil/turn_to_pieces.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>64,96,128,192</rect>
+                <key>scale9Paddings</key>
+                <rect>64,96,128,192</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

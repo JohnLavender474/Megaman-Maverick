@@ -24,7 +24,7 @@ import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
 const val MEGAMAN_BODY_WIDTH = 1f
-const val MEGAMAN_BODY_HEIGHT = 1.35f
+const val MEGAMAN_BODY_HEIGHT = 1.5f
 
 const val GROUNDSLIDE_HEIGHT = 0.75f
 

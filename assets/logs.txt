@@ -1,1 +1,855 @@
-===== SESSION STARTED: 2025-04-07T13:40:59.109585573 =====
+===== SESSION STARTED: 2025-04-09T13:34:16.949380884 =====
+13:34:37 | DEBUG | ElecDevil | init()
+13:34:37 | DEBUG | ElecDevil | onSpawn(): spawnProps=Properties({
+	[bounds=[18304.0,1632.0,32.0,32.0]]
+	[start_x=com.badlogic.gdx.maps.objects.RectangleMapObject@3ac3f6f]
+	[x=18304.0]
+	[height=32.0]
+	[right=com.badlogic.gdx.maps.objects.RectangleMapObject@1abebef3]
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@80bfdc6]
+	[music=JX_SHADOW_DEVIL_8BIT_REMIX_MUSIC]
+	[id=448]
+	[from_left=false]
+	[left=com.badlogic.gdx.maps.objects.RectangleMapObject@18f55704]
+	[y=1632.0]
+	[width=32.0]
+	[light_source_keys=1]
+})
+13:34:37 | DEBUG | ElecDevilBody | init(): hashcode=971415207
+13:34:37 | DEBUG | ElecDevilBody | onSpawn(): hashcode=971415207, spawnProps=Properties({
+	[facing=RIGHT]
+	[position=(18080.0,1376.0)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+	[active=false]
+})
+13:34:37 | DEBUG | ElecDevilBodyPieces | init():
+	hashcode=1638631856
+,	regions=[true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],	sprites=[row0column0:1510731556, row0column1:1684580278, row0column2:797313059, row0column3:1768639125, row1column0:1813838419, row1column1:1298707825, row1column2:1387293679, row1column3:1639759054, row2column0:1794710728, row2column1:1647509467, row2column2:856432481, row2column3:936546050, row2column4:368040556, row3column0:1616257837, row3column1:871554897, row3column2:276561074, row3column3:2074896491, row3column4:716333944, row4column0:262093096, row4column1:1078905349, row4column2:1488526679, row4column3:1638472859, row5column1:386478079, row5column2:555864569],
+	animators=[row0column0:836903727, row0column1:403094604, row0column2:1177427556, row0column3:1773117761, row1column0:1240730624, row1column1:1681730990, row1column2:1389810291, row1column3:1181205697, row2column0:798639105, row2column1:583490561, row2column2:1189496672, row2column3:1046467249, row2column4:1134043959, row3column0:1529305105, row3column1:789502290, row3column2:1862552664, row3column3:1829194516, row3column4:201421173, row4column0:1436347886, row4column1:406265225, row4column2:1329572464, row4column3:1211297851, row5column1:2062780238, row5column2:1518868172]
+13:34:37 | DEBUG | ElecDevilBodyPieces | onSpawn(): hashcode=1638631856, spawnProps=Properties({
+	[facing=RIGHT]
+	[light_source_keys={1}]
+	[owner={ ElecDevilBody:[facing=RIGHT, bounds=[18000.0,1376.0,160.0,152.0]] }]
+	[active=false]
+})
+13:34:37 | DEBUG | ElecDevilBody | init(): hashcode=1417203230
+13:34:37 | DEBUG | ElecDevilBody | onSpawn(): hashcode=1417203230, spawnProps=Properties({
+	[facing=LEFT]
+	[position=(18560.0,1376.0)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+	[active=false]
+})
+13:34:37 | DEBUG | ElecDevilBodyPieces | init():
+	hashcode=1591505133
+,	regions=[true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],	sprites=[row0column0:295372946, row0column1:440307236, row0column2:1322559460, row0column3:477319344, row1column0:1432687668, row1column1:1002762002, row1column2:1346667529, row1column3:1446291553, row2column0:722321959, row2column1:934085675, row2column2:1136503323, row2column3:817460653, row2column4:1977652583, row3column0:708004780, row3column1:74502531, row3column2:2141178045, row3column3:245703044, row3column4:1048274391, row4column0:1015367506, row4column1:1038002783, row4column2:441451873, row4column3:2137034273, row5column1:1766451528, row5column2:554510956],
+	animators=[row0column0:1005344801, row0column1:1082579195, row0column2:1713596938, row0column3:775254760, row1column0:2009139807, row1column1:24532316, row1column2:2088246338, row1column3:2036302615, row2column0:104070545, row2column1:895259838, row2column2:158995547, row2column3:205023576, row2column4:360628795, row3column0:1154895182, row3column1:500646211, row3column2:1382717704, row3column3:828831332, row3column4:1202479419, row4column0:1624702420, row4column1:1727171103, row4column2:1621202291, row4column3:1151370725, row5column1:324008184, row5column2:1637821180]
+13:34:37 | DEBUG | ElecDevilBodyPieces | onSpawn(): hashcode=1591505133, spawnProps=Properties({
+	[facing=LEFT]
+	[light_source_keys={1}]
+	[owner={ ElecDevilBody:[facing=LEFT, bounds=[18480.0,1376.0,160.0,152.0]] }]
+	[active=false]
+})
+13:34:38 | DEBUG | ElecDevil | setBothBodiesInactive()
+13:34:38 | DEBUG | ElecDevil | setBodyPiecesActive(): active=true
+13:34:38 | DEBUG | ElecDevil | loadLaunchQueue():
+	startBody=LEFT,
+	targetBody=RIGHT,
+	launchPositionQueue=
+		ElecDevilLaunchQueueElement(start=IntPair(x=3, y=0), target=IntPair(x=3, y=0), startPosition=(18800.0,1464.6666), targetPosition=(18016.0,1464.6666))
+		ElecDevilLaunchQueueElement(start=IntPair(x=4, y=0), target=IntPair(x=4, y=0), startPosition=(18800.0,1490.0), targetPosition=(18016.0,1490.0))
+		ElecDevilLaunchQueueElement(start=IntPair(x=0, y=0), target=IntPair(x=0, y=0), startPosition=(18800.0,1388.6666), targetPosition=(18016.0,1388.6666))
+		ElecDevilLaunchQueueElement(start=IntPair(x=1, y=0), target=IntPair(x=1, y=0), startPosition=(18800.0,1414.0), targetPosition=(18016.0,1414.0))
+		ElecDevilLaunchQueueElement(start=IntPair(x=2, y=0), target=IntPair(x=2, y=0), startPosition=(18800.0,1439.3333), targetPosition=(18016.0,1439.3333))
+		ElecDevilLaunchQueueElement(start=IntPair(x=1, y=1), target=IntPair(x=1, y=1), startPosition=(18800.0,1414.0), targetPosition=(18048.0,1414.0))
+		ElecDevilLaunchQueueElement(start=IntPair(x=5, y=1), target=IntPair(x=5, y=1), startPosition=(18800.0,1515.3333), targetPosition=(18048.0,1515.3333))
+		ElecDevilLaunchQueueElement(start=IntPair(x=2, y=1), target=IntPair(x=2, y=1), startPosition=(18800.0,1439.3333), targetPosition=(18048.0,1439.3333))
+		ElecDevilLaunchQueueElement(start=IntPair(x=4, y=1), target=IntPair(x=4, y=1), startPosition=(18800.0,1490.0), targetPosition=(18048.0,1490.0))
+		ElecDevilLaunchQueueElement(start=IntPair(x=0, y=1), target=IntPair(x=0, y=1), startPosition=(18800.0,1388.6666), targetPosition=(18048.0,1388.6666))
+		ElecDevilLaunchQueueElement(start=IntPair(x=3, y=1), target=IntPair(x=3, y=1), startPosition=(18800.0,1464.6666), targetPosition=(18048.0,1464.6666))
+		ElecDevilLaunchQueueElement(start=IntPair(x=0, y=2), target=IntPair(x=0, y=2), startPosition=(18800.0,1388.6666), targetPosition=(18080.0,1388.6666))
+		ElecDevilLaunchQueueElement(start=IntPair(x=1, y=2), target=IntPair(x=1, y=2), startPosition=(18800.0,1414.0), targetPosition=(18080.0,1414.0))
+		ElecDevilLaunchQueueElement(start=IntPair(x=2, y=2), target=IntPair(x=2, y=2), startPosition=(18800.0,1439.3333), targetPosition=(18080.0,1439.3333))
+		ElecDevilLaunchQueueElement(start=IntPair(x=4, y=2), target=IntPair(x=4, y=2), startPosition=(18800.0,1490.0), targetPosition=(18080.0,1490.0))
+		ElecDevilLaunchQueueElement(start=IntPair(x=5, y=2), target=IntPair(x=5, y=2), startPosition=(18800.0,1515.3333), targetPosition=(18080.0,1515.3333))
+		ElecDevilLaunchQueueElement(start=IntPair(x=3, y=2), target=IntPair(x=3, y=2), startPosition=(18800.0,1464.6666), targetPosition=(18080.0,1464.6666))
+		ElecDevilLaunchQueueElement(start=IntPair(x=1, y=3), target=IntPair(x=1, y=3), startPosition=(18800.0,1414.0), targetPosition=(18112.0,1414.0))
+		ElecDevilLaunchQueueElement(start=IntPair(x=2, y=3), target=IntPair(x=2, y=3), startPosition=(18800.0,1439.3333), targetPosition=(18112.0,1439.3333))
+		ElecDevilLaunchQueueElement(start=IntPair(x=4, y=3), target=IntPair(x=4, y=3), startPosition=(18800.0,1490.0), targetPosition=(18112.0,1490.0))
+		ElecDevilLaunchQueueElement(start=IntPair(x=0, y=3), target=IntPair(x=0, y=3), startPosition=(18800.0,1388.6666), targetPosition=(18112.0,1388.6666))
+		ElecDevilLaunchQueueElement(start=IntPair(x=3, y=3), target=IntPair(x=3, y=3), startPosition=(18800.0,1464.6666), targetPosition=(18112.0,1464.6666))
+		ElecDevilLaunchQueueElement(start=IntPair(x=2, y=4), target=IntPair(x=2, y=4), startPosition=(18800.0,1439.3333), targetPosition=(18144.0,1439.3333))
+		ElecDevilLaunchQueueElement(start=IntPair(x=3, y=4), target=IntPair(x=3, y=4), startPosition=(18800.0,1464.6666), targetPosition=(18144.0,1464.6666))
+13:34:38 | DEBUG | ElecDevil | onReady():
+	leftBody={ ElecDevilBody:[facing=RIGHT, bounds=[18000.0,1376.0,160.0,152.0]] },
+	rightBody={ ElecDevilBody:[facing=LEFT, bounds=[18480.0,1376.0,160.0,152.0]] },
+	leftBodyPieces={ ElecDevilBodyPieces:[
+		facing=RIGHT,
+		bounds=[18000.0,1376.0,160.0,152.0],
+		activePieces=[]
+	] },
+	rightBodyPieces={ ElecDevilBodyPieces:[
+		facing=LEFT,
+		bounds=[18480.0,1376.0,160.0,152.0],
+		activePieces=[]
+	] },
+	launchPositionQueue=
+		ElecDevilLaunchQueueElement(start=IntPair(x=3, y=0), target=IntPair(x=3, y=0), startPosition=(18800.0,1464.6666), targetPosition=(18016.0,1464.6666))
+		ElecDevilLaunchQueueElement(start=IntPair(x=4, y=0), target=IntPair(x=4, y=0), startPosition=(18800.0,1490.0), targetPosition=(18016.0,1490.0))
+		ElecDevilLaunchQueueElement(start=IntPair(x=0, y=0), target=IntPair(x=0, y=0), startPosition=(18800.0,1388.6666), targetPosition=(18016.0,1388.6666))
+		ElecDevilLaunchQueueElement(start=IntPair(x=1, y=0), target=IntPair(x=1, y=0), startPosition=(18800.0,1414.0), targetPosition=(18016.0,1414.0))
+		ElecDevilLaunchQueueElement(start=IntPair(x=2, y=0), target=IntPair(x=2, y=0), startPosition=(18800.0,1439.3333), targetPosition=(18016.0,1439.3333))
+		ElecDevilLaunchQueueElement(start=IntPair(x=1, y=1), target=IntPair(x=1, y=1), startPosition=(18800.0,1414.0), targetPosition=(18048.0,1414.0))
+		ElecDevilLaunchQueueElement(start=IntPair(x=5, y=1), target=IntPair(x=5, y=1), startPosition=(18800.0,1515.3333), targetPosition=(18048.0,1515.3333))
+		ElecDevilLaunchQueueElement(start=IntPair(x=2, y=1), target=IntPair(x=2, y=1), startPosition=(18800.0,1439.3333), targetPosition=(18048.0,1439.3333))
+		ElecDevilLaunchQueueElement(start=IntPair(x=4, y=1), target=IntPair(x=4, y=1), startPosition=(18800.0,1490.0), targetPosition=(18048.0,1490.0))
+		ElecDevilLaunchQueueElement(start=IntPair(x=0, y=1), target=IntPair(x=0, y=1), startPosition=(18800.0,1388.6666), targetPosition=(18048.0,1388.6666))
+		ElecDevilLaunchQueueElement(start=IntPair(x=3, y=1), target=IntPair(x=3, y=1), startPosition=(18800.0,1464.6666), targetPosition=(18048.0,1464.6666))
+		ElecDevilLaunchQueueElement(start=IntPair(x=0, y=2), target=IntPair(x=0, y=2), startPosition=(18800.0,1388.6666), targetPosition=(18080.0,1388.6666))
+		ElecDevilLaunchQueueElement(start=IntPair(x=1, y=2), target=IntPair(x=1, y=2), startPosition=(18800.0,1414.0), targetPosition=(18080.0,1414.0))
+		ElecDevilLaunchQueueElement(start=IntPair(x=2, y=2), target=IntPair(x=2, y=2), startPosition=(18800.0,1439.3333), targetPosition=(18080.0,1439.3333))
+		ElecDevilLaunchQueueElement(start=IntPair(x=4, y=2), target=IntPair(x=4, y=2), startPosition=(18800.0,1490.0), targetPosition=(18080.0,1490.0))
+		ElecDevilLaunchQueueElement(start=IntPair(x=5, y=2), target=IntPair(x=5, y=2), startPosition=(18800.0,1515.3333), targetPosition=(18080.0,1515.3333))
+		ElecDevilLaunchQueueElement(start=IntPair(x=3, y=2), target=IntPair(x=3, y=2), startPosition=(18800.0,1464.6666), targetPosition=(18080.0,1464.6666))
+		ElecDevilLaunchQueueElement(start=IntPair(x=1, y=3), target=IntPair(x=1, y=3), startPosition=(18800.0,1414.0), targetPosition=(18112.0,1414.0))
+		ElecDevilLaunchQueueElement(start=IntPair(x=2, y=3), target=IntPair(x=2, y=3), startPosition=(18800.0,1439.3333), targetPosition=(18112.0,1439.3333))
+		ElecDevilLaunchQueueElement(start=IntPair(x=4, y=3), target=IntPair(x=4, y=3), startPosition=(18800.0,1490.0), targetPosition=(18112.0,1490.0))
+		ElecDevilLaunchQueueElement(start=IntPair(x=0, y=3), target=IntPair(x=0, y=3), startPosition=(18800.0,1388.6666), targetPosition=(18112.0,1388.6666))
+		ElecDevilLaunchQueueElement(start=IntPair(x=3, y=3), target=IntPair(x=3, y=3), startPosition=(18800.0,1464.6666), targetPosition=(18112.0,1464.6666))
+		ElecDevilLaunchQueueElement(start=IntPair(x=2, y=4), target=IntPair(x=2, y=4), startPosition=(18800.0,1439.3333), targetPosition=(18144.0,1439.3333))
+		ElecDevilLaunchQueueElement(start=IntPair(x=3, y=4), target=IntPair(x=3, y=4), startPosition=(18800.0,1464.6666), targetPosition=(18144.0,1464.6666))
+13:34:40 | LOG | ElecDevil | onEvent: event=Event(key=END_BOSS_SPAWN, properties=Properties({
+}))
+13:34:41 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=3, y=0), state=false
+13:34:41 | DEBUG | ElecDevilBodyPiece | init(): hashcode=287136919
+13:34:41 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=287136919, spawnProps=Properties({
+	[start=(18800.0,1464.6666)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@5b47731f]
+	[cull_out_of_bounds=false]
+	[target=(18016.0,1464.6666)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:34:41 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:34:42 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=4, y=0), state=false
+13:34:42 | DEBUG | ElecDevilBodyPiece | init(): hashcode=1194710757
+13:34:42 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=1194710757, spawnProps=Properties({
+	[start=(18800.0,1490.0)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@115ca7de]
+	[cull_out_of_bounds=false]
+	[target=(18016.0,1490.0)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:34:42 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:34:42 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=0, y=0), state=false
+13:34:42 | DEBUG | ElecDevilBodyPiece | init(): hashcode=15288143
+13:34:42 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=15288143, spawnProps=Properties({
+	[start=(18800.0,1388.6666)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@40ce9049]
+	[cull_out_of_bounds=false]
+	[target=(18016.0,1388.6666)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:34:43 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:34:43 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=1, y=0), state=false
+13:34:43 | DEBUG | ElecDevilBodyPiece | init(): hashcode=955994360
+13:34:43 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=955994360, spawnProps=Properties({
+	[start=(18800.0,1414.0)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@28393e82]
+	[cull_out_of_bounds=false]
+	[target=(18016.0,1414.0)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:34:44 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:34:44 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18013.648,1464.6666), start=(18800.0,1464.6666), target=(18016.0,1464.6666)
+13:34:44 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=287136919
+13:34:44 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=3, y=0), state=true
+13:34:44 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=287136919
+13:34:44 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=2, y=0), state=false
+13:34:44 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=287136919, spawnProps=Properties({
+	[start=(18800.0,1439.3333)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@3f048c86]
+	[cull_out_of_bounds=false]
+	[target=(18016.0,1439.3333)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:34:44 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:34:45 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18013.648,1490.0), start=(18800.0,1490.0), target=(18016.0,1490.0)
+13:34:45 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=1194710757
+13:34:45 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=4, y=0), state=true
+13:34:45 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=1194710757
+13:34:45 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=1, y=1), state=false
+13:34:45 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=1194710757, spawnProps=Properties({
+	[start=(18800.0,1414.0)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@5a3cf824]
+	[cull_out_of_bounds=false]
+	[target=(18048.0,1414.0)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:34:45 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:34:45 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18013.648,1388.6666), start=(18800.0,1388.6666), target=(18016.0,1388.6666)
+13:34:45 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=15288143
+13:34:45 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=0, y=0), state=true
+13:34:45 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=15288143
+13:34:45 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=5, y=1), state=false
+13:34:46 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=15288143, spawnProps=Properties({
+	[start=(18800.0,1515.3333)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@1a84a8b2]
+	[cull_out_of_bounds=false]
+	[target=(18048.0,1515.3333)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:34:46 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:34:46 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18013.648,1414.0), start=(18800.0,1414.0), target=(18016.0,1414.0)
+13:34:46 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=955994360
+13:34:46 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=1, y=0), state=true
+13:34:46 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=955994360
+13:34:46 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=2, y=1), state=false
+13:34:46 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=955994360, spawnProps=Properties({
+	[start=(18800.0,1439.3333)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@236fd411]
+	[cull_out_of_bounds=false]
+	[target=(18048.0,1439.3333)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:34:47 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:34:47 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18015.74,1439.3333), start=(18800.0,1439.3333), target=(18016.0,1439.3333)
+13:34:47 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=287136919
+13:34:47 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=2, y=0), state=true
+13:34:47 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=287136919
+13:34:47 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=4, y=1), state=false
+13:34:47 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=287136919, spawnProps=Properties({
+	[start=(18800.0,1490.0)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@58583a2d]
+	[cull_out_of_bounds=false]
+	[target=(18048.0,1490.0)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:34:48 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:34:48 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18047.363,1414.0), start=(18800.0,1414.0), target=(18048.0,1414.0)
+13:34:48 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=1194710757
+13:34:48 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=1, y=1), state=true
+13:34:48 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=1194710757
+13:34:48 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=0, y=1), state=false
+13:34:48 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=1194710757, spawnProps=Properties({
+	[start=(18800.0,1388.6666)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@38caad07]
+	[cull_out_of_bounds=false]
+	[target=(18048.0,1388.6666)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:34:48 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:34:48 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18045.271,1515.3333), start=(18800.0,1515.3333), target=(18048.0,1515.3333)
+13:34:48 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=15288143
+13:34:48 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=5, y=1), state=true
+13:34:48 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=15288143
+13:34:49 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=3, y=1), state=false
+13:34:49 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=15288143, spawnProps=Properties({
+	[start=(18800.0,1464.6666)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@6ee186f3]
+	[cull_out_of_bounds=false]
+	[target=(18048.0,1464.6666)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:34:49 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:34:49 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18047.363,1439.3333), start=(18800.0,1439.3333), target=(18048.0,1439.3333)
+13:34:49 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=955994360
+13:34:49 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=2, y=1), state=true
+13:34:49 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=955994360
+13:34:49 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=0, y=2), state=false
+13:34:49 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=955994360, spawnProps=Properties({
+	[start=(18800.0,1388.6666)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@510bd87a]
+	[cull_out_of_bounds=false]
+	[target=(18080.0,1388.6666)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:34:50 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:34:50 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18045.271,1490.0), start=(18800.0,1490.0), target=(18048.0,1490.0)
+13:34:50 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=287136919
+13:34:50 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=4, y=1), state=true
+13:34:50 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=287136919
+13:34:50 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=1, y=2), state=false
+13:34:50 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=287136919, spawnProps=Properties({
+	[start=(18800.0,1414.0)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@4ac0fdc7]
+	[cull_out_of_bounds=false]
+	[target=(18080.0,1414.0)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:34:51 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:34:51 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18045.271,1388.6666), start=(18800.0,1388.6666), target=(18048.0,1388.6666)
+13:34:51 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=1194710757
+13:34:51 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=0, y=1), state=true
+13:34:51 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=1194710757
+13:34:51 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=2, y=2), state=false
+13:34:51 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=1194710757, spawnProps=Properties({
+	[start=(18800.0,1439.3333)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@7b45f7ef]
+	[cull_out_of_bounds=false]
+	[target=(18080.0,1439.3333)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:34:51 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:34:51 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18047.363,1464.6666), start=(18800.0,1464.6666), target=(18048.0,1464.6666)
+13:34:51 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=15288143
+13:34:51 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=3, y=1), state=true
+13:34:51 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=15288143
+13:34:52 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=4, y=2), state=false
+13:34:52 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=15288143, spawnProps=Properties({
+	[start=(18800.0,1490.0)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@42c9c0a1]
+	[cull_out_of_bounds=false]
+	[target=(18080.0,1490.0)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:34:52 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:34:52 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18076.895,1388.6666), start=(18800.0,1388.6666), target=(18080.0,1388.6666)
+13:34:52 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=955994360
+13:34:52 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=0, y=2), state=true
+13:34:52 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=955994360
+13:34:52 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=5, y=2), state=false
+13:34:52 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=955994360, spawnProps=Properties({
+	[start=(18800.0,1515.3333)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@517d68b8]
+	[cull_out_of_bounds=false]
+	[target=(18080.0,1515.3333)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:34:53 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:34:53 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18076.895,1414.0), start=(18800.0,1414.0), target=(18080.0,1414.0)
+13:34:53 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=287136919
+13:34:53 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=1, y=2), state=true
+13:34:53 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=287136919
+13:34:53 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=3, y=2), state=false
+13:34:53 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=287136919, spawnProps=Properties({
+	[start=(18800.0,1464.6666)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@5a85f41b]
+	[cull_out_of_bounds=false]
+	[target=(18080.0,1464.6666)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:34:54 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:34:54 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18078.986,1439.3333), start=(18800.0,1439.3333), target=(18080.0,1439.3333)
+13:34:54 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=1194710757
+13:34:54 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=2, y=2), state=true
+13:34:54 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=1194710757
+13:34:54 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=1, y=3), state=false
+13:34:54 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=1194710757, spawnProps=Properties({
+	[start=(18800.0,1414.0)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@510cefb6]
+	[cull_out_of_bounds=false]
+	[target=(18112.0,1414.0)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:34:54 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18076.895,1490.0), start=(18800.0,1490.0), target=(18080.0,1490.0)
+13:34:54 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=15288143
+13:34:54 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=4, y=2), state=true
+13:34:54 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:34:54 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=15288143
+13:34:55 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=2, y=3), state=false
+13:34:55 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=15288143, spawnProps=Properties({
+	[start=(18800.0,1439.3333)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@2bd2fa2c]
+	[cull_out_of_bounds=false]
+	[target=(18112.0,1439.3333)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:34:55 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18078.986,1515.3333), start=(18800.0,1515.3333), target=(18080.0,1515.3333)
+13:34:55 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=955994360
+13:34:55 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=5, y=2), state=true
+13:34:55 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=955994360
+13:34:55 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:34:55 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=4, y=3), state=false
+13:34:55 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=955994360, spawnProps=Properties({
+	[start=(18800.0,1490.0)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@b92cdf9]
+	[cull_out_of_bounds=false]
+	[target=(18112.0,1490.0)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:34:56 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18078.986,1464.6666), start=(18800.0,1464.6666), target=(18080.0,1464.6666)
+13:34:56 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=287136919
+13:34:56 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=3, y=2), state=true
+13:34:56 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:34:56 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=287136919
+13:34:56 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=0, y=3), state=false
+13:34:56 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=287136919, spawnProps=Properties({
+	[start=(18800.0,1388.6666)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@58a7226e]
+	[cull_out_of_bounds=false]
+	[target=(18112.0,1388.6666)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:34:57 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18110.61,1414.0), start=(18800.0,1414.0), target=(18112.0,1414.0)
+13:34:57 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=1194710757
+13:34:57 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=1, y=3), state=true
+13:34:57 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=1194710757
+13:34:57 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:34:57 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=3, y=3), state=false
+13:34:57 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=1194710757, spawnProps=Properties({
+	[start=(18800.0,1464.6666)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@5b7e6e2d]
+	[cull_out_of_bounds=false]
+	[target=(18112.0,1464.6666)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:34:57 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18110.61,1439.3333), start=(18800.0,1439.3333), target=(18112.0,1439.3333)
+13:34:57 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=15288143
+13:34:57 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=2, y=3), state=true
+13:34:57 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=15288143
+13:34:57 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:34:58 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=2, y=4), state=false
+13:34:58 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=15288143, spawnProps=Properties({
+	[start=(18800.0,1439.3333)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@7b301349]
+	[cull_out_of_bounds=false]
+	[target=(18144.0,1439.3333)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:34:58 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18108.518,1490.0), start=(18800.0,1490.0), target=(18112.0,1490.0)
+13:34:58 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=955994360
+13:34:58 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=4, y=3), state=true
+13:34:58 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=955994360
+13:34:58 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:34:58 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=3, y=4), state=false
+13:34:58 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=955994360, spawnProps=Properties({
+	[start=(18800.0,1464.6666)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@45c34a2]
+	[cull_out_of_bounds=false]
+	[target=(18144.0,1464.6666)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:34:59 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18108.518,1388.6666), start=(18800.0,1388.6666), target=(18112.0,1388.6666)
+13:34:59 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=287136919
+13:34:59 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=0, y=3), state=true
+13:34:59 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=287136919
+13:34:59 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:00 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18108.518,1464.6666), start=(18800.0,1464.6666), target=(18112.0,1464.6666)
+13:35:00 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=1194710757
+13:35:00 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=3, y=3), state=true
+13:35:00 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=1194710757
+13:35:00 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18140.14,1439.3333), start=(18800.0,1439.3333), target=(18144.0,1439.3333)
+13:35:00 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=15288143
+13:35:00 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=2, y=4), state=true
+13:35:00 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=15288143
+13:35:01 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18140.14,1464.6666), start=(18800.0,1464.6666), target=(18144.0,1464.6666)
+13:35:01 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=955994360
+13:35:01 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=3, y=4), state=true
+13:35:01 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=955994360
+13:35:01 | DEBUG | ElecDevil | update(): old=LAUNCH, next=APPEAR
+13:35:01 | DEBUG | ElecDevil | setOneBodyActive(): activeBody=RIGHT, inactiveBody=LEFT
+13:35:01 | DEBUG | ElecDevil | setBodyPiecesActive(): active=false
+13:35:02 | DEBUG | ElecDevil | update(): old=APPEAR, next=STAND
+13:35:02 | DEBUG | ElecDevil | spawnBodyEye()
+13:35:03 | DEBUG | ElecDevil | update(): old=STAND, next=CHARGE
+13:35:04 | DEBUG | ElecDevil | shootFromEye()
+13:35:04 | DEBUG | ElecDevil | update(): old=CHARGE, next=HAND
+13:35:04 | DEBUG | ElecDevil | shootFromHand()
+13:35:05 | DEBUG | ElecDevil | shootFromHand()
+13:35:05 | DEBUG | ElecDevil | shootFromHand()
+13:35:05 | DEBUG | ElecDevil | update(): old=HAND, next=TURN_TO_PIECES
+13:35:05 | DEBUG | ElecDevil | destroyBodyEye()
+13:35:06 | DEBUG | ElecDevil | update(): old=TURN_TO_PIECES, next=LAUNCH
+13:35:06 | DEBUG | ElecDevil | loadLaunchQueue():
+	startBody=RIGHT,
+	targetBody=LEFT,
+	launchPositionQueue=
+		ElecDevilLaunchQueueElement(start=IntPair(x=3, y=4), target=IntPair(x=3, y=4), startPosition=(18144.0,1464.6666), targetPosition=(18464.0,1464.6666))
+		ElecDevilLaunchQueueElement(start=IntPair(x=2, y=4), target=IntPair(x=2, y=4), startPosition=(18144.0,1439.3333), targetPosition=(18464.0,1439.3333))
+		ElecDevilLaunchQueueElement(start=IntPair(x=0, y=3), target=IntPair(x=0, y=3), startPosition=(18112.0,1388.6666), targetPosition=(18496.0,1388.6666))
+		ElecDevilLaunchQueueElement(start=IntPair(x=1, y=3), target=IntPair(x=1, y=3), startPosition=(18112.0,1414.0), targetPosition=(18496.0,1414.0))
+		ElecDevilLaunchQueueElement(start=IntPair(x=4, y=3), target=IntPair(x=4, y=3), startPosition=(18112.0,1490.0), targetPosition=(18496.0,1490.0))
+		ElecDevilLaunchQueueElement(start=IntPair(x=2, y=3), target=IntPair(x=2, y=3), startPosition=(18112.0,1439.3333), targetPosition=(18496.0,1439.3333))
+		ElecDevilLaunchQueueElement(start=IntPair(x=3, y=3), target=IntPair(x=3, y=3), startPosition=(18112.0,1464.6666), targetPosition=(18496.0,1464.6666))
+		ElecDevilLaunchQueueElement(start=IntPair(x=5, y=2), target=IntPair(x=5, y=2), startPosition=(18080.0,1515.3333), targetPosition=(18528.0,1515.3333))
+		ElecDevilLaunchQueueElement(start=IntPair(x=3, y=2), target=IntPair(x=3, y=2), startPosition=(18080.0,1464.6666), targetPosition=(18528.0,1464.6666))
+		ElecDevilLaunchQueueElement(start=IntPair(x=0, y=2), target=IntPair(x=0, y=2), startPosition=(18080.0,1388.6666), targetPosition=(18528.0,1388.6666))
+		ElecDevilLaunchQueueElement(start=IntPair(x=4, y=2), target=IntPair(x=4, y=2), startPosition=(18080.0,1490.0), targetPosition=(18528.0,1490.0))
+		ElecDevilLaunchQueueElement(start=IntPair(x=1, y=2), target=IntPair(x=1, y=2), startPosition=(18080.0,1414.0), targetPosition=(18528.0,1414.0))
+		ElecDevilLaunchQueueElement(start=IntPair(x=2, y=2), target=IntPair(x=2, y=2), startPosition=(18080.0,1439.3333), targetPosition=(18528.0,1439.3333))
+		ElecDevilLaunchQueueElement(start=IntPair(x=4, y=1), target=IntPair(x=4, y=1), startPosition=(18048.0,1490.0), targetPosition=(18560.0,1490.0))
+		ElecDevilLaunchQueueElement(start=IntPair(x=1, y=1), target=IntPair(x=1, y=1), startPosition=(18048.0,1414.0), targetPosition=(18560.0,1414.0))
+		ElecDevilLaunchQueueElement(start=IntPair(x=2, y=1), target=IntPair(x=2, y=1), startPosition=(18048.0,1439.3333), targetPosition=(18560.0,1439.3333))
+		ElecDevilLaunchQueueElement(start=IntPair(x=3, y=1), target=IntPair(x=3, y=1), startPosition=(18048.0,1464.6666), targetPosition=(18560.0,1464.6666))
+		ElecDevilLaunchQueueElement(start=IntPair(x=0, y=1), target=IntPair(x=0, y=1), startPosition=(18048.0,1388.6666), targetPosition=(18560.0,1388.6666))
+		ElecDevilLaunchQueueElement(start=IntPair(x=5, y=1), target=IntPair(x=5, y=1), startPosition=(18048.0,1515.3333), targetPosition=(18560.0,1515.3333))
+		ElecDevilLaunchQueueElement(start=IntPair(x=2, y=0), target=IntPair(x=2, y=0), startPosition=(18016.0,1439.3333), targetPosition=(18592.0,1439.3333))
+		ElecDevilLaunchQueueElement(start=IntPair(x=1, y=0), target=IntPair(x=1, y=0), startPosition=(18016.0,1414.0), targetPosition=(18592.0,1414.0))
+		ElecDevilLaunchQueueElement(start=IntPair(x=4, y=0), target=IntPair(x=4, y=0), startPosition=(18016.0,1490.0), targetPosition=(18592.0,1490.0))
+		ElecDevilLaunchQueueElement(start=IntPair(x=3, y=0), target=IntPair(x=3, y=0), startPosition=(18016.0,1464.6666), targetPosition=(18592.0,1464.6666))
+		ElecDevilLaunchQueueElement(start=IntPair(x=0, y=0), target=IntPair(x=0, y=0), startPosition=(18016.0,1388.6666), targetPosition=(18592.0,1388.6666))
+13:35:06 | DEBUG | ElecDevil | setBothBodiesInactive()
+13:35:06 | DEBUG | ElecDevil | setBodyPiecesActive(): active=true
+13:35:06 | DEBUG | ElecDevil | update(): set body pieces active states: startBodyPieces=RIGHT, targetBodyPieces=LEFT
+13:35:07 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=3, y=4), state=false
+13:35:07 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=955994360, spawnProps=Properties({
+	[start=(18144.0,1464.6666)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@d7839bd]
+	[cull_out_of_bounds=false]
+	[target=(18464.0,1464.6666)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:35:07 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:08 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=2, y=4), state=false
+13:35:08 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=15288143, spawnProps=Properties({
+	[start=(18144.0,1439.3333)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@3afbd1fd]
+	[cull_out_of_bounds=false]
+	[target=(18464.0,1439.3333)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:35:08 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:08 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=0, y=3), state=false
+13:35:08 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=1194710757, spawnProps=Properties({
+	[start=(18112.0,1388.6666)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@2c8f94f6]
+	[cull_out_of_bounds=false]
+	[target=(18496.0,1388.6666)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:35:08 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18464.455,1464.6666), start=(18144.0,1464.6666), target=(18464.0,1464.6666)
+13:35:08 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=955994360
+13:35:08 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=3, y=4), state=true
+13:35:08 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=955994360
+13:35:09 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:09 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=1, y=3), state=false
+13:35:09 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18466.547,1439.3333), start=(18144.0,1439.3333), target=(18464.0,1439.3333)
+13:35:09 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=15288143
+13:35:09 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=2, y=4), state=true
+13:35:09 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=955994360, spawnProps=Properties({
+	[start=(18112.0,1414.0)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@24acd393]
+	[cull_out_of_bounds=false]
+	[target=(18496.0,1414.0)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:35:09 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=15288143
+13:35:10 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:10 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=4, y=3), state=false
+13:35:10 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=15288143, spawnProps=Properties({
+	[start=(18112.0,1490.0)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@7ee76b77]
+	[cull_out_of_bounds=false]
+	[target=(18496.0,1490.0)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:35:10 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18497.793,1388.6666), start=(18112.0,1388.6666), target=(18496.0,1388.6666)
+13:35:10 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=1194710757
+13:35:10 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=0, y=3), state=true
+13:35:10 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=1194710757
+13:35:10 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:11 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=2, y=3), state=false
+13:35:11 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=1194710757, spawnProps=Properties({
+	[start=(18112.0,1439.3333)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@459efaeb]
+	[cull_out_of_bounds=false]
+	[target=(18496.0,1439.3333)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:35:11 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18497.793,1414.0), start=(18112.0,1414.0), target=(18496.0,1414.0)
+13:35:11 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=955994360
+13:35:11 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=1, y=3), state=true
+13:35:11 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=955994360
+13:35:11 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:11 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=3, y=3), state=false
+13:35:11 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=955994360, spawnProps=Properties({
+	[start=(18112.0,1464.6666)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@795ade44]
+	[cull_out_of_bounds=false]
+	[target=(18496.0,1464.6666)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:35:12 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18502.018,1490.0), start=(18112.0,1490.0), target=(18496.0,1490.0)
+13:35:12 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=15288143
+13:35:12 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=4, y=3), state=true
+13:35:12 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=15288143
+13:35:12 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:12 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=5, y=2), state=false
+13:35:12 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=15288143, spawnProps=Properties({
+	[start=(18080.0,1515.3333)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@2c940c10]
+	[cull_out_of_bounds=false]
+	[target=(18528.0,1515.3333)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:35:12 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18497.793,1439.3333), start=(18112.0,1439.3333), target=(18496.0,1439.3333)
+13:35:12 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=1194710757
+13:35:12 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=2, y=3), state=true
+13:35:12 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=1194710757
+13:35:13 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:13 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=3, y=2), state=false
+13:35:13 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=1194710757, spawnProps=Properties({
+	[start=(18080.0,1464.6666)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@32c8fe50]
+	[cull_out_of_bounds=false]
+	[target=(18528.0,1464.6666)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:35:13 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18497.793,1464.6666), start=(18112.0,1464.6666), target=(18496.0,1464.6666)
+13:35:13 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=955994360
+13:35:13 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=3, y=3), state=true
+13:35:13 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=955994360
+13:35:13 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:14 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=0, y=2), state=false
+13:35:14 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=955994360, spawnProps=Properties({
+	[start=(18080.0,1388.6666)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@5695a0ce]
+	[cull_out_of_bounds=false]
+	[target=(18528.0,1388.6666)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:35:14 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18533.264,1515.3333), start=(18080.0,1515.3333), target=(18528.0,1515.3333)
+13:35:14 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=15288143
+13:35:14 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=5, y=2), state=true
+13:35:14 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=15288143
+13:35:14 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:14 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=4, y=2), state=false
+13:35:14 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=15288143, spawnProps=Properties({
+	[start=(18080.0,1490.0)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@731fc66a]
+	[cull_out_of_bounds=false]
+	[target=(18528.0,1490.0)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:35:15 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18529.04,1464.6666), start=(18080.0,1464.6666), target=(18528.0,1464.6666)
+13:35:15 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=1194710757
+13:35:15 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=3, y=2), state=true
+13:35:15 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=1194710757
+13:35:15 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:15 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=1, y=2), state=false
+13:35:15 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=1194710757, spawnProps=Properties({
+	[start=(18080.0,1414.0)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@77469184]
+	[cull_out_of_bounds=false]
+	[target=(18528.0,1414.0)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:35:16 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18533.264,1388.6666), start=(18080.0,1388.6666), target=(18528.0,1388.6666)
+13:35:16 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=955994360
+13:35:16 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=0, y=2), state=true
+13:35:16 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=955994360
+13:35:16 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:16 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=2, y=2), state=false
+13:35:16 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=955994360, spawnProps=Properties({
+	[start=(18080.0,1439.3333)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@7f5b0ae0]
+	[cull_out_of_bounds=false]
+	[target=(18528.0,1439.3333)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:35:16 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18533.264,1490.0), start=(18080.0,1490.0), target=(18528.0,1490.0)
+13:35:16 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=15288143
+13:35:16 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=4, y=2), state=true
+13:35:16 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=15288143
+13:35:16 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:17 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=4, y=1), state=false
+13:35:17 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=15288143, spawnProps=Properties({
+	[start=(18048.0,1490.0)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@773a74fa]
+	[cull_out_of_bounds=false]
+	[target=(18560.0,1490.0)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:35:17 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18529.04,1414.0), start=(18080.0,1414.0), target=(18528.0,1414.0)
+13:35:17 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=1194710757
+13:35:17 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=1, y=2), state=true
+13:35:17 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=1194710757
+13:35:17 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:17 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=1, y=1), state=false
+13:35:17 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=1194710757, spawnProps=Properties({
+	[start=(18048.0,1414.0)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@1e46f43c]
+	[cull_out_of_bounds=false]
+	[target=(18560.0,1414.0)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:35:18 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18529.04,1439.3333), start=(18080.0,1439.3333), target=(18528.0,1439.3333)
+13:35:18 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=955994360
+13:35:18 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=2, y=2), state=true
+13:35:18 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=955994360
+13:35:18 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:18 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=2, y=1), state=false
+13:35:18 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=955994360, spawnProps=Properties({
+	[start=(18048.0,1439.3333)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@644a2bbc]
+	[cull_out_of_bounds=false]
+	[target=(18560.0,1439.3333)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:35:19 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:19 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18564.51,1490.0), start=(18048.0,1490.0), target=(18560.0,1490.0)
+13:35:19 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=15288143
+13:35:19 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=4, y=1), state=true
+13:35:19 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=15288143
+13:35:19 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=3, y=1), state=false
+13:35:19 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=15288143, spawnProps=Properties({
+	[start=(18048.0,1464.6666)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@3bc9d4a5]
+	[cull_out_of_bounds=false]
+	[target=(18560.0,1464.6666)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:35:19 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:20 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18564.51,1414.0), start=(18048.0,1414.0), target=(18560.0,1414.0)
+13:35:20 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=1194710757
+13:35:20 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=1, y=1), state=true
+13:35:20 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=1194710757
+13:35:20 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=0, y=1), state=false
+13:35:20 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=1194710757, spawnProps=Properties({
+	[start=(18048.0,1388.6666)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@359e486d]
+	[cull_out_of_bounds=false]
+	[target=(18560.0,1388.6666)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:35:20 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:20 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18564.51,1439.3333), start=(18048.0,1439.3333), target=(18560.0,1439.3333)
+13:35:20 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=955994360
+13:35:20 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=2, y=1), state=true
+13:35:20 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=955994360
+13:35:20 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=5, y=1), state=false
+13:35:20 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=955994360, spawnProps=Properties({
+	[start=(18048.0,1515.3333)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@51272af9]
+	[cull_out_of_bounds=false]
+	[target=(18560.0,1515.3333)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:35:21 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:21 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18560.285,1464.6666), start=(18048.0,1464.6666), target=(18560.0,1464.6666)
+13:35:21 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=15288143
+13:35:21 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=3, y=1), state=true
+13:35:21 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=15288143
+13:35:21 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=2, y=0), state=false
+13:35:21 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=15288143, spawnProps=Properties({
+	[start=(18016.0,1439.3333)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@14961754]
+	[cull_out_of_bounds=false]
+	[target=(18592.0,1439.3333)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:35:22 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:22 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18564.51,1388.6666), start=(18048.0,1388.6666), target=(18560.0,1388.6666)
+13:35:22 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=1194710757
+13:35:22 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=0, y=1), state=true
+13:35:22 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=1194710757
+13:35:22 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=1, y=0), state=false
+13:35:22 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=1194710757, spawnProps=Properties({
+	[start=(18016.0,1414.0)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@d659a33]
+	[cull_out_of_bounds=false]
+	[target=(18592.0,1414.0)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:35:23 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:23 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18564.51,1515.3333), start=(18048.0,1515.3333), target=(18560.0,1515.3333)
+13:35:23 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=955994360
+13:35:23 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=5, y=1), state=true
+13:35:23 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=955994360
+13:35:23 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=4, y=0), state=false
+13:35:23 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=955994360, spawnProps=Properties({
+	[start=(18016.0,1490.0)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@3dfeddf5]
+	[cull_out_of_bounds=false]
+	[target=(18592.0,1490.0)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:35:23 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:24 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=3, y=0), state=false
+13:35:24 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=287136919, spawnProps=Properties({
+	[start=(18016.0,1464.6666)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@630d53d]
+	[cull_out_of_bounds=false]
+	[target=(18592.0,1464.6666)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:35:24 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18595.756,1439.3333), start=(18016.0,1439.3333), target=(18592.0,1439.3333)
+13:35:24 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=15288143
+13:35:24 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=2, y=0), state=true
+13:35:24 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=15288143
+13:35:24 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:24 | DEBUG | ElecDevil | update(): startBodyPieces.setStateOfPiece: start=IntPair(x=0, y=0), state=false
+13:35:24 | DEBUG | ElecDevilBodyPiece | onSpawn(): hashcode=15288143, spawnProps=Properties({
+	[start=(18016.0,1388.6666)]
+	[end=com.megaman.maverick.game.entities.bosses.ElecDevil$$Lambda$728/0x0000715504334880@763a36c9]
+	[cull_out_of_bounds=false]
+	[target=(18592.0,1388.6666)]
+	[light_source_keys={1}]
+	[owner={ ElecDevil:[mapObjId=448, dead=false, hashCode=839259983] }]
+})
+13:35:24 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18595.756,1414.0), start=(18016.0,1414.0), target=(18592.0,1414.0)
+13:35:24 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=1194710757
+13:35:24 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=1, y=0), state=true
+13:35:24 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=1194710757
+13:35:25 | DEBUG | ElecDevilBodyPiece | update(): beginTimer just finished
+13:35:25 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18595.756,1490.0), start=(18016.0,1490.0), target=(18592.0,1490.0)
+13:35:25 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=955994360
+13:35:25 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=4, y=0), state=true
+13:35:25 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=955994360
+13:35:26 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18595.756,1464.6666), start=(18016.0,1464.6666), target=(18592.0,1464.6666)
+13:35:26 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=287136919
+13:35:26 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=3, y=0), state=true
+13:35:26 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=287136919
+13:35:27 | DEBUG | ElecDevilBodyPiece | update(): set processState to END: body.getCenter=(18595.756,1388.6666), start=(18016.0,1388.6666), target=(18592.0,1388.6666)
+13:35:27 | DEBUG | ElecDevilBodyPiece | spawnExplosion(): hashcode=15288143
+13:35:27 | DEBUG | ElecDevil | update(): targetBodyPieces.setStateOfPiece: target=IntPair(x=0, y=0), state=true
+13:35:27 | DEBUG | ElecDevilBodyPiece | onDestroy(): hashcode=15288143
+13:35:27 | DEBUG | ElecDevil | update(): old=LAUNCH, next=APPEAR
+13:35:27 | DEBUG | ElecDevil | setOneBodyActive(): activeBody=LEFT, inactiveBody=RIGHT
+13:35:27 | DEBUG | ElecDevil | setBodyPiecesActive(): active=false
+13:35:27 | DEBUG | ElecDevil | update(): old=APPEAR, next=STAND
+13:35:27 | DEBUG | ElecDevil | spawnBodyEye()
+13:35:28 | DEBUG | ElecDevil | update(): old=STAND, next=CHARGE
+13:35:30 | DEBUG | ElecDevil | onDestroy()
+13:35:30 | DEBUG | ElecDevilBody | onDestroy(): hashcode=971415207
+13:35:30 | DEBUG | ElecDevilBodyPieces | onDestroy(): hashcode=1638631856
+13:35:30 | DEBUG | ElecDevilBody | onDestroy(): hashcode=1417203230
+13:35:30 | DEBUG | ElecDevilBodyPieces | onDestroy(): hashcode=1591505133

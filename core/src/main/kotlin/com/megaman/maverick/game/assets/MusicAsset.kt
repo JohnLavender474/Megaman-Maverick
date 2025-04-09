@@ -68,7 +68,8 @@ enum class MusicAsset(src: String, val loop: Boolean = true, val onCompletion: (
     CYBERNETIC_FACTORY_MUSIC("Cybernetic_Factory.mp3"),
     ROBOT_CITY_MUSIC("Robot_City.mp3"),
     MMZ3_GLACIER_MUSIC("MMZero3_Glacier.mp3"),
-    VINNYZ_INTRO_STAGE_MUSIC("vinnyz_intro_stage_edited.mp3");
+    VINNYZ_INTRO_STAGE_MUSIC("vinnyz_intro_stage_edited.mp3"),
+    JX_SHADOW_DEVIL_8BIT_REMIX_MUSIC("jx_shadow_devil_8-bit_remix.mp3");
 
     companion object {
         fun valuesAsIAssetArray(): Array<IAsset> {

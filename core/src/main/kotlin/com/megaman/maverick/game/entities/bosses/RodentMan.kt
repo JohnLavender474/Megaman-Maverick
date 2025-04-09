@@ -123,7 +123,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
 
         private val animDefs = orderedMapOf<String, AnimationDef>(
             "stand" pairTo AnimationDef(2, 1, gdxArrayOf(0.5f, 0.15f), true),
-            "stand_slash" pairTo AnimationDef(2, 1, 0.1f, false),
+            "stand_slash" pairTo AnimationDef(1, 7, 0.05f, false),
             "run" pairTo AnimationDef(1, 5, 0.1f, true),
             "jump_down_look_down" pairTo AnimationDef(),
             "jump_down_look_straight" pairTo AnimationDef(),

@@ -498,6 +498,7 @@ sprites/frames/Explosions1/Explosion.png
 sprites/frames/Explosions1/Disintegration.png
 sprites/frames/Explosions1/PreciousExplosion.png
 sprites/frames/Explosions1/IcicleShards.png
+sprites/frames/Explosions1/ElecExplosion.png
 sprites/frames/Explosions1/ChargedShotExplosion.png
 sprites/frames/Explosions1/IceBombExplosion.png
 sprites/frames/Explosions1/MagmaExplosion.png
@@ -1083,6 +1084,7 @@ sprites/frames/Bosses3/ElecDevil/charge.png
 sprites/frames/Bosses3/ElecDevil/appear.png
 sprites/frames/Bosses3/ElecDevil/grid.png
 sprites/frames/Bosses3/ElecDevil/stand.png
+sprites/frames/Bosses3/ElecDevil/turn_to_pieces.png
 sprites/frames/Bosses3/ElecDevil/hand.png
 sprites/frames/Faces_old/Distributor Man.png
 sprites/frames/Faces_old/Blunt Man.png
@@ -1581,6 +1583,7 @@ sprites/frames/Projectiles1/Asteroid.png
 sprites/frames/Projectiles1/PreciousGem/purple.png
 sprites/frames/Projectiles1/PreciousGem/pink.png
 sprites/frames/Projectiles1/PreciousGem/blue.png
+sprites/frames/Projectiles1/ElecDevilBodyPiece.png
 sprites/frames/Projectiles1/ChargedShot_v2.png
 sprites/frames/Projectiles1/ChargedShot.png
 sprites/frames/Projectiles1/BouncingPebble.png
@@ -2663,9 +2666,11 @@ sprites/piskel/Gachappan.piskel
 sprites/piskel/LargeSpikes.piskel
 sprites/piskel/MegamanHalfChargedShot.piskel
 sprites/piskel/Megaman_v2_cartin.piskel
+sprites/piskel/ElecDevilBodyPiece.piskel
 sprites/piskel/LeafCanopy.piskel
 sprites/piskel/DistributorMan.piskel
 sprites/piskel/LavaBeam.piskel
+sprites/piskel/ElecDevilProjectile.piskel
 sprites/piskel/Big_Propeller_Bot.piskel
 sprites/piskel/TitleScreen_v2.piskel
 sprites/piskel/BikerKibbo.piskel
@@ -3195,6 +3200,7 @@ music/Robot_City.wav
 music/MM2_Credits.mp3
 music/vinnyz_inferno_track_OLD.mp3
 music/MMX_Sigma_2_Stage.txt
+music/jx_shadow_devil_8-bit_remix.mp3
 music/MM8_FrostMan.mp3
 music/MMX_LevelSelectScreen.mp3
 music/MM2_Boss_Intro.mp3

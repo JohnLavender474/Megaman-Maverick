@@ -172,22 +172,22 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         }
 
         var yOffset = when {
-            megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 0.1f
+            megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 0f
             megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) ->
-                if (megaman.direction == Direction.LEFT) 0.2f else 0.25f
+                if (megaman.direction == Direction.LEFT) 0.1f else 0.15f
 
-            megaman.isBehaviorActive(BehaviorType.JETPACKING) -> 0.2f
-            megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.25f
-            megaman.isBehaviorActive(BehaviorType.CROUCHING) -> -0.1f
-            megaman.isBehaviorActive(BehaviorType.CLIMBING) -> 0.25f
+            megaman.isBehaviorActive(BehaviorType.JETPACKING) -> 0.1f
+            megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.15f
+            megaman.isBehaviorActive(BehaviorType.CROUCHING) -> 0f
+            megaman.isBehaviorActive(BehaviorType.CLIMBING) -> 0.15f
             !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> when (megaman.direction) {
-                Direction.UP -> 0.05f
-                else -> 0.2f
+                Direction.UP -> -0.05f
+                else -> 0.1f
             }
 
             else -> when (megaman.direction) {
-                Direction.UP -> 0.1f
-                else -> 0f
+                Direction.UP -> 0f
+                else -> -0.1f
             }
         }
 
@@ -210,13 +210,6 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         }
 
         return out
-    }
-
-    fun clearWeapons() {
-        megaman.currentWeapon = MegamanWeapon.MEGA_BUSTER
-        weaponHandlers.clear()
-
-        GameLogger.debug(TAG, "clearWeapons()")
     }
 
     fun putWeapon(weapon: MegamanWeapon) {
@@ -297,10 +290,6 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
     fun setToMaxAmmo(weapon: MegamanWeapon) {
         weaponHandlers[weapon]?.ammo = MegamanValues.MAX_WEAPON_AMMO
-    }
-
-    fun depleteAmmo(weapon: MegamanWeapon) {
-        weaponHandlers[weapon]?.ammo = 0
     }
 
     fun getAmmo(weapon: MegamanWeapon) = when {
