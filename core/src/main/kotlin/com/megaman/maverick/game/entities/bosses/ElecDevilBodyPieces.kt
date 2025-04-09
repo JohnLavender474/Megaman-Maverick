@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
-import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
@@ -62,8 +62,14 @@ class ElecDevilBodyPieces(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
     companion object {
         const val TAG = "ElecDevilBodyPieces"
 
-        private const val LIGHT_SOURCE_RADIUS = 5
-        private const val LIGHT_SOURCE_RADIANCE = 3f
+        private const val BRIGHT_SOURCE_RADIUS = 5
+        private const val BRIGHT_SOURCE_RADIANCE = 3f
+
+        private const val DIM_SOURCE_RADIUS = 2
+        private const val DIM_SOURCE_RADIANCE = 1.25f
+
+        private const val STAND_BY_ALPHA = 0.5f
+        private const val STAND_BY_BLINK_DELAY = 0.1f
 
         private val colors = gdxArrayOf(ConstKeys.WHITE, ConstKeys.BLUE, ConstKeys.GREEN)
         private val regions = ObjectMap<String, TextureRegion>()
@@ -73,10 +79,14 @@ class ElecDevilBodyPieces(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
     override lateinit var facing: Facing
     override var on = false
 
+    private val standByPieces = OrderedSet<IntPair>()
     private val activePieces = OrderedSet<IntPair>()
 
     private val lightSourceKeys = ObjectSet<Int>()
     private val lightSourceSendEventDelay = Timer(ElecDevilConstants.LIGHT_SOURCE_SEND_EVENT_DELAY)
+
+    private val standByBlinkTimer = Timer(STAND_BY_BLINK_DELAY)
+    private var standByBlink = false
 
     override fun init() {
         if (regions.isEmpty) {
@@ -109,7 +119,7 @@ class ElecDevilBodyPieces(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
         GameLogger.debug(TAG, "onSpawn(): hashcode=${hashCode()}, spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        setStateOfAllPieces(false)
+        setStateOfAllPieces(ElecDevilBodyPieceState.INACTIVE)
 
         facing = spawnProps.get(ConstKeys.FACING, Facing::class)!!
         owner = spawnProps.get(ConstKeys.OWNER, ElecDevilBody::class)!!
@@ -120,6 +130,9 @@ class ElecDevilBodyPieces(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
         lightSourceKeys.addAll(
             spawnProps.get("${ConstKeys.LIGHT}_${ConstKeys.SOURCE}_${ConstKeys.KEYS}") as ObjectSet<Int>
         )
+
+        standByBlinkTimer.reset()
+        standByBlink = false
     }
 
     override fun onDestroy() {
@@ -130,35 +143,60 @@ class ElecDevilBodyPieces(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
         lightSourceKeys.clear()
     }
 
-    internal fun getStateOfPiece(row: Int, column: Int) = activePieces.contains(row pairTo column)
+    internal fun isPieceActive(row: Int, column: Int) = activePieces.contains(row pairTo column)
 
-    internal fun setStateOfPiece(row: Int, column: Int, state: Boolean) = when (state) {
-        true -> activePieces.add(row pairTo column)
-        false -> activePieces.remove(row pairTo column)
+    internal fun setStateOfPiece(row: Int, column: Int, state: ElecDevilBodyPieceState) {
+        val key = row pairTo column
+
+        when (state) {
+            ElecDevilBodyPieceState.INACTIVE -> {
+                standByPieces.remove(key)
+                activePieces.remove(key)
+            }
+
+            ElecDevilBodyPieceState.STANDBY -> {
+                standByPieces.add(key)
+                activePieces.remove(key)
+            }
+
+            ElecDevilBodyPieceState.ACTIVE -> {
+                standByPieces.remove(key)
+                activePieces.add(key)
+            }
+        }
     }
 
-    internal fun setStateOfAllPieces(state: Boolean) = ElecDevilConstants.forEachCell { row, column ->
-        setStateOfPiece(row, column, state)
+    internal fun setStateOfAllPieces(state: ElecDevilBodyPieceState) =
+        ElecDevilConstants.forEachCell { row, column -> setStateOfPiece(row, column, state) }
+
+    private fun lightUp(row: Int, column: Int, bright: Boolean) {
+        LightSourceUtils.sendLightSourceEvent(
+            game,
+            lightSourceKeys,
+            owner!!.getPositionOf(row, column).add(
+                ElecDevilConstants.PIECE_WIDTH * ConstVals.PPM / 2f,
+                ElecDevilConstants.PIECE_HEIGHT * ConstVals.PPM / 2f
+            ),
+            if (bright) BRIGHT_SOURCE_RADIANCE else DIM_SOURCE_RADIANCE,
+            if (bright) BRIGHT_SOURCE_RADIUS else DIM_SOURCE_RADIUS
+        )
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        standByBlinkTimer.update(delta)
+        if (standByBlinkTimer.isFinished()) {
+            standByBlink = !standByBlink
+            standByBlinkTimer.reset()
+        }
+
         when {
             on -> {
                 lightSourceSendEventDelay.update(delta)
 
                 if (lightSourceSendEventDelay.isFinished()) {
-                    activePieces.forEach { (row, column) ->
-                        LightSourceUtils.sendLightSourceEvent(
-                            game,
-                            lightSourceKeys,
-                            owner!!.getPositionOf(row, column).add(
-                                ElecDevilConstants.PIECE_WIDTH * ConstVals.PPM / 2f,
-                                ElecDevilConstants.PIECE_HEIGHT * ConstVals.PPM / 2f
-                            ),
-                            LIGHT_SOURCE_RADIANCE,
-                            LIGHT_SOURCE_RADIUS
-                        )
-                    }
+                    if (standByBlink) standByPieces.forEach { (row, column) -> lightUp(row, column, false) }
+
+                    activePieces.forEach { (row, column) -> lightUp(row, column, true) }
 
                     lightSourceSendEventDelay.reset()
                 }
@@ -187,7 +225,7 @@ class ElecDevilBodyPieces(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
             body.preProcess.put(key) {
                 damager.setPosition(owner!!.getPositionOf(row, column))
 
-                damagerFixture.setActive(on && getStateOfPiece(row, column))
+                damagerFixture.setActive(on && isPieceActive(row, column))
                 damagerFixture.drawingColor = if (damagerFixture.isActive()) Color.RED else Color.GRAY
             }
 
@@ -219,7 +257,11 @@ class ElecDevilBodyPieces(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
                 builder.sprite(key, sprite)
 
                 builder.updatable { _, sprite ->
-                    sprite.hidden = !on || !activePieces.contains(row pairTo column)
+                    val visible = on && (activePieces.contains(row pairTo column) ||
+                        (standByPieces.contains(row pairTo column) && standByBlink))
+                    sprite.hidden = !visible
+
+                    sprite.setAlpha(if (activePieces.contains(row pairTo column)) 1f else STAND_BY_ALPHA)
 
                     sprite.setFlip(isFacing(Facing.LEFT), false)
 
@@ -240,8 +282,29 @@ class ElecDevilBodyPieces(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
         .also { builder ->
             ElecDevilConstants.forEachCell { row, column ->
                 val rowColumnKey = ElecDevilConstants.getRowColumnKey(row, column)
-                val regions = colors.map { color -> regions["${color}/${rowColumnKey}"] }.toGdxArray()
-                builder.key(rowColumnKey).animator(Animator(Animation(regions, 0.1f, true)))
+
+                val activeRegions = colors.map { color -> regions["${color}/${rowColumnKey}"] }.toGdxArray()
+                val activeAnimation = Animation(activeRegions, 0.1f, true)
+
+                val standByRegion = regions["${ConstKeys.WHITE}/${rowColumnKey}"]
+                val standByAnimation = Animation(standByRegion)
+
+                builder.key(rowColumnKey)
+                    .animator(
+                        AnimatorBuilder()
+                            .setKeySupplier {
+                                when {
+                                    standByPieces.contains(row pairTo column) -> ConstKeys.STAND_BY
+                                    activePieces.contains(row pairTo column) -> ConstKeys.ACTIVE
+                                    else -> null
+                                }
+                            }
+                            .applyToAnimations { animations ->
+                                animations.put(ConstKeys.STAND_BY, standByAnimation)
+                                animations.put(ConstKeys.ACTIVE, activeAnimation)
+                            }
+                            .build()
+                    )
             }
         }
         .build()

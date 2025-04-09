@@ -150,6 +150,7 @@ sounds/explosion1.mp3
 sounds/disappearing_block.wav
 sounds/shake.wav
 sounds/liftoff.wav
+sounds/electric_1.wav
 sounds/bassy_blast.wav
 sounds/boss_door.wav
 sounds/beam_in.wav
@@ -210,8 +211,10 @@ sounds/electric_saw.wav
 sounds/currency_pickup.wav
 sounds/mario_fireball.mp3
 sounds/whee.wav
+sounds/volt.wav
 sounds/energy_fill.mp3
 sounds/jump.mp3
+sounds/electric_2.wav
 sounds/burst.wav
 sounds/quake.mp3
 sounds/floating_portal.wav

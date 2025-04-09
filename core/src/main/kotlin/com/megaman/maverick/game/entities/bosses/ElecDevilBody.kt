@@ -64,7 +64,7 @@ class ElecDevilBody(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
             ElecDevilState.APPEAR pairTo AnimationDef(2, 2, 0.1f, false),
             ElecDevilState.CHARGE pairTo AnimationDef(2, 2, 0.1f, true),
             ElecDevilState.STAND pairTo AnimationDef(2, 2, 0.1f, true),
-            ElecDevilState.HAND pairTo AnimationDef(),
+            ElecDevilState.HAND pairTo AnimationDef(2, 1, 0.1f, true),
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }

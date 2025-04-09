@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.projectiles
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.Animator
@@ -24,15 +25,27 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.ILightSourceEntity
 import com.megaman.maverick.game.world.body.*
 
-class ElecBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
+class ElecBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, ILightSourceEntity {
 
     companion object {
         const val TAG = "ElecBall"
+
         private const val SPEED = 10f
+
+        private const val LIGHT_SOURCE_RADIUS = 3
+        private const val LIGHT_SOURCE_RADIANCE = 1.25f
+
         private var region: TextureRegion? = null
     }
+
+    override val lightSourceKeys = ObjectSet<Int>()
+    override val lightSourceCenter: Vector2
+        get() = body.getCenter()
+    override var lightSourceRadius = LIGHT_SOURCE_RADIUS
+    override var lightSourceRadiance = LIGHT_SOURCE_RADIANCE
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -51,6 +64,10 @@ class ElecBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         val target = spawnProps.get(ConstKeys.TARGET, Vector2::class)!!
         val trajectory = target.sub(spawn).nor().scl(SPEED * ConstVals.PPM)
         body.physics.velocity.set(trajectory)
+
+        lightSourceKeys.addAll(
+            spawnProps.get("${ConstKeys.LIGHT}_${ConstKeys.SOURCE}_${ConstKeys.KEYS}") as ObjectSet<Int>
+        )
     }
 
     override fun onDestroy() {

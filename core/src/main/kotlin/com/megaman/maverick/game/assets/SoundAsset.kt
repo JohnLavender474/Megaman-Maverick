@@ -71,7 +71,10 @@ enum class SoundAsset(src: String, val seconds: Int) : IAsset {
     SPACE_LAZER_SOUND("space_lazer.wav", 1),
     CURRENCY_PICKUP_SOUND("currency_pickup.wav", 1),
     ONE_UP_SOUND("one_up.wav", 1),
-    REV_SOUND("rev.mp3", 1);
+    REV_SOUND("rev.mp3", 1),
+    VOLT_SOUND("volt.wav", 1),
+    ELECTRIC_1_SOUND("electric_1.wav", 1),
+    ELECTRIC_2_SOUND("electric_2.wav", 2);
 
     companion object {
         fun valuesAsIAssetArray(): Array<IAsset> {

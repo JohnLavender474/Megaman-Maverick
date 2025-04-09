@@ -48,6 +48,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val STAND_BY = "stand_by"
     const val GRID = "grid"
     const val HAND = "hand"
     const val RESIDUAL = "residual"

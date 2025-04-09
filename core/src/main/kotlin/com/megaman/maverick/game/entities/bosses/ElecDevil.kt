@@ -29,6 +29,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.megaman
@@ -96,7 +97,7 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
             val shots = HAND_DUR.div(HAND_SHOT_DELAY).toInt()
             for (i in 1..shots) {
                 val time = i * HAND_SHOT_DELAY
-                val runnable = TimeMarkedRunnable(time) { shootFromHand() }
+                val runnable = TimeMarkedRunnable(time) { shootFromEye() }
                 timer.addRunnable(runnable)
             }
         },
@@ -290,6 +291,8 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
                         val launchDelay = UtilMethods.interpolate(MIN_LAUNCH_DELAY, MAX_LAUNCH_DELAY, getHealthRatio())
                         launchDelayTimer.resetDuration(launchDelay)
 
+                        requestToPlaySound(SoundAsset.ELECTRIC_2_SOUND, false)
+
                         return@add
                     }
 
@@ -314,7 +317,10 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
                         )
 
                         val (startRow, startColumn) = start
-                        startBodyPieces.setStateOfPiece(startRow, startColumn, false)
+                        startBodyPieces.setStateOfPiece(startRow, startColumn, ElecDevilBodyPieceState.INACTIVE)
+
+                        val (targetRow, targetColumn) = target
+                        targetBodyPieces.setStateOfPiece(targetRow, targetColumn, ElecDevilBodyPieceState.STANDBY)
 
                         val onEnd: () -> Unit = {
                             GameLogger.debug(
@@ -322,8 +328,7 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
                                 "update(): targetBodyPieces.setStateOfPiece: target=$target, state=true"
                             )
 
-                            val (targetRow, targetColumn) = target
-                            targetBodyPieces.setStateOfPiece(targetRow, targetColumn, true)
+                            targetBodyPieces.setStateOfPiece(targetRow, targetColumn, ElecDevilBodyPieceState.ACTIVE)
                         }
 
                         val speed = UtilMethods.interpolate(
@@ -348,6 +353,8 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
 
                         val launchDelay = UtilMethods.interpolate(MIN_LAUNCH_DELAY, MAX_LAUNCH_DELAY, getHealthRatio())
                         launchDelayTimer.resetDuration(launchDelay)
+
+                        requestToPlaySound(SoundAsset.ELECTRIC_1_SOUND, false)
                     }
                 }
 
@@ -386,8 +393,8 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
                                     "targetBodyPieces=${targetBodyPieces.facing}"
                             )
 
-                            startBodyPieces.setStateOfAllPieces(true)
-                            targetBodyPieces.setStateOfAllPieces(false)
+                            startBodyPieces.setStateOfAllPieces(ElecDevilBodyPieceState.ACTIVE)
+                            targetBodyPieces.setStateOfAllPieces(ElecDevilBodyPieceState.INACTIVE)
                         }
 
                         timer.reset()
@@ -561,22 +568,12 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
             props(
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.POSITION pairTo eye.getCenter(),
-                ConstKeys.TARGET pairTo megaman.body.getCenter()
+                ConstKeys.TARGET pairTo megaman.body.getCenter(),
+                "${ConstKeys.LIGHT}_${ConstKeys.SOURCE}_${ConstKeys.KEYS}" pairTo lightSourceKeys
             )
         )
-    }
 
-    private fun shootFromHand() {
-        GameLogger.debug(TAG, "shootFromHand()")
-
-        val elecBall = MegaEntityFactory.fetch(ElecBall::class)!!
-        elecBall.spawn(
-            props(
-                ConstKeys.OWNER pairTo this,
-                ConstKeys.POSITION pairTo eye.getCenter(),
-                ConstKeys.TARGET pairTo megaman.body.getCenter()
-            )
-        )
+        requestToPlaySound(SoundAsset.VOLT_SOUND, false)
     }
 
     private fun isBodyActive() = leftBody!!.on || rightBody!!.on
