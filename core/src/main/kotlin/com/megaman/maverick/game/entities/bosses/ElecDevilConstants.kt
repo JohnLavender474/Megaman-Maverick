@@ -25,6 +25,9 @@ internal object ElecDevilConstants {
     internal const val PIECE_WIDTH = BODY_WIDTH.div(PIECE_COLUMNS)
     internal const val PIECE_HEIGHT = BODY_HEIGHT.div(PIECE_ROWS)
 
+    internal const val PIECE_MIN_SPEED = 10f
+    internal const val PIECE_MAX_SPEED = 12f
+
     internal val CELLS = orderedMapOf(
         0 pairTo orderedSetOf(0, 1, 2, 3),
         1 pairTo orderedSetOf(0, 1, 2, 3),

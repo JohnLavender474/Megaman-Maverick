@@ -48,7 +48,6 @@ class ElecDevilBodyPiece(game: MegamanMaverickGame) : AbstractProjectile(game), 
         const val TAG = "ElecDevilBodyPiece"
 
         private const val BEGIN_DUR = 0.5f
-        private const val SPEED = 10f
 
         private const val LIGHT_SOURCE_RADIUS = 3
         private const val LIGHT_SOURCE_RADIANCE = 1.25f
@@ -72,6 +71,8 @@ class ElecDevilBodyPiece(game: MegamanMaverickGame) : AbstractProjectile(game), 
     private val beginTimer = Timer(BEGIN_DUR)
 
     private lateinit var onEnd: () -> Unit
+
+    private var speed = 0f
 
     override fun init() {
         GameLogger.debug(TAG, "init(): hashcode=${hashCode()}")
@@ -101,6 +102,8 @@ class ElecDevilBodyPiece(game: MegamanMaverickGame) : AbstractProjectile(game), 
         processState = ProcessState.BEGIN
         beginTimer.reset()
 
+        speed = spawnProps.get(ConstKeys.SPEED, Float::class)!!
+
         lightSourceSendEventDelay.reset()
         lightSourceKeys.addAll(
             spawnProps.get("${ConstKeys.LIGHT}_${ConstKeys.SOURCE}_${ConstKeys.KEYS}") as ObjectSet<Int>
@@ -126,7 +129,7 @@ class ElecDevilBodyPiece(game: MegamanMaverickGame) : AbstractProjectile(game), 
 
         processState = ProcessState.CONTINUE
 
-        body.physics.velocity.set(target.pooledCopy().sub(body.getCenter()).nor().scl(SPEED * ConstVals.PPM))
+        body.physics.velocity.set(target.pooledCopy().sub(body.getCenter()).nor().scl(speed))
 
         if (processState == ProcessState.CONTINUE && start.dst2(target) < start.dst2(body.getCenter())) {
             GameLogger.debug(

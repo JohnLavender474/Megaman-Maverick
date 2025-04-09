@@ -154,6 +154,7 @@ comprehensive listing of the credits for the artwork used in this game.
 - Moon Head - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/MoonHead-Miniboss-Megaman-Maverick-1090151707)
 - Reactor Monkey - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
 - Bospider - [Bean and Shawn](https://www.spriters-resource.com/game_boy_gbc/mmxtreme/sheet/480/?source=genre)
+- Elec Devil = [boberatu](https://www.deviantart.com/boberatu/art/Elec-Devil-276493565)
 - Guts Tank - [Mister Mike](https://www.spriters-resource.com/nes/mm2/sheet/2317/) (currently not used)
 - Penpen Maker - [Mister Mike](https://www.spriters-resource.com/nes/mm3/sheet/77911/) (currently not used)
 - Sphinx - [Mister Mike](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/108177/) (currently not used)
@@ -253,6 +254,8 @@ comprehensive listing of the credits for the artwork used in this game.
   - Timber Woman Stage - [Mega Quest 2 - Level 1 Music](https://ryanavx.itch.io/mega-quest-2-music-pack)
 - [Wyatt](https://www.youtube.com/@WyattCroucher)
   - Wily Stage 1 - [Mega Man X - Sigma Stage 1 (8-bit)](https://www.youtube.com/watch?v=mpHnNDPZNKk)
+- [JXChip](https://www.youtube.com/@JXChip)
+  - Elec Devil - [Rockman X5 - Shadow Devil [Famitracker, VRC6]](https://www.youtube.com/watch?v=uVEBE9i7n7M)
 - [François Gérin-Lajoie](https://oragus.itch.io/)
   - Wily Stage 2 - [8-bit Robotics - Cybernetic Factory](https://oragus.itch.io/8-bit-robotics)
 - Capcom

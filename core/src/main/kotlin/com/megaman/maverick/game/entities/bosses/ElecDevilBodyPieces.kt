@@ -47,6 +47,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.bosses.ElecDevilConstants.BODY_SPRITE_FACING_LEFT_OFFSET_X
 import com.megaman.maverick.game.entities.bosses.ElecDevilConstants.BODY_SPRITE_FACING_RIGHT_OFFSET_X
+import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
@@ -56,7 +57,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getPositionPoint
 
 class ElecDevilBodyPieces(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity,
-    IAnimatedEntity, IDrawableShapesEntity, IOwnable<ElecDevilBody>, IFaceable, IActivatable, IDamager {
+    IAnimatedEntity, IDrawableShapesEntity, IOwnable<ElecDevilBody>, IFaceable, IActivatable, IDamager, IHazard {
 
     companion object {
         const val TAG = "ElecDevilBodyPieces"
@@ -173,18 +174,18 @@ class ElecDevilBodyPieces(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
         val debugShapes = Array<() -> IDrawableShape?>()
 
         ElecDevilConstants.forEachCell { row, column ->
-            val bounds = GameRectangle().setSize(
+            val damager = GameRectangle().setSize(
                 ElecDevilConstants.PIECE_WIDTH * ConstVals.PPM,
                 ElecDevilConstants.PIECE_HEIGHT * ConstVals.PPM
             )
 
-            val damagerFixture = Fixture(body, FixtureType.DAMAGER, bounds)
+            val damagerFixture = Fixture(body, FixtureType.DAMAGER, damager)
             damagerFixture.attachedToBody = false
             body.addFixture(damagerFixture)
 
             val key = ElecDevilConstants.getRowColumnKey(row, column)
             body.preProcess.put(key) {
-                bounds.setPosition(owner!!.getPositionOf(row, column))
+                damager.setPosition(owner!!.getPositionOf(row, column))
 
                 damagerFixture.setActive(on && getStateOfPiece(row, column))
                 damagerFixture.drawingColor = if (damagerFixture.isActive()) Color.RED else Color.GRAY

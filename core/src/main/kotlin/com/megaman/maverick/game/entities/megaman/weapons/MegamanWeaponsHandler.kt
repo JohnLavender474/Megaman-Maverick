@@ -178,7 +178,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
             megaman.isBehaviorActive(BehaviorType.JETPACKING) -> 0.1f
             megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.15f
-            megaman.isBehaviorActive(BehaviorType.CROUCHING) -> 0f
+            megaman.isBehaviorActive(BehaviorType.CROUCHING) -> -0.2f
             megaman.isBehaviorActive(BehaviorType.CLIMBING) -> 0.15f
             !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> when (megaman.direction) {
                 Direction.UP -> -0.05f

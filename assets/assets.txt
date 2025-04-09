@@ -1532,6 +1532,7 @@ sprites/frames/Projectiles1/RocketBomb.png
 sprites/frames/Projectiles1/Petal.png
 sprites/frames/Projectiles1/RollingBotShot.png
 sprites/frames/Projectiles1/TubeBeam.png
+sprites/frames/Projectiles1/ElecBall.png
 sprites/frames/Projectiles1/PurpleBlast/Charge.png
 sprites/frames/Projectiles1/PurpleBlast/Blast.png
 sprites/frames/Projectiles1/SnowJoeball.png

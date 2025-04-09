@@ -157,8 +157,7 @@ class ElecDevilBody(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         body.drawingColor = Color.YELLOW
 
         val debugShapes = Array<() -> IDrawableShape?>()
-
-        // TODO: create damager fixtures for body parts
+        debugShapes.add { body.getBounds() }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -173,7 +172,7 @@ class ElecDevilBody(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
             )
         })
         .updatable { _, sprite ->
-            sprite.hidden = !on
+            sprite.hidden = !on || owner!!.isDamageBlinking()
 
             sprite.setFlip(isFacing(Facing.LEFT), false)
 

@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.bosses
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.*
@@ -11,40 +12,49 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.IStateable
 import com.mega.game.engine.common.objects.*
+import com.mega.game.engine.common.shapes.GameCircle
+import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.projectiles.ElecBall
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
-import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.*
 
 class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<ElecDevilState> {
 
     companion object {
         const val TAG = "ElecDevil"
 
-        internal const val INIT_DUR = 0.5f
+        internal const val INIT_DUR = 1f
 
         internal const val APPEAR_DUR = 0.5f
 
-        internal const val STAND_DUR = 1f
+        internal const val STAND_DUR = 0.5f
 
         internal const val CHARGE_DUR = 1f
 
         internal const val HAND_DUR = 1.5f
         internal const val HAND_SHOT_DELAY = 0.5f
 
-        internal const val MIN_LAUNCH_DELAY = 0.25f
-        internal const val MAX_LAUNCH_DELAY = 0.75f
+        internal const val MIN_LAUNCH_DELAY = 0.5f
+        internal const val MAX_LAUNCH_DELAY = 1f
 
         internal const val TURN_TO_PIECES_DUR = 1f
 
@@ -67,11 +77,21 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
     // if true, then the left body should be active, and pieces should come from the left, and vice versa if false
     private var fromLeft = true
 
-    private val loop = Loop(ElecDevilState.entries.toGdxArray())
+    // LAUNCH, APPEAR, STAND, CHARGE, HAND, TURN_TO_PIECES
+    private val loop = Loop<ElecDevilState>(
+        ElecDevilState.LAUNCH,
+        ElecDevilState.APPEAR,
+        ElecDevilState.STAND,
+        ElecDevilState.CHARGE,
+        ElecDevilState.STAND,
+        ElecDevilState.HAND,
+        ElecDevilState.STAND,
+        ElecDevilState.TURN_TO_PIECES
+    )
     private val stateTimers = orderedMapOf(
         ElecDevilState.APPEAR pairTo Timer(APPEAR_DUR),
-        ElecDevilState.STAND pairTo Timer(STAND_DUR).setRunOnFirstupdate { spawnBodyEye() },
-        ElecDevilState.CHARGE pairTo Timer(CHARGE_DUR).setRunOnFinished { shootFromBodyEye() },
+        ElecDevilState.STAND pairTo Timer(STAND_DUR),
+        ElecDevilState.CHARGE pairTo Timer(CHARGE_DUR).setRunOnFinished { shootFromEye() },
         ElecDevilState.HAND pairTo Timer(HAND_DUR).also { timer ->
             val shots = HAND_DUR.div(HAND_SHOT_DELAY).toInt()
             for (i in 1..shots) {
@@ -80,7 +100,7 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
                 timer.addRunnable(runnable)
             }
         },
-        ElecDevilState.TURN_TO_PIECES pairTo Timer(TURN_TO_PIECES_DUR).setRunOnFirstupdate { destroyBodyEye() }
+        ElecDevilState.TURN_TO_PIECES pairTo Timer(TURN_TO_PIECES_DUR)
     )
     private val initTimer = Timer(INIT_DUR)
 
@@ -94,6 +114,9 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
     private var startX = 0f
 
     private val reusableIntMap = OrderedMap<Int, OrderedSet<Int>>()
+
+    private lateinit var eye: IGameShape2D
+    private lateinit var hand: IGameShape2D
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -239,7 +262,7 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
         updatablesComponent.add { delta ->
             game.setDebugText("body active: ${isBodyActive()}")
 
-            initTimer.update(delta)
+            if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) initTimer.update(delta)
 
             if (!ready) return@add
 
@@ -303,11 +326,18 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
                             targetBodyPieces.setStateOfPiece(targetRow, targetColumn, true)
                         }
 
+                        val speed = UtilMethods.interpolate(
+                            ElecDevilConstants.PIECE_MAX_SPEED,
+                            ElecDevilConstants.PIECE_MIN_SPEED,
+                            getHealthRatio()
+                        ) * ConstVals.PPM
+
                         val bodyPiece = MegaEntityFactory.fetch(ElecDevilBodyPiece::class)!!
                         bodyPiece.spawn(
                             props(
                                 ConstKeys.END pairTo onEnd,
                                 ConstKeys.OWNER pairTo this,
+                                ConstKeys.SPEED pairTo speed,
                                 ConstKeys.START pairTo startPosition,
                                 ConstKeys.TARGET pairTo targetPosition,
                                 "${ConstKeys.LIGHT}_${ConstKeys.SOURCE}_${ConstKeys.KEYS}" pairTo lightSourceKeys
@@ -368,7 +398,53 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
     }
 
     // No need for this entity to have a body. Contacts will be made from the "body" and "pieces" entities.
-    override fun defineBodyComponent() = BodyComponentCreator.create(this, Body(BodyType.ABSTRACT))
+    override fun defineBodyComponent(): BodyComponent {
+        val body = Body(BodyType.ABSTRACT)
+
+        val debugShapes = Array<() -> IDrawableShape?>()
+
+        eye = GameCircle().setRadius(0.5f * ConstVals.PPM)
+        val eyeFixture = Fixture(body, FixtureType.DAMAGEABLE, eye)
+        eyeFixture.attachedToBody = false
+        body.addFixture(eyeFixture)
+        debugShapes.add { eyeFixture }
+
+        body.preProcess.put(ConstKeys.DAMAGEABLE) {
+            val active = getCurrentState().equalsAny(ElecDevilState.STAND, ElecDevilState.CHARGE, ElecDevilState.HAND)
+            eyeFixture.setActive(active)
+
+            eyeFixture.drawingColor = if (active) Color.PURPLE else Color.GRAY
+
+            val center = when {
+                leftBody!!.on -> leftBody!!.body.getCenter().add(-0.25f * ConstVals.PPM, 1.5f * ConstVals.PPM)
+                else -> rightBody!!.body.getCenter().add(0.25f * ConstVals.PPM, 1.5f * ConstVals.PPM)
+            }
+            eye.setCenter(center)
+        }
+
+        hand = GameRectangle().setSize(1.5f * ConstVals.PPM)
+        val handFixture = Fixture(body, FixtureType.SHIELD, hand)
+        handFixture.attachedToBody = false
+        body.addFixture(handFixture)
+        debugShapes.add { handFixture }
+
+        body.preProcess.put(ConstKeys.HAND) {
+            val active = getCurrentState() == ElecDevilState.HAND
+            handFixture.setActive(active)
+
+            handFixture.drawingColor = if (active) Color.YELLOW else Color.GRAY
+
+            val center = when {
+                leftBody!!.on -> leftBody!!.body.getCenter().add(2.5f * ConstVals.PPM, 1.25f * ConstVals.PPM)
+                else -> rightBody!!.body.getCenter().add(-2.5f * ConstVals.PPM, 1.25f * ConstVals.PPM)
+            }
+            hand.setCenter(center)
+        }
+
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
+
+        return BodyComponentCreator.create(this, body)
+    }
 
     // No sprites for this entity. Sprites will be shown from the "body" and "pieces" entities.
     override fun defineSpritesComponent() = SpritesComponent()
@@ -418,9 +494,7 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
             }
 
             val (targetRow, targetColumn) = target
-            val targetPosition = targetBody
-                .getPositionOf(targetRow, targetColumn)
-                .add(xOffset * targetBody.facing.value, yOffset)
+            val targetPosition = targetBody.getPositionOf(targetRow, targetColumn).add(xOffset, yOffset)
 
             launchQueue.addLast(
                 ElecDevilLaunchQueueElement(
@@ -479,25 +553,33 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
         rightBodyPieces!!.on = active
     }
 
-    private fun spawnBodyEye() {
-        GameLogger.debug(TAG, "spawnBodyEye()")
-        // TODO
-    }
-
-    private fun shootFromBodyEye() {
+    private fun shootFromEye() {
         GameLogger.debug(TAG, "shootFromEye()")
-        // TODO
-    }
 
-    private fun destroyBodyEye() {
-        GameLogger.debug(TAG, "destroyBodyEye()")
-        // TODO
+        val elecBall = MegaEntityFactory.fetch(ElecBall::class)!!
+        elecBall.spawn(
+            props(
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.POSITION pairTo eye.getCenter(),
+                ConstKeys.TARGET pairTo megaman.body.getCenter()
+            )
+        )
     }
 
     private fun shootFromHand() {
         GameLogger.debug(TAG, "shootFromHand()")
-        // TODO
+
+        val elecBall = MegaEntityFactory.fetch(ElecBall::class)!!
+        elecBall.spawn(
+            props(
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.POSITION pairTo eye.getCenter(),
+                ConstKeys.TARGET pairTo megaman.body.getCenter()
+            )
+        )
     }
 
     private fun isBodyActive() = leftBody!!.on || rightBody!!.on
+
+    internal fun isDamageBlinking() = damageBlink
 }

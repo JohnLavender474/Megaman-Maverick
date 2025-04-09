@@ -115,6 +115,13 @@ DuoBall
   orig: 8, 16
   offset: 0, 0
   index: -1
+ElecBall
+  rotate: false
+  xy: 304, 340
+  size: 32, 96
+  orig: 32, 96
+  offset: 0, 0
+  index: -1
 ElecDevilBodyPiece
   rotate: false
   xy: 120, 164
@@ -173,7 +180,7 @@ FirePellet
   index: -1
 FireWall/disintegrate
   rotate: false
-  xy: 304, 340
+  xy: 336, 340
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -201,7 +208,7 @@ GreenPelletBlast/blast
   index: -1
 GreenPelletBlast/burst
   rotate: false
-  xy: 400, 340
+  xy: 432, 340
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
@@ -222,7 +229,7 @@ HoneyDrip/drip
   index: -1
 HoneyDrip/splash
   rotate: false
-  xy: 432, 340
+  xy: 464, 340
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
