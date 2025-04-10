@@ -130,6 +130,9 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         EventType.ADD_LIGHT_SOURCE
     )
 
+    var key = -1
+        private set
+
     private val rooms = ObjectSet<String>()
     private val lightSourceQueue = Queue<LightSourceDef>()
     private val previousTiles = OrderedSet<BlackTile>()
@@ -140,7 +143,6 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     private lateinit var lightSourcePool: Pool<LightSourceDef>
     private lateinit var bounds: GameRectangle
 
-    private var key = -1
     private var dividedPPM = 0f
     private var darkMode = false
 

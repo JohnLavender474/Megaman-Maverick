@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="600" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="15" nextobjectid="466">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="600" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="475">
  <tileset firstgid="1" source="../tsx/MegamanWanted_WilyStage1.tsx"/>
  <tileset firstgid="286" source="../tsx/MM10Endless.tsx"/>
  <tileset firstgid="958" source="../tsx/Tileset1.tsx"/>
@@ -296,6 +296,62 @@
   <object id="449" name="LeftPos" x="17456" y="2208" width="32" height="32"/>
   <object id="450" name="RightPos" x="17776" y="2208" width="32" height="32"/>
   <object id="451" name="StartX" x="17952" y="2208" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup id="15" name="items">
+  <object id="466" name="HealthBulb" x="17536" y="1696" width="32" height="32">
+   <properties>
+    <property name="large" type="bool" value="true"/>
+    <property name="timed" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="467" name="HealthBulb" x="17504" y="1696" width="32" height="32">
+   <properties>
+    <property name="large" type="bool" value="true"/>
+    <property name="timed" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="468" name="HealthBulb" x="17472" y="1696" width="32" height="32">
+   <properties>
+    <property name="large" type="bool" value="true"/>
+    <property name="timed" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="469" name="HealthBulb" x="17568" y="1696" width="32" height="32">
+   <properties>
+    <property name="large" type="bool" value="true"/>
+    <property name="timed" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="470" name="HealthBulb" x="17696" y="1696" width="32" height="32">
+   <properties>
+    <property name="large" type="bool" value="true"/>
+    <property name="timed" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="471" name="HealthBulb" x="17728" y="1696" width="32" height="32">
+   <properties>
+    <property name="large" type="bool" value="true"/>
+    <property name="timed" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="472" name="HealthBulb" x="17760" y="1696" width="32" height="32">
+   <properties>
+    <property name="large" type="bool" value="true"/>
+    <property name="timed" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="473" name="HealthBulb" x="17792" y="1696" width="32" height="32">
+   <properties>
+    <property name="large" type="bool" value="true"/>
+    <property name="timed" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="474" name="HealthBulb" x="17824" y="1696" width="32" height="32">
+   <properties>
+    <property name="large" type="bool" value="true"/>
+    <property name="timed" type="bool" value="false"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="3" name="blocks">
   <object id="3" x="0" y="2976" width="608" height="224"/>
@@ -1157,7 +1213,7 @@
   </object>
  </objectgroup>
  <objectgroup id="11" name="player">
-  <object id="452" name="0" x="17440" y="1792" width="32" height="32"/>
+  <object id="452" name="0" x="17408" y="1792" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="4" name="temp">
   <object id="10" name="0" x="96" y="2944" width="32" height="32"/>

@@ -34,10 +34,8 @@ class HealthBulb(game: MegamanMaverickGame) : AbstractEnergyItem(game), IAnimate
     override fun init() {
         if (!regions.containsKey(getTag())) {
             val map = ObjectMap<String, TextureRegion>()
-
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ITEMS_1.source)
             animDefs.keys().forEach { key -> map.put(key, atlas.findRegion("${getTag()}/$key")) }
-
             regions.put(getTag(), map)
         }
         super.init()
@@ -46,16 +44,13 @@ class HealthBulb(game: MegamanMaverickGame) : AbstractEnergyItem(game), IAnimate
 
     override fun contactWithPlayer(megaman: Megaman) {
         GameLogger.debug(TAG, "contactWithPlayer(): megaman=$megaman")
-
         destroy()
-
         game.eventsMan.submitEvent(
             Event(
                 EventType.ADD_PLAYER_HEALTH, props(ConstKeys.VALUE pairTo if (large) LARGE_AMOUNT else SMALL_AMOUNT)
             )
         )
     }
-
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: (String?) -> String? = { "${getTag()}/${if (large) "large" else "small"}" }
@@ -78,7 +73,6 @@ class HealthBulb(game: MegamanMaverickGame) : AbstractEnergyItem(game), IAnimate
         }
 
         val animator = Animator(keySupplier, animations)
-
         return AnimationsComponent(this, animator)
     }
 

@@ -17,6 +17,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
@@ -26,6 +27,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.ILightSourceEntity
+import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.*
 
 class ElecBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, ILightSourceEntity {
@@ -51,6 +53,7 @@ class ElecBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
+        addComponent(defineUpdatablesComponent())
         addComponent(defineAnimationsComponent())
     }
 
@@ -74,6 +77,10 @@ class ElecBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
     }
+
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
+        LightSourceUtils.sendLightSourceEvent(game, this)
+    })
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
