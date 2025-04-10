@@ -979,16 +979,18 @@ sprites/frames/Specials1/ToxicWater/waves.png
 sprites/frames/Specials1/Cart.png
 sprites/frames/Backgrounds5/GlacierCloudsBKG.png
 sprites/frames/Bosses3/RodentMan/shielded.png
-sprites/frames/Bosses3/RodentMan/stand_slash.png
 sprites/frames/Bosses3/RodentMan/jump_down_look_straight.png
 sprites/frames/Bosses3/RodentMan/wallslide.png
 sprites/frames/Bosses3/RodentMan/stand.png
 sprites/frames/Bosses3/RodentMan/jump_slash.png
 sprites/frames/Bosses3/RodentMan/jump_up_look_down.png
 sprites/frames/Bosses3/RodentMan/jump_down_look_down.png
+sprites/frames/Bosses3/RodentMan/stand_slash_single1.png
 sprites/frames/Bosses3/RodentMan/jump_up_look_up.png
+sprites/frames/Bosses3/RodentMan/stand_slash_single2.png
 sprites/frames/Bosses3/RodentMan/run.png
 sprites/frames/Bosses3/RodentMan/defeated.png
+sprites/frames/Bosses3/RodentMan/stand_slash_combo.png
 sprites/frames/Bosses3/BigAssMaverickRobot/Body/body.png
 sprites/frames/Bosses3/BigAssMaverickRobot/Hand/still.png
 sprites/frames/Bosses3/BigAssMaverickRobot/Hand/rocket.png
@@ -1089,6 +1091,7 @@ sprites/frames/Bosses3/ElecDevil/grid.png
 sprites/frames/Bosses3/ElecDevil/stand.png
 sprites/frames/Bosses3/ElecDevil/turn_to_pieces.png
 sprites/frames/Bosses3/ElecDevil/hand.png
+sprites/frames/Bosses3/ElecDevil/defeated.png
 sprites/frames/Faces_old/Distributor Man.png
 sprites/frames/Faces_old/Blunt Man.png
 sprites/frames/Faces_old/Precious Man.png
@@ -2207,6 +2210,7 @@ sprites/sprite_sheets/Bosses.txt
 sprites/sprite_sheets/Ui2.txt
 sprites/sprite_sheets/Backgrounds1.png
 sprites/sprite_sheets/Bosses2.png
+sprites/sprite_sheets/Bosses3-0.png
 sprites/sprite_sheets/FridgeMan.png
 sprites/sprite_sheets/Gates.png
 sprites/sprite_sheets/MegamanTrailSprite_v2.png

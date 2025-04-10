@@ -14,6 +14,7 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.orderedMapOf
+import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.interfaces.IActivatable
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
@@ -85,10 +86,8 @@ class ElecDevilBody(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         GameLogger.debug(TAG, "init(): hashcode=${hashCode()}")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_3.source)
-            animDefs.keys().forEach { state ->
-                val key = state.name.lowercase()
-                regions.put(key, atlas.findRegion("${ElecDevil.TAG}/$key"))
-            }
+            val keys = animDefs.keys().map { it.name.lowercase() }.toGdxArray().also { it.add("defeated") }
+            keys.forEach { key -> regions.put(key, atlas.findRegion("${ElecDevil.TAG}/$key")) }
         }
         super.init()
         addComponent(defineUpdatablesComponent())
@@ -189,7 +188,12 @@ class ElecDevilBody(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { if (on) owner!!.getCurrentState().name.lowercase() else null }
+                .setKeySupplier {
+                    when {
+                        on -> if (owner!!.defeated) "defeated" else owner!!.getCurrentState().name.lowercase()
+                        else -> null
+                    }
+                }
                 .applyToAnimations { animations ->
                     animDefs.forEach { entry ->
                         val state = entry.key

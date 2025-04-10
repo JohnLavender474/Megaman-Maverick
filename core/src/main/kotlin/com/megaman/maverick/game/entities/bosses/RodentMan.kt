@@ -67,12 +67,21 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
 
         private const val INIT_DUR = 1f
         private const val STAND_DUR = 0.75f
+        private const val RUN_DUR = 3f
         private const val SHIELDED_DUR = 1.5f
         private const val SPAWN_RATS_TIME = 0.75f
-        private const val SLASH_DUR = 0.5f
-        private const val SLASH_TIME = 0.1f
+
         private const val SLASH_DELAY = 0.75f
-        private const val RUN_DUR = 3f
+
+        private const val JUMP_SLASH_DUR = 0.5f
+        private const val JUMP_SLASH_TIME = 0.1f
+
+        private const val STAND_SLASH_DUR = 0.75f
+        private val STAND_SLASH_DEFS = gdxArrayOf(
+            0.15f pairTo RodentManSlashType.STRAIGHT,
+            0.35f pairTo RodentManSlashType.UP,
+            0.55f pairTo RodentManSlashType.BOTH
+        )
 
         private const val BODY_STANDARD_WIDTH = 1.25f
         private const val BODY_STANDARD_HEIGHT = 1.75f
@@ -123,7 +132,9 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
 
         private val animDefs = orderedMapOf<String, AnimationDef>(
             "stand" pairTo AnimationDef(2, 1, gdxArrayOf(0.5f, 0.15f), true),
-            "stand_slash" pairTo AnimationDef(1, 7, 0.05f, false),
+            "stand_slash_single1" pairTo AnimationDef(),
+            "stand_slash_single2" pairTo AnimationDef(),
+            "stand_slash_combo" pairTo AnimationDef(4, 3, 0.05f, false),
             "run" pairTo AnimationDef(1, 5, 0.1f, true),
             "jump_down_look_down" pairTo AnimationDef(),
             "jump_down_look_straight" pairTo AnimationDef(),
@@ -137,6 +148,8 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
     }
 
     private enum class RodentManState { INIT, STAND, JUMP, RUN, SHIELDED }
+
+    private enum class RodentManSlashType { STRAIGHT, UP, BOTH }
 
     override var direction: Direction
         get() = body.direction
@@ -157,14 +170,20 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
             .addRunnable(TimeMarkedRunnable(SPAWN_RATS_TIME) { spawnRats() })
     )
 
-    private val slashTimer = Timer(SLASH_DUR)
-        .addRunnable(TimeMarkedRunnable(SLASH_TIME) {
+    private val standSlashTimer = Timer(STAND_SLASH_DUR).also { timer ->
+        STAND_SLASH_DEFS.forEach { (time, slashType) ->
+            val runnable = TimeMarkedRunnable(time) { spawnSlashWaves(slashType) }
+            timer.addRunnable(runnable)
+        }
+    }
+    private val jumpSlashTimer = Timer(JUMP_SLASH_DUR)
+        .addRunnable(TimeMarkedRunnable(JUMP_SLASH_TIME) {
             FacingUtils.setFacingOf(this)
-            spawnSlashWaves()
+            spawnSlashWaves(RodentManSlashType.BOTH)
         })
-    private val slashing: Boolean
-        get() = !slashTimer.isFinished()
     private val slashDelay = Timer(SLASH_DELAY)
+    private val slashing: Boolean
+        get() = !standSlashTimer.isFinished() || !jumpSlashTimer.isFinished()
 
     private var onWallState: ProcessState? = null
     private val leftWall = GameRectangle()
@@ -203,7 +222,8 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
         stateMachine.reset()
         stateTimers.values().forEach { it.reset() }
 
-        slashTimer.setToEnd()
+        standSlashTimer.setToEnd()
+        jumpSlashTimer.setToEnd()
         slashDelay.setToEnd()
 
         spawnRatDelay.reset()
@@ -288,6 +308,12 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
             }
 
             when (currentState) {
+                RodentManState.STAND -> {
+                    slashDelay.update(delta)
+                    if (slashDelay.isJustFinished()) standSlashTimer.reset()
+                    standSlashTimer.update(delta)
+                }
+
                 RodentManState.RUN -> {
                     when (onWallState) {
                         ProcessState.BEGIN -> {
@@ -357,6 +383,10 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
                 }
 
                 RodentManState.JUMP -> {
+                    slashDelay.update(delta)
+                    if (slashDelay.isJustFinished()) jumpSlashTimer.reset()
+                    jumpSlashTimer.update(delta)
+
                     if (!slashing) FacingUtils.setFacingOf(this)
 
                     if (shouldEndJump()) {
@@ -376,10 +406,6 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
                     stateMachine.next()
                 }
             }
-
-            slashDelay.update(delta)
-            if (slashDelay.isJustFinished()) slashTimer.reset()
-            slashTimer.update(delta)
 
             val childIter = children.iterator()
             while (childIter.hasNext()) {
@@ -531,12 +557,19 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
                 .setKeySupplier {
                     if (defeated) "defeated" else when (currentState) {
                         RodentManState.INIT, RodentManState.STAND -> when {
-                            body.isSensing(BodySense.FEET_ON_GROUND) -> if (slashing) "stand_slash" else "stand"
+                            body.isSensing(BodySense.FEET_ON_GROUND) -> if (slashing) "stand_slash_combo" else "stand"
                             else -> if (slashing) "jump_slash" else "jump_down_look_straight"
                         }
 
                         RodentManState.JUMP -> when {
-                            slashing -> "jump_slash"
+                            slashing -> when {
+                                body.isSensing(BodySense.FEET_ON_GROUND) -> when {
+                                    jumpSlashTimer.time < JUMP_SLASH_TIME -> "stand_slash_single1"
+                                    else -> "stand_slash_single2"
+                                }
+
+                                else -> "jump_slash"
+                            }
 
                             body.physics.velocity.y > 0f -> when {
                                 megaman.body.getCenter().y > body.getCenter().y -> "jump_up_look_up"
@@ -593,15 +626,11 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
         when (current) {
             RodentManState.JUMP -> {
                 jump()
-
                 slashDelay.reset()
             }
 
             RodentManState.STAND -> {
-                slashTimer.setToEnd()
-
                 FacingUtils.setFacingOf(this)
-
                 timesAtStandState++
                 if (timesAtStandState % STAND_SLASH == 0) slashDelay.reset()
             }
@@ -612,42 +641,55 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
         }
 
         if (previous != RodentManState.INIT) stateTimers[previous]?.reset()
-        if (previous == RodentManState.RUN) {
-            onEndRunning()
 
-            FacingUtils.setFacingOf(this)
+        when (previous) {
+            RodentManState.STAND -> standSlashTimer.setToEnd()
+            RodentManState.JUMP -> jumpSlashTimer.setToEnd()
+            RodentManState.RUN -> {
+                onEndRunning()
+                FacingUtils.setFacingOf(this)
+            }
+
+            else -> {}
         }
     }
 
     private fun shouldUpdateStateTimer(state: RodentManState) = when (state) {
         RodentManState.RUN -> onWallState == null
         RodentManState.INIT -> body.isSensing(BodySense.FEET_ON_GROUND)
-        RodentManState.STAND, RodentManState.JUMP -> slashDelay.isFinished() && slashTimer.isFinished()
+        RodentManState.STAND -> slashDelay.isFinished() && standSlashTimer.isFinished()
+        RodentManState.JUMP -> slashDelay.isFinished() && jumpSlashTimer.isFinished()
         else -> true
     }
 
-    private fun spawnSlashWaves() {
+    private fun spawnSlashWaves(slashType: RodentManSlashType) {
         GameLogger.debug(TAG, "spawnSlashWaves()")
 
         val slashAngles = reusableAnglesArray
 
-        when (currentState) {
-            RodentManState.STAND -> when (facing) {
-                Facing.LEFT -> slashAngles.addAll(STAND_LEFT_SLASH_WAVE_ANGLES)
-                Facing.RIGHT -> slashAngles.addAll(STAND_RIGHT_SLASH_WAVE_ANGLES)
-            }
+        when (slashType) {
+            RodentManSlashType.STRAIGHT -> slashAngles.add(if (isFacing(Facing.LEFT)) 165f else 15f)
+            RodentManSlashType.UP -> slashAngles.add(if (isFacing(Facing.LEFT)) 150f else 30f)
+            RodentManSlashType.BOTH -> {
+                when (currentState) {
+                    RodentManState.STAND -> when (facing) {
+                        Facing.LEFT -> slashAngles.addAll(STAND_LEFT_SLASH_WAVE_ANGLES)
+                        Facing.RIGHT -> slashAngles.addAll(STAND_RIGHT_SLASH_WAVE_ANGLES)
+                    }
 
-            else -> {
-                val up = megaman.body.getCenter().y >= body.getCenter().y
+                    else -> {
+                        val up = megaman.body.getCenter().y >= body.getCenter().y
 
-                when (facing) {
-                    Facing.LEFT -> slashAngles.addAll(
-                        if (up) IN_AIR_UP_LEFT_SLASH_WAVE_ANGLES else IN_AIR_DOWN_LEFT_SLASH_WAVE_ANGLES
-                    )
+                        when (facing) {
+                            Facing.LEFT -> slashAngles.addAll(
+                                if (up) IN_AIR_UP_LEFT_SLASH_WAVE_ANGLES else IN_AIR_DOWN_LEFT_SLASH_WAVE_ANGLES
+                            )
 
-                    Facing.RIGHT -> slashAngles.addAll(
-                        if (up) IN_AIR_UP_RIGHT_SLASH_WAVE_ANGLES else IN_AIR_DOWN_RIGHT_SLASH_WAVE_ANGLES
-                    )
+                            Facing.RIGHT -> slashAngles.addAll(
+                                if (up) IN_AIR_UP_RIGHT_SLASH_WAVE_ANGLES else IN_AIR_DOWN_RIGHT_SLASH_WAVE_ANGLES
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -674,7 +716,6 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
         slashAngles.clear()
 
         spawnSlashDissipation()
-
         requestToPlaySound(SoundAsset.WHIP_V2_SOUND, false)
     }
 
@@ -780,7 +821,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
         body.physics.velocity.set(impulseX, impulseY)
     }
 
-    private fun shouldEndJump() = isWallSliding() ||
+    private fun shouldEndJump() = jumpSlashTimer.isFinished() && isWallSliding() ||
         (body.isSensing(BodySense.FEET_ON_GROUND) && body.physics.velocity.y <= 0f)
 
     private fun onEndRunning() {

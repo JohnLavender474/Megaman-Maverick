@@ -1212,10 +1212,10 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="11" name="player">
+ <objectgroup id="11" name="temp">
   <object id="452" name="0" x="17408" y="1792" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="4" name="temp">
+ <objectgroup id="4" name="player">
   <object id="10" name="0" x="96" y="2944" width="32" height="32"/>
   <object id="115" name="2" x="5280" y="2336" width="32" height="32"/>
   <object id="116" name="1" x="3424" y="2816" width="32" height="32"/>

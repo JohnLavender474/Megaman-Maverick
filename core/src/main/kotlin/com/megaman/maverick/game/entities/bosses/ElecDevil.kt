@@ -33,6 +33,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.projectiles.ElecBall
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -204,8 +205,8 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
             "${ConstKeys.START}_${ConstKeys.X}", RectangleMapObject::class
         )!!.rectangle.getCenter().x
 
-        launchDelayTimer.resetDuration(MAX_LAUNCH_DELAY)
         launches = 0
+        launchDelayTimer.resetDuration(MAX_LAUNCH_DELAY)
 
         initTimer.reset()
     }
@@ -219,7 +220,6 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
         setBodyPiecesActive(true)
 
         loadLaunchQueue(true)
-        launches++
 
         GameLogger.debug(
             TAG,
@@ -256,16 +256,64 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
         rightBodyPieces = null
     }
 
+    override fun spawnDefeatExplosion() {
+        val position = Position.entries.random()
+
+        val spawn = when {
+            leftBody!!.on -> leftBody!!.body.getCenter()
+            rightBody!!.on -> rightBody!!.body.getCenter()
+            leftBodyPieces!!.on -> leftBodyPieces!!.body.getCenter()
+            else -> rightBodyPieces!!.body.getCenter()
+        }
+
+        val explosion = MegaEntityFactory.fetch(Explosion::class)!!
+        explosion.spawn(
+            props(
+                ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND,
+                ConstKeys.POSITION pairTo spawn.add(
+                    (position.x - 1) * ConstVals.PPM.toFloat(),
+                    (position.y - 1) * ConstVals.PPM.toFloat()
+                )
+            )
+        )
+    }
+
+    override fun spawnExplosionOrbs(spawn: Vector2) {
+        GameLogger.debug(TAG, "spawnExplosionOrbs()")
+        val spawn = when {
+            leftBody!!.on -> leftBody!!.body.getCenter()
+            rightBody!!.on -> rightBody!!.body.getCenter()
+            leftBodyPieces!!.on -> leftBodyPieces!!.body.getCenter()
+            else -> rightBodyPieces!!.body.getCenter()
+        }
+        super.spawnExplosionOrbs(spawn)
+    }
+
+    override fun disintegrate(disintegrationProps: Properties?) {
+        GameLogger.debug(TAG, "disintegrate()")
+        val spawn = when {
+            leftBody!!.on -> leftBody!!.body.getCenter()
+            rightBody!!.on -> rightBody!!.body.getCenter()
+            leftBodyPieces!!.on -> leftBodyPieces!!.body.getCenter()
+            else -> rightBodyPieces!!.body.getCenter()
+        }
+        super.disintegrate(props(ConstKeys.POSITION pairTo spawn))
+    }
+
     override fun getCurrentState() = loop.getCurrent()
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            game.setDebugText("body active: ${isBodyActive()}")
+            if (!ready) {
+                if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) initTimer.update(delta)
+                return@add
+            }
 
-            if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) initTimer.update(delta)
-
-            if (!ready) return@add
+            if (defeated) {
+                explodeOnDefeat(delta)
+                return@add
+            }
 
             val launchedPieceIter = launchedPieces.iterator()
             while (launchedPieceIter.hasNext()) {
@@ -370,7 +418,6 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
 
                         if (next == ElecDevilState.LAUNCH) {
                             loadLaunchQueue(false)
-                            launches++
 
                             setBothBodiesInactive()
                             setBodyPiecesActive(true)
@@ -430,16 +477,21 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
         }
 
         hand = GameRectangle().setSize(1.5f * ConstVals.PPM)
-        val handFixture = Fixture(body, FixtureType.SHIELD, hand)
-        handFixture.attachedToBody = false
-        body.addFixture(handFixture)
-        debugShapes.add { handFixture }
+        debugShapes.add { hand }
+
+        val handShieldFixture = Fixture(body, FixtureType.SHIELD, hand)
+        handShieldFixture.attachedToBody = false
+        body.addFixture(handShieldFixture)
+
+        val handDamagerFixture = Fixture(body, FixtureType.DAMAGER, hand)
+        handDamagerFixture.attachedToBody = false
+        body.addFixture(handDamagerFixture)
 
         body.preProcess.put(ConstKeys.HAND) {
             val active = getCurrentState() == ElecDevilState.HAND
-            handFixture.setActive(active)
-
-            handFixture.drawingColor = if (active) Color.YELLOW else Color.GRAY
+            hand.drawingColor = if (active) Color.YELLOW else Color.GRAY
+            handShieldFixture.setActive(active)
+            handDamagerFixture.setActive(active)
 
             val center = when {
                 leftBody!!.on -> leftBody!!.body.getCenter().add(2.5f * ConstVals.PPM, 1.25f * ConstVals.PPM)
@@ -456,7 +508,11 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
     // No sprites for this entity. Sprites will be shown from the "body" and "pieces" entities.
     override fun defineSpritesComponent() = SpritesComponent()
 
+    private fun shouldRandomizeLaunchTargets() = launches % 3 == 0
+
     private fun loadLaunchQueue(firstLaunch: Boolean) {
+        launches++
+
         val startBody: ElecDevilBody
         val targetBody: ElecDevilBody
 
@@ -468,7 +524,7 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
             targetBody = leftBody!!
         }
 
-        val randomTargetRows = launches != 0 && launches % 3 == 0
+        val randomTargetRows = shouldRandomizeLaunchTargets()
 
         val columnRowMap = when {
             randomTargetRows -> ElecDevilConstants.fillMapWithColumnsAsKeys(reusableIntMap)
@@ -576,7 +632,7 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
         requestToPlaySound(SoundAsset.VOLT_SOUND, false)
     }
 
-    private fun isBodyActive() = leftBody!!.on || rightBody!!.on
-
     internal fun isDamageBlinking() = damageBlink
+
+    override fun getTag() = TAG
 }

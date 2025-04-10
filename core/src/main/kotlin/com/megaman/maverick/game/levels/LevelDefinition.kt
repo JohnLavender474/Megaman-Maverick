@@ -91,31 +91,31 @@ enum class LevelDefinition(
         type = LevelType.WILY_LEVEL,
         tmxMapSource = "WilyStage1_v2.tmx",
         music = MusicAsset.MMX_SIGMA_FORTRESS_1_MUSIC,
-        screenOnCompletion = { ScreenEnum.WILY_CASTLE_SCREEN }
+        screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),
     WILY_STAGE_2(
         type = LevelType.WILY_LEVEL,
         tmxMapSource = "WilyStage2_v2.tmx",
         music = MusicAsset.CYBERNETIC_FACTORY_MUSIC,
-        screenOnCompletion = { ScreenEnum.WILY_CASTLE_SCREEN }
+        screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),
     WILY_STAGE_3(
         type = LevelType.WILY_LEVEL,
         tmxMapSource = "WilyStage3_v2.tmx",
         music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
-        screenOnCompletion = { ScreenEnum.WILY_CASTLE_SCREEN }
+        screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),
     TEST_1(
         type = LevelType.TEST_LEVEL,
         tmxMapSource = "Test1.tmx",
         music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
-        screenOnCompletion = { ScreenEnum.WILY_CASTLE_SCREEN }
+        screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),
     TEST_TILESET_SIZE(
         type = LevelType.TEST_LEVEL,
         tmxMapSource = "TilesetSizeTest.tmx",
         music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
-        screenOnCompletion = { ScreenEnum.WILY_CASTLE_SCREEN }
+        screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     );
 
     companion object {

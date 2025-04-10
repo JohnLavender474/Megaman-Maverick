@@ -128,7 +128,7 @@
             </struct>
         </map>
         <key>multiPackMode</key>
-        <enum type="SettingsBase::MultiPackMode">MultiPackOff</enum>
+        <enum type="SettingsBase::MultiPackMode">MultiPackAuto</enum>
         <key>forceIdenticalLayout</key>
         <false/>
         <key>outputFormat</key>
@@ -290,6 +290,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Bosses3/ElecDevil/defeated.png</key>
             <key type="filename">../frames/Bosses3/ElecDevil/grid.png</key>
             <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row0column0.png</key>
             <key type="filename">../frames/Bosses3/ElecDevil/pieces/blue/row0column1.png</key>
@@ -474,6 +475,7 @@
             <key type="filename">../frames/Bosses3/RodentMan/jump_down_look_straight.png</key>
             <key type="filename">../frames/Bosses3/RodentMan/jump_up_look_down.png</key>
             <key type="filename">../frames/Bosses3/RodentMan/jump_up_look_up.png</key>
+            <key type="filename">../frames/Bosses3/RodentMan/stand_slash_single1.png</key>
             <key type="filename">../frames/Bosses3/RodentMan/wallslide.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -492,7 +494,7 @@
             <key type="filename">../frames/Bosses3/RodentMan/jump_slash.png</key>
             <key type="filename">../frames/Bosses3/RodentMan/shielded.png</key>
             <key type="filename">../frames/Bosses3/RodentMan/stand.png</key>
-            <key type="filename">../frames/Bosses3/RodentMan/stand_slash.png</key>
+            <key type="filename">../frames/Bosses3/RodentMan/stand_slash_single2.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -519,6 +521,21 @@
                 <rect>80,12,160,24</rect>
                 <key>scale9Paddings</key>
                 <rect>80,12,160,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses3/RodentMan/stand_slash_combo.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>48,48,96,96</rect>
+                <key>scale9Paddings</key>
+                <rect>48,48,96,96</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

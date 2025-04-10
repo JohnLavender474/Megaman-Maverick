@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.screens.levels.events
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
@@ -22,11 +23,13 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_SIZE
 import com.megaman.maverick.game.entities.megaman.components.getSpritePriority
 import com.megaman.maverick.game.entities.megaman.components.shouldFlipSpriteX
 import com.megaman.maverick.game.entities.megaman.components.shouldFlipSpriteY
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getPositionPoint
 
@@ -60,6 +63,8 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
     private lateinit var beamSprite: GameSprite
     private lateinit var beamTransAnim: Animation
 
+    private val beamCenter = Vector2()
+
     private var initialized = false
 
     override fun init() {
@@ -90,10 +95,15 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
 
         game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
 
+        game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)
+
         game.audioMan.stopMusic()
     }
 
     override fun update(delta: Float) {
+        beamCenter.set(beamSprite.boundingRectangle.getCenter())
+        game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}_${ConstKeys.CENTER}", beamCenter)
+
         game.addDrawable(beamSprite)
 
         when {
@@ -188,8 +198,9 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
             GameLogger.debug(TAG, "beam end timer just finished")
 
             val level = game.getCurrentLevel()
-
             game.eventsMan.submitEvent(Event(EventType.END_LEVEL, props(ConstKeys.LEVEL pairTo level)))
+
+            game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)
         }
     }
 }

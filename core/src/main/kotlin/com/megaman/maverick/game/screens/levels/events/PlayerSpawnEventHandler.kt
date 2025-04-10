@@ -193,8 +193,9 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
             megaman.ready = true
             megaman.setAllBehaviorsAllowed(true)
 
-            game.eventsMan.submitEvent(Event(EventType.PLAYER_READY))
             game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
+            game.eventsMan.submitEvent(Event(EventType.PLAYER_READY))
+
             game.audioMan.playSound(SoundAsset.BEAM_SOUND)
 
             game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", false)
