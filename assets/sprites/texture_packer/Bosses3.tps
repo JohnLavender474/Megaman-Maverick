@@ -457,6 +457,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Bosses3/RodentMan/defeated.png</key>
+            <key type="filename">../frames/Bosses3/RodentMan/stunned.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

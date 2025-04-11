@@ -26,14 +26,14 @@ BigAssMaverickRobot/Hand/still
   index: -1
 BigAssMaverickRobot/Head/defeated
   rotate: false
-  xy: 775, 1129
+  xy: 709, 1129
   size: 80, 160
   orig: 80, 160
   offset: 0, 0
   index: -1
 BigAssMaverickRobot/Head/down
   rotate: false
-  xy: 857, 1129
+  xy: 791, 1129
   size: 80, 160
   orig: 80, 160
   offset: 0, 0
@@ -614,7 +614,7 @@ ElecDevil/turn_to_pieces
   index: -1
 PreciousWoman/airpunch1
   rotate: false
-  xy: 513, 1129
+  xy: 447, 1129
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -705,14 +705,14 @@ PreciousWoman/wallslide
   index: -1
 PreciousWoman/wink
   rotate: false
-  xy: 563, 1129
+  xy: 497, 1129
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 RodentMan/defeated
   rotate: false
-  xy: 709, 1129
+  xy: 643, 1129
   size: 64, 144
   orig: 64, 144
   offset: 0, 0
@@ -789,9 +789,16 @@ RodentMan/stand_slash_single1
   index: -1
 RodentMan/stand_slash_single2
   rotate: false
-  xy: 447, 1129
-  size: 64, 96
-  orig: 64, 96
+  xy: 787, 1
+  size: 64, 48
+  orig: 64, 48
+  offset: 0, 0
+  index: -1
+RodentMan/stunned
+  rotate: false
+  xy: 643, 1129
+  size: 64, 144
+  orig: 64, 144
   offset: 0, 0
   index: -1
 RodentMan/wallslide

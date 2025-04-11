@@ -365,7 +365,7 @@
   <object id="141" x="9664" y="1248" width="448" height="192"/>
   <object id="142" x="9056" y="672" width="96" height="384"/>
   <object id="143" x="1184" y="1664" width="64" height="64"/>
-  <object id="152" x="360" y="1600" width="48" height="128"/>
+  <object id="152" x="352" y="1600" width="64" height="128"/>
   <object id="174" x="480" y="1632" width="160" height="96"/>
   <object id="175" x="736" y="1536" width="128" height="384"/>
   <object id="176" x="1024" y="1600" width="96" height="128"/>

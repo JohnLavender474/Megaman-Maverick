@@ -38,14 +38,16 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.bosses.RodentMan
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.IceShard
-import com.megaman.maverick.game.entities.utils.getObjectProps
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
+import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
 class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFreezableEntity,
@@ -89,7 +91,6 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = when {
@@ -98,13 +99,25 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         }
         body.setCenter(spawn)
 
-        getObjectProps(spawnProps, objs).forEach { triggers.add(it.rectangle.toGameRectangle(false)) }
+        FacingUtils.setFacingOf(this)
+
+        spawnProps.forEach { key, value ->
+            if (key.toString().contains(ConstKeys.TRIGGER)) {
+                val trigger = (value as RectangleMapObject).rectangle.toGameRectangle(false)
+                triggers.add(trigger)
+            }
+        }
         triggered = triggers.isEmpty
 
         frozen = false
 
-        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        GameLogger.debug(
+            TAG,
+            "onSpawn(): triggered=$triggered, triggers=${triggers.size}, facing=$facing, spawnProps=$spawnProps"
+        )
     }
+
+    override fun canBeDamagedBy(damager: IDamager) = damager !is RodentMan && super.canBeDamagedBy(damager)
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
         GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
@@ -116,6 +129,8 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+
+        triggers.forEach { GameObjectPools.free(it) }
         triggers.clear()
     }
 
@@ -189,13 +204,16 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
+            val position = Position.BOTTOM_CENTER
+            sprite.setPosition(body.getPositionPoint(position), position)
+
             sprite.setFlip(isFacing(Facing.LEFT), false)
+
             sprite.hidden = !triggered || damageBlink
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

@@ -100,7 +100,7 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     private fun shoot() {
         GameLogger.debug(TAG, "shoot()")
 
-        val spawn = body.getCenter().add(0f, 0.5f * ConstVals.PPM)
+        val spawn = body.getCenter().add(0.25f * facing.value * ConstVals.PPM, 0.75f * ConstVals.PPM)
 
         val impulse = GameObjectPools.fetch(Vector2::class)
             .set(LAUNCH_IMPULSE_X * facing.value, LAUNCH_IMPULSE_Y)

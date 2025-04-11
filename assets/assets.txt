@@ -981,6 +981,7 @@ sprites/frames/Backgrounds5/GlacierCloudsBKG.png
 sprites/frames/Bosses3/RodentMan/shielded.png
 sprites/frames/Bosses3/RodentMan/jump_down_look_straight.png
 sprites/frames/Bosses3/RodentMan/wallslide.png
+sprites/frames/Bosses3/RodentMan/stunned.png
 sprites/frames/Bosses3/RodentMan/stand.png
 sprites/frames/Bosses3/RodentMan/jump_slash.png
 sprites/frames/Bosses3/RodentMan/jump_up_look_down.png

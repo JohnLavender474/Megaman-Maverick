@@ -37,11 +37,11 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.ToxicGoopShot
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -165,12 +165,12 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
 
     private fun shoot() {
         if (toxicBarrelBotState == ToxicBarrelBotState.OPEN_CENTER) {
-            val spawn = body.getCenter().add(0.5f * ConstVals.PPM * facing.value, -0.25f * ConstVals.PPM)
+            val spawn = body.getCenter().add(0.75f * ConstVals.PPM * facing.value, -0.25f * ConstVals.PPM)
 
             val trajectory = GameObjectPools.fetch(Vector2::class)
                 .set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
 
-            val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
+            val bullet = MegaEntityFactory.fetch(Bullet::class)!!
             bullet.spawn(
                 props(
                     ConstKeys.POSITION pairTo spawn,
@@ -188,7 +188,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
             val impulse = GameObjectPools.fetch(Vector2::class)
                 .set(GOOP_SHOT_X_IMPULSE * ConstVals.PPM * facing.value, 0f)
 
-            val toxicGoopShot = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.TOXIC_GOOP_SHOT)!!
+            val toxicGoopShot = MegaEntityFactory.fetch(ToxicGoopShot::class)!!
             toxicGoopShot.spawn(
                 props(
                     ConstKeys.POSITION pairTo spawn,

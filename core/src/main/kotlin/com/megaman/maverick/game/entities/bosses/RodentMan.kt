@@ -24,6 +24,7 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -42,12 +43,14 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.SlashDissipation
 import com.megaman.maverick.game.entities.enemies.RatRobot
+import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.entities.projectiles.SlashWave
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -70,6 +73,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
         private const val RUN_DUR = 3f
         private const val SHIELDED_DUR = 1.5f
         private const val SPAWN_RATS_TIME = 0.75f
+        private const val STUN_DUR = 0.5f
 
         private const val SLASH_DELAY = 0.75f
 
@@ -142,7 +146,8 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
             "jump_up_look_up" pairTo AnimationDef(),
             "jump_slash" pairTo AnimationDef(2, 1, 0.1f, false),
             "shielded" pairTo AnimationDef(2, 1, 0.1f, true),
-            "defeated" pairTo AnimationDef(3, 1, 0.1f, true)
+            "defeated" pairTo AnimationDef(3, 1, 0.1f, true),
+            "stunned" pairTo AnimationDef(3, 1, 0.1f, true)
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -151,6 +156,8 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
 
     private enum class RodentManSlashType { STRAIGHT, UP, BOTH }
 
+    override val invincible: Boolean
+        get() = stunned || super.invincible
     override var direction: Direction
         get() = body.direction
         set(value) {
@@ -170,10 +177,17 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
             .addRunnable(TimeMarkedRunnable(SPAWN_RATS_TIME) { spawnRats() })
     )
 
+    private val stunTimer = Timer(STUN_DUR)
+    private val stunned: Boolean
+        get() = !stunTimer.isFinished()
+
     private val standSlashTimer = Timer(STAND_SLASH_DUR).also { timer ->
         STAND_SLASH_DEFS.forEach { (time, slashType) ->
-            val runnable = TimeMarkedRunnable(time) { spawnSlashWaves(slashType) }
-            timer.addRunnable(runnable)
+            val slashRunnable = TimeMarkedRunnable(time) {
+                FacingUtils.setFacingOf(this)
+                spawnSlashWaves(slashType)
+            }
+            timer.addRunnable(slashRunnable)
         }
     }
     private val jumpSlashTimer = Timer(JUMP_SLASH_DUR)
@@ -209,6 +223,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
         super.init()
         stateMachine = buildStateMachine()
         addComponent(defineAnimationsComponent())
+        damageOverrides.put(MoonScythe::class, dmgNeg(3))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -225,6 +240,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
         standSlashTimer.setToEnd()
         jumpSlashTimer.setToEnd()
         slashDelay.setToEnd()
+        stunTimer.setToEnd()
 
         spawnRatDelay.reset()
 
@@ -270,6 +286,12 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
         body.physics.gravityOn = true
     }
 
+    override fun takeDamageFrom(damager: IDamager): Boolean {
+        val damaged = super.takeDamageFrom(damager)
+        if (damaged && damager is MoonScythe) stunTimer.reset()
+        return damaged
+    }
+
     override fun triggerDefeat() {
         GameLogger.debug(TAG, "triggerDefeat()")
         super.triggerDefeat()
@@ -279,16 +301,17 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
 
         onEndRunning()
 
-        ratSpawns.clear()
-
-        children.forEach { (it as MegaGameEntity).destroy() }
-        children.clear()
+        clear()
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        clear()
+    }
 
+    private fun clear() {
+        ratSpawns.forEach { GameObjectPools.free(it) }
         ratSpawns.clear()
 
         children.forEach { (it as MegaGameEntity).destroy() }
@@ -298,12 +321,23 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add update@{ delta ->
+            val childIter = children.iterator()
+            while (childIter.hasNext()) {
+                val next = childIter.next() as MegaGameEntity
+                if (next.dead) childIter.remove()
+            }
+
             if (betweenReadyAndEndBossSpawnEvent) return@update
 
             if (defeated) {
                 body.physics.velocity.setZero()
                 body.physics.gravityOn = false
                 explodeOnDefeat(delta)
+                return@update
+            }
+
+            if (stunned) {
+                stunTimer.update(delta)
                 return@update
             }
 
@@ -406,12 +440,6 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
                     stateMachine.next()
                 }
             }
-
-            val childIter = children.iterator()
-            while (childIter.hasNext()) {
-                val next = childIter.next() as MegaGameEntity
-                if (next.dead) childIter.remove()
-            }
         }
     }
 
@@ -500,12 +528,13 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
             body.fixtures[FixtureType.DAMAGEABLE].first().setActive(currentState != RodentManState.SHIELDED)
 
             body.physics.gravity.y = ConstVals.PPM * when {
-                currentState == RodentManState.RUN && onWallState != null -> 0f
+                stunned || (currentState == RodentManState.RUN && onWallState != null) -> 0f
                 body.isSensing(BodySense.FEET_ON_GROUND) -> GROUND_GRAVITY
                 else -> GRAVITY
             }
 
             if (shouldSetVelXToZero()) body.physics.velocity.x = 0f
+            if (shouldSetVelYToZero()) body.physics.velocity.y = 0f
 
             body.physics.applyFrictionX = shouldApplyFrictionX()
             body.physics.applyFrictionY = shouldApplyFrictionY()
@@ -544,7 +573,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
             sprite.setFlip(isFacing(Facing.RIGHT), false)
 
             sprite.setOriginCenter()
-            sprite.rotation = direction.rotation
+            sprite.rotation = if (stunned) 0f else direction.rotation
 
             sprite.hidden = damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true)
         }
@@ -555,34 +584,45 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
         .animator(
             AnimatorBuilder()
                 .setKeySupplier {
-                    if (defeated) "defeated" else when (currentState) {
-                        RodentManState.INIT, RodentManState.STAND -> when {
-                            body.isSensing(BodySense.FEET_ON_GROUND) -> if (slashing) "stand_slash_combo" else "stand"
-                            else -> if (slashing) "jump_slash" else "jump_down_look_straight"
-                        }
-
-                        RodentManState.JUMP -> when {
-                            slashing -> when {
+                    when {
+                        defeated -> "defeated"
+                        stunned -> "stunned"
+                        else -> when (currentState) {
+                            RodentManState.INIT, RodentManState.STAND -> when {
                                 body.isSensing(BodySense.FEET_ON_GROUND) -> when {
-                                    jumpSlashTimer.time < JUMP_SLASH_TIME -> "stand_slash_single1"
-                                    else -> "stand_slash_single2"
+                                    slashing -> "stand_slash_combo"
+                                    else -> "stand"
                                 }
 
-                                else -> "jump_slash"
+                                else -> when {
+                                    slashing -> "jump_slash"
+                                    else -> "jump_down_look_straight"
+                                }
                             }
 
-                            body.physics.velocity.y > 0f -> when {
-                                megaman.body.getCenter().y > body.getCenter().y -> "jump_up_look_up"
-                                else -> "jump_up_look_down"
+                            RodentManState.JUMP -> when {
+                                slashing -> when {
+                                    body.isSensing(BodySense.FEET_ON_GROUND) -> when {
+                                        jumpSlashTimer.time < JUMP_SLASH_TIME -> "stand_slash_single1"
+                                        else -> "stand_slash_single2"
+                                    }
+
+                                    else -> "jump_slash"
+                                }
+
+                                body.physics.velocity.y > 0f -> when {
+                                    megaman.body.getCenter().y > body.getCenter().y -> "jump_up_look_up"
+                                    else -> "jump_up_look_down"
+                                }
+
+                                else -> when {
+                                    megaman.body.getCenter().y > body.getCenter().y -> "jump_down_look_straight"
+                                    else -> "jump_down_look_down"
+                                }
                             }
 
-                            else -> when {
-                                megaman.body.getCenter().y > body.getCenter().y -> "jump_down_look_straight"
-                                else -> "jump_down_look_down"
-                            }
+                            else -> currentState.name.lowercase()
                         }
-
-                        else -> currentState.name.lowercase()
                     }
                 }
                 .applyToAnimations { animations ->
@@ -840,10 +880,12 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
         !body.isSensing(BodySense.FEET_ON_GROUND) &&
         (isHittingAgainstLeftWall() || isHittingAgainstRightWall())
 
-    private fun shouldSetVelXToZero() = when (currentState) {
+    private fun shouldSetVelXToZero() = stunned || when (currentState) {
         RodentManState.RUN -> onWallState != null
         else -> false
     }
+
+    private fun shouldSetVelYToZero() = stunned
 
     private fun shouldApplyFrictionX() = currentState != RodentManState.RUN
 

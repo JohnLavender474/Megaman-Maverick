@@ -1083,7 +1083,7 @@
   </object>
  </objectgroup>
  <objectgroup id="13" name="player">
-  <object id="496" name="0" x="4064" y="3648" width="32" height="32"/>
+  <object id="496" name="0" x="4032" y="3648" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="11" name="temp">
   <object id="14" name="0" x="96" y="1344" width="32" height="32"/>

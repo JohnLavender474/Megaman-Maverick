@@ -95,8 +95,8 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        type = spawnProps.getOrDefault(ConstKeys.TYPE, "red") as String
-        upsideDown = spawnProps.getOrDefault(ConstKeys.DOWN, false) as Boolean
+        type = spawnProps.getOrDefault(ConstKeys.TYPE, ConstKeys.RED, String::class)
+        upsideDown = spawnProps.getOrDefault(ConstKeys.DOWN, false, Boolean::class)
 
         downTimer.reset()
         riseTimer.setToEnd()
@@ -184,21 +184,28 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
-            sprite.hidden = damageBlink
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             val position = if (upsideDown) Position.TOP_CENTER else Position.BOTTOM_CENTER
             val bodyPosition = body.getPositionPoint(position)
             sprite.setPosition(bodyPosition, position)
+
             sprite.setFlip(false, upsideDown)
+
+            sprite.hidden = damageBlink
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = {
-            val key = if (down) "down" else if (shooting) "shoot" else if (rising) "rise" else "drop"
-            "$type-$key"
+        val keySupplier: (String?) -> String? = key@{
+            val key = when {
+                down -> "down"
+                shooting -> "shoot"
+                rising -> "rise"
+                else -> "drop"
+            }
+            return@key "$type-$key"
         }
         animations = objectMapOf(
             "red-down" pairTo Animation(atlas!!.findRegion("RedScrewie/Down")),

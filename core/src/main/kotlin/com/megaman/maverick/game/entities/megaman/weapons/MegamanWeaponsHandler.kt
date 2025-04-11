@@ -174,7 +174,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         var yOffset = when {
             megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 0f
             megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) ->
-                if (megaman.direction == Direction.LEFT) 0.1f else 0.15f
+                if (megaman.direction == Direction.LEFT) 0.1f else 0.25f
 
             megaman.isBehaviorActive(BehaviorType.JETPACKING) -> 0.1f
             megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.15f
@@ -192,11 +192,6 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         }
 
         if (megaman.direction.isVertical()) {
-            if (megaman.direction == Direction.UP &&
-                megaman.isFacing(Facing.LEFT) &&
-                weapon == MegamanWeapon.MEGA_BUSTER
-            ) xOffset -= 0.35f
-
             out.x += xOffset * ConstVals.PPM
             out.y += (if (megaman.direction == Direction.DOWN) -yOffset else yOffset) * ConstVals.PPM
 
@@ -206,6 +201,14 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             }
         } else {
             out.x += (if (megaman.direction == Direction.LEFT) -yOffset - 0.1f else yOffset + 0.1f) * ConstVals.PPM
+
+            if (megaman.isAnyBehaviorActive(
+                    BehaviorType.CROUCHING,
+                    BehaviorType.GROUND_SLIDING,
+                    BehaviorType.WALL_SLIDING
+                )
+            ) out.x += 0.1f * ConstVals.PPM * if (megaman.direction == Direction.RIGHT) -1f else 1f
+
             out.y += xOffset * ConstVals.PPM
         }
 

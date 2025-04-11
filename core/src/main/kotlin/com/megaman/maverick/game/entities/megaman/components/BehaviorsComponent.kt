@@ -323,11 +323,15 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
         private val minTimer = Timer(MegamanValues.GROUND_SLIDE_MIN_TIME)
         private val maxTimer = Timer(MegamanValues.GROUND_SLIDE_MAX_TIME)
+        private val cooldown = Timer(MegamanValues.GROUND_SLIDE_COOLDOWN)
         private var directionOnInit: Direction? = null
 
         override fun evaluate(delta: Float): Boolean {
+            cooldown.update(delta)
+
             if (dead || !ready || !canMove || game.isCameraRotating() || body.isSensing(BodySense.FEET_ON_SAND) ||
-                isBehaviorActive(BehaviorType.JETPACKING) || !body.isSensing(BodySense.FEET_ON_GROUND)
+                isBehaviorActive(BehaviorType.JETPACKING) || !body.isSensing(BodySense.FEET_ON_GROUND) ||
+                !cooldown.isFinished()
             ) return false
 
             if (isBehaviorActive(BehaviorType.GROUND_SLIDING) && body.isSensing(BodySense.HEAD_TOUCHING_BLOCK))
@@ -395,6 +399,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         override fun end() {
             minTimer.reset()
             maxTimer.reset()
+            cooldown.reset()
             GameLogger.debug(MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG, "end()")
         }
     }

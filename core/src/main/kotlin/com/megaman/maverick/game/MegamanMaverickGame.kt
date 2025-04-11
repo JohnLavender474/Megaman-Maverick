@@ -9,6 +9,8 @@ import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.Pixmap
+import com.badlogic.gdx.graphics.PixmapIO
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
@@ -75,28 +77,20 @@ import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.loadButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.bosses.*
-import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.bosses.RodentMan
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.enemies.RatRobot
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.Megaman.Companion.MEGAMAN_EVENT_LISTENER_TAG
-import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_CONTROLLER_COMPONENT_TAG
-import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.debug.DebugWindow
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
-import com.megaman.maverick.game.screens.levels.MegaLevelScreen.Companion.MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG
-import com.megaman.maverick.game.screens.levels.camera.CameraManagerForRooms
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
-import com.megaman.maverick.game.screens.levels.stats.PlayerStatsHandler
 import com.megaman.maverick.game.screens.menus.ControllerSettingsScreen
 import com.megaman.maverick.game.screens.menus.MainMenuScreen
 import com.megaman.maverick.game.screens.menus.SaveGameScreen
-import com.megaman.maverick.game.screens.menus.level.LevelPauseScreen
 import com.megaman.maverick.game.screens.menus.level.LevelSelectScreen
 import com.megaman.maverick.game.screens.other.CreditsScreen
 import com.megaman.maverick.game.screens.other.GameOverScreen
@@ -113,6 +107,8 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.collisions.MegaCollisionHandler
 import com.megaman.maverick.game.world.contacts.MegaContactFilter
 import com.megaman.maverick.game.world.contacts.MegaContactListener
+import java.time.LocalDateTime
+import java.util.zip.Deflater
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
 
@@ -124,6 +120,7 @@ class MegamanMaverickGameParams {
     var fixedStepScalar: Float = 1f
     var musicVolume: Float = 0.5f
     var soundVolume: Float = 0.5f
+    var allowScreenshots: Boolean = false
     var showScreenController: Boolean = false
     var logLevels: OrderedSet<GameLogLevel> = OrderedSet()
 }
@@ -139,19 +136,7 @@ class MegamanMaverickGame(
         private const val LOADING = "LOADING"
         private const val LOG_FILE_NAME = "logs.txt"
         private const val SCREENSHOT_KEY = Input.Keys.P
-        val PROD_TAGS_TO_LOG: ObjectSet<String> = objectSetOf(
-            TAG, Megaman.TAG, GameState.TAG, AbstractBoss.TAG, AbstractEnemy.TAG, MegaLevelScreen.TAG,
-            PlayerStatsHandler.TAG, MegamanWeaponsHandler.TAG, CameraManagerForRooms.TAG, MEGAMAN_EVENT_LISTENER_TAG,
-            MEGAMAN_CONTROLLER_COMPONENT_TAG, MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, GlacierMan.TAG, MoonMan.TAG,
-            InfernoMan.TAG, TimberWoman.TAG, DesertMan.TAG, ReactorMan.TAG, PreciousWoman.TAG, LevelPauseScreen.TAG,
-            MainMenuScreen.TAG, LevelSelectScreen.TAG
-        )
-        val DEV_TAGS_TO_LOG: ObjectSet<String> = objectSetOf(
-            ElecDevil.TAG,
-            ElecDevilBody.TAG,
-            ElecDevilBodyPieces.TAG,
-            ElecDevilBodyPiece.TAG
-        )
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(RodentMan.TAG, RatRobot.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.oneFixtureMatches(FixtureType.CONSUMER)
         }
@@ -214,8 +199,8 @@ class MegamanMaverickGame(
                 if (level == GameLogLevel.ERROR) println(fullMessage)
             }
         })
-        // GameLogger.tagsToLog.addAll(PROD_TAGS_TO_LOG)
-        GameLogger.tagsToLog.addAll(DEV_TAGS_TO_LOG)
+
+        GameLogger.tagsToLog.addAll(TAGS_TO_LOG)
         GameLogger.filterByTag = true
 
         GameLogger.log(TAG, "create(): appType=${Gdx.app.type}")
@@ -393,18 +378,17 @@ class MegamanMaverickGame(
                 }
             }
 
-            // TODO: uncomment to take screenshots of the game screen
-            /*
-            val takeScreenshot = Gdx.input.isKeyJustPressed(SCREENSHOT_KEY)
-            if (takeScreenshot) {
-                val currentTime = LocalDateTime.now().toString()
-                val filename = "screenshot_${currentTime}.png"
+            if (params.allowScreenshots) {
+                val takeScreenshot = Gdx.input.isKeyJustPressed(SCREENSHOT_KEY)
+                if (takeScreenshot) {
+                    val currentTime = LocalDateTime.now().toString()
+                    val filename = "screenshot_${currentTime}.png"
 
-                val pixmap = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.width, Gdx.graphics.height)
-                PixmapIO.writePNG(Gdx.files.external(filename), pixmap, Deflater.DEFAULT_COMPRESSION, true)
-                pixmap.dispose()
+                    val pixmap = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.width, Gdx.graphics.height)
+                    PixmapIO.writePNG(Gdx.files.external(filename), pixmap, Deflater.DEFAULT_COMPRESSION, true)
+                    pixmap.dispose()
+                }
             }
-             */
 
             audioMan.update(delta)
             eventsMan.run()

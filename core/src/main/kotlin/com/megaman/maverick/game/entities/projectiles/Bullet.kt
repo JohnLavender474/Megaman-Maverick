@@ -65,11 +65,19 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
 
         direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
 
-        followTraj = spawnProps.containsKey(ConstKeys.TRAJECTORY)
-        if (followTraj) trajectory.set(spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)) else trajectory.setZero()
-
         val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)
         impulse?.let { body.physics.velocity.set(it) }
+
+        val residualRotation: Float
+
+        followTraj = spawnProps.containsKey(ConstKeys.TRAJECTORY)
+        if (followTraj) {
+            trajectory.set(spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class))
+            residualRotation = trajectory.angleDeg()
+        } else {
+            trajectory.setZero()
+            residualRotation = body.physics.velocity.angleDeg()
+        }
 
         val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2.Zero, Vector2::class)
         body.physics.gravity.set(gravity)
@@ -78,21 +86,19 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
 
         val shouldSpawnResidual =
             spawnProps.getOrDefault("${ConstKeys.SPAWN}_${ConstKeys.RESIDUAL}", true, Boolean::class)
-        if (shouldSpawnResidual) spawnResidual()
+        if (shouldSpawnResidual) spawnResidual(residualRotation)
     }
 
-    private fun spawnResidual() {
-        val rotation = body.physics.velocity.angleDeg()
-
+    private fun spawnResidual(residualRotation: Float) {
         val spawn = GameObjectPools.fetch(Vector2::class)
             .set(1f, 0f)
-            .rotateDeg(rotation)
+            .rotateDeg(residualRotation)
             .nor()
             .scl(body.getWidth() / 2f)
             .add(body.getCenter())
 
         val residual = MegaEntityFactory.fetch(BulletResidual::class)!!
-        residual.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.ROTATION pairTo rotation))
+        residual.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.ROTATION pairTo residualRotation))
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()

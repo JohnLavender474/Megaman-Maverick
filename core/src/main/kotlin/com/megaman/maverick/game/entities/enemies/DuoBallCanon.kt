@@ -53,13 +53,13 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
 
         private const val SWITCH_STATE_DELAY = 0.5f
 
-        private const val SHOOT_BULLET_OFFSET_X = 1f
+        private const val SHOOT_BULLET_OFFSET_X = 0.5f
         private const val SHOOT_BULLET_OFFSET_Y = 0.6f
         private const val BULLETS_TO_SHOOT = 3
         private const val EACH_BULLET_DUR = 0.25f
         private const val BULLET_SPEED = 10f
 
-        private const val LAUNCH_BALL_OFFSET_X = 0.15f
+        private const val LAUNCH_BALL_OFFSET_X = 0.25f
         private const val LAUNCH_BALL_OFFSET_Y = 1f
         private const val BALLS_TO_LAUNCH = 2
         private const val EACH_BALL_DUR = 0.5f

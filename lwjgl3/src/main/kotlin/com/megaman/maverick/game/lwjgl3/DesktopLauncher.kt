@@ -34,6 +34,7 @@ object DesktopLauncher {
     private const val DEFAULT_FIXED_STEP_SCALAR = 1.0f
     private const val DEFAULT_MUSIC_VOLUME = 0.8f
     private const val DEFAULT_SOUND_VOLUME = 0.8f
+    private const val DEFAULT_ALLOW_SCREENSHOTS = false
     private const val DEFAULT_SHOW_SCREEN_CONTROLLER = false
 
     @JvmStatic
@@ -76,13 +77,14 @@ object DesktopLauncher {
         }
 
         val params = MegamanMaverickGameParams()
-        params.writeLogsToFile = appArgs.writeLogsToFile
+        params.debugText = appArgs.debugText
         params.debugWindow = appArgs.debugWindow
         params.debugShapes = appArgs.debugShapes
-        params.debugText = appArgs.debugText
-        params.fixedStepScalar = appArgs.fixedStepScalar
         params.musicVolume = appArgs.musicVolume
         params.soundVolume = appArgs.soundVolume
+        params.writeLogsToFile = appArgs.writeLogsToFile
+        params.fixedStepScalar = appArgs.fixedStepScalar
+        params.allowScreenshots = appArgs.allowScreenshots
         params.showScreenController = appArgs.showScreenController
 
         val logLevels = appArgs.logLevels.replace("\\s+", "").split(",").filter { !it.isBlank() }
@@ -224,8 +226,16 @@ object DesktopLauncher {
 
         @Parameter(
             names = ["--showScreenController"],
-            description = ("Sets if the screen controller UI should be shown. Default value is $DEFAULT_SHOW_SCREEN_CONTROLLER")
+            description = ("Sets if the screen controller UI should be shown. Default value is " +
+                "$DEFAULT_SHOW_SCREEN_CONTROLLER")
         )
         var showScreenController = DEFAULT_SHOW_SCREEN_CONTROLLER
+
+        @Parameter(
+            names = ["--allowScreenshots"],
+            description = ("Sets if pressing the SCREENSHOT key will trigger a screenshot of the game to be taken. " +
+                "Default value is $DEFAULT_ALLOW_SCREENSHOTS")
+        )
+        var allowScreenshots = DEFAULT_ALLOW_SCREENSHOTS
     }
 }
