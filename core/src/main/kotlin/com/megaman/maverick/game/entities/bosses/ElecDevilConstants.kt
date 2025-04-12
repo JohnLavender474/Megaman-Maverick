@@ -59,11 +59,10 @@ internal object ElecDevilConstants {
     private val rows = Array<Int>()
     private val pieces = Array<IntPair>()
 
-    internal fun fillPieceQueue(fromLeft: Boolean): Array<IntPair> {
+    internal fun getPieceQueue(): Array<IntPair> {
         pieces.clear()
 
-        val columns = if (fromLeft) (PIECE_COLUMNS - 1 downTo 0) else (0 until PIECE_COLUMNS)
-
+        val columns = PIECE_COLUMNS - 1 downTo 0
         columns.forEach { column ->
             // clear, load, and shuffle rows
             rows.clear()

@@ -57,8 +57,8 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
         internal const val HAND_DUR = 1.5f
         internal const val HAND_SHOT_DELAY = 0.5f
 
-        internal const val MIN_LAUNCH_DELAY = 0.5f
-        internal const val MAX_LAUNCH_DELAY = 1f
+        internal const val MIN_LAUNCH_DELAY = 0.45f
+        internal const val MAX_LAUNCH_DELAY = 0.9f
 
         internal const val TURN_TO_PIECES_DUR = 1f
 
@@ -402,7 +402,10 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
 
                         launchedPieces.add(bodyPiece)
 
-                        val launchDelay = UtilMethods.interpolate(MIN_LAUNCH_DELAY, MAX_LAUNCH_DELAY, getHealthRatio())
+                        val launchDelay = when {
+                            shouldRandomizeLaunchTargets() -> MAX_LAUNCH_DELAY
+                            else -> UtilMethods.interpolate(MIN_LAUNCH_DELAY, MAX_LAUNCH_DELAY, getHealthRatio())
+                        }
                         launchDelayTimer.resetDuration(launchDelay)
 
                         requestToPlaySound(SoundAsset.ELECTRIC_1_SOUND, false)
@@ -534,7 +537,7 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
             else -> null
         }
 
-        ElecDevilConstants.fillPieceQueue(fromLeft).forEach { (row, column) ->
+        ElecDevilConstants.getPieceQueue().forEach { (row, column) ->
             var xOffset = ElecDevilConstants.PIECE_WIDTH * ConstVals.PPM / 2f
             val yOffset = ElecDevilConstants.PIECE_HEIGHT * ConstVals.PPM / 2f
 

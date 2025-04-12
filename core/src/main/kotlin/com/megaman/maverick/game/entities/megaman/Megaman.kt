@@ -270,8 +270,12 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
     val slipSliding: Boolean
         get() = body.isSensing(BodySense.FEET_ON_GROUND) &&
-            abs(if (direction.isVertical()) body.physics.velocity.x else body.physics.velocity.y) >=
-            (MegamanValues.SLIP_SLIDE_THRESHOLD * ConstVals.PPM)
+            abs(
+                when {
+                    direction.isVertical() -> body.physics.velocity.x
+                    else -> body.physics.velocity.y
+                }
+            ) >= MegamanValues.SLIP_SLIDE_THRESHOLD * ConstVals.PPM
 
     var teleporting = false
         private set

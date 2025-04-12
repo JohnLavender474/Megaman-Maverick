@@ -22,6 +22,7 @@ import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.special.Ladder
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
+import kotlin.math.abs
 
 const val MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: WallSlideBehavior"
 const val MEGAMAN_SWIM_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: SwimBehavior"
@@ -305,10 +306,14 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 else -> timer.update(delta)
             }
 
-            if (dead || damaged || !ready || !canMove || slipSliding || game.isCameraRotating() ||
+            if (dead || damaged || !ready || !canMove || game.isCameraRotating() ||
                 isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.JETPACKING) ||
                 !body.isSensing(BodySense.FEET_ON_GROUND) || body.isSensing(BodySense.FEET_ON_SAND) ||
-                !game.controllerPoller.isPressed(MegaControllerButton.DOWN)
+                !game.controllerPoller.isPressed(MegaControllerButton.DOWN) ||
+                when {
+                    direction.isVertical() -> abs(body.physics.velocity.x)
+                    else -> abs(body.physics.velocity.y)
+                } > MegamanValues.CROUCH_MAX_VEL * ConstVals.PPM
             ) return false
 
             return timer.isFinished()

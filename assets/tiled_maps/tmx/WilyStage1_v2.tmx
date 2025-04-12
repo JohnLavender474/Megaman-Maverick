@@ -848,7 +848,7 @@
     <property name="spawn_type" value="spawn_now"/>
    </properties>
   </object>
-  <object id="389" name="QuickSand" x="15680" y="1824" width="392" height="96">
+  <object id="389" name="QuickSand" x="15680" y="1824" width="384" height="96">
    <properties>
     <property name="spawn_type" value="spawn_now"/>
    </properties>
@@ -1204,10 +1204,10 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="11" name="temp">
+ <objectgroup id="11" name="player">
   <object id="452" name="0" x="17408" y="1792" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="4" name="player">
+ <objectgroup id="4" name="temp">
   <object id="10" name="0" x="96" y="2944" width="32" height="32"/>
   <object id="115" name="2" x="5280" y="2336" width="32" height="32"/>
   <object id="116" name="1" x="3424" y="2816" width="32" height="32"/>
@@ -1215,7 +1215,7 @@
   <object id="268" name="4" x="7616" y="1600" width="32" height="32"/>
   <object id="269" name="5" x="9424" y="1664" width="32" height="32"/>
   <object id="320" name="6" x="10304" y="1792" width="32" height="32"/>
-  <object id="423" name="7" x="13936" y="1760" width="32" height="32"/>
+  <object id="423" name="7" x="14272" y="1760" width="32" height="32"/>
   <object id="424" name="8" x="16592" y="1728" width="32" height="32"/>
   <object id="428" name="9" x="17472" y="1792" width="32" height="32"/>
  </objectgroup>

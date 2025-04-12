@@ -8,7 +8,7 @@ object MegamanValues {
     const val START_HEALTH = 14
     const val MAX_WEAPON_AMMO = 30
 
-    const val SLIP_SLIDE_THRESHOLD = 0.35f
+    const val SLIP_SLIDE_THRESHOLD = 0.25f
 
     const val CLAMP_X = 15f
     const val CLAMP_Y = 40f
@@ -46,7 +46,7 @@ object MegamanValues {
     const val JETPACK_Y_IMPULSE = 15f
     const val JETPACK_TIME_PER_BIT = 0.25f
 
-    const val GROUND_SLIDE_COOLDOWN = 0.1f
+    const val GROUND_SLIDE_COOLDOWN = 0.075f
     const val GROUND_SLIDE_MIN_TIME = 0.2f
     const val GROUND_SLIDE_MAX_TIME = 0.5f
     const val GROUND_SLIDE_VEL = 10f
@@ -77,7 +77,8 @@ object MegamanValues {
 
     const val SPAWNING_DUR = 0.05f
 
-    const val CROUCH_DELAY = 0.1f
+    const val CROUCH_DELAY = 0.05f
+    const val CROUCH_MAX_VEL = 1f
 
     const val STUN_DUR = 0.25f
     const val STUN_IMPULSE_X = 2.5f
