@@ -818,16 +818,8 @@
   <object id="427" x="17408" y="1824" width="192" height="96"/>
   <object id="431" x="17856" y="1504" width="128" height="320"/>
   <object id="462" x="17696" y="1824" width="288" height="96"/>
-  <object id="463" x="17880" y="1920" width="104" height="416">
-   <properties>
-    <property name="fixture_labels" value="no_side_touchie,no_projectile_collision"/>
-   </properties>
-  </object>
-  <object id="464" x="17280" y="1920" width="104" height="416">
-   <properties>
-    <property name="fixture_labels" value="no_side_touchie,no_projectile_collision"/>
-   </properties>
-  </object>
+  <object id="463" name="AbstractBlock" x="17880" y="1920" width="104" height="416"/>
+  <object id="464" name="AbstractBlock" x="17280" y="1920" width="104" height="416"/>
   <object id="465" x="17384" y="2240" width="496" height="96"/>
  </objectgroup>
  <objectgroup id="12" name="specials">

@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.controller.ControllerUtils
 
-
 class ControllerButton(
     var keyboardCode: Int,
     var controllerCode: Int? = null,

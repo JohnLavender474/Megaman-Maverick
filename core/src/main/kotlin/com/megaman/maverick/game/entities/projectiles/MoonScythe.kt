@@ -31,6 +31,8 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.blocks.AbstractBlock
+import com.megaman.maverick.game.entities.blocks.LadderTop
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
@@ -44,6 +46,7 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         private const val MAX_BOUNCES = 3
         private const val SPAWN_TRAIL_DELAY = 0.1f
         private const val DEBUG_FADING = false
+        private val BLOCK_FILTERS = gdxArrayOf(AbstractBlock::class, LadderTop::class)
         private var region: TextureRegion? = null
     }
 
@@ -162,6 +165,7 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
                 else -> body.physics.velocity.setZero()
             }
         }
+        body.addBlockFilter filter@{ block, _ -> return@filter BLOCK_FILTERS.contains(block::class) }
 
         val debugShapes = gdxArrayOf<() -> IDrawableShape?>()
 

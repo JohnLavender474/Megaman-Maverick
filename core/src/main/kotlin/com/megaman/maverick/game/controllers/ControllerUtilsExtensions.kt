@@ -14,20 +14,18 @@ fun getKeyboardPreferences(): Preferences =
 fun getControllerPreferences(controller: Controller): Preferences =
     Gdx.app.getPreferences("${PreferenceFiles.MEGAMAN_MAVERICK_CONTROLLER_PREFERENCES} - ${controller.name}")
 
-fun ControllerUtils.loadButtons(): ControllerButtons {
+fun ControllerUtils.loadControllerButtons(): ControllerButtons {
     val buttons = ControllerButtons()
 
-    val keyboardPreferences = getKeyboardPreferences()
     MegaControllerButton.entries.forEach {
-        val keyboardCode = keyboardPreferences.getInteger(it.name, it.defaultKeyboardKey)
+        val keyboardCode = it.defaultKeyboardKey
         buttons.put(it, ControllerButton(keyboardCode))
     }
 
     val controller = getController()
     if (controller != null) {
-        val controllerPreferences = getControllerPreferences(controller)
         MegaControllerButton.entries.forEach {
-            val controllerCode = controllerPreferences.getInteger(it.name, controller.mapping.getMapping(it))
+            val controllerCode = controller.mapping.getMapping(it)
             val button = buttons.get(it) as ControllerButton
             button.controllerCode = controllerCode
         }
@@ -36,26 +34,37 @@ fun ControllerUtils.loadButtons(): ControllerButtons {
     return buttons
 }
 
-fun ControllerUtils.resetToDefaults(buttons: ControllerButtons, isKeyboardSettings: Boolean) {
+fun ControllerUtils.saveSettingsToPrefs(buttons: ControllerButtons, isKeyboardSettings: Boolean) {
     if (isKeyboardSettings) {
-        val keyboardPreferences = Gdx.app.getPreferences(PreferenceFiles.MEGAMAN_MAVERICK_KEYBOARD_PREFERENCES)
+        val keyboardPrefs = getKeyboardPreferences()
         buttons.forEach {
             val button = it.value as ControllerButton
-            val keyboardCode = (it.key as MegaControllerButton).defaultKeyboardKey
-            button.keyboardCode = keyboardCode
-            keyboardPreferences.putInteger((it.key as MegaControllerButton).name, keyboardCode)
+            keyboardPrefs.putInteger((it.key as MegaControllerButton).name, button.keyboardCode)
         }
-        keyboardPreferences.flush()
+        keyboardPrefs.flush()
     } else {
         val controller = getController() ?: return
-        val controllerPreferences = getControllerPreferences(controller)
+        val controllerPrefs = getControllerPreferences(controller)
+        buttons.forEach {
+            val button = it.value as ControllerButton
+            val code = button.controllerCode ?: controller.mapping.getMapping(it.key as MegaControllerButton)
+            controllerPrefs.putInteger((it.key as MegaControllerButton).name, code)
+        }
+    }
+}
+
+fun ControllerUtils.resetSettingsToDefaults(buttons: ControllerButtons, isKeyboardSettings: Boolean) {
+    if (isKeyboardSettings) buttons.forEach {
+        val button = it.value as ControllerButton
+        val keyboardCode = (it.key as MegaControllerButton).defaultKeyboardKey
+        button.keyboardCode = keyboardCode
+    } else {
+        val controller = getController() ?: return
         buttons.forEach {
             val button = it.value as ControllerButton
             val controllerCode = controller.mapping.getMapping(it.key as MegaControllerButton)
             button.controllerCode = controllerCode
-            controllerPreferences.putInteger((it.key as MegaControllerButton).name, controllerCode)
         }
-        controllerPreferences.flush()
     }
 }
 
@@ -63,6 +72,8 @@ fun ControllerUtils.getControllerCode(controller: Controller, button: MegaContro
     val controllerPreferences =
         Gdx.app.getPreferences("${PreferenceFiles.MEGAMAN_MAVERICK_CONTROLLER_PREFERENCES} - ${controller.name}")
     val defaultMapping = getController()?.mapping
-    return if (controllerPreferences.contains(button.name)) controllerPreferences.getInteger(button.name)
-    else defaultMapping?.getMapping(button)
+    return when {
+        controllerPreferences.contains(button.name) -> controllerPreferences.getInteger(button.name)
+        else -> defaultMapping?.getMapping(button)
+    }
 }
