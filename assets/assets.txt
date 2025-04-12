@@ -2034,6 +2034,7 @@ sprites/frames/Ui2/TitleScreenBackgroundv2.png
 sprites/frames/Ui2/MegamanTitle.png
 sprites/frames/Ui2/TitleScreenBackground.png
 sprites/frames/Ui2/TitleScreenBackgroundv3.png
+sprites/frames/Ui1/menu_screen_bkg.png
 sprites/frames/Ui1/arrow.png
 sprites/frames/Ui1/logo_v2.png
 sprites/frames/Ui1/logo.png

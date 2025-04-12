@@ -65,7 +65,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     companion object {
         const val TAG = "SniperJoe"
 
-        private const val SHOOT_OFFSET_X = 1f
+        private const val SHOOT_OFFSET_X = 0.5f
         private const val SHOOT_OFFSET_Y = 0.1f
 
         private const val BULLET_SPEED = 10f

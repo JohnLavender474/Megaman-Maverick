@@ -70,8 +70,8 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
         private const val SLIDE_DUR = 0.5f
 
         private const val WEAPON_ROWS = 5
-        private const val WEAPON_BITS_COLUMN_1_X = 3.45f
         private const val WEAPON_BITS_ROWS_1_Y = 6.6f
+        private const val WEAPON_BITS_COLUMN_1_X = 3.45f
         private const val WEAPON_BITS_ROW_OFFSET = 1.075f
         private const val WEAPON_BITS_COLUMN_OFFSET = 6.675f
 

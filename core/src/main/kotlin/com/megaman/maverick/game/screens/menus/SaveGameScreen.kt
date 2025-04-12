@@ -5,12 +5,15 @@ import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.interfaces.Initializable
+import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -24,11 +27,14 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
         private const val SAVE = "SAVE"
         private const val CONTINUE = "CONTINUE"
         private const val MAIN_MENU = "MAIN MENU"
-        private const val TEXT_ROW_START = 6f
+        private const val TEXT_ROW_START = 9f
+        private const val TEXT_X = 5f
+        private const val ARROW_OFFSET_X = -0.5f
     }
 
     private val fontHandles = OrderedMap<String, MegaFontHandle>()
     private val arrows = OrderedMap<String, BlinkingArrow>()
+    private val backgroundSprite = GameSprite()
 
     private var initialized = false
 
@@ -38,19 +44,26 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
 
         GameLogger.debug(TAG, "init()")
 
-        var row = TEXT_ROW_START
+        val uiAtlas = game.assMan.getTextureAtlas(TextureAsset.UI_1.source)
+        val backgroundRegion = uiAtlas.findRegion("menu_screen_bkg")
+        backgroundSprite.setBounds(0f, 0f, ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
+        backgroundSprite.setRegion(backgroundRegion)
 
+        var row = TEXT_ROW_START
         gdxArrayOf(SAVE, CONTINUE, MAIN_MENU).forEach { text ->
             val fontHandle = MegaFontHandle(
                 text = text,
-                positionX = 2f * ConstVals.PPM,
+                positionX = TEXT_X * ConstVals.PPM,
                 positionY = row * ConstVals.PPM,
                 centerX = false,
                 centerY = false,
             )
             fontHandles.put(text, fontHandle)
 
-            val arrowCenter = Vector2(1.5f, row - ConstVals.ARROW_CENTER_ROW_DECREMENT).scl(ConstVals.PPM.toFloat())
+            val arrowCenter = Vector2(
+                TEXT_X + ARROW_OFFSET_X,
+                row - ConstVals.ARROW_CENTER_ROW_DECREMENT
+            ).scl(ConstVals.PPM.toFloat())
             arrows.put(text, BlinkingArrow(game.assMan, arrowCenter))
 
             row -= ConstVals.TEXT_ROW_DECREMENT * ConstVals.PPM
@@ -123,8 +136,11 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
         val batch = game.batch
         batch.projectionMatrix = game.getUiCamera().combined
         batch.begin()
+
+        backgroundSprite.draw(batch)
         fontHandles.values().forEach { it.draw(batch) }
         arrow.draw(batch)
+
         batch.end()
     }
 }

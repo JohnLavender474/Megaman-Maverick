@@ -2,12 +2,15 @@ package com.megaman.maverick.game.screens.other
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.utils.OrderedMap
+import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.screens.BaseScreen
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
+import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -23,6 +26,7 @@ class GameOverScreen(private val game: MegamanMaverickGame): BaseScreen(), Initi
     }
 
     private val fontHandles = OrderedMap<String, MegaFontHandle>()
+    private val backgroundSprite = GameSprite()
 
     private val pressStartBlinkTimer = Timer(PRESS_START_BLINK)
     private var pressStartBlink = true
@@ -32,6 +36,11 @@ class GameOverScreen(private val game: MegamanMaverickGame): BaseScreen(), Initi
     override fun init() {
         if (initialized) return
         initialized = true
+
+        val uiAtlas = game.assMan.getTextureAtlas(TextureAsset.UI_1.source)
+        val backgroundRegion = uiAtlas.findRegion("menu_screen_bkg")
+        backgroundSprite.setBounds(0f, 0f, ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
+        backgroundSprite.setRegion(backgroundRegion)
 
         val gameOver = MegaFontHandle(
             text = GAME_OVER,
@@ -84,6 +93,7 @@ class GameOverScreen(private val game: MegamanMaverickGame): BaseScreen(), Initi
         batch.projectionMatrix = game.getUiCamera().combined
         batch.begin()
 
+        backgroundSprite.draw(drawer)
         fontHandles[GAME_OVER].draw(drawer)
         if (pressStartBlink) fontHandles[PRESS_START].draw(drawer)
 
