@@ -40,6 +40,8 @@ import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
+import kotlin.math.max
+import kotlin.math.min
 
 class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<ElecDevilState> {
 
@@ -57,8 +59,11 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
         internal const val HAND_DUR = 1.5f
         internal const val HAND_SHOT_DELAY = 0.5f
 
-        internal const val MIN_LAUNCH_DELAY = 0.45f
+        internal const val MIN_LAUNCH_DELAY = 0.4f
         internal const val MAX_LAUNCH_DELAY = 0.9f
+        internal const val MAX_RANDOM_LAUNCH_DELAY = 1f
+        internal const val MIN_RANDOM_LAUNCH_DELAY = 0.65f
+        internal const val MIN_HEALTH_FOR_LAUNCH_OFFSET = 5f
 
         internal const val TURN_TO_PIECES_DUR = 1f
 
@@ -209,7 +214,6 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
         )!!.rectangle.getCenter().x
 
         launches = 0
-        launchDelayTimer.resetDuration(MAX_LAUNCH_DELAY)
 
         initTimer.reset()
     }
@@ -223,6 +227,7 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
         setBodyPiecesActive(true)
 
         loadLaunchQueue(true)
+        resetLaunchDelay()
 
         GameLogger.debug(
             TAG,
@@ -339,9 +344,6 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
                         setOneBodyActive()
                         setBodyPiecesActive(false)
 
-                        val launchDelay = UtilMethods.interpolate(MIN_LAUNCH_DELAY, MAX_LAUNCH_DELAY, getHealthRatio())
-                        launchDelayTimer.resetDuration(launchDelay)
-
                         requestToPlaySound(SoundAsset.ELECTRIC_2_SOUND, false)
 
                         return@add
@@ -402,11 +404,7 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
 
                         launchedPieces.add(bodyPiece)
 
-                        val launchDelay = when {
-                            shouldRandomizeLaunchTargets() -> MAX_LAUNCH_DELAY
-                            else -> UtilMethods.interpolate(MIN_LAUNCH_DELAY, MAX_LAUNCH_DELAY, getHealthRatio())
-                        }
-                        launchDelayTimer.resetDuration(launchDelay)
+                        resetLaunchDelay()
 
                         requestToPlaySound(SoundAsset.ELECTRIC_1_SOUND, false)
                     }
@@ -424,6 +422,7 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
 
                         if (next == ElecDevilState.LAUNCH) {
                             loadLaunchQueue(false)
+                            resetLaunchDelay()
 
                             setBothBodiesInactive()
                             setBodyPiecesActive(true)
@@ -513,6 +512,26 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
 
     // No sprites for this entity. Sprites will be shown from the "body" and "pieces" entities.
     override fun defineSpritesComponent() = SpritesComponent()
+
+    private fun resetLaunchDelay() {
+        val numerator = max(0f, getCurrentHealth() - MIN_HEALTH_FOR_LAUNCH_OFFSET)
+        val ratio = min(1f, numerator / ConstVals.MAX_HEALTH)
+
+        val min: Float
+        val max: Float
+        if (shouldRandomizeLaunchTargets()) {
+            min = MIN_RANDOM_LAUNCH_DELAY
+            max = MAX_RANDOM_LAUNCH_DELAY
+        } else {
+            min = MIN_LAUNCH_DELAY
+            max = MAX_LAUNCH_DELAY
+        }
+
+        val duration = UtilMethods.interpolate(min, max, ratio)
+        launchDelayTimer.resetDuration(duration)
+
+        game.setDebugText(UtilMethods.roundFloat(duration, 2).toString())
+    }
 
     private fun shouldRandomizeLaunchTargets() = launches % 3 == 0
 
