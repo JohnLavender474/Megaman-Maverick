@@ -19,6 +19,7 @@ Inferno Dragon - Ansimuz
 Moon Head - oldlavygenes
 Reactor Monkey - Balloon Cart
 Bospider - Capcom
+Elec Devil - boberatu
 
 ## Enemies
 
@@ -29,6 +30,7 @@ Capcom
 
 ## Tilesets
 
+Intro Stage - Super Icon Ltd
 Reactor Man - Balloon Cart
 Glacier Man - Balloon Cart
 Rodent Man - Ansimuz
@@ -37,7 +39,9 @@ Timber Woman - Ansimuz
 Moon Man - Samuel_X7
 Precious Woman - oldlavygenes
 Desert Man - Super Icon Ltd
-Intro Stage - Super Icon Ltd
+Wily 1 - AxeW1eld3r
+Wily 2 - Gektorne
+Capcom
 
 --------------------------------------------
 
@@ -45,6 +49,11 @@ Intro Stage - Super Icon Ltd
 
 Famitard
 Vinnyz29
+Cody O'Quinn
+ryanavx
+Wyatt
+JXChip
+François Gérin-Lajoie
 Capcom
 
 --------------------------------------------
