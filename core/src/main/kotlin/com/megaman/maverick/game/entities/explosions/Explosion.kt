@@ -6,6 +6,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
@@ -56,9 +57,12 @@ class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwn
     override var owner: IGameEntity? = null
 
     private val durationTimer = Timer(DURATION)
+    private var damager = true
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
+        super.init()
         addComponent(defineSpritesCompoent())
         addComponent(defineBodyComponent())
         addComponent(defineAnimationsComponent())
@@ -67,6 +71,7 @@ class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwn
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -75,6 +80,7 @@ class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwn
         durationTimer.reset()
 
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
+        damager = spawnProps.getOrDefault(ConstKeys.DAMAGER, true, Boolean::class)
 
         if (spawnProps.containsKey(ConstKeys.SOUND) && overlapsGameCamera()) {
             val sound = spawnProps.get(ConstKeys.SOUND, SoundAsset::class)!!
@@ -82,7 +88,7 @@ class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwn
         }
     }
 
-    override fun canDamage(damageable: IDamageable) = damageable != owner
+    override fun canDamage(damageable: IDamageable) = damager && damageable != owner
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
         durationTimer.update(it)
@@ -98,9 +104,9 @@ class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwn
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
         sprite.setSize(2.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
-        return spritesComponent
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
+        return component
     }
 
     private fun defineBodyComponent(): BodyComponent {

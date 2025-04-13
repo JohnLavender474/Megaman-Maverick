@@ -363,9 +363,9 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             when (direction) {
                 Direction.UP -> {}
-                Direction.DOWN -> body.translate(0f, ConstVals.PPM / 2f)
-                Direction.LEFT -> body.translate(ConstVals.PPM / 2f, 0f)
-                Direction.RIGHT -> body.translate(-ConstVals.PPM / 2f, 0f)
+                Direction.DOWN -> body.translate(0f, 0.75f * ConstVals.PPM)
+                Direction.LEFT -> body.translate(0.75f * ConstVals.PPM, 0f)
+                Direction.RIGHT -> body.translate(-0.75f * ConstVals.PPM, 0f)
             }
 
             directionOnInit = direction

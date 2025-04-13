@@ -365,7 +365,9 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(
             props(
-                ConstKeys.POSITION pairTo position, ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND
+                ConstKeys.DAMAGER pairTo false,
+                ConstKeys.POSITION pairTo position,
+                ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND
             )
         )
     }

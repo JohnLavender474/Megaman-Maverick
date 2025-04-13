@@ -289,7 +289,8 @@ abstract class AbstractBoss(
                 ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND,
                 ConstKeys.POSITION pairTo body.getCenter().add(
                     (position.x - 1) * 0.75f * ConstVals.PPM, (position.y - 1) * 0.75f * ConstVals.PPM
-                )
+                ),
+                ConstKeys.DAMAGER pairTo false
             )
         )
     }

@@ -281,7 +281,8 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
                 ConstKeys.POSITION pairTo spawn.add(
                     (position.x - 1) * ConstVals.PPM.toFloat(),
                     (position.y - 1) * ConstVals.PPM.toFloat()
-                )
+                ),
+                ConstKeys.DAMAGER pairTo false
             )
         )
     }
