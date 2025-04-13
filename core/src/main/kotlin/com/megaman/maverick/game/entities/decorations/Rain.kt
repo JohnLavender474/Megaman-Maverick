@@ -200,7 +200,7 @@ class RainFall(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntit
         private const val MIN_DELAY_DUR = 0.025f
         private const val MAX_RAIN_DROPS = 30
         private const val SPAWN_AREA_BUFFER_WIDTH = 5f
-        private const val SPAWN_AREA_BUFFER_HEIGHT = 10f
+        private const val SPAWN_AREA_BUFFER_HEIGHT = 25f
     }
 
     private lateinit var rainDropType: RainDropType
@@ -294,7 +294,9 @@ class RainFall(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntit
         rainSpawnDelay.update(delta)
         if (canSpawn && rainSpawnDelay.isFinished()) {
             spawnRainDrops()
-            rainSpawnDelay.resetDuration(getRandom(MIN_DELAY_DUR, MAX_DELAY_DUR))
+
+            val duration = getRandom(MIN_DELAY_DUR, MAX_DELAY_DUR)
+            rainSpawnDelay.resetDuration(duration)
         }
     })
 

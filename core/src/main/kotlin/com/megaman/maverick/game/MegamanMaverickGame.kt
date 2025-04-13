@@ -77,9 +77,9 @@ import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.loadControllerButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.bosses.RodentMan
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.enemies.RatRobot
+import com.megaman.maverick.game.entities.decorations.RainDrop
+import com.megaman.maverick.game.entities.decorations.RainFall
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.events.EventType
@@ -136,7 +136,7 @@ class MegamanMaverickGame(
         private const val LOADING = "LOADING"
         private const val LOG_FILE_NAME = "logs.txt"
         private const val SCREENSHOT_KEY = Input.Keys.P
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(RodentMan.TAG, RatRobot.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(RainFall.TAG, RainDrop.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.oneFixtureMatches(FixtureType.CONSUMER)
         }

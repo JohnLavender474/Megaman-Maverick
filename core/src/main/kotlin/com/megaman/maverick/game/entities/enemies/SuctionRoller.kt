@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
@@ -51,12 +52,14 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
     private var wasOnWall = false
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
@@ -71,14 +74,11 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            if (megaman.dead) return@add
-
             wasOnWall = onWall
-
             onWall = (facing == Facing.LEFT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
                 (facing == Facing.RIGHT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
 
-            if (body.isSensing(BodySense.FEET_ON_GROUND)) when {
+            if (!megaman.dead && body.isSensing(BodySense.FEET_ON_GROUND)) when {
                 megaman.body.getBounds().getPositionPoint(Position.BOTTOM_RIGHT).x < body.getX() ->
                     facing = Facing.LEFT
 
