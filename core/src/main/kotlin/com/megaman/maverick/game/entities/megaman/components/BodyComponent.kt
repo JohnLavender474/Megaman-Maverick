@@ -22,6 +22,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
+import kotlin.math.abs
 
 const val MEGAMAN_BODY_WIDTH = 1f
 const val MEGAMAN_BODY_HEIGHT = 1.5f
@@ -175,6 +176,9 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     val fixturesToSizeToBody = gdxArrayOf(bodyFixture, playerFixture, waterListenerFixture, teleporterListenerFixture)
 
     body.preProcess.put(ConstKeys.DEFAULT) {
+        if (abs(body.physics.velocity.x) < 0.025f * ConstVals.PPM) body.physics.velocity.x = 0f
+        if (abs(body.physics.velocity.y) < 0.025f * ConstVals.PPM) body.physics.velocity.y = 0f
+
         val height = if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) GROUNDSLIDE_HEIGHT else MEGAMAN_BODY_HEIGHT
         body.setSize(MEGAMAN_BODY_WIDTH * ConstVals.PPM, height * ConstVals.PPM)
 

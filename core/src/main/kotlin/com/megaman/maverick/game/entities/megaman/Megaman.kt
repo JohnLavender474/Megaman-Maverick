@@ -188,7 +188,9 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
             if (value != body.direction) {
                 GameLogger.debug(TAG, "direction-set(): value not same as field")
 
+                val center = body.getCenter()
                 body.direction = value
+                body.setCenter(center)
 
                 val camDir = if (value.isVertical()) value else value.getOpposite()
                 if (game.getGameCamera().direction != camDir) {
