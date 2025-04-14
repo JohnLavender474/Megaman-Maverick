@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.6.0</string>
+        <string>7.6.2</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -187,8 +187,8 @@
             <key type="filename">../frames/Megaman_v2_Moon/groundslide_shoot.png</key>
             <key type="filename">../frames/Megaman_v2_Moon/jump.png</key>
             <key type="filename">../frames/Megaman_v2_Moon/jump_shoot.png</key>
-            <key type="filename">../frames/Megaman_v2_Moon/run_start.png</key>
-            <key type="filename">../frames/Megaman_v2_Moon/run_start_shoot.png</key>
+            <key type="filename">../frames/Megaman_v2_Moon/run_trans.png</key>
+            <key type="filename">../frames/Megaman_v2_Moon/run_trans_shoot.png</key>
             <key type="filename">../frames/Megaman_v2_Moon/slip.png</key>
             <key type="filename">../frames/Megaman_v2_Moon/slip_shoot.png</key>
             <key type="filename">../frames/Megaman_v2_Moon/stand_shoot.png</key>

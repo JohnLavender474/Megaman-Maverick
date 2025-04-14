@@ -369,6 +369,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             }
 
             directionOnInit = direction
+
+            runTime = 100f
         }
 
         override fun act(delta: Float) {

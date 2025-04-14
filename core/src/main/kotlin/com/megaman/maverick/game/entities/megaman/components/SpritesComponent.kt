@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.megaman.components
 
 import com.badlogic.gdx.math.Vector2
-import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
@@ -172,7 +171,7 @@ private fun Megaman.defineDamagedBurstSprite(component: SpritesComponent) {
         }
 
         val animator = getAnimator(MEGAMAN_SPRITE_KEY) as Animator
-        val animation = animator.currentAnimation as Animation?
+        val animation = animator.currentAnimation
         if (animation == null) {
             burst.hidden = true
             return@putUpdateFunction

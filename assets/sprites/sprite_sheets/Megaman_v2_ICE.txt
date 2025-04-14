@@ -297,14 +297,14 @@ run_shoot
   orig: 96, 96
   offset: 0, 0
   index: -1
-run_start
+run_trans
   rotate: false
   xy: 783, 3
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-run_start_shoot
+run_trans_shoot
   rotate: false
   xy: 835, 3
   size: 48, 48

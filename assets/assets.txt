@@ -551,6 +551,7 @@ sprites/frames/Decorations1/GroundSnow/right.png
 sprites/frames/Decorations1/GroundSnow/back.png
 sprites/frames/Megaman_v2/climb_still_shoot.png
 sprites/frames/Megaman_v2/crouch_charge_half.png
+sprites/frames/Megaman_v2/run_trans.png
 sprites/frames/Megaman_v2/climb_charge_half.png
 sprites/frames/Megaman_v2/cartin_jump_charge_full.png
 sprites/frames/Megaman_v2/airdash_shoot.png
@@ -586,6 +587,7 @@ sprites/frames/Megaman_v2/beam.png
 sprites/frames/Megaman_v2/climb_still_charge_half.png
 sprites/frames/Megaman_v2/wallslide_charge_full.png
 sprites/frames/Megaman_v2/frozen_push.png
+sprites/frames/Megaman_v2/run_trans_shoot.png
 sprites/frames/Megaman_v2/slip_charge_half.png
 sprites/frames/Megaman_v2/cartin.png
 sprites/frames/Megaman_v2/frozen.png
@@ -602,8 +604,6 @@ sprites/frames/Megaman_v2/cartin_charge_half.png
 sprites/frames/Megaman_v2/climb_finish_charge_full.png
 sprites/frames/Megaman_v2/jump_charge_half.png
 sprites/frames/Megaman_v2/climb_still.png
-sprites/frames/Megaman_v2/run_start.png
-sprites/frames/Megaman_v2/run_start_shoot.png
 sprites/frames/Megaman_v2/slip.png
 sprites/frames/Megaman_v2/run.png
 sprites/frames/Megaman_v2/groundslide_shoot.png
@@ -764,6 +764,7 @@ sprites/frames/Bosses_old/SphinxMiniBoss/laugh.png
 sprites/frames/Bosses_old/SphinxMiniBoss/defeated.png
 sprites/frames/Megaman_v2_Ice/climb_still_shoot.png
 sprites/frames/Megaman_v2_Ice/crouch_charge_half.png
+sprites/frames/Megaman_v2_Ice/run_trans.png
 sprites/frames/Megaman_v2_Ice/climb_charge_half.png
 sprites/frames/Megaman_v2_Ice/cartin_jump_charge_full.png
 sprites/frames/Megaman_v2_Ice/airdash_shoot.png
@@ -798,6 +799,7 @@ sprites/frames/Megaman_v2_Ice/wallslide_charge_half.png
 sprites/frames/Megaman_v2_Ice/beam.png
 sprites/frames/Megaman_v2_Ice/climb_still_charge_half.png
 sprites/frames/Megaman_v2_Ice/wallslide_charge_full.png
+sprites/frames/Megaman_v2_Ice/run_trans_shoot.png
 sprites/frames/Megaman_v2_Ice/slip_charge_half.png
 sprites/frames/Megaman_v2_Ice/cartin.png
 sprites/frames/Megaman_v2_Ice/cartin_jump.png
@@ -813,8 +815,6 @@ sprites/frames/Megaman_v2_Ice/cartin_charge_half.png
 sprites/frames/Megaman_v2_Ice/climb_finish_charge_full.png
 sprites/frames/Megaman_v2_Ice/jump_charge_half.png
 sprites/frames/Megaman_v2_Ice/climb_still.png
-sprites/frames/Megaman_v2_Ice/run_start.png
-sprites/frames/Megaman_v2_Ice/run_start_shoot.png
 sprites/frames/Megaman_v2_Ice/slip.png
 sprites/frames/Megaman_v2_Ice/run.png
 sprites/frames/Megaman_v2_Ice/groundslide_shoot.png
@@ -1128,6 +1128,7 @@ sprites/frames/Faces_old/Timber Woman.png
 sprites/frames/Faces_old/Inferno Man.png
 sprites/frames/Megaman_v2_Fire/climb_still_shoot.png
 sprites/frames/Megaman_v2_Fire/crouch_charge_half.png
+sprites/frames/Megaman_v2_Fire/run_trans.png
 sprites/frames/Megaman_v2_Fire/climb_charge_half.png
 sprites/frames/Megaman_v2_Fire/cartin_jump_charge_full.png
 sprites/frames/Megaman_v2_Fire/airdash_shoot.png
@@ -1163,6 +1164,7 @@ sprites/frames/Megaman_v2_Fire/beam.png
 sprites/frames/Megaman_v2_Fire/climb_still_charge_half.png
 sprites/frames/Megaman_v2_Fire/wallslide_charge_full.png
 sprites/frames/Megaman_v2_Fire/frozen_push.png
+sprites/frames/Megaman_v2_Fire/run_trans_shoot.png
 sprites/frames/Megaman_v2_Fire/slip_charge_half.png
 sprites/frames/Megaman_v2_Fire/cartin.png
 sprites/frames/Megaman_v2_Fire/frozen.png
@@ -1179,8 +1181,6 @@ sprites/frames/Megaman_v2_Fire/cartin_charge_half.png
 sprites/frames/Megaman_v2_Fire/climb_finish_charge_full.png
 sprites/frames/Megaman_v2_Fire/jump_charge_half.png
 sprites/frames/Megaman_v2_Fire/climb_still.png
-sprites/frames/Megaman_v2_Fire/run_start.png
-sprites/frames/Megaman_v2_Fire/run_start_shoot.png
 sprites/frames/Megaman_v2_Fire/slip.png
 sprites/frames/Megaman_v2_Fire/run.png
 sprites/frames/Megaman_v2_Fire/groundslide_shoot.png
@@ -1191,6 +1191,7 @@ sprites/frames/Megaman_v2_Fire/slip_charge_full.png
 sprites/frames/Megaman_v2_Fire/groundslide.png
 sprites/frames/Megaman_v2_Moon/climb_still_shoot.png
 sprites/frames/Megaman_v2_Moon/crouch_charge_half.png
+sprites/frames/Megaman_v2_Moon/run_trans.png
 sprites/frames/Megaman_v2_Moon/climb_charge_half.png
 sprites/frames/Megaman_v2_Moon/cartin_jump_charge_full.png
 sprites/frames/Megaman_v2_Moon/airdash_shoot.png
@@ -1226,6 +1227,7 @@ sprites/frames/Megaman_v2_Moon/beam.png
 sprites/frames/Megaman_v2_Moon/climb_still_charge_half.png
 sprites/frames/Megaman_v2_Moon/wallslide_charge_full.png
 sprites/frames/Megaman_v2_Moon/frozen_push.png
+sprites/frames/Megaman_v2_Moon/run_trans_shoot.png
 sprites/frames/Megaman_v2_Moon/slip_charge_half.png
 sprites/frames/Megaman_v2_Moon/cartin.png
 sprites/frames/Megaman_v2_Moon/frozen.png
@@ -1242,8 +1244,6 @@ sprites/frames/Megaman_v2_Moon/cartin_charge_half.png
 sprites/frames/Megaman_v2_Moon/climb_finish_charge_full.png
 sprites/frames/Megaman_v2_Moon/jump_charge_half.png
 sprites/frames/Megaman_v2_Moon/climb_still.png
-sprites/frames/Megaman_v2_Moon/run_start.png
-sprites/frames/Megaman_v2_Moon/run_start_shoot.png
 sprites/frames/Megaman_v2_Moon/slip.png
 sprites/frames/Megaman_v2_Moon/run.png
 sprites/frames/Megaman_v2_Moon/groundslide_shoot.png
@@ -1696,6 +1696,7 @@ sprites/frames/MegamanTrailSprite_v2_OLD/groundslide.png
 sprites/frames/MegaMixEngine/Teleporters/bgteleporter2.png
 sprites/frames/MegaMixEngine/Teleporters/bgTeleporter.png
 sprites/frames/Megaman_v2_RushJet/climb_still_shoot.png
+sprites/frames/Megaman_v2_RushJet/run_trans.png
 sprites/frames/Megaman_v2_RushJet/jetpack.png
 sprites/frames/Megaman_v2_RushJet/jetpack_shoot.png
 sprites/frames/Megaman_v2_RushJet/airdash_shoot.png
@@ -1713,6 +1714,7 @@ sprites/frames/Megaman_v2_RushJet/slip_shoot.png
 sprites/frames/Megaman_v2_RushJet/swim.png
 sprites/frames/Megaman_v2_RushJet/jump_shoot.png
 sprites/frames/Megaman_v2_RushJet/frozen_push.png
+sprites/frames/Megaman_v2_RushJet/run_trans_shoot.png
 sprites/frames/Megaman_v2_RushJet/frozen.png
 sprites/frames/Megaman_v2_RushJet/run_shoot.png
 sprites/frames/Megaman_v2_RushJet/slip.png

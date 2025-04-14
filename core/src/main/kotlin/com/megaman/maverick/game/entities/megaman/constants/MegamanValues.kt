@@ -10,11 +10,17 @@ object MegamanValues {
 
     const val SLIP_SLIDE_THRESHOLD = 0.25f
 
-    const val CLAMP_X = 15f
+    const val CLAMP_X = 16f
     const val CLAMP_Y = 40f
 
-    const val RUN_SPEED = 5.25f
-    const val RUN_IMPULSE = 35f
+    const val RUN_1_SCALAR = 0.75f
+    const val RUN_1_TIME = 0.1f
+    const val RUN_2_SCALAR = 0.9f
+    const val RUN_2_TIME = 0.25f
+    const val RUN_3_SCALAR = 1f
+
+    const val RUN_SPEED = 6f
+    const val RUN_IMPULSE = 40f
     const val ICE_RUN_IMPULSE = 15f
     const val WATER_RUN_SPEED = 3f
 
@@ -38,7 +44,7 @@ object MegamanValues {
 
     const val AIR_DASH_MIN_TIME = 0.1f
     const val AIR_DASH_MAX_TIME = 0.25f
-    const val AIR_DASH_VEL = 8f
+    const val AIR_DASH_VEL = 10f
     const val AIR_DASH_END_BUMP = 2f
     const val WATER_AIR_DASH_VEL = 5f
     const val WATER_AIR_DASH_END_BUMP = 1f

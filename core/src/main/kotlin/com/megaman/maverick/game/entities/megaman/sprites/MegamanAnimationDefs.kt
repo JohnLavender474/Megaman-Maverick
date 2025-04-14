@@ -66,7 +66,8 @@ object MegamanAnimationDefs {
 
         "stunned" pairTo AnimationDef(2, 1, 0.05f),
 
-        "run_start" pairTo AnimationDef(),
+        "run_trans" pairTo AnimationDef(duration = 0.1f),
+        "run_trans_shoot" pairTo AnimationDef(duration = 0.1f),
         "run" pairTo AnimationDef(2, 2, DEFAULT_FRAME_DUR),
         "run_left" pairTo AnimationDef(2, 2, DEFAULT_FRAME_DUR),
         "run_charge_full" pairTo AnimationDef(2, 4, CHARGING_FRAME_DUR),

@@ -134,10 +134,10 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
             requestToPlaySound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND, false)
         }
     ).setToEnd()
+
+    internal var runTime = 0f
     internal val wallJumpTimer = Timer(MegamanValues.WALL_JUMP_IMPETUS_TIME).setToEnd()
-
     private val trailSpriteTimer = Timer(TRAIL_SPRITE_DELAY)
-
     private val underWaterBubbleTimer = Timer(UNDER_WATER_BUBBLE_DELAY)
 
     override val eventKeyMask = objectSetOf<Any>(
@@ -346,6 +346,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         body.physics.collisionOn = true
         body.physics.gravityOn = true
         body.forEachFixture { fixture -> fixture.setActive(true) }
+
+        runTime = 0f
 
         facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, ConstKeys.RIGHT, String::class).uppercase())
         direction =
