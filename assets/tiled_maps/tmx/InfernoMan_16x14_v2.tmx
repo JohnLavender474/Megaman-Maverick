@@ -1577,10 +1577,10 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="9" name="temp">
+ <objectgroup id="9" name="player">
   <object id="650" name="0" x="11520" y="608" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="8" name="player">
+ <objectgroup id="8" name="temp">
   <object id="10" name="0" x="128" y="2912" width="32" height="32"/>
   <object id="236" name="1" x="4496" y="1984" width="32" height="32">
    <properties>

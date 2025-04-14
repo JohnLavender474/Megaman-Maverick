@@ -79,7 +79,7 @@ object MegamanValues {
     const val MAGMA_WAVE_VEL = 10f
     const val MOON_SCYTHE_SPEED = 8f
     const val MAX_MOONS_BEFORE_SHOOT_AGAIN = 1
-    val MOON_SCYTHE_DEG_OFFSETS = gdxArrayOf(10f, 40f, 70f)
+    val MOON_SCYTHE_DEG_OFFSETS = gdxArrayOf(-20f, 40f, 70f)
 
     const val SPAWNING_DUR = 0.05f
 

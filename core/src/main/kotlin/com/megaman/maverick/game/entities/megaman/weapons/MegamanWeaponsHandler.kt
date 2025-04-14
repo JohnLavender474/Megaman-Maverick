@@ -362,7 +362,6 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         when (weapon) {
             MegamanWeapon.MEGA_BUSTER,
             MegamanWeapon.RUSH_JETPACK -> shootMegaBuster(stat)
-
             MegamanWeapon.ICE_CUBE -> shootIceCube(stat)
             MegamanWeapon.MAGMA_WAVE -> shootFireBall(stat)
             MegamanWeapon.MOON_SCYTHE -> shootMoonScythes(stat)
