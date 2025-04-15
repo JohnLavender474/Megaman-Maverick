@@ -35,7 +35,6 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 
-
 class ToxicWater(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, ICullableEntity {
 
     companion object {
@@ -97,7 +96,7 @@ class ToxicWater(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
             if (y == rows - 1) {
                 val region = regions["waves"]!!
-                val animation = Animation(region, 2, 2, 0.15f, true)
+                val animation = Animation(region, 2, 2, 0.125f, true)
                 val animator = Animator(animation)
                 animators.add({ sprite } pairTo animator)
             } else {

@@ -1436,6 +1436,37 @@ sprites/frames/Megaman/AirDashCharging.png
 sprites/frames/Megaman/StandThrow.png
 sprites/frames/Megaman/GroundSlide.png
 sprites/frames/Megaman/Spawn.png
+sprites/frames/LevelSelectScreenV2/background_selected.png
+sprites/frames/LevelSelectScreenV2/background_static.png
+sprites/frames/LevelSelectScreenV2/faces/inferno_man.png
+sprites/frames/LevelSelectScreenV2/faces/megaman_top_center.png
+sprites/frames/LevelSelectScreenV2/faces/megaman_center.png
+sprites/frames/LevelSelectScreenV2/faces/reactor_man.png
+sprites/frames/LevelSelectScreenV2/faces/precious_woman.png
+sprites/frames/LevelSelectScreenV2/faces/megaman_bottom_left.png
+sprites/frames/LevelSelectScreenV2/faces/moon_man.png
+sprites/frames/LevelSelectScreenV2/faces/timber_woman.png
+sprites/frames/LevelSelectScreenV2/faces/wily.png
+sprites/frames/LevelSelectScreenV2/faces/rodent_man.png
+sprites/frames/LevelSelectScreenV2/faces/glacier_man.png
+sprites/frames/LevelSelectScreenV2/faces/megaman_top_right.png
+sprites/frames/LevelSelectScreenV2/faces/megaman_bottom_center.png
+sprites/frames/LevelSelectScreenV2/faces/desert_man.png
+sprites/frames/LevelSelectScreenV2/faces/mega_man.png
+sprites/frames/LevelSelectScreenV2/faces/megaman_top_left.png
+sprites/frames/LevelSelectScreenV2/faces/megaman_center_left.png
+sprites/frames/LevelSelectScreenV2/faces/megaman_bottom_right.png
+sprites/frames/LevelSelectScreenV2/faces/megaman_center_right.png
+sprites/frames/LevelSelectScreenV2/selector/center.png
+sprites/frames/LevelSelectScreenV2/selector/center_right.png
+sprites/frames/LevelSelectScreenV2/selector/bottom_left.png
+sprites/frames/LevelSelectScreenV2/selector/top_left.png
+sprites/frames/LevelSelectScreenV2/selector/bottom_right.png
+sprites/frames/LevelSelectScreenV2/selector/bottom_center.png
+sprites/frames/LevelSelectScreenV2/selector/top_right.png
+sprites/frames/LevelSelectScreenV2/selector/top_center.png
+sprites/frames/LevelSelectScreenV2/selector/center_left.png
+sprites/frames/LevelSelectScreenV2/background_full.png
 sprites/frames/Bosses1/Bospider/climb.png
 sprites/frames/Bosses1/Bospider/open_eye.png
 sprites/frames/Bosses1/Bospider/still.png
@@ -2225,6 +2256,7 @@ sprites/sprite_sheets/Bosses.png
 sprites/sprite_sheets/PreciousMan.txt
 sprites/sprite_sheets/Platforms1.png
 sprites/sprite_sheets/NukeMan.txt
+sprites/sprite_sheets/LevelSelectScreenV2.png
 sprites/sprite_sheets/Test.txt
 sprites/sprite_sheets/Backgrounds2.png
 sprites/sprite_sheets/Colors.png
@@ -2297,6 +2329,7 @@ sprites/sprite_sheets/Ui2.png
 sprites/sprite_sheets/WintryMan.txt
 sprites/sprite_sheets/Enemies1.txt
 sprites/sprite_sheets/Megaman_v2_BUSTER.png
+sprites/sprite_sheets/LevelSelectScreenV2.txt
 sprites/sprite_sheets/Hazards1.png
 sprites/sprite_sheets/Environs1.png
 sprites/sprite_sheets/Specials1.png
@@ -2323,6 +2356,7 @@ sprites/texture_packer/Megaman.tps
 sprites/texture_packer/PreciousMan.tps
 sprites/texture_packer/Megaman_v2_FIREBALL.tps
 sprites/texture_packer/RodentMan.tps
+sprites/texture_packer/LevelSelectScreenV2.tps
 sprites/texture_packer/Hazards1.tps
 sprites/texture_packer/LevelSelectScreen.tps
 sprites/texture_packer/MegamanMaverick.tps
@@ -2533,6 +2567,7 @@ sprites/piskel/NavalMan_raw.piskel
 sprites/piskel/HoneyDrip.piskel
 sprites/piskel/MoonManMugshot.piskel
 sprites/piskel/MagmaOrb.piskel
+sprites/piskel/LevelSelectScreenV2.piskel
 sprites/piskel/BombChute.piskel
 sprites/piskel/Pipi & Copipi.piskel
 sprites/piskel/QuickSand_v2_Right.piskel
@@ -2589,6 +2624,7 @@ sprites/piskel/QuickSand_v2_BottomRight.piskel
 sprites/piskel/Snow.piskel
 sprites/piskel/AngryFlameBall.piskel
 sprites/piskel/ChargedShot_v2.piskel
+sprites/piskel/MegamanFont.piskel
 sprites/piskel/SpikeCopter.piskel
 sprites/piskel/Dropper Lift.piskel
 sprites/piskel/VandalJoe.piskel

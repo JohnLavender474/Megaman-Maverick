@@ -173,7 +173,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
         var yOffset = when {
             megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 0f
-            megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> 0.1f
+            megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> 0.25f
             megaman.isBehaviorActive(BehaviorType.JETPACKING) -> 0.1f
             megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.15f
             megaman.isBehaviorActive(BehaviorType.CROUCHING) -> -0.2f
@@ -183,10 +183,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 else -> 0.1f
             }
 
-            else -> when (megaman.direction) {
-                Direction.UP -> 0f
-                else -> -0.1f
-            }
+            else -> 0f
         }
 
         if (megaman.direction.isVertical()) {
