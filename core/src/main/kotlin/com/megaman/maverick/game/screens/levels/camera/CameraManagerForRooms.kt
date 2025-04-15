@@ -29,7 +29,9 @@ class CameraManagerForRooms(
     var beginTransition: (() -> Unit)? = null,
     var continueTransition: ((Float) -> Unit)? = null,
     var endTransition: (() -> Unit)? = null,
-    var onSetToRoomNoTrans: (() -> Unit)? = null
+    var onSetToRoomNoTrans: (() -> Unit)? = null,
+    var shouldInterpolate: () -> Boolean = { false },
+    var interpolationValue: () -> Float = { 1f }
 ) : Updatable, Resettable {
 
     companion object {
@@ -82,9 +84,6 @@ class CameraManagerForRooms(
             val targetCopy = focusTarget.cpy()
             interpolate(startCopy, targetCopy, transitionTimerRatio, GameObjectPools.fetch(Vector2::class))
         }
-
-    val delayJustFinished: Boolean
-        get() = delayTimer.isJustFinished()
 
     private val transitionTimerRatio: Float
         get() = transTimer.getRatio()
@@ -302,6 +301,12 @@ class CameraManagerForRooms(
     private fun setCameraToFocusable(focusY: Boolean = true) {
         focus?.let {
             val focusPos = it.getFocusPosition()
+
+            if (shouldInterpolate.invoke()) {
+                focusPos.x = interpolate(camera.position.x, focusPos.x, interpolationValue.invoke())
+                focusPos.y = interpolate(camera.position.y, focusPos.y, interpolationValue.invoke())
+            }
+
             camera.position.x = focusPos.x
             if (focusY) camera.position.y = focusPos.y
         }

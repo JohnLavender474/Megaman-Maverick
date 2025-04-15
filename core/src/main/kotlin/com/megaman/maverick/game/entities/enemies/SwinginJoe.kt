@@ -132,9 +132,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
             stateTimer.update(it)
             if (stateTimer.isJustFinished()) {
                 val next = loop.next()
-
                 if (next == SwinginJoeState.THROWING) throwBall()
-
                 stateTimer.reset()
             }
         }
@@ -143,14 +141,14 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(3f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
-            sprite.hidden = damageBlink
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+            sprite.translateX(-0.5f * ConstVals.PPM * facing.value)
             sprite.setFlip(facing == Facing.LEFT, false)
-            sprite.translateX(-0.25f * ConstVals.PPM * facing.value)
+            sprite.hidden = damageBlink
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

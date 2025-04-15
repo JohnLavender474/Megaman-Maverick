@@ -489,6 +489,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         }
 
         override fun init() {
+            game.setFocusSnappedAway(true)
+
             aButtonTask = if (body.isSensing(BodySense.IN_WATER)) AButtonTask.SWIM else AButtonTask.AIR_DASH
             body.physics.gravityOn = false
             canMakeLandSound = false
@@ -587,6 +589,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         }
 
         override fun end() {
+            game.setFocusSnappedAway(false)
             body.physics.gravityOn = true
             body.physics.velocity.setZero()
             aButtonTask = if (body.isSensing(BodySense.IN_WATER)) AButtonTask.SWIM else AButtonTask.AIR_DASH

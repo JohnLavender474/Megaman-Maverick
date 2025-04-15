@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.screens.levels
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
@@ -19,6 +20,7 @@ import com.mega.game.engine.behaviors.BehaviorsSystem
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.epsilonEquals
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.isAny
 import com.mega.game.engine.common.extensions.objectSetOf
@@ -174,10 +176,10 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     private lateinit var checkpointText: MegaFontHandle
     private val checkpointTimer = Timer(CHECKPOINT_TIMER)
 
-    private lateinit var gameCamera: RotatableCamera
-    private lateinit var cameraManagerForRooms: CameraManagerForRooms
-    private lateinit var gameCameraShaker: CameraShaker
     private lateinit var uiCamera: OrthographicCamera
+    private lateinit var gameCamera: RotatableCamera
+    private lateinit var gameCameraShaker: CameraShaker
+    private lateinit var cameraManagerForRooms: CameraManagerForRooms
 
     private val gameCameraPriorPosition = Vector3()
     private var camerasSetToGameCamera = false
@@ -230,7 +232,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         bossHealthHandler = BossHealthHandler(game)
 
         cameraManagerForRooms = CameraManagerForRooms(
-            gameCamera,
+            camera = gameCamera,
             distanceOnTransition = ROOM_DISTANCE_ON_TRANSITION * ConstVals.PPM,
             transitionScannerDimensions = Vector2(
                 TRANSITION_SCANNER_SIZE * ConstVals.PPM,
@@ -238,6 +240,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             ),
             transDelay = ConstVals.ROOM_TRANS_DELAY_DURATION,
             transDuration = ConstVals.ROOM_TRANS_DURATION,
+            shouldInterpolate = { game.isFocusSnappedAway() },
+            interpolationValue = { 10f * Gdx.graphics.deltaTime }
         )
         cameraManagerForRooms.focus = megaman
         cameraManagerForRooms.beginTransition = {
@@ -361,6 +365,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         endLevelEventHandler.reset()
 
+        game.setFocusSnappedAway(false)
         camerasSetToGameCamera = false
         gameCameraPriorPosition.setZero()
         gameCamera.position.set(ConstFuncs.getGameCamInitPos())
@@ -780,6 +785,15 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             gameCamera.update(delta)
 
             if (!gameCameraShaker.isFinished) gameCameraShaker.update(delta)
+
+            if (game.isFocusSnappedAway()) {
+                val megamanFocus = megaman.getFocusPosition()
+                val megamanX = megamanFocus.x
+                val megamanY = megamanFocus.y
+                if (megamanX.epsilonEquals(gameCamera.position.x, 0.1f * ConstVals.PPM) &&
+                    megamanY.epsilonEquals(gameCamera.position.y, 0.1f * ConstVals.PPM)
+                ) game.setFocusSnappedAway(false)
+            }
         }
 
         val gameCamDeltaX = gameCamera.position.x - gameCameraPriorPosition.x
@@ -915,6 +929,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         game.putProperty(ConstKeys.ROOM_TRANSITION, false)
         eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
+
+        game.setFocusSnappedAway(false)
     }
 
     override fun dispose() {

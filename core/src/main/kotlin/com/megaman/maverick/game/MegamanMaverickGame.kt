@@ -20,7 +20,6 @@ import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.utils.*
 import com.badlogic.gdx.utils.Array
-import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.mega.game.engine.GameEngine
 import com.mega.game.engine.animations.AnimationsSystem
@@ -61,6 +60,7 @@ import com.mega.game.engine.pathfinding.heuristics.IHeuristic
 import com.mega.game.engine.points.PointsSystem
 import com.mega.game.engine.screens.IScreen
 import com.mega.game.engine.screens.levels.tiledmap.TiledMapLoadResult
+import com.mega.game.engine.screens.viewports.PixelPerfectFitViewport
 import com.mega.game.engine.systems.GameSystem
 import com.mega.game.engine.updatables.UpdatablesSystem
 import com.mega.game.engine.world.WorldSystem
@@ -226,7 +226,7 @@ class MegamanMaverickGame(
         })
         gameCamera.setToDefaultPosition()
 
-        val gameViewport = FitViewport(gameWidth, gameHeight, gameCamera)
+        val gameViewport = PixelPerfectFitViewport(gameWidth, gameHeight, gameCamera)
         viewports.put(ConstKeys.GAME, gameViewport)
 
         val uiWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
@@ -234,7 +234,7 @@ class MegamanMaverickGame(
         val uiCamera = OrthographicCamera(uiWidth, uiHeight)
         uiCamera.setToDefaultPosition()
 
-        val uiViewport = FitViewport(uiWidth, uiHeight, uiCamera)
+        val uiViewport = PixelPerfectFitViewport(uiWidth, uiHeight, uiCamera)
         viewports.put(ConstKeys.UI, uiViewport)
 
         loadingText = MegaFontHandle(
@@ -707,4 +707,11 @@ class MegamanMaverickGame(
     fun setDebugText(text: String) = setDebugTextSupplier { text }
 
     fun setDebugTextSupplier(supplier: () -> String) = debugText.setTextSupplier(supplier)
+
+    // This is set to true when the camera focus on Megaman has (potentially) been snapped away suddenly, and so
+    // the camera should be interpolated to Megaman's current position to prevent a jarring camera experience. This
+    // is reset back to false once the camera reaches Megaman's true position again.
+    fun setFocusSnappedAway(value: Boolean) = putProperty("focus_snapped_away", value)
+
+    fun isFocusSnappedAway() = getOrDefaultProperty("focus_snapped_away", false, Boolean::class)
 }
