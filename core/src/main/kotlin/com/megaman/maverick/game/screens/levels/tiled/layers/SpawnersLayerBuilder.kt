@@ -117,8 +117,8 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                                 TAG,
                                 "build(): " +
                                     "entity=$name, " +
-                                    "shouldSpawn=$shouldSpawn, " +
                                     "entityRoom=$roomName, " +
+                                    "shouldSpawn=$shouldSpawn, " +
                                     "currentRoom=$currentRoomName"
                             )
 

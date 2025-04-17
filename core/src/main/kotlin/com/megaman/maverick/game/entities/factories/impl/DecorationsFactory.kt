@@ -4,6 +4,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.decorations.*
 import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.GameEntityPoolCreator
+import com.megaman.maverick.game.entities.hazards.DrippingToxicGoop
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanTrailSprite
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanTrailSpriteV2
 

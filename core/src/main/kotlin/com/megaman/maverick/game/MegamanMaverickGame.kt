@@ -20,6 +20,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.utils.*
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.mega.game.engine.GameEngine
 import com.mega.game.engine.animations.AnimationsSystem
@@ -31,6 +32,7 @@ import com.mega.game.engine.common.LogReceiver
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IPropertizable
+import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.InsertionOrderPriorityQueue
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.controller.ControllerSystem
@@ -60,7 +62,6 @@ import com.mega.game.engine.pathfinding.heuristics.IHeuristic
 import com.mega.game.engine.points.PointsSystem
 import com.mega.game.engine.screens.IScreen
 import com.mega.game.engine.screens.levels.tiledmap.TiledMapLoadResult
-import com.mega.game.engine.screens.viewports.PixelPerfectFitViewport
 import com.mega.game.engine.systems.GameSystem
 import com.mega.game.engine.updatables.UpdatablesSystem
 import com.mega.game.engine.world.WorldSystem
@@ -150,6 +151,7 @@ class MegamanMaverickGame(
     val currentScreen: IScreen?
         get() = currentScreenKey?.let { screens[it] }
 
+    val updatables = OrderedMap<String, Updatable>()
     val disposables = OrderedMap<String, Disposable>()
 
     val runQueue = Queue<() -> Unit>()
@@ -226,7 +228,7 @@ class MegamanMaverickGame(
         })
         gameCamera.setToDefaultPosition()
 
-        val gameViewport = PixelPerfectFitViewport(gameWidth, gameHeight, gameCamera)
+        val gameViewport = FitViewport(gameWidth, gameHeight, gameCamera)
         viewports.put(ConstKeys.GAME, gameViewport)
 
         val uiWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
@@ -234,7 +236,7 @@ class MegamanMaverickGame(
         val uiCamera = OrthographicCamera(uiWidth, uiHeight)
         uiCamera.setToDefaultPosition()
 
-        val uiViewport = PixelPerfectFitViewport(uiWidth, uiHeight, uiCamera)
+        val uiViewport = FitViewport(uiWidth, uiHeight, uiCamera)
         viewports.put(ConstKeys.UI, uiViewport)
 
         loadingText = MegaFontHandle(
@@ -362,15 +364,12 @@ class MegamanMaverickGame(
             val delta = Gdx.graphics.deltaTime
 
             controllerPoller.run()
-
             screenController?.update(delta)
 
             val screen = currentScreen
             if (screen != null) {
                 screen.render(delta)
-
                 screen.draw(batch)
-
                 if (screen is IShapeDebuggable) {
                     shapeRenderer.begin(ShapeType.Line)
                     screen.draw(shapeRenderer)
@@ -390,13 +389,13 @@ class MegamanMaverickGame(
                 }
             }
 
-            audioMan.update(delta)
             eventsMan.run()
+            audioMan.update(delta)
+            updatables.values().forEach { it.update(delta) }
         }
 
         if (params.debugText) {
             viewports.get(ConstKeys.GAME).apply()
-
             batch.projectionMatrix = getUiCamera().combined
             batch.begin()
             debugText.draw(batch)

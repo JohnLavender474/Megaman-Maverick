@@ -48,6 +48,8 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val IS = "is"
+    const val DUPLICATE = "duplicate"
     const val FACES = "faces"
     const val RED = "red"
     const val STAND_BY = "stand_by"

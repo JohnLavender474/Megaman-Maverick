@@ -165,7 +165,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
 
     private fun shoot() {
         if (toxicBarrelBotState == ToxicBarrelBotState.OPEN_CENTER) {
-            val spawn = body.getCenter().add(0.75f * ConstVals.PPM * facing.value, -0.25f * ConstVals.PPM)
+            val spawn = body.getCenter().add(0.5f * ConstVals.PPM * facing.value, -0.25f * ConstVals.PPM)
 
             val trajectory = GameObjectPools.fetch(Vector2::class)
                 .set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
@@ -173,9 +173,9 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
             val bullet = MegaEntityFactory.fetch(Bullet::class)!!
             bullet.spawn(
                 props(
+                    ConstKeys.OWNER pairTo this,
                     ConstKeys.POSITION pairTo spawn,
-                    ConstKeys.TRAJECTORY pairTo trajectory,
-                    ConstKeys.OWNER pairTo this
+                    ConstKeys.TRAJECTORY pairTo trajectory
                 )
             )
 
@@ -191,8 +191,8 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
             val toxicGoopShot = MegaEntityFactory.fetch(ToxicGoopShot::class)!!
             toxicGoopShot.spawn(
                 props(
-                    ConstKeys.POSITION pairTo spawn,
                     ConstKeys.OWNER pairTo this,
+                    ConstKeys.POSITION pairTo spawn,
                     ConstKeys.IMPULSE pairTo impulse
                 )
             )

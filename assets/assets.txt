@@ -1874,6 +1874,8 @@ sprites/frames/Enemies1/Cactus/big/right.png
 sprites/frames/Enemies1/Cactus/big/flash_right.png
 sprites/frames/Enemies1/Cactus/big/frozen.png
 sprites/frames/Enemies1/Cactus/big/idle.png
+sprites/frames/Enemies1/Petaspark/move.png
+sprites/frames/Enemies1/Petaspark/shock.png
 sprites/frames/Enemies1/IceFox/stand.png
 sprites/frames/Enemies1/IceFox/shoot.png
 sprites/frames/Enemies1/SniperJoe/snow/jump.png
@@ -2712,6 +2714,7 @@ sprites/piskel/Shotman.piskel
 sprites/piskel/CarriCarry.piskel
 sprites/piskel/Gachappan.piskel
 sprites/piskel/LargeSpikes.piskel
+sprites/piskel/Petaspark.piskel
 sprites/piskel/MegamanHalfChargedShot.piskel
 sprites/piskel/Megaman_v2_cartin.piskel
 sprites/piskel/ElecDevilBodyPiece.piskel

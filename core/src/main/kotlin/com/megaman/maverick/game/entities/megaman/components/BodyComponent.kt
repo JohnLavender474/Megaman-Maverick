@@ -27,7 +27,8 @@ import kotlin.math.abs
 const val MEGAMAN_BODY_WIDTH = 1f
 const val MEGAMAN_BODY_HEIGHT = 1.5f
 
-const val GROUNDSLIDE_HEIGHT = 0.75f
+// slightly less than 1 so that Megaman can slide under spaces that are 1 tile in height
+const val GROUNDSLIDE_CROUCH_HEIGHT = 0.9f
 
 val BEHAVIORS_TO_END_ON_BOUNCE = gdxArrayOf(
     BehaviorType.WALL_SLIDING,
@@ -90,7 +91,6 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 
     val feetFixture =
         Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.25f * ConstVals.PPM))
-    feetFixture.offsetFromBodyAttachment.y = -MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
     feetFixture.setRunnable {
         onBounce.invoke()
         if (!body.isSensing(BodySense.IN_WATER)) aButtonTask = AButtonTask.AIR_DASH
@@ -127,12 +127,10 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     val isFeetOnGround: () -> Boolean = { !feetGravitySet.isEmpty }
     body.putProperty(ConstKeys.FEET_ON_GROUND, isFeetOnGround)
     body.onReset.put("${ConstKeys.FEET}_${ConstKeys.GRAVITY}") { feetGravitySet.clear() }
-    feetGravityFixture.offsetFromBodyAttachment.y = -MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
     body.addFixture(feetGravityFixture)
 
     val headFixture =
         Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.25f * ConstVals.PPM))
-    headFixture.offsetFromBodyAttachment.y = MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
     headFixture.setRunnable(onBounce)
     body.addFixture(headFixture)
     headFixture.drawingColor = Color.ORANGE
@@ -141,7 +139,6 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 
     val leftFixture =
         Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.2f * ConstVals.PPM, ConstVals.PPM.toFloat()))
-    leftFixture.offsetFromBodyAttachment.x = -MEGAMAN_BODY_WIDTH * ConstVals.PPM / 2f
     leftFixture.offsetFromBodyAttachment.y = 0.1f * ConstVals.PPM
     leftFixture.setRunnable(onBounce)
     leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
@@ -151,7 +148,6 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 
     val rightFixture =
         Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.2f * ConstVals.PPM, ConstVals.PPM.toFloat()))
-    rightFixture.offsetFromBodyAttachment.x = MEGAMAN_BODY_WIDTH * ConstVals.PPM / 2f
     rightFixture.offsetFromBodyAttachment.y = 0.1f * ConstVals.PPM
     rightFixture.setRunnable(onBounce)
     rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
@@ -173,19 +169,30 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     val teleporterListenerFixture = Fixture(body, FixtureType.TELEPORTER_LISTENER, GameRectangle())
     body.addFixture(teleporterListenerFixture)
 
-    val fixturesToSizeToBody = gdxArrayOf(bodyFixture, playerFixture, waterListenerFixture, teleporterListenerFixture)
+    val fixturesToSizeToBody = gdxArrayOf(
+        bodyFixture, playerFixture, waterListenerFixture, teleporterListenerFixture
+    )
 
     body.preProcess.put(ConstKeys.DEFAULT) {
         if (abs(body.physics.velocity.x) < 0.025f * ConstVals.PPM) body.physics.velocity.x = 0f
         if (abs(body.physics.velocity.y) < 0.025f * ConstVals.PPM) body.physics.velocity.y = 0f
 
-        val height = if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) GROUNDSLIDE_HEIGHT else MEGAMAN_BODY_HEIGHT
+        val height = when {
+            isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) -> GROUNDSLIDE_CROUCH_HEIGHT
+            else -> MEGAMAN_BODY_HEIGHT
+        }
         body.setSize(MEGAMAN_BODY_WIDTH * ConstVals.PPM, height * ConstVals.PPM)
 
         fixturesToSizeToBody.forEach { fixture ->
             val bounds = fixture.rawShape as GameRectangle
             bounds.set(body)
         }
+
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
+        feetGravityFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
+        headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
+        leftFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
+        rightFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
 
         if (!ready) {
             body.physics.velocity.setZero()
@@ -216,7 +223,8 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                 body.physics.gravity.set(0f, gravityValue * ConstVals.PPM)
                 body.physics.defaultFrictionOnSelf.set(ConstVals.STANDARD_RESISTANCE_X, ConstVals.STANDARD_RESISTANCE_Y)
 
-                body.physics.velocityClamp.set(MegamanValues.CLAMP_X, MegamanValues.CLAMP_Y).scl(ConstVals.PPM.toFloat())
+                body.physics.velocityClamp.set(MegamanValues.CLAMP_X, MegamanValues.CLAMP_Y)
+                    .scl(ConstVals.PPM.toFloat())
 
                 damagableRect.let {
                     val size = GameObjectPools.fetch(Vector2::class)
@@ -237,7 +245,8 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                 body.physics.gravity.set(gravityValue * ConstVals.PPM, 0f)
                 body.physics.defaultFrictionOnSelf.set(ConstVals.STANDARD_RESISTANCE_Y, ConstVals.STANDARD_RESISTANCE_X)
 
-                body.physics.velocityClamp.set(MegamanValues.CLAMP_Y, MegamanValues.CLAMP_X).scl(ConstVals.PPM.toFloat())
+                body.physics.velocityClamp.set(MegamanValues.CLAMP_Y, MegamanValues.CLAMP_X)
+                    .scl(ConstVals.PPM.toFloat())
 
                 damagableRect.let {
                     val size = GameObjectPools.fetch(Vector2::class)

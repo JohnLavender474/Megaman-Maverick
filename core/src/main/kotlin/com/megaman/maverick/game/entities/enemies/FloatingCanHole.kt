@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.utils.Array
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -20,10 +21,10 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -34,50 +35,58 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
     companion object {
         const val TAG = "FloatingCanHole"
+
         private const val SPAWN_DELAY = 1.5f
         private const val DEFAULT_MAX_SPAWNED = 3
         private const val DEFAULT_DROP_ITEM_ON_DEATH = true
+
+        private fun canSpawnFloatingCan() = MegaGameEntities.getOfTag(FloatingCan.TAG).size < 3
     }
 
     override var children = Array<IGameEntity>()
 
     private val spawnDelayTimer = Timer(SPAWN_DELAY)
+
     private var maxToSpawn = DEFAULT_MAX_SPAWNED
     private var dropItemOnDeath = DEFAULT_DROP_ITEM_ON_DEATH
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
+        super.init()
         addComponent(defineBodyComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineCullablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        maxToSpawn = spawnProps.getOrDefault(ConstKeys.MAX, DEFAULT_MAX_SPAWNED, Int::class)
-
         spawnDelayTimer.reset()
 
+        maxToSpawn = spawnProps.getOrDefault(ConstKeys.MAX, DEFAULT_MAX_SPAWNED, Int::class)
         dropItemOnDeath =
             spawnProps.getOrDefault(ConstKeys.DROP_ITEM_ON_DEATH, DEFAULT_DROP_ITEM_ON_DEATH, Boolean::class)
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         children.clear()
     }
 
     private fun spawnFloatingCan() {
-        val floatingCan = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.FLOATING_CAN)!!
+        val floatingCan = MegaEntityFactory.fetch(FloatingCan::class)!!
         floatingCan.spawn(
             props(
                 ConstKeys.POSITION pairTo body.getCenter(),
                 ConstKeys.DROP_ITEM_ON_DEATH pairTo dropItemOnDeath
             )
         )
+
         children.add(floatingCan)
     }
 
@@ -87,9 +96,10 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
             val child = iter.next() as MegaGameEntity
             if (child.dead) iter.remove()
         }
+
         if (children.size < maxToSpawn) {
             spawnDelayTimer.update(delta)
-            if (spawnDelayTimer.isFinished()) {
+            if (spawnDelayTimer.isFinished() && canSpawnFloatingCan()) {
                 spawnFloatingCan()
                 spawnDelayTimer.reset()
             }

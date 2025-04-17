@@ -179,7 +179,12 @@ class LevelSelectScreenV2(game: MegamanMaverickGame) : MegaMenuScreen(game, Posi
         val mugshotRegion = game.assMan.getTextureRegion(
             TextureAsset.LEVEL_SELECT_SCREEN_V2.source, "${ConstKeys.FACES}/${levelDef.name.lowercase()}"
         )
-        val faceSupplier: () -> TextureRegion? = { mugshotRegion }
+        val faceSupplier: () -> TextureRegion? = {
+            when {
+                game.state.isLevelDefeated(levelDef) -> null
+                else -> mugshotRegion
+            }
+        }
 
         val mugshot = MugshotV2(game, faceSupplier)
         mugshotGrid.put(position, mugshot)

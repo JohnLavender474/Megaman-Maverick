@@ -126,11 +126,11 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         val residual = MegaEntityFactory.fetch(ChargedShotResidual::class)!!
         residual.spawn(
             props(
-                ConstKeys.SPAWN pairTo body.getPositionPoint(position),
+                ConstKeys.FACING pairTo facing,
                 ConstKeys.POSITION pairTo position,
                 ConstKeys.DIRECTION pairTo direction,
-                ConstKeys.FACING pairTo facing,
-                ConstKeys.BOOLEAN pairTo fullyCharged
+                ConstKeys.BOOLEAN pairTo fullyCharged,
+                ConstKeys.SPAWN pairTo body.getPositionPoint(position),
             )
         )
     }

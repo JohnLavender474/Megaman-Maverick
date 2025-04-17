@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
-import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
@@ -31,11 +31,10 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
@@ -53,25 +52,41 @@ class RollingBotShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
     override lateinit var facing: Facing
 
     override fun init() {
-        if (region == null)
-            region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "RollingBotShot")
+        GameLogger.debug(TAG, "init()")
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }
+
+    override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
+        super.onSpawn(spawnProps)
+
+        owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
+
+        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        body.setCenter(spawn)
+
+        val left = spawnProps.getOrDefault(ConstKeys.LEFT, false, Boolean::class)
+        facing = if (left) Facing.LEFT else Facing.RIGHT
+
+        body.physics.velocity.x = X_VEL * ConstVals.PPM * facing.value
+    }
+
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
 
         if (overlapsGameCamera()) playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
 
-        val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.CHARGED_SHOT_EXPLOSION)!!
+        val explosion = MegaEntityFactory.fetch(ChargedShotExplosion::class)!!
         explosion.spawn(
             props(
                 ConstKeys.OWNER pairTo owner,
                 ConstKeys.BOOLEAN pairTo false,
-                ConstKeys.DURATION pairTo EXPLOSION_DURATION,
                 ConstKeys.POSITION pairTo body.getCenter(),
-                ConstKeys.DIRECTION pairTo if (isFacing(Facing.LEFT)) Direction.LEFT else Direction.RIGHT
+                ConstKeys.DURATION pairTo EXPLOSION_DURATION,
+                ConstKeys.ROTATION pairTo body.physics.velocity.angleDeg()
             )
         )
     }
@@ -79,16 +94,6 @@ class RollingBotShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
-
-    override fun onSpawn(spawnProps: Properties) {
-        super.onSpawn(spawnProps)
-        owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
-        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        body.setCenter(spawn)
-        val left = spawnProps.getOrDefault(ConstKeys.LEFT, false, Boolean::class)
-        facing = if (left) Facing.LEFT else Facing.RIGHT
-        body.physics.velocity.x = X_VEL * ConstVals.PPM * facing.value
-    }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)

@@ -47,6 +47,7 @@ import com.megaman.maverick.game.entities.decorations.Splash.SplashType
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
@@ -56,6 +57,7 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
     companion object {
         const val TAG = "RainDrop"
         private const val SPLASH_DUR = 0.3f
+        private const val DEFAULT_DEATH_Y_OFFSET = -20f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -90,15 +92,30 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        val spawn = when {
+            spawnProps.containsKey(ConstKeys.BOUNDS) ->
+                spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
+
+            else -> spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        }
         body.setCenter(spawn)
 
-        val ignoreIds = spawnProps.get(ConstKeys.IGNORE) as ObjectSet<Int>
-        this.ignoreIds.addAll(ignoreIds)
+        if (spawnProps.containsKey(ConstKeys.IGNORE)) {
+            val ignoreIds = spawnProps.get(ConstKeys.IGNORE) as ObjectSet<Int>
+            this.ignoreIds.addAll(ignoreIds)
+        }
 
-        type = spawnProps.get(ConstKeys.TYPE, RainDropType::class)!!
+        val type= spawnProps.get(ConstKeys.TYPE)
+        this.type = if (type is String) RainDropType.valueOf(type.uppercase()) else type as RainDropType
 
-        val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
+        val trajectory = when {
+            spawnProps.containsKey(ConstKeys.TRAJECTORY) -> spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
+            else -> {
+                val velX = spawnProps.getOrDefault("${ConstKeys.VELOCITY}_${ConstKeys.X}", 0f, Float::class)
+                val velY = spawnProps.getOrDefault("${ConstKeys.VELOCITY}_${ConstKeys.Y}", 0f, Float::class)
+                GameObjectPools.fetch(Vector2::class).set(velX, velY).scl(ConstVals.PPM.toFloat())
+            }
+        }
         body.physics.velocity.set(trajectory)
 
         body.physics.gravityOn = true
@@ -106,7 +123,11 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         splashTimer.setToEnd()
         splashed = false
 
-        deathY = spawnProps.get("${ConstKeys.DEATH}_${ConstKeys.Y}", Float::class)!!
+        deathY = spawnProps.getOrDefault(
+            "${ConstKeys.DEATH}_${ConstKeys.Y}",
+            body.getY() + DEFAULT_DEATH_Y_OFFSET * ConstVals.PPM,
+            Float::class
+        )
     }
 
     override fun onDestroy() {
@@ -279,8 +300,8 @@ class RainFall(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntit
             rainDrop.spawn(
                 props(
                     ConstKeys.POSITION pairTo spawn,
-                    ConstKeys.IGNORE pairTo ignoreHitIds,
                     ConstKeys.TYPE pairTo rainDropType,
+                    ConstKeys.IGNORE pairTo ignoreHitIds,
                     ConstKeys.TRAJECTORY pairTo trajectory,
                     "${ConstKeys.DEATH}_${ConstKeys.Y}" pairTo deathY,
                 )

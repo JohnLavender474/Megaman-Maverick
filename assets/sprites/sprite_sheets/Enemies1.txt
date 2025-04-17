@@ -152,14 +152,14 @@ Cactus/big/right
   index: -1
 Cactus/big/turn_left
   rotate: false
-  xy: 520, 794
+  xy: 716, 794
   size: 32, 144
   orig: 32, 144
   offset: 0, 0
   index: -1
 Cactus/big/turn_right
   rotate: false
-  xy: 554, 794
+  xy: 750, 794
   size: 32, 144
   orig: 32, 144
   offset: 0, 0
@@ -208,14 +208,14 @@ Cactus/small/right
   index: -1
 Cactus/small/turn_left
   rotate: false
-  xy: 588, 794
+  xy: 784, 794
   size: 32, 144
   orig: 32, 144
   offset: 0, 0
   index: -1
 Cactus/small/turn_right
   rotate: false
-  xy: 622, 794
+  xy: 818, 794
   size: 32, 144
   orig: 32, 144
   offset: 0, 0
@@ -229,7 +229,7 @@ CannoHoney/closed_eyes
   index: -1
 CannoHoney/closing_eyes
   rotate: false
-  xy: 656, 794
+  xy: 852, 794
   size: 32, 192
   orig: 32, 192
   offset: 0, 0
@@ -243,7 +243,7 @@ CannoHoney/oepn_eyes
   index: -1
 CannoHoney/opening_eyes
   rotate: false
-  xy: 690, 794
+  xy: 886, 794
   size: 32, 192
   orig: 32, 192
   offset: 0, 0
@@ -871,6 +871,20 @@ Penguin/Stand
   orig: 64, 32
   offset: 0, 0
   index: -1
+Petaspark/move
+  rotate: false
+  xy: 134, 794
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+Petaspark/shock
+  rotate: false
+  xy: 264, 794
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
 PetitDevil/LargeGreen
   rotate: false
   xy: 488, 70
@@ -908,7 +922,7 @@ PicketJoe/stand
   index: -1
 PicketJoe/throw
   rotate: false
-  xy: 134, 794
+  xy: 330, 794
   size: 384, 128
   orig: 384, 128
   offset: 0, 0

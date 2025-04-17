@@ -14,6 +14,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
+import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
@@ -40,14 +41,17 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.explosions.Explosion
+import com.megaman.maverick.game.entities.projectiles.UFOBomb
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
+import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
 class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
@@ -58,12 +62,13 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         private const val X_VEL_WITH_BOMB = 5f
         private const val X_VEL_NO_BOMB = 10f
         private const val DROP_DURATION = 1f
+        private const val BOMB_DESTROYED_DUR = 0.5f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
     override lateinit var facing: Facing
 
-    private val dropTimer = Timer(DROP_DURATION)
+    private val dropTimer = Timer()
     private val triggers = Array<GameRectangle>()
 
     private lateinit var start: Vector2
@@ -77,8 +82,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            regions.put("no_bomb", atlas.findRegion("$TAG/no_bomb"))
-            regions.put("with_bomb", atlas.findRegion("$TAG/with_bomb"))
+            gdxArrayOf("with_bomb", "no_bomb").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -105,7 +109,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             start = spawnProps.get(ConstKeys.START, RectangleMapObject::class)!!.rectangle.getCenter(false)
             target = spawnProps.get(ConstKeys.TARGET, RectangleMapObject::class)!!.rectangle.getCenter(false)
 
-            dropTimer.reset()
+            dropTimer.resetDuration(DROP_DURATION)
 
             body.forEachFixture { it.setActive(false) }
         } else setToHover()
@@ -126,8 +130,9 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     }
 
     private fun dropBomb() {
-        val bomb = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.UFO_BOMB)!!
         val spawn = body.getPositionPoint(Position.BOTTOM_CENTER).sub(0f, 0.6f * ConstVals.PPM)
+
+        val bomb = MegaEntityFactory.fetch(UFOBomb::class)!!
         bomb.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.OWNER pairTo this))
     }
 
@@ -157,23 +162,28 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
                     body.forEachFixture { it.setActive(true) }
 
-                    facing = if (trajectory.x == 0f) {
-                        if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
-                    } else if (trajectory.x < 0f) Facing.LEFT else Facing.RIGHT
+                    facing = when {
+                        trajectory.x == 0f -> if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                        trajectory.x < 0f -> Facing.LEFT
+                        else -> Facing.RIGHT
+                    }
                 } else return@add
             }
 
-            if (rising) {
-                if (body.getCenter().epsilonEquals(target, 0.1f * ConstVals.PPM)) {
+            if (rising) when {
+                body.getCenter().epsilonEquals(target, 0.1f * ConstVals.PPM) -> {
                     rising = false
                     setToHover()
-                } else return@add
+                }
+
+                else -> return@add
             }
 
             if (!dropped && isMegamanUnderMe()) {
                 dropBomb()
                 dropped = true
-                dropTimer.reset()
+                dropTimer.resetDuration(DROP_DURATION)
+
                 body.physics.velocity.setZero()
             }
 
@@ -206,14 +216,20 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         shieldFixture.drawingColor = Color.BLUE
         debugShapes.add { shieldFixture }
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.4f * ConstVals.PPM))
-        body.addFixture(damagerFixture)
+        val damagerFixture1 = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.4f * ConstVals.PPM))
+        body.addFixture(damagerFixture1)
+
+        val damagerFixture2 =
+            Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(ConstVals.PPM.toFloat(), 1.75f * ConstVals.PPM))
+        damagerFixture2.attachedToBody = false
+        body.addFixture(damagerFixture2)
+        debugShapes.add { damagerFixture2 }
 
         val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(0.4f * ConstVals.PPM))
         body.addFixture(damageableFixture)
 
         val leftSideFixture =
-            Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
+            Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 1.5f * ConstVals.PPM))
         leftSideFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
         leftSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftSideFixture)
@@ -221,20 +237,56 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         debugShapes.add { leftSideFixture }
 
         val rightSideFixture =
-            Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
+            Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 1.5f * ConstVals.PPM))
         rightSideFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
         rightSideFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightSideFixture)
         rightSideFixture.drawingColor = Color.YELLOW
         debugShapes.add { rightSideFixture }
 
+        val bombDamagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.5f * ConstVals.PPM))
+        bombDamagerFixture.offsetFromBodyAttachment.y = -1.25f * ConstVals.PPM
+        body.addFixture(bombDamagerFixture)
+
+        val bombConsumerFixture = Fixture(body, FixtureType.CONSUMER, GameCircle().setRadius(0.5f * ConstVals.PPM))
+        bombConsumerFixture.offsetFromBodyAttachment.y = -1.25f * ConstVals.PPM
+        bombConsumerFixture.setFilter { fixture ->
+            !dropped && fixture.getType() == FixtureType.PROJECTILE &&
+                (fixture.getEntity() as IProjectileEntity).owner == megaman
+        }
+        bombConsumerFixture.setConsumer { processState, fixture ->
+            val projectile = fixture.getEntity() as IProjectileEntity
+            if (projectile.owner == megaman) {
+                // so that the enemy doesn't get stuck in place if the bomb gets destroyed while he's rising
+                rising = false
+
+                dropped = true
+                dropTimer.resetDuration(BOMB_DESTROYED_DUR)
+
+                body.physics.velocity.setZero()
+
+                val spawn = bombConsumerFixture.getShape().getCenter()
+                val explosion = MegaEntityFactory.fetch(Explosion::class)!!
+                explosion.spawn(props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo spawn))
+
+                requestToPlaySound(SoundAsset.EXPLOSION_2_SOUND, false)
+            }
+        }
+        body.addFixture(bombConsumerFixture)
+        bombConsumerFixture.drawingColor = Color.ORANGE
+        debugShapes.add { if (bombConsumerFixture.isActive()) bombConsumerFixture else null }
+
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            if (!waiting && !rising &&
-                ((isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
-                    (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)))
-            ) swapFacing()
+            if (!waiting && !rising && FacingUtils.isFacingBlock(this)) swapFacing()
+
+            val active = !dropped
+            bombDamagerFixture.setActive(active)
+            bombConsumerFixture.setActive(active)
+
+            val position = Position.TOP_CENTER
+            (damagerFixture2.rawShape as GameRectangle).positionOnPoint(body.getPositionPoint(position), position)
         }
 
         return BodyComponentCreator.create(this, body)
@@ -243,13 +295,14 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(2.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setPosition(body.getPositionPoint(Position.TOP_CENTER), Position.TOP_CENTER)
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
+            val position = Position.TOP_CENTER
+            sprite.setPosition(body.getPositionPoint(position), position)
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.hidden = damageBlink || waiting
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

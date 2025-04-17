@@ -1,18 +1,18 @@
 package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
-import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.animations.IAnimator
 import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.interfaces.Initializable
+import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -32,15 +32,47 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+
+private class ToxicWaterWaveAnimator(private val game: MegamanMaverickGame) : IAnimator, Initializable, Updatable {
+
+    companion object {
+        const val TAG = "ToxicWaterWaveAnimator"
+    }
+
+    private lateinit var animation: IAnimation
+    private var initialized = false
+
+    override fun init() {
+        if (initialized) return
+        initialized = true
+
+        val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
+        val region = atlas.findRegion("${ToxicWater.TAG}/waves")
+        animation = Animation(region, 2, 2, 0.125f, true)
+    }
+
+    override fun update(delta: Float) = animation.update(delta)
+
+    override fun shouldAnimate(delta: Float) = true
+
+    override fun animate(sprite: GameSprite, delta: Float) {
+        val region = animation.getCurrentRegion()
+        if (region != null) sprite.setRegion(region)
+    }
+
+    override fun reset() = animation.reset()
+}
 
 class ToxicWater(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, ICullableEntity {
 
     companion object {
         const val TAG = "ToxicWater"
         private const val WATER_ALPHA = 0.8f
-        private val regions = ObjectMap<String, TextureRegion>()
+        private var waterRegion: TextureRegion? = null
+        private var waveAnimator: ToxicWaterWaveAnimator? = null
     }
 
     private var water: Water? = null
@@ -48,9 +80,11 @@ class ToxicWater(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-        if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
-            gdxArrayOf("waves", "water").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
+        if (waterRegion == null)
+            waterRegion = game.assMan.getTextureRegion(TextureAsset.SPECIALS_1.source, "$TAG/water")
+        if (waveAnimator == null) {
+            waveAnimator = ToxicWaterWaveAnimator(game)
+            waveAnimator!!.init()
         }
         super.init()
         addComponent(defineCullablesComponent())
@@ -66,6 +100,9 @@ class ToxicWater(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         val water = MegaEntityFactory.fetch(Water::class)!!
         water.spawn(props(ConstKeys.BOUNDS pairTo bounds, ConstKeys.HIDDEN pairTo true))
         this.water = water
+
+        if (!game.updatables.containsKey(ToxicWaterWaveAnimator.TAG))
+            game.updatables.put(ToxicWaterWaveAnimator.TAG, waveAnimator!!::update)
     }
 
     override fun onDestroy() {
@@ -74,6 +111,8 @@ class ToxicWater(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
         water?.destroy()
         water = null
+
+        if (MegaGameEntities.getOfTag(TAG).isEmpty) game.updatables.remove(ToxicWaterWaveAnimator.TAG)
     }
 
     private fun defineDrawables(bounds: GameRectangle) {
@@ -84,24 +123,17 @@ class ToxicWater(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         val columns = (bounds.getWidth() / (0.5f * ConstVals.PPM)).toInt()
 
         for (x in 0 until columns) for (y in 0 until rows) {
-            val pos = Vector2(
-                bounds.getX() + (0.5f * x * ConstVals.PPM),
-                bounds.getY() + (0.5f * y * ConstVals.PPM)
-            )
+            val posX = bounds.getX() + (0.5f * x * ConstVals.PPM)
+            val posY = bounds.getY() + (0.5f * y * ConstVals.PPM)
 
             val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
-            sprite.setBounds(pos.x, pos.y, 0.5f * ConstVals.PPM, 0.5f * ConstVals.PPM)
+            sprite.setBounds(posX, posY, 0.5f * ConstVals.PPM, 0.5f * ConstVals.PPM)
             sprite.setAlpha(WATER_ALPHA)
             sprites.put("${x}_${y}", sprite)
 
-            if (y == rows - 1) {
-                val region = regions["waves"]!!
-                val animation = Animation(region, 2, 2, 0.125f, true)
-                val animator = Animator(animation)
-                animators.add({ sprite } pairTo animator)
-            } else {
-                val region = regions["water"]!!
-                sprite.setRegion(region)
+            when (y) {
+                rows - 1 -> animators.add({ sprite } pairTo waveAnimator!!)
+                else -> sprite.setRegion(waterRegion!!)
             }
         }
 

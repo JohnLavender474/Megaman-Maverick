@@ -6,6 +6,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
@@ -13,7 +14,6 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.isAny
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -30,20 +30,14 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IHazard
-import com.megaman.maverick.game.entities.contracts.IOwnable
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getPositionPoint
+import com.megaman.maverick.game.entities.contracts.*
+import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
+import com.megaman.maverick.game.world.body.*
 
 class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDamager, IOwnable<IGameEntity>,
     IBodyEntity, ISpritesEntity, IDirectional {
@@ -63,7 +57,9 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
     private lateinit var animation: IAnimation
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
+        super.init()
         addComponent(defineBodyComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
@@ -71,26 +67,22 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
         direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        val position = when (direction) {
-            Direction.UP -> Position.BOTTOM_CENTER
-            Direction.DOWN -> Position.TOP_CENTER
-            Direction.LEFT -> Position.CENTER_RIGHT
-            Direction.RIGHT -> Position.CENTER_LEFT
-        }
+        val position = DirectionPositionMapper.getInvertedPosition(direction)
         body.positionOnPoint(spawn, position)
 
         animation.reset()
     }
 
     override fun canDamage(damageable: IDamageable) =
-        (damageable is Megaman && owner is AbstractEnemy) ||
-                (damageable.isAny(AbstractEnemy::class, IHazard::class) && owner is Megaman)
+        (damageable == megaman && owner?.isAny(AbstractEnemy::class, IHazard::class) == true) ||
+                (damageable.isAny(AbstractEnemy::class, IHazard::class) && owner == megaman)
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
         if (animation.isFinished()) destroy()
@@ -98,14 +90,11 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.85f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat())
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        body.addFixture(damagerFixture)
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
 
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
-
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.DAMAGER))
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
@@ -116,11 +105,12 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
 
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 3))
-        sprite.setSize(0.85f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        sprite.setSize(2f * ConstVals.PPM)
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
+
             val position = when (direction) {
                 Direction.UP -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER
@@ -130,7 +120,7 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
             val bodyPosition = body.getPositionPoint(position)
             sprite.setPosition(bodyPosition, position)
         }
-        return spritesComponent
+        return component
     }
 
     override fun getType() = EntityType.EXPLOSION

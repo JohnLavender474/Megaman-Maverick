@@ -12,7 +12,6 @@ class PixelPerfectFitViewport(worldWidth: Float, worldHeight: Float, camera: Ort
 
     override fun update(screenWidth: Int, screenHeight: Int, centerCamera: Boolean) {
         // get the min screen/world rate from width and height
-
         val wRate = screenWidth / worldWidth
         val hRate = screenHeight / worldHeight
         val rate = min(wRate.toDouble(), hRate.toDouble()).toFloat()
