@@ -25,25 +25,27 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
-import com.mega.game.engine.world.body.Body
-import com.mega.game.engine.world.body.BodyComponent
-import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.IWater
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.decorations.Splash.SplashType
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.splitIntoGameRectanglesBasedOnCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getEntity
 
-class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity, IWater {
+class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+    IWater {
 
     companion object {
         const val TAG = "PolygonWater"
@@ -93,7 +95,14 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         super.onDestroy()
     }
 
-    override fun doMakeSplashSound() = splashSound
+    override fun shouldSplash(fixture: IFixture): Boolean {
+        val entity = fixture.getEntity()
+        return entity.getType() != EntityType.PROJECTILE || (entity as IProjectileEntity).owner != megaman
+    }
+
+    override fun doMakeSplashSound(fixture: IFixture) = splashSound
+
+    override fun getSplashType(fixture: IFixture) = SplashType.BLUE
 
     private fun defineDrawables(cells: Matrix<GameRectangle>) {
         val sprites = OrderedMap<Any, GameSprite>()

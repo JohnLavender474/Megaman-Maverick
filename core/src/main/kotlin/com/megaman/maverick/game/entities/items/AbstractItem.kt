@@ -27,7 +27,6 @@ import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.ItemEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.decorations.Splash
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -114,13 +113,11 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
         debugShapes.add { itemFixture }
 
         val waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle())
-        waterListenerFixture.setHitByWaterReceiver {
+        waterListenerFixture.setHitByWaterReceiver { water ->
             body.physics.velocity.setZero()
 
             gravity = WATER_GRAVITY
             velClamp = WATER_VEL_CLAMP
-
-            Splash.splashOnWaterSurface(body.getBounds(), it.body.getBounds(), true)
         }
         body.addFixture(waterListenerFixture)
 

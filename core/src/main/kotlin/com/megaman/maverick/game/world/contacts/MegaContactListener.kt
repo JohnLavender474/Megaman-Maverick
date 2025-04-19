@@ -431,7 +431,6 @@ class MegaContactListener(
             )
 
             val entity = listenerFixture.getEntity()
-            val isMegaman = entity is Megaman
 
             val body = listenerFixture.getBody()
             val wasInWater = body.hasAnyContactWater()
@@ -442,18 +441,17 @@ class MegaContactListener(
 
             if (listenerFixture.hasHitByWaterByReceiver()) listenerFixture.getHitByWater(water)
 
-            if (!wasInWater && (isMegaman || entity is AbstractEnemy)) {
-                val splash = listenerFixture.getOrDefaultProperty(ConstKeys.SPLASH, true, Boolean::class)
-                if (splash) {
-                    Splash.splashOnWaterSurface(
-                        listenerFixture.getBody().getBounds(),
-                        waterFixture.getBody().getBounds()
-                    )
+            val shouldSplash = water.shouldSplash(listenerFixture) &&
+                listenerFixture.getOrDefaultProperty(ConstKeys.SPLASH, true, Boolean::class)
 
-                    if (water.doMakeSplashSound()) game.audioMan.playSound(SoundAsset.SPLASH_SOUND, false)
-                }
-            }
+            if (!wasInWater && shouldSplash) Splash.splashOnWaterSurface(
+                listenerFixture.getBody().getBounds(),
+                waterFixture.getBody().getBounds(),
+                water.getSplashType(listenerFixture),
+                water.doMakeSplashSound(listenerFixture)
+            )
 
+            val isMegaman = entity is Megaman
             if (isMegaman) {
                 if (!entity.body.isSensing(BodySense.FEET_ON_GROUND) &&
                     !entity.isBehaviorActive(BehaviorType.WALL_SLIDING)
@@ -1371,13 +1369,22 @@ class MegaContactListener(
             body.removeContactWater(water)
             if (!body.hasAnyContactWater()) body.setBodySense(BodySense.IN_WATER, false)
 
-            val listener = listenerFixture.getEntity()
+            if (!body.isSensing(BodySense.IN_WATER)) {
+                val shouldSplash = water.shouldSplash(listenerFixture) &&
+                    listenerFixture.getOrDefaultProperty(ConstKeys.SPLASH, true, Boolean::class)
 
-            if (!body.isSensing(BodySense.IN_WATER) && listener is Megaman) {
-                Splash.splashOnWaterSurface(listenerFixture.getBody().getBounds(), waterFixture.getBody().getBounds())
-                listener.aButtonTask = AButtonTask.AIR_DASH
-                listener.gravityScalar = 1f
-                game.audioMan.playSound(SoundAsset.SPLASH_SOUND, false)
+                if (shouldSplash) Splash.splashOnWaterSurface(
+                    listenerFixture.getBody().getBounds(),
+                    waterFixture.getBody().getBounds(),
+                    water.getSplashType(listenerFixture),
+                    water.doMakeSplashSound(listenerFixture)
+                )
+
+                val listener = listenerFixture.getEntity()
+                if (listener is Megaman) {
+                    listener.aButtonTask = AButtonTask.AIR_DASH
+                    listener.gravityScalar = 1f
+                }
             }
         }
 

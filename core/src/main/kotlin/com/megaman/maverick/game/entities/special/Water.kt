@@ -26,22 +26,23 @@ import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
-import com.mega.game.engine.world.body.Body
-import com.mega.game.engine.world.body.BodyComponent
-import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.IWater
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.decorations.Splash.SplashType
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getEntity
 import java.util.*
 
 class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
@@ -77,6 +78,7 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         )
     }
 
+    private lateinit var splashType: SplashType
     private var splashSound = true
 
     override fun init() {
@@ -85,6 +87,7 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
             val atlas = game.assMan.getTextureAtlas(ATLAS_KEY)
             SPRITE_DEFS.keys().forEach { key -> regions.put(key, atlas.findRegion("${REGION_KEY_PREFIX}/$key")) }
         }
+        super.init()
         addComponent(defineBodyComponent())
         addComponent(defineCullablesComponent())
     }
@@ -92,8 +95,6 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
-
-        val hasSurface = spawnProps.getOrDefault(ConstKeys.SURFACE, true, Boolean::class)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
@@ -107,9 +108,19 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         if (hidden) {
             removeComponent(SpritesComponent::class)
             removeComponent(AnimationsComponent::class)
-        } else defineDrawables(bounds, hasSurface)
+        } else {
+            val hasSurface = spawnProps.getOrDefault(ConstKeys.SURFACE, true, Boolean::class)
+            defineDrawables(bounds, hasSurface)
+        }
 
         splashSound = spawnProps.getOrDefault(ConstKeys.SPLASH, true, Boolean::class)
+
+        val splashType = spawnProps.getOrDefault("${ConstKeys.SPLASH}_${ConstKeys.TYPE}", SplashType.BLUE)
+        this.splashType = when (splashType) {
+            is String -> SplashType.valueOf(splashType.uppercase())
+            is SplashType -> splashType
+            else -> SplashType.BLUE
+        }
     }
 
     override fun onDestroy() {
@@ -117,7 +128,14 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         GameLogger.debug(TAG, "onDestroy()")
     }
 
-    override fun doMakeSplashSound() = splashSound
+    override fun shouldSplash(fixture: IFixture): Boolean {
+        val entity = fixture.getEntity()
+        return entity.getType() != EntityType.PROJECTILE || (entity as IProjectileEntity).owner != megaman
+    }
+
+    override fun doMakeSplashSound(fixture: IFixture) = splashSound
+
+    override fun getSplashType(fixture: IFixture) = SplashType.BLUE
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)

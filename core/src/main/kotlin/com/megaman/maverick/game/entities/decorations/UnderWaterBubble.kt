@@ -111,6 +111,7 @@ class UnderWaterBubble(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyE
         val waterListenerFixture =
             Fixture(body, FixtureType.WATER_LISTENER, GameCircle().setRadius(0.05f * ConstVals.PPM))
         waterListenerFixture.offsetFromBodyAttachment.y = 0.125f * ConstVals.PPM
+        waterListenerFixture.putProperty(ConstKeys.SPLASH, false)
         body.addFixture(waterListenerFixture)
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

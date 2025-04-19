@@ -34,6 +34,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.decorations.Splash.SplashType
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 
 private class ToxicWaterWaveAnimator(private val game: MegamanMaverickGame) : IAnimator, Initializable, Updatable {
@@ -98,7 +99,13 @@ class ToxicWater(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         defineDrawables(bounds)
 
         val water = MegaEntityFactory.fetch(Water::class)!!
-        water.spawn(props(ConstKeys.BOUNDS pairTo bounds, ConstKeys.HIDDEN pairTo true))
+        water.spawn(
+            props(
+                ConstKeys.HIDDEN pairTo true,
+                ConstKeys.BOUNDS pairTo bounds,
+                "${ConstKeys.SPLASH}_${ConstKeys.TYPE}" pairTo SplashType.TOXIC
+            )
+        )
         this.water = water
 
         if (!game.updatables.containsKey(ToxicWaterWaveAnimator.TAG))

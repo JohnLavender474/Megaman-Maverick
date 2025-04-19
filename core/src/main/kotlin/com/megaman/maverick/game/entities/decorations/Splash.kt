@@ -58,7 +58,12 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
         private const val CULL_TIME = 0.375f
         private val regions = ObjectMap<String, TextureRegion>()
 
-        fun splashOnWaterSurface(splasher: GameRectangle, water: GameRectangle, makeSound: Boolean = true) {
+        fun splashOnWaterSurface(
+            splasher: GameRectangle,
+            water: GameRectangle,
+            type: SplashType,
+            makeSound: Boolean = true
+        ) {
             GameLogger.debug(TAG, "splashOnWaterSurface(): splasher=$splasher, water=$water, makeSound=$makeSound")
 
             val numSplashes = ceil(splasher.getWidth() / ConstVals.PPM).toInt()
@@ -72,9 +77,9 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
                 val splash = MegaEntityFactory.fetch(Splash::class)!!
                 splash.spawn(
                     props(
+                        ConstKeys.TYPE pairTo type,
                         ConstKeys.POSITION pairTo spawn,
                         ConstKeys.SOUND pairTo makeSound,
-                        ConstKeys.TYPE pairTo SplashType.BLUE
                     )
                 )
             }
@@ -135,6 +140,7 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
         if (makeSound) when (type) {
             SplashType.BLUE, SplashType.WHITE, SplashType.TOXIC ->
                 requestToPlaySound(SoundAsset.SPLASH_SOUND, false)
+
             SplashType.SAND -> requestToPlaySound(SoundAsset.BRUSH_SOUND, false)
             else -> {}
         }
