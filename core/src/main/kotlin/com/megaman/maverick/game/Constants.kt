@@ -48,6 +48,8 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val TANK = "tank"
+    const val HEART = "heart"
     const val IS = "is"
     const val DUPLICATE = "duplicate"
     const val FACES = "faces"
@@ -146,6 +148,7 @@ object ConstKeys {
     const val NOT = "not"
     const val TAG = "tag"
     const val FORCE = "force"
+    const val RECEIVE = "receive"
     const val CLAMP = "clamp"
     const val WATER = "water"
     const val HIT = "hit"

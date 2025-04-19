@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -48,6 +49,7 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
     private val spawnOnContact = Array<RectangleMapObject>()
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ITEMS_1.source, TAG)
         super.init()
         addComponent(defineSpritesCompoent())
@@ -55,15 +57,20 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
     }
 
     override fun canSpawn(spawnProps: Properties): Boolean {
-        heartTank = MegaHeartTank.get(spawnProps.get(ConstKeys.VALUE, String::class)!!.uppercase())
+        val value = spawnProps.get(ConstKeys.VALUE)!!
+        this.heartTank = when (value) {
+            is MegaHeartTank -> value
+            is String -> MegaHeartTank.valueOf(value.uppercase())
+            else -> throw IllegalArgumentException("Invalid value: $value")
+        }
         return !megaman.hasHeartTank(heartTank)
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         if (!this::heartTank.isInitialized) throw IllegalStateException("Heart tank value is not initialized")
         body.setSize(BODY_SIZE * ConstVals.PPM)
         super.onSpawn(spawnProps)
-
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.SPAWN) && value is RectangleMapObject) spawnOnContact.add(value)
         }
@@ -71,9 +78,6 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
 
     override fun contactWithPlayer(megaman: Megaman) {
         destroy()
-
-        game.eventsMan.submitEvent(Event(EventType.ATTAIN_HEART_TANK, props(ConstKeys.VALUE pairTo heartTank)))
-
         spawnOnContact.forEach {
             val props = it.properties.toProps()
 
@@ -83,13 +87,14 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
             val entity = MegaEntityFactory.fetch(key, MegaGameEntity::class)!!
             entity.spawn(props)
         }
+        game.eventsMan.submitEvent(Event(EventType.ATTAIN_HEART_TANK, props(ConstKeys.VALUE pairTo heartTank)))
     }
 
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(2f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             val position = DirectionPositionMapper.getInvertedPosition(direction)
             val bodyPosition = body.getPositionPoint(position)
             sprite.setPosition(bodyPosition, position)
@@ -97,7 +102,7 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

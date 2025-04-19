@@ -45,8 +45,8 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.PreciousGem
-import com.megaman.maverick.game.entities.PreciousGem.PreciousGemColor
+import com.megaman.maverick.game.entities.projectiles.PreciousGem
+import com.megaman.maverick.game.entities.projectiles.PreciousGem.PreciousGemColor
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman

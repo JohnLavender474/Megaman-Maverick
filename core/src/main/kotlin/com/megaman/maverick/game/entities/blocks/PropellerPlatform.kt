@@ -41,11 +41,14 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
 
     companion object {
         const val TAG = "PropellerPlatform"
+
         private const val BODY_WIDTH = 1.25f
         private const val BODY_HEIGHT = 0.25f
+
         private const val DAMAGER_WIDTH = 0.5f
         private const val DAMAGER_HEIGHT = 0.25f
         private const val DAMAGER_OFFSET_Y = 0.6f
+
         private var region: TextureRegion? = null
     }
 

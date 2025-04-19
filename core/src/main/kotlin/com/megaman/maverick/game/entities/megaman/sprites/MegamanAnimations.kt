@@ -7,14 +7,15 @@ import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.drawables.sprites.containsRegion
 import com.mega.game.engine.drawables.sprites.splitAndFlatten
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimationDefs.CHARGING_FRAME_DUR
 import java.util.function.Supplier
 
 class MegamanAnimations(
@@ -71,13 +72,47 @@ class MegamanAnimations(
         "stand_shoot" -> buildStandAnimation(atlas, true)
         else -> {
             val region = atlas.findRegion(defKey)
-            val def = MegamanAnimationDefs.get(defKey)
-            val regions = region.splitAndFlatten(def.rows, def.cols, Array())
+            var (rows, columns, durations, loop) = MegamanAnimationDefs.get(defKey)
+            val regions = region.splitAndFlatten(rows, columns, Array())
+
+            // I'm too lazy to go in and manually add the "uncharged" region to each charging animation, so I'm doing
+            // programatically here. Not the smartest move, but... well, yeah, just not the smartest move lol. This
+            // is SUPER hacky, but... it's kinda fun to be stupid and hacky sometimes. Anyways, if this doesn't work,
+            // then it's easy enough (though time-consuming as fuck) to go through each animation and manually add an
+            // additional frame.
+            if (defKey.contains("charge_half") || defKey.contains("charge_full")) {
+                val unchargedKey = defKey.split("_")
+                    .filter { keyPart -> !keyPart.equalsAny("charge", "half", "full") }
+                    .joinToString("_")
+
+                GameLogger.debug(
+                    TAG,
+                    "buildAnimation(): building charge animation: " +
+                        "defKey=$defKey, unchargedKey=$unchargedKey, regions=${regions.size}, durations=${durations.size}"
+                )
+
+                if (atlas.containsRegion(unchargedKey)) {
+                    val unchargedRegion = atlas.findRegion(unchargedKey)
+
+                    val (uRows, uColumns, _, _) = MegamanAnimationDefs.get(unchargedKey)
+                    val unchargedRegions = unchargedRegion.splitAndFlatten(uRows, uColumns, Array())
+
+                    regions.add(unchargedRegions[0]) // only add the first region
+
+                    durations = Array(durations) // create copy of array so that original isn't modified
+                    durations.add(CHARGING_FRAME_DUR)
+
+                    GameLogger.debug(
+                        TAG, "buildAnimation(): built charge animation: " +
+                            "regions=${regions.size}, durations=${durations.size}"
+                    )
+                } else GameLogger.error(TAG, "buildAnimation(): no region for uncharged key: $unchargedKey")
+            }
 
             if (regionProcessor != null) for (i in 0 until regions.size)
-                regions[i] = regionProcessor.process(regions[i], defKey, def, i)
+                regions[i] = regionProcessor.process(regions[i], defKey, rows, columns, durations, loop, i)
 
-            Animation(regions, def.durations)
+            Animation(regions, durations)
         }
     }
 
@@ -150,7 +185,7 @@ class MegamanAnimations(
                 throw Error("Not yet implemented")
             }
 
-            override fun getCurrentTime()= when {
+            override fun getCurrentTime() = when {
                 !runTransAnim.isFinished() -> runTransAnim.getCurrentTime()
                 else -> standAnim.getCurrentTime()
             }
@@ -164,5 +199,13 @@ class MegamanAnimations(
 
 interface MegaRegionProcessor {
 
-    fun process(region: TextureRegion, defKey: String, def: AnimationDef, index: Int): TextureRegion
+    fun process(
+        region: TextureRegion,
+        defKey: String,
+        rows: Int,
+        columns: Int,
+        durations: Array<Float>,
+        loop: Boolean,
+        index: Int
+    ): TextureRegion
 }

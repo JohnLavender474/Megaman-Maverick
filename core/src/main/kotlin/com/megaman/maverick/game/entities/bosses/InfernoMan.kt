@@ -43,7 +43,6 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
-import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.blocks.Block
@@ -52,9 +51,11 @@ import com.megaman.maverick.game.entities.contracts.IFireEntity
 import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.IceShard
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
+import com.megaman.maverick.game.entities.projectiles.MagmaGoop
+import com.megaman.maverick.game.entities.projectiles.MagmaMeteor
+import com.megaman.maverick.game.entities.projectiles.MagmaOrb
+import com.megaman.maverick.game.entities.projectiles.MagmaWave
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -72,10 +73,10 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
         private const val INIT_DUR = 1f
         private const val STAND_DUR = 1.5f
-        private const val WALL_SLIDE_DUR = 0.75f
+        private const val WALL_SLIDE_DUR = 1f
         private const val SHOOT_DUR = 0.25f
-        private const val SHOOT_COOLDOWN_DUR = 0.5f
-        private const val SHOOT_DELAY = 0.25f
+        private const val SHOOT_DELAY = 0.5f
+        private const val SHOOT_COOLDOWN_DUR = 0.75f
         private const val MEGA_SHOOT_DUR = 1f
         private const val MEGA_SHOOT_TIME = 0.5f
 
@@ -83,7 +84,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val FLAME_HEAD_SHOTS = 4
         private const val FLAME_HEAD_SHOOT_DELAY = 0.2f
 
-        private const val FROZEN_DUR = 0.5f
+        private const val FROZEN_DUR = 0.75f
 
         private const val BODY_WIDTH = 1.5f
         private const val BODY_HEIGHT = 1.75f
@@ -220,9 +221,9 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         meteorSpawners.clear()
-        poppedMeteorSpawners.clear()
         randomMeteorKeys.clear()
         meteorSpawnDelays.clear()
+        poppedMeteorSpawners.clear()
     }
 
     override fun isReady(delta: Float) = timers["init"].isFinished()
@@ -266,24 +267,28 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             }
 
             val frozenTimer = timers["frozen"]
-            if (isHealthDepleted()) frozenTimer.setToEnd() else if (!frozenTimer.isFinished()) {
-                body.physics.velocity.setZero()
-                body.physics.gravityOn = false
+            when {
+                isHealthDepleted() -> frozenTimer.setToEnd()
 
-                frozenTimer.update(delta)
+                !frozenTimer.isFinished() -> {
+                    body.physics.velocity.setZero()
+                    body.physics.gravityOn = false
 
-                if (frozenTimer.isFinished()) {
-                    damageTimer.reset()
+                    frozenTimer.update(delta)
 
-                    body.physics.gravityOn = true
+                    if (frozenTimer.isFinished()) {
+                        damageTimer.reset()
 
-                    for (i in 0 until 5) {
-                        val iceShard = MegaEntityFactory.fetch(IceShard::class)!!
-                        iceShard.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.INDEX pairTo i))
+                        body.physics.gravityOn = true
+
+                        for (i in 0 until 5) {
+                            val iceShard = MegaEntityFactory.fetch(IceShard::class)!!
+                            iceShard.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.INDEX pairTo i))
+                        }
                     }
-                }
 
-                return@add
+                    return@add
+                }
             }
 
             updateFacing()
@@ -291,7 +296,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             val shootTimer = timers["shoot"]
 
             val shootDelay = timers["shoot_delay"]
-            shootDelay.update(delta)
+            if (shouldUpdateShootDelay()) shootDelay.update(delta)
             if (shootDelay.isFinished()) shootTimer.update(delta)
 
             val shootCooldown = timers["shoot_cooldown"]
@@ -305,6 +310,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
                     if (currentState == InfernoManState.WALLSLIDE) {
                         body.physics.velocity.x = 0f
+
                         if (shouldGoToStandState()) {
                             stateMachine.next()
                             return@add
@@ -312,14 +318,24 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                     }
 
                     val stateTimer = timers[currentState.name.lowercase()]
-                    stateTimer.update(delta)
-                    if (stateTimer.isFinished() &&
-                        shootTimer.isFinished() &&
-                        shootCooldown.isFinished()
-                    ) stateMachine.next()
+
+                    if (shouldUpdateStateTimer()) stateTimer.update(delta)
+
+                    if (stateTimer.isFinished() && shootTimer.isFinished() && shootCooldown.isFinished())
+                        stateMachine.next()
                 }
             }
         }
+    }
+
+    private fun shouldUpdateStateTimer() = when (currentState) {
+        InfernoManState.STAND -> body.isSensing(BodySense.FEET_ON_GROUND)
+        else -> true
+    }
+
+    private fun shouldUpdateShootDelay() = when (currentState) {
+        InfernoManState.STAND -> body.isSensing(BodySense.FEET_ON_GROUND)
+        else -> true
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -378,8 +394,8 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(SPRITE_SIZE * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             val flipX = when (currentState) {
                 InfernoManState.WALLSLIDE -> body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)
@@ -388,7 +404,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             sprite.setFlip(flipX, false)
             sprite.hidden = !frozen && (damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true))
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
@@ -587,7 +603,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private fun shootWave() {
         val spawn = body.getPositionPoint(Position.BOTTOM_CENTER).add(0.75f * ConstVals.PPM * facing.value, 0f)
 
-        val wave = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_WAVE)!!
+        val wave = MegaEntityFactory.fetch(MagmaWave::class)!!
         wave.spawn(
             props(
                 ConstKeys.POSITION pairTo spawn,
@@ -628,13 +644,13 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         val trajectory = Vector2(0f, GOOP_SPEED * ConstVals.PPM).rotateDeg(rotation)
         val spawn = body.getCenter().add(offsetX, offsetY)
 
-        val goop = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_GOOP)!!
+        val goop = MegaEntityFactory.fetch(MagmaGoop::class)!!
         goop.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.POSITION pairTo spawn,
-                ConstKeys.TRAJECTORY pairTo trajectory,
-                ConstKeys.ROTATION pairTo rotation
+                ConstKeys.ROTATION pairTo rotation,
+                ConstKeys.TRAJECTORY pairTo trajectory
             )
         )
 
@@ -647,7 +663,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         val spawn = body.getPositionPoint(Position.TOP_CENTER).add(0f, 0.25f * ConstVals.PPM)
         val trajectory = GameObjectPools.fetch(Vector2::class).set(0f, ORB_SPEED * ConstVals.PPM)
 
-        val orb = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_ORB)!!
+        val orb = MegaEntityFactory.fetch(MagmaOrb::class)!!
         orb.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.TRAJECTORY pairTo trajectory))
 
         requestToPlaySound(SoundAsset.WHIP_SOUND, false)
@@ -673,7 +689,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
         val floor = MegaGameEntities.getOfMapObjectId(meteorCollideBlockId).first() as Block
 
-        val meteor = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.MAGMA_METEOR)!!
+        val meteor = MegaEntityFactory.fetch(MagmaMeteor::class)!!
         meteor.spawn(
             props(
                 ConstKeys.POSITION pairTo spawn,

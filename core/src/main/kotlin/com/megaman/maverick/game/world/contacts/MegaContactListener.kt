@@ -488,6 +488,10 @@ class MegaContactListener(
             printDebugLog(contact, "beginContact(): Body-Force, contact=$contact")
             val (bodyFixture, forceFixture) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.FORCE, out)!!
 
+            val receiveForce =
+                bodyFixture.getOrDefaultProperty("${ConstKeys.RECEIVE}_${ConstKeys.FORCE}", true, Boolean::class)
+            if (!receiveForce) return
+
             val forceAlteration = forceFixture.getVelocityAlteration(bodyFixture, delta, ProcessState.BEGIN)
             bodyFixture.applyForceAlteration(ProcessState.BEGIN, forceAlteration)
 
@@ -1010,6 +1014,10 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.FORCE)) {
             val (bodyFixture, forceFixture) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.FORCE, out)!!
 
+            val receiveForce =
+                bodyFixture.getOrDefaultProperty("${ConstKeys.RECEIVE}_${ConstKeys.FORCE}", true, Boolean::class)
+            if (!receiveForce) return
+
             val forceAlteration = forceFixture.getVelocityAlteration(bodyFixture, delta, ProcessState.CONTINUE)
             bodyFixture.applyForceAlteration(ProcessState.CONTINUE, forceAlteration)
 
@@ -1338,8 +1346,14 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.FORCE)) {
             printDebugLog(contact, "endContact(): Body-Force, contact=$contact")
             val (bodyFixture, forceFixture) = contact.getFixturesInOrder(FixtureType.BODY, FixtureType.FORCE, out)!!
+
+            val receiveForce =
+                bodyFixture.getOrDefaultProperty("${ConstKeys.RECEIVE}_${ConstKeys.FORCE}", true, Boolean::class)
+            if (!receiveForce) return
+
             val forceAlteration = forceFixture.getVelocityAlteration(bodyFixture, delta, ProcessState.END)
             bodyFixture.applyForceAlteration(ProcessState.END, forceAlteration)
+
             bodyFixture.getBody().setBodySense(BodySense.FORCE_APPLIED, false)
             forceFixture.getRunnable()?.invoke()
         }

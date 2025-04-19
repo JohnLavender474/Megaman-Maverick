@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.bosses
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
@@ -31,17 +32,18 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
+import com.megaman.maverick.game.entities.items.HeartTank
+import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.MagmaWave
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
@@ -78,14 +80,18 @@ class ReactorMonkey(game: MegamanMaverickGame) :
 
     override lateinit var facing: Facing
 
-    private val throwTimer = Timer(THROW_DUR)
-    private val ballCatchArea = GameCircle().setRadius(BALL_CATCH_RADIUS * ConstVals.PPM)
-
-    private lateinit var throwDelayTimer: Timer
-    private lateinit var reactorMonkeyState: ReactorMonkeyState
+    private lateinit var state: ReactorMonkeyState
+    private val position = Vector2()
 
     private var monkeyBall: ReactorMonkeyBall? = null
+
+    private val throwTimer = Timer(THROW_DUR)
+    private lateinit var throwDelayTimer: Timer
+
     private var ballSpawnY = DEFAULT_BALL_SPAWN_Y
+    private val ballCatchArea = GameCircle().setRadius(BALL_CATCH_RADIUS * ConstVals.PPM)
+
+    private var megaHeartTank: MegaHeartTank? = null
 
     override fun init() {
         if (regions.isEmpty) {
@@ -110,14 +116,24 @@ class ReactorMonkey(game: MegamanMaverickGame) :
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
+        position.set(spawn)
 
         throwDelayTimer = Timer(MAX_THROW_DELAY)
         throwTimer.reset()
 
-        reactorMonkeyState = ReactorMonkeyState.STAND
+        state = ReactorMonkeyState.STAND
 
         facing = if (megaman.body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
         ballSpawnY = spawnProps.getOrDefault(BALL_SPAWN_Y_KEY, DEFAULT_BALL_SPAWN_Y, Float::class)
+
+        megaHeartTank = when {
+            spawnProps.containsKey("${ConstKeys.HEART}_${ConstKeys.TANK}") ->
+                MegaHeartTank.valueOf(
+                    spawnProps.get("${ConstKeys.HEART}_${ConstKeys.TANK}", String::class)!!.uppercase()
+                )
+
+            else -> null
+        }
     }
 
     override fun isReady(delta: Float) = true
@@ -125,28 +141,37 @@ class ReactorMonkey(game: MegamanMaverickGame) :
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+
         monkeyBall?.let { ball -> if (!ball.dead) ball.destroy() }
         monkeyBall = null
+
+        if (megaHeartTank != null) {
+            val heartTank = MegaEntityFactory.fetch(HeartTank::class)!!
+            heartTank.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.VALUE pairTo megaHeartTank))
+        }
     }
 
     fun spawnNewMonkeyBall() {
-        if (monkeyBall != null) throw IllegalStateException("Monkey ball should be null when a new one is spawned")
-        monkeyBall =
-            EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.REACTOR_MONKEY_BALL)!! as ReactorMonkeyBall
+        if (this.monkeyBall != null) throw IllegalStateException("Monkey ball should be null when a new one is spawned")
+
         val spawn = body.getPositionPoint(Position.TOP_CENTER).add(0f, ballSpawnY * ConstVals.PPM)
-        monkeyBall!!.spawn(
+
+        val monkeyBall = MegaEntityFactory.fetch(ReactorMonkeyBall::class)!!
+        monkeyBall.spawn(
             props(
-                ConstKeys.POSITION pairTo spawn,
                 ConstKeys.OWNER pairTo this,
-                ConstKeys.COLLIDE pairTo false
+                ConstKeys.COLLIDE pairTo false,
+                ConstKeys.POSITION pairTo spawn
             )
         )
+
+        this.monkeyBall = monkeyBall
     }
 
     fun catchMonkeyBall() {
         monkeyBall?.let { ball ->
-            ball.body.physics.gravityOn = false
             ball.body.physics.velocity.setZero()
+            ball.body.physics.gravityOn = false
             ball.hidden = true
         }
     }
@@ -171,6 +196,7 @@ class ReactorMonkey(game: MegamanMaverickGame) :
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             if (!ready) return@add
+
             if (defeated) {
                 explodeOnDefeat(delta)
                 return@add
@@ -179,7 +205,7 @@ class ReactorMonkey(game: MegamanMaverickGame) :
             ballCatchArea.setCenter(body.getPositionPoint(Position.TOP_CENTER).add(0f, 1.75f * ConstVals.PPM))
             facing = if (megaman.body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
 
-            if (reactorMonkeyState == ReactorMonkeyState.STAND) {
+            if (state == ReactorMonkeyState.STAND) {
                 throwDelayTimer.update(delta)
                 if (throwDelayTimer.isFinished()) {
                     when {
@@ -187,7 +213,7 @@ class ReactorMonkey(game: MegamanMaverickGame) :
                         ballCatchArea.contains(monkeyBall!!.body.getCenter()) ||
                             monkeyBall!!.body.getY() < ballCatchArea.getY() -> {
                             catchMonkeyBall()
-                            reactorMonkeyState = ReactorMonkeyState.THROW
+                            state = ReactorMonkeyState.THROW
                             throwDelayTimer.resetDuration(MIN_THROW_DELAY + (MAX_THROW_DELAY - MIN_THROW_DELAY) * getHealthRatio())
                         }
                     }
@@ -199,7 +225,7 @@ class ReactorMonkey(game: MegamanMaverickGame) :
                     monkeyBall = null
                 }
                 if (throwTimer.isFinished()) {
-                    reactorMonkeyState = ReactorMonkeyState.STAND
+                    state = ReactorMonkeyState.STAND
                     throwTimer.reset()
                 }
             }
@@ -210,19 +236,26 @@ class ReactorMonkey(game: MegamanMaverickGame) :
         val body = Body(BodyType.ABSTRACT)
         body.setSize(3.5f * ConstVals.PPM, 4.25f * ConstVals.PPM)
 
-        body.preProcess.put(ConstKeys.DEFAULT) { body.forEachFixture { fixture -> fixture.setActive(!defeated) } }
+        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
+        bodyFixture.putProperty("${ConstKeys.RECEIVE}_${ConstKeys.FORCE}", false)
+        body.addFixture(bodyFixture)
+
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            body.physics.velocity.setZero()
+            body.setBottomCenterToPoint(position)
+            body.forEachFixture { fixture -> fixture.setActive(!defeated) }
+        }
 
         addComponent(
             DrawableShapesComponent(
-                debugShapeSuppliers = gdxArrayOf({ body.getBounds() }, { ballCatchArea }),
-                debug = true
+                debugShapeSuppliers = gdxArrayOf({ body.getBounds() }, { ballCatchArea }), debug = true
             )
         )
 
         return BodyComponentCreator.create(
             this,
             body,
-            BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
+            BodyFixtureDef.of(FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
         )
     }
 
@@ -231,7 +264,8 @@ class ReactorMonkey(game: MegamanMaverickGame) :
         sprite.setSize(7.5f * ConstVals.PPM, 8f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
         component.putUpdateFunction { _, _ ->
-            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+            val position = Position.BOTTOM_CENTER
+            sprite.setPosition(body.getPositionPoint(position), position)
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.hidden = damageBlink || !ready
             sprite.setAlpha(if (defeated) 1f - defeatTimer.getRatio() else 1f)
@@ -241,7 +275,7 @@ class ReactorMonkey(game: MegamanMaverickGame) :
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: (String?) -> String? = key@{
-            var key = reactorMonkeyState.name.lowercase()
+            var key = state.name.lowercase()
             if (!damageTimer.isFinished()) key += "_damaged"
             return@key key
         }

@@ -18,6 +18,7 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -35,11 +36,12 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.hazards.DrippingToxicGoop
+import com.megaman.maverick.game.entities.projectiles.RollingBotShot
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
@@ -49,13 +51,20 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
     companion object {
         const val TAG = "RollingBot"
+
         private const val X_VEL = 3f
+
         private const val ROLL_DURATION = 1f
         private const val OPEN_DELAY = 0.5f
+
         private const val SHOOT_DELAY = 0.25f
         private const val BULLETS_TO_SHOOT = 3
+
         private const val GRAVITY = -0.15f
-        private const val GROUND_GRAVITY = -0.0001f
+        private const val GROUND_GRAVITY = -0.01f
+
+        private const val TOXIC_GOOP_DMG_DUR = 0.25f
+
         private var rollRegion: TextureRegion? = null
         private var openRegion: TextureRegion? = null
         private var shootRegion: TextureRegion? = null
@@ -64,12 +73,15 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
     override lateinit var facing: Facing
 
+    private lateinit var state: RollingBotState
+
     private val rolling: Boolean
-        get() = rollingBotState == RollingBotState.ROLLING
+        get() = state == RollingBotState.ROLLING
+
     private val rollTimer = Timer(ROLL_DURATION)
     private val openTimer = Timer(OPEN_DELAY)
     private val shootTimer = Timer(SHOOT_DELAY)
-    private lateinit var rollingBotState: RollingBotState
+
     private var bulletsShot = 0
 
     override fun init() {
@@ -82,19 +94,36 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         }
         super.init()
         addComponent(defineAnimationsComponent())
+        damageOverrides.put(DrippingToxicGoop::class, dmgNeg(10))
     }
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "spawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+
         rollTimer.reset()
         openTimer.reset()
         shootTimer.reset()
-        rollingBotState = RollingBotState.ROLLING
+
+        state = RollingBotState.ROLLING
+
         bulletsShot = 0
+    }
+
+    override fun canBeDamagedBy(damager: IDamager) =
+        super.canBeDamagedBy(damager) && (!rolling || damager is DrippingToxicGoop)
+
+    override fun takeDamageFrom(damager: IDamager): Boolean {
+        return super.takeDamageFrom(damager)
+    }
+
+    override fun getDamageDuration(damager: IDamager) = when (damager) {
+        is DrippingToxicGoop -> TOXIC_GOOP_DMG_DUR
+        else -> super.getDamageDuration(damager)
     }
 
     private fun shoot() {
@@ -105,7 +134,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
             else -> body.getPositionPoint(Position.CENTER_RIGHT).add(0.2f * ConstVals.PPM, 0.1f * ConstVals.PPM)
         }
 
-        val shot = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ROLLING_BOT_SHOT)!!
+        val shot = MegaEntityFactory.fetch(RollingBotShot::class)!!
         shot.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
@@ -120,27 +149,30 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            when (rollingBotState) {
+            when (state) {
                 RollingBotState.ROLLING -> {
                     body.physics.velocity.x = X_VEL * facing.value * ConstVals.PPM
+
                     rollTimer.update(delta)
                     if (body.isSensing(BodySense.FEET_ON_GROUND) && rollTimer.isFinished()) {
                         rollTimer.reset()
-                        rollingBotState = RollingBotState.OPENING
+                        state = RollingBotState.OPENING
                     }
                 }
 
                 RollingBotState.OPENING -> {
                     body.physics.velocity.x = 0f
+
                     openTimer.update(delta)
                     if (openTimer.isFinished()) {
                         openTimer.reset()
-                        rollingBotState = RollingBotState.SHOOTING
+                        state = RollingBotState.SHOOTING
                     }
                 }
 
                 RollingBotState.SHOOTING -> {
                     body.physics.velocity.x = 0f
+
                     facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
                     shootTimer.update(delta)
@@ -148,19 +180,21 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
                         shoot()
                         bulletsShot++
                         shootTimer.reset()
+
                         if (bulletsShot >= BULLETS_TO_SHOOT) {
                             bulletsShot = 0
-                            rollingBotState = RollingBotState.CLOSING
+                            state = RollingBotState.CLOSING
                         }
                     }
                 }
 
                 RollingBotState.CLOSING -> {
                     body.physics.velocity.x = 0f
+
                     openTimer.update(delta)
                     if (openTimer.isFinished()) {
                         openTimer.reset()
-                        rollingBotState = RollingBotState.ROLLING
+                        state = RollingBotState.ROLLING
                     }
                 }
             }
@@ -192,7 +226,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             var feetFixtureOffset = 0f
-            when (rollingBotState) {
+            when (state) {
                 RollingBotState.ROLLING -> {
                     body.setSize(ConstVals.PPM.toFloat())
                     feetFixtureOffset = -0.375f * ConstVals.PPM
@@ -209,11 +243,14 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
             body.forEachFixture { fixture ->
                 fixture as Fixture
 
-                if (fixture.getType() == FixtureType.FEET) {
-                    fixture.offsetFromBodyAttachment.y = feetFixtureOffset
-                    return@forEachFixture
-                } else if (fixture.getType() == FixtureType.SHIELD) fixture.setActive(rolling)
-                else if (fixture.getType() == FixtureType.DAMAGEABLE) fixture.setActive(!rolling)
+                when {
+                    fixture.getType() == FixtureType.FEET -> {
+                        fixture.offsetFromBodyAttachment.y = feetFixtureOffset
+                        return@forEachFixture
+                    }
+
+                    fixture.getType() == FixtureType.SHIELD -> fixture.setActive(rolling)
+                }
 
                 val fixtureShape = fixture.rawShape as GameRectangle
                 fixtureShape.set(body)
@@ -231,17 +268,18 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
+            val position = Position.BOTTOM_CENTER
+            sprite.setPosition(body.getPositionPoint(position), position)
             sprite.setFlip(isFacing(Facing.RIGHT), false)
-            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             sprite.hidden = damageBlink
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = { rollingBotState.name }
+        val keySupplier: (String?) -> String? = { state.name }
         val animations = objectMapOf<String, IAnimation>(
             RollingBotState.ROLLING.name pairTo Animation(rollRegion!!, 2, 4, 0.1f, true),
             RollingBotState.OPENING.name pairTo Animation(openRegion!!, 1, 3, 0.1f, false),

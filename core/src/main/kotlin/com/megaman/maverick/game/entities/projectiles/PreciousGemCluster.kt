@@ -17,7 +17,6 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.PreciousGem
 import com.megaman.maverick.game.entities.bosses.PreciousWoman.Companion.SHIELD_GEM_MAX_DIST_FROM_ROOM_CENTER
 import com.megaman.maverick.game.entities.bosses.PreciousWoman.Companion.SHIELD_GEM_SPIN_SPEED
 import com.megaman.maverick.game.entities.bosses.PreciousWoman.ShieldGemDef

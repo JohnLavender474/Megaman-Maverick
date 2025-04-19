@@ -10,6 +10,7 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimator
 import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.getTextureRegion
@@ -38,13 +39,13 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.decorations.Splash.SplashType
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGdxRectangle
@@ -65,6 +66,7 @@ class ToxicWaterfall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     private val bodiesInWater = OrderedMap<IBodyEntity, Timer>()
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()
         addComponent(AudioComponent())
@@ -74,6 +76,7 @@ class ToxicWaterfall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
@@ -81,6 +84,7 @@ class ToxicWaterfall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         bodiesInWater.clear()
     }
@@ -93,15 +97,15 @@ class ToxicWaterfall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
             if (timer.isFinished()) {
                 val entity = entry.key
 
-                val overlap = Rectangle()
+                val overlap = GameObjectPools.fetch(Rectangle::class)
                 Intersector.intersectRectangles(
                     body.getBounds().toGdxRectangle(),
                     entity.body.getBounds().toGdxRectangle(),
                     overlap
                 )
 
-                val toxicSplash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)!!
-                toxicSplash.spawn(
+                val splash = MegaEntityFactory.fetch(Splash::class)!!
+                splash.spawn(
                     props(
                         ConstKeys.TYPE pairTo SplashType.TOXIC,
                         ConstKeys.POSITION pairTo overlap.getPositionPoint(Position.TOP_CENTER),
@@ -126,11 +130,16 @@ class ToxicWaterfall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         consumerFixture.setConsumer { state, fixture ->
             val entity = fixture.getEntity() as IBodyEntity
 
-            if (state == ProcessState.BEGIN) {
-                bodiesInWater.put(entity, Timer(SPLASH_FREQ))
-                if (entity.isAny(Megaman::class, AbstractEnemy::class))
-                    requestToPlaySound(SoundAsset.SPLASH_SOUND, false)
-            } else if (state == ProcessState.END) bodiesInWater.remove(entity)
+            when (state) {
+                ProcessState.BEGIN -> {
+                    bodiesInWater.put(entity, Timer(SPLASH_FREQ))
+                    if (entity.isAny(Megaman::class, AbstractEnemy::class))
+                        requestToPlaySound(SoundAsset.SPLASH_SOUND, false)
+                }
+
+                ProcessState.END -> bodiesInWater.remove(entity)
+                else -> {}
+            }
         }
         body.addFixture(consumerFixture)
 

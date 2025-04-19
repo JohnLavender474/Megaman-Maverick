@@ -1,1 +1,489 @@
-===== SESSION STARTED: 2025-04-16T21:24:09.820237837 =====
+===== SESSION STARTED: 2025-04-18T23:49:36.488434369 =====
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'cartin' with key 'cartin_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_charge_full, unchargedKey=cartin, regions=2, durations=2
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'cartin_charge_full' with key 'cartin_charge_full_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_charge_half, unchargedKey=cartin, regions=6, durations=6
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=7, durations=7
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'cartin_charge_half' with key 'cartin_charge_half_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'cartin_damaged' with key 'cartin_damaged_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump' with key 'cartin_jump_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_jump_charge_full, unchargedKey=cartin_jump, regions=2, durations=2
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump_charge_full' with key 'cartin_jump_charge_full_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_jump_charge_half, unchargedKey=cartin_jump, regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump_charge_half' with key 'cartin_jump_charge_half_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump_shoot' with key 'cartin_jump_shoot_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'cartin_shoot' with key 'cartin_shoot_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'climb' with key 'climb_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_charge_half, unchargedKey=climb, regions=6, durations=6
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=7, durations=7
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'climb_charge_half' with key 'climb_charge_half_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_charge_full, unchargedKey=climb, regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=5, durations=5
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'climb_charge_full' with key 'climb_charge_full_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish' with key 'climb_finish_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_finish_charge_full, unchargedKey=climb_finish, regions=2, durations=2
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish_charge_full' with key 'climb_finish_charge_full_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_finish_charge_half, unchargedKey=climb_finish, regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish_charge_half' with key 'climb_finish_charge_half_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'climb_still' with key 'climb_still_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_shoot' with key 'climb_still_shoot_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_still_charge_full, unchargedKey=climb_still, regions=2, durations=2
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_charge_full' with key 'climb_still_charge_full_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_still_charge_half, unchargedKey=climb_still, regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_charge_half' with key 'climb_still_charge_half_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'stand' with key 'stand_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=stand_charge_full, unchargedKey=stand, regions=2, durations=2
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'stand_charge_full' with key 'stand_charge_full_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=stand_charge_half, unchargedKey=stand, regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'stand_charge_half' with key 'stand_charge_half_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'stand_shoot' with key 'stand_shoot_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'damaged' with key 'damaged_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'stunned' with key 'stunned_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'run_trans' with key 'run_trans_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'run_trans_shoot' with key 'run_trans_shoot_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'run' with key 'run_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=run_charge_full, unchargedKey=run, regions=8, durations=8
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=9, durations=9
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'run_charge_full' with key 'run_charge_full_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=run_charge_half, unchargedKey=run, regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=5, durations=5
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'run_charge_half' with key 'run_charge_half_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'run_shoot' with key 'run_shoot_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'jump' with key 'jump_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=jump_charge_full, unchargedKey=jump, regions=2, durations=2
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'jump_charge_full' with key 'jump_charge_full_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=jump_charge_half, unchargedKey=jump, regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'jump_charge_half' with key 'jump_charge_half_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'jump_shoot' with key 'jump_shoot_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'swim' with key 'swim_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=swim_charge_full, unchargedKey=swim, regions=2, durations=2
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'swim_charge_full' with key 'swim_charge_full_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=swim_charge_half, unchargedKey=swim, regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'swim_charge_half' with key 'swim_charge_half_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'swim_shoot' with key 'swim_shoot_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'wallslide' with key 'wallslide_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=wallslide_charge_full, unchargedKey=wallslide, regions=2, durations=2
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_charge_full' with key 'wallslide_charge_full_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=wallslide_charge_half, unchargedKey=wallslide, regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_charge_half' with key 'wallslide_charge_half_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_shoot' with key 'wallslide_shoot_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'groundslide' with key 'groundslide_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_shoot' with key 'groundslide_shoot_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=groundslide_charge_full, unchargedKey=groundslide, regions=2, durations=2
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_charge_full' with key 'groundslide_charge_full_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=groundslide_charge_half, unchargedKey=groundslide, regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_charge_half' with key 'groundslide_charge_half_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'airdash' with key 'airdash_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'airdash_shoot' with key 'airdash_shoot_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=airdash_charge_full, unchargedKey=airdash, regions=2, durations=2
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'airdash_charge_full' with key 'airdash_charge_full_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=airdash_charge_half, unchargedKey=airdash, regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'airdash_charge_half' with key 'airdash_charge_half_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'crouch' with key 'crouch_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'crouch_shoot' with key 'crouch_shoot_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=crouch_charge_half, unchargedKey=crouch, regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'crouch_charge_half' with key 'crouch_charge_half_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=crouch_charge_full, unchargedKey=crouch, regions=2, durations=2
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'crouch_charge_full' with key 'crouch_charge_full_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'slip' with key 'slip_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=slip_charge_full, unchargedKey=slip, regions=2, durations=2
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'slip_charge_full' with key 'slip_charge_full_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=slip_charge_half, unchargedKey=slip, regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'slip_charge_half' with key 'slip_charge_half_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'slip_shoot' with key 'slip_shoot_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'frozen' with key 'frozen_megabuster'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'cartin' with key 'cartin_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_charge_full, unchargedKey=cartin, regions=2, durations=2
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'cartin_charge_full' with key 'cartin_charge_full_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_charge_half, unchargedKey=cartin, regions=6, durations=6
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=7, durations=7
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'cartin_charge_half' with key 'cartin_charge_half_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'cartin_damaged' with key 'cartin_damaged_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump' with key 'cartin_jump_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_jump_charge_full, unchargedKey=cartin_jump, regions=2, durations=2
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump_charge_full' with key 'cartin_jump_charge_full_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_jump_charge_half, unchargedKey=cartin_jump, regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump_charge_half' with key 'cartin_jump_charge_half_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump_shoot' with key 'cartin_jump_shoot_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'cartin_shoot' with key 'cartin_shoot_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'climb' with key 'climb_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_charge_half, unchargedKey=climb, regions=6, durations=6
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=7, durations=7
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'climb_charge_half' with key 'climb_charge_half_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_charge_full, unchargedKey=climb, regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=5, durations=5
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'climb_charge_full' with key 'climb_charge_full_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish' with key 'climb_finish_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_finish_charge_full, unchargedKey=climb_finish, regions=2, durations=2
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish_charge_full' with key 'climb_finish_charge_full_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_finish_charge_half, unchargedKey=climb_finish, regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish_charge_half' with key 'climb_finish_charge_half_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'climb_still' with key 'climb_still_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_shoot' with key 'climb_still_shoot_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_still_charge_full, unchargedKey=climb_still, regions=2, durations=2
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_charge_full' with key 'climb_still_charge_full_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_still_charge_half, unchargedKey=climb_still, regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_charge_half' with key 'climb_still_charge_half_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'stand' with key 'stand_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=stand_charge_full, unchargedKey=stand, regions=2, durations=2
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'stand_charge_full' with key 'stand_charge_full_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=stand_charge_half, unchargedKey=stand, regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'stand_charge_half' with key 'stand_charge_half_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'stand_shoot' with key 'stand_shoot_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'damaged' with key 'damaged_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'stunned' with key 'stunned_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'run_trans' with key 'run_trans_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'run_trans_shoot' with key 'run_trans_shoot_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'run' with key 'run_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=run_charge_full, unchargedKey=run, regions=8, durations=8
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=9, durations=9
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'run_charge_full' with key 'run_charge_full_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=run_charge_half, unchargedKey=run, regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=5, durations=5
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'run_charge_half' with key 'run_charge_half_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'run_shoot' with key 'run_shoot_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'jump' with key 'jump_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=jump_charge_full, unchargedKey=jump, regions=2, durations=2
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'jump_charge_full' with key 'jump_charge_full_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=jump_charge_half, unchargedKey=jump, regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'jump_charge_half' with key 'jump_charge_half_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'jump_shoot' with key 'jump_shoot_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'swim' with key 'swim_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=swim_charge_full, unchargedKey=swim, regions=2, durations=2
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'swim_charge_full' with key 'swim_charge_full_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=swim_charge_half, unchargedKey=swim, regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'swim_charge_half' with key 'swim_charge_half_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'swim_shoot' with key 'swim_shoot_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'wallslide' with key 'wallslide_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=wallslide_charge_full, unchargedKey=wallslide, regions=2, durations=2
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_charge_full' with key 'wallslide_charge_full_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=wallslide_charge_half, unchargedKey=wallslide, regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_charge_half' with key 'wallslide_charge_half_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_shoot' with key 'wallslide_shoot_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'groundslide' with key 'groundslide_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_shoot' with key 'groundslide_shoot_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=groundslide_charge_full, unchargedKey=groundslide, regions=2, durations=2
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_charge_full' with key 'groundslide_charge_full_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=groundslide_charge_half, unchargedKey=groundslide, regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_charge_half' with key 'groundslide_charge_half_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'airdash' with key 'airdash_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'airdash_shoot' with key 'airdash_shoot_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=airdash_charge_full, unchargedKey=airdash, regions=2, durations=2
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'airdash_charge_full' with key 'airdash_charge_full_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=airdash_charge_half, unchargedKey=airdash, regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'airdash_charge_half' with key 'airdash_charge_half_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'crouch' with key 'crouch_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'crouch_shoot' with key 'crouch_shoot_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=crouch_charge_half, unchargedKey=crouch, regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'crouch_charge_half' with key 'crouch_charge_half_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=crouch_charge_full, unchargedKey=crouch, regions=2, durations=2
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'crouch_charge_full' with key 'crouch_charge_full_icecube'
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'slip' with key 'slip_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=slip_charge_full, unchargedKey=slip, regions=2, durations=2
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'slip_charge_full' with key 'slip_charge_full_icecube'
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=slip_charge_half, unchargedKey=slip, regions=3, durations=3
+23:49:38 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:38 | DEBUG | MegamanAnimations | init(): put animation 'slip_charge_half' with key 'slip_charge_half_icecube'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'slip_shoot' with key 'slip_shoot_icecube'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'cartin' with key 'cartin_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_charge_full, unchargedKey=cartin, regions=2, durations=2
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'cartin_charge_full' with key 'cartin_charge_full_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_charge_half, unchargedKey=cartin, regions=6, durations=6
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=7, durations=7
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'cartin_charge_half' with key 'cartin_charge_half_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'cartin_damaged' with key 'cartin_damaged_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump' with key 'cartin_jump_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_jump_charge_full, unchargedKey=cartin_jump, regions=2, durations=2
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump_charge_full' with key 'cartin_jump_charge_full_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_jump_charge_half, unchargedKey=cartin_jump, regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump_charge_half' with key 'cartin_jump_charge_half_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump_shoot' with key 'cartin_jump_shoot_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'cartin_shoot' with key 'cartin_shoot_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'climb' with key 'climb_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_charge_half, unchargedKey=climb, regions=6, durations=6
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=7, durations=7
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'climb_charge_half' with key 'climb_charge_half_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_charge_full, unchargedKey=climb, regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=5, durations=5
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'climb_charge_full' with key 'climb_charge_full_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish' with key 'climb_finish_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_finish_charge_full, unchargedKey=climb_finish, regions=2, durations=2
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish_charge_full' with key 'climb_finish_charge_full_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_finish_charge_half, unchargedKey=climb_finish, regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish_charge_half' with key 'climb_finish_charge_half_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'climb_still' with key 'climb_still_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_shoot' with key 'climb_still_shoot_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_still_charge_full, unchargedKey=climb_still, regions=2, durations=2
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_charge_full' with key 'climb_still_charge_full_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_still_charge_half, unchargedKey=climb_still, regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_charge_half' with key 'climb_still_charge_half_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'stand' with key 'stand_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=stand_charge_full, unchargedKey=stand, regions=2, durations=2
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'stand_charge_full' with key 'stand_charge_full_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=stand_charge_half, unchargedKey=stand, regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'stand_charge_half' with key 'stand_charge_half_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'stand_shoot' with key 'stand_shoot_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'damaged' with key 'damaged_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'stunned' with key 'stunned_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'run_trans' with key 'run_trans_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'run_trans_shoot' with key 'run_trans_shoot_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'run' with key 'run_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=run_charge_full, unchargedKey=run, regions=8, durations=8
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=9, durations=9
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'run_charge_full' with key 'run_charge_full_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=run_charge_half, unchargedKey=run, regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=5, durations=5
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'run_charge_half' with key 'run_charge_half_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'run_shoot' with key 'run_shoot_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'jump' with key 'jump_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=jump_charge_full, unchargedKey=jump, regions=2, durations=2
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'jump_charge_full' with key 'jump_charge_full_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=jump_charge_half, unchargedKey=jump, regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'jump_charge_half' with key 'jump_charge_half_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'jump_shoot' with key 'jump_shoot_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'swim' with key 'swim_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=swim_charge_full, unchargedKey=swim, regions=2, durations=2
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'swim_charge_full' with key 'swim_charge_full_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=swim_charge_half, unchargedKey=swim, regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'swim_charge_half' with key 'swim_charge_half_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'swim_shoot' with key 'swim_shoot_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'wallslide' with key 'wallslide_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=wallslide_charge_full, unchargedKey=wallslide, regions=2, durations=2
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_charge_full' with key 'wallslide_charge_full_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=wallslide_charge_half, unchargedKey=wallslide, regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_charge_half' with key 'wallslide_charge_half_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_shoot' with key 'wallslide_shoot_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'groundslide' with key 'groundslide_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_shoot' with key 'groundslide_shoot_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=groundslide_charge_full, unchargedKey=groundslide, regions=2, durations=2
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_charge_full' with key 'groundslide_charge_full_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=groundslide_charge_half, unchargedKey=groundslide, regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_charge_half' with key 'groundslide_charge_half_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'airdash' with key 'airdash_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'airdash_shoot' with key 'airdash_shoot_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=airdash_charge_full, unchargedKey=airdash, regions=2, durations=2
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'airdash_charge_full' with key 'airdash_charge_full_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=airdash_charge_half, unchargedKey=airdash, regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'airdash_charge_half' with key 'airdash_charge_half_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'crouch' with key 'crouch_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'crouch_shoot' with key 'crouch_shoot_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=crouch_charge_half, unchargedKey=crouch, regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'crouch_charge_half' with key 'crouch_charge_half_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=crouch_charge_full, unchargedKey=crouch, regions=2, durations=2
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'crouch_charge_full' with key 'crouch_charge_full_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'slip' with key 'slip_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=slip_charge_full, unchargedKey=slip, regions=2, durations=2
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'slip_charge_full' with key 'slip_charge_full_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=slip_charge_half, unchargedKey=slip, regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'slip_charge_half' with key 'slip_charge_half_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'slip_shoot' with key 'slip_shoot_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'frozen' with key 'frozen_magmawave'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'cartin' with key 'cartin_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_charge_full, unchargedKey=cartin, regions=2, durations=2
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'cartin_charge_full' with key 'cartin_charge_full_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_charge_half, unchargedKey=cartin, regions=6, durations=6
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=7, durations=7
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'cartin_charge_half' with key 'cartin_charge_half_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'cartin_damaged' with key 'cartin_damaged_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump' with key 'cartin_jump_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_jump_charge_full, unchargedKey=cartin_jump, regions=2, durations=2
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump_charge_full' with key 'cartin_jump_charge_full_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_jump_charge_half, unchargedKey=cartin_jump, regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump_charge_half' with key 'cartin_jump_charge_half_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump_shoot' with key 'cartin_jump_shoot_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'cartin_shoot' with key 'cartin_shoot_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'climb' with key 'climb_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_charge_half, unchargedKey=climb, regions=6, durations=6
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=7, durations=7
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'climb_charge_half' with key 'climb_charge_half_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_charge_full, unchargedKey=climb, regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=5, durations=5
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'climb_charge_full' with key 'climb_charge_full_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish' with key 'climb_finish_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_finish_charge_full, unchargedKey=climb_finish, regions=2, durations=2
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish_charge_full' with key 'climb_finish_charge_full_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_finish_charge_half, unchargedKey=climb_finish, regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish_charge_half' with key 'climb_finish_charge_half_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'climb_still' with key 'climb_still_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_shoot' with key 'climb_still_shoot_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_still_charge_full, unchargedKey=climb_still, regions=2, durations=2
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_charge_full' with key 'climb_still_charge_full_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_still_charge_half, unchargedKey=climb_still, regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_charge_half' with key 'climb_still_charge_half_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'stand' with key 'stand_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=stand_charge_full, unchargedKey=stand, regions=2, durations=2
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'stand_charge_full' with key 'stand_charge_full_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=stand_charge_half, unchargedKey=stand, regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'stand_charge_half' with key 'stand_charge_half_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'stand_shoot' with key 'stand_shoot_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'damaged' with key 'damaged_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'stunned' with key 'stunned_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'run_trans' with key 'run_trans_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'run_trans_shoot' with key 'run_trans_shoot_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'run' with key 'run_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=run_charge_full, unchargedKey=run, regions=8, durations=8
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=9, durations=9
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'run_charge_full' with key 'run_charge_full_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=run_charge_half, unchargedKey=run, regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=5, durations=5
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'run_charge_half' with key 'run_charge_half_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'run_shoot' with key 'run_shoot_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'jump' with key 'jump_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=jump_charge_full, unchargedKey=jump, regions=2, durations=2
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'jump_charge_full' with key 'jump_charge_full_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=jump_charge_half, unchargedKey=jump, regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'jump_charge_half' with key 'jump_charge_half_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'jump_shoot' with key 'jump_shoot_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'swim' with key 'swim_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=swim_charge_full, unchargedKey=swim, regions=2, durations=2
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'swim_charge_full' with key 'swim_charge_full_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=swim_charge_half, unchargedKey=swim, regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'swim_charge_half' with key 'swim_charge_half_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'swim_shoot' with key 'swim_shoot_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'wallslide' with key 'wallslide_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=wallslide_charge_full, unchargedKey=wallslide, regions=2, durations=2
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_charge_full' with key 'wallslide_charge_full_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=wallslide_charge_half, unchargedKey=wallslide, regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_charge_half' with key 'wallslide_charge_half_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_shoot' with key 'wallslide_shoot_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'groundslide' with key 'groundslide_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_shoot' with key 'groundslide_shoot_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=groundslide_charge_full, unchargedKey=groundslide, regions=2, durations=2
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_charge_full' with key 'groundslide_charge_full_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=groundslide_charge_half, unchargedKey=groundslide, regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_charge_half' with key 'groundslide_charge_half_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'airdash' with key 'airdash_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'airdash_shoot' with key 'airdash_shoot_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=airdash_charge_full, unchargedKey=airdash, regions=2, durations=2
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'airdash_charge_full' with key 'airdash_charge_full_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=airdash_charge_half, unchargedKey=airdash, regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'airdash_charge_half' with key 'airdash_charge_half_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'crouch' with key 'crouch_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'crouch_shoot' with key 'crouch_shoot_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=crouch_charge_half, unchargedKey=crouch, regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'crouch_charge_half' with key 'crouch_charge_half_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=crouch_charge_full, unchargedKey=crouch, regions=2, durations=2
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'crouch_charge_full' with key 'crouch_charge_full_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'slip' with key 'slip_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=slip_charge_full, unchargedKey=slip, regions=2, durations=2
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'slip_charge_full' with key 'slip_charge_full_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=slip_charge_half, unchargedKey=slip, regions=3, durations=3
+23:49:39 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'slip_charge_half' with key 'slip_charge_half_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'slip_shoot' with key 'slip_shoot_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'frozen' with key 'frozen_moonscythe'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'jetpack' with key 'jetpack_rushjetpack'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'jetpack_shoot' with key 'jetpack_shoot_rushjetpack'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'climb' with key 'climb_rushjetpack'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish' with key 'climb_finish_rushjetpack'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_shoot' with key 'climb_still_shoot_rushjetpack'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'stand' with key 'stand_rushjetpack'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'stand_shoot' with key 'stand_shoot_rushjetpack'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'damaged' with key 'damaged_rushjetpack'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'run_trans' with key 'run_trans_rushjetpack'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'run_trans_shoot' with key 'run_trans_shoot_rushjetpack'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'run' with key 'run_rushjetpack'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'run_shoot' with key 'run_shoot_rushjetpack'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'jump' with key 'jump_rushjetpack'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'jump_shoot' with key 'jump_shoot_rushjetpack'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'swim' with key 'swim_rushjetpack'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'swim_shoot' with key 'swim_shoot_rushjetpack'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'wallslide' with key 'wallslide_rushjetpack'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_shoot' with key 'wallslide_shoot_rushjetpack'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'groundslide' with key 'groundslide_rushjetpack'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_shoot' with key 'groundslide_shoot_rushjetpack'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'airdash' with key 'airdash_rushjetpack'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'airdash_shoot' with key 'airdash_shoot_rushjetpack'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'slip' with key 'slip_rushjetpack'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'slip_shoot' with key 'slip_shoot_rushjetpack'
+23:49:39 | DEBUG | MegamanAnimations | init(): put animation 'frozen' with key 'frozen_rushjetpack'

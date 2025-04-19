@@ -538,6 +538,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         else -> true
     }
 
+    override fun getDamageDuration(damager: IDamager) = MegamanValues.DAMAGE_DURATION
+
     fun addDamageListener(damageListener: IMegamanDamageListener) = damageListeners.add(damageListener)
 
     fun removeDamageListener(damageListener: IMegamanDamageListener) = damageListeners.remove(damageListener)

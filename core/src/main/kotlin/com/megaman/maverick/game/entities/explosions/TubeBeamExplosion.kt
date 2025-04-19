@@ -105,9 +105,9 @@ class TubeBeamExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 15))
         sprite.setSize(4.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
-        return spritesComponent
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

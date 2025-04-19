@@ -17,7 +17,7 @@ import kotlin.reflect.KClass
 
 abstract class AbstractHealthEntity(
     game: MegamanMaverickGame,
-    dmgDuration: Float = DEFAULT_DMG_DURATION,
+    protected var dmgDuration: Float = DEFAULT_DMG_DURATION,
     dmgBlinkDur: Float = DEFAULT_DMG_BLINK_DUR
 ) : MegaGameEntity(game), IHealthEntity, IDamageable {
 
@@ -73,12 +73,17 @@ abstract class AbstractHealthEntity(
 
         translateHealth(-editedDamage)
 
-        damageTimer.reset()
+        val dmgDur = getDamageDuration(damager)
+        damageTimer.resetDuration(dmgDur)
 
         return true
     }
 
+    protected open fun getDamageDuration(damager: IDamager) = dmgDuration
+
     protected open fun editDamageFrom(damager: IDamager, baseDamage: Int) = baseDamage
+
+    protected open fun onDamageFinished() {}
 
     protected open fun onHealthDepleted() {
         destroy()
@@ -93,6 +98,7 @@ abstract class AbstractHealthEntity(
         pointsComponent.putListener(ConstKeys.HEALTH) {
             if (it.current <= ConstVals.MIN_HEALTH && !wasHealthDepleted) {
                 wasHealthDepleted = true
+
                 onHealthDepleted()
             }
         }
@@ -110,11 +116,16 @@ abstract class AbstractHealthEntity(
 
                     if (damageBlinkTimer.isFinished()) {
                         damageBlinkTimer.reset()
+
                         damageBlink = !damageBlink
                     }
                 }
 
-                else -> damageBlink = false
+                else -> {
+                    if (damageTimer.isJustFinished()) onDamageFinished()
+
+                    damageBlink = false
+                }
             }
         }
     }

@@ -44,11 +44,13 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.projectiles.UFOBomb
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.FacingUtils
@@ -58,11 +60,19 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
     companion object {
         const val TAG = "UFOhNoBot"
+
+        private const val MAX_SPAWNED = 2
+
         private const val RISE_VEL = 8f
+
         private const val X_VEL_WITH_BOMB = 5f
         private const val X_VEL_NO_BOMB = 10f
+
         private const val DROP_DURATION = 1f
         private const val BOMB_DESTROYED_DUR = 0.5f
+
+        private const val BLOCK_BUMPS_BEFORE_EXPLODE = 2
+
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -71,12 +81,14 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     private val dropTimer = Timer()
     private val triggers = Array<GameRectangle>()
 
-    private lateinit var start: Vector2
-    private lateinit var target: Vector2
+    private val start = Vector2()
+    private val target = Vector2()
 
-    private var waiting = true
     private var dropped = false
     private var rising = false
+    private var waiting = true
+
+    private var blockBumps = 0
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -87,6 +99,8 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         super.init()
         addComponent(defineAnimationsComponent())
     }
+
+    override fun canSpawn(spawnProps: Properties) = MegaGameEntities.getOfTag(TAG).size < MAX_SPAWNED
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "spawn(): spawnProps=$spawnProps")
@@ -101,23 +115,32 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         rising = false
 
         waiting = spawnProps.getOrDefault(ConstKeys.WAIT, true, Boolean::class)
-        if (waiting) {
-            spawnProps.getAllMatching { it.toString().contains(ConstKeys.TRIGGER) }.forEach {
-                val trigger = (it.second as RectangleMapObject).rectangle.toGameRectangle(false)
-                triggers.add(trigger)
+        when {
+            waiting -> {
+                spawnProps.getAllMatching { it.toString().contains(ConstKeys.TRIGGER) }.forEach {
+                    val trigger = (it.second as RectangleMapObject).rectangle.toGameRectangle(false)
+                    triggers.add(trigger)
+                }
+
+                start.set(spawnProps.get(ConstKeys.START, RectangleMapObject::class)!!.rectangle.getCenter())
+                target.set(spawnProps.get(ConstKeys.TARGET, RectangleMapObject::class)!!.rectangle.getCenter())
+
+                dropTimer.resetDuration(DROP_DURATION)
+
+                body.forEachFixture { it.setActive(false) }
             }
-            start = spawnProps.get(ConstKeys.START, RectangleMapObject::class)!!.rectangle.getCenter(false)
-            target = spawnProps.get(ConstKeys.TARGET, RectangleMapObject::class)!!.rectangle.getCenter(false)
 
-            dropTimer.resetDuration(DROP_DURATION)
+            else -> setToHover()
+        }
 
-            body.forEachFixture { it.setActive(false) }
-        } else setToHover()
+        blockBumps = 0
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+
+        triggers.forEach { GameObjectPools.free(it) }
         triggers.clear()
     }
 
@@ -130,7 +153,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     }
 
     private fun dropBomb() {
-        val spawn = body.getPositionPoint(Position.BOTTOM_CENTER).sub(0f, 0.6f * ConstVals.PPM)
+        val spawn = body.getPositionPoint(Position.BOTTOM_CENTER).sub(0f, 0.75f * ConstVals.PPM)
 
         val bomb = MegaEntityFactory.fetch(UFOBomb::class)!!
         bomb.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.OWNER pairTo this))
@@ -150,8 +173,8 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (waiting) {
-                if (triggers.any { trigger -> megaman.body.getBounds().overlaps(trigger) }) {
+            if (waiting) when {
+                triggers.any { trigger -> megaman.body.getBounds().overlaps(trigger) } -> {
                     waiting = false
                     rising = true
 
@@ -167,7 +190,9 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
                         trajectory.x < 0f -> Facing.LEFT
                         else -> Facing.RIGHT
                     }
-                } else return@add
+                }
+
+                else -> return@add
             }
 
             if (rising) when {
@@ -279,7 +304,19 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            if (!waiting && !rising && FacingUtils.isFacingBlock(this)) swapFacing()
+            if (!waiting && !rising && FacingUtils.isFacingBlock(this)) {
+                blockBumps++
+                if (blockBumps >= BLOCK_BUMPS_BEFORE_EXPLODE) {
+                    val explosion = MegaEntityFactory.fetch(Explosion::class)!!
+                    explosion.spawn(props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo body.getCenter()))
+
+                    requestToPlaySound(SoundAsset.EXPLOSION_2_SOUND, false)
+
+                    destroy()
+                }
+
+                swapFacing()
+            }
 
             val active = !dropped
             bombDamagerFixture.setActive(active)

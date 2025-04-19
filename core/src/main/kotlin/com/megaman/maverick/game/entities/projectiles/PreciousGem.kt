@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.entities
+package com.megaman.maverick.game.entities.projectiles
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
@@ -81,9 +81,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
-
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-
         super.onSpawn(spawnProps)
 
         val position = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -98,17 +96,15 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         setSizeByIndex(0)
 
         pauseBeforeTargetMegamanTimer.reset()
-        targetMegamanAfterPause = spawnProps.get("${ConstKeys.TARGET}_${Megaman.TAG}", Boolean::class)!!
+        targetMegamanAfterPause = spawnProps.get("${ConstKeys.TARGET}_${Megaman.Companion.TAG}", Boolean::class)!!
         targetReached = false
 
         speed = spawnProps.get(ConstKeys.SPEED, Float::class)!!
-
         color = spawnProps.get(ConstKeys.COLOR, PreciousGemColor::class)!!
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
-
         super.onDestroy()
     }
 
@@ -184,7 +180,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         return BodyComponentCreator.create(
             this,
             body,
-            BodyFixtureDef.of(FixtureType.PROJECTILE, FixtureType.DAMAGER, FixtureType.SHIELD)
+            BodyFixtureDef.Companion.of(FixtureType.PROJECTILE, FixtureType.DAMAGER, FixtureType.SHIELD)
         )
     }
 

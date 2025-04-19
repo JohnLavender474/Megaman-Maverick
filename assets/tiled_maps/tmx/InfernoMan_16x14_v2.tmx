@@ -367,7 +367,7 @@
     <property name="spawner" type="object" value="579"/>
    </properties>
   </object>
-  <object id="579" name="MeteorSpawner" x="11776" y="480" width="448" height="32"/>
+  <object id="579" name="MeteorSpawner" x="11840" y="480" width="320" height="32"/>
   <object id="581" name="Scanner" x="10272" y="928" width="320" height="64"/>
   <object id="583" name="Target" x="9664" y="1456" width="32" height="32"/>
   <object id="589" name="Scanner" x="7840" y="1184" width="320" height="64"/>

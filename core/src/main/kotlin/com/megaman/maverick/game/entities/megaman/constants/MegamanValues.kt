@@ -60,7 +60,7 @@ object MegamanValues {
 
     const val CLIMB_VEL = 3.25f
 
-    const val DAMAGE_DURATION = .75f
+    const val DAMAGE_DURATION = 0.5f
     const val DAMAGE_RECOVERY_TIME = 1.5f
     const val DAMAGE_FLASH_DURATION = 0.05f
 

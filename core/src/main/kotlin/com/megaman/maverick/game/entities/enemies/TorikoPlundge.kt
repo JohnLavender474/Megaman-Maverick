@@ -42,7 +42,6 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.IDamageNegotiator
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
@@ -56,7 +55,6 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
-import kotlin.reflect.KClass
 
 class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IParentEntity, IDirectional {
 
@@ -67,10 +65,6 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
         private const val PLUNGE_2_DUR = 0.5f
         private const val PLUNGE_3_DUR = 0.25f
         private const val PLUNGE_SPEED = 3f
-
-        private val damageNegotiations = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-            // TODO
-        )
 
         private val animDefs = orderedMapOf(
             "idle" pairTo AnimationDef(2, 1, gdxArrayOf(1f, 0.15f), true),
@@ -83,7 +77,7 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
 
     override val damageNegotiator = object : IDamageNegotiator {
 
-        override fun get(damager: IDamager) = damageNegotiations[damager::class]?.get(damager) ?: 0
+        override fun get(damager: IDamager) = 0
     }
     override var children = Array<IGameEntity>()
     override var direction: Direction
@@ -100,14 +94,11 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
-
         super.init()
-
         addComponent(defineAnimationsComponent())
     }
 
@@ -116,9 +107,7 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
             .collectValues<RectangleMapObject> { key, value -> key.toString().contains(ConstKeys.BLOCK) }
             .map { obj -> obj.properties.get(ConstKeys.ID, Int::class.java) }
             .any { id -> MegaGameEntities.hasAnyOfMapObjectId(id) }
-
         GameLogger.debug(TAG, "canSpawn(): canSpawn=$canSpawn, spawnProps=$spawnProps")
-
         return canSpawn
     }
 
@@ -321,7 +310,7 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
         triggerFixture.setConsumer { processState, fixture ->
             if (processState == ProcessState.BEGIN) trigger(fixture.getEntity() as IBodyEntity)
         }
-        triggerFixture.offsetFromBodyAttachment.y = (body.getHeight() / 2f) + 0.75f * ConstVals.PPM
+        triggerFixture.offsetFromBodyAttachment.y = (body.getHeight() / 2f) + ConstVals.PPM
         body.addFixture(triggerFixture)
         triggerFixture.drawingColor = Color.BLUE
         debugShapes.add { triggerFixture }
