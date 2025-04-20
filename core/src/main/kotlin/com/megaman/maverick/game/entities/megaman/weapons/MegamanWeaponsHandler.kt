@@ -176,7 +176,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> 0.25f
             megaman.isBehaviorActive(BehaviorType.JETPACKING) -> 0.1f
             megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.15f
-            megaman.isBehaviorActive(BehaviorType.CROUCHING) -> -0.2f
+            megaman.isBehaviorActive(BehaviorType.CROUCHING) -> 0.125f
             megaman.isBehaviorActive(BehaviorType.CLIMBING) -> 0.15f
             !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> when (megaman.direction) {
                 Direction.UP -> -0.05f
@@ -357,6 +357,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         when (weapon) {
             MegamanWeapon.MEGA_BUSTER,
             MegamanWeapon.RUSH_JETPACK -> shootMegaBuster(stat)
+
             MegamanWeapon.ICE_CUBE -> shootIceCube(stat)
             MegamanWeapon.MAGMA_WAVE -> shootFireBall(stat)
             MegamanWeapon.MOON_SCYTHE -> shootMoonScythes(stat)

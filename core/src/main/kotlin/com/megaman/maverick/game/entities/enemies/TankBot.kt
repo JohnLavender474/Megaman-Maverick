@@ -13,6 +13,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
+import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
@@ -37,12 +38,11 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -51,13 +51,18 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
 
     companion object {
         const val TAG = "TankBot"
+
         private const val X_VEL = 2f
+
         private const val TURN_DUR = 0.4f
         private const val TURN_DELAY = 0.25f
-        private const val SHOOT_DELAY = 0.5f
+
+        private const val SHOOT_DELAY = 0.75f
+
         private const val LAUNCH_IMPULSE_X = 8f
         private const val LAUNCH_IMPULSE_Y = 8f
         private const val LAUNCH_GRAVITY = -0.15f
+
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -73,9 +78,7 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            regions.put("roll", atlas.findRegion("$TAG/roll"))
-            regions.put("stop", atlas.findRegion("$TAG/stop"))
-            regions.put("turn", atlas.findRegion("$TAG/turn"))
+            gdxArrayOf("roll", "stop", "turn").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -91,6 +94,7 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
         facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         shootDelayTimer.reset()
+
         turnDelayTimer.setToEnd()
         turnTimer.setToEnd()
 
@@ -108,13 +112,13 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
 
         val gravity = GameObjectPools.fetch(Vector2::class).set(0f, LAUNCH_GRAVITY * ConstVals.PPM)
 
-        val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
+        val bullet = MegaEntityFactory.fetch(Bullet::class)!!
         bullet.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.POSITION pairTo spawn,
+                ConstKeys.IMPULSE pairTo impulse,
                 ConstKeys.GRAVITY pairTo gravity,
-                ConstKeys.IMPULSE pairTo impulse
             )
         )
 
@@ -132,18 +136,22 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
         updatablesComponent.add { delta ->
             if (!turnDelayTimer.isFinished()) {
                 turnDelayTimer.update(delta)
-                if (turnDelayTimer.isFinished()) turnTimer.reset()
-                else return@add
+                when {
+                    turnDelayTimer.isFinished() -> turnTimer.reset()
+                    else -> return@add
+                }
             }
 
             if (!turnTimer.isFinished()) {
                 turnTimer.update(delta)
-                if (turnTimer.isFinished()) swapFacing()
-                else return@add
+                when {
+                    turnTimer.isFinished() -> swapFacing()
+                    else -> return@add
+                }
             }
 
-            if ((isFacing(Facing.LEFT) && megaman.body.getX() > body.getMaxX()) ||
-                (isFacing(Facing.RIGHT) && megaman.body.getMaxX() < body.getX())
+            if ((isFacing(Facing.LEFT) && megaman.body.getX() >= body.getMaxX()) ||
+                (isFacing(Facing.RIGHT) && megaman.body.getMaxX() <= body.getX())
             ) {
                 startTurning()
                 return@add
@@ -175,51 +183,49 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body }
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
-        body.addFixture(bodyFixture)
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        body.addFixture(damagerFixture)
-
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
-        body.addFixture(damageableFixture)
-
         val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFixture.offsetFromBodyAttachment = Vector2(-0.65f * ConstVals.PPM, -0.5f * ConstVals.PPM)
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
         leftFixture.drawingColor = Color.YELLOW
-        debugShapes.add { leftFixture}
+        debugShapes.add { leftFixture }
 
         val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFixture.offsetFromBodyAttachment = Vector2(0.65f * ConstVals.PPM, -0.5f * ConstVals.PPM)
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
         rightFixture.drawingColor = Color.YELLOW
-        debugShapes.add { rightFixture}
+        debugShapes.add { rightFixture }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(
+            this,
+            body,
+            BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
+        )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM, 1.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
+            val position = Position.BOTTOM_CENTER
+            sprite.setPosition(body.getPositionPoint(position), position)
             sprite.setFlip(isFacing(Facing.LEFT), false)
             sprite.hidden = damageBlink
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: (String?) -> String? = {
-            if (!turnDelayTimer.isFinished() || stopped) "stop"
-            else if (!turnTimer.isFinished()) "turn"
-            else "roll"
+            when {
+                !turnTimer.isFinished() -> "turn"
+                !turnDelayTimer.isFinished() || stopped -> "stop"
+                else -> "roll"
+            }
         }
         val animations = objectMapOf<String, IAnimation>(
             "stop" pairTo Animation(regions["stop"]),

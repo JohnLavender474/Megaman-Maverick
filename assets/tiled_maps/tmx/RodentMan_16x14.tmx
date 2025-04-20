@@ -1013,7 +1013,7 @@
     <property name="trigger" type="object" value="207"/>
    </properties>
   </object>
-  <object id="288" name="SniperJoe" x="3064" y="1712" width="16" height="16"/>
+  <object id="288" name="SniperJoe" x="3048" y="1712" width="16" height="16"/>
   <object id="297" name="SniperJoe" x="2504" y="1776" width="16" height="16"/>
   <object id="298" name="ShieldAttacker" x="2656" y="1576" width="16" height="16">
    <properties>
