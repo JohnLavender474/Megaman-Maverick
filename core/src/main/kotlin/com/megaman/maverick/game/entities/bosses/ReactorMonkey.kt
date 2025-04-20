@@ -27,6 +27,7 @@ import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
@@ -234,7 +235,7 @@ class ReactorMonkey(game: MegamanMaverickGame) :
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(3.5f * ConstVals.PPM, 4.25f * ConstVals.PPM)
+        body.setSize(3.5f * ConstVals.PPM, 5f * ConstVals.PPM)
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         bodyFixture.putProperty("${ConstKeys.RECEIVE}_${ConstKeys.FORCE}", false)
@@ -261,13 +262,17 @@ class ReactorMonkey(game: MegamanMaverickGame) :
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
-        sprite.setSize(7.5f * ConstVals.PPM, 8f * ConstVals.PPM)
+        sprite.setSize(10f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
         component.putUpdateFunction { _, _ ->
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
+            sprite.translateX(0.75f * ConstVals.PPM * -facing.value)
+
             sprite.setFlip(isFacing(Facing.RIGHT), false)
+
             sprite.hidden = damageBlink || !ready
+
             sprite.setAlpha(if (defeated) 1f - defeatTimer.getRatio() else 1f)
         }
         return component
@@ -280,10 +285,10 @@ class ReactorMonkey(game: MegamanMaverickGame) :
             return@key key
         }
         val animations = objectMapOf<String, IAnimation>(
-            "stand" pairTo Animation(regions["stand"], 1, 2, gdxArrayOf(1f, 0.1f), true),
+            "stand" pairTo Animation(regions["stand"], 2, 1, gdxArrayOf(1f, 0.1f), true),
             "stand_damaged" pairTo Animation(regions["stand_damaged"]),
-            "throw" pairTo Animation(regions["throw"], 1, 3, 0.1f, false),
-            "throw_damaged" pairTo Animation(regions["throw_damaged"], 1, 3, 0.1f, false)
+            "throw" pairTo Animation(regions["throw"], 3, 1, 0.1f, false),
+            "throw_damaged" pairTo Animation(regions["throw_damaged"], 3, 1, 0.1f, false)
         )
         val onChangeKey: (String?, String?) -> Unit = { previous, current ->
             if ((current == "throw_damaged" && previous == "throw") ||

@@ -133,7 +133,7 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(2.5f * ConstVals.PPM)
+        body.setSize(3.5f * ConstVals.PPM)
         body.physics.gravity.y = GRAVITY * ConstVals.PPM
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
@@ -141,38 +141,23 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(ConstVals.PPM.toFloat()))
-        body.addFixture(shieldFixture)
-        debugShapes.add { shieldFixture }
-
-        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(1.25f * ConstVals.PPM))
-        body.addFixture(projectileFixture)
-        debugShapes.add { projectileFixture }
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(1.25f * ConstVals.PPM))
-        body.addFixture(damagerFixture)
-
-        val waterListenerFixture =
-            Fixture(body, FixtureType.WATER_LISTENER, GameCircle().setRadius(1.25f * ConstVals.PPM))
-        body.addFixture(waterListenerFixture)
-
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        headFixture.offsetFromBodyAttachment.y = 1.25f * ConstVals.PPM
+        headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
         headFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ -> bounce(Direction.DOWN) }
         body.addFixture(headFixture)
         debugShapes.add { headFixture }
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyAttachment.y = -1.25f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         feetFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ -> bounce(Direction.UP) }
         body.addFixture(feetFixture)
         debugShapes.add { feetFixture }
 
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 1.5f * ConstVals.PPM))
-        leftFixture.offsetFromBodyAttachment.x = -1.25f * ConstVals.PPM
+        leftFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ -> bounce(Direction.RIGHT) }
         body.addFixture(leftFixture)
@@ -180,7 +165,7 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 1.5f * ConstVals.PPM))
-        rightFixture.offsetFromBodyAttachment.x = 1.25f * ConstVals.PPM
+        rightFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
         rightFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ -> bounce(Direction.LEFT) }
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
@@ -188,12 +173,21 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        val circle = GameCircle().setRadius(body.getWidth() / 2f)
+
+        return BodyComponentCreator.create(
+            this, body, BodyFixtureDef.of(
+                FixtureType.SHIELD pairTo circle.copy(),
+                FixtureType.DAMAGER pairTo circle.copy(),
+                FixtureType.PROJECTILE pairTo circle.copy(),
+                FixtureType.WATER_LISTENER pairTo circle.copy()
+            )
+        )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
-        sprite.setSize(3f * ConstVals.PPM)
+        sprite.setSize(4f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
         component.putUpdateFunction { _, _ ->
             sprite.hidden = hidden

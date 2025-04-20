@@ -6,7 +6,6 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IDirectional
@@ -32,6 +31,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.setEntity
@@ -42,12 +42,12 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
     companion object {
         const val TAG = "PropellerPlatform"
 
-        private const val BODY_WIDTH = 1.25f
-        private const val BODY_HEIGHT = 0.25f
+        private const val BODY_WIDTH = 2f
+        private const val BODY_HEIGHT = 0.5f
 
-        private const val DAMAGER_WIDTH = 0.5f
-        private const val DAMAGER_HEIGHT = 0.25f
-        private const val DAMAGER_OFFSET_Y = 0.6f
+        private const val DAMAGER_WIDTH = 1.5f
+        private const val DAMAGER_HEIGHT = 0.5f
+        private const val DAMAGER_OFFSET_Y = 0.75f
 
         private var region: TextureRegion? = null
     }
@@ -139,22 +139,19 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
-            sprite.setOriginCenter()
-            sprite.rotation = direction.rotation
-            val position = when (direction) {
-                Direction.UP -> Position.TOP_CENTER
-                Direction.DOWN -> Position.BOTTOM_CENTER
-                Direction.LEFT -> Position.CENTER_LEFT
-                Direction.RIGHT -> Position.CENTER_RIGHT
-            }
+        sprite.setSize(2f * ConstVals.PPM)
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
+            val position = DirectionPositionMapper.getPosition(direction)
             val bodyPosition = body.getPositionPoint(position)
             sprite.setPosition(bodyPosition, position)
+
+            sprite.setOriginCenter()
+            sprite.rotation = direction.rotation
+
             sprite.hidden = hidden
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

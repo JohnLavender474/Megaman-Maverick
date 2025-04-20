@@ -42,6 +42,7 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.hazards.DrippingToxicGoop
 import com.megaman.maverick.game.entities.projectiles.RollingBotShot
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -124,12 +125,21 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         else -> super.getDamageDuration(damager)
     }
 
+    override fun onHealthDepleted() {
+        super.onHealthDepleted()
+
+        val explosion = MegaEntityFactory.fetch(Explosion::class)!!
+        explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.OWNER pairTo this))
+
+        playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
+    }
+
     private fun shoot() {
         val position = when {
             isFacing(Facing.LEFT) ->
-                body.getPositionPoint(Position.CENTER_LEFT).add(-0.2f * ConstVals.PPM, 0.1f * ConstVals.PPM)
+                body.getPositionPoint(Position.CENTER_LEFT).add(-0.35f * ConstVals.PPM, 0.1f * ConstVals.PPM)
 
-            else -> body.getPositionPoint(Position.CENTER_RIGHT).add(0.2f * ConstVals.PPM, 0.1f * ConstVals.PPM)
+            else -> body.getPositionPoint(Position.CENTER_RIGHT).add(0.35f * ConstVals.PPM, 0.1f * ConstVals.PPM)
         }
 
         val shot = MegaEntityFactory.fetch(RollingBotShot::class)!!
@@ -201,6 +211,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
+        body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
@@ -214,7 +225,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
             when (state) {
                 RollingBotState.ROLL -> body.setSize(1.25f * ConstVals.PPM)
                 RollingBotState.OPEN, RollingBotState.SHOOT, RollingBotState.CLOSE ->
-                    body.setSize(1.25f * ConstVals.PPM, 2f * ConstVals.PPM)
+                    body.setSize(1.5f * ConstVals.PPM, 2f * ConstVals.PPM)
             }
 
             body.forEachFixture { fixture ->

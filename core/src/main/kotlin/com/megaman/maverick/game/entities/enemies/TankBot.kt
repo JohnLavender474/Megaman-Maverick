@@ -22,6 +22,7 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -39,16 +40,19 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.explosions.Explosion
+import com.megaman.maverick.game.entities.hazards.DrippingToxicGoop
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable {
+class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "TankBot"
@@ -63,6 +67,8 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
         private const val LAUNCH_IMPULSE_X = 8f
         private const val LAUNCH_IMPULSE_Y = 8f
         private const val LAUNCH_GRAVITY = -0.15f
+
+        private const val TOXIC_GOOP_DMG_DUR = 0.25f
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -83,6 +89,12 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
         }
         super.init()
         addComponent(defineAnimationsComponent())
+        damageOverrides.put(DrippingToxicGoop::class, dmgNeg(10))
+    }
+
+    override fun getDamageDuration(damager: IDamager) = when (damager) {
+        is DrippingToxicGoop -> TOXIC_GOOP_DMG_DUR
+        else -> super.getDamageDuration(damager)
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -105,7 +117,7 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     private fun shoot() {
         GameLogger.debug(TAG, "shoot()")
 
-        val spawn = body.getCenter().add(0.35f * facing.value * ConstVals.PPM, 1.25f * ConstVals.PPM)
+        val spawn = body.getCenter().add(0.3f * facing.value * ConstVals.PPM, 1.15f * ConstVals.PPM)
 
         val impulse = GameObjectPools.fetch(Vector2::class)
             .set(LAUNCH_IMPULSE_X * facing.value, LAUNCH_IMPULSE_Y)
@@ -130,6 +142,15 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
         GameLogger.debug(TAG, "startTurning()")
         body.physics.velocity.x = 0f
         turnDelayTimer.reset()
+    }
+
+    override fun onHealthDepleted() {
+        super.onHealthDepleted()
+
+        val explosion = MegaEntityFactory.fetch(Explosion::class)!!
+        explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.OWNER pairTo this))
+
+        playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
