@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -11,7 +12,7 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -34,6 +35,7 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
@@ -47,7 +49,7 @@ import com.megaman.maverick.game.world.body.*
 
 class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
 
-    enum class RollingBotState { ROLLING, OPENING, SHOOTING, CLOSING }
+    enum class RollingBotState { ROLL, OPEN, SHOOT, CLOSE }
 
     companion object {
         const val TAG = "RollingBot"
@@ -65,10 +67,13 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
         private const val TOXIC_GOOP_DMG_DUR = 0.25f
 
-        private var rollRegion: TextureRegion? = null
-        private var openRegion: TextureRegion? = null
-        private var shootRegion: TextureRegion? = null
-        private var closeRegion: TextureRegion? = null
+        private val animDefs = orderedMapOf(
+            "roll" pairTo AnimationDef(2, 4, 0.1f, true),
+            "shoot" pairTo AnimationDef(),
+            "open" pairTo AnimationDef(3, 1, 0.1f, false),
+            "close" pairTo AnimationDef(3, 1, 0.1f, false)
+        )
+        private val regions = ObjectMap<String, TextureRegion>()
     }
 
     override lateinit var facing: Facing
@@ -76,7 +81,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     private lateinit var state: RollingBotState
 
     private val rolling: Boolean
-        get() = state == RollingBotState.ROLLING
+        get() = state == RollingBotState.ROLL
 
     private val rollTimer = Timer(ROLL_DURATION)
     private val openTimer = Timer(OPEN_DELAY)
@@ -85,12 +90,9 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     private var bulletsShot = 0
 
     override fun init() {
-        if (rollRegion == null || openRegion == null || shootRegion == null || closeRegion == null) {
+        if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            rollRegion = atlas.findRegion("RollerBot/Roll")
-            openRegion = atlas.findRegion("RollerBot/Open")
-            shootRegion = atlas.findRegion("RollerBot/Shoot")
-            closeRegion = atlas.findRegion("RollerBot/Close")
+            animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -109,17 +111,13 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         openTimer.reset()
         shootTimer.reset()
 
-        state = RollingBotState.ROLLING
+        state = RollingBotState.ROLL
 
         bulletsShot = 0
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
         super.canBeDamagedBy(damager) && (!rolling || damager is DrippingToxicGoop)
-
-    override fun takeDamageFrom(damager: IDamager): Boolean {
-        return super.takeDamageFrom(damager)
-    }
 
     override fun getDamageDuration(damager: IDamager) = when (damager) {
         is DrippingToxicGoop -> TOXIC_GOOP_DMG_DUR
@@ -150,27 +148,27 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             when (state) {
-                RollingBotState.ROLLING -> {
+                RollingBotState.ROLL -> {
                     body.physics.velocity.x = X_VEL * facing.value * ConstVals.PPM
 
                     rollTimer.update(delta)
                     if (body.isSensing(BodySense.FEET_ON_GROUND) && rollTimer.isFinished()) {
                         rollTimer.reset()
-                        state = RollingBotState.OPENING
+                        state = RollingBotState.OPEN
                     }
                 }
 
-                RollingBotState.OPENING -> {
+                RollingBotState.OPEN -> {
                     body.physics.velocity.x = 0f
 
                     openTimer.update(delta)
                     if (openTimer.isFinished()) {
                         openTimer.reset()
-                        state = RollingBotState.SHOOTING
+                        state = RollingBotState.SHOOT
                     }
                 }
 
-                RollingBotState.SHOOTING -> {
+                RollingBotState.SHOOT -> {
                     body.physics.velocity.x = 0f
 
                     facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
@@ -183,18 +181,18 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
                         if (bulletsShot >= BULLETS_TO_SHOOT) {
                             bulletsShot = 0
-                            state = RollingBotState.CLOSING
+                            state = RollingBotState.CLOSE
                         }
                     }
                 }
 
-                RollingBotState.CLOSING -> {
+                RollingBotState.CLOSE -> {
                     body.physics.velocity.x = 0f
 
                     openTimer.update(delta)
                     if (openTimer.isFinished()) {
                         openTimer.reset()
-                        state = RollingBotState.ROLLING
+                        state = RollingBotState.ROLL
                     }
                 }
             }
@@ -207,37 +205,16 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
-        body.addFixture(bodyFixture)
-
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         body.addFixture(feetFixture)
         debugShapes.add { feetFixture }
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
-        body.addFixture(damagerFixture)
-
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle())
-        body.addFixture(damageableFixture)
-
-        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle())
-        body.addFixture(shieldFixture)
-
         body.preProcess.put(ConstKeys.DEFAULT) {
-            var feetFixtureOffset = 0f
             when (state) {
-                RollingBotState.ROLLING -> {
-                    body.setSize(ConstVals.PPM.toFloat())
-                    feetFixtureOffset = -0.375f * ConstVals.PPM
-                }
-
-                RollingBotState.OPENING,
-                RollingBotState.SHOOTING,
-                RollingBotState.CLOSING -> {
-                    body.setSize(ConstVals.PPM.toFloat(), 1.5f * ConstVals.PPM)
-                    feetFixtureOffset = -0.675f * ConstVals.PPM
-                }
+                RollingBotState.ROLL -> body.setSize(1.25f * ConstVals.PPM)
+                RollingBotState.OPEN, RollingBotState.SHOOT, RollingBotState.CLOSE ->
+                    body.setSize(1.25f * ConstVals.PPM, 2f * ConstVals.PPM)
             }
 
             body.forEachFixture { fixture ->
@@ -245,7 +222,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
                 when {
                     fixture.getType() == FixtureType.FEET -> {
-                        fixture.offsetFromBodyAttachment.y = feetFixtureOffset
+                        fixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
                         return@forEachFixture
                     }
 
@@ -262,12 +239,16 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(
+            this,
+            body,
+            BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE, FixtureType.SHIELD)
+        )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(2f * ConstVals.PPM)
+        sprite.setSize(3f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
         component.putUpdateFunction { _, _ ->
             val position = Position.BOTTOM_CENTER
@@ -279,13 +260,14 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = { state.name }
-        val animations = objectMapOf<String, IAnimation>(
-            RollingBotState.ROLLING.name pairTo Animation(rollRegion!!, 2, 4, 0.1f, true),
-            RollingBotState.OPENING.name pairTo Animation(openRegion!!, 1, 3, 0.1f, false),
-            RollingBotState.SHOOTING.name pairTo Animation(shootRegion!!),
-            RollingBotState.CLOSING.name pairTo Animation(closeRegion!!, 1, 3, 0.1f, false)
-        )
+        val keySupplier: (String?) -> String? = { state.name.lowercase() }
+        val animations = ObjectMap<String, IAnimation>()
+        animDefs.forEach { entry ->
+            val key = entry.key
+            val (rows, columns, durations, loop) = entry.value
+            val animation = Animation(regions[key], rows, columns, durations, loop)
+            animations.put(key, animation)
+        }
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }

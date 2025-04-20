@@ -27,6 +27,7 @@ import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
@@ -104,7 +105,7 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     private fun shoot() {
         GameLogger.debug(TAG, "shoot()")
 
-        val spawn = body.getCenter().add(0.25f * facing.value * ConstVals.PPM, 0.75f * ConstVals.PPM)
+        val spawn = body.getCenter().add(0.35f * facing.value * ConstVals.PPM, 1.25f * ConstVals.PPM)
 
         val impulse = GameObjectPools.fetch(Vector2::class)
             .set(LAUNCH_IMPULSE_X * facing.value, LAUNCH_IMPULSE_Y)
@@ -177,38 +178,95 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(1.5f * ConstVals.PPM, ConstVals.PPM.toFloat())
+        body.setSize(3f * ConstVals.PPM, 2f * ConstVals.PPM)
         body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body }
 
         val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        leftFixture.offsetFromBodyAttachment = Vector2(-0.65f * ConstVals.PPM, -0.5f * ConstVals.PPM)
+        leftFixture.offsetFromBodyAttachment.set(-body.getWidth() / 2f, -body.getHeight() / 2f)
+        leftFixture.offsetFromBodyAttachment.set(-body.getWidth() / 2f, -body.getHeight() / 2f)
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
         leftFixture.drawingColor = Color.YELLOW
         debugShapes.add { leftFixture }
 
         val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        rightFixture.offsetFromBodyAttachment = Vector2(0.65f * ConstVals.PPM, -0.5f * ConstVals.PPM)
+        rightFixture.offsetFromBodyAttachment.set(body.getWidth() / 2f, -body.getHeight() / 2f)
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
         rightFixture.drawingColor = Color.YELLOW
         debugShapes.add { rightFixture }
 
+        val damagerFixture1 =
+            Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(2f * ConstVals.PPM, ConstVals.PPM.toFloat()))
+        damagerFixture1.attachedToBody = false
+        body.addFixture(damagerFixture1)
+        debugShapes.add { damagerFixture1 }
+
+        val damageableFixture1 = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle())
+        damageableFixture1.attachedToBody = false
+        body.addFixture(damageableFixture1)
+
+        val damagerFixture2 =
+            Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(ConstVals.PPM.toFloat()))
+        damagerFixture2.attachedToBody = false
+        body.addFixture(damagerFixture2)
+        debugShapes.add { damagerFixture2 }
+
+        val damageableFixture2 = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle())
+        damageableFixture2.attachedToBody = false
+        body.addFixture(damageableFixture2)
+
+        val damagerFixture3 = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.5f * ConstVals.PPM))
+        damagerFixture3.attachedToBody = false
+        body.addFixture(damagerFixture3)
+        debugShapes.add { damagerFixture3 }
+
+        val damageableFixture3 = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle())
+        damageableFixture3.attachedToBody = false
+        body.addFixture(damageableFixture3)
+
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            if (turnTimer.isFinished()) {
+                val position1 = if (isFacing(Facing.LEFT)) Position.BOTTOM_RIGHT else Position.BOTTOM_LEFT
+                (damagerFixture1.rawShape as GameRectangle).positionOnPoint(body.getPositionPoint(position1), position1)
+                (damageableFixture1.rawShape as GameRectangle).set(damagerFixture1.rawShape as GameRectangle)
+
+                (damagerFixture2.rawShape as GameRectangle)
+                    .setTopCenterToPoint(body.getPositionPoint(Position.TOP_CENTER))
+                    .translate(0.25f * ConstVals.PPM * -facing.value, 0f)
+                (damageableFixture2.rawShape as GameRectangle).set(damagerFixture2.rawShape as GameRectangle)
+
+                damagerFixture3.setActive(true)
+                (damagerFixture3.rawShape as GameRectangle).positionOnPoint(
+                    (damagerFixture1.rawShape as GameRectangle).getPositionPoint(position1.flipHorizontally()),
+                    position1
+                )
+                damageableFixture3.setActive(true)
+                (damageableFixture3.rawShape as GameRectangle).set(damagerFixture3.rawShape as GameRectangle)
+            } else {
+                val position1 = Position.BOTTOM_CENTER
+                (damagerFixture1.rawShape as GameRectangle).positionOnPoint(body.getPositionPoint(position1), position1)
+                (damageableFixture1.rawShape as GameRectangle).set(damagerFixture1.rawShape as GameRectangle)
+
+                (damagerFixture2.rawShape as GameRectangle).setTopCenterToPoint(body.getPositionPoint(Position.TOP_CENTER))
+                (damageableFixture2.rawShape as GameRectangle).set(damagerFixture2.rawShape as GameRectangle)
+
+                damagerFixture3.setActive(false)
+                damageableFixture3.setActive(false)
+            }
+        }
+
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(
-            this,
-            body,
-            BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
-        )
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.BODY))
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(2f * ConstVals.PPM, 1.5f * ConstVals.PPM)
+        sprite.setSize(3f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
         component.putUpdateFunction { _, _ ->
             val position = Position.BOTTOM_CENTER

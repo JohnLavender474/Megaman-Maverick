@@ -342,8 +342,8 @@ ReactorMan/stand
 ReactorMan/throw
   rotate: false
   xy: 546, 1032
-  size: 48, 48
-  orig: 48, 48
+  size: 48, 96
+  orig: 48, 96
   offset: 0, 0
   index: -1
 ReactorMonkey/stand

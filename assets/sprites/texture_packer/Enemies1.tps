@@ -872,8 +872,8 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Enemies1/RollerBot/Close.png</key>
-            <key type="filename">../frames/Enemies1/RollerBot/Open.png</key>
+            <key type="filename">../frames/Enemies1/RollingBot/close.png</key>
+            <key type="filename">../frames/Enemies1/RollingBot/open.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -882,13 +882,13 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>36,10,72,20</rect>
+                <rect>12,36,24,72</rect>
                 <key>scale9Paddings</key>
-                <rect>36,10,72,20</rect>
+                <rect>12,36,24,72</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Enemies1/RollerBot/Roll.png</key>
+            <key type="filename">../frames/Enemies1/RollingBot/roll.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -897,13 +897,13 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>48,20,96,40</rect>
+                <rect>48,24,96,48</rect>
                 <key>scale9Paddings</key>
-                <rect>48,20,96,40</rect>
+                <rect>48,24,96,48</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Enemies1/RollerBot/Shoot.png</key>
+            <key type="filename">../frames/Enemies1/RollingBot/shoot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

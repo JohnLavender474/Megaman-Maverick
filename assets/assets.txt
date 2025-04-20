@@ -1838,6 +1838,10 @@ sprites/frames/Enemies1/PetitDevil/LargeGreen.png
 sprites/frames/Enemies1/PetitDevil/LargeOrange.png
 sprites/frames/Enemies1/PetitDevil/SmallGreen.png
 sprites/frames/Enemies1/Matasaburo.png
+sprites/frames/Enemies1/RollingBot/roll.png
+sprites/frames/Enemies1/RollingBot/close.png
+sprites/frames/Enemies1/RollingBot/open.png
+sprites/frames/Enemies1/RollingBot/shoot.png
 sprites/frames/Enemies1/FlyPincher/Pinch.png
 sprites/frames/Enemies1/FlyPincher/Open.png
 sprites/frames/Enemies1/GreenUziJoe/stand_shoot.png
@@ -1960,10 +1964,6 @@ sprites/frames/Enemies1/FireMet/Walk.png
 sprites/frames/Enemies1/FireMet/Shoot.png
 sprites/frames/Enemies1/BabyPenguin.png
 sprites/frames/Enemies1/SuctionRoller.png
-sprites/frames/Enemies1/RollerBot/Close.png
-sprites/frames/Enemies1/RollerBot/Shoot.png
-sprites/frames/Enemies1/RollerBot/Roll.png
-sprites/frames/Enemies1/RollerBot/Open.png
 sprites/frames/Enemies1/SnowSeal/Stand.png
 sprites/frames/Enemies1/SnowSeal/FormSnowball.png
 sprites/frames/Enemies1/SnowSeal/SlapTail.png

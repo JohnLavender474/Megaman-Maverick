@@ -73,10 +73,10 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
         private val animDefs = orderedMapOf(
             "stand" pairTo AnimationDef(1, 3, gdxArrayOf(1f, 0.1f, 0.1f), true),
-            "throw" pairTo AnimationDef(),
+            "defeated" pairTo AnimationDef(3, 1, 0.1f, true),
+            "throw" pairTo AnimationDef(2, 1, 0.05f, false),
             "run" pairTo AnimationDef(2, 2, 0.1f, true),
             "jump" pairTo AnimationDef(),
-            "defeated" pairTo AnimationDef(3, 1, 0.1f, true)
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }

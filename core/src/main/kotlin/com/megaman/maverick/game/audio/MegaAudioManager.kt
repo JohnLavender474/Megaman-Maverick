@@ -76,7 +76,9 @@ class MegaAudioManager(
 
         if (!musicPaused && fadeOutMusicTimer != null) {
             fadeOutMusicTimer!!.update(delta)
+
             currentMusic?.volume = musicVolume - (musicVolume * fadeOutMusicTimer!!.getRatio())
+
             if (fadeOutMusicTimer!!.isFinished()) {
                 fadeOutMusicTimer = null
                 stopMusic()
@@ -92,14 +94,17 @@ class MegaAudioManager(
         if (currentMusic?.isPlaying == true) currentMusic?.stop()
 
         key as MusicAsset
+
         currentMusic = music.get(key)
         if (currentMusic == null) return
 
         currentMusic!!.isLooping = loop
         currentMusic!!.volume = musicVolume
 
-        if (key.onCompletion == null) currentMusic!!.setOnCompletionListener(null)
-        else currentMusic!!.setOnCompletionListener { key.onCompletion.invoke(this) }
+        when (key.onCompletion) {
+            key.onCompletion -> currentMusic!!.setOnCompletionListener(null)
+            else -> currentMusic!!.setOnCompletionListener { key.onCompletion!!.invoke(this) }
+        }
 
         currentMusic!!.play()
 

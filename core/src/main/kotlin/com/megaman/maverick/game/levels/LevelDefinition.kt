@@ -60,7 +60,7 @@ enum class LevelDefinition(
         mugshotAtlas = "FACES_1",
         mugshotRegion = "Inferno Man",
         tmxMapSource = "InfernoMan_16x14_v2.tmx",
-        music = MusicAsset.INFERNO_MAN_MUSIC_OLD,
+        music = MusicAsset.INFERNO_MAN_INTRO_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),
     REACTOR_MAN(
