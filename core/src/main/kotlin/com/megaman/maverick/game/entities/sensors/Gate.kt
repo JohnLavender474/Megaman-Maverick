@@ -80,6 +80,10 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
     )
     override lateinit var direction: Direction
 
+    // The camera manager for rooms uses a very naive approach to determining which direction to transition the camera
+    // to when transitioning between rooms. This is an override in case that logic is faulty for the given gate.
+    private var transDirection: Direction? = null
+
     private lateinit var type: GateType
     private lateinit var state: GateState
 
@@ -96,7 +100,6 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.GATES.source)
             GateType.entries.forEach { type ->
@@ -109,9 +112,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
                 }
             }
         }
-
         super.init()
-
         addComponent(AudioComponent())
         addComponent(defineBodyComponent())
         addComponent(defineUpdatablesComponent())
@@ -143,40 +144,66 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
         resettable = spawnProps.getOrDefault(ConstKeys.RESET, true, Boolean::class)
         showCloseEvent = spawnProps.getOrDefault(ConstKeys.CLOSE, true, Boolean::class)
 
+        transDirection = when {
+            spawnProps.containsKey("${ConstKeys.TRANS}_${ConstKeys.DIRECTION}") -> {
+                Direction.valueOf(
+                    spawnProps.get("${ConstKeys.TRANS}_${ConstKeys.DIRECTION}", String::class)!!.uppercase()
+                )
+            }
+
+            else -> null
+        }
+
         reset()
     }
 
     override fun onDestroy() {
-        GameLogger.debug(TAG, "onDestroy()")
+        GameLogger.debug(TAG, "onDestroy(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId")
         super.onDestroy()
         game.eventsMan.removeListener(this)
     }
 
     override fun onEvent(event: Event) {
-        GameLogger.debug(TAG, "onEvent(): event=$event")
-
         when (event.key) {
-            EventType.PLAYER_SPAWN -> if (resettable) reset()
+            EventType.PLAYER_SPAWN -> {
+                GameLogger.debug(TAG, "onEvent(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId, PLAYER_SPAWN")
+                if (resettable) reset()
+            }
 
             EventType.END_ROOM_TRANS -> {
                 val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!
-                if (nextRoomKey == room.name) transitionFinished = true
+
+                if (nextRoomKey == room.name) {
+                    GameLogger.debug(
+                        TAG,
+                        "onEvent(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId, nextRoomKey=$nextRoomKey: END_ROOM_TRANS"
+                    )
+
+                    transitionFinished = true
+                }
             }
 
             EventType.INTERMEDIATE_BOSS_DEAD -> {
                 thisBossKey?.let { it ->
                     val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
-                    GameLogger.debug(
-                        TAG, "onEvent(): INTERMEDIATE_BOSS_DEAD: " +
-                            "this_boss_key=$thisBossKey, other_boss_key=${boss.bossKey}"
-                    )
-                    if (it == boss.bossKey) triggerable = true
+
+                    if (it == boss.bossKey) {
+                        GameLogger.debug(
+                            TAG,
+                            "onEvent(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId, INTERMEDIATE_BOSS_DEAD: " +
+                                "this_boss_key=$thisBossKey, other_boss_key=${boss.bossKey}"
+                        )
+
+                        triggerable = true
+                    }
                 }
             }
         }
     }
 
     override fun reset() {
+        GameLogger.debug(TAG, "reset(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId")
+
         timer.reset()
         state = GateState.OPENABLE
         transitionFinished = false
@@ -188,6 +215,8 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
     fun trigger() {
         if (!triggerable) return
 
+        GameLogger.debug(TAG, "trigger(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId")
+
         state = GateState.OPENING
         playSoundNow(SoundAsset.BOSS_DOOR_SOUND, false)
         game.eventsMan.submitEvent(Event(EventType.GATE_INIT_OPENING))
@@ -197,17 +226,26 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
         if (state == GateState.OPENING) {
             timer.update(it)
             if (timer.isFinished()) {
-                GameLogger.debug(TAG, "update(): OPEN")
+                GameLogger.debug(TAG, "update(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId, OPEN")
+
                 timer.reset()
                 state = GateState.OPEN
                 game.eventsMan.submitEvent(Event(EventType.GATE_FINISH_OPENING))
-                game.eventsMan.submitEvent(Event(EventType.NEXT_ROOM_REQ, props(ConstKeys.ROOM pairTo nextRoomKey)))
+                game.eventsMan.submitEvent(
+                    Event(
+                        EventType.NEXT_ROOM_REQ, props(
+                            ConstKeys.ROOM pairTo nextRoomKey,
+                            "${ConstKeys.TRANS}_${ConstKeys.DIRECTION}" pairTo transDirection
+                        )
+                    )
+                )
             }
         }
 
         if (state == GateState.OPEN) {
             if (transitionFinished) {
-                GameLogger.debug(TAG, "update(): CLOSING")
+                GameLogger.debug(TAG, "update(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId, CLOSING")
+
                 transitionFinished = false
                 state = GateState.CLOSING
                 if (showCloseEvent) requestToPlaySound(SoundAsset.BOSS_DOOR_SOUND, false)
@@ -218,7 +256,8 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
         if (state == GateState.CLOSING) {
             timer.update(it)
             if (timer.isFinished()) {
-                GameLogger.debug(TAG, "update(): CLOSED")
+                GameLogger.debug(TAG, "update(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId, CLOSED")
+
                 timer.reset()
                 state = GateState.CLOSED
                 game.eventsMan.submitEvent(Event(EventType.GATE_FINISH_CLOSING))

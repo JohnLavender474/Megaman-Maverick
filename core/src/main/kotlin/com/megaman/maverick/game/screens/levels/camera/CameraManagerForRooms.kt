@@ -117,13 +117,13 @@ class CameraManagerForRooms(
         reset = true
     }
 
-    fun transitionToRoom(roomName: String): Boolean {
+    fun transitionToRoom(roomName: String, transDirection: Direction? = null): Boolean {
         if (currentGameRoom == null) throw IllegalStateException(
             "Cannot transition to room $roomName because the current game room is null"
         )
 
         val nextGameRoom = gameRooms?.first { it.name == roomName } ?: return false
-        transitionDirection = getSingleMostDirectionFromStartToTarget(
+        transitionDirection = transDirection ?: getSingleMostDirectionFromStartToTarget(
             currentGameRoom!!.rectangle.getCenter(), nextGameRoom.rectangle.getCenter()
         )
 

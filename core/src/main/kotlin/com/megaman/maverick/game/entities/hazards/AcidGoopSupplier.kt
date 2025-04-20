@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.hazards
 
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -26,6 +27,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
 class AcidGoopSupplier(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IBodyEntity, ICullableEntity {
@@ -41,50 +43,61 @@ class AcidGoopSupplier(game: MegamanMaverickGame) : MegaGameEntity(game), IHazar
     private val dropDelayTimer = Timer(DROP_DELAY)
     private var acidGoop: AcidGoop? = null
 
-    override fun getType() = EntityType.HAZARD
-
     override fun init() {
+        GameLogger.debug(TAG, "init()")
+        super.init()
         addComponent(defineUpdatablesComponent())
-        addComponent(defineBodyComponent())
         addComponent(defineCullablesComponent())
+        addComponent(defineBodyComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
+
         val spawnDelayDuration = getRandom(MIN_SPAWN_DELAY, MAX_SPAWN_DELAY)
         spawnDelayTimer.resetDuration(spawnDelayDuration)
+
         dropDelayTimer.reset()
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+
         acidGoop?.destroy()
         acidGoop = null
     }
 
     private fun createAcidGoop() {
-        acidGoop = MegaEntityFactory.fetch(AcidGoop::class)!!
-        acidGoop!!.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+        val acidGoop = MegaEntityFactory.fetch(AcidGoop::class)!!
+        acidGoop.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+        this.acidGoop = acidGoop
     }
 
     private fun dropAcidGoop() = acidGoop!!.setToFall()
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (acidGoop == null) {
-            spawnDelayTimer.update(delta)
-            if (spawnDelayTimer.isFinished()) {
-                createAcidGoop()
-                val spawnDelayDuration = getRandom(MIN_SPAWN_DELAY, MAX_SPAWN_DELAY)
-                spawnDelayTimer.resetDuration(spawnDelayDuration)
+        when (acidGoop) {
+            null -> {
+                spawnDelayTimer.update(delta)
+                if (spawnDelayTimer.isFinished()) {
+                    createAcidGoop()
+                    val spawnDelayDuration = getRandom(MIN_SPAWN_DELAY, MAX_SPAWN_DELAY)
+                    spawnDelayTimer.resetDuration(spawnDelayDuration)
+                }
             }
-        } else {
-            dropDelayTimer.update(delta)
-            if (dropDelayTimer.isFinished()) {
-                dropAcidGoop()
-                acidGoop = null
-                dropDelayTimer.reset()
+
+            else -> {
+                dropDelayTimer.update(delta)
+                if (dropDelayTimer.isFinished()) {
+                    dropAcidGoop()
+                    acidGoop = null
+                    dropDelayTimer.reset()
+                }
             }
         }
     })
@@ -92,13 +105,13 @@ class AcidGoopSupplier(game: MegamanMaverickGame) : MegaGameEntity(game), IHazar
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat())
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
         return BodyComponentCreator.create(this, body)
     }
 
     private fun defineCullablesComponent() = CullablesComponent(
-        objectMapOf(
-            ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(this)
-        )
+        objectMapOf(ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(this))
     )
+
+    override fun getType() = EntityType.HAZARD
 }

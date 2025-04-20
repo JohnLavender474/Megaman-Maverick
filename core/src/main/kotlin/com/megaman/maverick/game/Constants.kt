@@ -48,6 +48,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val TRANS = "trans"
     const val TANK = "tank"
     const val HEART = "heart"
     const val IS = "is"

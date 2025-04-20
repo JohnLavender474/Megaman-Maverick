@@ -83,6 +83,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toProps
 import com.megaman.maverick.game.utils.interfaces.IShapeDebuggable
 import com.megaman.maverick.game.utils.misc.HealthFillType
+import com.megaman.maverick.game.world.body.getCenter
 import java.util.*
 
 class MegaLevelScreen(private val game: MegamanMaverickGame) :
@@ -249,7 +250,12 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         )
         cameraManagerForRooms.focus = megaman
         cameraManagerForRooms.beginTransition = {
-            GameLogger.debug(TAG, "begin transition logic for camera manager")
+            GameLogger.debug(
+                TAG,
+                "begin transition logic for rooms manager: " +
+                    "current=${cameraManagerForRooms.currentGameRoom?.name}, " +
+                    "prior=${cameraManagerForRooms.priorGameRoom?.name}"
+            )
 
             eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
 
@@ -289,10 +295,20 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 )
             )
 
+            GameLogger.debug(
+                TAG, "continue transition logic for rooms manager: " +
+                    "transitionInterpolation=${cameraManagerForRooms.transitionInterpolation} " +
+                    "megaman.body.getCenter=${megaman.body.getCenter()}"
+            )
+
             game.putProperty(ConstKeys.ROOM_TRANSITION, true)
         }
         cameraManagerForRooms.endTransition = {
-            GameLogger.debug(TAG, "end transition logic for camera manager")
+            GameLogger.debug(
+                TAG, "end transition logic for rooms manager: " +
+                    "current=${cameraManagerForRooms.currentGameRoom?.name}, " +
+                    "prior=${cameraManagerForRooms.priorGameRoom?.name}"
+            )
 
             val currentRoom = cameraManagerForRooms.currentGameRoom
             val hasEvent = currentRoom?.properties?.containsKey(ConstKeys.EVENT) == true
@@ -517,15 +533,14 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
 
             EventType.NEXT_ROOM_REQ -> {
-                GameLogger.debug(
-                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): next room req --> start room transition"
-                )
-
                 val roomName = event.properties.get(ConstKeys.ROOM) as String
-                val isTrans = cameraManagerForRooms.transitionToRoom(roomName)
+
+                val transDirection = event.getProperty("${ConstKeys.TRANS}_${ConstKeys.DIRECTION}", Direction::class)
+                val isTrans = cameraManagerForRooms.transitionToRoom(roomName, transDirection)
+
                 if (isTrans) GameLogger.debug(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
-                    "onEvent(): next room req --> successfully starting transition to room: $roomName"
+                    "onEvent(): next room req --> starting transition to room: $roomName"
                 ) else GameLogger.error(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
                     "onEvent(): next room req --> could not start transition to room: $roomName"
@@ -594,6 +609,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                             HealthFillType.BIT_BY_BIT,
                             HealthFillType::class
                         )
+
                         val runOnFirstUpdate: (() -> Unit)? = when (type) {
                             HealthFillType.BIT_BY_BIT -> {
                                 { game.audioMan.pauseMusic() }
@@ -601,10 +617,12 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
                             else -> null
                         }
+
                         val runOnFinished = {
                             eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN))
                             if (type == HealthFillType.BIT_BY_BIT) game.audioMan.playMusic()
                         }
+
                         bossHealthHandler.set(boss, type, runOnFirstUpdate, runOnFinished)
 
                         game.engine.systems.forEach {

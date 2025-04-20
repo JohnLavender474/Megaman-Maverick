@@ -1,489 +1,562 @@
-===== SESSION STARTED: 2025-04-19T22:11:01.853564251 =====
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin' with key 'cartin_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_charge_full, unchargedKey=cartin, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_charge_full' with key 'cartin_charge_full_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_charge_half, unchargedKey=cartin, regions=6, durations=6
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=7, durations=7
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_charge_half' with key 'cartin_charge_half_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_damaged' with key 'cartin_damaged_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump' with key 'cartin_jump_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_jump_charge_full, unchargedKey=cartin_jump, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump_charge_full' with key 'cartin_jump_charge_full_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_jump_charge_half, unchargedKey=cartin_jump, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump_charge_half' with key 'cartin_jump_charge_half_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump_shoot' with key 'cartin_jump_shoot_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_shoot' with key 'cartin_shoot_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb' with key 'climb_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_charge_half, unchargedKey=climb, regions=6, durations=6
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=7, durations=7
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_charge_half' with key 'climb_charge_half_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_charge_full, unchargedKey=climb, regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=5, durations=5
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_charge_full' with key 'climb_charge_full_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish' with key 'climb_finish_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_finish_charge_full, unchargedKey=climb_finish, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish_charge_full' with key 'climb_finish_charge_full_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_finish_charge_half, unchargedKey=climb_finish, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish_charge_half' with key 'climb_finish_charge_half_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_still' with key 'climb_still_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_shoot' with key 'climb_still_shoot_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_still_charge_full, unchargedKey=climb_still, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_charge_full' with key 'climb_still_charge_full_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_still_charge_half, unchargedKey=climb_still, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_charge_half' with key 'climb_still_charge_half_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'stand' with key 'stand_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=stand_charge_full, unchargedKey=stand, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'stand_charge_full' with key 'stand_charge_full_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=stand_charge_half, unchargedKey=stand, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'stand_charge_half' with key 'stand_charge_half_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'stand_shoot' with key 'stand_shoot_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'damaged' with key 'damaged_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'stunned' with key 'stunned_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'run_trans' with key 'run_trans_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'run_trans_shoot' with key 'run_trans_shoot_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'run' with key 'run_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=run_charge_full, unchargedKey=run, regions=8, durations=8
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=9, durations=9
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'run_charge_full' with key 'run_charge_full_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=run_charge_half, unchargedKey=run, regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=5, durations=5
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'run_charge_half' with key 'run_charge_half_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'run_shoot' with key 'run_shoot_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'jump' with key 'jump_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=jump_charge_full, unchargedKey=jump, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'jump_charge_full' with key 'jump_charge_full_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=jump_charge_half, unchargedKey=jump, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'jump_charge_half' with key 'jump_charge_half_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'jump_shoot' with key 'jump_shoot_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'swim' with key 'swim_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=swim_charge_full, unchargedKey=swim, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'swim_charge_full' with key 'swim_charge_full_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=swim_charge_half, unchargedKey=swim, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'swim_charge_half' with key 'swim_charge_half_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'swim_shoot' with key 'swim_shoot_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'wallslide' with key 'wallslide_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=wallslide_charge_full, unchargedKey=wallslide, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_charge_full' with key 'wallslide_charge_full_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=wallslide_charge_half, unchargedKey=wallslide, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_charge_half' with key 'wallslide_charge_half_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_shoot' with key 'wallslide_shoot_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'groundslide' with key 'groundslide_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_shoot' with key 'groundslide_shoot_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=groundslide_charge_full, unchargedKey=groundslide, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_charge_full' with key 'groundslide_charge_full_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=groundslide_charge_half, unchargedKey=groundslide, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_charge_half' with key 'groundslide_charge_half_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'airdash' with key 'airdash_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'airdash_shoot' with key 'airdash_shoot_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=airdash_charge_full, unchargedKey=airdash, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'airdash_charge_full' with key 'airdash_charge_full_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=airdash_charge_half, unchargedKey=airdash, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'airdash_charge_half' with key 'airdash_charge_half_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'crouch' with key 'crouch_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'crouch_shoot' with key 'crouch_shoot_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=crouch_charge_half, unchargedKey=crouch, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'crouch_charge_half' with key 'crouch_charge_half_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=crouch_charge_full, unchargedKey=crouch, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'crouch_charge_full' with key 'crouch_charge_full_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'slip' with key 'slip_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=slip_charge_full, unchargedKey=slip, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'slip_charge_full' with key 'slip_charge_full_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=slip_charge_half, unchargedKey=slip, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'slip_charge_half' with key 'slip_charge_half_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'slip_shoot' with key 'slip_shoot_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'frozen' with key 'frozen_megabuster'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin' with key 'cartin_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_charge_full, unchargedKey=cartin, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_charge_full' with key 'cartin_charge_full_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_charge_half, unchargedKey=cartin, regions=6, durations=6
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=7, durations=7
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_charge_half' with key 'cartin_charge_half_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_damaged' with key 'cartin_damaged_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump' with key 'cartin_jump_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_jump_charge_full, unchargedKey=cartin_jump, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump_charge_full' with key 'cartin_jump_charge_full_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_jump_charge_half, unchargedKey=cartin_jump, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump_charge_half' with key 'cartin_jump_charge_half_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump_shoot' with key 'cartin_jump_shoot_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_shoot' with key 'cartin_shoot_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb' with key 'climb_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_charge_half, unchargedKey=climb, regions=6, durations=6
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=7, durations=7
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_charge_half' with key 'climb_charge_half_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_charge_full, unchargedKey=climb, regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=5, durations=5
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_charge_full' with key 'climb_charge_full_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish' with key 'climb_finish_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_finish_charge_full, unchargedKey=climb_finish, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish_charge_full' with key 'climb_finish_charge_full_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_finish_charge_half, unchargedKey=climb_finish, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish_charge_half' with key 'climb_finish_charge_half_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_still' with key 'climb_still_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_shoot' with key 'climb_still_shoot_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_still_charge_full, unchargedKey=climb_still, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_charge_full' with key 'climb_still_charge_full_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_still_charge_half, unchargedKey=climb_still, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_charge_half' with key 'climb_still_charge_half_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'stand' with key 'stand_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=stand_charge_full, unchargedKey=stand, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'stand_charge_full' with key 'stand_charge_full_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=stand_charge_half, unchargedKey=stand, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'stand_charge_half' with key 'stand_charge_half_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'stand_shoot' with key 'stand_shoot_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'damaged' with key 'damaged_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'stunned' with key 'stunned_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'run_trans' with key 'run_trans_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'run_trans_shoot' with key 'run_trans_shoot_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'run' with key 'run_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=run_charge_full, unchargedKey=run, regions=8, durations=8
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=9, durations=9
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'run_charge_full' with key 'run_charge_full_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=run_charge_half, unchargedKey=run, regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=5, durations=5
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'run_charge_half' with key 'run_charge_half_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'run_shoot' with key 'run_shoot_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'jump' with key 'jump_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=jump_charge_full, unchargedKey=jump, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'jump_charge_full' with key 'jump_charge_full_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=jump_charge_half, unchargedKey=jump, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'jump_charge_half' with key 'jump_charge_half_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'jump_shoot' with key 'jump_shoot_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'swim' with key 'swim_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=swim_charge_full, unchargedKey=swim, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'swim_charge_full' with key 'swim_charge_full_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=swim_charge_half, unchargedKey=swim, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'swim_charge_half' with key 'swim_charge_half_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'swim_shoot' with key 'swim_shoot_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'wallslide' with key 'wallslide_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=wallslide_charge_full, unchargedKey=wallslide, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_charge_full' with key 'wallslide_charge_full_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=wallslide_charge_half, unchargedKey=wallslide, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_charge_half' with key 'wallslide_charge_half_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_shoot' with key 'wallslide_shoot_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'groundslide' with key 'groundslide_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_shoot' with key 'groundslide_shoot_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=groundslide_charge_full, unchargedKey=groundslide, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_charge_full' with key 'groundslide_charge_full_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=groundslide_charge_half, unchargedKey=groundslide, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_charge_half' with key 'groundslide_charge_half_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'airdash' with key 'airdash_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'airdash_shoot' with key 'airdash_shoot_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=airdash_charge_full, unchargedKey=airdash, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'airdash_charge_full' with key 'airdash_charge_full_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=airdash_charge_half, unchargedKey=airdash, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'airdash_charge_half' with key 'airdash_charge_half_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'crouch' with key 'crouch_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'crouch_shoot' with key 'crouch_shoot_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=crouch_charge_half, unchargedKey=crouch, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'crouch_charge_half' with key 'crouch_charge_half_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=crouch_charge_full, unchargedKey=crouch, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'crouch_charge_full' with key 'crouch_charge_full_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'slip' with key 'slip_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=slip_charge_full, unchargedKey=slip, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'slip_charge_full' with key 'slip_charge_full_icecube'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=slip_charge_half, unchargedKey=slip, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'slip_charge_half' with key 'slip_charge_half_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'slip_shoot' with key 'slip_shoot_icecube'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin' with key 'cartin_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_charge_full, unchargedKey=cartin, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_charge_full' with key 'cartin_charge_full_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_charge_half, unchargedKey=cartin, regions=6, durations=6
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=7, durations=7
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_charge_half' with key 'cartin_charge_half_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_damaged' with key 'cartin_damaged_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump' with key 'cartin_jump_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_jump_charge_full, unchargedKey=cartin_jump, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump_charge_full' with key 'cartin_jump_charge_full_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_jump_charge_half, unchargedKey=cartin_jump, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump_charge_half' with key 'cartin_jump_charge_half_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump_shoot' with key 'cartin_jump_shoot_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_shoot' with key 'cartin_shoot_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb' with key 'climb_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_charge_half, unchargedKey=climb, regions=6, durations=6
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=7, durations=7
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_charge_half' with key 'climb_charge_half_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_charge_full, unchargedKey=climb, regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=5, durations=5
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_charge_full' with key 'climb_charge_full_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish' with key 'climb_finish_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_finish_charge_full, unchargedKey=climb_finish, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish_charge_full' with key 'climb_finish_charge_full_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_finish_charge_half, unchargedKey=climb_finish, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish_charge_half' with key 'climb_finish_charge_half_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_still' with key 'climb_still_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_shoot' with key 'climb_still_shoot_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_still_charge_full, unchargedKey=climb_still, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_charge_full' with key 'climb_still_charge_full_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_still_charge_half, unchargedKey=climb_still, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_charge_half' with key 'climb_still_charge_half_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'stand' with key 'stand_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=stand_charge_full, unchargedKey=stand, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'stand_charge_full' with key 'stand_charge_full_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=stand_charge_half, unchargedKey=stand, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'stand_charge_half' with key 'stand_charge_half_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'stand_shoot' with key 'stand_shoot_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'damaged' with key 'damaged_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'stunned' with key 'stunned_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'run_trans' with key 'run_trans_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'run_trans_shoot' with key 'run_trans_shoot_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'run' with key 'run_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=run_charge_full, unchargedKey=run, regions=8, durations=8
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=9, durations=9
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'run_charge_full' with key 'run_charge_full_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=run_charge_half, unchargedKey=run, regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=5, durations=5
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'run_charge_half' with key 'run_charge_half_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'run_shoot' with key 'run_shoot_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'jump' with key 'jump_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=jump_charge_full, unchargedKey=jump, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'jump_charge_full' with key 'jump_charge_full_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=jump_charge_half, unchargedKey=jump, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'jump_charge_half' with key 'jump_charge_half_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'jump_shoot' with key 'jump_shoot_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'swim' with key 'swim_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=swim_charge_full, unchargedKey=swim, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'swim_charge_full' with key 'swim_charge_full_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=swim_charge_half, unchargedKey=swim, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'swim_charge_half' with key 'swim_charge_half_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'swim_shoot' with key 'swim_shoot_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'wallslide' with key 'wallslide_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=wallslide_charge_full, unchargedKey=wallslide, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_charge_full' with key 'wallslide_charge_full_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=wallslide_charge_half, unchargedKey=wallslide, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_charge_half' with key 'wallslide_charge_half_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_shoot' with key 'wallslide_shoot_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'groundslide' with key 'groundslide_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_shoot' with key 'groundslide_shoot_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=groundslide_charge_full, unchargedKey=groundslide, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_charge_full' with key 'groundslide_charge_full_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=groundslide_charge_half, unchargedKey=groundslide, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_charge_half' with key 'groundslide_charge_half_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'airdash' with key 'airdash_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'airdash_shoot' with key 'airdash_shoot_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=airdash_charge_full, unchargedKey=airdash, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'airdash_charge_full' with key 'airdash_charge_full_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=airdash_charge_half, unchargedKey=airdash, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'airdash_charge_half' with key 'airdash_charge_half_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'crouch' with key 'crouch_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'crouch_shoot' with key 'crouch_shoot_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=crouch_charge_half, unchargedKey=crouch, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'crouch_charge_half' with key 'crouch_charge_half_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=crouch_charge_full, unchargedKey=crouch, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'crouch_charge_full' with key 'crouch_charge_full_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'slip' with key 'slip_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=slip_charge_full, unchargedKey=slip, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'slip_charge_full' with key 'slip_charge_full_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=slip_charge_half, unchargedKey=slip, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'slip_charge_half' with key 'slip_charge_half_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'slip_shoot' with key 'slip_shoot_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'frozen' with key 'frozen_magmawave'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin' with key 'cartin_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_charge_full, unchargedKey=cartin, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_charge_full' with key 'cartin_charge_full_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_charge_half, unchargedKey=cartin, regions=6, durations=6
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=7, durations=7
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_charge_half' with key 'cartin_charge_half_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_damaged' with key 'cartin_damaged_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump' with key 'cartin_jump_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_jump_charge_full, unchargedKey=cartin_jump, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump_charge_full' with key 'cartin_jump_charge_full_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=cartin_jump_charge_half, unchargedKey=cartin_jump, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump_charge_half' with key 'cartin_jump_charge_half_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_jump_shoot' with key 'cartin_jump_shoot_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'cartin_shoot' with key 'cartin_shoot_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb' with key 'climb_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_charge_half, unchargedKey=climb, regions=6, durations=6
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=7, durations=7
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_charge_half' with key 'climb_charge_half_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_charge_full, unchargedKey=climb, regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=5, durations=5
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_charge_full' with key 'climb_charge_full_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish' with key 'climb_finish_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_finish_charge_full, unchargedKey=climb_finish, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish_charge_full' with key 'climb_finish_charge_full_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_finish_charge_half, unchargedKey=climb_finish, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish_charge_half' with key 'climb_finish_charge_half_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_still' with key 'climb_still_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_shoot' with key 'climb_still_shoot_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_still_charge_full, unchargedKey=climb_still, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_charge_full' with key 'climb_still_charge_full_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=climb_still_charge_half, unchargedKey=climb_still, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_charge_half' with key 'climb_still_charge_half_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'stand' with key 'stand_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=stand_charge_full, unchargedKey=stand, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'stand_charge_full' with key 'stand_charge_full_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=stand_charge_half, unchargedKey=stand, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'stand_charge_half' with key 'stand_charge_half_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'stand_shoot' with key 'stand_shoot_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'damaged' with key 'damaged_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'stunned' with key 'stunned_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'run_trans' with key 'run_trans_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'run_trans_shoot' with key 'run_trans_shoot_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'run' with key 'run_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=run_charge_full, unchargedKey=run, regions=8, durations=8
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=9, durations=9
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'run_charge_full' with key 'run_charge_full_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=run_charge_half, unchargedKey=run, regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=5, durations=5
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'run_charge_half' with key 'run_charge_half_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'run_shoot' with key 'run_shoot_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'jump' with key 'jump_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=jump_charge_full, unchargedKey=jump, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'jump_charge_full' with key 'jump_charge_full_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=jump_charge_half, unchargedKey=jump, regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'jump_charge_half' with key 'jump_charge_half_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'jump_shoot' with key 'jump_shoot_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'swim' with key 'swim_moonscythe'
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=swim_charge_full, unchargedKey=swim, regions=2, durations=2
-22:11:03 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:03 | DEBUG | MegamanAnimations | init(): put animation 'swim_charge_full' with key 'swim_charge_full_moonscythe'
-22:11:04 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=swim_charge_half, unchargedKey=swim, regions=3, durations=3
-22:11:04 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'swim_charge_half' with key 'swim_charge_half_moonscythe'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'swim_shoot' with key 'swim_shoot_moonscythe'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'wallslide' with key 'wallslide_moonscythe'
-22:11:04 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=wallslide_charge_full, unchargedKey=wallslide, regions=2, durations=2
-22:11:04 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_charge_full' with key 'wallslide_charge_full_moonscythe'
-22:11:04 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=wallslide_charge_half, unchargedKey=wallslide, regions=3, durations=3
-22:11:04 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_charge_half' with key 'wallslide_charge_half_moonscythe'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_shoot' with key 'wallslide_shoot_moonscythe'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'groundslide' with key 'groundslide_moonscythe'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_shoot' with key 'groundslide_shoot_moonscythe'
-22:11:04 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=groundslide_charge_full, unchargedKey=groundslide, regions=2, durations=2
-22:11:04 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_charge_full' with key 'groundslide_charge_full_moonscythe'
-22:11:04 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=groundslide_charge_half, unchargedKey=groundslide, regions=3, durations=3
-22:11:04 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_charge_half' with key 'groundslide_charge_half_moonscythe'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'airdash' with key 'airdash_moonscythe'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'airdash_shoot' with key 'airdash_shoot_moonscythe'
-22:11:04 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=airdash_charge_full, unchargedKey=airdash, regions=2, durations=2
-22:11:04 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'airdash_charge_full' with key 'airdash_charge_full_moonscythe'
-22:11:04 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=airdash_charge_half, unchargedKey=airdash, regions=3, durations=3
-22:11:04 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'airdash_charge_half' with key 'airdash_charge_half_moonscythe'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'crouch' with key 'crouch_moonscythe'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'crouch_shoot' with key 'crouch_shoot_moonscythe'
-22:11:04 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=crouch_charge_half, unchargedKey=crouch, regions=3, durations=3
-22:11:04 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'crouch_charge_half' with key 'crouch_charge_half_moonscythe'
-22:11:04 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=crouch_charge_full, unchargedKey=crouch, regions=2, durations=2
-22:11:04 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'crouch_charge_full' with key 'crouch_charge_full_moonscythe'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'slip' with key 'slip_moonscythe'
-22:11:04 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=slip_charge_full, unchargedKey=slip, regions=2, durations=2
-22:11:04 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=3, durations=3
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'slip_charge_full' with key 'slip_charge_full_moonscythe'
-22:11:04 | DEBUG | MegamanAnimations | buildAnimation(): building charge animation: defKey=slip_charge_half, unchargedKey=slip, regions=3, durations=3
-22:11:04 | DEBUG | MegamanAnimations | buildAnimation(): built charge animation: regions=4, durations=4
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'slip_charge_half' with key 'slip_charge_half_moonscythe'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'slip_shoot' with key 'slip_shoot_moonscythe'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'frozen' with key 'frozen_moonscythe'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'jetpack' with key 'jetpack_rushjetpack'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'jetpack_shoot' with key 'jetpack_shoot_rushjetpack'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'climb' with key 'climb_rushjetpack'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'climb_finish' with key 'climb_finish_rushjetpack'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'climb_still_shoot' with key 'climb_still_shoot_rushjetpack'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'stand' with key 'stand_rushjetpack'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'stand_shoot' with key 'stand_shoot_rushjetpack'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'damaged' with key 'damaged_rushjetpack'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'run_trans' with key 'run_trans_rushjetpack'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'run_trans_shoot' with key 'run_trans_shoot_rushjetpack'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'run' with key 'run_rushjetpack'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'run_shoot' with key 'run_shoot_rushjetpack'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'jump' with key 'jump_rushjetpack'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'jump_shoot' with key 'jump_shoot_rushjetpack'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'swim' with key 'swim_rushjetpack'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'swim_shoot' with key 'swim_shoot_rushjetpack'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'wallslide' with key 'wallslide_rushjetpack'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'wallslide_shoot' with key 'wallslide_shoot_rushjetpack'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'groundslide' with key 'groundslide_rushjetpack'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'groundslide_shoot' with key 'groundslide_shoot_rushjetpack'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'airdash' with key 'airdash_rushjetpack'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'airdash_shoot' with key 'airdash_shoot_rushjetpack'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'slip' with key 'slip_rushjetpack'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'slip_shoot' with key 'slip_shoot_rushjetpack'
-22:11:04 | DEBUG | MegamanAnimations | init(): put animation 'frozen' with key 'frozen_rushjetpack'
+===== SESSION STARTED: 2025-04-20T11:12:09.938652294 =====
+11:12:14 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_SPAWN, properties=Properties({
+}))
+11:12:14 | DEBUG | MegaLevelScreenEventListener | onEvent(): player spawn --> reset camera manager for rooms and spawn megaman
+11:12:14 | DEBUG | MegaLevelScreen | onEvent(): player spawn --> spawn Megaman: Properties({
+	[bounds=[9920.0,2784.0,32.0,32.0]]
+	[x=9920.0]
+	[height=32.0]
+	[id=660]
+	[name=0]
+	[y=2784.0]
+	[width=32.0]
+})
+11:12:14 | DEBUG | Gate | init()
+11:12:14 | DEBUG | Gate | onSpawn(): spawnProps=Properties({
+	[boss_key=2]
+	[bounds=[6368.0,2016.0,64.0,96.0]]
+	[x=6368.0]
+	[height=96.0]
+	[room=room7]
+	[mini_boss=true]
+	[id=197]
+	[name=Gate]
+	[y=2016.0]
+	[width=64.0]
+})
+11:12:14 | DEBUG | Gate | reset(): nextRoomKey=room7, mapObjectId=197
+11:12:14 | DEBUG | Gate | init()
+11:12:14 | DEBUG | Gate | onSpawn(): spawnProps=Properties({
+	[boss_key=1]
+	[direction=right]
+	[bounds=[6880.0,1920.0,64.0,96.0]]
+	[x=6880.0]
+	[height=96.0]
+	[room=room7]
+	[mini_boss=true]
+	[id=196]
+	[name=Gate]
+	[y=1920.0]
+	[width=64.0]
+})
+11:12:14 | DEBUG | Gate | reset(): nextRoomKey=room7, mapObjectId=196
+11:12:14 | DEBUG | Gate | init()
+11:12:14 | DEBUG | Gate | onSpawn(): spawnProps=Properties({
+	[direction=right]
+	[bounds=[7392.0,1984.0,64.0,96.0]]
+	[x=7392.0]
+	[height=96.0]
+	[room=mini_boss_room_1]
+	[id=194]
+	[name=Gate]
+	[y=1984.0]
+	[width=64.0]
+})
+11:12:14 | DEBUG | Gate | reset(): nextRoomKey=mini_boss_room_1, mapObjectId=194
+11:12:14 | DEBUG | Gate | init()
+11:12:14 | DEBUG | Gate | onSpawn(): spawnProps=Properties({
+	[bounds=[5856.0,2176.0,64.0,96.0]]
+	[x=5856.0]
+	[height=96.0]
+	[room=alt_path_1_mini_boss_room_1]
+	[id=198]
+	[name=Gate]
+	[y=2176.0]
+	[width=64.0]
+})
+11:12:14 | DEBUG | Gate | reset(): nextRoomKey=alt_path_1_mini_boss_room_1, mapObjectId=198
+11:12:14 | DEBUG | Gate | init()
+11:12:14 | DEBUG | Gate | onSpawn(): spawnProps=Properties({
+	[bounds=[9952.0,2656.0,64.0,96.0]]
+	[x=9952.0]
+	[height=96.0]
+	[room=mini_boss_room_2]
+	[id=558]
+	[name=Gate]
+	[y=2656.0]
+	[width=64.0]
+})
+11:12:14 | DEBUG | Gate | reset(): nextRoomKey=mini_boss_room_2, mapObjectId=558
+11:12:14 | DEBUG | Gate | init()
+11:12:14 | DEBUG | Gate | onSpawn(): spawnProps=Properties({
+	[bounds=[10976.0,3840.0,64.0,96.0]]
+	[trans_direction=right]
+	[x=10976.0]
+	[height=96.0]
+	[room=room14]
+	[id=628]
+	[name=Gate]
+	[y=3840.0]
+	[width=64.0]
+})
+11:12:14 | DEBUG | Gate | reset(): nextRoomKey=room14, mapObjectId=628
+11:12:14 | DEBUG | Gate | init()
+11:12:14 | DEBUG | Gate | onSpawn(): spawnProps=Properties({
+	[bounds=[11488.0,3680.0,64.0,96.0]]
+	[x=11488.0]
+	[height=96.0]
+	[room=boss_room]
+	[id=630]
+	[name=Gate]
+	[y=3680.0]
+	[width=64.0]
+})
+11:12:14 | DEBUG | Gate | reset(): nextRoomKey=boss_room, mapObjectId=630
+11:12:14 | DEBUG | Gate | init()
+11:12:14 | DEBUG | Gate | onSpawn(): spawnProps=Properties({
+	[boss_key=3]
+	[bounds=[10464.0,2656.0,64.0,96.0]]
+	[trans_direction=right]
+	[x=10464.0]
+	[height=96.0]
+	[room=room13]
+	[mini_boss=true]
+	[id=661]
+	[name=Gate]
+	[y=2656.0]
+	[width=64.0]
+})
+11:12:14 | DEBUG | Gate | reset(): nextRoomKey=room13, mapObjectId=661
+11:12:16 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_READY, properties=Properties({
+}))
+11:12:16 | DEBUG | MegaLevelScreenEventListener | onEvent(): player ready
+11:12:22 | DEBUG | Gate | trigger(): nextRoomKey=mini_boss_room_2, mapObjectId=558
+11:12:22 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_OPENING, properties=Properties({
+}))
+11:12:22 | DEBUG | MegaLevelScreenEventListener | onEvent(): gate init opening --> start room transition
+11:12:23 | DEBUG | Gate | update(): nextRoomKey=mini_boss_room_2, mapObjectId=558, OPEN
+11:12:23 | LOG | MegaLevelScreen | event(): event=Event(key=NEXT_ROOM_REQ, properties=Properties({
+	[trans_direction=null]
+	[room=mini_boss_room_2]
+}))
+11:12:23 | DEBUG | MegaLevelScreenEventListener | onEvent(): next room req --> starting transition to room: mini_boss_room_2
+11:12:23 | DEBUG | MegaLevelScreen | begin transition logic for rooms manager: current=mini_boss_room_2, prior=room12
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9933.042,2670.4) megaman.body.getCenter=(9933.042,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9933.042,2670.4) megaman.body.getCenter=(9933.042,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9933.042,2670.4) megaman.body.getCenter=(9933.042,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9933.042,2670.4) megaman.body.getCenter=(9933.042,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9933.042,2670.4) megaman.body.getCenter=(9933.042,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9933.042,2670.4) megaman.body.getCenter=(9933.042,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9933.042,2670.4) megaman.body.getCenter=(9933.042,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9933.042,2670.4) megaman.body.getCenter=(9933.042,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9933.042,2670.4) megaman.body.getCenter=(9933.042,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9933.042,2670.4) megaman.body.getCenter=(9933.042,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9933.042,2670.4) megaman.body.getCenter=(9933.042,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9933.042,2670.4) megaman.body.getCenter=(9933.042,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9933.042,2670.4) megaman.body.getCenter=(9933.042,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9933.042,2670.4) megaman.body.getCenter=(9933.042,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9933.042,2670.4) megaman.body.getCenter=(9933.042,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9933.042,2670.4) megaman.body.getCenter=(9933.042,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9933.042,2670.4) megaman.body.getCenter=(9933.042,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9933.042,2670.4) megaman.body.getCenter=(9933.042,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9933.042,2670.4) megaman.body.getCenter=(9933.042,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9933.042,2670.4) megaman.body.getCenter=(9933.042,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9935.115,2670.4) megaman.body.getCenter=(9933.042,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9936.874,2670.4) megaman.body.getCenter=(9935.115,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9938.789,2670.4) megaman.body.getCenter=(9936.874,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9940.705,2670.4) megaman.body.getCenter=(9938.789,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9942.621,2670.4) megaman.body.getCenter=(9940.705,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9944.541,2670.4) megaman.body.getCenter=(9942.621,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9946.461,2670.4) megaman.body.getCenter=(9944.541,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9948.369,2670.4) megaman.body.getCenter=(9946.461,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9950.286,2670.4) megaman.body.getCenter=(9948.369,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9952.202,2670.4) megaman.body.getCenter=(9950.286,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9954.117,2670.4) megaman.body.getCenter=(9952.202,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9956.033,2670.4) megaman.body.getCenter=(9954.117,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9958.069,2670.4) megaman.body.getCenter=(9956.033,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9959.864,2670.4) megaman.body.getCenter=(9958.069,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9961.781,2670.4) megaman.body.getCenter=(9959.864,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9963.697,2670.4) megaman.body.getCenter=(9961.781,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9965.612,2670.4) megaman.body.getCenter=(9963.697,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9967.528,2670.4) megaman.body.getCenter=(9965.612,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9969.444,2670.4) megaman.body.getCenter=(9967.528,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9971.36,2670.4) megaman.body.getCenter=(9969.444,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9973.276,2670.4) megaman.body.getCenter=(9971.36,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9975.192,2670.4) megaman.body.getCenter=(9973.276,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9977.108,2670.4) megaman.body.getCenter=(9975.192,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9979.024,2670.4) megaman.body.getCenter=(9977.108,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9980.94,2670.4) megaman.body.getCenter=(9979.024,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9982.993,2670.4) megaman.body.getCenter=(9980.94,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9984.772,2670.4) megaman.body.getCenter=(9982.993,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9986.6875,2670.4) megaman.body.getCenter=(9984.772,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9988.6045,2670.4) megaman.body.getCenter=(9986.6875,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9990.5205,2670.4) megaman.body.getCenter=(9988.6045,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9992.437,2670.4) megaman.body.getCenter=(9990.5205,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9994.353,2670.4) megaman.body.getCenter=(9992.437,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9996.269,2670.4) megaman.body.getCenter=(9994.353,2670.4)
+11:12:23 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(9998.187,2670.4) megaman.body.getCenter=(9996.269,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10000.101,2670.4) megaman.body.getCenter=(9998.187,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10002.019,2670.4) megaman.body.getCenter=(10000.101,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10003.932,2670.4) megaman.body.getCenter=(10002.019,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10005.972,2670.4) megaman.body.getCenter=(10003.932,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10007.764,2670.4) megaman.body.getCenter=(10005.972,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10009.68,2670.4) megaman.body.getCenter=(10007.764,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10011.596,2670.4) megaman.body.getCenter=(10009.68,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10013.512,2670.4) megaman.body.getCenter=(10011.596,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10015.428,2670.4) megaman.body.getCenter=(10013.512,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10017.344,2670.4) megaman.body.getCenter=(10015.428,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10019.26,2670.4) megaman.body.getCenter=(10017.344,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10021.176,2670.4) megaman.body.getCenter=(10019.26,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10023.093,2670.4) megaman.body.getCenter=(10021.176,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10025.008,2670.4) megaman.body.getCenter=(10023.093,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10026.924,2670.4) megaman.body.getCenter=(10025.008,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10028.84,2670.4) megaman.body.getCenter=(10026.924,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10030.914,2670.4) megaman.body.getCenter=(10028.84,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10032.671,2670.4) megaman.body.getCenter=(10030.914,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10034.588,2670.4) megaman.body.getCenter=(10032.671,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10036.504,2670.4) megaman.body.getCenter=(10034.588,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10038.419,2670.4) megaman.body.getCenter=(10036.504,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10040.336,2670.4) megaman.body.getCenter=(10038.419,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10042.251,2670.4) megaman.body.getCenter=(10040.336,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10044.167,2670.4) megaman.body.getCenter=(10042.251,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10046.083,2670.4) megaman.body.getCenter=(10044.167,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10047.999,2670.4) megaman.body.getCenter=(10046.083,2670.4)
+11:12:24 | DEBUG | MegaLevelScreen | end transition logic for rooms manager: current=mini_boss_room_2, prior=room12
+11:12:24 | LOG | MegaLevelScreen | event(): event=Event(key=ENTER_BOSS_ROOM, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@2fe74516]
+}))
+11:12:24 | DEBUG | MegaLevelScreenEventListener | onEvent(): enter boss room
+11:12:24 | DEBUG | Gate | onEvent(): nextRoomKey=mini_boss_room_2, mapObjectId=558, nextRoomKey=mini_boss_room_2: END_ROOM_TRANS
+11:12:24 | DEBUG | Gate | update(): nextRoomKey=mini_boss_room_2, mapObjectId=558, CLOSING
+11:12:24 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_CLOSING, properties=Properties({
+}))
+11:12:24 | DEBUG | MegaLevelScreenEventListener | onEvent(): gate init closing
+11:12:24 | LOG | MegaLevelScreen | event(): event=Event(key=BOSS_READY, properties=Properties({
+	[boss={ ReactorMonkey:[mapObjId=557, dead=false, hashCode=1109227776] }]
+	[health_fill_type=BIT_BY_BIT]
+}))
+11:12:24 | LOG | MegaLevelScreen | event(): event=Event(key=END_BOSS_SPAWN, properties=Properties({
+}))
+11:12:24 | DEBUG | Gate | update(): nextRoomKey=mini_boss_room_2, mapObjectId=558, CLOSED
+11:12:30 | LOG | MegaLevelScreen | event(): event=Event(key=BOSS_DEFEATED, properties=Properties({
+	[boss={ ReactorMonkey:[mapObjId=557, dead=false, hashCode=1109227776] }]
+}))
+11:12:30 | DEBUG | MegaLevelScreenEventListener | onEvent(): boss defeated
+11:12:33 | LOG | MegaLevelScreen | event(): event=Event(key=BOSS_DEAD, properties=Properties({
+	[boss={ ReactorMonkey:[mapObjId=557, dead=true, hashCode=1109227776] }]
+}))
+11:12:33 | DEBUG | MegaLevelScreenEventListener | onEvent(): boss dead
+11:12:33 | LOG | MegaLevelScreen | event(): event=Event(key=INTERMEDIATE_BOSS_DEAD, properties=Properties({
+	[boss={ ReactorMonkey:[mapObjId=557, dead=true, hashCode=1109227776] }]
+}))
+11:12:33 | DEBUG | Gate | onEvent(): nextRoomKey=room13, mapObjectId=661, INTERMEDIATE_BOSS_DEAD: this_boss_key=3, other_boss_key=3
+11:12:36 | DEBUG | Gate | trigger(): nextRoomKey=room13, mapObjectId=661
+11:12:36 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_OPENING, properties=Properties({
+}))
+11:12:36 | DEBUG | MegaLevelScreenEventListener | onEvent(): gate init opening --> start room transition
+11:12:37 | DEBUG | Gate | update(): nextRoomKey=room13, mapObjectId=661, OPEN
+11:12:37 | LOG | MegaLevelScreen | event(): event=Event(key=NEXT_ROOM_REQ, properties=Properties({
+	[trans_direction=RIGHT]
+	[room=room13]
+}))
+11:12:37 | DEBUG | MegaLevelScreenEventListener | onEvent(): next room req --> starting transition to room: room13
+11:12:37 | DEBUG | MegaLevelScreen | begin transition logic for rooms manager: current=room13, prior=mini_boss_room_2
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10448.0,2670.4) megaman.body.getCenter=(10448.0,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10448.0,2670.4) megaman.body.getCenter=(10448.0,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10448.0,2670.4) megaman.body.getCenter=(10448.0,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10448.0,2670.4) megaman.body.getCenter=(10448.0,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10448.0,2670.4) megaman.body.getCenter=(10448.0,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10448.0,2670.4) megaman.body.getCenter=(10448.0,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10448.0,2670.4) megaman.body.getCenter=(10448.0,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10448.0,2670.4) megaman.body.getCenter=(10448.0,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10448.0,2670.4) megaman.body.getCenter=(10448.0,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10448.0,2670.4) megaman.body.getCenter=(10448.0,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10448.0,2670.4) megaman.body.getCenter=(10448.0,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10448.0,2670.4) megaman.body.getCenter=(10448.0,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10448.0,2670.4) megaman.body.getCenter=(10448.0,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10448.0,2670.4) megaman.body.getCenter=(10448.0,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10448.0,2670.4) megaman.body.getCenter=(10448.0,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10448.0,2670.4) megaman.body.getCenter=(10448.0,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10448.0,2670.4) megaman.body.getCenter=(10448.0,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10448.0,2670.4) megaman.body.getCenter=(10448.0,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10448.0,2670.4) megaman.body.getCenter=(10448.0,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10448.0,2670.4) megaman.body.getCenter=(10448.0,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10449.866,2670.4) megaman.body.getCenter=(10448.0,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10451.733,2670.4) megaman.body.getCenter=(10449.866,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10453.6,2670.4) megaman.body.getCenter=(10451.733,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10455.467,2670.4) megaman.body.getCenter=(10453.6,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10457.333,2670.4) megaman.body.getCenter=(10455.467,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10459.2,2670.4) megaman.body.getCenter=(10457.333,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10461.066,2670.4) megaman.body.getCenter=(10459.2,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10462.933,2670.4) megaman.body.getCenter=(10461.066,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10464.8,2670.4) megaman.body.getCenter=(10462.933,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10466.666,2670.4) megaman.body.getCenter=(10464.8,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10468.697,2670.4) megaman.body.getCenter=(10466.666,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10470.399,2670.4) megaman.body.getCenter=(10468.697,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10472.266,2670.4) megaman.body.getCenter=(10470.399,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10474.133,2670.4) megaman.body.getCenter=(10472.266,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10475.999,2670.4) megaman.body.getCenter=(10474.133,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10477.866,2670.4) megaman.body.getCenter=(10475.999,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10479.732,2670.4) megaman.body.getCenter=(10477.866,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10481.6,2670.4) megaman.body.getCenter=(10479.732,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10483.467,2670.4) megaman.body.getCenter=(10481.6,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10485.333,2670.4) megaman.body.getCenter=(10483.467,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10487.199,2670.4) megaman.body.getCenter=(10485.333,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10489.066,2670.4) megaman.body.getCenter=(10487.199,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10490.933,2670.4) megaman.body.getCenter=(10489.066,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10492.951,2670.4) megaman.body.getCenter=(10490.933,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10494.666,2670.4) megaman.body.getCenter=(10492.951,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10496.533,2670.4) megaman.body.getCenter=(10494.666,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10498.399,2670.4) megaman.body.getCenter=(10496.533,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10500.267,2670.4) megaman.body.getCenter=(10498.399,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10502.133,2670.4) megaman.body.getCenter=(10500.267,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10503.999,2670.4) megaman.body.getCenter=(10502.133,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10505.866,2670.4) megaman.body.getCenter=(10503.999,2670.4)
+11:12:37 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10507.732,2670.4) megaman.body.getCenter=(10505.866,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10509.6,2670.4) megaman.body.getCenter=(10507.732,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10511.467,2670.4) megaman.body.getCenter=(10509.6,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10513.333,2670.4) megaman.body.getCenter=(10511.467,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10515.306,2670.4) megaman.body.getCenter=(10513.333,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10517.067,2670.4) megaman.body.getCenter=(10515.306,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10518.933,2670.4) megaman.body.getCenter=(10517.067,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10520.799,2670.4) megaman.body.getCenter=(10518.933,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10522.667,2670.4) megaman.body.getCenter=(10520.799,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10524.533,2670.4) megaman.body.getCenter=(10522.667,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10526.399,2670.4) megaman.body.getCenter=(10524.533,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10528.267,2670.4) megaman.body.getCenter=(10526.399,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10530.133,2670.4) megaman.body.getCenter=(10528.267,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10531.999,2670.4) megaman.body.getCenter=(10530.133,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10533.866,2670.4) megaman.body.getCenter=(10531.999,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10535.733,2670.4) megaman.body.getCenter=(10533.866,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10537.6,2670.4) megaman.body.getCenter=(10535.733,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10539.592,2670.4) megaman.body.getCenter=(10537.6,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10541.333,2670.4) megaman.body.getCenter=(10539.592,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10543.2,2670.4) megaman.body.getCenter=(10541.333,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10545.066,2670.4) megaman.body.getCenter=(10543.2,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10546.933,2670.4) megaman.body.getCenter=(10545.066,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10548.8,2670.4) megaman.body.getCenter=(10546.933,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10550.667,2670.4) megaman.body.getCenter=(10548.8,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10552.533,2670.4) megaman.body.getCenter=(10550.667,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10554.399,2670.4) megaman.body.getCenter=(10552.533,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10556.266,2670.4) megaman.body.getCenter=(10554.399,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10558.133,2670.4) megaman.body.getCenter=(10556.266,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10560.0,2670.4) megaman.body.getCenter=(10558.133,2670.4)
+11:12:38 | DEBUG | MegaLevelScreen | end transition logic for rooms manager: current=room13, prior=mini_boss_room_2
+11:12:38 | DEBUG | Gate | onEvent(): nextRoomKey=room13, mapObjectId=661, nextRoomKey=room13: END_ROOM_TRANS
+11:12:38 | DEBUG | Gate | update(): nextRoomKey=room13, mapObjectId=661, CLOSING
+11:12:38 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_CLOSING, properties=Properties({
+}))
+11:12:38 | DEBUG | MegaLevelScreenEventListener | onEvent(): gate init closing
+11:12:38 | DEBUG | Gate | update(): nextRoomKey=room13, mapObjectId=661, CLOSED
+11:12:49 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_PLAYER_HEALTH, properties=Properties({
+	[value=8]
+}))
+11:13:04 | LOG | MegaLevelScreen | event(): event=Event(key=ADD_CURRENCY, properties=Properties({
+	[value=4]
+}))
+11:13:05 | DEBUG | Gate | trigger(): nextRoomKey=room14, mapObjectId=628
+11:13:05 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_OPENING, properties=Properties({
+}))
+11:13:05 | DEBUG | MegaLevelScreenEventListener | onEvent(): gate init opening --> start room transition
+11:13:05 | DEBUG | Gate | update(): nextRoomKey=room14, mapObjectId=628, OPEN
+11:13:05 | LOG | MegaLevelScreen | event(): event=Event(key=NEXT_ROOM_REQ, properties=Properties({
+	[trans_direction=RIGHT]
+	[room=room14]
+}))
+11:13:05 | DEBUG | MegaLevelScreenEventListener | onEvent(): next room req --> starting transition to room: room14
+11:13:05 | DEBUG | MegaLevelScreen | begin transition logic for rooms manager: current=room14, prior=room13
+11:13:05 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10957.211,3864.0) megaman.body.getCenter=(10957.211,3864.0)
+11:13:05 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10957.211,3864.0) megaman.body.getCenter=(10957.211,3864.0)
+11:13:05 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10957.211,3864.0) megaman.body.getCenter=(10957.211,3864.0)
+11:13:05 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10957.211,3864.0) megaman.body.getCenter=(10957.211,3864.0)
+11:13:05 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10957.211,3864.0) megaman.body.getCenter=(10957.211,3864.0)
+11:13:05 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10957.211,3864.0) megaman.body.getCenter=(10957.211,3864.0)
+11:13:05 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10957.211,3864.0) megaman.body.getCenter=(10957.211,3864.0)
+11:13:05 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10957.211,3864.0) megaman.body.getCenter=(10957.211,3864.0)
+11:13:05 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10957.211,3864.0) megaman.body.getCenter=(10957.211,3864.0)
+11:13:05 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10957.211,3864.0) megaman.body.getCenter=(10957.211,3864.0)
+11:13:05 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10957.211,3864.0) megaman.body.getCenter=(10957.211,3864.0)
+11:13:05 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10957.211,3864.0) megaman.body.getCenter=(10957.211,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10957.211,3864.0) megaman.body.getCenter=(10957.211,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10957.211,3864.0) megaman.body.getCenter=(10957.211,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10957.211,3864.0) megaman.body.getCenter=(10957.211,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10957.211,3864.0) megaman.body.getCenter=(10957.211,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10957.211,3864.0) megaman.body.getCenter=(10957.211,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10957.211,3864.0) megaman.body.getCenter=(10957.211,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10957.211,3864.0) megaman.body.getCenter=(10957.211,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10957.211,3864.0) megaman.body.getCenter=(10957.211,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10959.124,3864.0) megaman.body.getCenter=(10957.211,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10961.038,3864.0) megaman.body.getCenter=(10959.124,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10962.952,3864.0) megaman.body.getCenter=(10961.038,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10964.864,3864.0) megaman.body.getCenter=(10962.952,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10966.777,3864.0) megaman.body.getCenter=(10964.864,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10968.69,3864.0) megaman.body.getCenter=(10966.777,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10970.604,3864.0) megaman.body.getCenter=(10968.69,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10972.517,3864.0) megaman.body.getCenter=(10970.604,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10974.546,3864.0) megaman.body.getCenter=(10972.517,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10976.342,3864.0) megaman.body.getCenter=(10974.546,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10978.256,3864.0) megaman.body.getCenter=(10976.342,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10980.169,3864.0) megaman.body.getCenter=(10978.256,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10982.082,3864.0) megaman.body.getCenter=(10980.169,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10983.996,3864.0) megaman.body.getCenter=(10982.082,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10985.908,3864.0) megaman.body.getCenter=(10983.996,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10987.821,3864.0) megaman.body.getCenter=(10985.908,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10989.734,3864.0) megaman.body.getCenter=(10987.821,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10991.648,3864.0) megaman.body.getCenter=(10989.734,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10993.562,3864.0) megaman.body.getCenter=(10991.648,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10995.475,3864.0) megaman.body.getCenter=(10993.562,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10997.52,3864.0) megaman.body.getCenter=(10995.475,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(10999.3,3864.0) megaman.body.getCenter=(10997.52,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11001.214,3864.0) megaman.body.getCenter=(10999.3,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11003.128,3864.0) megaman.body.getCenter=(11001.214,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11005.04,3864.0) megaman.body.getCenter=(11003.128,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11006.953,3864.0) megaman.body.getCenter=(11005.04,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11008.866,3864.0) megaman.body.getCenter=(11006.953,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11010.779,3864.0) megaman.body.getCenter=(11008.866,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11012.692,3864.0) megaman.body.getCenter=(11010.779,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11014.605,3864.0) megaman.body.getCenter=(11012.692,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11016.519,3864.0) megaman.body.getCenter=(11014.605,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11018.432,3864.0) megaman.body.getCenter=(11016.519,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11020.345,3864.0) megaman.body.getCenter=(11018.432,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11022.38,3864.0) megaman.body.getCenter=(11020.345,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11024.172,3864.0) megaman.body.getCenter=(11022.38,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11026.085,3864.0) megaman.body.getCenter=(11024.172,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11027.998,3864.0) megaman.body.getCenter=(11026.085,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11029.911,3864.0) megaman.body.getCenter=(11027.998,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11031.824,3864.0) megaman.body.getCenter=(11029.911,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11033.737,3864.0) megaman.body.getCenter=(11031.824,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11035.65,3864.0) megaman.body.getCenter=(11033.737,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11037.563,3864.0) megaman.body.getCenter=(11035.65,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11039.477,3864.0) megaman.body.getCenter=(11037.563,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11041.39,3864.0) megaman.body.getCenter=(11039.477,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11043.303,3864.0) megaman.body.getCenter=(11041.39,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11045.216,3864.0) megaman.body.getCenter=(11043.303,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11047.242,3864.0) megaman.body.getCenter=(11045.216,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11049.043,3864.0) megaman.body.getCenter=(11047.242,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11050.955,3864.0) megaman.body.getCenter=(11049.043,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11052.868,3864.0) megaman.body.getCenter=(11050.955,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11054.782,3864.0) megaman.body.getCenter=(11052.868,3864.0)
+11:13:06 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11056.695,3864.0) megaman.body.getCenter=(11054.782,3864.0)
+11:13:07 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11058.608,3864.0) megaman.body.getCenter=(11056.695,3864.0)
+11:13:07 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11060.521,3864.0) megaman.body.getCenter=(11058.608,3864.0)
+11:13:07 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11062.435,3864.0) megaman.body.getCenter=(11060.521,3864.0)
+11:13:07 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11064.348,3864.0) megaman.body.getCenter=(11062.435,3864.0)
+11:13:07 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11066.261,3864.0) megaman.body.getCenter=(11064.348,3864.0)
+11:13:07 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11068.175,3864.0) megaman.body.getCenter=(11066.261,3864.0)
+11:13:07 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11070.206,3864.0) megaman.body.getCenter=(11068.175,3864.0)
+11:13:07 | DEBUG | MegaLevelScreen | end transition logic for rooms manager: current=room14, prior=room13
+11:13:07 | DEBUG | Gate | onEvent(): nextRoomKey=room14, mapObjectId=628, nextRoomKey=room14: END_ROOM_TRANS
+11:13:07 | DEBUG | Gate | update(): nextRoomKey=room14, mapObjectId=628, CLOSING
+11:13:07 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_CLOSING, properties=Properties({
+}))
+11:13:07 | DEBUG | MegaLevelScreenEventListener | onEvent(): gate init closing
+11:13:07 | DEBUG | Gate | update(): nextRoomKey=room14, mapObjectId=628, CLOSED
+11:13:09 | DEBUG | Gate | trigger(): nextRoomKey=boss_room, mapObjectId=630
+11:13:09 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_OPENING, properties=Properties({
+}))
+11:13:09 | DEBUG | MegaLevelScreenEventListener | onEvent(): gate init opening --> start room transition
+11:13:09 | DEBUG | Gate | update(): nextRoomKey=boss_room, mapObjectId=630, OPEN
+11:13:09 | LOG | MegaLevelScreen | event(): event=Event(key=NEXT_ROOM_REQ, properties=Properties({
+	[trans_direction=null]
+	[room=boss_room]
+}))
+11:13:09 | DEBUG | MegaLevelScreenEventListener | onEvent(): next room req --> starting transition to room: boss_room
+11:13:09 | DEBUG | MegaLevelScreen | begin transition logic for rooms manager: current=boss_room, prior=room14
+11:13:09 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11472.0,3694.4) megaman.body.getCenter=(11472.0,3694.4)
+11:13:09 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11472.0,3694.4) megaman.body.getCenter=(11472.0,3694.4)
+11:13:09 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11472.0,3694.4) megaman.body.getCenter=(11472.0,3694.4)
+11:13:09 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11472.0,3694.4) megaman.body.getCenter=(11472.0,3694.4)
+11:13:09 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11472.0,3694.4) megaman.body.getCenter=(11472.0,3694.4)
+11:13:09 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11472.0,3694.4) megaman.body.getCenter=(11472.0,3694.4)
+11:13:09 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11472.0,3694.4) megaman.body.getCenter=(11472.0,3694.4)
+11:13:09 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11472.0,3694.4) megaman.body.getCenter=(11472.0,3694.4)
+11:13:09 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11472.0,3694.4) megaman.body.getCenter=(11472.0,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11472.0,3694.4) megaman.body.getCenter=(11472.0,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11472.0,3694.4) megaman.body.getCenter=(11472.0,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11472.0,3694.4) megaman.body.getCenter=(11472.0,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11472.0,3694.4) megaman.body.getCenter=(11472.0,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11472.0,3694.4) megaman.body.getCenter=(11472.0,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11472.0,3694.4) megaman.body.getCenter=(11472.0,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11472.0,3694.4) megaman.body.getCenter=(11472.0,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11472.0,3694.4) megaman.body.getCenter=(11472.0,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11472.0,3694.4) megaman.body.getCenter=(11472.0,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11472.0,3694.4) megaman.body.getCenter=(11472.0,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11472.0,3694.4) megaman.body.getCenter=(11472.0,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11472.0,3694.4) megaman.body.getCenter=(11472.0,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11473.867,3694.4) megaman.body.getCenter=(11472.0,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11475.733,3694.4) megaman.body.getCenter=(11473.867,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11477.735,3694.4) megaman.body.getCenter=(11475.733,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11479.467,3694.4) megaman.body.getCenter=(11477.735,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11481.333,3694.4) megaman.body.getCenter=(11479.467,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11483.2,3694.4) megaman.body.getCenter=(11481.333,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11485.066,3694.4) megaman.body.getCenter=(11483.2,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11486.935,3694.4) megaman.body.getCenter=(11485.066,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11488.8,3694.4) megaman.body.getCenter=(11486.935,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11490.667,3694.4) megaman.body.getCenter=(11488.8,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11492.533,3694.4) megaman.body.getCenter=(11490.667,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11494.4,3694.4) megaman.body.getCenter=(11492.533,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11496.267,3694.4) megaman.body.getCenter=(11494.4,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11498.133,3694.4) megaman.body.getCenter=(11496.267,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11500.0,3694.4) megaman.body.getCenter=(11498.133,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11501.967,3694.4) megaman.body.getCenter=(11500.0,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11503.733,3694.4) megaman.body.getCenter=(11501.967,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11505.601,3694.4) megaman.body.getCenter=(11503.733,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11507.467,3694.4) megaman.body.getCenter=(11505.601,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11509.333,3694.4) megaman.body.getCenter=(11507.467,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11511.2,3694.4) megaman.body.getCenter=(11509.333,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11513.067,3694.4) megaman.body.getCenter=(11511.2,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11514.934,3694.4) megaman.body.getCenter=(11513.067,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11516.8,3694.4) megaman.body.getCenter=(11514.934,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11518.667,3694.4) megaman.body.getCenter=(11516.8,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11520.533,3694.4) megaman.body.getCenter=(11518.667,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11522.4,3694.4) megaman.body.getCenter=(11520.533,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11524.402,3694.4) megaman.body.getCenter=(11522.4,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11526.133,3694.4) megaman.body.getCenter=(11524.402,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11528.0,3694.4) megaman.body.getCenter=(11526.133,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11529.867,3694.4) megaman.body.getCenter=(11528.0,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11531.733,3694.4) megaman.body.getCenter=(11529.867,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11533.601,3694.4) megaman.body.getCenter=(11531.733,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11535.467,3694.4) megaman.body.getCenter=(11533.601,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11537.333,3694.4) megaman.body.getCenter=(11535.467,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11539.2,3694.4) megaman.body.getCenter=(11537.333,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11541.066,3694.4) megaman.body.getCenter=(11539.2,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11542.934,3694.4) megaman.body.getCenter=(11541.066,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11544.801,3694.4) megaman.body.getCenter=(11542.934,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11546.667,3694.4) megaman.body.getCenter=(11544.801,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11548.533,3694.4) megaman.body.getCenter=(11546.667,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11550.4,3694.4) megaman.body.getCenter=(11548.533,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11552.267,3694.4) megaman.body.getCenter=(11550.4,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11554.133,3694.4) megaman.body.getCenter=(11552.267,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11556.0,3694.4) megaman.body.getCenter=(11554.133,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11557.866,3694.4) megaman.body.getCenter=(11556.0,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11559.732,3694.4) megaman.body.getCenter=(11557.866,3694.4)
+11:13:10 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11561.6,3694.4) megaman.body.getCenter=(11559.732,3694.4)
+11:13:11 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11563.467,3694.4) megaman.body.getCenter=(11561.6,3694.4)
+11:13:11 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11565.333,3694.4) megaman.body.getCenter=(11563.467,3694.4)
+11:13:11 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11567.199,3694.4) megaman.body.getCenter=(11565.333,3694.4)
+11:13:11 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11569.066,3694.4) megaman.body.getCenter=(11567.199,3694.4)
+11:13:11 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11570.933,3694.4) megaman.body.getCenter=(11569.066,3694.4)
+11:13:11 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11572.8,3694.4) megaman.body.getCenter=(11570.933,3694.4)
+11:13:11 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11574.666,3694.4) megaman.body.getCenter=(11572.8,3694.4)
+11:13:11 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11576.533,3694.4) megaman.body.getCenter=(11574.666,3694.4)
+11:13:11 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11578.399,3694.4) megaman.body.getCenter=(11576.533,3694.4)
+11:13:11 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11580.267,3694.4) megaman.body.getCenter=(11578.399,3694.4)
+11:13:11 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11582.133,3694.4) megaman.body.getCenter=(11580.267,3694.4)
+11:13:11 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11583.999,3694.4) megaman.body.getCenter=(11582.133,3694.4)
+11:13:11 | DEBUG | MegaLevelScreen | end transition logic for rooms manager: current=boss_room, prior=room14
+11:13:11 | LOG | MegaLevelScreen | event(): event=Event(key=ENTER_BOSS_ROOM, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@5a5edc9e]
+}))
+11:13:11 | DEBUG | MegaLevelScreenEventListener | onEvent(): enter boss room
+11:13:11 | DEBUG | Gate | onEvent(): nextRoomKey=boss_room, mapObjectId=630, nextRoomKey=boss_room: END_ROOM_TRANS
+11:13:11 | DEBUG | Gate | update(): nextRoomKey=boss_room, mapObjectId=630, CLOSING
+11:13:11 | LOG | MegaLevelScreen | event(): event=Event(key=GATE_INIT_CLOSING, properties=Properties({
+}))
+11:13:11 | DEBUG | MegaLevelScreenEventListener | onEvent(): gate init closing
+11:13:11 | DEBUG | Gate | update(): nextRoomKey=boss_room, mapObjectId=630, CLOSED
+11:13:13 | LOG | MegaLevelScreen | event(): event=Event(key=BOSS_READY, properties=Properties({
+	[boss={ ReactorMan:[mapObjId=659, dead=false, hashCode=1077032868] }]
+	[health_fill_type=BIT_BY_BIT]
+}))
+11:13:15 | LOG | MegaLevelScreen | event(): event=Event(key=END_BOSS_SPAWN, properties=Properties({
+}))
+11:13:50 | DEBUG | MegaLevelScreen | render(): pause game
+11:13:51 | DEBUG | Gate | onDestroy(): nextRoomKey=room7, mapObjectId=197
+11:13:51 | DEBUG | Gate | onDestroy(): nextRoomKey=room7, mapObjectId=196
+11:13:51 | DEBUG | Gate | onDestroy(): nextRoomKey=mini_boss_room_1, mapObjectId=194
+11:13:51 | DEBUG | Gate | onDestroy(): nextRoomKey=alt_path_1_mini_boss_room_1, mapObjectId=198
+11:13:51 | DEBUG | Gate | onDestroy(): nextRoomKey=mini_boss_room_2, mapObjectId=558
+11:13:51 | DEBUG | Gate | onDestroy(): nextRoomKey=room14, mapObjectId=628
+11:13:51 | DEBUG | Gate | onDestroy(): nextRoomKey=boss_room, mapObjectId=630
+11:13:51 | DEBUG | Gate | onDestroy(): nextRoomKey=room13, mapObjectId=661
+11:13:51 | DEBUG | MegaLevelScreen | dispose(): Disposing level screen

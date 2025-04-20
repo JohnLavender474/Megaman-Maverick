@@ -40,7 +40,10 @@ interface IPropertizable {
 
     fun removeProperty(key: Any) = properties.remove(key)
 
-    fun <T: Any> removeProperty(key: Any, type: KClass<T>): T? = type.cast(properties.remove(key))
+    fun <T : Any> removeProperty(key: Any, type: KClass<T>): T? {
+        val value = properties.remove(key)
+        return if (value != null) type.cast(value) else null
+    }
 
     fun clearProperties() = properties.clear()
 }
