@@ -291,6 +291,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
                 body.physics.velocity.setZero()
 
                 val spawn = bombConsumerFixture.getShape().getCenter()
+
                 val explosion = MegaEntityFactory.fetch(Explosion::class)!!
                 explosion.spawn(props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo spawn))
 
@@ -318,7 +319,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
                 swapFacing()
             }
 
-            val active = !dropped
+            val active = !dropped && !waiting
             bombDamagerFixture.setActive(active)
             bombConsumerFixture.setActive(active)
 

@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.projectiles
 
-
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
@@ -9,13 +8,10 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
+import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.enums.Facing
-import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.interfaces.IDirectional
-import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -44,9 +40,11 @@ import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.decorations.ChargedShotResidual
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
+import kotlin.math.abs
 
-class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFaceable, IDirectional {
+class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
     companion object {
         const val TAG = "ChargedShot"
@@ -54,21 +52,14 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         val FULL_BODY_SIZE: Vector2 = Vector2(0.75f, 1f).scl(ConstVals.PPM.toFloat())
         val HALF_BODY_SIZE: Vector2 = Vector2(0.5f, 0.75f).scl(ConstVals.PPM.toFloat())
 
+        private const val BOUNCE_MAX = 2
+
         private const val HALF_CHARGED_SHOT_REGION_PREFIX = "Half"
         private const val CHARGED_SHOT_REGION_SUFFIX = "_v2"
-        private const val BOUNCE_MAX = 1
 
         private val SPRITE_SIZE = Vector2(2f, 2f).scl(ConstVals.PPM.toFloat())
-
         private val regions = ObjectMap<String, TextureRegion>()
     }
-
-    override var direction: Direction
-        get() = body.direction
-        set(value) {
-            body.direction = value
-        }
-    override lateinit var facing: Facing
 
     var fullyCharged = false
         private set
@@ -96,15 +87,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         body.setSize(bodySize)
         body.forEachFixture { ((it as Fixture).rawShape as GameRectangle).setSize(bodySize) }
 
-        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
-
         trajectory.set(spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!)
-
-        facing = when {
-            direction.isVertical() -> if (trajectory.x > 0f) Facing.RIGHT else Facing.LEFT
-            trajectory.y > 0f -> Facing.RIGHT
-            else -> Facing.LEFT
-        }
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
@@ -115,22 +98,14 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     }
 
     private fun spawnResidual() {
-        val position = when (direction) {
-            Direction.UP, Direction.DOWN ->
-                if (isFacing(Facing.LEFT)) Position.CENTER_RIGHT else Position.CENTER_LEFT
-
-            Direction.LEFT, Direction.RIGHT ->
-                if (isFacing(Facing.LEFT)) Position.TOP_CENTER else Position.BOTTOM_CENTER
-        }
+        val spawn = trajectory.cpy().nor().scl(ConstVals.PPM.toFloat()).add(body.getCenter())
 
         val residual = MegaEntityFactory.fetch(ChargedShotResidual::class)!!
         residual.spawn(
             props(
-                ConstKeys.FACING pairTo facing,
-                ConstKeys.POSITION pairTo position,
-                ConstKeys.DIRECTION pairTo direction,
+                ConstKeys.POSITION pairTo spawn,
                 ConstKeys.BOOLEAN pairTo fullyCharged,
-                ConstKeys.SPAWN pairTo body.getPositionPoint(position),
+                ConstKeys.ROTATION pairTo trajectory.angleDeg(),
             )
         )
     }
@@ -145,62 +120,35 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
-        bounce(Direction.UP)
+        bounce(otherShape)
 
     override fun hitSand(sandFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val shieldEntity = shieldFixture.getEntity()
         if (shieldEntity == owner || (shieldEntity is IOwnable<*> && shieldEntity.owner == owner)) return
-
-        bounce(shieldFixture.getProperty(ConstKeys.DIRECTION, Direction::class))
+        bounce(otherShape)
     }
 
-    private fun bounce(deflectNullable: Direction? = null) {
+    private fun bounce(shape: IGameShape2D) {
         bounced++
+
         if (bounced > BOUNCE_MAX) {
             explodeAndDie()
             return
         }
 
-        swapFacing()
-
-        if (direction.isVertical()) trajectory.x *= -1f else trajectory.y *= -1f
-
-        val deflection = deflectNullable ?: Direction.UP
+        val temp = GameObjectPools.fetch(Vector2::class).set(trajectory)
+        val direction = UtilMethods.getOverlapPushDirection(body.getBounds(), shape) ?: Direction.UP
         when (direction) {
-            Direction.UP -> {
-                when (deflection) {
-                    Direction.UP -> trajectory.set(trajectory.x, 5f * ConstVals.PPM)
-                    Direction.DOWN -> trajectory.set(trajectory.x, -5f * ConstVals.PPM)
-                    else -> trajectory.set(trajectory.x, 0f)
-                }
-            }
-
-            Direction.DOWN -> {
-                when (deflection) {
-                    Direction.UP -> trajectory.set(trajectory.x, -5f * ConstVals.PPM)
-                    Direction.DOWN -> trajectory.set(trajectory.x, 5f * ConstVals.PPM)
-                    else -> trajectory.set(trajectory.x, 0f)
-                }
-            }
-
-            Direction.LEFT -> {
-                when (deflection) {
-                    Direction.UP -> trajectory.set(-5f * ConstVals.PPM, trajectory.y)
-                    Direction.DOWN -> trajectory.set(5f * ConstVals.PPM, trajectory.y)
-                    else -> trajectory.set(0f, trajectory.y)
-                }
-            }
-
-            Direction.RIGHT -> {
-                when (deflection) {
-                    Direction.UP -> trajectory.set(5f * ConstVals.PPM, trajectory.y)
-                    Direction.DOWN -> trajectory.set(-5f * ConstVals.PPM, trajectory.y)
-                    else -> trajectory.set(0f, trajectory.y)
-                }
+            Direction.UP, Direction.DOWN -> temp.y = -trajectory.y
+            Direction.LEFT, Direction.RIGHT -> {
+                temp.x = -trajectory.x
+                temp.y = abs(trajectory.x / 2f)
             }
         }
+        temp.nor().scl(trajectory.len())
+        trajectory.set(temp)
 
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }

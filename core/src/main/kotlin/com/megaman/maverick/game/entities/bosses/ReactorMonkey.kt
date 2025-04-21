@@ -267,7 +267,7 @@ class ReactorMonkey(game: MegamanMaverickGame) :
         component.putUpdateFunction { _, _ ->
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
-            sprite.translateX(0.75f * ConstVals.PPM * -facing.value)
+            sprite.translateX(0.5f * ConstVals.PPM * -facing.value)
 
             sprite.setFlip(isFacing(Facing.RIGHT), false)
 

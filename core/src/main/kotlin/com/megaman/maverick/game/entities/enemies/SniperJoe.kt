@@ -76,6 +76,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
         private const val FIREBALL_X = 10f
 
+        private const val JUMP_DELAY = 0.5f
         private const val JUMP_IMPULSE = 15f
 
         private const val SHIELD_OFFSET = 0.675f
@@ -162,6 +163,8 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     private val shielded: Boolean
         get() = currentState != SniperJoeState.SHOOT
 
+    private val jumpDelay = Timer(JUMP_DELAY)
+
     override fun init() {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
@@ -210,6 +213,8 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         frozen = false
 
         FacingUtils.setFacingOf(this)
+
+        jumpDelay.setToEnd()
     }
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
@@ -247,6 +252,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 stateMachine.next()
             }
 
+            jumpDelay.update(delta)
 
             if (!currentState.equalsAny(SniperJoeState.JUMP, SniperJoeState.TURN, SniperJoeState.FROZEN)) when {
                 shouldStartTurning() -> {
@@ -425,7 +431,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 IceShard.spawn5(body.getCenter())
                 damageTimer.reset()
             }
-
+            SniperJoeState.JUMP -> jumpDelay.reset()
             else -> {}
         }
 
@@ -440,25 +446,24 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         currentState == SniperJoeState.IDLE && facing != FacingUtils.getPreferredFacingFor(this)
 
     private fun shouldStartJumping() =
-        body.isSensing(BodySense.FEET_ON_GROUND) &&
-                body.physics.velocity.y <= 0f &&
-                when (direction) {
-                    Direction.UP -> megaman.body.getY() > body.getMaxY() &&
-                            megaman.body.getX() <= body.getMaxX() &&
-                            megaman.body.getMaxX() >= body.getX()
+        jumpDelay.isFinished() && body.isSensing(BodySense.FEET_ON_GROUND) && body.physics.velocity.y <= 0f &&
+            when (direction) {
+                Direction.UP -> megaman.body.getY() > body.getMaxY() &&
+                    megaman.body.getX() <= body.getMaxX() &&
+                    megaman.body.getMaxX() >= body.getX()
 
-                    Direction.DOWN -> megaman.body.getMaxY() < body.getY() &&
-                            megaman.body.getX() <= body.getMaxX() &&
-                            megaman.body.getMaxX() >= body.getX()
+                Direction.DOWN -> megaman.body.getMaxY() < body.getY() &&
+                    megaman.body.getX() <= body.getMaxX() &&
+                    megaman.body.getMaxX() >= body.getX()
 
-                    Direction.LEFT -> megaman.body.getMaxX() < body.getX() &&
-                            megaman.body.getY() <= body.getMaxY() &&
-                            megaman.body.getMaxY() >= body.getY()
+                Direction.LEFT -> megaman.body.getMaxX() < body.getX() &&
+                    megaman.body.getY() <= body.getMaxY() &&
+                    megaman.body.getMaxY() >= body.getY()
 
-                    Direction.RIGHT -> megaman.body.getX() > body.getMaxX() &&
-                            megaman.body.getY() <= body.getMaxY() &&
-                            megaman.body.getMaxY() >= body.getY()
-                }
+                Direction.RIGHT -> megaman.body.getX() > body.getMaxX() &&
+                    megaman.body.getY() <= body.getMaxY() &&
+                    megaman.body.getMaxY() >= body.getY()
+            }
 
     private fun jump() {
         val impulse = GameObjectPools.fetch(Vector2::class)

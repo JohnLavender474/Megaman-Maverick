@@ -59,22 +59,25 @@ class StarExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     override var owner: IGameEntity? = null
 
     private val timer = Timer(EXPLOSION_DUR)
+    private var damager = true
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
         super.init()
         addComponent(AudioComponent())
-        addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
+        addComponent(defineUpdatablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         owner = spawnProps.get(ConstKeys.OWNER) as GameEntity?
+        damager = spawnProps.getOrDefault(ConstKeys.DAMAGER, true, Boolean::class)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
@@ -82,6 +85,11 @@ class StarExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         timer.reset()
 
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.BLAST_1_SOUND, false)
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -100,17 +108,19 @@ class StarExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         damagerFixture.drawingColor = Color.RED
         debugShapes.add { damagerFixture}
 
+        body.preProcess.put(ConstKeys.DEFAULT) { damagerFixture.setActive(damager) }
+
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 15))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(4f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
-        return spritesComponent
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
@@ -120,4 +130,6 @@ class StarExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     }
 
     override fun getType() = EntityType.EXPLOSION
+
+    override fun getTag() = TAG
 }

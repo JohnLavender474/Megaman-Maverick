@@ -520,6 +520,8 @@ sprites/frames/Decorations1/SandSplash.png
 sprites/frames/Decorations1/RainDrop/purple.png
 sprites/frames/Decorations1/RainDrop/blue.png
 sprites/frames/Decorations1/SlashDissipation.png
+sprites/frames/Decorations1/PunkCityLampPost/alight.png
+sprites/frames/Decorations1/PunkCityLampPost/broken.png
 sprites/frames/Decorations1/BulletResidual.png
 sprites/frames/Decorations1/CrystalConveyorBKG.png
 sprites/frames/Decorations1/BreathBubbles.png
@@ -2643,6 +2645,7 @@ sprites/piskel/BossFaces.piskel
 sprites/piskel/WoodPlank.piskel
 sprites/piskel/DarkSamus993-FireManTileset.piskel
 sprites/piskel/PropellerPlatform.piskel
+sprites/piskel/PunkCityLampPost.piskel
 sprites/piskel/QuickSand_v2_TopLeft.piskel
 sprites/piskel/SprBGTomahawk_v2.piskel
 sprites/piskel/IceFox.piskel

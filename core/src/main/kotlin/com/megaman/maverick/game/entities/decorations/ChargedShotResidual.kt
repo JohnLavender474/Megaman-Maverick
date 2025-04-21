@@ -8,14 +8,8 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.enums.Facing
-import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.interfaces.IDirectional
-import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.time.Timer
@@ -23,7 +17,7 @@ import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
-import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
@@ -35,8 +29,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
-class ChargedShotResidual(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity,
-    IFaceable, IDirectional {
+class ChargedShotResidual(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "ChargedShotResidual"
@@ -44,15 +37,12 @@ class ChargedShotResidual(game: MegamanMaverickGame) : MegaGameEntity(game), ISp
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override lateinit var direction: Direction
-    override lateinit var facing: Facing
-
     var fullyCharged = false
         private set
 
-    private lateinit var position: Position
     private val spawn = Vector2()
     private val timer = Timer(DUR)
+    private var rotation = 0f
 
     override fun init() {
         if (regions.isEmpty) {
@@ -70,17 +60,16 @@ class ChargedShotResidual(game: MegamanMaverickGame) : MegaGameEntity(game), ISp
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        facing = spawnProps.get(ConstKeys.FACING, Facing::class)!!
-        direction = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
+        spawn.set(spawnProps.get(ConstKeys.POSITION, Vector2::class)!!)
+
         fullyCharged = spawnProps.get(ConstKeys.BOOLEAN, Boolean::class)!!
-        position = spawnProps.get(ConstKeys.POSITION, Position::class)!!
-
-        spawn.set(spawnProps.get(ConstKeys.SPAWN, Vector2::class)!!)
-
-        timer.reset()
 
         val dimensions = if (fullyCharged) 1.5f * ConstVals.PPM else ConstVals.PPM.toFloat()
         defaultSprite.setSize(dimensions)
+
+        rotation = spawnProps.get(ConstKeys.ROTATION, Float::class)!!
+
+        timer.reset()
     }
 
     override fun onDestroy() {
@@ -98,19 +87,8 @@ class ChargedShotResidual(game: MegamanMaverickGame) : MegaGameEntity(game), ISp
         val component = SpritesComponent(sprite)
         component.putUpdateFunction { _, _ ->
             sprite.setOriginCenter()
-            sprite.rotation = direction.rotation
-            sprite.setFlip(
-                when {
-                    direction.equalsAny(Direction.UP, Direction.LEFT) -> isFacing(Facing.LEFT)
-                    else -> isFacing(Facing.RIGHT)
-                },
-                false
-            )
-            sprite.setPosition(spawn, position)
-            when {
-                direction.isVertical() -> sprite.translateX(0.25f * ConstVals.PPM * facing.value)
-                else -> sprite.translateY(0.25f * ConstVals.PPM * facing.value)
-            }
+            sprite.rotation = rotation
+            sprite.setCenter(spawn)
         }
         return component
     }
@@ -126,4 +104,6 @@ class ChargedShotResidual(game: MegamanMaverickGame) : MegaGameEntity(game), ISp
     }
 
     override fun getType() = EntityType.DECORATION
+
+    override fun getTag() = TAG
 }

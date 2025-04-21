@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
@@ -41,9 +42,11 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.decorations.DustPuff
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
+import kotlin.math.abs
 
 class BikerKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
 
@@ -54,7 +57,11 @@ class BikerKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         private const val GROUND_GRAVITY = -0.001f
 
         private const val X_VEL = 8f
+        private const val X_IMPULSE = 10f
+
         private const val JUMP_IMPULSE = 20f
+
+        private const val ON_SPAWN_DELAY = 0.5f
 
         private const val DUST_PUFF_DELAY = 0.1f
         private val DUST_PUFF_OFFSETS = gdxArrayOf(-0.75f, 1.25f)
@@ -64,12 +71,23 @@ class BikerKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             "ride" pairTo AnimationDef(2, 1, 0.1f, true)
         )
         private val regions = ObjectMap<String, TextureRegion>()
+
+        private const val SPAWN_BUFFER = 1f
+
+        private fun delayNextPossibleSpawn(biker: BikerKibbo) {
+            val game = biker.game
+            val id = biker.mapObjectId
+            val timer = Timer(SPAWN_BUFFER).setRunOnFinished { game.updatables.remove("$TAG/$id") }
+            game.updatables.put("$TAG/$id", timer)
+        }
     }
 
     override lateinit var facing: Facing
 
     private val dustPuffDelay = Timer(DUST_PUFF_DELAY)
     private var dustPuffIndex = 0
+
+    private val onSpawnDelay = Timer(ON_SPAWN_DELAY)
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -79,6 +97,12 @@ class BikerKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         }
         super.init()
         addComponent(defineAnimationsComponent())
+    }
+
+    override fun canSpawn(spawnProps: Properties): Boolean {
+        val id = spawnProps.get(ConstKeys.ID, Int::class)!!
+        val timer = game.updatables.get("$TAG/$id") as Timer?
+        return timer == null || timer.isFinished()
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -92,21 +116,33 @@ class BikerKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
         dustPuffDelay.reset()
         dustPuffIndex = 0
+
+        onSpawnDelay.reset()
+
+        requestToPlaySound(SoundAsset.REV_SOUND, false)
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        if (isHealthDepleted()) explode()
+        delayNextPossibleSpawn(this)
+        if (overlapsGameCamera() && isHealthDepleted()) explode()
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (body.isSensing(BodySense.FEET_ON_GROUND) && (
-                    megaman.body.getMaxX() >= body.getX() &&
-                        megaman.body.getX() <= body.getMaxX() &&
-                        megaman.body.getY() > body.getY())
+            onSpawnDelay.update(delta)
+            when {
+                !onSpawnDelay.isFinished() -> body.physics.velocity.x = 0f
+                body.isSensing(BodySense.FEET_ON_GROUND) && abs(body.physics.velocity.x) < X_VEL * ConstVals.PPM ->
+                    body.physics.velocity.x += X_IMPULSE * ConstVals.PPM * facing.value * Gdx.graphics.deltaTime
+            }
+
+            if (body.isSensing(BodySense.FEET_ON_GROUND) &&
+                megaman.body.getMaxX() >= body.getX() &&
+                megaman.body.getX() <= body.getMaxX() &&
+                megaman.body.getY() > body.getY()
             ) jump()
 
             dustPuffDelay.update(delta)
@@ -121,6 +157,7 @@ class BikerKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     override fun swapFacing() {
         GameLogger.debug(TAG, "swapFacing()")
         super.swapFacing()
+        body.physics.velocity.x = 0f
         requestToPlaySound(SoundAsset.REV_SOUND, false)
     }
 
@@ -132,9 +169,12 @@ class BikerKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     private fun spawnDustPuff(index: Int) {
         GameLogger.debug(TAG, "spawnDustPuff(): index=$index")
+
         val offset = DUST_PUFF_OFFSETS[index % DUST_PUFF_OFFSETS.size]
+
         val position = body.getPositionPoint(Position.BOTTOM_CENTER)
             .add(facing.value * offset * ConstVals.PPM, 0f)
+
         val puff = MegaEntityFactory.fetch(DustPuff::class)!!
         puff.spawn(props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo position))
     }
@@ -173,8 +213,6 @@ class BikerKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         debugShapes.add { feetFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.physics.velocity.x = facing.value * ConstVals.PPM * X_VEL
-
             body.physics.gravity.y = ConstVals.PPM * when {
                 body.isSensing(BodySense.FEET_ON_GROUND) -> GROUND_GRAVITY
                 else -> GRAVITY

@@ -7,9 +7,11 @@ import com.mega.game.engine.behaviors.FunctionalBehaviorImpl
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.controller.buttons.ButtonStatus
 import com.megaman.maverick.game.ConstKeys
@@ -21,6 +23,8 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.special.Ladder
 import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
@@ -429,26 +433,40 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             ladder = body.getProperty(ConstKeys.LADDER, Ladder::class)!!
 
-            val center = body.getCenter()
+            val headPos = body.fixtures.get(FixtureType.HEAD)
+                .first().getShape().getBoundingRectangle()
+                .getPositionPoint(if (isFacing(Facing.LEFT)) Position.CENTER_LEFT else Position.CENTER_RIGHT)
+            val headBounds = GameObjectPools.fetch(GameRectangle::class)
+                .setSize(0.25f * ConstVals.PPM)
+                .setCenter(headPos)
+
+            val feetPos = body.fixtures.get(FixtureType.FEET)
+                .first().getShape().getBoundingRectangle()
+                .getPositionPoint(if (isFacing(Facing.LEFT)) Position.CENTER_LEFT else Position.CENTER_RIGHT)
+            val feetBounds = GameObjectPools.fetch(GameRectangle::class)
+                .setSize(0.25f * ConstVals.PPM)
+                .setCenter(feetPos)
+
+            val bodyCenter = body.getCenter()
 
             if (isBehaviorActive(BehaviorType.CLIMBING)) {
                 when {
                     direction.isVertical() -> {
                         if (!body.isSensing(BodySense.HEAD_TOUCHING_LADDER)) when {
                             direction == Direction.DOWN &&
-                                center.y + MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM < ladder.body.getY() ->
+                                bodyCenter.y + MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM < ladder.body.getY() ->
                                 return false
 
-                            center.y - MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM > ladder.body.getMaxY() ->
+                            bodyCenter.y - MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM > ladder.body.getMaxY() ->
                                 return false
                         }
 
                         if (!body.isSensing(BodySense.FEET_TOUCHING_LADDER)) when {
                             direction == Direction.DOWN &&
-                                center.y - MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM > ladder.body.getMaxY() ->
+                                bodyCenter.y - MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM > ladder.body.getMaxY() ->
                                 return false
 
-                            center.y + MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM < ladder.body.getY() ->
+                            bodyCenter.y + MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM < ladder.body.getY() ->
                                 return false
                         }
                     }
@@ -456,19 +474,19 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     else -> {
                         if (!body.isSensing(BodySense.HEAD_TOUCHING_LADDER)) when {
                             direction == Direction.LEFT &&
-                                center.x + MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM < ladder.body.getX() ->
+                                bodyCenter.x + MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM < ladder.body.getX() ->
                                 return false
 
-                            center.x - MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM > ladder.body.getMaxX() ->
+                            bodyCenter.x - MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM > ladder.body.getMaxX() ->
                                 return false
                         }
 
                         if (!body.isSensing(BodySense.FEET_TOUCHING_LADDER)) when {
                             direction == Direction.LEFT &&
-                                center.x + MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM > ladder.body.getMaxX() ->
+                                bodyCenter.x + MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM > ladder.body.getMaxX() ->
                                 return false
 
-                            center.x - MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM < ladder.body.getX() ->
+                            bodyCenter.x - MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM < ladder.body.getX() ->
                                 return false
                         }
                     }
@@ -478,10 +496,12 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             }
 
             if (body.isSensing(BodySense.FEET_TOUCHING_LADDER) &&
+                ladder.body.getBounds().overlaps(feetBounds) &&
                 game.controllerPoller.isPressed(MegaControllerButton.DOWN)
             ) return true
 
             if (body.isSensing(BodySense.HEAD_TOUCHING_LADDER) &&
+                ladder.body.getBounds().overlaps(headBounds) &&
                 game.controllerPoller.isPressed(MegaControllerButton.UP)
             ) return true
 

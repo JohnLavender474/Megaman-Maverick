@@ -63,6 +63,11 @@ abstract class AbstractProjectile(game: MegamanMaverickGame, override var size: 
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        owner = null
+    }
+
     override fun onDamageInflictedTo(damageable: IDamageable) {
         onDamageInflictedTo?.invoke(damageable)
     }

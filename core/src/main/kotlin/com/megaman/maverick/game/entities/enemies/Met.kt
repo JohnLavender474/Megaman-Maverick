@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -52,6 +53,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
 
     companion object {
         const val TAG = "Met"
+
         const val RUN_ONLY = "run_only"
         const val RUNNING_ALLOWED = "running_allowed"
 
@@ -60,11 +62,15 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         private const val SHIELDING_DURATION = 1.15f
         private const val RUNNING_DURATION = 0.5f
         private const val POP_UP_DURATION = 0.5f
+
         private const val RUN_SPEED = 8f
-        private const val GRAVITY_IN_AIR = 18f
-        private const val GRAVITY_ON_GROUND = .15f
+
+        private const val GRAVITY_IN_AIR = 0.25f
+        private const val GRAVITY_ON_GROUND = 0.01f
+
         private const val BULLET_TRAJECTORY_X = 15f
         private const val BULLET_TRAJECTORY_Y = 0.25f
+
         private const val VELOCITY_CLAMP_X = 8f
         private const val VELOCITY_CLAMP_Y = 18f
     }
@@ -99,8 +105,8 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-
         super.onSpawn(spawnProps)
+
         behavior = MetBehavior.SHIELDING
 
         val spawn = if (spawnProps.containsKey(ConstKeys.BOUNDS)) {
@@ -148,7 +154,6 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
-
         updatablesComponent.add {
             if (runOnly) behavior = MetBehavior.RUNNING
 
@@ -210,33 +215,27 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(0.85f * ConstVals.PPM)
+        body.physics.applyFrictionX = false
+        body.physics.applyFrictionY = false
+        body.setSize(ConstVals.PPM.toFloat())
 
         val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBounds() }
 
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(0.75f * ConstVals.PPM))
-        body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture}
-
-        val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.15f * ConstVals.PPM))
-        feetFixture.offsetFromBodyAttachment.y = -0.375f * ConstVals.PPM
+        val feetFixture =
+            Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         body.addFixture(feetFixture)
-
-        val shieldFixture = Fixture(
-            body, FixtureType.SHIELD, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM)
-        )
-        body.addFixture(shieldFixture)
-
-        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.75f * ConstVals.PPM))
-        body.addFixture(damageableFixture)
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.75f * ConstVals.PPM))
-        body.addFixture(damagerFixture)
+        feetFixture.drawingColor = Color.GREEN
+        debugShapes.add { feetFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.physics.velocityClamp =
-                (if (direction.isVertical()) Vector2(VELOCITY_CLAMP_X, VELOCITY_CLAMP_Y)
-                else Vector2(VELOCITY_CLAMP_Y, VELOCITY_CLAMP_X)).scl(ConstVals.PPM.toFloat())
+            body.physics.velocityClamp.set(
+                when {
+                    direction.isVertical() -> Vector2(VELOCITY_CLAMP_X, VELOCITY_CLAMP_Y)
+                    else -> Vector2(VELOCITY_CLAMP_Y, VELOCITY_CLAMP_X)
+                }
+            ).scl(ConstVals.PPM.toFloat())
 
             val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GRAVITY_ON_GROUND else GRAVITY_IN_AIR
             val gravityVec = GameObjectPools.fetch(Vector2::class)
@@ -248,23 +247,27 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
             }.scl(ConstVals.PPM.toFloat())
             body.physics.gravity.set(gravityVec)
 
-            shieldFixture.setActive(behavior == MetBehavior.SHIELDING)
-            damageableFixture.setActive(behavior != MetBehavior.SHIELDING)
-
-            shieldFixture.putProperty(ConstKeys.DIRECTION, direction)
+            body.fixtures.get(FixtureType.SHIELD).first().let {
+                it.setActive(behavior == MetBehavior.SHIELDING)
+                it.putProperty(ConstKeys.DIRECTION, direction)
+            }
+            body.fixtures.get(FixtureType.DAMAGER).first().setActive(behavior != MetBehavior.SHIELDING)
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(
+            this,
+            body,
+            BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE, FixtureType.SHIELD)
+        )
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
-        sprite.setSize(1.65f * ConstVals.PPM)
-
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        sprite.setSize(2f * ConstVals.PPM)
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.hidden = damageBlink
 
             val flipX = facing == Facing.LEFT
@@ -273,7 +276,6 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
 
             val rotation = when (direction) {
                 Direction.UP, Direction.DOWN -> 0f
-
                 Direction.LEFT -> 90f
                 Direction.RIGHT -> 270f
             }
@@ -290,7 +292,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
             sprite.setPosition(bodyPosition, position)
         }
 
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

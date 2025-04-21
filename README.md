@@ -191,6 +191,7 @@ comprehensive listing of the credits for the artwork used in this game.
   - [Random Enemies Set 7](https://www.deviantart.com/megared225/art/Random-Enemies-Set-7-539684729)
     - Iceskate Peng
     - Duo-Ball Cannon
+    - Biker Kibbo
   - [Random Enemies Set 8](https://www.deviantart.com/megared225/art/Random-Enemies-Set-8-543327890)
     - Cool Telly
   - [Random Enemies Set 9](https://www.deviantart.com/megared225/art/Random-Enemy-Sprites-Set-9-557171615):
@@ -237,7 +238,6 @@ comprehensive listing of the credits for the artwork used in this game.
 
 - [Famitard](https://www.youtube.com/@FamiTard)
   - Main Menu - [MMX3 Intro Stage 8-Bit](https://youtu.be/jEPimSadiRE)
-  - Intro Stage - [MMX2 Intro Stage 8-Bit](https://youtu.be/7omZK5SjNms)
   - Stage Select Menu (Megaman) - [MMX5 Stage Select 8-Bit](https://youtu.be/NooP1Ir2jp0)
   - Stage Select Menu (Wily) - [MMX5 Zero Stage 1 8-Bit](https://youtu.be/LegA_I5t5js)
   - Reactor Man Stage - [Original Composition 1 8-Bit](https://youtu.be/UwyhXokv8zw?si=arpFaqewqTtV1PXJ)
@@ -247,6 +247,7 @@ comprehensive listing of the credits for the artwork used in this game.
   - Precious Woman Stage - [MMX2 Crystal Snail 8-Bit](https://youtu.be/1qrbYy9qQdE)
   - Robot Master Fight - [MMX6 Boss Fight 8-Bit](https://youtu.be/IeySHEF5U_8)
 - [vinnyz29](https://soundcloud.com/mega-vinnyz279)
+  - Intro Stage 
   - Inferno Man Stage
 - [Cody O'Quinn](https://www.youtube.com/channel/UC3YB69gazd6mzXMGpPHdyTQ)
   - Desert Man Stage - [8 Bit Music - "Battle Man"](https://youtu.be/zA1SwzvHsZw)

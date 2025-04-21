@@ -41,6 +41,7 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.hazards.SpikeTeeth
@@ -63,6 +64,8 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         private const val DROP_TEETH_DUR = 0.3f
         private const val DROP_DELAY = 0.25f
 
+        private const val MAX_SPAWNED = 2
+
         private val animDefs = orderedMapOf(
             "drop" pairTo AnimationDef(),
             "fly" pairTo AnimationDef(2, 1, 0.1f, true),
@@ -82,6 +85,7 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     private val dropDelay = Timer(DROP_DELAY)
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             SpikeCopterState.entries.forEach { state ->
@@ -92,6 +96,8 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         super.init()
         addComponent(defineAnimationsComponent())
     }
+
+    override fun canSpawn(spawnProps: Properties) = MegaGameEntities.getOfTag(TAG).size < MAX_SPAWNED
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")

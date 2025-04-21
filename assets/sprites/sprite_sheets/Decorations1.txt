@@ -1,25 +1,25 @@
 Decorations1.png
-size: 510, 792
+size: 452, 886
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 AirConditioner/machine
   rotate: false
-  xy: 0, 144
+  xy: 224, 52
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 AirConditioner/pipe
   rotate: false
-  xy: 266, 0
+  xy: 0, 52
   size: 64, 16
   orig: 64, 16
   offset: 0, 0
   index: -1
 BlinkingArrow
   rotate: false
-  xy: 80, 48
+  xy: 426, 0
   size: 26, 52
   orig: 26, 52
   offset: 0, 0
@@ -40,49 +40,49 @@ BulletResidual
   index: -1
 Candle
   rotate: false
-  xy: 0, 208
+  xy: 0, 260
   size: 126, 42
   orig: 126, 42
   offset: 0, 0
   index: -1
 ChargedShot_Residual_Half
   rotate: false
-  xy: 242, 48
+  xy: 64, 52
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 CrystalConveyorBKG
   rotate: false
-  xy: 382, 208
+  xy: 320, 302
   size: 128, 384
   orig: 128, 384
   offset: 0, 0
   index: -1
 DrippingToxicGoop
   rotate: false
-  xy: 330, 0
+  xy: 218, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 DustPuff
   rotate: false
-  xy: 122, 48
+  xy: 96, 148
   size: 120, 16
   orig: 120, 16
   offset: 0, 0
   index: -1
 FullChargedShotResidual
   rotate: false
-  xy: 64, 144
+  xy: 288, 52
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Furnace
   rotate: false
-  xy: 306, 48
+  xy: 352, 52
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
@@ -117,37 +117,51 @@ GroundSnow/right
   index: -1
 JetpackFlame
   rotate: false
-  xy: 402, 48
+  xy: 0, 148
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 Lantern
   rotate: false
-  xy: 274, 48
+  xy: 96, 52
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 LavaFall
   rotate: false
-  xy: 106, 48
+  xy: 208, 52
   size: 16, 96
   orig: 16, 96
   offset: 0, 0
   index: -1
 MegamanDamageBurst
   rotate: false
-  xy: 362, 0
+  xy: 250, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 MuzzleFlash
   rotate: false
-  xy: 218, 0
+  xy: 282, 0
   size: 48, 16
   orig: 48, 16
+  offset: 0, 0
+  index: -1
+PunkCityLampPost/alight
+  rotate: false
+  xy: 128, 302
+  size: 192, 150
+  orig: 192, 150
+  offset: 0, 0
+  index: -1
+PunkCityLampPost/broken
+  rotate: false
+  xy: 64, 302
+  size: 64, 150
+  orig: 64, 150
   offset: 0, 0
   index: -1
 RainDrop/blue
@@ -166,63 +180,63 @@ RainDrop/purple
   index: -1
 RainSplash
   rotate: false
-  xy: 0, 48
+  xy: 128, 52
   size: 80, 16
   orig: 80, 16
   offset: 0, 0
   index: -1
 SandSplash
   rotate: false
-  xy: 128, 144
+  xy: 126, 260
   size: 160, 32
   orig: 160, 32
   offset: 0, 0
   index: -1
 SlashDissipation
   rotate: false
-  xy: 318, 208
+  xy: 0, 302
   size: 64, 144
   orig: 64, 144
   offset: 0, 0
   index: -1
 SmallGrass/brush
   rotate: false
-  xy: 394, 0
+  xy: 330, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SmallGrass/still
   rotate: false
-  xy: 426, 0
+  xy: 362, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Smoke/0
   rotate: false
-  xy: 126, 208
+  xy: 216, 148
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
   index: -1
 Smoke/1
   rotate: false
-  xy: 174, 208
+  xy: 264, 148
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
   index: -1
 Smoke/2
   rotate: false
-  xy: 222, 208
+  xy: 312, 148
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
   index: -1
 Smoke/3
   rotate: false
-  xy: 270, 208
+  xy: 360, 148
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
@@ -236,14 +250,14 @@ Snow
   index: -1
 SpaceSatellite
   rotate: false
-  xy: 0, 592
+  xy: 0, 686
   size: 400, 200
   orig: 400, 200
   offset: 0, 0
   index: -1
 Thread
   rotate: false
-  xy: 458, 0
+  xy: 394, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -257,7 +271,7 @@ ToxicWaterfall
   index: -1
 ToxicWaterSplash
   rotate: false
-  xy: 288, 144
+  xy: 286, 260
   size: 160, 32
   orig: 160, 32
   offset: 0, 0
