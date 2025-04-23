@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
@@ -46,7 +47,12 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
         const val TAG = "ReactorManProjectile"
 
         private const val GRAVITY = -0.15f
+
+        private const val GROW_DUR = 0.4f
         private const val DIE_DUR = 0.05f
+
+        private const val BIG_SIZE = 1f
+        private const val SMALL_SIZE = 0.5f
 
         private val shatterTrajectories = objectMapOf(
             Direction.UP pairTo gdxArrayOf(
@@ -81,11 +87,15 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
 
     var active = false
 
-    private val dyingTimer = Timer(DIE_DUR)
-    private var dying = false
     private var big = false
 
+    private val growTimer = Timer(GROW_DUR)
+
+    private val dyingTimer = Timer(DIE_DUR)
+    private var dying = false
+
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
@@ -96,10 +106,15 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
+
         big = spawnProps.get(ConstKeys.BIG, Boolean::class)!!
+
+        val grow = spawnProps.getOrDefault(ConstKeys.GROW, false, Boolean::class)!!
+        if (big && grow) growTimer.reset() else growTimer.setToEnd()
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
@@ -127,10 +142,13 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
     }
 
     override fun explodeAndDie(vararg params: Any?) {
-        if (big) destroy() else {
-            body.physics.velocity.setZero()
-            body.physics.gravityOn = false
-            dying = true
+        when {
+            big -> destroy()
+            else -> {
+                body.physics.velocity.setZero()
+                body.physics.gravityOn = false
+                dying = true
+            }
         }
     }
 
@@ -149,17 +167,19 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
                         Direction.LEFT -> body.getPositionPoint(Position.CENTER_LEFT)
                         Direction.RIGHT -> body.getPositionPoint(Position.CENTER_RIGHT)
                     },
-                    ConstKeys.OWNER pairTo owner,
                     ConstKeys.BIG pairTo false,
-                    ConstKeys.TRAJECTORY pairTo trajectory.cpy().scl(ConstVals.PPM.toFloat()),
+                    ConstKeys.OWNER pairTo owner,
+                    ConstKeys.ACTIVE pairTo true,
                     ConstKeys.GRAVITY_ON pairTo true,
-                    ConstKeys.ACTIVE pairTo true
+                    ConstKeys.TRAJECTORY pairTo trajectory.cpy().scl(ConstVals.PPM.toFloat()),
                 )
             )
         }
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        growTimer.update(delta)
+
         if (dying) {
             dyingTimer.update(delta)
             if (dyingTimer.isFinished()) destroy()
@@ -172,15 +192,10 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
 
-        val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameRectangle())
-        body.addFixture(projectileFixture)
-
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
-        body.addFixture(damagerFixture)
-
         body.preProcess.put(ConstKeys.DEFAULT) {
-            val size = if (big) 0.65f else 0.35f
+            val size = if (big) BIG_SIZE else SMALL_SIZE
             body.setSize(size * ConstVals.PPM)
+
             body.forEachFixture {
                 val shape = (it as Fixture).rawShape as GameRectangle
                 shape.setSize(size * ConstVals.PPM)
@@ -189,7 +204,7 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.DAMAGER, FixtureType.PROJECTILE))
     }
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
@@ -204,7 +219,13 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { if (big) "big" else if (!dying) "small" else "die" }
+                .setKeySupplier {
+                    when {
+                        big && growTimer.isFinished() -> "big"
+                        !dying -> "small"
+                        else -> "die"
+                    }
+                }
                 .applyToAnimations { animations ->
                     animDefs.forEach { entry ->
                         val key = entry.key

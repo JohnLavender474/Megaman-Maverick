@@ -356,6 +356,8 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Bosses1/GutsTank/FistLaunched.png</key>
+            <key type="filename">../frames/Bosses1/ReactorMan/giga_rise.png</key>
+            <key type="filename">../frames/Bosses1/ReactorMan/giga_stand.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -528,6 +530,36 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Bosses1/ReactorMan/jump_throw.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>120,180,240,360</rect>
+                <key>scale9Paddings</key>
+                <rect>120,180,240,360</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses1/ReactorMan/jump_throw_two.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>60,180,120,360</rect>
+                <key>scale9Paddings</key>
+                <rect>60,180,120,360</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Bosses1/ReactorMan/run.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -555,6 +587,36 @@
                 <rect>36,12,72,24</rect>
                 <key>scale9Paddings</key>
                 <rect>36,12,72,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses1/ReactorMan/stand_throw.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>36,36,72,72</rect>
+                <key>scale9Paddings</key>
+                <rect>36,36,72,72</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses1/ReactorMan/stand_throw_two.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>120,120,240,240</rect>
+                <key>scale9Paddings</key>
+                <rect>120,120,240,240</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
