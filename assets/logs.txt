@@ -1,103 +1,256 @@
-===== SESSION STARTED: 2025-04-23T23:00:49.060779822 =====
-23:00:57 | DEBUG | ReactorMan | init()
-23:00:57 | DEBUG | ReactorMan | onSpawn(): spawnProps=Properties({
-	[beamer_1=com.badlogic.gdx.maps.objects.RectangleMapObject@43da41e]
+===== SESSION STARTED: 2025-04-24T19:00:21.856147912 =====
+19:00:30 | DEBUG | ReactorMan | init()
+19:00:30 | DEBUG | ReactorMan | onSpawn(): spawnProps=Properties({
+	[beamer_1=com.badlogic.gdx.maps.objects.RectangleMapObject@736309a9]
 	[bounds=[11936.0,3936.0,32.0,32.0]]
-	[beamer_6=com.badlogic.gdx.maps.objects.RectangleMapObject@148c7c4b]
+	[beamer_6=com.badlogic.gdx.maps.objects.RectangleMapObject@4e93dcb9]
 	[x=11936.0]
-	[beamer_13=com.badlogic.gdx.maps.objects.RectangleMapObject@2009f9b0]
+	[beamer_13=com.badlogic.gdx.maps.objects.RectangleMapObject@188b6035]
 	[height=32.0]
-	[beamer_3=com.badlogic.gdx.maps.objects.RectangleMapObject@50d951e7]
-	[beamer_10=com.badlogic.gdx.maps.objects.RectangleMapObject@39ad12b6]
-	[beamer_8=com.badlogic.gdx.maps.objects.RectangleMapObject@4eb45fec]
-	[beamer_5=com.badlogic.gdx.maps.objects.RectangleMapObject@211febf3]
+	[beamer_3=com.badlogic.gdx.maps.objects.RectangleMapObject@4a34e9f]
+	[beamer_10=com.badlogic.gdx.maps.objects.RectangleMapObject@6f6621e3]
+	[beamer_8=com.badlogic.gdx.maps.objects.RectangleMapObject@3fc05ea2]
+	[beamer_5=com.badlogic.gdx.maps.objects.RectangleMapObject@7c891ba7]
 	[id=659]
-	[beamer_12=com.badlogic.gdx.maps.objects.RectangleMapObject@3bd3d05e]
-	[beamer_2=com.badlogic.gdx.maps.objects.RectangleMapObject@6aba5d30]
-	[beamer_7=com.badlogic.gdx.maps.objects.RectangleMapObject@61d34b4]
+	[beamer_12=com.badlogic.gdx.maps.objects.RectangleMapObject@6240651f]
+	[beamer_2=com.badlogic.gdx.maps.objects.RectangleMapObject@3cf7298d]
+	[beamer_7=com.badlogic.gdx.maps.objects.RectangleMapObject@1ff55ff]
 	[y=3936.0]
 	[width=32.0]
-	[beamer_4=com.badlogic.gdx.maps.objects.RectangleMapObject@588307f7]
-	[beamer_11=com.badlogic.gdx.maps.objects.RectangleMapObject@7df76d99]
-	[beamer_9=com.badlogic.gdx.maps.objects.RectangleMapObject@459cfcca]
+	[beamer_4=com.badlogic.gdx.maps.objects.RectangleMapObject@351f2244]
+	[beamer_11=com.badlogic.gdx.maps.objects.RectangleMapObject@5496c165]
+	[beamer_9=com.badlogic.gdx.maps.objects.RectangleMapObject@51a8313b]
 })
-23:00:57 | DEBUG | ReactorMan | onChangeFacing(): current=LEFT, previous=null, state=INIT
-23:00:59 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=INIT
-23:01:01 | DEBUG | ReactorMan | onChangeState(): current=STAND_THROW, previous=STAND
-23:01:01 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11960.0,3747.2), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1607453282] }]
-23:01:02 | DEBUG | ReactorMan | throwOneProjectile(): trajectory=(-447.17236,27.219069), projectile={ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1607453282] }
-23:01:03 | DEBUG | ReactorMan | onChangeState(): current=JUMP, previous=STAND_THROW
-23:01:03 | DEBUG | ReactorMan | jump()
-23:01:04 | DEBUG | ReactorMan | onChangeState(): current=JUMP_THROW, previous=JUMP
-23:01:04 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11786.844,3913.0488), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1021656938] }]
-23:01:04 | DEBUG | ReactorMan | throwOneProjectile(): trajectory=(-389.33228,221.64023), projectile={ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1021656938] }
-23:01:05 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=JUMP_THROW
-23:01:05 | DEBUG | ReactorMan | onChangeState(): current=STAND_THROW, previous=STAND
-23:01:05 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11786.844,3747.2), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=69670055] }]
-23:01:06 | DEBUG | ReactorMan | throwOneProjectile(): trajectory=(-440.52292,81.50795), projectile={ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=69670055] }
-23:01:07 | DEBUG | ReactorMan | onChangeState(): current=JUMP, previous=STAND_THROW
-23:01:07 | DEBUG | ReactorMan | jump()
-23:01:08 | DEBUG | ReactorMan | onChangeState(): current=JUMP_THROW_TWO, previous=JUMP
-23:01:08 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11709.066,3915.242), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=426052262] }]
-23:01:08 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=1, spawn=(11645.066,3915.242), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=426052262] }, { ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1607453282] }]
-23:01:08 | DEBUG | ReactorMan | onChangeFacing(): current=RIGHT, previous=LEFT, state=JUMP_THROW_TWO
-23:01:09 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=JUMP_THROW_TWO
-23:01:09 | DEBUG | ReactorMan | onChangeState(): current=STAND_THROW_TWO, previous=STAND
-23:01:09 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11645.066,3712.0), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1021656938] }]
-23:01:09 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=1, spawn=(11709.066,3712.0), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1021656938] }, { ReactorManProjectile:[mapObjId=0, dead=false, hashCode=792195577] }]
-23:01:10 | DEBUG | ReactorMan | onChangeState(): current=JUMP, previous=STAND_THROW_TWO
-23:01:10 | DEBUG | ReactorMan | jump()
-23:01:11 | DEBUG | ReactorMan | onChangeState(): current=JUMP_THROW, previous=JUMP
-23:01:11 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11796.709,3877.1064), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=792195577] }]
-23:01:11 | DEBUG | ReactorMan | throwOneProjectile(): trajectory=(383.45905,-231.65315), projectile={ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=792195577] }
-23:01:12 | DEBUG | ReactorMan | onChangeFacing(): current=LEFT, previous=RIGHT, state=JUMP_THROW
-23:01:12 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=JUMP_THROW
-23:01:12 | DEBUG | ReactorMan | onChangeState(): current=GIGA_STAND, previous=STAND
-23:01:13 | DEBUG | ReactorMan | onChangeState(): current=GIGA_RISE, previous=GIGA_STAND
-23:01:20 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=GIGA_RISE
-23:01:20 | DEBUG | ReactorMan | onChangeFacing(): current=RIGHT, previous=LEFT, state=STAND
-23:01:20 | DEBUG | ReactorMan | onChangeFacing(): current=LEFT, previous=RIGHT, state=STAND
-23:01:21 | DEBUG | ReactorMan | onChangeState(): current=STAND_THROW, previous=STAND
-23:01:21 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11812.709,3747.2), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1021656938] }]
-23:01:22 | DEBUG | ReactorMan | throwOneProjectile(): trajectory=(-447.9429,7.1524487), projectile={ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1021656938] }
-23:01:22 | DEBUG | ReactorMan | onChangeState(): current=JUMP, previous=STAND_THROW
-23:01:22 | DEBUG | ReactorMan | jump()
-23:01:23 | DEBUG | ReactorMan | onChangeState(): current=JUMP_THROW_TWO, previous=JUMP
-23:01:23 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11721.956,3919.9175), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=69670055] }]
-23:01:23 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=1, spawn=(11657.956,3919.9175), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=69670055] }, { ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1613912455] }]
-23:01:23 | DEBUG | ReactorMan | onChangeFacing(): current=RIGHT, previous=LEFT, state=JUMP_THROW_TWO
-23:01:24 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=JUMP_THROW_TWO
-23:01:25 | DEBUG | ReactorMan | onChangeState(): current=STAND_THROW, previous=STAND
-23:01:25 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11681.956,3747.2), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=347572726] }]
-23:01:25 | DEBUG | ReactorMan | throwOneProjectile(): trajectory=(447.90408,9.270156), projectile={ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=347572726] }
-23:01:26 | DEBUG | ReactorMan | onChangeState(): current=JUMP, previous=STAND_THROW
-23:01:26 | DEBUG | ReactorMan | jump()
-23:01:27 | DEBUG | ReactorMan | onChangeState(): current=JUMP_THROW, previous=JUMP
-23:01:27 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11825.316,3922.1462), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1613912455] }]
-23:01:27 | DEBUG | ReactorMan | throwOneProjectile(): trajectory=(114.80852,-433.03928), projectile={ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1613912455] }
-23:01:27 | DEBUG | ReactorMan | onChangeFacing(): current=LEFT, previous=RIGHT, state=JUMP_THROW
-23:01:28 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=JUMP_THROW
-23:01:29 | DEBUG | ReactorMan | onChangeState(): current=STAND_THROW_TWO, previous=STAND
-23:01:29 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11865.316,3712.0), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=347572726] }]
-23:01:29 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=1, spawn=(11801.316,3712.0), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=347572726] }, { ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1607453282] }]
-23:01:30 | DEBUG | ReactorMan | onChangeState(): current=JUMP, previous=STAND_THROW_TWO
-23:01:30 | DEBUG | ReactorMan | jump()
-23:01:30 | DEBUG | ReactorMan | onChangeState(): current=JUMP_THROW_TWO, previous=JUMP
-23:01:30 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11736.214,3914.5332), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=426052262] }]
-23:01:30 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=1, spawn=(11672.214,3914.5332), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=426052262] }, { ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1613912455] }]
-23:01:31 | DEBUG | ReactorMan | onChangeFacing(): current=RIGHT, previous=LEFT, state=JUMP_THROW_TWO
-23:01:32 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=JUMP_THROW_TWO
-23:01:32 | DEBUG | ReactorMan | onChangeState(): current=STAND_THROW, previous=STAND
-23:01:32 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11696.214,3747.2), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1607453282] }]
-23:01:33 | DEBUG | ReactorMan | throwOneProjectile(): trajectory=(446.44678,37.273094), projectile={ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1607453282] }
-23:01:33 | DEBUG | ReactorMan | onChangeState(): current=JUMP, previous=STAND_THROW
-23:01:33 | DEBUG | ReactorMan | jump()
-23:01:34 | DEBUG | ReactorMan | onChangeState(): current=JUMP_THROW, previous=JUMP
-23:01:34 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11810.176,3877.1064), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1021656938] }]
-23:01:34 | DEBUG | ReactorMan | throwOneProjectile(): trajectory=(205.78021,-397.94284), projectile={ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1021656938] }
-23:01:34 | DEBUG | ReactorMan | onChangeFacing(): current=LEFT, previous=RIGHT, state=JUMP_THROW
-23:01:35 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=JUMP_THROW
-23:01:36 | DEBUG | ReactorMan | onChangeState(): current=GIGA_STAND, previous=STAND
-23:01:36 | DEBUG | ReactorMan | onChangeState(): current=GIGA_RISE, previous=GIGA_STAND
-23:01:43 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=GIGA_RISE
-23:01:44 | DEBUG | ReactorMan | onDestroy()
+19:00:30 | DEBUG | ReactorMan | onChangeFacing(): current=LEFT, previous=null, state=INIT
+19:00:32 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=INIT
+19:00:35 | DEBUG | ReactorMan | onChangeState(): current=STAND_THROW, previous=STAND
+19:00:35 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11960.0,3747.2), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=384752294] }]
+19:00:35 | DEBUG | ReactorMan | throwOneProjectile(): trajectory=(-447.17236,27.218998), projectile={ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=384752294] }
+19:00:36 | DEBUG | ReactorMan | onChangeState(): current=JUMP, previous=STAND_THROW
+19:00:36 | DEBUG | ReactorMan | jump()
+19:00:37 | DEBUG | ReactorMan | onChangeState(): current=JUMP_THROW, previous=JUMP
+19:00:37 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11771.344,3952.3474), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=258447256] }]
+19:00:37 | DEBUG | ReactorMan | throwOneProjectile(): trajectory=(-256.22687,-367.4939), projectile={ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=258447256] }
+19:00:37 | DEBUG | ReactorMan | onChangeFacing(): current=RIGHT, previous=LEFT, state=JUMP_THROW
+19:00:38 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=JUMP_THROW
+19:00:39 | DEBUG | ReactorMan | onChangeState(): current=STAND_THROW, previous=STAND
+19:00:39 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11755.344,3747.2), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=47719432] }]
+19:00:39 | DEBUG | ReactorMan | throwOneProjectile(): trajectory=(391.95514,216.96811), projectile={ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=47719432] }
+19:00:40 | DEBUG | ReactorMan | onChangeState(): current=JUMP, previous=STAND_THROW
+19:00:40 | DEBUG | ReactorMan | jump()
+19:00:41 | DEBUG | ReactorMan | onChangeState(): current=JUMP_THROW_TWO, previous=JUMP
+19:00:41 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11849.609,3957.3032), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=384752294] }]
+19:00:41 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=1, spawn=(11913.609,3957.3032), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=384752294] }, { ReactorManProjectile:[mapObjId=0, dead=false, hashCode=258447256] }]
+19:00:41 | DEBUG | ReactorMan | onChangeFacing(): current=LEFT, previous=RIGHT, state=JUMP_THROW_TWO
+19:00:42 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=JUMP_THROW_TWO
+19:00:43 | DEBUG | ReactorMan | onChangeState(): current=RUN, previous=STAND
+19:00:43 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=RUN
+19:00:43 | DEBUG | ReactorMan | onChangeState(): current=GIGA_STAND, previous=STAND
+19:00:44 | DEBUG | ReactorMan | onChangeState(): current=GIGA_RISE, previous=GIGA_STAND
+19:00:46 | DEBUG | ReactorMan | findBeamerOverMegaman(): points to test: [11552.0, 11568.0, 11584.0]
+19:00:46 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11552.0, beamerMaxX=11584.0, beamer={ TubeBeamerV2:[mapObjId=680, dead=false, hashCode=1083615749] }
+19:00:46 | DEBUG | ReactorMan | findBeamerOverMegaman(): success: found beamer: { TubeBeamerV2:[mapObjId=680, dead=false, hashCode=1083615749] }
+19:00:51 | DEBUG | ReactorMan | findBeamerOverMegaman(): points to test: [11959.671, 11975.671, 11991.671]
+19:00:51 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11552.0, beamerMaxX=11584.0, beamer={ TubeBeamerV2:[mapObjId=680, dead=false, hashCode=1083615749] }
+19:00:51 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11744.0, beamerMaxX=11776.0, beamer={ TubeBeamerV2:[mapObjId=686, dead=false, hashCode=10304615] }
+19:00:51 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11968.0, beamerMaxX=12000.0, beamer={ TubeBeamerV2:[mapObjId=693, dead=false, hashCode=1820355723] }
+19:00:51 | DEBUG | ReactorMan | findBeamerOverMegaman(): success: found beamer: { TubeBeamerV2:[mapObjId=693, dead=false, hashCode=1820355723] }
+19:00:52 | DEBUG | ReactorMan | findBeamerOverMegaman(): points to test: [11859.974, 11875.974, 11891.974]
+19:00:52 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11552.0, beamerMaxX=11584.0, beamer={ TubeBeamerV2:[mapObjId=680, dead=false, hashCode=1083615749] }
+19:00:52 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11744.0, beamerMaxX=11776.0, beamer={ TubeBeamerV2:[mapObjId=686, dead=false, hashCode=10304615] }
+19:00:52 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11648.0, beamerMaxX=11680.0, beamer={ TubeBeamerV2:[mapObjId=683, dead=false, hashCode=1845297077] }
+19:00:52 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11872.0, beamerMaxX=11904.0, beamer={ TubeBeamerV2:[mapObjId=690, dead=false, hashCode=407877261] }
+19:00:52 | DEBUG | ReactorMan | findBeamerOverMegaman(): success: found beamer: { TubeBeamerV2:[mapObjId=690, dead=false, hashCode=407877261] }
+19:00:54 | DEBUG | ReactorMan | update(): queued beams empty, go to next state
+19:00:54 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=GIGA_RISE
+19:00:54 | DEBUG | ReactorMan | onChangeFacing(): current=RIGHT, previous=LEFT, state=STAND
+19:00:55 | DEBUG | ReactorMan | onChangeState(): current=STAND_THROW, previous=STAND
+19:00:55 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11715.509,3747.2), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=258447256] }]
+19:00:56 | DEBUG | ReactorMan | throwOneProjectile(): trajectory=(407.6255,185.86415), projectile={ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=258447256] }
+19:00:56 | DEBUG | ReactorMan | onChangeState(): current=JUMP, previous=STAND_THROW
+19:00:56 | DEBUG | ReactorMan | jump()
+19:00:57 | DEBUG | ReactorMan | onChangeState(): current=JUMP_THROW, previous=JUMP
+19:00:57 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11849.143,3987.3833), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1055300312] }]
+19:00:57 | DEBUG | ReactorMan | throwOneProjectile(): trajectory=(46.746944,-445.55438), projectile={ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1055300312] }
+19:00:57 | DEBUG | ReactorMan | onChangeFacing(): current=LEFT, previous=RIGHT, state=JUMP_THROW
+19:00:59 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=JUMP_THROW
+19:00:59 | DEBUG | ReactorMan | onChangeState(): current=RUN, previous=STAND
+19:01:00 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=RUN
+19:01:00 | DEBUG | ReactorMan | onChangeState(): current=STAND_THROW_TWO, previous=STAND
+19:01:00 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11726.817,3712.0), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=258447256] }]
+19:01:00 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=1, spawn=(11662.817,3712.0), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=258447256] }, { ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1830669823] }]
+19:01:01 | DEBUG | ReactorMan | onChangeState(): current=JUMP, previous=STAND_THROW_TWO
+19:01:01 | DEBUG | ReactorMan | jump()
+19:01:01 | DEBUG | ReactorMan | onChangeFacing(): current=RIGHT, previous=LEFT, state=JUMP
+19:01:02 | DEBUG | ReactorMan | onChangeState(): current=JUMP_THROW_TWO, previous=JUMP
+19:01:02 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11660.157,3947.8462), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1127434428] }]
+19:01:02 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=1, spawn=(11724.157,3947.8462), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1127434428] }, { ReactorManProjectile:[mapObjId=0, dead=false, hashCode=640161448] }]
+19:01:03 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=JUMP_THROW_TWO
+19:01:03 | DEBUG | ReactorMan | onChangeState(): current=GIGA_STAND, previous=STAND
+19:01:04 | DEBUG | ReactorMan | onChangeState(): current=GIGA_RISE, previous=GIGA_STAND
+19:01:05 | DEBUG | ReactorMan | findBeamerOverMegaman(): points to test: [11823.605, 11839.605, 11855.605]
+19:01:05 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11552.0, beamerMaxX=11584.0, beamer={ TubeBeamerV2:[mapObjId=680, dead=false, hashCode=1083615749] }
+19:01:05 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11744.0, beamerMaxX=11776.0, beamer={ TubeBeamerV2:[mapObjId=686, dead=false, hashCode=10304615] }
+19:01:05 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11968.0, beamerMaxX=12000.0, beamer={ TubeBeamerV2:[mapObjId=693, dead=false, hashCode=1820355723] }
+19:01:05 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11648.0, beamerMaxX=11680.0, beamer={ TubeBeamerV2:[mapObjId=683, dead=false, hashCode=1845297077] }
+19:01:05 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11872.0, beamerMaxX=11904.0, beamer={ TubeBeamerV2:[mapObjId=690, dead=false, hashCode=407877261] }
+19:01:05 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11808.0, beamerMaxX=11840.0, beamer={ TubeBeamerV2:[mapObjId=688, dead=false, hashCode=1910034407] }
+19:01:05 | DEBUG | ReactorMan | findBeamerOverMegaman(): success: found beamer: { TubeBeamerV2:[mapObjId=688, dead=false, hashCode=1910034407] }
+19:01:09 | DEBUG | ReactorMan | findBeamerOverMegaman(): points to test: [11760.763, 11776.763, 11792.763]
+19:01:09 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11744.0, beamerMaxX=11776.0, beamer={ TubeBeamerV2:[mapObjId=686, dead=false, hashCode=10304615] }
+19:01:09 | DEBUG | ReactorMan | findBeamerOverMegaman(): success: found beamer: { TubeBeamerV2:[mapObjId=686, dead=false, hashCode=10304615] }
+19:01:12 | DEBUG | ReactorMan | findBeamerOverMegaman(): points to test: [11809.977, 11825.977, 11841.977]
+19:01:12 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11552.0, beamerMaxX=11584.0, beamer={ TubeBeamerV2:[mapObjId=680, dead=false, hashCode=1083615749] }
+19:01:12 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11744.0, beamerMaxX=11776.0, beamer={ TubeBeamerV2:[mapObjId=686, dead=false, hashCode=10304615] }
+19:01:12 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11968.0, beamerMaxX=12000.0, beamer={ TubeBeamerV2:[mapObjId=693, dead=false, hashCode=1820355723] }
+19:01:12 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11872.0, beamerMaxX=11904.0, beamer={ TubeBeamerV2:[mapObjId=690, dead=false, hashCode=407877261] }
+19:01:12 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11712.0, beamerMaxX=11744.0, beamer={ TubeBeamerV2:[mapObjId=685, dead=false, hashCode=508756323] }
+19:01:12 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11936.0, beamerMaxX=11968.0, beamer={ TubeBeamerV2:[mapObjId=692, dead=false, hashCode=349717579] }
+19:01:12 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11584.0, beamerMaxX=11616.0, beamer={ TubeBeamerV2:[mapObjId=681, dead=false, hashCode=1900438403] }
+19:01:12 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11776.0, beamerMaxX=11808.0, beamer={ TubeBeamerV2:[mapObjId=687, dead=false, hashCode=1188445627] }
+19:01:12 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11680.0, beamerMaxX=11712.0, beamer={ TubeBeamerV2:[mapObjId=684, dead=false, hashCode=1082684443] }
+19:01:12 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11904.0, beamerMaxX=11936.0, beamer={ TubeBeamerV2:[mapObjId=691, dead=false, hashCode=379886173] }
+19:01:12 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11840.0, beamerMaxX=11872.0, beamer={ TubeBeamerV2:[mapObjId=689, dead=false, hashCode=1421650289] }
+19:01:12 | DEBUG | ReactorMan | findBeamerOverMegaman(): success: found beamer: { TubeBeamerV2:[mapObjId=689, dead=false, hashCode=1421650289] }
+19:01:14 | DEBUG | ReactorMan | update(): queued beams empty, go to next state
+19:01:14 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=GIGA_RISE
+19:01:15 | DEBUG | ReactorMan | onChangeState(): current=RUN, previous=STAND
+19:01:15 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=RUN
+19:01:16 | DEBUG | ReactorMan | onChangeState(): current=STAND_THROW, previous=STAND
+19:01:16 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11848.573,3747.2), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1127434428] }]
+19:01:16 | DEBUG | ReactorMan | throwOneProjectile(): trajectory=(270.37848,357.21072), projectile={ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1127434428] }
+19:01:17 | DEBUG | ReactorMan | onChangeState(): current=JUMP, previous=STAND_THROW
+19:01:17 | DEBUG | ReactorMan | jump()
+19:01:18 | DEBUG | ReactorMan | onChangeState(): current=JUMP_THROW, previous=JUMP
+19:01:18 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11875.824,3877.011), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=384752294] }]
+19:01:18 | DEBUG | ReactorMan | throwOneProjectile(): trajectory=(116.14669,-432.68225), projectile={ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=384752294] }
+19:01:18 | DEBUG | ReactorMan | onChangeFacing(): current=LEFT, previous=RIGHT, state=JUMP_THROW
+19:01:19 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=JUMP_THROW
+19:01:19 | DEBUG | ReactorMan | onChangeState(): current=STAND_THROW_TWO, previous=STAND
+19:01:19 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11915.824,3712.0), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1127434428] }]
+19:01:19 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=1, spawn=(11851.824,3712.0), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1127434428] }, { ReactorManProjectile:[mapObjId=0, dead=false, hashCode=47719432] }]
+19:01:20 | DEBUG | ReactorMan | onChangeState(): current=JUMP, previous=STAND_THROW_TWO
+19:01:20 | DEBUG | ReactorMan | jump()
+19:01:21 | DEBUG | ReactorMan | onChangeState(): current=JUMP_THROW_TWO, previous=JUMP
+19:01:21 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11789.597,3841.4104), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=47719432] }]
+19:01:21 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=1, spawn=(11725.597,3841.4104), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=47719432] }, { ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1055300312] }]
+19:01:22 | DEBUG | ReactorMan | onChangeFacing(): current=RIGHT, previous=LEFT, state=JUMP_THROW_TWO
+19:01:22 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=JUMP_THROW_TWO
+19:01:22 | DEBUG | ReactorMan | onChangeState(): current=GIGA_STAND, previous=STAND
+19:01:23 | DEBUG | ReactorMan | onChangeState(): current=GIGA_RISE, previous=GIGA_STAND
+19:01:24 | DEBUG | ReactorMan | findBeamerOverMegaman(): points to test: [11890.726, 11906.726, 11922.726]
+19:01:24 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11552.0, beamerMaxX=11584.0, beamer={ TubeBeamerV2:[mapObjId=680, dead=false, hashCode=1083615749] }
+19:01:24 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11744.0, beamerMaxX=11776.0, beamer={ TubeBeamerV2:[mapObjId=686, dead=false, hashCode=10304615] }
+19:01:24 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11968.0, beamerMaxX=12000.0, beamer={ TubeBeamerV2:[mapObjId=693, dead=false, hashCode=1820355723] }
+19:01:24 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11648.0, beamerMaxX=11680.0, beamer={ TubeBeamerV2:[mapObjId=683, dead=false, hashCode=1845297077] }
+19:01:24 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11872.0, beamerMaxX=11904.0, beamer={ TubeBeamerV2:[mapObjId=690, dead=false, hashCode=407877261] }
+19:01:24 | DEBUG | ReactorMan | findBeamerOverMegaman(): success: found beamer: { TubeBeamerV2:[mapObjId=690, dead=false, hashCode=407877261] }
+19:01:28 | DEBUG | ReactorMan | findBeamerOverMegaman(): points to test: [11811.924, 11827.924, 11843.924]
+19:01:28 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11552.0, beamerMaxX=11584.0, beamer={ TubeBeamerV2:[mapObjId=680, dead=false, hashCode=1083615749] }
+19:01:28 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11744.0, beamerMaxX=11776.0, beamer={ TubeBeamerV2:[mapObjId=686, dead=false, hashCode=10304615] }
+19:01:28 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11968.0, beamerMaxX=12000.0, beamer={ TubeBeamerV2:[mapObjId=693, dead=false, hashCode=1820355723] }
+19:01:28 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11648.0, beamerMaxX=11680.0, beamer={ TubeBeamerV2:[mapObjId=683, dead=false, hashCode=1845297077] }
+19:01:28 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11872.0, beamerMaxX=11904.0, beamer={ TubeBeamerV2:[mapObjId=690, dead=false, hashCode=407877261] }
+19:01:28 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11808.0, beamerMaxX=11840.0, beamer={ TubeBeamerV2:[mapObjId=688, dead=false, hashCode=1910034407] }
+19:01:28 | DEBUG | ReactorMan | findBeamerOverMegaman(): success: found beamer: { TubeBeamerV2:[mapObjId=688, dead=false, hashCode=1910034407] }
+19:01:31 | DEBUG | ReactorMan | findBeamerOverMegaman(): points to test: [11685.567, 11701.567, 11717.567]
+19:01:31 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11552.0, beamerMaxX=11584.0, beamer={ TubeBeamerV2:[mapObjId=680, dead=false, hashCode=1083615749] }
+19:01:31 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11744.0, beamerMaxX=11776.0, beamer={ TubeBeamerV2:[mapObjId=686, dead=false, hashCode=10304615] }
+19:01:31 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11968.0, beamerMaxX=12000.0, beamer={ TubeBeamerV2:[mapObjId=693, dead=false, hashCode=1820355723] }
+19:01:31 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11648.0, beamerMaxX=11680.0, beamer={ TubeBeamerV2:[mapObjId=683, dead=false, hashCode=1845297077] }
+19:01:31 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11872.0, beamerMaxX=11904.0, beamer={ TubeBeamerV2:[mapObjId=690, dead=false, hashCode=407877261] }
+19:01:31 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11808.0, beamerMaxX=11840.0, beamer={ TubeBeamerV2:[mapObjId=688, dead=false, hashCode=1910034407] }
+19:01:31 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11584.0, beamerMaxX=11616.0, beamer={ TubeBeamerV2:[mapObjId=681, dead=false, hashCode=1900438403] }
+19:01:31 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11776.0, beamerMaxX=11808.0, beamer={ TubeBeamerV2:[mapObjId=687, dead=false, hashCode=1188445627] }
+19:01:31 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11680.0, beamerMaxX=11712.0, beamer={ TubeBeamerV2:[mapObjId=684, dead=false, hashCode=1082684443] }
+19:01:31 | DEBUG | ReactorMan | findBeamerOverMegaman(): success: found beamer: { TubeBeamerV2:[mapObjId=684, dead=false, hashCode=1082684443] }
+19:01:33 | DEBUG | ReactorMan | update(): queued beams empty, go to next state
+19:01:33 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=GIGA_RISE
+19:01:34 | DEBUG | ReactorMan | onChangeState(): current=RUN, previous=STAND
+19:01:34 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=RUN
+19:01:34 | DEBUG | ReactorMan | onChangeFacing(): current=LEFT, previous=RIGHT, state=STAND
+19:01:35 | DEBUG | ReactorMan | onChangeState(): current=STAND_THROW, previous=STAND
+19:01:35 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11927.922,3747.2), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=384752294] }]
+19:01:35 | DEBUG | ReactorMan | throwOneProjectile(): trajectory=(-444.18292,58.356743), projectile={ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=384752294] }
+19:01:36 | DEBUG | ReactorMan | onChangeState(): current=JUMP, previous=STAND_THROW
+19:01:36 | DEBUG | ReactorMan | jump()
+19:01:37 | DEBUG | ReactorMan | onChangeState(): current=JUMP_THROW, previous=JUMP
+19:01:37 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11773.336,3900.4895), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1055300312] }]
+19:01:37 | DEBUG | ReactorMan | throwOneProjectile(): trajectory=(-432.8736,-115.431656), projectile={ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1055300312] }
+19:01:38 | DEBUG | ReactorMan | onChangeFacing(): current=RIGHT, previous=LEFT, state=JUMP_THROW
+19:01:38 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=JUMP_THROW
+19:01:38 | DEBUG | ReactorMan | onChangeState(): current=STAND_THROW_TWO, previous=STAND
+19:01:38 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11733.336,3712.0), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1830669823] }]
+19:01:38 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=1, spawn=(11797.336,3712.0), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1830669823] }, { ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1127434428] }]
+19:01:39 | DEBUG | ReactorMan | onChangeState(): current=JUMP, previous=STAND_THROW_TWO
+19:01:39 | DEBUG | ReactorMan | jump()
+19:01:40 | DEBUG | ReactorMan | onChangeState(): current=JUMP_THROW_TWO, previous=JUMP
+19:01:40 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11842.673,3935.0308), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=258447256] }]
+19:01:40 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=1, spawn=(11906.673,3935.0308), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=258447256] }, { ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1055300312] }]
+19:01:41 | DEBUG | ReactorMan | onChangeFacing(): current=LEFT, previous=RIGHT, state=JUMP_THROW_TWO
+19:01:42 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=JUMP_THROW_TWO
+19:01:42 | DEBUG | ReactorMan | onChangeState(): current=GIGA_STAND, previous=STAND
+19:01:42 | DEBUG | ReactorMan | onChangeState(): current=GIGA_RISE, previous=GIGA_STAND
+19:01:45 | DEBUG | ReactorMan | findBeamerOverMegaman(): points to test: [11785.978, 11801.978, 11817.978]
+19:01:45 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11552.0, beamerMaxX=11584.0, beamer={ TubeBeamerV2:[mapObjId=680, dead=false, hashCode=1083615749] }
+19:01:45 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11968.0, beamerMaxX=12000.0, beamer={ TubeBeamerV2:[mapObjId=693, dead=false, hashCode=1820355723] }
+19:01:45 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11648.0, beamerMaxX=11680.0, beamer={ TubeBeamerV2:[mapObjId=683, dead=false, hashCode=1845297077] }
+19:01:45 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11872.0, beamerMaxX=11904.0, beamer={ TubeBeamerV2:[mapObjId=690, dead=false, hashCode=407877261] }
+19:01:45 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11808.0, beamerMaxX=11840.0, beamer={ TubeBeamerV2:[mapObjId=688, dead=false, hashCode=1910034407] }
+19:01:45 | DEBUG | ReactorMan | findBeamerOverMegaman(): success: found beamer: { TubeBeamerV2:[mapObjId=688, dead=false, hashCode=1910034407] }
+19:01:48 | DEBUG | ReactorMan | findBeamerOverMegaman(): points to test: [11576.603, 11592.603, 11608.603]
+19:01:48 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11552.0, beamerMaxX=11584.0, beamer={ TubeBeamerV2:[mapObjId=680, dead=false, hashCode=1083615749] }
+19:01:48 | DEBUG | ReactorMan | findBeamerOverMegaman(): success: found beamer: { TubeBeamerV2:[mapObjId=680, dead=false, hashCode=1083615749] }
+19:01:51 | DEBUG | ReactorMan | findBeamerOverMegaman(): points to test: [11756.453, 11772.453, 11788.453]
+19:01:51 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11552.0, beamerMaxX=11584.0, beamer={ TubeBeamerV2:[mapObjId=680, dead=false, hashCode=1083615749] }
+19:01:51 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11744.0, beamerMaxX=11776.0, beamer={ TubeBeamerV2:[mapObjId=686, dead=false, hashCode=10304615] }
+19:01:51 | DEBUG | ReactorMan | findBeamerOverMegaman(): success: found beamer: { TubeBeamerV2:[mapObjId=686, dead=false, hashCode=10304615] }
+19:01:52 | DEBUG | ReactorMan | update(): queued beams empty, go to next state
+19:01:52 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=GIGA_RISE
+19:01:53 | DEBUG | ReactorMan | onChangeState(): current=RUN, previous=STAND
+19:01:54 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=RUN
+19:01:54 | DEBUG | ReactorMan | onChangeState(): current=STAND_THROW, previous=STAND
+19:01:54 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11720.348,3747.2), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1055300312] }]
+19:01:55 | DEBUG | ReactorMan | throwOneProjectile(): trajectory=(-440.17636,83.35916), projectile={ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1055300312] }
+19:01:55 | DEBUG | ReactorMan | onChangeFacing(): current=RIGHT, previous=LEFT, state=STAND_THROW
+19:01:56 | DEBUG | ReactorMan | onChangeState(): current=JUMP, previous=STAND_THROW
+19:01:56 | DEBUG | ReactorMan | jump()
+19:01:56 | DEBUG | ReactorMan | onChangeState(): current=JUMP_THROW, previous=JUMP
+19:01:56 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11733.796,3877.1064), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=640161448] }]
+19:01:56 | DEBUG | ReactorMan | throwOneProjectile(): trajectory=(404.52716,-192.51443), projectile={ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=640161448] }
+19:01:58 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=JUMP_THROW
+19:01:58 | DEBUG | ReactorMan | onChangeState(): current=STAND_THROW_TWO, previous=STAND
+19:01:58 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11709.796,3712.0), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1830669823] }]
+19:01:58 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=1, spawn=(11773.796,3712.0), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1830669823] }, { ReactorManProjectile:[mapObjId=0, dead=false, hashCode=640161448] }]
+19:01:59 | DEBUG | ReactorMan | onChangeState(): current=JUMP, previous=STAND_THROW_TWO
+19:01:59 | DEBUG | ReactorMan | jump()
+19:01:59 | DEBUG | ReactorMan | onChangeState(): current=JUMP_THROW_TWO, previous=JUMP
+19:01:59 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11817.672,3841.4104), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=258447256] }]
+19:01:59 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=1, spawn=(11881.672,3841.4104), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=258447256] }, { ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1127434428] }]
+19:02:01 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=JUMP_THROW_TWO
+19:02:01 | DEBUG | ReactorMan | onChangeState(): current=GIGA_STAND, previous=STAND
+19:02:01 | DEBUG | ReactorMan | onChangeState(): current=GIGA_RISE, previous=GIGA_STAND
+19:02:05 | DEBUG | ReactorMan | findBeamerOverMegaman(): points to test: [11735.042, 11751.042, 11767.042]
+19:02:05 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11552.0, beamerMaxX=11584.0, beamer={ TubeBeamerV2:[mapObjId=680, dead=false, hashCode=1083615749] }
+19:02:05 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11744.0, beamerMaxX=11776.0, beamer={ TubeBeamerV2:[mapObjId=686, dead=false, hashCode=10304615] }
+19:02:05 | DEBUG | ReactorMan | findBeamerOverMegaman(): success: found beamer: { TubeBeamerV2:[mapObjId=686, dead=false, hashCode=10304615] }
+19:02:08 | DEBUG | ReactorMan | findBeamerOverMegaman(): points to test: [11746.189, 11762.189, 11778.189]
+19:02:08 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11552.0, beamerMaxX=11584.0, beamer={ TubeBeamerV2:[mapObjId=680, dead=false, hashCode=1083615749] }
+19:02:08 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11744.0, beamerMaxX=11776.0, beamer={ TubeBeamerV2:[mapObjId=686, dead=false, hashCode=10304615] }
+19:02:08 | DEBUG | ReactorMan | findBeamerOverMegaman(): success: found beamer: { TubeBeamerV2:[mapObjId=686, dead=false, hashCode=10304615] }
+19:02:09 | DEBUG | ReactorMan | findBeamerOverMegaman(): points to test: [11659.836, 11675.836, 11691.836]
+19:02:09 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11552.0, beamerMaxX=11584.0, beamer={ TubeBeamerV2:[mapObjId=680, dead=false, hashCode=1083615749] }
+19:02:09 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11968.0, beamerMaxX=12000.0, beamer={ TubeBeamerV2:[mapObjId=693, dead=false, hashCode=1820355723] }
+19:02:09 | DEBUG | ReactorMan | findBeamerOverMegaman(): testing: beamerX=11648.0, beamerMaxX=11680.0, beamer={ TubeBeamerV2:[mapObjId=683, dead=false, hashCode=1845297077] }
+19:02:09 | DEBUG | ReactorMan | findBeamerOverMegaman(): success: found beamer: { TubeBeamerV2:[mapObjId=683, dead=false, hashCode=1845297077] }
+19:02:11 | DEBUG | ReactorMan | update(): queued beams empty, go to next state
+19:02:11 | DEBUG | ReactorMan | onChangeState(): current=STAND, previous=GIGA_RISE
+19:02:11 | DEBUG | ReactorMan | onChangeFacing(): current=LEFT, previous=RIGHT, state=STAND
+19:02:12 | DEBUG | ReactorMan | onChangeState(): current=STAND_THROW, previous=STAND
+19:02:12 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11857.672,3747.2), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1127434428] }]
+19:02:13 | DEBUG | ReactorMan | throwOneProjectile(): trajectory=(-447.92523,8.183703), projectile={ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=1127434428] }
+19:02:14 | DEBUG | ReactorMan | onChangeState(): current=JUMP, previous=STAND_THROW
+19:02:14 | DEBUG | ReactorMan | jump()
+19:02:15 | DEBUG | ReactorMan | onChangeState(): current=JUMP_THROW, previous=JUMP
+19:02:15 | DEBUG | ReactorMan | spawnProjectile(): projectiles.sizeBeforeSpawn=0, spawn=(11729.7,3916.3325), projectiles=[{ ReactorManProjectile:[mapObjId=0, dead=false, hashCode=384752294] }]
+19:02:18 | DEBUG | ReactorMan | onDestroy()

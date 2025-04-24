@@ -51,11 +51,13 @@ import com.megaman.maverick.game.entities.hazards.TubeBeamerV2
 import com.megaman.maverick.game.entities.projectiles.ReactorManProjectile
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toProps
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.utils.misc.HeadUtils
 import com.megaman.maverick.game.world.body.*
+import kotlin.math.abs
 import kotlin.math.min
 
 class ReactorManV2(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IFaceable {
@@ -77,6 +79,9 @@ class ReactorManV2(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnt
 
         private const val RUN_DUR = 0.5f
         private const val RUN_SPEED = 10f
+        private const val CYCLES_BEFORE_RUN = 2
+        private const val MIN_DIST_TO_TRIGGER_RUN = 4f
+        private const val RUN_CHANCE = 75f
 
         private const val JUMP_IMPULSE = 16f
         private const val JUMP_THROW_DUR = 0.75f
@@ -87,13 +92,16 @@ class ReactorManV2(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnt
         private const val GIGA_STAND_DUR = 0.5f
         private const val GIGA_RISE_MAX_VEL = 5f
         private const val GIGA_RISE_IMPULSE = 10f
+        private const val GIGA_STOP_RISING_IMPULSE = 5f
         private const val GIGA_RISE_DUR = 1f
         private const val GIGA_CHANCE_DELTA = 25f
         private const val MIN_CYCLES_BEFORE_GIGA = 3
         private const val GIGA_LASER_BEAM_SETS = 3
         private const val GIGA_LASER_BEAMS_PER_SET = 4
-        private const val GIGA_DELAY_BETWEEN_BEAMS = 0.5f
+        private const val GIGA_DELAY_BETWEEN_BEAMS = 0.75f
         private const val GIGA_DELAY_BETWEEN_BEAMS_KEY = "giga_delay_between_beams"
+
+        private const val BEAM_DELAY = 1f
 
         private const val CHANGE_FACING_DELAY_KEY = "change_facing_delay"
         private const val CHANGE_FACING_DELAY = 0.1f
@@ -104,16 +112,17 @@ class ReactorManV2(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnt
         private const val GROUND_GRAVITY = -0.001f
 
         private val animDefs = orderedMapOf(
-            ReactorManState.INIT pairTo AnimationDef(3, 1, 0.1f, false),
-            ReactorManState.STAND pairTo AnimationDef(1, 3, gdxArrayOf(0.5f, 0.15f, 0.15f), true),
-            ReactorManState.STAND_THROW pairTo AnimationDef(3, 3, 0.1f, false),
-            ReactorManState.STAND_THROW_TWO pairTo AnimationDef(3, 1, 0.1f, false),
-            ReactorManState.RUN pairTo AnimationDef(2, 2, 0.1f, true),
-            ReactorManState.JUMP pairTo AnimationDef(),
-            ReactorManState.JUMP_THROW pairTo AnimationDef(3, 2, 0.1f, false),
-            ReactorManState.JUMP_THROW_TWO pairTo AnimationDef(3, 1, 0.1f, false),
-            ReactorManState.GIGA_STAND pairTo AnimationDef(2, 1, 0.1f, true),
-            ReactorManState.GIGA_RISE pairTo AnimationDef(2, 1, 0.1f, true)
+            "init" pairTo AnimationDef(3, 1, 0.1f, false),
+            "stand" pairTo AnimationDef(1, 3, gdxArrayOf(0.5f, 0.15f, 0.15f), true),
+            "stand_throw" pairTo AnimationDef(3, 3, 0.1f, false),
+            "stand_throw_two" pairTo AnimationDef(3, 1, 0.1f, false),
+            "run" pairTo AnimationDef(2, 2, 0.1f, true),
+            "jump" pairTo AnimationDef(),
+            "jump_throw" pairTo AnimationDef(3, 2, 0.1f, false),
+            "jump_throw_two" pairTo AnimationDef(3, 1, 0.1f, false),
+            "giga_stand" pairTo AnimationDef(2, 1, 0.1f, true),
+            "giga_rise" pairTo AnimationDef(2, 1, 0.1f, true),
+            "defeated" pairTo AnimationDef(3, 1, 0.1f, true)
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -156,31 +165,29 @@ class ReactorManV2(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnt
 
     private var standCycles = -1
     private var jumpCycles = -1
+    private var cyclesSinceRun = -1
 
     private val projectiles = Array<ReactorManProjectile>()
 
     private val beamers = Array<TubeBeamerV2>()
-    private val queuedBeams = Queue<TubeBeamerV2>()
-    private val reusableIntArr = Array<Int>()
+    private val queuedBeamerIndices = Queue<Int>()
+
+    private val reusableIndexArray = Array<Int>()
+    private val reusableFloatArray = Array<Float>()
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
-
             val failedKeys = Array<String>()
-
-            animDefs.keys().map { it.name.lowercase() }.forEach { key ->
+            animDefs.keys().forEach { key ->
                 val region = atlas.findRegion("$TAG/$key")
-
                 if (region == null) {
                     failedKeys.add(key)
                     return@forEach
                 }
-
                 regions.put(key, region)
             }
-
             if (!failedKeys.isEmpty) throw IllegalStateException("Failed to fetch regions for keys: $failedKeys")
         }
         super.init()
@@ -207,9 +214,11 @@ class ReactorManV2(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnt
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.BEAMER)) {
                 val props = (value as RectangleMapObject).toProps()
-                props.put(ConstKeys.OWNED, true)
+                props.put(ConstKeys.DELAY, BEAM_DELAY)
 
                 val beamer = MegaEntityFactory.fetch(TubeBeamerV2::class)!!
+                beamer.canBeam = false
+                beamer.onEndBeam = { beamer.canBeam = false }
                 beamer.spawn(props)
 
                 beamers.add(beamer)
@@ -225,6 +234,12 @@ class ReactorManV2(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnt
 
         projectiles.forEach { it.destroy() }
         projectiles.clear()
+
+        beamers.forEach { it.destroy() }
+        beamers.clear()
+
+        reusableIndexArray.clear()
+        reusableFloatArray.clear()
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -285,9 +300,10 @@ class ReactorManV2(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnt
                             body.physics.velocity.set(0f, velY)
                         }
                         else -> {
-                            body.physics.velocity.y -= GIGA_RISE_IMPULSE * ConstVals.PPM
-
-                            if (body.physics.velocity.y > 0.1f * ConstVals.PPM) return@update
+                            if (body.physics.velocity.y > 0.1f * ConstVals.PPM) {
+                                body.physics.velocity.y -= GIGA_STOP_RISING_IMPULSE * ConstVals.PPM * delta
+                                return@update
+                            }
 
                             body.physics.velocity.setZero()
 
@@ -295,13 +311,34 @@ class ReactorManV2(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnt
                             delay.update(delta)
 
                             if (delay.isFinished()) {
-                                val beam = queuedBeams.removeFirst()
-                                beam.startBeaming()
+                                var index = queuedBeamerIndices.removeFirst()
+
+                                if (index == -1) index = findBeamerOverMegaman()
+
+                                if (index == -1 || beamers[index].beaming || beamers[index].canBeam) {
+                                    val indexArray = reloadIndexArray()
+                                    for (i in 0 until indexArray.size)
+                                        if (!beamers[i].beaming && !beamers[i].canBeam) {
+                                            index = i
+                                            break
+                                        }
+                                }
+
+                                when {
+                                    index != -1 -> {
+                                        val beamer = beamers[index]
+                                        beamer.canBeam = true
+                                    }
+                                    else -> GameLogger.error(TAG, "update(): failed to find beamer to beam")
+                                }
 
                                 delay.reset()
                             }
 
-                            if (queuedBeams.isEmpty) stateMachine.next()
+                            if (queuedBeamerIndices.isEmpty) {
+                                GameLogger.debug(TAG, "update(): queued beams empty, go to next state")
+                                stateMachine.next()
+                            }
                         }
                     }
                 }
@@ -311,6 +348,7 @@ class ReactorManV2(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnt
 
             if (projectiles.size >= 1 && projectiles[0].spawned)
                 projectiles[0].body.setCenter(getProjectilePosition1())
+
             if (projectiles.size >= 2 && projectiles[1].spawned)
                 projectiles[1].body.setCenter(getProjectilePosition2())
         }
@@ -426,7 +464,7 @@ class ReactorManV2(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnt
                 }
                 .applyToAnimations { animations ->
                     animDefs.forEach { entry ->
-                        val key = entry.key.name.lowercase()
+                        val key = entry.key
                         val (rows, columns, durations, loop) = entry.value
                         try {
                             val animation = Animation(regions[key], rows, columns, durations, loop)
@@ -446,9 +484,12 @@ class ReactorManV2(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnt
         // init
         .transition(ReactorManState.INIT, ReactorManState.STAND) { true }
         // stand
+        .transition(ReactorManState.STAND, ReactorManState.RUN) { shouldStartRunning() }
         .transition(ReactorManState.STAND, ReactorManState.GIGA_STAND) { shouldPerformGigaAttack() }
         .transition(ReactorManState.STAND, ReactorManState.STAND_THROW_TWO) { shouldPerformStandTwoThrow() }
         .transition(ReactorManState.STAND, ReactorManState.STAND_THROW) { true }
+        // run
+        .transition(ReactorManState.RUN, ReactorManState.STAND) { true }
         // stand throw
         .transition(ReactorManState.STAND_THROW, ReactorManState.JUMP) { true }
         // stand throw two
@@ -471,7 +512,11 @@ class ReactorManV2(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnt
     private fun onChangeState(current: ReactorManState, previous: ReactorManState) {
         GameLogger.debug(TAG, "onChangeState(): current=$current, previous=$previous")
 
-        if (previous.equalsAny(ReactorManState.GIGA_STAND, ReactorManState.GIGA_RISE)) standCycles = -1
+        when (previous) {
+            ReactorManState.GIGA_STAND, ReactorManState.GIGA_RISE -> standCycles = -1
+            ReactorManState.RUN -> cyclesSinceRun = -1
+            else -> {}
+        }
 
         if (current != ReactorManState.INIT) stateTimers[current]?.reset()
 
@@ -480,7 +525,11 @@ class ReactorManV2(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnt
                 jump()
                 jumpCycles++
             }
-            ReactorManState.STAND -> standCycles++
+            ReactorManState.STAND -> {
+                standCycles++
+                cyclesSinceRun++
+            }
+            ReactorManState.RUN -> FacingUtils.setFacingOf(this)
             ReactorManState.STAND_THROW -> {
                 spawnProjectile()
                 otherTimers[STAND_THROW_DELAY_KEY].reset()
@@ -491,24 +540,75 @@ class ReactorManV2(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnt
             }
             ReactorManState.GIGA_RISE -> {
                 queueBeams()
-                otherTimers[GIGA_DELAY_BETWEEN_BEAMS_KEY].reset()
+
+                val delay = otherTimers[GIGA_DELAY_BETWEEN_BEAMS_KEY]
+                delay.setToEnd()
             }
             else -> {}
         }
     }
 
-    private fun queueBeams() = (0 until GIGA_LASER_BEAM_SETS).forEach {
-        (0 until beamers.size).forEach { reusableIntArr.add(it) }
-        reusableIntArr.shuffle()
+    private fun reloadIndexArray(): Array<Int> {
+        reusableIndexArray.clear()
+        (0 until beamers.size).forEach { a -> reusableIndexArray.add(a) }
+        reusableIndexArray.shuffle()
+        return reusableIndexArray
+    }
 
-        (0 until GIGA_LASER_BEAMS_PER_SET).forEach {
-            val index = reusableIntArr.pop()
+    private fun queueBeams() {
+        var indexArray = reloadIndexArray()
 
-            val beamer = beamers[index]
-            queuedBeams.addLast(beamer)
+        (0 until GIGA_LASER_BEAM_SETS).forEach {
+            val perfectTargetIndex = UtilMethods.getRandom(0, GIGA_LASER_BEAMS_PER_SET - 1)
+
+            (0 until GIGA_LASER_BEAMS_PER_SET).forEach { a ->
+                val index = when (a) {
+                    perfectTargetIndex -> -1
+                    else -> {
+                        if (indexArray.isEmpty) indexArray = reloadIndexArray()
+                        indexArray.pop()
+                    }
+                }
+
+                queuedBeamerIndices.addLast(index)
+            }
+        }
+    }
+
+    private fun findBeamerOverMegaman(): Int {
+        val megamanBounds = megaman.body.getBounds()
+
+        reusableFloatArray.clear()
+        reusableFloatArray.addAll(megamanBounds.getX(), megamanBounds.getCenter().x, megamanBounds.getMaxX())
+
+        GameLogger.debug(TAG, "findBeamerOverMegaman(): points to test: $reusableFloatArray")
+
+        for (i in 0 until beamers.size) {
+            val beamer = beamers[i]
+
+            if (beamer.beaming || beamer.canBeam) continue
+
+            val beamerBounds = beamer.body.getBounds()
+            val beamerX = beamerBounds.getX()
+            val beamerMaxX = beamerBounds.getMaxX()
+
+            GameLogger.debug(
+                TAG,
+                "findBeamerOverMegaman(): testing: beamerX=$beamerX, beamerMaxX=$beamerMaxX, beamer=$beamer"
+            )
+
+            val inBounds = reusableFloatArray.any { beamerX <= it && beamerMaxX >= it }
+
+            if (inBounds) {
+                GameLogger.debug(TAG, "findBeamerOverMegaman(): success: found beamer: $beamer")
+
+                return i
+            }
         }
 
-        reusableIntArr.clear()
+        GameLogger.error(TAG, "findBeamerOverMegaman(): failure: failed to find beamer")
+
+        return -1
     }
 
     private fun jump() {
@@ -520,7 +620,7 @@ class ReactorManV2(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnt
     }
 
     private fun shouldApplyGravity(): Boolean {
-        if (currentState == ReactorManState.GIGA_RISE) return false
+        if (defeated || currentState == ReactorManState.GIGA_RISE) return false
 
         if (currentState.equalsAny(ReactorManState.JUMP_THROW, ReactorManState.JUMP_THROW_TWO))
             return stateTimers[currentState].isFinished()
@@ -569,7 +669,7 @@ class ReactorManV2(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnt
     }
 
     private fun getProjectilePosition2() = when (currentState) {
-        ReactorManState.STAND_THROW, ReactorManState.JUMP_THROW-> body.getPositionPoint(Position.TOP_CENTER).add(
+        ReactorManState.STAND_THROW, ReactorManState.JUMP_THROW -> body.getPositionPoint(Position.TOP_CENTER).add(
             0.25f * ConstVals.PPM * facing.value,
             (if (body.isSensing(BodySense.FEET_ON_GROUND)) 0.1f else 0.25f) * ConstVals.PPM
         )
@@ -639,11 +739,19 @@ class ReactorManV2(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnt
         projectiles.clear()
     }
 
+    private fun shouldStartRunning() = cyclesSinceRun >= CYCLES_BEFORE_RUN &&
+        abs(megaman.body.getX() - body.getX()) >= MIN_DIST_TO_TRIGGER_RUN * ConstVals.PPM &&
+        UtilMethods.getRandom(0f, 100f) <= RUN_CHANCE
+
     private fun shouldStopRunning() = FacingUtils.isFacingBlock(this)
 
     private fun shouldEndJump() = body.physics.velocity.y <= 0f && body.isSensing(BodySense.FEET_ON_GROUND)
 
-    private fun canChangeFacing() = !currentState.equalsAny(ReactorManState.GIGA_STAND, ReactorManState.GIGA_RISE)
+    private fun canChangeFacing() = !currentState.equalsAny(
+        ReactorManState.GIGA_STAND,
+        ReactorManState.GIGA_RISE,
+        ReactorManState.RUN
+    )
 
     private fun onChangeFacing(current: Facing, previous: Facing?) {
         GameLogger.debug(TAG, "onChangeFacing(): current=$current, previous=$previous, state=$currentState")

@@ -84,6 +84,9 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     override lateinit var direction: Direction
 
+    val beaming: Boolean
+        get() = !beamTimer.isFinished()
+
     private val rawLine = GameLine()
     private val maxLine = GameLine()
     private val actualLine = GameLine()
@@ -101,12 +104,11 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private val beamDelay = Timer(BEAM_DELAY)
     private val beamTimer = Timer(BEAM_DUR)
-    private val beaming: Boolean
-        get() = !beamTimer.isFinished()
 
     private val spawnExplosionDelay = Timer(SPAWN_EXPLOSION_DELAY)
 
-    private var owned = false
+    var canBeam = true
+    var onEndBeam: (() -> Unit)? = null
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -155,11 +157,11 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)
 
-        beamDelay.reset()
+        val delayDur = spawnProps.getOrDefault(ConstKeys.DELAY, BEAM_DELAY, Float::class)
+        beamDelay.resetDuration(delayDur)
+
         beamTimer.setToEnd()
         spawnExplosionDelay.setToEnd()
-
-        owned = spawnProps.getOrDefault(ConstKeys.OWNED, false, Boolean::class)
     }
 
     override fun onDestroy() {
@@ -179,7 +181,11 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         when {
             beaming -> {
                 beamTimer.update(delta)
-                if (beamTimer.isFinished()) beamDelay.reset()
+                if (beamTimer.isFinished()) {
+                    beamDelay.reset()
+                    onEndBeam?.invoke()
+                    return@UpdatablesComponent
+                }
 
                 when {
                     actualLine.getLength() < maxLine.getLength() -> {
@@ -209,14 +215,14 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
                 }
             }
 
-            else -> if (!owned) {
+            else -> if (canBeam) {
                 beamDelay.update(delta)
                 if (beamDelay.isFinished()) startBeaming()
             }
         }
     })
 
-    fun startBeaming() {
+    private fun startBeaming() {
         val start = rawLine.getFirstLocalPoint()
         actualLine.setLocalPoints(start, start)
 
