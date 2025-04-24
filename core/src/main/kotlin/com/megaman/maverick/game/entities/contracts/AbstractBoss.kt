@@ -167,7 +167,6 @@ abstract class AbstractBoss(
 
     override fun onEvent(event: Event) {
         GameLogger.debug(TAG, "onEvent: event=$event")
-        GameLogger.log(getTag(), "onEvent: event=$event")
         when (event.key) {
             EventType.END_BOSS_SPAWN -> onEndBossSpawnEvent()
             EventType.PLAYER_SPAWN -> destroy()
@@ -250,6 +249,7 @@ abstract class AbstractBoss(
 
     protected open fun onEndBossSpawnEvent() {
         GameLogger.debug(TAG, "onEndBossSpawnEvent()")
+
         betweenReadyAndEndBossSpawnEvent = false
 
         if (playBossMusic()) {

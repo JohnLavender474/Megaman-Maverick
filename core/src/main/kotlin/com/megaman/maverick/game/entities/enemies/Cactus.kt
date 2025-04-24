@@ -313,7 +313,7 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         .build()
 
     private fun buildStateMachine() = EnumStateMachineBuilder.create<CactusState>()
-        .setOnChangeState(this::onChangeState)
+        .onChangeState(this::onChangeState)
         .initialState(CactusState.IDLE)
         // idle
         .transition(CactusState.IDLE, CactusState.FROZEN) { frozen }

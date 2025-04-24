@@ -47,28 +47,28 @@ Bospider/still
   index: -1
 GlacierMan/brake
   rotate: false
-  xy: 1114, 100
+  xy: 1016, 100
   size: 64, 144
   orig: 64, 144
   offset: 0, 0
   index: -1
 GlacierMan/brake_shoot
   rotate: false
-  xy: 1180, 100
+  xy: 1082, 100
   size: 64, 144
   orig: 64, 144
   offset: 0, 0
   index: -1
 GlacierMan/brake_shoot_up
   rotate: false
-  xy: 1246, 100
+  xy: 1148, 100
   size: 64, 144
   orig: 64, 144
   offset: 0, 0
   index: -1
 GlacierMan/defeated
   rotate: false
-  xy: 1312, 100
+  xy: 1214, 100
   size: 64, 144
   orig: 64, 144
   offset: 0, 0
@@ -110,7 +110,7 @@ GlacierMan/fall_shoot_up
   index: -1
 GlacierMan/fired
   rotate: false
-  xy: 1378, 100
+  xy: 1280, 100
   size: 64, 144
   orig: 64, 144
   offset: 0, 0
@@ -173,7 +173,7 @@ GlacierMan/stand_shoot_up
   index: -1
 GlacierMan/stop
   rotate: false
-  xy: 1444, 100
+  xy: 1346, 100
   size: 192, 144
   orig: 192, 144
   offset: 0, 0
@@ -250,14 +250,14 @@ MechaDragon/fly
   index: -1
 MechaDragon/frozen
   rotate: false
-  xy: 788, 100
+  xy: 690, 100
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 MechaDragon/init
   rotate: false
-  xy: 918, 100
+  xy: 820, 100
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
@@ -278,7 +278,7 @@ MoonHead/angry
   index: -1
 MoonHead/awaken
   rotate: false
-  xy: 1048, 100
+  xy: 950, 100
   size: 64, 135
   orig: 64, 135
   offset: 0, 0
@@ -313,7 +313,7 @@ MoonHead/shoot
   index: -1
 ReactorMan/defeated
   rotate: false
-  xy: 1638, 100
+  xy: 1540, 100
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -332,6 +332,13 @@ ReactorMan/giga_stand
   orig: 48, 96
   offset: 0, 0
   index: -1
+ReactorMan/init
+  rotate: false
+  xy: 1590, 100
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
 ReactorMan/jump
   rotate: false
   xy: 648, 2
@@ -341,14 +348,14 @@ ReactorMan/jump
   index: -1
 ReactorMan/jump_throw
   rotate: false
-  xy: 1688, 100
+  xy: 1640, 100
   size: 96, 144
   orig: 96, 144
   offset: 0, 0
   index: -1
 ReactorMan/jump_throw_two
   rotate: false
-  xy: 1786, 100
+  xy: 1738, 100
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -369,21 +376,21 @@ ReactorMan/stand
   index: -1
 ReactorMan/stand_throw
   rotate: false
-  xy: 1836, 100
+  xy: 1788, 100
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 ReactorMan/stand_throw_two
   rotate: false
-  xy: 640, 100
-  size: 96, 96
-  orig: 96, 96
+  xy: 1934, 100
+  size: 48, 144
+  orig: 48, 144
   offset: 0, 0
   index: -1
 ReactorMan/throw
   rotate: false
-  xy: 738, 100
+  xy: 640, 100
   size: 48, 96
   orig: 48, 96
   offset: 0, 0

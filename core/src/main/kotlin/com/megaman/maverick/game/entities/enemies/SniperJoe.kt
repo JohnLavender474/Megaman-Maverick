@@ -395,7 +395,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     private fun buildStateMachine() = EnumStateMachineBuilder
         .create<SniperJoeState>()
         .initialState(SniperJoeState.IDLE)
-        .setOnChangeState(this::onChangeState)
+        .onChangeState(this::onChangeState)
         // idle
         .transition(SniperJoeState.IDLE, SniperJoeState.FROZEN) { type == SniperJoeType.FIRE && frozen }
         .transition(SniperJoeState.IDLE, SniperJoeState.JUMP) { shouldStartJumping() }

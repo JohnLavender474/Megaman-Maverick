@@ -604,7 +604,7 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IFreezableEnt
     private fun buildStateMachine() = EnumStateMachineBuilder
         .create<MechaDragonState>()
         .initialState(MechaDragonState.INIT)
-        .setOnChangeState(this::onChangeState)
+        .onChangeState(this::onChangeState)
         // init
         .transition(MechaDragonState.INIT, MechaDragonState.TURNING_AROUND) { shouldTurnAround() }
         .transition(MechaDragonState.INIT, MechaDragonState.HOVER_IN_PLACE) { true }

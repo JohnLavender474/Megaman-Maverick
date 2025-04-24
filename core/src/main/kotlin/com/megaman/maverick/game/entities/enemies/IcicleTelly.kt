@@ -295,7 +295,7 @@ class IcicleTelly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
     private fun buildStateMachine() = EnumStateMachineBuilder.create<IcicleTellyState>()
         .initialState(IcicleTellyState.SPIN)
-        .setOnChangeState(this::onChangeState)
+        .onChangeState(this::onChangeState)
         .transition(IcicleTellyState.SPIN, IcicleTellyState.SPAWN_ICICLE) { icicleShattered }
         .transition(IcicleTellyState.SPIN, IcicleTellyState.DROP_ICICLE) { true }
         .transition(IcicleTellyState.DROP_ICICLE, IcicleTellyState.SPAWN_ICICLE) { true }

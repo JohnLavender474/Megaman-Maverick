@@ -287,7 +287,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
     private fun buildStateMachine() = EnumStateMachineBuilder.create<SpikeBotState>()
         .initialState(SpikeBotState.STAND)
-        .setOnChangeState(this::onChangeState)
+        .onChangeState(this::onChangeState)
         .transition(SpikeBotState.STAND, SpikeBotState.WALK) { true }
         .transition(SpikeBotState.WALK, SpikeBotState.JUMP) { shouldJump() }
         .transition(SpikeBotState.WALK, SpikeBotState.SHOOT) { true }

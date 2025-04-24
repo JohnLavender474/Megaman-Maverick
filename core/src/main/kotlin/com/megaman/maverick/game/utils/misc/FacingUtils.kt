@@ -63,13 +63,27 @@ object FacingUtils {
         }
     }
 
-    fun setFacingOf(entity: MegaGameEntity) {
+    fun setFacingOf(entity: MegaGameEntity, onChangeFacing: ((current: Facing, previous: Facing?) -> Unit)? = null) {
         entity as IFaceable
-        entity.facing = getPreferredFacingFor(entity)
+
+        val previous: Facing? = try {
+            entity.facing
+        } catch (_: Exception) {
+            null
+        }
+
+        val current = getPreferredFacingFor(entity)
+
+        if (previous != current) {
+            entity.facing = current
+
+            onChangeFacing?.invoke(current, previous)
+        }
     }
 
     fun isFacingBlock(entity: IBodyEntity): Boolean {
         entity as IFaceable
+
         return (entity.body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && entity.isFacing(Facing.LEFT)) ||
             (entity.body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && entity.isFacing(Facing.RIGHT))
     }

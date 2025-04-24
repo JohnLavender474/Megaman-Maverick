@@ -1484,9 +1484,16 @@ sprites/frames/Bosses1/MechaDragon/frozen.png
 sprites/frames/Bosses1/MechaDragon/turning.png
 sprites/frames/Bosses1/MechaDragon/defeated.png
 sprites/frames/Bosses1/ReactorMan/throw.png
+sprites/frames/Bosses1/ReactorMan/stand_throw_two.png
+sprites/frames/Bosses1/ReactorMan/stand_throw.png
+sprites/frames/Bosses1/ReactorMan/init.png
 sprites/frames/Bosses1/ReactorMan/stand.png
 sprites/frames/Bosses1/ReactorMan/jump.png
+sprites/frames/Bosses1/ReactorMan/giga_stand.png
+sprites/frames/Bosses1/ReactorMan/giga_rise.png
+sprites/frames/Bosses1/ReactorMan/jump_throw.png
 sprites/frames/Bosses1/ReactorMan/run.png
+sprites/frames/Bosses1/ReactorMan/jump_throw_two.png
 sprites/frames/Bosses1/ReactorMan/defeated.png
 sprites/frames/Bosses1/GlacierMan/fall.png
 sprites/frames/Bosses1/GlacierMan/fall_shoot_up.png
@@ -2545,6 +2552,7 @@ sprites/piskel/Gate_v2.piskel
 sprites/piskel/Smoke.piskel
 sprites/piskel/Explosion.piskel
 sprites/piskel/ChargeOrbs.piskel
+sprites/piskel/ReactorMan_StandThrow.piskel
 sprites/piskel/Toxic_Waterfall.piskel
 sprites/piskel/ReactMan.piskel
 sprites/piskel/CrystalManTileset.piskel
@@ -3174,6 +3182,8 @@ tiled_maps/tmx/InfernoMan_16x14_v2.tmx
 tiled_maps/tmx/WilyStage2_v2.tmx
 diagrams/Guts Tank - Design.drawio
 diagrams/Inferno Man - Design.drawio
+diagrams/.$Reactor Man V2.drawio.bkp
+diagrams/Reactor Man V2.drawio
 diagrams/Desert Man - Design.drawio
 diagrams/Glacier Man - Design.drawio
 diagrams/.$Inferno Man - Design.drawio.bkp

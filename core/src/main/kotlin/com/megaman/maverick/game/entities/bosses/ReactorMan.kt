@@ -134,11 +134,6 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     override fun isReady(delta: Float) = initTimer.isFinished()
 
-    override fun onReady() {
-        GameLogger.debug(TAG, "onReady()")
-        super.onReady()
-    }
-
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()

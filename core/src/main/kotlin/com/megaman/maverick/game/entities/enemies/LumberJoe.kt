@@ -361,8 +361,8 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     private fun isBurning() = !stateTimers[LumberJoeState.BURN].isFinished()
 
     private fun buildStateMachine() = EnumStateMachineBuilder.create<LumberJoeState>()
-        .setTriggerChangeWhenSameElement(false)
-        .setOnChangeState(this::onChangeState)
+        .triggerChangeWhenSameElement(false)
+        .onChangeState(this::onChangeState)
         .initialState(LumberJoeState.JUMP)
         // stand
         .transition(LumberJoeState.STAND, LumberJoeState.BURN) { isBurning() }

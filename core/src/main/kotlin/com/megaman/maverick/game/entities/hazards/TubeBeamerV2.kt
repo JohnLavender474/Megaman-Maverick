@@ -75,7 +75,7 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         private const val BEAM_WIDTH = 0.125f
         private const val BEAM_HEIGHT = 1f
-        private const val BEAM_GROWTH_RATE = 16f
+        private const val BEAM_GROWTH_RATE = 18f
         private const val BEAM_REGION_KEY = "TubeBeam_short"
         private const val BEAM_DELAY_FLASH_RATIO = 0.5f
 
@@ -97,7 +97,7 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private val ignoreIds = ObjectSet<Int>()
 
-    private lateinit var spawnRoom: String
+    private var spawnRoom: String? = null
 
     private val beamDelay = Timer(BEAM_DELAY)
     private val beamTimer = Timer(BEAM_DUR)
@@ -105,6 +105,8 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         get() = !beamTimer.isFinished()
 
     private val spawnExplosionDelay = Timer(SPAWN_EXPLOSION_DELAY)
+
+    private var owned = false
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -129,7 +131,12 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        direction = Direction.valueOf(spawnProps.get(ConstKeys.DIRECTION, String::class)!!.uppercase())
+        val rawDir = spawnProps.get(ConstKeys.DIRECTION)
+        this.direction = when (rawDir) {
+            is Direction -> rawDir
+            is String -> Direction.valueOf(rawDir.uppercase())
+            else -> throw IllegalStateException("Not a valid direction value: $rawDir")
+        }
 
         val position = DirectionPositionMapper.getPosition(direction)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(position)
@@ -146,11 +153,13 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             }
         }
 
-        spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
+        spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)
 
         beamDelay.reset()
         beamTimer.setToEnd()
         spawnExplosionDelay.setToEnd()
+
+        owned = spawnProps.getOrDefault(ConstKeys.OWNED, false, Boolean::class)
     }
 
     override fun onDestroy() {
@@ -200,21 +209,23 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
                 }
             }
 
-            else -> {
+            else -> if (!owned) {
                 beamDelay.update(delta)
-                if (beamDelay.isFinished()) {
-                    val start = rawLine.getFirstLocalPoint()
-                    actualLine.setLocalPoints(start, start)
-
-                    beamTimer.reset()
-                    spawnExplosionDelay.setToEnd()
-
-                    if (game.getGameCamera().overlaps(maxLine.getBoundingRectangle()))
-                        requestToPlaySound(SoundAsset.BURST_SOUND, false)
-                }
+                if (beamDelay.isFinished()) startBeaming()
             }
         }
     })
+
+    fun startBeaming() {
+        val start = rawLine.getFirstLocalPoint()
+        actualLine.setLocalPoints(start, start)
+
+        beamTimer.reset()
+        spawnExplosionDelay.setToEnd()
+
+        if (game.getGameCamera().overlaps(maxLine.getBoundingRectangle()))
+            requestToPlaySound(SoundAsset.BURST_SOUND, false)
+    }
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
@@ -278,7 +289,9 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             ConstKeys.CULL_ROOM pairTo getStandardEventCullingLogic(
                 this,
                 objectSetOf(EventType.BEGIN_ROOM_TRANS),
-                predicate@{ event -> return@predicate !event.isProperty(ConstKeys.NAME, spawnRoom) }
+                predicate@{ event ->
+                    return@predicate spawnRoom != null && !event.isProperty(ConstKeys.NAME, spawnRoom!!)
+                }
             )
         )
     )

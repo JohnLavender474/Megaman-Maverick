@@ -37,18 +37,13 @@ class EnumStateMachineBuilder<E : Enum<E>>() {
         return this
     }
 
-    fun setOnChangeState(onChangeState: ((E, E) -> Unit)? = null): EnumStateMachineBuilder<E> {
+    fun onChangeState(onChangeState: ((E, E) -> Unit)? = null): EnumStateMachineBuilder<E> {
         builder.setOnChangeState(onChangeState)
         return this
     }
 
-    fun setTriggerChangeWhenSameElement(triggerChangeWhenSameElement: Boolean): EnumStateMachineBuilder<E> {
+    fun triggerChangeWhenSameElement(triggerChangeWhenSameElement: Boolean): EnumStateMachineBuilder<E> {
         builder.setTriggerChangeWhenSameElement(triggerChangeWhenSameElement)
-        return this
-    }
-
-    fun setCallOnChangeOnReset(callOnChangeOnReset: Boolean): EnumStateMachineBuilder<E> {
-        builder.setCallOnChangeOnReset(callOnChangeOnReset)
         return this
     }
 

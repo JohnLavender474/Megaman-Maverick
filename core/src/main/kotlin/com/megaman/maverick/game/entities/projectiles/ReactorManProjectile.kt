@@ -46,7 +46,8 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
     companion object {
         const val TAG = "ReactorManProjectile"
 
-        private const val GRAVITY = -0.15f
+        private const val BIG_GRAVITY = -0.05f
+        private const val SMALL_GRAVITY = -0.15f
 
         private const val GROW_DUR = 0.4f
         private const val DIE_DUR = 0.05f
@@ -113,8 +114,11 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
 
         big = spawnProps.get(ConstKeys.BIG, Boolean::class)!!
 
-        val grow = spawnProps.getOrDefault(ConstKeys.GROW, false, Boolean::class)!!
+        val grow = spawnProps.getOrDefault(ConstKeys.GROW, false, Boolean::class)
         if (big && grow) growTimer.reset() else growTimer.setToEnd()
+
+        val size = if (big && !grow) BIG_SIZE else SMALL_SIZE
+        body.setSize(size * ConstVals.PPM)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
@@ -188,13 +192,16 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.physics.gravity.set(0f, GRAVITY * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            val size = if (big) BIG_SIZE else SMALL_SIZE
+            body.physics.gravity.y = ConstVals.PPM * if (big && growTimer.isFinished()) BIG_GRAVITY else SMALL_GRAVITY
+
+            val size = if (big && growTimer.isFinished()) BIG_SIZE else SMALL_SIZE
+            val center = body.getCenter()
             body.setSize(size * ConstVals.PPM)
+            body.setCenter(center)
 
             body.forEachFixture {
                 val shape = (it as Fixture).rawShape as GameRectangle

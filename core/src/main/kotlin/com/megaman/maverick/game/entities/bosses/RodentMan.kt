@@ -641,8 +641,8 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
         .build()
 
     private fun buildStateMachine() = EnumStateMachineBuilder.create<RodentManState>()
-        .setOnChangeState(this::onChangeState)
-        .setTriggerChangeWhenSameElement(true)
+        .onChangeState(this::onChangeState)
+        .triggerChangeWhenSameElement(true)
         .initialState(RodentManState.INIT)
         // init
         .transition(RodentManState.INIT, RodentManState.STAND) { true }
