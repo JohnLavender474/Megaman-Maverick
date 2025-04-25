@@ -32,6 +32,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
 class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFaceable {
@@ -75,8 +76,7 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
             wasOnWall = onWall
-            onWall = (facing == Facing.LEFT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
-                (facing == Facing.RIGHT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
+            onWall = FacingUtils.isFacingBlock(this)
 
             if (!megaman.dead && body.isSensing(BodySense.FEET_ON_GROUND)) when {
                 megaman.body.getBounds().getPositionPoint(Position.BOTTOM_RIGHT).x < body.getX() ->
@@ -91,6 +91,8 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(ConstVals.PPM.toFloat())
+        body.physics.applyFrictionX = false
+        body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }

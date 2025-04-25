@@ -44,14 +44,15 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
+import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
 class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity,
@@ -97,14 +98,12 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             gdxArrayOf("stand", "throw", "shoot", "shoot_up").forEach { key ->
                 regions.put(key, atlas.findRegion("${TAG}/$key"))
             }
         }
-
         if (stateTimers.isEmpty) {
             stateTimers.put(AstroAssState.STAND, Timer(STAND_DUR))
             stateTimers.put(AstroAssState.SHOOT, Timer(SHOOT_DUR).also { timer ->
@@ -124,28 +123,28 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
                 timer.addRunnables(runnable)
             })
         }
-
         stateMachine = buildStateMachine()
-
         super.init()
-
         addComponent(defineAnimationsComponent())
-
         sensor.drawingColor = Color.GRAY
         addDebugShapeSupplier { sensor }
     }
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.positionOnPoint(spawn, Position.BOTTOM_CENTER)
 
-        updateFacing()
+        FacingUtils.setFacingOf(this)
 
         stateMachine.reset()
+        stateTimers.forEach {
+            val key = it.key
+            val timer = it.value
+            if (key == AstroAssState.STAND) timer.setToEnd() else timer.reset()
+        }
         stateTimers.values().forEach { it.reset() }
 
         shootUp = false
@@ -164,7 +163,6 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
-
         super.onDestroy()
     }
 
@@ -177,20 +175,18 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
             .set(0.35f * facing.value, 0.2f)
             .scl(ConstVals.PPM.toFloat()).add(body.getCenter())
 
-        // TODO: impulse dependent on direction
         val impulse = GameObjectPools.fetch(Vector2::class)
             .set(FLAG_THROW_IMPULSE_X * facing.value, FLAG_THROW_IMPULSE_Y)
             .scl(ConstVals.PPM.toFloat())
 
-        val flag =
-            EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.STAGED_MOON_LANDING_FLAG)!! as StagedMoonLandingFlag
+        val flag = MegaEntityFactory.fetch(StagedMoonLandingFlag::class)!!
         flag.spawn(
             props(
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.IMPULSE pairTo impulse,
                 "${ConstKeys.PARENT}_${ConstKeys.ID}" pairTo mapObjectId,
-                "${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}" pairTo DEFAULT_FLAG_MOVEMENT_SCALAR,
-                "${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}" pairTo DEFAULT_FLAG_GRAVITY_SCALAR
+                "${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}" pairTo DEFAULT_FLAG_GRAVITY_SCALAR,
+                "${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}" pairTo DEFAULT_FLAG_MOVEMENT_SCALAR
             )
         )
 
@@ -221,23 +217,15 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
         GameLogger.debug(TAG, "shootLazer(): spawn=$spawn, trajectory=$trajectory")
     }
 
-    private fun updateFacing() {
-        when {
-            megaman.body.getMaxX() < body.getX() -> facing = Facing.LEFT
-            megaman.body.getX() > body.getMaxX() -> facing = Facing.RIGHT
-        }
-    }
-
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             if (flag?.dead == true) flag = null
 
-            if (currentState == AstroAssState.STAND) updateFacing()
+            if (currentState == AstroAssState.STAND) FacingUtils.setFacingOf(this)
 
             val timer = stateTimers[currentState]
             timer.update(delta)
-
             if (timer.isFinished()) stateMachine.next()
         }
     }
@@ -248,7 +236,7 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
         AstroAssState.entries.forEach { builder.state(it.name, it) }
         builder.initialState(AstroAssState.STAND.name)
             .transition(AstroAssState.STAND.name, AstroAssState.THROW.name) { shouldThrowFlag() }
-            .transition(AstroAssState.STAND.name, AstroAssState.SHOOT.name) { shouldShootLazer() }
+            .transition(AstroAssState.STAND.name, AstroAssState.SHOOT.name) { true /* shouldShootLazer() */ }
             .transition(AstroAssState.THROW.name, AstroAssState.STAND.name) { true }
             .transition(AstroAssState.SHOOT.name, AstroAssState.STAND.name) { true }
         return builder.build()
@@ -256,7 +244,6 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
 
     private fun onChangeState(current: AstroAssState, previous: AstroAssState) {
         GameLogger.debug(TAG, "onChangeState(): current=$current, previous=$previous")
-
         stateTimers[previous].reset()
     }
 

@@ -98,7 +98,7 @@ class ReactorManV2(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEnt
         private const val MIN_CYCLES_BEFORE_GIGA = 3
         private const val GIGA_LASER_BEAM_SETS = 3
         private const val GIGA_LASER_BEAMS_PER_SET = 4
-        private const val GIGA_DELAY_BETWEEN_BEAMS = 0.75f
+        private const val GIGA_DELAY_BETWEEN_BEAMS = 0.5f
         private const val GIGA_DELAY_BETWEEN_BEAMS_KEY = "giga_delay_between_beams"
 
         private const val BEAM_DELAY = 1f

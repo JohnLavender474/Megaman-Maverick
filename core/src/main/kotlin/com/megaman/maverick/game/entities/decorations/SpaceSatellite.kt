@@ -45,12 +45,12 @@ class SpaceSatellite(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.BACKGROUND, 10))
         sprite.setSize(12.5f * ConstVals.PPM, 6.25f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.setPosition(position, Position.BOTTOM_CENTER)
             sprite.setFlip(left, false)
         }
-        return spritesComponent
+        return component
     }
 
     override fun getType() = EntityType.DECORATION

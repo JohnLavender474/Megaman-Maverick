@@ -23,24 +23,28 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
+import com.megaman.maverick.game.utils.GameObjectPools
 
 class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEntity, ICullableEntity,
     IDrawableShapesEntity, IActivatable {
 
     companion object {
         const val TAG = "AsteroidsSpawner"
-        const val MIN_SPEED = 1.5f
-        const val MAX_SPEED = 3f
+
+        const val MIN_SPEED = 2f
+        const val MAX_SPEED = 4f
+
         private const val MIN_SPAWN_DELAY = 0.75f
         private const val MAX_SPAWN_DELAY = 1.5f
+
         private const val MIN_ANGLE = 240f
         private const val MAX_ANGLE = 300f
+
         private const val MAX_CHILDREN = 4
     }
 
@@ -51,19 +55,22 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
             if (value) resetSpawnTimer()
         }
 
-    var onSpawnAsteroidListener: ((Asteroid) -> Unit)? = null
+    var onSpawnListener: ((Asteroid) -> Unit)? = null
 
     private val bounds = GameRectangle()
     private lateinit var spawnTimer: Timer
     private var destroyChildren = false
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
+        super.init()
         addComponent(defineUpdatablesComponent())
         addComponent(defineCullablesComponent())
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ bounds }), debug = true))
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
@@ -78,7 +85,7 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
         resetSpawnTimer()
 
         on = spawnProps.getOrDefault(ConstKeys.ON, true, Boolean::class)
-        onSpawnAsteroidListener = spawnProps.get(ConstKeys.LISTENER) as ((Asteroid) -> Unit)?
+        onSpawnListener = spawnProps.get(ConstKeys.LISTENER) as ((Asteroid) -> Unit)?
         destroyChildren = spawnProps.getOrDefault("${ConstKeys.DESTROY}_${ConstKeys.CHILDREN}", false, Boolean::class)
     }
 
@@ -96,16 +103,22 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
     private fun spawnAsteroid() {
         val angle = getRandom(MIN_ANGLE, MAX_ANGLE)
         val speed = getRandom(MIN_SPEED, MAX_SPEED)
-        val impulse = Vector2(speed, 0f).rotateDeg(angle).scl(ConstVals.PPM.toFloat())
+
+        val impulse = GameObjectPools.fetch(Vector2::class)
+            .set(speed, 0f)
+            .rotateDeg(angle).scl(ConstVals.PPM.toFloat())
+
         val posX = getRandom(bounds.getX(), bounds.getMaxX())
         val posY = bounds.getMaxY()
-        val asteroid = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.ASTEROID)!!
+
+        val asteroid = MegaEntityFactory.fetch(Asteroid::class)!!
         asteroid.spawn(
             props(
                 ConstKeys.POSITION pairTo Vector2(posX, posY),
                 ConstKeys.IMPULSE pairTo impulse
             )
         )
+
         children.add(asteroid)
 
         GameLogger.debug(TAG, "Spawned asteroid. Size of children: ${children.size}")
@@ -130,4 +143,6 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
     }
 
     override fun getType() = EntityType.HAZARD
+
+    override fun getTag() = TAG
 }

@@ -3164,6 +3164,7 @@ tiled_maps/tmx/MoonMan_16x12.tmx
 tiled_maps/tmx/MoonMan_16x14_v3.tmx
 tiled_maps/tmx/Test6.tmx
 tiled_maps/tmx/DesertMan_v3.tmx
+tiled_maps/tmx/MoonMan_16x14_v4.tmx
 tiled_maps/tmx/WilyStage1_v3.tmx
 tiled_maps/tmx/PreciousMan.tmx
 tiled_maps/tmx/InfernoMan_16x12_v2.tmx

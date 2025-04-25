@@ -28,6 +28,7 @@ import com.megaman.maverick.game.entities.contracts.ItemEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
@@ -40,9 +41,11 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
         const val TAG = "AbstractItem"
 
         private const val GRAVITY = 0.25f
+        private const val MOON_GRAVITY = 0.1f
         private const val WATER_GRAVITY = 0.1f
 
         private const val VEL_CLAMP = 10f
+        private const val MOON_VEL_CLAMP = 2.5f
         private const val WATER_VEL_CLAMP = 2.5f
     }
 
@@ -92,7 +95,14 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
             else -> removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
         }
 
-        gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, GRAVITY, Float::class)
+        gravity = spawnProps.getOrDefault(
+            ConstKeys.GRAVITY,
+            when (LevelDefinition.MOON_MAN) {
+                game.getCurrentLevel() -> MOON_GRAVITY
+                else -> GRAVITY
+            },
+            Float::class
+        )
         velClamp = spawnProps.getOrDefault(ConstKeys.CLAMP, VEL_CLAMP, Float::class)
         gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
     }
@@ -115,7 +125,6 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
         val waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle())
         waterListenerFixture.setHitByWaterReceiver { water ->
             body.physics.velocity.setZero()
-
             gravity = WATER_GRAVITY
             velClamp = WATER_VEL_CLAMP
         }
@@ -128,6 +137,7 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
         debugShapes.add { feetFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
+            if (game.getCurrentLevel() == LevelDefinition.MOON_MAN) velClamp = MOON_VEL_CLAMP
             body.physics.velocityClamp.set(velClamp * ConstVals.PPM)
 
             if (body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.FEET_ON_SAND)) {

@@ -37,7 +37,8 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             Saw::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             MoonScythe::class pairTo dmgNeg(5),
             SmallIceCube::class pairTo dmgNeg(3),
-            DrippingToxicGoop::class pairTo dmgNeg(1)
+            DrippingToxicGoop::class pairTo dmgNeg(1),
+            Asteroid::class pairTo dmgNeg(10),
         )
 
         private val MEDIUM_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -57,7 +58,8 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             Saw::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             MoonScythe::class pairTo dmgNeg(15),
             SmallIceCube::class pairTo dmgNeg(5),
-            DrippingToxicGoop::class pairTo dmgNeg(1)
+            DrippingToxicGoop::class pairTo dmgNeg(1),
+            Asteroid::class pairTo dmgNeg(20),
         )
 
         private val SMALL_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -77,7 +79,8 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             Saw::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             MoonScythe::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             SmallIceCube::class pairTo dmgNeg(15),
-            DrippingToxicGoop::class pairTo dmgNeg(1)
+            DrippingToxicGoop::class pairTo dmgNeg(1),
+            Asteroid::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
         )
 
         // damage is determined by the damageable's size instead of the damager's size
