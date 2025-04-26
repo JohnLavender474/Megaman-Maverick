@@ -35,6 +35,7 @@ enum class TextureAsset(src: String) : IAsset {
     MEGAMAN_ICE_CUBE("Megaman_v2_ICE.txt"),
     MEGAMAN_MOON_SCYTHE("Megaman_v2_MOON.txt"),
     MEGAMAN_MAGMA_WAVE("Megaman_v2_FIREBALL.txt"),
+    MEGAMAN_PRECIOUS_GUARD("Megaman_v2_PRECIOUS.txt"),
     MEGAMAN_RUSH_JETPACK("Megaman_v2_RUSH_JET.txt"),
     MEGAMAN_TRAIL_SPRITE("MegamanTrailSprite.txt"),
     MEGAMAN_TRAIL_SPRITE_V2("MegamanTrailSprite_v2.txt"),

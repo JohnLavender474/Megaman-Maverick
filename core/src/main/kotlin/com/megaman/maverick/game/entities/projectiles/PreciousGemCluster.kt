@@ -4,11 +4,15 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.utils.OrbitUtils
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.events.Event
+import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
@@ -17,67 +21,97 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.bosses.PreciousWoman.Companion.SHIELD_GEM_MAX_DIST_FROM_ROOM_CENTER
+import com.megaman.maverick.game.entities.bosses.PreciousWoman.Companion.SHIELD_GEM_MAX_DIST_FROM_ORIGIN
 import com.megaman.maverick.game.entities.bosses.PreciousWoman.Companion.SHIELD_GEM_SPIN_SPEED
 import com.megaman.maverick.game.entities.bosses.PreciousWoman.ShieldGemDef
+import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.overlaps
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class PreciousGemCluster(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
+class PreciousGemCluster(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IEventListener,
+    IOwnable<IGameEntity> {
 
     companion object {
         const val TAG = "PreciousGemCluster"
-        private const val DIST_FROM_CENTER_DELTA = 2f
+        private const val DEFAULT_DIST_FROM_CENTER_DELTA = 2f
     }
 
-    private val gems = OrderedMap<PreciousGem, ShieldGemDef>()
-    private val roomCenter = Vector2()
+    override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_JUST_DIED)
+    override var owner: IGameEntity? = null
+
+    val gems = OrderedMap<PreciousGem, ShieldGemDef>()
+    var distDeltaOnRelease = 0f
+    val origin = Vector2()
+
+    private var maxDistFromOrigin = 0f
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
         super.init()
-        addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
+        addComponent(defineUpdatablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-
         super.onSpawn(spawnProps)
+
+        game.eventsMan.addListener(this)
+
+        owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
 
         val position = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(position)
 
-        val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
+        val trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2.Zero, Vector2::class)
         body.physics.velocity.set(trajectory)
 
-        roomCenter.set(spawnProps.get("${ConstKeys.ROOM}_${ConstKeys.CENTER}", Vector2::class)!!)
+        origin.set(spawnProps.get(ConstKeys.ORIGIN, Vector2::class)!!)
 
         val gems = spawnProps.get(PreciousGem.TAG) as OrderedMap<PreciousGem, ShieldGemDef>
         this.gems.putAll(gems)
+
+        maxDistFromOrigin = spawnProps.getOrDefault(
+            "${ConstKeys.MAX}_${ConstKeys.DISTANCE}",
+            SHIELD_GEM_MAX_DIST_FROM_ORIGIN * ConstVals.PPM,
+            Float::class
+        )
+
+        distDeltaOnRelease = spawnProps.getOrDefault(
+            "${ConstKeys.DISTANCE}_${ConstKeys.DELTA}",
+            DEFAULT_DIST_FROM_CENTER_DELTA * ConstVals.PPM,
+            Float::class
+        )
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
-
         super.onDestroy()
+
+        game.eventsMan.removeListener(this)
 
         gems.keys().forEach { it.destroy() }
         gems.clear()
+    }
+
+    override fun onEvent(event: Event) {
+        GameLogger.debug(PreciousGem.Companion.TAG, "onEvent(): event=$event")
+        if (owner == megaman && event.key == EventType.PLAYER_JUST_DIED) destroy()
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         gems.forEach { entry ->
             val gem = entry.key
             val def = entry.value
-
             var (angle, distance, released) = def
 
-            if (released) distance += DIST_FROM_CENTER_DELTA * ConstVals.PPM * delta
+            if (released) distance += distDeltaOnRelease * delta
 
             angle += SHIELD_GEM_SPIN_SPEED * 360f * delta
             val center = OrbitUtils.calculateOrbitalPosition(
@@ -94,12 +128,10 @@ class PreciousGemCluster(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
         val iter = gems.iterator()
         while (iter.hasNext) {
             val gem = iter.next().key
-
             when {
                 gem.dead -> iter.remove()
-
                 !game.getGameCamera().overlaps(gem.body.getBounds()) &&
-                    gem.body.getCenter().dst(roomCenter) > SHIELD_GEM_MAX_DIST_FROM_ROOM_CENTER * ConstVals.PPM -> {
+                    gem.body.getCenter().dst(origin) > maxDistFromOrigin -> {
                     gem.destroy()
                     iter.remove()
                 }

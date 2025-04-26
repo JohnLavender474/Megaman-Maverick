@@ -499,7 +499,7 @@
   <object id="656" name="Start" x="6880" y="4976" width="32" height="32"/>
   <object id="657" name="Target" x="6880" y="4640" width="32" height="32"/>
   <object id="658" name="Trigger" x="6752" y="4608" width="32" height="160"/>
-  <object id="659" name="ReactorManV2" x="11936" y="2432" width="32" height="32">
+  <object id="659" name="ReactorMan" x="11936" y="2432" width="32" height="32">
    <properties>
     <property name="beamer_1" type="object" value="680"/>
     <property name="beamer_10" type="object" value="690"/>

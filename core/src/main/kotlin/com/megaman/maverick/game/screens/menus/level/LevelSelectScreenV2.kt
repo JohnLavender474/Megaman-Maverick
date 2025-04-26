@@ -45,10 +45,8 @@ class LevelSelectScreenV2(game: MegamanMaverickGame) : MegaMenuScreen(game, Posi
             Position.BOTTOM_CENTER pairTo LevelDefinition.MOON_MAN,
             Position.BOTTOM_RIGHT pairTo LevelDefinition.RODENT_MAN
         )
-        private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private val levelDefGrid = ObjectMap<Position, LevelDefinition>()
     private val mugshotGrid = ObjectMap<Position, MugshotV2>()
 
     private val outroTimer = Timer(OUTRO_DUR)
@@ -216,8 +214,8 @@ class LevelSelectScreenV2(game: MegamanMaverickGame) : MegaMenuScreen(game, Posi
         game.getUiCamera().position.set(ConstFuncs.getUiCamInitPos())
 
         val musicAsset = when {
-            game.state.allRobotMasterLevelsDefeated() -> MusicAsset.MMX5_STAGE_SELECT_2_MUSIC
-            else -> MusicAsset.MMX5_STAGE_SELECT_1_MUSIC
+            game.state.allRobotMasterLevelsDefeated() -> MusicAsset.VINNYZ_WILY_STAGE_SELECT_V1_MUSIC
+            else -> MusicAsset.VINNYZ_STAGE_SELECT_V1_MUSIC
         }
         game.audioMan.playMusic(musicAsset, true)
     }

@@ -52,6 +52,10 @@ object MegamanValues {
     const val JETPACK_Y_IMPULSE = 15f
     const val JETPACK_TIME_PER_BIT = 0.25f
 
+    const val SHIELD_GEM_DISTANCE_DELTA = 5f
+    const val SHIELD_GEM_MAX_DIST = 10f
+    const val SHIELD_GEM_LERP = 10f
+
     const val GROUND_SLIDE_COOLDOWN = 0.075f
     const val GROUND_SLIDE_MIN_TIME = 0.2f
     const val GROUND_SLIDE_MAX_TIME = 0.5f

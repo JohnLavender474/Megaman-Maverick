@@ -1,5 +1,5 @@
 MegamanTrailSprite_v2.png
-size: 960, 48
+size: 240, 240
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -40,105 +40,133 @@ magma_wave/airdash
   index: -1
 magma_wave/airdash_shoot
   rotate: false
-  xy: 240, 0
+  xy: 0, 48
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 magma_wave/groundslide
   rotate: false
-  xy: 288, 0
+  xy: 48, 48
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 magma_wave/groundslide_shoot
   rotate: false
-  xy: 336, 0
+  xy: 96, 48
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 mega_buster/airdash
   rotate: false
-  xy: 384, 0
+  xy: 144, 48
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 mega_buster/airdash_shoot
   rotate: false
-  xy: 432, 0
+  xy: 192, 48
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 mega_buster/groundslide
   rotate: false
-  xy: 480, 0
+  xy: 0, 96
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 mega_buster/groundslide_shoot
   rotate: false
-  xy: 528, 0
+  xy: 48, 96
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 moon_scythe/airdash
   rotate: false
-  xy: 576, 0
+  xy: 96, 96
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 moon_scythe/airdash_shoot
   rotate: false
-  xy: 624, 0
+  xy: 144, 96
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 moon_scythe/groundslide
   rotate: false
-  xy: 672, 0
+  xy: 192, 96
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 moon_scythe/groundslide_shoot
   rotate: false
-  xy: 720, 0
+  xy: 0, 144
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+precious_guard/airdash
+  rotate: false
+  xy: 48, 144
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+precious_guard/airdash_shoot
+  rotate: false
+  xy: 96, 144
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+precious_guard/groundslide
+  rotate: false
+  xy: 144, 144
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+precious_guard/groundslide_shoot
+  rotate: false
+  xy: 192, 144
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 rush_jetpack/airdash
   rotate: false
-  xy: 768, 0
+  xy: 0, 192
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 rush_jetpack/airdash_shoot
   rotate: false
-  xy: 816, 0
+  xy: 48, 192
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 rush_jetpack/groundslide
   rotate: false
-  xy: 864, 0
+  xy: 96, 192
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 rush_jetpack/groundslide_shoot
   rotate: false
-  xy: 912, 0
+  xy: 144, 192
   size: 48, 48
   orig: 48, 48
   offset: 0, 0

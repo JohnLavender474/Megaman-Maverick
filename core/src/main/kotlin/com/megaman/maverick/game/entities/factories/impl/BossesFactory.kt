@@ -25,7 +25,7 @@ class BossesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
     }
 
     override fun init() {
-        pools.put(REACTOR_MAN, GameEntityPoolCreator.create { ReactorMan(game) })
+        pools.put(REACTOR_MAN, GameEntityPoolCreator.create { ReactorMan_OLD(game) })
         pools.put(GLACIER_MAN, GameEntityPoolCreator.create { GlacierMan(game) })
         pools.put(DESERT_MAN, GameEntityPoolCreator.create { DesertMan(game) })
         pools.put(INFERNO_MAN, GameEntityPoolCreator.create { InfernoMan(game) })

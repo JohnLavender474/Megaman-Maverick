@@ -78,10 +78,12 @@ import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.loadControllerButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.bosses.ReactorManV2
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler
+import com.megaman.maverick.game.entities.projectiles.PreciousGem
+import com.megaman.maverick.game.entities.projectiles.PreciousGemCluster
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -131,12 +133,13 @@ class MegamanMaverickGame(
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        const val VERSION = "ALPHA 1.8.0"
+        const val VERSION = "ALPHA 1.9.0"
         private const val ASSET_MILLIS = 17
         private const val LOADING = "LOADING"
         private const val LOG_FILE_NAME = "logs.txt"
         private const val SCREENSHOT_KEY = Input.Keys.P
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(ReactorManV2.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> =
+            objectSetOf(GameState.TAG, MegamanWeaponsHandler.TAG, PreciousGem.TAG, PreciousGemCluster.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.oneFixtureMatches(FixtureType.CONSUMER)
         }

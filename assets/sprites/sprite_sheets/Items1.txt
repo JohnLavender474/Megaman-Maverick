@@ -3,72 +3,65 @@ size: 64, 530
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-EmptyHealthTank
-  rotate: false
-  xy: 0, 18
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
 HealthBulb/large
   rotate: false
-  xy: 0, 82
+  xy: 0, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 HealthBulb/small
   rotate: false
-  xy: 0, 146
+  xy: 0, 64
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 HealthTank
   rotate: false
-  xy: 0, 210
+  xy: 0, 128
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 HeartTank
   rotate: false
-  xy: 0, 242
+  xy: 0, 160
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Life
   rotate: false
-  xy: 32, 18
+  xy: 0, 192
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 Screw/large
   rotate: false
-  xy: 0, 274
+  xy: 0, 256
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Screw/small
   rotate: false
-  xy: 0, 338
+  xy: 0, 320
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 SniperJoeShield/Blue
   rotate: false
-  xy: 0, 0
+  xy: 0, 384
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: -1
 SniperJoeShield/Orange
   rotate: false
-  xy: 18, 0
+  xy: 18, 384
   size: 18, 18
   orig: 18, 18
   offset: 0, 0

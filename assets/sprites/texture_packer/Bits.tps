@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.6.0</string>
+        <string>7.6.2</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -176,6 +176,7 @@
             <key type="filename">../frames/Bits/fire.png</key>
             <key type="filename">../frames/Bits/ice.png</key>
             <key type="filename">../frames/Bits/moon.png</key>
+            <key type="filename">../frames/Bits/precious.png</key>
             <key type="filename">../frames/Bits/rush_jet.png</key>
             <key type="filename">../frames/Bits/standard.png</key>
             <struct type="IndividualSpriteSettings">

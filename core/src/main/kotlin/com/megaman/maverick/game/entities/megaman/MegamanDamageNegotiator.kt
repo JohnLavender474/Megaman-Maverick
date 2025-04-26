@@ -35,24 +35,18 @@ class MegamanDamageNegotiator(private val megaman: Megaman) : IDamageNegotiator 
 
     override fun get(damager: IDamager): Int {
         val entity = damager as MegaGameEntity
-
         if (entity is IOwnable<*> && entity.owner == megaman) return 0
 
         val tag = entity.getTag()
-
         return when {
             custom.containsKey(tag) -> custom[tag].get(damager)
-
             entity is ISizable -> when (entity.size) {
                 Size.LARGE -> 4
                 Size.MEDIUM -> 3
                 Size.SMALL -> 2
             }
-
             entity is IHazard -> entity.getDamageToMegaman()
-
             entityTypes.contains(entity.getType()) -> 3
-
             else -> 0
         }
     }

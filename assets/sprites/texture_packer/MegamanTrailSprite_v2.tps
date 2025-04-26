@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.6.0</string>
+        <string>7.6.2</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -189,6 +189,10 @@
             <key type="filename">../frames/MegamanTrailSprite_v2/moon_scythe/airdash_shoot.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/moon_scythe/groundslide.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/moon_scythe/groundslide_shoot.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/precious_guard/airdash.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/precious_guard/airdash_shoot.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/precious_guard/groundslide.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/precious_guard/groundslide_shoot.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/rush_jetpack/airdash.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/rush_jetpack/airdash_shoot.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/rush_jetpack/groundslide.png</key>

@@ -5,5 +5,6 @@ enum class MegamanWeapon {
     ICE_CUBE,
     MAGMA_WAVE,
     MOON_SCYTHE,
+    PRECIOUS_GUARD,
     RUSH_JETPACK
 }

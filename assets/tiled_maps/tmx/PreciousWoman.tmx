@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="200" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="140">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="200" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="144">
  <tileset firstgid="1" source="../tsx/CrystalManTileset.tsx"/>
  <tileset firstgid="226" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1250" source="../tsx/mm9jewel.tsx"/>
@@ -234,6 +234,30 @@
   <object id="134" name="HeartTank" x="4000" y="1376" width="32" height="32">
    <properties>
     <property name="value" value="h"/>
+   </properties>
+  </object>
+  <object id="140" name="HealthBulb" x="3744" y="1312" width="32" height="32">
+   <properties>
+    <property name="large" type="bool" value="true"/>
+    <property name="timed" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="141" name="HealthBulb" x="3776" y="1312" width="32" height="32">
+   <properties>
+    <property name="large" type="bool" value="true"/>
+    <property name="timed" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="142" name="HealthBulb" x="3808" y="1312" width="32" height="32">
+   <properties>
+    <property name="large" type="bool" value="true"/>
+    <property name="timed" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="143" name="HealthBulb" x="3712" y="1312" width="32" height="32">
+   <properties>
+    <property name="large" type="bool" value="true"/>
+    <property name="timed" type="bool" value="false"/>
    </properties>
   </object>
  </objectgroup>

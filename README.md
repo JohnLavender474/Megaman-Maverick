@@ -248,6 +248,8 @@ comprehensive listing of the credits for the artwork used in this game.
   - Robot Master Fight - [MMX6 Boss Fight 8-Bit](https://youtu.be/IeySHEF5U_8)
 - [vinnyz29](https://soundcloud.com/mega-vinnyz279)
   - Intro Stage 
+  - Stage Select
+  - Wily Stage Select
   - Inferno Man Stage
 - [Cody O'Quinn](https://www.youtube.com/channel/UC3YB69gazd6mzXMGpPHdyTQ)
   - Desert Man Stage - [8 Bit Music - "Battle Man"](https://youtu.be/zA1SwzvHsZw)

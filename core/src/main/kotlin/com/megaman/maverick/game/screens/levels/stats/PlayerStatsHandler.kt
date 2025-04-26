@@ -30,6 +30,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
     companion object {
         const val TAG = "PlayerStatsHandler"
         private const val RUSH_JET = "rush_jet"
+        private const val PRECIOUS = "precious"
         private const val SPECIAL_ITEM_DUR = 0.5f
     }
 
@@ -72,6 +73,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
                 MegamanWeapon.MAGMA_WAVE -> ConstKeys.FIRE
                 MegamanWeapon.ICE_CUBE -> ConstKeys.ICE
                 MegamanWeapon.RUSH_JETPACK -> RUSH_JET
+                MegamanWeapon.PRECIOUS_GUARD -> PRECIOUS
                 else -> throw IllegalStateException("No bit source for weapon $it")
             }
 
@@ -241,7 +243,6 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
 
         if (timerQueue.isEmpty) {
             GameLogger.debug(TAG, "update(): timer queue just emptied: turn on all systems")
-
             engine.systems.forEach { it.on = true }
         }
     }

@@ -72,14 +72,13 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
         fun getWeaponsFromLevelDef(levelDef: LevelDefinition): OrderedSet<MegamanWeapon> {
             val set = OrderedSet<MegamanWeapon>()
-
             when (levelDef) {
                 LevelDefinition.MOON_MAN -> set.addAll(MegamanWeapon.MOON_SCYTHE, MegamanWeapon.RUSH_JETPACK)
+                LevelDefinition.PRECIOUS_WOMAN -> set.add(MegamanWeapon.PRECIOUS_GUARD)
                 LevelDefinition.INFERNO_MAN -> set.add(MegamanWeapon.MAGMA_WAVE)
                 LevelDefinition.GLACIER_MAN -> set.add(MegamanWeapon.ICE_CUBE)
                 else -> {}
             }
-
             return set
         }
 

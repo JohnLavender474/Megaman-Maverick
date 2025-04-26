@@ -41,6 +41,7 @@ class MegamanAnimations(
                 MegamanWeapon.ICE_CUBE -> TextureAsset.MEGAMAN_ICE_CUBE.source
                 MegamanWeapon.MAGMA_WAVE -> TextureAsset.MEGAMAN_MAGMA_WAVE.source
                 MegamanWeapon.MOON_SCYTHE -> TextureAsset.MEGAMAN_MOON_SCYTHE.source
+                MegamanWeapon.PRECIOUS_GUARD -> TextureAsset.MEGAMAN_PRECIOUS_GUARD.source
                 MegamanWeapon.RUSH_JETPACK -> TextureAsset.MEGAMAN_RUSH_JETPACK.source
             }
 

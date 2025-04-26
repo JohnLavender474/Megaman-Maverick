@@ -284,6 +284,9 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
         MegamanWeapon.entries.forEach { weapon ->
             if (!megaman.hasWeapon(weapon)) return@forEach
 
+            // TODO
+            if (weapon == MegamanWeapon.PRECIOUS_GUARD) return@forEach
+
             val key = weapon.toString().lowercase()
             try {
                 val buttonSprite = GameSprite(buttonRegions[key])

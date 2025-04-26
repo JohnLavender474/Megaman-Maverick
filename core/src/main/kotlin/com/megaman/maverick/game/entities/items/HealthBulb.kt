@@ -32,6 +32,7 @@ class HealthBulb(game: MegamanMaverickGame) : AbstractEnergyItem(game), IAnimate
     }
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (!regions.containsKey(getTag())) {
             val map = ObjectMap<String, TextureRegion>()
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ITEMS_1.source)

@@ -188,7 +188,7 @@ class DrippingToxicGoop(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
         val columns = floor(bounds.getWidth() / ConstVals.PPM).toInt()
 
         for (x in 0 until columns) for (y in 0 until rows) {
-            val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
+            val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
             sprite.setBounds(
                 bounds.getX() + x * ConstVals.PPM,
                 bounds.getY() + y * ConstVals.PPM,

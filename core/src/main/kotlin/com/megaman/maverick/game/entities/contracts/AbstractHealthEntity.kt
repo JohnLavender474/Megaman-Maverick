@@ -39,6 +39,7 @@ abstract class AbstractHealthEntity(
     private var wasHealthDepleted = false
 
     override fun init() {
+        super.init()
         addComponent(definePointsComponent())
         val updatablesComponent = UpdatablesComponent()
         addComponent(updatablesComponent)
@@ -47,7 +48,6 @@ abstract class AbstractHealthEntity(
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-
         setHealthToMax()
 
         damageTimer.setToEnd()
@@ -98,7 +98,6 @@ abstract class AbstractHealthEntity(
         pointsComponent.putListener(ConstKeys.HEALTH) {
             if (it.current <= ConstVals.MIN_HEALTH && !wasHealthDepleted) {
                 wasHealthDepleted = true
-
                 onHealthDepleted()
             }
         }
@@ -109,21 +108,16 @@ abstract class AbstractHealthEntity(
     protected open fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         updatablesComponent.add { delta ->
             damageTimer.update(delta)
-
             when {
                 !damageTimer.isFinished() -> {
                     damageBlinkTimer.update(delta)
-
                     if (damageBlinkTimer.isFinished()) {
                         damageBlinkTimer.reset()
-
                         damageBlink = !damageBlink
                     }
                 }
-
                 else -> {
                     if (damageTimer.isJustFinished()) onDamageFinished()
-
                     damageBlink = false
                 }
             }

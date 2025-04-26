@@ -12,6 +12,7 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.isAny
 import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
@@ -44,6 +45,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.hazards.DrippingToxicGoop
+import com.megaman.maverick.game.entities.projectiles.PreciousGem
 import com.megaman.maverick.game.entities.projectiles.RollingBotShot
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -66,7 +68,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         private const val GRAVITY = -0.15f
         private const val GROUND_GRAVITY = -0.01f
 
-        private const val TOXIC_GOOP_DMG_DUR = 0.25f
+        private const val SHORT_DMG_DUR = 0.25f
 
         private val animDefs = orderedMapOf(
             "roll" pairTo AnimationDef(2, 4, 0.1f, true),
@@ -118,14 +120,15 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
-        super.canBeDamagedBy(damager) && (!rolling || damager is DrippingToxicGoop)
+        super.canBeDamagedBy(damager) && (!rolling || damager.isAny(DrippingToxicGoop::class, PreciousGem::class))
 
     override fun getDamageDuration(damager: IDamager) = when (damager) {
-        is DrippingToxicGoop -> TOXIC_GOOP_DMG_DUR
+        is DrippingToxicGoop, is PreciousGem -> SHORT_DMG_DUR
         else -> super.getDamageDuration(damager)
     }
 
     override fun onHealthDepleted() {
+        GameLogger.debug(TAG, "onHealthDepleted()")
         super.onHealthDepleted()
 
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
@@ -135,6 +138,8 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     }
 
     private fun shoot() {
+        GameLogger.debug(TAG, "shoot()")
+
         val position = when {
             isFacing(Facing.LEFT) ->
                 body.getPositionPoint(Position.CENTER_LEFT).add(-0.35f * ConstVals.PPM, 0.1f * ConstVals.PPM)
