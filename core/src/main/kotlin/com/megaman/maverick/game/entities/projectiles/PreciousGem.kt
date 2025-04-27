@@ -65,10 +65,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         private const val SIZE_INCREASE_DELAY_DUR = 0.1f
         private const val PAUSE_BEFORE_FIRST_TARGET_DUR = 0.5f
         private val BODY_SIZES = gdxArrayOf(0.25f, 0.5f, 0.75f, 1f)
-        private val IGNORE_DMG = objectSetOf<KClass<out IDamager>>(
-            Asteroid::class,
-            PropellerPlatform::class,
-        )
+        private val IGNORE_DMG = objectSetOf<KClass<out IDamager>>(Asteroid::class, PropellerPlatform::class)
         private val regions = ObjectMap<PreciousGemColor, TextureRegion>()
     }
 
@@ -176,7 +173,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
     override fun onEvent(event: Event) {
         GameLogger.debug(TAG, "onEvent(): event=$event")
-        if (event.key == EventType.PLAYER_JUST_DIED) destroy()
+        if (owner == megaman && event.key == EventType.PLAYER_JUST_DIED) destroy()
     }
 
     override fun takeDamageFrom(damager: IDamager): Boolean {

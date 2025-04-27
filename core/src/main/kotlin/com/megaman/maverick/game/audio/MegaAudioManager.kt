@@ -91,22 +91,21 @@ class MegaAudioManager(
             if (currentMusic?.isPlaying != true) currentMusic?.play()
             return
         }
+
         if (currentMusic?.isPlaying == true) currentMusic?.stop()
 
         key as MusicAsset
 
         currentMusic = music.get(key)
+
         if (currentMusic == null) return
 
-        currentMusic!!.isLooping = loop
-        currentMusic!!.volume = musicVolume
-
-        when (key.onCompletion) {
-            key.onCompletion -> currentMusic!!.setOnCompletionListener(null)
-            else -> currentMusic!!.setOnCompletionListener { key.onCompletion!!.invoke(this) }
+        currentMusic!!.let {
+            it.isLooping = loop
+            it.volume = musicVolume
+            it.setOnCompletionListener { key.onCompletion?.invoke(this) }
+            it.play()
         }
-
-        currentMusic!!.play()
 
         musicPaused = false
         fadeOutMusicTimer = null

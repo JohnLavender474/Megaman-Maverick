@@ -46,11 +46,15 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
     companion object {
         const val TAG = "LevelPauseScreen"
 
-        private val FULL_TABLE = TableBuilder<Any>().row(gdxArrayOf(MegamanWeapon.MEGA_BUSTER, null))
-            .row(gdxArrayOf(MegamanWeapon.MOON_SCYTHE, null)).row(gdxArrayOf(MegamanWeapon.MAGMA_WAVE, null))
-            .row(gdxArrayOf(MegamanWeapon.ICE_CUBE, MegamanWeapon.RUSH_JETPACK)).row(gdxArrayOf(null, null))
-            .row(gdxArrayOf(MegaHealthTank.A, MegaHealthTank.C, null))
-            .row(gdxArrayOf(MegaHealthTank.B, MegaHealthTank.D, ConstKeys.EXIT)).build()
+        private val FULL_TABLE = TableBuilder<Any>()
+            .row(gdxArrayOf(MegamanWeapon.MEGA_BUSTER, null))
+            .row(gdxArrayOf(MegamanWeapon.MOON_SCYTHE, null))
+            .row(gdxArrayOf(MegamanWeapon.MAGMA_WAVE, null))
+            .row(gdxArrayOf(MegamanWeapon.ICE_CUBE, MegamanWeapon.RUSH_JETPACK))
+            .row(gdxArrayOf(null, null))
+            .row(gdxArrayOf(MegaHealthTank.A, MegaHealthTank.C, ConstKeys.EXIT))
+            .row(gdxArrayOf(MegaHealthTank.B, MegaHealthTank.D, ConstKeys.EXIT))
+            .build()
 
         private const val OPTIONS_PREFIX = "options"
         private const val WEAPONS_PREFIX = "weapons"

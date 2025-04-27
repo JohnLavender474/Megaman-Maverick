@@ -81,7 +81,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private const val RUN_DUR = 1.5f
         private const val RUN_CHANCE = 20f
         private const val RUN_IMPULSE_X = 35f
-        private const val MAX_RUN_SPEED = 10f
+        private const val MAX_RUN_SPEED = 7.5f
 
         private const val VEL_CLAMP_X = 50f
         private const val VEL_CLAMP_Y = 25f
@@ -96,13 +96,13 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private const val SPRITE_SIZE = 3f
 
         private const val INIT_DUR = 1f
-        private const val STAND_DUR = 0.75f
+        private const val STAND_DUR = 1f
         private const val WALL_SLIDE_DUR = 1f
         private const val GROUND_SLIDE_DUR = 0.5f
         private const val LAUGH_1_DUR = 0.25f
         private const val LAUGH_2_DUR = 1.25f
         private const val THROW_GEMS_DUR = 1f
-        private const val THROW_SHIELD_GEMS_DUR = 0.75f
+        private const val THROW_SHIELD_GEMS_DUR = 1f
         private const val THROW_TIME = 0.1f
         private const val SPAWN_SHIELDS_DUR = 1f
         private const val JUMP_UPDATE_FACING_DELAY = 0.5f
@@ -111,18 +111,18 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private const val STUNNED_IMPULSE_X = 2f
 
         private const val GROUNDSLIDE_CHANCE = 20f
-        private const val GROUNDSLIDE_VEL_X = 8f
+        private const val GROUNDSLIDE_VEL_X = 9f
 
-        private const val AIRPUNCH_DELAY = 0.25f
+        private const val AIRPUNCH_DELAY = 0.5f
         private const val AIRPUNCH_MAX_DUR = 1f
         private const val AIRPUNCH_COOLDOWN = 4f
-        private const val AIRPUNCH_VEL_X = 14f
+        private const val AIRPUNCH_VEL_X = 9f
         private const val AIRPUNCH_CHANCE = 50f
 
         private const val JUMP_CHANCE_FIRST_CHECK = 20f
         private const val JUMP_CHANCE_SECOND_CHECK = 75f
         private const val JUMP_MAX_IMPULSE_X = 10f
-        private const val JUMP_IMPULSE_Y = 12f
+        private const val JUMP_IMPULSE_Y = 10f
         private const val WALL_JUMP_IMPULSE_X = 5f
 
         private const val GEMS_TO_THROW = 3
