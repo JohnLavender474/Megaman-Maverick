@@ -59,7 +59,12 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
         private const val CULL_TIME = 1f
 
         private val HIT_PROJS = objectSetOf<KClass<out IProjectileEntity>>(
-            Asteroid::class, ExplodingBall::class, RocketBomb::class, Bullet::class, ChargedShot::class
+            Bullet::class,
+            Asteroid::class,
+            RocketBomb::class,
+            ChargedShot::class,
+            ExplodingBall::class,
+            BunbyRedRocket::class
         )
 
         private val regions = ObjectMap<String, TextureRegion>()
