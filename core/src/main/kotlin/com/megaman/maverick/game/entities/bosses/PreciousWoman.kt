@@ -113,10 +113,10 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private const val GROUNDSLIDE_CHANCE = 20f
         private const val GROUNDSLIDE_VEL_X = 9f
 
-        private const val AIRPUNCH_DELAY = 0.5f
+        private const val AIRPUNCH_DELAY = 0.25f
         private const val AIRPUNCH_MAX_DUR = 1f
         private const val AIRPUNCH_COOLDOWN = 4f
-        private const val AIRPUNCH_VEL_X = 9f
+        private const val AIRPUNCH_VEL_X = 10f
         private const val AIRPUNCH_CHANCE = 50f
 
         private const val JUMP_CHANCE_FIRST_CHECK = 20f
@@ -586,8 +586,8 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             body.physics.gravity.y = gravity * ConstVals.PPM
 
             body.physics.defaultFrictionOnSelf.y = when (currentState) {
+                PreciousWomanState.INIT, PreciousWomanState.AIRPUNCH -> 0f
                 PreciousWomanState.WALLSLIDE -> WALLSLIDE_FRICTION_Y
-                PreciousWomanState.INIT -> 0f
                 else -> DEFAULT_FRICTION_Y
             }
 
