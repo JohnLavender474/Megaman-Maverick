@@ -35,7 +35,7 @@ enum class LevelDefinition(
         type = LevelType.ROBOT_MASTER_LEVEL,
         mugshotAtlas = "FACES_1",
         mugshotRegion = "Moon Man",
-        tmxMapSource = "MoonMan_16x14_v3.tmx",
+        tmxMapSource = "MoonMan_16x14_v4.tmx",
         music = MusicAsset.MMX5_DARK_DIZZY_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),

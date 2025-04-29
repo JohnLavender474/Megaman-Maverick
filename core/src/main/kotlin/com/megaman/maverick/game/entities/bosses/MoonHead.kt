@@ -325,7 +325,12 @@ class MoonHead(game: MegamanMaverickGame) : AbstractBoss(game, dmgDuration = DAM
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.forEachFixture {
                 it.setActive(
-                    !loop.getCurrent().equalsAny(MoonHeadState.DELAY, MoonHeadState.DARK, MoonHeadState.CRUMBLE)
+                    when {
+                        defeated -> false
+                        else -> !loop.getCurrent().equalsAny(
+                            MoonHeadState.DELAY, MoonHeadState.DARK, MoonHeadState.CRUMBLE
+                        )
+                    }
                 )
             }
         }
@@ -336,16 +341,16 @@ class MoonHead(game: MegamanMaverickGame) : AbstractBoss(game, dmgDuration = DAM
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
         sprite.setSize(3.5f * ConstVals.PPM, 3f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.hidden = damageBlink || loop.getCurrent() == MoonHeadState.DELAY
             val alpha = if (defeated) 1f - defeatTimer.getRatio() else 1f
             sprite.setAlpha(alpha)
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

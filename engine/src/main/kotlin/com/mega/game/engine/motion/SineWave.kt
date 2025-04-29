@@ -1,7 +1,7 @@
 package com.mega.game.engine.motion
 
-import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
+import com.mega.game.engine.common.utils.SineUtils
 
 class SineWave(var position: Vector2, var speed: Float, var amplitude: Float, var frequency: Float) : IMotion {
 
@@ -12,7 +12,7 @@ class SineWave(var position: Vector2, var speed: Float, var amplitude: Float, va
     override fun update(delta: Float) {
         elapsedTime += delta
         position.x += speed * delta
-        position.y += amplitude * MathUtils.sin(frequency * elapsedTime)
+        position.y += SineUtils.y(amplitude, frequency, elapsedTime)
     }
 
     override fun reset() {

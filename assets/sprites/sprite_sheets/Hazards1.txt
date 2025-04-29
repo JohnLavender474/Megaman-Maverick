@@ -124,7 +124,7 @@ Flame3/Whoosh
   index: -1
 FlameColumn
   rotate: false
-  xy: 602, 236
+  xy: 650, 236
   size: 96, 236
   orig: 96, 236
   offset: 0, 0
@@ -372,6 +372,13 @@ PipePuff
   xy: 928, 140
   size: 96, 96
   orig: 96, 96
+  offset: 0, 0
+  index: -1
+SaucerRay
+  rotate: false
+  xy: 602, 236
+  size: 48, 192
+  orig: 48, 192
   offset: 0, 0
   index: -1
 Saw/ring

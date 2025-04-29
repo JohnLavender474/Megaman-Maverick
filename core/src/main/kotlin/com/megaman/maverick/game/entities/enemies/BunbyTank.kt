@@ -165,8 +165,10 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
                 return@add
             }
 
-            val size = (if (direction.isVertical()) Vector2(5f, 0.75f)
-            else Vector2(0.75f, 5f)).scl(ConstVals.PPM.toFloat())
+            val size = (when {
+                direction.isVertical() -> Vector2(10f, 0.75f)
+                else -> Vector2(0.75f, 10f)
+            }).scl(ConstVals.PPM.toFloat())
             shootScanner.setSize(size)
             turnAroundScanner.setSize(size)
 

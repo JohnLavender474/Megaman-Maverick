@@ -67,6 +67,8 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
 
     override var owner: IGameEntity? = null
 
+    var hard = false
+
     private lateinit var type: String
 
     private var rotation = 0f
@@ -78,15 +80,12 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             regions.put(REGULAR, atlas.findRegion("$TAG/$REGULAR"))
             regions.put(BLUE, atlas.findRegion("$TAG/$BLUE"))
         }
-
         super.init()
-
         addComponent(defineUpdatablesComponent())
     }
 
@@ -98,7 +97,6 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
         val spawn = when {
             spawnProps.containsKey(ConstKeys.BOUNDS) ->
                 spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
-
             else -> spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         }
         body.setCenter(spawn)
@@ -122,11 +120,12 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
         val active = delayTimer == null
         body.physics.collisionOn = active
         body.forEachFixture { it.setActive(delayTimer == null) }
+
+        hard = spawnProps.getOrDefault(ConstKeys.HARD, false, Boolean::class)
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
-
         super.onDestroy()
     }
 
@@ -157,11 +156,12 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
     override fun canDamage(damageable: IDamageable) = damageable !is MoonHead && super.canDamage(damageable)
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        val entity = bodyFixture.getEntity()
+        val other = bodyFixture.getEntity()
 
-        if (entity == owner ||
-            (entity is IOwnable<*> && entity.owner == owner) ||
-            (entity is IDamageable && canDamage(entity))
+        if (other == owner ||
+            (other is Asteroid && !other.hard && hard) ||
+            (other is IOwnable<*> && other.owner == owner) ||
+            (other is IDamageable && canDamage(other))
         ) return
 
         explodeAndDie()
@@ -188,7 +188,6 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
-
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.ASTEROID_EXPLOSION)!!
         explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
@@ -223,10 +222,10 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
-        sprite.setSize(1.75f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { delta, _ ->
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
+        sprite.setSize(2f * ConstVals.PPM)
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { delta, _ ->
             val region = regions.get(type)
             sprite.setRegion(region)
 
@@ -238,6 +237,6 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
 
             sprite.hidden = blink
         }
-        return spritesComponent
+        return component
     }
 }

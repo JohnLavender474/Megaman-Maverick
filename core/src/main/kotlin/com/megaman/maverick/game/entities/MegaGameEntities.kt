@@ -31,6 +31,12 @@ object MegaGameEntities {
         }
     }
 
+    inline fun <reified T: MegaGameEntity> getOfTag(tag: String, out: OrderedSet<T>): OrderedSet<T> {
+        val entities = getOfTag(tag)
+        entities.forEach { out.add(it as T) }
+        return out
+    }
+
     fun getOfTag(tag: String): OrderedSet<MegaGameEntity> = entityTagToEntities.get(tag, OrderedSet())
 
     fun getOfTags(out: ObjectSet<MegaGameEntity>, tags: Iterable<String>): ObjectSet<MegaGameEntity> {

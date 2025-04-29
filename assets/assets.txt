@@ -834,6 +834,7 @@ sprites/frames/Hazards1/LavaBeamer.png
 sprites/frames/Hazards1/LavaBeamer/Off.png
 sprites/frames/Hazards1/LavaBeamer/SwitchingOn.png
 sprites/frames/Hazards1/LavaBeamer/On.png
+sprites/frames/Hazards1/SaucerRay.png
 sprites/frames/Hazards1/IceCubeMaker.png
 sprites/frames/Hazards1/Flame.png
 sprites/frames/Hazards1/CrystalSpikes.png
@@ -1992,9 +1993,9 @@ sprites/frames/Enemies1/NuttGlider/stand.png
 sprites/frames/Enemies1/NuttGlider/jump.png
 sprites/frames/Enemies1/NuttGlider/stand_nutt.png
 sprites/frames/Enemies1/NuttGlider/glide.png
+sprites/frames/Enemies1/TellySaucer/flash.png
 sprites/frames/Enemies1/TellySaucer/collapsed.png
 sprites/frames/Enemies1/TellySaucer/spin.png
-sprites/frames/Enemies1/TellySaucer/hit.png
 sprites/frames/Enemies1/IcicleTelly/drop_icicle.png
 sprites/frames/Enemies1/IcicleTelly/spawn_icicle.png
 sprites/frames/Enemies1/IcicleTelly/spin.png
@@ -2080,6 +2081,14 @@ sprites/frames/Enemies1/Arigock/shooting.png
 sprites/frames/Enemies1/Arigock/closed.png
 sprites/frames/Enemies1/SpringHead/unleashed.png
 sprites/frames/Enemies1/SpringHead/compressed.png
+sprites/frames/Enemies1/MoonEyeStone/throw.png
+sprites/frames/Enemies1/MoonEyeStone/expand.png
+sprites/frames/Enemies1/MoonEyeStone/seek.png
+sprites/frames/Enemies1/MoonEyeStone/nude.png
+sprites/frames/Enemies1/MoonEyeStone/awaken.png
+sprites/frames/Enemies1/MoonEyeStone/piece.png
+sprites/frames/Enemies1/MoonEyeStone/sleep.png
+sprites/frames/Enemies1/MoonEyeStone/idle.png
 sprites/frames/Enemies1/Spiky.png
 sprites/frames/Enemies1/SniperJoe_OLD/Orange/ShootingNoShield.png
 sprites/frames/Enemies1/SniperJoe_OLD/Orange/StandNoShield.png
@@ -2503,6 +2512,7 @@ sprites/piskel/MoonManProjectiles.piskel
 sprites/piskel/CornMan.piskel
 sprites/piskel/large_swing_ring.piskel
 sprites/piskel/MoonHead.piskel
+sprites/piskel/MoonEye.piskel
 sprites/piskel/Spiky.piskel
 sprites/piskel/MugshotPane_80x48.piskel
 sprites/piskel/MegamanMaverick_Left.piskel
@@ -2770,6 +2780,7 @@ sprites/piskel/SpikeTeeth.piskel
 sprites/piskel/QuickSand_v2_BottomCenter.piskel
 sprites/piskel/Robbit.piskel
 sprites/piskel/TimberWoman.piskel
+sprites/piskel/SaucerRay.piskel
 sprites/piskel/MegamanFaces.piskel
 sprites/piskel/BlobTool.piskel
 sprites/piskel/MugshotPane_48x48.piskel

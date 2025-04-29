@@ -48,6 +48,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val HARD = "hard"
     const val OWNED = "owned"
     const val GROW = "grow"
     const val TRANS = "trans"
