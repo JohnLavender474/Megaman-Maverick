@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.isAny
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -37,6 +38,7 @@ import com.megaman.maverick.game.entities.bosses.MoonHead
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
+import com.megaman.maverick.game.entities.enemies.MoonEyeStone
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -62,6 +64,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
             Bullet::class,
             Asteroid::class,
             RocketBomb::class,
+            PreciousGem::class,
             ChargedShot::class,
             ExplodingBall::class,
             BunbyRedRocket::class
@@ -158,7 +161,8 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
         }
     })
 
-    override fun canDamage(damageable: IDamageable) = damageable !is MoonHead && super.canDamage(damageable)
+    override fun canDamage(damageable: IDamageable) = super.canDamage(damageable) &&
+        !damageable.isAny(MoonHead::class, MoonEyeStone::class)
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val other = bodyFixture.getEntity()

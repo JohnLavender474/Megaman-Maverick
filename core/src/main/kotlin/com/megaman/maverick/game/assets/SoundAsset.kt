@@ -74,7 +74,8 @@ enum class SoundAsset(src: String, val seconds: Int) : IAsset {
     REV_SOUND("rev.mp3", 1),
     VOLT_SOUND("volt.wav", 1),
     ELECTRIC_1_SOUND("electric_1.wav", 1),
-    ELECTRIC_2_SOUND("electric_2.wav", 2);
+    ELECTRIC_2_SOUND("electric_2.wav", 2),
+    POUND_SOUND("pound.wav", 1);
 
     companion object {
         fun valuesAsIAssetArray(): Array<IAsset> {

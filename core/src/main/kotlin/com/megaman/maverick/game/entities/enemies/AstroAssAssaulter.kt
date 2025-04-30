@@ -1,8 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -46,12 +44,10 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
-import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
@@ -69,9 +65,6 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
 
         private const val THROW_DUR = 0.25f
         private const val THROW_TIME = 0.1f
-
-        private const val SENSOR_WIDTH = 30f
-        private const val SENSOR_HEIGHT = 6f
 
         private const val FLAG_THROW_IMPULSE_X = 8f
         private const val FLAG_THROW_IMPULSE_Y = 5f
@@ -93,7 +86,9 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
     private val stateTimers = OrderedMap<AstroAssState, Timer>()
 
     private var flag: StagedMoonLandingFlag? = null
-    private val sensor = GameRectangle()
+    private var canThrowFlagLeft = true
+    private var canThrowFlagRight = true
+
     private var shootUp = false
 
     override fun init() {
@@ -123,11 +118,9 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
                 timer.addRunnables(runnable)
             })
         }
-        stateMachine = buildStateMachine()
         super.init()
+        stateMachine = buildStateMachine()
         addComponent(defineAnimationsComponent())
-        sensor.drawingColor = Color.GRAY
-        addDebugShapeSupplier { sensor }
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -149,16 +142,8 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
 
         shootUp = false
 
-        sensor.set(
-            when {
-                spawnProps.containsKey(ConstKeys.SENSORS) ->
-                    spawnProps.get(ConstKeys.SENSOR, RectangleMapObject::class)!!.rectangle.toGameRectangle()
-
-                else -> GameObjectPools.fetch(GameRectangle::class)
-                    .setSize(SENSOR_WIDTH * ConstVals.PPM, SENSOR_HEIGHT * ConstVals.PPM)
-                    .setCenter(body.getCenter())
-            }
-        )
+        canThrowFlagLeft = spawnProps.getOrDefault("${ConstKeys.FLAG}_${ConstKeys.LEFT}", true, Boolean::class)
+        canThrowFlagRight = spawnProps.getOrDefault("${ConstKeys.FLAG}_${ConstKeys.RIGHT}", true, Boolean::class)
     }
 
     override fun onDestroy() {
@@ -166,7 +151,8 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
         super.onDestroy()
     }
 
-    private fun shouldThrowFlag() = !FLAGS.containsKey(mapObjectId)
+    private fun canThrowFlag() = !FLAGS.containsKey(mapObjectId) &&
+        ((isFacing(Facing.LEFT) && canThrowFlagLeft) || (isFacing(Facing.RIGHT) && canThrowFlagRight))
 
     private fun throwFlag() {
         GameLogger.debug(TAG, "throwFlag()")
@@ -192,8 +178,6 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
 
         FLAGS.put(mapObjectId, flag)
     }
-
-    private fun shouldShootLazer() = sensor.overlaps(megaman.body.getBounds())
 
     private fun shootLazer() {
         val spawn = GameObjectPools.fetch(Vector2::class)
@@ -235,7 +219,7 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
         builder.setOnChangeState(this::onChangeState)
         AstroAssState.entries.forEach { builder.state(it.name, it) }
         builder.initialState(AstroAssState.STAND.name)
-            .transition(AstroAssState.STAND.name, AstroAssState.THROW.name) { shouldThrowFlag() }
+            .transition(AstroAssState.STAND.name, AstroAssState.THROW.name) { canThrowFlag() }
             .transition(AstroAssState.STAND.name, AstroAssState.SHOOT.name) { true /* shouldShootLazer() */ }
             .transition(AstroAssState.THROW.name, AstroAssState.STAND.name) { true }
             .transition(AstroAssState.SHOOT.name, AstroAssState.STAND.name) { true }

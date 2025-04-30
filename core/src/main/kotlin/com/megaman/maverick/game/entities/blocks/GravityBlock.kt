@@ -6,7 +6,10 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
@@ -21,6 +24,7 @@ import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setBounds
+import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
@@ -32,6 +36,7 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -45,15 +50,19 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
 class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
-    IDirectional {
+    IAudioEntity, IDirectional {
 
     companion object {
         const val TAG = "GravityBlock"
+
         const val MOON_CRATE = "MoonCrate"
+
         private const val GRAVITY = 0.25f
         private const val GROUND_GRAVITY = 0.01f
+
         private const val BODY_WIDTH = 2f
         private const val BODY_HEIGHT = 2f
+
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -68,18 +77,21 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private lateinit var regionKey: String
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             gdxArrayOf(MOON_CRATE).forEach { regions.put(it, atlas.findRegion(it)) }
         }
         super.init()
-        addComponent(defineUpdatablesComponent())
-        addComponent(defineCullablesComponent())
+        addComponent(AudioComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
+        addComponent(defineCullablesComponent())
+        addComponent(defineUpdatablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val center = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
@@ -107,7 +119,9 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+
         innerBlock?.destroy()
         innerBlock = null
     }
@@ -120,9 +134,9 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
             ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
-                this, objectSetOf(EventType.END_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS), { event ->
+                this, objectSetOf(EventType.END_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS), cull@{ event ->
                     val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
-                    room != spawnRoom
+                    return@cull room != spawnRoom
                 }
             )
         )
@@ -136,31 +150,30 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        val feetFixture =
-            Fixture(
-                body,
-                FixtureType.FEET,
-                GameRectangle().setSize(BODY_WIDTH * 0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM)
-            )
+        val feetFixture = Fixture(
+            body,
+            FixtureType.FEET,
+            GameRectangle().setSize(BODY_WIDTH * 0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM)
+        )
+        feetFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ ->
+            requestToPlaySound(SoundAsset.POUND_SOUND, false)
+        }
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         body.addFixture(feetFixture)
         feetFixture.drawingColor = Color.GREEN
         debugShapes.add { feetFixture }
 
         body.preProcess.put(ConstKeys.BLOCK) {
-
             innerBlock!!.let {
                 it.body.direction = direction
                 it.body.set(body)
             }
         }
-
         body.preProcess.put(ConstKeys.FEET_BLOCKS) {
             val feetBlocks = body.getFeetBlocks()
             val filteredFeetBlocks = feetBlocks.removeIf { it == innerBlock }
             body.setFeetBlocks(filteredFeetBlocks)
         }
-
         body.preProcess.put(ConstKeys.GRAVITY) {
             val gravity = GameObjectPools.fetch(Vector2::class)
 
@@ -178,7 +191,6 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
             body.physics.gravity.set(gravity)
         }
-
         body.preProcess.put(ConstKeys.MOVEMENT) {
             when {
                 direction.isVertical() -> body.physics.velocity.x = 0f

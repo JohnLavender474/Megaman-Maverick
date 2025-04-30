@@ -3,7 +3,6 @@ package com.megaman.maverick.game.drawables.backgrounds
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.viewport.FitViewport
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.interfaces.Resettable
@@ -13,6 +12,7 @@ import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sorting.IComparableDrawable
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpriteMatrix
+import com.mega.game.engine.screens.viewports.PixelPerfectFitViewport
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 
@@ -41,7 +41,7 @@ open class Background(
     protected open val backgroundSprites: SpriteMatrix =
         SpriteMatrix(model, priority, modelWidth, modelHeight, rows, columns)
 
-    protected open val viewport = FitViewport(
+    protected open val viewport = PixelPerfectFitViewport(
         ConstVals.VIEW_WIDTH * ConstVals.PPM,
         ConstVals.VIEW_HEIGHT * ConstVals.PPM,
         RotatableCamera(printDebug = PRINT_CAM_DEBUG)

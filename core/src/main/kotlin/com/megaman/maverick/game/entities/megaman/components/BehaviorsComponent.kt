@@ -422,13 +422,13 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         override fun evaluate(delta: Float): Boolean {
             if (dead || !ready || !canMove) return false
 
-            if (damaged || isAnyBehaviorActive(
+            if (damaged || !body.properties.containsKey(ConstKeys.LADDER) || isAnyBehaviorActive(
                     BehaviorType.JUMPING,
-                    BehaviorType.AIR_DASHING,
-                    BehaviorType.GROUND_SLIDING,
                     BehaviorType.SWIMMING,
-                    BehaviorType.JETPACKING
-                ) || !body.properties.containsKey(ConstKeys.LADDER)
+                    BehaviorType.JETPACKING,
+                    BehaviorType.AIR_DASHING,
+                    BehaviorType.GROUND_SLIDING
+                )
             ) return false
 
             ladder = body.getProperty(ConstKeys.LADDER, Ladder::class)!!

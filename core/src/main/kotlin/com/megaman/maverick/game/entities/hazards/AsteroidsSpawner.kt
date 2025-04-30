@@ -3,9 +3,11 @@ package com.megaman.maverick.game.entities.hazards
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.random
 import com.mega.game.engine.common.interfaces.IActivatable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -24,11 +26,14 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.enemies.MoonEyeStone
 import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.world.body.getCenter
 
 class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEntity, ICullableEntity,
     IDrawableShapesEntity, IActivatable {
@@ -64,8 +69,8 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
     override fun init() {
         GameLogger.debug(TAG, "init()")
         super.init()
-        addComponent(defineUpdatablesComponent())
         addComponent(defineCullablesComponent())
+        addComponent(defineUpdatablesComponent())
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ bounds }), debug = true))
     }
 
@@ -90,45 +95,56 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         if (destroyChildren) children.forEach { (it as MegaGameEntity).destroy() }
         children.clear()
     }
 
     private fun resetSpawnTimer() {
+        GameLogger.debug(TAG, "resetSpawnTimer()")
         val newDuration = getRandom(MIN_SPAWN_DELAY, MAX_SPAWN_DELAY)
         spawnTimer.resetDuration(newDuration)
     }
 
+    private fun shouldAimAtMoonEyeStone() = UtilMethods.getRandomBool() &&
+        MegaGameEntities.getOfTag(MoonEyeStone.TAG).size > 0
+
+    private fun getRandomMoonEyeStone() = MegaGameEntities.getOfTag(MoonEyeStone.TAG).random() as MoonEyeStone
+
     private fun spawnAsteroid() {
-        val angle = getRandom(MIN_ANGLE, MAX_ANGLE)
-        val speed = getRandom(MIN_SPEED, MAX_SPEED)
-
-        val impulse = GameObjectPools.fetch(Vector2::class)
-            .set(speed, 0f)
-            .rotateDeg(angle).scl(ConstVals.PPM.toFloat())
-
-        val posX = getRandom(bounds.getX(), bounds.getMaxX())
-        val posY = bounds.getMaxY()
-
-        val asteroid = MegaEntityFactory.fetch(Asteroid::class)!!
-        asteroid.spawn(
-            props(
-                ConstKeys.POSITION pairTo Vector2(posX, posY),
-                ConstKeys.IMPULSE pairTo impulse
-            )
+        val spawn = GameObjectPools.fetch(Vector2::class).set(
+            getRandom(bounds.getX(), bounds.getMaxX()), bounds.getMaxY()
         )
 
+        val angle = when {
+            shouldAimAtMoonEyeStone() -> getRandomMoonEyeStone()
+                .body
+                .getCenter()
+                .sub(spawn)
+                .angleDeg()
+                .coerceIn(MIN_ANGLE, MAX_ANGLE)
+            else -> getRandom(MIN_ANGLE, MAX_ANGLE)
+        }
+
+        val impulse = GameObjectPools.fetch(Vector2::class)
+            .set(getRandom(MIN_SPEED, MAX_SPEED), 0f)
+            .rotateDeg(angle).scl(ConstVals.PPM.toFloat())
+
+        val asteroid = MegaEntityFactory.fetch(Asteroid::class)!!
+        asteroid.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.IMPULSE pairTo impulse))
         children.add(asteroid)
 
         GameLogger.debug(TAG, "Spawned asteroid. Size of children: ${children.size}")
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent(update@{ delta ->
         children.removeAll { (it as MegaGameEntity).dead }
 
-        val roomTrans = game.isProperty(ConstKeys.ROOM_TRANSITION, true)
-        if (children.size >= MAX_CHILDREN || roomTrans || !on) return@UpdatablesComponent
+        if (!on || children.size >= MAX_CHILDREN || game.isProperty(ConstKeys.ROOM_TRANSITION, true)) {
+            spawnTimer.setToEnd()
+            return@update
+        }
 
         spawnTimer.update(delta)
         if (spawnTimer.isFinished()) {

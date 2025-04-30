@@ -48,13 +48,17 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
 
     companion object {
         const val TAG = "GravitySwitcharoo"
+
         private const val BODY_SIZE = 1.75f
+
         private const val ARROW_SPRITE_SIZE = 2f
-        private const val AURA_SPRITE_SIZE = 2.5f
         private const val ARROW_ALPHA = 0.75f
+
+        private const val AURA_SPRITE_SIZE = 2.5f
         private const val AURA_MIN_ALPHA = 0.25f
         private const val AURA_MAX_ALPHA = 0.5f
         private const val AURA_BLINK_DUR = 0.2f
+
         private val regions = ObjectMap<String, TextureRegion>()
     }
 

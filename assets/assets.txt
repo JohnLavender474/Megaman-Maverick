@@ -203,6 +203,7 @@ sounds/bloopity.wav
 sounds/space_lazer.wav
 sounds/electric_shock.wav
 sounds/select_ping.mp3
+sounds/pound.wav
 sounds/ice_shard_2.wav
 sounds/dink.mp3
 sounds/asteroid_explode.wav

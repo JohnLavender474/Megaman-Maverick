@@ -30,6 +30,7 @@ import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.common.utils.OrbitUtils
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -174,6 +175,8 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
             asteroid.owner = null
         }
     }
+
+    override fun canBeDamagedBy(damager: IDamager) = super.canBeDamagedBy(damager) && damager !is Asteroid
 
     override fun onHealthDepleted() {
         GameLogger.debug(TAG, "onHealthDepleted()")

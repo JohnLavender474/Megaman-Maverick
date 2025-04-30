@@ -280,6 +280,14 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         firstUpdate = true
     }
 
+    override fun triggerDefeat() {
+        GameLogger.debug(TAG, "triggerDefeat()")
+        super.triggerDefeat()
+
+        shieldGems.keys().forEach { gem -> gem.destroy() }
+        shieldGems.clear()
+    }
+
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
