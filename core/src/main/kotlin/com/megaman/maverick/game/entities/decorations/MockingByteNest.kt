@@ -42,15 +42,17 @@ class MockingByteNest(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
 
     companion object {
         const val TAG = "MockingByteNest"
+        private const val DEFAULT_RISE_AMOUNT = 2f
         private var region: TextureRegion? = null
     }
 
     override var owner: MockingByte? = null
 
     val position = Vector2()
-    var hidden = false
-
     val returnPositions = Array<Vector2>()
+
+    var hidden = false
+    var riseAmount = 0f
 
     private lateinit var spawnRoom: String
 
@@ -69,8 +71,10 @@ class MockingByteNest(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         val position = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         this.position.set(position)
 
-        spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
         owner = spawnProps.get(ConstKeys.OWNER, MockingByte::class)
+        spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
+        riseAmount = spawnProps.getOrDefault(ConstKeys.RISE, DEFAULT_RISE_AMOUNT, Float::class)
+
         hidden = false
 
         spawnProps.forEach { key, value ->

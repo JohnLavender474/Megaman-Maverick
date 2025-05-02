@@ -467,7 +467,9 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
             MockingByteState.RISE -> {
                 body.translate(0f, 0.5f * ConstVals.PPM)
                 startPosition.set(body.getCenter())
-                targetPosition.set(startPosition).add(0f, 4f * ConstVals.PPM)
+
+                val riseAmount = getNest()?.riseAmount ?: 4f
+                targetPosition.set(startPosition).add(0f, riseAmount * ConstVals.PPM)
 
                 GameLogger.debug(
                     TAG, "onChangeState(): RISE: " +
@@ -493,6 +495,7 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
             }
             MockingByteState.RETURN_TO_NEST -> {
                 val nest = getNest()!!
+                nest.owner = this
 
                 val returnPositions = reusableVec2Array
                 returnPositions.addAll(nest.returnPositions)
