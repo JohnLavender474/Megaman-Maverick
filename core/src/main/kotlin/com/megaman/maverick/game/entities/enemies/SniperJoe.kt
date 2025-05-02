@@ -144,7 +144,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     private lateinit var stateMachine: StateMachine<SniperJoeState>
     private val currentState: SniperJoeState
-        get() = stateMachine.getCurrent()
+        get() = stateMachine.getCurrentElement()
     private val stateTimers = orderedMapOf(
         SniperJoeState.IDLE pairTo Timer(IDLE_DUR),
         SniperJoeState.TURN pairTo Timer(TURN_DUR),

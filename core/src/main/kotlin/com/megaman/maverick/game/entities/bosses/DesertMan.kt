@@ -139,7 +139,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
 
     private lateinit var stateMachine: StateMachine<DesertManState>
     private val currentState: DesertManState
-        get() = stateMachine.getCurrent()
+        get() = stateMachine.getCurrentElement()
     private var previousAttackState: DesertManState? = null
 
     private lateinit var leftWallBounds: GameRectangle

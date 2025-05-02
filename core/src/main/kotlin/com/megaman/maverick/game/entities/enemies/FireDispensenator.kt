@@ -88,7 +88,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
     )
     private lateinit var stateMachine: StateMachine<FireDispensenatorState>
     private val currentState: FireDispensenatorState
-        get() = stateMachine.getCurrent()
+        get() = stateMachine.getCurrentElement()
     private val shouldBeFrozen: Boolean
         get() = !timers["frozen"].isFinished()
     private val ignoreBlockSet = ObjectSet<Int>()
@@ -149,7 +149,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            val state = stateMachine.getCurrent()
+            val state = stateMachine.getCurrentElement()
 
             if (shouldBeFrozen && state != FireDispensenatorState.FROZEN) stateMachine.next()
 
@@ -211,7 +211,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = { stateMachine.getCurrent().name.lowercase() }
+        val keySupplier: (String?) -> String? = { stateMachine.getCurrentElement().name.lowercase() }
         val animations = objectMapOf<String, IAnimation>(
             "sleep" pairTo Animation(regions["sleep"]),
             "open" pairTo Animation(regions["open"], 2, 1, 0.1f, false),

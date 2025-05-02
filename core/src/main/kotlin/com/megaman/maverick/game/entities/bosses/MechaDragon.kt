@@ -136,7 +136,7 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IFreezableEnt
 
     private lateinit var stateMachine: StateMachine<MechaDragonState>
     private val currentState: MechaDragonState
-        get() = stateMachine.getCurrent()
+        get() = stateMachine.getCurrentElement()
     private val stateTimers = OrderedMap<MechaDragonState, Timer>()
 
     private val frozenTimer = Timer(FROZEN_DUR)

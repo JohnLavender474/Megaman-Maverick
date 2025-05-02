@@ -202,7 +202,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
 
     private lateinit var stateMachine: StateMachine<TimberWomanState>
     private val currentState: TimberWomanState
-        get() = stateMachine.getCurrent()
+        get() = stateMachine.getCurrentElement()
     private var previousNonStandState: TimberWomanState? = null
     private val stateTimers = OrderedMap<TimberWomanState, Timer>()
 

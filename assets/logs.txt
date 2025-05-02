@@ -1,31 +1,270 @@
-===== SESSION STARTED: 2025-04-29T18:01:03.901765883 =====
-18:01:05 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=MEGA_BUSTER, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@5ecba515
-18:01:05 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=null
-18:01:05 | DEBUG | GameState | addListener(): listener={ Megaman:[mapObjId=0, dead=false, hashCode=836972194] }, added=true
-18:01:06 | DEBUG | GameState | reset()
-18:01:06 | DEBUG | GameState | fromString(): s=INTRO_STAGE;C,F,B,G,H,D,A,E;A,B,C,D;;120
-18:01:06 | DEBUG | GameState | addLevelDefeated(): level=INTRO_STAGE, added=true
-18:01:06 | DEBUG | GameState | addHeartTank(): heartTank=C, added=true
-18:01:06 | DEBUG | GameState | addHeartTank(): heartTank=F, added=true
-18:01:06 | DEBUG | GameState | addHeartTank(): heartTank=B, added=true
-18:01:06 | DEBUG | GameState | addHeartTank(): heartTank=G, added=true
-18:01:06 | DEBUG | GameState | addHeartTank(): heartTank=H, added=true
-18:01:06 | DEBUG | GameState | addHeartTank(): heartTank=D, added=true
-18:01:06 | DEBUG | GameState | addHeartTank(): heartTank=A, added=true
-18:01:06 | DEBUG | GameState | addHeartTank(): heartTank=E, added=true
-18:01:06 | DEBUG | GameState | addHealthTank(): healthTank=A
-18:01:06 | DEBUG | GameState | addHealthTank(): healthTank=B
-18:01:06 | DEBUG | GameState | addHealthTank(): healthTank=C
-18:01:06 | DEBUG | GameState | addHealthTank(): healthTank=D
-18:01:08 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=MEGA_BUSTER
-18:01:12 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-18:01:12 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-18:01:12 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-18:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
-18:01:12 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-18:01:12 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-18:01:12 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-18:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
-18:01:13 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-18:01:13 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-18:01:13 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+===== SESSION STARTED: 2025-05-01T23:54:35.125989537 =====
+23:54:37 | DEBUG | MockingByte | init()
+23:54:37 | DEBUG | MockingByte | onSpawn(): spawnProps=Properties({
+	[bounds=[39864.0,256.0,16.0,16.0]]
+	[trigger=null]
+	[x=39864.0]
+	[height=16.0]
+	[cull_out_of_bounds=false]
+	[id=487]
+	[nest=com.badlogic.gdx.maps.objects.RectangleMapObject@3fc05ea2]
+	[name=MockingByte]
+	[y=256.0]
+	[width=16.0]
+})
+23:54:37 | ERROR | MockingByte | Nest should not be null when state=SLEEP
+23:54:37 | DEBUG | MockingByte | onChangeState(): current=AWAKEN, previous=SLEEP
+23:54:37 | ERROR | MockingByte | Nest should not be null when state=AWAKEN
+23:54:37 | DEBUG | MockingByte | onChangeState(): current=LEAVE_NEST, previous=AWAKEN
+23:54:37 | ERROR | MockingByte | Nest should not be null when state=LEAVE_NEST
+23:54:37 | DEBUG | MockingByte | onChangeState(): current=RISE, previous=LEAVE_NEST
+23:54:37 | DEBUG | MockingByte | onChangeState(): RISE: startPos=(39872.0,288.0), targetPos=(39872.0,416.0), megamanPos=(39680.0,216.0)
+23:54:38 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:54:38 | DEBUG | MockingByte | onChangeState(): current=HOVER, previous=RISE
+23:54:38 | DEBUG | MockingByte | onChangeState(): HOVER: startPos=(39872.0,288.0), targetPos=(39872.0,416.0), megamanPos=(39680.0,216.0)
+23:54:39 | DEBUG | MockingByte | update(): hover delay just finished: startPos=(39872.0,406.66452), targetPos=(39680.0,216.0)
+23:54:41 | DEBUG | MockingByte | update(): reached target position: actualPos=(39687.453,223.33797), targetPos=(39680.0,216.0)
+23:54:41 | DEBUG | MockingByte | onChangeState(): current=HOVER, previous=HOVER
+23:54:41 | DEBUG | MockingByte | onChangeState(): HOVER: startPos=(39872.0,406.66452), targetPos=(39680.0,216.0), megamanPos=(39600.0,377.98917)
+23:54:41 | DEBUG | MockingByte | update(): hover delay just finished: startPos=(39686.055,221.94945), targetPos=(39683.715,451.81857)
+23:54:42 | DEBUG | MockingByte | init()
+23:54:42 | DEBUG | MockingByte | onSpawn(): spawnProps=Properties({
+	[bounds=[40088.0,288.0,16.0,16.0]]
+	[trigger=null]
+	[x=40088.0]
+	[height=16.0]
+	[cull_out_of_bounds=false]
+	[id=468]
+	[nest=com.badlogic.gdx.maps.objects.RectangleMapObject@1f3165e7]
+	[name=MockingByte]
+	[y=288.0]
+	[width=16.0]
+})
+23:54:42 | DEBUG | MockingByte | update(): megaman entered awaken area, wake up
+23:54:42 | DEBUG | MockingByte | onChangeState(): current=AWAKEN, previous=SLEEP
+23:54:42 | DEBUG | MockingByte | update(): reached target position: actualPos=(39683.76,446.32367), targetPos=(39683.715,451.81857)
+23:54:42 | DEBUG | MockingByte | onChangeState(): current=HOVER, previous=HOVER
+23:54:42 | DEBUG | MockingByte | onChangeState(): HOVER: startPos=(39686.055,221.94945), targetPos=(39683.715,451.81857), megamanPos=(39880.91,361.42685)
+23:54:42 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:54:42 | DEBUG | MockingByte | onChangeState(): current=LEAVE_NEST, previous=AWAKEN
+23:54:42 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:54:42 | DEBUG | MockingByte | onChangeState(): current=RISE, previous=LEAVE_NEST
+23:54:42 | DEBUG | MockingByte | onChangeState(): RISE: startPos=(40096.0,320.0), targetPos=(40096.0,448.0), megamanPos=(39930.277,326.485)
+23:54:42 | DEBUG | MockingByte | onChangeState(): set nest owner to null
+23:54:42 | DEBUG | MockingByte | update(): hover delay just finished: startPos=(39683.746,448.19342), targetPos=(39934.926,261.47165)
+23:54:43 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:54:43 | DEBUG | MockingByte | onChangeState(): current=HOVER, previous=RISE
+23:54:43 | DEBUG | MockingByte | onChangeState(): HOVER: startPos=(40096.0,320.0), targetPos=(40096.0,448.0), megamanPos=(39971.426,260.39972)
+23:54:44 | DEBUG | MockingByte | update(): reached target position: actualPos=(39927.18,267.26868), targetPos=(39934.926,261.47165)
+23:54:44 | DEBUG | MockingByte | onChangeState(): current=DIVE, previous=HOVER
+23:54:44 | DEBUG | MockingByte | update(): dive delay just finished: startPos=(39927.18,267.26868), targetPos=(39911.965,340.1072)
+23:54:44 | DEBUG | MockingByte | update(): hover delay just finished: startPos=(40096.0,439.97513), targetPos=(39883.863,337.08588)
+23:54:45 | DEBUG | MockingByte | update(): reached target position: actualPos=(39890.35,340.2305), targetPos=(39883.863,337.08588)
+23:54:45 | DEBUG | MockingByte | onChangeState(): current=HOVER, previous=HOVER
+23:54:45 | DEBUG | MockingByte | onChangeState(): HOVER: startPos=(40096.0,439.97513), targetPos=(39883.863,337.08588), megamanPos=(39867.562,359.25836)
+23:54:46 | DEBUG | MockingByte | update(): hover delay just finished: startPos=(39887.76,338.97668), targetPos=(39968.67,373.75497)
+23:54:46 | DEBUG | MockingByte | update(): max dive time out of bounds: actualPos=(39780.617,968.9264), targetPos=(39911.965,340.1072)
+23:54:46 | DEBUG | MockingByte | update(): lost nest; found new nest: true; nestId=467
+23:54:46 | DEBUG | MockingByte | onChangeState(): current=RETURN_TO_NEST, previous=DIVE
+23:54:46 | DEBUG | MockingByte | onChangeState(): startPos=(39968.0,64.0), targetPos=(40096.0,288.0), nest=467
+23:54:46 | DEBUG | MockingByte | update(): reached target position: actualPos=(39962.992,371.32675), targetPos=(39968.67,373.75497)
+23:54:46 | DEBUG | MockingByte | onChangeState(): current=HOVER, previous=HOVER
+23:54:46 | DEBUG | MockingByte | onChangeState(): HOVER: startPos=(39887.76,338.97668), targetPos=(39968.67,373.75497), megamanPos=(40038.27,312.0)
+23:54:47 | DEBUG | MockingByte | update(): hover delay just finished: startPos=(39965.0,372.1898), targetPos=(40130.008,422.0371)
+23:54:47 | DEBUG | MockingByte | update(): reached target position: actualPos=(40092.36,281.57385), targetPos=(40096.0,288.0)
+23:54:47 | DEBUG | MockingByte | onChangeState(): current=FALL_ASLEEP, previous=RETURN_TO_NEST
+23:54:47 | DEBUG | MockingByte | update(): reached target position: actualPos=(40122.586,419.79535), targetPos=(40130.008,422.0371)
+23:54:47 | DEBUG | MockingByte | onChangeState(): current=DIVE, previous=HOVER
+23:54:48 | DEBUG | MockingByte | update(): dive delay just finished: startPos=(40122.586,419.79535), targetPos=(39987.25,413.15076)
+23:54:48 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:54:48 | DEBUG | MockingByte | onChangeState(): current=SLEEP, previous=FALL_ASLEEP
+23:54:48 | DEBUG | MockingByte | update(): megaman entered awaken area, wake up
+23:54:48 | DEBUG | MockingByte | onChangeState(): current=AWAKEN, previous=SLEEP
+23:54:49 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:54:49 | DEBUG | MockingByte | onChangeState(): current=LEAVE_NEST, previous=AWAKEN
+23:54:49 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:54:49 | DEBUG | MockingByte | onChangeState(): current=RISE, previous=LEAVE_NEST
+23:54:49 | DEBUG | MockingByte | onChangeState(): RISE: startPos=(40096.0,320.0), targetPos=(40096.0,448.0), megamanPos=(39954.67,216.0)
+23:54:49 | DEBUG | MockingByte | onChangeState(): set nest owner to null
+23:54:50 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:54:50 | DEBUG | MockingByte | onChangeState(): current=HOVER, previous=RISE
+23:54:50 | DEBUG | MockingByte | onChangeState(): HOVER: startPos=(40096.0,320.0), targetPos=(40096.0,448.0), megamanPos=(40013.27,216.0)
+23:54:50 | DEBUG | MockingByte | update(): max dive time out of bounds: actualPos=(39303.836,379.61957), targetPos=(39987.25,413.15076)
+23:54:50 | DEBUG | MockingByte | update(): lost nest; found new nest: true; nestId=467
+23:54:50 | DEBUG | MockingByte | onChangeState(): current=RETURN_TO_NEST, previous=DIVE
+23:54:50 | DEBUG | MockingByte | onChangeState(): startPos=(39968.0,64.0), targetPos=(40096.0,288.0), nest=467
+23:54:51 | DEBUG | MockingByte | update(): hover delay just finished: startPos=(40096.0,440.36157), targetPos=(39935.04,306.73764)
+23:54:51 | DEBUG | MockingByte | update(): reached target position: actualPos=(40091.848,280.7157), targetPos=(40096.0,288.0)
+23:54:51 | DEBUG | MockingByte | onChangeState(): current=FALL_ASLEEP, previous=RETURN_TO_NEST
+23:54:52 | DEBUG | MockingByte | update(): reached target position: actualPos=(39942.06,312.58606), targetPos=(39935.04,306.73764)
+23:54:52 | DEBUG | MockingByte | onChangeState(): current=HOVER, previous=HOVER
+23:54:52 | DEBUG | MockingByte | onChangeState(): HOVER: startPos=(40096.0,440.36157), targetPos=(39935.04,306.73764), megamanPos=(39828.363,280.0)
+23:54:52 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:54:52 | DEBUG | MockingByte | onChangeState(): current=SLEEP, previous=FALL_ASLEEP
+23:54:52 | DEBUG | MockingByte | update(): hover delay just finished: startPos=(39939.75,310.6652), targetPos=(39812.68,287.84384)
+23:54:52 | DEBUG | MockingByte | update(): megaman entered awaken area, wake up
+23:54:52 | DEBUG | MockingByte | onChangeState(): current=AWAKEN, previous=SLEEP
+23:54:53 | DEBUG | MockingByte | update(): reached target position: actualPos=(39820.582,289.26135), targetPos=(39812.68,287.84384)
+23:54:53 | DEBUG | MockingByte | onChangeState(): current=HOVER, previous=HOVER
+23:54:53 | DEBUG | MockingByte | onChangeState(): HOVER: startPos=(39939.75,310.6652), targetPos=(39812.68,287.84384), megamanPos=(39882.867,304.21735)
+23:54:53 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:54:53 | DEBUG | MockingByte | onChangeState(): current=LEAVE_NEST, previous=AWAKEN
+23:54:53 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:54:53 | DEBUG | MockingByte | onChangeState(): current=RISE, previous=LEAVE_NEST
+23:54:53 | DEBUG | MockingByte | onChangeState(): RISE: startPos=(40096.0,320.0), targetPos=(40096.0,448.0), megamanPos=(39934.65,388.80276)
+23:54:53 | DEBUG | MockingByte | onChangeState(): set nest owner to null
+23:54:53 | DEBUG | MockingByte | update(): hover delay just finished: startPos=(39818.49,288.88464), targetPos=(39970.082,355.32965)
+23:54:54 | DEBUG | MockingByte | update(): reached target position: actualPos=(39964.45,352.86368), targetPos=(39970.082,355.32965)
+23:54:54 | DEBUG | MockingByte | onChangeState(): current=DIVE, previous=HOVER
+23:54:54 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:54:54 | DEBUG | MockingByte | onChangeState(): current=HOVER, previous=RISE
+23:54:54 | DEBUG | MockingByte | onChangeState(): HOVER: startPos=(40096.0,320.0), targetPos=(40096.0,448.0), megamanPos=(39968.613,206.4)
+23:54:54 | DEBUG | MockingByte | update(): dive delay just finished: startPos=(39964.45,352.86368), targetPos=(39913.902,290.61435)
+23:54:55 | DEBUG | MockingByte | update(): hover delay just finished: startPos=(40096.0,440.36157), targetPos=(39842.977,280.0)
+23:54:56 | DEBUG | MockingByte | update(): max dive time out of bounds: actualPos=(39528.863,-183.71658), targetPos=(39913.902,290.61435)
+23:54:56 | DEBUG | MockingByte | update(): lost nest; found new nest: true; nestId=474
+23:54:56 | DEBUG | MockingByte | onChangeState(): current=RETURN_TO_NEST, previous=DIVE
+23:54:56 | DEBUG | MockingByte | onChangeState(): startPos=(39936.0,64.0), targetPos=(39872.0,256.0), nest=474
+23:54:56 | DEBUG | MockingByte | update(): reached target position: actualPos=(39848.965,283.79727), targetPos=(39842.977,280.0)
+23:54:56 | DEBUG | MockingByte | onChangeState(): current=HOVER, previous=HOVER
+23:54:56 | DEBUG | MockingByte | onChangeState(): HOVER: startPos=(40096.0,440.36157), targetPos=(39842.977,280.0), megamanPos=(39942.008,257.1938)
+23:54:57 | DEBUG | MockingByte | update(): hover delay just finished: startPos=(39847.387,282.79715), targetPos=(40028.957,321.8909)
+23:54:57 | DEBUG | MockingByte | update(): reached target position: actualPos=(39874.477,248.65018), targetPos=(39872.0,256.0)
+23:54:57 | DEBUG | MockingByte | onChangeState(): current=FALL_ASLEEP, previous=RETURN_TO_NEST
+23:55:03 | DEBUG | MockingByte | update(): reached target position: actualPos=(40023.0,320.6049), targetPos=(40028.957,321.8909)
+23:55:03 | DEBUG | MockingByte | onChangeState(): current=HOVER, previous=HOVER
+23:55:03 | DEBUG | MockingByte | onChangeState(): HOVER: startPos=(39847.387,282.79715), targetPos=(40028.957,321.8909), megamanPos=(40101.562,327.0451)
+23:55:03 | DEBUG | MockingByte | update(): hover delay just finished: startPos=(40024.89,321.01126), targetPos=(40132.688,452.67303)
+23:55:03 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:55:03 | DEBUG | MockingByte | onChangeState(): current=SLEEP, previous=FALL_ASLEEP
+23:55:04 | DEBUG | MockingByte | update(): megaman entered awaken area, wake up
+23:55:04 | DEBUG | MockingByte | onChangeState(): current=AWAKEN, previous=SLEEP
+23:55:04 | DEBUG | MockingByte | update(): reached target position: actualPos=(40127.4,446.20618), targetPos=(40132.688,452.67303)
+23:55:04 | DEBUG | MockingByte | onChangeState(): current=DIVE, previous=HOVER
+23:55:04 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:55:04 | DEBUG | MockingByte | onChangeState(): current=LEAVE_NEST, previous=AWAKEN
+23:55:04 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:55:04 | DEBUG | MockingByte | onChangeState(): current=RISE, previous=LEAVE_NEST
+23:55:04 | DEBUG | MockingByte | onChangeState(): RISE: startPos=(39872.0,288.0), targetPos=(39872.0,416.0), megamanPos=(40051.18,312.0)
+23:55:04 | DEBUG | MockingByte | onChangeState(): set nest owner to null
+23:55:05 | DEBUG | MockingByte | update(): dive delay just finished: startPos=(40127.4,446.20618), targetPos=(40061.47,312.0)
+23:55:05 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:55:05 | DEBUG | MockingByte | onChangeState(): current=HOVER, previous=RISE
+23:55:05 | DEBUG | MockingByte | onChangeState(): HOVER: startPos=(39872.0,288.0), targetPos=(39872.0,416.0), megamanPos=(39988.44,216.0)
+23:55:06 | DEBUG | MockingByte | update(): hover delay just finished: startPos=(39872.0,408.36157), targetPos=(39884.977,280.0)
+23:55:06 | DEBUG | MockingByte | update(): max dive time out of bounds: actualPos=(39794.37,-231.61832), targetPos=(40061.47,312.0)
+23:55:06 | DEBUG | MockingByte | update(): lost nest; found new nest: true; nestId=474
+23:55:06 | DEBUG | MockingByte | onChangeState(): current=RETURN_TO_NEST, previous=DIVE
+23:55:06 | DEBUG | MockingByte | onChangeState(): startPos=(39808.0,64.0), targetPos=(39872.0,256.0), nest=474
+23:55:07 | DEBUG | MockingByte | update(): reached target position: actualPos=(39884.16,287.9146), targetPos=(39884.977,280.0)
+23:55:07 | DEBUG | MockingByte | onChangeState(): current=HOVER, previous=HOVER
+23:55:07 | DEBUG | MockingByte | onChangeState(): HOVER: startPos=(39872.0,408.36157), targetPos=(39884.977,280.0), megamanPos=(39802.254,363.7978)
+23:55:07 | DEBUG | MockingByte | update(): reached target position: actualPos=(39869.523,248.65018), targetPos=(39872.0,256.0)
+23:55:07 | DEBUG | MockingByte | onChangeState(): current=FALL_ASLEEP, previous=RETURN_TO_NEST
+23:55:07 | DEBUG | MockingByte | update(): hover delay just finished: startPos=(39884.37,285.79773), targetPos=(39739.227,407.86127)
+23:55:08 | DEBUG | MockingByte | update(): reached target position: actualPos=(39745.98,402.20587), targetPos=(39739.227,407.86127)
+23:55:08 | DEBUG | MockingByte | onChangeState(): current=HOVER, previous=HOVER
+23:55:08 | DEBUG | MockingByte | onChangeState(): HOVER: startPos=(39884.37,285.79773), targetPos=(39739.227,407.86127), megamanPos=(39699.63,450.61136)
+23:55:08 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:55:08 | DEBUG | MockingByte | onChangeState(): current=SLEEP, previous=FALL_ASLEEP
+23:55:08 | DEBUG | MockingByte | update(): megaman entered awaken area, wake up
+23:55:08 | DEBUG | MockingByte | onChangeState(): current=AWAKEN, previous=SLEEP
+23:55:09 | DEBUG | MockingByte | update(): hover delay just finished: startPos=(39743.66,404.1597), targetPos=(39817.215,443.15048)
+23:55:09 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:55:09 | DEBUG | MockingByte | onChangeState(): current=LEAVE_NEST, previous=AWAKEN
+23:55:09 | DEBUG | MockingByte | update(): reached target position: actualPos=(39811.1,439.91153), targetPos=(39817.215,443.15048)
+23:55:09 | DEBUG | MockingByte | onChangeState(): current=DIVE, previous=HOVER
+23:55:09 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:55:09 | DEBUG | MockingByte | onChangeState(): current=RISE, previous=LEAVE_NEST
+23:55:09 | DEBUG | MockingByte | onChangeState(): RISE: startPos=(39872.0,288.0), targetPos=(39872.0,416.0), megamanPos=(39793.637,282.69238)
+23:55:09 | DEBUG | MockingByte | onChangeState(): set nest owner to null
+23:55:09 | DEBUG | MockingByte | update(): dive delay just finished: startPos=(39811.1,439.91153), targetPos=(39745.598,216.0)
+23:55:10 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:55:10 | DEBUG | MockingByte | onChangeState(): current=HOVER, previous=RISE
+23:55:10 | DEBUG | MockingByte | onChangeState(): HOVER: startPos=(39872.0,288.0), targetPos=(39872.0,416.0), megamanPos=(39639.4,216.0)
+23:55:11 | DEBUG | MockingByte | update(): hover delay just finished: startPos=(39872.0,407.13474), targetPos=(39600.0,376.385)
+23:55:11 | DEBUG | MockingByte | update(): max dive time out of bounds: actualPos=(39608.414,-252.96829), targetPos=(39745.598,216.0)
+23:55:11 | DEBUG | MockingByte | update(): lost nest; found new nest: true; nestId=475
+23:55:11 | DEBUG | MockingByte | onChangeState(): current=RETURN_TO_NEST, previous=DIVE
+23:55:11 | DEBUG | MockingByte | onChangeState(): startPos=(39584.0,608.0), targetPos=(39680.0,352.0), nest=475
+23:55:12 | DEBUG | MockingByte | update(): reached target position: actualPos=(39605.582,377.01263), targetPos=(39600.0,376.385)
+23:55:12 | DEBUG | MockingByte | onChangeState(): current=HOVER, previous=HOVER
+23:55:12 | DEBUG | MockingByte | onChangeState(): HOVER: startPos=(39872.0,407.13474), targetPos=(39600.0,376.385), megamanPos=(39654.51,462.06802)
+23:55:12 | DEBUG | MockingByte | update(): reached target position: actualPos=(39677.13,359.74542), targetPos=(39680.0,352.0)
+23:55:12 | DEBUG | MockingByte | onChangeState(): current=FALL_ASLEEP, previous=RETURN_TO_NEST
+23:55:13 | DEBUG | MockingByte | update(): hover delay just finished: startPos=(39603.746,376.80518), targetPos=(39654.51,462.06802)
+23:55:13 | DEBUG | MockingByte | update(): reached target position: actualPos=(39650.93,456.0455), targetPos=(39654.51,462.06802)
+23:55:13 | DEBUG | MockingByte | onChangeState(): current=HOVER, previous=HOVER
+23:55:13 | DEBUG | MockingByte | onChangeState(): HOVER: startPos=(39603.746,376.80518), targetPos=(39654.51,462.06802), megamanPos=(39654.51,462.06802)
+23:55:13 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:55:13 | DEBUG | MockingByte | onChangeState(): current=SLEEP, previous=FALL_ASLEEP
+23:55:13 | DEBUG | MockingByte | update(): megaman entered awaken area, wake up
+23:55:13 | DEBUG | MockingByte | onChangeState(): current=AWAKEN, previous=SLEEP
+23:55:13 | DEBUG | MockingByte | update(): hover delay just finished: startPos=(39652.605,458.86642), targetPos=(39654.51,462.06802)
+23:55:13 | DEBUG | MockingByte | update(): reached target position: actualPos=(39652.605,458.86642), targetPos=(39654.51,462.06802)
+23:55:13 | DEBUG | MockingByte | onChangeState(): current=DIVE, previous=HOVER
+23:55:14 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:55:14 | DEBUG | MockingByte | onChangeState(): current=LEAVE_NEST, previous=AWAKEN
+23:55:14 | DEBUG | MockingByte | update(): dive delay just finished: startPos=(39652.605,458.86642), targetPos=(39654.51,462.06802)
+23:55:14 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:55:14 | DEBUG | MockingByte | onChangeState(): current=RISE, previous=LEAVE_NEST
+23:55:14 | DEBUG | MockingByte | onChangeState(): RISE: startPos=(39680.0,384.0), targetPos=(39680.0,512.0), megamanPos=(39654.51,462.06802)
+23:55:14 | DEBUG | MockingByte | onChangeState(): set nest owner to null
+23:55:15 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:55:15 | DEBUG | MockingByte | onChangeState(): current=HOVER, previous=RISE
+23:55:15 | DEBUG | MockingByte | onChangeState(): HOVER: startPos=(39680.0,384.0), targetPos=(39680.0,512.0), megamanPos=(39654.51,462.06802)
+23:55:15 | DEBUG | MockingByte | update(): max dive time out of bounds: actualPos=(39931.336,927.3901), targetPos=(39654.51,462.06802)
+23:55:15 | DEBUG | MockingByte | update(): lost nest; found new nest: true; nestId=475
+23:55:15 | DEBUG | MockingByte | onChangeState(): current=RETURN_TO_NEST, previous=DIVE
+23:55:15 | DEBUG | MockingByte | onChangeState(): startPos=(39584.0,608.0), targetPos=(39680.0,352.0), nest=475
+23:55:16 | DEBUG | MockingByte | update(): hover delay just finished: startPos=(39680.0,503.0985), targetPos=(39654.51,462.06802)
+23:55:16 | DEBUG | MockingByte | onDestroy()
+23:55:16 | DEBUG | MockingByte | onDestroy()
+23:55:19 | DEBUG | MockingByte | onSpawn(): spawnProps=Properties({
+	[bounds=[40088.0,288.0,16.0,16.0]]
+	[trigger=null]
+	[x=40088.0]
+	[height=16.0]
+	[cull_out_of_bounds=false]
+	[id=468]
+	[nest=com.badlogic.gdx.maps.objects.RectangleMapObject@1f3165e7]
+	[name=MockingByte]
+	[y=288.0]
+	[width=16.0]
+})
+23:55:19 | DEBUG | MockingByte | update(): megaman entered awaken area, wake up
+23:55:19 | DEBUG | MockingByte | onChangeState(): current=AWAKEN, previous=SLEEP
+23:55:20 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:55:20 | DEBUG | MockingByte | onChangeState(): current=LEAVE_NEST, previous=AWAKEN
+23:55:20 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:55:20 | DEBUG | MockingByte | onChangeState(): current=RISE, previous=LEAVE_NEST
+23:55:20 | DEBUG | MockingByte | onChangeState(): RISE: startPos=(40096.0,320.0), targetPos=(40096.0,448.0), megamanPos=(39976.72,216.0)
+23:55:20 | DEBUG | MockingByte | onChangeState(): set nest owner to null
+23:55:21 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:55:21 | DEBUG | MockingByte | onChangeState(): current=HOVER, previous=RISE
+23:55:21 | DEBUG | MockingByte | onChangeState(): HOVER: startPos=(40096.0,320.0), targetPos=(40096.0,448.0), megamanPos=(40050.746,312.0)
+23:55:22 | DEBUG | MockingByte | update(): hover delay just finished: startPos=(40096.0,439.13474), targetPos=(39916.465,306.5077)
+23:55:23 | DEBUG | MockingByte | update(): reached target position: actualPos=(39922.973,311.32037), targetPos=(39916.465,306.5077)
+23:55:23 | DEBUG | MockingByte | onChangeState(): current=HOVER, previous=HOVER
+23:55:23 | DEBUG | MockingByte | onChangeState(): HOVER: startPos=(40096.0,439.13474), targetPos=(39916.465,306.5077), megamanPos=(39900.715,384.81815)
+23:55:23 | DEBUG | MockingByte | update(): hover delay just finished: startPos=(39920.617,309.57867), targetPos=(40028.715,342.22174)
+23:55:24 | DEBUG | MockingByte | update(): reached target position: actualPos=(40021.3,339.98624), targetPos=(40028.715,342.22174)
+23:55:24 | DEBUG | MockingByte | onChangeState(): current=HOVER, previous=HOVER
+23:55:24 | DEBUG | MockingByte | onChangeState(): HOVER: startPos=(39920.617,309.57867), targetPos=(40028.715,342.22174), megamanPos=(40103.883,397.46725)
+23:55:24 | DEBUG | MockingByte | update(): hover delay just finished: startPos=(40024.418,340.92932), targetPos=(40112.246,482.52887)
+23:55:25 | DEBUG | MockingByte | update(): reached target position: actualPos=(40108.64,476.70734), targetPos=(40112.246,482.52887)
+23:55:25 | DEBUG | MockingByte | onChangeState(): current=DIVE, previous=HOVER
+23:55:25 | DEBUG | MockingByte | update(): dive delay just finished: startPos=(40108.64,476.70734), targetPos=(39892.688,280.0)
+23:55:28 | DEBUG | MockingByte | update(): max dive time out of bounds: actualPos=(39437.47,-135.27647), targetPos=(39892.688,280.0)
+23:55:28 | DEBUG | MockingByte | update(): lost nest; found new nest: true; nestId=467
+23:55:28 | DEBUG | MockingByte | onChangeState(): current=RETURN_TO_NEST, previous=DIVE
+23:55:28 | DEBUG | MockingByte | onChangeState(): startPos=(39968.0,64.0), targetPos=(40096.0,288.0), nest=467
+23:55:29 | DEBUG | MockingByte | update(): reached target position: actualPos=(40091.848,280.7157), targetPos=(40096.0,288.0)
+23:55:29 | DEBUG | MockingByte | onChangeState(): current=FALL_ASLEEP, previous=RETURN_TO_NEST
+23:55:30 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:55:30 | DEBUG | MockingByte | onChangeState(): current=SLEEP, previous=FALL_ASLEEP
+23:55:30 | DEBUG | MockingByte | update(): megaman entered awaken area, wake up
+23:55:30 | DEBUG | MockingByte | onChangeState(): current=AWAKEN, previous=SLEEP
+23:55:30 | DEBUG | MockingByte | onSpawn(): state timer finished
+23:55:30 | DEBUG | MockingByte | onChangeState(): current=LEAVE_NEST, previous=AWAKEN
+23:55:31 | DEBUG | MockingByte | onDestroy()

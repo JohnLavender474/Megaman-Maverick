@@ -114,7 +114,7 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
     private lateinit var stateMachine: StateMachine<LumberJoeState>
     private val currentState: LumberJoeState
-        get() = stateMachine.getCurrent()
+        get() = stateMachine.getCurrentElement()
     private val stateTimers = OrderedMap<LumberJoeState, Timer>()
     private var axesThrown = 0
     private var hasShield = true

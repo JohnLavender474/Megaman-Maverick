@@ -18,11 +18,11 @@ class StateMachineBuilderTest : DescribeSpec({
                 .initialState("A")
                 .build()
 
-            stateMachine.getCurrent() shouldBe "State A"
+            stateMachine.getCurrentElement() shouldBe "State A"
             stateMachine.next()
-            stateMachine.getCurrent() shouldBe "State B"
+            stateMachine.getCurrentElement() shouldBe "State B"
             stateMachine.next()
-            stateMachine.getCurrent() shouldBe "State C"
+            stateMachine.getCurrentElement() shouldBe "State C"
         }
     }
 
@@ -36,9 +36,9 @@ class StateMachineBuilderTest : DescribeSpec({
                 .initialState("A")
                 .build()
 
-            stateMachine.getCurrent() shouldBe "State A"
+            stateMachine.getCurrentElement() shouldBe "State A"
             stateMachine.next()
-            stateMachine.getCurrent() shouldBe "State B"
+            stateMachine.getCurrentElement() shouldBe "State B"
         }
 
         it("should throw an exception if a state is referenced in a transition but not defined") {
@@ -77,15 +77,15 @@ class StateMachineBuilderTest : DescribeSpec({
                 .initialState("A")
                 .build()
 
-            stateMachine.getCurrent() shouldBe "State A"
+            stateMachine.getCurrentElement() shouldBe "State A"
             stateMachine.next()
-            stateMachine.getCurrent() shouldBe "State B"
+            stateMachine.getCurrentElement() shouldBe "State B"
             stateMachine.next()
-            stateMachine.getCurrent() shouldBe "State C"
+            stateMachine.getCurrentElement() shouldBe "State C"
             stateMachine.next()
-            stateMachine.getCurrent() shouldBe "State D"
+            stateMachine.getCurrentElement() shouldBe "State D"
             stateMachine.next()
-            stateMachine.getCurrent() shouldBe "State A"
+            stateMachine.getCurrentElement() shouldBe "State A"
         }
 
         it("should throw an exception if any transition references an undefined state in complex setups") {
@@ -119,11 +119,11 @@ class StateMachineBuilderTest : DescribeSpec({
                 .initialState("A")
                 .build()
 
-            stateMachine.getCurrent() shouldBe "State A"
+            stateMachine.getCurrentElement() shouldBe "State A"
             stateMachine.next()
-            stateMachine.getCurrent() shouldBe "State B"
+            stateMachine.getCurrentElement() shouldBe "State B"
             stateMachine.next()
-            stateMachine.getCurrent() shouldBe "State B"
+            stateMachine.getCurrentElement() shouldBe "State B"
         }
     }
 })

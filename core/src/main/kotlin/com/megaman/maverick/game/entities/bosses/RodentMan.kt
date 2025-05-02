@@ -168,7 +168,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
 
     private lateinit var stateMachine: StateMachine<RodentManState>
     private val currentState: RodentManState
-        get() = stateMachine.getCurrent()
+        get() = stateMachine.getCurrentElement()
     private val stateTimers = orderedMapOf<RodentManState, Timer>(
         RodentManState.INIT pairTo Timer(INIT_DUR),
         RodentManState.RUN pairTo Timer(RUN_DUR),

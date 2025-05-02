@@ -28,7 +28,9 @@ class StateMachine<T>(
         return currentState.element
     }
 
-    fun getCurrent() = currentState.element
+    fun getCurrentState() = currentState
+
+    fun getCurrentElement() = getCurrentState().element
 
     override fun reset() {
         val previousState = currentState

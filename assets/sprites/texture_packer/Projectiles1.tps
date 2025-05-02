@@ -176,6 +176,12 @@
             <key type="filename">../frames/Projectiles1/Asteroid.png</key>
             <key type="filename">../frames/Projectiles1/Asteroid/Blue.png</key>
             <key type="filename">../frames/Projectiles1/Asteroid/Regular.png</key>
+            <key type="filename">../frames/Projectiles1/MockingByteEgg/pieces/1.png</key>
+            <key type="filename">../frames/Projectiles1/MockingByteEgg/pieces/2.png</key>
+            <key type="filename">../frames/Projectiles1/MockingByteEgg/pieces/3.png</key>
+            <key type="filename">../frames/Projectiles1/MockingByteEgg/pieces/4.png</key>
+            <key type="filename">../frames/Projectiles1/MockingByteEgg/pieces/5.png</key>
+            <key type="filename">../frames/Projectiles1/MockingByteEgg/whole.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

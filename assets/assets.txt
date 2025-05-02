@@ -524,6 +524,7 @@ sprites/frames/Decorations1/SlashDissipation.png
 sprites/frames/Decorations1/PunkCityLampPost/alight.png
 sprites/frames/Decorations1/PunkCityLampPost/broken.png
 sprites/frames/Decorations1/BulletResidual.png
+sprites/frames/Decorations1/MockingByteNest.png
 sprites/frames/Decorations1/CrystalConveyorBKG.png
 sprites/frames/Decorations1/BreathBubbles.png
 sprites/frames/Decorations1/RainSplash.png
@@ -1645,6 +1646,12 @@ sprites/frames/Projectiles1/BouncingPebble.png
 sprites/frames/Projectiles1/CaveRock/Rock.png
 sprites/frames/Projectiles1/CaveRock/Burst.png
 sprites/frames/Projectiles1/SealionBall.png
+sprites/frames/Projectiles1/MockingByteEgg/pieces/4.png
+sprites/frames/Projectiles1/MockingByteEgg/pieces/3.png
+sprites/frames/Projectiles1/MockingByteEgg/pieces/1.png
+sprites/frames/Projectiles1/MockingByteEgg/pieces/2.png
+sprites/frames/Projectiles1/MockingByteEgg/pieces/5.png
+sprites/frames/Projectiles1/MockingByteEgg/whole.png
 sprites/frames/Faces1/Rodent Man.png
 sprites/frames/Faces1/Glacier Man.png
 sprites/frames/Faces1/Wily.png
@@ -1952,6 +1959,17 @@ sprites/frames/Enemies1/Cactus/big/frozen.png
 sprites/frames/Enemies1/Cactus/big/idle.png
 sprites/frames/Enemies1/Petaspark/move.png
 sprites/frames/Enemies1/Petaspark/shock.png
+sprites/frames/Enemies1/MockingByte/nest.png
+sprites/frames/Enemies1/MockingByte/return_to_nest.png
+sprites/frames/Enemies1/MockingByte/hover.png
+sprites/frames/Enemies1/MockingByte/enter_nest.png
+sprites/frames/Enemies1/MockingByte/rise.png
+sprites/frames/Enemies1/MockingByte/fall_asleep.png
+sprites/frames/Enemies1/MockingByte/awaken.png
+sprites/frames/Enemies1/MockingByte/sleep.png
+sprites/frames/Enemies1/MockingByte/dive1.png
+sprites/frames/Enemies1/MockingByte/dive2.png
+sprites/frames/Enemies1/MockingByte/leave_nest.png
 sprites/frames/Enemies1/IceFox/stand.png
 sprites/frames/Enemies1/IceFox/shoot.png
 sprites/frames/Enemies1/SniperJoe/snow/jump.png
@@ -1978,6 +1996,7 @@ sprites/frames/Enemies1/CloudedTorpedo/TorpedoFire.png
 sprites/frames/Enemies1/PreciousJoe/Stand.png
 sprites/frames/Enemies1/PreciousJoe/Charge.png
 sprites/frames/Enemies1/PreciousJoe/Shoot.png
+sprites/frames/Enemies1/BabyMockingByte.png
 sprites/frames/Enemies1/SwinginJoe/throw.png
 sprites/frames/Enemies1/SwinginJoe/swing1.png
 sprites/frames/Enemies1/SwinginJoe/swing2.png
@@ -2060,6 +2079,7 @@ sprites/frames/Enemies1/Bat/Fly.png
 sprites/frames/Enemies1/Ratton/stand.png
 sprites/frames/Enemies1/Ratton/jump.png
 sprites/frames/Enemies1/Ratton/frozen.png
+sprites/frames/Enemies1/MockingBit.png
 sprites/frames/Enemies1/Pipi/Copipi.png
 sprites/frames/Enemies1/Pipi/Pipi.png
 sprites/frames/Enemies1/Pipi/Egg.png
@@ -2529,6 +2549,7 @@ sprites/piskel/Ring Ring.piskel
 sprites/piskel/Toxic_Barrel_Bot.piskel
 sprites/piskel/NavalManFace.piskel
 sprites/piskel/AppearingBrick2.piskel
+sprites/piskel/MockingByteEgg.piskel
 sprites/piskel/RoasterMan.piskel
 sprites/piskel/Enemies3.piskel
 sprites/piskel/BreakableIce.piskel
@@ -2748,6 +2769,7 @@ sprites/piskel/Water.piskel
 sprites/piskel/PolarityManFace.piskel
 sprites/piskel/Bospider.piskel
 sprites/piskel/Penguin_Bot.piskel
+sprites/piskel/MockingByte.piskel
 sprites/piskel/ScreenController.piskel
 sprites/piskel/SpreadExplosion.piskel
 sprites/piskel/MMX_Sigma2_ElectricBall.piskel

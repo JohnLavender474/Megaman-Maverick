@@ -80,7 +80,7 @@ class IcicleTelly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
     private lateinit var stateMachine: StateMachine<IcicleTellyState>
     private val currentState: IcicleTellyState
-        get() = stateMachine.getCurrent()
+        get() = stateMachine.getCurrentElement()
     private val stateTimers = orderedMapOf(
         IcicleTellyState.DROP_ICICLE pairTo Timer(DROP_DUR).addRunnable(TimeMarkedRunnable(DROP_TIME) { dropIcicle() }),
         IcicleTellyState.SPAWN_ICICLE pairTo Timer(SPAWN_DUR)

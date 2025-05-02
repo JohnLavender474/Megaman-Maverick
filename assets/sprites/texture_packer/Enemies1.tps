@@ -203,6 +203,30 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Enemies1/BabyMockingByte.png</key>
+            <key type="filename">../frames/Enemies1/MockingBit.png</key>
+            <key type="filename">../frames/Enemies1/MockingByte/enter_nest.png</key>
+            <key type="filename">../frames/Enemies1/MockingByte/hover.png</key>
+            <key type="filename">../frames/Enemies1/MockingByte/leave_nest.png</key>
+            <key type="filename">../frames/Enemies1/MockingByte/return_to_nest.png</key>
+            <key type="filename">../frames/Enemies1/MockingByte/rise.png</key>
+            <key type="filename">../frames/Enemies1/MoonEyeStone/expand.png</key>
+            <key type="filename">../frames/Enemies1/MoonEyeStone/seek.png</key>
+            <key type="filename">../frames/Enemies1/MoonEyeStone/throw.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>6,12,12,24</rect>
+                <key>scale9Paddings</key>
+                <rect>6,12,12,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Enemies1/BabyPenguin.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -772,6 +796,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Enemies1/Merserker/on_ground.png</key>
+            <key type="filename">../frames/Enemies1/MockingByte/awaken.png</key>
             <key type="filename">../frames/Enemies1/MoonEyeStone/idle.png</key>
             <key type="filename">../frames/Enemies1/NuttGlider/stand.png</key>
             <key type="filename">../frames/Enemies1/NuttGlider/stand_nutt.png</key>
@@ -795,38 +820,10 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Enemies1/MoonEyeStone/awaken.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>6,18,12,36</rect>
-                <key>scale9Paddings</key>
-                <rect>6,18,12,36</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies1/MoonEyeStone/expand.png</key>
-            <key type="filename">../frames/Enemies1/MoonEyeStone/seek.png</key>
-            <key type="filename">../frames/Enemies1/MoonEyeStone/throw.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>6,12,12,24</rect>
-                <key>scale9Paddings</key>
-                <rect>6,12,12,24</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
+            <key type="filename">../frames/Enemies1/MockingByte/dive1.png</key>
+            <key type="filename">../frames/Enemies1/MockingByte/dive2.png</key>
+            <key type="filename">../frames/Enemies1/MockingByte/nest.png</key>
+            <key type="filename">../frames/Enemies1/MockingByte/sleep.png</key>
             <key type="filename">../frames/Enemies1/MoonEyeStone/nude.png</key>
             <key type="filename">../frames/Enemies1/MoonEyeStone/piece.png</key>
             <key type="filename">../frames/Enemies1/MoonEyeStone/sleep.png</key>
@@ -841,6 +838,22 @@
                 <rect>6,6,12,12</rect>
                 <key>scale9Paddings</key>
                 <rect>6,6,12,12</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/MockingByte/fall_asleep.png</key>
+            <key type="filename">../frames/Enemies1/MoonEyeStone/awaken.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>6,18,12,36</rect>
+                <key>scale9Paddings</key>
+                <rect>6,18,12,36</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

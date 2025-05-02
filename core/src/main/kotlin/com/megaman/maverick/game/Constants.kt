@@ -48,6 +48,8 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val WHOLE = "whole"
+    const val AFTER = "after"
     const val NEST = "nest"
     const val FLAG = "flag"
     const val HARD = "hard"

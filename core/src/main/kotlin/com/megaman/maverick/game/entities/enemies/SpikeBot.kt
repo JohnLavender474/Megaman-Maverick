@@ -103,7 +103,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
     private lateinit var stateMachine: StateMachine<SpikeBotState>
     private val currentState: SpikeBotState
-        get() = stateMachine.getCurrent()
+        get() = stateMachine.getCurrentElement()
 
     private val stateTimers = orderedMapOf(
         SpikeBotState.WALK pairTo Timer(WALK_DUR),

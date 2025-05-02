@@ -82,7 +82,7 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
 
     private lateinit var stateMachine: StateMachine<AstroAssState>
     private val currentState: AstroAssState
-        get() = stateMachine.getCurrent()
+        get() = stateMachine.getCurrentElement()
     private val stateTimers = OrderedMap<AstroAssState, Timer>()
 
     private var flag: StagedMoonLandingFlag? = null

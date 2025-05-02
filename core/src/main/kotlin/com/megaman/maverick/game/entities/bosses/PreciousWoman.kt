@@ -187,7 +187,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
     private lateinit var stateMachine: StateMachine<PreciousWomanState>
     private val currentState: PreciousWomanState
-        get() = stateMachine.getCurrent()
+        get() = stateMachine.getCurrentElement()
     private val stateTimers = OrderedMap<PreciousWomanState, Timer>()
 
     private val laughTimer = Timer(LAUGH_1_DUR + LAUGH_2_DUR)

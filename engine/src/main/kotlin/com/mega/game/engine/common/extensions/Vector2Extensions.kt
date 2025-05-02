@@ -73,3 +73,9 @@ fun Vector2.setToDirection(direction: Direction): Vector2 = when (direction) {
     Direction.LEFT -> set(-1f, 0f)
     Direction.RIGHT -> set(1f, 0f)
 }
+
+fun Vector2.midPoint(other: Vector2, out: Vector2): Vector2 {
+    val midX = (x + other.x) / 2f
+    val midY = (y + other.y) / 2f
+    return out.set(midX, midY)
+}

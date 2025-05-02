@@ -84,7 +84,7 @@ class IceSkaterPeng(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
 
     private lateinit var stateMachine: StateMachine<IceSkaterPengState>
     private val currentState: IceSkaterPengState
-        get() = stateMachine.getCurrent()
+        get() = stateMachine.getCurrentElement()
 
     private val jumpDelay = Timer(JUMP_DELAY)
     private val brakeTimer = Timer(BRAKE_MAX_DUR)

@@ -108,7 +108,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     private lateinit var stateMachine: StateMachine<GlacierManState>
     private val currentState: GlacierManState
-        get() = stateMachine.getCurrent()
+        get() = stateMachine.getCurrentElement()
     private var previousState: GlacierManState? = null
 
     private val timers = ObjectMap<String, Timer>()
@@ -380,7 +380,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
 
-            val translateY = if (!defeated && stateMachine.getCurrent() == GlacierManState.JUMP) -0.5f else 0f
+            val translateY = if (!defeated && stateMachine.getCurrentElement() == GlacierManState.JUMP) -0.5f else 0f
             sprite.translateY(translateY * ConstVals.PPM)
 
             sprite.setFlip(isFacing(Facing.RIGHT), false)
@@ -414,7 +414,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         )
         val keySupplier: (String?) -> String? = {
             if (defeated) "defeated" else if (fired) "fired" else {
-                val state = stateMachine.getCurrent()
+                val state = stateMachine.getCurrentElement()
 
                 val key = when (state) {
                     GlacierManState.INIT -> if (body.isSensing(BodySense.FEET_ON_GROUND)) "stop" else "fall"
@@ -598,7 +598,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         )
     }
 
-    private fun canShootUp() = !stateMachine.getCurrent().equalsAny(GlacierManState.SLED, GlacierManState.JUMP)
+    private fun canShootUp() = !stateMachine.getCurrentElement().equalsAny(GlacierManState.SLED, GlacierManState.JUMP)
 
     private fun shoot() {
         GameLogger.debug(TAG, "shoot()")
@@ -609,7 +609,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         val trajectory = Vector2()
         if (body.isSensing(BodySense.FEET_ON_GROUND)) {
             when {
-                stateMachine.getCurrent() == GlacierManState.SLED -> spawn.add(
+                stateMachine.getCurrentElement() == GlacierManState.SLED -> spawn.add(
                     0.75f * facing.value * ConstVals.PPM,
                     0.1f * ConstVals.PPM
                 )
@@ -645,7 +645,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     }
 
     private fun isFalling() =
-        stateMachine.getCurrent() == GlacierManState.JUMP && body.physics.velocity.y < 0f && !body.isSensing(BodySense.FEET_ON_GROUND)
+        stateMachine.getCurrentElement() == GlacierManState.JUMP && body.physics.velocity.y < 0f && !body.isSensing(BodySense.FEET_ON_GROUND)
 
     private fun onChangeState(current: GlacierManState, previous: GlacierManState) {
         GameLogger.debug(TAG, "onChangeState(): new=$current, old=$previous")

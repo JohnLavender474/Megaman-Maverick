@@ -135,7 +135,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     private lateinit var stateMachine: StateMachine<ReactorManState>
     private val currentState: ReactorManState
-        get() = stateMachine.getCurrent()
+        get() = stateMachine.getCurrentElement()
 
     private val stateTimers = orderedMapOf(
         ReactorManState.STAND pairTo Timer(STAND_DUR),

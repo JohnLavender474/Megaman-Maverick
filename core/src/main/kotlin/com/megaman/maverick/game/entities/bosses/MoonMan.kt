@@ -148,7 +148,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
     private lateinit var stateMachine: StateMachine<MoonManState>
     private val currentState: MoonManState
-        get() = stateMachine.getCurrent()
+        get() = stateMachine.getCurrentElement()
 
     private val timers = ObjectMap<String, Timer>()
 

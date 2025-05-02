@@ -18,7 +18,7 @@ class StateMachineTest : DescribeSpec({
 
             val stateMachine = StateMachine(stateA)
 
-            stateMachine.getCurrent() shouldBe "A"
+            stateMachine.getCurrentElement() shouldBe "A"
             stateMachine.next() shouldBe "B"
             stateMachine.next() shouldBe "C"
             stateMachine.next() shouldBe "A"
@@ -42,7 +42,7 @@ class StateMachineTest : DescribeSpec({
 
             val stateMachine = StateMachine(stateA)
 
-            stateMachine.getCurrent() shouldBe "A"
+            stateMachine.getCurrentElement() shouldBe "A"
             stateMachine.next() shouldBe "B"
             stateMachine.next() shouldBe "C"
             stateMachine.next() shouldBe "D"
@@ -67,7 +67,7 @@ class StateMachineTest : DescribeSpec({
 
             val stateMachine = StateMachine(stateA)
 
-            stateMachine.getCurrent() shouldBe "A"
+            stateMachine.getCurrentElement() shouldBe "A"
             stateMachine.next() shouldBe "C"
         }
     }
@@ -89,7 +89,7 @@ class StateMachineTest : DescribeSpec({
 
             val stateMachine = StateMachine(stateA)
 
-            stateMachine.getCurrent() shouldBe "A"
+            stateMachine.getCurrentElement() shouldBe "A"
             stateMachine.next() shouldBe "B"
             stateMachine.next() shouldBe "C"
             stateMachine.next() shouldBe "D"
@@ -105,7 +105,7 @@ class StateMachineTest : DescribeSpec({
 
             val stateMachine = StateMachine(stateA)
 
-            stateMachine.getCurrent() shouldBe "A"
+            stateMachine.getCurrentElement() shouldBe "A"
             stateMachine.next() shouldBe "A"
         }
 
@@ -118,7 +118,7 @@ class StateMachineTest : DescribeSpec({
 
             val stateMachine = StateMachine(stateA)
 
-            stateMachine.getCurrent() shouldBe "A"
+            stateMachine.getCurrentElement() shouldBe "A"
             stateMachine.next() shouldBe "B"
             stateMachine.next() shouldBe "A"
             stateMachine.next() shouldBe "B"
@@ -139,7 +139,7 @@ class StateMachineTest : DescribeSpec({
 
             val stateMachine = StateMachine(stateA)
 
-            stateMachine.getCurrent() shouldBe "A"
+            stateMachine.getCurrentElement() shouldBe "A"
             stateMachine.next() shouldBe "C"
 
             conditionToB = true
@@ -162,7 +162,7 @@ class StateMachineTest : DescribeSpec({
 
             val stateMachine = StateMachine(stateA)
 
-            stateMachine.getCurrent() shouldBe "A"
+            stateMachine.getCurrentElement() shouldBe "A"
             stateMachine.next() shouldBe "B"
             stateMachine.next() shouldBe "C"
             stateMachine.next() shouldBe "B"
@@ -188,7 +188,7 @@ class StateMachineTest : DescribeSpec({
 
             val stateMachine = StateMachine(stateA)
 
-            stateMachine.getCurrent() shouldBe "A"
+            stateMachine.getCurrentElement() shouldBe "A"
             stateMachine.next() shouldBe "B"
             stateMachine.next() shouldBe "C"
             stateMachine.next() shouldBe "D"
@@ -221,7 +221,7 @@ class StateMachineTest : DescribeSpec({
 
             val stateMachine = StateMachine(stateA)
 
-            stateMachine.getCurrent() shouldBe "A"
+            stateMachine.getCurrentElement() shouldBe "A"
             stateMachine.next() shouldBe "B"
             stateMachine.next() shouldBe "C"
 
@@ -254,7 +254,7 @@ class StateMachineTest : DescribeSpec({
 
             val stateMachine = StateMachine(stateA)
 
-            stateMachine.getCurrent() shouldBe "A"
+            stateMachine.getCurrentElement() shouldBe "A"
             stateMachine.next() shouldBe "B"
 
             stateMachine.next() shouldBe "D"
@@ -291,7 +291,7 @@ class StateMachineTest : DescribeSpec({
 
             val stateMachine = StateMachine(stateA)
 
-            stateMachine.getCurrent() shouldBe "A"
+            stateMachine.getCurrentElement() shouldBe "A"
             stateMachine.next() shouldBe "B"
             stateMachine.next() shouldBe "C"
 

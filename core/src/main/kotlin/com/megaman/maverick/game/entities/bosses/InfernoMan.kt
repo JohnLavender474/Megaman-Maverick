@@ -135,7 +135,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     private lateinit var stateMachine: StateMachine<InfernoManState>
     private val currentState: InfernoManState
-        get() = stateMachine.getCurrent()
+        get() = stateMachine.getCurrentElement()
     private var stateIndex = 0
 
     private val frozen: Boolean

@@ -139,7 +139,7 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
     private lateinit var stateMachine: StateMachine<CactusState>
     private val currentState: CactusState
-        get() = stateMachine.getCurrent()
+        get() = stateMachine.getCurrentElement()
     private val stateTimers = orderedMapOf(
         CactusState.TURN pairTo Timer(TURN_DUR),
         CactusState.FLASH pairTo Timer(FLASH_DUR),
