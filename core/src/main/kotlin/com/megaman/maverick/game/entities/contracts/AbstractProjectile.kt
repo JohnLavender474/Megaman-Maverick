@@ -22,6 +22,7 @@ abstract class AbstractProjectile(game: MegamanMaverickGame, override var size: 
     protected var movementScalar = 1f
 
     override fun init() {
+        super.init()
         addComponents(defineProjectileComponents())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())

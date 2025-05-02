@@ -1,4 +1,6 @@
 package com.megaman.maverick.game.entities.special
 
-class GravitySwitchCapsule {
+import com.megaman.maverick.game.MegamanMaverickGame
+
+class GravitySwitchCapsule(game: MegamanMaverickGame) {
 }

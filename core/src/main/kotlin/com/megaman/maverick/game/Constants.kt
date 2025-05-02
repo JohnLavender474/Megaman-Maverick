@@ -48,6 +48,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val DEACTIVATED = "deactivated"
     const val WHOLE = "whole"
     const val AFTER = "after"
     const val NEST = "nest"

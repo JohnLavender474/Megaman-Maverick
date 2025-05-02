@@ -114,7 +114,6 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         )
 
         spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
-
         regionKey = spawnProps.getOrDefault(ConstKeys.REGION, MOON_CRATE, String::class)
     }
 
@@ -155,7 +154,8 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             FixtureType.FEET,
             GameRectangle().setSize(BODY_WIDTH * 0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM)
         )
-        feetFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ ->
+        feetFixture.setHitByBlockReceiver(ProcessState.BEGIN) hitByBlock@{ block, _ ->
+            if (block == innerBlock) return@hitByBlock
             requestToPlaySound(SoundAsset.POUND_SOUND, false)
         }
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f

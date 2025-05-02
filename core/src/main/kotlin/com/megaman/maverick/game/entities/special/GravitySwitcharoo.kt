@@ -5,7 +5,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
-import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
@@ -77,7 +77,9 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
-            gdxArrayOf(ConstKeys.ARROW, ConstKeys.AURA).forEach { regions.put(it, atlas.findRegion("${TAG}/$it")) }
+            gdxArrayOf(ConstKeys.ARROW, ConstKeys.AURA, ConstKeys.DEACTIVATED).forEach {
+                regions.put(it, atlas.findRegion("${TAG}/$it"))
+            }
         }
         super.init()
         addComponent(defineBodyComponent())
@@ -138,9 +140,9 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
             ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
-                this, objectSetOf(EventType.END_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS), { event ->
+                this, objectSetOf(EventType.END_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS), cull@{ event ->
                     val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
-                    room != spawnRoom
+                    return@cull room != spawnRoom
                 }
             )
         )
@@ -148,29 +150,24 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(
-            ConstKeys.ARROW, GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
-                .apply {
-                    setSize(ARROW_SPRITE_SIZE * ConstVals.PPM)
-                    setAlpha(ARROW_ALPHA)
-                }
+            ConstKeys.ARROW, GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1)).also {
+                it.setSize(ARROW_SPRITE_SIZE * ConstVals.PPM)
+                it.setAlpha(ARROW_ALPHA)
+            }
         )
         .updatable { _, sprite ->
             sprite.setCenter(body.getCenter())
-
             sprite.setOriginCenter()
             sprite.rotation = direction.getOpposite().rotation
         }
         .sprite(
             ConstKeys.AURA,
             GameSprite(regions[ConstKeys.AURA], DrawingPriority(DrawingSection.FOREGROUND, 2))
-                .apply {
-                    setSize(AURA_SPRITE_SIZE * ConstVals.PPM)
-                }
+                .also { it.setSize(AURA_SPRITE_SIZE * ConstVals.PPM) }
         )
         .updatable { delta, sprite ->
             sprite.setCenter(body.getCenter())
-
-            auraBlink.update(delta)
+            auraBlink.update(if (megaman.direction == direction) delta / 2f else delta)
             val alpha = auraBlink.getValue()
             sprite.setAlpha(alpha)
         }
@@ -178,6 +175,14 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
         .key(ConstKeys.ARROW)
-        .animator(Animator(Animation(regions[ConstKeys.ARROW], 3, 1, 0.1f, true)))
+        .animator(
+            AnimatorBuilder()
+                .setKeySupplier { if (megaman.direction == direction) ConstKeys.DEACTIVATED else ConstKeys.ARROW }
+                .applyToAnimations { animations ->
+                    animations.put(ConstKeys.ARROW, Animation(regions[ConstKeys.ARROW], 3, 1, 0.1f, true))
+                    animations.put(ConstKeys.DEACTIVATED, Animation(regions[ConstKeys.DEACTIVATED]))
+                }
+                .build()
+        )
         .build()
 }

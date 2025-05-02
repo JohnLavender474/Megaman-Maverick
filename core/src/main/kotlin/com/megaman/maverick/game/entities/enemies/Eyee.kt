@@ -48,10 +48,14 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
 
     companion object {
         const val TAG = "Eyee"
+
         private const val MAX_SPEED = 10f
         private const val SPEED_DELTA = 20f
+
         private const val WAIT_DUR = 1f
+
         private const val CULL_TIME = 2f
+
         private var openRegion: TextureRegion? = null
         private var blinkRegion: TextureRegion? = null
     }
@@ -74,6 +78,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
     private var progress = 0f
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         super.init()
         if (openRegion == null || blinkRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
@@ -85,6 +90,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
 
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()

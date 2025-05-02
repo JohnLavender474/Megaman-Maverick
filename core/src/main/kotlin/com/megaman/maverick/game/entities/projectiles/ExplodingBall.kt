@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
@@ -46,12 +47,14 @@ class ExplodingBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
     }
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "GachappanBall")
         super.init()
         addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         owner = spawnProps.get(ConstKeys.OWNER) as GameEntity?
@@ -71,8 +74,8 @@ class ExplodingBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
+        GameLogger.debug(TAG, "explodeAndDie()")
         destroy()
-
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(
             props(
@@ -110,10 +113,10 @@ class ExplodingBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
-        sprite.setSize(1.75f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
-        return spritesComponent
+        sprite.setSize(2f * ConstVals.PPM)
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

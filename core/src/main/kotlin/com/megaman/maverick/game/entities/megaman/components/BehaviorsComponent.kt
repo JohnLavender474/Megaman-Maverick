@@ -323,6 +323,15 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             return timer.isFinished()
         }
 
+        override fun init() {
+            when (direction) {
+                Direction.UP -> {}
+                Direction.DOWN -> body.translate(0f, 0.75f * ConstVals.PPM)
+                Direction.LEFT -> body.translate(0.75f * ConstVals.PPM, 0f)
+                Direction.RIGHT -> body.translate(-0.75f * ConstVals.PPM, 0f)
+            }
+        }
+
         override fun act(delta: Float) {
             body.physics.velocity.x = 0f
         }

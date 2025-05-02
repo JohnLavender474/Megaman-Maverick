@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -177,11 +178,13 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         if (abs(body.physics.velocity.x) < 0.025f * ConstVals.PPM) body.physics.velocity.x = 0f
         if (abs(body.physics.velocity.y) < 0.025f * ConstVals.PPM) body.physics.velocity.y = 0f
 
+        val bottomCenter = body.getPositionPoint(Position.BOTTOM_CENTER)
         val height = when {
             isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) -> GROUNDSLIDE_CROUCH_HEIGHT
             else -> MEGAMAN_BODY_HEIGHT
         }
         body.setSize(MEGAMAN_BODY_WIDTH * ConstVals.PPM, height * ConstVals.PPM)
+        body.setBottomCenterToPoint(bottomCenter)
 
         fixturesToSizeToBody.forEach { fixture ->
             val bounds = fixture.rawShape as GameRectangle
@@ -190,6 +193,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         feetGravityFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
+
         headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
         leftFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
         rightFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f

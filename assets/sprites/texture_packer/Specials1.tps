@@ -254,6 +254,7 @@
             <key type="filename">../frames/Specials1/FloorButton/down.png</key>
             <key type="filename">../frames/Specials1/FloorButton/up.png</key>
             <key type="filename">../frames/Specials1/GravitySwitcharoo/aura.png</key>
+            <key type="filename">../frames/Specials1/GravitySwitcharoo/deactivated.png</key>
             <key type="filename">../frames/Specials1/LightSwitch/Off.png</key>
             <key type="filename">../frames/Specials1/LightSwitch/On.png</key>
             <key type="filename">../frames/Specials1/PortalHopper/Launch.png</key>

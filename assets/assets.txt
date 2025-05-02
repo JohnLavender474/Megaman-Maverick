@@ -949,6 +949,7 @@ sprites/frames/Projectiles2/Nutt.png
 sprites/frames/Projectiles2/SpitFireball.png
 sprites/frames/Specials1/SwitcharooArrow.png
 sprites/frames/Specials1/GravitySwitcharoo/arrow.png
+sprites/frames/Specials1/GravitySwitcharoo/deactivated.png
 sprites/frames/Specials1/GravitySwitcharoo/aura.png
 sprites/frames/Specials1/Cart/move.png
 sprites/frames/Specials1/Cart/idle.png

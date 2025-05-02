@@ -42,11 +42,10 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.ExplodingBall
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
@@ -57,16 +56,23 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
     companion object {
         const val TAG = "PopupCanon"
+
         private const val SHOOT_X = 8f
         private const val SHOOT_Y = 2.5f
+
         private const val REST_DUR = 0.75f
+
         private const val TRANS_DUR = 0.6f
+
         private const val SHOOT_DUR = 0.25f
         private const val SHOOT_OFFSET_X = 0.25f
         private const val SHOOT_OFFSET_Y = 0.25f
+
         private const val BALL_GRAVITY = 0.15f
-        private const val TRANS_DAMAGEABLE_CUTOFF = 0.5f
         private const val DEFAULT_BALL_GRAVITY_SCALAR = 1f
+
+        private const val TRANS_DAMAGEABLE_CUTOFF = 0.5f
+
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -146,8 +152,6 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     }
 
     private fun shoot() {
-        val explodingBall = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.EXPLODING_BALL)!!
-
         val offset = GameObjectPools.fetch(Vector2::class)
         when (direction) {
             Direction.UP -> offset.set(SHOOT_OFFSET_X * facing.value, SHOOT_OFFSET_Y)
@@ -174,6 +178,7 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
             Direction.RIGHT -> gravity.set(-BALL_GRAVITY, 0f)
         }.scl(ballGravityScalar * ConstVals.PPM.toFloat())
 
+        val explodingBall = MegaEntityFactory.fetch(ExplodingBall::class)!!
         explodingBall.spawn(
             props(
                 ConstKeys.POSITION pairTo spawn,

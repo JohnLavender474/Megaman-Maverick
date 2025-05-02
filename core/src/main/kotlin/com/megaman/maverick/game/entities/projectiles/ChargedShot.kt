@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.gdxArrayOf
@@ -68,6 +69,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     private var bounced = 0
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             regions.put(ConstKeys.FULL, atlas.findRegion("${TAG}${CHARGED_SHOT_REGION_SUFFIX}"))
@@ -79,6 +81,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         fullyCharged = spawnProps.get(ConstKeys.BOOLEAN, Boolean::class)!!
