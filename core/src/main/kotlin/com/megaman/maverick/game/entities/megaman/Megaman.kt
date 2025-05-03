@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.megaman
 
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.audio.AudioComponent
@@ -13,6 +14,7 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
+import com.mega.game.engine.common.objects.IntPair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -323,7 +325,64 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         addComponent(defineSpritesComponent())
         addComponent(AudioComponent())
 
-        val animations = MegamanAnimations(game).get()
+        val weaponSpawns = OrderedMap<String, IntPair>()
+
+        /*
+        val weaponSpawnMagicColors = objectSetOf(MegamanValues.WEAPON_SPAWN_MAGIC_COLOR)
+        val magicColorsMap = OrderedMap<IntPair, Color>()
+        val regionProcessor = object : MegaRegionProcessor {
+
+            override fun process(
+                region: TextureRegion,
+                defKey: String,
+                fullKey: String,
+                rows: Int,
+                columns: Int,
+                durations: Array<Float>,
+                loop: Boolean,
+                index: Int
+            ): TextureRegion {
+                GameLogger.debug(TAG, "init(): regionProcessor: defKey=$defKey")
+
+                // TODO: val magical = MagicPixels.get(frame, weaponSpawnMagicColors, magicColorsMap)
+                val file = Gdx.files.internal("sprites/frames/Megaman_v2/${defKey}.png")
+                val r = TextureRegion(Texture(file)).splitAndFlatten(rows, columns, Array())[index]
+                val magical = MagicPixels.get(Pixmap(file), weaponSpawnMagicColors, magicColorsMap)
+
+                val region = when {
+                    magical -> {
+                        GameLogger.debug(
+                            TAG,
+                            "init(): regionProcessor: magical region found: map=$magicColorsMap, index=$index"
+                        )
+
+                        val data = r.texture.textureData // TODO: frame.texture.textureData
+                        if (!data.isPrepared) data.prepare()
+
+                        val pixmap = data.consumePixmap()
+
+                        // there should only be at most one magic color pixel per frame, so we'll just pick the first one
+                        magicColorsMap.keys().forEach { position ->
+                            val key = MegamanAnimations.splitFullKey(fullKey)[0]
+                            weaponSpawns.put(key, position)
+
+                            val (x, y) = position
+                            pixmap.drawPixel(x, y, Color.rgba8888(0f, 0f, 0f, 0f))
+                        }
+
+                        TextureRegion(Texture(pixmap))
+                    }
+
+                    else -> frame
+                }
+
+                magicColorsMap.clear()
+
+                return region
+            }
+        }
+         */
+        val animations = MegamanAnimations(game, /* regionProcessor */).get()
         addComponent(defineAnimationsComponent(animations))
 
         weaponsHandler = MegamanWeaponsHandler(this)
@@ -405,6 +464,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
             aButtonTask = AButtonTask.AIR_DASH
             teleporting = false
             canBeDamaged = true
+            game.setFocusSnappedAway(false)
         })
     }
 

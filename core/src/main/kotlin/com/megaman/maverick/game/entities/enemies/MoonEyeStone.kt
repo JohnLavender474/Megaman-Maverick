@@ -14,7 +14,6 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
-import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.orderedMapOf
@@ -57,7 +56,6 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
-import kotlin.math.roundToInt
 
 class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDrawableShapesEntity, IFaceable,
     IDirectional {
@@ -78,8 +76,6 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
 
         private const val MIN_RELEASE_SPEED = 3f
         private const val MAX_RELEASE_SPEED = 6f
-
-        private const val SEEK_SPEED = 2f
 
         private val animDefs = orderedMapOf(
             "sleep" pairTo AnimationDef(),
@@ -163,16 +159,13 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         val iter = asteroids.keys().iterator()
         while (iter.hasNext) {
             val asteroid = iter.next()
+            asteroid.owner = null
 
             val speed = UtilMethods.getRandom(MIN_RELEASE_SPEED, MAX_RELEASE_SPEED)
-
-            val trajectory = GameObjectPools.fetch(Vector2::class)
+            val impulse = GameObjectPools.fetch(Vector2::class)
                 .set(0f, speed * ConstVals.PPM)
                 .setAngleDeg(UtilMethods.getRandom(0f, 359f))
-
-            asteroid.body.physics.velocity.set(trajectory)
-
-            asteroid.owner = null
+            asteroid.impulse.set(impulse)
         }
     }
 
@@ -186,10 +179,13 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
-        updatablesComponent.add { delta ->
+        updatablesComponent.add update@{ delta ->
             direction = megaman.body.direction
 
+            if (game.isCameraRotating()) return@update
+
             if (currentState != MoonEyeStoneState.SEEK || !throwing) processAsteroids(delta)
+
             when (currentState) {
                 MoonEyeStoneState.SLEEP -> {
                     body.physics.velocity.setZero()
@@ -206,7 +202,6 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
                     throwTimer.update(delta)
                     if (throwTimer.isFinished()) throwDelay.reset()
                 } else {
-                    // seekMegaman()
                     FacingUtils.setFacingOf(this)
                     if (!asteroids.isEmpty) throwDelay.update(delta)
                     if (throwDelay.isFinished()) throwTimer.reset()
@@ -224,7 +219,7 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
                 if (asteroids.isEmpty) throwDelay.reset()
 
                 asteroid.owner = this
-                asteroid.body.physics.velocity.setZero()
+                asteroid.impulse.setZero()
 
                 val angle = asteroid.body
                     .getBounds()
@@ -266,12 +261,11 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         while (iter.hasNext) {
             val asteroid = iter.next()
 
-            val trajectory = megaman.body.getBounds().getCenter()
+            val impulse = megaman.body.getBounds().getCenter()
                 .sub(asteroid.body.getBounds().getCenter())
                 .nor()
                 .scl(THROW_SPEED * ConstVals.PPM)
-
-            asteroid.body.physics.velocity.set(trajectory)
+            asteroid.impulse.set(impulse)
 
             iter.remove()
         }
@@ -336,17 +330,6 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
                 .build()
         )
         .build()
-
-    private fun seekMegaman() {
-        val angle = megaman.body
-            .getPositionPoint(if (isFacing(Facing.LEFT)) Position.TOP_RIGHT else Position.TOP_LEFT)
-            .sub(body.getCenter())
-            .angleDeg()
-            .div(45f)
-            .roundToInt()
-            .times(45f)
-        body.physics.velocity.set(SEEK_SPEED * ConstVals.PPM, 0f).rotateDeg(angle)
-    }
 
     private fun nextState() {
         GameLogger.debug(TAG, "nextState()")

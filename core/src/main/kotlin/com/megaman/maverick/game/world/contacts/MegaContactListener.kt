@@ -1168,9 +1168,17 @@ class MegaContactListener(
 
             val body = sideFixture.getBody()
 
+            val stickToBlock = sideFixture.getOrDefaultProperty(ConstKeys.STICK_TO_BLOCK, true, Boolean::class)
+            if (stickToBlock) {
+                val posDelta = blockFixture.getBody().getPositionDelta()
+                body.translate(posDelta)
+            }
+
             val sideType = sideFixture.getProperty(ConstKeys.SIDE)
-            if (sideType == ConstKeys.LEFT) body.setBodySense(BodySense.SIDE_TOUCHING_BLOCK_LEFT, true)
-            else body.setBodySense(BodySense.SIDE_TOUCHING_BLOCK_RIGHT, true)
+            when (sideType) {
+                ConstKeys.LEFT -> body.setBodySense(BodySense.SIDE_TOUCHING_BLOCK_LEFT, true)
+                else -> body.setBodySense(BodySense.SIDE_TOUCHING_BLOCK_RIGHT, true)
+            }
         }
     }
 

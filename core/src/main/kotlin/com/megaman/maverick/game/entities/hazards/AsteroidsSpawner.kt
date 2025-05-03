@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.hazards
 
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.GameLogger
@@ -7,6 +8,7 @@ import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.extensions.random
 import com.mega.game.engine.common.interfaces.IActivatable
 import com.mega.game.engine.common.objects.Properties
@@ -32,6 +34,8 @@ import com.megaman.maverick.game.entities.enemies.MoonEyeStone
 import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
+import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.getCenter
 
@@ -44,8 +48,8 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
         const val MIN_SPEED = 2f
         const val MAX_SPEED = 4f
 
-        private const val MIN_SPAWN_DELAY = 1f
-        private const val MAX_SPAWN_DELAY = 2f
+        private const val MIN_SPAWN_DELAY = 1.5f
+        private const val MAX_SPAWN_DELAY = 2.5f
 
         private const val MIN_ANGLE = 240f
         private const val MAX_ANGLE = 300f
@@ -60,10 +64,13 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
             if (value) resetSpawnTimer()
         }
 
+    private val bounds = GameRectangle()
+
+    private val spawnTimer = Timer()
+    private var spawnRoom: String? = null
     var onSpawnListener: ((Asteroid) -> Unit)? = null
 
-    private val bounds = GameRectangle()
-    private lateinit var spawnTimer: Timer
+    private var cullOOBChildren = true
     private var destroyChildren = false
 
     override fun init() {
@@ -86,12 +93,16 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
             getGameCameraCullingLogic(getGameCamera(), { bounds })
         ) else removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
 
-        spawnTimer = Timer()
-        resetSpawnTimer()
-
         on = spawnProps.getOrDefault(ConstKeys.ON, true, Boolean::class)
+
+        resetSpawnTimer()
+        spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)
         onSpawnListener = spawnProps.get(ConstKeys.LISTENER) as ((Asteroid) -> Unit)?
+
         destroyChildren = spawnProps.getOrDefault("${ConstKeys.DESTROY}_${ConstKeys.CHILDREN}", false, Boolean::class)
+        cullOOBChildren = spawnProps.getOrDefault(
+            "${ConstKeys.CULL_OUT_OF_BOUNDS}_${ConstKeys.CHILDREN}", true, Boolean::class
+        )
     }
 
     override fun onDestroy() {
@@ -133,7 +144,13 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
             .rotateDeg(angle).scl(ConstVals.PPM.toFloat())
 
         val asteroid = MegaEntityFactory.fetch(Asteroid::class)!!
-        asteroid.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.IMPULSE pairTo impulse))
+        asteroid.spawn(
+            props(
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.IMPULSE pairTo impulse,
+                ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOOBChildren
+            )
+        )
         children.add(asteroid)
 
         GameLogger.debug(TAG, "Spawned asteroid. Size of children: ${children.size}")
@@ -154,10 +171,18 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
         }
     })
 
-    private fun defineCullablesComponent(): CullablesComponent {
-        val cullOnEvents = getStandardEventCullingLogic(this)
-        return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS pairTo cullOnEvents))
-    }
+    private fun defineCullablesComponent() = CullablesComponent(
+        objectMapOf(
+            ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
+                this,
+                objectSetOf(EventType.BEGIN_ROOM_TRANS),
+                cull@{ event ->
+                    val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
+                    return@cull room != spawnRoom
+                }
+            )
+        )
+    )
 
     override fun getType() = EntityType.HAZARD
 

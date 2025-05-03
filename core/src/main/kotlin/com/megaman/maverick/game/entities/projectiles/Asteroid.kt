@@ -58,7 +58,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
 
         private const val BLINK_DUR = 0.01f
 
-        private const val CULL_TIME = 2f
+        private const val CULL_TIME = 3f
 
         private val HIT_PROJS = objectSetOf<KClass<out IProjectileEntity>>(
             Bullet::class,
@@ -75,6 +75,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
 
     override var owner: IGameEntity? = null
 
+    val impulse = Vector2()
     var hard = false
 
     private lateinit var type: String
@@ -110,7 +111,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
         body.setCenter(spawn)
 
         val impulse = spawnProps.getOrDefault(ConstKeys.IMPULSE, Vector2.Zero, Vector2::class)
-        body.physics.velocity.set(impulse)
+        this.impulse.set(impulse)
 
         rotationSpeed = spawnProps.getOrDefault(
             "${ConstKeys.ROTATION}_${ConstKeys.SPEED}",
@@ -196,6 +197,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
+        GameLogger.debug(TAG, "explodeAndDie()")
         destroy()
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.ASTEROID_EXPLOSION)!!
         explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
@@ -224,6 +226,10 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(0.6f * ConstVals.PPM))
         body.addFixture(shieldFixture)
         debugShapes.add { shieldFixture }
+
+        body.preProcess.put(ConstKeys.IMPULSE) {
+            if (game.isCameraRotating()) body.physics.velocity.setZero() else body.physics.velocity.set(impulse)
+        }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

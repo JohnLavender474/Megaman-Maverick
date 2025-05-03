@@ -37,7 +37,7 @@ interface IProjectileEntity : IMegaGameEntity, IBodyEntity, IAudioEntity, ICulla
         components.add(
             CullablesComponent(
                 objectMapOf(
-                    ConstKeys.CULL_EVENTS pairTo getCullOnEventCullable(),
+                    ConstKeys.CULL_EVENTS pairTo getCullOnEventsCullable(),
                     ConstKeys.CULL_OUT_OF_BOUNDS pairTo getCullOnOutOfGameCam(outOfBoundsCullTime)
                 )
             )
@@ -47,7 +47,7 @@ interface IProjectileEntity : IMegaGameEntity, IBodyEntity, IAudioEntity, ICulla
 
     fun removeCullOnEventCullable() = removeCullable(ConstKeys.CULL_EVENTS)
 
-    fun getCullOnEventCullable(): CullableOnEvent {
+    fun getCullOnEventsCullable(): CullableOnEvent {
         val cullEvents =
             objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING)
         return CullableOnEvent({ cullEvents.contains(it.key) }, cullEvents)

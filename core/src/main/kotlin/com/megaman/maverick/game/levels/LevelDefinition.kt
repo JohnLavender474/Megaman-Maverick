@@ -76,7 +76,7 @@ enum class LevelDefinition(
         mugshotAtlas = "FACES_1",
         mugshotRegion = "Glacier Man",
         tmxMapSource = "GlacierMan_16x14_v2.tmx",
-        music = MusicAsset.MMZ3_GLACIER_MUSIC,
+        music = MusicAsset.VINNYZ_GLACIER_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),
     PRECIOUS_WOMAN(

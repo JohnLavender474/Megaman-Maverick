@@ -92,6 +92,22 @@ class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         damageOverrides.put(Asteroid::class, dmgNeg(ConstVals.MAX_HEALTH))
     }
 
+    override fun canSpawn(spawnProps: Properties): Boolean {
+        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
+        val left = megaman.body.getCenter().x <= spawn.x
+
+        val canSpawnLeft = spawnProps.getOrDefault(
+            "${ConstKeys.CAN}_${ConstKeys.SPAWN}_${ConstKeys.LEFT}", true, Boolean::class
+        )
+        val canSpawnRight = spawnProps.getOrDefault(
+            "${ConstKeys.CAN}_${ConstKeys.SPAWN}_${ConstKeys.RIGHT}", true, Boolean::class
+        )
+
+        if (left && !canSpawnLeft) return false
+        if (!left && !canSpawnRight) return false
+        return super.canSpawn(spawnProps)
+    }
+
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
@@ -202,6 +218,12 @@ class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         GameLogger.debug(TAG, "startRay()")
 
         val spawn = body.getBounds().getPositionPoint(DirectionPositionMapper.getInvertedPosition(direction))
+        when (direction) {
+            Direction.UP -> {}
+            Direction.DOWN -> {}
+            Direction.LEFT -> spawn.x += 1.5f * ConstVals.PPM
+            Direction.RIGHT -> spawn.x -= 1.5f * ConstVals.PPM
+        }
 
         val ray = MegaEntityFactory.fetch(SaucerRay::class)!!
         ray.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.DIRECTION pairTo direction))

@@ -28,6 +28,8 @@ class MegamanAnimations(
 
         fun buildFullKey(regionKey: String, weapon: MegamanWeapon) =
             "${regionKey}_${weapon.name.lowercase().replace("_", "")}"
+
+        fun splitFullKey(definitionKey: String) = definitionKey.split("_")
     }
 
     private val animations = OrderedMap<String, IAnimation>()
@@ -50,9 +52,8 @@ class MegamanAnimations(
             MegamanAnimationDefs.getKeys().forEach { defKey ->
                 if (!atlas.containsRegion(defKey)) return@forEach
 
-                val animation = buildAnimation(defKey, atlas)
-
                 val fullKey = buildFullKey(defKey, weapon)
+                val animation = buildAnimation(defKey, atlas, fullKey)
                 animations.put(fullKey, animation)
 
                 GameLogger.debug(TAG, "init(): put animation \'$defKey\' with key \'$fullKey\'")
@@ -68,7 +69,7 @@ class MegamanAnimations(
         return animations
     }
 
-    private fun buildAnimation(defKey: String, atlas: TextureAtlas) = when (defKey) {
+    private fun buildAnimation(defKey: String, atlas: TextureAtlas, fullKey: String) = when (defKey) {
         "stand" -> buildStandAnimation(atlas, false)
         "stand_shoot" -> buildStandAnimation(atlas, true)
         else -> {
@@ -111,7 +112,7 @@ class MegamanAnimations(
             }
 
             if (regionProcessor != null) for (i in 0 until regions.size)
-                regions[i] = regionProcessor.process(regions[i], defKey, rows, columns, durations, loop, i)
+                regions[i] = regionProcessor.process(regions[i], defKey, fullKey, rows, columns, durations, loop, i)
 
             Animation(regions, durations)
         }
@@ -203,6 +204,7 @@ interface MegaRegionProcessor {
     fun process(
         region: TextureRegion,
         defKey: String,
+        fullKey: String,
         rows: Int,
         columns: Int,
         durations: Array<Float>,

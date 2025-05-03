@@ -48,6 +48,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val CAN = "can"
     const val DEACTIVATED = "deactivated"
     const val WHOLE = "whole"
     const val AFTER = "after"
@@ -370,6 +371,7 @@ object ConstKeys {
     const val GAME = "game"
     const val UI = "ui"
     const val SYSTEMS = "systems"
+    const val ONLY = "only"
     const val UP = "up"
     const val DOWN = "down"
     const val LEFT = "left"

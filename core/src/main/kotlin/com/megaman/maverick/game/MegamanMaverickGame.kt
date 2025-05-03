@@ -223,7 +223,6 @@ class MegamanMaverickGame(
         val gameHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
         val gameCamera = RotatableCamera(onJustFinishedRotating = {
             setCameraRotating(false)
-            setFocusSnappedAway(true)
             eventsMan.submitEvent(Event(EventType.END_GAME_CAM_ROTATION))
         })
         gameCamera.setToDefaultPosition()

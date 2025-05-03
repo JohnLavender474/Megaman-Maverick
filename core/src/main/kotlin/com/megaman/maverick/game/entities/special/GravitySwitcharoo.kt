@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.special
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
@@ -27,6 +28,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.*
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
@@ -36,8 +38,8 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaGameEntities
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.enemies.TellySaucer
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
@@ -51,7 +53,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
     companion object {
         const val TAG = "GravitySwitcharoo"
 
-        private const val BODY_SIZE = 1.75f
+        private const val BODY_SIZE = 2f
 
         private const val ARROW_SPRITE_SIZE = 2f
         private const val ARROW_ALPHA = 0.75f
@@ -61,7 +63,8 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         private const val AURA_MAX_ALPHA = 0.5f
         private const val AURA_BLINK_DUR = 0.2f
 
-        private val TRIGGER_ENTITY_TAGS = gdxArrayOf(TellySaucer.TAG)
+        // TODO: Tags commented out because allowing other entities to trigger gravity switch makes gameplay unstable
+        private val TRIGGER_ENTITY_TAGS = gdxArrayOf<String>(/* TellySaucer.TAG, Asteroid.TAG, StagedMoonLandingFlag.TAG */)
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -71,6 +74,8 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         set(value) {
             body.direction = value
         }
+
+    private val triggerEntities = ObjectSet<IBodyEntity>()
 
     private val auraBlink =
         SmoothOscillationTimer(duration = AURA_BLINK_DUR, start = AURA_MIN_ALPHA, end = AURA_MAX_ALPHA)
@@ -111,17 +116,26 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        triggerEntities.clear()
     }
-
-    override fun shouldBeginSwitchToDown(delta: Float) = direction != megaman.direction && isTriggerEntityInBounds()
 
     private fun isTriggerEntityInBounds(): Boolean {
         val bounds = body.getBounds()
-        return megaman.body.getBounds().overlaps(bounds) || TRIGGER_ENTITY_TAGS.any any@{ tag ->
+
+        if (!triggerEntities.contains(megaman) && megaman.body.getBounds().overlaps(bounds)) return true
+
+        return TRIGGER_ENTITY_TAGS.any predicate@{ tag ->
             val entities = MegaGameEntities.getOfTag(tag)
-            return@any entities.any { entity -> entity is IBodyEntity && entity.body.getBounds().overlaps(bounds) }
+            return@predicate entities.any { entity ->
+                entity is IBodyEntity && !triggerEntities.contains(entity) && entity.body.getBounds().overlaps(bounds)
+            }
         }
     }
+
+    override fun shouldBeginSwitchToDown(delta: Float) =
+        !game.isCameraRotating() &&
+            direction != megaman.direction && isTriggerEntityInBounds() &&
+            body.getBounds().overlaps(game.getGameCamera().getRotatedBounds())
 
     override fun shouldBeginSwitchToUp(delta: Float) = direction != megaman.direction
 
@@ -132,7 +146,19 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
     override fun onFinishSwitchToDown() {
         GameLogger.debug(TAG, "onFinishSwitchToDown(): direction=$direction")
 
+        val bounds = body.getBounds()
+
+        if (megaman.body.getBounds().overlaps(bounds)) triggerEntities.add(megaman)
+
+        TRIGGER_ENTITY_TAGS.forEach { tag ->
+            val entities = MegaGameEntities.getOfTag(tag)
+            entities.forEach { entity ->
+                if (entity is IBodyEntity && entity.body.getBounds().overlaps(bounds)) triggerEntities.add(entity)
+            }
+        }
+
         megaman.direction = direction
+
         megaman.aButtonTask = when {
             megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> AButtonTask.JUMP
             else -> AButtonTask.AIR_DASH
@@ -141,11 +167,30 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         requestToPlaySound(SoundAsset.LIFT_OFF_SOUND, false)
     }
 
+    override fun defineUpdatablesComponent(component: UpdatablesComponent) {
+        super.defineUpdatablesComponent(component)
+        component.put(ConstKeys.TRIGGER) update@{
+            if (game.isCameraRotating()) return@update
+
+            val iter = triggerEntities.iterator()
+            while (iter.hasNext) {
+                val entity = iter.next()
+
+                if ((entity as MegaGameEntity).dead) {
+                    iter.remove()
+                    continue
+                }
+
+                if (!entity.body.getBounds().overlaps(body.getBounds())) iter.remove()
+            }
+        }
+    }
+
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(BODY_SIZE * ConstVals.PPM)
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
-        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.BODY))
+        return BodyComponentCreator.create(this, body)
     }
 
     private fun defineCullablesComponent() = CullablesComponent(

@@ -3308,6 +3308,7 @@ music/vinnyz_stage_select_v1.mp3
 music/vinnyz_inferno_loop_track.mp3
 music/Mega_Quest_2_Level_1.ogg
 music/MM8_FrostMan_Alt.mp3
+music/vinnyz_glacier_track.wav
 music/vinnyz_stage_select_v1.wav
 music/MMX2_X-Hunter.mp3
 music/MMX7_VanishingGungaroo.txt

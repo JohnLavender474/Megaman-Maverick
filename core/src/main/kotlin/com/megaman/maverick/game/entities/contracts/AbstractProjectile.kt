@@ -48,7 +48,7 @@ abstract class AbstractProjectile(game: MegamanMaverickGame, override var size: 
         val doCullOnEvents = spawnProps.getOrDefault(ConstKeys.CULL_EVENTS, true, Boolean::class)
         when {
             doCullOnEvents -> {
-                val cullOnEvents = getCullOnEventCullable()
+                val cullOnEvents = getCullOnEventsCullable()
                 putCullable(ConstKeys.CULL_EVENTS, cullOnEvents)
                 putProperty(ConstKeys.CULL_EVENTS, cullOnEvents)
                 game.eventsMan.addListener(cullOnEvents)
@@ -57,8 +57,8 @@ abstract class AbstractProjectile(game: MegamanMaverickGame, override var size: 
 
             else -> {
                 removeCullOnEventCullable()
-                val cullOnEvents = getProperty(ConstKeys.CULL_EVENTS)
-                if (cullOnEvents != null) game.eventsMan.removeListener(cullOnEvents as IEventListener)
+                val cullOnEvents = getProperty(ConstKeys.CULL_EVENTS) as IEventListener?
+                if (cullOnEvents != null) game.eventsMan.removeListener(cullOnEvents)
                 runnablesOnDestroy.remove(ConstKeys.CULL_EVENTS)
             }
         }

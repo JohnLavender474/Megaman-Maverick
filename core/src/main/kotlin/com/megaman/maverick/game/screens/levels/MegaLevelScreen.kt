@@ -809,11 +809,12 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             if (!gameCameraShaker.isFinished) gameCameraShaker.update(delta)
 
             if (game.isFocusSnappedAway()) {
-                val megamanFocus = megaman.getFocusPosition()
-                val megamanX = megamanFocus.x
-                val megamanY = megamanFocus.y
-                if (megamanX.epsilonEquals(gameCamera.position.x, 0.1f * ConstVals.PPM) &&
-                    megamanY.epsilonEquals(gameCamera.position.y, 0.1f * ConstVals.PPM)
+                val focus = megaman.getFocusPosition()
+                val focusX = focus.x
+                val focusY = focus.y
+
+                if (focusX.epsilonEquals(gameCamera.position.x, 0.25f * ConstVals.PPM) &&
+                    focusY.epsilonEquals(gameCamera.position.y, 0.25f * ConstVals.PPM)
                 ) game.setFocusSnappedAway(false)
             }
         }
