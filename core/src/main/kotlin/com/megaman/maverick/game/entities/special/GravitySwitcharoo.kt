@@ -35,7 +35,9 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.enemies.TellySaucer
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
@@ -58,6 +60,8 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         private const val AURA_MIN_ALPHA = 0.25f
         private const val AURA_MAX_ALPHA = 0.5f
         private const val AURA_BLINK_DUR = 0.2f
+
+        private val TRIGGER_ENTITY_TAGS = gdxArrayOf(TellySaucer.TAG)
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -82,11 +86,11 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
             }
         }
         super.init()
-        addComponent(defineBodyComponent())
-        addComponent(defineCullablesComponent())
-        addComponent(defineSpritesComponent())
-        addComponent(defineAnimationsComponent())
         addComponent(AudioComponent())
+        addComponent(defineBodyComponent())
+        addComponent(defineSpritesComponent())
+        addComponent(defineCullablesComponent())
+        addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -109,8 +113,15 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         super.onDestroy()
     }
 
-    override fun shouldBeginSwitchToDown(delta: Float) =
-        direction != megaman.direction && megaman.body.getBounds().overlaps(body.getBounds())
+    override fun shouldBeginSwitchToDown(delta: Float) = direction != megaman.direction && isTriggerEntityInBounds()
+
+    private fun isTriggerEntityInBounds(): Boolean {
+        val bounds = body.getBounds()
+        return megaman.body.getBounds().overlaps(bounds) || TRIGGER_ENTITY_TAGS.any any@{ tag ->
+            val entities = MegaGameEntities.getOfTag(tag)
+            return@any entities.any { entity -> entity is IBodyEntity && entity.body.getBounds().overlaps(bounds) }
+        }
+    }
 
     override fun shouldBeginSwitchToUp(delta: Float) = direction != megaman.direction
 
@@ -120,13 +131,13 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
 
     override fun onFinishSwitchToDown() {
         GameLogger.debug(TAG, "onFinishSwitchToDown(): direction=$direction")
-        megaman.let {
-            it.direction = direction
-            it.aButtonTask = when {
-                it.body.isSensing(BodySense.FEET_ON_GROUND) -> AButtonTask.JUMP
-                else -> AButtonTask.AIR_DASH
-            }
+
+        megaman.direction = direction
+        megaman.aButtonTask = when {
+            megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> AButtonTask.JUMP
+            else -> AButtonTask.AIR_DASH
         }
+
         requestToPlaySound(SoundAsset.LIFT_OFF_SOUND, false)
     }
 

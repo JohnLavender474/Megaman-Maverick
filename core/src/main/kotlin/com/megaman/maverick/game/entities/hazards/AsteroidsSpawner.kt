@@ -97,6 +97,7 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+
         if (destroyChildren) children.forEach { (it as MegaGameEntity).destroy() }
         children.clear()
     }

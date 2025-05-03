@@ -68,7 +68,7 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         private const val AWAKEN_RADIUS = 8f
         private const val AWAKEN_DUR = 0.3f
 
-        private const val ASTEROID_RADIUS = 2f
+        private const val ASTEROID_RADIUS = 1.5f
         private const val ASTEROID_ROTATION_SPEED = 0.25f
 
         private const val THROW_DELAY = 1f

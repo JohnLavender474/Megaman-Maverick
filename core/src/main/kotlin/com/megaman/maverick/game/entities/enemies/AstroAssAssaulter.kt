@@ -133,12 +133,15 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
         FacingUtils.setFacingOf(this)
 
         stateMachine.reset()
+
         stateTimers.forEach {
             val key = it.key
             val timer = it.value
-            if (key == AstroAssState.STAND) timer.setToEnd() else timer.reset()
+
+            timer.reset()
+
+            if (key == AstroAssState.STAND) timer.update(STAND_DUR / 2f)
         }
-        stateTimers.values().forEach { it.reset() }
 
         shootUp = false
 

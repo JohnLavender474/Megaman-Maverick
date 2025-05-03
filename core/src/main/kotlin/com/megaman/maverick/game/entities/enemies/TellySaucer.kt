@@ -47,6 +47,7 @@ import com.megaman.maverick.game.entities.hazards.SaucerRay
 import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getMotionValue
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
@@ -83,7 +84,7 @@ class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            gdxArrayOf("spin", "flash").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
+            gdxArrayOf("spin", "flash", "collapsed").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
         addComponent(MotionComponent())
@@ -121,6 +122,18 @@ class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add update@{ delta ->
+            direction = megaman.direction
+
+            if (game.isCameraRotating()) {
+                body.physics.velocity.setZero()
+
+                rayTimer.setToEnd()
+                ray?.destroy()
+                ray = null
+
+                return@update
+            }
+
             rayTimer.update(delta)
             if (!rayTimer.isFinished()) {
                 body.physics.velocity.setZero()
@@ -176,7 +189,7 @@ class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { if (raying) "flash" else "spin" }
+                .setKeySupplier { if (game.isCameraRotating()) "collapsed" else if (raying) "flash" else "spin" }
                 .addAnimations(
                     "flash" pairTo Animation(regions["flash"], 2, 1, 0.1f, true),
                     "spin" pairTo Animation(regions["spin"], 3, 2, 0.1f, true)
@@ -186,9 +199,9 @@ class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         .build()
 
     private fun startRay() {
-        GameLogger.debug(TAG, "startRay()damageable")
+        GameLogger.debug(TAG, "startRay()")
 
-        val spawn = body.getPositionPoint(DirectionPositionMapper.getInvertedPosition(direction))
+        val spawn = body.getBounds().getPositionPoint(DirectionPositionMapper.getInvertedPosition(direction))
 
         val ray = MegaEntityFactory.fetch(SaucerRay::class)!!
         ray.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.DIRECTION pairTo direction))

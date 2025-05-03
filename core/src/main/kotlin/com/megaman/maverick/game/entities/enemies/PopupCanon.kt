@@ -65,7 +65,7 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         private const val TRANS_DUR = 0.6f
 
         private const val SHOOT_DUR = 0.25f
-        private const val SHOOT_OFFSET_X = 0.25f
+        private const val SHOOT_OFFSET_X = 0.5f
         private const val SHOOT_OFFSET_Y = 0.25f
 
         private const val BALL_GRAVITY = 0.15f

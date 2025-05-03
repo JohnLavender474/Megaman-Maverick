@@ -58,7 +58,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
 
         private const val BLINK_DUR = 0.01f
 
-        private const val CULL_TIME = 1f
+        private const val CULL_TIME = 2f
 
         private val HIT_PROJS = objectSetOf<KClass<out IProjectileEntity>>(
             Bullet::class,

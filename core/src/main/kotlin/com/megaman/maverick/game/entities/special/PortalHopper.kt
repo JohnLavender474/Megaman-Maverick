@@ -39,6 +39,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.ITeleporterEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
@@ -48,10 +49,12 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     companion object {
         const val TAG = "PortalHopper"
-        private var waitRegion: TextureRegion? = null
-        private var launchRegion: TextureRegion? = null
+
         private const val PORTAL_HOP_IMPULSE = 35f
         private const val PORTAL_HOP_DELAY = 0.5f
+
+        private var waitRegion: TextureRegion? = null
+        private var launchRegion: TextureRegion? = null
     }
 
     override val eventKeyMask = objectSetOf<Any>(EventType.TELEPORT)
@@ -69,22 +72,22 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private var thisKey = -1
     private var nextKey = -1
-    private var launch = false
     private var rotation = 0f
-
-    override fun getType() = EntityType.SPECIAL
+    private var launch = false
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (waitRegion == null || launchRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
             waitRegion = atlas.findRegion("$TAG/Wait")
             launchRegion = atlas.findRegion("$TAG/Launch")
         }
+        super.init()
         addComponent(AudioComponent())
-        addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
+        addComponent(defineUpdatablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -237,7 +240,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(1.5f * ConstVals.PPM)
+        body.setSize(2f * ConstVals.PPM)
         return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.TELEPORTER))
     }
 
@@ -248,7 +251,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         component.putUpdateFunction { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
-            sprite.rotation = rotation
+            sprite.rotation = if (rotation < 0f) megaman.direction.rotation else rotation
         }
         return component
     }
@@ -262,4 +265,6 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
+
+    override fun getType() = EntityType.SPECIAL
 }
