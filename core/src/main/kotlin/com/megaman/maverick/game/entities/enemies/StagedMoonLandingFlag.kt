@@ -93,6 +93,7 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
     private var shield2Blink = false
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             FlagState.entries.forEach {
@@ -101,20 +102,16 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
             }
             regions.put(ConstKeys.SHIELD, atlas.findRegion("$TAG/${ConstKeys.SHIELD}"))
         }
-
         if (stateTimers.isEmpty) {
             stateTimers.put(FlagState.RISE, Timer(RISE_DUR))
             stateTimers.put(FlagState.FALL, Timer(FALL_DUR))
         }
-
         super.init()
-
         addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-
         super.onSpawn(spawnProps)
 
         parentId = spawnProps.getOrDefault("${ConstKeys.PARENT}_${ConstKeys.ID}", -1, Int::class)
@@ -145,9 +142,7 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
-
         super.onDestroy()
-
         AstroAssAssaulter.FLAGS.remove(parentId)
     }
 
@@ -155,12 +150,10 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
 
     internal fun setToBeDestroyed() {
         GameLogger.debug(TAG, "setToBeDestroyed()")
-
         if (currentState == FlagState.HIDDEN) {
             destroy()
             return
         }
-
         if (currentState != FlagState.FALL) loop.setIndex(FlagState.FALL.ordinal)
     }
 
@@ -180,10 +173,8 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             shield1Timer.update(delta)
-
             if (!shield1Timer.isFinished()) {
                 shield1BlinkTimer.update(delta)
-
                 if (shield1BlinkTimer.isFinished()) {
                     shield1Blink = !shield1Blink
                     shield1BlinkTimer.reset()
@@ -191,10 +182,8 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
             }
 
             shield2Timer.update(delta)
-
             if (!shield2Timer.isFinished()) {
                 shield2BlinkTimer.update(delta)
-
                 if (shield2BlinkTimer.isFinished()) {
                     shield2Blink = !shield2Blink
                     shield2BlinkTimer.reset()
@@ -206,27 +195,20 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
             when (currentState) {
                 FlagState.HIDDEN -> {
                     if (body.isSensing(BodySense.FEET_ON_GROUND)) {
-                        resetBodySizeOnUnfurling()
-
                         requestToPlaySound(SoundAsset.BRUSH_SOUND, false)
-
+                        resetBodySizeOnUnfurling()
                         loop.next()
                     }
                 }
-
                 FlagState.RISE -> {
                     val timer = stateTimers[currentState]
                     timer.update(delta)
-
                     if (timer.isFinished()) loop.next()
                 }
-
                 FlagState.STAND -> {}
-
                 FlagState.FALL -> {
                     val timer = stateTimers[currentState]
                     timer.update(delta)
-
                     if (timer.isFinished()) destroy()
                 }
             }

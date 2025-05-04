@@ -171,7 +171,7 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         }.scl(ConstVals.PPM.toFloat())
 
         val gravity = GameObjectPools.fetch(Vector2::class)
-        when (megaman.direction) {
+        when (direction) {
             Direction.UP -> gravity.set(0f, -BALL_GRAVITY)
             Direction.DOWN -> gravity.set(0f, BALL_GRAVITY)
             Direction.LEFT -> gravity.set(BALL_GRAVITY, 0f)

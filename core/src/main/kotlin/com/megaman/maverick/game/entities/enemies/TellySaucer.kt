@@ -9,7 +9,6 @@ import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
@@ -61,6 +60,7 @@ class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         private const val FREQUENCY = 3f
         private const val AMPLITUDE = 0.025f
 
+        private const val RAY_DELAY = 1f
         private const val RAY_DUR = 1f
 
         private val regions = ObjectMap<String, TextureRegion>()
@@ -76,6 +76,7 @@ class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
     private var ray: SaucerRay? = null
 
+    private val rayDelay = Timer(RAY_DELAY)
     private val rayTimer = Timer(RAY_DUR)
     private val raying: Boolean
         get() = !rayTimer.isFinished()
@@ -123,6 +124,7 @@ class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         val amplitude = ConstVals.PPM * if (flip) -AMPLITUDE else AMPLITUDE
         sine = SineWave(sinePos, speed, amplitude, FREQUENCY)
 
+        rayDelay.setToEnd()
         rayTimer.setToEnd()
 
         requestToPlaySound(SoundAsset.ALARM_SOUND, false)
@@ -159,6 +161,7 @@ class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
                 ray?.destroy()
                 ray = null
             }
+            rayDelay.update(delta)
 
             sine.update(delta)
             sine.getMotionValue()?.let { body.setCenter(it) }
@@ -179,7 +182,7 @@ class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
             Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(ConstVals.PPM.toFloat(), 4f * ConstVals.PPM))
         rayScanner.offsetFromBodyAttachment.y = -body.getHeight()
         rayScanner.setFilter { fixture -> fixture.getEntity() == megaman && fixture.getType() == FixtureType.DAMAGEABLE }
-        rayScanner.setConsumer { processState, _ -> if (processState == ProcessState.BEGIN && !raying) startRay() }
+        rayScanner.setConsumer { processState, _ -> if (rayDelay.isFinished() && !raying) startRay() }
         body.addFixture(rayScanner)
         rayScanner.drawingColor = Color.GREEN
         debugShapes.add { rayScanner }
@@ -229,6 +232,7 @@ class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         ray.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.DIRECTION pairTo direction))
         this.ray = ray
 
+        rayDelay.reset()
         rayTimer.reset()
     }
 }

@@ -45,11 +45,11 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
     companion object {
         const val TAG = "AsteroidsSpawner"
 
-        const val MIN_SPEED = 2f
-        const val MAX_SPEED = 4f
+        const val MIN_SPEED = 1.5f
+        const val MAX_SPEED = 3f
 
-        private const val MIN_SPAWN_DELAY = 1.5f
-        private const val MAX_SPAWN_DELAY = 2.5f
+        private const val MIN_SPAWN_DELAY = 2f
+        private const val MAX_SPAWN_DELAY = 4f
 
         private const val MIN_ANGLE = 240f
         private const val MAX_ANGLE = 300f

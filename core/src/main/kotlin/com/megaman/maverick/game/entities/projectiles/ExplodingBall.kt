@@ -12,7 +12,6 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
-import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -92,10 +91,6 @@ class ExplodingBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         body.physics.velocityClamp.set(CLAMP * ConstVals.PPM, CLAMP * ConstVals.PPM)
-
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
-        bodyFixture.putProperty(ConstKeys.GRAVITY_ROTATABLE, false)
-        body.addFixture(bodyFixture)
 
         val projectileFixture = Fixture(body, FixtureType.PROJECTILE, GameCircle().setRadius(0.4f * ConstVals.PPM))
         body.addFixture(projectileFixture)

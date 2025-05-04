@@ -1,7 +1,9 @@
 package com.megaman.maverick.game.entities.special
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.animations.Animation
@@ -18,9 +20,11 @@ import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.SmoothOscillationTimer
 import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -40,7 +44,11 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.enemies.StagedMoonLandingFlag
+import com.megaman.maverick.game.entities.enemies.TellySaucer
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
+import com.megaman.maverick.game.entities.projectiles.Asteroid
+import com.megaman.maverick.game.entities.projectiles.ExplodingBall
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
@@ -64,7 +72,8 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         private const val AURA_BLINK_DUR = 0.2f
 
         // TODO: Tags commented out because allowing other entities to trigger gravity switch makes gameplay unstable
-        private val TRIGGER_ENTITY_TAGS = gdxArrayOf<String>(/* TellySaucer.TAG, Asteroid.TAG, StagedMoonLandingFlag.TAG */)
+        private val TRIGGER_ENTITY_TAGS =
+            gdxArrayOf<String>(TellySaucer.TAG, Asteroid.TAG, StagedMoonLandingFlag.TAG, ExplodingBall.TAG)
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -75,6 +84,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
             body.direction = value
         }
 
+    private val triggerArea = GameCircle().setRadius(BODY_SIZE * ConstVals.PPM / 2f)
     private val triggerEntities = ObjectSet<IBodyEntity>()
 
     private val auraBlink =
@@ -108,9 +118,9 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
 
-        auraBlink.reset()
-
         spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
+
+        auraBlink.reset()
     }
 
     override fun onDestroy() {
@@ -120,14 +130,14 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
     }
 
     private fun isTriggerEntityInBounds(): Boolean {
-        val bounds = body.getBounds()
-
-        if (!triggerEntities.contains(megaman) && megaman.body.getBounds().overlaps(bounds)) return true
+        if (!triggerEntities.contains(megaman) && megaman.body.getBounds().overlaps(triggerArea)) return true
 
         return TRIGGER_ENTITY_TAGS.any predicate@{ tag ->
             val entities = MegaGameEntities.getOfTag(tag)
             return@predicate entities.any { entity ->
-                entity is IBodyEntity && !triggerEntities.contains(entity) && entity.body.getBounds().overlaps(bounds)
+                entity is IBodyEntity &&
+                    !triggerEntities.contains(entity) &&
+                    entity.body.getBounds().overlaps(triggerArea)
             }
         }
     }
@@ -135,7 +145,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
     override fun shouldBeginSwitchToDown(delta: Float) =
         !game.isCameraRotating() &&
             direction != megaman.direction && isTriggerEntityInBounds() &&
-            body.getBounds().overlaps(game.getGameCamera().getRotatedBounds())
+            triggerArea.overlaps(game.getGameCamera().getRotatedBounds())
 
     override fun shouldBeginSwitchToUp(delta: Float) = direction != megaman.direction
 
@@ -146,14 +156,12 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
     override fun onFinishSwitchToDown() {
         GameLogger.debug(TAG, "onFinishSwitchToDown(): direction=$direction")
 
-        val bounds = body.getBounds()
-
-        if (megaman.body.getBounds().overlaps(bounds)) triggerEntities.add(megaman)
+        if (megaman.body.getBounds().overlaps(triggerArea)) triggerEntities.add(megaman)
 
         TRIGGER_ENTITY_TAGS.forEach { tag ->
             val entities = MegaGameEntities.getOfTag(tag)
             entities.forEach { entity ->
-                if (entity is IBodyEntity && entity.body.getBounds().overlaps(bounds)) triggerEntities.add(entity)
+                if (entity is IBodyEntity && entity.body.getBounds().overlaps(triggerArea)) triggerEntities.add(entity)
             }
         }
 
@@ -170,18 +178,18 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
     override fun defineUpdatablesComponent(component: UpdatablesComponent) {
         super.defineUpdatablesComponent(component)
         component.put(ConstKeys.TRIGGER) update@{
+            triggerArea.setCenter(body.getCenter())
+
             if (game.isCameraRotating()) return@update
 
             val iter = triggerEntities.iterator()
             while (iter.hasNext) {
                 val entity = iter.next()
-
                 if ((entity as MegaGameEntity).dead) {
                     iter.remove()
                     continue
                 }
-
-                if (!entity.body.getBounds().overlaps(body.getBounds())) iter.remove()
+                if (!entity.body.getBounds().overlaps(triggerArea)) iter.remove()
             }
         }
     }
@@ -189,7 +197,13 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(BODY_SIZE * ConstVals.PPM)
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
+        body.drawingColor = Color.GRAY
+
+        val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBounds() }
+
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
+
         return BodyComponentCreator.create(this, body)
     }
 

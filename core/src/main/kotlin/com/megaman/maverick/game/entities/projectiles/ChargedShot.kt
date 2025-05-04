@@ -18,6 +18,7 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
+import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -58,6 +59,8 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         private const val HALF_CHARGED_SHOT_REGION_PREFIX = "Half"
         private const val CHARGED_SHOT_REGION_SUFFIX = "_v2"
 
+        private const val NO_MOVE_CULL_DUR = 0.5f
+
         private val SPRITE_SIZE = Vector2(2f, 2f).scl(ConstVals.PPM.toFloat())
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -67,6 +70,8 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     private val trajectory = Vector2()
     private var bounced = 0
+
+    private val noMoveCullTimer = Timer(NO_MOVE_CULL_DUR)
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -98,6 +103,8 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         bounced = 0
 
         spawnResidual()
+
+        noMoveCullTimer.reset()
     }
 
     private fun spawnResidual() {
@@ -170,8 +177,13 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         explosion.spawn(props)
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent({
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         body.physics.velocity.let { if (canMove) it.set(trajectory.cpy().scl(movementScalar)) else it.setZero() }
+
+        if (canMove && body.physics.velocity.epsilonEquals(0f, 0f, 0.1f * ConstVals.PPM)) {
+            noMoveCullTimer.update(delta)
+            if (noMoveCullTimer.isFinished()) destroy()
+        } else noMoveCullTimer.reset()
     })
 
     override fun defineBodyComponent(): BodyComponent {

@@ -9,6 +9,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
@@ -98,6 +99,7 @@ class MoonHead(game: MegamanMaverickGame) : AbstractBoss(game, dmgDuration = DAM
     private lateinit var arcMotion: ArcMotion
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
             gdxArrayOf("dark", "awaken", "angry", "shoot", "crumble", "damaged").forEach { key ->
@@ -111,7 +113,7 @@ class MoonHead(game: MegamanMaverickGame) : AbstractBoss(game, dmgDuration = DAM
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.ORB, false)
         spawnProps.put(ConstKeys.MINI, true)
-
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         loop.reset()
@@ -167,9 +169,9 @@ class MoonHead(game: MegamanMaverickGame) : AbstractBoss(game, dmgDuration = DAM
         val asteroid = MegaEntityFactory.fetch(Asteroid::class)!!
         asteroid.spawn(
             props(
+                ConstKeys.OWNER pairTo this,
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.IMPULSE pairTo impulse,
-                ConstKeys.OWNER pairTo this,
                 ConstKeys.TYPE pairTo Asteroid.BLUE,
                 "${ConstKeys.ROTATION}_${ConstKeys.SPEED}" pairTo Asteroid.MAX_ROTATION_SPEED
             )
