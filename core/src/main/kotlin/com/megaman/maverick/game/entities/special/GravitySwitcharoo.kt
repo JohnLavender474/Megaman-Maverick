@@ -49,9 +49,9 @@ import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
 import com.megaman.maverick.game.entities.enemies.StagedMoonLandingFlag
 import com.megaman.maverick.game.entities.enemies.TellySaucer
+import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
-import com.megaman.maverick.game.entities.projectiles.Asteroid
-import com.megaman.maverick.game.entities.projectiles.ExplodingBall
+import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
@@ -76,7 +76,18 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
 
         // TODO: Tags commented out because allowing other entities to trigger gravity switch makes gameplay unstable
         private val TRIGGER_ENTITY_TAGS =
-            gdxArrayOf<String>(TellySaucer.TAG, Asteroid.TAG, StagedMoonLandingFlag.TAG, ExplodingBall.TAG)
+            gdxArrayOf<String>(
+                TellySaucer.TAG,
+                Asteroid.TAG,
+                StagedMoonLandingFlag.TAG,
+                ExplodingBall.TAG,
+                Bullet.TAG,
+                ChargedShot.TAG,
+                PreciousGem.TAG,
+                MoonScythe.TAG,
+                MagmaWave.TAG,
+                SmallIceCube.TAG
+            )
 
         private val regions = ObjectMap<String, TextureRegion>()
     }

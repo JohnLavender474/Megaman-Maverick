@@ -73,8 +73,6 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         }
 
     private var innerBlock: Block? = null
-    private lateinit var feetFixture: Fixture
-
     private lateinit var spawnRoom: String
     private lateinit var regionKey: String
 
@@ -112,6 +110,7 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
                 ConstKeys.BLOCK_FILTERS pairTo { entity: MegaGameEntity, block: MegaGameEntity ->
                     blockFilter(entity, block)
                 },
+                ConstKeys.DRAW pairTo false
             )
         )
 
@@ -130,12 +129,7 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private fun blockFilter(entity: MegaGameEntity, block: MegaGameEntity) =
         entity == this && block == this.innerBlock
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent({
-        direction = megaman.direction
-
-        if (!body.isSensing(BodySense.FEET_ON_GROUND) && feetFixture.getShape().overlaps(megaman.body.getBounds()))
-            megaman.depleteHealth()
-    })
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ direction = megaman.direction })
 
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
@@ -158,10 +152,10 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        feetFixture = Fixture(
+        val feetFixture = Fixture(
             body,
             FixtureType.FEET,
-            GameRectangle().setSize(BODY_WIDTH * 0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM)
+            GameRectangle().setSize(BODY_WIDTH * 0.75f * ConstVals.PPM, 0.25f * ConstVals.PPM)
         )
         feetFixture.setHitByBlockReceiver(ProcessState.BEGIN) hitByBlock@{ block, _ ->
             if (block == innerBlock) return@hitByBlock
@@ -170,7 +164,13 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         body.addFixture(feetFixture)
         feetFixture.drawingColor = Color.GREEN
-        debugShapes.add { feetFixture }
+        // debugShapes.add { feetFixture }
+
+        val deathFixture = Fixture(body, FixtureType.DEATH)
+        deathFixture.putProperty(ConstKeys.INSTANT, true)
+        deathFixture.attachedToBody = false
+        body.addFixture(deathFixture)
+        debugShapes.add { deathFixture }
 
         body.preProcess.put(ConstKeys.BLOCK) {
             innerBlock!!.let {
@@ -185,19 +185,16 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         }
         body.preProcess.put(ConstKeys.GRAVITY) {
             val gravity = GameObjectPools.fetch(Vector2::class)
-
             val value = when {
                 body.isSensing(BodySense.FEET_ON_GROUND) && !body.getFeetBlocks().isEmpty -> GROUND_GRAVITY
                 else -> GRAVITY
             }
-
             when (direction) {
                 Direction.UP -> gravity.set(0f, -value)
                 Direction.DOWN -> gravity.set(0f, value)
                 Direction.LEFT -> gravity.set(value, 0f)
                 Direction.RIGHT -> gravity.set(-value, 0f)
             }.scl(ConstVals.PPM.toFloat())
-
             body.physics.gravity.set(gravity)
         }
         body.preProcess.put(ConstKeys.MOVEMENT) {
@@ -205,6 +202,11 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
                 direction.isVertical() -> body.physics.velocity.x = 0f
                 else -> body.physics.velocity.y = 0f
             }
+        }
+        body.preProcess.put(ConstKeys.DEATH) {
+            deathFixture.setShape(feetFixture.getShape())
+            deathFixture.setActive(!body.isSensing(BodySense.FEET_ON_GROUND))
+            deathFixture.drawingColor = if (deathFixture.isActive()) Color.RED else Color.YELLOW
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

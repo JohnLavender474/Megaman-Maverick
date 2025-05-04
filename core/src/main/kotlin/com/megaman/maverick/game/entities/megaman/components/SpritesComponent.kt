@@ -36,33 +36,25 @@ fun Megaman.getSpriteDirection() = when {
     else -> direction
 }
 
-fun Megaman.shouldFlipSpriteX(): Boolean {
-    val facing = when {
-        getSpriteDirection() == Direction.RIGHT -> Facing.RIGHT
-        else -> Facing.LEFT
-    }
+fun Megaman.shouldFlipSpriteX() = isFacing(Facing.LEFT)
 
-    return isFacing(facing)
-}
-
-fun Megaman.shouldFlipSpriteY() = getSpriteDirection() == Direction.DOWN
+fun Megaman.shouldFlipSpriteY() = false // getSpriteDirection() == Direction.DOWN
 
 fun Megaman.getSpriteRotation() = when (getSpriteDirection()) {
-    Direction.UP, Direction.DOWN -> 0f
+    Direction.UP -> 0f
+    Direction.DOWN -> 180f
     Direction.LEFT -> 90f
     Direction.RIGHT -> 270f
 }
 
 fun Megaman.getSpriteXTranslation() = when (getSpriteDirection()) {
     Direction.UP, Direction.DOWN -> 0f
-
     Direction.LEFT -> when {
-        isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.1f
+        isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) -> 0f
         else -> 0.3f
     }
-
     Direction.RIGHT -> when {
-        isBehaviorActive(BehaviorType.GROUND_SLIDING) -> -0.1f
+        isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) -> 0f
         else -> -0.3f
     }
 }
@@ -70,16 +62,17 @@ fun Megaman.getSpriteXTranslation() = when (getSpriteDirection()) {
 fun Megaman.getSpriteYTranslation() = when (getSpriteDirection()) {
     Direction.UP -> when {
         !feetOnGround && !isBehaviorActive(BehaviorType.WALL_SLIDING) -> -0.25f
-        isBehaviorActive(BehaviorType.GROUND_SLIDING) -> -GROUND_SLIDE_SPRITE_OFFSET_Y
+        isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) -> -GROUND_SLIDE_SPRITE_OFFSET_Y
         else -> 0f
     }
-
     Direction.DOWN -> when {
-        isBehaviorActive(BehaviorType.GROUND_SLIDING) -> GROUND_SLIDE_SPRITE_OFFSET_Y
+        isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) -> GROUND_SLIDE_SPRITE_OFFSET_Y
         else -> 0.075f
     }
-
-    Direction.LEFT, Direction.RIGHT -> 0f
+    Direction.LEFT, Direction.RIGHT -> when {
+        isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) -> 0.2f
+        else -> 0f
+    }
 }
 
 fun Megaman.getSpritePriority(out: DrawingPriority): DrawingPriority {

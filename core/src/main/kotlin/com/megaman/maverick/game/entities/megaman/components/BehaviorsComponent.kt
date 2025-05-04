@@ -162,10 +162,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                             BodySense.SIDE_TOUCHING_BLOCK_RIGHT
                         ) && !body.isSensing(BodySense.FEET_ON_GROUND)) ->
                         MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM * facing.value
-
                     else -> body.physics.velocity.x
                 }
-
                 Direction.LEFT, Direction.RIGHT -> ConstVals.PPM * when {
                     isBehaviorActive(BehaviorType.WALL_SLIDING) -> wallJumpVel
                     hasEnhancement(MegaEnhancement.JUMP_BOOST) -> jumpVel * MegaEnhancement.JUMP_BOOST_SCALAR
@@ -178,15 +176,22 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     hasEnhancement(MegaEnhancement.JUMP_BOOST) -> jumpVel * MegaEnhancement.JUMP_BOOST_SCALAR
                     else -> jumpVel
                 }
-
-                Direction.LEFT, Direction.RIGHT -> when {
+                Direction.LEFT -> when {
                     isBehaviorActive(BehaviorType.WALL_SLIDING) ||
                         (body.isSensingAny(
                             BodySense.SIDE_TOUCHING_BLOCK_LEFT,
                             BodySense.SIDE_TOUCHING_BLOCK_RIGHT
                         ) && !body.isSensing(BodySense.FEET_ON_GROUND)) ->
                         MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM * facing.value
-
+                    else -> body.physics.velocity.y
+                }
+                Direction.RIGHT -> when {
+                    isBehaviorActive(BehaviorType.WALL_SLIDING) ||
+                        (body.isSensingAny(
+                            BodySense.SIDE_TOUCHING_BLOCK_LEFT,
+                            BodySense.SIDE_TOUCHING_BLOCK_RIGHT
+                        ) && !body.isSensing(BodySense.FEET_ON_GROUND)) ->
+                        MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM * -facing.value
                     else -> body.physics.velocity.y
                 }
             }
@@ -243,14 +248,15 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             if (direction.isVertical()) impulse.y = 0f else impulse.x = 0f
 
-            var impulseValue = facing.value * ConstVals.PPM * movementScalar *
+            var impulseValue = ConstVals.PPM * movementScalar *
                 (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_AIR_DASH_VEL else MegamanValues.AIR_DASH_VEL)
             if (hasEnhancement(MegaEnhancement.AIR_DASH_BOOST)) impulseValue *= MegaEnhancement.AIR_DASH_BOOST_SCALAR
 
             when (direction) {
-                Direction.UP, Direction.DOWN -> impulse.x = impulseValue
-
-                Direction.LEFT, Direction.RIGHT -> impulse.y = impulseValue
+                Direction.UP -> impulse.x = impulseValue * facing.value
+                Direction.DOWN -> impulse.x = impulseValue * -facing.value
+                Direction.LEFT -> impulse.y = impulseValue * facing.value
+                Direction.RIGHT -> impulse.y = impulseValue * -facing.value
             }
 
             lastFacing = facing
@@ -406,13 +412,15 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             var vel = (when {
                 body.isSensing(BodySense.IN_WATER) -> MegamanValues.WATER_GROUND_SLIDE_VEL
                 else -> MegamanValues.GROUND_SLIDE_VEL
-            }) * ConstVals.PPM * movementScalar * facing.value
+            }) * ConstVals.PPM * movementScalar
 
             if (hasEnhancement(MegaEnhancement.GROUND_SLIDE_BOOST)) vel *= MegaEnhancement.GROUND_SLIDE_BOOST_SCALAR
 
             when (direction) {
-                Direction.UP, Direction.DOWN -> body.physics.velocity.x = vel
-                Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y = vel
+                Direction.UP -> body.physics.velocity.x = vel * facing.value
+                Direction.DOWN -> body.physics.velocity.x = vel * -facing.value
+                Direction.LEFT -> body.physics.velocity.y = vel * facing.value
+                Direction.RIGHT -> body.physics.velocity.y = vel * -facing.value
             }
         }
 

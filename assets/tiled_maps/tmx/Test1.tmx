@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="1500" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="15" nextobjectid="494">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="1500" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="15" nextobjectid="495">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/Gravity Man Stage.tsx"/>
  <tileset firstgid="4609" source="../tsx/MM3Wily1.tsx"/>
@@ -330,22 +330,6 @@
   <object id="477" x="39648" y="288" width="64" height="32"/>
   <object id="486" x="39840" y="384" width="64" height="64"/>
   <object id="490" x="39968" y="64" width="192" height="32"/>
-  <object id="491" name="GravityBlock" x="38944" y="352" width="64" height="64">
-   <properties>
-    <property name="spawn_room" value="room24"/>
-   </properties>
-  </object>
-  <object id="492" name="GravityBlock" x="38944" y="288" width="64" height="64">
-   <properties>
-    <property name="spawn_room" value="room24"/>
-   </properties>
-  </object>
-  <object id="493" name="GravitySwitcharoo" x="38832" y="336" width="32" height="32">
-   <properties>
-    <property name="direction" value="right"/>
-    <property name="spawn_room" value="room24"/>
-   </properties>
-  </object>
  </objectgroup>
  <objectgroup id="10" name="children">
   <object id="97" name="GravityChange" x="11936" y="96" width="384" height="320">
@@ -532,6 +516,18 @@
   <object id="437" name="SpringBouncer" x="38208" y="352" width="96" height="32">
    <properties>
     <property name="direction" value="up"/>
+   </properties>
+  </object>
+  <object id="493" name="GravitySwitcharoo" x="38832" y="336" width="32" height="32">
+   <properties>
+    <property name="direction" value="right"/>
+    <property name="spawn_room" value="room24"/>
+   </properties>
+  </object>
+  <object id="494" name="GravitySwitcharoo" x="38832" y="192" width="32" height="32">
+   <properties>
+    <property name="direction" value="left"/>
+    <property name="spawn_room" value="room24"/>
    </properties>
   </object>
  </objectgroup>

@@ -3,7 +3,6 @@ package com.megaman.maverick.game.entities.megaman.components
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
-import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.controller.ControllerComponent
 import com.mega.game.engine.controller.buttons.ButtonActuator
@@ -156,7 +155,7 @@ private fun Megaman.runLeft(poller: IControllerPoller, delta: Float) {
     }
 
     facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.RIGHT else Facing.LEFT
-    if (direction.equalsAny(Direction.DOWN, Direction.RIGHT)) swapFacing()
+    // if (direction.equalsAny(Direction.DOWN, Direction.RIGHT)) swapFacing()
 
     running = !isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.GROUND_SLIDING, BehaviorType.CLIMBING)
     if (!running) return
@@ -176,7 +175,7 @@ private fun Megaman.runLeft(poller: IControllerPoller, delta: Float) {
         if (body.isSensing(BodySense.FEET_ON_ICE)) MegamanValues.ICE_RUN_IMPULSE
         else MegamanValues.RUN_IMPULSE
 
-    var impulse = rawImpulse * delta * movementScalar * ConstVals.PPM * facing.value *
+    var impulse = rawImpulse * delta * movementScalar * ConstVals.PPM *
         (if (isBehaviorActive(BehaviorType.WALL_SLIDING)) -1f else 1f)
     impulse *= if (body.isSensing(BodySense.FEET_ON_GROUND)) when {
         runTime < MegamanValues.RUN_1_TIME -> MegamanValues.RUN_1_SCALAR
@@ -184,10 +183,12 @@ private fun Megaman.runLeft(poller: IControllerPoller, delta: Float) {
         else -> MegamanValues.RUN_3_SCALAR
     } else 1f
 
-    if (direction.isVertical() && abs(body.physics.velocity.x) < threshold)
-        body.physics.velocity.x += impulse
-    else if (direction.isHorizontal() && abs(body.physics.velocity.y) < threshold)
-        body.physics.velocity.y += impulse
+    when {
+        direction == Direction.UP && abs(body.physics.velocity.x) < threshold -> body.physics.velocity.x -= impulse
+        direction == Direction.DOWN && abs(body.physics.velocity.x) < threshold -> body.physics.velocity.x += impulse
+        direction == Direction.LEFT && abs(body.physics.velocity.y) < threshold -> body.physics.velocity.y -= impulse
+        direction == Direction.RIGHT && abs(body.physics.velocity.y) < threshold -> body.physics.velocity.y += impulse
+    }
 }
 
 private fun Megaman.runRight(poller: IControllerPoller, delta: Float) {
@@ -199,7 +200,7 @@ private fun Megaman.runRight(poller: IControllerPoller, delta: Float) {
     }
 
     facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.LEFT else Facing.RIGHT
-    if (direction.equalsAny(Direction.DOWN, Direction.RIGHT)) swapFacing()
+    // if (direction.equalsAny(Direction.DOWN, Direction.RIGHT)) swapFacing()
 
     running = !isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.GROUND_SLIDING, BehaviorType.CLIMBING)
     if (!running) return
@@ -214,7 +215,7 @@ private fun Megaman.runRight(poller: IControllerPoller, delta: Float) {
         if (body.isSensing(BodySense.FEET_ON_ICE)) MegamanValues.ICE_RUN_IMPULSE
         else MegamanValues.RUN_IMPULSE
 
-    var impulse = rawImpulse * delta * movementScalar * ConstVals.PPM * facing.value *
+    var impulse = rawImpulse * delta * movementScalar * ConstVals.PPM *
         (if (isBehaviorActive(BehaviorType.WALL_SLIDING)) -1f else 1f)
     impulse *= if (body.isSensing(BodySense.FEET_ON_GROUND)) when {
         runTime < MegamanValues.RUN_1_TIME -> MegamanValues.RUN_1_SCALAR
@@ -222,10 +223,12 @@ private fun Megaman.runRight(poller: IControllerPoller, delta: Float) {
         else -> MegamanValues.RUN_3_SCALAR
     } else 1f
 
-    if (direction.isVertical() && abs(body.physics.velocity.x) < threshold)
-        body.physics.velocity.x += impulse
-    else if (direction.isHorizontal() && abs(body.physics.velocity.y) < threshold)
-        body.physics.velocity.y += impulse
+    when {
+        direction == Direction.UP && abs(body.physics.velocity.x) < threshold -> body.physics.velocity.x += impulse
+        direction == Direction.DOWN && abs(body.physics.velocity.x) < threshold -> body.physics.velocity.x -= impulse
+        direction == Direction.LEFT && abs(body.physics.velocity.y) < threshold -> body.physics.velocity.y += impulse
+        direction == Direction.RIGHT && abs(body.physics.velocity.y) < threshold -> body.physics.velocity.y -= impulse
+    }
 }
 
 private fun Megaman.onJustStopRunning() {

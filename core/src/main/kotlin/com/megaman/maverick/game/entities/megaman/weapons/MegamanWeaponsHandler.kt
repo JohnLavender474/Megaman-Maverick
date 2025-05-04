@@ -170,7 +170,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
         val out = GameObjectPools.fetch(Vector2::class).set(megaman.body.getCenter())
 
-        var xOffset = megaman.facing.value * when {
+        var xOffset = when {
             megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 1f
             megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> 0.75f
             megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.5f
@@ -186,7 +186,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> 0.25f
             megaman.isBehaviorActive(BehaviorType.JETPACKING) -> 0.1f
             megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.15f
-            megaman.isBehaviorActive(BehaviorType.CROUCHING) -> 0.125f
+            megaman.isBehaviorActive(BehaviorType.CROUCHING) -> 0f
             megaman.isBehaviorActive(BehaviorType.CLIMBING) -> 0.15f
             !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> when (megaman.direction) {
                 Direction.UP -> -0.05f
@@ -195,24 +195,49 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             else -> 0f
         }
 
-        if (megaman.direction.isVertical()) {
-            out.x += xOffset * ConstVals.PPM
-            out.y += (if (megaman.direction == Direction.DOWN) -yOffset else yOffset) * ConstVals.PPM
+        when (megaman.direction) {
+            Direction.UP -> {
+                out.x += xOffset * ConstVals.PPM * megaman.facing.value
+                out.y += (if (megaman.direction == Direction.DOWN) -yOffset else yOffset) * ConstVals.PPM
 
-            if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) {
-                var groundSlideOffset = GROUND_SLIDE_SPRITE_OFFSET_Y * ConstVals.PPM
-                out.y += if (megaman.direction == Direction.UP) -groundSlideOffset else groundSlideOffset
+                if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) {
+                    var groundSlideOffset = GROUND_SLIDE_SPRITE_OFFSET_Y * ConstVals.PPM
+                    out.y += if (megaman.direction == Direction.UP) -groundSlideOffset else groundSlideOffset
+                }
             }
-        } else {
-            out.x += (if (megaman.direction == Direction.LEFT) -yOffset else yOffset) * ConstVals.PPM
-            if (megaman.direction == Direction.LEFT && !megaman.body.isSensing(BodySense.FEET_ON_GROUND)) out.x -= 0.2f
+            Direction.DOWN -> {
+                out.x += xOffset * ConstVals.PPM * -megaman.facing.value
+                out.y += (if (megaman.direction == Direction.DOWN) -yOffset else yOffset) * ConstVals.PPM
 
-            if (megaman.isAnyBehaviorActive(
-                    BehaviorType.CROUCHING, BehaviorType.GROUND_SLIDING, BehaviorType.WALL_SLIDING
-                )
-            ) out.x += 0.1f * ConstVals.PPM * if (megaman.direction == Direction.RIGHT) -1f else 1f
+                if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) {
+                    var groundSlideOffset = GROUND_SLIDE_SPRITE_OFFSET_Y * ConstVals.PPM
+                    out.y += if (megaman.direction == Direction.UP) -groundSlideOffset else groundSlideOffset
+                }
+            }
+            Direction.LEFT -> {
+                out.x += yOffset * ConstVals.PPM
+                if (!megaman.body.isSensing(BodySense.FEET_ON_GROUND)) out.x -= 0.2f * ConstVals.PPM
+                if (megaman.isBehaviorActive(BehaviorType.CROUCHING)) out.x -= 0.1f * ConstVals.PPM
+                if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) out.x -= 0.25f * ConstVals.PPM
 
-            out.y += xOffset * ConstVals.PPM
+                out.y += xOffset * ConstVals.PPM * megaman.facing.value
+                if (megaman.isAnyBehaviorActive(BehaviorType.CROUCHING, BehaviorType.GROUND_SLIDING)) when {
+                    megaman.isFacing(Facing.LEFT) -> out.y += 0.15f * ConstVals.PPM
+                    else -> out.y += 0.2f * ConstVals.PPM
+                }
+            }
+            Direction.RIGHT -> {
+                out.x += yOffset * ConstVals.PPM
+                if (!megaman.body.isSensing(BodySense.FEET_ON_GROUND)) out.x -= 0.1f * ConstVals.PPM
+                if (megaman.isBehaviorActive(BehaviorType.CROUCHING)) out.x += 0.1f * ConstVals.PPM
+                if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) out.x -= 0.15f * ConstVals.PPM
+
+                out.y += xOffset * ConstVals.PPM * -megaman.facing.value
+                if (megaman.isAnyBehaviorActive(BehaviorType.CROUCHING, BehaviorType.GROUND_SLIDING)) when {
+                    megaman.isFacing(Facing.LEFT) -> out.y += 0.1f * ConstVals.PPM
+                    else -> out.y += 0.25f * ConstVals.PPM
+                }
+            }
         }
 
         return out
@@ -424,7 +449,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             MegamanWeapon.MEGA_BUSTER,
             MegamanWeapon.RUSH_JETPACK -> shootMegaBuster(stat)
             MegamanWeapon.ICE_CUBE -> shootIceCube(stat)
-            MegamanWeapon.MAGMA_WAVE -> shootFireBall(stat)
+            MegamanWeapon.MAGMA_WAVE -> shootMagmaWave(stat)
             MegamanWeapon.MOON_SCYTHE -> shootMoonScythes(stat)
             MegamanWeapon.PRECIOUS_GUARD -> shootPreciousGuard()
         }
@@ -442,9 +467,11 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         GameLogger.debug(TAG, "fireMegaBuster(): stat=$stat")
 
         val trajectory = GameObjectPools.fetch(Vector2::class)
-        when {
-            megaman.direction.isVertical() -> trajectory.x = MegamanValues.BULLET_VEL * megaman.facing.value
-            else -> trajectory.y = MegamanValues.BULLET_VEL * megaman.facing.value
+        when (megaman.direction) {
+            Direction.UP -> trajectory.x = MegamanValues.BULLET_VEL * megaman.facing.value
+            Direction.DOWN -> trajectory.x = MegamanValues.BULLET_VEL * -megaman.facing.value
+            Direction.LEFT -> trajectory.y = MegamanValues.BULLET_VEL * megaman.facing.value
+            Direction.RIGHT -> trajectory.y = MegamanValues.BULLET_VEL * -megaman.facing.value
         }
         trajectory.scl(ConstVals.PPM.toFloat())
 
@@ -506,7 +533,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         megaman.requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
     }
 
-    private fun shootFireBall(stat: MegaChargeStatus) {
+    private fun shootMagmaWave(stat: MegaChargeStatus) {
         GameLogger.debug(TAG, "shootFireBall(): stat=$stat")
 
         if (game.getCurrentLevel() == LevelDefinition.MOON_MAN) {
