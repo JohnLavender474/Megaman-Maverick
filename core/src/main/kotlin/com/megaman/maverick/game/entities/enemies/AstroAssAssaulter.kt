@@ -41,11 +41,9 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.SuperCoolActionStarWarsSpaceLazer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
@@ -59,7 +57,7 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
 
         internal val FLAGS = OrderedMap<Int, StagedMoonLandingFlag>()
 
-        private const val STAND_DUR = 1f
+        private const val STAND_DUR = 0.75f
         private const val SHOOT_DUR = 1f
         private const val SHOOT_EACH_DELAY = 0.25f
 
@@ -71,7 +69,7 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
         private const val DEFAULT_FLAG_GRAVITY_SCALAR = 0.75f
         private const val DEFAULT_FLAG_MOVEMENT_SCALAR = 1f
 
-        private const val LAZER_SPEED = 8f
+        private const val LAZER_SPEED = 10f
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -195,8 +193,7 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
             ConstKeys.TRAJECTORY pairTo trajectory
         )
 
-        val lazer =
-            EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.SUPER_COOL_ACTION_STAR_WARS_SPACE_LAZER)!!
+        val lazer = MegaEntityFactory.fetch(SuperCoolActionStarWarsSpaceLazer::class)!!
         lazer.spawn(props)
 
         requestToPlaySound(SoundAsset.SPACE_LAZER_SOUND, false)

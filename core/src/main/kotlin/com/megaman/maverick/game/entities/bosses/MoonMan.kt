@@ -52,6 +52,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
 import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.entities.projectiles.SharpStar
@@ -167,6 +168,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     private var asteroidsSpawned = 0
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_2.source)
             ANIM_DEFS.keys().forEach { key ->
@@ -484,6 +486,9 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
         requestToPlaySound(SoundAsset.LIFT_OFF_SOUND, false)
 
+        val aura = MegaEntityFactory.fetch(GravitySwitchAura::class)!!
+        aura.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+
         GameLogger.debug(TAG, "activateGravityChange(): gravity=$currentGravityChangeDir")
     }
 
@@ -511,12 +516,10 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                 standIndex++
                 GameLogger.debug(TAG, "onChangeState(): increment standIndex=$standIndex")
             }
-
             MoonManState.JUMP -> {
                 jumpIndex++
                 GameLogger.debug(TAG, "onChangeState(): increment jumpIndex=$jumpIndex")
             }
-
             else -> GameLogger.debug(TAG, "onChangeState(): no action when previous=$previous")
         }
 
@@ -525,24 +528,20 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                 timers["stand"].reset()
                 if (canShootInStandState()) shootIndex = 0
             }
-
             MoonManState.JUMP -> {
                 jump(megaman.body.getCenter())
                 if (canShootInJumpState()) shootIndex = 0
             }
-
             MoonManState.THROW_ASTEROIDS -> {
                 timers["spawn_asteroid_delay"].reset()
                 asteroidsSpawned = 0
             }
-
             MoonManState.GRAVITY_CHANGE -> {
                 ProcessState.entries.forEach {
                     val key = "gravity_change_${it.name.lowercase()}"
                     timers[key].reset()
                 }
             }
-
             else -> GameLogger.debug(TAG, "onChangeState(): no action when current=$current")
         }
     }
@@ -575,9 +574,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
         for (i in 0 until STAND_SHOOT_DURS.size) {
             val key = "shoot_$i"
-
             val dur = STAND_SHOOT_DURS[i]
-
             val timer = Timer(dur)
             timer.setRunOnJustFinished(
                 when (i) {

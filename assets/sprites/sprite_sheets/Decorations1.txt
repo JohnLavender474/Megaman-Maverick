@@ -68,7 +68,7 @@ DrippingToxicGoop
   index: -1
 DustPuff
   rotate: false
-  xy: 96, 144
+  xy: 128, 144
   size: 120, 16
   orig: 120, 16
   offset: 0, 0
@@ -85,6 +85,13 @@ Furnace
   xy: 378, 48
   size: 96, 32
   orig: 96, 32
+  offset: 0, 0
+  index: -1
+GravitySwitchAura
+  rotate: false
+  xy: 0, 144
+  size: 32, 96
+  orig: 32, 96
   offset: 0, 0
   index: -1
 GroundSnow/back
@@ -117,7 +124,7 @@ GroundSnow/right
   index: -1
 JetpackFlame
   rotate: false
-  xy: 0, 144
+  xy: 32, 144
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
@@ -222,28 +229,28 @@ SmallGrass/still
   index: -1
 Smoke/0
   rotate: false
-  xy: 216, 144
+  xy: 248, 144
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
   index: -1
 Smoke/1
   rotate: false
-  xy: 264, 144
+  xy: 296, 144
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
   index: -1
 Smoke/2
   rotate: false
-  xy: 312, 144
+  xy: 344, 144
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
   index: -1
 Smoke/3
   rotate: false
-  xy: 360, 144
+  xy: 392, 144
   size: 48, 112
   orig: 48, 112
   offset: 0, 0

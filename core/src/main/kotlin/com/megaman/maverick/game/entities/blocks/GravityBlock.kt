@@ -73,6 +73,8 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         }
 
     private var innerBlock: Block? = null
+    private lateinit var feetFixture: Fixture
+
     private lateinit var spawnRoom: String
     private lateinit var regionKey: String
 
@@ -128,7 +130,12 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private fun blockFilter(entity: MegaGameEntity, block: MegaGameEntity) =
         entity == this && block == this.innerBlock
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent({ direction = megaman.direction })
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
+        direction = megaman.direction
+
+        if (!body.isSensing(BodySense.FEET_ON_GROUND) && feetFixture.getShape().overlaps(megaman.body.getBounds()))
+            megaman.depleteHealth()
+    })
 
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
@@ -146,10 +153,12 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         body.setSize(BODY_WIDTH * ConstVals.PPM, BODY_HEIGHT * ConstVals.PPM)
         body.physics.receiveFrictionX = false
         body.physics.receiveFrictionY = false
+        body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBounds() }
 
-        val feetFixture = Fixture(
+        feetFixture = Fixture(
             body,
             FixtureType.FEET,
             GameRectangle().setSize(BODY_WIDTH * 0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM)

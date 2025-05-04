@@ -171,12 +171,15 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         }.scl(ConstVals.PPM.toFloat())
 
         val gravity = GameObjectPools.fetch(Vector2::class)
+        /*
         when (direction) {
             Direction.UP -> gravity.set(0f, -BALL_GRAVITY)
             Direction.DOWN -> gravity.set(0f, BALL_GRAVITY)
             Direction.LEFT -> gravity.set(BALL_GRAVITY, 0f)
             Direction.RIGHT -> gravity.set(-BALL_GRAVITY, 0f)
         }.scl(ballGravityScalar * ConstVals.PPM.toFloat())
+         */
+        gravity.set(0f, -BALL_GRAVITY).scl(ballGravityScalar * ConstVals.PPM.toFloat())
 
         val explodingBall = MegaEntityFactory.fetch(ExplodingBall::class)!!
         explodingBall.spawn(

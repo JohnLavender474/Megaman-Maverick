@@ -540,6 +540,7 @@ sprites/frames/Decorations1/Smoke/1.png
 sprites/frames/Decorations1/Smoke/2.png
 sprites/frames/Decorations1/DrippingToxicGoop.png
 sprites/frames/Decorations1/MuzzleFlash.png
+sprites/frames/Decorations1/GravitySwitchAura.png
 sprites/frames/Decorations1/SmallGrass/brush.png
 sprites/frames/Decorations1/SmallGrass/still.png
 sprites/frames/Decorations1/ToxicWaterSplash.png

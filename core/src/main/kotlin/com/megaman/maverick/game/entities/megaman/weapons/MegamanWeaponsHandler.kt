@@ -205,7 +205,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             }
         } else {
             out.x += (if (megaman.direction == Direction.LEFT) -yOffset else yOffset) * ConstVals.PPM
-            if (megaman.direction == Direction.LEFT && !megaman.body.isSensing(BodySense.FEET_ON_GROUND)) out.x -= 0.1f
+            if (megaman.direction == Direction.LEFT && !megaman.body.isSensing(BodySense.FEET_ON_GROUND)) out.x -= 0.2f
 
             if (megaman.isAnyBehaviorActive(
                     BehaviorType.CROUCHING, BehaviorType.GROUND_SLIDING, BehaviorType.WALL_SLIDING

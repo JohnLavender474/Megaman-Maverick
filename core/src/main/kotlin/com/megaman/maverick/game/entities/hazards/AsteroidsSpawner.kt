@@ -48,8 +48,8 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
         const val MIN_SPEED = 1.5f
         const val MAX_SPEED = 3f
 
-        private const val MIN_SPAWN_DELAY = 2f
-        private const val MAX_SPAWN_DELAY = 4f
+        private const val MIN_SPAWN_DELAY = 1f
+        private const val MAX_SPAWN_DELAY = 3f
 
         private const val MIN_ANGLE = 240f
         private const val MAX_ANGLE = 300f

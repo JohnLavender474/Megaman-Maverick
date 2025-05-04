@@ -20,6 +20,7 @@ import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.SmoothOscillationTimer
 import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
@@ -41,9 +42,11 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
 import com.megaman.maverick.game.entities.enemies.StagedMoonLandingFlag
 import com.megaman.maverick.game.entities.enemies.TellySaucer
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
@@ -173,6 +176,9 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         }
 
         requestToPlaySound(SoundAsset.LIFT_OFF_SOUND, false)
+
+        val aura = MegaEntityFactory.fetch(GravitySwitchAura::class)!!
+        aura.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     override fun defineUpdatablesComponent(component: UpdatablesComponent) {
