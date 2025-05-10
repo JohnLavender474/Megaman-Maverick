@@ -314,7 +314,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             when {
                 !game.controllerPoller.isPressed(MegaControllerButton.DOWN) ||
                     isBehaviorActive(BehaviorType.GROUND_SLIDING) -> timer.reset()
-
                 else -> timer.update(delta)
             }
 
@@ -332,9 +331,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         }
 
         override fun init() {
-            val focus = GameObjectPools.fetch(Vector2::class, false).set(getFocusPosition())
-            putProperty(ConstKeys.FOCUS, focus)
-
             body.physics.velocity.setZero()
 
             when (direction) {
@@ -347,10 +343,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
         override fun act(delta: Float) {
             body.physics.velocity.x = 0f
-        }
-
-        override fun end() {
-            removeProperty(ConstKeys.FOCUS)
         }
     }
 

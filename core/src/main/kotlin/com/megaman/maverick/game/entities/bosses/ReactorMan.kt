@@ -99,10 +99,6 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val GIGA_CHANCE_DELTA = 25f
         private const val MIN_CYCLES_BEFORE_GIGA = 3
 
-        /*
-        private const val GIGA_LASER_BEAM_SETS = 3
-        private const val GIGA_LASER_BEAMS_PER_SET = 4
-         */
         private const val GIGA_MAX_DELAY_BETWEEN_BEAMS = 0.8f
         private const val GIGA_MIN_DELAY_BETWEEN_BEAMS = 0.6f
         private const val GIGA_DELAY_BETWEEN_BEAMS_KEY = "giga_delay_between_beams"
@@ -602,29 +598,11 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     private fun queueBeams() {
         val indexArray = reloadIndexArray()
-
         while (!indexArray.isEmpty) {
             val index = indexArray.pop()
             queuedBeamerIndices.addLast(index)
         }
-
         GameLogger.debug(TAG, "queueBeams(): $queuedBeamerIndices")
-        /*
-        var indexArray = reloadIndexArray()
-        (0 until GIGA_LASER_BEAM_SETS).forEach {
-            val perfectTargetIndex = UtilMethods.getRandom(0, GIGA_LASER_BEAMS_PER_SET - 1)
-            (0 until GIGA_LASER_BEAMS_PER_SET).forEach { a ->
-                val index = when (a) {
-                    perfectTargetIndex -> -1
-                    else -> {
-                        if (indexArray.isEmpty) indexArray = reloadIndexArray()
-                        indexArray.pop()
-                    }
-                }
-                queuedBeamerIndices.addLast(index)
-            }
-        }
-         */
     }
 
     private fun findBeamerOverMegaman(): Int {
@@ -650,16 +628,13 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             )
 
             val inBounds = reusableFloatArray.any { beamerX <= it && beamerMaxX >= it }
-
             if (inBounds) {
                 GameLogger.debug(TAG, "findBeamerOverMegaman(): success: found beamer: $beamer")
-
                 return i
             }
         }
 
         GameLogger.error(TAG, "findBeamerOverMegaman(): failure: failed to find beamer")
-
         return -1
     }
 
@@ -691,10 +666,8 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private fun shouldUpdateTimer() = when (currentState) {
         ReactorManState.INIT, ReactorManState.STAND, ReactorManState.RUN ->
             body.isSensing(BodySense.FEET_ON_GROUND)
-
         ReactorManState.STAND_THROW, ReactorManState.STAND_THROW_TWO ->
             body.isSensing(BodySense.FEET_ON_GROUND) && otherTimers[STAND_THROW_DELAY_KEY].isFinished()
-
         else -> true
     }
 

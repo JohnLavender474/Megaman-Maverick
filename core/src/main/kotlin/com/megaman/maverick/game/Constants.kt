@@ -48,6 +48,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val EXCEPTION = "exception"
     const val FOCUS = "focus"
     const val CAN = "can"
     const val DEACTIVATED = "deactivated"

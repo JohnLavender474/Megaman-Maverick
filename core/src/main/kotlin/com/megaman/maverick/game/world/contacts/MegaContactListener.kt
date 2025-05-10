@@ -608,9 +608,12 @@ class MegaContactListener(
                 out
             )!!
 
-            if (otherFixture.hasFixtureLabel(FixtureLabel.NO_PROJECTILE_COLLISION)) return
-
             val projectile1 = projectileFixture.getEntity() as IProjectileEntity
+
+            if (otherFixture.hasFixtureLabel(FixtureLabel.NO_PROJECTILE_COLLISION) &&
+                !otherFixture.isExceptionForNoProjectileCollision(projectile1, projectileFixture)
+            ) return
+
             if (otherFixture.hasHitByProjectileReceiver()) otherFixture.getHitByProjectile(projectile1)
 
             val thisShape = projectileFixture.getShape().copy()

@@ -3,6 +3,7 @@ package com.megaman.maverick.game.world.body
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 
 enum class FixtureLabel {
     NO_PROJECTILE_COLLISION,
@@ -38,5 +39,15 @@ fun IFixture.removeFixtureLabel(fixtureLabel: FixtureLabel) {
     if (!hasProperty(ConstKeys.FIXTURE_LABELS)) return
     val labels = getProperty(ConstKeys.FIXTURE_LABELS) as ObjectSet<FixtureLabel>
     labels.remove(fixtureLabel)
+}
+
+fun IFixture.setExceptionForNoProjectileCollision(exception: (IProjectileEntity, IFixture) -> Boolean) {
+    putProperty("${FixtureLabel.NO_PROJECTILE_COLLISION}_${ConstKeys.EXCEPTION}", exception)
+}
+
+fun IFixture.isExceptionForNoProjectileCollision(entity: IProjectileEntity, fixture: IFixture): Boolean {
+    val exception = getProperty("${FixtureLabel.NO_PROJECTILE_COLLISION}_${ConstKeys.EXCEPTION}")
+    if (exception == null) return false
+    return (exception as (IProjectileEntity, IFixture) -> Boolean).invoke(entity, fixture)
 }
 

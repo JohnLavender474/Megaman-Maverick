@@ -275,7 +275,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         )
         .updatable { _, sprite ->
             sprite.setCenter(body.getCenter())
-            sprite.hidden = damageBlink
+            sprite.hidden = damageBlink || (owner == megaman && megaman.teleporting)
         }
         .build()
 
