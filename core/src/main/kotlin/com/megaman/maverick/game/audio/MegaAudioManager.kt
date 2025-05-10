@@ -71,7 +71,7 @@ class MegaAudioManager(
             if (e.loop) continue
 
             e.time += delta
-            if (e.time > e.ass.seconds) eIter.remove()
+            if (e.time >= e.ass.seconds) eIter.remove()
         }
 
         if (!musicPaused && fadeOutMusicTimer != null) {

@@ -57,7 +57,7 @@ object MegaGameEntities {
         return out
     }
 
-    fun hasAnyOfMapObjectId(mapObjectId: Int) = !getOfMapObjectId(mapObjectId).isEmpty
+    fun existsAnyOfMapObjectId(mapObjectId: Int) = !getOfMapObjectId(mapObjectId).isEmpty
 
     fun getOfMapObjectId(mapObjectId: Int): OrderedSet<MegaGameEntity> =
         mapObjectIdToEntities.get(mapObjectId, OrderedSet())

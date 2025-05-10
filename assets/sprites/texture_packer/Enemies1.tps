@@ -712,6 +712,8 @@
             <key type="filename">../frames/Enemies1/FlyBoy/Stand.png</key>
             <key type="filename">../frames/Enemies1/LumberJoe/jump.png</key>
             <key type="filename">../frames/Enemies1/LumberJoe/jump_shielded.png</key>
+            <key type="filename">../frames/Enemies1/Starkner/blue.png</key>
+            <key type="filename">../frames/Enemies1/Starkner/sleep.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -750,6 +752,10 @@
             <key type="filename">../frames/Enemies1/LumberJoe/cooldown_shielded.png</key>
             <key type="filename">../frames/Enemies1/LumberJoe/stand.png</key>
             <key type="filename">../frames/Enemies1/LumberJoe/stand_shielded.png</key>
+            <key type="filename">../frames/Enemies1/Starkner/blackhole.png</key>
+            <key type="filename">../frames/Enemies1/Starkner/blackhole_appear.png</key>
+            <key type="filename">../frames/Enemies1/Starkner/blackhole_disappear.png</key>
+            <key type="filename">../frames/Enemies1/Starkner/yellow.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -766,6 +772,7 @@
             </struct>
             <key type="filename">../frames/Enemies1/LumberJoe/throw.png</key>
             <key type="filename">../frames/Enemies1/LumberJoe/throw_shielded.png</key>
+            <key type="filename">../frames/Enemies1/Starkner/red.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

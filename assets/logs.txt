@@ -1,1 +1,1250 @@
-===== SESSION STARTED: 2025-05-04T14:37:24.678273575 =====
+===== SESSION STARTED: 2025-05-10T12:49:36.740452907 =====
+12:53:55 | DEBUG | Starkner | init()
+12:53:55 | DEBUG | Starkner | onSpawn(): spawnProps=Properties({
+	[bounds=[14416.0,2400.0,32.0,32.0]]
+	[x=14416.0]
+	[height=32.0]
+	[cull_time=2.0]
+	[id=410]
+	[name=Starkner]
+	[y=2400.0]
+	[width=32.0]
+})
+12:53:55 | DEBUG | Starkner | destroy(): added mapObjectId=410 from ALIVE: {410}
+12:53:55 | DEBUG | Starkner | update(): state timer finished, go to blue state
+12:53:55 | DEBUG | Starkner | update(): state timer finished, set moving to target=(14378.314,2264.3628)
+12:53:57 | DEBUG | Starkner | update(): reached target=(14378.314,2264.3628)
+12:53:57 | DEBUG | Starkner | update(): state timer finished, set moving to target=(14500.883,2427.6184)
+12:53:59 | DEBUG | Starkner | update(): reached target=(14500.883,2427.6184)
+12:53:59 | DEBUG | Starkner | init()
+12:53:59 | DEBUG | Starkner | onSpawn(): spawnProps=Properties({
+	[bounds=[14272.0,2912.0,32.0,32.0]]
+	[x=14272.0]
+	[height=32.0]
+	[cull_time=2.0]
+	[id=418]
+	[name=Starkner]
+	[y=2912.0]
+	[width=32.0]
+})
+12:53:59 | DEBUG | Starkner | destroy(): added mapObjectId=418 from ALIVE: {410, 418}
+12:53:59 | DEBUG | Starkner | update(): state timer finished, set moving to target=(14551.209,2713.3032)
+12:53:59 | DEBUG | Starkner | update(): state timer finished, go to blue state
+12:53:59 | DEBUG | Starkner | update(): state timer finished, set moving to target=(14528.753,2783.5212)
+12:54:01 | DEBUG | Starkner | update(): reached target=(14551.209,2713.3032)
+12:54:02 | DEBUG | Starkner | update(): reached target=(14528.753,2783.5212)
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=true
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | onHealthDepleted
+12:54:02 | DEBUG | Starkner | destroy(): removed mapObjectId=418 from ALIVE: {410}
+12:54:02 | DEBUG | Starkner | init()
+12:54:02 | DEBUG | Starkner | onSpawn(): spawnProps=Properties({
+	[state=YELLOW]
+	[cull_time=2.0]
+	[id=418]
+	[position=(14524.26,2786.2148)]
+})
+12:54:02 | DEBUG | Starkner | destroy(): added mapObjectId=418 from ALIVE: {410, 418}
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:02 | DEBUG | Starkner | update(): state timer finished, set moving to target=(14329.25,2808.0)
+12:54:03 | DEBUG | Starkner | update(): state timer finished, set moving to target=(14329.25,2808.0)
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=935631445] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=1214595918] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=935631445] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=1214595918] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=935631445] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=1214595918] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=935631445] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=1214595918] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=935631445] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=1214595918] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=935631445] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=1214595918] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=935631445] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=1214595918] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=935631445] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=1214595918] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=935631445] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=1214595918] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=935631445] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=1214595918] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=935631445] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=1214595918] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=true
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=935631445] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=1214595918] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | onHealthDepleted
+12:54:03 | DEBUG | Starkner | destroy(): removed mapObjectId=418 from ALIVE: {410}
+12:54:03 | DEBUG | Starkner | onSpawn(): spawnProps=Properties({
+	[state=RED]
+	[cull_time=2.0]
+	[id=418]
+	[position=(14384.289,2801.8467)]
+})
+12:54:03 | DEBUG | Starkner | destroy(): added mapObjectId=418 from ALIVE: {410, 418}
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=1214595918] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=1214595918] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=1214595918] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=true
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=1214595918] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=1214595918] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=1214595918] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=1214595918] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | onHealthDepleted
+12:54:03 | DEBUG | Starkner | destroy(): removed mapObjectId=410 from ALIVE: {418}
+12:54:03 | DEBUG | Starkner | onSpawn(): spawnProps=Properties({
+	[state=YELLOW]
+	[cull_time=2.0]
+	[id=410]
+	[position=(14385.359,2782.684)]
+})
+12:54:03 | DEBUG | Starkner | destroy(): added mapObjectId=410 from ALIVE: {410, 418}
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:03 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | update(): state timer finished, set moving to target=(14256.0,2944.1228)
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:04 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:04 | DEBUG | Starkner | update(): state timer finished, set moving to target=(14256.0,2930.6467)
+12:54:05 | DEBUG | Starkner | update(): reached target=(14256.0,2944.1228)
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=true
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=true
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:05 | DEBUG | Starkner | update(): reached target=(14256.0,2930.6467)
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:05 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | update(): state timer finished, set moving to target=(14256.0,2703.3308)
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:06 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:06 | DEBUG | Starkner | update(): state timer finished, set moving to target=(14344.39,2696.3904)
+12:54:07 | DEBUG | Starkner | update(): reached target=(14256.0,2703.3308)
+12:54:07 | DEBUG | Starkner | update(): state timer finished, set moving to target=(14512.0,2619.3958)
+12:54:08 | DEBUG | Starkner | update(): reached target=(14344.39,2696.3904)
+12:54:08 | DEBUG | Starkner | update(): reached target=(14512.0,2619.3958)
+12:54:09 | DEBUG | Starkner | update(): state timer finished, set moving to target=(14562.212,2750.143)
+12:54:09 | DEBUG | Starkner | update(): state timer finished, set moving to target=(14618.092,2801.4675)
+12:54:10 | DEBUG | Starkner | update(): reached target=(14562.212,2750.143)
+12:54:10 | DEBUG | Starkner | update(): reached target=(14618.092,2801.4675)
+12:54:14 | DEBUG | Starkner | update(): state timer finished, set moving to target=(14632.533,2830.8115)
+12:54:14 | DEBUG | Starkner | update(): reached target=(14632.533,2830.8115)
+12:54:14 | DEBUG | Starkner | update(): state timer finished, set moving to target=(14632.567,2854.2285)
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | update(): reached target=(14632.567,2854.2285)
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | update(): state timer finished, set moving to target=(14521.087,2929.9749)
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:15 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:15 | DEBUG | Starkner | update(): reached target=(14521.087,2929.9749)
+12:54:16 | DEBUG | Starkner | update(): state timer finished, set moving to target=(14361.478,2832.488)
+12:54:16 | DEBUG | Starkner | update(): state timer finished, set moving to target=(14358.305,2835.5789)
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=true
+12:54:16 | DEBUG | Starkner | onHealthDepleted
+12:54:16 | DEBUG | Starkner | destroy(): removed mapObjectId=410 from ALIVE: {418}
+12:54:16 | DEBUG | Starkner | init()
+12:54:16 | DEBUG | Starkner | onSpawn(): spawnProps=Properties({
+	[state=RED]
+	[cull_time=2.0]
+	[id=410]
+	[position=(14524.945,2843.2837)]
+})
+12:54:16 | DEBUG | Starkner | destroy(): added mapObjectId=410 from ALIVE: {410, 418}
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1969754956] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1969754956] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1969754956] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1969754956] }, result=false
+12:54:16 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1969754956] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1969754956] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1969754956] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1969754956] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1969754956] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1969754956] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1969754956] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1969754956] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1969754956] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1969754956] }, result=true
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=true, hashCode=1969754956] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1008561904] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1008561904] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1008561904] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1008561904] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1008561904] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1008561904] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1008561904] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1008561904] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1008561904] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1008561904] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1008561904] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1008561904] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1008561904] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1008561904] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1008561904] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1008561904] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1008561904] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1008561904] }, result=false
+12:54:17 | DEBUG | Starkner | canBeDamagedBy(): damager={ Bullet:[mapObjId=0, dead=false, hashCode=1008561904] }, result=false
+12:54:17 | DEBUG | Starkner | update(): reached target=(14358.305,2835.5789)
+12:54:17 | DEBUG | Starkner | update(): state timer finished, set moving to target=(14277.579,2887.3945)
+12:54:18 | DEBUG | Starkner | update(): state timer finished, set moving to target=(14256.0,2874.7349)
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=true
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | onHealthDepleted
+12:54:18 | DEBUG | Starkner | destroy(): removed mapObjectId=410 from ALIVE: {418}
+12:54:18 | DEBUG | Starkner | onSpawn(): spawnProps=Properties({
+	[state=BLACKHOLE]
+	[cull_time=2.0]
+	[id=410]
+	[position=(14351.9375,2874.1384)]
+})
+12:54:18 | DEBUG | Starkner | destroy(): added mapObjectId=410 from ALIVE: {410, 418}
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=410, dead=false, hashCode=935631445] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=418, dead=false, hashCode=145279672] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=2046967348] }, result=false
+12:54:18 | DEBUG | Starkner | update(): reached target=(14256.0,2874.7349)
+12:54:19 | DEBUG | Starkner | update(): state timer finished, set moving to target=(14347.571,3072.907)
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=true
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:19 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShotExplosion:[mapObjId=0, dead=false, hashCode=1295359081] }, result=false
+12:54:20 | DEBUG | Starkner | update(): reached target=(14347.571,3072.907)
+12:54:20 | DEBUG | Starkner | destroy(): removed mapObjectId=410 from ALIVE: {418}
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=true
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | onHealthDepleted
+12:54:20 | DEBUG | Starkner | destroy(): removed mapObjectId=418 from ALIVE: {}
+12:54:20 | DEBUG | Starkner | onSpawn(): spawnProps=Properties({
+	[state=BLACKHOLE]
+	[cull_time=2.0]
+	[id=418]
+	[position=(14347.033,3071.6968)]
+})
+12:54:20 | DEBUG | Starkner | destroy(): added mapObjectId=418 from ALIVE: {418}
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:20 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | canBeDamagedBy(): damager={ ChargedShot:[mapObjId=0, dead=false, hashCode=361542922] }, result=false
+12:54:21 | DEBUG | Starkner | destroy(): removed mapObjectId=418 from ALIVE: {}
+12:54:29 | DEBUG | Starkner | onSpawn(): spawnProps=Properties({
+	[bounds=[15936.0,3088.0,32.0,32.0]]
+	[x=15936.0]
+	[height=32.0]
+	[cull_time=2.0]
+	[id=441]
+	[name=Starkner]
+	[y=3088.0]
+	[width=32.0]
+})
+12:54:29 | DEBUG | Starkner | destroy(): added mapObjectId=441 from ALIVE: {441}
+12:54:29 | DEBUG | Starkner | onSpawn(): spawnProps=Properties({
+	[bounds=[15936.0,2848.0,32.0,32.0]]
+	[x=15936.0]
+	[height=32.0]
+	[cull_time=2.0]
+	[id=465]
+	[name=Starkner]
+	[y=2848.0]
+	[width=32.0]
+})
+12:54:29 | DEBUG | Starkner | destroy(): added mapObjectId=465 from ALIVE: {441, 465}
+12:54:30 | DEBUG | Starkner | update(): state timer finished, go to blue state
+12:54:30 | DEBUG | Starkner | update(): state timer finished, go to blue state
+12:54:30 | DEBUG | Starkner | update(): state timer finished, set moving to target=(15715.619,2950.4187)
+12:54:30 | DEBUG | Starkner | update(): state timer finished, set moving to target=(15715.619,2950.4187)
+12:54:32 | DEBUG | Starkner | update(): reached target=(15715.619,2950.4187)
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | update(): reached target=(15715.619,2950.4187)
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | update(): state timer finished, set moving to target=(15651.386,3032.0)
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:32 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:33 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:33 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:33 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:33 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:33 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:33 | DEBUG | Starkner | update(): state timer finished, set moving to target=(15680.269,3124.3293)
+12:54:33 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=465, dead=false, hashCode=145279672] }, result=false
+12:54:33 | DEBUG | Starkner | canBeDamagedBy(): damager={ Starkner:[mapObjId=441, dead=false, hashCode=935631445] }, result=false
+12:54:33 | DEBUG | Starkner | update(): reached target=(15651.386,3032.0)
+12:54:34 | DEBUG | Starkner | update(): state timer finished, set moving to target=(15886.014,3036.9712)
+12:54:34 | DEBUG | Starkner | update(): reached target=(15680.269,3124.3293)
+12:54:34 | DEBUG | Starkner | update(): state timer finished, set moving to target=(15984.0,2911.2986)
+12:54:35 | DEBUG | Starkner | destroy(): removed mapObjectId=441 from ALIVE: {465}
+12:54:35 | DEBUG | Starkner | destroy(): removed mapObjectId=465 from ALIVE: {}

@@ -33,14 +33,13 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.bosses.MoonHead
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.enemies.MoonEyeStone
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.explosions.AsteroidExplosion
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
@@ -59,6 +58,8 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
         private const val BLINK_DUR = 0.01f
 
         private const val CULL_TIME = 3f
+
+        private const val DEFAULT_MIN_Y = -100000f * ConstVals.PPM
 
         private val HIT_PROJS = objectSetOf<KClass<out IProjectileEntity>>(
             Bullet::class,
@@ -84,8 +85,11 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
     private var rotationSpeed = 0f
 
     private var delayTimer: Timer? = null
+
     private val blinkTimer = Timer(BLINK_DUR)
     private var blink = false
+
+    private var minY = DEFAULT_MIN_Y
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -131,14 +135,22 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
         body.forEachFixture { it.setActive(delayTimer == null) }
 
         hard = spawnProps.getOrDefault(ConstKeys.HARD, false, Boolean::class)
+
+        minY = spawnProps.getOrDefault("${ConstKeys.MIN}_${ConstKeys.Y}", DEFAULT_MIN_Y, Float::class)
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        impulse.setZero()
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent(update@{ delta ->
+        if (body.getBounds().getY() < minY) {
+            destroy()
+            return@update
+        }
+
         delayTimer?.let { timer ->
             timer.update(delta)
             if (timer.isFinished()) {
@@ -199,7 +211,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
     override fun explodeAndDie(vararg params: Any?) {
         GameLogger.debug(TAG, "explodeAndDie()")
         destroy()
-        val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.ASTEROID_EXPLOSION)!!
+        val explosion = MegaEntityFactory.fetch(AsteroidExplosion::class)!!
         explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 

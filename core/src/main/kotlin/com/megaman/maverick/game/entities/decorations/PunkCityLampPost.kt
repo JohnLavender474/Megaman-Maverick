@@ -124,7 +124,7 @@ class PunkCityLampPost(game: MegamanMaverickGame) : MegaGameEntity(game), ISprit
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
 
         val explosion = MegaEntityFactory.fetch(StarExplosion::class)!!
-        explosion.spawn(props(ConstKeys.POSITION pairTo block!!.body.getCenter(), ConstKeys.DAMAGER pairTo false))
+        explosion.spawn(props(ConstKeys.POSITION pairTo block!!.body.getCenter(), ConstKeys.ACTIVE pairTo false))
     }
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()

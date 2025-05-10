@@ -45,16 +45,18 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
     companion object {
         const val TAG = "AsteroidsSpawner"
 
-        const val MIN_SPEED = 1.5f
+        const val MIN_SPEED = 2f
         const val MAX_SPEED = 3f
 
-        private const val MIN_SPAWN_DELAY = 1f
+        private const val MIN_SPAWN_DELAY = 1.5f
         private const val MAX_SPAWN_DELAY = 3f
 
         private const val MIN_ANGLE = 240f
         private const val MAX_ANGLE = 300f
 
-        private const val MAX_CHILDREN = 4
+        private const val MAX_CHILDREN = 3
+
+        private const val DEFAULT_MIN_Y = -100000f * ConstVals.PPM
     }
 
     override var children = Array<IGameEntity>()
@@ -72,6 +74,8 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
 
     private var cullOOBChildren = true
     private var destroyChildren = false
+
+    private var minY = DEFAULT_MIN_Y
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -103,6 +107,9 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
         cullOOBChildren = spawnProps.getOrDefault(
             "${ConstKeys.CULL_OUT_OF_BOUNDS}_${ConstKeys.CHILDREN}", true, Boolean::class
         )
+
+        val minYObj = spawnProps.get("${ConstKeys.MIN}_${ConstKeys.Y}", RectangleMapObject::class)
+        minY = if (minYObj != null) minYObj.rectangle.y else DEFAULT_MIN_Y
     }
 
     override fun onDestroy() {
@@ -130,6 +137,8 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
         )
 
         val angle = when {
+            // When targeting a random MoonEyeStone, it is possible that the asteroid may not actually target it since
+            // the angle is coerced between MIN_ANGLE and MAX_ANGLE. This is on purpose.
             shouldAimAtMoonEyeStone() -> getRandomMoonEyeStone()
                 .body
                 .getCenter()
@@ -148,6 +157,7 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
             props(
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.IMPULSE pairTo impulse,
+                "${ConstKeys.MINI}_${ConstKeys.Y}" pairTo minY,
                 ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOOBChildren
             )
         )

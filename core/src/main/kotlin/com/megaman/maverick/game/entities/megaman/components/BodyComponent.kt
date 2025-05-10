@@ -209,7 +209,6 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                 wallSlidingOnIce || frozen -> waterIceGravity
                 else -> waterGravity
             }
-
             !feetGravitySet.isEmpty -> groundGravity
             wallSlidingOnIce || frozen -> iceGravity
             isBehaviorActive(BehaviorType.JUMPING) -> jumpGravity
@@ -223,7 +222,6 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
             Direction.DOWN -> {
                 body.physics.gravity.set(0f, gravityValue * ConstVals.PPM)
                 body.physics.defaultFrictionOnSelf.set(ConstVals.STANDARD_RESISTANCE_X, ConstVals.STANDARD_RESISTANCE_Y)
-
                 body.physics.velocityClamp.set(MegamanValues.CLAMP_X, MegamanValues.CLAMP_Y)
                     .scl(ConstVals.PPM.toFloat())
 
@@ -232,7 +230,6 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                     when {
                         isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) ->
                             size.set(MEGAMAN_BODY_HEIGHT, MEGAMAN_BODY_WIDTH)
-
                         else -> size.set(MEGAMAN_BODY_WIDTH, MEGAMAN_BODY_HEIGHT)
                     }
                     it.setSize(size.scl(ConstVals.PPM.toFloat()))
@@ -241,11 +238,9 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                     it.positionOnPoint(body.getBounds().getPositionPoint(position), position)
                 }
             }
-
             else -> {
                 body.physics.gravity.set(gravityValue * ConstVals.PPM, 0f)
                 body.physics.defaultFrictionOnSelf.set(ConstVals.STANDARD_RESISTANCE_Y, ConstVals.STANDARD_RESISTANCE_X)
-
                 body.physics.velocityClamp.set(MegamanValues.CLAMP_Y, MegamanValues.CLAMP_X)
                     .scl(ConstVals.PPM.toFloat())
 
@@ -254,7 +249,6 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                     when {
                         isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) ->
                             size.set(MEGAMAN_BODY_WIDTH, MEGAMAN_BODY_HEIGHT)
-
                         else -> size.set(MEGAMAN_BODY_HEIGHT, MEGAMAN_BODY_WIDTH)
                     }
                     it.setSize(size.scl(ConstVals.PPM.toFloat()))

@@ -23,9 +23,9 @@ abstract class AbstractProjectile(game: MegamanMaverickGame, override var size: 
 
     override fun init() {
         super.init()
-        addComponents(defineProjectileComponents())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
+        addComponents(defineProjectileComponents())
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -41,7 +41,6 @@ abstract class AbstractProjectile(game: MegamanMaverickGame, override var size: 
                 val cullTime = spawnProps.getOrDefault(ConstKeys.CULL_TIME, PROJECTILE_DEFAULT_CULL_TIME, Float::class)
                 putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getCullOnOutOfGameCam(cullTime))
             }
-
             else -> removeCullOnOutOfGameCam()
         }
 
@@ -54,7 +53,6 @@ abstract class AbstractProjectile(game: MegamanMaverickGame, override var size: 
                 game.eventsMan.addListener(cullOnEvents)
                 runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
             }
-
             else -> {
                 removeCullOnEventCullable()
                 val cullOnEvents = getProperty(ConstKeys.CULL_EVENTS) as IEventListener?

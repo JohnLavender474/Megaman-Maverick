@@ -415,7 +415,9 @@
             <key type="filename">../frames/Enemies2/RatRobot/run.png</key>
             <key type="filename">../frames/Enemies2/StagedMoonLandingFlag/fall.png</key>
             <key type="filename">../frames/Enemies2/StagedMoonLandingFlag/rise.png</key>
-            <key type="filename">../frames/Enemies2/StagedMoonLandingFlag/shield.png</key>
+            <key type="filename">../frames/Enemies2/StagedMoonLandingFlag/shield1.png</key>
+            <key type="filename">../frames/Enemies2/StagedMoonLandingFlag/shield2.png</key>
+            <key type="filename">../frames/Enemies2/StagedMoonLandingFlag/shield3.png</key>
             <key type="filename">../frames/Enemies2/UnderwaterPenguinBot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

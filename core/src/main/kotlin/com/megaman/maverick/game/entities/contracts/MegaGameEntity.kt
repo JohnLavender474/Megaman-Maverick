@@ -29,8 +29,8 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
     }
 
     override fun onDestroy() {
-        runnablesOnDestroy.values().forEach { it.invoke() }
         MegaGameEntities.remove(this)
+        runnablesOnDestroy.values().forEach { it.invoke() }
         GameLogger.debug(TAG, "${getTag()}: onDestroy(): this=$this")
     }
 

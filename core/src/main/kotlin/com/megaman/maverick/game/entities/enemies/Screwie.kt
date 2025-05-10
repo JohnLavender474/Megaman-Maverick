@@ -87,7 +87,8 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
             gdxArrayOf(
                 TimeMarkedRunnable(0.5f) { shoot() },
                 TimeMarkedRunnable(1.0f) { shoot() },
-                TimeMarkedRunnable(1.5f) { shoot() })
+                TimeMarkedRunnable(1.5f) { shoot() }
+            )
         )
         addComponent(defineAnimationsComponent())
     }

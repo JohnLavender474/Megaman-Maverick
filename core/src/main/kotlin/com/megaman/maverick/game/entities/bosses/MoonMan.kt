@@ -28,8 +28,6 @@ import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
-import com.mega.game.engine.drawables.sorting.DrawingPriority
-import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
@@ -76,8 +74,8 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         private const val BODY_WIDTH = 1.25f
         private const val BODY_HEIGHT = 1.75f
 
-        private const val JUMP_IMPULSE_Y = 12f
-        private const val JUMP_MAX_IMPULSE_X = 12f
+        private const val JUMP_IMPULSE_Y = 10f
+        private const val JUMP_MAX_IMPULSE_X = 8f
         private const val JUMP_MIN_HORIZONTAL_SCALAR = 0.5f
         private const val JUMP_MAX_HORIZONTAL_SCALAR = 0.75f
         private const val JUMP_HORIZONTAL_SCALAR_DENOMINATOR = 8
@@ -287,7 +285,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                     val impulse = megaman.body.getCenter()
                         .sub(asteroid.body.getCenter())
                         .nor().scl(ASTEROID_SPEED * ConstVals.PPM)
-                    asteroid.body.physics.velocity.set(impulse)
+                    asteroid.impulse.set(impulse)
                     iter.remove()
                 }
             }
@@ -432,10 +430,10 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
+        val sprite = GameSprite()
         sprite.setSize(SPRITE_SIZE * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
 
@@ -447,7 +445,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
             sprite.hidden = damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true)
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
@@ -457,10 +455,8 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                 MoonManState.STAND -> when {
                     body.isSensing(BodySense.FEET_ON_GROUND) ->
                         if (canShootInStandState()) "shoot_$shootIndex" else "stand"
-
                     else -> "jump"
                 }
-
                 MoonManState.GRAVITY_CHANGE -> "gravity_change_${gravityChangeState.name.lowercase()}"
                 else -> currentState.name.lowercase()
             }
@@ -662,8 +658,8 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         asteroid.spawn(
             props(
                 ConstKeys.POSITION pairTo spawn,
+                ConstKeys.TYPE pairTo Asteroid.REGULAR,
                 ConstKeys.DELAY pairTo THROW_ASTEROID_DELAY,
-                ConstKeys.TYPE pairTo Asteroid.REGULAR
             )
         )
 

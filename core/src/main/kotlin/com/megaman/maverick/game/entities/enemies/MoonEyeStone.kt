@@ -25,6 +25,7 @@ import com.mega.game.engine.common.objects.MutableOrderedSet
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameCircle
+import com.mega.game.engine.common.shapes.GameLine
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
@@ -37,6 +38,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
@@ -48,6 +50,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
@@ -66,6 +69,7 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         private const val AWAKEN_RADIUS = 8f
         private const val AWAKEN_DUR = 0.3f
 
+        private const val MAX_ASTEROIDS = 4
         private const val ASTEROID_RADIUS = 1.5f
         private const val ASTEROID_ROTATION_SPEED = 0.25f
 
@@ -156,9 +160,7 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
 
         reusableBodySet.clear()
 
-        val iter = asteroids.keys().iterator()
-        while (iter.hasNext) {
-            val asteroid = iter.next()
+        asteroids.keys().forEach { asteroid ->
             asteroid.owner = null
 
             val speed = UtilMethods.getRandom(MIN_RELEASE_SPEED, MAX_RELEASE_SPEED)
@@ -167,6 +169,8 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
                 .setAngleDeg(UtilMethods.getRandom(0f, 359f))
             asteroid.impulse.set(impulse)
         }
+
+        asteroids.clear()
     }
 
     override fun canBeDamagedBy(damager: IDamager) = super.canBeDamagedBy(damager) && damager !is Asteroid
@@ -204,9 +208,19 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
                 } else {
                     FacingUtils.setFacingOf(this)
                     if (!asteroids.isEmpty) throwDelay.update(delta)
-                    if (throwDelay.isFinished()) throwTimer.reset()
+                    if (throwDelay.isFinished() && (asteroids.size > MAX_ASTEROIDS || anyAsteroidCanHitMegaman()))
+                        throwTimer.reset()
                 }
             }
+        }
+    }
+
+    private fun anyAsteroidCanHitMegaman(): Boolean {
+        val blocks = MegaGameEntities.getOfType(EntityType.BLOCK)
+        return asteroids.keys().any { asteroid ->
+            val line = GameObjectPools.fetch(GameLine::class)
+                .set(asteroid.body.getCenter(), megaman.body.getCenter())
+            return@any blocks.none { block -> block is IBodyEntity && block.body.getBounds().overlaps(line) }
         }
     }
 

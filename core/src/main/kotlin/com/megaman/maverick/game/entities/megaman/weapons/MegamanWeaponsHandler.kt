@@ -170,69 +170,124 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
         val out = GameObjectPools.fetch(Vector2::class).set(megaman.body.getCenter())
 
-        var xOffset = when {
-            megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 1f
-            megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> 0.75f
-            megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.5f
-            megaman.isBehaviorActive(BehaviorType.CROUCHING) -> 1f
-            !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> 1f
-            megaman.slipSliding -> 0.75f
-            megaman.running -> 1.75f
-            else -> 1f
-        }
-
-        var yOffset = when {
-            megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 0f
-            megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> 0.25f
-            megaman.isBehaviorActive(BehaviorType.JETPACKING) -> 0.1f
-            megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.15f
-            megaman.isBehaviorActive(BehaviorType.CROUCHING) -> 0f
-            megaman.isBehaviorActive(BehaviorType.CLIMBING) -> 0.15f
-            !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> when (megaman.direction) {
-                Direction.UP -> -0.05f
-                else -> 0.1f
-            }
-            else -> 0f
-        }
-
         when (megaman.direction) {
             Direction.UP -> {
-                out.x += xOffset * ConstVals.PPM * megaman.facing.value
-                out.y += (if (megaman.direction == Direction.DOWN) -yOffset else yOffset) * ConstVals.PPM
-
-                if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) {
-                    var groundSlideOffset = GROUND_SLIDE_SPRITE_OFFSET_Y * ConstVals.PPM
-                    out.y += if (megaman.direction == Direction.UP) -groundSlideOffset else groundSlideOffset
+                val xOffset = when {
+                    megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 1f
+                    megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> 0.75f
+                    megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.5f
+                    megaman.isBehaviorActive(BehaviorType.CROUCHING) -> 0.75f
+                    !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> 1f
+                    megaman.slipSliding -> 0.75f
+                    megaman.running -> 1.75f
+                    else -> 1f
                 }
+
+                val yOffset = when {
+                    megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 0f
+                    megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> 0.25f
+                    megaman.isBehaviorActive(BehaviorType.JETPACKING) -> 0.1f
+                    megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.15f
+                    megaman.isBehaviorActive(BehaviorType.CROUCHING) -> 0.15f
+                    megaman.isBehaviorActive(BehaviorType.CLIMBING) -> 0.15f
+                    !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> -0.05f
+                    else -> 0f
+                }
+
+                out.x += xOffset * ConstVals.PPM * megaman.facing.value
+                out.y += yOffset * ConstVals.PPM
+
+                if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING))
+                    out.y -= GROUND_SLIDE_SPRITE_OFFSET_Y * ConstVals.PPM
             }
             Direction.DOWN -> {
-                out.x += xOffset * ConstVals.PPM * -megaman.facing.value
-                out.y += (if (megaman.direction == Direction.DOWN) -yOffset else yOffset) * ConstVals.PPM
-
-                if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) {
-                    var groundSlideOffset = GROUND_SLIDE_SPRITE_OFFSET_Y * ConstVals.PPM
-                    out.y += if (megaman.direction == Direction.UP) -groundSlideOffset else groundSlideOffset
+                val xOffset = when {
+                    megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 1f
+                    megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> 0.75f
+                    megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.5f
+                    megaman.isBehaviorActive(BehaviorType.CROUCHING) -> 0.75f
+                    !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> 1f
+                    megaman.slipSliding -> 0.75f
+                    megaman.running -> 1.75f
+                    else -> 1f
                 }
+
+                val yOffset = when {
+                    megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 0f
+                    megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> 0.25f
+                    megaman.isBehaviorActive(BehaviorType.JETPACKING) -> 0.35f
+                    megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.15f
+                    megaman.isBehaviorActive(BehaviorType.CROUCHING) -> 0.15f
+                    megaman.isBehaviorActive(BehaviorType.CLIMBING) -> 0.15f
+                    !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> 0.1f
+                    else -> 0f
+                }
+
+                out.x += xOffset * ConstVals.PPM * -megaman.facing.value
+                out.y -= yOffset * ConstVals.PPM
+
+                if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING))
+                    out.y += GROUND_SLIDE_SPRITE_OFFSET_Y * ConstVals.PPM
             }
             Direction.LEFT -> {
-                out.x += yOffset * ConstVals.PPM
-                if (!megaman.body.isSensing(BodySense.FEET_ON_GROUND)) out.x -= 0.2f * ConstVals.PPM
-                if (megaman.isBehaviorActive(BehaviorType.CROUCHING)) out.x -= 0.1f * ConstVals.PPM
-                if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) out.x -= 0.25f * ConstVals.PPM
+                val yOffset = when {
+                    megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 1f
+                    megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> 0.75f
+                    megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.5f
+                    megaman.isBehaviorActive(BehaviorType.CROUCHING) -> 0.75f
+                    !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> 1f
+                    megaman.slipSliding -> 0.75f
+                    megaman.running -> 1.75f
+                    else -> 1f
+                }
 
-                out.y += xOffset * ConstVals.PPM * megaman.facing.value
+                val xOffset = when {
+                    megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 0f
+                    megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> -0.25f
+                    megaman.isBehaviorActive(BehaviorType.JETPACKING) -> 0.1f
+                    megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0f
+                    megaman.isBehaviorActive(BehaviorType.CROUCHING) -> -0.1f
+                    megaman.isBehaviorActive(BehaviorType.CLIMBING) -> 0.15f
+                    !megaman.body.isSensing(BodySense.FEET_ON_GROUND) ->
+                        if (megaman.body.physics.velocity.x > 0f) -0.2f else -0.3f
+                    else -> 0f
+                }
+
+                out.x += xOffset * ConstVals.PPM
+                out.y += yOffset * ConstVals.PPM * megaman.facing.value
+
                 if (megaman.isAnyBehaviorActive(BehaviorType.CROUCHING, BehaviorType.GROUND_SLIDING)) when {
                     megaman.isFacing(Facing.LEFT) -> out.y += 0.15f * ConstVals.PPM
                     else -> out.y += 0.2f * ConstVals.PPM
                 }
             }
             Direction.RIGHT -> {
-                out.x += yOffset * ConstVals.PPM
-                if (!megaman.body.isSensing(BodySense.FEET_ON_GROUND)) out.x -= 0.1f * ConstVals.PPM
-                if (megaman.isBehaviorActive(BehaviorType.CROUCHING)) out.x += 0.1f * ConstVals.PPM
-                if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING)) out.x -= 0.15f * ConstVals.PPM
+                val yOffset = when {
+                    megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 1f
+                    megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> 0.75f
+                    megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0.5f
+                    megaman.isBehaviorActive(BehaviorType.CROUCHING) -> 1f
+                    !megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> 1f
+                    megaman.slipSliding -> 0.75f
+                    megaman.running -> 1.75f
+                    else -> 1f
+                }
 
-                out.y += xOffset * ConstVals.PPM * -megaman.facing.value
+                val xOffset = when {
+                    megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 0f
+                    megaman.isBehaviorActive(BehaviorType.WALL_SLIDING) -> 0.25f
+                    megaman.isBehaviorActive(BehaviorType.JETPACKING) -> 0.1f
+                    megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0f
+                    megaman.isBehaviorActive(BehaviorType.CROUCHING) -> 0.1f
+                    megaman.isBehaviorActive(BehaviorType.CLIMBING) -> 0.15f
+                    !megaman.body.isSensing(BodySense.FEET_ON_GROUND) ->
+                        if (megaman.body.physics.velocity.x < 0f) 0.05f else 0.2f
+                    else -> 0f
+                }
+
+                out.x += xOffset * ConstVals.PPM
+                out.y += yOffset * ConstVals.PPM * -megaman.facing.value
+
                 if (megaman.isAnyBehaviorActive(BehaviorType.CROUCHING, BehaviorType.GROUND_SLIDING)) when {
                     megaman.isFacing(Facing.LEFT) -> out.y += 0.1f * ConstVals.PPM
                     else -> out.y += 0.25f * ConstVals.PPM

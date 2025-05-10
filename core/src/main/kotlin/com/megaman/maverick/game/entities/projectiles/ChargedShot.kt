@@ -40,6 +40,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.IOwnable
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.ChargedShotResidual
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -149,12 +150,35 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         }
 
         val temp = GameObjectPools.fetch(Vector2::class).set(trajectory)
-        val direction = UtilMethods.getOverlapPushDirection(body.getBounds(), shape) ?: Direction.UP
-        when (direction) {
-            Direction.UP, Direction.DOWN -> temp.y = -trajectory.y
-            Direction.LEFT, Direction.RIGHT -> {
-                temp.x = -trajectory.x
-                temp.y = abs(trajectory.x / 2f)
+        val pushDir = UtilMethods.getOverlapPushDirection(body.getBounds(), shape) ?: Direction.UP
+        when (megaman.direction) {
+            Direction.UP -> when (pushDir) {
+                Direction.UP, Direction.DOWN -> temp.y = -trajectory.y
+                Direction.LEFT, Direction.RIGHT -> {
+                    temp.x = -trajectory.x
+                    temp.y = abs(trajectory.x / 2f)
+                }
+            }
+            Direction.DOWN -> when (pushDir) {
+                Direction.UP, Direction.DOWN -> temp.y = -trajectory.y
+                Direction.LEFT, Direction.RIGHT -> {
+                    temp.x = -trajectory.x
+                    temp.y = -abs(trajectory.x / 2f)
+                }
+            }
+            Direction.LEFT -> when (pushDir) {
+                Direction.UP, Direction.DOWN -> {
+                    temp.y = -trajectory.y
+                    temp.x = -abs(trajectory.y / 2f)
+                }
+                Direction.LEFT, Direction.RIGHT -> temp.x = -trajectory.x
+            }
+            Direction.RIGHT -> when (pushDir) {
+                Direction.UP, Direction.DOWN -> {
+                    temp.y = -trajectory.y
+                    temp.x = abs(trajectory.y / 2f)
+                }
+                Direction.LEFT, Direction.RIGHT -> temp.x = -trajectory.x
             }
         }
         temp.nor().scl(trajectory.len())

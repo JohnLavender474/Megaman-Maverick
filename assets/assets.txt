@@ -162,6 +162,7 @@ sounds/rev.wav
 sounds/time_stopper.wav
 sounds/energy_fill_mm9.mp3
 sounds/buster_bullet_shot.mp3
+sounds/blackhole.wav
 sounds/chill_shoot.mp3
 sounds/mecha_dragon.wav
 sounds/buster_charged_shot_v2.wav
@@ -376,10 +377,12 @@ sprites/frames/Enemies2/DemonMet/frozen.png
 sprites/frames/Enemies2/DemonMet/angel.png
 sprites/frames/Enemies2/UnderwaterPenguinBot.png
 sprites/frames/Enemies2/StagedMoonLandingFlag/fall.png
+sprites/frames/Enemies2/StagedMoonLandingFlag/shield3.png
 sprites/frames/Enemies2/StagedMoonLandingFlag/stand.png
 sprites/frames/Enemies2/StagedMoonLandingFlag/hidden.png
+sprites/frames/Enemies2/StagedMoonLandingFlag/shield1.png
+sprites/frames/Enemies2/StagedMoonLandingFlag/shield2.png
 sprites/frames/Enemies2/StagedMoonLandingFlag/rise.png
-sprites/frames/Enemies2/StagedMoonLandingFlag/shield.png
 sprites/frames/Enemies2/FireDispensenator/close.png
 sprites/frames/Enemies2/FireDispensenator/open.png
 sprites/frames/Enemies2/FireDispensenator/fire.png
@@ -554,6 +557,9 @@ sprites/frames/Decorations1/GroundSnow/middle.png
 sprites/frames/Decorations1/GroundSnow/left.png
 sprites/frames/Decorations1/GroundSnow/right.png
 sprites/frames/Decorations1/GroundSnow/back.png
+sprites/frames/Decorations1/StarknerTrailSprite/red.png
+sprites/frames/Decorations1/StarknerTrailSprite/yellow.png
+sprites/frames/Decorations1/StarknerTrailSprite/blue.png
 sprites/frames/Megaman_v2/climb_still_shoot.png
 sprites/frames/Megaman_v2/crouch_charge_half.png
 sprites/frames/Megaman_v2/run_trans.png
@@ -948,6 +954,8 @@ sprites/frames/Projectiles2/MagmaPellet.png
 sprites/frames/Projectiles2/MagmaMeteor.png
 sprites/frames/Projectiles2/Nutt.png
 sprites/frames/Projectiles2/SpitFireball.png
+sprites/frames/Specials1/GravityCapsule/inactive.png
+sprites/frames/Specials1/GravityCapsule/active.png
 sprites/frames/Specials1/SwitcharooArrow.png
 sprites/frames/Specials1/GravitySwitcharoo/arrow.png
 sprites/frames/Specials1/GravitySwitcharoo/deactivated.png
@@ -972,6 +980,9 @@ sprites/frames/Specials1/LightSwitch/On.png
 sprites/frames/Specials1/LightSwitch/SwitchOff.png
 sprites/frames/Specials1/SpringBouncer/still.png
 sprites/frames/Specials1/SpringBouncer/bounce.png
+sprites/frames/Specials1/PortalHopperV2/wait.png
+sprites/frames/Specials1/PortalHopperV2/moon.png
+sprites/frames/Specials1/PortalHopperV2/launch.png
 sprites/frames/Specials1/CartV2/move.png
 sprites/frames/Specials1/CartV2/idle.png
 sprites/frames/Specials1/RailTrack/middle.png
@@ -1698,6 +1709,7 @@ sprites/frames/Backgrounds3/GlacierBKG.png
 sprites/frames/Backgrounds3/BKG21.png
 sprites/frames/Backgrounds3/BKG17.png
 sprites/frames/Backgrounds3/BKG23.png
+sprites/frames/GravitySwitcharooV2png
 sprites/frames/MegamanTrailSprite_v2_OLD/climb_still_shoot.png
 sprites/frames/MegamanTrailSprite_v2_OLD/climb_charge_half.png
 sprites/frames/MegamanTrailSprite_v2_OLD/airdash_jetpack_shoot.png
@@ -2015,6 +2027,13 @@ sprites/frames/Enemies1/NuttGlider/stand.png
 sprites/frames/Enemies1/NuttGlider/jump.png
 sprites/frames/Enemies1/NuttGlider/stand_nutt.png
 sprites/frames/Enemies1/NuttGlider/glide.png
+sprites/frames/Enemies1/Starkner/blackhole_disappear.png
+sprites/frames/Enemies1/Starkner/blackhole_appear.png
+sprites/frames/Enemies1/Starkner/red.png
+sprites/frames/Enemies1/Starkner/yellow.png
+sprites/frames/Enemies1/Starkner/sleep.png
+sprites/frames/Enemies1/Starkner/blue.png
+sprites/frames/Enemies1/Starkner/blackhole.png
 sprites/frames/Enemies1/TellySaucer/flash.png
 sprites/frames/Enemies1/TellySaucer/collapsed.png
 sprites/frames/Enemies1/TellySaucer/spin.png
@@ -2544,6 +2563,7 @@ sprites/piskel/Lava2.piskel
 sprites/piskel/Walrus_Bot.piskel
 sprites/piskel/Life.piskel
 sprites/piskel/WallTeck.piskel
+sprites/piskel/LunarPortal.piskel
 sprites/piskel/TubeBeam.piskel
 sprites/piskel/Jetpack_Ice_Blaster_Bot_Projectile.piskel
 sprites/piskel/RodentMan_Mugshot_v2.piskel
@@ -2553,6 +2573,7 @@ sprites/piskel/NavalManFace.piskel
 sprites/piskel/AppearingBrick2.piskel
 sprites/piskel/MockingByteEgg.piskel
 sprites/piskel/RoasterMan.piskel
+sprites/piskel/PortalHopperV2.piskel
 sprites/piskel/Enemies3.piskel
 sprites/piskel/BreakableIce.piskel
 sprites/piskel/ChargedShot_Residual_Half.piskel
@@ -2562,6 +2583,7 @@ sprites/piskel/CanonMet.piskel
 sprites/piskel/Bunby Tank DX.piskel
 sprites/piskel/ColtonJoe.piskel
 sprites/piskel/Items.piskel
+sprites/piskel/GravityCapsule.piskel
 sprites/piskel/Togglee.piskel
 sprites/piskel/Taketento.piskel
 sprites/piskel/Falling_Icicle.piskel
@@ -2642,6 +2664,7 @@ sprites/piskel/TurnBlaster.piskel
 sprites/piskel/SeaMine.piskel
 sprites/piskel/GreenPelletBlast.piskel
 sprites/piskel/WhiteShards.piskel
+sprites/piskel/MoonManTilesV2.piskel
 sprites/piskel/Asteroid.piskel
 sprites/piskel/PipePuff.piskel
 sprites/piskel/AcidGoop.piskel
@@ -2799,6 +2822,7 @@ sprites/piskel/Popoheli.piskel
 sprites/piskel/InfernoMan_v2.piskel
 sprites/piskel/DrLight.piskel
 sprites/piskel/RodentMan_temp.piskel
+sprites/piskel/MoonManTiles_v2.piskel
 sprites/piskel/SinkSand.piskel
 sprites/piskel/UFOBombBot.piskel
 sprites/piskel/SpikeTeeth.piskel
@@ -3006,6 +3030,7 @@ tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock/sprBGB
 tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock/sprBGBlock frame 1.png
 tiled_maps/png/tstKnightMan.png
 tiled_maps/png/mm10blade.png
+tiled_maps/png/MoonManTiles_OLD.png
 tiled_maps/png/tstCentaurManAlt-resize.png
 tiled_maps/png/mm9galaxy.png
 tiled_maps/png/generel_block_tiles.png
@@ -3146,6 +3171,7 @@ tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstWilly3_2Alt.png
 tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstAstro_2.png
 tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstTengu.png
 tiled_maps/png/MMM MegaMan 8 tille sets/credits.txt
+tiled_maps/png/MoonManTiles_temp.png
 tiled_maps/png/tstMagnetman.png
 tiled_maps/png/pipe forest preview.png
 tiled_maps/png/PunkCity.png
@@ -3248,6 +3274,7 @@ tiled_maps/tmx/TilesetSizeTest.tmx
 tiled_maps/tmx/Test5.tmx
 tiled_maps/tmx/DesertMan_v4.tmx
 tiled_maps/tmx/CaveMan.tmx
+tiled_maps/tmx/MoonMan_16x14_v5.tmx
 tiled_maps/tmx/DesertMan_16x14_v3.tmx
 tiled_maps/tmx/WilyStage1.tmx
 tiled_maps/tmx/InfernoMan_v2.tmx

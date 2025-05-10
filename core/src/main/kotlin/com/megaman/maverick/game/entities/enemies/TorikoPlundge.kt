@@ -106,7 +106,7 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
         val canSpawn = spawnProps
             .collectValues<RectangleMapObject> { key, value -> key.toString().contains(ConstKeys.BLOCK) }
             .map { obj -> obj.properties.get(ConstKeys.ID, Int::class.java) }
-            .any { id -> MegaGameEntities.hasAnyOfMapObjectId(id) }
+            .any { id -> MegaGameEntities.existsAnyOfMapObjectId(id) }
         GameLogger.debug(TAG, "canSpawn(): canSpawn=$canSpawn, spawnProps=$spawnProps")
         return canSpawn
     }
@@ -244,7 +244,7 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             val shouldExplode = !plundgeIds.isEmpty && plundgeIds.none { id ->
-                MegaGameEntities.hasAnyOfMapObjectId(id)
+                MegaGameEntities.existsAnyOfMapObjectId(id)
             }
             if (shouldExplode) {
                 explodeAndDie()
@@ -252,7 +252,7 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
             }
 
             val shouldDie = !crumblingBlockIds.isEmpty && crumblingBlockIds.none { id ->
-                MegaGameEntities.hasAnyOfMapObjectId(id)
+                MegaGameEntities.existsAnyOfMapObjectId(id)
             }
             if (shouldDie) {
                 destroy()

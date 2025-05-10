@@ -258,6 +258,7 @@
             <key type="filename">../frames/Specials1/LightSwitch/Off.png</key>
             <key type="filename">../frames/Specials1/LightSwitch/On.png</key>
             <key type="filename">../frames/Specials1/PortalHopper/Launch.png</key>
+            <key type="filename">../frames/Specials1/PortalHopperV2/moon.png</key>
             <key type="filename">../frames/Specials1/RailTrack/drop.png</key>
             <key type="filename">../frames/Specials1/RailTrack/left.png</key>
             <key type="filename">../frames/Specials1/RailTrack/middle.png</key>
@@ -280,6 +281,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Specials1/FloorButton/switch.png</key>
+            <key type="filename">../frames/Specials1/PortalHopperV2/launch.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -306,6 +308,36 @@
                 <rect>32,8,64,16</rect>
                 <key>scale9Paddings</key>
                 <rect>32,8,64,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Specials1/GravityCapsule/active.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,72,32,144</rect>
+                <key>scale9Paddings</key>
+                <rect>16,72,32,144</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Specials1/GravityCapsule/inactive.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,24,32,48</rect>
+                <key>scale9Paddings</key>
+                <rect>16,24,32,48</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -354,6 +386,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Specials1/PortalHopperV2/wait.png</key>
             <key type="filename">../frames/Specials1/RailTrack/platform.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

@@ -466,6 +466,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
             canBeDamaged = true
             game.setFocusSnappedAway(false)
         })
+
+        removeProperty(ConstKeys.FOCUS)
     }
 
     override fun onDestroy() {
@@ -786,6 +788,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
     override fun getFocusBounds() = body.getBounds()
 
     override fun getFocusPosition(): Vector2 {
+        if (hasProperty(ConstKeys.FOCUS)) return getProperty(ConstKeys.FOCUS, Vector2::class)!!
+
         val position = DirectionPositionMapper.getInvertedPosition(direction)
         val focus = body.getBounds().getPositionPoint(position)
         when (direction) {

@@ -57,7 +57,7 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
 
         internal val FLAGS = OrderedMap<Int, StagedMoonLandingFlag>()
 
-        private const val STAND_DUR = 0.75f
+        private const val STAND_DUR = 1f
         private const val SHOOT_DUR = 1f
         private const val SHOOT_EACH_DELAY = 0.25f
 

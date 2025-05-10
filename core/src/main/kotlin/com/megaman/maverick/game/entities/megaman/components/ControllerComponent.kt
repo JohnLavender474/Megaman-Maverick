@@ -155,17 +155,11 @@ private fun Megaman.runLeft(poller: IControllerPoller, delta: Float) {
     }
 
     facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.RIGHT else Facing.LEFT
-    // if (direction.equalsAny(Direction.DOWN, Direction.RIGHT)) swapFacing()
 
     running = !isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.GROUND_SLIDING, BehaviorType.CLIMBING)
     if (!running) return
 
     runTime += delta
-
-    if (!running) {
-        runTime += delta
-        return
-    }
 
     val threshold =
         (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_RUN_SPEED
@@ -200,7 +194,6 @@ private fun Megaman.runRight(poller: IControllerPoller, delta: Float) {
     }
 
     facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.LEFT else Facing.RIGHT
-    // if (direction.equalsAny(Direction.DOWN, Direction.RIGHT)) swapFacing()
 
     running = !isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.GROUND_SLIDING, BehaviorType.CLIMBING)
     if (!running) return

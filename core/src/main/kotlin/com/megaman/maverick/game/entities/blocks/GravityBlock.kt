@@ -159,7 +159,9 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         )
         feetFixture.setHitByBlockReceiver(ProcessState.BEGIN) hitByBlock@{ block, _ ->
             if (block == innerBlock) return@hitByBlock
-            requestToPlaySound(SoundAsset.POUND_SOUND, false)
+
+            if (game.getGameCamera().getRotatedBounds().overlaps(body.getBounds()))
+                requestToPlaySound(SoundAsset.POUND_SOUND, false)
         }
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         body.addFixture(feetFixture)

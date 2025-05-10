@@ -161,7 +161,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                             BodySense.SIDE_TOUCHING_BLOCK_LEFT,
                             BodySense.SIDE_TOUCHING_BLOCK_RIGHT
                         ) && !body.isSensing(BodySense.FEET_ON_GROUND)) ->
-                        MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM * facing.value
+                        MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM * facing.value *
+                            (if (direction == Direction.UP) 1f else -1f)
                     else -> body.physics.velocity.x
                 }
                 Direction.LEFT, Direction.RIGHT -> ConstVals.PPM * when {
@@ -182,7 +183,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                             BodySense.SIDE_TOUCHING_BLOCK_LEFT,
                             BodySense.SIDE_TOUCHING_BLOCK_RIGHT
                         ) && !body.isSensing(BodySense.FEET_ON_GROUND)) ->
-                        MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM * facing.value
+                        MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM * facing.value *
+                            (if (direction == Direction.LEFT) 1f else -1f)
                     else -> body.physics.velocity.y
                 }
                 Direction.RIGHT -> when {
@@ -330,6 +332,11 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         }
 
         override fun init() {
+            val focus = GameObjectPools.fetch(Vector2::class, false).set(getFocusPosition())
+            putProperty(ConstKeys.FOCUS, focus)
+
+            body.physics.velocity.setZero()
+
             when (direction) {
                 Direction.UP -> {}
                 Direction.DOWN -> body.translate(0f, 0.75f * ConstVals.PPM)
@@ -340,6 +347,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
         override fun act(delta: Float) {
             body.physics.velocity.x = 0f
+        }
+
+        override fun end() {
+            removeProperty(ConstKeys.FOCUS)
         }
     }
 

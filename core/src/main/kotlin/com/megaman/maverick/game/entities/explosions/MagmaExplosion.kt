@@ -9,6 +9,7 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.interfaces.IActivatable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.time.Timer
@@ -47,7 +48,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
 class MagmaExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    IAudioEntity, IDamager, IHazard, IOwnable<IGameEntity> {
+    IAudioEntity, IDamager, IHazard, IOwnable<IGameEntity>, IActivatable {
 
     companion object {
         const val TAG = "MagmaExplosion"
@@ -57,6 +58,7 @@ class MagmaExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     }
 
     override var owner: IGameEntity? = null
+    override var on = true
 
     private val timer = Timer(EXPLOSION_DUR)
     private var scalar = 1f
@@ -74,6 +76,7 @@ class MagmaExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         super.onSpawn(spawnProps)
 
         owner = spawnProps.get(ConstKeys.OWNER) as GameEntity?
+        on = spawnProps.getOrDefault(ConstKeys.ACTIVE, true, Boolean::class)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
@@ -105,6 +108,8 @@ class MagmaExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         body.addFixture(damagerFixture)
         damagerFixture.drawingColor = Color.RED
         debugShapes.add { damagerFixture}
+
+        body.preProcess.put(ConstKeys.DEFAULT) { damagerFixture.setActive(on) }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

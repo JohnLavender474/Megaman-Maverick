@@ -401,7 +401,7 @@ class DarknessV3(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
         tilesInLightSourceMap.forEach { entry ->
             val mapObjectId = entry.key
-            if (!MegaGameEntities.hasAnyOfMapObjectId(mapObjectId)) {
+            if (!MegaGameEntities.existsAnyOfMapObjectId(mapObjectId)) {
                 queuedLightSourcesToRemove.addLast(mapObjectId)
                 return@forEach
             }

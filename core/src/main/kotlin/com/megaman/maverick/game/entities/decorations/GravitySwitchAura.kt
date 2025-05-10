@@ -89,7 +89,7 @@ class GravitySwitchAura(game: MegamanMaverickGame) : MegaGameEntity(game), ISpri
         .build()
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
-        .key(TAG).animator(Animator(Animation(region!!, 3, 1, 0.1f, true)))
+        .key(TAG).animator(Animator(Animation(region!!, 2, 2, 0.1f, true)))
         .build()
 
     override fun getType() = EntityType.DECORATION

@@ -1,24 +1,24 @@
 package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
-import com.mega.game.engine.animations.Animation
-import com.mega.game.engine.animations.AnimationsComponent
-import com.mega.game.engine.animations.Animator
-import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.animations.*
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.*
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.sprites.GameSprite
-import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
@@ -34,6 +34,7 @@ import com.mega.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -53,8 +54,17 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         private const val PORTAL_HOP_IMPULSE = 35f
         private const val PORTAL_HOP_DELAY = 0.5f
 
-        private var waitRegion: TextureRegion? = null
-        private var launchRegion: TextureRegion? = null
+        private const val MOON_WAIT_ROTS_PER_SEC = 1.5f
+        private const val MOON_HOP_ROTS_PER_SEC = 3f
+
+        private val portalAnimDefs = orderedMapOf(
+            "wait" pairTo AnimationDef(2, 2, 0.1f, true),
+            "launch" pairTo AnimationDef(2, 1, 0.1f, true)
+        )
+        private val moonAnimDefs = orderedMapOf(
+            "moon" pairTo AnimationDef()
+        )
+        private val regions = ObjectMap<String, TextureRegion>()
     }
 
     override val eventKeyMask = objectSetOf<Any>(EventType.TELEPORT)
@@ -77,10 +87,12 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-        if (waitRegion == null || launchRegion == null) {
+        if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
-            waitRegion = atlas.findRegion("$TAG/Wait")
-            launchRegion = atlas.findRegion("$TAG/Launch")
+            val keys = Array<String>()
+            portalAnimDefs.keys().forEach { key -> keys.add(key) }
+            moonAnimDefs.keys().forEach { key -> keys.add(key) }
+            keys.forEach { key -> regions.put(key, atlas.findRegion("${TAG}V2/$key")) }
         }
         super.init()
         addComponent(AudioComponent())
@@ -244,27 +256,37 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.TELEPORTER))
     }
 
-    private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
-        sprite.setSize(2f * ConstVals.PPM)
-        val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+    private fun defineSpritesComponent() = SpritesComponentBuilder()
+        .sprite("portal", GameSprite().also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
+        .updatable { _, sprite ->
             sprite.setCenter(body.getCenter())
+
             sprite.setOriginCenter()
             sprite.rotation = if (rotation < 0f) megaman.direction.rotation else rotation
         }
-        return component
-    }
+        .sprite("moon", GameSprite(regions["moon"]).also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
+        .updatable { delta, sprite ->
+            sprite.setCenter(body.getCenter())
+
+            sprite.setOriginCenter()
+            sprite.rotation += 360f * delta * if (launch) MOON_HOP_ROTS_PER_SEC else MOON_WAIT_ROTS_PER_SEC
+        }
+        .build()
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: (String?) -> String? = { if (launch) "launch" else "wait" }
-        val animations = objectMapOf<String, IAnimation>(
-            "launch" pairTo Animation(launchRegion!!, 1, 3, 0.05f, true),
-            "wait" pairTo Animation(waitRegion!!, 1, 2, 0.1f, true)
-        )
+        val animations = ObjectMap<String, IAnimation>()
+        portalAnimDefs.forEach { entry ->
+            val key = entry.key
+            val (rows, columns, durations, loop) = entry.value
+            animations.put(key, Animation(regions[key], rows, columns, durations, loop))
+        }
         val animator = Animator(keySupplier, animations)
-        return AnimationsComponent(this, animator)
+        val entry: GamePair<() -> GameSprite, IAnimator> = { sprites["portal"] } pairTo animator
+        return AnimationsComponent(gdxArrayOf(entry))
     }
 
     override fun getType() = EntityType.SPECIAL
+
+    override fun getTag() = TAG
 }

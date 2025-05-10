@@ -47,11 +47,7 @@ import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
-import com.megaman.maverick.game.entities.enemies.StagedMoonLandingFlag
-import com.megaman.maverick.game.entities.enemies.TellySaucer
-import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
-import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
@@ -75,19 +71,20 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         private const val AURA_BLINK_DUR = 0.2f
 
         // TODO: Tags commented out because allowing other entities to trigger gravity switch makes gameplay unstable
-        private val TRIGGER_ENTITY_TAGS =
-            gdxArrayOf<String>(
-                TellySaucer.TAG,
-                Asteroid.TAG,
-                StagedMoonLandingFlag.TAG,
-                ExplodingBall.TAG,
-                Bullet.TAG,
-                ChargedShot.TAG,
-                PreciousGem.TAG,
-                MoonScythe.TAG,
-                MagmaWave.TAG,
-                SmallIceCube.TAG
-            )
+        private val TRIGGER_ENTITY_TAGS = gdxArrayOf<String>(
+            /*
+            TellySaucer.TAG,
+            Asteroid.TAG,
+            StagedMoonLandingFlag.TAG,
+            ExplodingBall.TAG,
+            Bullet.TAG,
+            ChargedShot.TAG,
+            PreciousGem.TAG,
+            MoonScythe.TAG,
+            MagmaWave.TAG,
+            SmallIceCube.TAG
+             */
+        )
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -156,10 +153,9 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         }
     }
 
-    override fun shouldBeginSwitchToDown(delta: Float) =
-        !game.isCameraRotating() &&
-            direction != megaman.direction && isTriggerEntityInBounds() &&
-            triggerArea.overlaps(game.getGameCamera().getRotatedBounds())
+    override fun shouldBeginSwitchToDown(delta: Float) = !game.isCameraRotating() &&
+        direction != megaman.direction && isTriggerEntityInBounds() &&
+        triggerArea.overlaps(game.getGameCamera().getRotatedBounds())
 
     override fun shouldBeginSwitchToUp(delta: Float) = direction != megaman.direction
 
@@ -266,7 +262,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
             AnimatorBuilder()
                 .setKeySupplier { if (megaman.direction == direction) ConstKeys.DEACTIVATED else ConstKeys.ARROW }
                 .applyToAnimations { animations ->
-                    animations.put(ConstKeys.ARROW, Animation(regions[ConstKeys.ARROW], 3, 1, 0.1f, true))
+                    animations.put(ConstKeys.ARROW, Animation(regions[ConstKeys.ARROW], 3, 2, 0.1f, true))
                     animations.put(ConstKeys.DEACTIVATED, Animation(regions[ConstKeys.DEACTIVATED]))
                 }
                 .build()

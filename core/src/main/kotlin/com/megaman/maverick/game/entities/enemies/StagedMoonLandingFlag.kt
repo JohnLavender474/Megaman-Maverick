@@ -8,7 +8,6 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
-import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
@@ -30,6 +29,7 @@ import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.*
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.points.Points
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
@@ -44,6 +44,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
 class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity,
@@ -66,6 +67,7 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
 
         private const val SHIELD_SHOW_DUR = 1f
         private const val SHIELD_BLINK_DUR = 0.1f
+        private const val SHIELD_INVINCIBLE_DUR = 0.1f
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -83,11 +85,15 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
     private var parentId = -1
 
     private lateinit var shieldDamager1: Fixture
+    private val shield1Health = Points(0, 100, 100)
+    private val shield1Invincible = Timer(SHIELD_INVINCIBLE_DUR)
     private val shield1Timer = Timer(SHIELD_SHOW_DUR)
     private val shield1BlinkTimer = Timer(SHIELD_BLINK_DUR)
     private var shield1Blink = false
 
     private lateinit var shieldDamager2: Fixture
+    private val shield2Health = Points(0, 100, 100)
+    private val shield2Invincible = Timer(SHIELD_INVINCIBLE_DUR)
     private val shield2Timer = Timer(SHIELD_SHOW_DUR)
     private val shield2BlinkTimer = Timer(SHIELD_BLINK_DUR)
     private var shield2Blink = false
@@ -100,7 +106,10 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
                 val key = it.name.lowercase()
                 regions.put(key, atlas.findRegion("$TAG/$key"))
             }
-            regions.put(ConstKeys.SHIELD, atlas.findRegion("$TAG/${ConstKeys.SHIELD}"))
+            for (i in 1..3) {
+                val key = "${ConstKeys.SHIELD}$i"
+                regions.put(key, atlas.findRegion("$TAG/$key"))
+            }
         }
         if (stateTimers.isEmpty) {
             stateTimers.put(FlagState.RISE, Timer(RISE_DUR))
@@ -128,14 +137,18 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
         stateTimers.values().forEach { it.reset() }
 
         shield1Timer.setToEnd()
+        shield1Health.setToMax()
+        shield1Invincible.setToEnd()
         shield1BlinkTimer.reset()
         shield1Blink = false
 
         shield2Timer.setToEnd()
+        shield2Health.setToMax()
+        shield2Invincible.setToEnd()
         shield2BlinkTimer.reset()
         shield2Blink = false
 
-        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        FacingUtils.setFacingOf(this)
 
         gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
     }
@@ -180,6 +193,7 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
                     shield1BlinkTimer.reset()
                 }
             }
+            shield1Invincible.update(delta)
 
             shield2Timer.update(delta)
             if (!shield2Timer.isFinished()) {
@@ -189,8 +203,9 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
                     shield2BlinkTimer.reset()
                 }
             }
+            shield2Invincible.update(delta)
 
-            facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+            FacingUtils.setFacingOf(this)
 
             when (currentState) {
                 FlagState.HIDDEN -> {
@@ -250,7 +265,14 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
             GameRectangle().setSize(0.5f * ConstVals.PPM, 1.5f * ConstVals.PPM)
         )
         shieldFixture1.setHitByProjectileReceiver { projectile ->
-            if (projectile.owner == megaman) shield1Timer.reset()
+            if (projectile.owner == megaman) {
+                shield1Timer.reset()
+                if (shield1Invincible.isFinished()) {
+                    shield1Health.translate(-10)
+                    shield1Invincible.reset()
+                    requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+                }
+            }
         }
         shieldFixture1.offsetFromBodyAttachment.x = -0.5f * ConstVals.PPM
         body.addFixture(shieldFixture1)
@@ -263,7 +285,14 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
             GameRectangle().setSize(0.5f * ConstVals.PPM, 1.5f * ConstVals.PPM)
         )
         shieldFixture2.setHitByProjectileReceiver { projectile ->
-            if (projectile.owner == megaman) shield2Timer.reset()
+            if (projectile.owner == megaman) {
+                shield2Timer.reset()
+                if (shield2Invincible.isFinished()) {
+                    shield2Health.translate(-10)
+                    shield2Invincible.reset()
+                    requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+                }
+            }
         }
         shieldFixture2.offsetFromBodyAttachment.x = 0.5f * ConstVals.PPM
         body.addFixture(shieldFixture2)
@@ -297,21 +326,16 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
             if (body.isSensing(BodySense.FEET_ON_GROUND)) body.physics.velocity.x = 0f
 
             val shieldsActive = currentState == FlagState.STAND
-            shieldFixture1.setActive(shieldsActive)
-            shieldDamager1.setActive(shieldsActive)
-            shieldFixture2.setActive(shieldsActive)
-            shieldDamager2.setActive(shieldsActive)
+            shieldFixture1.setActive(shieldsActive && !shield1Health.isMin())
+            shieldDamager1.setActive(shieldsActive && !shield1Health.isMin())
+            shieldFixture2.setActive(shieldsActive && !shield2Health.isMin())
+            shieldDamager2.setActive(shieldsActive && !shield2Health.isMin())
 
             val shieldDamager1Bounds = shieldDamager1.rawShape as GameRectangle
             shieldDamager1Bounds.set(shieldFixture1.getShape() as GameRectangle)
 
             val shieldDamager2Bounds = shieldDamager2.rawShape as GameRectangle
             shieldDamager2Bounds.set(shieldFixture2.getShape() as GameRectangle)
-
-            if (currentState == FlagState.FALL) {
-                val damageableFixture = body.fixtures.get(FixtureType.DAMAGEABLE).first()
-                damageableFixture.setActive(false)
-            }
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -369,10 +393,42 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
         )
         // shield 1
         .key("${ConstKeys.SHIELD}_1")
-        .animator(Animator(Animation(regions[ConstKeys.SHIELD], 3, 1, 0.1f, true)))
+        .animator(
+            AnimatorBuilder()
+                .setKeySupplier {
+                    when {
+                        shield1Health.current >= 75 -> "${ConstKeys.SHIELD}1"
+                        shield1Health.current >= 25 -> "${ConstKeys.SHIELD}2"
+                        else -> "${ConstKeys.SHIELD}3"
+                    }
+                }
+                .applyToAnimations { animations ->
+                    for (i in 1..3) {
+                        val key = "${ConstKeys.SHIELD}$i"
+                        animations.put(key, Animation(regions[key], 3, 1, 0.1f, true))
+                    }
+                }
+                .build()
+        )
         // shield 2
         .key("${ConstKeys.SHIELD}_2")
-        .animator(Animator(Animation(regions[ConstKeys.SHIELD], 3, 1, 0.1f, true)))
+        .animator(
+            AnimatorBuilder()
+                .setKeySupplier {
+                    when {
+                        shield2Health.current >= 75 -> "${ConstKeys.SHIELD}1"
+                        shield2Health.current >= 25 -> "${ConstKeys.SHIELD}2"
+                        else -> "${ConstKeys.SHIELD}3"
+                    }
+                }
+                .applyToAnimations { animations ->
+                    for (i in 1..3) {
+                        val key = "${ConstKeys.SHIELD}$i"
+                        animations.put(key, Animation(regions[key], 3, 1, 0.1f, true))
+                    }
+                }
+                .build()
+        )
         // build
         .build()
 }

@@ -189,7 +189,9 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             turnAroundScanner.positionOnPoint(turnAroundScannerPosition, position.opposite())
 
             if (!megaman.dead) {
-                if (megaman.body.getBounds().overlaps(shootScanner)) {
+                if (body.getBounds().overlaps(game.getGameCamera().getRotatedBounds()) &&
+                    megaman.body.getBounds().overlaps(shootScanner)
+                ) {
                     body.physics.velocity.setZero()
                     shootTimer.reset()
                     return@add

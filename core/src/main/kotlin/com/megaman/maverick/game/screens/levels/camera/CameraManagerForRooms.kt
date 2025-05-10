@@ -152,22 +152,18 @@ class CameraManagerForRooms(
                 transitionTarget.x = (next.x + next.width) - min(next.width / 2f, camera.viewportWidth / 2f)
                 focusTarget.x = (next.x + next.width) - distanceOnTransition
             }
-
             Direction.RIGHT -> {
                 transitionTarget.x = next.x + min(next.width / 2f, camera.viewportWidth / 2f)
                 focusTarget.x = next.x + distanceOnTransition
             }
-
             Direction.UP -> {
                 transitionTarget.y = next.y + min(next.height / 2f, camera.viewportHeight / 2f)
                 focusTarget.y = next.y + distanceOnTransition
             }
-
             Direction.DOWN -> {
                 transitionTarget.y = (next.y + next.height) - min(next.height / 2f, camera.viewportHeight / 2f)
                 focusTarget.y = (next.y + next.height) - distanceOnTransition
             }
-
             null -> {}
         }
     }
@@ -203,14 +199,12 @@ class CameraManagerForRooms(
                 setCameraToFocusable()
                 camera.coerceIntoBounds(currentRoomBounds)
             }
-
             priorGameRoom != null -> {
                 setCameraToFocusable(focusY = false)
 
                 val priorRoomBounds = priorGameRoom!!.rectangle.toGameRectangle()
                 camera.coerceIntoBounds(priorRoomBounds)
             }
-
             else -> return
         }
 
@@ -252,7 +246,6 @@ class CameraManagerForRooms(
 
                 endTransition?.invoke()
             }
-
             ProcessState.BEGIN, ProcessState.CONTINUE -> {
                 if (transitionState == ProcessState.BEGIN) {
                     beginTransition?.invoke()
