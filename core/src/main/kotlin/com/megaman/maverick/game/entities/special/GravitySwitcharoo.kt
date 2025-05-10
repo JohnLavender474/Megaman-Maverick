@@ -63,9 +63,9 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         private const val BODY_SIZE = 2f
 
         private const val ARROW_SPRITE_SIZE = 2f
-        private const val ARROW_ALPHA = 0.75f
+        private const val ARROW_ALPHA = 1f
 
-        private const val AURA_SPRITE_SIZE = 2.5f
+        private const val AURA_SPRITE_SIZE = 3f
         private const val AURA_MIN_ALPHA = 0.25f
         private const val AURA_MAX_ALPHA = 0.5f
         private const val AURA_BLINK_DUR = 0.2f
@@ -262,7 +262,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
             AnimatorBuilder()
                 .setKeySupplier { if (megaman.direction == direction) ConstKeys.DEACTIVATED else ConstKeys.ARROW }
                 .applyToAnimations { animations ->
-                    animations.put(ConstKeys.ARROW, Animation(regions[ConstKeys.ARROW], 3, 2, 0.1f, true))
+                    animations.put(ConstKeys.ARROW, Animation(regions[ConstKeys.ARROW], 3, 1, 0.1f, true))
                     animations.put(ConstKeys.DEACTIVATED, Animation(regions[ConstKeys.DEACTIVATED]))
                 }
                 .build()

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="600" height="125" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="477">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="600" height="125" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="478">
  <tileset firstgid="1" source="../tsx/MoonManTiles.tsx"/>
  <layer id="1" name="tiles1" width="600" height="125">
   <data encoding="csv">
@@ -1391,12 +1391,17 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="469" name="GravityBlock" x="11360" y="1856" width="64" height="64">
+  <object id="469" name="GravityBlock" x="11360" y="1952" width="64" height="64">
    <properties>
     <property name="spawn_room" value="room10"/>
    </properties>
   </object>
-  <object id="470" name="GravityBlock" x="11360" y="2016" width="64" height="64">
+  <object id="470" name="GravityBlock" x="11360" y="2048" width="64" height="64">
+   <properties>
+    <property name="spawn_room" value="room10"/>
+   </properties>
+  </object>
+  <object id="477" name="GravityBlock" x="11360" y="1848" width="64" height="64">
    <properties>
     <property name="spawn_room" value="room10"/>
    </properties>

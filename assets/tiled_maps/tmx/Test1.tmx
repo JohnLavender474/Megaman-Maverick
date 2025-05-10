@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="1500" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="15" nextobjectid="504">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="1500" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="15" nextobjectid="506">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/Gravity Man Stage.tsx"/>
  <tileset firstgid="4609" source="../tsx/MM3Wily1.tsx"/>
@@ -566,6 +566,18 @@
     <property name="next" type="int" value="1"/>
     <property name="rotation" type="float" value="0"/>
     <property name="spawn_type" value="spawn_now"/>
+   </properties>
+  </object>
+  <object id="504" name="GravitySwitcharoo" x="40640" y="320" width="32" height="32">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="spawn_room" value="room25"/>
+   </properties>
+  </object>
+  <object id="505" name="GravitySwitcharoo" x="40864" y="256" width="32" height="32">
+   <properties>
+    <property name="direction" value="up"/>
+    <property name="spawn_room" value="room25"/>
    </properties>
   </object>
  </objectgroup>
