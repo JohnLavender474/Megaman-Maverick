@@ -51,7 +51,7 @@ object MegamanValues {
     const val WATER_AIR_DASH_END_BUMP = 1f
 
     const val JETPACK_Y_IMPULSE = 15f
-    const val JETPACK_TIME_PER_BIT = 0.25f
+    const val JETPACK_TIME_PER_BIT = 0.5f
 
     const val SHIELD_GEM_DISTANCE_DELTA = 5f
     const val SHIELD_GEM_MAX_DIST = 10f

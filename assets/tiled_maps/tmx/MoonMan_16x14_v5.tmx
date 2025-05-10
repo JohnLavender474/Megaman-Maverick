@@ -185,11 +185,7 @@
   <object id="2" x="96" y="3776" width="256" height="224"/>
   <object id="3" x="352" y="3744" width="160" height="256"/>
   <object id="4" x="512" y="3648" width="64" height="352"/>
-  <object id="5" x="0" y="3520" width="40" height="224">
-   <properties>
-    <property name="fixture_labels" value="no_side_touchie,no_projectile_collision"/>
-   </properties>
-  </object>
+  <object id="5" name="AbstractBlock" x="0" y="3520" width="40" height="224"/>
   <object id="6" x="0" y="3360" width="160" height="160"/>
   <object id="7" x="160" y="3360" width="288" height="128"/>
   <object id="8" x="448" y="3360" width="1952" height="96"/>
