@@ -506,6 +506,7 @@
     <property name="beamer_11" type="object" value="691"/>
     <property name="beamer_12" type="object" value="692"/>
     <property name="beamer_13" type="object" value="693"/>
+    <property name="beamer_14" type="object" value="682"/>
     <property name="beamer_2" type="object" value="681"/>
     <property name="beamer_3" type="object" value="683"/>
     <property name="beamer_4" type="object" value="684"/>
@@ -536,84 +537,84 @@
     <property name="spawn_room" value="boss_room"/>
    </properties>
   </object>
-  <object id="682" name="Beamer" x="11616" y="2368" width="32" height="32">
+  <object id="682" name="Beamer" x="11968" y="2368" width="32" height="32">
    <properties>
     <property name="direction" value="down"/>
     <property name="ignore" type="object" value="620"/>
     <property name="spawn_room" value="boss_room"/>
    </properties>
   </object>
-  <object id="683" name="Beamer" x="11648" y="2368" width="32" height="32">
+  <object id="683" name="Beamer" x="11616" y="2368" width="32" height="32">
    <properties>
     <property name="direction" value="down"/>
     <property name="ignore" type="object" value="620"/>
     <property name="spawn_room" value="boss_room"/>
    </properties>
   </object>
-  <object id="684" name="Beamer" x="11680" y="2368" width="32" height="32">
+  <object id="684" name="Beamer" x="11648" y="2368" width="32" height="32">
    <properties>
     <property name="direction" value="down"/>
     <property name="ignore" type="object" value="620"/>
     <property name="spawn_room" value="boss_room"/>
    </properties>
   </object>
-  <object id="685" name="Beamer" x="11712" y="2368" width="32" height="32">
+  <object id="685" name="Beamer" x="11680" y="2368" width="32" height="32">
    <properties>
     <property name="direction" value="down"/>
     <property name="ignore" type="object" value="620"/>
     <property name="spawn_room" value="boss_room"/>
    </properties>
   </object>
-  <object id="686" name="Beamer" x="11744" y="2368" width="32" height="32">
+  <object id="686" name="Beamer" x="11712" y="2368" width="32" height="32">
    <properties>
     <property name="direction" value="down"/>
     <property name="ignore" type="object" value="620"/>
     <property name="spawn_room" value="boss_room"/>
    </properties>
   </object>
-  <object id="687" name="Beamer" x="11776" y="2368" width="32" height="32">
+  <object id="687" name="Beamer" x="11744" y="2368" width="32" height="32">
    <properties>
     <property name="direction" value="down"/>
     <property name="ignore" type="object" value="620"/>
     <property name="spawn_room" value="boss_room"/>
    </properties>
   </object>
-  <object id="688" name="Beamer" x="11808" y="2368" width="32" height="32">
+  <object id="688" name="Beamer" x="11776" y="2368" width="32" height="32">
    <properties>
     <property name="direction" value="down"/>
     <property name="ignore" type="object" value="620"/>
     <property name="spawn_room" value="boss_room"/>
    </properties>
   </object>
-  <object id="689" name="Beamer" x="11840" y="2368" width="32" height="32">
+  <object id="689" name="Beamer" x="11808" y="2368" width="32" height="32">
    <properties>
     <property name="direction" value="down"/>
     <property name="ignore" type="object" value="620"/>
     <property name="spawn_room" value="boss_room"/>
    </properties>
   </object>
-  <object id="690" name="Beamer" x="11872" y="2368" width="32" height="32">
+  <object id="690" name="Beamer" x="11840" y="2368" width="32" height="32">
    <properties>
     <property name="direction" value="down"/>
     <property name="ignore" type="object" value="620"/>
     <property name="spawn_room" value="boss_room"/>
    </properties>
   </object>
-  <object id="691" name="Beamer" x="11904" y="2368" width="32" height="32">
+  <object id="691" name="Beamer" x="11872" y="2368" width="32" height="32">
    <properties>
     <property name="direction" value="down"/>
     <property name="ignore" type="object" value="620"/>
     <property name="spawn_room" value="boss_room"/>
    </properties>
   </object>
-  <object id="692" name="Beamer" x="11936" y="2368" width="32" height="32">
+  <object id="692" name="Beamer" x="11904" y="2368" width="32" height="32">
    <properties>
     <property name="direction" value="down"/>
     <property name="ignore" type="object" value="620"/>
     <property name="spawn_room" value="boss_room"/>
    </properties>
   </object>
-  <object id="693" name="Beamer" x="11968" y="2368" width="32" height="32">
+  <object id="693" name="Beamer" x="11936" y="2368" width="32" height="32">
    <properties>
     <property name="direction" value="down"/>
     <property name="ignore" type="object" value="620"/>
@@ -1380,10 +1381,10 @@
   <object id="674" name="TankBot" x="6040" y="4816" width="16" height="16"/>
   <object id="675" name="TankBot" x="1400" y="5808" width="16" height="16"/>
  </objectgroup>
- <objectgroup id="13" name="temp">
+ <objectgroup id="13" name="player">
   <object id="679" name="0" x="11328" y="2688" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="10" name="player">
+ <objectgroup id="10" name="temp">
   <object id="42" name="0" x="64" y="5792" width="32" height="32"/>
   <object id="103" name="2" x="2816" y="4640" width="32" height="32"/>
   <object id="199" name="3" x="5440" y="4832" width="32" height="32"/>
