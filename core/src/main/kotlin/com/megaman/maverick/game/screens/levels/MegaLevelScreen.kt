@@ -51,6 +51,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerButton
+import com.megaman.maverick.game.controllers.SelectButtonAction
 import com.megaman.maverick.game.drawables.backgrounds.Background
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.EntityType
@@ -495,7 +496,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): player done dying --> respawn player"
                 )
 
-                music?.let { audioMan.playMusic(it, true) }
+                music?.let { audioMan.playMusic(it, it.loop) }
 
                 if (megaman.isAtMinLives()) {
                     game.setCurrentScreen(ScreenEnum.GAME_OVER_SCREEN.name)
@@ -753,9 +754,12 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         }
     }
 
+    private fun isPauseButtonRequested() = controllerPoller.isJustReleased(MegaControllerButton.START) ||
+        (game.selectButtonAction == SelectButtonAction.START && controllerPoller.isJustPressed(MegaControllerButton.SELECT))
+
     override fun render(delta: Float) {
         // do not allow pausing if Megaman is dead
-        if (!game.paused && !megaman.dead && controllerPoller.isJustReleased(MegaControllerButton.START)) {
+        if (!game.paused && !megaman.dead && isPauseButtonRequested()) {
             GameLogger.debug(TAG, "render(): pause game")
             game.runQueue.addLast { game.pause() }
         }

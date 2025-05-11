@@ -75,6 +75,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.controllers.ScreenController
+import com.megaman.maverick.game.controllers.SelectButtonAction
 import com.megaman.maverick.game.controllers.loadControllerButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -160,6 +161,7 @@ class MegamanMaverickGame(
 
     lateinit var buttons: ControllerButtons
     lateinit var controllerPoller: IControllerPoller
+    lateinit var selectButtonAction: SelectButtonAction
 
     lateinit var assMan: AssetManager
     lateinit var eventsMan: EventsManager
@@ -210,7 +212,9 @@ class MegamanMaverickGame(
         shapeRenderer.setAutoShapeType(true)
         batch = SpriteBatch()
 
-        controllerPoller = defineControllerPoller()
+        buttons = ControllerUtils.loadControllerButtons()
+        controllerPoller = defineControllerPoller(buttons)
+        selectButtonAction = SelectButtonAction.NEXT_WEAPON
 
         eventsMan = EventsManager()
         eventsMan.addListener(this)
@@ -501,10 +505,7 @@ class MegamanMaverickGame(
         return false
     }
 
-    private fun defineControllerPoller(): IControllerPoller {
-        buttons = ControllerUtils.loadControllerButtons()
-        return MegaControllerPoller(buttons)
-    }
+    private fun defineControllerPoller(buttons: ControllerButtons) = MegaControllerPoller(buttons)
 
     private fun queueAssets() {
         val assets = Array<IAsset>()

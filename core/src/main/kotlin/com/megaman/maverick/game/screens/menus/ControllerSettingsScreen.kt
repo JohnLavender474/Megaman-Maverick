@@ -40,6 +40,7 @@ class ControllerSettingsScreen(
         private const val BACK = "BACK TO MAIN MENU"
         private const val LOAD_SAVED_SETTINGS = "LOAD SAVED SETTINGS"
         private const val RESET_TO_DEFAULTS = "RESET TO DEFAULTS"
+        private const val SELECT_ACTION = "SELECT ACTION"
         private const val DELAY_ON_CHANGE = 0.25f
     }
 
@@ -148,7 +149,7 @@ class ControllerSettingsScreen(
             override fun onSelect(delta: Float) = backAction.invoke()
 
             override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                Direction.UP -> MegaControllerButton.B.name
+                Direction.UP -> SELECT_ACTION
                 Direction.DOWN -> LOAD_SAVED_SETTINGS
                 else -> null
             }
@@ -230,22 +231,20 @@ class ControllerSettingsScreen(
         )
         fontHandles.add(resetToDefaultsFontHandle)
 
-        buttons.put(
-            RESET_TO_DEFAULTS,
-            object : IMenuButton {
+        buttons.put(RESET_TO_DEFAULTS, object : IMenuButton {
 
-                override fun onSelect(delta: Float): Boolean {
-                    ControllerUtils.resetSettingsToDefaults(controllerButtons, isKeyboardSettings)
-                    game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
-                    return false
-                }
-
-                override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                    Direction.UP -> LOAD_SAVED_SETTINGS
-                    Direction.DOWN -> MegaControllerButton.START.name
-                    else -> null
-                }
+            override fun onSelect(delta: Float): Boolean {
+                ControllerUtils.resetSettingsToDefaults(controllerButtons, isKeyboardSettings)
+                game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
+                return false
             }
+
+            override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
+                Direction.UP -> LOAD_SAVED_SETTINGS
+                Direction.DOWN -> MegaControllerButton.entries[0].name
+                else -> null
+            }
+        }
         )
 
         MegaControllerButton.entries.forEach { b ->
@@ -284,18 +283,57 @@ class ControllerSettingsScreen(
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                     Direction.UP -> {
                         val index = b.ordinal - 1
-                        if (index < 0) RESET_TO_DEFAULTS else MegaControllerButton.entries[index].name
+                        when {
+                            index < 0 -> RESET_TO_DEFAULTS
+                            else -> MegaControllerButton.entries[index].name
+                        }
                     }
-
                     Direction.DOWN -> {
                         val index = b.ordinal + 1
-                        if (index >= MegaControllerButton.entries.size) BACK else MegaControllerButton.entries[index].name
+                        when {
+                            index >= MegaControllerButton.entries.size -> SELECT_ACTION
+                            else -> MegaControllerButton.entries[index].name
+                        }
                     }
-
                     else -> null
                 }
             })
         }
+
+        row -= 1f
+
+        val selectActionTextSupplier = {
+            "${SELECT_ACTION}: ${game.selectButtonAction.text}"
+        }
+        val selectActionFontHandle = MegaFontHandle(
+            selectActionTextSupplier,
+            positionX = 3f * ConstVals.PPM,
+            positionY = row * ConstVals.PPM,
+            centerX = false,
+            centerY = false,
+        )
+        fontHandles.addAll(selectActionFontHandle)
+
+        buttons.put(SELECT_ACTION, object : IMenuButton {
+
+            override fun onSelect(delta: Float): Boolean {
+                onNavigate(Direction.RIGHT, delta)
+                return false
+            }
+
+            override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
+                Direction.UP -> MegaControllerButton.SELECT.name
+                Direction.DOWN -> BACK
+                Direction.LEFT -> {
+                    game.selectButtonAction = game.selectButtonAction.previous()
+                    SELECT_ACTION
+                }
+                Direction.RIGHT -> {
+                    game.selectButtonAction = game.selectButtonAction.next()
+                    SELECT_ACTION
+                }
+            }
+        })
     }
 
     override fun show() {
@@ -338,6 +376,7 @@ class ControllerSettingsScreen(
             BACK -> 11.6f
             LOAD_SAVED_SETTINGS -> 10.6f
             RESET_TO_DEFAULTS -> 9.6f
+            SELECT_ACTION -> 0.6f
             else -> try {
                 9.6f - (MegaControllerButton.valueOf(buttonKey!!).ordinal + 1)
             } catch (e: Exception) {

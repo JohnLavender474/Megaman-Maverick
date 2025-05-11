@@ -11,6 +11,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
+import com.megaman.maverick.game.controllers.SelectButtonAction
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.Megaman.Companion.TAG
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
@@ -96,26 +97,31 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
     )
 
     val select = ButtonActuator(onJustReleased = { _ ->
-        if (!ready || damaged || teleporting) {
-            GameLogger.debug(
-                MEGAMAN_CONTROLLER_COMPONENT_TAG,
-                "select actuator just released, do nothing: ready=$ready, damaged=$damaged, teleporting=$teleporting"
-            )
-            return@ButtonActuator
+        when (game.selectButtonAction) {
+            SelectButtonAction.NEXT_WEAPON -> {
+                if (!ready || damaged || teleporting) {
+                    GameLogger.debug(
+                        MEGAMAN_CONTROLLER_COMPONENT_TAG,
+                        "select actuator just released, do nothing: ready=$ready, damaged=$damaged, teleporting=$teleporting"
+                    )
+                    return@ButtonActuator
+                }
+
+                GameLogger.debug(
+                    MEGAMAN_CONTROLLER_COMPONENT_TAG,
+                    "select actuator just released, attempt to set to next weapon"
+                )
+
+                setToNextWeapon()
+            }
+            else -> {}
         }
-
-        GameLogger.debug(
-            MEGAMAN_CONTROLLER_COMPONENT_TAG,
-            "select actuator just released, attempt to set to next weapon"
-        )
-
-        setToNextWeapon()
     })
 
     return ControllerComponent(
+        MegaControllerButton.B pairTo { attack },
         MegaControllerButton.LEFT pairTo { left },
         MegaControllerButton.RIGHT pairTo { right },
-        MegaControllerButton.B pairTo { attack },
         MegaControllerButton.SELECT pairTo { select }
     )
 }

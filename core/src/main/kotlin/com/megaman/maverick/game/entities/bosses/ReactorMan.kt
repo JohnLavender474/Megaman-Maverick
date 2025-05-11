@@ -99,12 +99,11 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val GIGA_CHANCE_DELTA = 25f
         private const val MIN_CYCLES_BEFORE_GIGA = 3
 
-        private const val GIGA_MAX_DELAY_BETWEEN_BEAMS = 0.8f
-        private const val GIGA_MIN_DELAY_BETWEEN_BEAMS = 0.6f
+        private const val GIGA_DELAY_BETWEEN_BEAMS = 0.75f
         private const val GIGA_DELAY_BETWEEN_BEAMS_KEY = "giga_delay_between_beams"
         private const val GIGA_LASER_BEAMER_COUNT = 14
         private val GIGA_LASER_BEAMS_ARRAYS = gdxArrayOf<Array<Int>>(
-            gdxArrayOf(12, -1, 5, 8, 3, -1, 10, 2, 7, -1, 0, 1),
+            gdxArrayOf(10, -1, 5, 8, 3, -1, 12, 2, 7, -1, 0, 1),
             gdxArrayOf(-1, 7, 0, 11, -1, 4, 9, -1, 2, 6, -1, 13),
             gdxArrayOf(5, 10, -1, 3, 8, -1, 13, 1, -1, 6, 11, -1),
             gdxArrayOf(9, -1, 2, 7, -1, 12, 5, -1, 0, 4, -1, 8),
@@ -182,9 +181,9 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         get() = stateTimers[currentState]
 
     private val otherTimers = orderedMapOf(
-        GIGA_DELAY_BETWEEN_BEAMS_KEY pairTo Timer(),
         STAND_THROW_DELAY_KEY pairTo Timer(STAND_THROW_DELAY),
         CHANGE_FACING_DELAY_KEY pairTo Timer(CHANGE_FACING_DELAY),
+        GIGA_DELAY_BETWEEN_BEAMS_KEY pairTo Timer(GIGA_DELAY_BETWEEN_BEAMS)
     )
 
     private var standCycles = -1
@@ -359,12 +358,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                                     else -> GameLogger.error(TAG, "update(): failed to find beamer to beam")
                                 }
 
-                                val duration = UtilMethods.interpolate(
-                                    GIGA_MIN_DELAY_BETWEEN_BEAMS,
-                                    GIGA_MAX_DELAY_BETWEEN_BEAMS,
-                                    getHealthRatio()
-                                )
-                                delay.resetDuration(duration)
+                                delay.reset()
                             }
 
                             if (queuedBeamerIndices.isEmpty) {

@@ -71,6 +71,7 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         private const val CULL_TIME = 2f
         private const val DMG_DUR = 0.25f
         private const val ROTS_PER_SEC = 2
+        private const val MAX_TARGET_TIME = 2f
         private const val TRAIL_SPRITE_DELAY = 0.1f
         private val STATE_DURS = objectMapOf(
             StarknerState.SLEEP pairTo 0.5f,
@@ -118,6 +119,7 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     private lateinit var state: StarknerState
     private val stateTimer = Timer()
 
+    private val targetTimer = Timer(MAX_TARGET_TIME)
     private val target = Vector2()
     private var moving = false
 
@@ -168,8 +170,11 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         body.setCenter(center)
         target.set(center)
 
+        targetTimer.reset()
         moving = false
+
         trailSpriteTimer.setToEnd()
+
         FacingUtils.setFacingOf(this)
 
         ALIVE.add(mapObjectId)
@@ -299,10 +304,13 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                             trailSpriteTimer.reset()
                         }
 
-                        if (body.getCenter().epsilonEquals(target, 0.25f * ConstVals.PPM)) {
+                        targetTimer.update(delta)
+
+                        if (targetTimer.isFinished() || body.getCenter().epsilonEquals(target, 0.25f * ConstVals.PPM)) {
                             GameLogger.debug(TAG, "update(): reached target=$target")
                             moving = false
                             stateTimer.reset()
+                            targetTimer.reset()
                         }
 
                         return@update
@@ -313,6 +321,7 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                     stateTimer.update(delta)
                     if (!megaman.dead && stateTimer.isFinished()) {
                         moving = true
+                        targetTimer.reset()
                         target.set(megaman.body.getCenter())
                         GameLogger.debug(TAG, "update(): state timer finished, set moving to target=$target")
                     }

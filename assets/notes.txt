@@ -9,7 +9,7 @@ Heart Tank Locations
 - G: Timber Woman
 - H: Precious Woman
 
-Health Tank Locations
+Energy Tank Locations
 
 - A: Rodent Man
 - B: Inferno Man

@@ -19,6 +19,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
+import com.megaman.maverick.game.controllers.SelectButtonAction
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.special.Ladder
@@ -224,6 +225,14 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         private val impulse = Vector2()
         private var lastFacing = Facing.RIGHT
 
+        private fun isAirDashButtonActivated() = game.controllerPoller.isPressed(MegaControllerButton.A) ||
+            (game.selectButtonAction == SelectButtonAction.AIR_DASH &&
+                game.controllerPoller.isPressed(MegaControllerButton.SELECT))
+
+        private fun isAirDashButtonJustActivated() = game.controllerPoller.isJustPressed(MegaControllerButton.A) ||
+            (game.selectButtonAction == SelectButtonAction.AIR_DASH &&
+                game.controllerPoller.isJustPressed(MegaControllerButton.SELECT))
+
         override fun evaluate(delta: Float): Boolean {
             if (dead || !ready || !canMove || damaged || teleporting || maxTimer.isFinished() ||
                 body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.TELEPORTING) || isAnyBehaviorActive(
@@ -231,12 +240,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 )
             ) return false
 
-            return if (isBehaviorActive(BehaviorType.AIR_DASHING))
-                !minTimer.isFinished() || game.controllerPoller.isPressed(MegaControllerButton.A)
-            else aButtonTask == AButtonTask.AIR_DASH &&
-                game.controllerPoller.isJustPressed(MegaControllerButton.A) &&
-                (if (currentWeapon == MegamanWeapon.RUSH_JETPACK)
-                    game.controllerPoller.isReleased(MegaControllerButton.UP) else true)
+            if (isBehaviorActive(BehaviorType.AIR_DASHING)) return !minTimer.isFinished() || isAirDashButtonActivated()
+
+            return aButtonTask == AButtonTask.AIR_DASH && isAirDashButtonJustActivated() &&
+                (currentWeapon != MegamanWeapon.RUSH_JETPACK || game.controllerPoller.isReleased(MegaControllerButton.UP))
         }
 
         override fun init() {

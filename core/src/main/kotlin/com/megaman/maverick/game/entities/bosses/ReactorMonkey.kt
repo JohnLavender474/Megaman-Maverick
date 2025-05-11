@@ -61,8 +61,8 @@ class ReactorMonkey(game: MegamanMaverickGame) :
         const val TAG = "ReactorMonkey"
         const val BALL_SPAWN_Y_KEY = "${ConstKeys.BALL}_${ConstKeys.SPAWN}_${ConstKeys.Y}"
 
-        private const val MIN_THROW_DELAY = 0.75f
-        private const val MAX_THROW_DELAY = 2.25f
+        private const val MIN_THROW_DELAY = 1.25f
+        private const val MAX_THROW_DELAY = 2.5f
 
         private const val THROW_DUR = 0.3f
 
@@ -146,9 +146,9 @@ class ReactorMonkey(game: MegamanMaverickGame) :
         monkeyBall?.let { ball -> if (!ball.dead) ball.destroy() }
         monkeyBall = null
 
-        if (megaHeartTank != null) {
+        if (megaHeartTank != null && !megaman.hasHeartTank(megaHeartTank!!)) {
             val heartTank = MegaEntityFactory.fetch(HeartTank::class)!!
-            heartTank.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.VALUE pairTo megaHeartTank))
+            heartTank.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.VALUE pairTo megaHeartTank!!))
         }
     }
 

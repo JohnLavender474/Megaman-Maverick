@@ -160,25 +160,23 @@ class ScreenController(private val game: MegamanMaverickGame) : Updatable, Resiz
         }
 
         val actionTable = Table()
-        for (y in 0 until ACTION_TABLE_HEIGHT) {
-            for (x in 0 until ACTION_TABLE_WIDTH) {
-                val actor = if (x == 0) when (y) {
-                    0 -> buttonImages[MegaControllerButton.START]
-                    1 -> Image(SpriteDrawable(Sprite(startRegion)))
-                    2 -> buttonImages[MegaControllerButton.B]
-                    3 -> Image(SpriteDrawable(Sprite(bRegion)))
-                    else -> throw IllegalStateException("Invalid y: x=$x, y=$y")
-                } else when (y) {
-                    0 -> buttonImages[MegaControllerButton.SELECT]
-                    1 -> Image(SpriteDrawable(Sprite(selectRegion)))
-                    2 -> buttonImages[MegaControllerButton.A]
-                    3 -> Image(SpriteDrawable(Sprite(aRegion)))
-                    else -> throw IllegalStateException("Invalid y: x=$x, y=$y")
-                }
-                addButton(actionTable, actor)
+        for (y in 0 until ACTION_TABLE_HEIGHT) for (x in 0 until ACTION_TABLE_WIDTH) {
+            val actor = if (x == 0) when (y) {
+                0 -> buttonImages[MegaControllerButton.START]
+                1 -> Image(SpriteDrawable(Sprite(startRegion)))
+                2 -> buttonImages[MegaControllerButton.B]
+                3 -> Image(SpriteDrawable(Sprite(bRegion)))
+                else -> throw IllegalStateException("Invalid y: x=$x, y=$y")
+            } else when (y) {
+                0 -> buttonImages[MegaControllerButton.SELECT]
+                1 -> Image(SpriteDrawable(Sprite(selectRegion)))
+                2 -> buttonImages[MegaControllerButton.A]
+                3 -> Image(SpriteDrawable(Sprite(aRegion)))
+                else -> throw IllegalStateException("Invalid y: x=$x, y=$y")
             }
-            actionTable.row()
+            addButton(actionTable, actor)
         }
+        actionTable.row()
 
         val outerTable = Table()
         outerTable.setFillParent(true)

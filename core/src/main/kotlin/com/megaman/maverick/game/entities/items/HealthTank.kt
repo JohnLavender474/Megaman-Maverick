@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -41,6 +42,7 @@ class HealthTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity
         private set
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ITEMS_1.source, TAG)
         super.init()
         addComponent(defineSpritesCompoent())
@@ -48,17 +50,20 @@ class HealthTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity
     }
 
     override fun canSpawn(spawnProps: Properties): Boolean {
+        GameLogger.debug(TAG, "canSpawn(): spawnProps=$spawnProps")
         healthTank = MegaHealthTank.valueOf(spawnProps.get(ConstKeys.VALUE, String::class)!!.uppercase())
         return !megaman.hasHealthTank(healthTank)
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         if (!this::healthTank.isInitialized) throw IllegalStateException("Heart tank value is not initialized")
         body.setSize(BODY_WIDTH * ConstVals.PPM, BODY_HEIGHT * ConstVals.PPM)
         super.onSpawn(spawnProps)
     }
 
     override fun contactWithPlayer(megaman: Megaman) {
+        GameLogger.debug(TAG, "contactWithPlayer()")
         destroy()
         game.eventsMan.submitEvent(Event(EventType.ATTAIN_HEALTH_TANK, props(ConstKeys.VALUE pairTo healthTank)))
     }
@@ -66,8 +71,8 @@ class HealthTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity
     private fun defineSpritesCompoent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(2f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             val position = DirectionPositionMapper.getInvertedPosition(direction)
             val bodyPosition = body.getPositionPoint(position)
             sprite.setPosition(bodyPosition, position)
@@ -75,7 +80,7 @@ class HealthTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

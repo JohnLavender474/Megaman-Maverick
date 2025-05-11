@@ -10,6 +10,7 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
@@ -59,6 +60,7 @@ import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
+import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
@@ -90,7 +92,8 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
         private const val INIT_DUR = 0.3f
         private const val STAND_DUR = 0.75f
-        private const val SPAWN_ASTEROID_DELAY = 1.25f
+        private const val SPAWN_ASTEROID_MAX_DELAY = 1.25f
+        private const val SPAWN_ASTEROID_MIN_DELAY = 0.75f
         private const val THROW_ASTEROID_DELAY = 1f
         private const val ASTEROIDS_END_DUR = 1f
 
@@ -103,12 +106,15 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         private const val GRAVITY_CHANGE_CHANGE_DELTA = 0.1f
 
         private const val ASTEROIDS_TO_SPAWN = 3
-        private const val ASTEROID_SPEED = 6f
+        private const val ASTEROID_MIN_SPEED = 6f
+        private const val ASTEROID_MAX_SPEED = 10f
 
-        private const val SHARP_STAR_SPEED = 8f
+        private const val SHARP_STAR_MIN_SPEED = 8f
+        private const val SHARP_STAR_MAX_SPEED = 12f
         private const val SHARP_STAR_MOVEMENT_SCALAR = 0.75f
 
-        private const val MOON_SCYTHE_SPEED = 8f
+        private const val MOON_SCYTHE_MIN_SPEED = 8f
+        private const val MOON_SCYTHE_MAX_SPEED = 12f
         private const val MOON_SCYTHE_MOVEMENT_SCALAR = 0.5f
         private val MOON_SCYTHE_DEG_OFFSETS = gdxArrayOf(10f, 40f, 70f)
 
@@ -203,7 +209,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         buildTimers()
         timers.forEach { it.value.reset() }
 
-        updateFacing()
+        FacingUtils.setFacingOf(this)
 
         shootIndex = 0
         standIndex = 0
@@ -264,7 +270,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                 return@add
             }
 
-            updateFacing()
+            FacingUtils.setFacingOf(this)
 
             if (currentState != MoonManState.GRAVITY_CHANGE) {
                 val gravityChangeDelayTimer = timers["gravity_change_delay"]
@@ -280,12 +286,18 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             val iter = asteroidsToThrow.iterator()
             while (iter.hasNext()) {
                 val (asteroid, throwTimer) = iter.next()
+
                 throwTimer.update(delta)
+
                 if (throwTimer.isFinished()) {
+                    val speed = UtilMethods.interpolate(ASTEROID_MAX_SPEED, ASTEROID_MIN_SPEED, getHealthRatio())
+
                     val impulse = megaman.body.getCenter()
                         .sub(asteroid.body.getCenter())
-                        .nor().scl(ASTEROID_SPEED * ConstVals.PPM)
+                        .nor().scl(speed * ConstVals.PPM)
+
                     asteroid.impulse.set(impulse)
+
                     iter.remove()
                 }
             }
@@ -529,7 +541,9 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                 if (canShootInJumpState()) shootIndex = 0
             }
             MoonManState.THROW_ASTEROIDS -> {
-                timers["spawn_asteroid_delay"].reset()
+                val duration =
+                    UtilMethods.interpolate(SPAWN_ASTEROID_MIN_DELAY, SPAWN_ASTEROID_MAX_DELAY, getHealthRatio())
+                timers["spawn_asteroid_delay"].resetDuration(duration)
                 asteroidsSpawned = 0
             }
             MoonManState.GRAVITY_CHANGE -> {
@@ -565,7 +579,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         timers.put("gravity_change_continue", Timer(GRAVITY_CHANGE_CONTINUE_DUR))
         timers.put("gravity_change_end", Timer(GRAVITY_CHANGE_END_DUR))
         timers.put("gravity_change_delay", Timer(GRAVITY_CHANGE_DELAY_DUR))
-        timers.put("spawn_asteroid_delay", Timer(SPAWN_ASTEROID_DELAY))
+        timers.put("spawn_asteroid_delay", Timer(SPAWN_ASTEROID_MAX_DELAY))
         timers.put("spawn_asteroids_end", Timer(ASTEROIDS_END_DUR))
 
         for (i in 0 until STAND_SHOOT_DURS.size) {
@@ -580,13 +594,6 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                 }
             )
             timers.put(key, timer)
-        }
-    }
-
-    private fun updateFacing() {
-        when {
-            megaman.body.getMaxX() < body.getX() -> facing = Facing.LEFT
-            megaman.body.getX() > body.getMaxX() -> facing = Facing.RIGHT
         }
     }
 
@@ -607,7 +614,9 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
     private fun shootMoonScythe() {
         for (i in 0 until MOON_SCYTHE_DEG_OFFSETS.size) {
-            val trajectory = GameObjectPools.fetch(Vector2::class).set(0f, MOON_SCYTHE_SPEED * ConstVals.PPM)
+            val speed = UtilMethods.interpolate(MOON_SCYTHE_MAX_SPEED, MOON_SCYTHE_MIN_SPEED, getHealthRatio())
+
+            val trajectory = GameObjectPools.fetch(Vector2::class).set(0f, speed * ConstVals.PPM)
 
             var rotOffset = MOON_SCYTHE_DEG_OFFSETS[i] * facing.value
             if (direction == Direction.DOWN) rotOffset *= -1f
@@ -633,8 +642,10 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     private fun shootStar() {
         val position = if (megaman.direction == Direction.UP) Position.TOP_CENTER else Position.BOTTOM_CENTER
 
+        val speed = UtilMethods.interpolate(SHARP_STAR_MAX_SPEED, SHARP_STAR_MIN_SPEED, getHealthRatio())
+
         val trajectory =
-            megaman.body.getPositionPoint(position).sub(body.getCenter()).nor().scl(SHARP_STAR_SPEED * ConstVals.PPM)
+            megaman.body.getPositionPoint(position).sub(body.getCenter()).nor().scl(speed * ConstVals.PPM)
 
         val sharpStar = MegaEntityFactory.fetch(SharpStar::class)!!
         sharpStar.spawn(
