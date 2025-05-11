@@ -25,6 +25,7 @@ Elec Devil - boberatu
 
 Samuel_X7
 MegaRed225
+Balloon Cart
 Mister Mike
 Capcom
 
@@ -42,6 +43,11 @@ Desert Man - Super Icon Ltd
 Wily 1 - AxeW1eld3r
 Wily 2 - Gektorne
 Capcom
+
+## Other
+
+PJCosta5
+Kofi K
 
 --------------------------------------------
 

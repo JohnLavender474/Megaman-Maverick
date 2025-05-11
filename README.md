@@ -166,8 +166,10 @@ comprehensive listing of the credits for the artwork used in this game.
 #### Enemies
 
 - [Samuel_X7](https://www.deviantart.com/samuelx4)
-  - Astro (Ass) Assaulter
-  - Staged Moon Landing Flag
+  - Astro Assaulter
+  - Moon Flag
+  - Moon Eye Stone
+  - Starkner
   - Lumber Joe (original by MegaRed225)
   - Punk Fire Joe
   - Cactus
@@ -175,6 +177,7 @@ comprehensive listing of the credits for the artwork used in this game.
   - Toxic Barrel Bot
   - UFOhNo Bot
   - Tank Bot
+  - Rolling Green Bot
 - [MegaRed225](https://www.deviantart.com/megared225/gallery):
   - [Random Enemies Set 1](https://www.deviantart.com/megared225/art/Random-Enemies-Set-1-517309440)
     - Toriko Plundge 
@@ -206,7 +209,14 @@ comprehensive listing of the credits for the artwork used in this game.
 
 - [Samuel_X7](https://www.deviantart.com/samuelx4):
   - Robot Master Entry Gate
-  - Rocket Platform (Jeff Bezos' Little Dick Rocket)
+  - Rocket Platform
+
+### Other
+
+- [Kofi K](https://www.youtube.com/@kofi_k1st)
+  - Gravity Switcharoo
+- [PJCosta5](https://youtube.com/@pedrojaimecostapereira)
+  - Moon Warp Portal
 
 #### Tilesets
 
