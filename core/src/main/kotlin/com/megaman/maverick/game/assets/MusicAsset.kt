@@ -46,7 +46,7 @@ enum class MusicAsset(src: String, val loop: Boolean = true, val onCompletion: (
     INFERNO_MAN_INTRO_MUSIC(
         src = "vinnyz_inferno_intro_track.wav",
         loop = false,
-        onCompletion = { it.playMusic(INFERNO_MAN_LOOP_MUSIC) }
+        onCompletion = { it.playMusic(INFERNO_MAN_LOOP_MUSIC, true) }
     ),
     INFERNO_MAN_LOOP_MUSIC("vinnyz_inferno_loop_track.wav"),
     MMX5_BOSS_FIGHT_MUSIC("MMX5_BossFight.mp3"),

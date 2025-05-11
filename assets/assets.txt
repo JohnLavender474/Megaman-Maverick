@@ -3356,6 +3356,7 @@ music/MMX5_BossFight.mp3
 music/MMX2_X-Hunter.txt
 music/Mega_Quest_2_Level_6.ogg
 music/MMX_StormEagle.txt
+music/vinnyz_wip_1.wav
 music/vinnyz_intro_stage.mp3
 music/vinnyz_inferno_intro_track.wav
 music/Mega_Quest_2_Level_5.mp3

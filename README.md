@@ -253,7 +253,6 @@ comprehensive listing of the credits for the artwork used in this game.
   - Reactor Man Stage - [Original Composition 1 8-Bit](https://youtu.be/UwyhXokv8zw?si=arpFaqewqTtV1PXJ)
   - Rodent Man Stage - [Original Composition 2 8-Bit](https://youtu.be/x8RDDcdzs-4)
   - Moon Man Stage - [MMX5 Dark Necrobat 8-Bit](https://youtu.be/RosxPCxVOyk)
-  - Glacier Man Stage - [MMZ3 Glacier le Cactank 8-Bit](https://youtu.be/Vez2dltcOvw)
   - Precious Woman Stage - [MMX2 Crystal Snail 8-Bit](https://youtu.be/1qrbYy9qQdE)
   - Robot Master Fight - [MMX6 Boss Fight 8-Bit](https://youtu.be/IeySHEF5U_8)
 - [vinnyz29](https://soundcloud.com/mega-vinnyz279)
@@ -261,6 +260,7 @@ comprehensive listing of the credits for the artwork used in this game.
   - Stage Select
   - Wily Stage Select
   - Inferno Man Stage
+  - Glacier Man Stage
 - [Cody O'Quinn](https://www.youtube.com/channel/UC3YB69gazd6mzXMGpPHdyTQ)
   - Desert Man Stage - [8 Bit Music - "Battle Man"](https://youtu.be/zA1SwzvHsZw)
 - [ryanavx](https://ryanavx.itch.io/)
