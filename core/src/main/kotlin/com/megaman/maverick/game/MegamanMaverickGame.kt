@@ -20,6 +20,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.utils.*
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.mega.game.engine.GameEngine
 import com.mega.game.engine.animations.AnimationsSystem
@@ -80,9 +81,10 @@ import com.megaman.maverick.game.controllers.loadControllerButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.enemies.Starkner
+import com.megaman.maverick.game.entities.enemies.ProspectorJoe
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.projectiles.GroundPebble
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -119,6 +121,7 @@ class MegamanMaverickGameParams {
     var debugShapes: Boolean = false
     var debugText: Boolean = false
     var fixedStepScalar: Float = 1f
+    var pixelPerfect: Boolean = false
     var musicVolume: Float = 0.5f
     var soundVolume: Float = 0.5f
     var allowScreenshots: Boolean = false
@@ -132,18 +135,22 @@ class MegamanMaverickGame(
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        const val VERSION = "ALPHA 1.9.0"
+        const val VERSION = "ALPHA 1.9.2"
         private const val ASSET_MILLIS = 17
         private const val LOADING = "LOADING"
         private const val LOG_FILE_NAME = "logs.txt"
         private const val SCREENSHOT_KEY = Input.Keys.P
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(Starkner.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(ProspectorJoe.TAG, GroundPebble.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.oneFixtureMatches(FixtureType.CONSUMER)
         }
     }
 
-    override val eventKeyMask = objectSetOf<Any>(EventType.TURN_CONTROLLER_ON, EventType.TURN_CONTROLLER_OFF)
+    override val eventKeyMask = objectSetOf<Any>(
+        EventType.TURN_CONTROLLER_ON,
+        EventType.TURN_CONTROLLER_OFF,
+        EventType.TOGGLE_PIXEL_PERFECT
+    )
     override val properties = Properties()
 
     val viewports = ObjectMap<String, Viewport>()
@@ -185,6 +192,8 @@ class MegamanMaverickGame(
     private var logFileWriter: AsyncFileWriter? = null
     private var debugWindow: DebugWindow? = null
 
+    private var pixelPerfect = false
+
     override fun create() {
         params.logLevels.forEach { GameLogger.setLogLevel(it, true) }
 
@@ -220,8 +229,9 @@ class MegamanMaverickGame(
         eventsMan.addListener(this)
 
         engine = createGameEngine()
-
         state = GameState()
+
+        this.pixelPerfect = params.pixelPerfect
 
         val gameWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
         val gameHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
@@ -231,7 +241,10 @@ class MegamanMaverickGame(
         })
         gameCamera.setToDefaultPosition()
 
-        val gameViewport = PixelPerfectFitViewport(gameWidth, gameHeight, gameCamera)
+        val gameViewport = when {
+            pixelPerfect -> PixelPerfectFitViewport(gameWidth, gameHeight, gameCamera)
+            else -> FitViewport(gameWidth, gameHeight, gameCamera)
+        }
         viewports.put(ConstKeys.GAME, gameViewport)
 
         val uiWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
@@ -239,7 +252,10 @@ class MegamanMaverickGame(
         val uiCamera = OrthographicCamera(uiWidth, uiHeight)
         uiCamera.setToDefaultPosition()
 
-        val uiViewport = PixelPerfectFitViewport(uiWidth, uiHeight, uiCamera)
+        val uiViewport = when {
+            pixelPerfect -> PixelPerfectFitViewport(uiWidth, uiHeight, uiCamera)
+            else -> FitViewport(uiWidth, uiHeight, uiCamera)
+        }
         viewports.put(ConstKeys.UI, uiViewport)
 
         loadingText = MegaFontHandle(
@@ -310,6 +326,7 @@ class MegamanMaverickGame(
         audioMan.soundVolume = params.soundVolume
 
         MegaEntityFactory.init(this)
+
         // TODO: should replace EntityFactories with MegaEntityFactory
         EntityFactories.initialize(this)
 
@@ -426,6 +443,40 @@ class MegamanMaverickGame(
                         "${ConstKeys.CONTROLLER}_${ConstKeys.SYSTEM}_${ConstKeys.ON}", true, Boolean::class
                     )
                 if (turnSystemOn) getSystem(ControllerSystem::class).on = true
+            }
+
+            EventType.TOGGLE_PIXEL_PERFECT -> {
+                val pixelPerfect = event.getProperty(ConstKeys.VALUE, Boolean::class)!!
+                if (this.pixelPerfect == pixelPerfect) return
+                this.pixelPerfect = pixelPerfect
+
+                val newGameViewport: Viewport
+                val newUiViewport: Viewport
+
+                val gameCam = getGameCamera()
+                val uiCam = getUiCamera()
+
+                val gameWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
+                val gameHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
+
+                val uiWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
+                val uiHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
+
+                if (pixelPerfect) {
+                    newGameViewport = PixelPerfectFitViewport(gameWidth, gameHeight, gameCam)
+                    newUiViewport = PixelPerfectFitViewport(uiWidth, uiHeight, uiCam)
+                } else {
+                    newGameViewport = FitViewport(gameWidth, gameHeight, gameCam)
+                    newUiViewport = FitViewport(uiWidth, uiHeight, uiCam)
+                }
+
+                newGameViewport.apply()
+                newUiViewport.apply()
+
+                viewports.put(ConstKeys.GAME, newGameViewport)
+                viewports.put(ConstKeys.UI, newUiViewport)
+
+                resize(Gdx.graphics.width, Gdx.graphics.height)
             }
         }
     }
@@ -713,4 +764,6 @@ class MegamanMaverickGame(
     fun setFocusSnappedAway(value: Boolean) = putProperty("focus_snapped_away", value)
 
     fun isFocusSnappedAway() = getOrDefaultProperty("focus_snapped_away", false, Boolean::class)
+
+    fun isPixelPerfect() = pixelPerfect
 }

@@ -13,6 +13,7 @@ class ScrollingStars(
     width: Float = WIDTH * ConstVals.PPM,
     height: Float = HEIGHT * ConstVals.PPM
 ) : ScrollingBackground(
+    game,
     "ScrollingStars",
     game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_1.source, "StarFieldBG"),
     start,

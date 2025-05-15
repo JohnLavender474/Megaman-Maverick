@@ -12,6 +12,7 @@ class AnimatedStars(
     width: Float = MODEL_WIDTH * ConstVals.PPM,
     height: Float = MODEL_HEIGHT * ConstVals.PPM
 ) : AnimatedBackground(
+    game,
     "AnimatedStars",
     start.x - (ROWS * ConstVals.PPM) / 2f,
     start.y - (COLS * ConstVals.PPM) / 2f,

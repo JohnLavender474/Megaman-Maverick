@@ -9,6 +9,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 class WindyClouds(
     game: MegamanMaverickGame, start: Vector2, width: Float, height: Float
 ) : ScrollingBackground(
+    game,
     "WindyClouds",
     game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_2.source, "BKG04"),
     start,

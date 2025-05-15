@@ -136,7 +136,7 @@ class ControllerSettingsScreen(
             centerY = true,
         )
 
-        var row = 11.75f
+        var row = 12.75f
         blinkingArrow = BlinkingArrow(game.assMan, Vector2(2.5f * ConstVals.PPM, row * ConstVals.PPM))
 
         val backFontHandle = MegaFontHandle(
@@ -373,12 +373,12 @@ class ControllerSettingsScreen(
         if (delayOnChangeTimer.isJustFinished()) undoSelection()
 
         val arrowY = when (buttonKey) {
-            BACK -> 11.6f
-            LOAD_SAVED_SETTINGS -> 10.6f
-            RESET_TO_DEFAULTS -> 9.6f
-            SELECT_ACTION -> 0.6f
+            BACK -> 12.6f
+            LOAD_SAVED_SETTINGS -> 11.6f
+            RESET_TO_DEFAULTS -> 10.6f
+            SELECT_ACTION -> 1.6f
             else -> try {
-                9.6f - (MegaControllerButton.valueOf(buttonKey!!).ordinal + 1)
+                10.6f - (MegaControllerButton.valueOf(buttonKey!!).ordinal + 1)
             } catch (e: Exception) {
                 throw Exception("Failed to set arrow Y position: buttonKey=$buttonKey", e)
             }

@@ -314,8 +314,8 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
     private fun createWeaponEntry(weapon: MegamanWeapon) = when (weapon) {
         MegamanWeapon.MEGA_BUSTER -> MegaWeaponHandler(cooldown = Timer(0.1f))
-        MegamanWeapon.RUSH_JETPACK -> MegaWeaponHandler(cooldown = Timer(0.1f), chargeable = { false })
-        MegamanWeapon.ICE_CUBE -> MegaWeaponHandler(
+        MegamanWeapon.RUSH_JET -> MegaWeaponHandler(cooldown = Timer(0.1f), chargeable = { false })
+        MegamanWeapon.FRIGID_SHOT -> MegaWeaponHandler(
             cooldown = Timer(0.25f),
             normalCost = { 3 },
             halfChargedCost = { 5 },
@@ -323,7 +323,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             chargeable = { _ -> false /* TODO: true */ }
         )
 
-        MegamanWeapon.MAGMA_WAVE -> MegaWeaponHandler(
+        MegamanWeapon.INFERNAL_BARRAGE -> MegaWeaponHandler(
             cooldown = Timer(0.5f),
             normalCost = { 3 },
             halfChargedCost = { 5 },
@@ -332,7 +332,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             canFireWeapon = { _, _ -> !megaman.body.isSensing(BodySense.IN_WATER) }
         )
 
-        MegamanWeapon.MOON_SCYTHE -> MegaWeaponHandler(
+        MegamanWeapon.MOON_SCYTHES -> MegaWeaponHandler(
             cooldown = Timer(0.1f),
             normalCost = { 6 },
             halfChargedCost = { 12 },
@@ -486,7 +486,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         val handler = weaponHandlers[weapon]
 
         val cost = when {
-            weapon.equalsAny(MegamanWeapon.MEGA_BUSTER, MegamanWeapon.RUSH_JETPACK) -> 0
+            weapon.equalsAny(MegamanWeapon.MEGA_BUSTER, MegamanWeapon.RUSH_JET) -> 0
             else -> when (stat) {
                 MegaChargeStatus.FULLY_CHARGED -> handler.fullyChargedCost(handler)
                 MegaChargeStatus.HALF_CHARGED -> handler.halfChargedCost(handler)
@@ -502,10 +502,10 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
         when (weapon) {
             MegamanWeapon.MEGA_BUSTER,
-            MegamanWeapon.RUSH_JETPACK -> shootMegaBuster(stat)
-            MegamanWeapon.ICE_CUBE -> shootIceCube(stat)
-            MegamanWeapon.MAGMA_WAVE -> shootMagmaWave(stat)
-            MegamanWeapon.MOON_SCYTHE -> shootMoonScythes(stat)
+            MegamanWeapon.RUSH_JET -> shootMegaBuster(stat)
+            MegamanWeapon.FRIGID_SHOT -> shootIceCube(stat)
+            MegamanWeapon.INFERNAL_BARRAGE -> shootMagmaWave(stat)
+            MegamanWeapon.MOON_SCYTHES -> shootMoonScythes(stat)
             MegamanWeapon.PRECIOUS_GUARD -> shootPreciousGuard()
         }
 
@@ -566,7 +566,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
     private fun shootIceCube(stat: MegaChargeStatus) {
         GameLogger.debug(TAG, "shootIceCube(): stat=$stat")
 
-        val spawn = getSpawnPosition(MegamanWeapon.ICE_CUBE)
+        val spawn = getSpawnPosition(MegamanWeapon.FRIGID_SHOT)
 
         val trajectory = GameObjectPools.fetch(Vector2::class)
             .set(MegamanValues.ICE_CUBE_VEL * ConstVals.PPM * megaman.facing.value, 0f)
@@ -639,7 +639,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                     )
                 )
 
-                weaponHandlers[MegamanWeapon.MAGMA_WAVE].addSpawned(stat, fireWave)
+                weaponHandlers[MegamanWeapon.INFERNAL_BARRAGE].addSpawned(stat, fireWave)
 
                 megaman.requestToPlaySound(SoundAsset.CRASH_BOMBER_SOUND, false)
             }
@@ -670,12 +670,12 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                         ConstKeys.OWNER pairTo megaman,
                         ConstKeys.TRAJECTORY pairTo trajectory,
                         ConstKeys.ROTATION pairTo trajectory.angleDeg(),
-                        ConstKeys.POSITION pairTo getSpawnPosition(MegamanWeapon.MOON_SCYTHE),
+                        ConstKeys.POSITION pairTo getSpawnPosition(MegamanWeapon.MOON_SCYTHES),
                         "${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}" pairTo megaman.movementScalar
                     )
                 )
 
-                weaponHandlers[MegamanWeapon.MOON_SCYTHE].addSpawned(stat, scythe)
+                weaponHandlers[MegamanWeapon.MOON_SCYTHES].addSpawned(stat, scythe)
 
                 megaman.requestToPlaySound(SoundAsset.WHIP_SOUND, false)
             }

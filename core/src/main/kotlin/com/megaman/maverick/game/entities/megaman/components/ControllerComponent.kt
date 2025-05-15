@@ -55,7 +55,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
 
     val attack = ButtonActuator(
         onPressContinued = { _, delta ->
-            if (!ready || stunned || damaged || teleporting || currentWeapon == MegamanWeapon.RUSH_JETPACK ||
+            if (!ready || stunned || damaged || teleporting || currentWeapon == MegamanWeapon.RUSH_JET ||
                 (!charging && !weaponsHandler.canFireWeapon(currentWeapon, MegaChargeStatus.HALF_CHARGED)) ||
                 (charging && !weaponsHandler.canFireWeapon(currentWeapon, MegaChargeStatus.FULLY_CHARGED))
             ) {

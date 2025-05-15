@@ -47,11 +47,12 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
         const val TAG = "LevelPauseScreen"
 
         private val FULL_TABLE = TableBuilder<Any>()
-            .row(gdxArrayOf(MegamanWeapon.MEGA_BUSTER, null))
-            .row(gdxArrayOf(MegamanWeapon.MOON_SCYTHE, null))
-            .row(gdxArrayOf(MegamanWeapon.MAGMA_WAVE, null))
-            .row(gdxArrayOf(MegamanWeapon.ICE_CUBE, MegamanWeapon.RUSH_JETPACK))
-            .row(gdxArrayOf(null, null))
+            .row(gdxArrayOf(MegamanWeapon.MEGA_BUSTER, null)) // atomic radium
+            .row(gdxArrayOf(null, null)) // needle spin, rodent claws
+            .row(gdxArrayOf(MegamanWeapon.FRIGID_SHOT, null)) // axe swinger
+            .row(gdxArrayOf(MegamanWeapon.INFERNAL_BARRAGE, MegamanWeapon.RUSH_JET))
+            .row(gdxArrayOf(MegamanWeapon.MOON_SCYTHES, null)) // adapter 1
+            .row(gdxArrayOf(MegamanWeapon.PRECIOUS_GUARD, null)) // adapter 2
             .row(gdxArrayOf(MegaHealthTank.A, MegaHealthTank.C, ConstKeys.EXIT))
             .row(gdxArrayOf(MegaHealthTank.B, MegaHealthTank.D, ConstKeys.EXIT))
             .build()
@@ -138,7 +139,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
         )
 
         MegamanWeapon.entries.forEach { weapon ->
-            val key = weapon.toString().lowercase()
+            val key = weapon.name.lowercase()
 
             if (levelPauseScreenAtlas.containsRegion("$WEAPONS_PREFIX/$key")) {
                 buttonRegions.put(key, levelPauseScreenAtlas.findRegion("$WEAPONS_PREFIX/$key"))
@@ -149,7 +150,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
         }
 
         MegaHealthTank.entries.forEach { healthTank ->
-            val key = healthTank.toString().lowercase()
+            val key = healthTank.name.lowercase()
 
             if (levelPauseScreenAtlas.containsRegion("$HEALTH_TANKS_PREFIX/$key")) {
                 buttonRegions.put(key, levelPauseScreenAtlas.findRegion("$HEALTH_TANKS_PREFIX/$key"))
@@ -288,10 +289,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
         MegamanWeapon.entries.forEach { weapon ->
             if (!megaman.hasWeapon(weapon)) return@forEach
 
-            // TODO
-            if (weapon == MegamanWeapon.PRECIOUS_GUARD) return@forEach
-
-            val key = weapon.toString().lowercase()
+            val key = weapon.name.lowercase()
             try {
                 val buttonSprite = GameSprite(buttonRegions[key])
                 buttonSprite.setBounds(
@@ -299,7 +297,9 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                 )
                 buttonSprites.put(key, buttonSprite)
             } catch (e: Exception) {
-                throw IllegalStateException("Failed to create button sprite for key=$key", e)
+                throw IllegalStateException(
+                    "Failed to create button sprite for key=$key. Button regions: ${buttonRegions.map { it.key }}", e
+                )
             }
         }
 

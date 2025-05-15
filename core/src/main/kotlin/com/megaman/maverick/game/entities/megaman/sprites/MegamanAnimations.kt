@@ -40,11 +40,11 @@ class MegamanAnimations(
         MegamanWeapon.entries.forEach { weapon ->
             val assetSource = when (weapon) {
                 MegamanWeapon.MEGA_BUSTER -> TextureAsset.MEGAMAN_BUSTER.source
-                MegamanWeapon.ICE_CUBE -> TextureAsset.MEGAMAN_ICE_CUBE.source
-                MegamanWeapon.MAGMA_WAVE -> TextureAsset.MEGAMAN_MAGMA_WAVE.source
-                MegamanWeapon.MOON_SCYTHE -> TextureAsset.MEGAMAN_MOON_SCYTHE.source
+                MegamanWeapon.FRIGID_SHOT -> TextureAsset.MEGAMAN_ICE_CUBE.source
+                MegamanWeapon.INFERNAL_BARRAGE -> TextureAsset.MEGAMAN_MAGMA_WAVE.source
+                MegamanWeapon.MOON_SCYTHES -> TextureAsset.MEGAMAN_MOON_SCYTHE.source
                 MegamanWeapon.PRECIOUS_GUARD -> TextureAsset.MEGAMAN_PRECIOUS_GUARD.source
-                MegamanWeapon.RUSH_JETPACK -> TextureAsset.MEGAMAN_RUSH_JETPACK.source
+                MegamanWeapon.RUSH_JET -> TextureAsset.MEGAMAN_RUSH_JETPACK.source
             }
 
             val atlas = game.assMan.getTextureAtlas(assetSource)

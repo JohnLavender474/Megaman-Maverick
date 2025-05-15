@@ -6,9 +6,11 @@ import com.mega.game.engine.common.UtilMethods.interpolate
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.utils.GameObjectPools
 
 open class ScrollingBackground(
+    game: MegamanMaverickGame,
     key: String,
     region: TextureRegion,
     private val start: Vector2,
@@ -20,7 +22,7 @@ open class ScrollingBackground(
     cols: Int,
     initPos: Vector2 = Vector2(start).add(width / 2f, height / 2f),
     priority: DrawingPriority = DrawingPriority(DrawingSection.BACKGROUND, 0)
-) : Background(key, start.x, start.y, region, width, height, rows, cols, priority, initPos = initPos) {
+) : Background(game, key, start.x, start.y, region, width, height, rows, cols, priority, initPos = initPos) {
 
     private val timer = Timer(duration)
 

@@ -488,6 +488,7 @@
             <key type="filename">../frames/Enemies1/CannoHoney/closed_eyes.png</key>
             <key type="filename">../frames/Enemies1/CannoHoney/oepn_eyes.png</key>
             <key type="filename">../frames/Enemies1/CryoMet/run.png</key>
+            <key type="filename">../frames/Enemies1/ProspectorJoe/idle.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/fire/idle.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/fire/turn.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/orange/idle.png</key>
@@ -527,6 +528,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Enemies1/Darspider/crawl.png</key>
+            <key type="filename">../frames/Enemies1/ProspectorJoe/dig.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

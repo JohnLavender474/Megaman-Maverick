@@ -405,6 +405,10 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
     override fun buildLevel(result: Properties) {
         backgrounds = result.get(ConstKeys.BACKGROUNDS) as Array<Background>? ?: Array()
+        backgrounds.forEach {
+            game.eventsMan.addListener(it)
+            disposables.add { game.eventsMan.removeListener(it) }
+        }
         backgroundsToHide =
             result.get("${ConstKeys.HIDDEN}_${ConstKeys.BACKGROUNDS}") as ObjectSet<String>? ?: ObjectSet()
 

@@ -1,5 +1,5 @@
 LevelPauseScreenV2.png
-size: 1806, 678
+size: 1806, 1130
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -80,72 +80,142 @@ options/exit_selected
   orig: 256, 224
   offset: 0, 0
   index: -1
-weapons/ice_cube
+weapons/atomic_radium
   rotate: false
   xy: 1033, 227
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-weapons/ice_cube_selected
+weapons/atomic_radium_selected
   rotate: false
   xy: 1291, 227
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-weapons/magma_wave
+weapons/axe_swinger
   rotate: false
   xy: 1549, 227
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-weapons/magma_wave_selected
+weapons/axe_swinger_selected
   rotate: false
   xy: 1, 453
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-weapons/mega_buster
+weapons/frigid_shot
   rotate: false
   xy: 259, 453
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-weapons/mega_buster_selected
+weapons/frigid_shot_selected
   rotate: false
   xy: 517, 453
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-weapons/moon_scythe
+weapons/infernal_barrage
   rotate: false
   xy: 775, 453
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-weapons/moon_scythe_selected
+weapons/infernal_barrage_selected
   rotate: false
   xy: 1033, 453
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-weapons/rush_jetpack
+weapons/mega_buster
   rotate: false
   xy: 1291, 453
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-weapons/rush_jetpack_selected
+weapons/mega_buster_selected
   rotate: false
   xy: 1549, 453
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+weapons/moon_scythes
+  rotate: false
+  xy: 1, 679
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+weapons/moon_scythes_selected
+  rotate: false
+  xy: 259, 679
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+weapons/needle_spin
+  rotate: false
+  xy: 517, 679
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+weapons/needle_spin_selected
+  rotate: false
+  xy: 775, 679
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+weapons/precious_guard
+  rotate: false
+  xy: 1033, 679
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+weapons/precious_guard_selected
+  rotate: false
+  xy: 1291, 679
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+weapons/rodent_claws
+  rotate: false
+  xy: 1549, 679
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+weapons/rodent_claws_selected
+  rotate: false
+  xy: 1, 905
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+weapons/rush_jet
+  rotate: false
+  xy: 259, 905
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+weapons/rush_jet_selected
+  rotate: false
+  xy: 517, 905
   size: 256, 224
   orig: 256, 224
   offset: 0, 0

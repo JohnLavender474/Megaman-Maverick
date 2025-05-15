@@ -31,13 +31,13 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
     }
 
     private val presetBKGMap: ObjectMap<String, (RectangleMapObject) -> Background> = objectMapOf(
-        "UndergroundPipes" pairTo { UndergroundPipes(params.game.assMan, it) },
-        "DesertCanyon" pairTo { DesertCanyon(params.game.assMan, it) },
-        "DesertNoSunSky" pairTo { DesertNoSunSky(params.game.assMan, it) },
-        "DesertSunSky" pairTo { DesertSunSky(params.game.assMan, it) },
-        "Space" pairTo { Space(params.game.assMan, it) },
-        "EarthBackdrop" pairTo { EarthBackdrop(params.game.assMan, it) },
-        "Moon" pairTo { Moon(params.game.assMan, it) },
+        "UndergroundPipes" pairTo { UndergroundPipes(params.game, it) },
+        "DesertCanyon" pairTo { DesertCanyon(params.game, it) },
+        "DesertNoSunSky" pairTo { DesertNoSunSky(params.game, it) },
+        "DesertSunSky" pairTo { DesertSunSky(params.game, it) },
+        "Space" pairTo { Space(params.game, it) },
+        "EarthBackdrop" pairTo { EarthBackdrop(params.game, it) },
+        "Moon" pairTo { Moon(params.game, it) },
         "WindyClouds" pairTo {
             WindyClouds(
                 params.game,
@@ -60,6 +60,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
         },
         "CrystalBKG" pairTo {
             Background(
+                game = params.game,
                 key = it.name,
                 startX = it.rectangle.x,
                 startY = it.rectangle.y,
@@ -73,6 +74,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
         },
         "InfernoBKG" pairTo {
             AnimatedBackground(
+                game = params.game,
                 key = it.name,
                 startX = it.rectangle.x,
                 startY = it.rectangle.y,
@@ -89,6 +91,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
         },
         "ForestBKG" pairTo {
             Background(
+                game = params.game,
                 it.name,
                 it.rectangle.x,
                 it.rectangle.y,
@@ -102,6 +105,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
         },
         "ForestBKG_v2" pairTo {
             Background(
+                game = params.game,
                 key = it.name,
                 startX = it.rectangle.x,
                 startY = it.rectangle.y,
@@ -117,6 +121,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
         },
         "GlacierBKG" pairTo {
             AnimatedBackground(
+                game = params.game,
                 it.name,
                 startX = it.rectangle.x,
                 startY = it.rectangle.y,
@@ -136,6 +141,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
         },
         "GlacierCloudsBKG" pairTo {
             Background(
+                game = params.game,
                 it.name,
                 startX = it.rectangle.x,
                 startY = it.rectangle.y,
@@ -152,6 +158,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
         },
         "BKG12" pairTo {
             Background(
+                game = params.game,
                 it.name,
                 startX = it.rectangle.x,
                 startY = it.rectangle.y,
@@ -171,6 +178,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
         },
         "SunriseHills" pairTo {
             Background(
+                game = params.game,
                 it.name,
                 startX = it.rectangle.x,
                 startY = it.rectangle.y,
@@ -190,6 +198,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
         },
         "SunsetHills" pairTo {
             Background(
+                game = params.game,
                 it.name,
                 startX = it.rectangle.x,
                 startY = it.rectangle.y,
@@ -259,6 +268,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 val animColumns = props.get("${ConstKeys.ANIMATION}_${ConstKeys.COLUMNS}", Int::class)!!
                 val duration = props.get(ConstKeys.DURATION, Float::class)!!
                 AnimatedBackground(
+                    game = params.game,
                     o.name,
                     o.rectangle.x,
                     o.rectangle.y,
@@ -277,6 +287,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                     priority = DrawingPriority(section, priority)
                 )
             } else Background(
+                game = params.game,
                 o.name,
                 o.rectangle.x,
                 o.rectangle.y,

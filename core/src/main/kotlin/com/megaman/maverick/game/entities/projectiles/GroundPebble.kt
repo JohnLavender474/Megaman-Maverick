@@ -101,6 +101,11 @@ class GroundPebble(game: MegamanMaverickGame) : AbstractHealthEntity(game, dmgDu
         spriteRotationDelay.reset()
     }
 
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+    }
+
     override fun takeDamageFrom(damager: IDamager): Boolean {
         GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
         requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
@@ -121,6 +126,8 @@ class GroundPebble(game: MegamanMaverickGame) : AbstractHealthEntity(game, dmgDu
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
+        GameLogger.debug(TAG, "explodeAndDie()")
+
         destroy()
 
         val disintegration = MegaEntityFactory.fetch(Disintegration::class)!!

@@ -184,16 +184,26 @@
             <key type="filename">../frames/LevelPauseScreenV2/health_tanks/d_selected.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/options/exit.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/options/exit_selected.png</key>
-            <key type="filename">../frames/LevelPauseScreenV2/weapons/ice_cube.png</key>
-            <key type="filename">../frames/LevelPauseScreenV2/weapons/ice_cube_selected.png</key>
-            <key type="filename">../frames/LevelPauseScreenV2/weapons/magma_wave.png</key>
-            <key type="filename">../frames/LevelPauseScreenV2/weapons/magma_wave_selected.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/weapons/atomic_radium.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/weapons/atomic_radium_selected.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/weapons/axe_swinger.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/weapons/axe_swinger_selected.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/weapons/frigid_shot.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/weapons/frigid_shot_selected.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/weapons/infernal_barrage.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/weapons/infernal_barrage_selected.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/weapons/mega_buster.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/weapons/mega_buster_selected.png</key>
-            <key type="filename">../frames/LevelPauseScreenV2/weapons/moon_scythe.png</key>
-            <key type="filename">../frames/LevelPauseScreenV2/weapons/moon_scythe_selected.png</key>
-            <key type="filename">../frames/LevelPauseScreenV2/weapons/rush_jetpack.png</key>
-            <key type="filename">../frames/LevelPauseScreenV2/weapons/rush_jetpack_selected.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/weapons/moon_scythes.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/weapons/moon_scythes_selected.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/weapons/needle_spin.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/weapons/needle_spin_selected.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/weapons/precious_guard.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/weapons/precious_guard_selected.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/weapons/rodent_claws.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/weapons/rodent_claws_selected.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/weapons/rush_jet.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/weapons/rush_jet_selected.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

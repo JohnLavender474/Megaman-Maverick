@@ -225,13 +225,15 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         private val impulse = Vector2()
         private var lastFacing = Facing.RIGHT
 
-        private fun isAirDashButtonActivated() = game.controllerPoller.isPressed(MegaControllerButton.A) ||
-            (game.selectButtonAction == SelectButtonAction.AIR_DASH &&
-                game.controllerPoller.isPressed(MegaControllerButton.SELECT))
+        private fun isAirDashButtonActivated() = when (game.selectButtonAction) {
+            SelectButtonAction.AIR_DASH -> game.controllerPoller.isPressed(MegaControllerButton.SELECT)
+            else -> game.controllerPoller.isPressed(MegaControllerButton.A)
+        }
 
-        private fun isAirDashButtonJustActivated() = game.controllerPoller.isJustPressed(MegaControllerButton.A) ||
-            (game.selectButtonAction == SelectButtonAction.AIR_DASH &&
-                game.controllerPoller.isJustPressed(MegaControllerButton.SELECT))
+        private fun isAirDashButtonJustActivated() = when (game.selectButtonAction) {
+            SelectButtonAction.AIR_DASH -> game.controllerPoller.isJustPressed(MegaControllerButton.SELECT)
+            else -> game.controllerPoller.isJustPressed(MegaControllerButton.A)
+        }
 
         override fun evaluate(delta: Float): Boolean {
             if (dead || !ready || !canMove || damaged || teleporting || maxTimer.isFinished() ||
@@ -243,7 +245,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             if (isBehaviorActive(BehaviorType.AIR_DASHING)) return !minTimer.isFinished() || isAirDashButtonActivated()
 
             return aButtonTask == AButtonTask.AIR_DASH && isAirDashButtonJustActivated() &&
-                (currentWeapon != MegamanWeapon.RUSH_JETPACK || game.controllerPoller.isReleased(MegaControllerButton.UP))
+                (currentWeapon != MegamanWeapon.RUSH_JET || game.controllerPoller.isReleased(MegaControllerButton.UP))
         }
 
         override fun init() {
@@ -648,10 +650,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         private val timePerBitTimer = Timer(MegamanValues.JETPACK_TIME_PER_BIT)
 
         override fun evaluate(delta: Float): Boolean {
-            if (dead || !ready || !canMove || damaged || teleporting || currentWeapon != MegamanWeapon.RUSH_JETPACK ||
+            if (dead || !ready || !canMove || damaged || teleporting || currentWeapon != MegamanWeapon.RUSH_JET ||
                 !game.controllerPoller.areAllPressed(gdxArrayOf(MegaControllerButton.A, MegaControllerButton.UP)) ||
                 isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.AIR_DASHING, BehaviorType.GROUND_SLIDING) ||
-                weaponsHandler.isDepleted(MegamanWeapon.RUSH_JETPACK)
+                weaponsHandler.isDepleted(MegamanWeapon.RUSH_JET)
             ) return false
 
             return if (isBehaviorActive(BehaviorType.JETPACKING)) game.controllerPoller.areAllPressed(
@@ -700,7 +702,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             timePerBitTimer.update(delta)
 
             if (timePerBitTimer.isFinished()) {
-                weaponsHandler.translateAmmo(MegamanWeapon.RUSH_JETPACK, -1)
+                weaponsHandler.translateAmmo(MegamanWeapon.RUSH_JET, -1)
                 timePerBitTimer.reset()
             }
         }

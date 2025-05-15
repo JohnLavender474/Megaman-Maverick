@@ -8,8 +8,10 @@ import com.mega.game.engine.common.objects.Matrix
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.megaman.maverick.game.ConstVals
+import com.megaman.maverick.game.MegamanMaverickGame
 
 open class AnimatedBackground(
+    game: MegamanMaverickGame,
     key: String,
     startX: Float,
     startY: Float,
@@ -28,6 +30,7 @@ open class AnimatedBackground(
     initPos: Vector2 = Vector2(startX, startY).add(modelWidth / 2f, modelHeight / 2f),
     doMove: () -> Boolean = { true }
 ) : Background(
+    game,
     key,
     startX,
     startY,
@@ -66,7 +69,7 @@ open class AnimatedBackground(
             }
             it.update(delta)
 
-            sprite.setRegion(it.getCurrentRegion()!!)
+            sprite.setRegion(it.getCurrentRegion())
         }
     }
 }

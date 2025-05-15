@@ -36,6 +36,7 @@ object DesktopLauncher {
     private const val DEFAULT_SOUND_VOLUME = 0.8f
     private const val DEFAULT_ALLOW_SCREENSHOTS = false
     private const val DEFAULT_SHOW_SCREEN_CONTROLLER = false
+    private const val DEFAULT_PIXEL_PERFECT = false
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -82,6 +83,7 @@ object DesktopLauncher {
         params.debugShapes = appArgs.debugShapes
         params.musicVolume = appArgs.musicVolume
         params.soundVolume = appArgs.soundVolume
+        params.pixelPerfect = appArgs.pixelPerfect
         params.writeLogsToFile = appArgs.writeLogsToFile
         params.fixedStepScalar = appArgs.fixedStepScalar
         params.allowScreenshots = appArgs.allowScreenshots
@@ -237,5 +239,11 @@ object DesktopLauncher {
                 "Default value is $DEFAULT_ALLOW_SCREENSHOTS")
         )
         var allowScreenshots = DEFAULT_ALLOW_SCREENSHOTS
+
+        @Parameter(
+            names = ["--pixelPerfect"],
+            description = ("Sets whether to use a pixel-perfect viewport. Default value is $DEFAULT_PIXEL_PERFECT")
+        )
+        var pixelPerfect = DEFAULT_PIXEL_PERFECT
     }
 }

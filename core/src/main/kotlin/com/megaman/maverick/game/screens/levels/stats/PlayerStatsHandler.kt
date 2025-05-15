@@ -69,10 +69,10 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
             if (it == MegamanWeapon.MEGA_BUSTER) return@forEach
 
             val bitSource = when (it) {
-                MegamanWeapon.MOON_SCYTHE -> ConstKeys.MOON
-                MegamanWeapon.MAGMA_WAVE -> ConstKeys.FIRE
-                MegamanWeapon.ICE_CUBE -> ConstKeys.ICE
-                MegamanWeapon.RUSH_JETPACK -> RUSH_JET
+                MegamanWeapon.MOON_SCYTHES -> ConstKeys.MOON
+                MegamanWeapon.INFERNAL_BARRAGE -> ConstKeys.FIRE
+                MegamanWeapon.FRIGID_SHOT -> ConstKeys.ICE
+                MegamanWeapon.RUSH_JET -> RUSH_JET
                 MegamanWeapon.PRECIOUS_GUARD -> PRECIOUS
                 else -> throw IllegalStateException("No bit source for weapon $it")
             }

@@ -13,10 +13,13 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.interfaces.Initializable
+import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.controller.ControllerUtils
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.events.Event
 import com.mega.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -25,6 +28,7 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
+import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
@@ -48,6 +52,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         BACK("BACK"),
         MUSIC_VOLUME("MUSIC VOLUME"),
         EFFECTS_VOLUME("SFX VOLUME"),
+        PIXEL_PERFECT("PIXEL PERFECT"),
         KEYBOARD_SETTINGS("KEYBOARD SETTINGS"),
         CONTROLLER_SETTINGS("CONTROLLER SETTINGS")
     }
@@ -109,8 +114,17 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         row = SETTINGS_TEXT_START_ROW
 
         MainScreenSettingsButton.entries.forEach {
+            val textSupplier: () -> String = when (it) {
+                MainScreenSettingsButton.PIXEL_PERFECT -> {
+                    { "${it.text}: ${game.isPixelPerfect().toString().uppercase()}" }
+                }
+                else -> {
+                    { it.text }
+                }
+            }
+
             val fontHandle = MegaFontHandle(
-                it.text,
+                textSupplier = textSupplier,
                 positionX = 17f * ConstVals.PPM,
                 positionY = row * ConstVals.PPM,
                 centerX = false,
@@ -293,7 +307,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                 }
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                    Direction.UP -> MainScreenSettingsButton.EFFECTS_VOLUME.text
+                    Direction.UP -> MainScreenSettingsButton.CONTROLLER_SETTINGS.text
                     Direction.DOWN -> MainScreenSettingsButton.MUSIC_VOLUME.text
                     else -> buttonKey
                 }
@@ -347,9 +361,37 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                     }
 
                     Direction.UP -> MainScreenSettingsButton.MUSIC_VOLUME.text
-                    Direction.DOWN -> MainScreenSettingsButton.KEYBOARD_SETTINGS.text
+                    Direction.DOWN -> MainScreenSettingsButton.PIXEL_PERFECT.text
                 }
             })
+
+        buttons.put(
+            MainScreenSettingsButton.PIXEL_PERFECT.text,
+            object : IMenuButton {
+
+                override fun onSelect(delta: Float): Boolean {
+                    onNavigate(Direction.RIGHT, delta)
+                    return false
+                }
+
+                override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
+                    Direction.UP -> MainScreenSettingsButton.EFFECTS_VOLUME.text
+                    Direction.DOWN -> MainScreenSettingsButton.KEYBOARD_SETTINGS.text
+                    Direction.LEFT, Direction.RIGHT -> {
+                        val pixelPerfect = game.isPixelPerfect()
+
+                        game.eventsMan.submitEvent(
+                            Event(
+                                EventType.TOGGLE_PIXEL_PERFECT,
+                                props(ConstKeys.VALUE pairTo !pixelPerfect)
+                            )
+                        )
+
+                        buttonKey
+                    }
+                }
+            }
+        )
 
         buttons.put(
             MainScreenSettingsButton.KEYBOARD_SETTINGS.text,
@@ -361,7 +403,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                 }
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                    Direction.UP -> MainScreenSettingsButton.EFFECTS_VOLUME.text
+                    Direction.UP -> MainScreenSettingsButton.PIXEL_PERFECT.text
                     Direction.DOWN -> MainScreenSettingsButton.CONTROLLER_SETTINGS.text
                     else -> buttonKey
                 }
