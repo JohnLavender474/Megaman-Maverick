@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.megaman
 
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.audio.AudioComponent
@@ -14,7 +13,6 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
-import com.mega.game.engine.common.objects.IntPair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -325,9 +323,9 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         addComponent(defineSpritesComponent())
         addComponent(AudioComponent())
 
+        /*
         val weaponSpawns = OrderedMap<String, IntPair>()
 
-        /*
         val weaponSpawnMagicColors = objectSetOf(MegamanValues.WEAPON_SPAWN_MAGIC_COLOR)
         val magicColorsMap = OrderedMap<IntPair, Color>()
         val regionProcessor = object : MegaRegionProcessor {

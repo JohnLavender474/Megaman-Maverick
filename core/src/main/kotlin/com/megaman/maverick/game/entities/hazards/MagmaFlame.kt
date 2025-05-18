@@ -124,7 +124,7 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IFireEntity,
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        timer.update(delta)
+        if (body.isSensing(BodySense.FEET_ON_GROUND)) timer.update(delta)
         if (timer.isFinished()) destroy()
     })
 

@@ -64,7 +64,7 @@ enum class SoundAsset(src: String, val seconds: Float) : IAsset {
     WIND_1_SOUND("wind_1.wav", 3f),
     WHIP_SOUND("whip.wav", 1f),
     WHIP_V2_SOUND("whip_v2.mp3", 1f),
-    ASTEROID_EXPLODE_SOUND("asteroid_explode.wav", 1f),
+    ASTEROID_EXPLODE_SOUND("asteroid_explode.wav", 0.5f),
     SOLAR_BLAZE_SOUND("solar_blaze.wav", 1f),
     BRUSH_SOUND("brush.wav", 1f),
     BUTTON_SOUND("button.wav", 1f),
@@ -76,7 +76,8 @@ enum class SoundAsset(src: String, val seconds: Float) : IAsset {
     ELECTRIC_1_SOUND("electric_1.wav", 1f),
     ELECTRIC_2_SOUND("electric_2.wav", 2f),
     POUND_SOUND("pound.wav", 1f),
-    BLACKHOLE_SOUND("blackhole.wav", 0.35f);
+    BLACKHOLE_SOUND("blackhole.wav", 0.35f),
+    DIG_SOUND("dig.wav", 0.25f);
 
     companion object {
         fun valuesAsIAssetArray(): Array<IAsset> {

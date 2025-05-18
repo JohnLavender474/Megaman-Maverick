@@ -54,13 +54,17 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
 
     companion object {
         const val TAG = "HeliMet"
+
         private const val TARGET_VEL = 10f
+
         private const val POP_UP_DUR = 0.3f
+
         private const val SHOOT_DELAY = 1.5f
         private const val BULLET_VELOCITY = 15f
+
         private const val SIDE_TO_SIDE_VEL = 2f
         private const val SIDE_TO_SIDE_DUR = 6f
-        private const val SHIELD_ROTATION_PER_SECOND = 720f
+
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -245,10 +249,7 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
             sprite.hidden = damageBlink
 
             sprite.setOriginCenter()
-            sprite.rotation = when (state) {
-                SHIELD -> sprite.rotation + (SHIELD_ROTATION_PER_SECOND * delta)
-                else -> direction.rotation
-            }
+            sprite.rotation = direction.rotation
         }
         .build()
 
@@ -258,8 +259,8 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
             AnimatorBuilder()
                 .setKeySupplier { state.name.lowercase() }
                 .addAnimations(
-                    "shield" pairTo Animation(regions["shield"]),
                     "fly" pairTo Animation(regions["fly"], 1, 2, 0.1f, true),
+                    "shield" pairTo Animation(regions["shield"], 2, 2, 0.1f, true),
                     "pop_up" pairTo Animation(regions["pop_up"], 1, 3, 0.1f, false)
                 )
                 .build()

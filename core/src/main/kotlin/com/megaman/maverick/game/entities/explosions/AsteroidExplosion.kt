@@ -76,7 +76,8 @@ class AsteroidExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
 
         timer.reset()
 
-        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ASTEROID_EXPLODE_SOUND, false)
+        if (overlapsGameCamera() && !game.audioMan.isSoundPlaying(SoundAsset.ASTEROID_EXPLODE_SOUND))
+            requestToPlaySound(SoundAsset.ASTEROID_EXPLODE_SOUND, false)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->

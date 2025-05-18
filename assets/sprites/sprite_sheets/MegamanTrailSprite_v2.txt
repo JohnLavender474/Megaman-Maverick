@@ -3,56 +3,56 @@ size: 240, 240
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-ice_cube/airdash
+frigid_shot/airdash
   rotate: false
   xy: 0, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-ice_cube/airdash_shoot
+frigid_shot/airdash_shoot
   rotate: false
   xy: 48, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-ice_cube/groundslide
+frigid_shot/groundslide
   rotate: false
   xy: 96, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-ice_cube/groundslide_shoot
+frigid_shot/groundslide_shoot
   rotate: false
   xy: 144, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-magma_wave/airdash
+infernal_barrage/airdash
   rotate: false
   xy: 192, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-magma_wave/airdash_shoot
+infernal_barrage/airdash_shoot
   rotate: false
   xy: 0, 48
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-magma_wave/groundslide
+infernal_barrage/groundslide
   rotate: false
   xy: 48, 48
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-magma_wave/groundslide_shoot
+infernal_barrage/groundslide_shoot
   rotate: false
   xy: 96, 48
   size: 48, 48
@@ -87,28 +87,28 @@ mega_buster/groundslide_shoot
   orig: 48, 48
   offset: 0, 0
   index: -1
-moon_scythe/airdash
+moon_scythes/airdash
   rotate: false
   xy: 96, 96
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-moon_scythe/airdash_shoot
+moon_scythes/airdash_shoot
   rotate: false
   xy: 144, 96
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-moon_scythe/groundslide
+moon_scythes/groundslide
   rotate: false
   xy: 192, 96
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-moon_scythe/groundslide_shoot
+moon_scythes/groundslide_shoot
   rotate: false
   xy: 0, 144
   size: 48, 48
@@ -143,28 +143,28 @@ precious_guard/groundslide_shoot
   orig: 48, 48
   offset: 0, 0
   index: -1
-rush_jetpack/airdash
+rush_jet/airdash
   rotate: false
   xy: 0, 192
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-rush_jetpack/airdash_shoot
+rush_jet/airdash_shoot
   rotate: false
   xy: 48, 192
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-rush_jetpack/groundslide
+rush_jet/groundslide
   rotate: false
   xy: 96, 192
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-rush_jetpack/groundslide_shoot
+rush_jet/groundslide_shoot
   rotate: false
   xy: 144, 192
   size: 48, 48

@@ -48,6 +48,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val ROCK = "rock"
     const val EXCEPTION = "exception"
     const val FOCUS = "focus"
     const val CAN = "can"

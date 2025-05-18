@@ -38,6 +38,7 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.ExplosionOrb
 import com.megaman.maverick.game.entities.explosions.SpreadExplosion
+import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.events.EventType
@@ -98,6 +99,8 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                 if (it.fullyCharged) BRIGHTEST_LIGHT_SOURCE else BRIGHTER_LIGHT_SOURCE
             },
             MoonScythe::class pairTo { BRIGHTEST_LIGHT_SOURCE },
+            MagmaWave::class pairTo { BRIGHTEST_LIGHT_SOURCE },
+            MagmaFlame::class pairTo { BRIGHTEST_LIGHT_SOURCE },
             Fireball::class pairTo { BRIGHTER_LIGHT_SOURCE },
             DuoBall::class pairTo { STANDARD_LIGHT_SOURCE },
             ArigockBall::class pairTo { STANDARD_LIGHT_SOURCE },
@@ -110,7 +113,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             GreenPelletBlast::class pairTo { STANDARD_LIGHT_SOURCE }
         )
         private val LIGHT_UP_ENTITY_TYPES = orderedSetOf(
-            EntityType.PROJECTILE, EntityType.EXPLOSION, EntityType.ENEMY
+            EntityType.PROJECTILE, EntityType.EXPLOSION, EntityType.ENEMY, EntityType.HAZARD
         )
 
         private const val DEBUG_THRESHOLD_SECS = 0.025f

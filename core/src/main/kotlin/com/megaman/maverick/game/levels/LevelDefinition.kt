@@ -19,7 +19,7 @@ enum class LevelDefinition(
 ) : IAsset {
     INTRO_STAGE(
         type = LevelType.INTRO_LEVEL,
-        tmxMapSource = "IntroStage_v2.tmx",
+        tmxMapSource = "IntroStage_v3.tmx",
         music = MusicAsset.VINNYZ_INTRO_STAGE_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),

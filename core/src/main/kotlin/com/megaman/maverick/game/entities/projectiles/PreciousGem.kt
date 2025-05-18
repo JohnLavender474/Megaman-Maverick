@@ -69,7 +69,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         private val regions = ObjectMap<PreciousGemColor, TextureRegion>()
     }
 
-    enum class PreciousGemColor { PURPLE, BLUE, PINK }
+    enum class PreciousGemColor { PURPLE, BLUE, PINK, GREEN }
 
     override val damageNegotiator = object : IDamageNegotiator {
 

@@ -1239,7 +1239,7 @@
   <object id="43" name="TotemPolem" x="1112" y="2992" width="16" height="16"/>
   <object id="44" name="CactusLauncher" x="904" y="2896" width="16" height="16"/>
   <object id="46" name="Arigock" x="2200" y="2800" width="16" height="16"/>
-  <object id="48" name="ColtonJoe" x="2520" y="2864" width="16" height="16"/>
+  <object id="48" name="LampeonBandito" x="2520" y="2864" width="16" height="16"/>
   <object id="143" name="BombPotton" x="3872" y="2672" width="32" height="32">
    <properties>
     <property name="start" type="object" value="144"/>
@@ -1280,7 +1280,7 @@
    </properties>
   </object>
   <object id="159" name="TotemPolem" x="6264" y="3024" width="16" height="16"/>
-  <object id="168" name="ColtonJoe" x="6232" y="2864" width="16" height="16"/>
+  <object id="168" name="LampeonBandito" x="6232" y="2864" width="16" height="16"/>
   <object id="170" name="ShieldAttacker" x="5560" y="2888" width="16" height="16">
    <properties>
     <property name="value" type="float" value="-5"/>
@@ -1296,7 +1296,7 @@
     <property name="value" type="float" value="6"/>
    </properties>
   </object>
-  <object id="191" name="ColtonJoe" x="5336" y="3024" width="16" height="16"/>
+  <object id="191" name="LampeonBandito" x="5336" y="3024" width="16" height="16"/>
   <object id="199" name="Arigock" x="2952" y="2928" width="16" height="16"/>
   <object id="204" name="TorikoPlundge" x="6080" y="2368" width="32" height="32">
    <properties>
@@ -1317,7 +1317,7 @@
     <property name="value" type="float" value="5"/>
    </properties>
   </object>
-  <object id="210" name="ColtonJoe" x="4248" y="2832" width="16" height="16"/>
+  <object id="210" name="LampeonBandito" x="4248" y="2832" width="16" height="16"/>
   <object id="224" name="TorikoPlundge" x="6080" y="1952" width="32" height="32">
    <properties>
     <property name="block" type="object" value="223"/>
@@ -1381,19 +1381,19 @@
     <property name="big" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="442" name="ColtonJoe" x="13752" y="1968" width="16" height="16"/>
+  <object id="442" name="LampeonBandito" x="13752" y="1968" width="16" height="16"/>
   <object id="450" name="Arigock" x="11416" y="2096" width="16" height="16"/>
   <object id="453" name="CactusLauncher" x="11928" y="2032" width="16" height="16"/>
-  <object id="454" name="ColtonJoe" x="11640" y="2000" width="16" height="16"/>
+  <object id="454" name="LampeonBandito" x="11640" y="2000" width="16" height="16"/>
   <object id="463" name="TotemPolem" x="15544" y="2000" width="16" height="16"/>
   <object id="474" name="BombPotton" x="15056" y="1776" width="32" height="32">
    <properties>
     <property name="start" type="object" value="475"/>
    </properties>
   </object>
-  <object id="488" name="ColtonJoe" x="14248" y="2064" width="16" height="16"/>
+  <object id="488" name="LampeonBandito" x="14248" y="2064" width="16" height="16"/>
   <object id="491" name="TotemPolem" x="16392" y="2000" width="16" height="16"/>
-  <object id="494" name="ColtonJoe" x="16840" y="2000" width="16" height="16"/>
+  <object id="494" name="LampeonBandito" x="16840" y="2000" width="16" height="16"/>
   <object id="496" name="CactusLauncher" x="17160" y="2032" width="16" height="16"/>
   <object id="497" name="Bat" x="17160" y="1888" width="16" height="16"/>
   <object id="498" name="Bat" x="16840" y="1888" width="16" height="16"/>
@@ -1402,7 +1402,7 @@
   <object id="510" name="Arigock" x="17768" y="2000" width="16" height="16"/>
   <object id="511" name="Arigock" x="17928" y="2000" width="16" height="16"/>
   <object id="512" name="Bat" x="17928" y="1824" width="16" height="16"/>
-  <object id="513" name="ColtonJoe" x="18120" y="1936" width="16" height="16"/>
+  <object id="513" name="LampeonBandito" x="18120" y="1936" width="16" height="16"/>
   <object id="527" name="Bat" x="19176" y="1920" width="16" height="16"/>
   <object id="547" name="CarriCarry" x="19304" y="1616" width="16" height="16"/>
   <object id="552" name="Spiky" x="19192" y="1008" width="16" height="16">

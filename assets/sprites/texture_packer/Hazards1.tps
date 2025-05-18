@@ -327,6 +327,8 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Hazards1/Flame2.png</key>
+            <key type="filename">../frames/Hazards1/PreciousCubeChute/bottom.png</key>
+            <key type="filename">../frames/Hazards1/PreciousCubeChute/top.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

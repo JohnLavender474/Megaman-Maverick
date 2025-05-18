@@ -173,6 +173,10 @@ comprehensive listing of the credits for the artwork used in this game.
   - Lumber Joe (original by MegaRed225)
   - Punk Fire Joe
   - Cactus
+  - Lampeon Bandito
+  - Scooper Pete
+- [Nachtyama (Nakiyama)](https://youtube.com/@blueshot333)
+  - Precious Cube
 - [Balloon Cart](https://balloon-cart.itch.io)
   - Toxic Barrel Bot
   - UFOhNo Bot
@@ -199,6 +203,7 @@ comprehensive listing of the credits for the artwork used in this game.
     - Cool Telly
   - [Random Enemies Set 9](https://www.deviantart.com/megared225/art/Random-Enemy-Sprites-Set-9-557171615):
     - Fire Dispensenator
+    - Drill Tank XT
   - [Random Enemies Set 10](https://www.deviantart.com/megared225/art/Random-Enemy-Sprites-Set-10-571128501)
     - Nutt Glider
 - Mister Mike

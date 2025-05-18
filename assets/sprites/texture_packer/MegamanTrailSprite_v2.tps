@@ -173,30 +173,30 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../frames/MegamanTrailSprite_v2/ice_cube/airdash.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/ice_cube/airdash_shoot.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/ice_cube/groundslide.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/ice_cube/groundslide_shoot.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/magma_wave/airdash.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/magma_wave/airdash_shoot.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/magma_wave/groundslide.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/magma_wave/groundslide_shoot.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/frigid_shot/airdash.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/frigid_shot/airdash_shoot.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/frigid_shot/groundslide.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/frigid_shot/groundslide_shoot.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/infernal_barrage/airdash.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/infernal_barrage/airdash_shoot.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/infernal_barrage/groundslide.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/infernal_barrage/groundslide_shoot.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/mega_buster/airdash.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/mega_buster/airdash_shoot.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/mega_buster/groundslide.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/mega_buster/groundslide_shoot.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/moon_scythe/airdash.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/moon_scythe/airdash_shoot.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/moon_scythe/groundslide.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/moon_scythe/groundslide_shoot.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/moon_scythes/airdash.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/moon_scythes/airdash_shoot.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/moon_scythes/groundslide.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/moon_scythes/groundslide_shoot.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/precious_guard/airdash.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/precious_guard/airdash_shoot.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/precious_guard/groundslide.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/precious_guard/groundslide_shoot.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/rush_jetpack/airdash.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/rush_jetpack/airdash_shoot.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/rush_jetpack/groundslide.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/rush_jetpack/groundslide_shoot.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/rush_jet/airdash.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/rush_jet/airdash_shoot.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/rush_jet/groundslide.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/rush_jet/groundslide_shoot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

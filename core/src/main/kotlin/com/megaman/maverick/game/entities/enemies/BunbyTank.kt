@@ -262,7 +262,10 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
                 0.1f * ConstVals.PPM, 0.1f * ConstVals.PPM
             )
         )
-        leftFootFixture.offsetFromBodyAttachment.set(-ConstVals.PPM.toFloat(), -0.75f * ConstVals.PPM)
+        leftFootFixture.offsetFromBodyAttachment.set(
+            (-0.5f * ConstVals.PPM) - (body.getWidth() / 2f),
+            -body.getHeight() / 2f
+        )
         leftFootFixture.setFilter { fixture -> fixture.getType().equalsAny(FixtureType.BLOCK, FixtureType.DEATH) }
         leftFootFixture.setConsumer { _, fixture ->
             when (fixture.getType()) {
@@ -278,7 +281,10 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
                 0.1f * ConstVals.PPM, 0.1f * ConstVals.PPM
             )
         )
-        rightFootFixture.offsetFromBodyAttachment.set(ConstVals.PPM.toFloat(), -0.75f * ConstVals.PPM)
+        rightFootFixture.offsetFromBodyAttachment.set(
+            (0.5f * ConstVals.PPM) + (body.getWidth() / 2f),
+            -body.getHeight() / 2f
+        )
         rightFootFixture.setFilter { fixture -> fixture.getType().equalsAny(FixtureType.BLOCK, FixtureType.DEATH) }
         rightFootFixture.setConsumer { _, fixture ->
             when (fixture.getType()) {

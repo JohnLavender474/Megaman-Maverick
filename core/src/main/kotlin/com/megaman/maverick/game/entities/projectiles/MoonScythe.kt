@@ -63,6 +63,7 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
     private var bounces = 0
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
         addComponent(defineUpdatablesComponent())
@@ -70,6 +71,7 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         fade = spawnProps.getOrDefault(ConstKeys.FADE, false, Boolean::class)

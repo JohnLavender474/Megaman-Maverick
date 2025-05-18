@@ -9,12 +9,10 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.orderedMapOf
-import com.mega.game.engine.common.extensions.toGdxArray
+import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.objects.Properties
@@ -38,6 +36,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
@@ -47,10 +46,10 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class ProspectorJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class ScooperPete(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
 
     companion object {
-        const val TAG = "ProspectorJoe"
+        const val TAG = "ScooperPete"
 
         private const val IDLE_DUR = 1f
 
@@ -68,6 +67,7 @@ class ProspectorJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
             Vector2(4f, 12f),
             Vector2(2f, 16f)
         )
+        private const val THROW_IMPULSE_VAR = 2f
 
         private val animDefs = orderedMapOf(
             "idle" pairTo AnimationDef(2, 1, 0.05f, true),
@@ -106,7 +106,8 @@ class ProspectorJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
 
         val spawn = when {
             spawnProps.containsKey(ConstKeys.POSITION) -> spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-            spawnProps.containsKey(ConstKeys.POSITION_SUPPLIER) -> (spawnProps.get(ConstKeys.POSITION_SUPPLIER) as () -> Vector2).invoke()
+            spawnProps.containsKey(ConstKeys.POSITION_SUPPLIER) ->
+                (spawnProps.get(ConstKeys.POSITION_SUPPLIER) as () -> Vector2).invoke()
             else -> spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         }
         body.setBottomCenterToPoint(spawn)
@@ -195,6 +196,7 @@ class ProspectorJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
         THROW_IMPULSES.forEach {
             val impulse = GameObjectPools.fetch(Vector2::class)
                 .set(it.x * facing.value, it.y)
+                .add(UtilMethods.getRandom(-THROW_IMPULSE_VAR, THROW_IMPULSE_VAR))
                 .scl(ConstVals.PPM.toFloat())
 
             val dirt = MegaEntityFactory.fetch(GroundPebble::class)!!
@@ -206,5 +208,7 @@ class ProspectorJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
                 )
             )
         }
+
+        requestToPlaySound(SoundAsset.DIG_SOUND, false)
     }
 }

@@ -223,6 +223,7 @@
             <key type="filename">../frames/Projectiles1/CannonBall.png</key>
             <key type="filename">../frames/Projectiles1/Fire/Fireball.png</key>
             <key type="filename">../frames/Projectiles1/HoneyDrip/drip.png</key>
+            <key type="filename">../frames/Projectiles1/KibboHammer.png</key>
             <key type="filename">../frames/Projectiles1/Prickly.png</key>
             <key type="filename">../frames/Projectiles1/ReactorManProjectile/small.png</key>
             <key type="filename">../frames/Projectiles1/Snowball.png</key>
@@ -352,6 +353,11 @@
             </struct>
             <key type="filename">../frames/Projectiles1/DuoBall.png</key>
             <key type="filename">../frames/Projectiles1/IceBomb.png</key>
+            <key type="filename">../frames/Projectiles1/LampeonBullet/0.png</key>
+            <key type="filename">../frames/Projectiles1/LampeonBullet/1.png</key>
+            <key type="filename">../frames/Projectiles1/LampeonBullet/2.png</key>
+            <key type="filename">../frames/Projectiles1/LampeonBullet/3.png</key>
+            <key type="filename">../frames/Projectiles1/LampeonBullet/4.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -387,6 +393,7 @@
             <key type="filename">../frames/Projectiles1/Monkey_Ball.png</key>
             <key type="filename">../frames/Projectiles1/Nuclear_Monkey_Ball.png</key>
             <key type="filename">../frames/Projectiles1/PreciousGem/blue.png</key>
+            <key type="filename">../frames/Projectiles1/PreciousGem/green.png</key>
             <key type="filename">../frames/Projectiles1/PreciousGem/pink.png</key>
             <key type="filename">../frames/Projectiles1/PreciousGem/purple.png</key>
             <key type="filename">../frames/Projectiles1/ReactorMonkeyBall/0.png</key>
@@ -425,6 +432,8 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Projectiles1/FirePellet.png</key>
+            <key type="filename">../frames/Projectiles1/Rock/big.png</key>
+            <key type="filename">../frames/Projectiles1/Rock/small.png</key>
             <key type="filename">../frames/Projectiles1/Snowball2.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
