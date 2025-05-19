@@ -203,6 +203,7 @@ comprehensive listing of the credits for the artwork used in this game.
     - Biker Kibbo
   - [Random Enemies Set 8](https://www.deviantart.com/megared225/art/Random-Enemies-Set-8-543327890)
     - Cool Telly
+    - Steam Roller Man
   - [Random Enemies Set 9](https://www.deviantart.com/megared225/art/Random-Enemy-Sprites-Set-9-557171615):
     - Fire Dispensenator
     - Drill Tank XT
