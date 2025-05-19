@@ -749,9 +749,23 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="308" x="9184" y="1472" width="320" height="32"/>
+  <object id="308" x="9184" y="1472" width="320" height="32">
+   <properties>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="cull_room" value="room11"/>
+    <property name="spawn_room" value="room11"/>
+    <property name="spawn_type" value="spawn_room"/>
+   </properties>
+  </object>
   <object id="315" x="9504" y="1344" width="64" height="160"/>
-  <object id="317" x="9216" y="1216" width="384" height="32"/>
+  <object id="317" x="9216" y="1216" width="384" height="32">
+   <properties>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="cull_room" value="room11"/>
+    <property name="spawn_room" value="room11"/>
+    <property name="spawn_type" value="spawn_room"/>
+   </properties>
+  </object>
   <object id="319" name="LadderTop" x="9568" y="1344" width="32" height="8"/>
   <object id="321" x="9312" y="1152" width="64" height="64"/>
   <object id="322" x="9184" y="992" width="384" height="96"/>

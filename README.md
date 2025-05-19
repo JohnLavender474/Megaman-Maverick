@@ -195,6 +195,8 @@ comprehensive listing of the credits for the artwork used in this game.
     - Big Fish Neo
     - Cannon Hopper
     - Telly Saucer
+  - [Random Enemies Set 6](https://www.deviantart.com/megared225/art/Random-Enemies-Set-6-523218783)
+    - Submarine Joe
   - [Random Enemies Set 7](https://www.deviantart.com/megared225/art/Random-Enemies-Set-7-539684729)
     - Iceskate Peng
     - Duo-Ball Cannon

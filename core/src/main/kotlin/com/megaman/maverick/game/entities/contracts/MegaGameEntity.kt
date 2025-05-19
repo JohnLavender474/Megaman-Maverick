@@ -22,7 +22,7 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
         private set
 
     override fun onSpawn(spawnProps: Properties) {
-        mapObjectId = spawnProps.getOrDefault(ConstKeys.ID, 0, Int::class)
+        mapObjectId = spawnProps.getOrDefault(ConstKeys.ID, -1, Int::class)
         runnablesOnSpawn.values().forEach { it.invoke() }
         MegaGameEntities.add(this)
         GameLogger.debug(TAG, "${getTag()}: onSpawn(): this=$this, spawnProps=$spawnProps")

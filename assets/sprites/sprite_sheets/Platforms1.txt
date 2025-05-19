@@ -26,189 +26,189 @@ repeat: none
   index: -1
 AppearingBrick
   rotate: false
-  xy: 774, 450
+  xy: 578, 34
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 AppearingBrick2
   rotate: false
-  xy: 92, 0
+  xy: 676, 34
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 BlockPiece/brown
   rotate: false
-  xy: 126, 0
+  xy: 296, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 BlockPiece/gold
   rotate: false
-  xy: 160, 0
+  xy: 330, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 BlockPiece/red
   rotate: false
-  xy: 194, 0
+  xy: 364, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Boulder/Large
   rotate: false
-  xy: 228, 0
+  xy: 398, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Boulder/Medium
   rotate: false
-  xy: 262, 0
+  xy: 432, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Boulder/Small
   rotate: false
-  xy: 296, 0
+  xy: 466, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 BreakableIce/1
   rotate: false
-  xy: 330, 0
+  xy: 500, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 BreakableIce/2
   rotate: false
-  xy: 364, 0
+  xy: 534, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 BreakableIce/3
   rotate: false
-  xy: 398, 0
+  xy: 568, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 BreakableIce/Shards
   rotate: false
-  xy: 493, 516
+  xy: 66, 132
   size: 160, 32
   orig: 160, 32
   offset: 0, 0
   index: -1
 Brick
   rotate: false
-  xy: 432, 0
+  xy: 602, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ConveyorBelt/LeftPart-MoveLeft-Green
   rotate: false
-  xy: 466, 0
+  xy: 636, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ConveyorBelt/LeftPart-MoveLeft
   rotate: false
-  xy: 940, 0
+  xy: 182, 34
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 ConveyorBelt/LeftPart-MoveRight-Green
   rotate: false
-  xy: 500, 0
+  xy: 670, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ConveyorBelt/LeftPart-MoveRight
   rotate: false
-  xy: 0, 450
+  xy: 248, 34
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 ConveyorBelt/MiddlePart-MoveLeft-Green
   rotate: false
-  xy: 534, 0
+  xy: 704, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ConveyorBelt/MiddlePart-MoveRight-Green
   rotate: false
-  xy: 568, 0
+  xy: 738, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ConveyorBelt/MiddlePart
   rotate: false
-  xy: 66, 450
+  xy: 314, 34
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 ConveyorBelt/RightPart-MoveLeft-Green
   rotate: false
-  xy: 602, 0
+  xy: 772, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ConveyorBelt/RightPart-MoveLeft
   rotate: false
-  xy: 132, 450
+  xy: 380, 34
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 ConveyorBelt/RightPart-MoveRight-Green
   rotate: false
-  xy: 636, 0
+  xy: 806, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 CrumblingBlock
   rotate: false
-  xy: 670, 0
+  xy: 840, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 DropperLift/Closed
   rotate: false
-  xy: 840, 0
+  xy: 82, 34
   size: 48, 32
   orig: 48, 32
   offset: 0, 0
   index: -1
 DropperLift/Open
   rotate: false
-  xy: 890, 0
+  xy: 132, 34
   size: 48, 32
   orig: 48, 32
   offset: 0, 0
   index: -1
 DropperLift/Opening
   rotate: false
-  xy: 872, 450
+  xy: 228, 132
   size: 96, 64
   orig: 96, 64
   offset: 0, 0
@@ -229,7 +229,7 @@ FlipperPlatform/FlipToRight
   index: -1
 FlipperPlatform/Left
   rotate: false
-  xy: 0, 516
+  xy: 326, 132
   size: 96, 64
   orig: 96, 64
   offset: 0, 0
@@ -243,7 +243,7 @@ FlipperPlatform/LeftDelay
   index: -1
 FlipperPlatform/Right
   rotate: false
-  xy: 98, 516
+  xy: 424, 132
   size: 96, 64
   orig: 96, 64
   offset: 0, 0
@@ -257,28 +257,28 @@ FlipperPlatform/RightDelay
   index: -1
 FrozenBlock
   rotate: false
-  xy: 704, 0
+  xy: 874, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GearTrolleyPlatform
   rotate: false
-  xy: 198, 450
+  xy: 446, 34
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 InfernoChainPlatform/chain
   rotate: false
-  xy: 738, 0
+  xy: 908, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 InfernoChainPlatform/platform
   rotate: false
-  xy: 772, 0
+  xy: 942, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -292,28 +292,28 @@ Lift
   index: -1
 MetalCrate
   rotate: false
-  xy: 264, 450
+  xy: 909, 34
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 MoonCrate
   rotate: false
-  xy: 330, 450
+  xy: 0, 132
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Platform1_64x8
   rotate: false
-  xy: 396, 450
+  xy: 230, 0
   size: 64, 8
   orig: 64, 8
   offset: 0, 0
   index: -1
 Platform2
   rotate: false
-  xy: 392, 516
+  xy: 808, 34
   size: 99, 32
   orig: 99, 32
   offset: 0, 0
@@ -327,7 +327,7 @@ PropellerPlatform
   index: -1
 PropellerPlatform_OLD
   rotate: false
-  xy: 655, 516
+  xy: 620, 132
   size: 256, 32
   orig: 256, 32
   offset: 0, 0
@@ -341,21 +341,28 @@ RocketPlatform
   index: -1
 RocketPlatform_v2
   rotate: false
-  xy: 66, 0
+  xy: 878, 132
   size: 24, 448
   orig: 24, 448
   offset: 0, 0
   index: -1
+SteamRoller
+  rotate: false
+  xy: 904, 132
+  size: 112, 96
+  orig: 112, 96
+  offset: 0, 0
+  index: -1
 SwingingPlatform/other_small_platform
   rotate: false
-  xy: 528, 450
+  xy: 66, 0
   size: 80, 5
   orig: 80, 5
   offset: 0, 0
   index: -1
 SwingingPlatform/platform
   rotate: false
-  xy: 610, 450
+  xy: 0, 34
   size: 80, 16
   orig: 80, 16
   offset: 0, 0
@@ -369,35 +376,35 @@ SwingingPlatform/ring
   index: -1
 SwingingPlatform/small_platform
   rotate: false
-  xy: 692, 450
+  xy: 148, 0
   size: 80, 5
   orig: 80, 5
   offset: 0, 0
   index: -1
 TrackBlock
   rotate: false
-  xy: 806, 0
+  xy: 976, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 WoodBlock1
   rotate: false
-  xy: 462, 450
+  xy: 512, 34
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 WoodPlank/fire
   rotate: false
-  xy: 196, 516
+  xy: 522, 132
   size: 96, 64
   orig: 96, 64
   offset: 0, 0
   index: -1
 WoodPlank/still
   rotate: false
-  xy: 294, 516
+  xy: 710, 34
   size: 96, 32
   orig: 96, 32
   offset: 0, 0

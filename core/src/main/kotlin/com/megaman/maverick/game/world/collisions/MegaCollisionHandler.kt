@@ -57,7 +57,7 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
 
             when (dynamicBodyDirection) {
                 Direction.UP -> {
-                    if (dynamicBody.isSensing(BodySense.FEET_ON_GROUND)) {
+                    if (dynamicBody.getFeetBlocks().contains(staticBody.getEntity())) {
                         dynamicBody.setY(staticBody.getMaxY())
                         dynamicBody.physics.frictionOnSelf.x += staticBody.physics.frictionToApply.x
                         return true
@@ -67,7 +67,7 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
                 }
 
                 Direction.DOWN -> {
-                    if (dynamicBody.isSensing(BodySense.FEET_ON_GROUND)) {
+                    if (dynamicBody.getFeetBlocks().contains(staticBody.getEntity())) {
                         dynamicBody.setMaxY(staticBody.getY())
                         dynamicBody.physics.frictionOnSelf.x += staticBody.physics.frictionToApply.x
                         return true
@@ -77,7 +77,7 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
                 }
 
                 Direction.LEFT -> {
-                    if (dynamicBody.isSensing(BodySense.FEET_ON_GROUND)) {
+                    if (dynamicBody.getFeetBlocks().contains(staticBody.getEntity())) {
                         dynamicBody.setMaxX(staticBody.getX())
                         dynamicBody.physics.frictionOnSelf.y += staticBody.physics.frictionToApply.y
                         return true
@@ -87,7 +87,7 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
                 }
 
                 Direction.RIGHT -> {
-                    if (dynamicBody.isSensing(BodySense.FEET_ON_GROUND)) {
+                    if (dynamicBody.getFeetBlocks().contains(staticBody.getEntity())) {
                         dynamicBody.setX(staticBody.getMaxX())
                         dynamicBody.physics.frictionOnSelf.y += staticBody.physics.frictionToApply.y
                         return true
@@ -97,7 +97,7 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
                 }
             }
         } else if (staticBody.hasBodyLabel(BodyLabel.COLLIDE_UP_ONLY)) {
-            // TODO: account for IDirectional logic similar to "collide up only" logic
+            // TODO: account for IDirectional logic similar to "collide down only" logic
 
             if (dynamicBody == megaman.body && megaman.isBehaviorActive(BehaviorType.CLIMBING)) return true
 

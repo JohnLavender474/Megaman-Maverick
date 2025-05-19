@@ -1921,6 +1921,7 @@ sprites/frames/Platforms1/8bitBlueBlock.png
 sprites/frames/Platforms1/8bitBlueBlockTransBorder.png
 sprites/frames/Platforms1/Lift.png
 sprites/frames/Platforms1/RocketPlatform.png
+sprites/frames/Platforms1/SteamRoller.png
 sprites/frames/Platforms1/WoodBlock1.png
 sprites/frames/Platforms1/CrumblingBlock.png
 sprites/frames/Platforms1/Boulder/Small.png
@@ -1973,6 +1974,10 @@ sprites/frames/Enemies1/Popoheli/frozen.png
 sprites/frames/Enemies1/GapingFish/Chomping.png
 sprites/frames/Enemies1/GapingFish/Swimming.png
 sprites/frames/Enemies1/GapingFish/Gaping.png
+sprites/frames/Enemies1/SteamRollerMan/roll.png
+sprites/frames/Enemies1/SteamRollerMan/smash.png
+sprites/frames/Enemies1/SteamRollerMan/reverse.png
+sprites/frames/Enemies1/SteamRollerMan/idle.png
 sprites/frames/Enemies1/Penguin/Slippin.png
 sprites/frames/Enemies1/Penguin/Stand.png
 sprites/frames/Enemies1/Penguin/Slide.png
@@ -2815,6 +2820,7 @@ sprites/piskel/VandalJoe.piskel
 sprites/piskel/AirConditioner.piskel
 sprites/piskel/SpikeBall.piskel
 sprites/piskel/QuickSand_v2_Left.piskel
+sprites/piskel/SteamRollerMan.piskel
 sprites/piskel/Popup Canon.piskel
 sprites/piskel/InfernoBKG.piskel
 sprites/piskel/LevelPauseMenu.piskel
@@ -2836,6 +2842,7 @@ sprites/piskel/CannoHoney.piskel
 sprites/piskel/MegamanFire.piskel
 sprites/piskel/Bits.piskel
 sprites/piskel/large_swing.piskel
+sprites/piskel/SteamRoller.piskel
 sprites/piskel/DrillTankXT.piskel
 sprites/piskel/Up n Down.piskel
 sprites/piskel/InfernoMan_Mugshot_v2.piskel

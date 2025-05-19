@@ -8,7 +8,7 @@ import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Loop
 import com.mega.game.engine.common.time.Timer
 
-abstract class StateLoopHandler<T>(states: Array<T>, timers: Array<GamePair<T, Timer>>): Resettable, Updatable {
+open class StateLoopHandler<T>(states: Array<T>, timers: Array<GamePair<T, Timer>>): Resettable, Updatable {
 
     private val stateLoop = Loop(states)
     private val stateTimers = orderedMapOfEntries(timers)

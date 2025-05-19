@@ -1,126 +1,45 @@
-===== SESSION STARTED: 2025-05-18T20:43:12.231166871 =====
-20:43:17 | DEBUG | SubmarineJoe | init()
-20:43:17 | DEBUG | SubmarineJoe | onSpawn(): spawnProps=Properties({
-	[bounds=[44576.0,320.0,32.0,32.0]]
-	[x=44576.0]
+===== SESSION STARTED: 2025-05-19T00:45:50.354024141 =====
+00:45:56 | DEBUG | SteamRollerMan | init()
+00:45:56 | DEBUG | SteamRollerMan | onSpawn(): spawnProps=Properties({
+	[bounds=[45632.0,192.0,32.0,32.0]]
+	[x=45632.0]
 	[height=32.0]
-	[id=543]
-	[name=SubmarineJoe]
-	[y=320.0]
+	[id=556]
+	[name=SteamRollerMan]
+	[facing=left]
+	[y=192.0]
 	[width=32.0]
 })
-20:43:19 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
-20:43:19 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
-20:43:20 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
-20:43:21 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
-20:43:21 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
-20:43:22 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
-20:43:23 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
-20:43:23 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
-20:43:24 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
-20:43:25 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
-20:43:25 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
-20:43:25 | DEBUG | SubmarineJoe | onHealthDepleted()
-20:43:25 | DEBUG | SubmarineJoe | onDestroy()
-20:43:27 | DEBUG | SubmarineJoe | onSpawn(): spawnProps=Properties({
-	[bounds=[44576.0,320.0,32.0,32.0]]
-	[x=44576.0]
-	[height=32.0]
-	[id=543]
-	[name=SubmarineJoe]
-	[y=320.0]
-	[width=32.0]
-})
-20:43:29 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
-20:43:29 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
-20:43:30 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
-20:43:31 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
-20:43:31 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
-20:43:31 | DEBUG | SubmarineJoe | onHealthDepleted()
-20:43:31 | DEBUG | SubmarineJoe | onDestroy()
-20:43:32 | DEBUG | SubmarineJoe | onSpawn(): spawnProps=Properties({
-	[bounds=[44576.0,320.0,32.0,32.0]]
-	[x=44576.0]
-	[height=32.0]
-	[id=543]
-	[name=SubmarineJoe]
-	[y=320.0]
-	[width=32.0]
-})
-20:43:33 | DEBUG | SubmarineJoe | onHealthDepleted()
-20:43:33 | DEBUG | SubmarineJoe | onDestroy()
-20:43:41 | DEBUG | SubmarineJoe | onSpawn(): spawnProps=Properties({
-	[bounds=[44576.0,320.0,32.0,32.0]]
-	[x=44576.0]
-	[height=32.0]
-	[id=543]
-	[name=SubmarineJoe]
-	[y=320.0]
-	[width=32.0]
-})
-20:43:43 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
-20:43:43 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
-20:43:44 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
-20:43:45 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
-20:43:45 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
-20:43:46 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
-20:43:48 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
-20:43:48 | DEBUG | SubmarineJoe | onHealthDepleted()
-20:43:48 | DEBUG | SubmarineJoe | onDestroy()
-20:43:50 | DEBUG | SubmarineJoe | onSpawn(): spawnProps=Properties({
-	[bounds=[44576.0,320.0,32.0,32.0]]
-	[x=44576.0]
-	[height=32.0]
-	[id=543]
-	[name=SubmarineJoe]
-	[y=320.0]
-	[width=32.0]
-})
-20:43:51 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
-20:43:52 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
-20:43:52 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
-20:43:55 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
-20:43:56 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
-20:43:56 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
-20:44:00 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
-20:44:01 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
-20:44:01 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
-20:44:03 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
-20:44:04 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
-20:44:04 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
-20:44:05 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
-20:44:06 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
-20:44:06 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
-20:44:08 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
-20:44:08 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
-20:44:09 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
-20:44:11 | DEBUG | SubmarineJoe | onHealthDepleted()
-20:44:11 | DEBUG | SubmarineJoe | onDestroy()
-20:44:12 | DEBUG | SubmarineJoe | onSpawn(): spawnProps=Properties({
-	[bounds=[44576.0,320.0,32.0,32.0]]
-	[x=44576.0]
-	[height=32.0]
-	[id=543]
-	[name=SubmarineJoe]
-	[y=320.0]
-	[width=32.0]
-})
-20:44:13 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
-20:44:13 | DEBUG | SubmarineJoe | onHealthDepleted()
-20:44:13 | DEBUG | SubmarineJoe | onDestroy()
-20:44:15 | DEBUG | SubmarineJoe | onSpawn(): spawnProps=Properties({
-	[bounds=[44576.0,320.0,32.0,32.0]]
-	[x=44576.0]
-	[height=32.0]
-	[id=543]
-	[name=SubmarineJoe]
-	[y=320.0]
-	[width=32.0]
-})
-20:44:16 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
-20:44:16 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
-20:44:17 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
-20:44:18 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
-20:44:19 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
-20:44:19 | DEBUG | SubmarineJoe | onHealthDepleted()
-20:44:19 | DEBUG | SubmarineJoe | onDestroy()
+00:45:57 | DEBUG | SteamRollerMan | onChangeState(): current=ROLL, previous=IDLE
+00:45:57 | DEBUG | SteamRollerMan | onChangeState(): current=SMASH, previous=ROLL
+00:45:57 | DEBUG | SteamRollerMan | smash()
+00:45:57 | DEBUG | SteamRollerMan | onChangeState(): current=IDLE, previous=SMASH
+00:45:58 | DEBUG | SteamRollerMan | onChangeState(): current=ROLL, previous=IDLE
+00:45:59 | DEBUG | SteamRollerMan | onChangeState(): current=SMASH, previous=ROLL
+00:45:59 | DEBUG | SteamRollerMan | smash()
+00:45:59 | DEBUG | SteamRollerMan | onChangeState(): current=IDLE, previous=SMASH
+00:46:00 | DEBUG | SteamRollerMan | onChangeState(): current=ROLL, previous=IDLE
+00:46:01 | DEBUG | SteamRollerMan | onChangeState(): current=IDLE, previous=ROLL
+00:46:02 | DEBUG | SteamRollerMan | onChangeState(): current=REVERSE, previous=IDLE
+00:46:05 | DEBUG | SteamRollerMan | onChangeState(): current=IDLE, previous=REVERSE
+00:46:05 | DEBUG | SteamRollerMan | onChangeState(): current=ROLL, previous=IDLE
+00:46:05 | DEBUG | SteamRollerMan | onChangeState(): current=SMASH, previous=ROLL
+00:46:06 | DEBUG | SteamRollerMan | smash()
+00:46:06 | DEBUG | SteamRollerMan | onChangeState(): current=IDLE, previous=SMASH
+00:46:06 | DEBUG | SteamRollerMan | onChangeState(): current=ROLL, previous=IDLE
+00:46:07 | DEBUG | SteamRollerMan | onChangeState(): current=SMASH, previous=ROLL
+00:46:07 | DEBUG | SteamRollerMan | smash()
+00:46:07 | DEBUG | SteamRollerMan | onChangeState(): current=IDLE, previous=SMASH
+00:46:07 | DEBUG | SteamRollerMan | onChangeState(): current=ROLL, previous=IDLE
+00:46:07 | DEBUG | SteamRollerMan | onChangeState(): current=SMASH, previous=ROLL
+00:46:08 | DEBUG | SteamRollerMan | smash()
+00:46:08 | DEBUG | SteamRollerMan | onChangeState(): current=IDLE, previous=SMASH
+00:46:08 | DEBUG | SteamRollerMan | onChangeState(): current=ROLL, previous=IDLE
+00:46:09 | DEBUG | SteamRollerMan | onChangeState(): current=SMASH, previous=ROLL
+00:46:09 | DEBUG | SteamRollerMan | smash()
+00:46:09 | DEBUG | SteamRollerMan | onChangeState(): current=IDLE, previous=SMASH
+00:46:10 | DEBUG | SteamRollerMan | onChangeState(): current=ROLL, previous=IDLE
+00:46:12 | DEBUG | SteamRollerMan | onChangeState(): current=IDLE, previous=ROLL
+00:46:12 | DEBUG | SteamRollerMan | onChangeState(): current=REVERSE, previous=IDLE
+00:46:13 | DEBUG | SteamRollerMan | onHealthDepleted()
+00:46:13 | DEBUG | SteamRollerMan | onDestroy()

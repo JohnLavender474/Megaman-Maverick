@@ -8,7 +8,7 @@ import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.state.StateMachine
 
-abstract class StateMachineHandler<T>(
+open class StateMachineHandler<T>(
     private val stateMachine: StateMachine<T>,
     timers: Array<GamePair<T, Timer>>
 ) : Resettable, Updatable {
