@@ -1,1 +1,126 @@
-===== SESSION STARTED: 2025-05-17T21:31:21.684206021 =====
+===== SESSION STARTED: 2025-05-18T20:43:12.231166871 =====
+20:43:17 | DEBUG | SubmarineJoe | init()
+20:43:17 | DEBUG | SubmarineJoe | onSpawn(): spawnProps=Properties({
+	[bounds=[44576.0,320.0,32.0,32.0]]
+	[x=44576.0]
+	[height=32.0]
+	[id=543]
+	[name=SubmarineJoe]
+	[y=320.0]
+	[width=32.0]
+})
+20:43:19 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
+20:43:19 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
+20:43:20 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
+20:43:21 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
+20:43:21 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
+20:43:22 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
+20:43:23 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
+20:43:23 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
+20:43:24 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
+20:43:25 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
+20:43:25 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
+20:43:25 | DEBUG | SubmarineJoe | onHealthDepleted()
+20:43:25 | DEBUG | SubmarineJoe | onDestroy()
+20:43:27 | DEBUG | SubmarineJoe | onSpawn(): spawnProps=Properties({
+	[bounds=[44576.0,320.0,32.0,32.0]]
+	[x=44576.0]
+	[height=32.0]
+	[id=543]
+	[name=SubmarineJoe]
+	[y=320.0]
+	[width=32.0]
+})
+20:43:29 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
+20:43:29 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
+20:43:30 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
+20:43:31 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
+20:43:31 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
+20:43:31 | DEBUG | SubmarineJoe | onHealthDepleted()
+20:43:31 | DEBUG | SubmarineJoe | onDestroy()
+20:43:32 | DEBUG | SubmarineJoe | onSpawn(): spawnProps=Properties({
+	[bounds=[44576.0,320.0,32.0,32.0]]
+	[x=44576.0]
+	[height=32.0]
+	[id=543]
+	[name=SubmarineJoe]
+	[y=320.0]
+	[width=32.0]
+})
+20:43:33 | DEBUG | SubmarineJoe | onHealthDepleted()
+20:43:33 | DEBUG | SubmarineJoe | onDestroy()
+20:43:41 | DEBUG | SubmarineJoe | onSpawn(): spawnProps=Properties({
+	[bounds=[44576.0,320.0,32.0,32.0]]
+	[x=44576.0]
+	[height=32.0]
+	[id=543]
+	[name=SubmarineJoe]
+	[y=320.0]
+	[width=32.0]
+})
+20:43:43 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
+20:43:43 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
+20:43:44 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
+20:43:45 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
+20:43:45 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
+20:43:46 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
+20:43:48 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
+20:43:48 | DEBUG | SubmarineJoe | onHealthDepleted()
+20:43:48 | DEBUG | SubmarineJoe | onDestroy()
+20:43:50 | DEBUG | SubmarineJoe | onSpawn(): spawnProps=Properties({
+	[bounds=[44576.0,320.0,32.0,32.0]]
+	[x=44576.0]
+	[height=32.0]
+	[id=543]
+	[name=SubmarineJoe]
+	[y=320.0]
+	[width=32.0]
+})
+20:43:51 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
+20:43:52 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
+20:43:52 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
+20:43:55 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
+20:43:56 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
+20:43:56 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
+20:44:00 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
+20:44:01 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
+20:44:01 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
+20:44:03 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
+20:44:04 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
+20:44:04 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
+20:44:05 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
+20:44:06 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
+20:44:06 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
+20:44:08 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
+20:44:08 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
+20:44:09 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
+20:44:11 | DEBUG | SubmarineJoe | onHealthDepleted()
+20:44:11 | DEBUG | SubmarineJoe | onDestroy()
+20:44:12 | DEBUG | SubmarineJoe | onSpawn(): spawnProps=Properties({
+	[bounds=[44576.0,320.0,32.0,32.0]]
+	[x=44576.0]
+	[height=32.0]
+	[id=543]
+	[name=SubmarineJoe]
+	[y=320.0]
+	[width=32.0]
+})
+20:44:13 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
+20:44:13 | DEBUG | SubmarineJoe | onHealthDepleted()
+20:44:13 | DEBUG | SubmarineJoe | onDestroy()
+20:44:15 | DEBUG | SubmarineJoe | onSpawn(): spawnProps=Properties({
+	[bounds=[44576.0,320.0,32.0,32.0]]
+	[x=44576.0]
+	[height=32.0]
+	[id=543]
+	[name=SubmarineJoe]
+	[y=320.0]
+	[width=32.0]
+})
+20:44:16 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
+20:44:16 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
+20:44:17 | DEBUG | SubmarineJoe | onChangeState(): current=MOVE, previous=SHOOT
+20:44:18 | DEBUG | SubmarineJoe | onChangeState(): current=IDLE, previous=MOVE
+20:44:19 | DEBUG | SubmarineJoe | onChangeState(): current=SHOOT, previous=IDLE
+20:44:19 | DEBUG | SubmarineJoe | onHealthDepleted()
+20:44:19 | DEBUG | SubmarineJoe | onDestroy()

@@ -28,7 +28,7 @@ object StandardPathfinderResultConsumer {
         onTargetNull: () -> Unit = {},
         stopOnTargetNull: Boolean = true,
         preProcess: (() -> Unit)? = null,
-        trajectoryConsumer: (Vector2) -> Unit = { body.physics.velocity.set(it) },
+        trajectoryConsumer: (Vector2) -> Unit = { trajectory -> body.physics.velocity.set(trajectory) },
         postProcess: (() -> Unit)? = null,
         shapes: Array<IDrawableShape>? = null
     ): Boolean {

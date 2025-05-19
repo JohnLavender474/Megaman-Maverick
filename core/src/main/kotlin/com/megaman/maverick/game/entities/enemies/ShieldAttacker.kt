@@ -49,10 +49,13 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
 
     companion object {
         const val TAG = "ShieldAttacker"
+
         private const val X_VEL = 6f
+
         private const val CULL_TIME = 5f
         private const val TURN_DUR = 0.5f
         private const val FROZEN_DUR = 0.5f
+
         private val animDefs = orderedMapOf(
             "frozen" pairTo AnimationDef(),
             "turn" pairTo AnimationDef(1, 5, 0.1f, false),

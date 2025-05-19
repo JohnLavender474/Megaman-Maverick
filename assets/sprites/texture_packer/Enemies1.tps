@@ -644,10 +644,7 @@
             <key type="filename">../frames/Enemies1/NuttGlider/jump.png</key>
             <key type="filename">../frames/Enemies1/NuttGlider/jump_nutt.png</key>
             <key type="filename">../frames/Enemies1/SubmarineJoe/idle.png</key>
-            <key type="filename">../frames/Enemies1/SubmarineJoe/open2.png</key>
-            <key type="filename">../frames/Enemies1/SubmarineJoe/open3.png</key>
-            <key type="filename">../frames/Enemies1/SubmarineJoe/open4.png</key>
-            <key type="filename">../frames/Enemies1/SubmarineJoe/open6.png</key>
+            <key type="filename">../frames/Enemies1/SubmarineJoe/move.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -875,7 +872,6 @@
             <key type="filename">../frames/Enemies1/PreciousJoe/Shoot.png</key>
             <key type="filename">../frames/Enemies1/PreciousJoe/Stand.png</key>
             <key type="filename">../frames/Enemies1/Ratton/frozen.png</key>
-            <key type="filename">../frames/Enemies1/SubmarineJoe/open1.png</key>
             <key type="filename">../frames/Enemies1/SwinginJoe/throw.png</key>
             <key type="filename">../frames/Enemies1/WispyWasp/Nest.png</key>
             <struct type="IndividualSpriteSettings">
@@ -1150,6 +1146,21 @@
                 <rect>48,8,96,16</rect>
                 <key>scale9Paddings</key>
                 <rect>48,8,96,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/SubmarineJoe/shoot.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>84,12,168,24</rect>
+                <key>scale9Paddings</key>
+                <rect>84,12,168,24</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

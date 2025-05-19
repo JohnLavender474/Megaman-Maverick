@@ -1,11 +1,10 @@
 package com.megaman.maverick.game.entities.utils
 
 import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
-import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
@@ -18,34 +17,17 @@ import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.events.Event
-import com.mega.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toProps
-import com.megaman.maverick.game.world.body.getBody
 import com.megaman.maverick.game.world.body.getBounds
-import kotlin.math.abs
-
-fun performStandardShieldReflection(projectileFixture: IFixture, shieldFixture: IFixture) {
-    val body = projectileFixture.getBody()
-    var direction = getOverlapPushDirection(body.getBounds(), shieldFixture.getShape())
-    direction?.let {
-        when (it) {
-            Direction.UP -> body.physics.velocity.y = abs(body.physics.velocity.y)
-            Direction.DOWN -> body.physics.velocity.y = -abs(body.physics.velocity.y)
-            Direction.LEFT -> {
-                body.physics.velocity.x = -abs(body.physics.velocity.x)
-            }
-
-            Direction.RIGHT -> body.physics.velocity.x = abs(body.physics.velocity.x)
-        }
-    }
-}
+import com.megaman.maverick.game.world.body.getCenter
 
 fun getStandardEventCullingLogic(
     entity: ICullableEntity,
@@ -137,4 +119,13 @@ fun standardOnTeleportEnd(entity: GameEntity) {
 
 fun setStandardOnTeleportEndProp(entity: GameEntity) {
     entity.putProperty(ConstKeys.ON_TELEPORT_END, { standardOnTeleportEnd(entity) })
+}
+
+fun IBodyEntity.moveTowards(target: Vector2, speed: Float) {
+    val velocity = GameObjectPools.fetch(Vector2::class)
+        .set(target)
+        .sub(body.getCenter())
+        .nor()
+        .scl(speed)
+    body.physics.velocity.set(velocity)
 }

@@ -42,11 +42,10 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.BunbyRedRocket
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -142,14 +141,14 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             Direction.RIGHT -> trajectory.set(0f, -ROCKET_SPEED * facing.value)
         }.scl(ConstVals.PPM.toFloat() * movementScalar)
 
-        val rocket = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BUNBY_RED_ROCKET)!!
+        val rocket = MegaEntityFactory.fetch(BunbyRedRocket::class)!!
         rocket.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
-                ConstKeys.POSITION pairTo spawn,
-                ConstKeys.TRAJECTORY pairTo trajectory,
                 ConstKeys.FACING pairTo facing,
-                ConstKeys.DIRECTION pairTo direction
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.DIRECTION pairTo direction,
+                ConstKeys.TRAJECTORY pairTo trajectory
             )
         )
 

@@ -1609,6 +1609,7 @@ sprites/frames/Projectiles1/SmallIceCube/2.png
 sprites/frames/Projectiles1/CacaFlame/fall.png
 sprites/frames/Projectiles1/CacaFlame/burst.png
 sprites/frames/Projectiles1/CryoPellet.png
+sprites/frames/Projectiles1/SubmarineMissile.png
 sprites/frames/Projectiles1/SnowballForm.png
 sprites/frames/Projectiles1/RocketBomb.png
 sprites/frames/Projectiles1/Petal.png
@@ -2076,11 +2077,8 @@ sprites/frames/Enemies1/CannoHoney/closed_eyes.png
 sprites/frames/Enemies1/CannoHoney/closing_eyes.png
 sprites/frames/Enemies1/CannoHoney/opening_eyes.png
 sprites/frames/Enemies1/CannoHoney/oepn_eyes.png
-sprites/frames/Enemies1/SubmarineJoe/open3.png
-sprites/frames/Enemies1/SubmarineJoe/open4.png
-sprites/frames/Enemies1/SubmarineJoe/open6.png
-sprites/frames/Enemies1/SubmarineJoe/open2.png
-sprites/frames/Enemies1/SubmarineJoe/open1.png
+sprites/frames/Enemies1/SubmarineJoe/move.png
+sprites/frames/Enemies1/SubmarineJoe/shoot.png
 sprites/frames/Enemies1/SubmarineJoe/idle.png
 sprites/frames/Enemies1/SwimmingMet/Swim.png
 sprites/frames/Enemies1/SwimmingMet/LayDown.png
@@ -2628,6 +2626,7 @@ sprites/piskel/ChargedShot_Residual_Half.piskel
 sprites/piskel/BuilderKibbo.piskel
 sprites/piskel/Nuclear_Monkey_Ball.piskel
 sprites/piskel/JetMet.piskel
+sprites/piskel/SubmarineMissile.piskel
 sprites/piskel/CanonMet.piskel
 sprites/piskel/Bunby Tank DX.piskel
 sprites/piskel/ColtonJoe.piskel

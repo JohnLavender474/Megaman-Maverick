@@ -81,7 +81,7 @@ import com.megaman.maverick.game.controllers.loadControllerButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.enemies.DrillTankXT
+import com.megaman.maverick.game.entities.enemies.SubmarineJoe
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.events.EventType
@@ -139,7 +139,7 @@ class MegamanMaverickGame(
         private const val LOADING = "LOADING"
         private const val LOG_FILE_NAME = "logs.txt"
         private const val SCREENSHOT_KEY = Input.Keys.P
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(DrillTankXT.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(SubmarineJoe.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.oneFixtureMatches(FixtureType.CONSUMER)
         }
@@ -236,6 +236,7 @@ class MegamanMaverickGame(
         val gameHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
         val gameCamera = RotatableCamera(onJustFinishedRotating = {
             setCameraRotating(false)
+            setFocusSnappedAway(false)
             eventsMan.submitEvent(Event(EventType.END_GAME_CAM_ROTATION))
         })
         gameCamera.setToDefaultPosition()

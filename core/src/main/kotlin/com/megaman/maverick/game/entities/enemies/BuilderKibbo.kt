@@ -52,7 +52,7 @@ class BuilderKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
     companion object {
         const val TAG = "BuilderKibbo"
 
-        private const val STAND_DUR = 0.75f
+        private const val STAND_DUR = 1f
         private const val PRE_THROW_DUR = 0.25f
         private const val THROW_DUR = 0.5f
 

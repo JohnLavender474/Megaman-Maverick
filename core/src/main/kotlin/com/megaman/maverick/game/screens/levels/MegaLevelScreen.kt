@@ -457,6 +457,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 bossHealthHandler.unset()
 
                 engine.systems.forEach { it.on = true }
+
+                game.setFocusSnappedAway(false)
                 game.putProperty(ConstKeys.ROOM_TRANSITION, false)
 
                 MegaGameEntities.getOfType(EntityType.ENEMY).forEach { it.destroy() }

@@ -1,5 +1,6 @@
 package com.mega.game.engine.common.extensions
 
+import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.common.objects.GamePair
@@ -13,6 +14,12 @@ fun <T, U> objectMapOf(vararg pairs: GamePair<T, U>): ObjectMap<T, U> {
 fun <T, U> orderedMapOf(vararg pairs: GamePair<T, U>): OrderedMap<T, U> {
     val map = OrderedMap<T, U>()
     pairs.forEach { map.put(it.first, it.second) }
+    return map
+}
+
+fun <T, U> orderedMapOfEntries(entries: Array<GamePair<T, U>>): OrderedMap<T, U> {
+    val map = OrderedMap<T, U>()
+    entries.forEach { map.put(it.first, it.second) }
     return map
 }
 
