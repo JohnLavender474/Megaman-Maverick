@@ -29,7 +29,6 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.GameEntity
-import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -66,8 +65,8 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
-class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE), IAnimatedEntity, IParentEntity,
-    IFreezableEntity, IFireableEntity {
+class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE), IAnimatedEntity,
+    IParentEntity<BabySpider>, IFreezableEntity, IFireableEntity {
 
     companion object {
         const val TAG = "Bospider"
@@ -123,7 +122,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
     override val damageNegotiator = object : IDamageNegotiator {
         override fun get(damager: IDamager) = BOSS_DMG_NEG[damager::class]?.get(damager) ?: 0
     }
-    override var children = Array<IGameEntity>()
+    override var children = Array<BabySpider>()
     override var burning: Boolean
         get() = !burnTimer.isFinished()
         set(value) {

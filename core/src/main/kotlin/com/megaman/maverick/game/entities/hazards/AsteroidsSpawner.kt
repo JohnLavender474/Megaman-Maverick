@@ -18,7 +18,6 @@ import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
-import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
@@ -39,7 +38,7 @@ import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.getCenter
 
-class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEntity, ICullableEntity,
+class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEntity<Asteroid>, ICullableEntity,
     IDrawableShapesEntity, IActivatable {
 
     companion object {
@@ -59,7 +58,7 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
         private const val DEFAULT_MIN_Y = -100000f * ConstVals.PPM
     }
 
-    override var children = Array<IGameEntity>()
+    override var children = Array<Asteroid>()
     override var on = true
         set(value) {
             field = value

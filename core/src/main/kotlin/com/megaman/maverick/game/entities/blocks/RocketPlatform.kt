@@ -18,7 +18,6 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.entities.GameEntity
-import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IChildEntity
 import com.mega.game.engine.entities.contracts.IMotionEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
@@ -34,6 +33,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -43,8 +43,8 @@ import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.setEntity
 
-class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, ISpritesEntity, IMotionEntity,
-    IEventListener, IDamager, IDirectional {
+class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity<MegaGameEntity>, ISpritesEntity,
+    IMotionEntity, IEventListener, IDamager, IDirectional {
 
     companion object {
         const val TAG = "RocketPlatform"
@@ -60,7 +60,7 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, IS
         set(value) {
             body.direction = value
         }
-    override var children = Array<IGameEntity>()
+    override var children = Array<MegaGameEntity>()
 
     private val canMove: Boolean
         get() = !game.isCameraRotating()

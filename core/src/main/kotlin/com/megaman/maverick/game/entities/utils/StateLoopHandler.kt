@@ -25,8 +25,6 @@ open class StateLoopHandler<T>(states: Array<T>, timers: Array<GamePair<T, Timer
         if (shouldUpdateTimerFor(currentState)) stateTimer?.update(delta)
 
         if (shouldGoToNextState(currentState, stateTimer)) {
-            stateTimer?.reset()
-
             val newState = stateLoop.next()
             onChangeState(newState, currentState)
         }
@@ -38,7 +36,9 @@ open class StateLoopHandler<T>(states: Array<T>, timers: Array<GamePair<T, Timer
 
     open fun shouldGoToNextState(state: T, timer: Timer?) = timer?.isFinished() == true
 
-    open fun onChangeState(current: T, previous: T) {}
+    open fun onChangeState(current: T, previous: T) {
+        stateTimers[current]?.reset()
+    }
 
     open fun shouldUpdateTimerFor(state: T) = true
 }

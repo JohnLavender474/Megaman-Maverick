@@ -16,8 +16,6 @@ import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
-import com.mega.game.engine.entities.GameEntity
-import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -38,7 +36,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.roundToInt
 
-class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IBodyEntity, IParentEntity {
+class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IBodyEntity, IParentEntity<MegaGameEntity> {
 
     enum class ElectrocutieState { MOVE, CHARGE, SHOCK }
 
@@ -50,12 +48,12 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
         const val SHOCK_DURATION = 0.5f
     }
 
-    override var children = Array<IGameEntity>()
+    override var children = Array<MegaGameEntity>()
 
     val currentState: ElectrocutieState
         get() = loop.getCurrent()
 
-    private val loop = Loop(ElectrocutieState.values().toGdxArray())
+    private val loop = Loop(ElectrocutieState.entries.toTypedArray().toGdxArray())
     private val timers = objectMapOf(
         ElectrocutieState.MOVE pairTo Timer(MOVE_DURATION),
         ElectrocutieState.CHARGE pairTo Timer(CHARGE_DURATION),
@@ -173,7 +171,7 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
 
     override fun onDestroy() {
         super.onDestroy()
-        children.forEach { (it as GameEntity).destroy() }
+        children.forEach { it.destroy() }
         children.clear()
     }
 

@@ -8,7 +8,6 @@ import com.mega.game.engine.common.extensions.toOrderedSet
 import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
@@ -23,7 +22,8 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.setConsumer
 
-class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IParentEntity {
+class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
+    IParentEntity<IGameEntity> {
 
     companion object {
         const val TAG = "FixtureTypeOverlapSpawn"
@@ -31,7 +31,7 @@ class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : MegaGameEntity(game),
 
     override var children = Array<IGameEntity>()
 
-    private lateinit var entitySuppliers: Array<GamePair<() -> GameEntity, Properties>>
+    private lateinit var entitySuppliers: Array<GamePair<() -> MegaGameEntity, Properties>>
     private lateinit var spawnMask: OrderedSet<FixtureType>
     private val fixturesConsumed = ObjectSet<FixtureType>()
     private var objectSpawned = false

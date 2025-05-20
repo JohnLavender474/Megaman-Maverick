@@ -35,8 +35,8 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
 
-open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IParentEntity, IMotionEntity,
-    IDrawableShapesEntity {
+open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IParentEntity<IGameEntity>,
+    IMotionEntity, IDrawableShapesEntity {
 
     companion object {
         const val TAG = "RotationAnchor"
@@ -50,6 +50,8 @@ open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
     override fun getType() = EntityType.SPECIAL
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
+        super.init()
         addComponent(MotionComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
@@ -58,6 +60,7 @@ open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!

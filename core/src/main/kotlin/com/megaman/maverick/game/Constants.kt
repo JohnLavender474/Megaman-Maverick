@@ -289,6 +289,7 @@ object ConstKeys {
     const val BACKGROUND = "background"
     const val ENTITY_TYPE = "entity_type"
     const val CULL = "cull"
+    const val CUSTOM_CULL = "custom_cull"
     const val CULL_TYPE = "cull_type"
     const val CULL_ROOM = "cull_room"
     const val ON = "on"

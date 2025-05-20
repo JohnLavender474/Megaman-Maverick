@@ -56,8 +56,8 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IParentEntity, ISpritesEntity,
-    IAnimatedEntity, IFontsEntity, IAudioEntity, IDirectional, IDamager, IEventListener {
+class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IParentEntity<IGameEntity>,
+    ISpritesEntity, IAnimatedEntity, IFontsEntity, IAudioEntity, IDirectional, IDamager, IEventListener {
 
     enum class ToggleeState {
         TOGGLED_ON, TOGGLED_OFF, TOGGLING_TO_ON, TOGGLING_TO_OFF;
@@ -95,8 +95,8 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         private set
      */
 
-    private val offEntitySuppliers = Array<GamePair<() -> GameEntity, Properties>>()
-    private val onEntitySuppliers = Array<GamePair<() -> GameEntity, Properties>>()
+    private val offEntitySuppliers = Array<GamePair<() -> MegaGameEntity, Properties>>()
+    private val onEntitySuppliers = Array<GamePair<() -> MegaGameEntity, Properties>>()
 
     private val switcharooArrowBlinkTimer = Timer(SWITCHAROO_ARROW_BLINK_DUR)
 

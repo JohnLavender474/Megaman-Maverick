@@ -46,8 +46,13 @@ class Body(
 
     override fun getBounds(out: GameRectangle): GameRectangle {
         out.set(bounds)
+
         val center = bounds.getCenter(tempVec1)
         out.rotate(direction.rotation, center.x, center.y)
+
+        out.drawingColor = drawingColor
+        out.drawingShapeType = drawingShapeType
+
         return out
     }
 

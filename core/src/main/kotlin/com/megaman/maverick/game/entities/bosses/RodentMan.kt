@@ -30,7 +30,6 @@ import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setPosition
-import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
 import com.mega.game.engine.state.EnumStateMachineBuilder
@@ -62,7 +61,7 @@ import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, IAnimatedEntity, IFaceable,
+class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<RatRobot>, IAnimatedEntity, IFaceable,
     IDirectional {
 
     companion object {
@@ -164,7 +163,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity, 
             body.direction = value
         }
     override lateinit var facing: Facing
-    override var children = Array<IGameEntity>()
+    override var children = Array<RatRobot>()
 
     private lateinit var stateMachine: StateMachine<RodentManState>
     private val currentState: RodentManState

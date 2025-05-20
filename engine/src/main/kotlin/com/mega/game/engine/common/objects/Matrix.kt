@@ -122,6 +122,11 @@ open class Matrix<T>(var rows: Int = 0, var columns: Int = 0) : MutableCollectio
         for (x in 0 until columns) for (y in 0 until rows) action(x, y, this[x, y])
     }
 
+    fun flatten(out: Array<T>): Array<T> {
+        forEach { _, _, element -> out.add(element) }
+        return out
+    }
+
     override fun contains(element: T) = elementToIndexMap.containsKey(element)
 
     override fun containsAll(elements: Collection<T>) = elements.all { contains(it) }

@@ -64,17 +64,19 @@ fun <T> Array<T>.processAndFilter(process: (T) -> Unit, filter: (T) -> Boolean):
 fun <T> Array<T>.processAndFilter(process: Consumer<T>, filter: Predicate<T>) =
     processAndFilter(process::accept, filter::evaluate)
 
-fun <T> Array<T>.getRandomElements(amount: Int): Array<T> {
+fun <T> Array<T>.getRandomElements(amount: Int, temp: Array<T>): Array<T> {
     require(amount >= 0) { "Number of indices must not be negative." }
     require(amount <= size) { "Number of indices must not exceed the size of the array." }
 
-    if (amount == 0) return Array()
+    temp.clear()
 
-    val copy = Array(this)
-    copy.shuffle()
-    copy.truncate(amount)
+    if (amount == 0) return temp
 
-    return copy
+    temp.addAll(this)
+    temp.shuffle()
+    temp.truncate(amount)
+
+    return temp
 }
 
 fun gdxFloatArrayOf(vararg elements: Float): FloatArray {

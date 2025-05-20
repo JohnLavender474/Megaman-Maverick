@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
@@ -43,7 +42,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
-import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.blocks.SteamRoller
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
@@ -73,7 +71,7 @@ class SteamRollerMan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
 
         private const val SMASH_AREA_WIDTH = 2.25f
         private const val SMASH_AREA_HEIGHT = 1f
-        private const val SMASH_AREA_OFFSET_X = 1.75f
+        private const val SMASH_AREA_OFFSET_X = 1f
         private const val SMASH_AREA_OFFSET_Y = 0.25f
         private const val SMASH_ROCKS = 5
         private const val SMASH_ROCKS_MIN_OFFSET_X = -0.35f
@@ -117,8 +115,6 @@ class SteamRollerMan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
     ).also { it.drawingColor = Color.GREEN }
 
     private lateinit var shieldFixture1: Fixture
-
-    private val blocks = OrderedSet<Block>()
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -293,22 +289,22 @@ class SteamRollerMan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
             body.physics.gravity.y = gravity * ConstVals.PPM
 
             damageableFixture.offsetFromBodyAttachment.set(
-                0.25f * ConstVals.PPM * -facing.value,
+                1f * ConstVals.PPM * -facing.value,
                 0.35f * ConstVals.PPM
             )
 
             damagerFixture1.offsetFromBodyAttachment.set(
-                0.25f * ConstVals.PPM * -facing.value,
+                1f * ConstVals.PPM * -facing.value,
                 0.35f * ConstVals.PPM
             )
 
             damagerFixture2.offsetFromBodyAttachment.set(
-                0.5f * ConstVals.PPM * -facing.value,
+                1.25f * ConstVals.PPM * -facing.value,
                 -1.25f * ConstVals.PPM
             )
 
             shieldFixture1.offsetFromBodyAttachment.set(
-                0.5f * ConstVals.PPM * -facing.value,
+                1.25f * ConstVals.PPM * -facing.value,
                 -1.25f * ConstVals.PPM
             )
         }
@@ -325,6 +321,7 @@ class SteamRollerMan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
             sprite.setFlip(isFacing(Facing.LEFT), false)
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
+            sprite.translateX(0.75f * ConstVals.PPM * -facing.value)
         }
         .build()
 
@@ -380,9 +377,9 @@ class SteamRollerMan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
 
     private fun setSmashAreaPosition() = when {
         currentState == SteamRollerManState.SMASH && currentStateTimer!!.time < 0.1f ->
-            smashArea.setCenter(body.getCenter().add(2f * ConstVals.PPM * facing.value, -0.25f * ConstVals.PPM))
+            smashArea.setCenter(body.getCenter().add(2.75f * ConstVals.PPM * facing.value, -0.25f * ConstVals.PPM))
         currentState == SteamRollerManState.SMASH && currentStateTimer!!.time < 0.3f ->
-            smashArea.setCenter(body.getCenter().add(ConstVals.PPM.toFloat() * facing.value, ConstVals.PPM.toFloat()))
+            smashArea.setCenter(body.getCenter().add(1.75f * ConstVals.PPM * facing.value, ConstVals.PPM.toFloat()))
         else -> smashArea.setBottomCenterToPoint(
             body.getPositionPoint(Position.BOTTOM_CENTER).add(
                 SMASH_AREA_OFFSET_X * ConstVals.PPM * facing.value,

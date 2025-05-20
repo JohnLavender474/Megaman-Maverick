@@ -10,7 +10,6 @@ import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
-import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -19,6 +18,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.AnimatedBlock
+import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
@@ -26,14 +26,14 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.getBounds
 import java.util.*
 
-class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEntity, IAudioEntity {
+class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEntity<Block>, IAudioEntity {
 
     companion object {
         const val TAG = "DisappearingBlocks"
         private const val DEFAULT_DURATION = 1.15f
     }
 
-    override var children = Array<IGameEntity>()
+    override var children = Array<Block>()
 
     private val keysToRender = LinkedList<String>()
     private val bounds = GameRectangle()

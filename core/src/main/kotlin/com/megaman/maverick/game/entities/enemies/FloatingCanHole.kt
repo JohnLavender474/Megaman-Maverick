@@ -9,7 +9,6 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
-import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
@@ -30,8 +29,8 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
 
-class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IParentEntity, ICullableEntity,
-    IHazard {
+class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IParentEntity<FloatingCan>,
+    ICullableEntity, IHazard {
 
     companion object {
         const val TAG = "FloatingCanHole"
@@ -43,7 +42,7 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         private fun canSpawnFloatingCan() = MegaGameEntities.getOfTag(FloatingCan.TAG).size < 3
     }
 
-    override var children = Array<IGameEntity>()
+    override var children = Array<FloatingCan>()
 
     private val spawnDelayTimer = Timer(SPAWN_DELAY)
 

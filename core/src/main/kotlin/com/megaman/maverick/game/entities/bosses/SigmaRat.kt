@@ -48,7 +48,10 @@ import com.megaman.maverick.game.entities.projectiles.SigmaRatElectricBall
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
-import com.megaman.maverick.game.world.body.*
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getPositionPoint
 
 class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE) {
 
@@ -142,6 +145,8 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
     private var attackState: SigmaRatAttack? = null
 
     private var electricBallsClockwise = false
+
+    private val reusableFloatArray = Array<Float>()
 
     override fun init() {
         if (bodyRegion == null || bodyDamagedRegion == null || bodyTittyShootRegion == null || bodyTittyShootDamagedRegion == null) {
@@ -288,7 +293,7 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
             SigmaRatAttack.FIRE_BLASTS -> {
                 fireballDelayTimer.reset()
 
-                val angles = FIRE_BALL_ANGLES.getRandomElements(3)
+                val angles = FIRE_BALL_ANGLES.getRandomElements(3, reusableFloatArray)
                 for (angle in angles) {
                     val fireball =
                         EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIREBALL)!! as Fireball

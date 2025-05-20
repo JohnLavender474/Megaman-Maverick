@@ -27,7 +27,6 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
-import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
@@ -56,7 +55,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IParentEntity, IDirectional {
+class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IParentEntity<Block>, IDirectional {
 
     companion object {
         const val TAG = "TorikoPlundge"
@@ -79,7 +78,7 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
 
         override fun get(damager: IDamager) = 0
     }
-    override var children = Array<IGameEntity>()
+    override var children = Array<Block>()
     override var direction: Direction
         get() = body.direction
         set(value) {

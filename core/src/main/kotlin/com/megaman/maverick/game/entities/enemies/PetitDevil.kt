@@ -48,8 +48,8 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IParentEntity,
-    IDrawableShapesEntity, IFaceable {
+class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity,
+    IParentEntity<PetitDevilChild>, IDrawableShapesEntity, IFaceable {
 
     companion object {
         const val TAG = "PetitDevil"
@@ -61,7 +61,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
     }
 
     override lateinit var facing: Facing
-    override var children = Array<IGameEntity>()
+    override var children = Array<PetitDevilChild>()
 
     private lateinit var type: String
 
@@ -104,10 +104,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
             Direction.RIGHT -> if (megaman.body.getY() > body.getY()) Facing.LEFT else Facing.RIGHT
         }
 
-        val trajectory = GameObjectPools.fetch(Vector2::class)
-            .set(megaman.body.getCenter())
-            .sub(body.getCenter())
-            .nor()
+        val trajectory = GameObjectPools.fetch(Vector2::class).set(megaman.body.getCenter()).sub(body.getCenter()).nor()
             .scl(SPEED * ConstVals.PPM)
         body.physics.velocity.set(trajectory)
 

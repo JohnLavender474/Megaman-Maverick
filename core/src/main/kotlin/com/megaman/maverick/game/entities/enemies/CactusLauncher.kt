@@ -25,7 +25,6 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
-import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -46,7 +45,8 @@ import com.megaman.maverick.game.entities.projectiles.CactusMissile
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IParentEntity, IAnimatedEntity {
+class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IParentEntity<CactusMissile>,
+    IAnimatedEntity {
 
     companion object {
         const val TAG = "CactusLauncher"
@@ -59,7 +59,7 @@ class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
 
     private enum class CactusLauncherState { WAIT, FIRE, RELOAD }
 
-    override var children = Array<IGameEntity>()
+    override var children = Array<CactusMissile>()
 
     private val loop = Loop(CactusLauncherState.entries.toGdxArray())
     private val timers = objectMapOf(

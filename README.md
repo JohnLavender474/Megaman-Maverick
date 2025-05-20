@@ -187,6 +187,9 @@ comprehensive listing of the credits for the artwork used in this game.
     - Toriko Plundge 
   - [Random Enemies Set 2](https://www.deviantart.com/megared225/art/Random-Enemies-Set-2-517311774)
     - Spike Copter
+  - [Random Enemies Set 3](https://www.deviantart.com/megared225/art/Random-Enemies-Set-3-517312719)
+    - Canno Honey
+    - Beezee
   - [Random Enemies Set 4](https://www.deviantart.com/megared225/art/Random-Enemies-Set-4-517313170)
     - Mettaur Demon
     - Mettaur Angel

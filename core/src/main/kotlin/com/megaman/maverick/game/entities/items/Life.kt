@@ -58,7 +58,6 @@ class Life(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity, IAni
             val position = DirectionPositionMapper.getInvertedPosition(direction)
             val bodyPosition = body.getPositionPoint(position)
             sprite.setPosition(bodyPosition, position)
-
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
         }

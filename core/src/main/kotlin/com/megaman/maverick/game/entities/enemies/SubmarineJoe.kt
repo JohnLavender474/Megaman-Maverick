@@ -148,8 +148,10 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
             return super.shouldGoToNextState(state, timer)
         }
 
-        override fun onChangeState(current: SubmarineJoeState, previous: SubmarineJoeState) =
+        override fun onChangeState(current: SubmarineJoeState, previous: SubmarineJoeState) {
             GameLogger.debug(TAG, "onChangeState(): current=$current, previous=$previous")
+            super.onChangeState(current, previous)
+        }
     }
 
     private val currentState: SubmarineJoeState

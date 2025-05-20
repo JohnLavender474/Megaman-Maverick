@@ -84,7 +84,6 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
         val spawn = when {
             spawnProps.containsKey(ConstKeys.BOUNDS) ->
                 spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(position)
-
             else -> spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         }
         body.positionOnPoint(spawn, position)

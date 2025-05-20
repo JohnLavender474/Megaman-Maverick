@@ -2078,10 +2078,8 @@ sprites/frames/Enemies1/SnowBat/Fly.png
 sprites/frames/Enemies1/FireMetSpawner/Closed.png
 sprites/frames/Enemies1/FireMetSpawner/Opening.png
 sprites/frames/Enemies1/FireMetSpawner/Open.png
-sprites/frames/Enemies1/CannoHoney/closed_eyes.png
-sprites/frames/Enemies1/CannoHoney/closing_eyes.png
-sprites/frames/Enemies1/CannoHoney/opening_eyes.png
-sprites/frames/Enemies1/CannoHoney/oepn_eyes.png
+sprites/frames/Enemies1/CannoHoney/squeeze.png
+sprites/frames/Enemies1/CannoHoney/idle.png
 sprites/frames/Enemies1/SubmarineJoe/move.png
 sprites/frames/Enemies1/SubmarineJoe/shoot.png
 sprites/frames/Enemies1/SubmarineJoe/idle.png
@@ -2104,6 +2102,8 @@ sprites/frames/Enemies1/FireMet/Walk.png
 sprites/frames/Enemies1/FireMet/Shoot.png
 sprites/frames/Enemies1/BabyPenguin.png
 sprites/frames/Enemies1/SuctionRoller.png
+sprites/frames/Enemies1/Beezee/attack.png
+sprites/frames/Enemies1/Beezee/hover.png
 sprites/frames/Enemies1/SnowSeal/Stand.png
 sprites/frames/Enemies1/SnowSeal/FormSnowball.png
 sprites/frames/Enemies1/SnowSeal/SlapTail.png
@@ -2114,7 +2114,6 @@ sprites/frames/Enemies1/SnowMet/PopUp.png
 sprites/frames/Enemies1/ShieldAttacker/attack.png
 sprites/frames/Enemies1/ShieldAttacker/frozen.png
 sprites/frames/Enemies1/ShieldAttacker/turn.png
-sprites/frames/Enemies1/Beezee.png
 sprites/frames/Enemies1/BikerKibbo/jump.png
 sprites/frames/Enemies1/BikerKibbo/ride.png
 sprites/frames/Enemies1/SpikeCopter/drop_teeth.png

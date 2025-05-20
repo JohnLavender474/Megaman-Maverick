@@ -220,6 +220,13 @@ HalfChargedShot
   orig: 32, 64
   offset: 0, 0
   index: -1
+HoneyDrip
+  rotate: false
+  xy: 360, 156
+  size: 24, 48
+  orig: 24, 48
+  offset: 0, 0
+  index: -1
 HoneyDrip/drip
   rotate: false
   xy: 192, 56
@@ -418,7 +425,7 @@ Prickly
   index: -1
 PurpleBlast/Blast
   rotate: false
-  xy: 360, 156
+  xy: 384, 156
   size: 96, 48
   orig: 96, 48
   offset: 0, 0

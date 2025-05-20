@@ -27,7 +27,6 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.GameEntity
-import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.*
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
@@ -38,19 +37,17 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.events.EventType
-
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class FireMetSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEntity, IBodyEntity, ICullableEntity,
-    ISpritesEntity, IAnimatedEntity, IHazard {
+class FireMetSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEntity<FireMet>, IBodyEntity,
+    ICullableEntity, ISpritesEntity, IAnimatedEntity, IHazard {
 
     companion object {
         const val TAG = "FireMetSpawner"
@@ -63,7 +60,7 @@ class FireMetSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentE
 
     enum class FireMetSpawnerState { CLOSED, OPENING, SPAWNING, CLOSING }
 
-    override var children = Array<IGameEntity>()
+    override var children = Array<FireMet>()
 
     private val loop = Loop(FireMetSpawnerState.entries.toTypedArray().toGdxArray())
     private val closedTimer = Timer(CLOSED_DUR)
@@ -108,7 +105,7 @@ class FireMetSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentE
     }
 
     private fun spawnFireMet() {
-        val fireMet = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.FIRE_MET)!!
+        val fireMet = MegaEntityFactory.fetch(FireMet::class)!!
         fireMet.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
         children.add(fireMet)
     }

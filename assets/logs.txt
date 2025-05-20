@@ -1,45 +1,2176 @@
-===== SESSION STARTED: 2025-05-19T00:45:50.354024141 =====
-00:45:56 | DEBUG | SteamRollerMan | init()
-00:45:56 | DEBUG | SteamRollerMan | onSpawn(): spawnProps=Properties({
-	[bounds=[45632.0,192.0,32.0,32.0]]
+===== SESSION STARTED: 2025-05-19T21:13:09.612388015 =====
+21:14:21 | DEBUG | CannoHoney | init()
+21:14:21 | DEBUG | CannoHoney | onSpawn(): spawnProps=Properties({
+	[bounds=[45632.0,320.0,32.0,32.0]]
 	[x=45632.0]
 	[height=32.0]
-	[id=556]
-	[name=SteamRollerMan]
-	[facing=left]
-	[y=192.0]
+	[cull_out_of_bounds=false]
+	[id=561]
+	[name=CannoHoney]
+	[y=320.0]
 	[width=32.0]
 })
-00:45:57 | DEBUG | SteamRollerMan | onChangeState(): current=ROLL, previous=IDLE
-00:45:57 | DEBUG | SteamRollerMan | onChangeState(): current=SMASH, previous=ROLL
-00:45:57 | DEBUG | SteamRollerMan | smash()
-00:45:57 | DEBUG | SteamRollerMan | onChangeState(): current=IDLE, previous=SMASH
-00:45:58 | DEBUG | SteamRollerMan | onChangeState(): current=ROLL, previous=IDLE
-00:45:59 | DEBUG | SteamRollerMan | onChangeState(): current=SMASH, previous=ROLL
-00:45:59 | DEBUG | SteamRollerMan | smash()
-00:45:59 | DEBUG | SteamRollerMan | onChangeState(): current=IDLE, previous=SMASH
-00:46:00 | DEBUG | SteamRollerMan | onChangeState(): current=ROLL, previous=IDLE
-00:46:01 | DEBUG | SteamRollerMan | onChangeState(): current=IDLE, previous=ROLL
-00:46:02 | DEBUG | SteamRollerMan | onChangeState(): current=REVERSE, previous=IDLE
-00:46:05 | DEBUG | SteamRollerMan | onChangeState(): current=IDLE, previous=REVERSE
-00:46:05 | DEBUG | SteamRollerMan | onChangeState(): current=ROLL, previous=IDLE
-00:46:05 | DEBUG | SteamRollerMan | onChangeState(): current=SMASH, previous=ROLL
-00:46:06 | DEBUG | SteamRollerMan | smash()
-00:46:06 | DEBUG | SteamRollerMan | onChangeState(): current=IDLE, previous=SMASH
-00:46:06 | DEBUG | SteamRollerMan | onChangeState(): current=ROLL, previous=IDLE
-00:46:07 | DEBUG | SteamRollerMan | onChangeState(): current=SMASH, previous=ROLL
-00:46:07 | DEBUG | SteamRollerMan | smash()
-00:46:07 | DEBUG | SteamRollerMan | onChangeState(): current=IDLE, previous=SMASH
-00:46:07 | DEBUG | SteamRollerMan | onChangeState(): current=ROLL, previous=IDLE
-00:46:07 | DEBUG | SteamRollerMan | onChangeState(): current=SMASH, previous=ROLL
-00:46:08 | DEBUG | SteamRollerMan | smash()
-00:46:08 | DEBUG | SteamRollerMan | onChangeState(): current=IDLE, previous=SMASH
-00:46:08 | DEBUG | SteamRollerMan | onChangeState(): current=ROLL, previous=IDLE
-00:46:09 | DEBUG | SteamRollerMan | onChangeState(): current=SMASH, previous=ROLL
-00:46:09 | DEBUG | SteamRollerMan | smash()
-00:46:09 | DEBUG | SteamRollerMan | onChangeState(): current=IDLE, previous=SMASH
-00:46:10 | DEBUG | SteamRollerMan | onChangeState(): current=ROLL, previous=IDLE
-00:46:12 | DEBUG | SteamRollerMan | onChangeState(): current=IDLE, previous=ROLL
-00:46:12 | DEBUG | SteamRollerMan | onChangeState(): current=REVERSE, previous=IDLE
-00:46:13 | DEBUG | SteamRollerMan | onHealthDepleted()
-00:46:13 | DEBUG | SteamRollerMan | onDestroy()
+21:14:21 | DEBUG | Beezee | init(): hashCode=693417450
+21:14:21 | DEBUG | Beezee | onSpawn(): hashCode=693417450, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:21 | DEBUG | Beezee | resetHoverTimer(): hashCode=693417450
+21:14:21 | DEBUG | Beezee | init(): hashCode=1254827280
+21:14:21 | DEBUG | Beezee | onSpawn(): hashCode=1254827280, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:21 | DEBUG | Beezee | resetHoverTimer(): hashCode=1254827280
+21:14:21 | DEBUG | Beezee | init(): hashCode=2078517710
+21:14:21 | DEBUG | Beezee | onSpawn(): hashCode=2078517710, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:21 | DEBUG | Beezee | resetHoverTimer(): hashCode=2078517710
+21:14:21 | DEBUG | Beezee | init(): hashCode=936931778
+21:14:21 | DEBUG | Beezee | onSpawn(): hashCode=936931778, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:21 | DEBUG | Beezee | resetHoverTimer(): hashCode=936931778
+21:14:21 | DEBUG | Beezee | init(): hashCode=1001351478
+21:14:21 | DEBUG | Beezee | onSpawn(): hashCode=1001351478, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:21 | DEBUG | Beezee | resetHoverTimer(): hashCode=1001351478
+21:14:21 | DEBUG | Beezee | init(): hashCode=677329142
+21:14:21 | DEBUG | Beezee | onSpawn(): hashCode=677329142, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:21 | DEBUG | Beezee | resetHoverTimer(): hashCode=677329142
+21:14:21 | DEBUG | Beezee | init(): hashCode=1309956586
+21:14:21 | DEBUG | Beezee | onSpawn(): hashCode=1309956586, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:21 | DEBUG | Beezee | resetHoverTimer(): hashCode=1309956586
+21:14:21 | DEBUG | Beezee | init(): hashCode=985032587
+21:14:21 | DEBUG | Beezee | onSpawn(): hashCode=985032587, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:21 | DEBUG | Beezee | resetHoverTimer(): hashCode=985032587
+21:14:21 | DEBUG | Beezee | findHoverTarget()
+21:14:21 | DEBUG | Beezee | findHoverTarget(): set hover target: (45693.156,350.07535)
+21:14:21 | DEBUG | Beezee | update(): HOVER: find hover target: (45693.156,350.07535)
+21:14:21 | DEBUG | Beezee | findHoverTarget()
+21:14:21 | DEBUG | Beezee | findHoverTarget(): set hover target: (45709.137,365.07434)
+21:14:21 | DEBUG | Beezee | update(): HOVER: find hover target: (45709.137,365.07434)
+21:14:21 | DEBUG | Beezee | findHoverTarget()
+21:14:21 | DEBUG | Beezee | findHoverTarget(): set hover target: (45607.465,390.98007)
+21:14:21 | DEBUG | Beezee | update(): HOVER: find hover target: (45607.465,390.98007)
+21:14:21 | DEBUG | Beezee | findHoverTarget()
+21:14:21 | DEBUG | Beezee | findHoverTarget(): set hover target: (45695.93,410.81125)
+21:14:21 | DEBUG | Beezee | update(): HOVER: find hover target: (45695.93,410.81125)
+21:14:21 | DEBUG | Beezee | findHoverTarget()
+21:14:21 | DEBUG | Beezee | findHoverTarget(): set hover target: (45602.812,379.3286)
+21:14:21 | DEBUG | Beezee | update(): HOVER: find hover target: (45602.812,379.3286)
+21:14:21 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@329548d0
+21:14:21 | DEBUG | Beezee | resetHoverTimer(): hashCode=1309956586
+21:14:21 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@77bc2e16
+21:14:21 | DEBUG | Beezee | resetHoverTimer(): hashCode=985032587
+21:14:21 | DEBUG | Beezee | findHoverTarget()
+21:14:21 | DEBUG | Beezee | findHoverTarget(): set hover target: (45684.707,334.861)
+21:14:21 | DEBUG | Beezee | update(): HOVER: find hover target: (45684.707,334.861)
+21:14:21 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2ffb3aec
+21:14:21 | DEBUG | Beezee | resetHoverTimer(): hashCode=1254827280
+21:14:21 | DEBUG | Beezee | findHoverTarget()
+21:14:21 | DEBUG | Beezee | findHoverTarget(): set hover target: (45596.586,407.83557)
+21:14:21 | DEBUG | Beezee | update(): HOVER: find hover target: (45596.586,407.83557)
+21:14:21 | DEBUG | Beezee | findHoverTarget()
+21:14:21 | DEBUG | Beezee | findHoverTarget(): set hover target: (45671.24,271.96555)
+21:14:21 | DEBUG | Beezee | update(): HOVER: find hover target: (45671.24,271.96555)
+21:14:21 | DEBUG | Beezee | findHoverTarget()
+21:14:21 | DEBUG | Beezee | findHoverTarget(): set hover target: (45584.465,396.6249)
+21:14:21 | DEBUG | Beezee | update(): HOVER: find hover target: (45584.465,396.6249)
+21:14:21 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@4aa31ffc
+21:14:21 | DEBUG | Beezee | resetHoverTimer(): hashCode=936931778
+21:14:22 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2287395
+21:14:22 | DEBUG | Beezee | resetHoverTimer(): hashCode=677329142
+21:14:22 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@125d47c4
+21:14:22 | DEBUG | Beezee | resetHoverTimer(): hashCode=2078517710
+21:14:22 | DEBUG | Beezee | findHoverTarget()
+21:14:22 | DEBUG | Beezee | findHoverTarget(): set hover target: (45582.273,384.9049)
+21:14:22 | DEBUG | Beezee | update(): HOVER: find hover target: (45582.273,384.9049)
+21:14:22 | DEBUG | Beezee | findHoverTarget()
+21:14:22 | DEBUG | Beezee | findHoverTarget(): set hover target: (45583.355,338.22076)
+21:14:22 | DEBUG | Beezee | update(): HOVER: find hover target: (45583.355,338.22076)
+21:14:22 | DEBUG | Beezee | findHoverTarget()
+21:14:22 | DEBUG | Beezee | findHoverTarget(): set hover target: (45630.406,401.8082)
+21:14:22 | DEBUG | Beezee | update(): HOVER: find hover target: (45630.406,401.8082)
+21:14:22 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2faa55bb
+21:14:22 | DEBUG | Beezee | resetHoverTimer(): hashCode=693417450
+21:14:22 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@329548d0
+21:14:22 | DEBUG | Beezee | resetHoverTimer(): hashCode=1309956586
+21:14:22 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@6ac45c0c
+21:14:22 | DEBUG | Beezee | resetHoverTimer(): hashCode=1001351478
+21:14:22 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@77bc2e16
+21:14:22 | DEBUG | Beezee | resetHoverTimer(): hashCode=985032587
+21:14:22 | DEBUG | Beezee | findHoverTarget()
+21:14:22 | DEBUG | Beezee | findHoverTarget(): set hover target: (45590.117,315.0878)
+21:14:22 | DEBUG | Beezee | update(): HOVER: find hover target: (45590.117,315.0878)
+21:14:22 | DEBUG | Beezee | findHoverTarget()
+21:14:22 | DEBUG | Beezee | findHoverTarget(): set hover target: (45681.16,417.96655)
+21:14:22 | DEBUG | Beezee | update(): HOVER: find hover target: (45681.16,417.96655)
+21:14:22 | DEBUG | Beezee | findHoverTarget()
+21:14:22 | DEBUG | Beezee | findHoverTarget(): set hover target: (45625.164,296.0877)
+21:14:22 | DEBUG | Beezee | update(): HOVER: find hover target: (45625.164,296.0877)
+21:14:22 | DEBUG | Beezee | findHoverTarget()
+21:14:22 | DEBUG | Beezee | findHoverTarget(): set hover target: (45706.99,359.7518)
+21:14:22 | DEBUG | Beezee | update(): HOVER: find hover target: (45706.99,359.7518)
+21:14:22 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@4aa31ffc
+21:14:22 | DEBUG | Beezee | resetHoverTimer(): hashCode=936931778
+21:14:22 | DEBUG | Beezee | findHoverTarget()
+21:14:22 | DEBUG | Beezee | findHoverTarget(): set hover target: (45680.473,393.00577)
+21:14:22 | DEBUG | Beezee | update(): HOVER: find hover target: (45680.473,393.00577)
+21:14:22 | DEBUG | Beezee | findHoverTarget()
+21:14:22 | DEBUG | Beezee | findHoverTarget(): set hover target: (45710.957,425.236)
+21:14:22 | DEBUG | Beezee | update(): HOVER: find hover target: (45710.957,425.236)
+21:14:22 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2faa55bb
+21:14:22 | DEBUG | Beezee | resetHoverTimer(): hashCode=693417450
+21:14:22 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2ffb3aec
+21:14:22 | DEBUG | Beezee | resetHoverTimer(): hashCode=1254827280
+21:14:22 | DEBUG | Beezee | findHoverTarget()
+21:14:22 | DEBUG | Beezee | findHoverTarget(): set hover target: (45588.582,301.1619)
+21:14:22 | DEBUG | Beezee | update(): HOVER: find hover target: (45588.582,301.1619)
+21:14:22 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@125d47c4
+21:14:22 | DEBUG | Beezee | resetHoverTimer(): hashCode=2078517710
+21:14:22 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2287395
+21:14:22 | DEBUG | Beezee | resetHoverTimer(): hashCode=677329142
+21:14:22 | DEBUG | CannoHoney | squeeze()
+21:14:22 | DEBUG | HoneyDrip | init()
+21:14:22 | DEBUG | HoneyDrip | onSpawn(): spawnProps=Properties({
+	[position=(45648.0,320.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:22 | DEBUG | Beezee | findHoverTarget()
+21:14:22 | DEBUG | Beezee | findHoverTarget(): set hover target: (45590.23,314.16107)
+21:14:22 | DEBUG | Beezee | update(): HOVER: find hover target: (45590.23,314.16107)
+21:14:23 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@6ac45c0c
+21:14:23 | DEBUG | Beezee | resetHoverTimer(): hashCode=1001351478
+21:14:23 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2ffb3aec
+21:14:23 | DEBUG | Beezee | resetHoverTimer(): hashCode=1254827280
+21:14:23 | DEBUG | Beezee | findHoverTarget()
+21:14:23 | DEBUG | Beezee | findHoverTarget(): set hover target: (45692.816,416.47437)
+21:14:23 | DEBUG | Beezee | update(): HOVER: find hover target: (45692.816,416.47437)
+21:14:23 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@329548d0
+21:14:23 | DEBUG | Beezee | resetHoverTimer(): hashCode=1309956586
+21:14:23 | DEBUG | Beezee | findHoverTarget()
+21:14:23 | DEBUG | Beezee | findHoverTarget(): set hover target: (45681.2,425.5283)
+21:14:23 | DEBUG | Beezee | update(): HOVER: find hover target: (45681.2,425.5283)
+21:14:23 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@77bc2e16
+21:14:23 | DEBUG | Beezee | resetHoverTimer(): hashCode=985032587
+21:14:23 | DEBUG | Beezee | findHoverTarget()
+21:14:23 | DEBUG | Beezee | findHoverTarget(): set hover target: (45583.56,329.86865)
+21:14:23 | DEBUG | Beezee | update(): HOVER: find hover target: (45583.56,329.86865)
+21:14:23 | DEBUG | Beezee | findHoverTarget()
+21:14:23 | DEBUG | Beezee | findHoverTarget(): set hover target: (45637.848,284.19775)
+21:14:23 | DEBUG | Beezee | update(): HOVER: find hover target: (45637.848,284.19775)
+21:14:23 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@4aa31ffc
+21:14:23 | DEBUG | Beezee | resetHoverTimer(): hashCode=936931778
+21:14:23 | DEBUG | Beezee | findHoverTarget()
+21:14:23 | DEBUG | Beezee | findHoverTarget(): set hover target: (45708.63,332.66837)
+21:14:23 | DEBUG | Beezee | update(): HOVER: find hover target: (45708.63,332.66837)
+21:14:23 | DEBUG | Beezee | findHoverTarget()
+21:14:23 | DEBUG | Beezee | findHoverTarget(): set hover target: (45573.293,328.13544)
+21:14:23 | DEBUG | Beezee | update(): HOVER: find hover target: (45573.293,328.13544)
+21:14:23 | DEBUG | Beezee | findHoverTarget()
+21:14:23 | DEBUG | Beezee | findHoverTarget(): set hover target: (45643.574,421.26624)
+21:14:23 | DEBUG | Beezee | update(): HOVER: find hover target: (45643.574,421.26624)
+21:14:23 | DEBUG | Beezee | findHoverTarget()
+21:14:23 | DEBUG | Beezee | findHoverTarget(): set hover target: (45644.94,321.2208)
+21:14:23 | DEBUG | Beezee | update(): HOVER: find hover target: (45644.94,321.2208)
+21:14:23 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2287395
+21:14:23 | DEBUG | Beezee | resetHoverTimer(): hashCode=677329142
+21:14:23 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@6ac45c0c
+21:14:23 | DEBUG | Beezee | resetHoverTimer(): hashCode=1001351478
+21:14:23 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2faa55bb
+21:14:23 | DEBUG | Beezee | resetHoverTimer(): hashCode=693417450
+21:14:23 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@125d47c4
+21:14:23 | DEBUG | Beezee | resetHoverTimer(): hashCode=2078517710
+21:14:23 | DEBUG | Beezee | setToAttack(): hashCode=2078517710
+21:14:23 | DEBUG | Beezee | setToAttack(): hashCode=1254827280
+21:14:23 | DEBUG | Beezee | setToAttack(): hashCode=1001351478
+21:14:23 | DEBUG | Beezee | init(): hashCode=391915263
+21:14:23 | DEBUG | Beezee | onSpawn(): hashCode=391915263, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:23 | DEBUG | Beezee | resetHoverTimer(): hashCode=391915263
+21:14:23 | DEBUG | Beezee | init(): hashCode=1648090182
+21:14:23 | DEBUG | Beezee | onSpawn(): hashCode=1648090182, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:23 | DEBUG | Beezee | resetHoverTimer(): hashCode=1648090182
+21:14:23 | DEBUG | Beezee | init(): hashCode=1091925703
+21:14:23 | DEBUG | Beezee | onSpawn(): hashCode=1091925703, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:23 | DEBUG | Beezee | resetHoverTimer(): hashCode=1091925703
+21:14:23 | DEBUG | HoneyDrip | onDestroy()
+21:14:24 | DEBUG | Beezee | findHoverTarget()
+21:14:24 | DEBUG | Beezee | findHoverTarget(): set hover target: (45613.62,268.84082)
+21:14:24 | DEBUG | Beezee | update(): HOVER: find hover target: (45613.62,268.84082)
+21:14:24 | DEBUG | Beezee | findHoverTarget()
+21:14:24 | DEBUG | Beezee | findHoverTarget(): set hover target: (45640.17,379.65515)
+21:14:24 | DEBUG | Beezee | update(): HOVER: find hover target: (45640.17,379.65515)
+21:14:24 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@329548d0
+21:14:24 | DEBUG | Beezee | resetHoverTimer(): hashCode=1309956586
+21:14:24 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@282d1023
+21:14:24 | DEBUG | Beezee | resetHoverTimer(): hashCode=1648090182
+21:14:24 | DEBUG | Beezee | findHoverTarget()
+21:14:24 | DEBUG | Beezee | findHoverTarget(): set hover target: (45692.598,337.1976)
+21:14:24 | DEBUG | Beezee | update(): HOVER: find hover target: (45692.598,337.1976)
+21:14:24 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@4aa31ffc
+21:14:24 | DEBUG | Beezee | resetHoverTimer(): hashCode=936931778
+21:14:24 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@77bc2e16
+21:14:24 | DEBUG | Beezee | resetHoverTimer(): hashCode=985032587
+21:14:24 | DEBUG | Beezee | findHoverTarget()
+21:14:24 | DEBUG | Beezee | findHoverTarget(): set hover target: (45619.69,424.61188)
+21:14:24 | DEBUG | Beezee | update(): HOVER: find hover target: (45619.69,424.61188)
+21:14:24 | DEBUG | Beezee | findHoverTarget()
+21:14:24 | DEBUG | Beezee | findHoverTarget(): set hover target: (45636.625,354.3663)
+21:14:24 | DEBUG | Beezee | update(): HOVER: find hover target: (45636.625,354.3663)
+21:14:24 | DEBUG | Beezee | findHoverTarget()
+21:14:24 | DEBUG | Beezee | findHoverTarget(): set hover target: (45574.836,296.8313)
+21:14:24 | DEBUG | Beezee | update(): HOVER: find hover target: (45574.836,296.8313)
+21:14:24 | DEBUG | Beezee | findHoverTarget()
+21:14:24 | DEBUG | Beezee | findHoverTarget(): set hover target: (45707.02,376.40295)
+21:14:24 | DEBUG | Beezee | update(): HOVER: find hover target: (45707.02,376.40295)
+21:14:24 | DEBUG | Beezee | findHoverTarget()
+21:14:24 | DEBUG | Beezee | findHoverTarget(): set hover target: (45645.37,327.88596)
+21:14:24 | DEBUG | Beezee | update(): HOVER: find hover target: (45645.37,327.88596)
+21:14:24 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@4aa31ffc
+21:14:24 | DEBUG | Beezee | resetHoverTimer(): hashCode=936931778
+21:14:24 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@6311640d
+21:14:24 | DEBUG | Beezee | resetHoverTimer(): hashCode=391915263
+21:14:24 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@223ed38f
+21:14:24 | DEBUG | Beezee | resetHoverTimer(): hashCode=1091925703
+21:14:24 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@329548d0
+21:14:24 | DEBUG | Beezee | resetHoverTimer(): hashCode=1309956586
+21:14:24 | DEBUG | Beezee | findHoverTarget()
+21:14:24 | DEBUG | Beezee | findHoverTarget(): set hover target: (45683.363,421.61917)
+21:14:24 | DEBUG | Beezee | update(): HOVER: find hover target: (45683.363,421.61917)
+21:14:24 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2faa55bb
+21:14:24 | DEBUG | Beezee | resetHoverTimer(): hashCode=693417450
+21:14:24 | DEBUG | Beezee | findHoverTarget()
+21:14:24 | DEBUG | Beezee | findHoverTarget(): set hover target: (45709.27,368.66727)
+21:14:24 | DEBUG | Beezee | update(): HOVER: find hover target: (45709.27,368.66727)
+21:14:24 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@282d1023
+21:14:24 | DEBUG | Beezee | resetHoverTimer(): hashCode=1648090182
+21:14:24 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2287395
+21:14:24 | DEBUG | Beezee | resetHoverTimer(): hashCode=677329142
+21:14:24 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@77bc2e16
+21:14:24 | DEBUG | Beezee | resetHoverTimer(): hashCode=985032587
+21:14:24 | DEBUG | Beezee | findHoverTarget()
+21:14:24 | DEBUG | Beezee | findHoverTarget(): set hover target: (45641.355,412.88513)
+21:14:24 | DEBUG | Beezee | update(): HOVER: find hover target: (45641.355,412.88513)
+21:14:24 | DEBUG | Beezee | findHoverTarget()
+21:14:24 | DEBUG | Beezee | findHoverTarget(): set hover target: (45686.066,336.18417)
+21:14:24 | DEBUG | Beezee | update(): HOVER: find hover target: (45686.066,336.18417)
+21:14:24 | DEBUG | Beezee | update(): hashCode=1254827280: ATTACK: attack delay just finished
+21:14:24 | DEBUG | Beezee | update(): hashCode=2078517710: ATTACK: attack delay just finished
+21:14:24 | DEBUG | Beezee | update(): hashCode=1001351478: ATTACK: attack delay just finished
+21:14:24 | DEBUG | Beezee | findHoverTarget()
+21:14:24 | DEBUG | Beezee | findHoverTarget(): set hover target: (45674.72,417.9527)
+21:14:24 | DEBUG | Beezee | update(): HOVER: find hover target: (45674.72,417.9527)
+21:14:24 | DEBUG | Beezee | findHoverTarget()
+21:14:24 | DEBUG | Beezee | findHoverTarget(): set hover target: (45717.61,384.96646)
+21:14:24 | DEBUG | Beezee | update(): HOVER: find hover target: (45717.61,384.96646)
+21:14:24 | DEBUG | Beezee | findHoverTarget()
+21:14:24 | DEBUG | Beezee | findHoverTarget(): set hover target: (45614.867,269.77167)
+21:14:24 | DEBUG | Beezee | update(): HOVER: find hover target: (45614.867,269.77167)
+21:14:24 | DEBUG | CannoHoney | squeeze()
+21:14:24 | DEBUG | HoneyDrip | onSpawn(): spawnProps=Properties({
+	[position=(45648.0,320.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:24 | DEBUG | Beezee | findHoverTarget()
+21:14:24 | DEBUG | Beezee | findHoverTarget(): set hover target: (45711.78,319.32263)
+21:14:24 | DEBUG | Beezee | update(): HOVER: find hover target: (45711.78,319.32263)
+21:14:25 | DEBUG | Beezee | findHoverTarget()
+21:14:25 | DEBUG | Beezee | findHoverTarget(): set hover target: (45660.273,316.94922)
+21:14:25 | DEBUG | Beezee | update(): HOVER: find hover target: (45660.273,316.94922)
+21:14:25 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@6311640d
+21:14:25 | DEBUG | Beezee | resetHoverTimer(): hashCode=391915263
+21:14:25 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@4aa31ffc
+21:14:25 | DEBUG | Beezee | resetHoverTimer(): hashCode=936931778
+21:14:25 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@223ed38f
+21:14:25 | DEBUG | Beezee | resetHoverTimer(): hashCode=1091925703
+21:14:25 | DEBUG | Beezee | findHoverTarget()
+21:14:25 | DEBUG | Beezee | findHoverTarget(): set hover target: (45612.97,423.78323)
+21:14:25 | DEBUG | Beezee | update(): HOVER: find hover target: (45612.97,423.78323)
+21:14:25 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@77bc2e16
+21:14:25 | DEBUG | Beezee | resetHoverTimer(): hashCode=985032587
+21:14:25 | DEBUG | Beezee | findHoverTarget()
+21:14:25 | DEBUG | Beezee | findHoverTarget(): set hover target: (45632.08,386.25302)
+21:14:25 | DEBUG | Beezee | update(): HOVER: find hover target: (45632.08,386.25302)
+21:14:25 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@282d1023
+21:14:25 | DEBUG | Beezee | resetHoverTimer(): hashCode=1648090182
+21:14:25 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2faa55bb
+21:14:25 | DEBUG | Beezee | resetHoverTimer(): hashCode=693417450
+21:14:25 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2287395
+21:14:25 | DEBUG | Beezee | resetHoverTimer(): hashCode=677329142
+21:14:25 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@329548d0
+21:14:25 | DEBUG | Beezee | resetHoverTimer(): hashCode=1309956586
+21:14:25 | DEBUG | Beezee | findHoverTarget()
+21:14:25 | DEBUG | Beezee | findHoverTarget(): set hover target: (45723.562,270.12308)
+21:14:25 | DEBUG | Beezee | update(): HOVER: find hover target: (45723.562,270.12308)
+21:14:25 | DEBUG | Beezee | findHoverTarget()
+21:14:25 | DEBUG | Beezee | findHoverTarget(): set hover target: (45672.324,364.5695)
+21:14:25 | DEBUG | Beezee | update(): HOVER: find hover target: (45672.324,364.5695)
+21:14:25 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@6311640d
+21:14:25 | DEBUG | Beezee | resetHoverTimer(): hashCode=391915263
+21:14:25 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@4aa31ffc
+21:14:25 | DEBUG | Beezee | resetHoverTimer(): hashCode=936931778
+21:14:25 | DEBUG | Beezee | findHoverTarget()
+21:14:25 | DEBUG | Beezee | findHoverTarget(): set hover target: (45611.14,294.14185)
+21:14:25 | DEBUG | Beezee | update(): HOVER: find hover target: (45611.14,294.14185)
+21:14:25 | DEBUG | Beezee | findHoverTarget()
+21:14:25 | DEBUG | Beezee | findHoverTarget(): set hover target: (45634.152,343.1132)
+21:14:25 | DEBUG | Beezee | update(): HOVER: find hover target: (45634.152,343.1132)
+21:14:25 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@223ed38f
+21:14:25 | DEBUG | Beezee | resetHoverTimer(): hashCode=1091925703
+21:14:25 | DEBUG | HoneyDrip | onDestroy()
+21:14:26 | DEBUG | Beezee | findHoverTarget()
+21:14:26 | DEBUG | Beezee | findHoverTarget(): set hover target: (45599.066,427.33804)
+21:14:26 | DEBUG | Beezee | update(): HOVER: find hover target: (45599.066,427.33804)
+21:14:26 | DEBUG | Beezee | findHoverTarget()
+21:14:26 | DEBUG | Beezee | findHoverTarget(): set hover target: (45628.69,333.59122)
+21:14:26 | DEBUG | Beezee | update(): HOVER: find hover target: (45628.69,333.59122)
+21:14:26 | DEBUG | Beezee | findHoverTarget()
+21:14:26 | DEBUG | Beezee | findHoverTarget(): set hover target: (45598.76,272.29044)
+21:14:26 | DEBUG | Beezee | update(): HOVER: find hover target: (45598.76,272.29044)
+21:14:26 | DEBUG | Beezee | findHoverTarget()
+21:14:26 | DEBUG | Beezee | findHoverTarget(): set hover target: (45717.586,407.14914)
+21:14:26 | DEBUG | Beezee | update(): HOVER: find hover target: (45717.586,407.14914)
+21:14:26 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@77bc2e16
+21:14:26 | DEBUG | Beezee | resetHoverTimer(): hashCode=985032587
+21:14:26 | DEBUG | Beezee | findHoverTarget()
+21:14:26 | DEBUG | Beezee | findHoverTarget(): set hover target: (45656.137,299.0385)
+21:14:26 | DEBUG | Beezee | update(): HOVER: find hover target: (45656.137,299.0385)
+21:14:26 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@282d1023
+21:14:26 | DEBUG | Beezee | resetHoverTimer(): hashCode=1648090182
+21:14:26 | DEBUG | Beezee | takeDamageFrom(): hashCode=936931778, damager={ Bullet:[mapObjId=-1, dead=false, hashCode=2024021140] }
+21:14:26 | DEBUG | Beezee | setToAttack(): hashCode=936931778
+21:14:26 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2287395
+21:14:26 | DEBUG | Beezee | resetHoverTimer(): hashCode=677329142
+21:14:26 | DEBUG | Beezee | setToAttack(): hashCode=693417450
+21:14:26 | DEBUG | Beezee | setToAttack(): hashCode=1309956586
+21:14:26 | DEBUG | Beezee | setToAttack(): hashCode=985032587
+21:14:26 | DEBUG | Beezee | init(): hashCode=867134838
+21:14:26 | DEBUG | Beezee | onSpawn(): hashCode=867134838, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:26 | DEBUG | Beezee | resetHoverTimer(): hashCode=867134838
+21:14:26 | DEBUG | Beezee | init(): hashCode=603219469
+21:14:26 | DEBUG | Beezee | onSpawn(): hashCode=603219469, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:26 | DEBUG | Beezee | resetHoverTimer(): hashCode=603219469
+21:14:26 | DEBUG | Beezee | init(): hashCode=490153912
+21:14:26 | DEBUG | Beezee | onSpawn(): hashCode=490153912, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:26 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:26 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@223ed38f
+21:14:26 | DEBUG | Beezee | resetHoverTimer(): hashCode=1091925703
+21:14:26 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@6311640d
+21:14:26 | DEBUG | Beezee | resetHoverTimer(): hashCode=391915263
+21:14:26 | DEBUG | Beezee | findHoverTarget()
+21:14:26 | DEBUG | Beezee | findHoverTarget(): set hover target: (45571.293,291.41974)
+21:14:26 | DEBUG | Beezee | update(): HOVER: find hover target: (45571.293,291.41974)
+21:14:26 | DEBUG | Beezee | findHoverTarget()
+21:14:26 | DEBUG | Beezee | findHoverTarget(): set hover target: (45724.7,319.74088)
+21:14:26 | DEBUG | Beezee | update(): HOVER: find hover target: (45724.7,319.74088)
+21:14:26 | DEBUG | Beezee | findHoverTarget()
+21:14:26 | DEBUG | Beezee | findHoverTarget(): set hover target: (45678.555,345.79053)
+21:14:26 | DEBUG | Beezee | update(): HOVER: find hover target: (45678.555,345.79053)
+21:14:26 | DEBUG | Beezee | findHoverTarget()
+21:14:26 | DEBUG | Beezee | findHoverTarget(): set hover target: (45569.2,389.37857)
+21:14:26 | DEBUG | Beezee | update(): HOVER: find hover target: (45569.2,389.37857)
+21:14:26 | DEBUG | Beezee | findHoverTarget()
+21:14:26 | DEBUG | Beezee | findHoverTarget(): set hover target: (45653.684,271.70206)
+21:14:26 | DEBUG | Beezee | update(): HOVER: find hover target: (45653.684,271.70206)
+21:14:26 | DEBUG | Beezee | findHoverTarget()
+21:14:26 | DEBUG | Beezee | findHoverTarget(): set hover target: (45610.297,402.03595)
+21:14:26 | DEBUG | Beezee | update(): HOVER: find hover target: (45610.297,402.03595)
+21:14:26 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@282d1023
+21:14:26 | DEBUG | Beezee | resetHoverTimer(): hashCode=1648090182
+21:14:26 | DEBUG | Beezee | findHoverTarget()
+21:14:26 | DEBUG | Beezee | findHoverTarget(): set hover target: (45716.434,394.76044)
+21:14:26 | DEBUG | Beezee | update(): HOVER: find hover target: (45716.434,394.76044)
+21:14:26 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@799ace5b
+21:14:26 | DEBUG | Beezee | resetHoverTimer(): hashCode=867134838
+21:14:26 | DEBUG | CannoHoney | squeeze()
+21:14:26 | DEBUG | HoneyDrip | onSpawn(): spawnProps=Properties({
+	[position=(45648.0,320.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:27 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@194c02c3
+21:14:27 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:27 | DEBUG | Beezee | findHoverTarget()
+21:14:27 | DEBUG | Beezee | findHoverTarget(): set hover target: (45678.715,395.9829)
+21:14:27 | DEBUG | Beezee | update(): HOVER: find hover target: (45678.715,395.9829)
+21:14:27 | DEBUG | Beezee | findHoverTarget()
+21:14:27 | DEBUG | Beezee | findHoverTarget(): set hover target: (45701.656,284.33087)
+21:14:27 | DEBUG | Beezee | update(): HOVER: find hover target: (45701.656,284.33087)
+21:14:27 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@6d988e94
+21:14:27 | DEBUG | Beezee | resetHoverTimer(): hashCode=603219469
+21:14:27 | DEBUG | Beezee | findHoverTarget()
+21:14:27 | DEBUG | Beezee | findHoverTarget(): set hover target: (45610.117,283.81488)
+21:14:27 | DEBUG | Beezee | update(): HOVER: find hover target: (45610.117,283.81488)
+21:14:27 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@223ed38f
+21:14:27 | DEBUG | Beezee | resetHoverTimer(): hashCode=1091925703
+21:14:27 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@282d1023
+21:14:27 | DEBUG | Beezee | resetHoverTimer(): hashCode=1648090182
+21:14:27 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@799ace5b
+21:14:27 | DEBUG | Beezee | resetHoverTimer(): hashCode=867134838
+21:14:27 | DEBUG | Beezee | update(): hashCode=936931778: ATTACK: attack delay just finished
+21:14:27 | DEBUG | Beezee | findHoverTarget()
+21:14:27 | DEBUG | Beezee | findHoverTarget(): set hover target: (45712.965,270.36755)
+21:14:27 | DEBUG | Beezee | update(): HOVER: find hover target: (45712.965,270.36755)
+21:14:27 | DEBUG | Beezee | update(): hashCode=693417450: ATTACK: attack delay just finished
+21:14:27 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2287395
+21:14:27 | DEBUG | Beezee | resetHoverTimer(): hashCode=677329142
+21:14:27 | DEBUG | Beezee | update(): hashCode=1309956586: ATTACK: attack delay just finished
+21:14:27 | DEBUG | Beezee | update(): hashCode=985032587: ATTACK: attack delay just finished
+21:14:27 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@6311640d
+21:14:27 | DEBUG | Beezee | resetHoverTimer(): hashCode=391915263
+21:14:27 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@194c02c3
+21:14:27 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:27 | DEBUG | Beezee | findHoverTarget()
+21:14:27 | DEBUG | Beezee | findHoverTarget(): set hover target: (45670.258,300.7624)
+21:14:27 | DEBUG | Beezee | update(): HOVER: find hover target: (45670.258,300.7624)
+21:14:27 | DEBUG | Beezee | findHoverTarget()
+21:14:27 | DEBUG | Beezee | findHoverTarget(): set hover target: (45609.566,402.80103)
+21:14:27 | DEBUG | Beezee | update(): HOVER: find hover target: (45609.566,402.80103)
+21:14:27 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@6d988e94
+21:14:27 | DEBUG | Beezee | resetHoverTimer(): hashCode=603219469
+21:14:27 | DEBUG | Beezee | findHoverTarget()
+21:14:27 | DEBUG | Beezee | findHoverTarget(): set hover target: (45585.4,395.2419)
+21:14:27 | DEBUG | Beezee | update(): HOVER: find hover target: (45585.4,395.2419)
+21:14:27 | DEBUG | Beezee | findHoverTarget()
+21:14:27 | DEBUG | Beezee | findHoverTarget(): set hover target: (45578.793,302.5591)
+21:14:27 | DEBUG | Beezee | update(): HOVER: find hover target: (45578.793,302.5591)
+21:14:27 | DEBUG | Beezee | findHoverTarget()
+21:14:27 | DEBUG | Beezee | findHoverTarget(): set hover target: (45627.242,423.0234)
+21:14:27 | DEBUG | Beezee | update(): HOVER: find hover target: (45627.242,423.0234)
+21:14:27 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@6311640d
+21:14:27 | DEBUG | Beezee | resetHoverTimer(): hashCode=391915263
+21:14:27 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@799ace5b
+21:14:27 | DEBUG | Beezee | resetHoverTimer(): hashCode=867134838
+21:14:27 | DEBUG | Beezee | findHoverTarget()
+21:14:27 | DEBUG | Beezee | findHoverTarget(): set hover target: (45672.156,408.32666)
+21:14:27 | DEBUG | Beezee | update(): HOVER: find hover target: (45672.156,408.32666)
+21:14:27 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@223ed38f
+21:14:27 | DEBUG | Beezee | resetHoverTimer(): hashCode=1091925703
+21:14:27 | DEBUG | HoneyDrip | onDestroy()
+21:14:28 | DEBUG | Beezee | findHoverTarget()
+21:14:28 | DEBUG | Beezee | findHoverTarget(): set hover target: (45657.363,296.4422)
+21:14:28 | DEBUG | Beezee | update(): HOVER: find hover target: (45657.363,296.4422)
+21:14:28 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@194c02c3
+21:14:28 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:28 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2287395
+21:14:28 | DEBUG | Beezee | resetHoverTimer(): hashCode=677329142
+21:14:28 | DEBUG | Beezee | findHoverTarget()
+21:14:28 | DEBUG | Beezee | findHoverTarget(): set hover target: (45573.676,344.29797)
+21:14:28 | DEBUG | Beezee | update(): HOVER: find hover target: (45573.676,344.29797)
+21:14:28 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@6d988e94
+21:14:28 | DEBUG | Beezee | resetHoverTimer(): hashCode=603219469
+21:14:28 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@282d1023
+21:14:28 | DEBUG | Beezee | resetHoverTimer(): hashCode=1648090182
+21:14:28 | DEBUG | Beezee | findHoverTarget()
+21:14:28 | DEBUG | Beezee | findHoverTarget(): set hover target: (45676.87,272.0795)
+21:14:28 | DEBUG | Beezee | update(): HOVER: find hover target: (45676.87,272.0795)
+21:14:28 | DEBUG | Beezee | findHoverTarget()
+21:14:28 | DEBUG | Beezee | findHoverTarget(): set hover target: (45574.945,334.8788)
+21:14:28 | DEBUG | Beezee | update(): HOVER: find hover target: (45574.945,334.8788)
+21:14:28 | DEBUG | Beezee | findHoverTarget()
+21:14:28 | DEBUG | Beezee | findHoverTarget(): set hover target: (45694.586,270.44446)
+21:14:28 | DEBUG | Beezee | update(): HOVER: find hover target: (45694.586,270.44446)
+21:14:28 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@6311640d
+21:14:28 | DEBUG | Beezee | resetHoverTimer(): hashCode=391915263
+21:14:28 | DEBUG | Beezee | findHoverTarget()
+21:14:28 | DEBUG | Beezee | findHoverTarget(): set hover target: (45584.42,330.7464)
+21:14:28 | DEBUG | Beezee | update(): HOVER: find hover target: (45584.42,330.7464)
+21:14:28 | DEBUG | Beezee | findHoverTarget()
+21:14:28 | DEBUG | Beezee | findHoverTarget(): set hover target: (45687.613,389.13388)
+21:14:28 | DEBUG | Beezee | update(): HOVER: find hover target: (45687.613,389.13388)
+21:14:28 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@282d1023
+21:14:28 | DEBUG | Beezee | resetHoverTimer(): hashCode=1648090182
+21:14:28 | DEBUG | Beezee | findHoverTarget()
+21:14:28 | DEBUG | Beezee | findHoverTarget(): set hover target: (45651.67,416.68658)
+21:14:28 | DEBUG | Beezee | update(): HOVER: find hover target: (45651.67,416.68658)
+21:14:28 | DEBUG | Beezee | findHoverTarget()
+21:14:28 | DEBUG | Beezee | findHoverTarget(): set hover target: (45679.89,376.38824)
+21:14:28 | DEBUG | Beezee | update(): HOVER: find hover target: (45679.89,376.38824)
+21:14:28 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@799ace5b
+21:14:28 | DEBUG | Beezee | resetHoverTimer(): hashCode=867134838
+21:14:28 | DEBUG | Beezee | setToAttack(): hashCode=603219469
+21:14:28 | DEBUG | Beezee | init(): hashCode=1182656815
+21:14:28 | DEBUG | Beezee | onSpawn(): hashCode=1182656815, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:28 | DEBUG | Beezee | resetHoverTimer(): hashCode=1182656815
+21:14:28 | DEBUG | CannoHoney | squeeze()
+21:14:28 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@194c02c3
+21:14:28 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:28 | DEBUG | HoneyDrip | onSpawn(): spawnProps=Properties({
+	[position=(45648.0,320.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:29 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2287395
+21:14:29 | DEBUG | Beezee | resetHoverTimer(): hashCode=677329142
+21:14:29 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@223ed38f
+21:14:29 | DEBUG | Beezee | resetHoverTimer(): hashCode=1091925703
+21:14:29 | DEBUG | Beezee | findHoverTarget()
+21:14:29 | DEBUG | Beezee | findHoverTarget(): set hover target: (45611.746,322.3195)
+21:14:29 | DEBUG | Beezee | update(): HOVER: find hover target: (45611.746,322.3195)
+21:14:29 | DEBUG | Beezee | findHoverTarget()
+21:14:29 | DEBUG | Beezee | findHoverTarget(): set hover target: (45590.832,420.0416)
+21:14:29 | DEBUG | Beezee | update(): HOVER: find hover target: (45590.832,420.0416)
+21:14:29 | DEBUG | Beezee | findHoverTarget()
+21:14:29 | DEBUG | Beezee | findHoverTarget(): set hover target: (45592.258,283.3626)
+21:14:29 | DEBUG | Beezee | update(): HOVER: find hover target: (45592.258,283.3626)
+21:14:29 | DEBUG | Beezee | findHoverTarget()
+21:14:29 | DEBUG | Beezee | findHoverTarget(): set hover target: (45638.773,309.4966)
+21:14:29 | DEBUG | Beezee | update(): HOVER: find hover target: (45638.773,309.4966)
+21:14:29 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@282d1023
+21:14:29 | DEBUG | Beezee | resetHoverTimer(): hashCode=1648090182
+21:14:29 | DEBUG | Beezee | findHoverTarget()
+21:14:29 | DEBUG | Beezee | findHoverTarget(): set hover target: (45661.32,324.12643)
+21:14:29 | DEBUG | Beezee | update(): HOVER: find hover target: (45661.32,324.12643)
+21:14:29 | DEBUG | Beezee | findHoverTarget()
+21:14:29 | DEBUG | Beezee | findHoverTarget(): set hover target: (45699.188,386.68024)
+21:14:29 | DEBUG | Beezee | update(): HOVER: find hover target: (45699.188,386.68024)
+21:14:29 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@6311640d
+21:14:29 | DEBUG | Beezee | resetHoverTimer(): hashCode=391915263
+21:14:29 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@4a11156b
+21:14:29 | DEBUG | Beezee | resetHoverTimer(): hashCode=1182656815
+21:14:29 | DEBUG | Beezee | findHoverTarget()
+21:14:29 | DEBUG | Beezee | findHoverTarget(): set hover target: (45658.695,281.9746)
+21:14:29 | DEBUG | Beezee | update(): HOVER: find hover target: (45658.695,281.9746)
+21:14:29 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@799ace5b
+21:14:29 | DEBUG | Beezee | resetHoverTimer(): hashCode=867134838
+21:14:29 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@223ed38f
+21:14:29 | DEBUG | Beezee | resetHoverTimer(): hashCode=1091925703
+21:14:29 | DEBUG | Beezee | findHoverTarget()
+21:14:29 | DEBUG | Beezee | findHoverTarget(): set hover target: (45719.316,305.26508)
+21:14:29 | DEBUG | Beezee | update(): HOVER: find hover target: (45719.316,305.26508)
+21:14:29 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@194c02c3
+21:14:29 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:29 | DEBUG | Beezee | findHoverTarget()
+21:14:29 | DEBUG | Beezee | findHoverTarget(): set hover target: (45623.95,381.32172)
+21:14:29 | DEBUG | Beezee | update(): HOVER: find hover target: (45623.95,381.32172)
+21:14:29 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2287395
+21:14:29 | DEBUG | Beezee | resetHoverTimer(): hashCode=677329142
+21:14:29 | DEBUG | Beezee | findHoverTarget()
+21:14:29 | DEBUG | Beezee | findHoverTarget(): set hover target: (45572.133,286.2143)
+21:14:29 | DEBUG | Beezee | update(): HOVER: find hover target: (45572.133,286.2143)
+21:14:29 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@282d1023
+21:14:29 | DEBUG | Beezee | resetHoverTimer(): hashCode=1648090182
+21:14:29 | DEBUG | Beezee | findHoverTarget()
+21:14:29 | DEBUG | Beezee | findHoverTarget(): set hover target: (45661.73,328.9834)
+21:14:29 | DEBUG | Beezee | update(): HOVER: find hover target: (45661.73,328.9834)
+21:14:29 | DEBUG | Beezee | update(): hashCode=603219469: ATTACK: attack delay just finished
+21:14:29 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@6311640d
+21:14:29 | DEBUG | Beezee | resetHoverTimer(): hashCode=391915263
+21:14:30 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@4a11156b
+21:14:30 | DEBUG | Beezee | resetHoverTimer(): hashCode=1182656815
+21:14:30 | DEBUG | HoneyDrip | onDestroy()
+21:14:30 | DEBUG | Beezee | findHoverTarget()
+21:14:30 | DEBUG | Beezee | findHoverTarget(): set hover target: (45688.95,320.54294)
+21:14:30 | DEBUG | Beezee | update(): HOVER: find hover target: (45688.95,320.54294)
+21:14:30 | DEBUG | Beezee | findHoverTarget()
+21:14:30 | DEBUG | Beezee | findHoverTarget(): set hover target: (45686.992,305.0304)
+21:14:30 | DEBUG | Beezee | update(): HOVER: find hover target: (45686.992,305.0304)
+21:14:30 | DEBUG | Beezee | findHoverTarget()
+21:14:30 | DEBUG | Beezee | findHoverTarget(): set hover target: (45692.152,349.08374)
+21:14:30 | DEBUG | Beezee | update(): HOVER: find hover target: (45692.152,349.08374)
+21:14:30 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@194c02c3
+21:14:30 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:30 | DEBUG | Beezee | findHoverTarget()
+21:14:30 | DEBUG | Beezee | findHoverTarget(): set hover target: (45675.574,299.9169)
+21:14:30 | DEBUG | Beezee | update(): HOVER: find hover target: (45675.574,299.9169)
+21:14:30 | DEBUG | Beezee | findHoverTarget()
+21:14:30 | DEBUG | Beezee | findHoverTarget(): set hover target: (45592.816,322.84116)
+21:14:30 | DEBUG | Beezee | update(): HOVER: find hover target: (45592.816,322.84116)
+21:14:30 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@4a11156b
+21:14:30 | DEBUG | Beezee | resetHoverTimer(): hashCode=1182656815
+21:14:30 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@799ace5b
+21:14:30 | DEBUG | Beezee | resetHoverTimer(): hashCode=867134838
+21:14:30 | DEBUG | Beezee | findHoverTarget()
+21:14:30 | DEBUG | Beezee | findHoverTarget(): set hover target: (45657.656,323.53473)
+21:14:30 | DEBUG | Beezee | update(): HOVER: find hover target: (45657.656,323.53473)
+21:14:30 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2287395
+21:14:30 | DEBUG | Beezee | resetHoverTimer(): hashCode=677329142
+21:14:30 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@223ed38f
+21:14:30 | DEBUG | Beezee | resetHoverTimer(): hashCode=1091925703
+21:14:30 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@282d1023
+21:14:30 | DEBUG | Beezee | resetHoverTimer(): hashCode=1648090182
+21:14:30 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@6311640d
+21:14:30 | DEBUG | Beezee | resetHoverTimer(): hashCode=391915263
+21:14:30 | DEBUG | Beezee | findHoverTarget()
+21:14:30 | DEBUG | Beezee | findHoverTarget(): set hover target: (45626.473,397.2353)
+21:14:30 | DEBUG | Beezee | update(): HOVER: find hover target: (45626.473,397.2353)
+21:14:30 | DEBUG | Beezee | findHoverTarget()
+21:14:30 | DEBUG | Beezee | findHoverTarget(): set hover target: (45596.066,301.53442)
+21:14:30 | DEBUG | Beezee | update(): HOVER: find hover target: (45596.066,301.53442)
+21:14:30 | DEBUG | Beezee | findHoverTarget()
+21:14:30 | DEBUG | Beezee | findHoverTarget(): set hover target: (45598.742,304.38312)
+21:14:30 | DEBUG | Beezee | update(): HOVER: find hover target: (45598.742,304.38312)
+21:14:30 | DEBUG | Beezee | findHoverTarget()
+21:14:30 | DEBUG | Beezee | findHoverTarget(): set hover target: (45695.797,318.39047)
+21:14:30 | DEBUG | Beezee | update(): HOVER: find hover target: (45695.797,318.39047)
+21:14:30 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2287395
+21:14:30 | DEBUG | Beezee | resetHoverTimer(): hashCode=677329142
+21:14:30 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@194c02c3
+21:14:30 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:30 | DEBUG | Beezee | findHoverTarget()
+21:14:30 | DEBUG | Beezee | findHoverTarget(): set hover target: (45669.27,381.03314)
+21:14:30 | DEBUG | Beezee | update(): HOVER: find hover target: (45669.27,381.03314)
+21:14:30 | DEBUG | Beezee | findHoverTarget()
+21:14:30 | DEBUG | Beezee | findHoverTarget(): set hover target: (45606.902,350.8292)
+21:14:30 | DEBUG | Beezee | update(): HOVER: find hover target: (45606.902,350.8292)
+21:14:30 | DEBUG | CannoHoney | squeeze()
+21:14:30 | DEBUG | HoneyDrip | onSpawn(): spawnProps=Properties({
+	[position=(45648.0,320.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:31 | DEBUG | Beezee | findHoverTarget()
+21:14:31 | DEBUG | Beezee | findHoverTarget(): set hover target: (45674.676,286.7803)
+21:14:31 | DEBUG | Beezee | update(): HOVER: find hover target: (45674.676,286.7803)
+21:14:31 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@6311640d
+21:14:31 | DEBUG | Beezee | resetHoverTimer(): hashCode=391915263
+21:14:31 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@4a11156b
+21:14:31 | DEBUG | Beezee | resetHoverTimer(): hashCode=1182656815
+21:14:31 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@223ed38f
+21:14:31 | DEBUG | Beezee | resetHoverTimer(): hashCode=1091925703
+21:14:31 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@799ace5b
+21:14:31 | DEBUG | Beezee | resetHoverTimer(): hashCode=867134838
+21:14:31 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@282d1023
+21:14:31 | DEBUG | Beezee | resetHoverTimer(): hashCode=1648090182
+21:14:31 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2287395
+21:14:31 | DEBUG | Beezee | resetHoverTimer(): hashCode=677329142
+21:14:31 | DEBUG | Beezee | findHoverTarget()
+21:14:31 | DEBUG | Beezee | findHoverTarget(): set hover target: (45581.297,331.52432)
+21:14:31 | DEBUG | Beezee | update(): HOVER: find hover target: (45581.297,331.52432)
+21:14:31 | DEBUG | Beezee | findHoverTarget()
+21:14:31 | DEBUG | Beezee | findHoverTarget(): set hover target: (45653.027,424.24258)
+21:14:31 | DEBUG | Beezee | update(): HOVER: find hover target: (45653.027,424.24258)
+21:14:31 | DEBUG | Beezee | findHoverTarget()
+21:14:31 | DEBUG | Beezee | findHoverTarget(): set hover target: (45686.355,299.11884)
+21:14:31 | DEBUG | Beezee | update(): HOVER: find hover target: (45686.355,299.11884)
+21:14:31 | DEBUG | Beezee | setToAttack(): hashCode=1648090182
+21:14:31 | DEBUG | Beezee | setToAttack(): hashCode=391915263
+21:14:31 | DEBUG | Beezee | init(): hashCode=1345532545
+21:14:31 | DEBUG | Beezee | onSpawn(): hashCode=1345532545, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:31 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:31 | DEBUG | Beezee | init(): hashCode=869887600
+21:14:31 | DEBUG | Beezee | onSpawn(): hashCode=869887600, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:31 | DEBUG | Beezee | resetHoverTimer(): hashCode=869887600
+21:14:31 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@223ed38f
+21:14:31 | DEBUG | Beezee | resetHoverTimer(): hashCode=1091925703
+21:14:31 | DEBUG | Beezee | findHoverTarget()
+21:14:31 | DEBUG | Beezee | findHoverTarget(): set hover target: (45652.434,327.91125)
+21:14:31 | DEBUG | Beezee | update(): HOVER: find hover target: (45652.434,327.91125)
+21:14:31 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@194c02c3
+21:14:31 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:31 | DEBUG | Beezee | findHoverTarget()
+21:14:31 | DEBUG | Beezee | findHoverTarget(): set hover target: (45598.08,373.86563)
+21:14:31 | DEBUG | Beezee | update(): HOVER: find hover target: (45598.08,373.86563)
+21:14:31 | DEBUG | Beezee | findHoverTarget()
+21:14:31 | DEBUG | Beezee | findHoverTarget(): set hover target: (45704.996,382.49417)
+21:14:31 | DEBUG | Beezee | update(): HOVER: find hover target: (45704.996,382.49417)
+21:14:31 | DEBUG | Beezee | findHoverTarget()
+21:14:31 | DEBUG | Beezee | findHoverTarget(): set hover target: (45569.523,298.57526)
+21:14:31 | DEBUG | Beezee | update(): HOVER: find hover target: (45569.523,298.57526)
+21:14:31 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@799ace5b
+21:14:31 | DEBUG | Beezee | resetHoverTimer(): hashCode=867134838
+21:14:31 | DEBUG | Beezee | findHoverTarget()
+21:14:31 | DEBUG | Beezee | findHoverTarget(): set hover target: (45596.395,380.01193)
+21:14:31 | DEBUG | Beezee | update(): HOVER: find hover target: (45596.395,380.01193)
+21:14:31 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@4a11156b
+21:14:31 | DEBUG | Beezee | resetHoverTimer(): hashCode=1182656815
+21:14:31 | DEBUG | Beezee | findHoverTarget()
+21:14:31 | DEBUG | Beezee | findHoverTarget(): set hover target: (45607.508,367.62344)
+21:14:31 | DEBUG | Beezee | update(): HOVER: find hover target: (45607.508,367.62344)
+21:14:31 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:14:31 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:31 | DEBUG | Beezee | findHoverTarget()
+21:14:31 | DEBUG | Beezee | findHoverTarget(): set hover target: (45686.4,278.13068)
+21:14:31 | DEBUG | Beezee | update(): HOVER: find hover target: (45686.4,278.13068)
+21:14:32 | DEBUG | HoneyDrip | onDestroy()
+21:14:32 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2287395
+21:14:32 | DEBUG | Beezee | resetHoverTimer(): hashCode=677329142
+21:14:32 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7940ad4b
+21:14:32 | DEBUG | Beezee | resetHoverTimer(): hashCode=869887600
+21:14:32 | DEBUG | Beezee | findHoverTarget()
+21:14:32 | DEBUG | Beezee | findHoverTarget(): set hover target: (45599.004,367.75528)
+21:14:32 | DEBUG | Beezee | update(): HOVER: find hover target: (45599.004,367.75528)
+21:14:32 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:14:32 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:32 | DEBUG | Beezee | findHoverTarget()
+21:14:32 | DEBUG | Beezee | findHoverTarget(): set hover target: (45589.508,295.64862)
+21:14:32 | DEBUG | Beezee | update(): HOVER: find hover target: (45589.508,295.64862)
+21:14:32 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@223ed38f
+21:14:32 | DEBUG | Beezee | resetHoverTimer(): hashCode=1091925703
+21:14:32 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@194c02c3
+21:14:32 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:32 | DEBUG | Beezee | findHoverTarget()
+21:14:32 | DEBUG | Beezee | findHoverTarget(): set hover target: (45628.46,319.455)
+21:14:32 | DEBUG | Beezee | update(): HOVER: find hover target: (45628.46,319.455)
+21:14:32 | DEBUG | Beezee | update(): hashCode=391915263: ATTACK: attack delay just finished
+21:14:32 | DEBUG | Beezee | update(): hashCode=1648090182: ATTACK: attack delay just finished
+21:14:32 | DEBUG | Beezee | findHoverTarget()
+21:14:32 | DEBUG | Beezee | findHoverTarget(): set hover target: (45703.54,273.35275)
+21:14:32 | DEBUG | Beezee | update(): HOVER: find hover target: (45703.54,273.35275)
+21:14:32 | DEBUG | Beezee | findHoverTarget()
+21:14:32 | DEBUG | Beezee | findHoverTarget(): set hover target: (45724.29,353.78183)
+21:14:32 | DEBUG | Beezee | update(): HOVER: find hover target: (45724.29,353.78183)
+21:14:32 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@799ace5b
+21:14:32 | DEBUG | Beezee | resetHoverTimer(): hashCode=867134838
+21:14:32 | DEBUG | Beezee | findHoverTarget()
+21:14:32 | DEBUG | Beezee | findHoverTarget(): set hover target: (45698.332,384.69293)
+21:14:32 | DEBUG | Beezee | update(): HOVER: find hover target: (45698.332,384.69293)
+21:14:32 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2287395
+21:14:32 | DEBUG | Beezee | resetHoverTimer(): hashCode=677329142
+21:14:32 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@4a11156b
+21:14:32 | DEBUG | Beezee | resetHoverTimer(): hashCode=1182656815
+21:14:32 | DEBUG | Beezee | findHoverTarget()
+21:14:32 | DEBUG | Beezee | findHoverTarget(): set hover target: (45608.156,341.8822)
+21:14:32 | DEBUG | Beezee | update(): HOVER: find hover target: (45608.156,341.8822)
+21:14:32 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7940ad4b
+21:14:32 | DEBUG | Beezee | resetHoverTimer(): hashCode=869887600
+21:14:32 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@194c02c3
+21:14:32 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:32 | DEBUG | Beezee | findHoverTarget()
+21:14:32 | DEBUG | Beezee | findHoverTarget(): set hover target: (45613.04,367.96204)
+21:14:32 | DEBUG | Beezee | update(): HOVER: find hover target: (45613.04,367.96204)
+21:14:32 | DEBUG | Beezee | findHoverTarget()
+21:14:32 | DEBUG | Beezee | findHoverTarget(): set hover target: (45666.215,397.20123)
+21:14:32 | DEBUG | Beezee | update(): HOVER: find hover target: (45666.215,397.20123)
+21:14:32 | DEBUG | Beezee | findHoverTarget()
+21:14:32 | DEBUG | Beezee | findHoverTarget(): set hover target: (45713.516,396.48257)
+21:14:32 | DEBUG | Beezee | update(): HOVER: find hover target: (45713.516,396.48257)
+21:14:32 | DEBUG | Beezee | findHoverTarget()
+21:14:32 | DEBUG | Beezee | findHoverTarget(): set hover target: (45595.77,301.19196)
+21:14:32 | DEBUG | Beezee | update(): HOVER: find hover target: (45595.77,301.19196)
+21:14:32 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@4a11156b
+21:14:32 | DEBUG | Beezee | resetHoverTimer(): hashCode=1182656815
+21:14:33 | DEBUG | CannoHoney | squeeze()
+21:14:33 | DEBUG | HoneyDrip | onSpawn(): spawnProps=Properties({
+	[position=(45648.0,320.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:33 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@223ed38f
+21:14:33 | DEBUG | Beezee | resetHoverTimer(): hashCode=1091925703
+21:14:33 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:14:33 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:33 | DEBUG | Beezee | findHoverTarget()
+21:14:33 | DEBUG | Beezee | findHoverTarget(): set hover target: (45639.047,390.54086)
+21:14:33 | DEBUG | Beezee | update(): HOVER: find hover target: (45639.047,390.54086)
+21:14:33 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2287395
+21:14:33 | DEBUG | Beezee | resetHoverTimer(): hashCode=677329142
+21:14:33 | DEBUG | Beezee | findHoverTarget()
+21:14:33 | DEBUG | Beezee | findHoverTarget(): set hover target: (45609.98,324.10532)
+21:14:33 | DEBUG | Beezee | update(): HOVER: find hover target: (45609.98,324.10532)
+21:14:33 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7940ad4b
+21:14:33 | DEBUG | Beezee | resetHoverTimer(): hashCode=869887600
+21:14:33 | DEBUG | Beezee | findHoverTarget()
+21:14:33 | DEBUG | Beezee | findHoverTarget(): set hover target: (45612.906,308.86136)
+21:14:33 | DEBUG | Beezee | update(): HOVER: find hover target: (45612.906,308.86136)
+21:14:33 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@194c02c3
+21:14:33 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:33 | DEBUG | Beezee | findHoverTarget()
+21:14:33 | DEBUG | Beezee | findHoverTarget(): set hover target: (45692.625,342.69257)
+21:14:33 | DEBUG | Beezee | update(): HOVER: find hover target: (45692.625,342.69257)
+21:14:33 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@799ace5b
+21:14:33 | DEBUG | Beezee | resetHoverTimer(): hashCode=867134838
+21:14:33 | DEBUG | Beezee | findHoverTarget()
+21:14:33 | DEBUG | Beezee | findHoverTarget(): set hover target: (45576.742,282.4351)
+21:14:33 | DEBUG | Beezee | update(): HOVER: find hover target: (45576.742,282.4351)
+21:14:33 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:14:33 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:33 | DEBUG | Beezee | findHoverTarget()
+21:14:33 | DEBUG | Beezee | findHoverTarget(): set hover target: (45660.25,288.69153)
+21:14:33 | DEBUG | Beezee | update(): HOVER: find hover target: (45660.25,288.69153)
+21:14:33 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@4a11156b
+21:14:33 | DEBUG | Beezee | resetHoverTimer(): hashCode=1182656815
+21:14:33 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@223ed38f
+21:14:33 | DEBUG | Beezee | resetHoverTimer(): hashCode=1091925703
+21:14:33 | DEBUG | Beezee | findHoverTarget()
+21:14:33 | DEBUG | Beezee | findHoverTarget(): set hover target: (45682.406,297.6429)
+21:14:33 | DEBUG | Beezee | update(): HOVER: find hover target: (45682.406,297.6429)
+21:14:33 | DEBUG | Beezee | findHoverTarget()
+21:14:33 | DEBUG | Beezee | findHoverTarget(): set hover target: (45633.25,362.42468)
+21:14:33 | DEBUG | Beezee | update(): HOVER: find hover target: (45633.25,362.42468)
+21:14:33 | DEBUG | Beezee | findHoverTarget()
+21:14:33 | DEBUG | Beezee | findHoverTarget(): set hover target: (45675.46,306.43735)
+21:14:33 | DEBUG | Beezee | update(): HOVER: find hover target: (45675.46,306.43735)
+21:14:33 | DEBUG | Beezee | findHoverTarget()
+21:14:33 | DEBUG | Beezee | findHoverTarget(): set hover target: (45718.348,372.11353)
+21:14:33 | DEBUG | Beezee | update(): HOVER: find hover target: (45718.348,372.11353)
+21:14:33 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2287395
+21:14:33 | DEBUG | Beezee | resetHoverTimer(): hashCode=677329142
+21:14:33 | DEBUG | Beezee | setToAttack(): hashCode=867134838
+21:14:33 | DEBUG | Beezee | setToAttack(): hashCode=1182656815
+21:14:33 | DEBUG | Beezee | setToAttack(): hashCode=869887600
+21:14:33 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@194c02c3
+21:14:33 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:33 | DEBUG | Beezee | init(): hashCode=692490920
+21:14:33 | DEBUG | Beezee | onSpawn(): hashCode=692490920, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:33 | DEBUG | Beezee | resetHoverTimer(): hashCode=692490920
+21:14:33 | DEBUG | Beezee | init(): hashCode=915426022
+21:14:33 | DEBUG | Beezee | onSpawn(): hashCode=915426022, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:33 | DEBUG | Beezee | resetHoverTimer(): hashCode=915426022
+21:14:33 | DEBUG | Beezee | init(): hashCode=1300747761
+21:14:33 | DEBUG | Beezee | onSpawn(): hashCode=1300747761, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:33 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:14:34 | DEBUG | HoneyDrip | onDestroy()
+21:14:34 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:14:34 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:34 | DEBUG | Beezee | findHoverTarget()
+21:14:34 | DEBUG | Beezee | findHoverTarget(): set hover target: (45677.254,359.85046)
+21:14:34 | DEBUG | Beezee | update(): HOVER: find hover target: (45677.254,359.85046)
+21:14:34 | DEBUG | Beezee | findHoverTarget()
+21:14:34 | DEBUG | Beezee | findHoverTarget(): set hover target: (45669.457,408.95413)
+21:14:34 | DEBUG | Beezee | update(): HOVER: find hover target: (45669.457,408.95413)
+21:14:34 | DEBUG | Beezee | findHoverTarget()
+21:14:34 | DEBUG | Beezee | findHoverTarget(): set hover target: (45694.1,324.32938)
+21:14:34 | DEBUG | Beezee | update(): HOVER: find hover target: (45694.1,324.32938)
+21:14:34 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:14:34 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:34 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@42a1969c
+21:14:34 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:14:34 | DEBUG | Beezee | findHoverTarget()
+21:14:34 | DEBUG | Beezee | findHoverTarget(): set hover target: (45599.484,413.08002)
+21:14:34 | DEBUG | Beezee | update(): HOVER: find hover target: (45599.484,413.08002)
+21:14:34 | DEBUG | Beezee | findHoverTarget()
+21:14:34 | DEBUG | Beezee | findHoverTarget(): set hover target: (45706.79,404.18976)
+21:14:34 | DEBUG | Beezee | update(): HOVER: find hover target: (45706.79,404.18976)
+21:14:34 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@223ed38f
+21:14:34 | DEBUG | Beezee | resetHoverTimer(): hashCode=1091925703
+21:14:34 | DEBUG | Beezee | findHoverTarget()
+21:14:34 | DEBUG | Beezee | findHoverTarget(): set hover target: (45698.79,282.7522)
+21:14:34 | DEBUG | Beezee | update(): HOVER: find hover target: (45698.79,282.7522)
+21:14:34 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@610dd1c7
+21:14:34 | DEBUG | Beezee | resetHoverTimer(): hashCode=915426022
+21:14:34 | DEBUG | Beezee | findHoverTarget()
+21:14:34 | DEBUG | Beezee | findHoverTarget(): set hover target: (45726.125,348.9203)
+21:14:34 | DEBUG | Beezee | update(): HOVER: find hover target: (45726.125,348.9203)
+21:14:34 | DEBUG | Beezee | findHoverTarget()
+21:14:34 | DEBUG | Beezee | findHoverTarget(): set hover target: (45715.234,316.72937)
+21:14:34 | DEBUG | Beezee | update(): HOVER: find hover target: (45715.234,316.72937)
+21:14:34 | DEBUG | Beezee | findHoverTarget()
+21:14:34 | DEBUG | Beezee | findHoverTarget(): set hover target: (45574.2,421.84995)
+21:14:34 | DEBUG | Beezee | update(): HOVER: find hover target: (45574.2,421.84995)
+21:14:34 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@59a20ac3
+21:14:34 | DEBUG | Beezee | resetHoverTimer(): hashCode=692490920
+21:14:34 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@223ed38f
+21:14:34 | DEBUG | Beezee | resetHoverTimer(): hashCode=1091925703
+21:14:34 | DEBUG | Beezee | update(): hashCode=867134838: ATTACK: attack delay just finished
+21:14:34 | DEBUG | Beezee | update(): hashCode=1182656815: ATTACK: attack delay just finished
+21:14:34 | DEBUG | Beezee | update(): hashCode=869887600: ATTACK: attack delay just finished
+21:14:34 | DEBUG | Beezee | findHoverTarget()
+21:14:34 | DEBUG | Beezee | findHoverTarget(): set hover target: (45600.04,362.91727)
+21:14:34 | DEBUG | Beezee | update(): HOVER: find hover target: (45600.04,362.91727)
+21:14:35 | DEBUG | Beezee | findHoverTarget()
+21:14:35 | DEBUG | Beezee | findHoverTarget(): set hover target: (45573.742,386.4367)
+21:14:35 | DEBUG | Beezee | update(): HOVER: find hover target: (45573.742,386.4367)
+21:14:35 | DEBUG | CannoHoney | squeeze()
+21:14:35 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@194c02c3
+21:14:35 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:35 | DEBUG | HoneyDrip | onSpawn(): spawnProps=Properties({
+	[position=(45648.0,320.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:35 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@42a1969c
+21:14:35 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:14:35 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2287395
+21:14:35 | DEBUG | Beezee | resetHoverTimer(): hashCode=677329142
+21:14:35 | DEBUG | Beezee | findHoverTarget()
+21:14:35 | DEBUG | Beezee | findHoverTarget(): set hover target: (45602.766,392.91864)
+21:14:35 | DEBUG | Beezee | update(): HOVER: find hover target: (45602.766,392.91864)
+21:14:35 | DEBUG | Beezee | findHoverTarget()
+21:14:35 | DEBUG | Beezee | findHoverTarget(): set hover target: (45633.348,285.7506)
+21:14:35 | DEBUG | Beezee | update(): HOVER: find hover target: (45633.348,285.7506)
+21:14:35 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@610dd1c7
+21:14:35 | DEBUG | Beezee | resetHoverTimer(): hashCode=915426022
+21:14:35 | DEBUG | Beezee | findHoverTarget()
+21:14:35 | DEBUG | Beezee | findHoverTarget(): set hover target: (45589.395,363.25717)
+21:14:35 | DEBUG | Beezee | update(): HOVER: find hover target: (45589.395,363.25717)
+21:14:35 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:14:35 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:35 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@223ed38f
+21:14:35 | DEBUG | Beezee | resetHoverTimer(): hashCode=1091925703
+21:14:35 | DEBUG | Beezee | findHoverTarget()
+21:14:35 | DEBUG | Beezee | findHoverTarget(): set hover target: (45671.48,319.83728)
+21:14:35 | DEBUG | Beezee | update(): HOVER: find hover target: (45671.48,319.83728)
+21:14:35 | DEBUG | Beezee | findHoverTarget()
+21:14:35 | DEBUG | Beezee | findHoverTarget(): set hover target: (45656.832,278.4995)
+21:14:35 | DEBUG | Beezee | update(): HOVER: find hover target: (45656.832,278.4995)
+21:14:35 | DEBUG | Beezee | findHoverTarget()
+21:14:35 | DEBUG | Beezee | findHoverTarget(): set hover target: (45709.99,281.20416)
+21:14:35 | DEBUG | Beezee | update(): HOVER: find hover target: (45709.99,281.20416)
+21:14:35 | DEBUG | Beezee | findHoverTarget()
+21:14:35 | DEBUG | Beezee | findHoverTarget(): set hover target: (45677.74,359.80365)
+21:14:35 | DEBUG | Beezee | update(): HOVER: find hover target: (45677.74,359.80365)
+21:14:35 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@194c02c3
+21:14:35 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:35 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@59a20ac3
+21:14:35 | DEBUG | Beezee | resetHoverTimer(): hashCode=692490920
+21:14:35 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2287395
+21:14:35 | DEBUG | Beezee | resetHoverTimer(): hashCode=677329142
+21:14:36 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@42a1969c
+21:14:36 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:14:36 | DEBUG | HoneyDrip | onDestroy()
+21:14:36 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@223ed38f
+21:14:36 | DEBUG | Beezee | resetHoverTimer(): hashCode=1091925703
+21:14:36 | DEBUG | Beezee | findHoverTarget()
+21:14:36 | DEBUG | Beezee | findHoverTarget(): set hover target: (45708.523,273.17242)
+21:14:36 | DEBUG | Beezee | update(): HOVER: find hover target: (45708.523,273.17242)
+21:14:36 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@610dd1c7
+21:14:36 | DEBUG | Beezee | resetHoverTimer(): hashCode=915426022
+21:14:36 | DEBUG | Beezee | findHoverTarget()
+21:14:36 | DEBUG | Beezee | findHoverTarget(): set hover target: (45626.426,399.15753)
+21:14:36 | DEBUG | Beezee | update(): HOVER: find hover target: (45626.426,399.15753)
+21:14:36 | DEBUG | Beezee | setToAttack(): hashCode=936931778
+21:14:36 | DEBUG | Beezee | setToAttack(): hashCode=677329142
+21:14:36 | DEBUG | Beezee | findHoverTarget()
+21:14:36 | DEBUG | Beezee | findHoverTarget(): set hover target: (45660.023,294.9856)
+21:14:36 | DEBUG | Beezee | update(): HOVER: find hover target: (45660.023,294.9856)
+21:14:36 | DEBUG | Beezee | init(): hashCode=944581772
+21:14:36 | DEBUG | Beezee | onSpawn(): hashCode=944581772, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:36 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:14:36 | DEBUG | Beezee | init(): hashCode=18316008
+21:14:36 | DEBUG | Beezee | onSpawn(): hashCode=18316008, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:36 | DEBUG | Beezee | resetHoverTimer(): hashCode=18316008
+21:14:36 | DEBUG | Beezee | findHoverTarget()
+21:14:36 | DEBUG | Beezee | findHoverTarget(): set hover target: (45576.34,298.5319)
+21:14:36 | DEBUG | Beezee | update(): HOVER: find hover target: (45576.34,298.5319)
+21:14:36 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@223ed38f
+21:14:36 | DEBUG | Beezee | resetHoverTimer(): hashCode=1091925703
+21:14:36 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:14:36 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:36 | DEBUG | Beezee | findHoverTarget()
+21:14:36 | DEBUG | Beezee | findHoverTarget(): set hover target: (45648.07,392.73557)
+21:14:36 | DEBUG | Beezee | update(): HOVER: find hover target: (45648.07,392.73557)
+21:14:36 | DEBUG | Beezee | findHoverTarget()
+21:14:36 | DEBUG | Beezee | findHoverTarget(): set hover target: (45725.082,280.72382)
+21:14:36 | DEBUG | Beezee | update(): HOVER: find hover target: (45725.082,280.72382)
+21:14:36 | DEBUG | Beezee | findHoverTarget()
+21:14:36 | DEBUG | Beezee | findHoverTarget(): set hover target: (45620.13,317.5905)
+21:14:36 | DEBUG | Beezee | update(): HOVER: find hover target: (45620.13,317.5905)
+21:14:36 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@610dd1c7
+21:14:36 | DEBUG | Beezee | resetHoverTimer(): hashCode=915426022
+21:14:36 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@42a1969c
+21:14:36 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:14:36 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:14:36 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:36 | DEBUG | Beezee | findHoverTarget()
+21:14:36 | DEBUG | Beezee | findHoverTarget(): set hover target: (45642.152,364.67438)
+21:14:36 | DEBUG | Beezee | update(): HOVER: find hover target: (45642.152,364.67438)
+21:14:36 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@59a20ac3
+21:14:36 | DEBUG | Beezee | resetHoverTimer(): hashCode=692490920
+21:14:36 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7ee57b1
+21:14:36 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:14:36 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@194c02c3
+21:14:36 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:36 | DEBUG | Beezee | findHoverTarget()
+21:14:36 | DEBUG | Beezee | findHoverTarget(): set hover target: (45587.51,288.8429)
+21:14:36 | DEBUG | Beezee | update(): HOVER: find hover target: (45587.51,288.8429)
+21:14:36 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@223ed38f
+21:14:36 | DEBUG | Beezee | resetHoverTimer(): hashCode=1091925703
+21:14:37 | DEBUG | CannoHoney | squeeze()
+21:14:37 | DEBUG | HoneyDrip | onSpawn(): spawnProps=Properties({
+	[position=(45648.0,320.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:37 | DEBUG | Beezee | findHoverTarget()
+21:14:37 | DEBUG | Beezee | findHoverTarget(): set hover target: (45716.836,309.57397)
+21:14:37 | DEBUG | Beezee | update(): HOVER: find hover target: (45716.836,309.57397)
+21:14:37 | DEBUG | Beezee | findHoverTarget()
+21:14:37 | DEBUG | Beezee | findHoverTarget(): set hover target: (45726.582,385.14395)
+21:14:37 | DEBUG | Beezee | update(): HOVER: find hover target: (45726.582,385.14395)
+21:14:37 | DEBUG | Beezee | findHoverTarget()
+21:14:37 | DEBUG | Beezee | findHoverTarget(): set hover target: (45649.95,420.90765)
+21:14:37 | DEBUG | Beezee | update(): HOVER: find hover target: (45649.95,420.90765)
+21:14:37 | DEBUG | Beezee | findHoverTarget()
+21:14:37 | DEBUG | Beezee | findHoverTarget(): set hover target: (45610.95,344.71582)
+21:14:37 | DEBUG | Beezee | update(): HOVER: find hover target: (45610.95,344.71582)
+21:14:37 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:14:37 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:37 | DEBUG | Beezee | findHoverTarget()
+21:14:37 | DEBUG | Beezee | findHoverTarget(): set hover target: (45699.31,380.68655)
+21:14:37 | DEBUG | Beezee | update(): HOVER: find hover target: (45699.31,380.68655)
+21:14:37 | DEBUG | Beezee | findHoverTarget()
+21:14:37 | DEBUG | Beezee | findHoverTarget(): set hover target: (45582.3,353.78018)
+21:14:37 | DEBUG | Beezee | update(): HOVER: find hover target: (45582.3,353.78018)
+21:14:37 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@29c356bc
+21:14:37 | DEBUG | Beezee | resetHoverTimer(): hashCode=18316008
+21:14:37 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@194c02c3
+21:14:37 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:37 | DEBUG | Beezee | update(): hashCode=677329142: ATTACK: attack delay just finished
+21:14:37 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@42a1969c
+21:14:37 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:14:37 | DEBUG | Beezee | findHoverTarget()
+21:14:37 | DEBUG | Beezee | findHoverTarget(): set hover target: (45616.727,367.12408)
+21:14:37 | DEBUG | Beezee | update(): HOVER: find hover target: (45616.727,367.12408)
+21:14:37 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@610dd1c7
+21:14:37 | DEBUG | Beezee | resetHoverTimer(): hashCode=915426022
+21:14:37 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7ee57b1
+21:14:37 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:14:37 | DEBUG | Beezee | findHoverTarget()
+21:14:37 | DEBUG | Beezee | findHoverTarget(): set hover target: (45644.766,292.73138)
+21:14:37 | DEBUG | Beezee | update(): HOVER: find hover target: (45644.766,292.73138)
+21:14:37 | DEBUG | Beezee | findHoverTarget()
+21:14:37 | DEBUG | Beezee | findHoverTarget(): set hover target: (45634.83,336.77112)
+21:14:37 | DEBUG | Beezee | update(): HOVER: find hover target: (45634.83,336.77112)
+21:14:37 | DEBUG | Beezee | findHoverTarget()
+21:14:37 | DEBUG | Beezee | findHoverTarget(): set hover target: (45595.465,366.11804)
+21:14:37 | DEBUG | Beezee | update(): HOVER: find hover target: (45595.465,366.11804)
+21:14:37 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@223ed38f
+21:14:37 | DEBUG | Beezee | resetHoverTimer(): hashCode=1091925703
+21:14:37 | DEBUG | Beezee | findHoverTarget()
+21:14:37 | DEBUG | Beezee | findHoverTarget(): set hover target: (45727.613,293.94193)
+21:14:37 | DEBUG | Beezee | update(): HOVER: find hover target: (45727.613,293.94193)
+21:14:37 | DEBUG | Beezee | findHoverTarget()
+21:14:37 | DEBUG | Beezee | findHoverTarget(): set hover target: (45673.113,300.69135)
+21:14:37 | DEBUG | Beezee | update(): HOVER: find hover target: (45673.113,300.69135)
+21:14:37 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:14:37 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:37 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@59a20ac3
+21:14:37 | DEBUG | Beezee | resetHoverTimer(): hashCode=692490920
+21:14:37 | DEBUG | Beezee | findHoverTarget()
+21:14:37 | DEBUG | Beezee | findHoverTarget(): set hover target: (45619.67,382.34644)
+21:14:37 | DEBUG | Beezee | update(): HOVER: find hover target: (45619.67,382.34644)
+21:14:37 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@194c02c3
+21:14:37 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:38 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@29c356bc
+21:14:38 | DEBUG | Beezee | resetHoverTimer(): hashCode=18316008
+21:14:38 | DEBUG | HoneyDrip | onDestroy()
+21:14:38 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@42a1969c
+21:14:38 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:14:38 | DEBUG | Beezee | findHoverTarget()
+21:14:38 | DEBUG | Beezee | findHoverTarget(): set hover target: (45687.41,370.65762)
+21:14:38 | DEBUG | Beezee | update(): HOVER: find hover target: (45687.41,370.65762)
+21:14:38 | DEBUG | Beezee | findHoverTarget()
+21:14:38 | DEBUG | Beezee | findHoverTarget(): set hover target: (45630.08,388.2471)
+21:14:38 | DEBUG | Beezee | update(): HOVER: find hover target: (45630.08,388.2471)
+21:14:38 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@610dd1c7
+21:14:38 | DEBUG | Beezee | resetHoverTimer(): hashCode=915426022
+21:14:38 | DEBUG | Beezee | findHoverTarget()
+21:14:38 | DEBUG | Beezee | findHoverTarget(): set hover target: (45620.965,424.38574)
+21:14:38 | DEBUG | Beezee | update(): HOVER: find hover target: (45620.965,424.38574)
+21:14:38 | DEBUG | Beezee | findHoverTarget()
+21:14:38 | DEBUG | Beezee | findHoverTarget(): set hover target: (45695.55,422.24066)
+21:14:38 | DEBUG | Beezee | update(): HOVER: find hover target: (45695.55,422.24066)
+21:14:38 | DEBUG | Beezee | findHoverTarget()
+21:14:38 | DEBUG | Beezee | findHoverTarget(): set hover target: (45631.297,347.4651)
+21:14:38 | DEBUG | Beezee | update(): HOVER: find hover target: (45631.297,347.4651)
+21:14:38 | DEBUG | Beezee | findHoverTarget()
+21:14:38 | DEBUG | Beezee | findHoverTarget(): set hover target: (45691.19,387.7306)
+21:14:38 | DEBUG | Beezee | update(): HOVER: find hover target: (45691.19,387.7306)
+21:14:38 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7ee57b1
+21:14:38 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:14:38 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@59a20ac3
+21:14:38 | DEBUG | Beezee | resetHoverTimer(): hashCode=692490920
+21:14:38 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@29c356bc
+21:14:38 | DEBUG | Beezee | resetHoverTimer(): hashCode=18316008
+21:14:38 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@223ed38f
+21:14:38 | DEBUG | Beezee | resetHoverTimer(): hashCode=1091925703
+21:14:38 | DEBUG | Beezee | findHoverTarget()
+21:14:38 | DEBUG | Beezee | findHoverTarget(): set hover target: (45598.457,376.1694)
+21:14:38 | DEBUG | Beezee | update(): HOVER: find hover target: (45598.457,376.1694)
+21:14:38 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@194c02c3
+21:14:38 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:38 | DEBUG | Beezee | findHoverTarget()
+21:14:38 | DEBUG | Beezee | findHoverTarget(): set hover target: (45585.61,292.8306)
+21:14:38 | DEBUG | Beezee | update(): HOVER: find hover target: (45585.61,292.8306)
+21:14:38 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@42a1969c
+21:14:38 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:14:38 | DEBUG | Beezee | findHoverTarget()
+21:14:38 | DEBUG | Beezee | findHoverTarget(): set hover target: (45622.72,333.6192)
+21:14:38 | DEBUG | Beezee | update(): HOVER: find hover target: (45622.72,333.6192)
+21:14:38 | DEBUG | Beezee | setToAttack(): hashCode=1091925703
+21:14:38 | DEBUG | Beezee | setToAttack(): hashCode=18316008
+21:14:38 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:14:38 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:38 | DEBUG | Beezee | init(): hashCode=1679629000
+21:14:38 | DEBUG | Beezee | onSpawn(): hashCode=1679629000, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:38 | DEBUG | Beezee | resetHoverTimer(): hashCode=1679629000
+21:14:38 | DEBUG | Beezee | init(): hashCode=949350729
+21:14:38 | DEBUG | Beezee | onSpawn(): hashCode=949350729, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:38 | DEBUG | Beezee | resetHoverTimer(): hashCode=949350729
+21:14:39 | DEBUG | CannoHoney | squeeze()
+21:14:39 | DEBUG | HoneyDrip | onSpawn(): spawnProps=Properties({
+	[position=(45648.0,320.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:39 | DEBUG | Beezee | findHoverTarget()
+21:14:39 | DEBUG | Beezee | findHoverTarget(): set hover target: (45633.18,415.17535)
+21:14:39 | DEBUG | Beezee | update(): HOVER: find hover target: (45633.18,415.17535)
+21:14:39 | DEBUG | Beezee | findHoverTarget()
+21:14:39 | DEBUG | Beezee | findHoverTarget(): set hover target: (45578.312,302.5408)
+21:14:39 | DEBUG | Beezee | update(): HOVER: find hover target: (45578.312,302.5408)
+21:14:39 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7ee57b1
+21:14:39 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:14:39 | DEBUG | Beezee | findHoverTarget()
+21:14:39 | DEBUG | Beezee | findHoverTarget(): set hover target: (45579.484,298.10175)
+21:14:39 | DEBUG | Beezee | update(): HOVER: find hover target: (45579.484,298.10175)
+21:14:39 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@610dd1c7
+21:14:39 | DEBUG | Beezee | resetHoverTimer(): hashCode=915426022
+21:14:39 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@59a20ac3
+21:14:39 | DEBUG | Beezee | resetHoverTimer(): hashCode=692490920
+21:14:39 | DEBUG | Beezee | findHoverTarget()
+21:14:39 | DEBUG | Beezee | findHoverTarget(): set hover target: (45642.652,329.64505)
+21:14:39 | DEBUG | Beezee | update(): HOVER: find hover target: (45642.652,329.64505)
+21:14:39 | DEBUG | Beezee | findHoverTarget()
+21:14:39 | DEBUG | Beezee | findHoverTarget(): set hover target: (45585.01,402.15887)
+21:14:39 | DEBUG | Beezee | update(): HOVER: find hover target: (45585.01,402.15887)
+21:14:39 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@3ddeaffc
+21:14:39 | DEBUG | Beezee | resetHoverTimer(): hashCode=1679629000
+21:14:39 | DEBUG | Beezee | findHoverTarget()
+21:14:39 | DEBUG | Beezee | findHoverTarget(): set hover target: (45679.926,383.4253)
+21:14:39 | DEBUG | Beezee | update(): HOVER: find hover target: (45679.926,383.4253)
+21:14:39 | DEBUG | Beezee | findHoverTarget()
+21:14:39 | DEBUG | Beezee | findHoverTarget(): set hover target: (45587.824,269.80936)
+21:14:39 | DEBUG | Beezee | update(): HOVER: find hover target: (45587.824,269.80936)
+21:14:39 | DEBUG | Beezee | findHoverTarget()
+21:14:39 | DEBUG | Beezee | findHoverTarget(): set hover target: (45620.832,363.94034)
+21:14:39 | DEBUG | Beezee | update(): HOVER: find hover target: (45620.832,363.94034)
+21:14:39 | DEBUG | Beezee | findHoverTarget()
+21:14:39 | DEBUG | Beezee | findHoverTarget(): set hover target: (45624.51,398.24442)
+21:14:39 | DEBUG | Beezee | update(): HOVER: find hover target: (45624.51,398.24442)
+21:14:39 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@194c02c3
+21:14:39 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:39 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@42a1969c
+21:14:39 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:14:39 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@758fd4b0
+21:14:39 | DEBUG | Beezee | resetHoverTimer(): hashCode=949350729
+21:14:39 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7ee57b1
+21:14:39 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:14:39 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:14:39 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:39 | DEBUG | Beezee | update(): hashCode=1091925703: ATTACK: attack delay just finished
+21:14:39 | DEBUG | Beezee | findHoverTarget()
+21:14:39 | DEBUG | Beezee | findHoverTarget(): set hover target: (45679.234,277.98022)
+21:14:39 | DEBUG | Beezee | update(): HOVER: find hover target: (45679.234,277.98022)
+21:14:39 | DEBUG | Beezee | update(): hashCode=18316008: ATTACK: attack delay just finished
+21:14:39 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@610dd1c7
+21:14:39 | DEBUG | Beezee | resetHoverTimer(): hashCode=915426022
+21:14:40 | DEBUG | HoneyDrip | onDestroy()
+21:14:40 | DEBUG | Beezee | findHoverTarget()
+21:14:40 | DEBUG | Beezee | findHoverTarget(): set hover target: (45607.34,396.06128)
+21:14:40 | DEBUG | Beezee | update(): HOVER: find hover target: (45607.34,396.06128)
+21:14:40 | DEBUG | Beezee | findHoverTarget()
+21:14:40 | DEBUG | Beezee | findHoverTarget(): set hover target: (45714.684,375.34573)
+21:14:40 | DEBUG | Beezee | update(): HOVER: find hover target: (45714.684,375.34573)
+21:14:40 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@758fd4b0
+21:14:40 | DEBUG | Beezee | resetHoverTimer(): hashCode=949350729
+21:14:40 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@59a20ac3
+21:14:40 | DEBUG | Beezee | resetHoverTimer(): hashCode=692490920
+21:14:40 | DEBUG | Beezee | findHoverTarget()
+21:14:40 | DEBUG | Beezee | findHoverTarget(): set hover target: (45603.223,338.9735)
+21:14:40 | DEBUG | Beezee | update(): HOVER: find hover target: (45603.223,338.9735)
+21:14:40 | DEBUG | Beezee | findHoverTarget()
+21:14:40 | DEBUG | Beezee | findHoverTarget(): set hover target: (45609.35,397.79874)
+21:14:40 | DEBUG | Beezee | update(): HOVER: find hover target: (45609.35,397.79874)
+21:14:40 | DEBUG | Beezee | findHoverTarget()
+21:14:40 | DEBUG | Beezee | findHoverTarget(): set hover target: (45681.508,280.5967)
+21:14:40 | DEBUG | Beezee | update(): HOVER: find hover target: (45681.508,280.5967)
+21:14:40 | DEBUG | Beezee | findHoverTarget()
+21:14:40 | DEBUG | Beezee | findHoverTarget(): set hover target: (45619.008,325.14633)
+21:14:40 | DEBUG | Beezee | update(): HOVER: find hover target: (45619.008,325.14633)
+21:14:40 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@42a1969c
+21:14:40 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:14:40 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@3ddeaffc
+21:14:40 | DEBUG | Beezee | resetHoverTimer(): hashCode=1679629000
+21:14:40 | DEBUG | Beezee | findHoverTarget()
+21:14:40 | DEBUG | Beezee | findHoverTarget(): set hover target: (45629.023,388.33997)
+21:14:40 | DEBUG | Beezee | update(): HOVER: find hover target: (45629.023,388.33997)
+21:14:40 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7ee57b1
+21:14:40 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:14:40 | DEBUG | Beezee | findHoverTarget()
+21:14:40 | DEBUG | Beezee | findHoverTarget(): set hover target: (45726.652,344.49255)
+21:14:40 | DEBUG | Beezee | update(): HOVER: find hover target: (45726.652,344.49255)
+21:14:40 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@758fd4b0
+21:14:40 | DEBUG | Beezee | resetHoverTimer(): hashCode=949350729
+21:14:40 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@59a20ac3
+21:14:40 | DEBUG | Beezee | resetHoverTimer(): hashCode=692490920
+21:14:40 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@194c02c3
+21:14:40 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:40 | DEBUG | Beezee | findHoverTarget()
+21:14:40 | DEBUG | Beezee | findHoverTarget(): set hover target: (45703.418,324.03854)
+21:14:40 | DEBUG | Beezee | update(): HOVER: find hover target: (45703.418,324.03854)
+21:14:40 | DEBUG | Beezee | findHoverTarget()
+21:14:40 | DEBUG | Beezee | findHoverTarget(): set hover target: (45710.07,414.67926)
+21:14:40 | DEBUG | Beezee | update(): HOVER: find hover target: (45710.07,414.67926)
+21:14:40 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:14:40 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:40 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@610dd1c7
+21:14:40 | DEBUG | Beezee | resetHoverTimer(): hashCode=915426022
+21:14:41 | DEBUG | Beezee | findHoverTarget()
+21:14:41 | DEBUG | Beezee | findHoverTarget(): set hover target: (45627.074,343.40485)
+21:14:41 | DEBUG | Beezee | update(): HOVER: find hover target: (45627.074,343.40485)
+21:14:41 | DEBUG | Beezee | findHoverTarget()
+21:14:41 | DEBUG | Beezee | findHoverTarget(): set hover target: (45646.973,347.9308)
+21:14:41 | DEBUG | Beezee | update(): HOVER: find hover target: (45646.973,347.9308)
+21:14:41 | DEBUG | Beezee | findHoverTarget()
+21:14:41 | DEBUG | Beezee | findHoverTarget(): set hover target: (45713.48,277.14545)
+21:14:41 | DEBUG | Beezee | update(): HOVER: find hover target: (45713.48,277.14545)
+21:14:41 | DEBUG | Beezee | findHoverTarget()
+21:14:41 | DEBUG | Beezee | findHoverTarget(): set hover target: (45587.758,373.7484)
+21:14:41 | DEBUG | Beezee | update(): HOVER: find hover target: (45587.758,373.7484)
+21:14:41 | DEBUG | CannoHoney | squeeze()
+21:14:41 | DEBUG | Beezee | findHoverTarget()
+21:14:41 | DEBUG | Beezee | findHoverTarget(): set hover target: (45622.94,364.81863)
+21:14:41 | DEBUG | Beezee | update(): HOVER: find hover target: (45622.94,364.81863)
+21:14:41 | DEBUG | HoneyDrip | onSpawn(): spawnProps=Properties({
+	[position=(45648.0,320.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:41 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@758fd4b0
+21:14:41 | DEBUG | Beezee | resetHoverTimer(): hashCode=949350729
+21:14:41 | DEBUG | HoneyDrip | onDestroy()
+21:14:41 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@59a20ac3
+21:14:41 | DEBUG | Beezee | resetHoverTimer(): hashCode=692490920
+21:14:41 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7ee57b1
+21:14:41 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:14:41 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@3ddeaffc
+21:14:41 | DEBUG | Beezee | resetHoverTimer(): hashCode=1679629000
+21:14:41 | DEBUG | CannoHoney | onDestroy()
+21:14:41 | DEBUG | CannoHoney | killChildren(): children=[490153912, 1345532545, 692490920, 915426022, 1300747761, 944581772, 1679629000, 949350729]
+21:14:41 | DEBUG | Beezee | onDestroy(): hashCode=490153912
+21:14:41 | DEBUG | Beezee | onDestroy(): hashCode=1345532545
+21:14:41 | DEBUG | Beezee | onDestroy(): hashCode=692490920
+21:14:41 | DEBUG | Beezee | onDestroy(): hashCode=915426022
+21:14:41 | DEBUG | Beezee | onDestroy(): hashCode=1300747761
+21:14:41 | DEBUG | Beezee | onDestroy(): hashCode=944581772
+21:14:41 | DEBUG | Beezee | onDestroy(): hashCode=1679629000
+21:14:41 | DEBUG | Beezee | onDestroy(): hashCode=949350729
+21:14:53 | DEBUG | CannoHoney | onSpawn(): spawnProps=Properties({
+	[bounds=[45632.0,320.0,32.0,32.0]]
+	[x=45632.0]
+	[height=32.0]
+	[cull_out_of_bounds=false]
+	[id=561]
+	[name=CannoHoney]
+	[y=320.0]
+	[width=32.0]
+})
+21:14:53 | DEBUG | Beezee | onSpawn(): hashCode=949350729, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:53 | DEBUG | Beezee | resetHoverTimer(): hashCode=949350729
+21:14:53 | DEBUG | Beezee | onSpawn(): hashCode=1679629000, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:53 | DEBUG | Beezee | resetHoverTimer(): hashCode=1679629000
+21:14:53 | DEBUG | Beezee | onSpawn(): hashCode=944581772, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:53 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:14:53 | DEBUG | Beezee | onSpawn(): hashCode=1300747761, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:53 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:14:53 | DEBUG | Beezee | onSpawn(): hashCode=915426022, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:53 | DEBUG | Beezee | resetHoverTimer(): hashCode=915426022
+21:14:53 | DEBUG | Beezee | onSpawn(): hashCode=692490920, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:53 | DEBUG | Beezee | resetHoverTimer(): hashCode=692490920
+21:14:53 | DEBUG | Beezee | onSpawn(): hashCode=1345532545, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:53 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:53 | DEBUG | Beezee | onSpawn(): hashCode=490153912, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:53 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:53 | DEBUG | Beezee | findHoverTarget()
+21:14:53 | DEBUG | Beezee | findHoverTarget(): set hover target: (45651.246,353.53116)
+21:14:53 | DEBUG | Beezee | update(): HOVER: find hover target: (45651.246,353.53116)
+21:14:53 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@610dd1c7
+21:14:53 | DEBUG | Beezee | resetHoverTimer(): hashCode=915426022
+21:14:53 | DEBUG | Beezee | findHoverTarget()
+21:14:53 | DEBUG | Beezee | findHoverTarget(): set hover target: (45587.688,349.81216)
+21:14:53 | DEBUG | Beezee | update(): HOVER: find hover target: (45587.688,349.81216)
+21:14:53 | DEBUG | Beezee | findHoverTarget()
+21:14:53 | DEBUG | Beezee | findHoverTarget(): set hover target: (45725.062,313.86047)
+21:14:53 | DEBUG | Beezee | update(): HOVER: find hover target: (45725.062,313.86047)
+21:14:53 | DEBUG | Beezee | findHoverTarget()
+21:14:53 | DEBUG | Beezee | findHoverTarget(): set hover target: (45631.07,305.18768)
+21:14:53 | DEBUG | Beezee | update(): HOVER: find hover target: (45631.07,305.18768)
+21:14:53 | DEBUG | Beezee | findHoverTarget()
+21:14:53 | DEBUG | Beezee | findHoverTarget(): set hover target: (45612.707,277.62167)
+21:14:53 | DEBUG | Beezee | update(): HOVER: find hover target: (45612.707,277.62167)
+21:14:53 | DEBUG | Beezee | findHoverTarget()
+21:14:53 | DEBUG | Beezee | findHoverTarget(): set hover target: (45683.04,407.59607)
+21:14:53 | DEBUG | Beezee | update(): HOVER: find hover target: (45683.04,407.59607)
+21:14:53 | DEBUG | Beezee | findHoverTarget()
+21:14:53 | DEBUG | Beezee | findHoverTarget(): set hover target: (45572.703,271.4213)
+21:14:53 | DEBUG | Beezee | update(): HOVER: find hover target: (45572.703,271.4213)
+21:14:53 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@59a20ac3
+21:14:53 | DEBUG | Beezee | resetHoverTimer(): hashCode=692490920
+21:14:53 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:14:53 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:53 | DEBUG | Beezee | findHoverTarget()
+21:14:53 | DEBUG | Beezee | findHoverTarget(): set hover target: (45585.203,278.65805)
+21:14:53 | DEBUG | Beezee | update(): HOVER: find hover target: (45585.203,278.65805)
+21:14:53 | DEBUG | Beezee | findHoverTarget()
+21:14:53 | DEBUG | Beezee | findHoverTarget(): set hover target: (45694.246,359.66812)
+21:14:53 | DEBUG | Beezee | update(): HOVER: find hover target: (45694.246,359.66812)
+21:14:53 | DEBUG | Beezee | findHoverTarget()
+21:14:53 | DEBUG | Beezee | findHoverTarget(): set hover target: (45594.22,345.60858)
+21:14:53 | DEBUG | Beezee | update(): HOVER: find hover target: (45594.22,345.60858)
+21:14:53 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@3ddeaffc
+21:14:53 | DEBUG | Beezee | resetHoverTimer(): hashCode=1679629000
+21:14:53 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7ee57b1
+21:14:53 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:14:53 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@610dd1c7
+21:14:53 | DEBUG | Beezee | resetHoverTimer(): hashCode=915426022
+21:14:53 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@194c02c3
+21:14:53 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:53 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@758fd4b0
+21:14:53 | DEBUG | Beezee | resetHoverTimer(): hashCode=949350729
+21:14:53 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@59a20ac3
+21:14:53 | DEBUG | Beezee | resetHoverTimer(): hashCode=692490920
+21:14:53 | DEBUG | Beezee | findHoverTarget()
+21:14:53 | DEBUG | Beezee | findHoverTarget(): set hover target: (45603.355,335.33948)
+21:14:53 | DEBUG | Beezee | update(): HOVER: find hover target: (45603.355,335.33948)
+21:14:53 | DEBUG | Beezee | findHoverTarget()
+21:14:53 | DEBUG | Beezee | findHoverTarget(): set hover target: (45571.36,414.93546)
+21:14:53 | DEBUG | Beezee | update(): HOVER: find hover target: (45571.36,414.93546)
+21:14:53 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@42a1969c
+21:14:53 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:14:54 | DEBUG | Beezee | findHoverTarget()
+21:14:54 | DEBUG | Beezee | findHoverTarget(): set hover target: (45627.207,410.7486)
+21:14:54 | DEBUG | Beezee | update(): HOVER: find hover target: (45627.207,410.7486)
+21:14:54 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:14:54 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:54 | DEBUG | Beezee | findHoverTarget()
+21:14:54 | DEBUG | Beezee | findHoverTarget(): set hover target: (45600.27,387.56842)
+21:14:54 | DEBUG | Beezee | update(): HOVER: find hover target: (45600.27,387.56842)
+21:14:54 | DEBUG | Beezee | findHoverTarget()
+21:14:54 | DEBUG | Beezee | findHoverTarget(): set hover target: (45657.348,378.20642)
+21:14:54 | DEBUG | Beezee | update(): HOVER: find hover target: (45657.348,378.20642)
+21:14:54 | DEBUG | Beezee | findHoverTarget()
+21:14:54 | DEBUG | Beezee | findHoverTarget(): set hover target: (45612.26,335.34802)
+21:14:54 | DEBUG | Beezee | update(): HOVER: find hover target: (45612.26,335.34802)
+21:14:54 | DEBUG | Beezee | findHoverTarget()
+21:14:54 | DEBUG | Beezee | findHoverTarget(): set hover target: (45714.445,316.6809)
+21:14:54 | DEBUG | Beezee | update(): HOVER: find hover target: (45714.445,316.6809)
+21:14:54 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@59a20ac3
+21:14:54 | DEBUG | Beezee | resetHoverTimer(): hashCode=692490920
+21:14:54 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@194c02c3
+21:14:54 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:54 | DEBUG | Beezee | findHoverTarget()
+21:14:54 | DEBUG | Beezee | findHoverTarget(): set hover target: (45664.664,305.2742)
+21:14:54 | DEBUG | Beezee | update(): HOVER: find hover target: (45664.664,305.2742)
+21:14:54 | DEBUG | Beezee | findHoverTarget()
+21:14:54 | DEBUG | Beezee | findHoverTarget(): set hover target: (45643.04,398.9807)
+21:14:54 | DEBUG | Beezee | update(): HOVER: find hover target: (45643.04,398.9807)
+21:14:54 | DEBUG | Beezee | findHoverTarget()
+21:14:54 | DEBUG | Beezee | findHoverTarget(): set hover target: (45705.9,320.7518)
+21:14:54 | DEBUG | Beezee | update(): HOVER: find hover target: (45705.9,320.7518)
+21:14:54 | DEBUG | CannoHoney | squeeze()
+21:14:54 | DEBUG | HoneyDrip | onSpawn(): spawnProps=Properties({
+	[position=(45648.0,320.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:54 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@610dd1c7
+21:14:54 | DEBUG | Beezee | resetHoverTimer(): hashCode=915426022
+21:14:54 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7ee57b1
+21:14:54 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:14:54 | DEBUG | Beezee | findHoverTarget()
+21:14:54 | DEBUG | Beezee | findHoverTarget(): set hover target: (45596.43,383.46875)
+21:14:54 | DEBUG | Beezee | update(): HOVER: find hover target: (45596.43,383.46875)
+21:14:54 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@59a20ac3
+21:14:54 | DEBUG | Beezee | resetHoverTimer(): hashCode=692490920
+21:14:54 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@758fd4b0
+21:14:54 | DEBUG | Beezee | resetHoverTimer(): hashCode=949350729
+21:14:54 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@3ddeaffc
+21:14:54 | DEBUG | Beezee | resetHoverTimer(): hashCode=1679629000
+21:14:54 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:14:54 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:54 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@194c02c3
+21:14:54 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:54 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@42a1969c
+21:14:54 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:14:54 | DEBUG | Beezee | findHoverTarget()
+21:14:54 | DEBUG | Beezee | findHoverTarget(): set hover target: (45695.816,395.48645)
+21:14:54 | DEBUG | Beezee | update(): HOVER: find hover target: (45695.816,395.48645)
+21:14:54 | DEBUG | Beezee | findHoverTarget()
+21:14:54 | DEBUG | Beezee | findHoverTarget(): set hover target: (45619.402,324.50092)
+21:14:54 | DEBUG | Beezee | update(): HOVER: find hover target: (45619.402,324.50092)
+21:14:54 | DEBUG | Beezee | findHoverTarget()
+21:14:54 | DEBUG | Beezee | findHoverTarget(): set hover target: (45644.336,298.22827)
+21:14:54 | DEBUG | Beezee | update(): HOVER: find hover target: (45644.336,298.22827)
+21:14:55 | DEBUG | Beezee | findHoverTarget()
+21:14:55 | DEBUG | Beezee | findHoverTarget(): set hover target: (45702.742,281.62662)
+21:14:55 | DEBUG | Beezee | update(): HOVER: find hover target: (45702.742,281.62662)
+21:14:55 | DEBUG | Beezee | findHoverTarget()
+21:14:55 | DEBUG | Beezee | findHoverTarget(): set hover target: (45689.703,372.48285)
+21:14:55 | DEBUG | Beezee | update(): HOVER: find hover target: (45689.703,372.48285)
+21:14:55 | DEBUG | Beezee | findHoverTarget()
+21:14:55 | DEBUG | Beezee | findHoverTarget(): set hover target: (45684.39,358.5494)
+21:14:55 | DEBUG | Beezee | update(): HOVER: find hover target: (45684.39,358.5494)
+21:14:55 | DEBUG | Beezee | findHoverTarget()
+21:14:55 | DEBUG | Beezee | findHoverTarget(): set hover target: (45613.145,410.17197)
+21:14:55 | DEBUG | Beezee | update(): HOVER: find hover target: (45613.145,410.17197)
+21:14:55 | DEBUG | Beezee | findHoverTarget()
+21:14:55 | DEBUG | Beezee | findHoverTarget(): set hover target: (45696.26,323.9424)
+21:14:55 | DEBUG | Beezee | update(): HOVER: find hover target: (45696.26,323.9424)
+21:14:55 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@194c02c3
+21:14:55 | DEBUG | Beezee | resetHoverTimer(): hashCode=490153912
+21:14:55 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@42a1969c
+21:14:55 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:14:55 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:14:55 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:55 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@758fd4b0
+21:14:55 | DEBUG | Beezee | resetHoverTimer(): hashCode=949350729
+21:14:55 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7ee57b1
+21:14:55 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:14:55 | DEBUG | Beezee | findHoverTarget()
+21:14:55 | DEBUG | Beezee | findHoverTarget(): set hover target: (45707.363,346.24908)
+21:14:55 | DEBUG | Beezee | update(): HOVER: find hover target: (45707.363,346.24908)
+21:14:55 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@610dd1c7
+21:14:55 | DEBUG | Beezee | resetHoverTimer(): hashCode=915426022
+21:14:55 | DEBUG | Beezee | setToAttack(): hashCode=490153912
+21:14:55 | DEBUG | Beezee | setToAttack(): hashCode=692490920
+21:14:55 | DEBUG | Beezee | setToAttack(): hashCode=915426022
+21:14:55 | DEBUG | Beezee | findHoverTarget()
+21:14:55 | DEBUG | Beezee | findHoverTarget(): set hover target: (45697.074,271.05984)
+21:14:55 | DEBUG | Beezee | update(): HOVER: find hover target: (45697.074,271.05984)
+21:14:55 | DEBUG | Beezee | init(): hashCode=1420331399
+21:14:55 | DEBUG | Beezee | onSpawn(): hashCode=1420331399, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:55 | DEBUG | Beezee | resetHoverTimer(): hashCode=1420331399
+21:14:55 | DEBUG | Beezee | init(): hashCode=2012586904
+21:14:55 | DEBUG | Beezee | onSpawn(): hashCode=2012586904, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:55 | DEBUG | Beezee | resetHoverTimer(): hashCode=2012586904
+21:14:55 | DEBUG | Beezee | init(): hashCode=1217986241
+21:14:55 | DEBUG | Beezee | onSpawn(): hashCode=1217986241, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:55 | DEBUG | Beezee | resetHoverTimer(): hashCode=1217986241
+21:14:55 | DEBUG | Beezee | findHoverTarget()
+21:14:55 | DEBUG | Beezee | findHoverTarget(): set hover target: (45608.395,319.74847)
+21:14:55 | DEBUG | Beezee | update(): HOVER: find hover target: (45608.395,319.74847)
+21:14:55 | DEBUG | HoneyDrip | onDestroy()
+21:14:55 | DEBUG | Beezee | findHoverTarget()
+21:14:55 | DEBUG | Beezee | findHoverTarget(): set hover target: (45726.176,284.12335)
+21:14:55 | DEBUG | Beezee | update(): HOVER: find hover target: (45726.176,284.12335)
+21:14:55 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@3ddeaffc
+21:14:55 | DEBUG | Beezee | resetHoverTimer(): hashCode=1679629000
+21:14:55 | DEBUG | Beezee | findHoverTarget()
+21:14:55 | DEBUG | Beezee | findHoverTarget(): set hover target: (45627.52,392.75015)
+21:14:55 | DEBUG | Beezee | update(): HOVER: find hover target: (45627.52,392.75015)
+21:14:55 | DEBUG | Beezee | findHoverTarget()
+21:14:55 | DEBUG | Beezee | findHoverTarget(): set hover target: (45574.457,360.88702)
+21:14:55 | DEBUG | Beezee | update(): HOVER: find hover target: (45574.457,360.88702)
+21:14:55 | DEBUG | Beezee | findHoverTarget()
+21:14:55 | DEBUG | Beezee | findHoverTarget(): set hover target: (45706.23,280.7878)
+21:14:55 | DEBUG | Beezee | update(): HOVER: find hover target: (45706.23,280.7878)
+21:14:56 | DEBUG | Beezee | findHoverTarget()
+21:14:56 | DEBUG | Beezee | findHoverTarget(): set hover target: (45665.344,412.8706)
+21:14:56 | DEBUG | Beezee | update(): HOVER: find hover target: (45665.344,412.8706)
+21:14:56 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@758fd4b0
+21:14:56 | DEBUG | Beezee | resetHoverTimer(): hashCode=949350729
+21:14:56 | DEBUG | Beezee | findHoverTarget()
+21:14:56 | DEBUG | Beezee | findHoverTarget(): set hover target: (45719.957,379.03693)
+21:14:56 | DEBUG | Beezee | update(): HOVER: find hover target: (45719.957,379.03693)
+21:14:56 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7ee57b1
+21:14:56 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:14:56 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@42a1969c
+21:14:56 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:14:56 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@4fb1ecfc
+21:14:56 | DEBUG | Beezee | resetHoverTimer(): hashCode=2012586904
+21:14:56 | DEBUG | Beezee | findHoverTarget()
+21:14:56 | DEBUG | Beezee | findHoverTarget(): set hover target: (45615.598,391.12128)
+21:14:56 | DEBUG | Beezee | update(): HOVER: find hover target: (45615.598,391.12128)
+21:14:56 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@3ddeaffc
+21:14:56 | DEBUG | Beezee | resetHoverTimer(): hashCode=1679629000
+21:14:56 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:14:56 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:56 | DEBUG | Beezee | findHoverTarget()
+21:14:56 | DEBUG | Beezee | findHoverTarget(): set hover target: (45599.504,324.3768)
+21:14:56 | DEBUG | Beezee | update(): HOVER: find hover target: (45599.504,324.3768)
+21:14:56 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@6517401
+21:14:56 | DEBUG | Beezee | resetHoverTimer(): hashCode=1217986241
+21:14:56 | DEBUG | Beezee | findHoverTarget()
+21:14:56 | DEBUG | Beezee | findHoverTarget(): set hover target: (45652.875,414.3266)
+21:14:56 | DEBUG | Beezee | update(): HOVER: find hover target: (45652.875,414.3266)
+21:14:56 | DEBUG | Beezee | findHoverTarget()
+21:14:56 | DEBUG | Beezee | findHoverTarget(): set hover target: (45713.098,298.60852)
+21:14:56 | DEBUG | Beezee | update(): HOVER: find hover target: (45713.098,298.60852)
+21:14:56 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@42a1969c
+21:14:56 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:14:56 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2ebfb81d
+21:14:56 | DEBUG | Beezee | resetHoverTimer(): hashCode=1420331399
+21:14:56 | DEBUG | Beezee | findHoverTarget()
+21:14:56 | DEBUG | Beezee | findHoverTarget(): set hover target: (45663.09,284.67154)
+21:14:56 | DEBUG | Beezee | update(): HOVER: find hover target: (45663.09,284.67154)
+21:14:56 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@758fd4b0
+21:14:56 | DEBUG | Beezee | resetHoverTimer(): hashCode=949350729
+21:14:56 | DEBUG | Beezee | findHoverTarget()
+21:14:56 | DEBUG | Beezee | findHoverTarget(): set hover target: (45655.027,336.26297)
+21:14:56 | DEBUG | Beezee | update(): HOVER: find hover target: (45655.027,336.26297)
+21:14:56 | DEBUG | Beezee | findHoverTarget()
+21:14:56 | DEBUG | Beezee | findHoverTarget(): set hover target: (45607.76,368.3146)
+21:14:56 | DEBUG | Beezee | update(): HOVER: find hover target: (45607.76,368.3146)
+21:14:56 | DEBUG | Beezee | update(): hashCode=915426022: ATTACK: attack delay just finished
+21:14:56 | DEBUG | Beezee | update(): hashCode=692490920: ATTACK: attack delay just finished
+21:14:56 | DEBUG | Beezee | update(): hashCode=490153912: ATTACK: attack delay just finished
+21:14:56 | DEBUG | Beezee | findHoverTarget()
+21:14:56 | DEBUG | Beezee | findHoverTarget(): set hover target: (45604.91,346.5103)
+21:14:56 | DEBUG | Beezee | update(): HOVER: find hover target: (45604.91,346.5103)
+21:14:56 | DEBUG | CannoHoney | squeeze()
+21:14:56 | DEBUG | HoneyDrip | onSpawn(): spawnProps=Properties({
+	[position=(45648.0,320.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:56 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@3ddeaffc
+21:14:56 | DEBUG | Beezee | resetHoverTimer(): hashCode=1679629000
+21:14:56 | DEBUG | Beezee | findHoverTarget()
+21:14:56 | DEBUG | Beezee | findHoverTarget(): set hover target: (45655.11,368.48004)
+21:14:56 | DEBUG | Beezee | update(): HOVER: find hover target: (45655.11,368.48004)
+21:14:56 | DEBUG | Beezee | findHoverTarget()
+21:14:56 | DEBUG | Beezee | findHoverTarget(): set hover target: (45617.805,278.9454)
+21:14:56 | DEBUG | Beezee | update(): HOVER: find hover target: (45617.805,278.9454)
+21:14:56 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@42a1969c
+21:14:56 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:14:56 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7ee57b1
+21:14:56 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:14:56 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@758fd4b0
+21:14:56 | DEBUG | Beezee | resetHoverTimer(): hashCode=949350729
+21:14:57 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@6517401
+21:14:57 | DEBUG | Beezee | resetHoverTimer(): hashCode=1217986241
+21:14:57 | DEBUG | Beezee | findHoverTarget()
+21:14:57 | DEBUG | Beezee | findHoverTarget(): set hover target: (45582.766,326.74728)
+21:14:57 | DEBUG | Beezee | update(): HOVER: find hover target: (45582.766,326.74728)
+21:14:57 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@4fb1ecfc
+21:14:57 | DEBUG | Beezee | resetHoverTimer(): hashCode=2012586904
+21:14:57 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:14:57 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:57 | DEBUG | Beezee | findHoverTarget()
+21:14:57 | DEBUG | Beezee | findHoverTarget(): set hover target: (45724.72,276.6246)
+21:14:57 | DEBUG | Beezee | update(): HOVER: find hover target: (45724.72,276.6246)
+21:14:57 | DEBUG | Beezee | findHoverTarget()
+21:14:57 | DEBUG | Beezee | findHoverTarget(): set hover target: (45584.73,387.51562)
+21:14:57 | DEBUG | Beezee | update(): HOVER: find hover target: (45584.73,387.51562)
+21:14:57 | DEBUG | Beezee | findHoverTarget()
+21:14:57 | DEBUG | Beezee | findHoverTarget(): set hover target: (45626.887,399.96536)
+21:14:57 | DEBUG | Beezee | update(): HOVER: find hover target: (45626.887,399.96536)
+21:14:57 | DEBUG | Beezee | findHoverTarget()
+21:14:57 | DEBUG | Beezee | findHoverTarget(): set hover target: (45632.59,269.70386)
+21:14:57 | DEBUG | Beezee | update(): HOVER: find hover target: (45632.59,269.70386)
+21:14:57 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7ee57b1
+21:14:57 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:14:57 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2ebfb81d
+21:14:57 | DEBUG | Beezee | resetHoverTimer(): hashCode=1420331399
+21:14:57 | DEBUG | Beezee | findHoverTarget()
+21:14:57 | DEBUG | Beezee | findHoverTarget(): set hover target: (45653.99,400.88858)
+21:14:57 | DEBUG | Beezee | update(): HOVER: find hover target: (45653.99,400.88858)
+21:14:57 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@3ddeaffc
+21:14:57 | DEBUG | Beezee | resetHoverTimer(): hashCode=1679629000
+21:14:57 | DEBUG | Beezee | findHoverTarget()
+21:14:57 | DEBUG | Beezee | findHoverTarget(): set hover target: (45626.79,411.6015)
+21:14:57 | DEBUG | Beezee | update(): HOVER: find hover target: (45626.79,411.6015)
+21:14:57 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@42a1969c
+21:14:57 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:14:57 | DEBUG | Beezee | findHoverTarget()
+21:14:57 | DEBUG | Beezee | findHoverTarget(): set hover target: (45593.887,291.054)
+21:14:57 | DEBUG | Beezee | update(): HOVER: find hover target: (45593.887,291.054)
+21:14:57 | DEBUG | Beezee | findHoverTarget()
+21:14:57 | DEBUG | Beezee | findHoverTarget(): set hover target: (45694.746,288.7588)
+21:14:57 | DEBUG | Beezee | update(): HOVER: find hover target: (45694.746,288.7588)
+21:14:57 | DEBUG | Beezee | findHoverTarget()
+21:14:57 | DEBUG | Beezee | findHoverTarget(): set hover target: (45573.965,350.65503)
+21:14:57 | DEBUG | Beezee | update(): HOVER: find hover target: (45573.965,350.65503)
+21:14:57 | DEBUG | HoneyDrip | onDestroy()
+21:14:57 | DEBUG | Beezee | findHoverTarget()
+21:14:57 | DEBUG | Beezee | findHoverTarget(): set hover target: (45698.516,349.7997)
+21:14:57 | DEBUG | Beezee | update(): HOVER: find hover target: (45698.516,349.7997)
+21:14:57 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7ee57b1
+21:14:57 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:14:57 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@758fd4b0
+21:14:57 | DEBUG | Beezee | resetHoverTimer(): hashCode=949350729
+21:14:57 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@6517401
+21:14:57 | DEBUG | Beezee | resetHoverTimer(): hashCode=1217986241
+21:14:57 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@4fb1ecfc
+21:14:57 | DEBUG | Beezee | resetHoverTimer(): hashCode=2012586904
+21:14:57 | DEBUG | Beezee | findHoverTarget()
+21:14:57 | DEBUG | Beezee | findHoverTarget(): set hover target: (45681.715,327.8296)
+21:14:57 | DEBUG | Beezee | update(): HOVER: find hover target: (45681.715,327.8296)
+21:14:57 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:14:57 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:57 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@42a1969c
+21:14:57 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:14:58 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@2ebfb81d
+21:14:58 | DEBUG | Beezee | resetHoverTimer(): hashCode=1420331399
+21:14:58 | DEBUG | Beezee | findHoverTarget()
+21:14:58 | DEBUG | Beezee | findHoverTarget(): set hover target: (45596.98,311.73123)
+21:14:58 | DEBUG | Beezee | update(): HOVER: find hover target: (45596.98,311.73123)
+21:14:58 | DEBUG | Beezee | findHoverTarget()
+21:14:58 | DEBUG | Beezee | findHoverTarget(): set hover target: (45598.15,308.31744)
+21:14:58 | DEBUG | Beezee | update(): HOVER: find hover target: (45598.15,308.31744)
+21:14:58 | DEBUG | Beezee | findHoverTarget()
+21:14:58 | DEBUG | Beezee | findHoverTarget(): set hover target: (45649.633,328.11893)
+21:14:58 | DEBUG | Beezee | update(): HOVER: find hover target: (45649.633,328.11893)
+21:14:58 | DEBUG | Beezee | setToAttack(): hashCode=1420331399
+21:14:58 | DEBUG | Beezee | setToAttack(): hashCode=949350729
+21:14:58 | DEBUG | Beezee | init(): hashCode=981264390
+21:14:58 | DEBUG | Beezee | onSpawn(): hashCode=981264390, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:58 | DEBUG | Beezee | resetHoverTimer(): hashCode=981264390
+21:14:58 | DEBUG | Beezee | init(): hashCode=1567768574
+21:14:58 | DEBUG | Beezee | onSpawn(): hashCode=1567768574, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:58 | DEBUG | Beezee | resetHoverTimer(): hashCode=1567768574
+21:14:58 | DEBUG | Beezee | findHoverTarget()
+21:14:58 | DEBUG | Beezee | findHoverTarget(): set hover target: (45693.582,279.92316)
+21:14:58 | DEBUG | Beezee | update(): HOVER: find hover target: (45693.582,279.92316)
+21:14:58 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@3ddeaffc
+21:14:58 | DEBUG | Beezee | resetHoverTimer(): hashCode=1679629000
+21:14:58 | DEBUG | Beezee | findHoverTarget()
+21:14:58 | DEBUG | Beezee | findHoverTarget(): set hover target: (45571.07,367.32397)
+21:14:58 | DEBUG | Beezee | update(): HOVER: find hover target: (45571.07,367.32397)
+21:14:58 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:14:58 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:58 | DEBUG | Beezee | findHoverTarget()
+21:14:58 | DEBUG | Beezee | findHoverTarget(): set hover target: (45714.44,299.9305)
+21:14:58 | DEBUG | Beezee | update(): HOVER: find hover target: (45714.44,299.9305)
+21:14:58 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@6517401
+21:14:58 | DEBUG | Beezee | resetHoverTimer(): hashCode=1217986241
+21:14:58 | DEBUG | Beezee | findHoverTarget()
+21:14:58 | DEBUG | Beezee | findHoverTarget(): set hover target: (45630.383,295.37717)
+21:14:58 | DEBUG | Beezee | update(): HOVER: find hover target: (45630.383,295.37717)
+21:14:58 | DEBUG | Beezee | findHoverTarget()
+21:14:58 | DEBUG | Beezee | findHoverTarget(): set hover target: (45664.613,289.1301)
+21:14:58 | DEBUG | Beezee | update(): HOVER: find hover target: (45664.613,289.1301)
+21:14:58 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7ee57b1
+21:14:58 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:14:58 | DEBUG | CannoHoney | squeeze()
+21:14:58 | DEBUG | HoneyDrip | onSpawn(): spawnProps=Properties({
+	[position=(45648.0,320.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:14:58 | DEBUG | Beezee | findHoverTarget()
+21:14:58 | DEBUG | Beezee | findHoverTarget(): set hover target: (45669.055,283.73257)
+21:14:58 | DEBUG | Beezee | update(): HOVER: find hover target: (45669.055,283.73257)
+21:14:58 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@4fb1ecfc
+21:14:58 | DEBUG | Beezee | resetHoverTimer(): hashCode=2012586904
+21:14:58 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@5e1b1b0a
+21:14:58 | DEBUG | Beezee | resetHoverTimer(): hashCode=1567768574
+21:14:58 | DEBUG | Beezee | findHoverTarget()
+21:14:58 | DEBUG | Beezee | findHoverTarget(): set hover target: (45633.33,374.54062)
+21:14:58 | DEBUG | Beezee | update(): HOVER: find hover target: (45633.33,374.54062)
+21:14:58 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@9a4d70a
+21:14:58 | DEBUG | Beezee | resetHoverTimer(): hashCode=981264390
+21:14:58 | DEBUG | Beezee | findHoverTarget()
+21:14:58 | DEBUG | Beezee | findHoverTarget(): set hover target: (45659.496,313.89764)
+21:14:58 | DEBUG | Beezee | update(): HOVER: find hover target: (45659.496,313.89764)
+21:14:58 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@3ddeaffc
+21:14:58 | DEBUG | Beezee | resetHoverTimer(): hashCode=1679629000
+21:14:58 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:14:58 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:58 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@42a1969c
+21:14:58 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:14:58 | DEBUG | Beezee | findHoverTarget()
+21:14:58 | DEBUG | Beezee | findHoverTarget(): set hover target: (45666.2,352.44757)
+21:14:58 | DEBUG | Beezee | update(): HOVER: find hover target: (45666.2,352.44757)
+21:14:59 | DEBUG | Beezee | findHoverTarget()
+21:14:59 | DEBUG | Beezee | findHoverTarget(): set hover target: (45641.086,353.4848)
+21:14:59 | DEBUG | Beezee | update(): HOVER: find hover target: (45641.086,353.4848)
+21:14:59 | DEBUG | Beezee | takeDamageFrom(): hashCode=1567768574, damager={ ChargedShot:[mapObjId=-1, dead=false, hashCode=1724065966] }
+21:14:59 | DEBUG | Beezee | setToAttack(): hashCode=1567768574
+21:14:59 | DEBUG | Beezee | findHoverTarget()
+21:14:59 | DEBUG | Beezee | findHoverTarget(): set hover target: (45646.906,281.99826)
+21:14:59 | DEBUG | Beezee | update(): HOVER: find hover target: (45646.906,281.99826)
+21:14:59 | DEBUG | Beezee | update(): hashCode=949350729: ATTACK: attack delay just finished
+21:14:59 | DEBUG | Beezee | update(): hashCode=1420331399: ATTACK: attack delay just finished
+21:14:59 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7ee57b1
+21:14:59 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:14:59 | DEBUG | Beezee | takeDamageFrom(): hashCode=1567768574, damager={ ChargedShotExplosion:[mapObjId=-1, dead=false, hashCode=1396670816] }
+21:14:59 | DEBUG | Beezee | setToAttack(): hashCode=1567768574
+21:14:59 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@6517401
+21:14:59 | DEBUG | Beezee | resetHoverTimer(): hashCode=1217986241
+21:14:59 | DEBUG | Beezee | findHoverTarget()
+21:14:59 | DEBUG | Beezee | findHoverTarget(): set hover target: (45570.586,360.78812)
+21:14:59 | DEBUG | Beezee | update(): HOVER: find hover target: (45570.586,360.78812)
+21:14:59 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@9a4d70a
+21:14:59 | DEBUG | Beezee | resetHoverTimer(): hashCode=981264390
+21:14:59 | DEBUG | Beezee | takeDamageFrom(): hashCode=1567768574, damager={ ChargedShotExplosion:[mapObjId=-1, dead=false, hashCode=1396670816] }
+21:14:59 | DEBUG | Beezee | setToAttack(): hashCode=1567768574
+21:14:59 | DEBUG | Beezee | onDestroy(): hashCode=1567768574
+21:14:59 | DEBUG | Beezee | takeDamageFrom(): hashCode=949350729, damager={ ChargedShotExplosion:[mapObjId=-1, dead=false, hashCode=1396670816] }
+21:14:59 | DEBUG | Beezee | setToAttack(): hashCode=949350729
+21:14:59 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@4fb1ecfc
+21:14:59 | DEBUG | Beezee | resetHoverTimer(): hashCode=2012586904
+21:14:59 | DEBUG | Beezee | findHoverTarget()
+21:14:59 | DEBUG | Beezee | findHoverTarget(): set hover target: (45670.266,375.60068)
+21:14:59 | DEBUG | Beezee | update(): HOVER: find hover target: (45670.266,375.60068)
+21:14:59 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@42a1969c
+21:14:59 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:14:59 | DEBUG | Beezee | findHoverTarget()
+21:14:59 | DEBUG | Beezee | findHoverTarget(): set hover target: (45662.203,285.89697)
+21:14:59 | DEBUG | Beezee | update(): HOVER: find hover target: (45662.203,285.89697)
+21:14:59 | DEBUG | Beezee | findHoverTarget()
+21:14:59 | DEBUG | Beezee | findHoverTarget(): set hover target: (45703.0,282.83517)
+21:14:59 | DEBUG | Beezee | update(): HOVER: find hover target: (45703.0,282.83517)
+21:14:59 | DEBUG | Beezee | findHoverTarget()
+21:14:59 | DEBUG | Beezee | findHoverTarget(): set hover target: (45677.645,334.20468)
+21:14:59 | DEBUG | Beezee | update(): HOVER: find hover target: (45677.645,334.20468)
+21:14:59 | DEBUG | Beezee | findHoverTarget()
+21:14:59 | DEBUG | Beezee | findHoverTarget(): set hover target: (45588.348,351.04968)
+21:14:59 | DEBUG | Beezee | update(): HOVER: find hover target: (45588.348,351.04968)
+21:14:59 | DEBUG | HoneyDrip | onDestroy()
+21:14:59 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@3ddeaffc
+21:14:59 | DEBUG | Beezee | resetHoverTimer(): hashCode=1679629000
+21:14:59 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:14:59 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:14:59 | DEBUG | Beezee | findHoverTarget()
+21:14:59 | DEBUG | Beezee | findHoverTarget(): set hover target: (45638.66,377.80978)
+21:14:59 | DEBUG | Beezee | update(): HOVER: find hover target: (45638.66,377.80978)
+21:14:59 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@6517401
+21:14:59 | DEBUG | Beezee | resetHoverTimer(): hashCode=1217986241
+21:14:59 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@9a4d70a
+21:14:59 | DEBUG | Beezee | resetHoverTimer(): hashCode=981264390
+21:14:59 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7ee57b1
+21:14:59 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:14:59 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@42a1969c
+21:14:59 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:15:00 | DEBUG | Beezee | findHoverTarget()
+21:15:00 | DEBUG | Beezee | findHoverTarget(): set hover target: (45669.223,408.06415)
+21:15:00 | DEBUG | Beezee | update(): HOVER: find hover target: (45669.223,408.06415)
+21:15:00 | DEBUG | Beezee | findHoverTarget()
+21:15:00 | DEBUG | Beezee | findHoverTarget(): set hover target: (45647.01,413.81738)
+21:15:00 | DEBUG | Beezee | update(): HOVER: find hover target: (45647.01,413.81738)
+21:15:00 | DEBUG | Beezee | findHoverTarget()
+21:15:00 | DEBUG | Beezee | findHoverTarget(): set hover target: (45587.25,303.48172)
+21:15:00 | DEBUG | Beezee | update(): HOVER: find hover target: (45587.25,303.48172)
+21:15:00 | DEBUG | Beezee | findHoverTarget()
+21:15:00 | DEBUG | Beezee | findHoverTarget(): set hover target: (45621.137,286.6461)
+21:15:00 | DEBUG | Beezee | update(): HOVER: find hover target: (45621.137,286.6461)
+21:15:00 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@4fb1ecfc
+21:15:00 | DEBUG | Beezee | resetHoverTimer(): hashCode=2012586904
+21:15:00 | DEBUG | Beezee | findHoverTarget()
+21:15:00 | DEBUG | Beezee | findHoverTarget(): set hover target: (45657.234,415.1367)
+21:15:00 | DEBUG | Beezee | update(): HOVER: find hover target: (45657.234,415.1367)
+21:15:00 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@6517401
+21:15:00 | DEBUG | Beezee | resetHoverTimer(): hashCode=1217986241
+21:15:00 | DEBUG | Beezee | findHoverTarget()
+21:15:00 | DEBUG | Beezee | findHoverTarget(): set hover target: (45709.8,300.5829)
+21:15:00 | DEBUG | Beezee | update(): HOVER: find hover target: (45709.8,300.5829)
+21:15:00 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7ee57b1
+21:15:00 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:15:00 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@3ddeaffc
+21:15:00 | DEBUG | Beezee | resetHoverTimer(): hashCode=1679629000
+21:15:00 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@c2323d1
+21:15:00 | DEBUG | Beezee | resetHoverTimer(): hashCode=1345532545
+21:15:00 | DEBUG | Beezee | setToAttack(): hashCode=1217986241
+21:15:00 | DEBUG | Beezee | setToAttack(): hashCode=2012586904
+21:15:00 | DEBUG | Beezee | setToAttack(): hashCode=981264390
+21:15:00 | DEBUG | Beezee | onSpawn(): hashCode=1567768574, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:15:00 | DEBUG | Beezee | resetHoverTimer(): hashCode=1567768574
+21:15:00 | DEBUG | Beezee | init(): hashCode=100429411
+21:15:00 | DEBUG | Beezee | onSpawn(): hashCode=100429411, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:15:00 | DEBUG | Beezee | resetHoverTimer(): hashCode=100429411
+21:15:00 | DEBUG | Beezee | init(): hashCode=377840774
+21:15:00 | DEBUG | Beezee | onSpawn(): hashCode=377840774, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:15:00 | DEBUG | Beezee | resetHoverTimer(): hashCode=377840774
+21:15:00 | DEBUG | Beezee | takeDamageFrom(): hashCode=1345532545, damager={ Bullet:[mapObjId=-1, dead=false, hashCode=2024021140] }
+21:15:00 | DEBUG | Beezee | setToAttack(): hashCode=1345532545
+21:15:00 | DEBUG | CannoHoney | squeeze()
+21:15:00 | DEBUG | HoneyDrip | onSpawn(): spawnProps=Properties({
+	[position=(45648.0,320.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:15:00 | DEBUG | Beezee | findHoverTarget()
+21:15:00 | DEBUG | Beezee | findHoverTarget(): set hover target: (45599.887,338.53122)
+21:15:00 | DEBUG | Beezee | update(): HOVER: find hover target: (45599.887,338.53122)
+21:15:00 | DEBUG | Beezee | findHoverTarget()
+21:15:00 | DEBUG | Beezee | findHoverTarget(): set hover target: (45722.508,310.5338)
+21:15:00 | DEBUG | Beezee | update(): HOVER: find hover target: (45722.508,310.5338)
+21:15:00 | DEBUG | Beezee | findHoverTarget()
+21:15:00 | DEBUG | Beezee | findHoverTarget(): set hover target: (45641.188,273.84402)
+21:15:00 | DEBUG | Beezee | update(): HOVER: find hover target: (45641.188,273.84402)
+21:15:00 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@42a1969c
+21:15:00 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:15:01 | DEBUG | Beezee | findHoverTarget()
+21:15:01 | DEBUG | Beezee | findHoverTarget(): set hover target: (45661.777,303.91418)
+21:15:01 | DEBUG | Beezee | update(): HOVER: find hover target: (45661.777,303.91418)
+21:15:01 | DEBUG | Beezee | findHoverTarget()
+21:15:01 | DEBUG | Beezee | findHoverTarget(): set hover target: (45642.54,309.4657)
+21:15:01 | DEBUG | Beezee | update(): HOVER: find hover target: (45642.54,309.4657)
+21:15:01 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@3ddeaffc
+21:15:01 | DEBUG | Beezee | resetHoverTimer(): hashCode=1679629000
+21:15:01 | DEBUG | Beezee | findHoverTarget()
+21:15:01 | DEBUG | Beezee | findHoverTarget(): set hover target: (45607.74,325.31763)
+21:15:01 | DEBUG | Beezee | update(): HOVER: find hover target: (45607.74,325.31763)
+21:15:01 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@5e1b1b0a
+21:15:01 | DEBUG | Beezee | resetHoverTimer(): hashCode=1567768574
+21:15:01 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@47b901b9
+21:15:01 | DEBUG | Beezee | resetHoverTimer(): hashCode=377840774
+21:15:01 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7ee57b1
+21:15:01 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:15:01 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@70606a74
+21:15:01 | DEBUG | Beezee | resetHoverTimer(): hashCode=100429411
+21:15:01 | DEBUG | Beezee | findHoverTarget()
+21:15:01 | DEBUG | Beezee | findHoverTarget(): set hover target: (45609.09,299.6497)
+21:15:01 | DEBUG | Beezee | update(): HOVER: find hover target: (45609.09,299.6497)
+21:15:01 | DEBUG | Beezee | findHoverTarget()
+21:15:01 | DEBUG | Beezee | findHoverTarget(): set hover target: (45576.297,364.61337)
+21:15:01 | DEBUG | Beezee | update(): HOVER: find hover target: (45576.297,364.61337)
+21:15:01 | DEBUG | Beezee | update(): hashCode=2012586904: ATTACK: attack delay just finished
+21:15:01 | DEBUG | Beezee | update(): hashCode=1217986241: ATTACK: attack delay just finished
+21:15:01 | DEBUG | Beezee | update(): hashCode=981264390: ATTACK: attack delay just finished
+21:15:01 | DEBUG | Beezee | findHoverTarget()
+21:15:01 | DEBUG | Beezee | findHoverTarget(): set hover target: (45689.574,377.04132)
+21:15:01 | DEBUG | Beezee | update(): HOVER: find hover target: (45689.574,377.04132)
+21:15:01 | DEBUG | Beezee | update(): hashCode=1345532545: ATTACK: attack delay just finished
+21:15:01 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@42a1969c
+21:15:01 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:15:01 | DEBUG | HoneyDrip | onDestroy()
+21:15:01 | DEBUG | Beezee | findHoverTarget()
+21:15:01 | DEBUG | Beezee | findHoverTarget(): set hover target: (45590.37,335.74274)
+21:15:01 | DEBUG | Beezee | update(): HOVER: find hover target: (45590.37,335.74274)
+21:15:01 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@3ddeaffc
+21:15:01 | DEBUG | Beezee | resetHoverTimer(): hashCode=1679629000
+21:15:01 | DEBUG | Beezee | findHoverTarget()
+21:15:01 | DEBUG | Beezee | findHoverTarget(): set hover target: (45621.973,347.94257)
+21:15:01 | DEBUG | Beezee | update(): HOVER: find hover target: (45621.973,347.94257)
+21:15:01 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@47b901b9
+21:15:01 | DEBUG | Beezee | resetHoverTimer(): hashCode=377840774
+21:15:01 | DEBUG | Beezee | findHoverTarget()
+21:15:01 | DEBUG | Beezee | findHoverTarget(): set hover target: (45673.75,328.30518)
+21:15:01 | DEBUG | Beezee | update(): HOVER: find hover target: (45673.75,328.30518)
+21:15:01 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@5e1b1b0a
+21:15:01 | DEBUG | Beezee | resetHoverTimer(): hashCode=1567768574
+21:15:02 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@70606a74
+21:15:02 | DEBUG | Beezee | resetHoverTimer(): hashCode=100429411
+21:15:02 | DEBUG | Beezee | findHoverTarget()
+21:15:02 | DEBUG | Beezee | findHoverTarget(): set hover target: (45627.082,309.79575)
+21:15:02 | DEBUG | Beezee | update(): HOVER: find hover target: (45627.082,309.79575)
+21:15:02 | DEBUG | Beezee | findHoverTarget()
+21:15:02 | DEBUG | Beezee | findHoverTarget(): set hover target: (45696.62,324.18536)
+21:15:02 | DEBUG | Beezee | update(): HOVER: find hover target: (45696.62,324.18536)
+21:15:02 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7ee57b1
+21:15:02 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:15:02 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@42a1969c
+21:15:02 | DEBUG | Beezee | resetHoverTimer(): hashCode=1300747761
+21:15:02 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@47b901b9
+21:15:02 | DEBUG | Beezee | resetHoverTimer(): hashCode=377840774
+21:15:02 | DEBUG | Beezee | findHoverTarget()
+21:15:02 | DEBUG | Beezee | findHoverTarget(): set hover target: (45650.965,390.5892)
+21:15:02 | DEBUG | Beezee | update(): HOVER: find hover target: (45650.965,390.5892)
+21:15:02 | DEBUG | Beezee | findHoverTarget()
+21:15:02 | DEBUG | Beezee | findHoverTarget(): set hover target: (45595.086,363.24484)
+21:15:02 | DEBUG | Beezee | update(): HOVER: find hover target: (45595.086,363.24484)
+21:15:02 | DEBUG | Beezee | findHoverTarget()
+21:15:02 | DEBUG | Beezee | findHoverTarget(): set hover target: (45627.34,394.561)
+21:15:02 | DEBUG | Beezee | update(): HOVER: find hover target: (45627.34,394.561)
+21:15:02 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@3ddeaffc
+21:15:02 | DEBUG | Beezee | resetHoverTimer(): hashCode=1679629000
+21:15:02 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@5e1b1b0a
+21:15:02 | DEBUG | Beezee | resetHoverTimer(): hashCode=1567768574
+21:15:02 | DEBUG | CannoHoney | squeeze()
+21:15:02 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@70606a74
+21:15:02 | DEBUG | Beezee | resetHoverTimer(): hashCode=100429411
+21:15:02 | DEBUG | HoneyDrip | onSpawn(): spawnProps=Properties({
+	[position=(45648.0,320.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:15:02 | DEBUG | Beezee | findHoverTarget()
+21:15:02 | DEBUG | Beezee | findHoverTarget(): set hover target: (45571.656,387.93015)
+21:15:02 | DEBUG | Beezee | update(): HOVER: find hover target: (45571.656,387.93015)
+21:15:02 | DEBUG | Beezee | findHoverTarget()
+21:15:02 | DEBUG | Beezee | findHoverTarget(): set hover target: (45647.723,416.31244)
+21:15:02 | DEBUG | Beezee | update(): HOVER: find hover target: (45647.723,416.31244)
+21:15:02 | DEBUG | Beezee | findHoverTarget()
+21:15:02 | DEBUG | Beezee | findHoverTarget(): set hover target: (45716.508,303.7775)
+21:15:02 | DEBUG | Beezee | update(): HOVER: find hover target: (45716.508,303.7775)
+21:15:02 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7ee57b1
+21:15:02 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:15:02 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@3ddeaffc
+21:15:02 | DEBUG | Beezee | resetHoverTimer(): hashCode=1679629000
+21:15:02 | DEBUG | Beezee | findHoverTarget()
+21:15:02 | DEBUG | Beezee | findHoverTarget(): set hover target: (45624.85,319.74768)
+21:15:02 | DEBUG | Beezee | update(): HOVER: find hover target: (45624.85,319.74768)
+21:15:03 | DEBUG | Beezee | setToAttack(): hashCode=100429411
+21:15:03 | DEBUG | Beezee | setToAttack(): hashCode=1300747761
+21:15:03 | DEBUG | Beezee | init(): hashCode=1397397183
+21:15:03 | DEBUG | Beezee | onSpawn(): hashCode=1397397183, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:15:03 | DEBUG | Beezee | resetHoverTimer(): hashCode=1397397183
+21:15:03 | DEBUG | Beezee | init(): hashCode=735745880
+21:15:03 | DEBUG | Beezee | onSpawn(): hashCode=735745880, spawnProps=Properties({
+	[cull_out_of_bounds=false]
+	[position=(45648.0,348.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:15:03 | DEBUG | Beezee | resetHoverTimer(): hashCode=735745880
+21:15:03 | DEBUG | Beezee | findHoverTarget()
+21:15:03 | DEBUG | Beezee | findHoverTarget(): set hover target: (45679.293,281.53162)
+21:15:03 | DEBUG | Beezee | update(): HOVER: find hover target: (45679.293,281.53162)
+21:15:03 | DEBUG | Beezee | findHoverTarget()
+21:15:03 | DEBUG | Beezee | findHoverTarget(): set hover target: (45619.527,297.06238)
+21:15:03 | DEBUG | Beezee | update(): HOVER: find hover target: (45619.527,297.06238)
+21:15:03 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@47b901b9
+21:15:03 | DEBUG | Beezee | resetHoverTimer(): hashCode=377840774
+21:15:03 | DEBUG | Beezee | findHoverTarget()
+21:15:03 | DEBUG | Beezee | findHoverTarget(): set hover target: (45652.234,392.5024)
+21:15:03 | DEBUG | Beezee | update(): HOVER: find hover target: (45652.234,392.5024)
+21:15:03 | DEBUG | Beezee | findHoverTarget()
+21:15:03 | DEBUG | Beezee | findHoverTarget(): set hover target: (45618.71,300.67792)
+21:15:03 | DEBUG | Beezee | update(): HOVER: find hover target: (45618.71,300.67792)
+21:15:03 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7ee57b1
+21:15:03 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:15:03 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@24ac57fa
+21:15:03 | DEBUG | Beezee | resetHoverTimer(): hashCode=1397397183
+21:15:03 | DEBUG | Beezee | findHoverTarget()
+21:15:03 | DEBUG | Beezee | findHoverTarget(): set hover target: (45716.95,371.40176)
+21:15:03 | DEBUG | Beezee | update(): HOVER: find hover target: (45716.95,371.40176)
+21:15:03 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@5e1b1b0a
+21:15:03 | DEBUG | Beezee | resetHoverTimer(): hashCode=1567768574
+21:15:03 | DEBUG | Beezee | findHoverTarget()
+21:15:03 | DEBUG | Beezee | findHoverTarget(): set hover target: (45643.13,308.20868)
+21:15:03 | DEBUG | Beezee | update(): HOVER: find hover target: (45643.13,308.20868)
+21:15:03 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@3ddeaffc
+21:15:03 | DEBUG | Beezee | resetHoverTimer(): hashCode=1679629000
+21:15:03 | DEBUG | Beezee | findHoverTarget()
+21:15:03 | DEBUG | Beezee | findHoverTarget(): set hover target: (45583.035,386.60593)
+21:15:03 | DEBUG | Beezee | update(): HOVER: find hover target: (45583.035,386.60593)
+21:15:03 | DEBUG | HoneyDrip | onDestroy()
+21:15:03 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@1101fa7
+21:15:03 | DEBUG | Beezee | resetHoverTimer(): hashCode=735745880
+21:15:04 | DEBUG | Beezee | findHoverTarget()
+21:15:04 | DEBUG | Beezee | findHoverTarget(): set hover target: (45600.234,354.3592)
+21:15:04 | DEBUG | Beezee | update(): HOVER: find hover target: (45600.234,354.3592)
+21:15:04 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7ee57b1
+21:15:04 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:15:04 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@47b901b9
+21:15:04 | DEBUG | Beezee | resetHoverTimer(): hashCode=377840774
+21:15:04 | DEBUG | Beezee | update(): hashCode=1300747761: ATTACK: attack delay just finished
+21:15:04 | DEBUG | Beezee | update(): hashCode=100429411: ATTACK: attack delay just finished
+21:15:04 | DEBUG | Beezee | findHoverTarget()
+21:15:04 | DEBUG | Beezee | findHoverTarget(): set hover target: (45604.87,332.11365)
+21:15:04 | DEBUG | Beezee | update(): HOVER: find hover target: (45604.87,332.11365)
+21:15:04 | DEBUG | Beezee | findHoverTarget()
+21:15:04 | DEBUG | Beezee | findHoverTarget(): set hover target: (45576.598,394.14258)
+21:15:04 | DEBUG | Beezee | update(): HOVER: find hover target: (45576.598,394.14258)
+21:15:04 | DEBUG | Beezee | findHoverTarget()
+21:15:04 | DEBUG | Beezee | findHoverTarget(): set hover target: (45634.13,317.6789)
+21:15:04 | DEBUG | Beezee | update(): HOVER: find hover target: (45634.13,317.6789)
+21:15:04 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@24ac57fa
+21:15:04 | DEBUG | Beezee | resetHoverTimer(): hashCode=1397397183
+21:15:04 | DEBUG | Beezee | findHoverTarget()
+21:15:04 | DEBUG | Beezee | findHoverTarget(): set hover target: (45702.434,278.41803)
+21:15:04 | DEBUG | Beezee | update(): HOVER: find hover target: (45702.434,278.41803)
+21:15:04 | DEBUG | Beezee | findHoverTarget()
+21:15:04 | DEBUG | Beezee | findHoverTarget(): set hover target: (45720.066,321.11484)
+21:15:04 | DEBUG | Beezee | update(): HOVER: find hover target: (45720.066,321.11484)
+21:15:04 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@5e1b1b0a
+21:15:04 | DEBUG | Beezee | resetHoverTimer(): hashCode=1567768574
+21:15:04 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@47b901b9
+21:15:04 | DEBUG | Beezee | resetHoverTimer(): hashCode=377840774
+21:15:04 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@7ee57b1
+21:15:04 | DEBUG | Beezee | resetHoverTimer(): hashCode=944581772
+21:15:04 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@3ddeaffc
+21:15:04 | DEBUG | Beezee | resetHoverTimer(): hashCode=1679629000
+21:15:04 | DEBUG | CannoHoney | squeeze()
+21:15:04 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@1101fa7
+21:15:04 | DEBUG | Beezee | resetHoverTimer(): hashCode=735745880
+21:15:04 | DEBUG | HoneyDrip | onSpawn(): spawnProps=Properties({
+	[position=(45648.0,320.0)]
+	[owner={ CannoHoney:[mapObjId=561, dead=false, hashCode=499609505] }]
+})
+21:15:04 | DEBUG | Beezee | findHoverTarget()
+21:15:04 | DEBUG | Beezee | findHoverTarget(): set hover target: (45578.71,287.6592)
+21:15:04 | DEBUG | Beezee | update(): HOVER: find hover target: (45578.71,287.6592)
+21:15:04 | DEBUG | Beezee | findHoverTarget()
+21:15:04 | DEBUG | Beezee | findHoverTarget(): set hover target: (45593.086,363.6268)
+21:15:04 | DEBUG | Beezee | update(): HOVER: find hover target: (45593.086,363.6268)
+21:15:04 | DEBUG | Beezee | takeDamageFrom(): hashCode=1397397183, damager={ ChargedShot:[mapObjId=-1, dead=false, hashCode=1724065966] }
+21:15:04 | DEBUG | Beezee | setToAttack(): hashCode=1397397183
+21:15:04 | DEBUG | Beezee | findHoverTarget()
+21:15:04 | DEBUG | Beezee | findHoverTarget(): set hover target: (45584.62,413.22375)
+21:15:04 | DEBUG | Beezee | update(): HOVER: find hover target: (45584.62,413.22375)
+21:15:04 | DEBUG | Beezee | onDestroy(): hashCode=1397397183
+21:15:04 | DEBUG | Beezee | takeDamageFrom(): hashCode=1567768574, damager={ ChargedShot:[mapObjId=-1, dead=false, hashCode=1724065966] }
+21:15:04 | DEBUG | Beezee | setToAttack(): hashCode=1567768574
+21:15:04 | DEBUG | Beezee | onDestroy(): hashCode=1567768574
+21:15:05 | DEBUG | Beezee | takeDamageFrom(): hashCode=377840774, damager={ ChargedShot:[mapObjId=-1, dead=false, hashCode=1724065966] }
+21:15:05 | DEBUG | Beezee | setToAttack(): hashCode=377840774
+21:15:05 | DEBUG | Beezee | findHoverTarget()
+21:15:05 | DEBUG | Beezee | findHoverTarget(): set hover target: (45684.01,402.471)
+21:15:05 | DEBUG | Beezee | update(): HOVER: find hover target: (45684.01,402.471)
+21:15:05 | DEBUG | Beezee | onDestroy(): hashCode=377840774
+21:15:05 | DEBUG | Beezee | update(): HOVER: reached hover target: com.mega.game.engine.common.time.Timer@3ddeaffc
+21:15:05 | DEBUG | Beezee | resetHoverTimer(): hashCode=1679629000
+21:15:05 | DEBUG | Beezee | findHoverTarget()
+21:15:05 | DEBUG | Beezee | findHoverTarget(): set hover target: (45600.086,331.4759)
+21:15:05 | DEBUG | Beezee | update(): HOVER: find hover target: (45600.086,331.4759)
+21:15:05 | DEBUG | Beezee | takeDamageFrom(): hashCode=944581772, damager={ ChargedShotExplosion:[mapObjId=-1, dead=false, hashCode=1396670816] }
+21:15:05 | DEBUG | Beezee | setToAttack(): hashCode=944581772
+21:15:05 | DEBUG | CannoHoney | onHealthDepleted()
+21:15:05 | DEBUG | CannoHoney | releaseChildren(): children=[1679629000, 944581772, 1345532545, 735745880]
+21:15:05 | DEBUG | Beezee | setToAttack(): hashCode=1679629000
+21:15:05 | DEBUG | Beezee | setToAttack(): hashCode=944581772
+21:15:05 | DEBUG | Beezee | setToAttack(): hashCode=1345532545
+21:15:05 | DEBUG | Beezee | setToAttack(): hashCode=735745880
+21:15:05 | DEBUG | CannoHoney | onDestroy()
+21:15:05 | DEBUG | CannoHoney | killChildren(): children=[]
+21:15:05 | DEBUG | Beezee | takeDamageFrom(): hashCode=944581772, damager={ ChargedShotExplosion:[mapObjId=-1, dead=false, hashCode=1396670816] }
+21:15:05 | DEBUG | Beezee | setToAttack(): hashCode=944581772
+21:15:05 | DEBUG | Beezee | onDestroy(): hashCode=944581772
+21:15:05 | DEBUG | HoneyDrip | onDestroy()
+21:15:06 | DEBUG | Beezee | update(): hashCode=1679629000: ATTACK: attack delay just finished
+21:15:06 | DEBUG | Beezee | update(): hashCode=735745880: ATTACK: attack delay just finished
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=693417450
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=1254827280
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=2078517710
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=936931778
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=1001351478
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=677329142
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=1309956586
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=985032587
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=391915263
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=1648090182
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=1091925703
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=867134838
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=603219469
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=1182656815
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=869887600
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=18316008
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=949350729
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=1679629000
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=1300747761
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=915426022
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=692490920
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=1345532545
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=490153912
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=1420331399
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=2012586904
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=1217986241
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=981264390
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=100429411
+21:15:11 | DEBUG | Beezee | onDestroy(): hashCode=735745880

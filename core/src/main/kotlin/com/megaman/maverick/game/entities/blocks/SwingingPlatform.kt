@@ -19,7 +19,6 @@ import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.*
 import com.mega.game.engine.entities.GameEntity
-import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IMotionEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
@@ -47,7 +46,7 @@ import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 import kotlin.math.PI
 
-class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, ISpritesEntity, IMotionEntity,
+class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity<MegaGameEntity>, ISpritesEntity, IMotionEntity,
     IEventListener {
 
     companion object {
@@ -62,7 +61,7 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity, 
     }
 
     override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_SPAWN)
-    override var children = Array<IGameEntity>()
+    override var children = Array<MegaGameEntity>()
 
     private lateinit var pendulum: Pendulum
     private var target: Vector2? = null

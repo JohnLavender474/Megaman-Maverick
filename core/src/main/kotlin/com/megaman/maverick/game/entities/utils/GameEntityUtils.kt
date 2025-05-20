@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.utils
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -53,13 +54,8 @@ fun getGameCameraCullingLogic(entity: IBodyEntity, timeToCull: Float = 1f) =
 fun getGameCameraCullingLogic(camera: RotatableCamera, bounds: () -> GameRectangle, timeToCull: Float = 1f) =
     CullableOnUncontained<GameRectangle>({ camera.getRotatedBounds() }, { bounds().overlaps(it) }, timeToCull)
 
-fun getObjectProps(props: Properties, out: Array<RectangleMapObject>): Array<RectangleMapObject> {
-    props.forEach { _, value -> if (value is RectangleMapObject) out.add(value) }
-    return out
-}
-
-fun convertObjectPropsToEntitySuppliers(props: Properties): Array<GamePair<() -> GameEntity, Properties>> {
-    val childEntitySuppliers = Array<GamePair<() -> GameEntity, Properties>>()
+fun convertObjectPropsToEntitySuppliers(props: Properties): Array<GamePair<() -> MegaGameEntity, Properties>> {
+    val childEntitySuppliers = Array<GamePair<() -> MegaGameEntity, Properties>>()
 
     props.forEach { key, value ->
         if (value is RectangleMapObject) {
@@ -68,7 +64,7 @@ fun convertObjectPropsToEntitySuppliers(props: Properties): Array<GamePair<() ->
                 val entityTypeString = childProps.get(ConstKeys.ENTITY_TYPE, String::class)!!
                 val entityType = EntityType.valueOf(entityTypeString.uppercase())
 
-                val childEntitySupplier: () -> GameEntity = { EntityFactories.fetch(entityType, value.name)!! }
+                val childEntitySupplier: () -> MegaGameEntity = { EntityFactories.fetch(entityType, value.name)!! }
 
                 GameLogger.debug(
                     "convertObjectPropsToEntities()", "entityType=$entityType,name=${value.name}"
@@ -121,11 +117,13 @@ fun setStandardOnTeleportEndProp(entity: GameEntity) {
     entity.putProperty(ConstKeys.ON_TELEPORT_END, { standardOnTeleportEnd(entity) })
 }
 
-fun IBodyEntity.moveTowards(target: Vector2, speed: Float) {
+fun IBodyEntity.moveTowards(target: Vector2, speed: Float, lerp: Boolean = false, lerpScalar: Float = 1f) {
     val velocity = GameObjectPools.fetch(Vector2::class)
         .set(target)
         .sub(body.getCenter())
         .nor()
         .scl(speed)
-    body.physics.velocity.set(velocity)
+
+    if (lerp) body.physics.velocity.lerp(velocity, lerpScalar * Gdx.graphics.deltaTime)
+    else body.physics.velocity.set(velocity)
 }

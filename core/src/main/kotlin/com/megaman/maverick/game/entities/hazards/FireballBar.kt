@@ -12,7 +12,6 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.entities.GameEntity
-import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
 import com.mega.game.engine.motion.RotatingLine
@@ -31,7 +30,7 @@ import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 
-class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEntity, ICullableEntity, IHazard {
+class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEntity<Fireball>, ICullableEntity, IHazard {
 
     companion object {
         const val TAG = "FireballBar"
@@ -40,7 +39,7 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
         private const val DEFAULT_SPEED = 4f
     }
 
-    override var children = Array<IGameEntity>()
+    override var children = Array<Fireball>()
 
     private lateinit var rotatingLine: RotatingLine
     private lateinit var spawnRoom: String

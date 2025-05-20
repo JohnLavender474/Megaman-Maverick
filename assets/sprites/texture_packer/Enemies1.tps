@@ -355,13 +355,10 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Enemies1/Beezee.png</key>
-            <key type="filename">../frames/Enemies1/CryoMet/flash.png</key>
-            <key type="filename">../frames/Enemies1/CryoMet/rise.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe/fire/shoot.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe/orange/shoot.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe/snow/shoot.png</key>
-            <key type="filename">../frames/Enemies1/SpikeCopter/drop_teeth.png</key>
+            <key type="filename">../frames/Enemies1/Beezee/attack.png</key>
+            <key type="filename">../frames/Enemies1/Beezee/hover.png</key>
+            <key type="filename">../frames/Enemies1/MockingByte/fall_asleep.png</key>
+            <key type="filename">../frames/Enemies1/MoonEyeStone/awaken.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -370,9 +367,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>8,24,16,48</rect>
+                <rect>6,18,12,36</rect>
                 <key>scale9Paddings</key>
-                <rect>8,24,16,48</rect>
+                <rect>6,18,12,36</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -518,8 +515,56 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Enemies1/CannoHoney/closed_eyes.png</key>
-            <key type="filename">../frames/Enemies1/CannoHoney/oepn_eyes.png</key>
+            <key type="filename">../frames/Enemies1/CannoHoney/idle.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,32,16,64</rect>
+                <key>scale9Paddings</key>
+                <rect>8,32,16,64</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/CannoHoney/squeeze.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,48,16,96</rect>
+                <key>scale9Paddings</key>
+                <rect>8,48,16,96</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/CryoMet/flash.png</key>
+            <key type="filename">../frames/Enemies1/CryoMet/rise.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/fire/shoot.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/orange/shoot.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/snow/shoot.png</key>
+            <key type="filename">../frames/Enemies1/SpikeCopter/drop_teeth.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,24,16,48</rect>
+                <key>scale9Paddings</key>
+                <rect>8,24,16,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Enemies1/CryoMet/run.png</key>
             <key type="filename">../frames/Enemies1/ScooperPete/idle.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/fire/idle.png</key>
@@ -541,22 +586,6 @@
                 <rect>8,16,16,32</rect>
                 <key>scale9Paddings</key>
                 <rect>8,16,16,32</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies1/CannoHoney/closing_eyes.png</key>
-            <key type="filename">../frames/Enemies1/CannoHoney/opening_eyes.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>8,48,16,96</rect>
-                <key>scale9Paddings</key>
-                <rect>8,48,16,96</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -906,22 +935,6 @@
                 <rect>6,6,12,12</rect>
                 <key>scale9Paddings</key>
                 <rect>6,6,12,12</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies1/MockingByte/fall_asleep.png</key>
-            <key type="filename">../frames/Enemies1/MoonEyeStone/awaken.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>6,18,12,36</rect>
-                <key>scale9Paddings</key>
-                <rect>6,18,12,36</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
