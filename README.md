@@ -210,6 +210,7 @@ comprehensive listing of the credits for the artwork used in this game.
   - [Random Enemies Set 9](https://www.deviantart.com/megared225/art/Random-Enemy-Sprites-Set-9-557171615):
     - Fire Dispensenator
     - Drill Tank XT
+    - Builder Kibbo
   - [Random Enemies Set 10](https://www.deviantart.com/megared225/art/Random-Enemy-Sprites-Set-10-571128501)
     - Nutt Glider
 - Mister Mike

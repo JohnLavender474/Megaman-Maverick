@@ -2652,6 +2652,7 @@ sprites/piskel/CartinJoe.piskel
 sprites/piskel/Flame2.piskel
 sprites/piskel/MagmaWave.piskel
 sprites/piskel/DeathBat.piskel
+sprites/piskel/RedBeezee.piskel
 sprites/piskel/Boulder.piskel
 sprites/piskel/Hanibiran.piskel
 sprites/piskel/FireMet.piskel

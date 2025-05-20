@@ -225,17 +225,17 @@ class SteamRollerMan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         debugShapes.add { body.getBounds() }
 
         val leftFixture =
-            Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.25f * ConstVals.PPM, 2f * ConstVals.PPM))
+            Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.25f * ConstVals.PPM, 1.5f *ConstVals.PPM))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
+        leftFixture.offsetFromBodyAttachment.set(-body.getWidth() / 2f, -0.5f * ConstVals.PPM)
         body.addFixture(leftFixture)
         leftFixture.drawingColor = Color.YELLOW
         debugShapes.add { leftFixture }
 
         val rightFixture =
-            Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.25f * ConstVals.PPM, 2f * ConstVals.PPM))
+            Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.25f * ConstVals.PPM, 1.5f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        rightFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
+        rightFixture.offsetFromBodyAttachment.set(body.getWidth() / 2f, -0.5f * ConstVals.PPM)
         body.addFixture(rightFixture)
         rightFixture.drawingColor = Color.YELLOW
         debugShapes.add { rightFixture }
