@@ -215,6 +215,14 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
             }
         }
 
+        val customPreProcess = spawnProps.get(ConstKeys.CUSTOM_PRE_PROCESS) as ((Body) -> Unit)?
+        if (customPreProcess != null) body.preProcess.put(ConstKeys.CUSTOM_PRE_PROCESS, customPreProcess)
+        else body.preProcess.remove(ConstKeys.CUSTOM_PRE_PROCESS)
+
+        val customPostProcess = spawnProps.get(ConstKeys.CUSTOM_POST_PROCESS) as ((Body) -> Unit)?
+        if (customPostProcess != null) body.postProcess.put(ConstKeys.CUSTOM_POST_PROCESS, customPostProcess)
+        else body.postProcess.remove(ConstKeys.CUSTOM_POST_PROCESS)
+
         draw = spawnProps.getOrDefault(ConstKeys.DRAW, true, Boolean::class)
 
         val owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)

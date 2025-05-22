@@ -6,6 +6,7 @@ import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.ISizable
 import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.components.IGameComponent
 import com.mega.game.engine.cullables.CullableOnEvent
@@ -20,9 +21,13 @@ import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.world.body.getCenter
 
 const val PROJECTILE_DEFAULT_CULL_TIME = 0.05f
 
@@ -60,7 +65,19 @@ interface IProjectileEntity : IMegaGameEntity, IBodyEntity, IAudioEntity, ICulla
 
     override fun canDamage(damageable: IDamageable) = damageable != owner
 
-    fun explodeAndDie(vararg params: Any?) {}
+    fun explodeAndDie(vararg params: Any?) {
+        // can't access "destroy" since it's defined in the abstract class, so manually call "engine.destroy" instead
+        game.engine.destroy(this)
+
+        val explosion = MegaEntityFactory.fetch(Explosion::class)!!
+        val props = props(
+            ConstKeys.OWNER pairTo this,
+            ConstKeys.POSITION pairTo body.getCenter()
+        )
+        explosion.spawn(props)
+
+        requestToPlaySound(SoundAsset.EXPLOSION_2_SOUND, false)
+    }
 
     fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {}
 

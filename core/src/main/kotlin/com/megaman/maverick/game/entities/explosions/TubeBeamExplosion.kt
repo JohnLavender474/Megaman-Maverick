@@ -48,7 +48,7 @@ class TubeBeamExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
 
     companion object {
         const val TAG = "TubeBeamExplosion"
-        private const val ANIMATION_FRAME_DUR = 0.05f
+        private const val ANIM_FRAME_DUR = 0.05f
         private const val EXPLOSION_DUR = 0.2f
         private var region: TextureRegion? = null
     }
@@ -86,13 +86,13 @@ class TubeBeamExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(2f * ConstVals.PPM)
+        body.setSize(1.75f * ConstVals.PPM)
         body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(ConstVals.PPM.toFloat()))
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(body.getWidth() / 2f))
         body.addFixture(damagerFixture)
         damagerFixture.drawingColor = Color.RED
         debugShapes.add { damagerFixture }
@@ -111,7 +111,7 @@ class TubeBeamExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(region!!, 2, 2, ANIMATION_FRAME_DUR, false)
+        val animation = Animation(region!!, 2, 2, ANIM_FRAME_DUR, false)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }

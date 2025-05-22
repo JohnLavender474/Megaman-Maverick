@@ -1,16 +1,15 @@
 package com.megaman.maverick.game.entities.projectiles
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
-import com.mega.game.engine.animations.AnimationsComponent
+import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
-import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
-import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -18,12 +17,12 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
-import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
-import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
@@ -36,35 +35,28 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.IProjectileEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.world.body.*
 
-class BunbyRedRocket(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IDirectional,
-    IFaceable {
+class DarkSerketClaw(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFaceable {
 
     companion object {
-        const val TAG = "BunbyRedRocket"
+        const val TAG = "DarkSerketClaw"
+        private const val CULL_TIME = 1f
         private var region: TextureRegion? = null
     }
 
-    override var direction: Direction
-        get() = body.direction
-        set(value) {
-            body.direction = value
-        }
     override lateinit var facing: Facing
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
+        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
@@ -74,13 +66,15 @@ class BunbyRedRocket(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
         val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
         body.physics.velocity.set(trajectory)
 
+        val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2.Zero, Vector2::class)
+        body.physics.gravity.set(gravity)
+
         facing = spawnProps.get(ConstKeys.FACING, Facing::class)!!
-        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
     }
 
-    override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        val projectile = projectileFixture.getEntity() as IProjectileEntity
-        if (projectile.owner == megaman) explodeAndDie()
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
@@ -88,7 +82,7 @@ class BunbyRedRocket(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
-        GameLogger.debug(TAG, "explodeAndDie()")
+        GameLogger.debug(BunbyRedRocket.Companion.TAG, "explodeAndDie()")
 
         destroy()
 
@@ -106,30 +100,31 @@ class BunbyRedRocket(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
         val body = Body(BodyType.ABSTRACT)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
-        body.setSize(ConstVals.PPM.toFloat(), 0.5f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat())
+        body.drawingColor = Color.GRAY
+
+        val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBounds() }
+
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
+
         return BodyComponentCreator.create(
-            this, body, BodyFixtureDef.of(FixtureType.PROJECTILE, FixtureType.DAMAGER)
+            this, body, BodyFixtureDef.of(FixtureType.PROJECTILE, FixtureType.DAMAGER, FixtureType.SHIELD)
         )
     }
 
-    override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
-        sprite.setSize(ConstVals.PPM.toFloat())
-        val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
-            sprite.setFlip(isFacing(Facing.LEFT), false)
-
-            sprite.setOriginCenter()
-            sprite.rotation = direction.rotation
-
+    override fun defineSpritesComponent() = SpritesComponentBuilder()
+        .sprite(
+            TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
+                .also { sprite -> sprite.setSize(3f * ConstVals.PPM, 2f * ConstVals.PPM) }
+        )
+        .updatable { _, sprite ->
             sprite.setCenter(body.getCenter())
+            sprite.setFlip(isFacing(Facing.RIGHT), false)
         }
-        return component
-    }
+        .build()
 
-    private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(region!!, 2, 1, 0.1f, true)
-        val animator = Animator(animation)
-        return AnimationsComponent(this, animator)
-    }
+    private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
+        .key(TAG).animator(Animator(Animation(region!!, 3, 1, 0.1f, true)))
+        .build()
 }

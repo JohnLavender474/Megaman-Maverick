@@ -91,15 +91,16 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val JUMP_THROW_TWO_DUR = 0.5f
         private const val JUMP_THROW_TWO_TIME = 0.2f
 
-        private const val GIGA_STAND_DUR = 0.75f
-        private const val GIGA_RISE_MAX_VEL = 5f
+        private const val GIGA_STAND_DUR = 0.25f
+        private const val GIGA_RISE_MAX_VEL = 10f
         private const val GIGA_RISE_IMPULSE = 10f
         private const val GIGA_STOP_RISING_IMPULSE = 5f
-        private const val GIGA_RISE_DUR = 1f
+        private const val GIGA_RISE_DUR = 0.5f
         private const val GIGA_CHANCE_DELTA = 25f
         private const val MIN_CYCLES_BEFORE_GIGA = 3
 
-        private const val GIGA_DELAY_BETWEEN_BEAMS = 0.75f
+        private const val GIGA_DELAY_BETWEEN_BEAMS_MIN = 0.5f
+        private const val GIGA_DELAY_BETWEEN_BEAMS_MAX = 0.75f
         private const val GIGA_DELAY_BETWEEN_BEAMS_KEY = "giga_delay_between_beams"
         private const val GIGA_LASER_BEAMER_COUNT = 14
         private val GIGA_LASER_BEAMS_ARRAYS = gdxArrayOf<Array<Int>>(
@@ -181,9 +182,9 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         get() = stateTimers[currentState]
 
     private val otherTimers = orderedMapOf(
+        GIGA_DELAY_BETWEEN_BEAMS_KEY pairTo Timer(),
         STAND_THROW_DELAY_KEY pairTo Timer(STAND_THROW_DELAY),
-        CHANGE_FACING_DELAY_KEY pairTo Timer(CHANGE_FACING_DELAY),
-        GIGA_DELAY_BETWEEN_BEAMS_KEY pairTo Timer(GIGA_DELAY_BETWEEN_BEAMS)
+        CHANGE_FACING_DELAY_KEY pairTo Timer(CHANGE_FACING_DELAY)
     )
 
     private var standCycles = -1
@@ -358,7 +359,12 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                                     else -> GameLogger.error(TAG, "update(): failed to find beamer to beam")
                                 }
 
-                                delay.reset()
+                                val duration = UtilMethods.interpolate(
+                                    GIGA_DELAY_BETWEEN_BEAMS_MIN,
+                                    GIGA_DELAY_BETWEEN_BEAMS_MAX,
+                                    getHealthRatio()
+                                )
+                                delay.resetDuration(duration)
                             }
 
                             if (queuedBeamerIndices.isEmpty) {

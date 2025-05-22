@@ -48,6 +48,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val CUSTOM = "custom"
     const val ROCK = "rock"
     const val EXCEPTION = "exception"
     const val FOCUS = "focus"
@@ -208,6 +209,9 @@ object ConstKeys {
     const val EDIT = "edit"
     const val FIRST = "first"
     const val AREA = "area"
+    const val PRE_PROCESS = "pre_process"
+    const val CUSTOM_PRE_PROCESS = "custom_pre_process"
+    const val CUSTOM_POST_PROCESS = "custom_post_process"
     const val PROJECTILES = "projectiles"
     const val APPLY_SCALAR_TO_CHILDREN = "apply_scalar_to_children"
     const val BLOCK = "block"

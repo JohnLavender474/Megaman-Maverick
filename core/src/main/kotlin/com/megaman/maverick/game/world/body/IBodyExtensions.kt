@@ -44,7 +44,7 @@ fun IBody.setEntity(entity: IBodyEntity) {
 fun IBody.getEntity(): MegaGameEntity = getProperty(ConstKeys.ENTITY) as MegaGameEntity
 
 fun IBody.getPositionDelta(): Vector2 {
-    val prior = getProperty(key = ConstKeys.PRIOR, Vector2::class)!!
+    val prior = getProperty(ConstKeys.PRIOR, Vector2::class)!!
     val current = getPosition().cpy()
     return current.sub(prior)
 }

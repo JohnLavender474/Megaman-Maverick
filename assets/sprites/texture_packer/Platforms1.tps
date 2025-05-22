@@ -478,21 +478,6 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Platforms1/SteamRoller.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>28,24,56,48</rect>
-                <key>scale9Paddings</key>
-                <rect>28,24,56,48</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
             <key type="filename">../frames/Platforms1/SwingingPlatform/other_small_platform.png</key>
             <key type="filename">../frames/Platforms1/SwingingPlatform/small_platform.png</key>
             <struct type="IndividualSpriteSettings">

@@ -148,6 +148,7 @@ sounds/atomic_fire.wav
 sounds/crash_bomber.wav
 sounds/explosion1.mp3
 sounds/disappearing_block.wav
+sounds/jet.wav
 sounds/shake.wav
 sounds/liftoff.wav
 sounds/electric_1.wav
@@ -969,6 +970,10 @@ sprites/frames/Projectiles2/Nutt.png
 sprites/frames/Projectiles2/SpitFireball.png
 sprites/frames/Specials1/GravityCapsule/inactive.png
 sprites/frames/Specials1/GravityCapsule/active.png
+sprites/frames/Specials1/SteamRoller/roll.png
+sprites/frames/Specials1/SteamRoller/smash.png
+sprites/frames/Specials1/SteamRoller/reverse.png
+sprites/frames/Specials1/SteamRoller/idle.png
 sprites/frames/Specials1/SwitcharooArrow.png
 sprites/frames/Specials1/GravitySwitcharoo/arrow.png
 sprites/frames/Specials1/GravitySwitcharoo/deactivated.png
@@ -1644,6 +1649,7 @@ sprites/frames/Projectiles1/Prickly.png
 sprites/frames/Projectiles1/HoneyDrip/splash.png
 sprites/frames/Projectiles1/HoneyDrip/drip.png
 sprites/frames/Projectiles1/Nuclear_Monkey_Ball.png
+sprites/frames/Projectiles1/DarkSerketClaw.png
 sprites/frames/Projectiles1/PreciousShot/Form.png
 sprites/frames/Projectiles1/PreciousShot/Shoot.png
 sprites/frames/Projectiles1/GreenPelletBlast/burst.png
@@ -1661,6 +1667,7 @@ sprites/frames/Projectiles1/Electric/PurpleShockBalls.png
 sprites/frames/Projectiles1/Electric/BigElectric.png
 sprites/frames/Projectiles1/Electric/ElectricBallPulse.png
 sprites/frames/Projectiles1/Electric/SmallElectric.png
+sprites/frames/Projectiles1/DeathBomb.png
 sprites/frames/Projectiles1/ReactorManProjectile/big.png
 sprites/frames/Projectiles1/ReactorManProjectile/small.png
 sprites/frames/Projectiles1/ReactorManProjectile/die.png
@@ -1921,7 +1928,6 @@ sprites/frames/Platforms1/8bitBlueBlock.png
 sprites/frames/Platforms1/8bitBlueBlockTransBorder.png
 sprites/frames/Platforms1/Lift.png
 sprites/frames/Platforms1/RocketPlatform.png
-sprites/frames/Platforms1/SteamRoller.png
 sprites/frames/Platforms1/WoodBlock1.png
 sprites/frames/Platforms1/CrumblingBlock.png
 sprites/frames/Platforms1/Boulder/Small.png
@@ -2045,6 +2051,11 @@ sprites/frames/Enemies1/BabyMockingByte.png
 sprites/frames/Enemies1/SwinginJoe/throw.png
 sprites/frames/Enemies1/SwinginJoe/swing1.png
 sprites/frames/Enemies1/SwinginJoe/swing2.png
+sprites/frames/Enemies1/DarkSerket/scurry.png
+sprites/frames/Enemies1/DarkSerket/stand.png
+sprites/frames/Enemies1/DarkSerket/jump.png
+sprites/frames/Enemies1/DarkSerket/grow_claws.png
+sprites/frames/Enemies1/DarkSerket/launch_claws.png
 sprites/frames/Enemies1/CryoMet/flash.png
 sprites/frames/Enemies1/CryoMet/down.png
 sprites/frames/Enemies1/CryoMet/rise.png
@@ -2142,6 +2153,8 @@ sprites/frames/Enemies1/Merserker/fly.png
 sprites/frames/Enemies1/Merserker/pre_chop_down.png
 sprites/frames/Enemies1/Merserker/chop_down.png
 sprites/frames/Enemies1/Merserker/on_ground.png
+sprites/frames/Enemies1/Jetto/gray.png
+sprites/frames/Enemies1/Jetto/bronze.png
 sprites/frames/Enemies1/BlueScrewie/Down.png
 sprites/frames/Enemies1/BlueScrewie/Drop.png
 sprites/frames/Enemies1/BlueScrewie/Shoot.png
@@ -2616,6 +2629,7 @@ sprites/piskel/WallTeck.piskel
 sprites/piskel/LunarPortal.piskel
 sprites/piskel/TubeBeam.piskel
 sprites/piskel/Jetpack_Ice_Blaster_Bot_Projectile.piskel
+sprites/piskel/DeathBomb.piskel
 sprites/piskel/RodentMan_Mugshot_v2.piskel
 sprites/piskel/Ring Ring.piskel
 sprites/piskel/Toxic_Barrel_Bot.piskel
@@ -2681,6 +2695,7 @@ sprites/piskel/DuoBall.piskel
 sprites/piskel/MechaDragon.piskel
 sprites/piskel/PreciousWoman.piskel
 sprites/piskel/LavaFall.piskel
+sprites/piskel/DarkSerket.piskel
 sprites/piskel/Lava.piskel
 sprites/piskel/IcicleTelly.piskel
 sprites/piskel/DesertMan_v2.piskel
@@ -2698,6 +2713,7 @@ sprites/piskel/MugshotPane.piskel
 sprites/piskel/SniperJoe.piskel
 sprites/piskel/Nuclear_Monkey_Boss.piskel
 sprites/piskel/GlacierCloudsBKG.piskel
+sprites/piskel/DarkSerketClaw.piskel
 sprites/piskel/SprBGTomahawk.piskel
 sprites/piskel/Totem Polem.piskel
 sprites/piskel/SiliconSilkie.piskel
@@ -2706,6 +2722,7 @@ sprites/piskel/TorikoPlundge.piskel
 sprites/piskel/Spikes.piskel
 sprites/piskel/Coldier.piskel
 sprites/piskel/CrystalConveyorBKG.piskel
+sprites/piskel/Jetto.piskel
 sprites/piskel/CrystalSpiky.piskel
 sprites/piskel/GreenConveyorBelt.piskel
 sprites/piskel/SniperJoeShield.piskel

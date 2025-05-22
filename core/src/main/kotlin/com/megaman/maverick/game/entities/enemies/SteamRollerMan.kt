@@ -43,6 +43,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.blocks.SteamRoller
+import com.megaman.maverick.game.entities.blocks.SteamRoller.SteamRollerState
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.AsteroidExplosion
@@ -67,6 +68,7 @@ class SteamRollerMan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
 
         private const val MAX_ROLL_SPEED = 3f
         private const val ROLL_IMPULSE = 5f
+
         private const val REVERSE_SPEED = 2f
 
         private const val SMASH_AREA_WIDTH = 2.25f
@@ -134,6 +136,7 @@ class SteamRollerMan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
@@ -168,11 +171,19 @@ class SteamRollerMan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
             .setSize(shieldShape.getWidth(), 0.1f * ConstVals.PPM)
             .setTopCenterToPoint(shieldShape.getPositionPoint(Position.TOP_CENTER))
 
+        val steamRollerState = when (currentState) {
+            SteamRollerManState.IDLE,
+            SteamRollerManState.ROLL,
+            SteamRollerManState.SMASH -> SteamRollerState.SMASH
+            SteamRollerManState.REVERSE -> SteamRollerState.REVERSE
+        }
+
         val steamRoller = MegaEntityFactory.fetch(SteamRoller::class)!!
         steamRoller.spawn(
             props(
                 ConstKeys.FACING pairTo facing,
                 ConstKeys.ID pairTo mapObjectId,
+                ConstKeys.STATE pairTo steamRollerState,
                 ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER),
                 ConstKeys.BLOCKS pairTo gdxArrayOf(smashAreaBlockBound, shieldAreaBlockBound)
             )
@@ -224,8 +235,15 @@ class SteamRollerMan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
+        val feetFixture =
+            Fixture(body, FixtureType.FEET, GameRectangle().setSize(4.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
+        body.addFixture(feetFixture)
+        feetFixture.drawingColor = Color.GREEN
+        debugShapes.add { feetFixture }
+
         val leftFixture =
-            Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.25f * ConstVals.PPM, 1.5f *ConstVals.PPM))
+            Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.25f * ConstVals.PPM, 1.5f * ConstVals.PPM))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.offsetFromBodyAttachment.set(-body.getWidth() / 2f, -0.5f * ConstVals.PPM)
         body.addFixture(leftFixture)

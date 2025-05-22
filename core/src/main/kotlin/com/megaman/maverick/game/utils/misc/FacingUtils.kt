@@ -87,4 +87,11 @@ object FacingUtils {
         return (entity.body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && entity.isFacing(Facing.LEFT)) ||
             (entity.body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && entity.isFacing(Facing.RIGHT))
     }
+
+    fun isBackTouchingBlock(entity: IBodyEntity): Boolean {
+        entity as IFaceable
+
+        return (entity.body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && entity.isFacing(Facing.RIGHT)) ||
+            (entity.body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && entity.isFacing(Facing.LEFT))
+    }
 }

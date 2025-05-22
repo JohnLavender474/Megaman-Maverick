@@ -14,8 +14,8 @@ class BodyBuilder(
     private var height: Float = 0f,
     private var physics: PhysicsData = PhysicsData(),
     private var fixtures: OrderedMap<Any, OrderedSet<IFixture>> = OrderedMap(),
-    private var preProcess: OrderedMap<Any, () -> Unit> = OrderedMap(),
-    private var postProcess: OrderedMap<Any, () -> Unit> = OrderedMap(),
+    private var preProcess: OrderedMap<Any, (Body) -> Unit> = OrderedMap(),
+    private var postProcess: OrderedMap<Any, (Body) -> Unit> = OrderedMap(),
     private var onReset: OrderedMap<Any, () -> Unit> = OrderedMap(),
     private var direction: Direction = Direction.UP,
     private var properties: Properties = Properties()
@@ -48,12 +48,12 @@ class BodyBuilder(
         return this
     }
 
-    fun preProcess(key: Any, action: () -> Unit): BodyBuilder {
+    fun preProcess(key: Any, action: (Body) -> Unit): BodyBuilder {
         preProcess.put(key, action)
         return this
     }
 
-    fun postProcess(key: Any, action: () -> Unit): BodyBuilder {
+    fun postProcess(key: Any, action: (Body) -> Unit): BodyBuilder {
         postProcess.put(key, action)
         return this
     }

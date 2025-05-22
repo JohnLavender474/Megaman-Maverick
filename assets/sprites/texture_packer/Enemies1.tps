@@ -589,50 +589,9 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Enemies1/Darspider/crawl.png</key>
-            <key type="filename">../frames/Enemies1/PreciousCube/blink_in_blue.png</key>
-            <key type="filename">../frames/Enemies1/PreciousCube/blink_in_green.png</key>
-            <key type="filename">../frames/Enemies1/PreciousCube/blink_in_pink.png</key>
-            <key type="filename">../frames/Enemies1/PreciousCube/blink_in_purple.png</key>
-            <key type="filename">../frames/Enemies1/PreciousCube/blink_out_blue.png</key>
-            <key type="filename">../frames/Enemies1/PreciousCube/blink_out_green.png</key>
-            <key type="filename">../frames/Enemies1/PreciousCube/blink_out_pink.png</key>
-            <key type="filename">../frames/Enemies1/PreciousCube/blink_out_purple.png</key>
-            <key type="filename">../frames/Enemies1/ScooperPete/dig.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>16,16,32,32</rect>
-                <key>scale9Paddings</key>
-                <rect>16,16,32,32</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies1/DeathBat/fly_attack.png</key>
-            <key type="filename">../frames/Enemies1/DeathBat/fly_retreat.png</key>
-            <key type="filename">../frames/Enemies1/DuoBallCanon/straight_shoot.png</key>
-            <key type="filename">../frames/Enemies1/DuoBallCanon/up_shoot.png</key>
-            <key type="filename">../frames/Enemies1/GreenUziJoe/jump_shoot_blast.png</key>
-            <key type="filename">../frames/Enemies1/GreenUziJoe/stand_shoot_blast.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>12,16,24,32</rect>
-                <key>scale9Paddings</key>
-                <rect>12,16,24,32</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
+            <key type="filename">../frames/Enemies1/DarkSerket/grow_claws.png</key>
+            <key type="filename">../frames/Enemies1/DarkSerket/jump.png</key>
+            <key type="filename">../frames/Enemies1/DarkSerket/stand.png</key>
             <key type="filename">../frames/Enemies1/DeathBat/hang.png</key>
             <key type="filename">../frames/Enemies1/DrillTankXT/die.png</key>
             <key type="filename">../frames/Enemies1/DrillTankXT/sleep.png</key>
@@ -658,6 +617,67 @@
                 <rect>12,8,24,16</rect>
                 <key>scale9Paddings</key>
                 <rect>12,8,24,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/DarkSerket/launch_claws.png</key>
+            <key type="filename">../frames/Enemies1/PopupCanon/Rise.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>24,16,48,32</rect>
+                <key>scale9Paddings</key>
+                <rect>24,16,48,32</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/DarkSerket/scurry.png</key>
+            <key type="filename">../frames/Enemies1/DeathBat/fly_attack.png</key>
+            <key type="filename">../frames/Enemies1/DeathBat/fly_retreat.png</key>
+            <key type="filename">../frames/Enemies1/DuoBallCanon/straight_shoot.png</key>
+            <key type="filename">../frames/Enemies1/DuoBallCanon/up_shoot.png</key>
+            <key type="filename">../frames/Enemies1/GreenUziJoe/jump_shoot_blast.png</key>
+            <key type="filename">../frames/Enemies1/GreenUziJoe/stand_shoot_blast.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,16,24,32</rect>
+                <key>scale9Paddings</key>
+                <rect>12,16,24,32</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/Darspider/crawl.png</key>
+            <key type="filename">../frames/Enemies1/PreciousCube/blink_in_blue.png</key>
+            <key type="filename">../frames/Enemies1/PreciousCube/blink_in_green.png</key>
+            <key type="filename">../frames/Enemies1/PreciousCube/blink_in_pink.png</key>
+            <key type="filename">../frames/Enemies1/PreciousCube/blink_in_purple.png</key>
+            <key type="filename">../frames/Enemies1/PreciousCube/blink_out_blue.png</key>
+            <key type="filename">../frames/Enemies1/PreciousCube/blink_out_green.png</key>
+            <key type="filename">../frames/Enemies1/PreciousCube/blink_out_pink.png</key>
+            <key type="filename">../frames/Enemies1/PreciousCube/blink_out_purple.png</key>
+            <key type="filename">../frames/Enemies1/ScooperPete/dig.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,16,32,32</rect>
+                <key>scale9Paddings</key>
+                <rect>16,16,32,32</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -803,6 +823,8 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Enemies1/IcicleTelly/spin.png</key>
+            <key type="filename">../frames/Enemies1/Jetto/bronze.png</key>
+            <key type="filename">../frames/Enemies1/Jetto/gray.png</key>
             <key type="filename">../frames/Enemies1/LampeonBandito/stand.png</key>
             <key type="filename">../frames/Enemies1/TellySaucer/spin.png</key>
             <struct type="IndividualSpriteSettings">
@@ -998,21 +1020,6 @@
                 <rect>53,53,105,105</rect>
                 <key>scale9Paddings</key>
                 <rect>53,53,105,105</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies1/PopupCanon/Rise.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>24,16,48,32</rect>
-                <key>scale9Paddings</key>
-                <rect>24,16,48,32</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

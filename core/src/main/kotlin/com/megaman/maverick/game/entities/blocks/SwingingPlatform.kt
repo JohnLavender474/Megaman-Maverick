@@ -51,12 +51,18 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity<M
 
     companion object {
         const val TAG = "SwingingPlatform"
+
         private const val BODY_WIDTH = 5f
         private const val BODY_HEIGHT = 1f
+
         private const val DEFAULT_LENGTH = 4f
+
         private const val PENDULUM_GRAVITY = 5f
+
         private const val TIME_TO_SPAWN_ENEMY = 0.25f
+
         private const val RING_COUNT = 10
+
         private val regions = ObjectMap<String, TextureRegion>()
     }
 

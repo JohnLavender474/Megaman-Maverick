@@ -27,8 +27,8 @@ class Body(
     height: Float = 0f,
     override var physics: PhysicsData = PhysicsData(),
     var fixtures: OrderedMap<Any, OrderedSet<IFixture>> = OrderedMap(),
-    var preProcess: OrderedMap<Any, () -> Unit> = OrderedMap(),
-    var postProcess: OrderedMap<Any, () -> Unit> = OrderedMap(),
+    var preProcess: OrderedMap<Any, (Body) -> Unit> = OrderedMap(),
+    var postProcess: OrderedMap<Any, (Body) -> Unit> = OrderedMap(),
     var onReset: OrderedMap<Any, () -> Unit> = OrderedMap(),
     override var direction: Direction = Direction.UP,
     override var properties: Properties = Properties(),
@@ -95,7 +95,7 @@ class Body(
         return this
     }
 
-    override fun preProcess() = preProcess.values().forEach { it.invoke() }
+    override fun preProcess() = preProcess.values().forEach { it.invoke(this) }
 
     override fun process(delta: Float) {
         if (physics.applyFrictionX && physics.frictionOnSelf.x > 0f)
@@ -115,7 +115,7 @@ class Body(
         bounds.translate(0f, physics.velocity.y * delta)
     }
 
-    override fun postProcess() = postProcess.values().forEach { it.invoke() }
+    override fun postProcess() = postProcess.values().forEach { it.invoke(this) }
 
     override fun reset() {
         physics.reset()
@@ -140,6 +140,11 @@ class Body(
         setX(bounds.getX())
         setY(bounds.getY())
         return this
+    }
+
+    fun getAllFixtures(out: Array<IFixture>): Array<IFixture> {
+        forEachFixture { fixture -> out.add(fixture) }
+        return out
     }
 
     override fun setX(x: Float): Body {

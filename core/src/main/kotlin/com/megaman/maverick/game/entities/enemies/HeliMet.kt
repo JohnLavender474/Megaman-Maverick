@@ -46,8 +46,10 @@ import com.megaman.maverick.game.entities.enemies.HeliMet.HeliMetState.*
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.utils.extensions.toGameRectangle
-import com.megaman.maverick.game.world.body.*
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodyFixtureDef
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
 
 class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IDirectional,
     IFaceable {
@@ -80,6 +82,7 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     private val sideToSideTimer = SmoothOscillationTimer(SIDE_TO_SIDE_DUR, -1f, 1f)
 
     private val target = Vector2()
+    private val tempTargetsQueue = Array<Vector2>()
 
     override fun init() {
         if (regions.isEmpty) {
@@ -108,15 +111,26 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
                 val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
                 body.setCenter(spawn)
 
-                val target1 = spawnProps.get("${ConstKeys.TARGET}_1", RectangleMapObject::class)!!
-                    .rectangle.toGameRectangle().getCenter()
+                val queue = tempTargetsQueue
 
-                val target2 = spawnProps.get("${ConstKeys.TARGET}_2", RectangleMapObject::class)!!
-                    .rectangle.toGameRectangle().getCenter()
+                spawnProps.forEach { key, value ->
+                    if (key.toString().contains(ConstKeys.TARGET)) {
+                        val target = (value as RectangleMapObject).rectangle.getCenter()
+                        queue.add(target)
+                    }
+                }
 
                 val megamanCenter = megaman.body.getCenter()
+                queue.sort sort@{ t1, t2 ->
+                    val t1Dst = t1.dst2(megamanCenter)
+                    val t2Dst = t2.dst2(megamanCenter)
+                    return@sort t1Dst.compareTo(t2Dst)
+                }
 
-                target.set(if (target1.dst2(megamanCenter) < target2.dst2(megamanCenter)) target1 else target2)
+                val target = queue.first()
+                this.target.set(target)
+
+                queue.clear()
             }
         }
 

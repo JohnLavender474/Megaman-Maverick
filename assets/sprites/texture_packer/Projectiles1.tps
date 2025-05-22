@@ -275,6 +275,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Projectiles1/CacaFlame/fall.png</key>
+            <key type="filename">../frames/Projectiles1/DarkSerketClaw.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -348,6 +349,25 @@
                 <rect>2,6,4,12</rect>
                 <key>scale9Paddings</key>
                 <rect>2,6,4,12</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Projectiles1/DeathBomb.png</key>
+            <key type="filename">../frames/Projectiles1/FirePellet.png</key>
+            <key type="filename">../frames/Projectiles1/Rock/big.png</key>
+            <key type="filename">../frames/Projectiles1/Rock/small.png</key>
+            <key type="filename">../frames/Projectiles1/Snowball2.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>4,4,8,8</rect>
+                <key>scale9Paddings</key>
+                <rect>4,4,8,8</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -431,24 +451,6 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Projectiles1/FirePellet.png</key>
-            <key type="filename">../frames/Projectiles1/Rock/big.png</key>
-            <key type="filename">../frames/Projectiles1/Rock/small.png</key>
-            <key type="filename">../frames/Projectiles1/Snowball2.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>4,4,8,8</rect>
-                <key>scale9Paddings</key>
-                <rect>4,4,8,8</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
             <key type="filename">../frames/Projectiles1/FireWall/disintegrate.png</key>
             <key type="filename">../frames/Projectiles1/MeanTorpedo.png</key>
             <struct type="IndividualSpriteSettings">
@@ -493,21 +495,6 @@
                 <rect>8,4,16,8</rect>
                 <key>scale9Paddings</key>
                 <rect>8,4,16,8</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Projectiles1/HoneyDrip.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>6,12,12,24</rect>
-                <key>scale9Paddings</key>
-                <rect>6,12,12,24</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
