@@ -68,8 +68,8 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         const val TAG = "Cactus"
 
         private const val TURN_DUR = 0.3f
-        private const val FLASH_DUR = 1.25f
-        private const val FACING_DUR = 2.5f
+        private const val FLASH_DUR = 1f
+        private const val FACING_DUR = 1f
         private const val FROZEN_DUR = 1f
 
         private const val NEEDLES = 5
@@ -86,6 +86,7 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
             Bullet::class pairTo dmgNeg(10),
             ArigockBall::class pairTo dmgNeg(10),
             CactusMissile::class pairTo dmgNeg(10),
+            LampeonBullet::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             MagmaFlame::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             MagmaWave::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
@@ -189,12 +190,14 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     }
 
     override fun onHealthDepleted() {
+        GameLogger.debug(TAG, "onHealthDepleted()")
         spawnNeedles()
         super.onHealthDepleted()
         playSoundNow(SoundAsset.THUMP_SOUND, false)
     }
 
-    override fun canBeDamagedBy(damager: IDamager) = damager is SmallGreenMissile || super.canBeDamagedBy(damager)
+    override fun canBeDamagedBy(damager: IDamager) =
+        damagers.containsKey(damager::class) || super.canBeDamagedBy(damager)
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
         GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")

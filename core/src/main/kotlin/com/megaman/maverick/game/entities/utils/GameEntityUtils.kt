@@ -11,6 +11,7 @@ import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullableOnEvent
 import com.mega.game.engine.cullables.CullableOnUncontained
 import com.mega.game.engine.entities.GameEntity
@@ -19,6 +20,7 @@ import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.events.Event
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -126,4 +128,20 @@ fun IBodyEntity.moveTowards(target: Vector2, speed: Float, lerp: Boolean = false
 
     if (lerp) body.physics.velocity.lerp(velocity, lerpScalar * Gdx.graphics.deltaTime)
     else body.physics.velocity.set(velocity)
+}
+
+fun delayNextPossibleSpawn(game: MegamanMaverickGame, tag: String, mapObjectId: Int, delay: Float) {
+    val key = "$tag/$mapObjectId"
+    val timer = Timer(delay).setRunOnFinished {
+        game.runQueue.addLast {
+            game.updatables.remove(key)
+        }
+    }
+    game.updatables.put(key, timer)
+}
+
+fun isNextPossibleSpawnDelayed(game: MegamanMaverickGame, tag: String, mapObjectId: Int): Boolean {
+    val key = "$tag/$mapObjectId"
+    val timer = game.updatables.get(key) as Timer?
+    return timer != null && !timer.isFinished()
 }

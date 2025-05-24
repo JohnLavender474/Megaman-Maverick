@@ -253,6 +253,8 @@
             <key type="filename">../frames/Enemies1/GapingFish/Gaping.png</key>
             <key type="filename">../frames/Enemies1/GapingFish/Swimming.png</key>
             <key type="filename">../frames/Enemies1/HeliMet/fly.png</key>
+            <key type="filename">../frames/Enemies1/Jetto/bronze/fall.png</key>
+            <key type="filename">../frames/Enemies1/Jetto/gray/fall.png</key>
             <key type="filename">../frames/Enemies1/MagFly.png</key>
             <key type="filename">../frames/Enemies1/Met/Run.png</key>
             <key type="filename">../frames/Enemies1/Penguin/Stand.png</key>
@@ -483,6 +485,7 @@
             <key type="filename">../frames/Enemies1/Cactus/small/idle.png</key>
             <key type="filename">../frames/Enemies1/Cactus/small/left.png</key>
             <key type="filename">../frames/Enemies1/Cactus/small/right.png</key>
+            <key type="filename">../frames/Enemies1/ShieldGuardBot/attack.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -823,8 +826,8 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Enemies1/IcicleTelly/spin.png</key>
-            <key type="filename">../frames/Enemies1/Jetto/bronze.png</key>
-            <key type="filename">../frames/Enemies1/Jetto/gray.png</key>
+            <key type="filename">../frames/Enemies1/Jetto/bronze/fly.png</key>
+            <key type="filename">../frames/Enemies1/Jetto/gray/fly.png</key>
             <key type="filename">../frames/Enemies1/LampeonBandito/stand.png</key>
             <key type="filename">../frames/Enemies1/TellySaucer/spin.png</key>
             <struct type="IndividualSpriteSettings">
@@ -1136,6 +1139,36 @@
                 <rect>40,8,80,16</rect>
                 <key>scale9Paddings</key>
                 <rect>40,8,80,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/ShieldGuardBot/frozen.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,6,16,12</rect>
+                <key>scale9Paddings</key>
+                <rect>8,6,16,12</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/ShieldGuardBot/turn.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,42,16,84</rect>
+                <key>scale9Paddings</key>
+                <rect>8,42,16,84</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

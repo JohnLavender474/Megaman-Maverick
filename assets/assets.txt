@@ -2153,8 +2153,10 @@ sprites/frames/Enemies1/Merserker/fly.png
 sprites/frames/Enemies1/Merserker/pre_chop_down.png
 sprites/frames/Enemies1/Merserker/chop_down.png
 sprites/frames/Enemies1/Merserker/on_ground.png
-sprites/frames/Enemies1/Jetto/gray.png
-sprites/frames/Enemies1/Jetto/bronze.png
+sprites/frames/Enemies1/Jetto/bronze/fall.png
+sprites/frames/Enemies1/Jetto/bronze/fly.png
+sprites/frames/Enemies1/Jetto/gray/fall.png
+sprites/frames/Enemies1/Jetto/gray/fly.png
 sprites/frames/Enemies1/BlueScrewie/Down.png
 sprites/frames/Enemies1/BlueScrewie/Drop.png
 sprites/frames/Enemies1/BlueScrewie/Shoot.png
@@ -2227,6 +2229,9 @@ sprites/frames/Enemies1/LumberJoe/cooldown_shielded.png
 sprites/frames/Enemies1/LumberJoe/stand_shielded.png
 sprites/frames/Enemies1/LumberJoe/burn.png
 sprites/frames/Enemies1/LumberJoe/burn_jump.png
+sprites/frames/Enemies1/ShieldGuardBot/attack.png
+sprites/frames/Enemies1/ShieldGuardBot/frozen.png
+sprites/frames/Enemies1/ShieldGuardBot/turn.png
 sprites/frames/Enemies1/Met/LayDown.png
 sprites/frames/Enemies1/Met/GetUp.png
 sprites/frames/Enemies1/Met/Run.png
@@ -3362,6 +3367,7 @@ tiled_maps/tmx/IntroStage.tmx
 tiled_maps/tmx/Test1.tmx
 tiled_maps/tmx/GlacierMan_16x14.tmx
 tiled_maps/tmx/InfernoMan.tmx
+tiled_maps/tmx/DesertMan_16x14_v4.tmx
 tiled_maps/tmx/DesertMan.tmx
 tiled_maps/tmx/Test7.tmx
 tiled_maps/tmx/InfernoMan_16x12.tmx

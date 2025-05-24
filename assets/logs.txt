@@ -1,1 +1,82 @@
-===== SESSION STARTED: 2025-05-22T19:24:52.316139611 =====
+===== SESSION STARTED: 2025-05-24T11:41:18.428631145 =====
+11:41:44 | DEBUG | Jetto | canSpawn(): canSpawn=true
+11:41:44 | DEBUG | Jetto | init()
+11:41:44 | DEBUG | Jetto | onSpawn(): spawnProps=Properties({
+	[bounds=[2976.0,400.0,32.0,32.0]]
+	[x=2976.0]
+	[height=32.0]
+	[cull_out_of_bounds=false]
+	[id=94]
+	[name=Jetto]
+	[y=400.0]
+	[width=32.0]
+})
+11:41:46 | DEBUG | Jetto | dropBomb()
+11:41:46 | DEBUG | Jetto | dropBomb()
+11:41:47 | DEBUG | Jetto | dropBomb()
+11:41:47 | DEBUG | Jetto | dropBomb()
+11:41:47 | DEBUG | Jetto | dropBomb()
+11:41:47 | DEBUG | Jetto | dropBomb()
+11:41:48 | DEBUG | Jetto | dropBomb()
+11:41:48 | DEBUG | Jetto | dropBomb()
+11:41:48 | DEBUG | Jetto | onDestroy()
+11:41:51 | DEBUG | Jetto | canSpawn(): canSpawn=true
+11:41:51 | DEBUG | Jetto | onSpawn(): spawnProps=Properties({
+	[bounds=[3520.0,400.0,32.0,32.0]]
+	[x=3520.0]
+	[height=32.0]
+	[cull_out_of_bounds=false]
+	[id=97]
+	[name=Jetto]
+	[y=400.0]
+	[width=32.0]
+})
+11:41:53 | DEBUG | Jetto | dropBomb()
+11:41:53 | DEBUG | Jetto | dropBomb()
+11:41:54 | DEBUG | Jetto | dropBomb()
+11:41:54 | DEBUG | Jetto | dropBomb()
+11:41:54 | DEBUG | Jetto | dropBomb()
+11:41:54 | DEBUG | Jetto | dropBomb()
+11:41:55 | DEBUG | Jetto | dropBomb()
+11:41:55 | DEBUG | Jetto | dropBomb()
+11:41:55 | DEBUG | Jetto | onDestroy()
+11:41:56 | DEBUG | Jetto | canSpawn(): canSpawn=true
+11:41:56 | DEBUG | Jetto | onSpawn(): spawnProps=Properties({
+	[bounds=[3904.0,400.0,32.0,32.0]]
+	[x=3904.0]
+	[height=32.0]
+	[cull_out_of_bounds=false]
+	[id=101]
+	[name=Jetto]
+	[y=400.0]
+	[width=32.0]
+})
+11:41:58 | DEBUG | Jetto | dropBomb()
+11:41:58 | DEBUG | Jetto | dropBomb()
+11:41:58 | DEBUG | Jetto | dropBomb()
+11:41:58 | DEBUG | Jetto | dropBomb()
+11:41:59 | DEBUG | Jetto | dropBomb()
+11:41:59 | DEBUG | Jetto | dropBomb()
+11:41:59 | DEBUG | Jetto | dropBomb()
+11:41:59 | DEBUG | Jetto | dropBomb()
+11:42:00 | DEBUG | Jetto | dropBomb()
+11:42:00 | DEBUG | Jetto | onDestroy()
+11:42:02 | DEBUG | Jetto | canSpawn(): canSpawn=true
+11:42:02 | DEBUG | Jetto | onSpawn(): spawnProps=Properties({
+	[bounds=[4416.0,400.0,32.0,32.0]]
+	[x=4416.0]
+	[height=32.0]
+	[cull_out_of_bounds=false]
+	[id=107]
+	[name=Jetto]
+	[y=400.0]
+	[width=32.0]
+})
+11:42:04 | DEBUG | Jetto | dropBomb()
+11:42:04 | DEBUG | Jetto | dropBomb()
+11:42:04 | DEBUG | Jetto | dropBomb()
+11:42:05 | DEBUG | Jetto | dropBomb()
+11:42:05 | DEBUG | Jetto | dropBomb()
+11:42:05 | DEBUG | Jetto | dropBomb()
+11:42:05 | DEBUG | Jetto | dropBomb()
+11:42:06 | DEBUG | Jetto | onDestroy()

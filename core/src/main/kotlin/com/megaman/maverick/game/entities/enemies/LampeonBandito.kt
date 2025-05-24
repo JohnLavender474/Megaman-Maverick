@@ -58,6 +58,7 @@ class LampeonBandito(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         const val TAG = "LampeonBandito"
 
         private const val SPRAY = "spray"
+
         private const val BULLETS = 5
         private const val BULLET_SPEED = 12f
 

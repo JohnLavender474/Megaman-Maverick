@@ -48,7 +48,7 @@ class LampeonBullet(game: MegamanMaverickGame) : AbstractProjectile(game), IFace
     companion object {
         const val TAG = "LampeonBullet"
         private val ANGLES = gdxArrayOf(80f, 85f, 90f, 95f, 100f)
-        private const val RANDOM_SPREAD = 2f
+        private const val RANDOM_SPREAD = 1f
         private val regKeys = (0..4).map { it.toString() }
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -69,8 +69,10 @@ class LampeonBullet(game: MegamanMaverickGame) : AbstractProjectile(game), IFace
 
     override fun canSpawn(spawnProps: Properties): Boolean {
         GameLogger.debug(TAG, "canSpawn(): spawnProps=$spawnProps")
+
         val index = spawnProps.getOrDefault(ConstKeys.INDEX, -1, Int::class)
         if (index < 0 || index > 4) return false
+
         return super.canSpawn(spawnProps)
     }
 
@@ -84,12 +86,15 @@ class LampeonBullet(game: MegamanMaverickGame) : AbstractProjectile(game), IFace
         if (index < 0 || index > 4) throw IllegalStateException("Index is invalid: $index")
 
         val angle = ANGLES[index] + 270f + UtilMethods.getRandom(-RANDOM_SPREAD, RANDOM_SPREAD)
+
         val speed = spawnProps.get(ConstKeys.SPEED, Float::class)!!
+
         val trajectory = GameObjectPools.fetch(Vector2::class)
             .set(1f, 0f)
             .setAngleDeg(angle)
             .scl(speed)
         if (isFacing(Facing.LEFT)) trajectory.x *= -1
+
         body.physics.velocity.set(trajectory)
 
         val position = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -118,9 +123,12 @@ class LampeonBullet(game: MegamanMaverickGame) : AbstractProjectile(game), IFace
 
     override fun explodeAndDie(vararg params: Any?) {
         GameLogger.debug(TAG, "explodeAndDie()")
+
         destroy()
+
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(props(ConstKeys.OWNER pairTo owner, ConstKeys.POSITION pairTo body.getCenter()))
+
         if (overlapsGameCamera()) playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
     }
 
@@ -136,7 +144,7 @@ class LampeonBullet(game: MegamanMaverickGame) : AbstractProjectile(game), IFace
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(
-            this, body, BodyFixtureDef.of(FixtureType.PROJECTILE, FixtureType.DAMAGER, FixtureType.SHIELD)
+            this, body, BodyFixtureDef.of(FixtureType.PROJECTILE, FixtureType.DAMAGER, /* FixtureType.SHIELD */)
         )
     }
 

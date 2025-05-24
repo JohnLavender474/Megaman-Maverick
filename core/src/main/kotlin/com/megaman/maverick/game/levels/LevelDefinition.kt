@@ -51,7 +51,7 @@ enum class LevelDefinition(
         type = LevelType.ROBOT_MASTER_LEVEL,
         mugshotAtlas = "FACES_1",
         mugshotRegion = "Desert Man",
-        tmxMapSource = "DesertMan_16x14_v3.tmx",
+        tmxMapSource = "DesertMan_16x14_v4.tmx",
         music = MusicAsset.CODY_O_QUINN_BATTLE_MAN_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),

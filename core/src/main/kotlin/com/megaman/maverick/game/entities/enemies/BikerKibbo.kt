@@ -44,6 +44,8 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.decorations.DustPuff
+import com.megaman.maverick.game.entities.utils.delayNextPossibleSpawn
+import com.megaman.maverick.game.entities.utils.isNextPossibleSpawnDelayed
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
@@ -72,14 +74,7 @@ class BikerKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         )
         private val regions = ObjectMap<String, TextureRegion>()
 
-        private const val SPAWN_BUFFER = 1f
-
-        private fun delayNextPossibleSpawn(biker: BikerKibbo) {
-            val game = biker.game
-            val id = biker.mapObjectId
-            val timer = Timer(SPAWN_BUFFER).setRunOnFinished { game.updatables.remove("$TAG/$id") }
-            game.updatables.put("$TAG/$id", timer)
-        }
+        private const val NEXT_POSSIBLE_SPAWN_DELAY = 1f
     }
 
     override lateinit var facing: Facing
@@ -101,8 +96,11 @@ class BikerKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun canSpawn(spawnProps: Properties): Boolean {
         val id = spawnProps.get(ConstKeys.ID, Int::class)!!
-        val timer = game.updatables.get("$TAG/$id") as Timer?
-        return timer == null || timer.isFinished()
+
+        val canSpawn = !isNextPossibleSpawnDelayed(game, TAG, id)
+        GameLogger.debug(TAG, "canSpawn(): canSpawn=$canSpawn")
+
+        return canSpawn
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -125,8 +123,10 @@ class BikerKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        delayNextPossibleSpawn(this)
+
         if (overlapsGameCamera() && isHealthDepleted()) explode()
+
+        delayNextPossibleSpawn(game, TAG, mapObjectId, NEXT_POSSIBLE_SPAWN_DELAY)
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
