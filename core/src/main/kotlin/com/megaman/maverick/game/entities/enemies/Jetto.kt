@@ -57,7 +57,7 @@ class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
     companion object {
         const val TAG = "Jetto"
 
-        private const val SPEED = 14f
+        private const val SPEED = 12f
 
         private const val CULL_TIME = 0.25f
 

@@ -175,6 +175,7 @@ comprehensive listing of the credits for the artwork used in this game.
   - Cactus
   - Lampeon Bandito
   - Scooper Pete
+  - Mocking Bit & Mocking Byte
 - [Nachtyama (Nakiyama)](https://youtube.com/@blueshot333)
   - Precious Cube
 - [Balloon Cart](https://balloon-cart.itch.io)
@@ -206,6 +207,7 @@ comprehensive listing of the credits for the artwork used in this game.
     - Biker Kibbo
   - [Random Enemies Set 8](https://www.deviantart.com/megared225/art/Random-Enemies-Set-8-543327890)
     - Cool Telly
+    - Jetto
     - Steam Roller Man
   - [Random Enemies Set 9](https://www.deviantart.com/megared225/art/Random-Enemy-Sprites-Set-9-557171615):
     - Fire Dispensenator

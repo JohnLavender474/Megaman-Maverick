@@ -14,7 +14,6 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.isAny
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
@@ -23,7 +22,6 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -43,9 +41,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.projectiles.ArigockBall
-import com.megaman.maverick.game.entities.projectiles.LampeonBullet
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -55,7 +51,7 @@ class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     companion object {
         const val TAG = "Arigock"
         private const val SHOOTING_DUR = 1.25f
-        private const val CLOSED_DUR = 1.5f
+        private const val CLOSED_DUR = 1f
         private const val BALL_Y_FORCE = 12f
         private val shotImpulses = gdxArrayOf(2.5f, -2.5f, 4f, -4f)
         private val regions = ObjectMap<String, TextureRegion>()
@@ -93,9 +89,6 @@ class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
         shootingTimer.setToEnd()
         closedTimer.reset()
     }
-
-    override fun canBeDamagedBy(damager: IDamager) =
-        damager.isAny(LampeonBullet::class, Explosion::class) || super.canBeDamagedBy(damager)
 
     private fun shoot(xImpulseIndex: Int) {
         GameLogger.debug(TAG, "shoot(): xImpulseIndex=$xImpulseIndex")
@@ -152,9 +145,9 @@ class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
         sprite.setSize(2f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
         component.putUpdateFunction { _, _ ->
+            sprite.hidden = damageBlink
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
-            sprite.hidden = damageBlink
         }
         return component
     }
@@ -163,7 +156,7 @@ class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
         val keySupplier: (String?) -> String? = { if (!shootingTimer.isFinished()) "shooting" else "closed" }
         val animations = objectMapOf<String, IAnimation>(
             "shooting" pairTo Animation(regions.get("shooting"), 2, 1, 0.1f, true),
-            "closed" pairTo Animation(regions.get("closed"), 2, 1, gdxArrayOf(1f, 0.15f), true)
+            "closed" pairTo Animation(regions.get("closed"), 2, 1, gdxArrayOf(0.5f, 0.25f), true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
