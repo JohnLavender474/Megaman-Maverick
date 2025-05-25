@@ -39,6 +39,8 @@ import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.misc.FacingUtils
+import com.megaman.maverick.game.utils.misc.HeadUtils
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
@@ -53,6 +55,7 @@ class CartV2(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimated
         private const val FRICTION_Y = 1f
 
         private const val MAX_VEL_X = 8f
+        private const val MAX_VEL_Y = 6f
         private const val IMPULSE_X = 8f
 
         private var regions = ObjectMap<String, TextureRegion>()
@@ -62,14 +65,11 @@ class CartV2(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimated
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
             gdxArrayOf("move", "idle").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
-
         super.init()
-
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineCullablesComponent())
@@ -86,6 +86,7 @@ class CartV2(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimated
         val copyProps = spawnProps.copy()
         copyProps.put(ConstKeys.BOUNDS, bounds)
         copyProps.put(ConstKeys.GRAVITY_ON, true)
+        copyProps.put("${ConstKeys.FEET}_${ConstKeys.SOUND}", false)
 
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$copyProps")
 
@@ -97,6 +98,12 @@ class CartV2(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimated
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+    }
+
+    override fun swapFacing() {
+        GameLogger.debug(TAG, "swapFacing")
+        super.swapFacing()
+        body.physics.velocity.x *= -1
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -113,6 +120,7 @@ class CartV2(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimated
         val body = component.body
         body.physics.defaultFrictionOnSelf.x = FRICTION_X
         body.physics.defaultFrictionOnSelf.y = FRICTION_Y
+        body.physics.velocityClamp.set(MAX_VEL_X, MAX_VEL_Y).scl(ConstVals.PPM.toFloat())
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
@@ -130,7 +138,7 @@ class CartV2(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimated
         debugShapeSuppliers.add { headFixture }
 
         val leftFixture =
-            Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.25f * ConstVals.PPM))
+            Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.25f * ConstVals.PPM))
         leftFixture.setEntity(this)
         leftFixture.bodyAttachmentPosition = Position.CENTER_LEFT
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
@@ -142,7 +150,7 @@ class CartV2(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimated
         debugShapeSuppliers.add { leftFixture }
 
         val rightFixture =
-            Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.25f * ConstVals.PPM))
+            Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.25f * ConstVals.PPM))
         rightFixture.setEntity(this)
         rightFixture.bodyAttachmentPosition = Position.CENTER_RIGHT
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
@@ -156,22 +164,19 @@ class CartV2(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimated
         body.preProcess.put(ConstKeys.DEFAULT) {
             feetFixture.drawingColor = if (body.isSensing(BodySense.FEET_ON_GROUND)) Color.GREEN else Color.DARK_GRAY
 
-            if (body.physics.velocity.x > MAX_VEL_X * ConstVals.PPM)
-                body.physics.velocity.x = MAX_VEL_X * ConstVals.PPM
-            else if (body.physics.velocity.x < -MAX_VEL_X * ConstVals.PPM)
-                body.physics.velocity.x = -MAX_VEL_X * ConstVals.PPM
-
             if (body.isSensing(BodySense.FEET_ON_GROUND)) {
                 body.physics.gravity.y = 0f
                 body.physics.velocity.y = 0f
             } else body.physics.gravity.y = GRAVITY * ConstVals.PPM
 
-            if (body.physics.velocity.y > 0f && body.isSensing(BodySense.HEAD_TOUCHING_BLOCK))
-                body.physics.velocity.y = 0f
+            HeadUtils.stopJumpingIfHitHead(body)
 
+            if (FacingUtils.isFacingBlock(this)) swapFacing()
+            /*
             if ((body.physics.velocity.x > 0f && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) ||
                 (body.physics.velocity.x < 0f && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT))
             ) body.physics.velocity.x = 0f
+             */
         }
 
         return component

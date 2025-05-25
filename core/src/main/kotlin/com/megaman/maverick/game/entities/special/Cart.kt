@@ -28,6 +28,7 @@ import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
@@ -43,6 +44,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
 class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
@@ -64,12 +66,14 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     override lateinit var facing: Facing
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.SPECIALS_1.source, TAG)
         super.init()
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
-        addComponent(defineAnimationsComponent())
         addComponent(defineCullablesComponent())
+        addComponent(defineAnimationsComponent())
+        addComponent(defineUpdatablesComponent())
     }
 
     override fun canSpawn(spawnProps: Properties): Boolean {
@@ -93,6 +97,10 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, ConstKeys.RIGHT, String::class).uppercase())
     }
 
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
+        if (FacingUtils.isFacingBlock(this)) swapFacing()
+    })
+
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM)
@@ -108,14 +116,6 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         cartFixture.putProperty(ConstKeys.ENTITY, this)
         body.addFixture(cartFixture)
         debugShapes.add { cartFixture }
-
-        val bodyFixture =
-            Fixture(body, FixtureType.BODY, GameRectangle().setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM))
-        body.addFixture(bodyFixture)
-
-        val shieldFixture =
-            Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(1.25f * ConstVals.PPM, 0.75f * ConstVals.PPM))
-        body.addFixture(shieldFixture)
 
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
@@ -135,14 +135,16 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
         body.addFixture(feetFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.physics.gravity.y =
-                if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY * ConstVals.PPM else GRAVITY * ConstVals.PPM
+            body.physics.gravity.y = when {
+                body.isSensing(BodySense.FEET_ON_GROUND) -> GROUND_GRAVITY
+                else -> GRAVITY
+            } * ConstVals.PPM
         }
         body.forEachFixture { fixture -> fixture.putProperty(ConstKeys.DEATH_LISTENER, false) }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.BODY, FixtureType.SHIELD))
     }
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
