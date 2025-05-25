@@ -8,6 +8,7 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.damage.IDamager
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
+import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.MagmaExplosion
 import com.megaman.maverick.game.entities.hazards.DrippingToxicGoop
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
@@ -39,7 +40,9 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             SmallIceCube::class pairTo dmgNeg(3),
             DrippingToxicGoop::class pairTo dmgNeg(1),
             Asteroid::class pairTo dmgNeg(10),
-            PreciousGem::class pairTo dmgNeg(10)
+            PreciousGem::class pairTo dmgNeg(10),
+            LampeonBullet::class pairTo dmgNeg(5),
+            Explosion::class pairTo dmgNeg(5)
         )
 
         private val MEDIUM_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -61,7 +64,9 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             SmallIceCube::class pairTo dmgNeg(5),
             DrippingToxicGoop::class pairTo dmgNeg(1),
             Asteroid::class pairTo dmgNeg(20),
-            PreciousGem::class pairTo dmgNeg(20)
+            PreciousGem::class pairTo dmgNeg(20),
+            LampeonBullet::class pairTo dmgNeg(15),
+            Explosion::class pairTo dmgNeg(15)
         )
 
         private val SMALL_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -83,7 +88,9 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             SmallIceCube::class pairTo dmgNeg(15),
             DrippingToxicGoop::class pairTo dmgNeg(1),
             Asteroid::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-            PreciousGem::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
+            PreciousGem::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            LampeonBullet::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            Explosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
         )
 
         // damage is determined by the damageable's size instead of the damager's size

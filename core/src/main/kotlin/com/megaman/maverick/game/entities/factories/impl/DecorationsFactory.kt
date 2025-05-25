@@ -63,7 +63,7 @@ class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory(
         pools.put(RAIN_FALL, GameEntityPoolCreator.create { RainFall(game) })
         pools.put(DRIPPING_TOXIC_GOOP, GameEntityPoolCreator.create { DrippingToxicGoop(game) })
         pools.put(TOXIC_WATERFALL, GameEntityPoolCreator.create { ToxicWaterfall(game) })
-        pools.put(LIGHT_SOURCE, GameEntityPoolCreator.create { LightSource(game) })
+        pools.put(LIGHT_SOURCE, GameEntityPoolCreator.create { LightSourceEntity(game) })
         pools.put(LANTERN, GameEntityPoolCreator.create { Lantern(game) })
         pools.put(SPACE_SATELLITE, GameEntityPoolCreator.create { SpaceSatellite(game) })
         pools.put(MEGAMAN_TRAIL_SPRITE, GameEntityPoolCreator.create { MegamanTrailSprite(game) })

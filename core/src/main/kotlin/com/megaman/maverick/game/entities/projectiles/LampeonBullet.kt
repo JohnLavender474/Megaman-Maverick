@@ -16,7 +16,6 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.IGameShape2D
-import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -37,8 +36,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.explosions.Explosion
+import com.megaman.maverick.game.entities.explosions.Disintegration
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
@@ -47,7 +45,7 @@ class LampeonBullet(game: MegamanMaverickGame) : AbstractProjectile(game), IFace
 
     companion object {
         const val TAG = "LampeonBullet"
-        private val ANGLES = gdxArrayOf(80f, 85f, 90f, 95f, 100f)
+        private val ANGLES = gdxArrayOf(70f, 80f, 90f, 100f, 110f)
         private const val RANDOM_SPREAD = 1f
         private val regKeys = (0..4).map { it.toString() }
         private val regions = ObjectMap<String, TextureRegion>()
@@ -108,7 +106,7 @@ class LampeonBullet(game: MegamanMaverickGame) : AbstractProjectile(game), IFace
         super.onDestroy()
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
+    // override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
@@ -126,10 +124,15 @@ class LampeonBullet(game: MegamanMaverickGame) : AbstractProjectile(game), IFace
 
         destroy()
 
+        val disintegration = MegaEntityFactory.fetch(Disintegration::class)!!
+        disintegration.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+
+        /*
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(props(ConstKeys.OWNER pairTo owner, ConstKeys.POSITION pairTo body.getCenter()))
 
         if (overlapsGameCamera()) playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
+         */
     }
 
     override fun defineBodyComponent(): BodyComponent {

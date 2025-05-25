@@ -35,14 +35,14 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.ILightSourceEntity
+import com.megaman.maverick.game.entities.contracts.ILightSource
 import com.megaman.maverick.game.entities.explosions.ElecExplosion
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.pooledCopy
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.*
 
-class ElecDevilBodyPiece(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, ILightSourceEntity {
+class ElecDevilBodyPiece(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, ILightSource {
 
     companion object {
         const val TAG = "ElecDevilBodyPiece"

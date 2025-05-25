@@ -40,6 +40,7 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.projectiles.DeathBomb
@@ -56,12 +57,12 @@ class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
     companion object {
         const val TAG = "Jetto"
 
-        private const val SPEED = 12f
+        private const val SPEED = 14f
 
-        private const val CULL_TIME = 0.5f
+        private const val CULL_TIME = 0.25f
 
         private const val BOMB_DROP_Y = -8f
-        private const val DROP_BOMB_DELAY = 0.25f
+        private const val DROP_BOMB_DELAY = 0.2f
 
         private const val FALL_EXPLODE_DELAY = 0.1f
         private const val FALL_BLINK_DELAY = 0.05f
@@ -112,6 +113,8 @@ class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
     }
 
     override fun canSpawn(spawnProps: Properties): Boolean {
+        if (!MegaGameEntities.getOfTag(TAG).isEmpty) return false
+
         val id = spawnProps.get(ConstKeys.ID, Int::class)!!
 
         val canSpawn = !isNextPossibleSpawnDelayed(game, TAG, id)
@@ -236,7 +239,7 @@ class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        val hitOtherJetto: () -> Unit = { state = JettoState.FALL }
+        val hitFunction: () -> Unit = { state = JettoState.FALL }
 
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.75f * ConstVals.PPM))
@@ -246,7 +249,7 @@ class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
                     ProcessState.BEGIN,
                     ProcessState.CONTINUE
                 ) && entity is Jetto
-            ) hitOtherJetto.invoke()
+            ) hitFunction.invoke()
         }
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         body.addFixture(leftFixture)
@@ -261,7 +264,7 @@ class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
                     ProcessState.BEGIN,
                     ProcessState.CONTINUE
                 ) && entity is Jetto
-            ) hitOtherJetto.invoke()
+            ) hitFunction.invoke()
         }
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         body.addFixture(rightFixture)
@@ -269,7 +272,7 @@ class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
         debugShapes.add { rightFixture }
 
         val feetFixture =
-            Fixture(body, FixtureType.FEET, GameRectangle().setSize(2.75f * ConstVals.PPM, 0.1f * ConstVals.PPM))
+            Fixture(body, FixtureType.FEET, GameRectangle().setSize(2.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         body.addFixture(feetFixture)
         feetFixture.drawingColor = Color.GREEN
@@ -277,8 +280,8 @@ class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.gravity.y = if (state == JettoState.FALL) FALL_GRAVITY * ConstVals.PPM else 0f
-
-            if (FacingUtils.isFacingBlock(this) || body.isSensing(BodySense.FEET_ON_GROUND)) {
+            if (FacingUtils.isFacingBlock(this)) state = JettoState.FALL
+            if (body.isSensing(BodySense.FEET_ON_GROUND)) {
                 explode()
                 destroy()
             }

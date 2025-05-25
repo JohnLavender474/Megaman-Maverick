@@ -39,11 +39,17 @@ class BouncingPebble(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     companion object {
         const val TAG = "BouncingPebble"
+
         private const val BOUNCE_VEL_SCALAR = 0.75f
         private const val DEFAULT_MAX_BOUNCES = 2
+
         private const val GRAVITY = -0.1f
+
         private const val MAX_CULL_TIME = 2f
-        private const val ROTATIONS_PER_SEC = 2f
+
+        private const val SPRITE_ROTATION = 90f
+        private const val SPRITE_ROTATE_DELAY = 0.1f
+
         private var region: TextureRegion? = null
     }
 
@@ -51,6 +57,8 @@ class BouncingPebble(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     private var maxBounces = DEFAULT_MAX_BOUNCES
     private var bounces = 0
+
+    private val spriteRotDelay = Timer(SPRITE_ROTATE_DELAY)
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -73,6 +81,8 @@ class BouncingPebble(game: MegamanMaverickGame) : AbstractProjectile(game) {
         bounces = 0
 
         cullTimer.reset()
+
+        spriteRotDelay.reset()
     }
 
     override fun onDestroy() {
@@ -170,7 +180,11 @@ class BouncingPebble(game: MegamanMaverickGame) : AbstractProjectile(game) {
         .updatable { delta, sprite ->
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
-            sprite.rotation += ROTATIONS_PER_SEC * 360f * delta
+            spriteRotDelay.update(delta)
+            if (spriteRotDelay.isFinished()) {
+                sprite.rotation += SPRITE_ROTATION
+                spriteRotDelay.reset()
+            }
         }
         .build()
 }

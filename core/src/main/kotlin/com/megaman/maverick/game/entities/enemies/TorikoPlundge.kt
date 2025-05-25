@@ -202,7 +202,6 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
 
     private fun onStartPlunge() {
         val block = children[0] as Block
-
         block.body.physics.velocity.let { velocity ->
             when (direction) {
                 Direction.UP -> velocity.set(0f, -PLUNGE_SPEED)
@@ -297,8 +296,11 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        val triggerFixture =
-            Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.25f * ConstVals.PPM))
+        val triggerFixture = Fixture(
+            body,
+            FixtureType.CONSUMER,
+            GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.5f * ConstVals.PPM)
+        )
         triggerFixture.setFilter filter@{ fixture ->
             return@filter when (direction) {
                 Direction.UP -> fixture.getType() == FixtureType.FEET

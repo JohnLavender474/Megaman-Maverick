@@ -85,6 +85,7 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     private var centerX = 0f
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             gdxArrayOf("ride", "shake").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }

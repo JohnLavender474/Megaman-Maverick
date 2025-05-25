@@ -41,7 +41,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.bosses.ElecDevilConstants.BODY_SPRITE_FACING_LEFT_OFFSET_X
 import com.megaman.maverick.game.entities.bosses.ElecDevilConstants.BODY_SPRITE_FACING_RIGHT_OFFSET_X
-import com.megaman.maverick.game.entities.contracts.ILightSourceEntity
+import com.megaman.maverick.game.entities.contracts.ILightSource
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -52,7 +52,7 @@ import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 
 class ElecDevilBody(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    IActivatable, IFaceable, IDamager, IOwnable<ElecDevil>, ILightSourceEntity {
+    IActivatable, IFaceable, IDamager, IOwnable<ElecDevil>, ILightSource {
 
     companion object {
         const val TAG = "ElecDevilBody"

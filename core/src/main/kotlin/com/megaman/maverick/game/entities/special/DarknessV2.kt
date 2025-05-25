@@ -52,25 +52,13 @@ import kotlin.reflect.KClass
 class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IEventListener,
     IGameShapeOverlappable {
 
-    private class BlackTile(val bounds: GameRectangle, var step: Float = 1f, var currentAlpha: Float = 1f) {
-
-        fun update(delta: Float, darken: Boolean) {
-            currentAlpha += (if (darken) step else -step) * delta
-            currentAlpha = currentAlpha.coerceIn(MIN_ALPHA, MAX_ALPHA)
-        }
-
-        fun reset(dark: Boolean) {
-            currentAlpha = if (dark) MAX_ALPHA else MIN_ALPHA
-        }
-    }
-
-    private data class LightSourceDef(var center: Vector2, var radius: Int, var radiance: Float)
-
     companion object {
         const val TAG = "DarknessV2"
 
         const val MIN_ALPHA = 0f
         const val MAX_ALPHA = 1f
+
+        private const val STEP_SCALAR = 2f
 
         private const val CAM_BOUNDS_BUFFER = 2f
 
@@ -125,6 +113,24 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         }
     }
 
+    private class BlackTile(
+        val bounds: GameRectangle,
+        var step: Float = STEP_SCALAR,
+        var currentAlpha: Float = 1f
+    ) {
+
+        fun update(delta: Float, darken: Boolean) {
+            currentAlpha += (if (darken) step else -step) * delta
+            currentAlpha = currentAlpha.coerceIn(MIN_ALPHA, MAX_ALPHA)
+        }
+
+        fun reset(dark: Boolean) {
+            currentAlpha = if (dark) MAX_ALPHA else MIN_ALPHA
+        }
+    }
+
+    private data class LightSourceDef(var center: Vector2, var radius: Int, var radiance: Float)
+
     override val eventKeyMask = objectSetOf<Any>(
         EventType.PLAYER_READY,
         EventType.BEGIN_ROOM_TRANS,
@@ -144,7 +150,8 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     private lateinit var allTiles: Matrix<BlackTile>
     private lateinit var tileSpritesPool: Pool<GameSprite>
     private lateinit var lightSourcePool: Pool<LightSourceDef>
-    private lateinit var bounds: GameRectangle
+
+    private val bounds = GameRectangle()
 
     private var dividedPPM = 0f
     private var darkMode = false
@@ -179,7 +186,8 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         spawnProps.get(ConstKeys.ROOM, String::class)!!.split(",").forEach { t -> rooms.add(t) }
         GameLogger.debug(TAG, "onSpawn(): key=$key, rooms=$rooms")
 
-        bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
+
         val ppmDivisor =
             spawnProps.getOrDefault("${ConstKeys.PPM}_${ConstKeys.DIVISOR}", DEFAULT_PPM_DIVISOR, Int::class)
         dividedPPM = ConstVals.PPM.toFloat() / ppmDivisor
@@ -262,7 +270,6 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                     lightSourceDef.center = center
                     lightSourceDef.radius = radius
                     lightSourceDef.radiance = radiance
-
                     lightSourceQueue.addLast(lightSourceDef)
                 }
             }
@@ -284,7 +291,6 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             val tileBounds = GameRectangle(posX, posY, dividedPPM, dividedPPM)
             allTiles[x, y] = BlackTile(tileBounds)
         }
-
         return allTiles[x, y]!!
     }
 
@@ -296,7 +302,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             val lightSourceDef = lightSourcePool.fetch()
 
             LIGHT_UP_ENTITIES[entity::class].invoke(entity).let { (first, second) ->
-                lightSourceDef.center = entity.body.getCenter()
+                lightSourceDef.center = entity.body.getCenter(false)
                 lightSourceDef.radius = first * ConstVals.PPM
                 lightSourceDef.radiance = second
             }
@@ -315,7 +321,6 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         val (minX, minY, maxX, maxY) = getMinsAndMaxes(reusableRect)
         for (x in minX..maxX) for (y in minY..maxY) {
             val tile = getTile(x, y)
-
             if (reusableCircle.overlaps(tile.bounds)) {
                 val alpha = ((tile.bounds.getCenter().dst(center) / radius) / radiance)
                 tile.currentAlpha = min(alpha.coerceIn(MIN_ALPHA, MAX_ALPHA), tile.currentAlpha)

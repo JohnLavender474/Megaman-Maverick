@@ -1,102 +1,102 @@
 Backgrounds6.png
-size: 1774, 1416
+size: 1770, 1412
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 CrystalBKG
   rotate: false
-  xy: 516, 2
+  xy: 514, 0
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 Desert/Canyon
   rotate: false
-  xy: 774, 2
+  xy: 772, 0
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 Desert/NoSunSky
   rotate: false
-  xy: 1032, 2
+  xy: 1030, 0
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 Desert/SunSky
   rotate: false
-  xy: 1354, 694
+  xy: 1352, 692
   size: 256, 672
   orig: 256, 672
   offset: 0, 0
   index: -1
 EarthBackdrop
   rotate: false
-  xy: 2, 2
+  xy: 0, 0
   size: 512, 160
   orig: 512, 160
   offset: 0, 0
   index: -1
 InfernoBKG
   rotate: false
-  xy: 948, 244
+  xy: 946, 242
   size: 256, 448
   orig: 256, 448
   offset: 0, 0
   index: -1
 PunkCity
   rotate: false
-  xy: 1290, 2
+  xy: 1288, 0
   size: 160, 240
   orig: 160, 240
   offset: 0, 0
   index: -1
 PunkCityAnimated
   rotate: false
-  xy: 516, 694
+  xy: 514, 692
   size: 320, 480
   orig: 320, 480
   offset: 0, 0
   index: -1
 PunkCityAnimated_3frames
   rotate: false
-  xy: 1612, 694
+  xy: 1610, 692
   size: 160, 720
   orig: 160, 720
   offset: 0, 0
   index: -1
 Space
   rotate: false
-  xy: 1206, 244
+  xy: 1204, 242
   size: 256, 448
   orig: 256, 448
   offset: 0, 0
   index: -1
 SunriseHills
   rotate: false
-  xy: 838, 694
+  xy: 836, 692
   size: 256, 512
   orig: 256, 512
   offset: 0, 0
   index: -1
 SunsetHills
   rotate: false
-  xy: 1096, 694
+  xy: 1094, 692
   size: 256, 512
   orig: 256, 512
   offset: 0, 0
   index: -1
 UndergroundPipes
   rotate: false
-  xy: 2, 244
+  xy: 0, 242
   size: 944, 240
   orig: 944, 240
   offset: 0, 0
   index: -1
 Wily1
   rotate: false
-  xy: 2, 694
+  xy: 0, 692
   size: 512, 448
   orig: 512, 448
   offset: 0, 0

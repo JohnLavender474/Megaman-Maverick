@@ -8,13 +8,13 @@ import com.mega.game.engine.events.Event
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.entities.contracts.ILightSourceEntity
+import com.megaman.maverick.game.entities.contracts.ILightSource
 import com.megaman.maverick.game.events.EventType
 
 object LightSourceUtils {
 
     fun sendLightSourceEvent(
-        game: MegamanMaverickGame, lightSource: ILightSourceEntity
+        game: MegamanMaverickGame, lightSource: ILightSource
     ) = sendLightSourceEvent(
         game,
         lightSource.lightSourceKeys,

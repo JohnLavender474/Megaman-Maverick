@@ -21,16 +21,17 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 
-class Lantern(game: MegamanMaverickGame) : LightSource(game), ISpritesEntity, IAnimatedEntity {
+class Lantern(game: MegamanMaverickGame) : LightSourceEntity(game), ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "Lantern"
-        const val RADIUS = 6
+        const val RADIUS = 4
         const val RADIANCE = 1.25f
         private var region: TextureRegion? = null
     }
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()
         addComponent(defineSpritesComponent())
@@ -58,5 +59,4 @@ class Lantern(game: MegamanMaverickGame) : LightSource(game), ISpritesEntity, IA
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
-
 }

@@ -170,7 +170,6 @@ abstract class AbstractEnemy(
     override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when {
         damager is IOwnable<*> && damager.owner == megaman && megaman.hasEnhancement(MegaEnhancement.DAMAGE_INCREASE) ->
             MegaEnhancement.scaleDamage(baseDamage, MegaEnhancement.ENEMY_DAMAGE_INCREASE_SCALAR)
-
         else -> baseDamage
     }
 

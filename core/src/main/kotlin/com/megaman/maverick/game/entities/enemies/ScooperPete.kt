@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
@@ -40,13 +41,15 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.ILightSource
 import com.megaman.maverick.game.entities.projectiles.GroundPebble
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
+import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.*
 
-class ScooperPete(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class ScooperPete(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable, ILightSource {
 
     companion object {
         const val TAG = "ScooperPete"
@@ -62,12 +65,14 @@ class ScooperPete(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         private const val THROW_OFFSET_Y = 0.1f
         private val THROW_IMPULSES = gdxArrayOf(
             Vector2(20f, 2f),
-            Vector2(16f, 4f),
+            Vector2(15f, 4f),
             Vector2(10f, 8f),
-            Vector2(4f, 12f),
-            Vector2(2f, 16f)
+            Vector2(5f, 12f)
         )
-        private const val THROW_IMPULSE_VAR = 2f
+        private const val THROW_IMPULSE_VAR = 1f
+
+        private const val RADIUS = 4
+        private const val RADIANCE = 2f
 
         private val animDefs = orderedMapOf(
             "idle" pairTo AnimationDef(2, 1, 0.05f, true),
@@ -80,12 +85,19 @@ class ScooperPete(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
 
     override lateinit var facing: Facing
 
+    override val lightSourceKeys = ObjectSet<Int>()
+    override val lightSourceCenter: Vector2
+        get() = body.getCenter()
+    override var lightSourceRadius = RADIUS
+    override var lightSourceRadiance = RADIANCE
+
     private val loop = Loop(ProspectorJoeState.entries.toGdxArray())
     private val currentState: ProspectorJoeState
         get() = loop.getCurrent()
     private val stateTimers = orderedMapOf(
         ProspectorJoeState.IDLE pairTo Timer(IDLE_DUR),
-        ProspectorJoeState.DIG pairTo Timer(DIG_DUR).addRunnable(TimeMarkedRunnable(THROW_TIME) { throwDirt() })
+        ProspectorJoeState.DIG pairTo Timer(DIG_DUR)
+            .addRunnable(TimeMarkedRunnable(THROW_TIME) { throwDirt() })
     )
     private val currentStateTimer: Timer
         get() = stateTimers[currentState]
@@ -116,11 +128,20 @@ class ScooperPete(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         stateTimers.values().forEach { it.reset() }
 
         FacingUtils.setFacingOf(this)
+
+        lightSourceKeys.addAll(
+            spawnProps.get(ConstKeys.KEYS, String::class)!!
+                .replace("\\s+", "")
+                .split(",")
+                .map { it.toInt() }
+                .toObjectSet()
+        )
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        lightSourceKeys.clear()
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -133,6 +154,8 @@ class ScooperPete(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
                 loop.next()
                 currentStateTimer.reset()
             }
+
+            LightSourceUtils.sendLightSourceEvent(game, this)
         }
     }
 

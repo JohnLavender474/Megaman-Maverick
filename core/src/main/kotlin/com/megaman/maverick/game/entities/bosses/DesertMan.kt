@@ -46,7 +46,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.ILightSourceEntity
+import com.megaman.maverick.game.entities.contracts.ILightSource
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.Splash.SplashType
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -60,7 +60,7 @@ import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, ILightSourceEntity, IFaceable {
+class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, ILightSource, IFaceable {
 
     companion object {
         const val TAG = "DesertMan"

@@ -37,7 +37,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IBossListener
-import com.megaman.maverick.game.entities.contracts.ILightSourceEntity
+import com.megaman.maverick.game.entities.contracts.ILightSource
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -48,7 +48,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
 // implements `IBossListener` to ensure is destroyed after 2nd Desert Man fight
-class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), ILightSourceEntity, IAnimatedEntity, IMotionEntity,
+class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), ILightSource, IAnimatedEntity, IMotionEntity,
     IBossListener, IEventListener {
 
     companion object {

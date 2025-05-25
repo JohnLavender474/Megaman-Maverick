@@ -15,7 +15,7 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.ILightSourceEntity
+import com.megaman.maverick.game.entities.contracts.ILightSource
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
@@ -23,7 +23,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
 
-open class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ILightSourceEntity, ICullableEntity {
+open class LightSourceEntity(game: MegamanMaverickGame) : MegaGameEntity(game), ILightSource, ICullableEntity {
 
     companion object {
         const val TAG = "LightSource"
@@ -34,14 +34,17 @@ open class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ILight
     override val lightSourceKeys = ObjectSet<Int>()
     override val lightSourceCenter: Vector2
         get() = bounds.getCenter()
-    override var lightSourceRadiance = 0f
     override var lightSourceRadius = 0
+    override var lightSourceRadiance = 0f
 
     protected lateinit var type: String
-    protected lateinit var bounds: GameRectangle
+
     protected lateinit var spritePos: Position
 
+    protected val bounds = GameRectangle()
+
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         super.init()
         addComponent(CullablesComponent())
         addComponent(defineUpdatablesComponent())
@@ -51,7 +54,7 @@ open class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ILight
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
         lightSourceKeys.addAll(
             spawnProps.get(ConstKeys.KEYS, String::class)!!
                 .replace("\\s+", "")
@@ -59,8 +62,8 @@ open class LightSource(game: MegamanMaverickGame) : MegaGameEntity(game), ILight
                 .map { it.toInt() }
                 .toObjectSet()
         )
-        lightSourceRadiance = spawnProps.getOrDefault(ConstKeys.RADIANCE, DEFAULT_RADIANCE, Float::class)
         lightSourceRadius = spawnProps.getOrDefault(ConstKeys.RADIUS, DEFAULT_RADIUS, Int::class)
+        lightSourceRadiance = spawnProps.getOrDefault(ConstKeys.RADIANCE, DEFAULT_RADIANCE, Float::class)
 
         val rawSpritePos = spawnProps.get("${ConstKeys.SPRITE}_${ConstKeys.POSITION}")
         spritePos = when (rawSpritePos) {

@@ -74,7 +74,7 @@ class GroundPebble(game: MegamanMaverickGame) : AbstractHealthEntity(game, dmgDu
         )
     )
 
-    private val spriteRotationDelay = Timer(SPRITE_ROTATE_DELAY)
+    private val spriteRotDelay = Timer(SPRITE_ROTATE_DELAY)
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -98,7 +98,7 @@ class GroundPebble(game: MegamanMaverickGame) : AbstractHealthEntity(game, dmgDu
         val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)!!
         body.physics.velocity.set(impulse)
 
-        spriteRotationDelay.reset()
+        spriteRotDelay.reset()
     }
 
     override fun onDestroy() {
@@ -112,9 +112,7 @@ class GroundPebble(game: MegamanMaverickGame) : AbstractHealthEntity(game, dmgDu
         return super.takeDamageFrom(damager)
     }
 
-    override fun hitBlock(
-        blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D
-    ) = explodeAndDie()
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
     /*
     override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
@@ -161,10 +159,10 @@ class GroundPebble(game: MegamanMaverickGame) : AbstractHealthEntity(game, dmgDu
 
             sprite.hidden = damageBlink
 
-            spriteRotationDelay.update(delta)
-            if (spriteRotationDelay.isFinished()) {
+            spriteRotDelay.update(delta)
+            if (spriteRotDelay.isFinished()) {
                 sprite.rotation += SPRITE_ROTATION
-                spriteRotationDelay.reset()
+                spriteRotDelay.reset()
             }
         }
         .build()

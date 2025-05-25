@@ -183,15 +183,11 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 startX = it.rectangle.x,
                 startY = it.rectangle.y,
                 model = params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "SunriseHills"),
-                modelWidth = it.rectangle.width,
-                modelHeight = it.rectangle.height,
+                modelWidth = 16f * ConstVals.PPM,
+                modelHeight = 32f * ConstVals.PPM,
                 rows = 1,
                 columns = 50,
                 priority = DrawingPriority(DrawingSection.BACKGROUND, 2),
-                initPos = Vector2(
-                    it.rectangle.getCenter().x + 5f * ConstVals.PPM,
-                    it.rectangle.getCenter().y
-                ),
                 parallaxX = 0.1f,
                 parallaxY = 0f
             )
@@ -203,15 +199,11 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 startX = it.rectangle.x,
                 startY = it.rectangle.y,
                 model = params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "SunsetHills"),
-                modelWidth = it.rectangle.width,
-                modelHeight = it.rectangle.height,
+                modelWidth = 16f * ConstVals.PPM,
+                modelHeight = 32f * ConstVals.PPM,
                 rows = 1,
                 columns = 50,
                 priority = DrawingPriority(DrawingSection.BACKGROUND, 1),
-                initPos = Vector2(
-                    it.rectangle.getCenter().x + 5f * ConstVals.PPM,
-                    it.rectangle.getCenter().y
-                ),
                 parallaxX = 0.1f,
                 parallaxY = 0f
             )
