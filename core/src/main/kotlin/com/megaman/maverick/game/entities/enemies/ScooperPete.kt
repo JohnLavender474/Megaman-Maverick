@@ -129,13 +129,7 @@ class ScooperPete(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
 
         FacingUtils.setFacingOf(this)
 
-        lightSourceKeys.addAll(
-            spawnProps.get(ConstKeys.KEYS, String::class)!!
-                .replace("\\s+", "")
-                .split(",")
-                .map { it.toInt() }
-                .toObjectSet()
-        )
+        LightSourceUtils.loadLightSourceKeysFromProps(this, spawnProps)
     }
 
     override fun onDestroy() {

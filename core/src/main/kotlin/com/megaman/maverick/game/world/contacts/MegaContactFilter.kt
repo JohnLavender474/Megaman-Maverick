@@ -13,8 +13,13 @@ import com.megaman.maverick.game.world.body.hasFilter
 class MegaContactFilter : IContactFilter {
 
     private val filters = objectMapOf(
-        FixtureType.PLAYER pairTo objectSetOf(FixtureType.BODY, FixtureType.ITEM),
-        FixtureType.DAMAGEABLE pairTo objectSetOf(FixtureType.DAMAGER),
+        FixtureType.PLAYER pairTo objectSetOf(
+            FixtureType.BODY,
+            FixtureType.ITEM
+        ),
+        FixtureType.DAMAGEABLE pairTo objectSetOf(
+            FixtureType.DAMAGER
+        ),
         FixtureType.BODY pairTo objectSetOf(
             FixtureType.BODY,
             FixtureType.FEET,
@@ -29,12 +34,24 @@ class MegaContactFilter : IContactFilter {
             FixtureType.BODY
         ),
         FixtureType.DEATH pairTo objectSetOf(
-            FixtureType.FEET, FixtureType.SIDE, FixtureType.HEAD, FixtureType.BODY
+            FixtureType.FEET,
+            FixtureType.SIDE,
+            FixtureType.HEAD,
+            FixtureType.BODY
         ),
-        FixtureType.WATER pairTo objectSetOf(FixtureType.WATER_LISTENER),
-        FixtureType.LADDER pairTo objectSetOf(FixtureType.HEAD, FixtureType.FEET),
+        FixtureType.WATER pairTo objectSetOf(
+            FixtureType.WATER_LISTENER
+        ),
+        FixtureType.LADDER pairTo objectSetOf(
+            FixtureType.HEAD,
+            FixtureType.FEET
+        ),
         FixtureType.SIDE pairTo objectSetOf(
-            FixtureType.ICE, FixtureType.GATE, FixtureType.BLOCK, FixtureType.BOUNCER
+            FixtureType.SIDE,
+            FixtureType.ICE,
+            FixtureType.GATE,
+            FixtureType.BLOCK,
+            FixtureType.BOUNCER
         ),
         FixtureType.FEET pairTo objectSetOf(
             FixtureType.ICE,
@@ -58,8 +75,13 @@ class MegaContactFilter : IContactFilter {
             FixtureType.PROJECTILE,
             FixtureType.EXPLOSION
         ),
-        FixtureType.LASER pairTo objectSetOf(FixtureType.BLOCK, FixtureType.BODY),
-        FixtureType.TELEPORTER pairTo objectSetOf(FixtureType.TELEPORTER_LISTENER)
+        FixtureType.LASER pairTo objectSetOf(
+            FixtureType.BLOCK,
+            FixtureType.BODY
+        ),
+        FixtureType.TELEPORTER pairTo objectSetOf(
+            FixtureType.TELEPORTER_LISTENER
+        )
     )
 
     override fun shouldProceedFiltering(fixture: IFixture) =

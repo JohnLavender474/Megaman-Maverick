@@ -44,7 +44,7 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
         private const val MOON_GRAVITY = 0.1f
         private const val WATER_GRAVITY = 0.1f
 
-        private const val VEL_CLAMP = 10f
+        private const val VEL_CLAMP = 12f
         private const val MOON_VEL_CLAMP = 2.5f
         private const val WATER_VEL_CLAMP = 2.5f
     }
@@ -110,8 +110,10 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
         val body = Body(BodyType.ABSTRACT)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
+        body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
         body.addFixture(bodyFixture)
@@ -139,21 +141,9 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
             if (game.getCurrentLevel() == LevelDefinition.MOON_MAN) velClamp = MOON_VEL_CLAMP
             body.physics.velocityClamp.set(velClamp * ConstVals.PPM)
 
-            if (body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.FEET_ON_SAND)) {
-                body.physics.gravityOn = false
-                body.physics.velocity.setZero()
-            } else {
-                body.physics.gravityOn = true
-
-                val gravityVec = GameObjectPools.fetch(Vector2::class)
-                when (direction) {
-                    Direction.LEFT -> gravityVec.set(gravity, 0f)
-                    Direction.RIGHT -> gravityVec.set(-gravity, 0f)
-                    Direction.UP -> gravityVec.set(0f, -gravity)
-                    Direction.DOWN -> gravityVec.set(0f, gravity)
-                }.scl(gravityScalar * ConstVals.PPM.toFloat())
-                body.physics.gravity.set(gravityVec)
-            }
+            if (body.isSensing(BodySense.FEET_ON_GROUND)) whenFeetOnGround()
+            if (body.isSensing(BodySense.FEET_ON_SAND)) whenFeetOnSand()
+            if (!body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.FEET_ON_SAND)) whenInAir()
 
             (bodyFixture.rawShape as GameRectangle).set(body)
             (itemFixture.rawShape as GameRectangle).set(body)
@@ -170,6 +160,30 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
 
     open fun defineUpdatablesComponent(component: UpdatablesComponent) {
         component.add { direction = megaman.direction }
+    }
+
+    protected open fun whenFeetOnGround() {
+        body.physics.gravityOn = false
+        body.physics.velocity.setZero()
+    }
+
+    protected open fun whenFeetOnSand() {
+        body.physics.gravityOn = false
+        body.physics.velocity.setZero()
+    }
+
+    protected open fun whenInAir() {
+        body.physics.gravityOn = true
+
+        val gravityVec = GameObjectPools.fetch(Vector2::class)
+        when (direction) {
+            Direction.LEFT -> gravityVec.set(gravity, 0f)
+            Direction.RIGHT -> gravityVec.set(-gravity, 0f)
+            Direction.UP -> gravityVec.set(0f, -gravity)
+            Direction.DOWN -> gravityVec.set(0f, gravity)
+        }.scl(gravityScalar * ConstVals.PPM.toFloat())
+
+        body.physics.gravity.set(gravityVec)
     }
 
     override fun getType() = EntityType.ITEM

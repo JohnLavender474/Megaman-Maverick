@@ -58,6 +58,12 @@ enum class MusicAsset(src: String, val loop: Boolean = true, val onCompletion: (
     FAMITARD_OC_1_MUSIC("Famitard_OC_1.mp3"),
     FAMITARD_OC_2_MUSIC("Famitard_OC_2.mp3"),
     CODY_O_QUINN_BATTLE_MAN_MUSIC("Cody_O_Quinn_Battle_Man.mp3"),
+    CODY_O_QUINN_BATTLE_MAN_MUSIC_INTRO(
+        src = "Cody_O_Quinn_Battle_Man_intro.wav",
+        loop = false,
+        onCompletion = { it.playMusic(CODY_O_QUINN_BATTLE_MAN_MUSIC_LOOP, true) }
+    ),
+    CODY_O_QUINN_BATTLE_MAN_MUSIC_LOOP("Cody_O_Quinn_Battle_Man_loop.wav"),
     CODY_O_QUINN_ACTION_MAN_MUSIC("Cody_O_Quinn_Action_Man.mp3"),
     MEGA_QUEST_2_LEVEL_1_MUSIC("Mega_Quest_2_Level_1.mp3"),
     MEGA_QUEST_2_LEVEL_2_MUSIC("Mega_Quest_2_Level_2.mp3"),

@@ -108,6 +108,7 @@ class ElecDevilBody(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         on = spawnProps.get(ConstKeys.ACTIVE, Boolean::class)!!
 
         lightSourceSendEventDelay.reset()
+
         lightSourceKeys.addAll(
             spawnProps.get("${ConstKeys.LIGHT}_${ConstKeys.SOURCE}_${ConstKeys.KEYS}") as ObjectSet<Int>
         )

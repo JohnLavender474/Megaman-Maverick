@@ -37,12 +37,12 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -148,8 +148,10 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         val spawnProps = props(
             ConstKeys.OWNER pairTo this, ConstKeys.TRAJECTORY pairTo trajectory, ConstKeys.POSITION pairTo spawn
         )
-        val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
+        val bullet = MegaEntityFactory.fetch(Bullet::class)!!
         bullet.spawn(spawnProps)
+
+        requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -251,7 +253,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
                 it.setActive(behavior == MetBehavior.SHIELDING)
                 it.putProperty(ConstKeys.DIRECTION, direction)
             }
-            body.fixtures.get(FixtureType.DAMAGER).first().setActive(behavior != MetBehavior.SHIELDING)
+            body.fixtures.get(FixtureType.DAMAGEABLE).first().setActive(behavior != MetBehavior.SHIELDING)
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

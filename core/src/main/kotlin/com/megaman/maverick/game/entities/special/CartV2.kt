@@ -9,7 +9,6 @@ import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -54,6 +53,8 @@ class CartV2(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimated
         private const val FRICTION_X = 1.0125f
         private const val FRICTION_Y = 1f
 
+        private const val MIN_VEL_X = 0.1f
+
         private const val MAX_VEL_X = 8f
         private const val MAX_VEL_Y = 6f
         private const val IMPULSE_X = 8f
@@ -63,6 +64,9 @@ class CartV2(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimated
 
     override lateinit var facing: Facing
 
+    private val moving: Boolean
+        get() = abs(body.physics.velocity.x) > MIN_VEL_X * ConstVals.PPM
+
     override fun init() {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
@@ -70,10 +74,10 @@ class CartV2(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimated
             gdxArrayOf("move", "idle").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
-        addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
-        addComponent(defineCullablesComponent())
         addComponent(defineSpritesComponent())
+        addComponent(defineCullablesComponent())
+        addComponent(defineUpdatablesComponent())
         addComponent(defineAnimationsComponent())
     }
 
@@ -106,11 +110,10 @@ class CartV2(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimated
         body.physics.velocity.x *= -1
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        val shouldImpulse =
-            abs(body.physics.velocity.x) < MAX_VEL_X * ConstVals.PPM &&
-                body.getBounds().overlaps(megaman.feetFixture.getShape())
+    private fun shouldMove() = body.getBounds().overlaps(megaman.feetFixture.getShape())
 
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        val shouldImpulse = shouldMove() && abs(body.physics.velocity.x) < MAX_VEL_X * ConstVals.PPM
         if (shouldImpulse) body.physics.velocity.x += IMPULSE_X * ConstVals.PPM * delta * facing.value
     })
 
@@ -142,8 +145,12 @@ class CartV2(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimated
         leftFixture.setEntity(this)
         leftFixture.bodyAttachmentPosition = Position.CENTER_LEFT
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftFixture.setHitByBodyReceiver { entity, processState ->
-            if (processState == ProcessState.BEGIN && entity is AbstractEnemy) entity.depleteHealth()
+        leftFixture.setHitByBodyReceiver { entity, _ ->
+            if (moving && entity is AbstractEnemy) entity.depleteHealth()
+        }
+        leftFixture.setHitBySideReceiver { fixture, _ ->
+            val entity = fixture.getEntity()
+            if (moving && entity is AbstractEnemy) entity.depleteHealth()
         }
         body.addFixture(leftFixture)
         leftFixture.drawingColor = Color.YELLOW
@@ -154,8 +161,12 @@ class CartV2(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimated
         rightFixture.setEntity(this)
         rightFixture.bodyAttachmentPosition = Position.CENTER_RIGHT
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        rightFixture.setHitByBodyReceiver { entity, processState ->
-            if (processState == ProcessState.BEGIN && entity is AbstractEnemy) entity.depleteHealth()
+        rightFixture.setHitByBodyReceiver { entity, _ ->
+            if (moving && entity is AbstractEnemy) entity.depleteHealth()
+        }
+        rightFixture.setHitBySideReceiver { fixture, _ ->
+            val entity = fixture.getEntity()
+            if (moving && entity is AbstractEnemy) entity.depleteHealth()
         }
         body.addFixture(rightFixture)
         rightFixture.drawingColor = Color.YELLOW
@@ -172,11 +183,8 @@ class CartV2(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimated
             HeadUtils.stopJumpingIfHitHead(body)
 
             if (FacingUtils.isFacingBlock(this)) swapFacing()
-            /*
-            if ((body.physics.velocity.x > 0f && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) ||
-                (body.physics.velocity.x < 0f && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT))
-            ) body.physics.velocity.x = 0f
-             */
+
+            if (!moving && !shouldMove()) body.physics.velocity.x = 0f
         }
 
         return component

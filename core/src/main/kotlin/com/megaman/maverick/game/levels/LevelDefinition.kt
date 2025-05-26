@@ -52,7 +52,7 @@ enum class LevelDefinition(
         mugshotAtlas = "FACES_1",
         mugshotRegion = "Desert Man",
         tmxMapSource = "DesertMan_16x14_v4.tmx",
-        music = MusicAsset.CODY_O_QUINN_BATTLE_MAN_MUSIC,
+        music = MusicAsset.CODY_O_QUINN_BATTLE_MAN_MUSIC_INTRO,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),
     INFERNO_MAN(

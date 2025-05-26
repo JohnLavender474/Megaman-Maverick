@@ -45,6 +45,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
+import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.min
 import kotlin.reflect.KClass
@@ -58,7 +59,8 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         const val MIN_ALPHA = 0f
         const val MAX_ALPHA = 1f
 
-        private const val STEP_SCALAR = 2f
+        private const val DARKNEN_STEP_SCALAR = 2f
+        private const val LIGHTEN_STEP_SCALAR = 1f
 
         private const val CAM_BOUNDS_BUFFER = 2f
 
@@ -115,12 +117,15 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
     private class BlackTile(
         val bounds: GameRectangle,
-        var step: Float = STEP_SCALAR,
-        var currentAlpha: Float = 1f
+        var currentAlpha: Float = 1f,
+        var darkenStepScalar: Float = DARKNEN_STEP_SCALAR,
+        var lightenStepScalar: Float = LIGHTEN_STEP_SCALAR
     ) {
 
         fun update(delta: Float, darken: Boolean) {
-            currentAlpha += (if (darken) step else -step) * delta
+            if (darken) currentAlpha += abs(darkenStepScalar) * delta
+            else currentAlpha -= abs(lightenStepScalar) * delta
+
             currentAlpha = currentAlpha.coerceIn(MIN_ALPHA, MAX_ALPHA)
         }
 

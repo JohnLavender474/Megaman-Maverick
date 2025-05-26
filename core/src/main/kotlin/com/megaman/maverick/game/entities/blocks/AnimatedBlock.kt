@@ -32,10 +32,10 @@ open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntit
 
     lateinit var region: TextureRegion
 
+    var deathPredicate: Predicate<Properties>? = null
+
     val trajectory = Vector2()
     val spriteSize = Vector2()
-
-    var deathPredicate: Predicate<Properties>? = null
     var hidden = false
 
     override fun init() {
@@ -44,6 +44,7 @@ open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntit
         addComponent(defineSpritesComponent())
         val updateablesComponent = UpdatablesComponent()
         defineUpdateablesComponent(updateablesComponent)
+        addComponent(updateablesComponent)
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -69,6 +70,13 @@ open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntit
         }
 
         if (spawnProps.containsKey(ConstKeys.KEY)) putProperty(ConstKeys.KEY, spawnProps.get(ConstKeys.KEY))
+        else removeProperty(ConstKeys.KEY)
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        animators.clear()
     }
 
     protected open fun defineUpdateablesComponent(updateablesComponent: UpdatablesComponent) {
@@ -84,13 +92,13 @@ open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntit
 
     protected open fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.setSize(spriteSize.x, spriteSize.y)
             sprite.setCenter(body.getCenter())
             sprite.hidden = hidden
         }
-        return spritesComponent
+        return component
     }
 }
 
@@ -106,22 +114,22 @@ object AnimatedBlockAnimators {
                 val region = assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "AppearingBrick")
                 Animation(region, 1, 3, 0.05f, false)
             }
-
             "AppearingBrick2" -> {
                 val region = assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "AppearingBrick2")
                 Animation(region, 3, 1, 0.05f, false)
             }
-
             "CaveRock" -> {
                 val region = assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "CaveRock/Rock")
                 Animation(region)
             }
-
+            "GoldBlock" -> {
+                val region = assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "GoldBlock")
+                Animation(region, 2, 2, 0.1f, true)
+            }
             "Platform1_64x8" -> {
                 val region = assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "Platform1_64x8")
                 Animation(region)
             }
-
             else -> throw IllegalArgumentException("$TAG: Illegal key = $key")
         }
 

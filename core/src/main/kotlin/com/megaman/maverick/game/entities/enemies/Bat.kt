@@ -113,6 +113,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
     private val reusableBodySet = MutableOrderedSet<IBody>()
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
         super.init()
         addComponent(defineAnimationsComponent())
@@ -129,7 +130,12 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         hangTimer.reset()
         releasePerchTimer.reset()
 
-        state = BatState.HANGING
+        val state = spawnProps.getOrDefault(ConstKeys.STATE, BatState.HANGING)
+        this.state = when (state) {
+            is BatState -> state
+            is String -> BatState.valueOf(state.uppercase())
+            else -> throw IllegalArgumentException("Invalid state type: $state")
+        }
 
         frozen = false
 

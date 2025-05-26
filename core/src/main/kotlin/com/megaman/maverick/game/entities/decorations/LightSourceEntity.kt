@@ -5,8 +5,6 @@ import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.extensions.toInt
-import com.mega.game.engine.common.extensions.toObjectSet
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
@@ -27,8 +25,6 @@ open class LightSourceEntity(game: MegamanMaverickGame) : MegaGameEntity(game), 
 
     companion object {
         const val TAG = "LightSource"
-        private const val DEFAULT_RADIUS = 5
-        private const val DEFAULT_RADIANCE = 1f
     }
 
     override val lightSourceKeys = ObjectSet<Int>()
@@ -55,15 +51,8 @@ open class LightSourceEntity(game: MegamanMaverickGame) : MegaGameEntity(game), 
         super.onSpawn(spawnProps)
 
         bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
-        lightSourceKeys.addAll(
-            spawnProps.get(ConstKeys.KEYS, String::class)!!
-                .replace("\\s+", "")
-                .split(",")
-                .map { it.toInt() }
-                .toObjectSet()
-        )
-        lightSourceRadius = spawnProps.getOrDefault(ConstKeys.RADIUS, DEFAULT_RADIUS, Int::class)
-        lightSourceRadiance = spawnProps.getOrDefault(ConstKeys.RADIANCE, DEFAULT_RADIANCE, Float::class)
+
+        LightSourceUtils.loadLightSourceFromProps(this, spawnProps)
 
         val rawSpritePos = spawnProps.get("${ConstKeys.SPRITE}_${ConstKeys.POSITION}")
         spritePos = when (rawSpritePos) {

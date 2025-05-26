@@ -119,6 +119,18 @@ fun IFixture.getHitByBody(body: IBodyEntity, processState: ProcessState): IFixtu
     return this
 }
 
+fun IFixture.hasHitBySideReceiver() = hasProperty(ConstKeys.HIT_BY_SIDE)
+
+fun IFixture.setHitBySideReceiver(receiver: (IFixture, ProcessState) -> Unit): IFixture {
+    putProperty(ConstKeys.HIT_BY_SIDE, receiver)
+    return this
+}
+
+fun IFixture.getHitBySide(side: IFixture, state: ProcessState): IFixture {
+    (getProperty(ConstKeys.HIT_BY_SIDE) as (IFixture, ProcessState) -> Unit).invoke(side, state)
+    return this
+}
+
 fun IFixture.setHitByBlockReceiver(state: ProcessState, receiver: (Block, Float) -> Unit): IFixture {
     putProperty("${ConstKeys.HIT_BY_BLOCK}_${state.name}", receiver)
     return this

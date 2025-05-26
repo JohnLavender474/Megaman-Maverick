@@ -1893,6 +1893,7 @@ sprites/frames/Platforms1/SwingingPlatform/platform.png
 sprites/frames/Platforms1/PropellerPlatform_OLD.png
 sprites/frames/Platforms1/RocketPlatform_v2.png
 sprites/frames/Platforms1/GearTrolleyPlatform.png
+sprites/frames/Platforms1/GoldBlock.png
 sprites/frames/Platforms1/PropellerPlatform.png
 sprites/frames/Platforms1/MoonCrate.png
 sprites/frames/Platforms1/Platform1_64x8.png
@@ -2853,6 +2854,7 @@ sprites/piskel/BossFaces.piskel
 sprites/piskel/WoodPlank.piskel
 sprites/piskel/DarkSamus993-FireManTileset.piskel
 sprites/piskel/PropellerPlatform.piskel
+sprites/piskel/GoldBlock.piskel
 sprites/piskel/PunkCityLampPost.piskel
 sprites/piskel/QuickSand_v2_TopLeft.piskel
 sprites/piskel/SprBGTomahawk_v2.piskel
@@ -3471,12 +3473,14 @@ music/MMX6_BlazeHeatnix.txt
 music/Cybernetic_Factory.mp3
 music/Mega_Quest_2_Level_6.mp3
 music/MMX_Sigma1st.txt
+music/Cody_O_Quinn_Battle_Man_loop.wav
 music/MMX5_IzzyGlow.txt
 music/SnakeManMM3.mp3
 music/Famitard_OC_1.mp3
 music/MMX3_IntroStage.ogg
 music/MMX3_IntroStage.txt
 music/MMX_ChillPenguin_Famitard.rtf
+music/Cody_O_Quinn_Battle_Man_intro.wav
 music/Cybernetic_Factory.wav
 music/MMX7_SoldierStonekong.mp3
 music/vinnyz_timber_track.mp3

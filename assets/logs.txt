@@ -1,7 +1,7 @@
-===== SESSION STARTED: 2025-05-25T18:18:35.867900774 =====
-18:19:28 | DEBUG | Jetto | canSpawn(): canSpawn=true
-18:19:28 | DEBUG | Jetto | init()
-18:19:28 | DEBUG | Jetto | onSpawn(): spawnProps=Properties({
+===== SESSION STARTED: 2025-05-26T13:50:16.255945877 =====
+13:50:41 | DEBUG | Jetto | canSpawn(): canSpawn=true
+13:50:41 | DEBUG | Jetto | init()
+13:50:41 | DEBUG | Jetto | onSpawn(): spawnProps=Properties({
 	[bounds=[2896.0,560.0,32.0,32.0]]
 	[x=2896.0]
 	[height=32.0]
@@ -11,19 +11,18 @@
 	[y=560.0]
 	[width=32.0]
 })
-18:19:29 | DEBUG | Jetto | dropBomb()
-18:19:30 | DEBUG | Jetto | dropBomb()
-18:19:30 | DEBUG | Jetto | dropBomb()
-18:19:30 | DEBUG | Jetto | dropBomb()
-18:19:30 | DEBUG | Jetto | dropBomb()
-18:19:30 | DEBUG | Jetto | dropBomb()
-18:19:31 | DEBUG | Jetto | dropBomb()
-18:19:31 | DEBUG | Jetto | dropBomb()
-18:19:31 | DEBUG | Jetto | dropBomb()
-18:19:31 | DEBUG | Jetto | dropBomb()
-18:19:31 | DEBUG | Jetto | onDestroy()
-18:19:36 | DEBUG | Jetto | canSpawn(): canSpawn=true
-18:19:36 | DEBUG | Jetto | onSpawn(): spawnProps=Properties({
+13:50:42 | DEBUG | Jetto | dropBomb()
+13:50:43 | DEBUG | Jetto | dropBomb()
+13:50:43 | DEBUG | Jetto | dropBomb()
+13:50:43 | DEBUG | Jetto | dropBomb()
+13:50:43 | DEBUG | Jetto | dropBomb()
+13:50:43 | DEBUG | Jetto | dropBomb()
+13:50:44 | DEBUG | Jetto | dropBomb()
+13:50:44 | DEBUG | Jetto | dropBomb()
+13:50:44 | DEBUG | Jetto | dropBomb()
+13:50:44 | DEBUG | Jetto | onDestroy()
+13:50:47 | DEBUG | Jetto | canSpawn(): canSpawn=true
+13:50:47 | DEBUG | Jetto | onSpawn(): spawnProps=Properties({
 	[bounds=[3616.0,560.0,32.0,32.0]]
 	[x=3616.0]
 	[height=32.0]
@@ -33,19 +32,18 @@
 	[y=560.0]
 	[width=32.0]
 })
-18:19:37 | DEBUG | Jetto | dropBomb()
-18:19:37 | DEBUG | Jetto | dropBomb()
-18:19:37 | DEBUG | Jetto | dropBomb()
-18:19:38 | DEBUG | Jetto | dropBomb()
-18:19:38 | DEBUG | Jetto | dropBomb()
-18:19:38 | DEBUG | Jetto | dropBomb()
-18:19:38 | DEBUG | Jetto | dropBomb()
-18:19:39 | DEBUG | Jetto | dropBomb()
-18:19:39 | DEBUG | Jetto | dropBomb()
-18:19:39 | DEBUG | Jetto | dropBomb()
-18:19:39 | DEBUG | Jetto | onDestroy()
-18:19:40 | DEBUG | Jetto | canSpawn(): canSpawn=true
-18:19:40 | DEBUG | Jetto | onSpawn(): spawnProps=Properties({
+13:50:48 | DEBUG | Jetto | dropBomb()
+13:50:48 | DEBUG | Jetto | dropBomb()
+13:50:48 | DEBUG | Jetto | dropBomb()
+13:50:49 | DEBUG | Jetto | dropBomb()
+13:50:49 | DEBUG | Jetto | dropBomb()
+13:50:49 | DEBUG | Jetto | dropBomb()
+13:50:49 | DEBUG | Jetto | dropBomb()
+13:50:49 | DEBUG | Jetto | dropBomb()
+13:50:50 | DEBUG | Jetto | dropBomb()
+13:50:50 | DEBUG | Jetto | onDestroy()
+13:50:50 | DEBUG | Jetto | canSpawn(): canSpawn=true
+13:50:50 | DEBUG | Jetto | onSpawn(): spawnProps=Properties({
 	[bounds=[3984.0,560.0,32.0,32.0]]
 	[x=3984.0]
 	[height=32.0]
@@ -55,21 +53,22 @@
 	[y=560.0]
 	[width=32.0]
 })
-18:19:41 | DEBUG | Jetto | dropBomb()
-18:19:42 | DEBUG | Jetto | dropBomb()
-18:19:42 | DEBUG | Jetto | dropBomb()
-18:19:42 | DEBUG | Jetto | dropBomb()
-18:19:42 | DEBUG | Jetto | dropBomb()
-18:19:42 | DEBUG | Jetto | dropBomb()
-18:19:43 | DEBUG | Jetto | dropBomb()
-18:19:43 | DEBUG | Jetto | dropBomb()
-18:19:43 | DEBUG | Jetto | dropBomb()
-18:19:43 | DEBUG | Jetto | dropBomb()
-18:19:43 | DEBUG | Jetto | onDestroy()
-18:19:44 | DEBUG | Jetto | canSpawn(): canSpawn=true
-18:19:44 | DEBUG | Jetto | onSpawn(): spawnProps=Properties({
-	[bounds=[4320.0,560.0,32.0,32.0]]
-	[x=4320.0]
+13:50:52 | DEBUG | Jetto | dropBomb()
+13:50:52 | DEBUG | Jetto | dropBomb()
+13:50:52 | DEBUG | Jetto | dropBomb()
+13:50:52 | DEBUG | Jetto | dropBomb()
+13:50:53 | DEBUG | Jetto | dropBomb()
+13:50:53 | DEBUG | Jetto | dropBomb()
+13:50:53 | DEBUG | Jetto | dropBomb()
+13:50:53 | DEBUG | Jetto | dropBomb()
+13:50:53 | DEBUG | Jetto | dropBomb()
+13:50:54 | DEBUG | Jetto | dropBomb()
+13:50:54 | DEBUG | Jetto | dropBomb()
+13:50:54 | DEBUG | Jetto | onDestroy()
+13:50:54 | DEBUG | Jetto | canSpawn(): canSpawn=true
+13:50:54 | DEBUG | Jetto | onSpawn(): spawnProps=Properties({
+	[bounds=[4416.0,560.0,32.0,32.0]]
+	[x=4416.0]
 	[height=32.0]
 	[cull_out_of_bounds=false]
 	[id=286]
@@ -77,12 +76,11 @@
 	[y=560.0]
 	[width=32.0]
 })
-18:19:45 | DEBUG | Jetto | dropBomb()
-18:19:46 | DEBUG | Jetto | dropBomb()
-18:19:46 | DEBUG | Jetto | dropBomb()
-18:19:46 | DEBUG | Jetto | dropBomb()
-18:19:46 | DEBUG | Jetto | dropBomb()
-18:19:46 | DEBUG | Jetto | dropBomb()
-18:19:47 | DEBUG | Jetto | dropBomb()
-18:19:47 | DEBUG | Jetto | dropBomb()
-18:19:47 | DEBUG | Jetto | onDestroy()
+13:50:55 | DEBUG | Jetto | dropBomb()
+13:50:56 | DEBUG | Jetto | dropBomb()
+13:50:56 | DEBUG | Jetto | dropBomb()
+13:50:56 | DEBUG | Jetto | dropBomb()
+13:50:56 | DEBUG | Jetto | dropBomb()
+13:50:56 | DEBUG | Jetto | dropBomb()
+13:50:57 | DEBUG | Jetto | dropBomb()
+13:50:57 | DEBUG | Jetto | onDestroy()

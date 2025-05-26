@@ -29,6 +29,7 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.state.EnumStateMachineBuilder
 import com.mega.game.engine.state.StateMachine
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -39,12 +40,15 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.projectiles.DarkSerketClaw
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
@@ -74,8 +78,8 @@ class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
         private const val GROW_CLAWS_DUR = 0.1f
 
-        private const val SCANNER_WIDTH = 12f
-        private const val SCANNER_HEIGHT = 1f
+        private const val SCANNER_WIDTH = 6f
+        private const val SCANNER_HEIGHT = 0.75f
 
         private const val GRAVITY = -0.375f
         private const val GROUND_GRAV = -0.01f
@@ -175,21 +179,24 @@ class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             when (currentState) {
                 DarkSerkerState.SCURRY -> {
                     val scurryVelX = when {
-                        body.isSensing(BodySense.FEET_ON_GROUND) -> SCURRY_GROUND_VEL_X
+                        body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.FEET_ON_SAND) -> SCURRY_GROUND_VEL_X
                         else -> SCURRY_AIR_VEL_X
                     }
                     body.physics.velocity.x = scurryVelX * ConstVals.PPM * facing.value
 
                     if (shouldStopScurrying()) stateMachine.next()
                 }
-                DarkSerkerState.JUMP -> if (shouldEndJump()) stateMachine.next()
+                DarkSerkerState.JUMP -> {
+                    if (FacingUtils.isFacingBlock(this)) body.physics.velocity.x = 0f
+                    if (shouldEndJump()) stateMachine.next()
+                }
                 else -> {}
             }
         }
     }
 
     private fun shouldUpdateStateTimer() = when (currentState) {
-        DarkSerkerState.STAND -> body.isSensing(BodySense.FEET_ON_GROUND)
+        DarkSerkerState.STAND -> body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.FEET_ON_SAND)
         DarkSerkerState.JUMP -> false
         else -> true
     }
@@ -231,8 +238,12 @@ class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         debugShapes.add { rightSideFixture }
 
         val feetFixture =
-            Fixture(body, FixtureType.FEET, GameRectangle().setSize(1.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
+            Fixture(body, FixtureType.FEET, GameRectangle().setSize(1.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
+        // This is set to prevent the scorpion from sinking in quick sand due to the "feet-rise-sink block" falling.
+        // However, setting this to false makes it so that the scorpion's feet won't "stick" to any blocks. If this
+        // becomes an issue, then "STICK_TO_BLICK" will need to be a callback instead of a boolean flag.
+        feetFixture.putProperty(ConstKeys.STICK_TO_BLOCK, false)
         body.addFixture(feetFixture)
         feetFixture.drawingColor = Color.GRAY
         body.addFixture(feetFixture)
@@ -323,8 +334,14 @@ class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             rightFootFixture.putProperty(ConstKeys.BLOCK, false)
             rightFootFixture.putProperty(ConstKeys.DEATH, false)
 
-            val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAV else GRAVITY
+            val gravity =
+                if (body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.FEET_ON_SAND)) GROUND_GRAV else GRAVITY
             body.physics.gravity.y = gravity * ConstVals.PPM
+
+            if (body.isSensing(BodySense.FEET_ON_SAND)) {
+                body.physics.gravityOn = false
+                if (body.physics.velocity.y < 0f) body.physics.velocity.y = 0f
+            } else body.physics.gravityOn = true
 
             stingerDamager1.offsetFromBodyAttachment.set(
                 0.75f * ConstVals.PPM * -facing.value,
@@ -450,17 +467,26 @@ class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         }
     }
 
+    private fun isAnyBlockInTheWay() = MegaGameEntities.getOfType(EntityType.BLOCK).any any@{
+        val blockBounds = (it as IBodyEntity).body.getBounds()
+        return@any blockBounds.overlaps(scanner) && when (facing) {
+            Facing.LEFT -> blockBounds.getCenter().x > megaman.body.getCenter().x
+            Facing.RIGHT -> blockBounds.getCenter().x < megaman.body.getCenter().x
+        }
+    }
+
     private fun shouldStopScurrying() =
         FacingUtils.isFacingBlock(this) || isFootOnDeath(facing) || shouldJump()
 
-    private fun shouldJump() =
-        (!isFootOnBlock(facing) &&
-            facing == FacingUtils.getPreferredFacingFor(this) &&
-            megaman.body.getBounds().getMaxY() >= body.getBounds().getY()
-            ).or(
-                isMegamanOverlappingScanner() &&
-                    UtilMethods.getRandom(0f, 100f) <= RANDOM_CLOSE_RANGE_JUMP_CHANCE
-            )
+    private fun shouldJump() = shouldJumpAtLedge() || shouldJumpToAttack()
+
+    private fun shouldJumpAtLedge() = !isFootOnBlock(facing) &&
+        (facing == FacingUtils.getPreferredFacingFor(this) ||
+            megaman.body.getBounds().getY() >= body.getBounds().getMaxY() ||
+            megaman.body.getBounds().getMaxY() <= body.getBounds().getY())
+
+    private fun shouldJumpToAttack() = isMegamanOverlappingScanner() && !isAnyBlockInTheWay() &&
+        UtilMethods.getRandom(0f, 100f) <= RANDOM_CLOSE_RANGE_JUMP_CHANCE
 
     private fun jump() {
         GameLogger.debug(TAG, "jump()")
@@ -477,9 +503,10 @@ class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         Facing.RIGHT -> rightFootFixture.isProperty(ConstKeys.DEATH, true)
     }
 
-    private fun shouldEndJump() = body.physics.velocity.y <= 0f && body.isSensing(BodySense.FEET_ON_GROUND)
+    private fun shouldEndJump() = body.physics.velocity.y <= 0f &&
+        body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.FEET_ON_SAND)
 
-    private fun shouldLaunchClaws() = isMegamanOverlappingScanner()
+    private fun shouldLaunchClaws() = isMegamanOverlappingScanner() && !isAnyBlockInTheWay()
 
     private fun launchClaw(index: Int) {
         GameLogger.debug(TAG, "launchClaw(): index=$index")

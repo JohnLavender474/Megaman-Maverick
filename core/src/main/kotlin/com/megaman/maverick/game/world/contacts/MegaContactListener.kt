@@ -216,6 +216,18 @@ class MegaContactListener(
             if (sideFixture.hasHitByBodyReceiver()) sideFixture.getHitByBody(bodyEntity, ProcessState.BEGIN)
         }
 
+        // side, side
+        else if (contact.fixturesMatch(FixtureType.SIDE, FixtureType.SIDE)) {
+            printDebugLog(contact, "beginContact(): Side-Side, contact=$contact")
+
+            val (side1Fixture, side2Fixture) = contact
+
+            if (side1Fixture.hasHitBySideReceiver())
+                side1Fixture.getHitBySide(side2Fixture, ProcessState.BEGIN)
+            if (side2Fixture.hasHitBySideReceiver())
+                side2Fixture.getHitBySide(side1Fixture, ProcessState.BEGIN)
+        }
+
         // block, side
         else if (contact.fixturesMatch(FixtureType.BLOCK, FixtureType.SIDE)) {
             printDebugLog(contact, "beginContact(): Block-Side, contact=$contact")
@@ -277,6 +289,8 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)) {
             printDebugLog(contact, "beginContact(): Feet-Block, contact=$contact")
             val (feetFixture, blockFixture) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.BLOCK, out)!!
+
+            if (feetFixture.hasFilter() && !feetFixture.getFilter().invoke(blockFixture)) return
 
             val block = blockFixture.getEntity() as Block
 
@@ -824,6 +838,8 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)) {
             val (feetFixture, blockFixture) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.BLOCK, out)!!
 
+            if (feetFixture.hasFilter() && !feetFixture.getFilter().invoke(blockFixture)) return
+
             val block = blockFixture.getEntity() as Block
 
             val body = feetFixture.getBody()
@@ -880,6 +896,18 @@ class MegaContactListener(
 
             val bodyEntity = bodyFixture.getEntity() as IBodyEntity
             if (sideFixture.hasHitByBodyReceiver()) sideFixture.getHitByBody(bodyEntity, ProcessState.CONTINUE)
+        }
+
+        // side, side
+        else if (contact.fixturesMatch(FixtureType.SIDE, FixtureType.SIDE)) {
+            printDebugLog(contact, "continueContact(): Side-Side, contact=$contact")
+
+            val (side1Fixture, side2Fixture) = contact
+
+            if (side1Fixture.hasHitBySideReceiver())
+                side1Fixture.getHitBySide(side2Fixture, ProcessState.CONTINUE)
+            if (side2Fixture.hasHitBySideReceiver())
+                side2Fixture.getHitBySide(side1Fixture, ProcessState.CONTINUE)
         }
 
         // head, ladder
@@ -1204,6 +1232,18 @@ class MegaContactListener(
             else body.setBodySense(BodySense.SIDE_TOUCHING_BLOCK_RIGHT, false)
         }
 
+        // side, side
+        else if (contact.fixturesMatch(FixtureType.SIDE, FixtureType.SIDE)) {
+            printDebugLog(contact, "endContact(): Side-Side, contact=$contact")
+
+            val (side1Fixture, side2Fixture) = contact
+
+            if (side1Fixture.hasHitBySideReceiver())
+                side1Fixture.getHitBySide(side2Fixture, ProcessState.END)
+            if (side2Fixture.hasHitBySideReceiver())
+                side2Fixture.getHitBySide(side1Fixture, ProcessState.END)
+        }
+
         // body, side
         else if (contact.fixturesMatch(FixtureType.BODY, FixtureType.SIDE)) {
             printDebugLog(contact, "endContact(): Body-Side, contact=$contact")
@@ -1231,6 +1271,8 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)) {
             printDebugLog(contact, "endContact(): Feet-Block, contact=$contact")
             val (feetFixture, blockFixture) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.BLOCK, out)!!
+
+            if (feetFixture.hasFilter() && !feetFixture.getFilter().invoke(blockFixture)) return
 
             val block = blockFixture.getEntity() as Block
             val body = feetFixture.getBody()

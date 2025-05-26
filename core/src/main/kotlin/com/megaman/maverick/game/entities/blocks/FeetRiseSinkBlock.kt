@@ -30,16 +30,16 @@ open class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
     protected var fallingSpeed = 0f
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
+
         super.init()
 
         body.preProcess.put(ConstKeys.MOVE) {
             val iter = feetSet.iterator()
             while (iter.hasNext) {
                 val feet = iter.next()
-
                 if (!feet.getShape().overlaps(body.getBounds())) {
                     iter.remove()
-
                     GameLogger.debug(
                         TAG,
                         "body.preProcess(): remove feet from body: " +
@@ -54,7 +54,6 @@ open class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
                     body.getY() > minY -> body.physics.velocity.y = fallingSpeed * ConstVals.PPM
                     else -> body.physics.velocity.y = 0f
                 }
-
                 shouldMoveUp() -> body.physics.velocity.y = risingSpeed * ConstVals.PPM
                 else -> body.physics.velocity.y = 0f
             }
@@ -73,6 +72,7 @@ open class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
     protected open fun shouldMoveUp() = feetSet.isEmpty && body.getMaxY() < maxY
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val max = abs(spawnProps.getOrDefault(ConstKeys.MAX, 0f, Float::class))
@@ -89,15 +89,15 @@ open class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-
         feetSet.clear()
     }
 
     protected open fun shouldListenToFeet(feetFixture: IFixture): Boolean {
         val entity = feetFixture.getEntity()
         val shouldListen = entity.isAny(Megaman::class, PushableBlock::class)
-        GameLogger.debug(TAG, "shouldListenToFeet(): shouldListen=$shouldListen, entity=${entity.getTag()}")
+        GameLogger.debug(TAG, "shouldListenToFeet(): shouldListen=$shouldListen, entity=$entity")
         return shouldListen
     }
 
@@ -107,7 +107,6 @@ open class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
                 feetSet.add(feetFixture)
                 GameLogger.debug(TAG, "hitByFeet(): feetSet.size=${feetSet.size}")
             }
-
             ProcessState.END -> feetSet.remove(feetFixture)
         }
     }

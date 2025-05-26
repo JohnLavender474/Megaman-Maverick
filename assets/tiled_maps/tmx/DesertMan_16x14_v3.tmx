@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="900" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="818">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="900" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="822">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/tomahawk_man_stage_tileset.tsx"/>
  <layer id="13" name="tiles3" width="900" height="100">
@@ -1233,6 +1233,24 @@
     <property name="event_type" value="show_backgrounds"/>
    </properties>
   </object>
+  <object id="819" name="EventTrigger" x="27296" y="1152" width="32" height="32">
+   <properties>
+    <property name="backgrounds" value="DesertSunSky"/>
+    <property name="event_type" value="show_backgrounds"/>
+   </properties>
+  </object>
+  <object id="820" name="EventTrigger" x="27296" y="1120" width="32" height="32">
+   <properties>
+    <property name="backgrounds" value="SunriseHills"/>
+    <property name="event_type" value="hide_backgrounds"/>
+   </properties>
+  </object>
+  <object id="821" name="EventTrigger" x="27296" y="1088" width="32" height="32">
+   <properties>
+    <property name="backgrounds" value="SunsetHills"/>
+    <property name="event_type" value="show_backgrounds"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="6" name="hazards"/>
  <objectgroup id="5" name="enemies">
@@ -1552,10 +1570,10 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="7" name="temp">
-  <object id="800" name="0" x="6368" y="3008" width="32" height="32"/>
+ <objectgroup id="7" name="player">
+  <object id="818" name="0" x="27328" y="1152" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="8" name="player">
+ <objectgroup id="8" name="temp">
   <object id="228" name="0" x="160" y="2976" width="32" height="32"/>
   <object id="390" name="3" x="10784" y="1984" width="32" height="32"/>
   <object id="486" name="4" x="15872" y="2048" width="32" height="32"/>

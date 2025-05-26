@@ -48,6 +48,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
 class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity, IAnimatedEntity, IFaceable,
@@ -57,12 +58,13 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
         const val TAG = "CartinJoe"
 
         private const val VEL_X = 5f
+        private const val MAX_VEL_Y = 8f
 
-        private const val GROUND_GRAVITY = -0.0015f
+        private const val GROUND_GRAV = -0.001f
         private const val GRAVITY = -0.25f
 
-        private const val WAIT_DURATION = 0.75f
-        private const val SHOOT_DURATION = 0.25f
+        private const val WAIT_DUR = 0.75f
+        private const val SHOOT_DUR = 0.25f
 
         private const val BULLET_SPEED = 10f
 
@@ -72,10 +74,11 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
     override lateinit var facing: Facing
     override lateinit var direction: Direction
 
-    val shooting: Boolean get() = !shootTimer.isFinished()
+    val shooting: Boolean
+        get() = !shootTimer.isFinished()
 
-    private val waitTimer = Timer(WAIT_DURATION)
-    private val shootTimer = Timer(SHOOT_DURATION)
+    private val waitTimer = Timer(WAIT_DUR)
+    private val shootTimer = Timer(SHOOT_DUR)
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -104,6 +107,12 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
     }
 
+    override fun onHealthDepleted() {
+        GameLogger.debug(TAG, "onHealthDepleted()")
+        super.onHealthDepleted()
+        explode()
+    }
+
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
@@ -121,14 +130,13 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
                 shootTimer.reset()
             }
 
-            if ((isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
-                (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
-            ) swapFacing()
+            if (FacingUtils.isFacingBlock(this)) swapFacing()
         }
     }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
+        body.physics.velocityClamp.y = MAX_VEL_Y * ConstVals.PPM
         body.setSize(1.25f * ConstVals.PPM, 2f * ConstVals.PPM)
         body.drawingColor = Color.GRAY
 
@@ -143,16 +151,16 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
 
         val damageableFixture = Fixture(
             body, FixtureType.DAMAGEABLE, GameRectangle().setSize(
-                ConstVals.PPM.toFloat(), 0.75f * ConstVals.PPM
+                ConstVals.PPM.toFloat(), 1.25f * ConstVals.PPM
             )
         )
-        damageableFixture.offsetFromBodyAttachment.y = 0.45f * ConstVals.PPM
+        damageableFixture.offsetFromBodyAttachment.y = 0.75f * ConstVals.PPM
         body.addFixture(damageableFixture)
         debugShapes.add { damageableFixture }
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyAttachment.y = -0.6f * ConstVals.PPM
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         body.addFixture(feetFixture)
         debugShapes.add { feetFixture }
 
@@ -163,26 +171,26 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
 
         val leftFixture = Fixture(
             body, FixtureType.SIDE, GameRectangle().setSize(
-                0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM
+                0.5f * ConstVals.PPM, 0.5f * ConstVals.PPM
             )
         )
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.setRunnable(onBounce)
-        leftFixture.offsetFromBodyAttachment.x = -0.75f * ConstVals.PPM
+        leftFixture.offsetFromBodyAttachment.set(-body.getWidth() / 2f, -0.25f * ConstVals.PPM)
         body.addFixture(leftFixture)
         debugShapes.add { leftFixture }
 
         val rightFixture =
-            Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
+            Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         rightFixture.setRunnable(onBounce)
-        rightFixture.offsetFromBodyAttachment.x = 0.75f * ConstVals.PPM
+        rightFixture.offsetFromBodyAttachment.set(body.getWidth() / 2f, -0.25f * ConstVals.PPM)
         body.addFixture(rightFixture)
         debugShapes.add { rightFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.gravity.y =
-                ConstVals.PPM * if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
+                ConstVals.PPM * if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAV else GRAVITY
             body.physics.velocity.x = VEL_X * ConstVals.PPM * facing.value
         }
 
@@ -198,12 +206,10 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
         sprite.setSize(3f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
         component.putUpdateFunction { _, _ ->
-            sprite.hidden = damageBlink
-
             val position = body.getPositionPoint(Position.BOTTOM_CENTER)
             sprite.setPosition(position, Position.BOTTOM_CENTER)
-
             sprite.setFlip(isFacing(Facing.RIGHT), false)
+            sprite.hidden = damageBlink
         }
         return component
     }
@@ -211,8 +217,8 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: (String?) -> String? = { if (shooting) "shoot" else "move" }
         val animations = objectMapOf<String, IAnimation>(
-            "shoot" pairTo Animation(regions["shoot"], 1, 2, 0.1f, true),
-            "move" pairTo Animation(regions["move"], 1, 2, 0.1f, true)
+            "shoot" pairTo Animation(regions["shoot"], 2, 1, 0.1f, true),
+            "move" pairTo Animation(regions["move"], 2, 1, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
