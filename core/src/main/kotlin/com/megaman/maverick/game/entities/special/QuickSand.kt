@@ -49,6 +49,7 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
     private val matrix = Matrix<GameRectangle>()
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
             Position.entries.forEach { position ->
@@ -60,9 +61,7 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
                 GameLogger.debug(TAG, "init(): putting regions: regionKey=$regionKey, key=$key, region=$region")
             }
         }
-
         super.init()
-
         addComponent(defineBodyComponent())
         addComponent(SpritesComponent())
         addComponent(AnimationsComponent())
@@ -70,12 +69,10 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-
         super.onSpawn(spawnProps)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
-
         body.forEachFixture { ((it as Fixture).rawShape as GameRectangle).set(bounds) }
 
         defineDrawables(bounds.splitByCellSize(ConstVals.PPM.toFloat(), matrix))
@@ -83,7 +80,6 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
-
         super.onDestroy()
 
         sprites.clear()
@@ -118,20 +114,18 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
 
             val regionKey = when (x) {
                 0 -> when (y) {
-                    0 -> Position.BOTTOM_LEFT
                     cells.rows - 1 -> Position.TOP_LEFT
+                    0 -> Position.BOTTOM_LEFT
                     else -> Position.CENTER_LEFT
                 }
-
                 cells.columns - 1 -> when (y) {
-                    0 -> Position.BOTTOM_RIGHT
                     cells.rows - 1 -> Position.TOP_RIGHT
+                    0 -> Position.BOTTOM_RIGHT
                     else -> Position.CENTER_RIGHT
                 }
-
                 else -> when (y) {
-                    0 -> Position.BOTTOM_CENTER
                     cells.rows - 1 -> Position.TOP_CENTER
+                    0 -> Position.BOTTOM_CENTER
                     else -> Position.CENTER
                 }
             }.name.lowercase()

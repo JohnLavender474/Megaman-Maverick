@@ -101,6 +101,13 @@ ChargedShot_v2
   orig: 32, 64
   offset: 0, 0
   index: -1
+Cokonut
+  rotate: false
+  xy: 480, 204
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
 CryoPellet
   rotate: false
   xy: 48, 24

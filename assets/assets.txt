@@ -1617,6 +1617,7 @@ sprites/frames/Projectiles1/CryoPellet.png
 sprites/frames/Projectiles1/SubmarineMissile.png
 sprites/frames/Projectiles1/SnowballForm.png
 sprites/frames/Projectiles1/RocketBomb.png
+sprites/frames/Projectiles1/Cokonut.png
 sprites/frames/Projectiles1/Petal.png
 sprites/frames/Projectiles1/RollingBotShot.png
 sprites/frames/Projectiles1/TubeBeam.png
@@ -1967,6 +1968,9 @@ sprites/frames/Enemies1/RollingBot/open.png
 sprites/frames/Enemies1/RollingBot/shoot.png
 sprites/frames/Enemies1/FlyPincher/Pinch.png
 sprites/frames/Enemies1/FlyPincher/Open.png
+sprites/frames/Enemies1/Cokeyro/shake.png
+sprites/frames/Enemies1/Cokeyro/die.png
+sprites/frames/Enemies1/Cokeyro/idle.png
 sprites/frames/Enemies1/GreenUziJoe/stand_shoot.png
 sprites/frames/Enemies1/GreenUziJoe/stand_shoot_start.png
 sprites/frames/Enemies1/GreenUziJoe/stand.png
@@ -2849,6 +2853,7 @@ sprites/piskel/InfernoBKG.piskel
 sprites/piskel/LevelPauseMenu.piskel
 sprites/piskel/Megaman_RUSH_JET.piskel
 sprites/piskel/InfernoManFace.piskel
+sprites/piskel/Cokonut.piskel
 sprites/piskel/ColdGust.piskel
 sprites/piskel/BossFaces.piskel
 sprites/piskel/WoodPlank.piskel
@@ -2862,6 +2867,7 @@ sprites/piskel/IceFox.piskel
 sprites/piskel/UF_Oh_No_Bot_1.piskel
 sprites/piskel/AstroAss.piskel
 sprites/piskel/Death_Bomb.piskel
+sprites/piskel/Cokeyro.piskel
 sprites/piskel/CannoHoney.piskel
 sprites/piskel/MegamanFire.piskel
 sprites/piskel/Bits.piskel
