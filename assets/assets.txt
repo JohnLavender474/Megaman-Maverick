@@ -532,6 +532,7 @@ sprites/frames/Decorations1/Candle.png
 sprites/frames/Decorations1/LavaFall.png
 sprites/frames/Decorations1/ToxicWaterfall.png
 sprites/frames/Decorations1/Thread.png
+sprites/frames/Decorations1/FloatingEmber.png
 sprites/frames/Decorations1/SandSplash.png
 sprites/frames/Decorations1/RainDrop/purple.png
 sprites/frames/Decorations1/RainDrop/blue.png
@@ -2668,6 +2669,7 @@ sprites/piskel/Rock.piskel
 sprites/piskel/SpitFireball.piskel
 sprites/piskel/FirePellet.piskel
 sprites/piskel/FlipperPlatform.piskel
+sprites/piskel/Ember.piskel
 sprites/piskel/MagmaGoop.piskel
 sprites/piskel/DuoBallCanon.piskel
 sprites/piskel/QuickSand_v2_Top.piskel
@@ -2689,6 +2691,7 @@ sprites/piskel/FloorButton.piskel
 sprites/piskel/All_Terrain_Missile_Bot.piskel
 sprites/piskel/Petit Devil.piskel
 sprites/piskel/GreenUziJoe.piskel
+sprites/piskel/Anokolisa_Swamp_Tileset.piskel
 sprites/piskel/MoonMan.piskel
 sprites/piskel/Gate.piskel
 sprites/piskel/NuttGlider.piskel
@@ -3033,6 +3036,7 @@ tiled_maps/tsx/PlantManTileset.tsx
 tiled_maps/tsx/Gravity Man Stage.tsx
 tiled_maps/tsx/pipe_forest_bkg.tsx
 tiled_maps/tsx/ReactorManCondensed.tsx
+tiled_maps/tsx/Anokolisa_Swamp_Tileset.tsx
 tiled_maps/tsx/StarManTileset-NoBlack.tsx
 tiled_maps/tsx/MM10Enker.tsx
 tiled_maps/tsx/pump_man.tsx
@@ -3129,6 +3133,7 @@ tiled_maps/png/pipe_forest.png
 tiled_maps/png/mm9tornado.png
 tiled_maps/png/mm9magma.png
 tiled_maps/png/sandy_pipes.png
+tiled_maps/png/Anokolisa_Swamp_Tileset.png
 tiled_maps/png/BKG01.png
 tiled_maps/png/ForestTiles 32x32.png
 tiled_maps/png/tstNeedleman.png
@@ -3364,6 +3369,7 @@ tiled_maps/tmx/RodentMan_16x12.tmx
 tiled_maps/tmx/WilyStage2.tmx
 tiled_maps/tmx/TilesetSizeTest.tmx
 tiled_maps/tmx/Test5.tmx
+tiled_maps/tmx/TimberWoman_16x14_v4.tmx
 tiled_maps/tmx/DesertMan_v4.tmx
 tiled_maps/tmx/CaveMan.tmx
 tiled_maps/tmx/MoonMan_16x14_v5.tmx
@@ -3433,6 +3439,7 @@ music/vinnyz_glacier_track.wav
 music/vinnyz_stage_select_v1.wav
 music/MMX2_X-Hunter.mp3
 music/MMX7_VanishingGungaroo.txt
+music/vinnyz_wily_stage_select_v1.wav
 music/MMX2_MorphMoth.txt
 music/Crystal_Mines.mp3
 music/MMX6_Gate_Stage.mp3

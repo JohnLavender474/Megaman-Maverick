@@ -57,7 +57,7 @@ class CanonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         private const val BULLET_SPEED = 10f
 
         private const val JUMP_X = 5f
-        private const val JUMP_Y = 10f
+        private const val JUMP_Y = 8f
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -144,6 +144,8 @@ class CanonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
+        body.physics.applyFrictionX = false
+        body.physics.applyFrictionY = false
         body.setSize(1.5f * ConstVals.PPM, ConstVals.PPM.toFloat())
 
         val debugShapes = Array<() -> IDrawableShape?>()

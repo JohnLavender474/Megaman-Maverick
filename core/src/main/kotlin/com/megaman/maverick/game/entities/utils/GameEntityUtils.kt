@@ -22,6 +22,7 @@ import com.mega.game.engine.events.Event
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.events.EventType
@@ -144,4 +145,11 @@ fun isNextPossibleSpawnDelayed(game: MegamanMaverickGame, tag: String, mapObject
     val key = "$tag/$mapObjectId"
     val timer = game.updatables.get(key) as Timer?
     return timer != null && !timer.isFinished()
+}
+
+fun onMaxSpawnedByTag(tag: String, max: Int, onMax: (ObjectSet<MegaGameEntity>) -> Unit): Boolean {
+    val setOfAll = MegaGameEntities.getOfTag(tag)
+    if (setOfAll.size <= max) return false
+    onMax.invoke(setOfAll)
+    return true
 }

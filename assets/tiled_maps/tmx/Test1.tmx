@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="2000" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="15" nextobjectid="606">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="2000" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="15" nextobjectid="607">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/Gravity Man Stage.tsx"/>
  <tileset firstgid="4609" source="../tsx/MM3Wily1.tsx"/>
@@ -1145,19 +1145,10 @@
    </properties>
   </object>
   <object id="578" name="DarkSerket" x="46848" y="288" width="32" height="32"/>
-  <object id="582" name="ShieldGuardBot" x="47680" y="192" width="32" height="32">
-   <properties>
-    <property name="value" type="float" value="-5"/>
-   </properties>
-  </object>
-  <object id="584" name="ShieldGuardBot" x="47584" y="384" width="32" height="32">
-   <properties>
-    <property name="value" type="float" value="5"/>
-   </properties>
-  </object>
   <object id="589" name="CartinJoe" x="46584" y="400" width="16" height="16"/>
   <object id="602" name="DarkSerket" x="48544" y="288" width="32" height="32"/>
   <object id="605" name="Cokeyro" x="47376" y="288" width="32" height="32"/>
+  <object id="606" name="Cokeyro" x="47616" y="416" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="4" name="player">
   <object id="604" name="0" x="47168" y="416" width="32" height="32"/>

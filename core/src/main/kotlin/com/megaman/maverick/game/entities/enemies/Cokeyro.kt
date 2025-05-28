@@ -48,9 +48,9 @@ import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.getRandomPositionInBounds
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
-import kotlin.math.max
 
 class Cokeyro(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDrawableShapesEntity, IFaceable {
 
@@ -63,7 +63,8 @@ class Cokeyro(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         private const val SHAKE_THROW_TIME = 0.3f
         private const val SHAKE_SCANNER_RADIUS = 6f
 
-        private const val DIE_DUR = 2f
+        private const val DIE_DUR = 1f
+        private const val EXPLODE_DELAY = 0.1f
 
         private const val COKO_IMPULSE_Y = 12f
         private const val COKO_MAX_IMPULSE_X = 10f
@@ -90,6 +91,7 @@ class Cokeyro(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     private var shakeTimes = 0
 
     private val dieTimer = Timer(DIE_DUR)
+    private val explodeTimer = Timer(EXPLODE_DELAY)
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -116,6 +118,7 @@ class Cokeyro(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         shakeTimes = 0
 
         dieTimer.reset()
+        explodeTimer.reset()
     }
 
     override fun onDestroy() {
@@ -128,6 +131,11 @@ class Cokeyro(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         GameLogger.debug(TAG, "takeDamageFrom(): damaged=$damaged, damager=$damager")
         if (damaged) startShaking()
         return damaged
+    }
+
+    override fun onHealthDepleted() {
+        GameLogger.debug(TAG, "onHealthDepleted()")
+        state = CokeyroState.DIE
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -149,8 +157,22 @@ class Cokeyro(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                     if (shakeTimer.isFinished()) onShakeTimerFinished()
                 }
                 CokeyroState.DIE -> {
+                    explodeTimer.update(delta)
+                    if (explodeTimer.isFinished()) {
+                        explode(
+                            props(
+                                ConstKeys.OWNER pairTo this,
+                                ConstKeys.POSITION pairTo body.getBounds().getRandomPositionInBounds()
+                            )
+                        )
+                        explodeTimer.reset()
+                    }
+
                     dieTimer.update(delta)
-                    if (dieTimer.isFinished()) destroy()
+                    if (dieTimer.isFinished()) {
+                        explode()
+                        destroy()
+                    }
                 }
             }
         }
@@ -237,12 +259,6 @@ class Cokeyro(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
-
-            val alpha = when (state) {
-                CokeyroState.DIE -> max(0f, 1f - dieTimer.getRatio())
-                else -> 1f
-            }
-            sprite.setAlpha(alpha)
 
             sprite.setFlip(isFacing(Facing.RIGHT), false)
         }

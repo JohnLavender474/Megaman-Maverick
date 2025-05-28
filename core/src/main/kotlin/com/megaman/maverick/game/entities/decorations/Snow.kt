@@ -105,6 +105,7 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
         fadeTimer.reset()
 
         val setOfAllSnow = MegaGameEntities.getOfTag(getTag())
+
         GameLogger.debug(
             TAG,
             "onSpawn(): " +

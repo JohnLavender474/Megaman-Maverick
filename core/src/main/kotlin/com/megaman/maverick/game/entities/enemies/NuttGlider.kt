@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
@@ -56,6 +57,8 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         private const val NO_NUTT_SUFFIX = ""
         private const val NUTT_SUFFIX = "_nutt"
 
+        private const val CULL_TIME = 2f
+
         private const val STAND_DUR = 1f
         private const val GLIDE_DUR = 1f
 
@@ -91,10 +94,13 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         NuttGliderState.STAND pairTo Timer(STAND_DUR),
         NuttGliderState.GLIDE pairTo Timer(GLIDE_DUR)
     )
+
     private lateinit var state: NuttGliderState
+
     private var hasNutt = true
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             NuttGliderState.entries.forEach { state ->
@@ -109,6 +115,8 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
@@ -118,7 +126,9 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
             body.isSensing(BodySense.FEET_ON_GROUND) -> NuttGliderState.STAND
             else -> NuttGliderState.JUMP
         }
+
         updateFacing()
+
         hasNutt = spawnProps.getOrDefault(HAS_NUTT, DEFAULT_HAS_NUTT, Boolean::class)
 
         timers.values().forEach { it.reset() }
@@ -179,8 +189,8 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
                     if (timer.isFinished()) {
                         jump()
-                        state = NuttGliderState.JUMP
                         timer.reset()
+                        state = NuttGliderState.JUMP
                     }
                 }
             }

@@ -1,5 +1,5 @@
 Decorations1.png
-size: 478, 918
+size: 480, 918
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -12,7 +12,7 @@ AirConditioner/machine
   index: -1
 AirConditioner/pipe
   rotate: false
-  xy: 4, 0
+  xy: 8, 0
   size: 64, 16
   orig: 64, 16
   offset: 0, 0
@@ -68,9 +68,16 @@ DrippingToxicGoop
   index: -1
 DustPuff
   rotate: false
-  xy: 68, 0
+  xy: 72, 0
   size: 120, 16
   orig: 120, 16
+  offset: 0, 0
+  index: -1
+FloatingEmber
+  rotate: false
+  xy: 4, 0
+  size: 4, 8
+  orig: 4, 8
   offset: 0, 0
   index: -1
 FullChargedShotResidual
@@ -96,28 +103,28 @@ GravitySwitchAura
   index: -1
 GroundSnow/back
   rotate: false
-  xy: 188, 0
+  xy: 192, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 GroundSnow/left
   rotate: false
-  xy: 204, 0
+  xy: 208, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 GroundSnow/middle
   rotate: false
-  xy: 220, 0
+  xy: 224, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 GroundSnow/right
   rotate: false
-  xy: 236, 0
+  xy: 240, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -159,7 +166,7 @@ MockingByteNest
   index: -1
 MuzzleFlash
   rotate: false
-  xy: 252, 0
+  xy: 256, 0
   size: 48, 16
   orig: 48, 16
   offset: 0, 0
@@ -180,21 +187,21 @@ PunkCityLampPost/broken
   index: -1
 RainDrop/blue
   rotate: false
-  xy: 300, 0
+  xy: 304, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 RainDrop/purple
   rotate: false
-  xy: 316, 0
+  xy: 320, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 RainSplash
   rotate: false
-  xy: 332, 0
+  xy: 336, 0
   size: 80, 16
   orig: 80, 16
   offset: 0, 0
@@ -299,7 +306,7 @@ Thread
   index: -1
 ToxicWaterfall
   rotate: false
-  xy: 412, 0
+  xy: 416, 0
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
@@ -313,7 +320,7 @@ ToxicWaterSplash
   index: -1
 UnderWaterBubble
   rotate: false
-  xy: 444, 0
+  xy: 448, 0
   size: 32, 16
   orig: 32, 16
   offset: 0, 0

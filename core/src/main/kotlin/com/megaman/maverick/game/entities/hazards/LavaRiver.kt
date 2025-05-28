@@ -3,19 +3,20 @@ package com.megaman.maverick.game.entities.hazards
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.extensions.orderedMapOf
+import com.mega.game.engine.common.UtilMethods
+import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -27,20 +28,27 @@ import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
 import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.decorations.FloatingEmber
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelUtils
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getRandomPositionInBounds
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
@@ -55,6 +63,11 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         const val FALL = "fall"
         const val INNER = "inner"
         const val FALL_START = "fall_start"
+
+        private const val EMBER_MIN_DELAY = 0.5f
+        private const val EMBER_MAX_DELAY = 1f
+        private const val EMBER_SPAWN_X_BUFFER = ConstVals.VIEW_WIDTH + 6
+        private const val EMBER_SPAWN_Y_BUFFER = ConstVals.VIEW_HEIGHT + 12
 
         private val animDefs = orderedMapOf(
             TOP pairTo AnimationDef(3, 1, 0.1f, true),
@@ -80,6 +93,8 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
     private var frozen = false
     private var hidden = false
 
+    private val emberDelay = Timer()
+
     override fun init() {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
@@ -88,8 +103,9 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         }
         super.init()
         addComponent(defineBodyComponent())
-        addComponent(defineCullablesComponent())
         addComponent(defineSpritesComponent())
+        addComponent(defineCullablesComponent())
+        addComponent(defineUpdatablesComponent())
         addComponent(defineAnimationsComponent())
     }
 
@@ -109,12 +125,40 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         frozen = spawnProps.getOrDefault(
             ConstKeys.FROZEN, LevelUtils.isInfernoManLevelFrozen(game.state), Boolean::class
         )
+
+        resetEmberDelay()
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
     }
+
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        when {
+            !frozen -> {
+                emberDelay.update(delta)
+                if (emberDelay.isFinished()) {
+                    val position = GameObjectPools.fetch(Vector2::class)
+                        .setX(body.getBounds().getRandomPositionInBounds().x)
+                        .setY(body.getBounds().getMaxY())
+
+                    val canSpawnBounds = GameObjectPools.fetch(GameRectangle::class)
+                        .setWidth(EMBER_SPAWN_X_BUFFER * ConstVals.PPM)
+                        .setHeight(EMBER_SPAWN_Y_BUFFER * ConstVals.PPM)
+                        .setCenter(game.getGameCamera().getRotatedBounds().getCenter())
+
+                    if (canSpawnBounds.contains(position)) {
+                        val ember = MegaEntityFactory.fetch(FloatingEmber::class)!!
+                        ember.spawn(props(ConstKeys.POSITION pairTo position))
+
+                        resetEmberDelay()
+                    }
+                }
+            }
+            else -> emberDelay.setToEnd()
+        }
+    })
 
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
@@ -188,6 +232,11 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
+    }
+
+    private fun resetEmberDelay() {
+        val duration = UtilMethods.getRandom(EMBER_MIN_DELAY, EMBER_MAX_DELAY)
+        emberDelay.resetDuration(duration)
     }
 
     override fun getType() = EntityType.HAZARD
