@@ -31,7 +31,9 @@ class CameraManagerForRooms(
     var endTransition: (() -> Unit)? = null,
     var onSetToRoomNoTrans: (() -> Unit)? = null,
     var shouldInterpolate: () -> Boolean = { false },
-    var interpolationValue: () -> Float = { 1f }
+    var interpolationValue: () -> Float = { 1f },
+    var absoluteMinX: Float = 0f,
+    var absoluteMaxX: Float = Float.POSITIVE_INFINITY
 ) : Updatable, Resettable {
 
     companion object {
@@ -67,7 +69,7 @@ class CameraManagerForRooms(
             if (value == null) return
 
             val pos = value.getFocusPosition()
-            camera.position.x = pos.x
+            camera.position.x = pos.x.coerceIn(absoluteMinX, absoluteMaxX)
             camera.position.y = pos.y
         }
 
@@ -169,6 +171,8 @@ class CameraManagerForRooms(
     }
 
     private fun onNoTransition() {
+        if (focus == null) return
+
         if (currentGameRoom == null) {
             val nextGameRoom = nextGameRoom()
 
@@ -178,12 +182,10 @@ class CameraManagerForRooms(
                 onSetToRoomNoTrans?.invoke()
             }
 
-            focus?.getFocusPosition()?.let { camera.position.x = it.x }
-
-            return
+            focus?.getFocusPosition()?.let {
+                camera.position.x = it.x.coerceIn(absoluteMinX, absoluteMaxX)
+            }
         }
-
-        if (focus == null) return
 
         if (currentGameRoom != null &&
             !currentGameRoom!!.rectangle.toGameRectangle().overlaps(focus!!.getFocusBounds())
@@ -300,7 +302,8 @@ class CameraManagerForRooms(
                 focusPos.y = interpolate(camera.position.y, focusPos.y, interpolationValue.invoke())
             }
 
-            camera.position.x = focusPos.x
+            camera.position.x = focusPos.x.coerceIn(absoluteMinX, absoluteMaxX)
+
             if (focusY) camera.position.y = focusPos.y
         }
     }

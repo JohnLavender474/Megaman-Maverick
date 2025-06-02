@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.maps.MapObject
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.AnimationsComponentBuilder
@@ -17,6 +18,7 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.ICullable
@@ -39,11 +41,13 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.hazards.HoneyDrip
 import com.megaman.maverick.game.entities.utils.StateLoopHandler
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.getShape
 import com.megaman.maverick.game.utils.extensions.overlaps
 import com.megaman.maverick.game.world.body.*
 
@@ -61,7 +65,7 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         private const val SQUEEZE_TIME = 0.5f
 
         private const val MAX_BEES = 8
-        private const val BEE_CYCLE_DELAY = 2.5f
+        private const val BEE_CYCLE_DELAY = 2f
         private const val MIN_BEES_TO_CYCLE = 1
         private const val MAX_BEES_TO_CYCLE = 3
 
@@ -91,6 +95,8 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     private val cullBounds = GameRectangle()
         .setSize(CULL_BOUNDS_SIZE * ConstVals.PPM)
         .also { it.drawingColor = Color.GRAY }
+
+    private val scanners = Array<IGameShape2D>()
 
     private val beeCycleDelay = Timer(BEE_CYCLE_DELAY)
     private val reusableBeeArray = Array<Beezee>()
@@ -122,6 +128,15 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         cullTimer.reset()
 
         beeCycleDelay.reset()
+
+        spawnProps.forEach { key, value ->
+            if (key.toString().contains(ConstKeys.SCANNER)) {
+                val scanner = (value as MapObject).getShape(false)
+                scanners.add(scanner)
+
+                addDebugShapeSupplier { scanner }
+            }
+        }
     }
 
     override fun onHealthDepleted() {
@@ -141,6 +156,8 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
         // if the hive is culled for being out of bounds, then destroy the children as well
         killChildren()
+
+        clearDebugShapeSuppliers()
     }
 
     private fun releaseChildren() {
@@ -173,11 +190,13 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
             stateLoopHandler.update(delta)
 
-            beeCycleDelay.update(delta)
-            if (beeCycleDelay.isFinished()) {
-                cycleBees()
-                beeCycleDelay.reset()
-            }
+            if (scanners.any { megaman.body.getBounds().overlaps(it) }) {
+                beeCycleDelay.update(delta)
+                if (beeCycleDelay.isFinished()) {
+                    cycleBees()
+                    beeCycleDelay.reset()
+                }
+            } else beeCycleDelay.setToEnd()
         }
     }
 

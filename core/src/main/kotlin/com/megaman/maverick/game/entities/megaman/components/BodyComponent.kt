@@ -69,7 +69,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.drawingColor = Color.GRAY
 
     val debugShapes = Array<() -> IDrawableShape?>()
-    // debugShapes.add { body.getBounds() }
+    debugShapes.add { body.getBounds() }
 
     val playerFixture = Fixture(body, FixtureType.PLAYER, GameRectangle())
     body.addFixture(playerFixture)
@@ -95,6 +95,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         onBounce.invoke()
         if (!body.isSensing(BodySense.IN_WATER)) aButtonTask = AButtonTask.AIR_DASH
     }
+    feetFixture.setShouldStickToBlock { _, _ -> !body.isSensing(BodySense.IN_WATER) }
     body.addFixture(feetFixture)
     feetFixture.drawingColor = Color.GREEN
     debugShapes.add { feetFixture }

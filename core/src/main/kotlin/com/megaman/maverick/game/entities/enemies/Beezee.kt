@@ -11,6 +11,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Size
+import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
@@ -42,6 +43,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.utils.moveTowards
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.extensions.getRandomPositionInBounds
@@ -68,6 +70,8 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
 
         private const val SPLIT_PARENT_BOUNDS_ROWS = 2
         private const val SPLIT_PARENT_BOUNDS_COLS = 2
+
+        private val DAMAGERS = gdxArrayOf(Axe::class)
 
         private val animDefs = orderedMapOf(
             "hover" pairTo AnimationDef(3, 1, 0.1f, true),
@@ -129,6 +133,9 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         super.onDestroy()
         owner = null
     }
+
+    override fun canBeDamagedBy(damager: IDamager) =
+        DAMAGERS.contains(damager::class) || super.canBeDamagedBy(damager)
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
         GameLogger.debug(TAG, "takeDamageFrom(): hashCode=${hashCode()}, damager=$damager")

@@ -1,1 +1,802 @@
-===== SESSION STARTED: 2025-05-27T20:15:42.402558551 =====
+===== SESSION STARTED: 2025-06-01T23:20:58.276416984 =====
+23:21:21 | DEBUG | WoodCrate | init()
+23:21:21 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[2016.0,960.0,64.0,64.0]]
+	[x=2016.0]
+	[height=64.0]
+	[id=37]
+	[name=WoodCrate]
+	[y=960.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=2016.0]
+	[height=64.0]
+	[id=37]
+	[name=WoodCrate]
+	[y=960.0]
+	[width=64.0]
+})
+23:21:23 | DEBUG | WoodCrate | init()
+23:21:23 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[2240.0,960.0,64.0,64.0]]
+	[x=2240.0]
+	[height=64.0]
+	[id=278]
+	[name=WoodCrate]
+	[y=960.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=2240.0]
+	[height=64.0]
+	[id=278]
+	[name=WoodCrate]
+	[y=960.0]
+	[width=64.0]
+})
+23:21:49 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[4000.0,1760.0,64.0,64.0]]
+	[x=4000.0]
+	[height=64.0]
+	[id=270]
+	[name=WoodCrate]
+	[y=1760.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=4000.0]
+	[height=64.0]
+	[id=270]
+	[name=WoodCrate]
+	[y=1760.0]
+	[width=64.0]
+})
+23:22:32 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[6464.0,2688.0,64.0,64.0]]
+	[spawn_room=room6]
+	[x=6464.0]
+	[height=64.0]
+	[spawn_type=spawn_room]
+	[cull_out_of_bounds=false]
+	[id=163]
+	[cull_room=room6]
+	[name=WoodCrate]
+	[y=2688.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[spawn_room=room6]
+	[x=6464.0]
+	[height=64.0]
+	[spawn_type=spawn_room]
+	[cull_out_of_bounds=false]
+	[id=163]
+	[cull_room=room6]
+	[name=WoodCrate]
+	[y=2688.0]
+	[width=64.0]
+})
+23:22:33 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[5952.0,2560.0,64.0,64.0]]
+	[x=5952.0]
+	[height=64.0]
+	[id=165]
+	[name=WoodCrate]
+	[y=2560.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=5952.0]
+	[height=64.0]
+	[id=165]
+	[name=WoodCrate]
+	[y=2560.0]
+	[width=64.0]
+})
+23:22:33 | DEBUG | WoodCrate | init()
+23:22:33 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[6080.0,2304.0,64.0,64.0]]
+	[x=6080.0]
+	[height=64.0]
+	[id=158]
+	[name=WoodCrate]
+	[y=2304.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=6080.0]
+	[height=64.0]
+	[id=158]
+	[name=WoodCrate]
+	[y=2304.0]
+	[width=64.0]
+})
+23:22:36 | DEBUG | WoodCrate | init()
+23:22:36 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[6464.0,2336.0,64.0,64.0]]
+	[x=6464.0]
+	[height=64.0]
+	[id=131]
+	[name=WoodCrate]
+	[y=2336.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=6464.0]
+	[height=64.0]
+	[id=131]
+	[name=WoodCrate]
+	[y=2336.0]
+	[width=64.0]
+})
+23:22:40 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[6080.0,2304.0,64.0,64.0]]
+	[x=6080.0]
+	[height=64.0]
+	[id=158]
+	[name=WoodCrate]
+	[y=2304.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=6080.0]
+	[height=64.0]
+	[id=158]
+	[name=WoodCrate]
+	[y=2304.0]
+	[width=64.0]
+})
+23:22:41 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[5952.0,2560.0,64.0,64.0]]
+	[x=5952.0]
+	[height=64.0]
+	[id=165]
+	[name=WoodCrate]
+	[y=2560.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=5952.0]
+	[height=64.0]
+	[id=165]
+	[name=WoodCrate]
+	[y=2560.0]
+	[width=64.0]
+})
+23:22:53 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[6464.0,2336.0,64.0,64.0]]
+	[x=6464.0]
+	[height=64.0]
+	[id=131]
+	[name=WoodCrate]
+	[y=2336.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=6464.0]
+	[height=64.0]
+	[id=131]
+	[name=WoodCrate]
+	[y=2336.0]
+	[width=64.0]
+})
+23:22:57 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[6464.0,2336.0,64.0,64.0]]
+	[x=6464.0]
+	[height=64.0]
+	[id=131]
+	[name=WoodCrate]
+	[y=2336.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=6464.0]
+	[height=64.0]
+	[id=131]
+	[name=WoodCrate]
+	[y=2336.0]
+	[width=64.0]
+})
+23:22:59 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[6560.0,1920.0,64.0,64.0]]
+	[x=6560.0]
+	[height=64.0]
+	[id=155]
+	[name=WoodCrate]
+	[y=1920.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=6560.0]
+	[height=64.0]
+	[id=155]
+	[name=WoodCrate]
+	[y=1920.0]
+	[width=64.0]
+})
+23:23:00 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[6304.0,1696.0,64.0,64.0]]
+	[x=6304.0]
+	[height=64.0]
+	[id=156]
+	[name=WoodCrate]
+	[y=1696.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=6304.0]
+	[height=64.0]
+	[id=156]
+	[name=WoodCrate]
+	[y=1696.0]
+	[width=64.0]
+})
+23:23:00 | DEBUG | WoodCrate | init()
+23:23:00 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[6464.0,1696.0,64.0,64.0]]
+	[x=6464.0]
+	[height=64.0]
+	[id=177]
+	[name=WoodCrate]
+	[y=1696.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=6464.0]
+	[height=64.0]
+	[id=177]
+	[name=WoodCrate]
+	[y=1696.0]
+	[width=64.0]
+})
+23:23:45 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[6560.0,1920.0,64.0,64.0]]
+	[x=6560.0]
+	[height=64.0]
+	[id=155]
+	[name=WoodCrate]
+	[y=1920.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=6560.0]
+	[height=64.0]
+	[id=155]
+	[name=WoodCrate]
+	[y=1920.0]
+	[width=64.0]
+})
+23:24:24 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[6560.0,1920.0,64.0,64.0]]
+	[x=6560.0]
+	[height=64.0]
+	[id=155]
+	[name=WoodCrate]
+	[y=1920.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=6560.0]
+	[height=64.0]
+	[id=155]
+	[name=WoodCrate]
+	[y=1920.0]
+	[width=64.0]
+})
+23:25:02 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[6560.0,1920.0,64.0,64.0]]
+	[x=6560.0]
+	[height=64.0]
+	[id=155]
+	[name=WoodCrate]
+	[y=1920.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=6560.0]
+	[height=64.0]
+	[id=155]
+	[name=WoodCrate]
+	[y=1920.0]
+	[width=64.0]
+})
+23:25:29 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[6560.0,1920.0,64.0,64.0]]
+	[x=6560.0]
+	[height=64.0]
+	[id=155]
+	[name=WoodCrate]
+	[y=1920.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=6560.0]
+	[height=64.0]
+	[id=155]
+	[name=WoodCrate]
+	[y=1920.0]
+	[width=64.0]
+})
+23:26:23 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[6560.0,1920.0,64.0,64.0]]
+	[x=6560.0]
+	[height=64.0]
+	[id=155]
+	[name=WoodCrate]
+	[y=1920.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=6560.0]
+	[height=64.0]
+	[id=155]
+	[name=WoodCrate]
+	[y=1920.0]
+	[width=64.0]
+})
+23:27:15 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[2016.0,960.0,64.0,64.0]]
+	[x=2016.0]
+	[height=64.0]
+	[id=37]
+	[name=WoodCrate]
+	[y=960.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=2016.0]
+	[height=64.0]
+	[id=37]
+	[name=WoodCrate]
+	[y=960.0]
+	[width=64.0]
+})
+23:27:17 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[2240.0,960.0,64.0,64.0]]
+	[x=2240.0]
+	[height=64.0]
+	[id=278]
+	[name=WoodCrate]
+	[y=960.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=2240.0]
+	[height=64.0]
+	[id=278]
+	[name=WoodCrate]
+	[y=960.0]
+	[width=64.0]
+})
+23:27:51 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[4000.0,1760.0,64.0,64.0]]
+	[x=4000.0]
+	[height=64.0]
+	[id=270]
+	[name=WoodCrate]
+	[y=1760.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=4000.0]
+	[height=64.0]
+	[id=270]
+	[name=WoodCrate]
+	[y=1760.0]
+	[width=64.0]
+})
+23:28:20 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[6464.0,2688.0,64.0,64.0]]
+	[spawn_room=room6]
+	[x=6464.0]
+	[height=64.0]
+	[spawn_type=spawn_room]
+	[cull_out_of_bounds=false]
+	[id=163]
+	[cull_room=room6]
+	[name=WoodCrate]
+	[y=2688.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[spawn_room=room6]
+	[x=6464.0]
+	[height=64.0]
+	[spawn_type=spawn_room]
+	[cull_out_of_bounds=false]
+	[id=163]
+	[cull_room=room6]
+	[name=WoodCrate]
+	[y=2688.0]
+	[width=64.0]
+})
+23:28:21 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[5952.0,2560.0,64.0,64.0]]
+	[x=5952.0]
+	[height=64.0]
+	[id=165]
+	[name=WoodCrate]
+	[y=2560.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=5952.0]
+	[height=64.0]
+	[id=165]
+	[name=WoodCrate]
+	[y=2560.0]
+	[width=64.0]
+})
+23:28:21 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[6080.0,2304.0,64.0,64.0]]
+	[x=6080.0]
+	[height=64.0]
+	[id=158]
+	[name=WoodCrate]
+	[y=2304.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=6080.0]
+	[height=64.0]
+	[id=158]
+	[name=WoodCrate]
+	[y=2304.0]
+	[width=64.0]
+})
+23:28:24 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[6464.0,2336.0,64.0,64.0]]
+	[x=6464.0]
+	[height=64.0]
+	[id=131]
+	[name=WoodCrate]
+	[y=2336.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=6464.0]
+	[height=64.0]
+	[id=131]
+	[name=WoodCrate]
+	[y=2336.0]
+	[width=64.0]
+})
+23:28:29 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[6080.0,2304.0,64.0,64.0]]
+	[x=6080.0]
+	[height=64.0]
+	[id=158]
+	[name=WoodCrate]
+	[y=2304.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=6080.0]
+	[height=64.0]
+	[id=158]
+	[name=WoodCrate]
+	[y=2304.0]
+	[width=64.0]
+})
+23:28:30 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[5952.0,2560.0,64.0,64.0]]
+	[x=5952.0]
+	[height=64.0]
+	[id=165]
+	[name=WoodCrate]
+	[y=2560.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=5952.0]
+	[height=64.0]
+	[id=165]
+	[name=WoodCrate]
+	[y=2560.0]
+	[width=64.0]
+})
+23:28:44 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[6464.0,2336.0,64.0,64.0]]
+	[x=6464.0]
+	[height=64.0]
+	[id=131]
+	[name=WoodCrate]
+	[y=2336.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=6464.0]
+	[height=64.0]
+	[id=131]
+	[name=WoodCrate]
+	[y=2336.0]
+	[width=64.0]
+})
+23:28:48 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[6560.0,1920.0,64.0,64.0]]
+	[x=6560.0]
+	[height=64.0]
+	[id=155]
+	[name=WoodCrate]
+	[y=1920.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=6560.0]
+	[height=64.0]
+	[id=155]
+	[name=WoodCrate]
+	[y=1920.0]
+	[width=64.0]
+})
+23:28:48 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[6304.0,1696.0,64.0,64.0]]
+	[x=6304.0]
+	[height=64.0]
+	[id=156]
+	[name=WoodCrate]
+	[y=1696.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=6304.0]
+	[height=64.0]
+	[id=156]
+	[name=WoodCrate]
+	[y=1696.0]
+	[width=64.0]
+})
+23:28:48 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[6464.0,1696.0,64.0,64.0]]
+	[x=6464.0]
+	[height=64.0]
+	[id=177]
+	[name=WoodCrate]
+	[y=1696.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=6464.0]
+	[height=64.0]
+	[id=177]
+	[name=WoodCrate]
+	[y=1696.0]
+	[width=64.0]
+})
+23:29:27 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[6560.0,1920.0,64.0,64.0]]
+	[x=6560.0]
+	[height=64.0]
+	[id=155]
+	[name=WoodCrate]
+	[y=1920.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=6560.0]
+	[height=64.0]
+	[id=155]
+	[name=WoodCrate]
+	[y=1920.0]
+	[width=64.0]
+})
+23:30:06 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[9984.0,800.0,64.0,64.0]]
+	[x=9984.0]
+	[height=64.0]
+	[id=274]
+	[name=WoodCrate]
+	[y=800.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=9984.0]
+	[height=64.0]
+	[id=274]
+	[name=WoodCrate]
+	[y=800.0]
+	[width=64.0]
+})
+23:30:06 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[10112.0,800.0,64.0,64.0]]
+	[x=10112.0]
+	[height=64.0]
+	[id=279]
+	[name=WoodCrate]
+	[y=800.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=10112.0]
+	[height=64.0]
+	[id=279]
+	[name=WoodCrate]
+	[y=800.0]
+	[width=64.0]
+})
+23:30:11 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[10400.0,736.0,64.0,64.0]]
+	[x=10400.0]
+	[height=64.0]
+	[id=272]
+	[name=WoodCrate]
+	[y=736.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=10400.0]
+	[height=64.0]
+	[id=272]
+	[name=WoodCrate]
+	[y=736.0]
+	[width=64.0]
+})
+23:30:12 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[10560.0,736.0,64.0,64.0]]
+	[x=10560.0]
+	[height=64.0]
+	[id=273]
+	[name=WoodCrate]
+	[y=736.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=10560.0]
+	[height=64.0]
+	[id=273]
+	[name=WoodCrate]
+	[y=736.0]
+	[width=64.0]
+})
+23:30:13 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[10752.0,672.0,64.0,64.0]]
+	[x=10752.0]
+	[height=64.0]
+	[id=271]
+	[name=WoodCrate]
+	[y=672.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=10752.0]
+	[height=64.0]
+	[id=271]
+	[name=WoodCrate]
+	[y=672.0]
+	[width=64.0]
+})
+23:30:14 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[10912.0,672.0,64.0,64.0]]
+	[x=10912.0]
+	[height=64.0]
+	[id=280]
+	[name=WoodCrate]
+	[y=672.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=10912.0]
+	[height=64.0]
+	[id=280]
+	[name=WoodCrate]
+	[y=672.0]
+	[width=64.0]
+})
+23:30:15 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:17 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:21 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[10560.0,736.0,64.0,64.0]]
+	[x=10560.0]
+	[height=64.0]
+	[id=273]
+	[name=WoodCrate]
+	[y=736.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=10560.0]
+	[height=64.0]
+	[id=273]
+	[name=WoodCrate]
+	[y=736.0]
+	[width=64.0]
+})
+23:30:22 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:29 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:34 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[10400.0,736.0,64.0,64.0]]
+	[x=10400.0]
+	[height=64.0]
+	[id=272]
+	[name=WoodCrate]
+	[y=736.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=10400.0]
+	[height=64.0]
+	[id=272]
+	[name=WoodCrate]
+	[y=736.0]
+	[width=64.0]
+})
+23:30:37 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[10912.0,672.0,64.0,64.0]]
+	[x=10912.0]
+	[height=64.0]
+	[id=280]
+	[name=WoodCrate]
+	[y=672.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=10912.0]
+	[height=64.0]
+	[id=280]
+	[name=WoodCrate]
+	[y=672.0]
+	[width=64.0]
+})
+23:30:37 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:38 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:39 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:41 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:41 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:43 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:43 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[10560.0,736.0,64.0,64.0]]
+	[x=10560.0]
+	[height=64.0]
+	[id=273]
+	[name=WoodCrate]
+	[y=736.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=10560.0]
+	[height=64.0]
+	[id=273]
+	[name=WoodCrate]
+	[y=736.0]
+	[width=64.0]
+})
+23:30:43 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:45 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:46 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[10560.0,736.0,64.0,64.0]]
+	[x=10560.0]
+	[height=64.0]
+	[id=273]
+	[name=WoodCrate]
+	[y=736.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=10560.0]
+	[height=64.0]
+	[id=273]
+	[name=WoodCrate]
+	[y=736.0]
+	[width=64.0]
+})
+23:30:46 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:47 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:48 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[10560.0,736.0,64.0,64.0]]
+	[x=10560.0]
+	[height=64.0]
+	[id=273]
+	[name=WoodCrate]
+	[y=736.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=10560.0]
+	[height=64.0]
+	[id=273]
+	[name=WoodCrate]
+	[y=736.0]
+	[width=64.0]
+})
+23:30:48 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:49 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:50 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:51 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:51 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:52 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:52 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:53 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:55 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:56 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:57 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:57 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:58 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:30:59 | DEBUG | WoodCrate | hitByFeet(): apply negative Y impulse
+23:31:00 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[10400.0,736.0,64.0,64.0]]
+	[x=10400.0]
+	[height=64.0]
+	[id=272]
+	[name=WoodCrate]
+	[y=736.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=10400.0]
+	[height=64.0]
+	[id=272]
+	[name=WoodCrate]
+	[y=736.0]
+	[width=64.0]
+})
+23:31:02 | DEBUG | WoodCrate | onSpawn(): spawnProps=Properties({
+	[bounds=[10112.0,800.0,64.0,64.0]]
+	[x=10112.0]
+	[height=64.0]
+	[id=279]
+	[name=WoodCrate]
+	[y=800.0]
+	[width=64.0]
+}), copyProps=Properties({
+	[x=10112.0]
+	[height=64.0]
+	[id=279]
+	[name=WoodCrate]
+	[y=800.0]
+	[width=64.0]
+})

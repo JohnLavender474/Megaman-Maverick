@@ -122,18 +122,23 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
-        if (damageable !is IHealthEntity || damageable.getCurrentHealth() > damageable.getMinHealth()) explodeAndDie()
+        if (damageable !is IHealthEntity || !damageable.isHealthDepleted()) explodeAndDie()
     }
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = bodyFixture.getEntity()
-        if (entity != owner && !entity.dead && entity is IDamageable && !entity.canBeDamagedBy(this)) explodeAndDie()
+        // If a charged shot projectile hits a damageable entity that is not dead, not invincible, and
+        // cannot be damaged by the projectile, then go ahead and destroy the projectile
+        if (entity != owner && !entity.dead && entity is IDamageable &&
+            !entity.invincible && !entity.canBeDamagedBy(this)
+        ) explodeAndDie()
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
         bounce(otherShape)
 
-    override fun hitSand(sandFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
+    override fun hitSand(sandFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
+        explodeAndDie()
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val shieldEntity = shieldFixture.getEntity()

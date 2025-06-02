@@ -150,7 +150,7 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
             (waterListenerFixture.rawShape as GameRectangle).set(body)
 
             feetFixture.offsetFromBodyAttachment.y = (-body.getHeight() / 2f) + 0.1f * ConstVals.PPM
-            feetFixture.putProperty(ConstKeys.STICK_TO_BLOCK, !body.isSensing(BodySense.FEET_ON_SAND))
+            feetFixture.setShouldStickToBlock(!body.isSensing(BodySense.FEET_ON_SAND))
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

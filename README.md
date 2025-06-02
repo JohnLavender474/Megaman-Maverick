@@ -159,7 +159,7 @@ comprehensive listing of the credits for the artwork used in this game.
 - Penpen Maker - [Mister Mike](https://www.spriters-resource.com/nes/mm3/sheet/77911/) (currently not used)
 - Sphinx - [Mister Mike](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/108177/) (currently not used)
 
-### Dr. Wily
+#### Dr. Wily
 
 - Wily Mugshot - [Toni](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/161866/?source=genre)
 
@@ -219,13 +219,13 @@ comprehensive listing of the credits for the artwork used in this game.
   - [Sniper Joe Expanded](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/159822/)
 - All other enemy sprites made by Capcom and sourced from https://www.spriters-resource.com/
 
-### Blocks / Platforms
+#### Blocks / Platforms
 
 - [Samuel_X7](https://www.deviantart.com/samuelx4):
   - Robot Master Entry Gate
   - Rocket Platform
 
-### Other
+#### Other
 
 - [Kofi K](https://www.youtube.com/@kofi_k1st)
   - Gravity Switcharoo
@@ -234,18 +234,25 @@ comprehensive listing of the credits for the artwork used in this game.
 
 #### Tilesets
 
+List of creators and the stages in which their artwork is used. Some stages contain more than one artist's works. 
+
 - [Balloon Cart](https://balloon-cart.itch.io)
   - [Reactor Man](https://balloon-cart.itch.io/reactor-man-asset-pack)
   - [Glacier Man](https://balloon-cart.itch.io/glacier-man-asset-pack)
 - [Ansimuz](https://ansimuz.itch.io)
   - [Intro Stage](https://ansimuz.itch.io/mega-bot) 
   - [Rodent Man](https://ansimuz.itch.io/mega-bot)
-  - [Inferno Man](https://www.deviantart.com/oldlavygenes474/art/1142906425)
+  - [Inferno Man](https://ansimuz.itch.io/mega-bot)
+  - [Timber Woman](https://ansimuz.itch.io/mega-bot)
 - [Super Icon Ltd](https://assetstore.unity.com/publishers/5990) 
   - [Mega 8-Bit Pixel Pack](https://assetstore.unity.com/packages/2d/environments/mega-8-bit-pixel-pack-60158)
 - [Gektorne](https://gektorne.itch.io/)
   - [Wily Stage 2](https://gektorne.itch.io/8bit-tileset-for-action-platformer)
-- [Bongwater-bandit](https://www.deviantart.com/bongwater-bandit:
+- [Anokolisa](https://anokolisa.itch.io)
+  - Timber Woman:
+    - [Forest Tiles](https://anokolisa.itch.io/legacy-classic-vlii-swamp)
+    - [Cave Tiles](https://anokolisa.itch.io/legacy-classic-vlii-cave)
+- [Bongwater-bandit](https://www.deviantart.com/bongwater-bandit)
   - [MM6 Plant Man edit](https://www.deviantart.com/bongwater-bandit/art/MM6-Plant-Man-edit-875037908)
 - Mister Mike
   - [Megaman 6 - Tomahawk Man](https://www.spriters-resource.com/nes/mm6/sheet/16402/)
@@ -300,7 +307,7 @@ Sounds belong to Capcom (Megaman-ripped sound effects) and Nintendo (Mario-rippe
 
 TODO: add credits and links here for where the sounds were downloaded from
 
-### Proof of Permissions for Fan Community Assets
+#### Proof of Permissions for Fan Community Assets
 
 For some of the fan artwork used in this game, the artist did not state in the work's description or elsewhere that the work was
 free to use. For these works, I reached out to the artist personally to ask if I could use their work. Below are screenshots

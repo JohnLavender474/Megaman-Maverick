@@ -1928,6 +1928,7 @@ sprites/frames/Platforms1/FrozenBlock.png
 sprites/frames/Platforms1/AppearingBrick.png
 sprites/frames/Platforms1/Platform2.png
 sprites/frames/Platforms1/8bitBlueBlock.png
+sprites/frames/Platforms1/WoodCrate.png
 sprites/frames/Platforms1/8bitBlueBlockTransBorder.png
 sprites/frames/Platforms1/Lift.png
 sprites/frames/Platforms1/RocketPlatform.png
@@ -2762,6 +2763,7 @@ sprites/piskel/ReactorMan_StandThrow.piskel
 sprites/piskel/Toxic_Waterfall.piskel
 sprites/piskel/ReactMan.piskel
 sprites/piskel/CrystalManTileset.piskel
+sprites/piskel/WoodenFlipper.piskel
 sprites/piskel/Dripping_Toxic_Goop.piskel
 sprites/piskel/MegamanChargedShot.piskel
 sprites/piskel/PurpleBlast.piskel
@@ -2853,6 +2855,7 @@ sprites/piskel/QuickSand_v2_Left.piskel
 sprites/piskel/SteamRollerMan.piskel
 sprites/piskel/Popup Canon.piskel
 sprites/piskel/InfernoBKG.piskel
+sprites/piskel/Anokolisa_Cave_Tileset.piskel
 sprites/piskel/LevelPauseMenu.piskel
 sprites/piskel/Megaman_RUSH_JET.piskel
 sprites/piskel/InfernoManFace.piskel
@@ -2866,6 +2869,7 @@ sprites/piskel/GoldBlock.piskel
 sprites/piskel/PunkCityLampPost.piskel
 sprites/piskel/QuickSand_v2_TopLeft.piskel
 sprites/piskel/SprBGTomahawk_v2.piskel
+sprites/piskel/WoodCrate.piskel
 sprites/piskel/IceFox.piskel
 sprites/piskel/UF_Oh_No_Bot_1.piskel
 sprites/piskel/AstroAss.piskel
@@ -2986,6 +2990,7 @@ tiled_maps/tsx/generel_block_tiles.tsx
 tiled_maps/tsx/ShadowMan.tsx
 tiled_maps/tsx/InfernoManTileset.tsx
 tiled_maps/tsx/Wily2.tsx
+tiled_maps/tsx/Anokolisa_Cave_Tileset.tsx
 tiled_maps/tsx/ColorsTileset.tsx
 tiled_maps/tsx/MagnetMan2.tsx
 tiled_maps/tsx/tomahawk_man_stage_tileset.tsx
@@ -3125,6 +3130,7 @@ tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock/sprBGB
 tiled_maps/png/MMM mega man 11 background/animated backgrounds/sprBGBlock/sprBGBlock frame 1.png
 tiled_maps/png/tstKnightMan.png
 tiled_maps/png/mm10blade.png
+tiled_maps/png/Anokolisa_Cave_Tileset.png
 tiled_maps/png/MoonManTiles_OLD.png
 tiled_maps/png/tstCentaurManAlt-resize.png
 tiled_maps/png/mm9galaxy.png

@@ -392,6 +392,15 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         gameCamera.position.set(ConstFuncs.getGameCamInitPos())
         uiCamera.position.set(ConstFuncs.getGameCamInitPos())
 
+        cameraManagerForRooms.absoluteMinX = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f
+        cameraManagerForRooms.absoluteMaxX = tiledMapLoadResult!!.worldWidth * ConstVals.PPM.toFloat()
+
+        GameLogger.debug(
+            TAG,
+            "start(): set camera-manager-for-rooms absolute min and max: " +
+                "${cameraManagerForRooms.absoluteMinX}, ${cameraManagerForRooms.absoluteMaxX}"
+        )
+
         if (DISPLAY_ROOMS_DEBUG_TEXT) {
             val roomsTextSupplier: () -> String = {
                 "current=${cameraManagerForRooms.currentGameRoom?.name} / " +
@@ -764,6 +773,12 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         (game.selectButtonAction == SelectButtonAction.START && controllerPoller.isJustPressed(MegaControllerButton.SELECT))
 
     override fun render(delta: Float) {
+        game.setDebugText(
+            "${cameraManagerForRooms.transitioning} / " +
+                "${cameraManagerForRooms.currentGameRoom?.name} / " +
+                "${cameraManagerForRooms.priorGameRoom?.name}"
+        )
+
         // do not allow pausing if Megaman is dead
         if (!game.paused && !megaman.dead && isPauseButtonRequested()) {
             GameLogger.debug(TAG, "render(): pause game")

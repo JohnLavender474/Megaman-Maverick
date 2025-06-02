@@ -101,7 +101,7 @@ class CanonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     }
 
     private fun shoot() {
-        val spawn = body.getCenter().add(ConstVals.PPM.toFloat() * facing.value, 0.25f * ConstVals.PPM)
+        val spawn = body.getCenter().add(0.75f * ConstVals.PPM * facing.value, 0.25f * ConstVals.PPM)
 
         val trajectory = GameObjectPools.fetch(Vector2::class).set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
 

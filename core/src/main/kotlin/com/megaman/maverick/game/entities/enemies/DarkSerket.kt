@@ -243,7 +243,7 @@ class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         // This is set to prevent the scorpion from sinking in quick sand due to the "feet-rise-sink block" falling.
         // However, setting this to false makes it so that the scorpion's feet won't "stick" to any blocks. If this
         // becomes an issue, then "STICK_TO_BLICK" will need to be a callback instead of a boolean flag.
-        feetFixture.putProperty(ConstKeys.STICK_TO_BLOCK, false)
+        feetFixture.setShouldStickToBlock(false)
         body.addFixture(feetFixture)
         feetFixture.drawingColor = Color.GRAY
         body.addFixture(feetFixture)

@@ -191,3 +191,20 @@ fun IFixture.setHitByLaserReceiver(receiver: (IFixture, ProcessState) -> Unit): 
 
 fun IFixture.getHitByLaser(laser: IFixture, processState: ProcessState) =
     (getProperty(ConstKeys.HIT_BY_LASER) as (IFixture, ProcessState) -> Unit).invoke(laser, processState)
+
+fun IFixture.shouldStickToBlock(processState: ProcessState, blockFixture: IFixture) = when {
+    hasProperty(ConstKeys.STICK_TO_BLOCK) ->
+        (getProperty(ConstKeys.STICK_TO_BLOCK) as (ProcessState, IFixture) -> Boolean).invoke(
+            processState,
+            blockFixture
+        )
+    else -> true
+}
+
+fun IFixture.setShouldStickToBlock(predicate: (ProcessState, IFixture) -> Boolean) {
+    putProperty(ConstKeys.STICK_TO_BLOCK, predicate)
+}
+
+fun IFixture.setShouldStickToBlock(shouldStick: Boolean) {
+    setShouldStickToBlock { _, _ -> shouldStick }
+}

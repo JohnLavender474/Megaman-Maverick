@@ -293,7 +293,6 @@ class MegaContactListener(
             if (feetFixture.hasFilter() && !feetFixture.getFilter().invoke(blockFixture)) return
 
             val block = blockFixture.getEntity() as Block
-
             val body = feetFixture.getBody()
 
             if (!blockFixture.getBody().physics.collisionOn) {
@@ -304,7 +303,7 @@ class MegaContactListener(
 
             body.addFeetBlock(block)
 
-            val stickToBlock = feetFixture.getOrDefaultProperty(ConstKeys.STICK_TO_BLOCK, true, Boolean::class)
+            val stickToBlock = feetFixture.shouldStickToBlock(ProcessState.BEGIN, blockFixture)
             if (stickToBlock) {
                 val posDelta = blockFixture.getBody().getPositionDelta()
                 body.translate(posDelta)
@@ -465,8 +464,7 @@ class MegaContactListener(
                 water.doMakeSplashSound(listenerFixture)
             )
 
-            val isMegaman = entity is Megaman
-            if (isMegaman) {
+            if (entity is Megaman) {
                 if (!entity.body.isSensing(BodySense.FEET_ON_GROUND) &&
                     !entity.isBehaviorActive(BehaviorType.WALL_SLIDING)
                 ) entity.aButtonTask = AButtonTask.SWIM
@@ -851,7 +849,7 @@ class MegaContactListener(
 
             body.addFeetBlock(block)
 
-            val stickToBlock = feetFixture.getOrDefaultProperty(ConstKeys.STICK_TO_BLOCK, true, Boolean::class)
+            val stickToBlock = feetFixture.shouldStickToBlock(ProcessState.CONTINUE, blockFixture)
             if (stickToBlock) {
                 val posDelta = blockFixture.getBody().getPositionDelta()
                 body.translate(posDelta)
@@ -1199,7 +1197,7 @@ class MegaContactListener(
 
             val body = sideFixture.getBody()
 
-            val stickToBlock = sideFixture.getOrDefaultProperty(ConstKeys.STICK_TO_BLOCK, true, Boolean::class)
+            val stickToBlock = sideFixture.shouldStickToBlock(ProcessState.CONTINUE, blockFixture)
             if (stickToBlock) {
                 val posDelta = blockFixture.getBody().getPositionDelta()
                 body.translate(posDelta)
@@ -1287,10 +1285,8 @@ class MegaContactListener(
                         entity.body.isSensing(BodySense.IN_WATER) -> AButtonTask.SWIM
                         else -> AButtonTask.AIR_DASH
                     }
-
                     if (!body.hasAnyFeetBlock()) entity.canMakeLandSound = true
                 }
-
                 else -> body.setBodySense(BodySense.FEET_ON_GROUND, false)
             }
 

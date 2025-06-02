@@ -45,17 +45,23 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
 
     companion object {
         const val TAG = "FallingLeaf"
-        private var region: TextureRegion? = null
+
         private const val DEFAULT_MIN_TRAJECTORY_X = -0.75f
         private const val DEFAULT_MAX_TRAJECTORY_X = -3f
         private const val DEFAULT_MIN_TRAJECTORY_Y = -0.25f
         private const val DEFAULT_MAX_TRAJECTORY_Y = -3f
         private const val DEFAULT_MIN_ELAPSE_DURATION = 0.5f
         private const val DEFAULT_MAX_ELAPSE_DURATION = 2f
+
         private const val TRANS_DUR = 0.5f
+
         private const val FADE_OUT_TIME = 1f
+
         private const val MIN_Y_OFFSET = 20f
+
         private const val MAX_SPAWNED_ALLOWED = 20
+
+        private var region: TextureRegion? = null
     }
 
     private val spawnPosition = Vector2()

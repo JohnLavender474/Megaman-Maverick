@@ -265,7 +265,6 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
         body.preProcess.put("${ConstKeys.BLOCK}_${ConstKeys.FIXTURE}") {
             blockRect.set(body)
-
             blockFixture.drawingColor = if (blockFixture.isActive()) Color.RED else Color.GRAY
         }
 

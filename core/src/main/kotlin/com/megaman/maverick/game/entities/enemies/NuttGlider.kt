@@ -59,7 +59,7 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
         private const val CULL_TIME = 2f
 
-        private const val STAND_DUR = 1f
+        private const val STAND_DUR = 0.75f
         private const val GLIDE_DUR = 1f
 
         private const val JUMP_IMPULSE_X = 6f
