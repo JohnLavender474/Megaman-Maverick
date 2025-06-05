@@ -66,7 +66,8 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         private const val HOVER_LERP_SCALAR = 10f
 
         private const val ATTACK_SPEED = 10f
-        private const val ATTACK_DELAY = 1f
+        private const val ATTACK_MIN_DELAY = 0.75f
+        private const val ATTACK_MAX_DELAY = 1.25f
 
         private const val SPLIT_PARENT_BOUNDS_ROWS = 2
         private const val SPLIT_PARENT_BOUNDS_COLS = 2
@@ -92,7 +93,7 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
     private val hoverArea = GameRectangle().setSize(HOVER_SIZE * ConstVals.PPM)
 
     private val attackTrajectory = Vector2()
-    private val attackDelay = Timer(ATTACK_DELAY)
+    private val attackDelay = Timer()
 
     private val cullTimer = Timer(CULL_TIME)
 
@@ -120,7 +121,9 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         state = BeezeeState.HOVER
         resetHoverTimer()
 
-        attackDelay.reset()
+        val attackDelayDur = UtilMethods.getRandom(ATTACK_MIN_DELAY, ATTACK_MAX_DELAY)
+        attackDelay.resetDuration(attackDelayDur)
+
         cullTimer.reset()
 
         facing = UtilMethods.getRandom(Facing.LEFT, Facing.RIGHT)

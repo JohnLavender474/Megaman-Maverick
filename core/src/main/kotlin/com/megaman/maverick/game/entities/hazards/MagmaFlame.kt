@@ -57,12 +57,16 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IFireEntity,
 
     companion object {
         const val TAG = "MagmaFlame"
+
         private const val DURATION = 0.75f
+
         private const val GRAVITY = 0.15f
         private const val GROUND_GRAVITY = 0.01f
+
         private const val BODY_SIZE = 0.5f
+
         private val DO_NOT_SPAWN_TAGS = objectSetOf(Water.TAG, ToxicWater.TAG)
-        private val DO_NOT_ENTITY_TYPES = objectSetOf(EntityType.BLOCK)
+
         private var region: TextureRegion? = null
     }
 
@@ -97,12 +101,16 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IFireEntity,
                 it.positionOnPoint(spawn, position)
             }
 
-        val set = outEntities.let {
-            MegaGameEntities.getOfTypes(it, DO_NOT_ENTITY_TYPES)
-            MegaGameEntities.getOfTags(it, DO_NOT_SPAWN_TAGS)
+        MegaGameEntities.getOfTags(outEntities, DO_NOT_SPAWN_TAGS)
+        var canSpawn = outEntities.none { it is IBodyEntity && it.body.getBounds().overlaps(bounds) }
+        outEntities.clear()
+
+        val bodyType = spawnProps.getOrDefault("${ConstKeys.BODY}_${ConstKeys.TYPE}", BodyType.DYNAMIC, BodyType::class)
+        if (canSpawn && bodyType == BodyType.DYNAMIC) {
+            MegaGameEntities.getOfType(EntityType.BLOCK)
+            canSpawn = outEntities.none { it is IBodyEntity && it.body.getBounds().overlaps(bounds) }
+            outEntities.clear()
         }
-        val canSpawn = set.none { it is IBodyEntity && it.body.getBounds().overlaps(bounds) }
-        set.clear()
 
         return canSpawn
     }
@@ -118,13 +126,19 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IFireEntity,
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.positionOnPoint(spawn, position)
 
+        val impulse = spawnProps.getOrDefault(ConstKeys.IMPULSE, Vector2.Zero, Vector2::class)
+        body.physics.velocity.set(impulse)
+
+        val bodyType = spawnProps.getOrDefault("${ConstKeys.BODY}_${ConstKeys.TYPE}", BodyType.DYNAMIC, BodyType::class)
+        body.type = bodyType
+
         timer.reset()
 
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (body.isSensing(BodySense.FEET_ON_GROUND)) timer.update(delta)
+        if (body.type == BodyType.DYNAMIC && body.isSensing(BodySense.FEET_ON_GROUND)) timer.update(delta)
         if (timer.isFinished()) destroy()
     })
 
@@ -151,10 +165,11 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IFireEntity,
         debugShapes.add { damagerFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            GravityUtils.setGravity(
-                body,
-                ConstVals.PPM * if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
-            )
+            val gravity = when (body.type) {
+                BodyType.DYNAMIC -> if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
+                else -> GRAVITY
+            }
+            GravityUtils.setGravity(body, gravity * ConstVals.PPM)
 
             if (body.isSensing(BodySense.IN_WATER)) {
                 destroy()

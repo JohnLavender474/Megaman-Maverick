@@ -29,13 +29,13 @@ object LightSourceUtils {
         lightSource: ILightSource,
         props: Properties
     ) {
-        lightSource.lightSourceKeys.addAll(
-            props.get(ConstKeys.KEYS, String::class)!!
-                .replace("\\s+", "")
-                .split(",")
-                .map { it.toInt() }
-                .toObjectSet()
-        )
+        val keys = props
+            .get(ConstKeys.KEYS, String::class)
+            ?.replace("\\s+", "")
+            ?.split(",")
+            ?.map { it.toInt() }
+            ?.toObjectSet()
+        keys?.let { lightSource.lightSourceKeys.addAll(it) }
     }
 
     fun sendLightSourceEvent(

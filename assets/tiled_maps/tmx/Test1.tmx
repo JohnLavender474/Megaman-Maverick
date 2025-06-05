@@ -895,7 +895,7 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="475" name="MockingByteNest" x="39672" y="272" width="16" height="16">
+  <object id="475" name="MockingByteNest" x="39664" y="272" width="16" height="16">
    <properties>
     <property name="return_position_1" type="object" value="478"/>
     <property name="return_position_2" type="object" value="479"/>

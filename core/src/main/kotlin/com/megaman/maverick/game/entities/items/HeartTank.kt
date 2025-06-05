@@ -98,11 +98,8 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-
         if (!this::heartTank.isInitialized) throw IllegalStateException("Heart tank value is not initialized")
-
         body.setSize(BODY_SIZE * ConstVals.PPM)
-
         super.onSpawn(spawnProps)
 
         spawnProps.forEach { key, value ->

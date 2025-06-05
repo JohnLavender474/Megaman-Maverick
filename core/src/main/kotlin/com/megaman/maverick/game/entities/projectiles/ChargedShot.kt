@@ -37,6 +37,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.blocks.WoodCrate
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.IOwnable
@@ -134,8 +135,14 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         ) explodeAndDie()
     }
 
-    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        val block = blockFixture.getEntity()
+
+        // This assumes that the wood crate will always be destroyed when hit by a fully charged shot
+        if (block is WoodCrate && fullyCharged) return
+
         bounce(otherShape)
+    }
 
     override fun hitSand(sandFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
         explodeAndDie()

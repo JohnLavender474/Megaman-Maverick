@@ -1,53 +1,53 @@
 Decorations1.png
-size: 480, 918
+size: 496, 918
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 AirConditioner/machine
   rotate: false
-  xy: 168, 88
+  xy: 208, 88
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 AirConditioner/pipe
   rotate: false
-  xy: 8, 0
+  xy: 68, 0
   size: 64, 16
   orig: 64, 16
   offset: 0, 0
   index: -1
 BlinkingArrow
   rotate: false
-  xy: 142, 88
+  xy: 182, 88
   size: 26, 52
   orig: 26, 52
   offset: 0, 0
   index: -1
 BreathBubbles
   rotate: false
-  xy: 126, 88
+  xy: 166, 88
   size: 16, 48
   orig: 16, 48
   offset: 0, 0
   index: -1
 BulletResidual
   rotate: false
-  xy: 0, 16
+  xy: 64, 16
   size: 12, 24
   orig: 12, 24
   offset: 0, 0
   index: -1
 Candle
   rotate: false
-  xy: 0, 88
+  xy: 40, 88
   size: 126, 42
   orig: 126, 42
   offset: 0, 0
   index: -1
 ChargedShot_Residual_Half
   rotate: false
-  xy: 232, 88
+  xy: 272, 88
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
@@ -61,112 +61,112 @@ CrystalConveyorBKG
   index: -1
 DrippingToxicGoop
   rotate: false
-  xy: 62, 16
+  xy: 126, 16
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 DustPuff
   rotate: false
-  xy: 72, 0
+  xy: 132, 0
   size: 120, 16
   orig: 120, 16
   offset: 0, 0
   index: -1
 FloatingEmber
   rotate: false
-  xy: 4, 0
+  xy: 64, 0
   size: 4, 8
   orig: 4, 8
   offset: 0, 0
   index: -1
 FullChargedShotResidual
   rotate: false
-  xy: 264, 88
+  xy: 304, 88
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Furnace
   rotate: false
-  xy: 94, 16
+  xy: 158, 16
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 GravitySwitchAura
   rotate: false
-  xy: 328, 88
+  xy: 368, 88
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 GroundSnow/back
   rotate: false
-  xy: 192, 0
+  xy: 252, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 GroundSnow/left
   rotate: false
-  xy: 208, 0
+  xy: 268, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 GroundSnow/middle
   rotate: false
-  xy: 224, 0
+  xy: 284, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 GroundSnow/right
   rotate: false
-  xy: 240, 0
+  xy: 300, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 JetpackFlame
   rotate: false
-  xy: 190, 16
+  xy: 254, 16
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 Lantern
   rotate: false
-  xy: 392, 88
+  xy: 432, 88
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 LavaFall
   rotate: false
-  xy: 424, 88
+  xy: 464, 88
   size: 16, 96
   orig: 16, 96
   offset: 0, 0
   index: -1
 MegamanDamageBurst
   rotate: false
-  xy: 286, 16
+  xy: 350, 16
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 MockingByteNest
   rotate: false
-  xy: 12, 16
+  xy: 76, 16
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 MuzzleFlash
   rotate: false
-  xy: 256, 0
+  xy: 316, 0
   size: 48, 16
   orig: 48, 16
   offset: 0, 0
@@ -187,28 +187,28 @@ PunkCityLampPost/broken
   index: -1
 RainDrop/blue
   rotate: false
-  xy: 304, 0
+  xy: 364, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 RainDrop/purple
   rotate: false
-  xy: 320, 0
+  xy: 380, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 RainSplash
   rotate: false
-  xy: 336, 0
+  xy: 396, 0
   size: 80, 16
   orig: 80, 16
   offset: 0, 0
   index: -1
 SandSplash
   rotate: false
-  xy: 318, 16
+  xy: 0, 48
   size: 160, 32
   orig: 160, 32
   offset: 0, 0
@@ -222,14 +222,14 @@ SlashDissipation
   index: -1
 SmallGrass/brush
   rotate: false
-  xy: 0, 48
+  xy: 160, 48
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 SmallGrass/still
   rotate: false
-  xy: 32, 48
+  xy: 192, 48
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -278,57 +278,127 @@ SpaceSatellite
   index: -1
 StarknerTrailSprite/blue
   rotate: false
-  xy: 256, 48
+  xy: 416, 48
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 StarknerTrailSprite/red
   rotate: false
-  xy: 296, 48
+  xy: 456, 48
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 StarknerTrailSprite/yellow
   rotate: false
-  xy: 336, 48
+  xy: 0, 88
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 Thread
   rotate: false
-  xy: 64, 48
+  xy: 224, 48
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ToxicWaterfall
   rotate: false
-  xy: 416, 0
+  xy: 0, 16
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ToxicWaterSplash
   rotate: false
-  xy: 96, 48
+  xy: 256, 48
   size: 160, 32
   orig: 160, 32
   offset: 0, 0
   index: -1
 UnderWaterBubble
   rotate: false
-  xy: 448, 0
+  xy: 32, 16
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 WhiteArrow
   rotate: false
-  xy: 36, 16
+  xy: 100, 16
   size: 26, 26
   orig: 26, 26
+  offset: 0, 0
+  index: -1
+WoodCratePiece/0
+  rotate: false
+  xy: 4, 0
+  size: 6, 6
+  orig: 6, 6
+  offset: 0, 0
+  index: -1
+WoodCratePiece/1
+  rotate: false
+  xy: 10, 0
+  size: 6, 6
+  orig: 6, 6
+  offset: 0, 0
+  index: -1
+WoodCratePiece/2
+  rotate: false
+  xy: 16, 0
+  size: 6, 6
+  orig: 6, 6
+  offset: 0, 0
+  index: -1
+WoodCratePiece/3
+  rotate: false
+  xy: 22, 0
+  size: 6, 6
+  orig: 6, 6
+  offset: 0, 0
+  index: -1
+WoodCratePiece/4
+  rotate: false
+  xy: 28, 0
+  size: 6, 6
+  orig: 6, 6
+  offset: 0, 0
+  index: -1
+WoodCratePiece/5
+  rotate: false
+  xy: 34, 0
+  size: 6, 6
+  orig: 6, 6
+  offset: 0, 0
+  index: -1
+WoodCratePiece/6
+  rotate: false
+  xy: 40, 0
+  size: 6, 6
+  orig: 6, 6
+  offset: 0, 0
+  index: -1
+WoodCratePiece/7
+  rotate: false
+  xy: 46, 0
+  size: 6, 6
+  orig: 6, 6
+  offset: 0, 0
+  index: -1
+WoodCratePiece/8
+  rotate: false
+  xy: 52, 0
+  size: 6, 6
+  orig: 6, 6
+  offset: 0, 0
+  index: -1
+WoodCratePiece/9
+  rotate: false
+  xy: 58, 0
+  size: 6, 6
+  orig: 6, 6
   offset: 0, 0
   index: -1

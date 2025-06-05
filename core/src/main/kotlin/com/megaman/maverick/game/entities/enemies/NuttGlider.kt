@@ -37,13 +37,13 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.projectiles.Nutt
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
 class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
@@ -127,7 +127,7 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
             else -> NuttGliderState.JUMP
         }
 
-        updateFacing()
+        FacingUtils.setFacingOf(this)
 
         hasNutt = spawnProps.getOrDefault(HAS_NUTT, DEFAULT_HAS_NUTT, Boolean::class)
 
@@ -137,7 +137,7 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            updateFacing()
+            FacingUtils.setFacingOf(this)
 
             body.physics.gravityOn = state != NuttGliderState.GLIDE
 
@@ -203,22 +203,22 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     }
 
     private fun dropNutt() {
-        val nutt = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.Companion.NUTT)!!
-        val spawn =
-            body.getCenter().add(NUTT_DROP_OFFSET_X * ConstVals.PPM * facing.value, NUTT_DROP_OFFSET_Y * ConstVals.PPM)
+        GameLogger.debug(TAG, "dropNutt()")
+
+        val spawn = body.getCenter()
+            .add(NUTT_DROP_OFFSET_X * ConstVals.PPM * facing.value, NUTT_DROP_OFFSET_Y * ConstVals.PPM)
+
+        val nutt = MegaEntityFactory.fetch(Nutt::class)!!
         nutt.spawn(props(ConstKeys.POSITION pairTo spawn))
     }
 
-    private fun jump() = body.physics.velocity.set(
-        JUMP_IMPULSE_X * facing.value * ConstVals.PPM,
-        JUMP_IMPULSE_Y * ConstVals.PPM
-    )
+    private fun jump() {
+        GameLogger.debug(TAG, "jump()")
 
-    private fun updateFacing() {
-        when {
-            megaman.body.getX() > body.getMaxX() -> facing = Facing.RIGHT
-            megaman.body.getMaxX() < body.getX() -> facing = Facing.LEFT
-        }
+        body.physics.velocity.set(
+            JUMP_IMPULSE_X * facing.value * ConstVals.PPM,
+            JUMP_IMPULSE_Y * ConstVals.PPM
+        )
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -262,7 +262,6 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
                     feetWidth = 1.5f
                     headWidth = 0.75f
                 }
-
                 else -> {
                     bodySize.set(1f, 1f)
                     feetWidth = 1f
@@ -325,7 +324,6 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
                             body.isSensing(BodySense.FEET_ON_GROUND) -> NuttGliderState.STAND.name.lowercase()
                             else -> NuttGliderState.JUMP.name.lowercase()
                         }
-
                         else -> state.name.lowercase()
                     }
                     val suffix = if (hasNutt) NUTT_SUFFIX else NO_NUTT_SUFFIX

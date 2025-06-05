@@ -3,7 +3,6 @@ package com.megaman.maverick.game.entities.decorations
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
-import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.objects.Properties
@@ -14,7 +13,6 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
-import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -30,34 +28,28 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
 
-class BlockPiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAudioEntity {
+class WoodCratePiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity {
 
     companion object {
-        const val TAG = "BlockPiece"
-        private const val ALPHA = 1f
-        private const val CULL_TIME = 2f
+        const val TAG = "WoodCratePiece"
+        const val MAX_INDEX = 9
         private const val GRAVITY = 0.25f
-        private const val START_ROTATION = 135f
-        private val regions = ObjectMap<String, TextureRegion>()
+        private const val CULL_TIME = 2f
+        private const val ROTATE_DELAY = 0.05f
+        private var regions = ObjectMap<Int, TextureRegion>()
     }
 
-    enum class BlockPieceColor { RED, GOLD, BROWN }
-
-    private lateinit var color: BlockPieceColor
+    private val rotateTimer = Timer(ROTATE_DELAY)
     private val cullTimer = Timer(CULL_TIME)
+    private var index = 0
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
-            BlockPieceColor.entries.forEach { color ->
-                val key = color.name.lowercase()
-                val region = atlas.findRegion("$TAG/$key")
-                regions.put(key, region)
-            }
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
+            for (i in 0 until 10) regions.put(i, atlas.findRegion("$TAG/$i"))
         }
         super.init()
-        addComponent(AudioComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineUpdatablesComponent())
@@ -67,14 +59,14 @@ class BlockPiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        body.setCenter(spawn)
+        val position = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        body.setCenter(position)
 
         val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)!!
         body.physics.velocity.set(impulse)
 
-        color = spawnProps.getOrDefault(ConstKeys.COLOR, BlockPieceColor.RED, BlockPieceColor::class)
-
+        index = spawnProps.get(ConstKeys.INDEX, Int::class)!!
+        rotateTimer.reset()
         cullTimer.reset()
     }
 
@@ -95,14 +87,21 @@ class BlockPiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(
             TAG, GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
-                .also { sprite -> sprite.setSize(0.5f * ConstVals.PPM) }
+                .also { sprite -> sprite.setSize(0.1875f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
-            sprite.setRegion(regions[color.name.lowercase()])
+        .updatable { delta, sprite ->
             sprite.setCenter(body.getCenter())
-            sprite.setAlpha(ALPHA)
+
+            val region = regions[index]
+            sprite.setRegion(region)
+
             sprite.setOriginCenter()
-            sprite.rotation = body.physics.velocity.angleDeg() + START_ROTATION
+
+            rotateTimer.update(delta)
+            if (rotateTimer.isFinished()) {
+                sprite.rotation += 90f
+                rotateTimer.reset()
+            }
         }
         .build()
 

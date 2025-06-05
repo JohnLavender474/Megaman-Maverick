@@ -61,6 +61,8 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
     companion object {
         const val TAG = "MockingByte"
 
+        private const val MAX_SPAWNED = 2
+
         private const val AWAKEN_DUR = 0.4f
         private const val AWAKEN_RADIUS = 8f
 
@@ -148,6 +150,9 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         stateMachine = buildStateMachine()
         addComponent(defineAnimationsComponent())
     }
+
+    override fun canSpawn(spawnProps: Properties) =
+        MegaGameEntities.getOfTag(TAG).size < MAX_SPAWNED
 
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)

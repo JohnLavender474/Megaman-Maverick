@@ -60,6 +60,7 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
     protected var velClamp = VEL_CLAMP
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         super.init()
 
         addComponent(CullablesComponent())

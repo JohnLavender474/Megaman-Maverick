@@ -202,6 +202,7 @@ abstract class AbstractEnemy(
 
     protected open fun explode(explosionProps: Properties? = null) {
         if (overlapsGameCamera()) playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
+
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         val props = explosionProps ?: props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo body.getCenter())
         explosion.spawn(props)

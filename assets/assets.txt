@@ -533,6 +533,16 @@ sprites/frames/Decorations1/LavaFall.png
 sprites/frames/Decorations1/ToxicWaterfall.png
 sprites/frames/Decorations1/Thread.png
 sprites/frames/Decorations1/FloatingEmber.png
+sprites/frames/Decorations1/WoodCratePiece/6.png
+sprites/frames/Decorations1/WoodCratePiece/9.png
+sprites/frames/Decorations1/WoodCratePiece/4.png
+sprites/frames/Decorations1/WoodCratePiece/3.png
+sprites/frames/Decorations1/WoodCratePiece/8.png
+sprites/frames/Decorations1/WoodCratePiece/0.png
+sprites/frames/Decorations1/WoodCratePiece/1.png
+sprites/frames/Decorations1/WoodCratePiece/7.png
+sprites/frames/Decorations1/WoodCratePiece/2.png
+sprites/frames/Decorations1/WoodCratePiece/5.png
 sprites/frames/Decorations1/SandSplash.png
 sprites/frames/Decorations1/RainDrop/purple.png
 sprites/frames/Decorations1/RainDrop/blue.png
@@ -1906,6 +1916,8 @@ sprites/frames/Platforms1/BreakableIce/Shards.png
 sprites/frames/Platforms1/BreakableIce/3.png
 sprites/frames/Platforms1/BreakableIce/1.png
 sprites/frames/Platforms1/BreakableIce/2.png
+sprites/frames/Platforms1/WoodCrate/burning.png
+sprites/frames/Platforms1/WoodCrate/idle.png
 sprites/frames/Platforms1/InfernoChainPlatform/platform.png
 sprites/frames/Platforms1/InfernoChainPlatform/chain.png
 sprites/frames/Platforms1/WoodPlank/still.png
@@ -1928,7 +1940,6 @@ sprites/frames/Platforms1/FrozenBlock.png
 sprites/frames/Platforms1/AppearingBrick.png
 sprites/frames/Platforms1/Platform2.png
 sprites/frames/Platforms1/8bitBlueBlock.png
-sprites/frames/Platforms1/WoodCrate.png
 sprites/frames/Platforms1/8bitBlueBlockTransBorder.png
 sprites/frames/Platforms1/Lift.png
 sprites/frames/Platforms1/RocketPlatform.png
@@ -2640,6 +2651,7 @@ sprites/piskel/Life.piskel
 sprites/piskel/WallTeck.piskel
 sprites/piskel/LunarPortal.piskel
 sprites/piskel/TubeBeam.piskel
+sprites/piskel/WoodCrateBurning.piskel
 sprites/piskel/Jetpack_Ice_Blaster_Bot_Projectile.piskel
 sprites/piskel/DeathBomb.piskel
 sprites/piskel/RodentMan_Mugshot_v2.piskel
@@ -2970,6 +2982,7 @@ sprites/piskel/StageSelect.piskel
 sprites/piskel/CrystalSpikes.piskel
 sprites/piskel/InfernoMan.piskel
 sprites/piskel/SmokePuff.piskel
+sprites/piskel/WoodCratePieces.piskel
 sprites/piskel/NukeMan.piskel
 sprites/piskel/1MiniIce.piskel
 sprites/piskel/Buddies.piskel

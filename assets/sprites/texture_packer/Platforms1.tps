@@ -403,7 +403,7 @@
             </struct>
             <key type="filename">../frames/Platforms1/MetalCrate.png</key>
             <key type="filename">../frames/Platforms1/MoonCrate.png</key>
-            <key type="filename">../frames/Platforms1/WoodCrate.png</key>
+            <key type="filename">../frames/Platforms1/WoodCrate/idle.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -537,6 +537,21 @@
                 <rect>250,124,500,247</rect>
                 <key>scale9Paddings</key>
                 <rect>250,124,500,247</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Platforms1/WoodCrate/burning.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,48,32,96</rect>
+                <key>scale9Paddings</key>
+                <rect>16,48,32,96</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

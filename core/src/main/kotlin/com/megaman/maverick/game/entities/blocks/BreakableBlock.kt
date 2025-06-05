@@ -50,7 +50,7 @@ class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, I
                         ConstKeys.COLOR pairTo color,
                         ConstKeys.POSITION pairTo center,
                         ConstKeys.IMPULSE pairTo impulse,
-                        ConstKeys.THUMP pairTo BRICK_TYPE_THUMP,
+                        ConstKeys.THUMP pairTo BRICK_TYPE_THUMP
                     )
                 )
             }

@@ -348,7 +348,7 @@ RocketPlatform
   index: -1
 RocketPlatform_v2
   rotate: false
-  xy: 328, 666
+  xy: 394, 666
   size: 24, 448
   orig: 24, 448
   offset: 0, 0
@@ -395,7 +395,14 @@ WoodBlock1
   orig: 64, 32
   offset: 0, 0
   index: -1
-WoodCrate
+WoodCrate/burning
+  rotate: false
+  xy: 328, 666
+  size: 64, 192
+  orig: 64, 192
+  offset: 0, 0
+  index: -1
+WoodCrate/idle
   rotate: false
   xy: 0, 666
   size: 64, 64

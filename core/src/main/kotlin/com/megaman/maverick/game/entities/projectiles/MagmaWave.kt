@@ -125,6 +125,12 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
+        val projectileFixture =
+            Fixture(body, FixtureType.PROJECTILE, GameRectangle().setSize(0.5f * ConstVals.PPM, 3f * ConstVals.PPM))
+        body.addFixture(projectileFixture)
+        projectileFixture.drawingColor = Color.ORANGE
+        debugShapes.add { projectileFixture }
+
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         leftFixture.offsetFromBodyAttachment.x = -0.125f * ConstVals.PPM
@@ -150,11 +156,7 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
             if (disintegrating) body.physics.velocity.setZero()
         }
 
-        return BodyComponentCreator.create(
-            this,
-            body,
-            BodyFixtureDef.of(FixtureType.BODY, FixtureType.PROJECTILE, FixtureType.DAMAGER)
-        )
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER))
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
