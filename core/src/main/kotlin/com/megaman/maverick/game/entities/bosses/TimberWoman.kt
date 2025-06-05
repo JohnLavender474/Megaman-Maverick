@@ -88,7 +88,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         private const val SPRITE_SIZE = 3.5f
 
         private const val INIT_DUR = 1f
-        private const val STAND_DUR = 1.8f
+        private const val STAND_DUR = 1f
         private const val MAX_RUN_DUR = 2f
         private const val WALL_SLIDE_DUR = 0.75f
         private const val STAND_SWING_DUR = 1f
@@ -256,8 +256,8 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         }
 
         if (animDefs.isEmpty) animDefs.putAll(
-            TimberWomanState.INIT.name.lowercase() pairTo AnimationDef(7, 1, 0.2f, true),
-            TimberWomanState.STAND.name.lowercase() pairTo AnimationDef(7, 1, 0.2f, true),
+            TimberWomanState.INIT.name.lowercase() pairTo AnimationDef(7, 1, 0.1f, true),
+            TimberWomanState.STAND.name.lowercase() pairTo AnimationDef(7, 1, 0.1f, true),
             TimberWomanState.STAND_SWING.name.lowercase() pairTo AnimationDef(
                 2, 4, gdxArrayOf(0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.25f, 0.1f, 0.1f), false
             ),

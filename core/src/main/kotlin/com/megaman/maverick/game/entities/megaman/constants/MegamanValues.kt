@@ -26,7 +26,7 @@ object MegamanValues {
     const val WATER_RUN_SPEED = 3f
 
     const val WATER_GRAVITY_SCALAR = 0.5f
-    const val SWIM_VEL_Y = 15f
+    const val SWIM_VEL_Y = 18f
     const val SWIM_TIMER = 0.25f
 
     const val JUMP_VEL = 25f
