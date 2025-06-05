@@ -253,9 +253,13 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
                             override fun onSelect(delta: Float): Boolean {
                                 GameLogger.debug(TAG, "exit button: onSelect()")
-                                game.audioMan.fadeOutMusic(EXIT_DUR)
-                                game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
-                                exiting = true
+
+                                if (game.state.isLevelDefeated(game.getCurrentLevel())) {
+                                    game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
+                                    game.audioMan.fadeOutMusic(EXIT_DUR)
+                                    exiting = true
+                                } else game.audioMan.playSound(SoundAsset.ERROR_SOUND)
+
                                 return false
                             }
 
