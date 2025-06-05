@@ -137,10 +137,10 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val block = blockFixture.getEntity()
-
-        // This assumes that the wood crate will always be destroyed when hit by a fully charged shot
-        if (block is WoodCrate && fullyCharged) return
-
+        if (block is WoodCrate) {
+            explodeAndDie()
+            return
+        }
         bounce(otherShape)
     }
 
