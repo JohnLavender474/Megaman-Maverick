@@ -116,6 +116,11 @@ class BuilderKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            if (!megaman.ready) {
+                loop.reset()
+                stateTimers.values().forEach { it.reset() }
+            }
+
             val stateTimer = stateTimers[currentState]
             if (shouldUpdateStateTimer()) stateTimer.update(delta)
             if (stateTimer.isFinished()) onFinishStateTimer(stateTimer)
