@@ -33,6 +33,7 @@ import com.megaman.maverick.game.entities.explosions.Disintegration
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.items.HealthBulb
 import com.megaman.maverick.game.entities.items.Life
+import com.megaman.maverick.game.entities.items.Screw
 import com.megaman.maverick.game.entities.items.WeaponEnergyBulb
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
@@ -74,8 +75,7 @@ abstract class AbstractEnemy(
                     else -> LOW_LIFE_CHANCE
                 }
             },
-            // TODO: dropping screws is disabled until an in-game "store" is implemented
-            // Screw::class pairTo { SCREW_CHANCE },
+            Screw::class pairTo { SCREW_CHANCE },
             HealthBulb::class pairTo chance@{ it ->
                 val megaman = it.megaman
                 val playerHealthModifier = 100 - (100 * megaman.getHealthRatio())
