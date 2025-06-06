@@ -94,10 +94,7 @@ import com.megaman.maverick.game.screens.menus.ControllerSettingsScreen
 import com.megaman.maverick.game.screens.menus.MainMenuScreen
 import com.megaman.maverick.game.screens.menus.SaveGameScreen
 import com.megaman.maverick.game.screens.menus.level.LevelSelectScreenV2
-import com.megaman.maverick.game.screens.other.CreditsScreen
-import com.megaman.maverick.game.screens.other.GameOverScreen
-import com.megaman.maverick.game.screens.other.LogoScreen
-import com.megaman.maverick.game.screens.other.SimpleInitGameScreen
+import com.megaman.maverick.game.screens.other.*
 import com.megaman.maverick.game.state.GameState
 import com.megaman.maverick.game.utils.AsyncFileWriter
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -348,6 +345,7 @@ class MegamanMaverickGame(
         screens.put(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, true))
         screens.put(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, false))
         screens.put(ScreenEnum.LEVEL_SELECT_SCREEN.name, LevelSelectScreenV2(this))
+        screens.put(ScreenEnum.ROBOT_MASTER_INTRO_SCREEN.name, RobotMasterIntroScreen(this))
         screens.put(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name, SimpleInitGameScreen(this))
         screens.put(ScreenEnum.CREDITS_SCREEN.name, CreditsScreen(this))
 
@@ -681,15 +679,16 @@ class MegamanMaverickGame(
         if (paused) resume()
     }
 
-    fun startLevelScreen(levelDef: LevelDefinition) {
+    fun startLevel() {
         val levelScreen = screens.get(ScreenEnum.LEVEL_SCREEN.name) as MegaLevelScreen
 
-        levelScreen.music = levelDef.music
-        levelScreen.screenOnCompletion = levelDef.screenOnCompletion
+        val level = getCurrentLevel()
 
-        levelScreen.start(levelDef.source)
+        levelScreen.music = level.music
+        levelScreen.screenOnCompletion = level.screenOnCompletion
+        levelScreen.start(level.source)
 
-        setCurrentLevel(levelDef)
+        setCurrentLevel(level)
 
         setCurrentScreen(ScreenEnum.LEVEL_SCREEN.name)
     }

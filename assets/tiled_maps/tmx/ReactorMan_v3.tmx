@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="500" height="200" tilewidth="32" tileheight="32" infinite="0" nextlayerid="15" nextobjectid="711">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="500" height="200" tilewidth="32" tileheight="32" infinite="0" nextlayerid="15" nextobjectid="713">
  <tileset firstgid="1" name="Reactor_Man_No_Black" tilewidth="32" tileheight="32" tilecount="240" columns="16">
   <image source="../png/Reactor_Man_No_Black.png" width="512" height="480"/>
  </tileset>
@@ -908,6 +908,8 @@
   <object id="705" x="10816" y="3616" width="32" height="32"/>
   <object id="709" x="10720" y="2752" width="32" height="96"/>
   <object id="708" x="10560" y="2688" width="64" height="32"/>
+  <object id="711" x="10624" y="2400" width="64" height="64"/>
+  <object id="712" x="10816" y="2400" width="64" height="64"/>
  </objectgroup>
  <objectgroup id="14" name="items">
   <object id="345" name="HealthTank" x="296" y="5488" width="16" height="16">

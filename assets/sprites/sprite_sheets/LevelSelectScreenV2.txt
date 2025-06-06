@@ -17,205 +17,219 @@ background_selected
   orig: 256, 448
   offset: 0, 0
   index: -1
-background_static
+background_selected_wily
   rotate: false
   xy: 517, 1
-  size: 256, 224
-  orig: 256, 224
+  size: 256, 448
+  orig: 256, 448
   offset: 0, 0
   index: -1
-faces/desert_man
+background_static
   rotate: false
   xy: 775, 1
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-faces/glacier_man
+background_static_wily
   rotate: false
   xy: 1033, 1
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-faces/inferno_man
+faces/desert_man
   rotate: false
   xy: 1291, 1
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-faces/mega_man
+faces/glacier_man
   rotate: false
   xy: 1549, 1
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-faces/megaman_bottom_center
+faces/inferno_man
   rotate: false
   xy: 1, 451
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-faces/megaman_bottom_left
+faces/mega_man
   rotate: false
   xy: 259, 451
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-faces/megaman_bottom_right
+faces/megaman_bottom_center
   rotate: false
   xy: 517, 451
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-faces/megaman_center
+faces/megaman_bottom_left
   rotate: false
   xy: 775, 451
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-faces/megaman_center_left
+faces/megaman_bottom_right
   rotate: false
   xy: 1033, 451
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-faces/megaman_center_right
+faces/megaman_center
   rotate: false
   xy: 1291, 451
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-faces/megaman_top_center
+faces/megaman_center_left
   rotate: false
   xy: 1549, 451
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-faces/megaman_top_left
+faces/megaman_center_right
   rotate: false
   xy: 1, 677
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-faces/megaman_top_right
+faces/megaman_top_center
   rotate: false
   xy: 259, 677
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-faces/moon_man
+faces/megaman_top_left
   rotate: false
   xy: 517, 677
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-faces/precious_woman
+faces/megaman_top_right
   rotate: false
   xy: 775, 677
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-faces/reactor_man
+faces/moon_man
   rotate: false
   xy: 1033, 677
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-faces/rodent_man
+faces/precious_woman
   rotate: false
   xy: 1291, 677
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-faces/timber_woman
+faces/reactor_man
   rotate: false
   xy: 1549, 677
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-faces/wily
+faces/rodent_man
   rotate: false
   xy: 1, 903
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-selector/bottom_center
+faces/timber_woman
   rotate: false
   xy: 259, 903
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-selector/bottom_left
+faces/wily
   rotate: false
   xy: 517, 903
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-selector/bottom_right
+selector/bottom_center
   rotate: false
   xy: 775, 903
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-selector/center
+selector/bottom_left
   rotate: false
   xy: 1033, 903
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-selector/center_left
+selector/bottom_right
   rotate: false
   xy: 1291, 903
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-selector/center_right
+selector/center
   rotate: false
   xy: 1549, 903
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-selector/top_center
+selector/center_left
   rotate: false
   xy: 1, 1129
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-selector/top_left
+selector/center_right
   rotate: false
   xy: 259, 1129
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-selector/top_right
+selector/top_center
   rotate: false
   xy: 517, 1129
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+selector/top_left
+  rotate: false
+  xy: 775, 1129
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+selector/top_right
+  rotate: false
+  xy: 1033, 1129
   size: 256, 224
   orig: 256, 224
   offset: 0, 0

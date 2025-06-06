@@ -65,6 +65,12 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     companion object {
         const val TAG = "GlacierMan"
 
+        const val SPRITE_WIDTH = 3.5f
+        const val SPRITE_HEIGHT = 2.625f
+        /*
+        3.5f * ConstVals.PPM, 2.625f * ConstVals.PPM
+         */
+
         private const val INIT_DUR = 1f
         private const val STAND_DUR = 1f
         private const val DUCK_DUR = 0.75f
@@ -374,7 +380,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
-        sprite.setSize(3.5f * ConstVals.PPM, 2.625f * ConstVals.PPM)
+        sprite.setSize(SPRITE_WIDTH * ConstVals.PPM, SPRITE_HEIGHT * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putUpdateFunction { _, _ ->
             val position = Position.BOTTOM_CENTER

@@ -1,5 +1,5 @@
 Ui1.png
-size: 404, 550
+size: 404, 616
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -10,23 +10,30 @@ arrow
   orig: 32, 32
   offset: 0, 0
   index: -1
-logo
+Bar
   rotate: false
   xy: 36, 2
+  size: 256, 64
+  orig: 256, 64
+  offset: 0, 0
+  index: -1
+logo
+  rotate: false
+  xy: 294, 2
   size: 100, 32
   orig: 100, 32
   offset: 0, 0
   index: -1
 logo_v2
   rotate: false
-  xy: 2, 228
+  xy: 2, 68
   size: 400, 320
   orig: 400, 320
   offset: 0, 0
   index: -1
 menu_screen_bkg
   rotate: false
-  xy: 138, 2
+  xy: 2, 390
   size: 256, 224
   orig: 256, 224
   offset: 0, 0

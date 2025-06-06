@@ -69,7 +69,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     companion object {
         const val TAG = "InfernoMan"
 
-        private const val SPRITE_SIZE = 3.5f
+        const val SPRITE_SIZE = 3.5f
 
         private const val INIT_DUR = 1f
         private const val STAND_DUR = 1.5f
@@ -418,7 +418,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             "jump_shoot_up" pairTo Animation(regions["jump_shoot_up"]),
             "wallslide" pairTo Animation(regions["wallslide"]),
             "slide" pairTo Animation(regions["slide"]),
-            "stand" pairTo Animation(regions["stand"]),
+            "stand" pairTo Animation(regions["stand"], 2, 1, gdxArrayOf(1f, 0.15f), true),
             "stand_shoot_mega" pairTo Animation(regions["stand_shoot_mega"], 3, 2, 0.1f, false),
             "stand_shoot_straight" pairTo Animation(regions["stand_shoot_straight"]),
             // "stand_shoot_straight_akimbo" pairTo Animation(regions["stand_shoot_straight_akimbo"], 2, 1, 0.1f, true),

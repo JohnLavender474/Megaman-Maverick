@@ -96,8 +96,10 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
                 when {
                     game.state.isLevelDefeated(LevelDefinition.INTRO_STAGE) ->
                         game.setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name)
-
-                    else -> game.startLevelScreen(LevelDefinition.INTRO_STAGE)
+                    else -> {
+                        game.setCurrentLevel(LevelDefinition.INTRO_STAGE)
+                        game.startLevel()
+                    }
                 }
 
                 return true

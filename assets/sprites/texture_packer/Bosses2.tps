@@ -187,6 +187,7 @@
             <key type="filename">../frames/Bosses2/TimberWoman/axe_swing2.png</key>
             <key type="filename">../frames/Bosses2/TimberWoman/axe_wallslide.png</key>
             <key type="filename">../frames/Bosses2/TimberWoman/defeated.png</key>
+            <key type="filename">../frames/Bosses2/TimberWoman/stand_still.png</key>
             <key type="filename">../frames/Bosses2/TimberWoman/wallslide.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

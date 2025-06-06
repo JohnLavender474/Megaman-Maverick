@@ -1382,6 +1382,7 @@ sprites/frames/Bosses2/TimberWoman/init.png
 sprites/frames/Bosses2/TimberWoman/stand_pound.png
 sprites/frames/Bosses2/TimberWoman/stand.png
 sprites/frames/Bosses2/TimberWoman/axe_swing2.png
+sprites/frames/Bosses2/TimberWoman/stand_still.png
 sprites/frames/Bosses2/TimberWoman/burn.png
 sprites/frames/Bosses2/TimberWoman/axe_swing1.png
 sprites/frames/Bosses2/TimberWoman/jump_spin.png
@@ -1484,6 +1485,7 @@ sprites/frames/Megaman/AirDashCharging.png
 sprites/frames/Megaman/StandThrow.png
 sprites/frames/Megaman/GroundSlide.png
 sprites/frames/Megaman/Spawn.png
+sprites/frames/LevelSelectScreenV2/background_selected_wily.png
 sprites/frames/LevelSelectScreenV2/background_selected.png
 sprites/frames/LevelSelectScreenV2/background_static.png
 sprites/frames/LevelSelectScreenV2/faces/inferno_man.png
@@ -1514,6 +1516,7 @@ sprites/frames/LevelSelectScreenV2/selector/bottom_center.png
 sprites/frames/LevelSelectScreenV2/selector/top_right.png
 sprites/frames/LevelSelectScreenV2/selector/top_center.png
 sprites/frames/LevelSelectScreenV2/selector/center_left.png
+sprites/frames/LevelSelectScreenV2/background_static_wily.png
 sprites/frames/LevelSelectScreenV2/background_full.png
 sprites/frames/Bosses1/Bospider/climb.png
 sprites/frames/Bosses1/Bospider/open_eye.png
@@ -2277,6 +2280,7 @@ sprites/frames/Ui2/MegamanTitle.png
 sprites/frames/Ui2/TitleScreenBackground.png
 sprites/frames/Ui2/TitleScreenBackgroundv3.png
 sprites/frames/Ui1/menu_screen_bkg.png
+sprites/frames/Ui1/Bar.png
 sprites/frames/Ui1/arrow.png
 sprites/frames/Ui1/logo_v2.png
 sprites/frames/Ui1/logo.png

@@ -175,6 +175,7 @@
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">../frames/LevelSelectScreenV2/background_full.png</key>
             <key type="filename">../frames/LevelSelectScreenV2/background_static.png</key>
+            <key type="filename">../frames/LevelSelectScreenV2/background_static_wily.png</key>
             <key type="filename">../frames/LevelSelectScreenV2/faces/desert_man.png</key>
             <key type="filename">../frames/LevelSelectScreenV2/faces/glacier_man.png</key>
             <key type="filename">../frames/LevelSelectScreenV2/faces/inferno_man.png</key>
@@ -218,6 +219,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/LevelSelectScreenV2/background_selected.png</key>
+            <key type="filename">../frames/LevelSelectScreenV2/background_selected_wily.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

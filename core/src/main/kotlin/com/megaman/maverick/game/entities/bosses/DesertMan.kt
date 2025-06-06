@@ -65,6 +65,9 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
     companion object {
         const val TAG = "DesertMan"
 
+        const val SPRITE_SIZE = 3.5f
+        const val SPRITE_Y_OFFSET = -0.5f
+
         private const val INIT_DUR = 1f
         private const val STAND_DUR = 1f
 
@@ -106,9 +109,6 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         private const val ARM_HEIGHT = 0.5f
         private const val ARM_OFFSET_Y = -0.25f
         private const val ARM_EXTENSIONS_COUNT = 2
-
-        private const val SPRITE_SIZE = 3.5f
-        private const val SPRITE_Y_OFFSET = -0.5f
 
         private const val NEEDLE_GRAV = -0.1f
         private const val NEEDLE_IMPULSE = 15f

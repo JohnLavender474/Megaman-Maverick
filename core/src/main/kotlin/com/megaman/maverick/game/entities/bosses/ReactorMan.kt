@@ -65,6 +65,8 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     companion object {
         const val TAG = "ReactorMan"
 
+        const val SPRITE_SIZE = 3f
+
         private const val INIT_DUR = 1f
 
         private const val STAND_MAX_DUR = 0.5f
@@ -458,7 +460,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     }
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
-        .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(3f * ConstVals.PPM) })
+        .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(SPRITE_SIZE * ConstVals.PPM) })
         .updatable { _, sprite ->
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)

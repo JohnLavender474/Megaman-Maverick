@@ -33,6 +33,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.blocks.WoodCrate
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.IWater
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -134,7 +135,7 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         return entity.getType() != EntityType.PROJECTILE || (entity as IProjectileEntity).owner != megaman
     }
 
-    override fun doMakeSplashSound(fixture: IFixture) = splashSound
+    override fun doMakeSplashSound(fixture: IFixture) = splashSound && fixture.getEntity() !is WoodCrate
 
     override fun getSplashType(fixture: IFixture) = SplashType.BLUE
 

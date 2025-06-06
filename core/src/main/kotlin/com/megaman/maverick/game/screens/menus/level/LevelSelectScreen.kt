@@ -379,13 +379,8 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         if (!game.paused) {
             if (outro) outroTimer.update(delta)
             if (outroTimer.isJustFinished()) {
-                /*
-                TODO
-                val bIntroScreen = game.screens.get(ScreenEnum.BOSS_INTRO_SCREEN.name) as BossIntroScreen
-                bIntroScreen.set(bSelect!!)
-                game.setCurrentScreen(ScreenEnum.BOSS_INTRO_SCREEN.name)
-                */
-                game.startLevelScreen(selectedLevelDef!!)
+                game.setCurrentLevel(selectedLevelDef!!)
+                game.setCurrentScreen(ScreenEnum.ROBOT_MASTER_INTRO_SCREEN.name)
             }
             if (outroTimer.isFinished()) return
 

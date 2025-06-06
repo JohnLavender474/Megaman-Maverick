@@ -12,6 +12,7 @@ enum class EntityType(private val packageSuffix: String) {
     PROJECTILE("projectiles"),
     SENSOR("sensors"),
     SPECIAL("special"),
+    MOCK("mock"),
     OTHER("other"),
     ANIMATED_MOCK("animated_mocks");
 

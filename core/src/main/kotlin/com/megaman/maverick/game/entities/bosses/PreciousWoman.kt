@@ -66,6 +66,8 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     companion object {
         const val TAG = "PreciousWoman"
 
+        const val SPRITE_SIZE = 3f
+
         const val SHIELD_GEM_SPIN_SPEED = 0.25f
         const val SHIELD_GEM_CLUSTER_SPEED = 8f
         const val SHIELD_GEM_MAX_DIST_FROM_ORIGIN = 20f
@@ -92,8 +94,6 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private const val DEFAULT_FRICTION_X = 1f
         private const val DEFAULT_FRICTION_Y = 1f
         private const val WALLSLIDE_FRICTION_Y = 10f
-
-        private const val SPRITE_SIZE = 3f
 
         private const val INIT_DUR = 1f
         private const val STAND_DUR = 1f

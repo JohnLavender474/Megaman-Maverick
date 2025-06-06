@@ -70,6 +70,8 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     companion object {
         const val TAG = "MoonMan"
 
+        const val SPRITE_SIZE = 2.75f
+
         // if false, Gravity Man's direction rotation will never change
         private const val CHANGE_GRAVITY = false
 
@@ -87,8 +89,6 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         private const val DEFAULT_GRAVITY_SCALAR = 0.25f
         private const val DEFAULT_FRICTION_X = 6f
         private const val DEFAULT_FRICTION_Y = 1.015f
-
-        private const val SPRITE_SIZE = 2.75f
 
         private const val INIT_DUR = 0.3f
         private const val STAND_DUR = 0.5f

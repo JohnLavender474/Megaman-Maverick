@@ -118,9 +118,16 @@ object DesktopLauncher {
 
         try {
             Lwjgl3Application(game, config)
-        } catch (e: Exception) {
-            game.dispose()
-            throw e
+        } catch (e1: Exception) {
+            e1.printStackTrace()
+
+            try {
+                game.dispose()
+            } catch (e2: Exception) {
+                throw Exception("Caught exception while disposing game: $e2")
+            }
+
+            throw e1
         }
     }
 

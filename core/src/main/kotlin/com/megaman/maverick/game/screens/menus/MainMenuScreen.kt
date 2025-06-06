@@ -203,8 +203,8 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
                 override fun onSelect(delta: Float): Boolean {
                     game.state.reset()
-                    // TODO: should start intro cutscene screen
-                    game.startLevelScreen(LevelDefinition.INTRO_STAGE)
+                    game.setCurrentLevel(LevelDefinition.INTRO_STAGE)
+                    game.startLevel()
                     return true
                 }
 
@@ -225,8 +225,10 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                         when {
                             game.state.isLevelDefeated(LevelDefinition.INTRO_STAGE) ->
                                 game.setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name)
-
-                            else -> game.startLevelScreen(LevelDefinition.INTRO_STAGE)
+                            else -> {
+                                game.setCurrentLevel(LevelDefinition.INTRO_STAGE)
+                                game.startLevel()
+                            }
                         }
                         game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
 

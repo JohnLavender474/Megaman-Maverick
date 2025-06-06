@@ -67,6 +67,9 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
     companion object {
         const val TAG = "RodentMan"
 
+        const val SPRITE_WIDTH = 4f
+        const val SPRITE_HEIGHT = 3f
+
         private const val INIT_DUR = 1f
         private const val STAND_DUR = 0.75f
         private const val RUN_DUR = 3f
@@ -127,8 +130,6 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
         private const val SPAWN_RAT_DELAY = 3f
         private const val MAX_RATS = 2
 
-        private const val SPRITE_WIDTH = 4f
-        private const val SPRITE_HEIGHT = 3f
         private const val SPRITE_OFFSET_DIR_UP = -0.1f
         private const val SPRITE_OFFSET_DIR_LEFT = 0.5f
         private const val SPRITE_OFFSET_DIR_RIGHT = -0.5f

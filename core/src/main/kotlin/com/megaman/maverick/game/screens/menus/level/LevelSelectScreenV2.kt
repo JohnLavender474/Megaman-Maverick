@@ -27,6 +27,8 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.levels.LevelDefinition
+import com.megaman.maverick.game.levels.LevelType
+import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.menus.MegaMenuScreen
 
 class LevelSelectScreenV2(game: MegamanMaverickGame) : MegaMenuScreen(game, Position.CENTER.name), Initializable {
@@ -55,7 +57,11 @@ class LevelSelectScreenV2(game: MegamanMaverickGame) : MegaMenuScreen(game, Posi
     private val background = GameSprite()
     private val backgroundAnims = ObjectMap<String, Animation>()
     private val currentBkgAnim: Animation
-        get() = if (selectionMade) backgroundAnims[ConstKeys.SELECTED] else backgroundAnims[ConstKeys.STATIC]
+        get() {
+            var key = if (selectionMade) ConstKeys.SELECTED else ConstKeys.STATIC
+            if (game.state.allRobotMasterLevelsDefeated()) key += "_wily"
+            return backgroundAnims[key]
+        }
 
     private val selector = GameSprite()
     private val selectorRegions = ObjectMap<String, TextureRegion>()
@@ -82,10 +88,20 @@ class LevelSelectScreenV2(game: MegamanMaverickGame) : MegaMenuScreen(game, Posi
         val staticAnim = Animation(staticBkgRegion)
         backgroundAnims.put(ConstKeys.STATIC, staticAnim)
 
+        val staticWilyBkgRegion =
+            levelSelectScreenAtlas.findRegion("${ConstKeys.BACKGROUND}_${ConstKeys.STATIC}_wily")
+        val staticWilyAnim = Animation(staticWilyBkgRegion)
+        backgroundAnims.put("${ConstKeys.STATIC}_wily", staticWilyAnim)
+
         val selectedBackgroundRegion =
             levelSelectScreenAtlas.findRegion("${ConstKeys.BACKGROUND}_${ConstKeys.SELECTED}")
         val selectedAnim = Animation(selectedBackgroundRegion, 2, 1, 0.1f, true)
         backgroundAnims.put(ConstKeys.SELECTED, selectedAnim)
+
+        val selectedBackgroundWilyRegion =
+            levelSelectScreenAtlas.findRegion("${ConstKeys.BACKGROUND}_${ConstKeys.SELECTED}_wily")
+        val selectedWilyAnim = Animation(selectedBackgroundWilyRegion, 2, 1, 0.1f, true)
+        backgroundAnims.put("${ConstKeys.SELECTED}_wily", selectedWilyAnim)
 
         Position.entries.forEach { position ->
             val key = position.name
@@ -228,7 +244,14 @@ class LevelSelectScreenV2(game: MegamanMaverickGame) : MegaMenuScreen(game, Posi
 
         if (!game.paused) {
             if (outro) outroTimer.update(delta)
-            if (outroTimer.isJustFinished()) game.startLevelScreen(selectedLevelDef!!)
+            if (outroTimer.isJustFinished()) {
+                game.setCurrentLevel(selectedLevelDef!!)
+
+                if (selectedLevelDef!!.type != LevelType.ROBOT_MASTER_LEVEL ||
+                    game.state.isLevelDefeated(selectedLevelDef!!)
+                ) game.startLevel()
+                else game.setCurrentScreen(ScreenEnum.ROBOT_MASTER_INTRO_SCREEN.name)
+            }
             if (outroTimer.isFinished()) return
 
             currentBkgAnim.update(delta)

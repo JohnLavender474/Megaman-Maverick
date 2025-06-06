@@ -74,6 +74,8 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
     companion object {
         const val TAG = "TimberWoman"
 
+        const val SPRITE_SIZE = 3.5f
+
         private const val LEAF_SPAWN = "leaf_spawn"
 
         private const val BODY_WIDTH = 1.5f
@@ -84,8 +86,6 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
 
         private const val VEL_CLAMP_X = 50f
         private const val VEL_CLAMP_Y = 25f
-
-        private const val SPRITE_SIZE = 3.5f
 
         private const val INIT_DUR = 1f
         private const val STAND_DUR = 1f

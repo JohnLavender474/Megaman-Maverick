@@ -93,6 +93,8 @@ open class Background(
         }
     }
 
+    fun set(pos: Vector2) = set(pos.x, pos.y)
+
     fun set(x: Float, y: Float) {
         viewport.camera.position.x = x
         viewport.camera.position.y = y

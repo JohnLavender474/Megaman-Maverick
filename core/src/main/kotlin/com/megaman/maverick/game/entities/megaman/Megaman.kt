@@ -466,6 +466,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         })
 
         removeProperty(ConstKeys.FOCUS)
+
+        game.setFocusSnappedAway(false)
     }
 
     override fun onDestroy() {

@@ -90,10 +90,12 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
     private lateinit var type: SplashType
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
             SplashType.entries.forEach { t -> regions.put(t.name, atlas.findRegion(t.regionkey)) }
         }
+        super.init()
         addComponent(SpritesComponent(GameSprite()))
         addComponent(defineAnimationsComponent())
         addComponent(defineUpdatablesComponent())
@@ -101,6 +103,7 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         type = when {
@@ -109,7 +112,6 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
                 rawType as? SplashType ?: if (rawType is String) SplashType.valueOf(rawType.uppercase())
                 else throw IllegalArgumentException("Type value must be a string or SplashType: $rawType")
             }
-
             else -> SplashType.BLUE
         }
 
@@ -140,7 +142,6 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
         if (makeSound) when (type) {
             SplashType.BLUE, SplashType.WHITE, SplashType.TOXIC ->
                 requestToPlaySound(SoundAsset.SPLASH_SOUND, false)
-
             SplashType.SAND -> requestToPlaySound(SoundAsset.BRUSH_SOUND, false)
             else -> {}
         }
