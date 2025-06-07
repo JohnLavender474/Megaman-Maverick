@@ -269,8 +269,6 @@ List of creators and the stages in which their artwork is used. Some stages cont
 
 - [Famitard](https://www.youtube.com/@FamiTard)
   - Main Menu - [MMX3 Intro Stage 8-Bit](https://youtu.be/jEPimSadiRE)
-  - Stage Select Menu (Megaman) - [MMX5 Stage Select 8-Bit](https://youtu.be/NooP1Ir2jp0)
-  - Stage Select Menu (Wily) - [MMX5 Zero Stage 1 8-Bit](https://youtu.be/LegA_I5t5js)
   - Reactor Man Stage - [Original Composition 1 8-Bit](https://youtu.be/UwyhXokv8zw?si=arpFaqewqTtV1PXJ)
   - Rodent Man Stage - [Original Composition 2 8-Bit](https://youtu.be/x8RDDcdzs-4)
   - Moon Man Stage - [MMX5 Dark Necrobat 8-Bit](https://youtu.be/RosxPCxVOyk)
@@ -293,7 +291,7 @@ List of creators and the stages in which their artwork is used. Some stages cont
 - [François Gérin-Lajoie](https://oragus.itch.io/)
   - Wily Stage 2 - [8-bit Robotics - Cybernetic Factory](https://oragus.itch.io/8-bit-robotics)
 - Capcom
-  - Logo Intro: [MM6 Capcom Logo](https://downloads.khinsider.com/game-soundtracks/album/megaman-6-original-soundtrack/01%2520Capcom%2520Logo.mp3)
+  - Logo Intro - [MM6 Capcom Logo](https://downloads.khinsider.com/game-soundtracks/album/megaman-6-original-soundtrack/01%2520Capcom%2520Logo.mp3)
 - TODO: Other music tracks are saved in the `assets` dir but not yet used in the game. These will be added here as they're added to the game.
 
 ### Sounds
