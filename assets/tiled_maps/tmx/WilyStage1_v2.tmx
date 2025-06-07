@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="600" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="494">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="600" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="496">
  <tileset firstgid="1" source="../tsx/MegamanWanted_WilyStage1.tsx"/>
  <tileset firstgid="286" source="../tsx/MM10Endless.tsx"/>
  <tileset firstgid="958" source="../tsx/Tileset1.tsx"/>
@@ -1335,10 +1335,10 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="11" name="temp">
-  <object id="493" name="0" x="17504" y="1792" width="32" height="32"/>
+ <objectgroup id="11" name="player">
+  <object id="495" name="0" x="17440" y="1792" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="4" name="player">
+ <objectgroup id="4" name="temp">
   <object id="10" name="0" x="96" y="2944" width="32" height="32"/>
   <object id="115" name="2" x="5280" y="2336" width="32" height="32"/>
   <object id="116" name="1" x="3424" y="2816" width="32" height="32"/>

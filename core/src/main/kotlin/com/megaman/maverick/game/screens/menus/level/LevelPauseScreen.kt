@@ -237,7 +237,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
                             val bitsBarX = HEALTH_TANK_BITS_COLUMN_1_X + j * HEALTH_TANK_BITS_COLUMN_OFFSET
                             val bitsBarY =
-                                HEALTH_TANK_BITS_ROW_1_Y + (WEAPON_ROWS + HEALTH_TANK_ROWS - i - 1) * HEALTH_TANK_BITS_ROW_OFFSET
+                                HEALTH_TANK_BITS_ROW_1_Y + (WEAPON_ROWS + HEALTH_TANK_ROWS - i) * HEALTH_TANK_BITS_ROW_OFFSET
                             val bitsSupplier: () -> Int = { game.state.getHealthTankValue(element) }
                             val bitsBar = LevelPauseScreenBitsBar(
                                 game.assMan, bitsBarX * ConstVals.PPM, bitsBarY * ConstVals.PPM, bitsSupplier

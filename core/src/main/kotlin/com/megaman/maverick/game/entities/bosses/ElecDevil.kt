@@ -39,7 +39,10 @@ import com.megaman.maverick.game.entities.projectiles.ElecBall
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
-import com.megaman.maverick.game.world.body.*
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.max
 import kotlin.math.min
 
@@ -59,10 +62,13 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
         internal const val HAND_DUR = 1.5f
         internal const val HAND_SHOT_DELAY = 0.5f
 
-        internal const val MIN_LAUNCH_DELAY = 0.4f
-        internal const val MAX_LAUNCH_DELAY = 0.9f
-        internal const val MAX_RANDOM_LAUNCH_DELAY = 1f
-        internal const val MIN_RANDOM_LAUNCH_DELAY = 0.65f
+        // TODO: mins and maxes are equal, but can be configured to be different
+        // internal const val MIN_LAUNCH_DELAY = 0.4f
+        // internal const val MAX_LAUNCH_DELAY = 0.9f
+        internal const val MIN_LAUNCH_DELAY = 0.5f
+        internal const val MAX_LAUNCH_DELAY = 0.5f
+        internal const val MAX_RANDOM_LAUNCH_DELAY = 0.5f
+        internal const val MIN_RANDOM_LAUNCH_DELAY = 0.5f
         internal const val MIN_HEALTH_FOR_LAUNCH_OFFSET = 5f
 
         internal const val TURN_TO_PIECES_DUR = 1f
