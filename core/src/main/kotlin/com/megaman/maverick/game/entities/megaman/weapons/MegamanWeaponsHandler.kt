@@ -28,6 +28,7 @@ import com.megaman.maverick.game.entities.bosses.PreciousWoman.Companion.SHIELD_
 import com.megaman.maverick.game.entities.bosses.PreciousWoman.ShieldGemDef
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.explosions.MagmaExplosion
+import com.megaman.maverick.game.entities.explosions.SmokePuff
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.GROUND_SLIDE_SPRITE_OFFSET_Y
@@ -322,16 +323,14 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             fullyChargedCost = { 7 },
             chargeable = { _ -> false /* TODO: true */ }
         )
-
         MegamanWeapon.INFERNAL_BARRAGE -> MegaWeaponHandler(
             cooldown = Timer(0.5f),
             normalCost = { 3 },
             halfChargedCost = { 5 },
             fullyChargedCost = { 7 },
             chargeable = { _ -> false /* TODO: !megaman.body.isSensing(BodySense.IN_WATER) */ },
-            canFireWeapon = { _, _ -> !megaman.body.isSensing(BodySense.IN_WATER) }
+            canFireWeapon = { _, _ -> true /* TODO: !megaman.body.isSensing(BodySense.IN_WATER) */ }
         )
-
         MegamanWeapon.MOON_SCYTHES -> MegaWeaponHandler(
             cooldown = Timer(0.1f),
             normalCost = { 6 },
@@ -351,7 +350,6 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 return@canFireWeapon count <= MegamanValues.MAX_MOONS_BEFORE_SHOOT_AGAIN
             }
         )
-
         MegamanWeapon.PRECIOUS_GUARD -> MegaWeaponHandler(
             cooldown = Timer(0.1f),
             normalCost = { if (it.getSpawnedCount(MegaChargeStatus.NOT_CHARGED) > 0) 0 else 4 },
@@ -504,7 +502,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             MegamanWeapon.MEGA_BUSTER,
             MegamanWeapon.RUSH_JET -> shootMegaBuster(stat)
             MegamanWeapon.FRIGID_SHOT -> shootIceCube(stat)
-            MegamanWeapon.INFERNAL_BARRAGE -> shootMagmaWave(stat)
+            MegamanWeapon.INFERNAL_BARRAGE -> shootInfernalBarrage(stat)
             MegamanWeapon.MOON_SCYTHES -> shootMoonScythes(stat)
             MegamanWeapon.PRECIOUS_GUARD -> shootPreciousGuard()
         }
@@ -588,11 +586,22 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         megaman.requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
     }
 
-    private fun shootMagmaWave(stat: MegaChargeStatus) {
-        GameLogger.debug(TAG, "shootFireBall(): stat=$stat")
+    private fun shootInfernalBarrage(stat: MegaChargeStatus) {
+        GameLogger.debug(TAG, "shootMagmaWave(): stat=$stat")
 
-        if (game.getCurrentLevel() == LevelDefinition.MOON_MAN) {
-            GameLogger.debug(TAG, "shootFireball(): in Moon Man's stage, fire cannot exist in outer space")
+        if (megaman.body.isSensing(BodySense.IN_WATER)) {
+            GameLogger.debug(TAG, "shootMagmaWave(): in water")
+
+            val smoke = MegaEntityFactory.fetch(SmokePuff::class)!!
+            smoke.spawn(
+                props(
+                    ConstKeys.OWNER pairTo this,
+                    ConstKeys.POSITION pairTo getSpawnPosition(MegamanWeapon.MEGA_BUSTER)
+                )
+            )
+            return
+        } else if (game.getCurrentLevel() == LevelDefinition.MOON_MAN) {
+            GameLogger.debug(TAG, "shootMagmaWave(): in Moon Man's stage")
 
             val explosion = MegaEntityFactory.fetch(MagmaExplosion::class)!!
             explosion.spawn(

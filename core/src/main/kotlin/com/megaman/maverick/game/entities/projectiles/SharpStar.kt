@@ -68,6 +68,11 @@ class SharpStar(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         GameLogger.debug(TAG, "hitBlock()")
+        explodeAndDie()
+    }
+
+    override fun explodeAndDie(vararg params: Any?) {
+        GameLogger.debug(TAG, "explodeAndDie()")
         destroy()
         val explosion = MegaEntityFactory.fetch(StarExplosion::class)!!
         explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))

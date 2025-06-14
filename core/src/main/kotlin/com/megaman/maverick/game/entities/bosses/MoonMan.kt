@@ -102,9 +102,9 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         private const val GRAVITY_CHANGE_CONTINUE_DUR = 1.2f
         private const val GRAVITY_CHANGE_END_DUR = ConstVals.GAME_CAM_ROTATE_TIME
 
-        private const val GRAVITY_CHANGE_DELAY_DUR = 5f
-        private const val GRAVITY_CHANGE_START_CHANCE = 0.1f
-        private const val GRAVITY_CHANGE_CHANGE_DELTA = 0.1f
+        private const val GRAVITY_CHANGE_DELAY_DUR = 3f
+        private const val GRAVITY_CHANGE_START_CHANCE = 0.25f
+        private const val GRAVITY_CHANGE_CHANGE_DELTA = 0.25f
 
         private const val ASTEROIDS_TO_SPAWN = 3
         // private const val ASTEROID_MIN_SPEED = 6f

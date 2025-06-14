@@ -117,11 +117,11 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
         }
 
         scrollingStars = ScrollingStars(
-            game,
-            Vector2(
+            game = game,
+            start = Vector2(
                 -ScrollingStars.COLS * ScrollingStars.WIDTH * ConstVals.PPM / 2f,
                 -ScrollingStars.ROWS * ScrollingStars.HEIGHT * ConstVals.PPM / 2f
-            )
+            ),
         )
         val pos = getDefaultCameraPosition()
         scrollingStars.set(pos.x, pos.y)
@@ -166,7 +166,9 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
         totalTimer.reset()
         letterDelay.reset()
 
-        uiCam.position.set(getDefaultCameraPosition())
+        val camPos = getDefaultCameraPosition()
+        uiCam.position.set(camPos)
+        scrollingStars.set(camPos.x, camPos.y)
 
         audioMan.playMusic(MusicAsset.MM2_BOSS_INTRO_MUSIC, false)
     }

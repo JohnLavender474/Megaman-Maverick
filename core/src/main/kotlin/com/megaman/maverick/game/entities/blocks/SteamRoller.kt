@@ -98,12 +98,6 @@ class SteamRoller(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
 
     private lateinit var state: SteamRollerState
 
-    /*
-    private val switchArea = GameRectangle()
-        .setSize(0.5f * ConstVals.PPM)
-        .also { it.drawingColor = Color.BLUE }
-     */
-
     private val blocks = Array<Block>()
     private val blockOffsets = OrderedMap<Block, Vector2>()
 
@@ -124,7 +118,6 @@ class SteamRoller(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
         addComponent(defineCullablesComponent())
         addComponent(defineAnimationsComponent())
         addComponent(defineUpdatablesComponent())
-        // addDebugShapeSupplier { switchArea }
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -199,27 +192,9 @@ class SteamRoller(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
         }
 
         when (state) {
-            SteamRollerState.IDLE -> {
-                body.physics.velocity.x = 0f
-
-                /*
-                if (!FacingUtils.isFacingBlock(this)) {
-                    switchArea.setCenter(
-                        body.getCenter().add(
-                            0.75f * ConstVals.PPM * -facing.value, -0.1f * ConstVals.PPM
-                        )
-                    )
-
-                    if (megaman.body.getBounds().overlaps(switchArea)) {
-                        GameLogger.debug(TAG, "update(): IDLE -> ROLL")
-                        state = SteamRollerState.ROLL
-                    }
-                }
-                 */
-            }
+            SteamRollerState.IDLE -> body.physics.velocity.x = 0f
             SteamRollerState.ROLL -> {
                 roll(delta)
-
                 if (FacingUtils.isFacingBlock(this)) {
                     GameLogger.debug(TAG, "ROLL -> IDLE")
                     state = SteamRollerState.IDLE
@@ -249,7 +224,6 @@ class SteamRoller(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
             }
             SteamRollerState.REVERSE -> {
                 reverse()
-
                 if (FacingUtils.isBackTouchingBlock(this)) {
                     GameLogger.debug(TAG, "update(): REVERSE -> IDLE")
                     state = SteamRollerState.IDLE
@@ -282,6 +256,10 @@ class SteamRoller(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
         leftFixture.drawingColor = Color.YELLOW
         debugShapes.add { leftFixture }
 
+        val leftDamagerFixture = Fixture(body, FixtureType.DAMAGER)
+        leftDamagerFixture.attachedToBody = false
+        body.addFixture(leftDamagerFixture)
+
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.25f * ConstVals.PPM, 1.5f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
@@ -290,9 +268,19 @@ class SteamRoller(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
         rightFixture.drawingColor = Color.YELLOW
         debugShapes.add { rightFixture }
 
+        val rightDamagerFixture = Fixture(body, FixtureType.DAMAGER)
+        rightDamagerFixture.attachedToBody = false
+        body.addFixture(rightDamagerFixture)
+
         body.preProcess.put(ConstKeys.DEFAULT) {
             val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAV else GRAVITY
             body.physics.gravity.y = gravity * ConstVals.PPM
+
+            val canSideDoDamage = state == SteamRollerState.ROLL
+            leftDamagerFixture.setActive(canSideDoDamage && isFacing(Facing.LEFT))
+            rightDamagerFixture.setActive(canSideDoDamage && isFacing(Facing.RIGHT))
+            leftDamagerFixture.setShape(leftFixture.getShape())
+            rightDamagerFixture.setShape(rightFixture.getShape())
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

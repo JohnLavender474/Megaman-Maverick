@@ -64,6 +64,8 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
         private val HIT_PROJS = objectSetOf<KClass<out IProjectileEntity>>(
             Bullet::class,
             Asteroid::class,
+            SharpStar::class,
+            MoonScythe::class,
             RocketBomb::class,
             PreciousGem::class,
             ChargedShot::class,

@@ -37,14 +37,14 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
     companion object {
         const val TAG = "InfernoMeteorShower"
 
-        private const val COOLDOWN_DUR = 3f
+        private const val COOLDOWN_DUR = 2f
         private const val METEOR_SHOWER_DUR = 4f
 
         private const val INIT_SPAWN_DELAY = 0.5f
-        private const val MIN_CONTINUE_SPAWN_DELAY = 0.5f
-        private const val MAX_CONTINUE_SPAWN_DELAY = 1f
+        private const val MIN_CONTINUE_SPAWN_DELAY = 0.25f
+        private const val MAX_CONTINUE_SPAWN_DELAY = 0.5f
 
-        private const val SHAKE_DUR = 2f
+        private const val SHAKE_DUR = 4f
         private const val SHAKE_INTERVAL = 0.1f
         private const val SHAKE_X = 0f
         private const val SHAKE_Y = 0.003125f
@@ -95,9 +95,7 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
         )
 
         spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
-
         timers.values().forEach { it.reset() }
-
         coolingDown = true
     }
 
@@ -156,7 +154,6 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
                     if (overlap) shakeRoom()
                 }
             }
-
             else -> {
                 val initSpawnDelay = timers["init_spawn_delay"]
                 initSpawnDelay.update(delta)

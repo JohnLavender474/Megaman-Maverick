@@ -9,6 +9,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.isAny
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -43,7 +44,7 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         const val TAG = "MoonScythe"
         private const val ROTATIONS_PER_SEC = 2.5f
         private const val FADE_DUR = 0.25f
-        private const val MAX_BOUNCES = 3
+        private const val MAX_BOUNCES = 4
         private const val SPAWN_TRAIL_DELAY = 0.1f
         private const val DEBUG_FADING = false
         private val BLOCK_FILTERS = gdxArrayOf(AbstractBlock::class, LadderTop::class)
@@ -95,8 +96,7 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = shieldFixture.getEntity()
-        if (entity is MoonScythe) return
-
+        if (entity.isAny(MoonScythe::class, SharpStar::class, Asteroid::class)) return
         hit(thisShape, otherShape)
     }
 
@@ -104,10 +104,8 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         if (shouldDebug) GameLogger.debug(TAG, "hit(): thisShape=$thisShape, otherShape=$otherShape")
 
         bounces++
-
         if (bounces > MAX_BOUNCES) {
             if (shouldDebug) GameLogger.debug(TAG, "hit(): start to fade")
-
             fade = true
         }
 
@@ -131,7 +129,6 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
                 fadeTimer.update(delta)
                 if (fadeTimer.isFinished()) destroy()
             }
-
             else -> {
                 spawnTrailDelay.update(delta)
                 if (spawnTrailDelay.isFinished()) {

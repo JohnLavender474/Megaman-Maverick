@@ -9,7 +9,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 class ScrollingStars(
     game: MegamanMaverickGame,
     start: Vector2,
-    target: Vector2 = start.cpy().add(WIDTH * ConstVals.PPM / 2f, 0f),
+    target: Vector2 = start.cpy().add(WIDTH * ConstVals.PPM, 0f),
     width: Float = WIDTH * ConstVals.PPM,
     height: Float = HEIGHT * ConstVals.PPM
 ) : ScrollingBackground(
@@ -23,6 +23,7 @@ class ScrollingStars(
     height,
     ROWS,
     COLS,
+    initPos = start.cpy()
 ) {
 
     companion object {
@@ -31,11 +32,5 @@ class ScrollingStars(
         const val DUR = 10f
         const val WIDTH = 16f
         const val HEIGHT = 14f
-    }
-
-    override fun update(delta: Float) {
-        val camPos = viewport.camera.position
-
-        super.update(delta)
     }
 }

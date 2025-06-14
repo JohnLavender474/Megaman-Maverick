@@ -56,7 +56,7 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
     companion object {
         const val TAG = "RisingLavaRiver"
 
-        private const val DEFAULT_RISE_SPEED = 1.25f
+        private const val DEFAULT_RISE_SPEED = 1.5f
         private const val DEFAULT_FALL_SPEED = 8f
 
         private const val STOP_DELAY = 0.5f
