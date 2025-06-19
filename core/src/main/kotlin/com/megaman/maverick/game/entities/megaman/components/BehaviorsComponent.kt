@@ -380,7 +380,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             return when {
                 isBehaviorActive(BehaviorType.GROUND_SLIDING) -> !minTimer.isFinished() ||
                     (game.controllerPoller.isPressed(MegaControllerButton.A) && directionOnInit == direction)
-
                 else -> game.controllerPoller.isPressed(MegaControllerButton.DOWN) &&
                     game.controllerPoller.isJustPressed(MegaControllerButton.A)
             }
@@ -499,7 +498,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                                 return false
                         }
                     }
-
                     else -> {
                         if (!body.isSensing(BodySense.HEAD_TOUCHING_LADDER)) when {
                             direction == Direction.LEFT &&
@@ -553,7 +551,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                         body.getY() >= ladder.body.getMaxY() -> body.setMaxY(ladder.body.getMaxY())
                     }
                 }
-
                 Direction.LEFT, Direction.RIGHT -> {
                     body.setCenterY(ladder.body.getCenter().y)
 
@@ -585,29 +582,23 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                         0f,
                         MegamanValues.CLIMB_VEL
                     )
-
                     game.controllerPoller.isPressed(MegaControllerButton.DOWN) -> velocity.set(
                         0f,
                         MegamanValues.CLIMB_VEL * -1f
                     )
-
                     else -> velocity.setZero()
                 }
-
                 Direction.DOWN -> when {
                     game.controllerPoller.isPressed(MegaControllerButton.DOWN) -> velocity.set(
                         0f,
                         MegamanValues.CLIMB_VEL
                     )
-
                     game.controllerPoller.isPressed(MegaControllerButton.UP) -> velocity.set(
                         0f,
                         MegamanValues.CLIMB_VEL * -1f
                     )
-
                     else -> velocity.setZero()
                 }
-
                 Direction.LEFT -> when {
                     game.controllerPoller.isPressed(MegaControllerButton.UP) ->
                         velocity.set(MegamanValues.CLIMB_VEL * -1f, 0f)
@@ -618,18 +609,15 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     else -> velocity.setZero()
 
                 }
-
                 Direction.RIGHT -> when {
                     game.controllerPoller.isPressed(MegaControllerButton.UP) -> velocity.set(
                         MegamanValues.CLIMB_VEL,
                         0f
                     )
-
                     game.controllerPoller.isPressed(MegaControllerButton.DOWN) -> velocity.set(
                         MegamanValues.CLIMB_VEL * -1f,
                         0f
                     )
-
                     else -> velocity.setZero()
                 }
             }.scl(ConstVals.PPM * movementScalar)
@@ -682,17 +670,14 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     if (body.physics.velocity.y < 0f) body.physics.velocity.y = 0f
                     body.physics.velocity.y += impulse
                 }
-
                 Direction.DOWN -> {
                     if (body.physics.velocity.y > 0f) body.physics.velocity.y = 0f
                     body.physics.velocity.y += -impulse
                 }
-
                 Direction.LEFT -> {
                     if (body.physics.velocity.x > 0f) body.physics.velocity.x = 0f
                     body.physics.velocity.x += -impulse
                 }
-
                 Direction.RIGHT -> {
                     if (body.physics.velocity.x < 0f) body.physics.velocity.x = 0f
                     body.physics.velocity.x += impulse

@@ -46,6 +46,12 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
     companion object {
         const val TAG = "LevelPauseScreen"
 
+        // This array sorts the healths in the order that they're displayed, starting at the top
+        // and moving to the right...
+        private val HEALTH_TANKS = gdxArrayOf(
+            MegaHealthTank.A, MegaHealthTank.C, MegaHealthTank.B, MegaHealthTank.D
+        )
+
         private val FULL_TABLE = TableBuilder<Any>()
             .row(gdxArrayOf(MegamanWeapon.MEGA_BUSTER, null)) // atomic radium
             .row(gdxArrayOf(null, null)) // needle spin, rodent claws
@@ -53,8 +59,9 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
             .row(gdxArrayOf(MegamanWeapon.INFERNAL_BARRAGE, MegamanWeapon.RUSH_JET))
             .row(gdxArrayOf(MegamanWeapon.MOON_SCYTHES, null)) // adapter 1
             .row(gdxArrayOf(MegamanWeapon.PRECIOUS_GUARD, null)) // adapter 2
-            .row(gdxArrayOf(MegaHealthTank.A, MegaHealthTank.C, ConstKeys.EXIT))
-            .row(gdxArrayOf(MegaHealthTank.B, MegaHealthTank.D, ConstKeys.EXIT))
+            // Both rows of health tanks have the exit button on purpose
+            .row(gdxArrayOf(HEALTH_TANKS[0], HEALTH_TANKS[1], ConstKeys.EXIT))
+            .row(gdxArrayOf(HEALTH_TANKS[2], HEALTH_TANKS[3], ConstKeys.EXIT))
             .build()
 
         private const val OPTIONS_PREFIX = "options"
@@ -216,7 +223,6 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                                 MegamanWeapon.MEGA_BUSTER -> {
                                     { megaman.getCurrentHealth() }
                                 }
-
                                 else -> {
                                     { megaman.weaponsHandler.getAmmo(element) }
                                 }
@@ -227,7 +233,6 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                             bitsBars.add(bitsBar)
                         }
                     }
-
                     is MegaHealthTank -> {
                         if (megaman.hasHealthTank(element)) {
                             row.add(element)
@@ -245,7 +250,6 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                             bitsBars.add(bitsBar)
                         }
                     }
-
                     ConstKeys.EXIT -> {
                         row.add(ConstKeys.EXIT)
 
@@ -331,7 +335,11 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
     }
 
     override fun isInteractionAllowed() =
-        super.isInteractionAllowed() && slideTimer.isFinished() && fillHealthTimer.isFinished() && !closing && !exiting
+        super.isInteractionAllowed() &&
+            slideTimer.isFinished() &&
+            fillHealthTimer.isFinished() &&
+            !closing &&
+            !exiting
 
     override fun render(delta: Float) {
         super.render(delta)
@@ -491,8 +499,37 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
         val oldNode = node
         try {
             node = when (direction) {
-                Direction.UP -> node.nextRow()
-                Direction.DOWN -> node.previousRow()
+                Direction.UP, Direction.DOWN -> {
+                    var nextNode = if (direction == Direction.UP) node.nextRow() else node.previousRow()
+
+                    // Moving from a weapon to the exit button should be intercepted and changed l if there are any
+                    // health tanks. In the case, find the first available health tank and move the selection there.
+                    if (oldNode.element is MegamanWeapon &&
+                        nextNode.element == ConstKeys.EXIT &&
+                        megaman.hasAnyHealthTanks
+                    ) {
+                        val iteration = when (direction) {
+                            Direction.UP -> IntProgression.fromClosedRange(HEALTH_TANKS.size - 1, 0, -1)
+                            else -> IntProgression.fromClosedRange(0, HEALTH_TANKS.size - 1, 1)
+                        }
+
+                        for (index in iteration) {
+                            val healthTank = HEALTH_TANKS[index]
+
+                            if (megaman.hasHealthTank(healthTank)) {
+                                val position = table.findPositionOf(healthTank)
+
+                                if (position != null) {
+                                    val (row, column) = position
+                                    nextNode = table.get(row, column)
+                                    break
+                                }
+                            }
+                        }
+                    }
+
+                    nextNode
+                }
                 Direction.LEFT -> node.previousColumn()
                 Direction.RIGHT -> node.nextColumn()
             }

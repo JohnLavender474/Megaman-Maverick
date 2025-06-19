@@ -7,6 +7,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
@@ -80,6 +81,7 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
     private val frozenTimer = Timer(FROZEN_DUR)
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         super.init()
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
@@ -89,6 +91,7 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
@@ -101,6 +104,7 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
     }
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
+        GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
         val damaged = super.takeDamageFrom(damager)
         if (damaged && !frozen && damager is IFreezerEntity) frozen = true
         return damaged
@@ -165,6 +169,7 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
 
             if (body.isSensing(BodySense.FEET_ON_GROUND)) {
                 standTimer.update(delta)
+                if (body.physics.velocity.y <= 0f) body.physics.velocity.x = 0f
                 facing = if (megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
             }
 
@@ -180,13 +185,13 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2.75f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.hidden = damageBlink
             sprite.setFlip(isFacing(Facing.LEFT), false)
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

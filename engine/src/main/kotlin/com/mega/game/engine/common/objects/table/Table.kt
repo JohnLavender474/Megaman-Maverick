@@ -1,6 +1,7 @@
 package com.mega.game.engine.common.objects.table
 
 import com.badlogic.gdx.utils.Array
+import com.mega.game.engine.common.objects.IntPair
 
 class Table<T>(elements: Array<Array<T>>) {
 
@@ -30,6 +31,13 @@ class Table<T>(elements: Array<Array<T>>) {
     fun columnCount(row: Int): Int {
         if (row >= table.size || row < 0) return 0
         return table[row].size
+    }
+
+    fun findPositionOf(element: T): IntPair? {
+        for (row in 0 until rowCount())
+            for (column in 0 until columnCount(row))
+                if (get(row, column).element == element) return IntPair(row, column)
+        return null
     }
 
     override fun toString() = StringBuilder()

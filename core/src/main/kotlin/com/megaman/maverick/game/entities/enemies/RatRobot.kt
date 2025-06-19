@@ -13,6 +13,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
+import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
@@ -38,6 +39,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.bosses.RodentMan
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
@@ -77,8 +79,6 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
     private val triggers = Array<GameRectangle>()
     private var triggered = false
-
-    private val objs = Array<RectangleMapObject>()
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -143,7 +143,10 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                 return@add
             }
 
-            if (!triggered && triggers.any { it.overlaps(megaman.body.getBounds()) }) {
+            if (!triggered &&
+                !megaman.isBehaviorActive(BehaviorType.CLIMBING) &&
+                triggers.any { it.overlaps(megaman.body.getBounds()) }
+            ) {
                 triggered = true
                 facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
             }
@@ -176,7 +179,50 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         body.addFixture(rightFixture)
         debugShapes.add { rightFixture }
 
+        val leftFootFixture = Fixture(
+            body, FixtureType.CONSUMER, GameRectangle().setSize(
+                0.1f * ConstVals.PPM, 0.1f * ConstVals.PPM
+            )
+        )
+        leftFootFixture.offsetFromBodyAttachment.set(
+            (-0.5f * ConstVals.PPM) - (body.getWidth() / 2f),
+            -body.getHeight() / 2f
+        )
+        leftFootFixture.setFilter { fixture -> fixture.getType().equalsAny(FixtureType.BLOCK, FixtureType.DEATH) }
+        leftFootFixture.setConsumer { _, fixture ->
+            when (fixture.getType()) {
+                FixtureType.BLOCK -> leftFootFixture.putProperty(ConstKeys.BLOCK, true)
+                FixtureType.DEATH -> leftFootFixture.putProperty(ConstKeys.DEATH, true)
+            }
+        }
+        body.addFixture(leftFootFixture)
+        debugShapes.add { leftFootFixture }
+
+        val rightFootFixture = Fixture(
+            body, FixtureType.CONSUMER, GameRectangle().setSize(
+                0.1f * ConstVals.PPM, 0.1f * ConstVals.PPM
+            )
+        )
+        rightFootFixture.offsetFromBodyAttachment.set(
+            (0.5f * ConstVals.PPM) + (body.getWidth() / 2f),
+            -body.getHeight() / 2f
+        )
+        rightFootFixture.setFilter { fixture -> fixture.getType().equalsAny(FixtureType.BLOCK, FixtureType.DEATH) }
+        rightFootFixture.setConsumer { _, fixture ->
+            when (fixture.getType()) {
+                FixtureType.BLOCK -> rightFootFixture.putProperty(ConstKeys.BLOCK, true)
+                FixtureType.DEATH -> rightFootFixture.putProperty(ConstKeys.DEATH, true)
+            }
+        }
+        body.addFixture(rightFootFixture)
+        debugShapes.add { rightFootFixture }
+
         body.preProcess.put(ConstKeys.DEFAULT) {
+            leftFootFixture.putProperty(ConstKeys.BLOCK, false)
+            leftFootFixture.putProperty(ConstKeys.DEATH, false)
+            rightFootFixture.putProperty(ConstKeys.BLOCK, false)
+            rightFootFixture.putProperty(ConstKeys.DEATH, false)
+
             body.physics.gravity.y = if (body.isSensing(BodySense.FEET_ON_GROUND)) 0f else -GRAVITY * ConstVals.PPM
             body.physics.gravityOn = triggered
 
@@ -187,11 +233,22 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                 }
 
             body.forEachFixture { it.setActive(triggered) }
+        }
 
-            if (body.isSensing(BodySense.FEET_ON_GROUND) &&
-                (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
-                (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
-            ) swapFacing()
+        body.postProcess.put(ConstKeys.DEFAULT) {
+            if (body.isSensing(BodySense.FEET_ON_GROUND) && !frozen) {
+                if (isFacing(Facing.LEFT)) {
+                    if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) ||
+                        leftFootFixture.getProperty(ConstKeys.BLOCK, Boolean::class) != true ||
+                        leftFootFixture.getProperty(ConstKeys.DEATH, Boolean::class) == true
+                    ) facing = Facing.RIGHT
+                } else if (isFacing(Facing.RIGHT)) {
+                    if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) ||
+                        rightFootFixture.getProperty(ConstKeys.BLOCK, Boolean::class) != true ||
+                        rightFootFixture.getProperty(ConstKeys.DEATH, Boolean::class) == true
+                    ) facing = Facing.LEFT
+                }
+            }
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

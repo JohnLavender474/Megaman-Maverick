@@ -862,6 +862,8 @@ sprites/frames/Megaman_v2_Ice/groundslide.png
 sprites/frames/Backgrounds4/GlacierBKG_v2.png
 sprites/frames/Backgrounds4/BGNeedle.png
 sprites/frames/Projectiles_old/SpitFireball_OLD.png
+sprites/frames/Hazards1/UnderwaterFan/gray.png
+sprites/frames/Hazards1/UnderwaterFan/green.png
 sprites/frames/Hazards1/LavaBeamer.png
 sprites/frames/Hazards1/LavaBeamer/Off.png
 sprites/frames/Hazards1/LavaBeamer/SwitchingOn.png
@@ -914,7 +916,6 @@ sprites/frames/Hazards1/CeilingCrusher/Bar.png
 sprites/frames/Hazards1/CeilingCrusher/Crusher.png
 sprites/frames/Hazards1/Spike7.png
 sprites/frames/Hazards1/Flame2.png
-sprites/frames/Hazards1/UnderwaterFan.png
 sprites/frames/Hazards1/GreenSpikeBall.piskel
 sprites/frames/Hazards1/WanaanLauncher/launcher.png
 sprites/frames/Hazards1/WanaanLauncher/bust.png
@@ -2646,6 +2647,7 @@ sprites/piskel/large_swing_ring.piskel
 sprites/piskel/MoonHead.piskel
 sprites/piskel/MoonEye.piskel
 sprites/piskel/Spiky.piskel
+sprites/piskel/UnderwaterFanPillar_Green.piskel
 sprites/piskel/MugshotPane_80x48.piskel
 sprites/piskel/MegamanMaverick_Left.piskel
 sprites/piskel/Megaman_Color_Palettes.piskel
@@ -2944,6 +2946,7 @@ sprites/piskel/Robbit.piskel
 sprites/piskel/TimberWoman.piskel
 sprites/piskel/SaucerRay.piskel
 sprites/piskel/MegamanFaces.piskel
+sprites/piskel/UnderwaterFanPillar_Gray.piskel
 sprites/piskel/BlobTool.piskel
 sprites/piskel/MugshotPane_48x48.piskel
 sprites/piskel/mm9jewel.piskel
@@ -3066,6 +3069,7 @@ tiled_maps/tsx/Reactor_Man_4.tsx
 tiled_maps/tsx/Hardman.tsx
 tiled_maps/tsx/Blizzardman.tsx
 tiled_maps/tsx/MM10Wily1.tsx
+tiled_maps/tsx/UnderwaterFanPillar_Gray.tsx
 tiled_maps/tsx/mm9concrete.tsx
 tiled_maps/png/tstMM10Wily1.png
 tiled_maps/png/star-man-stage-no-black.png
@@ -3187,6 +3191,7 @@ tiled_maps/png/tstFlashmanAnimated3.png
 tiled_maps/png/MoonManTiles.png
 tiled_maps/png/tstFlashmanAnimated.png
 tiled_maps/png/tstHardman.png
+tiled_maps/png/UnderwaterFanPillar_Gray.png
 tiled_maps/png/mm9endless.png
 tiled_maps/png/MM2wood_01.png
 tiled_maps/png/tstMM3Wily4.png

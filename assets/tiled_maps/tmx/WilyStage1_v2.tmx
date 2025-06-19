@@ -411,19 +411,7 @@
   </object>
  </objectgroup>
  <objectgroup id="15" name="items">
-  <object id="466" name="HealthBulb" x="17536" y="1696" width="32" height="32">
-   <properties>
-    <property name="large" type="bool" value="true"/>
-    <property name="timed" type="bool" value="false"/>
-   </properties>
-  </object>
   <object id="467" name="HealthBulb" x="17504" y="1696" width="32" height="32">
-   <properties>
-    <property name="large" type="bool" value="true"/>
-    <property name="timed" type="bool" value="false"/>
-   </properties>
-  </object>
-  <object id="468" name="HealthBulb" x="17472" y="1696" width="32" height="32">
    <properties>
     <property name="large" type="bool" value="true"/>
     <property name="timed" type="bool" value="false"/>
@@ -441,19 +429,7 @@
     <property name="timed" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="471" name="HealthBulb" x="17728" y="1696" width="32" height="32">
-   <properties>
-    <property name="large" type="bool" value="true"/>
-    <property name="timed" type="bool" value="false"/>
-   </properties>
-  </object>
   <object id="472" name="HealthBulb" x="17760" y="1696" width="32" height="32">
-   <properties>
-    <property name="large" type="bool" value="true"/>
-    <property name="timed" type="bool" value="false"/>
-   </properties>
-  </object>
-  <object id="473" name="HealthBulb" x="17792" y="1696" width="32" height="32">
    <properties>
     <property name="large" type="bool" value="true"/>
     <property name="timed" type="bool" value="false"/>

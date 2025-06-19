@@ -5,15 +5,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
-import com.mega.game.engine.animations.AnimationsComponent
-import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.AnimationsComponentBuilder
+import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Speed
-import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IDirectional
@@ -27,7 +28,7 @@ import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
-import com.mega.game.engine.drawables.sprites.SpritesComponent
+import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
@@ -81,14 +82,18 @@ class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
         private val ENTITIES_TO_BLOW = objectSetOf<KClass<out IBodyEntity>>(Megaman::class)
 
-        private var region: TextureRegion? = null
+        private val regions = ObjectMap<String, TextureRegion>()
     }
+
+    enum class UnderwaterFanColor { GRAY, GREEN }
 
     override var direction: Direction
         get() = body.direction
         set(value) {
             body.direction = value
         }
+
+    private lateinit var color: UnderwaterFanColor
 
     private val forceOrigin = Vector2()
     private val forceBounds = GameRectangle()
@@ -107,7 +112,12 @@ class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
+        if (regions.isEmpty) {
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+            UnderwaterFanColor.entries.map { it.name.lowercase() }
+                .forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
+        }
+        super.init()
         addComponent(defineCullablesComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
@@ -118,6 +128,13 @@ class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        val color = spawnProps.getOrDefault(ConstKeys.COLOR, UnderwaterFanColor.GREEN)
+        this.color = when (color) {
+            is UnderwaterFanColor -> color
+            is String -> UnderwaterFanColor.valueOf(color.uppercase())
+            else -> throw IllegalArgumentException("Invalid value for color: $color")
+        }
 
         spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
 
@@ -230,10 +247,10 @@ class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
                 }
             )
 
-            var force = (FORCE_MIN_IMPULSE + (FORCE_MAX_IMPULSE - FORCE_MIN_IMPULSE)) * scalar
-            force *= delta * ConstVals.PPM
+            var force = (FORCE_MIN_IMPULSE + (FORCE_MAX_IMPULSE - FORCE_MIN_IMPULSE))
+                .times(scalar * delta * ConstVals.PPM)
 
-            game.setDebugText("${scalar.toInt()}: ${force.toInt()}")
+            // game.setDebugText("${scalar.toInt()}: ${force.toInt()}")
 
             return@setVelocityAlteration VelocityAlteration.add(force, direction)
         }
@@ -259,25 +276,30 @@ class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.DAMAGER))
     }
 
-    private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite()
-        sprite.setSize(2.5f * ConstVals.PPM, 0.875f * ConstVals.PPM)
-        val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, sprite ->
+    private fun defineSpritesComponent() = SpritesComponentBuilder()
+        .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(2.5f * ConstVals.PPM, 0.875f * ConstVals.PPM) })
+        .updatable { _, sprite ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
-
             val position = DirectionPositionMapper.getInvertedPosition(direction)
             sprite.setPosition(body.getPositionPoint(position), position)
         }
-        return component
-    }
+        .build()
 
-    private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(region!!, 2, 2, 0.05f, true)
-        val animator = Animator(animation)
-        return AnimationsComponent(this, animator)
-    }
+    private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
+        .key(TAG)
+        .animator(
+            AnimatorBuilder()
+                .setKeySupplier { color.name.lowercase() }
+                .applyToAnimations { animations ->
+                    UnderwaterFanColor.entries.map { it.name.lowercase() }.forEach {
+                        val animation = Animation(regions[it], 2, 2, 0.05f, true)
+                        animations.put(it, animation)
+                    }
+                }
+                .build()
+        )
+        .build()
 
     override fun getType() = EntityType.HAZARD
 
