@@ -59,12 +59,14 @@ class MegaContactFilter : IContactFilter {
             FixtureType.BOUNCER,
             FixtureType.SAND,
             FixtureType.SNOW,
-            FixtureType.CART
+            FixtureType.CART,
+            FixtureType.GATE
         ),
         FixtureType.HEAD pairTo objectSetOf(
             FixtureType.BLOCK,
             FixtureType.BOUNCER,
-            FixtureType.FEET
+            FixtureType.FEET,
+            FixtureType.GATE
         ),
         FixtureType.PROJECTILE pairTo objectSetOf(
             FixtureType.BODY,

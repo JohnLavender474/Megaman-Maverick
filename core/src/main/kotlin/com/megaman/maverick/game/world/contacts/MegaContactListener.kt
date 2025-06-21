@@ -290,6 +290,7 @@ class MegaContactListener(
             printDebugLog(contact, "beginContact(): Feet-Block, contact=$contact")
             val (feetFixture, blockFixture) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.BLOCK, out)!!
 
+            if (blockFixture.hasFixtureLabel(FixtureLabel.NO_FEET_TOUCHIE)) return
             if (feetFixture.hasFilter() && !feetFixture.getFilter().invoke(blockFixture)) return
 
             val block = blockFixture.getEntity() as Block
@@ -836,6 +837,7 @@ class MegaContactListener(
         else if (contact.fixturesMatch(FixtureType.FEET, FixtureType.BLOCK)) {
             val (feetFixture, blockFixture) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.BLOCK, out)!!
 
+            if (blockFixture.hasFixtureLabel(FixtureLabel.NO_FEET_TOUCHIE)) return
             if (feetFixture.hasFilter() && !feetFixture.getFilter().invoke(blockFixture)) return
 
             val block = blockFixture.getEntity() as Block
@@ -1270,6 +1272,7 @@ class MegaContactListener(
             printDebugLog(contact, "endContact(): Feet-Block, contact=$contact")
             val (feetFixture, blockFixture) = contact.getFixturesInOrder(FixtureType.FEET, FixtureType.BLOCK, out)!!
 
+            if (blockFixture.hasFixtureLabel(FixtureLabel.NO_FEET_TOUCHIE)) return
             if (feetFixture.hasFilter() && !feetFixture.getFilter().invoke(blockFixture)) return
 
             val block = blockFixture.getEntity() as Block

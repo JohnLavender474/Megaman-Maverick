@@ -80,7 +80,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         override fun get(damager: IDamager) = when {
             IGNORE_DMG.contains(damager::class) -> 0
             else -> when (owner) {
-                megaman -> 6
+                megaman -> 8
                 else -> NON_MEGAMAN_DMG_NEGS[damager::class]?.get(damager) ?: 0
             }
         }

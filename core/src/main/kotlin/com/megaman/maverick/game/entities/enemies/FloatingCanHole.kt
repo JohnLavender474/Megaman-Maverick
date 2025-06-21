@@ -85,7 +85,6 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
                 ConstKeys.DROP_ITEM_ON_DEATH pairTo dropItemOnDeath
             )
         )
-
         children.add(floatingCan)
     }
 

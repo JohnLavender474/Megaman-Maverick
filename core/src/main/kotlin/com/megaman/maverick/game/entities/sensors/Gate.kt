@@ -53,7 +53,10 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
-import com.megaman.maverick.game.world.body.*
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getPositionPoint
 
 class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudioEntity, ISpritesEntity, IEventListener,
     Resettable, IDirectional {
@@ -285,7 +288,6 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
                     size.x = 2f
                     size.y = 3f
                 }
-
                 else -> {
                     size.x = 3f
                     size.y = 2f
@@ -302,7 +304,6 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
                     gateSize.x = 1f
                     gateSize.y = 1.5f
                 }
-
                 else -> {
                     gateSize.x = 1.5f
                     gateSize.y = 1f

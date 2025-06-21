@@ -74,7 +74,7 @@ class PipePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         private var region: TextureRegion? = null
     }
 
-    private enum class PipePuffState { PUFF, DELAY }
+    private enum class PipePuffState { DELAY, PUFF }
 
     override lateinit var direction: Direction
 
@@ -144,16 +144,14 @@ class PipePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
                             puffs = 0
                             delayTimer.resetDuration(PUFF_LONG_DELAY)
                         }
-
                         else -> delayTimer.resetDuration(PUFF_SHORT_DELAY)
                     }
 
                     loop.next()
                 }
             }
-
             PipePuffState.DELAY -> {
-                delayTimer.update(delta)
+                if (!game.isProperty(ConstKeys.ROOM_TRANSITION, true)) delayTimer.update(delta)
 
                 if (delayTimer.isFinished()) {
                     if (overlapsGameCamera()) requestToPlaySound(SoundAsset.WHOOSH_SOUND, false)

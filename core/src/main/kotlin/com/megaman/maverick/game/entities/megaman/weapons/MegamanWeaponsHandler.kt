@@ -352,7 +352,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         )
         MegamanWeapon.PRECIOUS_GUARD -> MegaWeaponHandler(
             cooldown = Timer(0.1f),
-            normalCost = { if (it.getSpawnedCount(MegaChargeStatus.NOT_CHARGED) > 0) 0 else 4 },
+            normalCost = { if (it.getSpawnedCount(MegaChargeStatus.NOT_CHARGED) > 0) 0 else 10 },
             chargeable = chargeable@{ it -> return@chargeable false },
             canFireWeapon = canFireWeapon@{ it, _ ->
                 if (it.getSpawnedCount(MegaChargeStatus.NOT_CHARGED) > 0) {

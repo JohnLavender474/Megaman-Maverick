@@ -15,6 +15,7 @@ class AbstractBlock(game: MegamanMaverickGame) : Block(game) {
         private val FIXTURE_LABELS = objectSetOf(
             FixtureLabel.NO_BODY_TOUCHIE,
             FixtureLabel.NO_SIDE_TOUCHIE,
+            FixtureLabel.NO_FEET_TOUCHIE,
             FixtureLabel.NO_PROJECTILE_COLLISION
         )
     }

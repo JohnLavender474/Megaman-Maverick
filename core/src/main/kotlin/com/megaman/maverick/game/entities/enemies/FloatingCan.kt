@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.objects.MutableOrderedSet
@@ -37,6 +38,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IBossListener
 import com.megaman.maverick.game.entities.contracts.megaman
@@ -55,6 +57,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         private const val SPAWN_DELAY = 1f
         private const val SPAWN_BLINK = 0.1f
         private const val FLY_SPEED = 1.5f
+        private const val MAX_SPAWNED = 6
     }
 
     private val spawnDelayTimer = Timer(SPAWN_DELAY)
@@ -64,6 +67,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     private val reusableBodySet = MutableOrderedSet<IBody>()
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source).findRegion(TAG)
         super.init()
         addComponent(defineBodyComponent())
@@ -72,13 +76,16 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         addComponent(definePathfindingComponent())
     }
 
+    override fun canSpawn(spawnProps: Properties) =
+        super.canSpawn(spawnProps) && MegaGameEntities.getOfTag(TAG).size < MAX_SPAWNED
+
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = when {
             spawnProps.containsKey(ConstKeys.BOUNDS) ->
                 (spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class))!!.getCenter()
-
             else -> spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         }
         body.setCenter(spawn)

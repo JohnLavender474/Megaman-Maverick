@@ -43,7 +43,10 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.world.body.*
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodyFixtureDef
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getPositionPoint
 
 class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ITeleporterEntity, IAudioEntity, IEventListener {
@@ -54,8 +57,8 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         private const val PORTAL_HOP_IMPULSE = 35f
         private const val PORTAL_HOP_DELAY = 0.5f
 
-        private const val MOON_WAIT_ROTS_PER_SEC = 1.5f
-        private const val MOON_HOP_ROTS_PER_SEC = 3f
+        private const val MOON_WAIT_ROT_DELAY = 0.1f
+        private const val MOON_HOP_ROT_DELAY = 0.05f
 
         private val portalAnimDefs = orderedMapOf(
             "wait" pairTo AnimationDef(2, 2, 0.1f, true),
@@ -82,8 +85,12 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private var thisKey = -1
     private var nextKey = -1
+
     private var rotation = 0f
+
     private var launch = false
+
+    private val moonRotationTimer = Timer()
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -126,9 +133,12 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         thisKey = spawnProps.get(ConstKeys.KEY, Int::class)!!
         nextKey = spawnProps.get(ConstKeys.NEXT, Int::class)!!
+
         rotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f, Float::class)
 
         launch = false
+
+        moonRotationTimer.resetDuration(MOON_WAIT_ROT_DELAY)
     }
 
     override fun onDestroy() {
@@ -260,16 +270,18 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         .sprite("portal", GameSprite().also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
         .updatable { _, sprite ->
             sprite.setCenter(body.getCenter())
-
             sprite.setOriginCenter()
             sprite.rotation = if (rotation < 0f) megaman.direction.rotation else rotation
         }
         .sprite("moon", GameSprite(regions["moon"]).also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
         .updatable { delta, sprite ->
             sprite.setCenter(body.getCenter())
-
             sprite.setOriginCenter()
-            sprite.rotation += 360f * delta * if (launch) MOON_HOP_ROTS_PER_SEC else MOON_WAIT_ROTS_PER_SEC
+            moonRotationTimer.update(delta)
+            if (moonRotationTimer.isFinished()) {
+                sprite.rotation += 90f
+                moonRotationTimer.resetDuration(if (launch) MOON_HOP_ROT_DELAY else MOON_WAIT_ROT_DELAY)
+            }
         }
         .build()
 

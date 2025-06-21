@@ -145,8 +145,9 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(
             props(
-                ConstKeys.POSITION pairTo body.getCenter(),
+                ConstKeys.OWNER pairTo owner,
                 ConstKeys.SOUND pairTo soundAsset,
+                ConstKeys.POSITION pairTo body.getCenter(),
                 ConstKeys.MASK pairTo objectSetOf<KClass<out IDamageable>>(
                     if (owner is Megaman) AbstractEnemy::class else Megaman::class
                 )
