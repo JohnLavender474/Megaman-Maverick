@@ -64,7 +64,10 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
-import com.megaman.maverick.game.world.body.*
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getPositionPoint
 import java.util.*
 import kotlin.math.abs
 
@@ -572,6 +575,8 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                 ConstKeys.TRAJECTORY pairTo trajectory
             )
         )
+
+        // requestToPlaySound(SoundAsset.BLAST_2_SOUND, false)
 
         GameLogger.debug(TAG, "shootOrb(): spawn=$spawn, trajectory=$trajectory")
     }

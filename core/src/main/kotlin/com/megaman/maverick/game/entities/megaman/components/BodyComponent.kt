@@ -10,11 +10,13 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.blocks.Block
+import com.megaman.maverick.game.entities.bosses.GutsTank
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
@@ -143,6 +145,10 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     leftFixture.offsetFromBodyAttachment.y = 0.1f * ConstVals.PPM
     leftFixture.setRunnable(onBounce)
     leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
+    leftFixture.setShouldStickToBlock shouldStick@{ _, blockFixture ->
+        val owner = blockFixture.getEntity().getProperty(ConstKeys.OWNER) as IGameEntity?
+        return@shouldStick owner !is GutsTank
+    }
     body.addFixture(leftFixture)
     debugShapes.add { leftFixture }
     body.putProperty("${ConstKeys.LEFT}_${ConstKeys.SIDE}", leftFixture)
@@ -152,6 +158,10 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     rightFixture.offsetFromBodyAttachment.y = 0.1f * ConstVals.PPM
     rightFixture.setRunnable(onBounce)
     rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
+    rightFixture.setShouldStickToBlock shouldStick@{ _, blockFixture ->
+        val owner = blockFixture.getEntity().getProperty(ConstKeys.OWNER) as IGameEntity?
+        return@shouldStick owner !is GutsTank
+    }
     body.addFixture(rightFixture)
     debugShapes.add { rightFixture }
     body.putProperty("${ConstKeys.RIGHT}_${ConstKeys.SIDE}", rightFixture)

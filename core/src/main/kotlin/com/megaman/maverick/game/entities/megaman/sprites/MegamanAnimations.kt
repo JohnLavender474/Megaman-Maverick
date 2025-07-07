@@ -28,8 +28,6 @@ class MegamanAnimations(
 
         fun buildFullKey(regionKey: String, weapon: MegamanWeapon) =
             "${regionKey}_${weapon.name.lowercase().replace("_", "")}"
-
-        fun splitFullKey(definitionKey: String) = definitionKey.split("_")
     }
 
     private val animations = OrderedMap<String, IAnimation>()
@@ -44,9 +42,9 @@ class MegamanAnimations(
                 MegamanWeapon.INFERNAL_BARRAGE -> TextureAsset.MEGAMAN_MAGMA_WAVE.source
                 MegamanWeapon.MOON_SCYTHES -> TextureAsset.MEGAMAN_MOON_SCYTHE.source
                 MegamanWeapon.PRECIOUS_GUARD -> TextureAsset.MEGAMAN_PRECIOUS_GUARD.source
+                MegamanWeapon.AXE_SWINGER -> TextureAsset.MEGAMAN_AXE_THROW.source
                 MegamanWeapon.RUSH_JET -> TextureAsset.MEGAMAN_RUSH_JETPACK.source
             }
-
             val atlas = game.assMan.getTextureAtlas(assetSource)
 
             MegamanAnimationDefs.getKeys().forEach { defKey ->
@@ -69,9 +67,13 @@ class MegamanAnimations(
         return animations
     }
 
-    private fun buildAnimation(defKey: String, atlas: TextureAtlas, fullKey: String) = when (defKey) {
-        "stand" -> buildStandAnimation(atlas, false)
-        "stand_shoot" -> buildStandAnimation(atlas, true)
+    private fun buildAnimation(
+        defKey: String,
+        atlas: TextureAtlas,
+        fullKey: String
+    ) = when (defKey) {
+        "stand" -> buildStandAnimation(atlas, false, true)
+        "stand_shoot" -> buildStandAnimation(atlas, true, true)
         else -> {
             val region = atlas.findRegion(defKey)
             var (rows, columns, durations, loop) = MegamanAnimationDefs.get(defKey)
@@ -114,11 +116,11 @@ class MegamanAnimations(
             if (regionProcessor != null) for (i in 0 until regions.size)
                 regions[i] = regionProcessor.process(regions[i], defKey, fullKey, rows, columns, durations, loop, i)
 
-            Animation(regions, durations)
+            Animation(regions, durations, loop)
         }
     }
 
-    private fun buildStandAnimation(atlas: TextureAtlas, shoot: Boolean): IAnimation {
+    private fun buildStandAnimation(atlas: TextureAtlas, shoot: Boolean, _loop: Boolean = true): IAnimation {
         val runTransKey = if (shoot) "run_trans_shoot" else "run_trans"
         val region2 = atlas.findRegion(runTransKey)
         val runTransDef = MegamanAnimationDefs.get(runTransKey)
@@ -129,9 +131,11 @@ class MegamanAnimations(
         val region1 = atlas.findRegion(standKey)
         val standDef = MegamanAnimationDefs.get(standKey)
         val standRegs = region1.splitAndFlatten(standDef.rows, standDef.cols, Array())
-        val standAnim = Animation(standRegs, standDef.durations, true)
+        val standAnim = Animation(standRegs, standDef.durations, _loop)
 
         return object : IAnimation {
+
+            private var loop = _loop
 
             override fun update(delta: Float) = when {
                 !runTransAnim.isFinished() -> runTransAnim.update(delta)
@@ -148,22 +152,25 @@ class MegamanAnimations(
                 else -> standAnim.getCurrentRegion()
             }
 
-            override fun isFinished() = false
+            override fun isFinished() = !loop && standAnim.isFinished()
 
             override fun getDuration() = runTransAnim.getDuration() + standAnim.getDuration()
 
             override fun setFrameDuration(frameDuration: Float) {
-                throw Error("Not yet implemented")
+                runTransAnim.setFrameDuration(frameDuration)
+                standAnim.setFrameDuration(frameDuration)
             }
 
             override fun setFrameDuration(index: Int, frameDuration: Float) {
-                throw Error("Not yet implemented")
+                val firstAnimSize = runTransAnim.size()
+                if (index < firstAnimSize) runTransAnim.setFrameDuration(index, frameDuration)
+                else standAnim.setFrameDuration(index - firstAnimSize, frameDuration)
             }
 
-            override fun isLooping() = true
+            override fun isLooping() = loop
 
             override fun setLooping(loop: Boolean) {
-                throw Error("Not yet implemented")
+                this.loop = loop
             }
 
             override fun reversed(): IAnimation {
@@ -180,21 +187,21 @@ class MegamanAnimations(
 
             override fun getIndex() = when {
                 !runTransAnim.isFinished() -> runTransAnim.getIndex()
-                else -> standAnim.getIndex()
+                else -> runTransAnim.size() + standAnim.getIndex()
             }
 
             override fun setCurrentTime(time: Float) {
-                throw Error("Not yet implemented")
+                val firstAnimDur = runTransAnim.getDuration()
+                if (time < firstAnimDur) runTransAnim.setCurrentTime(time)
+                else standAnim.setCurrentTime(time - firstAnimDur)
             }
 
             override fun getCurrentTime() = when {
                 !runTransAnim.isFinished() -> runTransAnim.getCurrentTime()
-                else -> standAnim.getCurrentTime()
+                else -> runTransAnim.getDuration() + standAnim.getCurrentTime()
             }
 
-            override fun copy(): IAnimation {
-                throw Error("Not yet implemented")
-            }
+            override fun copy() = buildStandAnimation(atlas, shoot, _loop)
         }
     }
 }

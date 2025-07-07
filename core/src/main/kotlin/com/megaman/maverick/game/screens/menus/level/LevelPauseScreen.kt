@@ -55,7 +55,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
         private val FULL_TABLE = TableBuilder<Any>()
             .row(gdxArrayOf(MegamanWeapon.MEGA_BUSTER, null)) // atomic radium
             .row(gdxArrayOf(null, null)) // needle spin, rodent claws
-            .row(gdxArrayOf(MegamanWeapon.FRIGID_SHOT, null)) // axe swinger
+            .row(gdxArrayOf(MegamanWeapon.FRIGID_SHOT, MegamanWeapon.AXE_SWINGER)) // axe swinger
             .row(gdxArrayOf(MegamanWeapon.INFERNAL_BARRAGE, MegamanWeapon.RUSH_JET))
             .row(gdxArrayOf(MegamanWeapon.MOON_SCYTHES, null)) // adapter 1
             .row(gdxArrayOf(MegamanWeapon.PRECIOUS_GUARD, null)) // adapter 2

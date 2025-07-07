@@ -338,7 +338,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses1/GutsTank/Fist.png</key>
+            <key type="filename">../frames/Bosses1/GutsTank/fist.png</key>
             <key type="filename">../frames/Bosses1/ReactorMan/jump.png</key>
             <key type="filename">../frames/Bosses1/ReactorMan/throw.png</key>
             <struct type="IndividualSpriteSettings">
@@ -355,7 +355,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses1/GutsTank/FistLaunched.png</key>
+            <key type="filename">../frames/Bosses1/GutsTank/fist_launched.png</key>
             <key type="filename">../frames/Bosses1/ReactorMan/giga_rise.png</key>
             <key type="filename">../frames/Bosses1/ReactorMan/giga_stand.png</key>
             <struct type="IndividualSpriteSettings">
@@ -372,9 +372,11 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bosses1/GutsTank/Laughing.png</key>
-            <key type="filename">../frames/Bosses1/GutsTank/MouthClosed.png</key>
-            <key type="filename">../frames/Bosses1/GutsTank/MouthOpen.png</key>
+            <key type="filename">../frames/Bosses1/GutsTank/laughing.png</key>
+            <key type="filename">../frames/Bosses1/GutsTank/laughing_moving.png</key>
+            <key type="filename">../frames/Bosses1/GutsTank/moving_laughing.png</key>
+            <key type="filename">../frames/Bosses1/GutsTank/moving_mouth_closed.png</key>
+            <key type="filename">../frames/Bosses1/GutsTank/moving_mouth_open.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -383,9 +385,25 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>96,48,192,96</rect>
+                <rect>48,96,96,192</rect>
                 <key>scale9Paddings</key>
-                <rect>96,48,192,96</rect>
+                <rect>48,96,96,192</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses1/GutsTank/mouth_closed.png</key>
+            <key type="filename">../frames/Bosses1/GutsTank/mouth_open.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>48,48,96,96</rect>
+                <key>scale9Paddings</key>
+                <rect>48,48,96,96</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

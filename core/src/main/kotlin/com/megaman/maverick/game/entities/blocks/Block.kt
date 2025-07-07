@@ -192,7 +192,6 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
                         }
                     }
                 }
-
                 is Iterable<*> -> {
                     try {
                         filters as Iterable<String>
@@ -207,7 +206,6 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
                         filters.forEach { filter -> body.addBlockFilter(filter) }
                     }
                 }
-
                 else -> {
                     val filter = filters as (MegaGameEntity, MegaGameEntity) -> Boolean
                     body.addBlockFilter(filter)

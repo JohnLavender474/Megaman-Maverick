@@ -38,6 +38,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
@@ -353,7 +354,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         MegamanWeapon.PRECIOUS_GUARD -> MegaWeaponHandler(
             cooldown = Timer(0.1f),
             normalCost = { if (it.getSpawnedCount(MegaChargeStatus.NOT_CHARGED) > 0) 0 else 10 },
-            chargeable = chargeable@{ it -> return@chargeable false },
+            chargeable = chargeable@{ false },
             canFireWeapon = canFireWeapon@{ it, _ ->
                 if (it.getSpawnedCount(MegaChargeStatus.NOT_CHARGED) > 0) {
                     val cluster = it.getSpawned()
@@ -372,6 +373,12 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 )
                 if (cluster.gems.values().none { it.released }) cluster.body.setCenter(cluster.origin)
             }
+        )
+        MegamanWeapon.AXE_SWINGER -> MegaWeaponHandler(
+            cooldown = Timer(0.5f),
+            normalCost = { 1 },
+            chargeable = { false },
+            canFireWeapon = { _, _ -> megaman.body.isSensing(BodySense.FEET_ON_GROUND) }
         )
     }
 
@@ -442,6 +449,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         val handler = weaponHandlers[weapon]
         if (!handler.cooldown.isFinished()) {
             GameLogger.debug(TAG, "canFireWeapon(): cannot fire $weapon: cooldown is not finished")
+            return false
         }
         if (!handler.canFireWeapon(handler, stat)) {
             GameLogger.debug(TAG, "canFireWeapon(): cannot fire $weapon: custom predicate failed")
@@ -499,12 +507,12 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         }
 
         when (weapon) {
-            MegamanWeapon.MEGA_BUSTER,
-            MegamanWeapon.RUSH_JET -> shootMegaBuster(stat)
+            MegamanWeapon.MEGA_BUSTER, MegamanWeapon.RUSH_JET -> shootMegaBuster(stat)
             MegamanWeapon.FRIGID_SHOT -> shootIceCube(stat)
             MegamanWeapon.INFERNAL_BARRAGE -> shootInfernalBarrage(stat)
             MegamanWeapon.MOON_SCYTHES -> shootMoonScythes(stat)
             MegamanWeapon.PRECIOUS_GUARD -> shootPreciousGuard()
+            MegamanWeapon.AXE_SWINGER -> MegaUtilMethods.delayRun(game, 0.1f) { throwAxe() }
         }
 
         handler.cooldown.reset()
@@ -744,5 +752,28 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         )
 
         handler.addSpawned(MegaChargeStatus.NOT_CHARGED, cluster)
+    }
+
+    private fun throwAxe() {
+        GameLogger.debug(TAG, "throwAxe()")
+
+        val impulse = GameObjectPools.fetch(Vector2::class)
+            .set(
+                MegamanValues.AXE_IMPULSE_X * megaman.facing.value,
+                MegamanValues.AXE_IMPULSE_Y
+            )
+            .scl(ConstVals.PPM.toFloat())
+
+        val spawn = megaman.body.getCenter()
+            .add(-0.1f * ConstVals.PPM * megaman.facing.value, 0.75f * ConstVals.PPM)
+
+        val axe = MegaEntityFactory.fetch(Axe::class)!!
+        axe.spawn(
+            props(
+                ConstKeys.OWNER pairTo megaman,
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.IMPULSE pairTo impulse
+            )
+        )
     }
 }

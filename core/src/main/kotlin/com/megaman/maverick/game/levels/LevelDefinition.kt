@@ -102,7 +102,7 @@ enum class LevelDefinition(
     WILY_STAGE_3(
         type = LevelType.WILY_LEVEL,
         tmxMapSource = "WilyStage3_v2.tmx",
-        music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
+        music = MusicAsset.MMZ_ENEMY_HALL_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),
     TEST_1(

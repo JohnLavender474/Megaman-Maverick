@@ -31,6 +31,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
         const val TAG = "PlayerStatsHandler"
         private const val RUSH_JET = "rush_jet"
         private const val PRECIOUS = "precious"
+        private const val AXE = "axe"
         private const val SPECIAL_ITEM_DUR = 0.5f
     }
 
@@ -74,6 +75,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
                 MegamanWeapon.FRIGID_SHOT -> ConstKeys.ICE
                 MegamanWeapon.RUSH_JET -> RUSH_JET
                 MegamanWeapon.PRECIOUS_GUARD -> PRECIOUS
+                MegamanWeapon.AXE_SWINGER -> AXE
                 else -> throw IllegalStateException("No bit source for weapon $it")
             }
 

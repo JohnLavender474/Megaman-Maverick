@@ -330,6 +330,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.JETPACKING) ||
                 !body.isSensing(BodySense.FEET_ON_GROUND) || body.isSensing(BodySense.FEET_ON_SAND) ||
                 !game.controllerPoller.isPressed(MegaControllerButton.DOWN) ||
+                (currentWeapon == MegamanWeapon.AXE_SWINGER && shooting) ||
                 when {
                     direction.isVertical() -> abs(body.physics.velocity.x)
                     else -> abs(body.physics.velocity.y)

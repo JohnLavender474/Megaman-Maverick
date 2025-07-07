@@ -30,11 +30,17 @@ open class Animator(
 
     override fun animate(sprite: GameSprite, delta: Float) {
         val nextKey = keySupplier(currentKey)
+
         if (currentKey != nextKey) {
             onChangeKey?.invoke(currentKey, nextKey)
+            // The "current" animation will become the "old" animation after the "currentKey" value
+            // is changed. Before changing the key, reset the "old" animation. Do not reset the new
+            // animation since "onChangeKey" may involve manipulating the new animation's state.
             currentAnimation?.reset()
         }
+
         currentKey = nextKey
+
         currentAnimation?.let {
             it.update(delta * updateScalar)
             it.getCurrentRegion()?.let { region -> sprite.setRegion(region) }

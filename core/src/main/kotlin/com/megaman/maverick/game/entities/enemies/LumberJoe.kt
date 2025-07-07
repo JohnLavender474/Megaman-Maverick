@@ -426,7 +426,13 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         val spawn = body.getCenter().add(-0.25f * ConstVals.PPM * facing.value, ConstVals.PPM.toFloat())
 
         val axe = MegaEntityFactory.fetch(Axe::class)!!
-        axe.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.IMPULSE pairTo impulse))
+        axe.spawn(
+            props(
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.IMPULSE pairTo impulse
+            )
+        )
     }
 
     override fun getTag() = TAG

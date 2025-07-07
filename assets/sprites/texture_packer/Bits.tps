@@ -173,6 +173,7 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">../frames/Bits/axe.png</key>
             <key type="filename">../frames/Bits/fire.png</key>
             <key type="filename">../frames/Bits/ice.png</key>
             <key type="filename">../frames/Bits/moon.png</key>

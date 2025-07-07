@@ -164,6 +164,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         get() = currentState != SniperJoeState.SHOOT
 
     private val jumpDelay = Timer(JUMP_DELAY)
+    private var canJump = true
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -194,7 +195,6 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         val spawn = when {
             spawnProps.containsKey(ConstKeys.BOUNDS) ->
                 spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
-
             else -> spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         }
         val position = DirectionPositionMapper.getInvertedPosition(direction)
@@ -215,6 +215,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         FacingUtils.setFacingOf(this)
 
         jumpDelay.setToEnd()
+        canJump = spawnProps.getOrDefault(ConstKeys.JUMP, true, Boolean::class)
     }
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
@@ -259,7 +260,6 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                     GameLogger.debug(TAG, "update(): should start turning")
                     stateMachine.next()
                 }
-
                 shouldStartJumping() -> {
                     GameLogger.debug(TAG, "update(): should start jumping")
                     stateMachine.next()
@@ -446,20 +446,19 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         currentState == SniperJoeState.IDLE && facing != FacingUtils.getPreferredFacingFor(this)
 
     private fun shouldStartJumping() =
-        jumpDelay.isFinished() && body.isSensing(BodySense.FEET_ON_GROUND) && body.physics.velocity.y <= 0f &&
+        canJump && jumpDelay.isFinished() &&
+            body.physics.velocity.y <= 0f &&
+            body.isSensing(BodySense.FEET_ON_GROUND) &&
             when (direction) {
                 Direction.UP -> megaman.body.getY() > body.getMaxY() &&
                     megaman.body.getX() <= body.getMaxX() &&
                     megaman.body.getMaxX() >= body.getX()
-
                 Direction.DOWN -> megaman.body.getMaxY() < body.getY() &&
                     megaman.body.getX() <= body.getMaxX() &&
                     megaman.body.getMaxX() >= body.getX()
-
                 Direction.LEFT -> megaman.body.getMaxX() < body.getX() &&
                     megaman.body.getY() <= body.getMaxY() &&
                     megaman.body.getMaxY() >= body.getY()
-
                 Direction.RIGHT -> megaman.body.getX() > body.getMaxX() &&
                     megaman.body.getY() <= body.getMaxY() &&
                     megaman.body.getMaxY() >= body.getY()
@@ -504,10 +503,8 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 when (direction) {
                     Direction.UP, Direction.DOWN ->
                         trajectory.set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
-
                     Direction.LEFT ->
                         trajectory.set(0f, BULLET_SPEED * ConstVals.PPM * facing.value)
-
                     Direction.RIGHT ->
                         trajectory.set(0f, -BULLET_SPEED * ConstVals.PPM * facing.value)
                 }

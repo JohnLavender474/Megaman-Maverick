@@ -29,6 +29,8 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.bosses.GutsTank
+import com.megaman.maverick.game.entities.bosses.GutsTankFist
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.decorations.BulletResidual
@@ -115,6 +117,8 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (owner == shieldFixture.getEntity()) return
+
+        if (shieldFixture.getEntity() is GutsTankFist && owner is GutsTank) return
 
         bounced++
         if (bounced > BOUNCE_MAX) {

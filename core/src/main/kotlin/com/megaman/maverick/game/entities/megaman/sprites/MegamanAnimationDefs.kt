@@ -57,9 +57,9 @@ object MegamanAnimationDefs {
         "stand_charge_full_left" pairTo AnimationDef(2, 1, CHARGING_FRAME_DUR),
         "stand_charge_half" pairTo AnimationDef(3, 1, CHARGING_FRAME_DUR),
         "stand_charge_half_left" pairTo AnimationDef(3, 1, CHARGING_FRAME_DUR),
-
         "stand_shoot" pairTo AnimationDef(),
         "stand_shoot_left" pairTo AnimationDef(),
+        "stand_axe_throw" pairTo AnimationDef(2, 1, 0.1f, false),
 
         "damaged" pairTo AnimationDef(3, 1, 0.05f),
         "damaged_left" pairTo AnimationDef(3, 1, 0.05f),
@@ -125,8 +125,9 @@ object MegamanAnimationDefs {
 
         "crouch" pairTo AnimationDef(),
         "crouch_shoot" pairTo AnimationDef(),
-        "crouch_charge_half" pairTo AnimationDef(3, 1, CROUCH_FRAME_DUR, false),
-        "crouch_charge_full" pairTo AnimationDef(2, 1, CROUCH_FRAME_DUR, false),
+        "crouch_charge_half" pairTo AnimationDef(3, 1, CROUCH_FRAME_DUR, true),
+        "crouch_charge_full" pairTo AnimationDef(2, 1, CROUCH_FRAME_DUR, true),
+        "crouch_axe_throw" pairTo AnimationDef(2, 1, 0.1f, false),
 
         "slip" pairTo AnimationDef(),
         "slip_left" pairTo AnimationDef(),
@@ -136,6 +137,7 @@ object MegamanAnimationDefs {
         "slip_charge_half_left" pairTo AnimationDef(3, 1, CHARGING_FRAME_DUR),
         "slip_shoot" pairTo AnimationDef(),
         "slip_shoot_left" pairTo AnimationDef(),
+        "slip_axe_throw" pairTo AnimationDef(2, 1, 0.1f, false),
 
         "frozen" pairTo AnimationDef()
     )

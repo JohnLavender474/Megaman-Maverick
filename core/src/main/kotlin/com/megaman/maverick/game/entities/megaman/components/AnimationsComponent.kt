@@ -8,6 +8,7 @@ import com.mega.game.engine.common.objects.pairTo
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
 import com.megaman.maverick.game.entities.megaman.sprites.getAnimationKey
 
@@ -25,11 +26,14 @@ internal fun Megaman.defineAnimationsComponent(animations: OrderedMap<String, IA
                 currentAnimKey = key
                 MegamanAnimations.buildFullKey(key, currentWeapon)
             }
-
             else -> null
         }
     }
-    val megamanAnimator = Animator(megamanAnimKeySupplier, animations)
+    val megamanAnimator = Animator(
+        keySupplier = megamanAnimKeySupplier,
+        animations = animations,
+        onChangeKey = { currentKey, nextKey -> onChangeAnimationKey(currentKey, nextKey, animations) }
+    )
 
     val decorationsAtlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
 
@@ -43,4 +47,21 @@ internal fun Megaman.defineAnimationsComponent(animations: OrderedMap<String, IA
     )
 
     return AnimationsComponent(animators, sprites)
+}
+
+internal fun Megaman.onChangeAnimationKey(
+    currentKey: String?,
+    nextKey: String?,
+    animations: OrderedMap<String, IAnimation>
+) {
+    // Special case for Axe Throw weapon: need to ensure that if Megaman is "shooting" (throwing),
+    // then if the animation key changes, the new animation starts at the same time stamp as what
+    // the current animation is at.
+    if (currentWeapon == MegamanWeapon.AXE_SWINGER &&
+        currentKey != null && nextKey != null &&
+        currentKey.contains("axe_throw")
+    ) {
+        val time = animations[currentKey]?.getCurrentTime()
+        time?.let { t -> animations[nextKey]?.setCurrentTime(t) }
+    }
 }

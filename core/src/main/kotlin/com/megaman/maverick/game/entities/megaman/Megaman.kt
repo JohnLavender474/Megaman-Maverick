@@ -77,6 +77,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
                 LevelDefinition.PRECIOUS_WOMAN -> set.add(MegamanWeapon.PRECIOUS_GUARD)
                 LevelDefinition.INFERNO_MAN -> set.add(MegamanWeapon.INFERNAL_BARRAGE)
                 LevelDefinition.GLACIER_MAN -> set.add(MegamanWeapon.FRIGID_SHOT)
+                LevelDefinition.TIMBER_WOMAN -> set.add(MegamanWeapon.AXE_SWINGER)
                 else -> {}
             }
             return set
@@ -117,7 +118,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
     internal var frozenPushTimer = Timer(MegamanValues.FROZEN_PUSH_DUR)
 
     var canMove = true
-        get() = field && !stunned && !damaged && !frozen
+        get() = field && !stunned && !damaged && !frozen &&
+            (currentWeapon != MegamanWeapon.AXE_SWINGER || !shooting)
 
     internal val stunTimer = Timer(MegamanValues.STUN_DUR)
     internal val damageRecoveryTimer = Timer(MegamanValues.DAMAGE_RECOVERY_TIME).setToEnd()
@@ -380,7 +382,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
             }
         }
          */
-        val animations = MegamanAnimations(game, /* regionProcessor */).get()
+        val animations = MegamanAnimations(game /*, regionProcessor */).get()
         addComponent(defineAnimationsComponent(animations))
 
         weaponsHandler = MegamanWeaponsHandler(this)

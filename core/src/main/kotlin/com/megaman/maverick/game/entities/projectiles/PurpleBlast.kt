@@ -7,6 +7,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -54,6 +55,7 @@ class PurpleBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     private val chargeDelayTimer = Timer(CHARGE_DELAY)
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (chargeRegion == null || blastRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             chargeRegion = atlas.findRegion("PurpleBlast/Charge")
@@ -65,6 +67,7 @@ class PurpleBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         facing = spawnProps.get(ConstKeys.FACING, Facing::class)!!
@@ -86,7 +89,7 @@ class PurpleBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.5f * ConstVals.PPM)
+        body.setSize(1f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
 
@@ -106,16 +109,16 @@ class PurpleBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 15))
-        sprite.setSize(1f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        sprite.setSize(2f * ConstVals.PPM)
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.setFlip(isFacing(Facing.LEFT), false)
             val angle = body.physics.velocity.angleDeg()
             sprite.setOriginCenter()
             sprite.setRotation(angle)
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

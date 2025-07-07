@@ -34,7 +34,9 @@ abstract class AbstractHealthEntity(
 
     protected open val damageTimer = Timer(dmgDuration)
     protected open val damageBlinkTimer = Timer(dmgBlinkDur)
-    protected open var damageBlink = false
+
+    open var damageBlink = false
+        protected set
 
     private var wasHealthDepleted = false
 

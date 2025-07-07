@@ -21,6 +21,7 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -39,10 +40,14 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.bosses.GutsTankFist
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
 import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.PurpleBlast
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -98,9 +103,13 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
     private var runSpeed = RUN_SPEED
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         super.init()
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
         addComponent(defineAnimationsComponent())
+        damageOverrides.put(GutsTankFist::class, dmgNeg(ConstVals.MAX_HEALTH))
+        damageOverrides.put(BigAssMaverickRobotOrb::class, dmgNeg(ConstVals.MAX_HEALTH))
+        damageOverrides.put(PurpleBlast::class, dmgNeg(ConstVals.MAX_HEALTH))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -130,6 +139,14 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+    }
+
+    override fun canBeDamagedBy(damager: IDamager) =
+        damageOverrides.containsKey(damager::class) || super.canBeDamagedBy(damager)
+
+    override fun takeDamageFrom(damager: IDamager): Boolean {
+        if (damageOverrides.containsKey(damager::class)) explode()
+        return super.takeDamageFrom(damager)
     }
 
     private fun shoot() {

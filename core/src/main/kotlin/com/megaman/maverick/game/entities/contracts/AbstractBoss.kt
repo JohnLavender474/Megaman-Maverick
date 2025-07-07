@@ -82,7 +82,8 @@ abstract class AbstractBoss(
                 if (it.fullyCharged) 2 else 1
             },
             MoonScythe::class pairTo dmgNeg(1),
-            SmallIceCube::class pairTo dmgNeg(1)
+            SmallIceCube::class pairTo dmgNeg(1),
+            Axe::class pairTo dmgNeg(1)
         )
 
         private val DEFAULT_BOSS_BATTLE_MUSIC = MusicAsset.MMX6_BOSS_FIGHT_MUSIC.name
@@ -255,8 +256,8 @@ abstract class AbstractBoss(
         if (playBossMusic()) {
             try {
                 val musicStr = getOrDefaultProperty(ConstKeys.MUSIC, DEFAULT_BOSS_BATTLE_MUSIC, String::class)
-                val music = MusicAsset.valueOf(musicStr.uppercase())
-                game.audioMan.playMusic(music, true)
+                val ass = MusicAsset.valueOf(musicStr.uppercase())
+                game.audioMan.playMusic(ass, ass.loop)
             } catch (e: Exception) {
                 throw Exception("Failed to play music. Music prop: ${getProperty(ConstKeys.MUSIC)}.", e)
             }

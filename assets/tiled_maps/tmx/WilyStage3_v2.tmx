@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="505" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="24" nextobjectid="423">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="505" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="24" nextobjectid="423">
  <properties>
   <property name="background_parallax_factor_y" type="float" value="0.25"/>
  </properties>
@@ -1848,14 +1848,14 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="13" name="player">
+ <objectgroup id="13" name="temp">
   <object id="348" name="0" x="15488" y="800" width="32" height="32">
    <properties>
     <property name="facing" value="left"/>
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="6" name="temp">
+ <objectgroup id="6" name="player">
   <object id="49" name="0" x="96" y="448" width="32" height="32"/>
   <object id="153" name="2" x="5248" y="1888" width="32" height="32"/>
   <object id="180" name="3" x="7552" y="2944" width="32" height="32"/>

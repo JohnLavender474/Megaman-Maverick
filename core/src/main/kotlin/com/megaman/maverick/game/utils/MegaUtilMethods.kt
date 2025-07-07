@@ -2,10 +2,30 @@ package com.megaman.maverick.game.utils
 
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.common.UtilMethods
+import com.mega.game.engine.common.time.Timer
 import com.megaman.maverick.game.ConstVals
+import com.megaman.maverick.game.MegamanMaverickGame
+import java.util.*
 import kotlin.math.roundToInt
 
 object MegaUtilMethods {
+
+    fun delayRun(game: MegamanMaverickGame, delay: Float, action: () -> Unit) {
+        if (delay <= 0f) throw IllegalArgumentException("Delay must be greater than 0: $delay")
+
+        val id = UUID.randomUUID().toString()
+
+        val timer = Timer(delay)
+
+        game.updatables.put(id) { delta ->
+            timer.update(delta)
+            if (timer.isJustFinished()) {
+                action()
+
+                game.runQueue.addLast { game.updatables.remove(id) }
+            }
+        }
+    }
 
     fun getSmallFontSize() = (ConstVals.PPM / 3f).roundToInt()
 

@@ -25,6 +25,7 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -44,10 +45,12 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.hazards.TubeBeamerV2
+import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.ReactorManProjectile
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -219,6 +222,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         super.init()
         addComponent(defineAnimationsComponent())
         stateMachine = buildStateMachine()
+        damageOverrides.put(Axe::class, dmgNeg(4))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -267,6 +271,9 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         reusableIndexArray.clear()
         reusableFloatArray.clear()
     }
+
+    override fun canBeDamagedBy(damager: IDamager) =
+        super.canBeDamagedBy(damager) && (damager is Axe || !isShielded())
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
@@ -445,9 +452,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             body.physics.applyFrictionY = shouldApplyFrictionY()
             body.physics.frictionOnSelf.y = getFrictionY()
 
-            val shielded = currentState.equalsAny(ReactorManState.GIGA_STAND, ReactorManState.GIGA_RISE)
-            body.fixtures[FixtureType.SHIELD].first().setActive(shielded)
-            body.fixtures[FixtureType.DAMAGEABLE].first().setActive(!shielded)
+            body.fixtures[FixtureType.SHIELD].first().setActive(isShielded())
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -784,6 +789,8 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         GameLogger.debug(TAG, "onChangeFacing(): current=$current, previous=$previous, state=$currentState")
         otherTimers[CHANGE_FACING_DELAY_KEY].reset()
     }
+
+    private fun isShielded() = currentState.equalsAny(ReactorManState.GIGA_STAND, ReactorManState.GIGA_RISE)
 
     override fun getTag() = TAG
 }

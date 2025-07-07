@@ -280,7 +280,8 @@ List of creators and the stages in which their artwork is used. Some stages cont
   - Wily Stage Select
   - Inferno Man Stage
   - Glacier Man Stage
-- [Cody O'Quinn](https://www.youtube.com/channel/UC3YB69gazd6mzXMGpPHdyTQ)
+- [Cody O'Qu
+- inn](https://www.youtube.com/channel/UC3YB69gazd6mzXMGpPHdyTQ)
   - Desert Man Stage - [8 Bit Music - "Battle Man"](https://youtu.be/zA1SwzvHsZw)
 - [ryanavx](https://ryanavx.itch.io/)
   - Timber Woman Stage - [Mega Quest 2 - Level 1 Music](https://ryanavx.itch.io/mega-quest-2-music-pack)

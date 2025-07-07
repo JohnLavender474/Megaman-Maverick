@@ -4,6 +4,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.feetOnGround
+import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.special.Ladder
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
@@ -56,7 +57,7 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
 
     isBehaviorActive(BehaviorType.JUMPING) || !feetOnGround -> amendKey("jump")
 
-    running ->amendKey("run")
+    running -> amendKey("run")
 
     slipSliding -> amendKey("slip")
 
@@ -64,10 +65,15 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
 }
 
 fun Megaman.amendKey(baseKey: String) = when {
-    shooting -> "${baseKey}_shoot"
+    shooting -> when (currentWeapon) {
+        MegamanWeapon.AXE_SWINGER -> when {
+            isBehaviorActive(BehaviorType.CROUCHING) -> "crouch_axe_throw"
+            else -> "stand_axe_throw"
+        }
+        else -> "${baseKey}_shoot"
+    }
     fullyCharged -> "${baseKey}_charge_full"
     halfCharged -> "${baseKey}_charge_half"
     else -> baseKey
-
 }
 

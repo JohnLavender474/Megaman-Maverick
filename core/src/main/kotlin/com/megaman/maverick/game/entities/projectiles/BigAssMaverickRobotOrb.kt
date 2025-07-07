@@ -66,6 +66,7 @@ class BigAssMaverickRobotOrb(game: MegamanMaverickGame) : AbstractProjectile(gam
     private val hitTimer = Timer(HIT_DUR)
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
@@ -84,10 +85,17 @@ class BigAssMaverickRobotOrb(game: MegamanMaverickGame) : AbstractProjectile(gam
         val spawn = spawnProps.getOrDefault(ConstKeys.POSITION, Vector2.Zero, Vector2::class)
         body.setCenter(spawn)
 
-        trajectory.set(spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!)
+        val trajectory = spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2.Zero, Vector2::class)
+        this.trajectory.set(trajectory)
+
+        val impulse = spawnProps.getOrDefault(ConstKeys.IMPULSE, Vector2.Zero, Vector2::class)
+        body.physics.velocity.set(impulse)
 
         val delay = spawnProps.getOrDefault(ConstKeys.DELAY, 0f, Float::class)
         moveDelay.resetDuration(delay)
+
+        val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2.Zero, Vector2::class)
+        body.physics.gravity.set(gravity)
 
         hit = false
         active = spawnProps.getOrDefault(ConstKeys.ACTIVE, true, Boolean::class)
@@ -139,6 +147,9 @@ class BigAssMaverickRobotOrb(game: MegamanMaverickGame) : AbstractProjectile(gam
         }
 
         if (hit) {
+            body.physics.gravity.setZero()
+            body.physics.velocity.setZero()
+
             hitTimer.update(delta)
             if (hitTimer.isFinished()) destroy()
         }

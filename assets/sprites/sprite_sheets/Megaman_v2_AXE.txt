@@ -1,0 +1,145 @@
+Megaman_v2_AXE.png
+size: 450, 246
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+airdash
+  rotate: false
+  xy: 1, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+beam
+  rotate: false
+  xy: 51, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+climb
+  rotate: false
+  xy: 1, 101
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+climb_finish
+  rotate: false
+  xy: 101, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+climb_still
+  rotate: false
+  xy: 151, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+crouch
+  rotate: false
+  xy: 201, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+crouch_axe_throw
+  rotate: false
+  xy: 51, 101
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+damaged
+  rotate: false
+  xy: 399, 101
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+groundslide
+  rotate: false
+  xy: 251, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+jump
+  rotate: false
+  xy: 301, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+run
+  rotate: false
+  xy: 101, 101
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+run_trans
+  rotate: false
+  xy: 351, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+slip
+  rotate: false
+  xy: 401, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+slip_axe_throw
+  rotate: false
+  xy: 199, 101
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+spawn
+  rotate: false
+  xy: 1, 51
+  size: 336, 48
+  orig: 336, 48
+  offset: 0, 0
+  index: -1
+stand
+  rotate: false
+  xy: 249, 101
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+stand_axe_throw
+  rotate: false
+  xy: 299, 101
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+stunned
+  rotate: false
+  xy: 349, 101
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+swim
+  rotate: false
+  xy: 339, 51
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+wallslide
+  rotate: false
+  xy: 389, 51
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1

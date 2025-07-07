@@ -9,7 +9,6 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
-import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -27,8 +26,7 @@ import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
-import com.mega.game.engine.drawables.sprites.setPosition
-import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IChildEntity
 import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
@@ -42,17 +40,26 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.damage.IDamageNegotiator
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.bosses.GutsTank.GutsTankAttackState
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.enemies.HeliMet
 import com.megaman.maverick.game.entities.enemies.Met
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.explosions.Explosion
+import com.megaman.maverick.game.entities.projectiles.Axe
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.MagmaWave
+import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.utils.GameObjectPools
-import com.megaman.maverick.game.world.body.*
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getCenter
 
 class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration = DAMAGE_DURATION, size = Size.MEDIUM),
     IChildEntity, IDrawableShapesEntity, IFaceable {
@@ -61,15 +68,36 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
 
     companion object {
         const val TAG = "GutsTankFist"
+
         private const val DAMAGE_DURATION = 0.75f
+
         private const val LAUNCH_DELAY = 1f
-        private const val LAUNCH_SPEED = 10f
-        private const val RETURN_DELAY = 1f
-        private const val RETURN_SPEED = 2f
-        private const val FIST_OFFSET_X = -2.35f
-        private const val FIST_OFFSET_Y = 0.75f
+        private const val LAUNCH_SPEED_IN_CAM = 10f
+        private const val LAUNCH_SPEED_OUT_OF_CAM = 15f
+
+        private const val RETURN_DELAY = 0.5f
+        private const val RETURN_SPEED_IN_CAM = 6f
+        private const val RETURN_SPEED_OUT_OF_CAM = 15f
+
+        private const val FIST_OFFSET_X = -4f
+        private const val FIST_OFFSET_Y = 2f
+
+        private const val LAUNCH_DIST = 16f
+
         private var fistRegion: TextureRegion? = null
         private var launchedRegion: TextureRegion? = null
+    }
+
+    override val damageNegotiator = object : IDamageNegotiator {
+
+        override fun get(damager: IDamager): Int {
+            if (damager !is IProjectileEntity || damager.owner != megaman) return 0
+            return when (damager) {
+                is ChargedShot -> if (damager.fullyCharged) 3 else 2
+                is MoonScythe, is MagmaWave, is Axe -> 4
+                else -> 2
+            }
+        }
     }
 
     override var parent: IGameEntity? = null
@@ -86,17 +114,18 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
         get() = (parent as GutsTank).body.getCenter().add(FIST_OFFSET_X * ConstVals.PPM, FIST_OFFSET_Y * ConstVals.PPM)
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (launchedRegion == null || fistRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
-            fistRegion = atlas.findRegion("GutsTank/Fist")
-            launchedRegion = atlas.findRegion("GutsTank/FistLaunched")
+            fistRegion = atlas.findRegion("${GutsTank.TAG}/fist")
+            launchedRegion = atlas.findRegion("${GutsTank.TAG}/fist_launched")
         }
         super.init()
         addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "spawn(): spawnProps = $spawnProps")
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         spawnProps.put(ConstKeys.DROP_ITEM_ON_DEATH, false)
         super.onSpawn(spawnProps)
@@ -108,10 +137,11 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
     override fun onDestroy() {
         super.onDestroy()
         if (getCurrentHealth() <= ConstVals.MIN_HEALTH) {
-            val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
+            val explosion = MegaEntityFactory.fetch(Explosion::class)!!
             explosion.spawn(
                 props(
-                    ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_1_SOUND
+                    ConstKeys.POSITION pairTo body.getCenter(),
+                    ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND
                 )
             )
         }
@@ -131,7 +161,9 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
         return super.canBeDamagedBy(damager)
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) = (parent as GutsTank).laugh()
+    override fun onDamageInflictedTo(damageable: IDamageable) {
+        if (damageable == megaman) (parent as GutsTank).laugh()
+    }
 
     internal fun launch() {
         facing = if (megaman.body.getX() < body.getCenter().x) Facing.LEFT else Facing.RIGHT
@@ -148,7 +180,6 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
                     body.physics.velocity.setZero()
                     body.setCenter(attachment)
                 }
-
                 GutsTankFistState.LAUNCHED -> {
                     launchDelayTimer.update(delta)
                     if (!launchDelayTimer.isFinished()) {
@@ -156,15 +187,25 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
                         return@add
                     }
                     if (launchDelayTimer.isJustFinished()) {
-                        target.set(megaman.body.getPositionPoint(Position.CENTER_LEFT))
+                        val direction = megaman.body.getCenter()
+                            .sub(body.getCenter())
+                            .nor()
+                            .scl(LAUNCH_DIST * ConstVals.PPM)
+                        target.set(body.getCenter().add(direction))
+
                         requestToPlaySound(SoundAsset.BURST_SOUND, false)
+                    }
+
+                    val speed = when {
+                        game.getGameCamera().getRotatedBounds().overlaps(body.getBounds()) -> LAUNCH_SPEED_IN_CAM
+                        else -> LAUNCH_SPEED_OUT_OF_CAM
                     }
 
                     val velocity = GameObjectPools.fetch(Vector2::class)
                         .set(target)
                         .sub(body.getCenter())
                         .nor()
-                        .scl(LAUNCH_SPEED * ConstVals.PPM)
+                        .scl(speed * ConstVals.PPM)
                     body.physics.velocity.set(velocity)
 
                     if (body.getBounds().contains(target)) {
@@ -173,19 +214,25 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
                         returnDelayTimer.reset()
                     }
                 }
-
                 GutsTankFistState.RETURNING -> {
                     facing = if (attachment.x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
+
                     returnDelayTimer.update(delta)
+
                     if (returnDelayTimer.isFinished()) {
+                        val speed = when {
+                            game.getGameCamera().getRotatedBounds().overlaps(body.getBounds()) -> RETURN_SPEED_IN_CAM
+                            else -> RETURN_SPEED_OUT_OF_CAM
+                        }
+
                         val velocity = GameObjectPools.fetch(Vector2::class)
                             .set(attachment)
                             .sub(body.getCenter())
                             .nor()
-                            .scl(RETURN_SPEED * ConstVals.PPM)
+                            .scl(speed * ConstVals.PPM)
                         body.physics.velocity.set(velocity)
 
-                        if (body.getBounds().contains(attachment)) {
+                        if (body.getBounds().getCenter().epsilonEquals(attachment, 0.1f * ConstVals.PPM)) {
                             fistState = GutsTankFistState.ATTACHED
                             (parent as GutsTank).finishAttack(GutsTankAttackState.LAUNCH_FIST)
                         }
@@ -197,28 +244,28 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(1.25f * ConstVals.PPM)
+        body.setSize(1.5f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBounds() }
+        // debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(ConstVals.PPM.toFloat()))
         body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture }
+        // debugShapes.add { bodyFixture }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(1.75f * ConstVals.PPM))
         body.addFixture(damagerFixture)
-        debugShapes.add { damagerFixture }
+        // debugShapes.add { damagerFixture }
 
         val damageableFixture =
             Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.2f * ConstVals.PPM, 1.05f * ConstVals.PPM))
         body.addFixture(damageableFixture)
-        debugShapes.add { damageableFixture }
+        // debugShapes.add { damageableFixture }
 
         val shieldFixture =
             Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(0.2f * ConstVals.PPM, 1.05f * ConstVals.PPM))
         body.addFixture(shieldFixture)
-        debugShapes.add { shieldFixture }
+        // debugShapes.add { shieldFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             shieldFixture.offsetFromBodyAttachment.x = 0.65f * facing.value * ConstVals.PPM
@@ -232,21 +279,15 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
-        sprite.setSize(2.25f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
+        sprite.setSize(6f * ConstVals.PPM, 3f * ConstVals.PPM)
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.hidden = damageBlink
-            val position = when (fistState) {
-                GutsTankFistState.ATTACHED, GutsTankFistState.LAUNCHED -> Position.CENTER_LEFT
-
-                GutsTankFistState.RETURNING -> Position.CENTER_RIGHT
-            }
-            val bodyPosition = body.getPositionPoint(position)
-            sprite.setPosition(bodyPosition, position)
+            sprite.setCenter(body.getCenter())
             sprite.setFlip(isFacing(Facing.LEFT), false)
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
@@ -258,7 +299,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
         }
         val animations = objectMapOf<String, IAnimation>(
             "fist" pairTo Animation(fistRegion!!),
-            "launched" pairTo Animation(launchedRegion!!, 2, 1, 0.1f, true)
+            "launched" pairTo Animation(launchedRegion!!, 2, 2, 0.05f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

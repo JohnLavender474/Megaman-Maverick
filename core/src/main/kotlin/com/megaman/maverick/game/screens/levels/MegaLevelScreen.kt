@@ -780,7 +780,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         )
 
         // do not allow pausing if Megaman is dead
-        if (!game.paused && !megaman.dead && isPauseButtonRequested()) {
+        if (!game.paused && !megaman.dead && megaman.ready && isPauseButtonRequested()) {
             GameLogger.debug(TAG, "render(): pause game")
             game.runQueue.addLast { game.pause() }
         }

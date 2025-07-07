@@ -10,7 +10,12 @@ enum class MusicAsset(src: String, val loop: Boolean = true, val onCompletion: (
     IAsset {
     MM6_CAPCOM_LOGO_MUSIC("MM6_CapcomLogo.mp3"),
     MM3_GAME_OVER_MUSIC("MM3_GameOver.mp3"),
-    MMX6_SIGMA_2_BATTLE_MUSIC("MMX6_Sigma.mp3"),
+    MMX6_SIGMA_2_BATTLE_INTRO_MUSIC(
+        src = "MMX6_Sigma_intro.wav",
+        loop = false,
+        onCompletion = { it.playMusic(MMX6_SIGMA_2_BATTLE_LOOP_MUSIC, true) }
+    ),
+    MMX6_SIGMA_2_BATTLE_LOOP_MUSIC("MMX6_Sigma_loop.wav"),
     MM6_WILY_BATTLE_MUSIC("MM6_WilyBattle.mp3"),
     MM8_FROST_MAN_MUSIC("MM8_FrostMan.mp3"),
     MMX2_INTRO_STAGE_MUSIC("MMX2_IntroStage.mp3"),

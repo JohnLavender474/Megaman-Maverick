@@ -42,7 +42,8 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             Asteroid::class pairTo dmgNeg(10),
             PreciousGem::class pairTo dmgNeg(10),
             LampeonBullet::class pairTo dmgNeg(5),
-            Explosion::class pairTo dmgNeg(5)
+            Explosion::class pairTo dmgNeg(5),
+            Axe::class pairTo dmgNeg(10)
         )
 
         private val MEDIUM_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -66,7 +67,8 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             Asteroid::class pairTo dmgNeg(20),
             PreciousGem::class pairTo dmgNeg(20),
             LampeonBullet::class pairTo dmgNeg(15),
-            Explosion::class pairTo dmgNeg(15)
+            Explosion::class pairTo dmgNeg(15),
+            Axe::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
         )
 
         private val SMALL_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -90,7 +92,8 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             Asteroid::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             PreciousGem::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             LampeonBullet::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-            Explosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
+            Explosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            Axe::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
         )
 
         // damage is determined by the damageable's size instead of the damager's size
