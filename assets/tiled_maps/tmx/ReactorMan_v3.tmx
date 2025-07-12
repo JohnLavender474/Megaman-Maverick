@@ -634,7 +634,7 @@
   <object id="12" x="128" y="5792" width="96" height="320"/>
   <object id="13" x="224" y="5824" width="288" height="288"/>
   <object id="14" x="512" y="5664" width="96" height="448"/>
-  <object id="15" x="0" y="5344" width="256" height="192"/>
+  <object id="15" x="0" y="5312" width="256" height="224"/>
   <object id="16" x="320" y="5664" width="160" height="32"/>
   <object id="17" x="768" y="5728" width="64" height="32"/>
   <object id="19" x="832" y="5856" width="224" height="256"/>
@@ -648,7 +648,7 @@
   <object id="28" x="1984" y="5632" width="96" height="32"/>
   <object id="29" x="1120" y="5664" width="192" height="32"/>
   <object id="30" x="1376" y="5664" width="224" height="32"/>
-  <object id="38" x="256" y="5344" width="1760" height="64">
+  <object id="38" x="256" y="5312" width="1760" height="64">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
     <property name="fixture_labels" value="no_side_touchie,no_projectile_collision"/>
@@ -662,7 +662,7 @@
    </properties>
   </object>
   <object id="45" x="608" y="5792" width="96" height="320"/>
-  <object id="48" x="2016" y="5352" width="224" height="192"/>
+  <object id="48" x="2016" y="5312" width="224" height="224"/>
   <object id="49" x="2240" y="5408" width="416" height="160"/>
   <object id="50" x="2400" y="5824" width="416" height="288"/>
   <object id="51" x="2720" y="4800" width="96" height="1024"/>
@@ -912,7 +912,7 @@
   <object id="712" x="10816" y="2400" width="64" height="64"/>
  </objectgroup>
  <objectgroup id="14" name="items">
-  <object id="345" name="HealthTank" x="296" y="5440" width="16" height="16">
+  <object id="345" name="HealthTank" x="296" y="5424" width="16" height="16">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
     <property name="spawn_type" value="spawn_now"/>

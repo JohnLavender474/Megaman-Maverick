@@ -35,6 +35,7 @@ class HealthTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity
         const val TAG = "HealthTank"
         private const val BODY_WIDTH = 1f
         private const val BODY_HEIGHT = 1.25f
+        private const val GRAVITY = 0.15f
         private var region: TextureRegion? = null
     }
 
@@ -56,6 +57,7 @@ class HealthTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.GRAVITY, GRAVITY)
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         if (!this::healthTank.isInitialized) throw IllegalStateException("Heart tank value is not initialized")
         body.setSize(BODY_WIDTH * ConstVals.PPM, BODY_HEIGHT * ConstVals.PPM)

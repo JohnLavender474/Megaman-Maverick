@@ -1,132 +1,179 @@
-===== SESSION STARTED: 2025-07-10T12:44:59.379055067 =====
-12:45:01 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=MEGA_BUSTER, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@10ec523c
-12:45:01 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=null
-12:45:02 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=INFERNAL_BARRAGE, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@34a0ef00
-12:45:02 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=MOON_SCYTHES, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@10ec523c
-12:45:02 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=RUSH_JET, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@34a0ef00
-12:45:02 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=FRIGID_SHOT, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@10ec523c
-12:45:02 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=AXE_SWINGER, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@34a0ef00
-12:45:02 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=PRECIOUS_GUARD, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@10ec523c
-12:45:04 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=MEGA_BUSTER
-12:45:09 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-12:45:09 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-12:45:09 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-12:45:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-12:45:11 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-12:45:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-12:45:13 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-12:45:13 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-12:45:13 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-12:45:15 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-12:45:15 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-12:45:15 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-12:45:15 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
-12:45:15 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
-12:45:16 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
-12:45:16 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
-12:45:16 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-12:45:16 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=FRIGID_SHOT, previous=MEGA_BUSTER
-12:45:17 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=INFERNAL_BARRAGE, previous=FRIGID_SHOT
-12:45:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=INFERNAL_BARRAGE, statToTry=NOT_CHARGED
-12:45:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
-12:45:18 | DEBUG | MegamanWeaponsHandler | shootMagmaWave(): stat=NOT_CHARGED
-12:45:18 | DEBUG | MegamanWeaponsHandler | shootMagmaWave(): in water
-12:45:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=27
-12:45:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=INFERNAL_BARRAGE, statToTry=NOT_CHARGED
-12:45:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
-12:45:19 | DEBUG | MegamanWeaponsHandler | shootMagmaWave(): stat=NOT_CHARGED
-12:45:19 | DEBUG | MegamanWeaponsHandler | shootMagmaWave(): in water
-12:45:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=24
-12:45:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=INFERNAL_BARRAGE, statToTry=NOT_CHARGED
-12:45:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
-12:45:19 | DEBUG | MegamanWeaponsHandler | shootMagmaWave(): stat=NOT_CHARGED
-12:45:19 | DEBUG | MegamanWeaponsHandler | shootMagmaWave(): in water
-12:45:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=21
-12:45:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=INFERNAL_BARRAGE, statToTry=NOT_CHARGED
-12:45:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
-12:45:21 | DEBUG | MegamanWeaponsHandler | shootMagmaWave(): stat=NOT_CHARGED
-12:45:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=18
-12:45:22 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=INFERNAL_BARRAGE, statToTry=NOT_CHARGED
-12:45:22 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
-12:45:22 | DEBUG | MegamanWeaponsHandler | shootMagmaWave(): stat=NOT_CHARGED
-12:45:22 | DEBUG | MegamanWeaponsHandler | shootMagmaWave(): in water
-12:45:22 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=15
-12:45:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=INFERNAL_BARRAGE, statToTry=NOT_CHARGED
-12:45:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
-12:45:24 | DEBUG | MegamanWeaponsHandler | shootMagmaWave(): stat=NOT_CHARGED
-12:45:24 | DEBUG | MegamanWeaponsHandler | shootMagmaWave(): in water
-12:45:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=12
-12:45:26 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MOON_SCYTHES, previous=INFERNAL_BARRAGE
-12:45:27 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:27 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:27 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:27 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:27 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:27 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:27 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:27 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MOON_SCYTHES, statToTry=NOT_CHARGED
-12:45:27 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:27 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
-12:45:27 | DEBUG | MegamanWeaponsHandler | fireMoonScythes(): stat=NOT_CHARGED
-12:45:27 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=24
-12:45:30 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:30 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:30 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:30 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:30 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:30 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:30 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:30 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MOON_SCYTHES, statToTry=NOT_CHARGED
-12:45:30 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:30 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
-12:45:30 | DEBUG | MegamanWeaponsHandler | fireMoonScythes(): stat=NOT_CHARGED
-12:45:30 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=18
-12:45:33 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:33 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:33 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:33 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:33 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:33 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:33 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:33 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MOON_SCYTHES, statToTry=NOT_CHARGED
-12:45:33 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:33 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
-12:45:33 | DEBUG | MegamanWeaponsHandler | fireMoonScythes(): stat=NOT_CHARGED
-12:45:33 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=12
-12:45:38 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:38 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:38 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:38 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:38 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:38 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:38 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:38 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MOON_SCYTHES, statToTry=NOT_CHARGED
-12:45:38 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:38 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
-12:45:38 | DEBUG | MegamanWeaponsHandler | fireMoonScythes(): stat=NOT_CHARGED
-12:45:38 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=6
-12:45:41 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:41 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:41 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:41 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:41 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:41 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:41 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:41 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:41 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MOON_SCYTHES, statToTry=NOT_CHARGED
-12:45:41 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
-12:45:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
-12:45:41 | DEBUG | MegamanWeaponsHandler | fireMoonScythes(): stat=NOT_CHARGED
-12:45:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=0
-12:45:43 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=PRECIOUS_GUARD, previous=MOON_SCYTHES
-12:45:44 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=AXE_SWINGER, previous=PRECIOUS_GUARD
-12:45:44 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=RUSH_JET, previous=AXE_SWINGER
-12:45:45 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=RUSH_JET
-12:45:45 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=FRIGID_SHOT, previous=MEGA_BUSTER
-12:45:45 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=INFERNAL_BARRAGE, previous=FRIGID_SHOT
-12:45:46 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MOON_SCYTHES, previous=INFERNAL_BARRAGE
-12:45:47 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=PRECIOUS_GUARD, previous=MOON_SCYTHES
-12:45:47 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=PRECIOUS_GUARD, statToTry=NOT_CHARGED
-12:45:47 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
-12:45:47 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=20
+===== SESSION STARTED: 2025-07-11T20:45:14.456896120 =====
+20:45:16 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=MEGA_BUSTER, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@10ec523c
+20:45:16 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=null
+20:45:27 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=MEGA_BUSTER
+20:45:31 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:45:31 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:45:31 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:31 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:31 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:31 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:31 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:31 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:33 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:45:33 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:45:33 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:35 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+20:45:35 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+20:45:35 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:35 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:45:35 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:45:35 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:35 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:36 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:45:36 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:45:36 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:36 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:37 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+20:45:37 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+20:45:37 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:39 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:45:39 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:45:39 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:39 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:45:45 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:45:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:45 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:45 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:45:45 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:45:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:45:45 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:45:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:45 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:46 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:45:46 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:45:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:46 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:46 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:47 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+20:45:47 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+20:45:47 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:47 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:47 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:45:47 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:45:47 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:47 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:47 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:47 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:47 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:47 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:45:47 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:45:47 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:47 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:47 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:45:47 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:45:47 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:47 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:48 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:45:48 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:45:48 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:48 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:48 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:48 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:48 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:48 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:49 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+20:45:49 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+20:45:49 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:49 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:45:49 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:45:49 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:50 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:45:50 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:45:50 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:50 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:50 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:50 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:45:51 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:45:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:51 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:51 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:45:51 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:45:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:51 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:51 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:45:51 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:45:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:51 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:51 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:51 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:52 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+20:45:52 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+20:45:52 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:52 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:52 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:52 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:55 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:45:55 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:45:55 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:55 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:55 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:55 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:45:55 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:45:55 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:55 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:55 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:45:57 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:45:57 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:45:57 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:45:57 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:46:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:46:05 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:46:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:46:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:46:07 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:46:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:46:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:46:14 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:46:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:46:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:46:14 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:46:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:46:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:46:14 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:46:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:46:16 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:46:16 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:46:16 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:46:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+20:46:18 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+20:46:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:46:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:46:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:46:18 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:46:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:46:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:46:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:46:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:46:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:46:18 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:46:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:46:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+20:46:19 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+20:46:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:46:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:46:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:46:22 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+20:46:22 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+20:46:22 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:46:33 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+20:46:33 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+20:46:33 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:46:33 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:46:33 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:46:33 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:46:33 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:46:33 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:46:33 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:46:33 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+20:46:33 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+20:46:34 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+20:46:34 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+20:46:34 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
