@@ -70,7 +70,11 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
+        try {
+            owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
+        } catch (e: Exception) {
+            throw Exception("Owner: ${spawnProps.get(ConstKeys.OWNER)}", e)
+        }
         direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!

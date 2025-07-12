@@ -877,6 +877,8 @@ sprites/frames/Megaman_v2_Axe/airdash.png
 sprites/frames/Megaman_v2_Axe/swim.png
 sprites/frames/Megaman_v2_Axe/stand_axe_throw.png
 sprites/frames/Megaman_v2_Axe/beam.png
+sprites/frames/Megaman_v2_Axe/frozen_push.png
+sprites/frames/Megaman_v2_Axe/frozen.png
 sprites/frames/Megaman_v2_Axe/climb_still.png
 sprites/frames/Megaman_v2_Axe/slip.png
 sprites/frames/Megaman_v2_Axe/run.png
@@ -1612,6 +1614,10 @@ sprites/frames/MegamanTrailSprite_v2/precious_guard/airdash_shoot.png
 sprites/frames/MegamanTrailSprite_v2/precious_guard/airdash.png
 sprites/frames/MegamanTrailSprite_v2/precious_guard/groundslide_shoot.png
 sprites/frames/MegamanTrailSprite_v2/precious_guard/groundslide.png
+sprites/frames/MegamanTrailSprite_v2/axe_swinger/airdash_shoot.png
+sprites/frames/MegamanTrailSprite_v2/axe_swinger/airdash.png
+sprites/frames/MegamanTrailSprite_v2/axe_swinger/groundslide_shoot.png
+sprites/frames/MegamanTrailSprite_v2/axe_swinger/groundslide.png
 sprites/frames/MegamanTrailSprite_v2/rush_jet/airdash_shoot.png
 sprites/frames/MegamanTrailSprite_v2/rush_jet/airdash.png
 sprites/frames/MegamanTrailSprite_v2/rush_jet/groundslide_shoot.png

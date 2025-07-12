@@ -603,10 +603,13 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             val smoke = MegaEntityFactory.fetch(SmokePuff::class)!!
             smoke.spawn(
                 props(
-                    ConstKeys.OWNER pairTo this,
+                    ConstKeys.OWNER pairTo megaman,
                     ConstKeys.POSITION pairTo getSpawnPosition(MegamanWeapon.MEGA_BUSTER)
                 )
             )
+
+            game.audioMan.playSound(SoundAsset.WHOOSH_SOUND, false)
+
             return
         } else if (game.getCurrentLevel() == LevelDefinition.MOON_MAN) {
             GameLogger.debug(TAG, "shootMagmaWave(): in Moon Man's stage")

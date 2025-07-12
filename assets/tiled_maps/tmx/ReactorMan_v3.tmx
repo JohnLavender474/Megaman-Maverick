@@ -912,7 +912,7 @@
   <object id="712" x="10816" y="2400" width="64" height="64"/>
  </objectgroup>
  <objectgroup id="14" name="items">
-  <object id="345" name="HealthTank" x="296" y="5488" width="16" height="16">
+  <object id="345" name="HealthTank" x="296" y="5440" width="16" height="16">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
     <property name="spawn_type" value="spawn_now"/>

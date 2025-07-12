@@ -37,12 +37,11 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-
+import com.megaman.maverick.game.entities.explosions.SmokePuff
 import com.megaman.maverick.game.world.body.*
 
 class LavaDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IDamager, IHazard, ISpritesEntity, IAnimatedEntity,
@@ -102,8 +101,8 @@ class LavaDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IDamager, IHaz
     })
 
     private fun spawnSmokePuff() {
-        val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
-        smokePuff.spawn(props(ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER), ConstKeys.OWNER pairTo this))
+        val puff = MegaEntityFactory.fetch(SmokePuff::class)!!
+        puff.spawn(props(ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER), ConstKeys.OWNER pairTo this))
     }
 
     private fun defineBodyComponent(): BodyComponent {

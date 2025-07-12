@@ -23,6 +23,7 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -42,6 +43,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.JoeBall
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -92,6 +94,9 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
+    override fun canBeDamagedBy(damager: IDamager) =
+        super.canBeDamagedBy(damager) && (damager is Axe || currentState != SwinginJoeState.SWING_EYES_CLOSED)
+
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(ConstVals.PPM.toFloat(), 2f * ConstVals.PPM)
@@ -112,14 +117,12 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
             body.physics.velocity.setZero()
 
             shieldFixture.setActive(currentState == SwinginJoeState.SWING_EYES_CLOSED)
-            damageableFixture.setActive(currentState != SwinginJoeState.SWING_EYES_CLOSED)
 
             when (currentState) {
                 SwinginJoeState.SWING_EYES_CLOSED -> {
                     damageableFixture.offsetFromBodyAttachment.x = 0.05f * ConstVals.PPM * -facing.value
                     shieldFixture.offsetFromBodyAttachment.x = 0.1f * ConstVals.PPM * facing.value
                 }
-
                 else -> damageableFixture.offsetFromBodyAttachment.x = 0f
             }
         }

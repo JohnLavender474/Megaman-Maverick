@@ -1,172 +1,200 @@
 MegamanTrailSprite_v2.png
-size: 240, 240
+size: 1344, 48
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-frigid_shot/airdash
+axe_swinger/airdash
   rotate: false
   xy: 0, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-frigid_shot/airdash_shoot
+axe_swinger/airdash_shoot
   rotate: false
   xy: 48, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-frigid_shot/groundslide
+axe_swinger/groundslide
   rotate: false
   xy: 96, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-frigid_shot/groundslide_shoot
+axe_swinger/groundslide_shoot
   rotate: false
   xy: 144, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-infernal_barrage/airdash
+frigid_shot/airdash
   rotate: false
   xy: 192, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
+frigid_shot/airdash_shoot
+  rotate: false
+  xy: 240, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+frigid_shot/groundslide
+  rotate: false
+  xy: 288, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+frigid_shot/groundslide_shoot
+  rotate: false
+  xy: 336, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+infernal_barrage/airdash
+  rotate: false
+  xy: 384, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
 infernal_barrage/airdash_shoot
   rotate: false
-  xy: 0, 48
+  xy: 432, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 infernal_barrage/groundslide
   rotate: false
-  xy: 48, 48
+  xy: 480, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 infernal_barrage/groundslide_shoot
   rotate: false
-  xy: 96, 48
+  xy: 528, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 mega_buster/airdash
   rotate: false
-  xy: 144, 48
+  xy: 576, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 mega_buster/airdash_shoot
   rotate: false
-  xy: 192, 48
+  xy: 624, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 mega_buster/groundslide
   rotate: false
-  xy: 0, 96
+  xy: 672, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 mega_buster/groundslide_shoot
   rotate: false
-  xy: 48, 96
+  xy: 720, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 moon_scythes/airdash
   rotate: false
-  xy: 96, 96
+  xy: 768, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 moon_scythes/airdash_shoot
   rotate: false
-  xy: 144, 96
+  xy: 816, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 moon_scythes/groundslide
   rotate: false
-  xy: 192, 96
+  xy: 864, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 moon_scythes/groundslide_shoot
   rotate: false
-  xy: 0, 144
+  xy: 912, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 precious_guard/airdash
   rotate: false
-  xy: 48, 144
+  xy: 960, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 precious_guard/airdash_shoot
   rotate: false
-  xy: 96, 144
+  xy: 1008, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 precious_guard/groundslide
   rotate: false
-  xy: 144, 144
+  xy: 1056, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 precious_guard/groundslide_shoot
   rotate: false
-  xy: 192, 144
+  xy: 1104, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 rush_jet/airdash
   rotate: false
-  xy: 0, 192
+  xy: 1152, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 rush_jet/airdash_shoot
   rotate: false
-  xy: 48, 192
+  xy: 1200, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 rush_jet/groundslide
   rotate: false
-  xy: 96, 192
+  xy: 1248, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 rush_jet/groundslide_shoot
   rotate: false
-  xy: 144, 192
+  xy: 1296, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0

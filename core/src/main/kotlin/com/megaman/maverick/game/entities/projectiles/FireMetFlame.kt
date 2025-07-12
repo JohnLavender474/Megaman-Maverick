@@ -34,12 +34,10 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-
+import com.megaman.maverick.game.entities.explosions.SmokePuff
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
@@ -85,11 +83,11 @@ class FireMetFlame(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
 
-        val smokePuff = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.SMOKE_PUFF)!!
-        smokePuff.spawn(
+        val puff = MegaEntityFactory.fetch(SmokePuff::class)!!
+        puff.spawn(
             props(
-                ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER),
-                ConstKeys.OWNER pairTo owner
+                ConstKeys.OWNER pairTo owner,
+                ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)
             )
         )
 

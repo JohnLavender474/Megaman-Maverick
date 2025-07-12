@@ -173,6 +173,10 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">../frames/MegamanTrailSprite_v2/axe_swinger/airdash.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/axe_swinger/airdash_shoot.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/axe_swinger/groundslide.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/axe_swinger/groundslide_shoot.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/frigid_shot/airdash.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/frigid_shot/airdash_shoot.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/frigid_shot/groundslide.png</key>

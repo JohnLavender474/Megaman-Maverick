@@ -1,5 +1,5 @@
 Megaman_v2_AXE.png
-size: 450, 246
+size: 500, 294
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -19,7 +19,7 @@ beam
   index: -1
 climb
   rotate: false
-  xy: 1, 101
+  xy: 439, 51
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -47,56 +47,70 @@ crouch
   index: -1
 crouch_axe_throw
   rotate: false
-  xy: 51, 101
+  xy: 1, 149
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 damaged
   rotate: false
-  xy: 399, 101
+  xy: 447, 149
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
   index: -1
-groundslide
+frozen
   rotate: false
   xy: 251, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-jump
+frozen_push
+  rotate: false
+  xy: 51, 149
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+groundslide
   rotate: false
   xy: 301, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-run
-  rotate: false
-  xy: 101, 101
-  size: 96, 96
-  orig: 96, 96
-  offset: 0, 0
-  index: -1
-run_trans
+jump
   rotate: false
   xy: 351, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-slip
+run
+  rotate: false
+  xy: 149, 149
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+run_trans
   rotate: false
   xy: 401, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
+slip
+  rotate: false
+  xy: 451, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
 slip_axe_throw
   rotate: false
-  xy: 199, 101
+  xy: 247, 149
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -110,21 +124,21 @@ spawn
   index: -1
 stand
   rotate: false
-  xy: 249, 101
+  xy: 297, 149
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 stand_axe_throw
   rotate: false
-  xy: 299, 101
+  xy: 347, 149
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 stunned
   rotate: false
-  xy: 349, 101
+  xy: 397, 149
   size: 48, 96
   orig: 48, 96
   offset: 0, 0

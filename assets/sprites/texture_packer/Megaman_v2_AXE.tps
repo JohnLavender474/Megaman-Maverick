@@ -178,6 +178,7 @@
             <key type="filename">../frames/Megaman_v2_Axe/climb_finish.png</key>
             <key type="filename">../frames/Megaman_v2_Axe/climb_still.png</key>
             <key type="filename">../frames/Megaman_v2_Axe/crouch.png</key>
+            <key type="filename">../frames/Megaman_v2_Axe/frozen.png</key>
             <key type="filename">../frames/Megaman_v2_Axe/groundslide.png</key>
             <key type="filename">../frames/Megaman_v2_Axe/jump.png</key>
             <key type="filename">../frames/Megaman_v2_Axe/run_trans.png</key>
@@ -233,6 +234,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Megaman_v2_Axe/frozen_push.png</key>
             <key type="filename">../frames/Megaman_v2_Axe/run.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

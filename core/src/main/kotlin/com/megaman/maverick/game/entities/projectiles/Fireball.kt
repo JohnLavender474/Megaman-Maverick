@@ -11,6 +11,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
@@ -31,7 +32,6 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
-import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.*
@@ -59,7 +59,6 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         const val TAG = "Fireball"
 
         const val BURST_ON_DAMAGE_INFLICTED = "burst_on_damage_inflicted"
-        const val BURST_ON_HIT_BODY = "burst_on_hit_body"
         const val BURST_ON_HIT_BLOCK = "burst_on_hit_block"
 
         private const val BURST_CULL_DUR = 0.5f
@@ -79,6 +78,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
     private var canDamage = true
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val fireballAtlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             regions.put("fireball", fireballAtlas.findRegion("Fire/Fireball"))
@@ -92,9 +92,8 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
-
-        owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
 
         val spawn = spawnProps.getOrDefault(ConstKeys.POSITION, Vector2.Zero, Vector2::class)
         body.setCenter(spawn)
@@ -117,6 +116,8 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
     }
 
     override fun explodeAndDie(vararg params: Any?) {
+        GameLogger.debug(TAG, "explodeAndDie(): params=$params")
+
         burst = true
 
         body.physics.gravity.setZero()
@@ -231,8 +232,8 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { delta, sprite ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { delta, sprite ->
             val size = if (burst) 1f else 2f
             sprite.setSize(size * ConstVals.PPM)
 
@@ -243,7 +244,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
             sprite.setOriginCenter()
             sprite.rotation = burstDirection.rotation
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

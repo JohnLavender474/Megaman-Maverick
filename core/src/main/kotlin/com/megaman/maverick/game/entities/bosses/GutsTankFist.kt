@@ -93,9 +93,9 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
         override fun get(damager: IDamager): Int {
             if (damager !is IProjectileEntity || damager.owner != megaman) return 0
             return when (damager) {
-                is ChargedShot -> if (damager.fullyCharged) 3 else 2
-                is MoonScythe, is MagmaWave, is Axe -> 4
-                else -> 2
+                is ChargedShot -> if (damager.fullyCharged) 2 else 1
+                is MoonScythe, is MagmaWave, is Axe -> 2
+                else -> 1
             }
         }
     }
