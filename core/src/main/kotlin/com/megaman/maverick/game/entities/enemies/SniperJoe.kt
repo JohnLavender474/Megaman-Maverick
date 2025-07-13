@@ -366,7 +366,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                     val key = "${type.name.lowercase()}/${currentState.name.lowercase()}"
                     return@keySupplier key
                 }
-                .setOnChangeKeyListener { oldKey, currentKey ->
+                .setOnChangeKeyListener { _, oldKey, currentKey ->
                     GameLogger.debug(TAG, "defineAnimationsComponent(): currentKey=$currentKey, oldKey=$oldKey")
                 }
                 .applyToAnimations { animations ->

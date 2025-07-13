@@ -438,7 +438,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 }
             }
         }
-        val onChangeKey: (String?, String?) -> Unit = { oldKey, newKey ->
+        val onChangeKey: (Animator, String?, String?) -> Unit = { _, oldKey, newKey ->
             if (newKey != null && oldKey != null && newKey.contains("_shoot") && !oldKey.contains("_shoot")) {
                 val newKeyRaw = newKey.removeSuffix("_up").removeSuffix("_shoot")
                 if (newKeyRaw == oldKey) {

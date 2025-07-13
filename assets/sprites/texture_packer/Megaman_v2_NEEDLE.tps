@@ -50,7 +50,7 @@
         <key>dxtCompressionMode</key>
         <enum type="SettingsBase::DxtCompressionMode">DXT_PERCEPTUAL</enum>
         <key>ditherType</key>
-        <enum type="SettingsBase::DitherType">PngQuantLow</enum>
+        <enum type="SettingsBase::DitherType">NearestNeighbour</enum>
         <key>backgroundColor</key>
         <uint>0</uint>
         <key>libGdx</key>
@@ -68,13 +68,13 @@
         <key>jpgQuality</key>
         <uint>80</uint>
         <key>pngOptimizationLevel</key>
-        <uint>0</uint>
+        <uint>1</uint>
         <key>webpQualityLevel</key>
         <uint>101</uint>
         <key>textureSubPath</key>
         <string></string>
         <key>textureFormat</key>
-        <enum type="SettingsBase::TextureFormat">png8</enum>
+        <enum type="SettingsBase::TextureFormat">png</enum>
         <key>borderPadding</key>
         <uint>0</uint>
         <key>maxTextureSize</key>
@@ -124,7 +124,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../sprite_sheets/MegamanTrailSprite_v2.txt</filename>
+                <filename>../sprite_sheets/Megaman_v2_NEEDLE.txt</filename>
             </struct>
         </map>
         <key>multiPackMode</key>
@@ -141,7 +141,7 @@
             <string></string>
         </struct>
         <key>autoAliasEnabled</key>
-        <false/>
+        <true/>
         <key>trimSpriteNames</key>
         <false/>
         <key>prependSmartFolderName</key>
@@ -155,7 +155,7 @@
             <key>scaleMode</key>
             <enum type="ScaleMode">Smooth</enum>
             <key>extrude</key>
-            <uint>0</uint>
+            <uint>1</uint>
             <key>trimThreshold</key>
             <uint>1</uint>
             <key>trimMargin</key>
@@ -173,36 +173,19 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../frames/MegamanTrailSprite_v2/axe_swinger/airdash.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/axe_swinger/airdash_shoot.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/axe_swinger/groundslide.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/axe_swinger/groundslide_shoot.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/frigid_shot/airdash.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/frigid_shot/airdash_shoot.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/frigid_shot/groundslide.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/frigid_shot/groundslide_shoot.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/infernal_barrage/airdash.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/infernal_barrage/airdash_shoot.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/infernal_barrage/groundslide.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/infernal_barrage/groundslide_shoot.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/mega_buster/airdash.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/mega_buster/airdash_shoot.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/mega_buster/groundslide.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/mega_buster/groundslide_shoot.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/moon_scythes/airdash.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/moon_scythes/airdash_shoot.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/moon_scythes/groundslide.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/moon_scythes/groundslide_shoot.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/needle_spin/airdash.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/needle_spin/groundslide.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/precious_guard/airdash.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/precious_guard/airdash_shoot.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/precious_guard/groundslide.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/precious_guard/groundslide_shoot.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/rush_jet/airdash.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/rush_jet/airdash_shoot.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/rush_jet/groundslide.png</key>
-            <key type="filename">../frames/MegamanTrailSprite_v2/rush_jet/groundslide_shoot.png</key>
+            <key type="filename">../frames/Megaman_v2_Needle/airdash.png</key>
+            <key type="filename">../frames/Megaman_v2_Needle/beam.png</key>
+            <key type="filename">../frames/Megaman_v2_Needle/climb_finish.png</key>
+            <key type="filename">../frames/Megaman_v2_Needle/climb_still.png</key>
+            <key type="filename">../frames/Megaman_v2_Needle/climb_still_shoot.png</key>
+            <key type="filename">../frames/Megaman_v2_Needle/crouch.png</key>
+            <key type="filename">../frames/Megaman_v2_Needle/frozen.png</key>
+            <key type="filename">../frames/Megaman_v2_Needle/groundslide.png</key>
+            <key type="filename">../frames/Megaman_v2_Needle/jump.png</key>
+            <key type="filename">../frames/Megaman_v2_Needle/run_trans.png</key>
+            <key type="filename">../frames/Megaman_v2_Needle/slip.png</key>
+            <key type="filename">../frames/Megaman_v2_Needle/swim.png</key>
+            <key type="filename">../frames/Megaman_v2_Needle/wallslide.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -217,6 +200,70 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Megaman_v2_Needle/climb.png</key>
+            <key type="filename">../frames/Megaman_v2_Needle/stand.png</key>
+            <key type="filename">../frames/Megaman_v2_Needle/stunned.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,24,24,48</rect>
+                <key>scale9Paddings</key>
+                <rect>12,24,24,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Megaman_v2_Needle/damaged.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,36,24,72</rect>
+                <key>scale9Paddings</key>
+                <rect>12,36,24,72</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Megaman_v2_Needle/frozen_push.png</key>
+            <key type="filename">../frames/Megaman_v2_Needle/needle_spin.png</key>
+            <key type="filename">../frames/Megaman_v2_Needle/run.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>24,24,48,48</rect>
+                <key>scale9Paddings</key>
+                <rect>24,24,48,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Megaman_v2_Needle/spawn.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>84,12,168,24</rect>
+                <key>scale9Paddings</key>
+                <rect>84,12,168,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
         </map>
         <key>fileLists</key>
         <map type="SpriteSheetMap">
@@ -224,7 +271,7 @@
             <struct type="SpriteSheet">
                 <key>files</key>
                 <array>
-                    <filename>../frames/MegamanTrailSprite_v2</filename>
+                    <filename>../frames/Megaman_v2_Needle</filename>
                 </array>
             </struct>
         </map>

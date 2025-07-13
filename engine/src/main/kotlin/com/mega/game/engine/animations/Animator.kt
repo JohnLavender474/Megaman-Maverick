@@ -10,8 +10,9 @@ open class Animator(
     val keySupplier: (String?) -> String?,
     val animations: ObjectMap<String, IAnimation>,
     var updateScalar: Float = 1f,
-    var onChangeKey: ((String?, String?) -> Unit)? = null,
-    var shouldAnimatePredicate: (Float) -> Boolean = { true }
+    var onChangeKey: ((Animator, String?, String?) -> Unit)? = null,
+    var shouldAnimatePredicate: (Float) -> Boolean = { true },
+    var postProcessKey: ((Animator, String?, String?) -> String?)? = null
 ) : IAnimator {
 
     companion object {
@@ -32,14 +33,16 @@ open class Animator(
         val nextKey = keySupplier(currentKey)
 
         if (currentKey != nextKey) {
-            onChangeKey?.invoke(currentKey, nextKey)
+            onChangeKey?.invoke(this, currentKey, nextKey)
             // The "current" animation will become the "old" animation after the "currentKey" value
             // is changed. Before changing the key, reset the "old" animation. Do not reset the new
             // animation since "onChangeKey" may involve manipulating the new animation's state.
             currentAnimation?.reset()
-        }
 
-        currentKey = nextKey
+            val oldKey = currentKey
+            currentKey = nextKey
+            postProcessKey?.let { currentKey = it.invoke(this, oldKey, currentKey) }
+        }
 
         currentAnimation?.let {
             it.update(delta * updateScalar)
@@ -59,7 +62,7 @@ class AnimatorBuilder {
     private var keySupplier: ((String?) -> String?) = { Animator.DEFAULT_KEY }
     private val animations: ObjectMap<String, IAnimation> = ObjectMap()
     private var updateScalar: Float = 1f
-    private var onChangeKey: ((String?, String?) -> Unit)? = null
+    private var onChangeKey: ((Animator, String?, String?) -> Unit)? = null
 
     fun setKeySupplier(supplier: (String?) -> String?) = apply {
         this.keySupplier = supplier
@@ -87,7 +90,7 @@ class AnimatorBuilder {
         this.updateScalar = scalar
     }
 
-    fun setOnChangeKeyListener(listener: (String?, String?) -> Unit) = apply {
+    fun setOnChangeKeyListener(listener: (Animator, String?, String?) -> Unit) = apply {
         this.onChangeKey = listener
     }
 

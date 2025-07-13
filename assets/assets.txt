@@ -564,6 +564,7 @@ sprites/frames/Decorations1/Smoke/3.png
 sprites/frames/Decorations1/Smoke/0.png
 sprites/frames/Decorations1/Smoke/1.png
 sprites/frames/Decorations1/Smoke/2.png
+sprites/frames/Decorations1/DesertTornado.png
 sprites/frames/Decorations1/DrippingToxicGoop.png
 sprites/frames/Decorations1/MuzzleFlash.png
 sprites/frames/Decorations1/GravitySwitchAura.png
@@ -718,6 +719,7 @@ sprites/frames/Rejects/FreezerMan/Opening.png
 sprites/frames/Rejects/FreezerMan/JumpOpenFreezer.png
 sprites/frames/Rejects/FreezerMan/StandLookDown.png
 sprites/frames/Rejects/FreezerMan/StandLookUp.png
+sprites/frames/Bits/needle.png
 sprites/frames/Bits/axe.png
 sprites/frames/Bits/rush_jet.png
 sprites/frames/Bits/fire.png
@@ -1359,8 +1361,27 @@ sprites/frames/Environs1/Leaves/SpringLeaf.png
 sprites/frames/Environs1/WindyGrass/Left.png
 sprites/frames/Environs1/WindyGrass/Right.png
 sprites/frames/Environs1/WindyGrass/Middle.png
+sprites/frames/Megaman_v2_Needle/climb_still_shoot.png
+sprites/frames/Megaman_v2_Needle/run_trans.png
+sprites/frames/Megaman_v2_Needle/wallslide.png
+sprites/frames/Megaman_v2_Needle/needle_spin.png
+sprites/frames/Megaman_v2_Needle/climb.png
+sprites/frames/Megaman_v2_Needle/damaged.png
+sprites/frames/Megaman_v2_Needle/crouch.png
+sprites/frames/Megaman_v2_Needle/climb_finish.png
+sprites/frames/Megaman_v2_Needle/stunned.png
+sprites/frames/Megaman_v2_Needle/stand.png
+sprites/frames/Megaman_v2_Needle/jump.png
+sprites/frames/Megaman_v2_Needle/airdash.png
+sprites/frames/Megaman_v2_Needle/swim.png
+sprites/frames/Megaman_v2_Needle/beam.png
 sprites/frames/Megaman_v2_Needle/frozen_push.png
 sprites/frames/Megaman_v2_Needle/frozen.png
+sprites/frames/Megaman_v2_Needle/climb_still.png
+sprites/frames/Megaman_v2_Needle/slip.png
+sprites/frames/Megaman_v2_Needle/run.png
+sprites/frames/Megaman_v2_Needle/spawn.png
+sprites/frames/Megaman_v2_Needle/groundslide.png
 sprites/frames/MegamanRushJet/Stand.png
 sprites/frames/MegamanRushJet/Swim.png
 sprites/frames/MegamanRushJet/JumpShoot.png
@@ -1622,6 +1643,8 @@ sprites/frames/MegamanTrailSprite_v2/rush_jet/airdash_shoot.png
 sprites/frames/MegamanTrailSprite_v2/rush_jet/airdash.png
 sprites/frames/MegamanTrailSprite_v2/rush_jet/groundslide_shoot.png
 sprites/frames/MegamanTrailSprite_v2/rush_jet/groundslide.png
+sprites/frames/MegamanTrailSprite_v2/needle_spin/airdash.png
+sprites/frames/MegamanTrailSprite_v2/needle_spin/groundslide.png
 sprites/frames/MegamanTrailSprite_v2/mega_buster/airdash_shoot.png
 sprites/frames/MegamanTrailSprite_v2/mega_buster/airdash.png
 sprites/frames/MegamanTrailSprite_v2/mega_buster/groundslide_shoot.png
@@ -2467,6 +2490,7 @@ sprites/sprite_sheets/Megaman_BUSTER.txt
 sprites/sprite_sheets/Enemies2.txt
 sprites/sprite_sheets/LevelSelectScreen.txt
 sprites/sprite_sheets/Megaman_v2_RUSH_JET.png
+sprites/sprite_sheets/Megaman_v2_NEEDLE.png
 sprites/sprite_sheets/Buddies.png
 sprites/sprite_sheets/Enemies2.png
 sprites/sprite_sheets/MisterMan.txt
@@ -2525,6 +2549,7 @@ sprites/sprite_sheets/Megaman_v2_MOON.txt
 sprites/sprite_sheets/FreezerMan.txt
 sprites/sprite_sheets/Bosses3.png
 sprites/sprite_sheets/Gates.txt
+sprites/sprite_sheets/Megaman_v2_NEEDLE.txt
 sprites/sprite_sheets/Backgrounds5.txt
 sprites/sprite_sheets/Megaman_RUSH_JETPACK.txt
 sprites/sprite_sheets/FreezerMan.png
@@ -2619,6 +2644,7 @@ sprites/texture_packer/LevelPauseScreenV2.tps
 sprites/texture_packer/Environs1.tps
 sprites/texture_packer/Items1.tps
 sprites/texture_packer/Decorations1.tps
+sprites/texture_packer/Megaman_v2_NEEDLE.tps
 sprites/texture_packer/Bosses.tps
 sprites/texture_packer/Ui1.tps
 sprites/texture_packer/Backgrounds1.tps

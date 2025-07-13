@@ -54,7 +54,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
         private val FULL_TABLE = TableBuilder<Any>()
             .row(gdxArrayOf(MegamanWeapon.MEGA_BUSTER, null)) // atomic radium
-            .row(gdxArrayOf(null, null)) // needle spin, rodent claws
+            .row(gdxArrayOf(MegamanWeapon.NEEDLE_SPIN, null)) // needle spin, rodent claws
             .row(gdxArrayOf(MegamanWeapon.FRIGID_SHOT, MegamanWeapon.AXE_SWINGER)) // axe swinger
             .row(gdxArrayOf(MegamanWeapon.INFERNAL_BARRAGE, MegamanWeapon.RUSH_JET))
             .row(gdxArrayOf(MegamanWeapon.MOON_SCYTHES, null)) // adapter 1
@@ -384,7 +384,6 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                     val selectedKey = "$key$SELECTED_SUFFIX"
                     buttonRegions[selectedKey]
                 }
-
                 else -> buttonRegions[key]
             }
             buttonSprite.setRegion(buttonRegion)

@@ -44,6 +44,7 @@ class MegamanAnimations(
                 MegamanWeapon.PRECIOUS_GUARD -> TextureAsset.MEGAMAN_PRECIOUS_GUARD.source
                 MegamanWeapon.AXE_SWINGER -> TextureAsset.MEGAMAN_AXE_THROW.source
                 MegamanWeapon.RUSH_JET -> TextureAsset.MEGAMAN_RUSH_JETPACK.source
+                MegamanWeapon.NEEDLE_SPIN -> TextureAsset.MEGAMAN_NEEDLE_SPIN.source
             }
             val atlas = game.assMan.getTextureAtlas(assetSource)
 

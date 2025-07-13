@@ -83,7 +83,8 @@ abstract class AbstractBoss(
             },
             MoonScythe::class pairTo dmgNeg(1),
             SmallIceCube::class pairTo dmgNeg(1),
-            Axe::class pairTo dmgNeg(1)
+            Axe::class pairTo dmgNeg(1),
+            Needle::class pairTo dmgNeg(1)
         )
 
         private val DEFAULT_BOSS_BATTLE_MUSIC = MusicAsset.MMX6_BOSS_FIGHT_MUSIC.name

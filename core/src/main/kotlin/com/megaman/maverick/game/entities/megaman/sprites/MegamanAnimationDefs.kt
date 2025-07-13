@@ -61,6 +61,8 @@ object MegamanAnimationDefs {
         "stand_shoot_left" pairTo AnimationDef(),
         "stand_axe_throw" pairTo AnimationDef(2, 1, 0.1f, false),
 
+        "needle_spin" pairTo AnimationDef(2, 2, 0.1f, true),
+
         "damaged" pairTo AnimationDef(3, 1, 0.05f),
         "damaged_left" pairTo AnimationDef(3, 1, 0.05f),
 

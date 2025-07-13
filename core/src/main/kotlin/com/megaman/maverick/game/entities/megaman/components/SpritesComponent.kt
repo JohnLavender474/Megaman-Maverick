@@ -14,6 +14,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanKeys
+import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getCenter
@@ -28,6 +29,10 @@ const val JETPACK_FLAME_SPRITE_SIZE = 1f
 const val DAMAGE_BURST_SPRITE_KEY = "DamagedBurst"
 const val DAMAGE_BURST_SPRITE_SIZE = MEGAMAN_SPRITE_SIZE
 const val DAMAGE_BURST_OFFSET = 0.25f
+
+const val DESERT_TORNADO_SPRITE_KEY = "DesertTornado"
+const val DESERT_TORNADO_SPRITE_SIZE = 3f
+const val DESERT_TORNADO_OFFSET = -0.1f
 
 const val GROUND_SLIDE_SPRITE_OFFSET_Y = 0.1f
 
@@ -92,6 +97,7 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
     defineMegamanSprite(component)
     defineJetpackFlameSprite(component)
     defineDamagedBurstSprite(component)
+    defineDesertTornatoSprite(component)
     return component
 }
 
@@ -181,6 +187,37 @@ private fun Megaman.defineDamagedBurstSprite(component: SpritesComponent) {
         }
 
         burst.hidden = false
+    }
+}
+
+private fun Megaman.defineDesertTornatoSprite(component: SpritesComponent) {
+    val region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, "DesertTornado")
+    val priority = getSpritePriority(DrawingPriority())
+    val sprite = GameSprite(region, DrawingPriority(priority.section, priority.value + 1))
+    component.putSprite(DESERT_TORNADO_SPRITE_KEY, sprite)
+    component.putUpdateFunction(DESERT_TORNADO_SPRITE_KEY) { _, tornado ->
+        tornado.setSize(DESERT_TORNADO_SPRITE_SIZE * ConstVals.PPM)
+
+        val center = body.getCenter()
+
+        val offset = GameObjectPools.fetch(Vector2::class)
+        when (direction) {
+            Direction.UP -> offset.set(0f, DESERT_TORNADO_OFFSET)
+            Direction.DOWN -> offset.set(0f, -DESERT_TORNADO_OFFSET)
+            Direction.LEFT -> offset.set(-DESERT_TORNADO_OFFSET, 0f)
+            Direction.RIGHT -> offset.set(DESERT_TORNADO_OFFSET, 0f)
+        }
+        offset.scl(ConstVals.PPM.toFloat())
+        center.add(offset)
+
+        tornado.setCenter(center)
+
+        if (currentWeapon != MegamanWeapon.NEEDLE_SPIN || !shooting) {
+            tornado.hidden = true
+            return@putUpdateFunction
+        }
+
+        tornado.hidden = false
     }
 }
 

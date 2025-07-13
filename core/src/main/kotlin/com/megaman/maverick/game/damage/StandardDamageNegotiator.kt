@@ -14,6 +14,7 @@ import com.megaman.maverick.game.entities.hazards.DrippingToxicGoop
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.hazards.Saw
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
+import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.*
 import kotlin.reflect.KClass
 
@@ -43,7 +44,9 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             PreciousGem::class pairTo dmgNeg(10),
             LampeonBullet::class pairTo dmgNeg(5),
             Explosion::class pairTo dmgNeg(5),
-            Axe::class pairTo dmgNeg(10)
+            Axe::class pairTo dmgNeg(10),
+            Needle::class pairTo dmgNeg(10),
+            Megaman::class pairTo dmgNeg(15)
         )
 
         private val MEDIUM_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -68,7 +71,9 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             PreciousGem::class pairTo dmgNeg(20),
             LampeonBullet::class pairTo dmgNeg(15),
             Explosion::class pairTo dmgNeg(15),
-            Axe::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
+            Axe::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            Needle::class pairTo dmgNeg(20),
+            Megaman::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
         )
 
         private val SMALL_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -93,7 +98,9 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             PreciousGem::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             LampeonBullet::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             Explosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-            Axe::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
+            Axe::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            Needle::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            Megaman::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
         )
 
         // damage is determined by the damageable's size instead of the damager's size

@@ -32,7 +32,8 @@ internal fun Megaman.defineAnimationsComponent(animations: OrderedMap<String, IA
     val megamanAnimator = Animator(
         keySupplier = megamanAnimKeySupplier,
         animations = animations,
-        onChangeKey = { currentKey, nextKey -> onChangeAnimationKey(currentKey, nextKey, animations) }
+        onChangeKey = { animator, currentKey, nextKey -> onChangeAnimationKey(currentKey, nextKey, animations) },
+        postProcessKey = { animator, currentKey, nextKey -> postProcessAnimationKey(currentKey, nextKey) }
     )
 
     val decorationsAtlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
@@ -41,18 +42,21 @@ internal fun Megaman.defineAnimationsComponent(animations: OrderedMap<String, IA
     val jetpackFlameAnimation = Animation(jetpackFlameRegion, 1, 3, 0.1f)
     val jetpackFlameAnimator = Animator(jetpackFlameAnimation)
 
+    val desertTornadoRegion = decorationsAtlas.findRegion(DESERT_TORNADO_SPRITE_KEY)
+    val desertTornadoAnimation = Animation(desertTornadoRegion, 2, 1, 0.1f)
+    val desertTornadoAnimator = Animator(desertTornadoAnimation)
+
     val animators = orderedMapOf<Any, IAnimator>(
         MEGAMAN_SPRITE_KEY pairTo megamanAnimator,
-        JETPACK_FLAME_SPRITE_KEY pairTo jetpackFlameAnimator
+        JETPACK_FLAME_SPRITE_KEY pairTo jetpackFlameAnimator,
+        DESERT_TORNADO_SPRITE_KEY pairTo desertTornadoAnimator
     )
 
     return AnimationsComponent(animators, sprites)
 }
 
 internal fun Megaman.onChangeAnimationKey(
-    currentKey: String?,
-    nextKey: String?,
-    animations: OrderedMap<String, IAnimation>
+    currentKey: String?, nextKey: String?, animations: OrderedMap<String, IAnimation>
 ) {
     // Special case for Axe Throw weapon: need to ensure that if Megaman is "shooting" (throwing),
     // then if the animation key changes, the new animation starts at the same time stamp as what
@@ -64,4 +68,13 @@ internal fun Megaman.onChangeAnimationKey(
         val time = animations[currentKey]?.getCurrentTime()
         time?.let { t -> animations[nextKey]?.setCurrentTime(t) }
     }
+}
+
+internal fun Megaman.postProcessAnimationKey(currentKey: String?, nextKey: String?): String? {
+    if (currentKey?.contains("_shoot") == true && nextKey?.contains("needle_spin") == true) {
+        shootAnimTimer.setToEnd()
+        return currentKey.replace("_shoot", "")
+    }
+
+    return nextKey
 }

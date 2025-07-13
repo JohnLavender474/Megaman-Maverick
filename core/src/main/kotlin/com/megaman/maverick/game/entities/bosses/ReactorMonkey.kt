@@ -290,7 +290,7 @@ class ReactorMonkey(game: MegamanMaverickGame) :
             "throw" pairTo Animation(regions["throw"], 3, 1, 0.1f, false),
             "throw_damaged" pairTo Animation(regions["throw_damaged"], 3, 1, 0.1f, false)
         )
-        val onChangeKey: (String?, String?) -> Unit = { previous, current ->
+        val onChangeKey: (Animator, String?, String?) -> Unit = { _, previous, current ->
             if ((current == "throw_damaged" && previous == "throw") ||
                 (current == "throw" && previous == "throw_damaged")
             ) {

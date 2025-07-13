@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -20,6 +21,7 @@ import com.megaman.maverick.game.entities.bosses.GutsTank
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
+import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
@@ -180,6 +182,16 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     val teleporterListenerFixture = Fixture(body, FixtureType.TELEPORTER_LISTENER, GameRectangle())
     body.addFixture(teleporterListenerFixture)
 
+    val needleSpinDamagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(ConstVals.PPM.toFloat()))
+    body.addFixture(needleSpinDamagerFixture)
+    needleSpinDamagerFixture.drawingColor = Color.ORANGE
+    debugShapes.add { needleSpinDamagerFixture }
+
+    val needleSpinShieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(ConstVals.PPM.toFloat()))
+    body.addFixture(needleSpinShieldFixture)
+    needleSpinShieldFixture.drawingColor = Color.PURPLE
+    debugShapes.add { needleSpinShieldFixture }
+
     val fixturesToSizeToBody = gdxArrayOf(
         bodyFixture, playerFixture, waterListenerFixture, teleporterListenerFixture
     )
@@ -187,6 +199,10 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.preProcess.put(ConstKeys.DEFAULT) {
         if (abs(body.physics.velocity.x) < 0.025f * ConstVals.PPM) body.physics.velocity.x = 0f
         if (abs(body.physics.velocity.y) < 0.025f * ConstVals.PPM) body.physics.velocity.y = 0f
+
+        val needleSpinning = currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting
+        needleSpinDamagerFixture.setActive(needleSpinning)
+        needleSpinShieldFixture.setActive(needleSpinning)
 
         val height = when {
             isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) -> GROUNDSLIDE_CROUCH_HEIGHT

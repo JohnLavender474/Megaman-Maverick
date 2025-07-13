@@ -66,6 +66,7 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
 
 fun Megaman.amendKey(baseKey: String) = when {
     shooting -> when (currentWeapon) {
+        MegamanWeapon.NEEDLE_SPIN -> "needle_spin"
         MegamanWeapon.AXE_SWINGER -> when {
             isBehaviorActive(BehaviorType.CROUCHING) -> "crouch_axe_throw"
             else -> "stand_axe_throw"

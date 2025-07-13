@@ -1145,7 +1145,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
                         animations.put(key, Animation(regions[key], def.rows, def.cols, def.durations, def.loop))
                     }
                 }
-                .setOnChangeKeyListener { currentKey, nextKey ->
+                .setOnChangeKeyListener { _, currentKey, nextKey ->
                     GameLogger.debug(
                         TAG,
                         "defineAnimationsComponent(): on change key listener: currentKey=$currentKey, nextKey=$nextKey"

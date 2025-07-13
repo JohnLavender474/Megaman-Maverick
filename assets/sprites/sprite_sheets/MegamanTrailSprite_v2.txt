@@ -1,5 +1,5 @@
 MegamanTrailSprite_v2.png
-size: 1344, 48
+size: 1440, 48
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -143,58 +143,72 @@ moon_scythes/groundslide_shoot
   orig: 48, 48
   offset: 0, 0
   index: -1
-precious_guard/airdash
+needle_spin/airdash
   rotate: false
   xy: 960, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-precious_guard/airdash_shoot
+needle_spin/groundslide
   rotate: false
   xy: 1008, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-precious_guard/groundslide
+precious_guard/airdash
   rotate: false
   xy: 1056, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-precious_guard/groundslide_shoot
+precious_guard/airdash_shoot
   rotate: false
   xy: 1104, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-rush_jet/airdash
+precious_guard/groundslide
   rotate: false
   xy: 1152, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-rush_jet/airdash_shoot
+precious_guard/groundslide_shoot
   rotate: false
   xy: 1200, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-rush_jet/groundslide
+rush_jet/airdash
   rotate: false
   xy: 1248, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-rush_jet/groundslide_shoot
+rush_jet/airdash_shoot
   rotate: false
   xy: 1296, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+rush_jet/groundslide
+  rotate: false
+  xy: 1344, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+rush_jet/groundslide_shoot
+  rotate: false
+  xy: 1392, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0

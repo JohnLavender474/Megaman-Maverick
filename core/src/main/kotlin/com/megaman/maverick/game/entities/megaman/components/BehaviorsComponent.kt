@@ -44,7 +44,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
     val wallSlide = FunctionalBehaviorImpl(
         evaluate = evaluate@{
             if (dead || !ready || !canMove || body.isSensing(BodySense.FEET_ON_SAND) ||
-                isBehaviorActive(BehaviorType.JETPACKING) || !wallSlideNotAllowedTimer.isFinished()
+                isBehaviorActive(BehaviorType.JETPACKING) || !wallSlideNotAllowedTimer.isFinished() ||
+                (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting)
             ) return@evaluate false
 
             if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) &&
@@ -100,8 +101,9 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         override fun evaluate(delta: Float): Boolean {
             if (dead || !ready || !canMove) return false
 
-            if (damaged || !body.isSensing(BodySense.IN_WATER) || body.isSensing(BodySense.HEAD_TOUCHING_BLOCK))
-                return false
+            if (damaged || !body.isSensing(BodySense.IN_WATER) || body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) ||
+                (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting)
+            ) return false
 
             return when {
                 isBehaviorActive(BehaviorType.SWIMMING) -> return !timer.isFinished()
@@ -139,7 +141,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 isAnyBehaviorActive(BehaviorType.SWIMMING, BehaviorType.CLIMBING, BehaviorType.JETPACKING) ||
                 body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) ||
                 !game.controllerPoller.isPressed(MegaControllerButton.A) ||
-                game.controllerPoller.isPressed(MegaControllerButton.DOWN)
+                game.controllerPoller.isPressed(MegaControllerButton.DOWN) ||
+                (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting)
             ) return@FunctionalBehaviorImpl false
 
             return@FunctionalBehaviorImpl if (isBehaviorActive(BehaviorType.JUMPING)) {
@@ -239,7 +242,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             if (dead || !ready || !canMove || damaged || teleporting || maxTimer.isFinished() ||
                 body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.TELEPORTING) || isAnyBehaviorActive(
                     BehaviorType.WALL_SLIDING, BehaviorType.CLIMBING, BehaviorType.JETPACKING
-                )
+                ) || (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting)
             ) return false
 
             if (isBehaviorActive(BehaviorType.AIR_DASHING)) return !minTimer.isFinished() || isAirDashButtonActivated()
@@ -331,6 +334,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 !body.isSensing(BodySense.FEET_ON_GROUND) || body.isSensing(BodySense.FEET_ON_SAND) ||
                 !game.controllerPoller.isPressed(MegaControllerButton.DOWN) ||
                 (currentWeapon == MegamanWeapon.AXE_SWINGER && shooting) ||
+                (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting) ||
                 when {
                     direction.isVertical() -> abs(body.physics.velocity.x)
                     else -> abs(body.physics.velocity.y)
@@ -368,7 +372,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             if (dead || !ready || !canMove || game.isCameraRotating() || body.isSensing(BodySense.FEET_ON_SAND) ||
                 isBehaviorActive(BehaviorType.JETPACKING) || !body.isSensing(BodySense.FEET_ON_GROUND) ||
-                !cooldown.isFinished()
+                !cooldown.isFinished() || (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting)
             ) return false
 
             if (isBehaviorActive(BehaviorType.GROUND_SLIDING) && body.isSensing(BodySense.HEAD_TOUCHING_BLOCK))
@@ -457,7 +461,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     BehaviorType.JETPACKING,
                     BehaviorType.AIR_DASHING,
                     BehaviorType.GROUND_SLIDING
-                )
+                ) || (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting)
             ) return false
 
             ladder = body.getProperty(ConstKeys.LADDER, Ladder::class)!!

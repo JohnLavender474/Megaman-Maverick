@@ -7,5 +7,6 @@ enum class MegamanWeapon {
     MOON_SCYTHES,
     PRECIOUS_GUARD,
     AXE_SWINGER,
+    NEEDLE_SPIN,
     RUSH_JET
 }

@@ -45,7 +45,7 @@ import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.min
 
-data class MegaWeaponHandler(
+open class MegaWeaponHandler(
     var cooldown: Timer,
     var ammo: Int = MegamanValues.MAX_WEAPON_AMMO,
     var normalCost: (MegaWeaponHandler) -> Int = { 0 },
@@ -54,6 +54,7 @@ data class MegaWeaponHandler(
     var chargeable: (MegaWeaponHandler) -> Boolean = { true },
     var updateFunction: ((MegaGameEntity, MegaChargeStatus, Float) -> Unit)? = null,
     var canFireWeapon: (MegaWeaponHandler, MegaChargeStatus) -> Boolean = { _, _ -> true },
+    var onShoot: (() -> Unit)? = null
 ) : Updatable {
 
     companion object {
@@ -97,7 +98,9 @@ data class MegaWeaponHandler(
 
     override fun update(delta: Float) {
         cullAllDead()
+
         cooldown.update(delta)
+
         if (updateFunction != null) spawned.forEach { entry ->
             val chargeStatus = entry.key
             val entities = entry.value
@@ -380,6 +383,34 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             chargeable = { false },
             canFireWeapon = { _, _ -> megaman.body.isSensing(BodySense.FEET_ON_GROUND) }
         )
+        MegamanWeapon.NEEDLE_SPIN -> object : MegaWeaponHandler(
+            cooldown = Timer(0.25f),
+            normalCost = { 1 },
+            chargeable = { false }
+        ) {
+
+            private var canSpin = true
+
+            init {
+                canFireWeapon = { _, _ -> canSpin }
+                // onShoot = { canSpin = false }
+            }
+
+            override fun update(delta: Float) {
+                super.update(delta)
+
+                /*
+                if (megaman.isBehaviorActive(BehaviorType.SWIMMING)) {
+                    canSpin = false
+                    return
+                }
+
+                if (megaman.body.isSensing(BodySense.FEET_ON_GROUND) ||
+                    megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)
+                ) canSpin = true
+                 */
+            }
+        }
     }
 
     fun hasWeapon(weapon: MegamanWeapon) = weaponHandlers.containsKey(weapon)
@@ -513,9 +544,11 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             MegamanWeapon.MOON_SCYTHES -> shootMoonScythes(stat)
             MegamanWeapon.PRECIOUS_GUARD -> shootPreciousGuard()
             MegamanWeapon.AXE_SWINGER -> MegaUtilMethods.delayRun(game, 0.1f) { throwAxe() }
+            MegamanWeapon.NEEDLE_SPIN -> spinNeedles()
         }
 
         handler.cooldown.reset()
+        handler.onShoot?.invoke()
 
         translateAmmo(weapon, -cost)
 
@@ -554,7 +587,6 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
                 weaponHandlers[MegamanWeapon.MEGA_BUSTER].addSpawned(stat, bullet)
             }
-
             MegaChargeStatus.HALF_CHARGED, MegaChargeStatus.FULLY_CHARGED -> {
                 megaman.requestToPlaySound(SoundAsset.MEGA_BUSTER_CHARGED_SHOT_SOUND, false)
                 megaman.stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
@@ -778,5 +810,43 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 ConstKeys.IMPULSE pairTo impulse
             )
         )
+    }
+
+    private fun spinNeedles() {
+        GameLogger.debug(TAG, "spinNeedles()")
+
+        for (i in 0 until MegamanValues.NEEDLE_ANGLES.size) {
+            val angle = MegamanValues.NEEDLE_ANGLES[i]
+            val xOffset = MegamanValues.NEEDLE_X_OFFSETS[i]
+            val position = megaman.body.getCenter().add(
+                xOffset * ConstVals.PPM, MegamanValues.NEEDLE_Y_OFFSET * ConstVals.PPM
+            )
+            val impulse = GameObjectPools.fetch(Vector2::class)
+                .set(0f, MegamanValues.NEEDLE_IMPULSE * ConstVals.PPM * megaman.movementScalar)
+                .rotateDeg(angle)
+            val gravity = MegamanValues.NEEDLE_GRAV * ConstVals.PPM * megaman.gravityScalar
+
+            val needle = MegaEntityFactory.fetch(Needle::class)!!
+            needle.spawn(
+                props(
+                    ConstKeys.OWNER pairTo megaman,
+                    ConstKeys.GRAVITY pairTo gravity,
+                    ConstKeys.IMPULSE pairTo impulse,
+                    ConstKeys.POSITION pairTo position,
+                )
+            )
+        }
+
+        val vel = megaman.body.physics.velocity
+
+        var impulse = MegamanValues.NEEDLE_SPIN_MEGAMAN_IMPULSE_Y * ConstVals.PPM * megaman.movementScalar
+        if (megaman.isBehaviorActive(BehaviorType.SWIMMING)) impulse *= MegamanValues.NEEDLE_SPIN_WATER_SCALAR
+
+        when (megaman.direction) {
+            Direction.UP -> vel.y = impulse
+            Direction.DOWN -> vel.y = -impulse
+            Direction.LEFT -> vel.x = -impulse
+            Direction.RIGHT -> vel.x = impulse
+        }
     }
 }

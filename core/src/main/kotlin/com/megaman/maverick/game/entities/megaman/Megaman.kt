@@ -64,7 +64,7 @@ import kotlin.math.abs
 
 class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntity, ISpritesEntity, IBehaviorsEntity,
     IPointsEntity, IAudioEntity, IAnimatedEntity, IScalableGravityEntity, IFreezableEntity, IGameStateListener,
-    IEventListener, IFaceable, IDirectional, IFocusable {
+    IEventListener, IFaceable, IDirectional, IFocusable, IDamager {
 
     companion object {
         const val TAG = "Megaman"
@@ -78,6 +78,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
                 LevelDefinition.INFERNO_MAN -> set.add(MegamanWeapon.INFERNAL_BARRAGE)
                 LevelDefinition.GLACIER_MAN -> set.add(MegamanWeapon.FRIGID_SHOT)
                 LevelDefinition.TIMBER_WOMAN -> set.add(MegamanWeapon.AXE_SWINGER)
+                LevelDefinition.DESERT_MAN -> set.add(MegamanWeapon.NEEDLE_SPIN)
                 else -> {}
             }
             return set
@@ -718,21 +719,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
             trailSpriteTimer.update(delta)
             if (trailSpriteTimer.isFinished()) {
-                val trailSpriteSpawned = when {
-                    isBehaviorActive(BehaviorType.GROUND_SLIDING) -> {
-                        var key = "groundslide"
-                        if (shooting) key += "_shoot"
-                        spawnTrailSprite(key)
-                    }
-
-                    isBehaviorActive(BehaviorType.AIR_DASHING) -> {
-                        var key = "airdash"
-                        if (shooting) key += "_shoot"
-                        spawnTrailSprite(key)
-                    }
-
-                    else -> false
-                }
+                val trailSpriteSpawned = tryToSpawnTrailSprite()
                 if (trailSpriteSpawned) trailSpriteTimer.reset()
             }
 
@@ -764,7 +751,29 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         }
     }
 
-    private fun spawnTrailSprite(animKey: String? = null): Boolean {
+    private fun tryToSpawnTrailSprite(): Boolean {
+        val animKey: String
+
+        when {
+            isBehaviorActive(BehaviorType.GROUND_SLIDING) -> {
+                var key = "groundslide"
+                if (shooting) {
+                    if (currentWeapon == MegamanWeapon.NEEDLE_SPIN) return false
+                    key += "_shoot"
+                }
+                animKey = key
+            }
+            isBehaviorActive(BehaviorType.AIR_DASHING) -> {
+                var key = "airdash"
+                if (shooting) {
+                    if (currentWeapon == MegamanWeapon.NEEDLE_SPIN) return false
+                    key += "_shoot"
+                }
+                animKey = key
+            }
+            else -> return false
+        }
+
         val trailSprite = MegaEntityFactory.fetch(MegamanTrailSpriteV2::class)!!
         return trailSprite.spawn(props(ConstKeys.KEY pairTo animKey))
     }
