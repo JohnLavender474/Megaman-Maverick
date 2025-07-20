@@ -1,0 +1,68 @@
+WeaponGet.png
+size: 774, 966
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+megaman/axe_swinger
+  rotate: false
+  xy: 1, 1
+  size: 256, 320
+  orig: 256, 320
+  offset: 0, 0
+  index: -1
+megaman/frigid_shot
+  rotate: false
+  xy: 259, 1
+  size: 256, 320
+  orig: 256, 320
+  offset: 0, 0
+  index: -1
+megaman/infernal_barrage
+  rotate: false
+  xy: 517, 1
+  size: 256, 320
+  orig: 256, 320
+  offset: 0, 0
+  index: -1
+megaman/mega_buster
+  rotate: false
+  xy: 1, 323
+  size: 256, 320
+  orig: 256, 320
+  offset: 0, 0
+  index: -1
+megaman/moon_scythes
+  rotate: false
+  xy: 259, 323
+  size: 256, 320
+  orig: 256, 320
+  offset: 0, 0
+  index: -1
+megaman/needle_spin
+  rotate: false
+  xy: 517, 323
+  size: 256, 320
+  orig: 256, 320
+  offset: 0, 0
+  index: -1
+megaman/precious_guard
+  rotate: false
+  xy: 1, 645
+  size: 256, 320
+  orig: 256, 320
+  offset: 0, 0
+  index: -1
+megaman/rush_jet
+  rotate: false
+  xy: 259, 645
+  size: 256, 320
+  orig: 256, 320
+  offset: 0, 0
+  index: -1
+overlay
+  rotate: false
+  xy: 517, 645
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1

@@ -8,6 +8,7 @@ const val MUSIC_ASSET_PREFIX = "music/"
 
 enum class MusicAsset(src: String, val loop: Boolean = true, val onCompletion: ((MegaAudioManager) -> Unit)? = null) :
     IAsset {
+    MM3_NEW_WEAPON_MUSIC("MM3_NewWeapon.mp3"),
     MM6_CAPCOM_LOGO_MUSIC("MM6_CapcomLogo.mp3"),
     MM3_GAME_OVER_MUSIC("MM3_GameOver.mp3"),
     MMX6_SIGMA_2_BATTLE_INTRO_MUSIC(

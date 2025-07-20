@@ -128,6 +128,10 @@ class MegaFontHandle : IComparableDrawable<Batch>, IPositional, IDrawableShape {
         fontHandle.textSupplier = supplier
     }
 
+    fun clearText() {
+        setText("")
+    }
+
     override fun getX() = fontHandle.getX()
 
     override fun getY() = fontHandle.getY()

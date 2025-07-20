@@ -1,38 +1,28 @@
-===== SESSION STARTED: 2025-07-13T13:09:54.153095805 =====
-13:09:55 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=MEGA_BUSTER, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@2d6aca33
-13:09:55 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=null
-13:09:56 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=NEEDLE_SPIN, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@4cbf4f53
-13:10:07 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=MEGA_BUSTER
-13:10:09 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=NEEDLE_SPIN, previous=MEGA_BUSTER
-13:10:10 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
-13:10:10 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
-13:10:10 | DEBUG | MegamanWeaponsHandler | spinNeedles()
-13:10:10 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=29
-13:10:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
-13:10:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
-13:10:11 | DEBUG | MegamanWeaponsHandler | spinNeedles()
-13:10:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=28
-13:10:12 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
-13:10:12 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
-13:10:12 | DEBUG | MegamanWeaponsHandler | spinNeedles()
-13:10:12 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=27
-13:10:12 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
-13:10:12 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
-13:10:12 | DEBUG | MegamanWeaponsHandler | spinNeedles()
-13:10:12 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=26
-13:10:16 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
-13:10:16 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
-13:10:16 | DEBUG | MegamanWeaponsHandler | spinNeedles()
-13:10:16 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=25
-13:10:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
-13:10:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
-13:10:18 | DEBUG | MegamanWeaponsHandler | spinNeedles()
-13:10:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=24
-13:10:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
-13:10:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
-13:10:20 | DEBUG | MegamanWeaponsHandler | spinNeedles()
-13:10:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=23
-13:10:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
-13:10:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
-13:10:21 | DEBUG | MegamanWeaponsHandler | spinNeedles()
-13:10:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=22
+===== SESSION STARTED: 2025-07-20T14:23:49.954304074 =====
+14:24:26 | DEBUG | GetWeaponScreen | init(): megaman animators: {mega_buster=com.mega.game.engine.animations.Animator@71978f46, mega_buster_reversed=com.mega.game.engine.animations.Animator@304d0259, frigid_shot=com.mega.game.engine.animations.Animator@1d23ff23, frigid_shot_reversed=com.mega.game.engine.animations.Animator@2133661d, infernal_barrage=com.mega.game.engine.animations.Animator@6c9320c2, infernal_barrage_reversed=com.mega.game.engine.animations.Animator@3414a8c3, moon_scythes=com.mega.game.engine.animations.Animator@36cc9385, moon_scythes_reversed=com.mega.game.engine.animations.Animator@cf518cf, precious_guard=com.mega.game.engine.animations.Animator@7915bca3, precious_guard_reversed=com.mega.game.engine.animations.Animator@68d651f2, axe_swinger=com.mega.game.engine.animations.Animator@3ad4a7d6, axe_swinger_reversed=com.mega.game.engine.animations.Animator@1e43e323, needle_spin=com.mega.game.engine.animations.Animator@4a67b4ec, needle_spin_reversed=com.mega.game.engine.animations.Animator@10643593, rush_jet=com.mega.game.engine.animations.Animator@f91da5e, rush_jet_reversed=com.mega.game.engine.animations.Animator@eca6a74}
+14:24:26 | DEBUG | GetWeaponScreen | show(): remove weapons attained prop from global game object
+14:24:26 | DEBUG | GetWeaponScreen | show(): eventQueue=[GetWeaponEvent(type=MEGAMAN_MOVE, props=Properties({
+})), GetWeaponEvent(type=MEGAMAN_TRANS, props=Properties({
+	[weapon=MEGA_BUSTER]
+})), GetWeaponEvent(type=WEAPON_EVENT, props=Properties({
+	[weapon=FRIGID_SHOT]
+})), GetWeaponEvent(type=END_EVENT, props=Properties({
+}))]
+14:24:26 | DEBUG | GetWeaponScreen | resetEventTimer()
+14:24:26 | DEBUG | GetWeaponScreen | onChangeEvent(): new=GetWeaponEvent(type=MEGAMAN_TRANS, props=Properties({
+	[weapon=MEGA_BUSTER]
+})), old=GetWeaponEvent(type=MEGAMAN_MOVE, props=Properties({
+}))
+14:24:26 | DEBUG | GetWeaponScreen | resetEventTimer()
+14:24:27 | DEBUG | GetWeaponScreen | onChangeEvent(): new=GetWeaponEvent(type=WEAPON_EVENT, props=Properties({
+	[weapon=FRIGID_SHOT]
+})), old=GetWeaponEvent(type=MEGAMAN_TRANS, props=Properties({
+	[weapon=MEGA_BUSTER]
+}))
+14:24:27 | DEBUG | GetWeaponScreen | resetEventTimer()
+14:24:31 | DEBUG | GetWeaponScreen | onChangeEvent(): new=GetWeaponEvent(type=END_EVENT, props=Properties({
+})), old=GetWeaponEvent(type=WEAPON_EVENT, props=Properties({
+	[weapon=FRIGID_SHOT]
+}))
+14:24:31 | DEBUG | GetWeaponScreen | resetEventTimer()
+14:24:33 | DEBUG | GetWeaponScreen | render(): end event: go to next screen

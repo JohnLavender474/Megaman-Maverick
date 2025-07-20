@@ -812,6 +812,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
     override fun onAddLevelDefeated(level: LevelDefinition) {
         val weaponsAttained = getWeaponsFromLevelDef(level)
+        game.putProperty(ConstKeys.WEAPONS_ATTAINED, weaponsAttained)
         weaponsAttained.forEach { weapon -> if (!weaponsHandler.hasWeapon(weapon)) weaponsHandler.putWeapon(weapon) }
     }
 

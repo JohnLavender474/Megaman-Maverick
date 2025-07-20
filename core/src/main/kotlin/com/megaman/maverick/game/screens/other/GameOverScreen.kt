@@ -87,8 +87,6 @@ class GameOverScreen(private val game: MegamanMaverickGame): BaseScreen(), Initi
     }
 
     override fun draw(drawer: Batch) {
-        super.draw(drawer)
-
         val batch = game.batch
         batch.projectionMatrix = game.getUiCamera().combined
         batch.begin()

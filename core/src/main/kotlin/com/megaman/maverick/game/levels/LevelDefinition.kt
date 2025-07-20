@@ -21,7 +21,7 @@ enum class LevelDefinition(
         type = LevelType.INTRO_LEVEL,
         tmxMapSource = "IntroStage_v3.tmx",
         music = MusicAsset.VINNYZ_INTRO_STAGE_MUSIC,
-        screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
+        screenOnCompletion = { game -> RobotMasterLevelOnCompletion.invoke(game) }
     ),
     TIMBER_WOMAN(
         type = LevelType.ROBOT_MASTER_LEVEL,
@@ -29,7 +29,7 @@ enum class LevelDefinition(
         mugshotRegion = "Timber Woman",
         tmxMapSource = "TimberWoman_16x14_v4.tmx",
         music = MusicAsset.MEGA_QUEST_2_LEVEL_1_MUSIC,
-        screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
+        screenOnCompletion = { game -> RobotMasterLevelOnCompletion.invoke(game) }
     ),
     MOON_MAN(
         type = LevelType.ROBOT_MASTER_LEVEL,
@@ -37,7 +37,7 @@ enum class LevelDefinition(
         mugshotRegion = "Moon Man",
         tmxMapSource = "MoonMan_16x14_v5.tmx",
         music = MusicAsset.MMX5_DARK_DIZZY_MUSIC,
-        screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
+        screenOnCompletion = { game -> RobotMasterLevelOnCompletion.invoke(game) }
     ),
     RODENT_MAN(
         type = LevelType.ROBOT_MASTER_LEVEL,
@@ -45,7 +45,7 @@ enum class LevelDefinition(
         mugshotRegion = "Rodent Man",
         tmxMapSource = "RodentMan_16x14.tmx",
         music = MusicAsset.FAMITARD_OC_2_MUSIC,
-        screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
+        screenOnCompletion = { game -> RobotMasterLevelOnCompletion.invoke(game) }
     ),
     DESERT_MAN(
         type = LevelType.ROBOT_MASTER_LEVEL,
@@ -53,7 +53,7 @@ enum class LevelDefinition(
         mugshotRegion = "Desert Man",
         tmxMapSource = "DesertMan_16x14_v4.tmx",
         music = MusicAsset.CODY_O_QUINN_BATTLE_MAN_MUSIC_INTRO,
-        screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
+        screenOnCompletion = { game -> RobotMasterLevelOnCompletion.invoke(game) }
     ),
     INFERNO_MAN(
         type = LevelType.ROBOT_MASTER_LEVEL,
@@ -61,7 +61,7 @@ enum class LevelDefinition(
         mugshotRegion = "Inferno Man",
         tmxMapSource = "InfernoMan_16x14_v2.tmx",
         music = MusicAsset.INFERNO_MAN_INTRO_MUSIC,
-        screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
+        screenOnCompletion = { game -> RobotMasterLevelOnCompletion.invoke(game) }
     ),
     REACTOR_MAN(
         type = LevelType.ROBOT_MASTER_LEVEL,
@@ -69,7 +69,7 @@ enum class LevelDefinition(
         mugshotRegion = "Reactor Man",
         tmxMapSource = "ReactorMan_v3.tmx",
         music = MusicAsset.FAMITARD_OC_1_MUSIC,
-        screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
+        screenOnCompletion = { game -> RobotMasterLevelOnCompletion.invoke(game) }
     ),
     GLACIER_MAN(
         type = LevelType.ROBOT_MASTER_LEVEL,
@@ -77,7 +77,7 @@ enum class LevelDefinition(
         mugshotRegion = "Glacier Man",
         tmxMapSource = "GlacierMan_16x14_v2.tmx",
         music = MusicAsset.VINNYZ_GLACIER_MUSIC,
-        screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
+        screenOnCompletion = { game -> RobotMasterLevelOnCompletion.invoke(game) }
     ),
     PRECIOUS_WOMAN(
         type = LevelType.ROBOT_MASTER_LEVEL,
@@ -85,7 +85,7 @@ enum class LevelDefinition(
         mugshotRegion = "Precious Woman",
         tmxMapSource = "PreciousWoman.tmx",
         music = MusicAsset.MMX2_CRYSTAL_SNAIL_MUSIC,
-        screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
+        screenOnCompletion = { game -> RobotMasterLevelOnCompletion.invoke(game) }
     ),
     WILY_STAGE_1(
         type = LevelType.WILY_LEVEL,

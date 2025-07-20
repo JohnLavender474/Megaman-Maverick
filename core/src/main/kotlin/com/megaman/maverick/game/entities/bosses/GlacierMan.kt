@@ -50,6 +50,7 @@ import com.megaman.maverick.game.entities.contracts.IFireEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
+import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.MagmaWave
 import com.megaman.maverick.game.entities.projectiles.Snowhead
@@ -163,6 +164,10 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         damageOverrides.put(Fireball::class, dmgNeg(4))
         damageOverrides.put(MagmaWave::class, dmgNeg(4))
         damageOverrides.put(MagmaFlame::class, dmgNeg(4))
+
+
+        // TODO: For temporary testing only
+        damageOverrides.put(Bullet::class, dmgNeg(ConstVals.MAX_HEALTH))
     }
 
     override fun onSpawn(spawnProps: Properties) {

@@ -48,6 +48,8 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val WEAPON = "weapon"
+    const val WEAPONS_ATTAINED = "weapons_attained"
     const val CUSTOM = "custom"
     const val ROCK = "rock"
     const val EXCEPTION = "exception"
