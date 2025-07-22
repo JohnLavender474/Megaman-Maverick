@@ -37,6 +37,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
 import java.util.*
 
+// TODO: Need to test with all robot masters   
 class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initializable {
 
     companion object {
