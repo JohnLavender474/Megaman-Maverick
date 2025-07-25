@@ -114,6 +114,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
 
                 setToNextWeapon()
             }
+
             else -> {}
         }
     })
@@ -167,9 +168,7 @@ private fun Megaman.runLeft(poller: IControllerPoller, delta: Float) {
 
     runTime += delta
 
-    val threshold =
-        (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_RUN_SPEED
-        else MegamanValues.RUN_SPEED) * ConstVals.PPM
+    val threshold = getMaxRunSpeed()
 
     val rawImpulse =
         if (body.isSensing(BodySense.FEET_ON_ICE)) MegamanValues.ICE_RUN_IMPULSE
@@ -177,6 +176,7 @@ private fun Megaman.runLeft(poller: IControllerPoller, delta: Float) {
 
     var impulse = rawImpulse * delta * movementScalar * ConstVals.PPM *
         (if (isBehaviorActive(BehaviorType.WALL_SLIDING)) -1f else 1f)
+
     impulse *= if (body.isSensing(BodySense.FEET_ON_GROUND)) when {
         runTime < MegamanValues.RUN_1_TIME -> MegamanValues.RUN_1_SCALAR
         runTime < MegamanValues.RUN_2_TIME -> MegamanValues.RUN_2_SCALAR
@@ -206,9 +206,7 @@ private fun Megaman.runRight(poller: IControllerPoller, delta: Float) {
 
     runTime += delta
 
-    val threshold =
-        (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_RUN_SPEED
-        else MegamanValues.RUN_SPEED) * ConstVals.PPM
+    val threshold = getMaxRunSpeed()
 
     val rawImpulse =
         if (body.isSensing(BodySense.FEET_ON_ICE)) MegamanValues.ICE_RUN_IMPULSE

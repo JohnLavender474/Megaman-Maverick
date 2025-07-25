@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="500" height="200" tilewidth="32" tileheight="32" infinite="0" nextlayerid="15" nextobjectid="713">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="500" height="200" tilewidth="32" tileheight="32" infinite="0" nextlayerid="15" nextobjectid="714">
  <tileset firstgid="1" name="Reactor_Man_No_Black" tilewidth="32" tileheight="32" tilecount="240" columns="16">
   <image source="../png/Reactor_Man_No_Black.png" width="512" height="480"/>
  </tileset>
@@ -1317,7 +1317,7 @@
   <object id="698" name="ToxicBarrelBot" x="6568" y="4752" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="13" name="temp">
-  <object id="710" name="0" x="11328" y="2688" width="32" height="32"/>
+  <object id="713" name="0" x="7488" y="4384" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="10" name="player">
   <object id="42" name="0" x="64" y="5792" width="32" height="32"/>

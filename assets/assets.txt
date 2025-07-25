@@ -3575,6 +3575,7 @@ music/MMX2_MorphMoth.mp3
 music/MMX2_IntroStage.mp3
 music/MMZ_EnemyHall.mp3
 music/Cody_O_Quinn_Battle_Man.mp3
+music/MM3_NewWeapon.wav
 music/vinnyz_wily_stage_select_v1.mp3
 music/MM7_SlashMan.mp3
 music/MMX5_StageSelect.mp3

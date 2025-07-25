@@ -22,6 +22,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
@@ -290,4 +291,11 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
     return BodyComponentCreator.create(this, body)
+}
+
+fun Megaman.getMaxRunSpeed(): Float {
+    var threshold = MegamanValues.RUN_MAX_SPEED * ConstVals.PPM
+    if (body.isSensing(BodySense.IN_WATER)) threshold *= MegamanValues.WATER_RUN_MAX_SPEED_SCALAR
+    else if (game.getCurrentLevel() == LevelDefinition.MOON_MAN) threshold *= MegamanValues.MOON_RUN_MAX_SPEED_SCALAR
+    return threshold
 }

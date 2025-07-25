@@ -37,7 +37,6 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
 import java.util.*
 
-// TODO: Need to test with all robot masters   
 class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initializable {
 
     companion object {
@@ -47,7 +46,7 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
         private val MEGAMAN_START = Vector2(ConstVals.VIEW_WIDTH / 2f, -5f)
         private val MEGAMAN_END = Vector2(4f, ConstVals.VIEW_HEIGHT / 2f)
 
-        private val EVENT_DURS = gdxArrayOf(0.5f, 0.4f, 2f, 0f)
+        private val EVENT_DURS = gdxArrayOf(0.5f, 0.4f, 2f, 0.5f)
 
         private val ANIM_DEFS = ObjectMap<String, AnimationDef>().also {
             MegamanWeapon.entries.forEach { weapon ->

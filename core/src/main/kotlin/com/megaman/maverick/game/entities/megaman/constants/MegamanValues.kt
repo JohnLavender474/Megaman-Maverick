@@ -20,10 +20,11 @@ object MegamanValues {
     const val RUN_2_TIME = 0.25f
     const val RUN_3_SCALAR = 1f
 
-    const val RUN_SPEED = 6f
+    const val RUN_MAX_SPEED = 6f
     const val RUN_IMPULSE = 40f
     const val ICE_RUN_IMPULSE = 15f
-    const val WATER_RUN_SPEED = 3f
+    const val WATER_RUN_MAX_SPEED_SCALAR = 0.5f
+    const val MOON_RUN_MAX_SPEED_SCALAR = 0.75f
 
     const val WATER_GRAVITY_SCALAR = 0.5f
     const val SWIM_VEL_Y = 18f

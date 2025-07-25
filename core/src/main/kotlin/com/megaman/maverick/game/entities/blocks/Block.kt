@@ -81,7 +81,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
                 val cullable = getStandardEventCullingLogic(
                     this,
-                    objectSetOf<Any>(EventType.END_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS),
+                    objectSetOf(EventType.END_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS),
                     predicate@{ event ->
                         val nextRoom = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)?.name
                         return@predicate nextRoom != room

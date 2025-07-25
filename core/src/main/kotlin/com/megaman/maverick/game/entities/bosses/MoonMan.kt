@@ -92,10 +92,9 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
         private const val INIT_DUR = 0.3f
         private const val STAND_DUR = 0.5f
-        private const val SPAWN_ASTEROID_MIN_DELAY = 0.5f
-        // private const val SPAWN_ASTEROID_MAX_DELAY = 1f
-        private const val SPAWN_ASTEROID_MAX_DELAY = 0.5f
-        private const val THROW_ASTEROID_DELAY = 0.5f
+        private const val SPAWN_ASTEROID_MIN_DELAY = 1f
+        private const val SPAWN_ASTEROID_MAX_DELAY = 1f
+        private const val THROW_ASTEROID_DELAY = 0.75f
         private const val ASTEROIDS_END_DUR = 1f
 
         private const val GRAVITY_CHANGE_BEGIN_DUR = 0.3f
@@ -107,18 +106,15 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         private const val GRAVITY_CHANGE_CHANGE_DELTA = 0.25f
 
         private const val ASTEROIDS_TO_SPAWN = 3
-        // private const val ASTEROID_MIN_SPEED = 6f
-        private const val ASTEROID_MIN_SPEED = 10f
-        private const val ASTEROID_MAX_SPEED = 10f
+        private const val ASTEROID_MIN_SPEED = 8f
+        private const val ASTEROID_MAX_SPEED = 8f
 
-        // private const val SHARP_STAR_MIN_SPEED = 8f
         private const val SHARP_STAR_MIN_SPEED = 12f
         private const val SHARP_STAR_MAX_SPEED = 12f
         private const val SHARP_STAR_MOVEMENT_SCALAR = 0.75f
 
-        // private const val MOON_SCYTHE_MIN_SPEED = 8f
-        private const val MOON_SCYTHE_MIN_SPEED = 12f
-        private const val MOON_SCYTHE_MAX_SPEED = 12f
+        private const val MOON_SCYTHE_MIN_SPEED = 10f
+        private const val MOON_SCYTHE_MAX_SPEED = 10f
         private const val MOON_SCYTHE_MOVEMENT_SCALAR = 0.5f
         private val MOON_SCYTHE_DEG_OFFSETS = gdxArrayOf(10f, 40f, 70f)
 

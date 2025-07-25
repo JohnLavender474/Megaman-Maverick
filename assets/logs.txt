@@ -1,28 +1,519 @@
-===== SESSION STARTED: 2025-07-20T14:23:49.954304074 =====
-14:24:26 | DEBUG | GetWeaponScreen | init(): megaman animators: {mega_buster=com.mega.game.engine.animations.Animator@71978f46, mega_buster_reversed=com.mega.game.engine.animations.Animator@304d0259, frigid_shot=com.mega.game.engine.animations.Animator@1d23ff23, frigid_shot_reversed=com.mega.game.engine.animations.Animator@2133661d, infernal_barrage=com.mega.game.engine.animations.Animator@6c9320c2, infernal_barrage_reversed=com.mega.game.engine.animations.Animator@3414a8c3, moon_scythes=com.mega.game.engine.animations.Animator@36cc9385, moon_scythes_reversed=com.mega.game.engine.animations.Animator@cf518cf, precious_guard=com.mega.game.engine.animations.Animator@7915bca3, precious_guard_reversed=com.mega.game.engine.animations.Animator@68d651f2, axe_swinger=com.mega.game.engine.animations.Animator@3ad4a7d6, axe_swinger_reversed=com.mega.game.engine.animations.Animator@1e43e323, needle_spin=com.mega.game.engine.animations.Animator@4a67b4ec, needle_spin_reversed=com.mega.game.engine.animations.Animator@10643593, rush_jet=com.mega.game.engine.animations.Animator@f91da5e, rush_jet_reversed=com.mega.game.engine.animations.Animator@eca6a74}
-14:24:26 | DEBUG | GetWeaponScreen | show(): remove weapons attained prop from global game object
-14:24:26 | DEBUG | GetWeaponScreen | show(): eventQueue=[GetWeaponEvent(type=MEGAMAN_MOVE, props=Properties({
-})), GetWeaponEvent(type=MEGAMAN_TRANS, props=Properties({
-	[weapon=MEGA_BUSTER]
-})), GetWeaponEvent(type=WEAPON_EVENT, props=Properties({
-	[weapon=FRIGID_SHOT]
-})), GetWeaponEvent(type=END_EVENT, props=Properties({
-}))]
-14:24:26 | DEBUG | GetWeaponScreen | resetEventTimer()
-14:24:26 | DEBUG | GetWeaponScreen | onChangeEvent(): new=GetWeaponEvent(type=MEGAMAN_TRANS, props=Properties({
-	[weapon=MEGA_BUSTER]
-})), old=GetWeaponEvent(type=MEGAMAN_MOVE, props=Properties({
-}))
-14:24:26 | DEBUG | GetWeaponScreen | resetEventTimer()
-14:24:27 | DEBUG | GetWeaponScreen | onChangeEvent(): new=GetWeaponEvent(type=WEAPON_EVENT, props=Properties({
-	[weapon=FRIGID_SHOT]
-})), old=GetWeaponEvent(type=MEGAMAN_TRANS, props=Properties({
-	[weapon=MEGA_BUSTER]
-}))
-14:24:27 | DEBUG | GetWeaponScreen | resetEventTimer()
-14:24:31 | DEBUG | GetWeaponScreen | onChangeEvent(): new=GetWeaponEvent(type=END_EVENT, props=Properties({
-})), old=GetWeaponEvent(type=WEAPON_EVENT, props=Properties({
-	[weapon=FRIGID_SHOT]
-}))
-14:24:31 | DEBUG | GetWeaponScreen | resetEventTimer()
-14:24:33 | DEBUG | GetWeaponScreen | render(): end event: go to next screen
+===== SESSION STARTED: 2025-07-24T20:53:41.154917622 =====
+20:55:42 | DEBUG | TubeBeamerV2 | init()
+20:55:42 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=right]
+	[bounds=[6528.0,2528.0,32.0,32.0]]
+	[spawn_room=room8]
+	[x=6528.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@59dc36d4]
+	[id=238]
+	[name=TubeBeamerV2]
+	[y=2528.0]
+	[width=32.0]
+})
+20:55:42 | DEBUG | TubeBeamerV2 | init()
+20:55:42 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=right]
+	[bounds=[6496.0,2656.0,32.0,32.0]]
+	[spawn_room=room8]
+	[x=6496.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@7fe82967]
+	[id=239]
+	[name=TubeBeamerV2]
+	[y=2656.0]
+	[width=32.0]
+})
+20:55:55 | DEBUG | TubeBeamerV2 | init()
+20:55:55 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[6624.0,3328.0,32.0,32.0]]
+	[spawn_room=room9]
+	[x=6624.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@715b886f]
+	[id=303]
+	[name=TubeBeamerV2]
+	[y=3328.0]
+	[width=32.0]
+})
+20:55:55 | DEBUG | TubeBeamerV2 | init()
+20:55:55 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[6496.0,3232.0,32.0,32.0]]
+	[spawn_room=room9]
+	[x=6496.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@315f09ef]
+	[id=304]
+	[name=TubeBeamerV2]
+	[y=3232.0]
+	[width=32.0]
+})
+20:55:55 | DEBUG | TubeBeamerV2 | onDestroy()
+20:55:55 | DEBUG | TubeBeamerV2 | onDestroy()
+20:56:03 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=right]
+	[bounds=[7712.0,3488.0,32.0,32.0]]
+	[spawn_room=room10]
+	[x=7712.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@14a049f9]
+	[id=318]
+	[name=TubeBeamerV2]
+	[y=3488.0]
+	[width=32.0]
+})
+20:56:03 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[7392.0,3648.0,32.0,32.0]]
+	[spawn_room=room10]
+	[x=7392.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@52ff99cd]
+	[id=320]
+	[name=TubeBeamerV2]
+	[y=3648.0]
+	[width=32.0]
+})
+20:56:03 | DEBUG | TubeBeamerV2 | init()
+20:56:03 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=left]
+	[bounds=[7904.0,3488.0,32.0,32.0]]
+	[spawn_room=room10]
+	[x=7904.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@3fba233d]
+	[id=321]
+	[name=TubeBeamerV2]
+	[y=3488.0]
+	[width=32.0]
+})
+20:56:03 | DEBUG | TubeBeamerV2 | init()
+20:56:03 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=left]
+	[bounds=[8032.0,3616.0,32.0,32.0]]
+	[spawn_room=room10]
+	[x=8032.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@4098dd77]
+	[id=322]
+	[name=TubeBeamerV2]
+	[y=3616.0]
+	[width=32.0]
+})
+20:56:03 | DEBUG | TubeBeamerV2 | init()
+20:56:03 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[7712.0,3712.0,32.0,32.0]]
+	[spawn_room=room10]
+	[x=7712.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@6fbb4061]
+	[id=348]
+	[name=TubeBeamerV2]
+	[y=3712.0]
+	[width=32.0]
+})
+20:56:03 | DEBUG | TubeBeamerV2 | onDestroy()
+20:56:03 | DEBUG | TubeBeamerV2 | onDestroy()
+20:56:23 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=right]
+	[bounds=[7936.0,3136.0,32.0,32.0]]
+	[spawn_room=room11]
+	[x=7936.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@5e8507f1]
+	[id=545]
+	[name=TubeBeamerV2]
+	[y=3136.0]
+	[width=32.0]
+})
+20:56:23 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=left]
+	[bounds=[8192.0,3040.0,32.0,32.0]]
+	[spawn_room=room11]
+	[x=8192.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@40fa8766]
+	[id=546]
+	[name=TubeBeamerV2]
+	[y=3040.0]
+	[width=32.0]
+})
+20:56:23 | DEBUG | TubeBeamerV2 | init()
+20:56:23 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=left]
+	[bounds=[8032.0,2880.0,32.0,32.0]]
+	[spawn_room=room11]
+	[x=8032.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@5a545b0f]
+	[id=547]
+	[name=TubeBeamerV2]
+	[y=2880.0]
+	[width=32.0]
+})
+20:56:23 | DEBUG | TubeBeamerV2 | init()
+20:56:23 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[8064.0,2816.0,32.0,32.0]]
+	[spawn_room=room11]
+	[x=8064.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@5ad1904f]
+	[id=548]
+	[name=TubeBeamerV2]
+	[y=2816.0]
+	[width=32.0]
+})
+20:56:23 | DEBUG | TubeBeamerV2 | init()
+20:56:23 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=left]
+	[bounds=[8160.0,2720.0,32.0,32.0]]
+	[spawn_room=room11]
+	[x=8160.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1de0641b]
+	[id=549]
+	[name=TubeBeamerV2]
+	[y=2720.0]
+	[width=32.0]
+})
+20:56:23 | DEBUG | TubeBeamerV2 | onDestroy()
+20:56:23 | DEBUG | TubeBeamerV2 | onDestroy()
+20:56:23 | DEBUG | TubeBeamerV2 | onDestroy()
+20:56:23 | DEBUG | TubeBeamerV2 | onDestroy()
+20:56:23 | DEBUG | TubeBeamerV2 | onDestroy()
+20:56:40 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[8864.0,2848.0,32.0,32.0]]
+	[spawn_room=room12]
+	[x=8864.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@3b9ac754]
+	[id=552]
+	[name=TubeBeamerV2]
+	[y=2848.0]
+	[width=32.0]
+})
+20:56:40 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[8672.0,2880.0,32.0,32.0]]
+	[spawn_room=room12]
+	[x=8672.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@587c5c1]
+	[id=553]
+	[name=TubeBeamerV2]
+	[y=2880.0]
+	[width=32.0]
+})
+20:56:40 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[8640.0,2880.0,32.0,32.0]]
+	[spawn_room=room12]
+	[x=8640.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@587c5c1]
+	[id=554]
+	[name=TubeBeamerV2]
+	[y=2880.0]
+	[width=32.0]
+})
+20:56:40 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=left]
+	[bounds=[8960.0,2720.0,32.0,32.0]]
+	[spawn_room=room12]
+	[x=8960.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@4a50c746]
+	[id=555]
+	[name=TubeBeamerV2]
+	[y=2720.0]
+	[width=32.0]
+})
+20:56:40 | DEBUG | TubeBeamerV2 | onDestroy()
+20:56:40 | DEBUG | TubeBeamerV2 | onDestroy()
+20:56:40 | DEBUG | TubeBeamerV2 | onDestroy()
+20:56:40 | DEBUG | TubeBeamerV2 | onDestroy()
+20:56:40 | DEBUG | TubeBeamerV2 | onDestroy()
+20:56:52 | DEBUG | TubeBeamerV2 | onDestroy()
+20:56:52 | DEBUG | TubeBeamerV2 | onDestroy()
+20:56:52 | DEBUG | TubeBeamerV2 | onDestroy()
+20:56:52 | DEBUG | TubeBeamerV2 | onDestroy()
+20:57:11 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=left]
+	[bounds=[10848.0,3232.0,32.0,32.0]]
+	[spawn_room=room13]
+	[x=10848.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@60a01cb]
+	[id=590]
+	[name=TubeBeamerV2]
+	[y=3232.0]
+	[width=32.0]
+})
+20:57:11 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=right]
+	[bounds=[10624.0,3456.0,32.0,32.0]]
+	[spawn_room=room13]
+	[x=10624.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@d49e8c6]
+	[id=669]
+	[name=TubeBeamerV2]
+	[y=3456.0]
+	[width=32.0]
+})
+20:57:11 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=left]
+	[bounds=[10848.0,3712.0,32.0,32.0]]
+	[spawn_room=room13]
+	[x=10848.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@485deee1]
+	[id=671]
+	[name=TubeBeamerV2]
+	[y=3712.0]
+	[width=32.0]
+})
+20:57:31 | DEBUG | TubeBeamerV2 | onDestroy()
+20:57:31 | DEBUG | TubeBeamerV2 | onDestroy()
+20:57:31 | DEBUG | TubeBeamerV2 | onDestroy()
+20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[11552.0,4000.0,32.0,32.0]]
+	[spawn_room=boss_room]
+	[x=11552.0]
+	[height=32.0]
+	[delay=1.0]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
+	[id=680]
+	[name=Beamer]
+	[y=4000.0]
+	[width=32.0]
+})
+20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[11584.0,4000.0,32.0,32.0]]
+	[spawn_room=boss_room]
+	[x=11584.0]
+	[height=32.0]
+	[delay=1.0]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
+	[id=681]
+	[name=Beamer]
+	[y=4000.0]
+	[width=32.0]
+})
+20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[11616.0,4000.0,32.0,32.0]]
+	[spawn_room=boss_room]
+	[x=11616.0]
+	[height=32.0]
+	[delay=1.0]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
+	[id=683]
+	[name=Beamer]
+	[y=4000.0]
+	[width=32.0]
+})
+20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[11648.0,4000.0,32.0,32.0]]
+	[spawn_room=boss_room]
+	[x=11648.0]
+	[height=32.0]
+	[delay=1.0]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
+	[id=684]
+	[name=Beamer]
+	[y=4000.0]
+	[width=32.0]
+})
+20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[11680.0,4000.0,32.0,32.0]]
+	[spawn_room=boss_room]
+	[x=11680.0]
+	[height=32.0]
+	[delay=1.0]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
+	[id=685]
+	[name=Beamer]
+	[y=4000.0]
+	[width=32.0]
+})
+20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[11712.0,4000.0,32.0,32.0]]
+	[spawn_room=boss_room]
+	[x=11712.0]
+	[height=32.0]
+	[delay=1.0]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
+	[id=686]
+	[name=Beamer]
+	[y=4000.0]
+	[width=32.0]
+})
+20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[11744.0,4000.0,32.0,32.0]]
+	[spawn_room=boss_room]
+	[x=11744.0]
+	[height=32.0]
+	[delay=1.0]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
+	[id=687]
+	[name=Beamer]
+	[y=4000.0]
+	[width=32.0]
+})
+20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[11776.0,4000.0,32.0,32.0]]
+	[spawn_room=boss_room]
+	[x=11776.0]
+	[height=32.0]
+	[delay=1.0]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
+	[id=688]
+	[name=Beamer]
+	[y=4000.0]
+	[width=32.0]
+})
+20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[11808.0,4000.0,32.0,32.0]]
+	[spawn_room=boss_room]
+	[x=11808.0]
+	[height=32.0]
+	[delay=1.0]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
+	[id=689]
+	[name=Beamer]
+	[y=4000.0]
+	[width=32.0]
+})
+20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[11840.0,4000.0,32.0,32.0]]
+	[spawn_room=boss_room]
+	[x=11840.0]
+	[height=32.0]
+	[delay=1.0]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
+	[id=690]
+	[name=Beamer]
+	[y=4000.0]
+	[width=32.0]
+})
+20:57:36 | DEBUG | TubeBeamerV2 | init()
+20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[11872.0,4000.0,32.0,32.0]]
+	[spawn_room=boss_room]
+	[x=11872.0]
+	[height=32.0]
+	[delay=1.0]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
+	[id=691]
+	[name=Beamer]
+	[y=4000.0]
+	[width=32.0]
+})
+20:57:36 | DEBUG | TubeBeamerV2 | init()
+20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[11904.0,4000.0,32.0,32.0]]
+	[spawn_room=boss_room]
+	[x=11904.0]
+	[height=32.0]
+	[delay=1.0]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
+	[id=692]
+	[name=Beamer]
+	[y=4000.0]
+	[width=32.0]
+})
+20:57:36 | DEBUG | TubeBeamerV2 | init()
+20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[11936.0,4000.0,32.0,32.0]]
+	[spawn_room=boss_room]
+	[x=11936.0]
+	[height=32.0]
+	[delay=1.0]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
+	[id=693]
+	[name=Beamer]
+	[y=4000.0]
+	[width=32.0]
+})
+20:57:36 | DEBUG | TubeBeamerV2 | init()
+20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
+	[direction=down]
+	[bounds=[11968.0,4000.0,32.0,32.0]]
+	[spawn_room=boss_room]
+	[x=11968.0]
+	[height=32.0]
+	[delay=1.0]
+	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
+	[id=682]
+	[name=Beamer]
+	[y=4000.0]
+	[width=32.0]
+})
+20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
+20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
