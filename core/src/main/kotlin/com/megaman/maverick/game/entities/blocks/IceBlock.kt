@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.blocks
 
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.world.body.Fixture
@@ -16,13 +17,17 @@ open class IceBlock(game: MegamanMaverickGame) : Block(game) {
     private lateinit var ice: Fixture
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         super.init()
+
         ice = Fixture(body, FixtureType.ICE, GameRectangle())
         ice.setEntity(this)
+
         body.addFixture(ice)
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
         (ice.rawShape as GameRectangle).set(body)
     }

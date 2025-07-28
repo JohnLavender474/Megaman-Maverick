@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.blocks
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.objects.Properties
@@ -20,10 +21,14 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.contracts.IFireEntity
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.IceShard
-import com.megaman.maverick.game.entities.projectiles.*
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.MoonScythe
+import com.megaman.maverick.game.entities.projectiles.TeardropBlast
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
 
@@ -41,6 +46,7 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
     private var hit = false
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region1 == null || region2 == null || region3 == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             region1 = atlas.findRegion("$TAG/1")
@@ -53,12 +59,18 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
         hit = false
         index = 1
     }
 
     override fun hitByFeet(processState: ProcessState, feetFixture: IFixture) {
+        if (feetFixture.getEntity() is IFireEntity) {
+            explodeAndDie()
+            return
+        }
+
         if (processState == ProcessState.BEGIN) hit()
     }
 
@@ -70,12 +82,13 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
         val projectile = projectileFixture.getEntity() as IProjectileEntity
         when (projectile) {
             is Bullet, is TeardropBlast -> hit()
-            is Fireball, is MoonScythe -> explodeAndDie()
+            is MoonScythe, is IFireEntity -> explodeAndDie()
             is ChargedShot -> if (projectile.fullyCharged) explodeAndDie() else hit(2)
         }
     }
 
     private fun hit(increment: Int = 1) {
+        GameLogger.debug(TAG, "hit(): increment=$increment")
         index += increment
         when {
             index >= BREAK_INDEX -> explodeAndDie()
@@ -84,6 +97,8 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
     }
 
     private fun explodeAndDie() {
+        GameLogger.debug(TAG, "explodeAndDie()")
+
         for (i in 0 until 5) {
             val shard = MegaEntityFactory.fetch(IceShard::class)!!
             shard.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.INDEX pairTo i))
@@ -95,8 +110,8 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.setRegion(
                 when (index) {
@@ -106,7 +121,7 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
                 }
             )
         }
-        return spritesComponent
+        return component
     }
 }
 

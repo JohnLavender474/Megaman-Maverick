@@ -35,15 +35,16 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IOwnable
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.*
+import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.projectiles.Axe
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.utils.moveTowards
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.extensions.getRandomPositionInBounds
@@ -52,7 +53,7 @@ import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
 class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable,
-    IOwnable<CannoHoney>, ICullable {
+    IOwnable<CannoHoney>, ICullable, IFreezableEntity {
 
     companion object {
         const val TAG = "Beezee"
@@ -72,9 +73,13 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         private const val SPLIT_PARENT_BOUNDS_ROWS = 2
         private const val SPLIT_PARENT_BOUNDS_COLS = 2
 
+        private const val FROZEN_GRAVITY = -0.25f
+        private const val FROZEN_GROUND_GRAV = -0.01f
+
         private val DAMAGERS = gdxArrayOf(Axe::class)
 
         private val animDefs = orderedMapOf(
+            "frozen" pairTo AnimationDef(),
             "hover" pairTo AnimationDef(3, 1, 0.1f, true),
             "attack" pairTo AnimationDef(3, 1, 0.05f, true)
         )
@@ -85,6 +90,13 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
 
     override var owner: CannoHoney? = null
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = frozenHandler.isFrozen()
+        set(value) {
+            frozenHandler.setFrozen(value)
+        }
+    private val frozenHandler = FreezableEntityHandler(1f)
 
     private lateinit var state: BeezeeState
 
@@ -127,8 +139,9 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         cullTimer.reset()
 
         facing = UtilMethods.getRandom(Facing.LEFT, Facing.RIGHT)
-
         owner = spawnProps.get(ConstKeys.OWNER, CannoHoney::class)!!
+
+        frozenHandler.setFrozen(false)
     }
 
     override fun onDestroy() {
@@ -143,7 +156,9 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
     override fun takeDamageFrom(damager: IDamager): Boolean {
         GameLogger.debug(TAG, "takeDamageFrom(): hashCode=${hashCode()}, damager=$damager")
         val damaged = super.takeDamageFrom(damager)
-        if (damaged) setToAttack()
+        if (damaged) {
+            if (damager is IFreezerEntity) frozen = true else setToAttack()
+        }
         return damaged
     }
 
@@ -158,6 +173,13 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
             else cullTimer.reset()
 
             owner?.let { hoverArea.setCenter(it.body.getCenter()) }
+
+            frozenHandler.update(delta)
+            if (frozen) return@update
+            if (frozenHandler.isJustFinished()) {
+                IceShard.spawn5(body.getCenter())
+                setToAttack()
+            }
 
             when (state) {
                 BeezeeState.HOVER -> {
@@ -219,11 +241,27 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.5f * ConstVals.PPM)
+        body.physics.applyFrictionX = false
+        body.physics.applyFrictionY = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
+        val feetFixture =
+            Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
+        body.addFixture(feetFixture)
+        feetFixture.drawingColor = Color.GREEN
+        debugShapes.add { feetFixture }
+
         body.preProcess.put(ConstKeys.DEFAULT) {
+            if (frozen) {
+                val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) FROZEN_GROUND_GRAV else FROZEN_GRAVITY
+                body.physics.gravity.y = gravity * ConstVals.PPM
+
+                body.physics.velocity.x = 0f
+            } else body.physics.gravity.y = 0f
+
             body.drawingColor = if (owner == null) Color.RED else Color.BLUE
         }
 
@@ -252,7 +290,7 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { state.name.lowercase() }
+                .setKeySupplier { if (frozen) "frozen" else state.name.lowercase() }
                 .applyToAnimations { animations ->
                     AnimationUtils.loadAnimationDefs(animDefs, animations, regions)
                 }

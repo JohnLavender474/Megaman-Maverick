@@ -184,19 +184,19 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
 
         for (weapon in weapons) {
             if (remainingAmmo <= 0) {
-                GameLogger.debug(TAG, "addWeaponEnergy(): remaining ammo depleted")
+                GameLogger.debug(TAG, "addWeaponEnergy(): loop: remaining ammo depleted")
                 break
             }
 
             if (!megaman.hasWeapon(weapon)) {
-                GameLogger.debug(TAG, "addWeaponEnergy(): megaman does not have weapon $weapon")
+                GameLogger.debug(TAG, "addWeaponEnergy(): loop: megaman does not have weapon $weapon")
                 continue
             }
 
             remainingAmmo = addWeaponEnergyTo(weapon, remainingAmmo)
 
             GameLogger.debug(
-                TAG, "addWeaponEnergy(): added ammo to weapon $weapon: remainingAmmo=$remainingAmmo"
+                TAG, "addWeaponEnergy(): loop: added ammo to weapon $weapon: remainingAmmo=$remainingAmmo"
             )
         }
 
@@ -248,7 +248,6 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
                 healthToAddNow = value
                 addToTanks = false
             }
-
             else -> {
                 GameLogger.debug(TAG, "addHealth(): value greater than what Megaman needs, try to add to health tanks")
 

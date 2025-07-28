@@ -47,19 +47,18 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IFireEntity
-import com.megaman.maverick.game.entities.contracts.IFireableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.*
+import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.MegaUtilMethods
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
 class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFireableEntity,
-    IFaceable {
+    IFaceable, IFreezableEntity {
 
     companion object {
         const val TAG = "LumberJoe"
@@ -93,6 +92,7 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         private const val SHIELDED_REGION_SUFFIX = "_shielded"
 
         private val animDefs = orderedMapOf(
+            "frozen" pairTo AnimationDef(),
             "stand" pairTo AnimationDef(2, 1, gdxArrayOf(0.5f, 0.15f), true),
             "cooldown" pairTo AnimationDef(2, 1, gdxArrayOf(0.25f, 0.25f), true),
             "throw" pairTo AnimationDef(3, 1, gdxArrayOf(0.125f, 0.25f, 0.125f), false),
@@ -106,11 +106,19 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     private enum class LumberJoeState { STAND, JUMP, THROW, COOLDOWN, BURN }
 
     override lateinit var facing: Facing
+
     override var burning: Boolean
         get() = !stateTimers[LumberJoeState.BURN].isFinished()
         set(value) {
             if (value) stateTimers[LumberJoeState.BURN].reset() else stateTimers[LumberJoeState.BURN].setToEnd()
         }
+
+    override var frozen: Boolean
+        get() = !frozenTimer.isFinished()
+        set(value) {
+            if (value) frozenTimer.reset() else frozenTimer.setToEnd()
+        }
+    private val frozenTimer = Timer(0.5f)
 
     private lateinit var stateMachine: StateMachine<LumberJoeState>
     private val currentState: LumberJoeState
@@ -183,6 +191,9 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         axesThrown = 0
 
         hasShield = true
+
+        frozen = false
+        burning = false
     }
 
     override fun onDestroy() {
@@ -195,9 +206,11 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
         val damaged = super.takeDamageFrom(damager)
 
-        if (damaged && damager is IFireEntity) {
-            burning = true
-            requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
+        if (damaged) {
+            if (damager is IFireEntity) {
+                burning = true
+                requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
+            } else if (damager is IFreezerEntity) frozen = true
         }
 
         return damaged
@@ -206,14 +219,21 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            frozenTimer.update(delta)
+            if (frozen) {
+                body.physics.velocity.x = 0f
+                return@add
+            }
+            if (frozenTimer.isJustFinished()) IceShard.spawn5(body.getCenter())
+
             jumpSensor.setBottomCenterToPoint(body.getPositionPoint(Position.TOP_CENTER))
 
             when {
+                frozen -> return@add
                 currentState != LumberJoeState.BURN && isBurning() -> {
                     GameLogger.debug(TAG, "update(): start burning")
                     stateMachine.next()
                 }
-
                 currentState.equalsAny(LumberJoeState.STAND, LumberJoeState.COOLDOWN) -> FacingUtils.setFacingOf(this)
             }
 
@@ -222,7 +242,6 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
                     GameLogger.debug(TAG, "update(): should stop jumping")
                     stateMachine.next()
                 }
-
                 else -> {
                     val timer = stateTimers[currentState]
                     timer.update(delta)
@@ -312,6 +331,8 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         .animator(
             AnimatorBuilder()
                 .setKeySupplier keySupplier@{
+                    if (frozen) return@keySupplier if (hasShield) "frozen_shielded" else "frozen"
+
                     if (currentState == LumberJoeState.BURN) return@keySupplier when {
                         body.isSensing(BodySense.FEET_ON_GROUND) ->
                             if (hasShield) "burn${SHIELDED_REGION_SUFFIX}" else "burn"

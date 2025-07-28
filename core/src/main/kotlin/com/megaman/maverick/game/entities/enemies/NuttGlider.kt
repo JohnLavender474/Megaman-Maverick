@@ -5,14 +5,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
-import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
@@ -21,6 +19,7 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -39,14 +38,19 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.projectiles.Nutt
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
+import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
+class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFaceable,
+    IFreezableEntity {
 
     companion object {
         const val TAG = "NuttGlider"
@@ -78,10 +82,18 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         private const val NUTT_DROP_OFFSET_X = 0.75f
         private const val NUTT_DROP_OFFSET_Y = -0.25f
 
-        private val ANIM_DEFS = objectMapOf<NuttGliderState, AnimationDef>(
-            NuttGliderState.GLIDE pairTo AnimationDef(rows = 2, duration = 0.1f),
-            NuttGliderState.JUMP pairTo AnimationDef(rows = 2, duration = 0.1f, loop = false),
-            NuttGliderState.STAND pairTo AnimationDef()
+        private const val FROZEN_GRAVITY = -0.25f
+        private const val FROZEN_GROUND_GRAV = -0.01f
+
+        private val ANIM_DEFS = objectMapOf<String, AnimationDef>(
+            "glide" pairTo AnimationDef(rows = 2, duration = 0.1f),
+            "glide_nutt" pairTo AnimationDef(rows = 2, duration = 0.1f),
+            "jump" pairTo AnimationDef(rows = 2, duration = 0.1f, loop = false),
+            "jump_nutt" pairTo AnimationDef(rows = 2, duration = 0.1f, loop = false),
+            "stand" pairTo AnimationDef(),
+            "stand_nutt" pairTo AnimationDef(),
+            "frozen" pairTo AnimationDef(),
+            "frozen_nutt" pairTo AnimationDef()
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -89,6 +101,13 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     private enum class NuttGliderState { GLIDE, JUMP, STAND }
 
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = frozenHandler.isFrozen()
+        set(value) {
+            frozenHandler.setFrozen(value)
+        }
+    private val frozenHandler = FreezableEntityHandler(1f)
 
     private val timers = objectMapOf(
         NuttGliderState.STAND pairTo Timer(STAND_DUR),
@@ -103,12 +122,7 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            NuttGliderState.entries.forEach { state ->
-                gdxArrayOf(NO_NUTT_SUFFIX, NUTT_SUFFIX).forEach { suffix ->
-                    val key = "${state.name.lowercase()}$suffix"
-                    regions.put(key, atlas.findRegion("$TAG/$key"))
-                }
-            }
+            AnimationUtils.loadRegions(TAG, atlas, ANIM_DEFS.keys(), regions)
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -128,31 +142,43 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         }
 
         FacingUtils.setFacingOf(this)
-
         hasNutt = spawnProps.getOrDefault(HAS_NUTT, DEFAULT_HAS_NUTT, Boolean::class)
-
         timers.values().forEach { it.reset() }
+        frozenHandler.setFrozen(false)
+    }
+
+    override fun takeDamageFrom(damager: IDamager): Boolean {
+        val damaged = super.takeDamageFrom(damager)
+        if (damaged && frozenHandler.canBeFrozenBy(damager)) frozenHandler.setFrozen(true)
+        return damaged
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
-        updatablesComponent.add { delta ->
-            FacingUtils.setFacingOf(this)
+        updatablesComponent.add update@{ delta ->
+            if (!frozen) FacingUtils.setFacingOf(this)
 
-            body.physics.gravityOn = state != NuttGliderState.GLIDE
+            body.physics.gravityOn = frozen || state != NuttGliderState.GLIDE
+
+            frozenHandler.update(delta)
+            if (frozen) return@update
+            if (frozenHandler.isJustFinished()) {
+                IceShard.spawn5(body.getCenter())
+                state = NuttGliderState.STAND
+            }
 
             when (state) {
                 NuttGliderState.GLIDE -> {
                     if (body.isSensing(BodySense.FEET_ON_GROUND)) {
                         state = NuttGliderState.STAND
-                        return@add
+                        return@update
                     }
 
                     if ((isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
                         (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
                     ) {
                         state = NuttGliderState.STAND
-                        return@add
+                        return@update
                     }
 
                     if (hasNutt && shouldDropNutt()) {
@@ -187,7 +213,7 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
                     val timer = timers[state]
                     timer.update(delta)
 
-                    if (timer.isFinished()) {
+                    if (timer.isFinished() && body.isSensing(BodySense.FEET_ON_GROUND)) {
                         jump()
                         timer.reset()
                         state = NuttGliderState.JUMP
@@ -253,11 +279,12 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         val outFixtures = Array<IFixture>()
         body.preProcess.put(ConstKeys.DEFAULT) {
             val bodySize = GameObjectPools.fetch(Vector2::class)
+
             val feetWidth: Float
             val headWidth: Float
 
-            when (state) {
-                NuttGliderState.GLIDE -> {
+            when {
+                frozen || state == NuttGliderState.GLIDE -> {
                     bodySize.set(1.75f, 0.75f)
                     feetWidth = 1.5f
                     headWidth = 0.75f
@@ -268,7 +295,6 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
                     headWidth = 0.25f
                 }
             }
-
             body.setSize(bodySize.scl(ConstVals.PPM.toFloat()))
 
             (feetFixture.rawShape as GameRectangle).setWidth(feetWidth * ConstVals.PPM)
@@ -285,8 +311,13 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
             }
             outFixtures.clear()
 
-            val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
+            val gravity = when {
+                frozen -> if (body.isSensing(BodySense.FEET_ON_GROUND)) FROZEN_GROUND_GRAV else FROZEN_GRAVITY
+                else -> if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
+            }
             body.physics.gravity.y = gravity * ConstVals.PPM
+
+            if (frozen) body.physics.velocity.x = 0f
 
             if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) && body.physics.velocity.y > 0f)
                 body.physics.velocity.y = 0f
@@ -305,11 +336,15 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1)))
         .updatable { _, sprite ->
-            val position = Position.BOTTOM_CENTER
             sprite.setSize(3f * ConstVals.PPM)
+
+            val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
-            if (state == NuttGliderState.GLIDE) sprite.translateY(-0.5f * ConstVals.PPM)
+
+            if (frozen || state == NuttGliderState.GLIDE) sprite.translateY(-0.5f * ConstVals.PPM)
+
             sprite.setFlip(isFacing(Facing.RIGHT), false)
+
             sprite.hidden = damageBlink
         }
         .build()
@@ -319,28 +354,23 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         .animator(
             AnimatorBuilder()
                 .setKeySupplier {
-                    val prefix = when (state) {
+                    val prefix = if (frozen) "frozen" else when (state) {
                         NuttGliderState.STAND -> when {
-                            body.isSensing(BodySense.FEET_ON_GROUND) -> NuttGliderState.STAND.name.lowercase()
-                            else -> NuttGliderState.JUMP.name.lowercase()
+                            body.isSensing(BodySense.FEET_ON_GROUND) -> "stand"
+                            else -> "jump"
                         }
                         else -> state.name.lowercase()
                     }
+
                     val suffix = if (hasNutt) NUTT_SUFFIX else NO_NUTT_SUFFIX
-                    "${prefix}${suffix}"
+
+                    return@setKeySupplier "${prefix}${suffix}"
+                }
+                .setOnChangeKeyListener { _, oldKey, nextKey ->
+                    GameLogger.debug(TAG, "onChangeKey(): oldKey=$oldKey, nextKey=$nextKey")
                 }
                 .applyToAnimations { animations ->
-                    NuttGliderState.entries.forEach { state ->
-                        gdxArrayOf(NO_NUTT_SUFFIX, NUTT_SUFFIX).forEach { suffix ->
-                            val (rows, columns, durations, loop) = ANIM_DEFS[state]
-
-                            val key = "${state.name.lowercase()}$suffix"
-                            val region = regions[key]
-
-                            val animation = Animation(region, rows, columns, durations, loop)
-                            animations.put(key, animation)
-                        }
-                    }
+                    AnimationUtils.loadAnimationDefs(ANIM_DEFS, animations, regions)
                 }
                 .build()
         )

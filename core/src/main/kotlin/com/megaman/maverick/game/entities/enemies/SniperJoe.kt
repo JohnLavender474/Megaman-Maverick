@@ -221,7 +221,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     override fun takeDamageFrom(damager: IDamager): Boolean {
         GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
         val damaged = super.takeDamageFrom(damager)
-        if (damaged && type == SniperJoeType.FIRE) when {
+        if (damaged) when {
             damager is IFreezerEntity && !frozen -> frozen = true
             damager is IFireEntity && frozen -> frozen = false
         }
@@ -397,18 +397,18 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         .initialState(SniperJoeState.IDLE)
         .onChangeState(this::onChangeState)
         // idle
-        .transition(SniperJoeState.IDLE, SniperJoeState.FROZEN) { type == SniperJoeType.FIRE && frozen }
+        .transition(SniperJoeState.IDLE, SniperJoeState.FROZEN) { frozen }
         .transition(SniperJoeState.IDLE, SniperJoeState.JUMP) { shouldStartJumping() }
         .transition(SniperJoeState.IDLE, SniperJoeState.TURN) { shouldStartTurning() }
         .transition(SniperJoeState.IDLE, SniperJoeState.SHOOT) { true }
         // turn
-        .transition(SniperJoeState.TURN, SniperJoeState.FROZEN) { type == SniperJoeType.FIRE && frozen }
+        .transition(SniperJoeState.TURN, SniperJoeState.FROZEN) { frozen }
         .transition(SniperJoeState.TURN, SniperJoeState.IDLE) { true }
         // jump
-        .transition(SniperJoeState.JUMP, SniperJoeState.FROZEN) { type == SniperJoeType.FIRE && frozen }
+        .transition(SniperJoeState.JUMP, SniperJoeState.FROZEN) { frozen }
         .transition(SniperJoeState.JUMP, SniperJoeState.IDLE) { shouldEndJumping() }
         // shoot
-        .transition(SniperJoeState.SHOOT, SniperJoeState.FROZEN) { type == SniperJoeType.FIRE && frozen }
+        .transition(SniperJoeState.SHOOT, SniperJoeState.FROZEN) { frozen }
         .transition(SniperJoeState.SHOOT, SniperJoeState.JUMP) { shouldStartJumping() }
         .transition(SniperJoeState.SHOOT, SniperJoeState.TURN) { shouldStartTurning() }
         .transition(SniperJoeState.SHOOT, SniperJoeState.IDLE) { true }

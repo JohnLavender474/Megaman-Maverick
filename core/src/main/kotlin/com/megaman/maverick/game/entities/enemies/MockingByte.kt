@@ -23,6 +23,7 @@ import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -46,8 +47,11 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
+import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.MockingByteNest
+import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.projectiles.MockingByteEgg
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -56,7 +60,7 @@ import com.megaman.maverick.game.utils.extensions.midPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable, IFreezableEntity {
 
     companion object {
         const val TAG = "MockingByte"
@@ -106,6 +110,13 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
     enum class MockingByteState { SLEEP, AWAKEN, LEAVE_NEST, RETURN_TO_NEST, ENTER_NEST, RISE, HOVER, DIVE, FALL_ASLEEP }
 
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = !frozenTimer.isFinished()
+        set(value) {
+            if (value) frozenTimer.reset() else frozenTimer.setToEnd()
+        }
+    private val frozenTimer = Timer(1f)
 
     private lateinit var stateMachine: StateMachine<MockingByteState>
     private val stateTimers = orderedMapOf(
@@ -181,6 +192,8 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         facing = Facing.LEFT
 
         hoverTimes = 0
+
+        frozen = false
     }
 
     override fun onDestroy() {
@@ -194,9 +207,22 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         }
     }
 
+    override fun takeDamageFrom(damager: IDamager): Boolean {
+        val damaged = super.takeDamageFrom(damager)
+        if (damaged && damager is IFreezerEntity) frozen = true
+        return damaged
+    }
+
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add update@{ delta ->
+            frozenTimer.update(delta)
+            if (frozen) {
+                body.physics.velocity.set(0f, -10f * ConstVals.PPM)
+                return@update
+            }
+            if (frozenTimer.isJustFinished()) IceShard.spawn5(body.getCenter())
+
             val stateTimer = stateTimers[currentState]
             if (stateTimer != null) {
                 stateTimer.update(delta)
@@ -422,8 +448,9 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         .animator(
             AnimatorBuilder()
                 .setKeySupplier {
-                    when (currentState) {
-                        MockingByteState.DIVE -> if (!diveDelay.isFinished()) "dive1" else "dive2"
+                    when {
+                        frozen -> "frozen"
+                        currentState == MockingByteState.DIVE -> if (!diveDelay.isFinished()) "dive1" else "dive2"
                         else -> currentState.name.lowercase()
                     }
                 }

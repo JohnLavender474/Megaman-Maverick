@@ -232,6 +232,8 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                         }
                         game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
 
+                        game.removeProperty(ConstKeys.WEAPONS_ATTAINED)
+
                         return true
                     } else {
                         GameLogger.error(TAG, "Failed to load saved state")

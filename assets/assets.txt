@@ -2026,6 +2026,7 @@ sprites/frames/Platforms1/FlipperPlatform/Right.png
 sprites/frames/Platforms1/FlipperPlatform/FlipToLeft.png
 sprites/frames/Platforms1/FlipperPlatform/LeftDelay.png
 sprites/frames/Enemies1/CanonHopper/stand.png
+sprites/frames/Enemies1/CanonHopper/frozen.png
 sprites/frames/Enemies1/CanonHopper/hop.png
 sprites/frames/Enemies1/PicketJoe/throw.png
 sprites/frames/Enemies1/PicketJoe/stand.png
@@ -2096,6 +2097,7 @@ sprites/frames/Enemies1/MockingByte/return_to_nest.png
 sprites/frames/Enemies1/MockingByte/hover.png
 sprites/frames/Enemies1/MockingByte/enter_nest.png
 sprites/frames/Enemies1/MockingByte/rise.png
+sprites/frames/Enemies1/MockingByte/frozen.png
 sprites/frames/Enemies1/MockingByte/fall_asleep.png
 sprites/frames/Enemies1/MockingByte/awaken.png
 sprites/frames/Enemies1/MockingByte/sleep.png
@@ -2105,6 +2107,7 @@ sprites/frames/Enemies1/MockingByte/leave_nest.png
 sprites/frames/Enemies1/IceFox/stand.png
 sprites/frames/Enemies1/IceFox/shoot.png
 sprites/frames/Enemies1/SniperJoe/snow/jump.png
+sprites/frames/Enemies1/SniperJoe/snow/frozen.png
 sprites/frames/Enemies1/SniperJoe/snow/turn.png
 sprites/frames/Enemies1/SniperJoe/snow/shoot.png
 sprites/frames/Enemies1/SniperJoe/snow/idle.png
@@ -2114,6 +2117,7 @@ sprites/frames/Enemies1/SniperJoe/fire/turn.png
 sprites/frames/Enemies1/SniperJoe/fire/shoot.png
 sprites/frames/Enemies1/SniperJoe/fire/idle.png
 sprites/frames/Enemies1/SniperJoe/orange/jump.png
+sprites/frames/Enemies1/SniperJoe/orange/frozen.png
 sprites/frames/Enemies1/SniperJoe/orange/turn.png
 sprites/frames/Enemies1/SniperJoe/orange/shoot.png
 sprites/frames/Enemies1/SniperJoe/orange/idle.png
@@ -2153,6 +2157,8 @@ sprites/frames/Enemies1/NuttGlider/jump_nutt.png
 sprites/frames/Enemies1/NuttGlider/stand.png
 sprites/frames/Enemies1/NuttGlider/jump.png
 sprites/frames/Enemies1/NuttGlider/stand_nutt.png
+sprites/frames/Enemies1/NuttGlider/frozen.png
+sprites/frames/Enemies1/NuttGlider/frozen_nutt.png
 sprites/frames/Enemies1/NuttGlider/glide.png
 sprites/frames/Enemies1/Starkner/blackhole_disappear.png
 sprites/frames/Enemies1/Starkner/blackhole_appear.png
@@ -2200,6 +2206,7 @@ sprites/frames/Enemies1/BabyPenguin.png
 sprites/frames/Enemies1/SuctionRoller.png
 sprites/frames/Enemies1/Beezee/attack.png
 sprites/frames/Enemies1/Beezee/hover.png
+sprites/frames/Enemies1/Beezee/frozen.png
 sprites/frames/Enemies1/SnowSeal/Stand.png
 sprites/frames/Enemies1/SnowSeal/FormSnowball.png
 sprites/frames/Enemies1/SnowSeal/SlapTail.png
@@ -2313,6 +2320,8 @@ sprites/frames/Enemies1/LumberJoe/jump.png
 sprites/frames/Enemies1/LumberJoe/cooldown_shielded.png
 sprites/frames/Enemies1/LumberJoe/stand_shielded.png
 sprites/frames/Enemies1/LumberJoe/burn.png
+sprites/frames/Enemies1/LumberJoe/frozen.png
+sprites/frames/Enemies1/LumberJoe/frozen_shielded.png
 sprites/frames/Enemies1/LumberJoe/burn_jump.png
 sprites/frames/Enemies1/ShieldGuardBot/attack.png
 sprites/frames/Enemies1/ShieldGuardBot/frozen.png

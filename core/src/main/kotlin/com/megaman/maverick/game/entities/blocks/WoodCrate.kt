@@ -46,10 +46,7 @@ import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.decorations.WoodCratePiece
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.hazards.Saw
-import com.megaman.maverick.game.entities.projectiles.Bullet
-import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.entities.projectiles.MagmaWave
-import com.megaman.maverick.game.entities.projectiles.MoonScythe
+import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -92,7 +89,8 @@ class WoodCrate(game: MegamanMaverickGame) : Block(game), IFireableEntity, ISpri
                 if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
             },
             MoonScythe::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-            Saw::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
+            Saw::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            Axe::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
         )
 
         private val BURN_TAGS = objectSetOf(MagmaFlame.TAG, MagmaWave.TAG)
@@ -274,7 +272,7 @@ class WoodCrate(game: MegamanMaverickGame) : Block(game), IFireableEntity, ISpri
                 flame as IBodyEntity
 
                 val flameFeet = flame.body.fixtures.get(FixtureType.FEET)
-                if (flameFeet.any { it.getShape().overlaps(body.getBounds()) }) {
+                if (flameFeet != null && flameFeet.any { it.getShape().overlaps(body.getBounds()) }) {
                     burning = true
                     break
                 }

@@ -19,6 +19,7 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -37,13 +38,17 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
+import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class CanonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFaceable {
+class CanonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFaceable, IFreezableEntity {
 
     companion object {
         const val TAG = "CanonHopper"
@@ -66,6 +71,13 @@ class CanonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
     override lateinit var facing: Facing
 
+    override var frozen: Boolean
+        get() = !frozenTimer.isFinished()
+        set(value) {
+            if (value) frozenTimer.reset() else frozenTimer.setToEnd()
+        }
+    private val frozenTimer = Timer(1f)
+
     private val loop = Loop(CanonHopperState.entries.toGdxArray())
     private val currentState: CanonHopperState
         get() = loop.getCurrent()
@@ -80,6 +92,7 @@ class CanonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
                 val key = state.name.lowercase()
                 regions.put(key, atlas.findRegion("$TAG/$key"))
             }
+            regions.put("frozen", atlas.findRegion("$TAG/frozen"))
         }
         super.init()
     }
@@ -93,11 +106,19 @@ class CanonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
         loop.reset()
         standTimer.reset()
+
+        frozen = false
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+    }
+
+    override fun takeDamageFrom(damager: IDamager): Boolean {
+        val damaged = super.takeDamageFrom(damager)
+        if (damaged && damager is IFreezerEntity) frozen = true
+        return damaged
     }
 
     private fun shoot() {
@@ -123,6 +144,13 @@ class CanonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            frozenTimer.update(delta)
+            if (frozen) {
+                body.physics.velocity.x = 0f
+                return@add
+            }
+            if (frozenTimer.isJustFinished()) IceShard.spawn5(body.getCenter())
+
             when (currentState) {
                 CanonHopperState.STAND -> {
                     facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
@@ -135,7 +163,6 @@ class CanonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
                         standTimer.reset()
                     }
                 }
-
                 CanonHopperState.HOP ->
                     if (body.isSensing(BodySense.FEET_ON_GROUND) && body.physics.velocity.y <= 0f) loop.next()
             }
@@ -188,15 +215,15 @@ class CanonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
         .updatable { _, sprite ->
-            val region = regions[currentState.name.lowercase()]
+            val region = if (frozen) regions["frozen"] else regions[currentState.name.lowercase()]
             sprite.setRegion(region)
 
             sprite.hidden = damageBlink
 
             sprite.setFlip(isFacing(Facing.LEFT), false)
 
-            val position = when (currentState) {
-                CanonHopperState.STAND -> Position.BOTTOM_CENTER
+            val position = when {
+                frozen || currentState == CanonHopperState.STAND -> Position.BOTTOM_CENTER
                 else -> Position.CENTER
             }
             sprite.setPosition(body.getPositionPoint(position), position)

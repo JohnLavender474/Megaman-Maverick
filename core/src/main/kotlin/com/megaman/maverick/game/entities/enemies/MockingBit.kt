@@ -25,8 +25,10 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.world.body.*
 
 class MockingBit(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
@@ -44,6 +46,7 @@ class MockingBit(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
+        damageOverrides.put(SmallIceCube::class, dmgNeg(ConstVals.MAX_HEALTH))
     }
 
     override fun onSpawn(spawnProps: Properties) {
