@@ -32,6 +32,7 @@ import com.mega.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
@@ -41,7 +42,10 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGdxRectangle
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
-import com.megaman.maverick.game.world.body.*
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodyFixtureDef
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
 
 class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
@@ -53,7 +57,10 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
     private var rotation = 0f
 
+    private var bounces = 0
+
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
@@ -61,7 +68,6 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(MagmaMeteor.Companion.TAG, "onSpawn(): spawnProps=$spawnProps")
-
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -71,10 +77,17 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         body.physics.velocity.set(trajectory)
 
         rotation = spawnProps.get(ConstKeys.ROTATION, Float::class)!!
+
+        bounces = 0
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
         explodeAndDie(thisShape, otherShape)
+
+    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        explodeAndDie(thisShape, otherShape)
+        requestToPlaySound(SoundAsset.DINK_SOUND, false)
+    }
 
     override fun explodeAndDie(vararg params: Any?) {
         GameLogger.debug(TAG, "explodeAndDie(): params=$params")
@@ -122,13 +135,13 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(ConstVals.PPM.toFloat())
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
             sprite.rotation = START_ROTATION + rotation
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

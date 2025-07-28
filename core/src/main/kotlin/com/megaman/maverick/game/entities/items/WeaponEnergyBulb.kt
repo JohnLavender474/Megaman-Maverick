@@ -31,6 +31,7 @@ class WeaponEnergyBulb(game: MegamanMaverickGame): AbstractEnergyItem(game) {
     }
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (!regions.containsKey(getTag())) {
             val map = ObjectMap<String, TextureRegion>()
 

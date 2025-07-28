@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.audio.AudioComponent
@@ -24,6 +25,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAudioEntity
+import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.BodyComponent
@@ -39,12 +41,14 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.decorations.WoodCratePiece
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.hazards.Saw
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.MagmaWave
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -91,6 +95,8 @@ class WoodCrate(game: MegamanMaverickGame) : Block(game), IFireableEntity, ISpri
             Saw::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
         )
 
+        private val BURN_TAGS = objectSetOf(MagmaFlame.TAG, MagmaWave.TAG)
+
         private val animDefs = orderedMapOf(
             "idle" pairTo AnimationDef(),
             "burning" pairTo AnimationDef(3, 1, 0.05f, true)
@@ -111,6 +117,9 @@ class WoodCrate(game: MegamanMaverickGame) : Block(game), IFireableEntity, ISpri
     private val spawnFlameDelay = Timer(SPAWN_FLAME_DELAY)
 
     private val iTimer = Timer(I_DUR)
+
+    private val reusableEntitySet = ObjectSet<MegaGameEntity>()
+
     override fun init() {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
@@ -239,9 +248,10 @@ class WoodCrate(game: MegamanMaverickGame) : Block(game), IFireableEntity, ISpri
     override fun hitByProjectile(projectileFixture: IFixture) {
         val projectile = projectileFixture.getEntity() as IProjectileEntity
         GameLogger.debug(TAG, "hitByProjectile(): projectile=$projectile, projectileFixture=$projectileFixture")
+
         if (projectile.owner == this) return
 
-        if (projectile is IFireEntity) {
+        if (projectile is IFireEntity && !burning) {
             GameLogger.debug(TAG, "hitByProjectile(): set to burning")
             burning = true
         } else if (projectile.owner == megaman) {
@@ -258,6 +268,19 @@ class WoodCrate(game: MegamanMaverickGame) : Block(game), IFireableEntity, ISpri
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        if (!burning) {
+            val flames = MegaGameEntities.getOfTags(reusableEntitySet, BURN_TAGS)
+            for (flame in flames) {
+                flame as IBodyEntity
+
+                val flameFeet = flame.body.fixtures.get(FixtureType.FEET)
+                if (flameFeet.any { it.getShape().overlaps(body.getBounds()) }) {
+                    burning = true
+                    break
+                }
+            }
+        }
+
         if (body.isSensing(BodySense.IN_WATER)) {
             if (body.physics.velocity.y > FLOAT_UP_MAX_VEL_Y * ConstVals.PPM)
                 body.physics.velocity.y = FLOAT_UP_MAX_VEL_Y * ConstVals.PPM

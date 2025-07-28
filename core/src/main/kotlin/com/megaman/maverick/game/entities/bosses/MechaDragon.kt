@@ -60,12 +60,16 @@ import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
+import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.SpitFireball
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
-import com.megaman.maverick.game.world.body.*
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getPositionPoint
 
 class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IFreezableEntity, IAnimatedEntity, IFaceable {
 
@@ -186,6 +190,7 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IFreezableEnt
         stateMachine = buildStateMachine()
         damageOverrides.put(ChargedShotExplosion::class, dmgNeg(1))
         damageOverrides.put(SmallIceCube::class, dmgNeg(4))
+        damageOverrides.put(Axe::class, dmgNeg(3))
     }
 
     override fun onSpawn(spawnProps: Properties) {

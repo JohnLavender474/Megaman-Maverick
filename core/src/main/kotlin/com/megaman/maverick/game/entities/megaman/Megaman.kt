@@ -172,8 +172,11 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         get() = chargeStatus == MegaChargeStatus.HALF_CHARGED
     val fullyCharged: Boolean
         get() = canChargeCurrentWeapon && chargingTimer.isFinished()
-    val shooting: Boolean
+    var shooting: Boolean
         get() = !shootAnimTimer.isFinished()
+        set(value) {
+            if (value) shootAnimTimer.reset() else shootAnimTimer.setToEnd()
+        }
     val ammo: Int
         get() = when (currentWeapon) {
             MegamanWeapon.MEGA_BUSTER -> Int.MAX_VALUE
@@ -889,9 +892,10 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         return health != temp
     }
 
-    fun translateAmmo(ammo: Int) {
-        val weapon = megaman.currentWeapon
-        megaman.weaponsHandler.translateAmmo(weapon, ammo)
+    fun translateAmmo(ammo: Int, weapon: MegamanWeapon = megaman.currentWeapon): Int {
+        val remaining = weaponsHandler.translateAmmo(weapon, ammo)
+        GameLogger.debug(TAG, "translateAmmo(): ammo=$ammo, remaining=$remaining")
+        return remaining
     }
 
     fun isAtMinLives() = lives.isMin()

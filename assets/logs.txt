@@ -1,519 +1,147 @@
-===== SESSION STARTED: 2025-07-24T20:53:41.154917622 =====
-20:55:42 | DEBUG | TubeBeamerV2 | init()
-20:55:42 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=right]
-	[bounds=[6528.0,2528.0,32.0,32.0]]
-	[spawn_room=room8]
-	[x=6528.0]
-	[height=32.0]
-	[spawn_type=spawn_room]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@59dc36d4]
-	[id=238]
-	[name=TubeBeamerV2]
-	[y=2528.0]
-	[width=32.0]
-})
-20:55:42 | DEBUG | TubeBeamerV2 | init()
-20:55:42 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=right]
-	[bounds=[6496.0,2656.0,32.0,32.0]]
-	[spawn_room=room8]
-	[x=6496.0]
-	[height=32.0]
-	[spawn_type=spawn_room]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@7fe82967]
-	[id=239]
-	[name=TubeBeamerV2]
-	[y=2656.0]
-	[width=32.0]
-})
-20:55:55 | DEBUG | TubeBeamerV2 | init()
-20:55:55 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=down]
-	[bounds=[6624.0,3328.0,32.0,32.0]]
-	[spawn_room=room9]
-	[x=6624.0]
-	[height=32.0]
-	[spawn_type=spawn_room]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@715b886f]
-	[id=303]
-	[name=TubeBeamerV2]
-	[y=3328.0]
-	[width=32.0]
-})
-20:55:55 | DEBUG | TubeBeamerV2 | init()
-20:55:55 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=down]
-	[bounds=[6496.0,3232.0,32.0,32.0]]
-	[spawn_room=room9]
-	[x=6496.0]
-	[height=32.0]
-	[spawn_type=spawn_room]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@315f09ef]
-	[id=304]
-	[name=TubeBeamerV2]
-	[y=3232.0]
-	[width=32.0]
-})
-20:55:55 | DEBUG | TubeBeamerV2 | onDestroy()
-20:55:55 | DEBUG | TubeBeamerV2 | onDestroy()
-20:56:03 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=right]
-	[bounds=[7712.0,3488.0,32.0,32.0]]
-	[spawn_room=room10]
-	[x=7712.0]
-	[height=32.0]
-	[spawn_type=spawn_room]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@14a049f9]
-	[id=318]
-	[name=TubeBeamerV2]
-	[y=3488.0]
-	[width=32.0]
-})
-20:56:03 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=down]
-	[bounds=[7392.0,3648.0,32.0,32.0]]
-	[spawn_room=room10]
-	[x=7392.0]
-	[height=32.0]
-	[spawn_type=spawn_room]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@52ff99cd]
-	[id=320]
-	[name=TubeBeamerV2]
-	[y=3648.0]
-	[width=32.0]
-})
-20:56:03 | DEBUG | TubeBeamerV2 | init()
-20:56:03 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=left]
-	[bounds=[7904.0,3488.0,32.0,32.0]]
-	[spawn_room=room10]
-	[x=7904.0]
-	[height=32.0]
-	[spawn_type=spawn_room]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@3fba233d]
-	[id=321]
-	[name=TubeBeamerV2]
-	[y=3488.0]
-	[width=32.0]
-})
-20:56:03 | DEBUG | TubeBeamerV2 | init()
-20:56:03 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=left]
-	[bounds=[8032.0,3616.0,32.0,32.0]]
-	[spawn_room=room10]
-	[x=8032.0]
-	[height=32.0]
-	[spawn_type=spawn_room]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@4098dd77]
-	[id=322]
-	[name=TubeBeamerV2]
-	[y=3616.0]
-	[width=32.0]
-})
-20:56:03 | DEBUG | TubeBeamerV2 | init()
-20:56:03 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=down]
-	[bounds=[7712.0,3712.0,32.0,32.0]]
-	[spawn_room=room10]
-	[x=7712.0]
-	[height=32.0]
-	[spawn_type=spawn_room]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@6fbb4061]
-	[id=348]
-	[name=TubeBeamerV2]
-	[y=3712.0]
-	[width=32.0]
-})
-20:56:03 | DEBUG | TubeBeamerV2 | onDestroy()
-20:56:03 | DEBUG | TubeBeamerV2 | onDestroy()
-20:56:23 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=right]
-	[bounds=[7936.0,3136.0,32.0,32.0]]
-	[spawn_room=room11]
-	[x=7936.0]
-	[height=32.0]
-	[spawn_type=spawn_room]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@5e8507f1]
-	[id=545]
-	[name=TubeBeamerV2]
-	[y=3136.0]
-	[width=32.0]
-})
-20:56:23 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=left]
-	[bounds=[8192.0,3040.0,32.0,32.0]]
-	[spawn_room=room11]
-	[x=8192.0]
-	[height=32.0]
-	[spawn_type=spawn_room]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@40fa8766]
-	[id=546]
-	[name=TubeBeamerV2]
-	[y=3040.0]
-	[width=32.0]
-})
-20:56:23 | DEBUG | TubeBeamerV2 | init()
-20:56:23 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=left]
-	[bounds=[8032.0,2880.0,32.0,32.0]]
-	[spawn_room=room11]
-	[x=8032.0]
-	[height=32.0]
-	[spawn_type=spawn_room]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@5a545b0f]
-	[id=547]
-	[name=TubeBeamerV2]
-	[y=2880.0]
-	[width=32.0]
-})
-20:56:23 | DEBUG | TubeBeamerV2 | init()
-20:56:23 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=down]
-	[bounds=[8064.0,2816.0,32.0,32.0]]
-	[spawn_room=room11]
-	[x=8064.0]
-	[height=32.0]
-	[spawn_type=spawn_room]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@5ad1904f]
-	[id=548]
-	[name=TubeBeamerV2]
-	[y=2816.0]
-	[width=32.0]
-})
-20:56:23 | DEBUG | TubeBeamerV2 | init()
-20:56:23 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=left]
-	[bounds=[8160.0,2720.0,32.0,32.0]]
-	[spawn_room=room11]
-	[x=8160.0]
-	[height=32.0]
-	[spawn_type=spawn_room]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1de0641b]
-	[id=549]
-	[name=TubeBeamerV2]
-	[y=2720.0]
-	[width=32.0]
-})
-20:56:23 | DEBUG | TubeBeamerV2 | onDestroy()
-20:56:23 | DEBUG | TubeBeamerV2 | onDestroy()
-20:56:23 | DEBUG | TubeBeamerV2 | onDestroy()
-20:56:23 | DEBUG | TubeBeamerV2 | onDestroy()
-20:56:23 | DEBUG | TubeBeamerV2 | onDestroy()
-20:56:40 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=down]
-	[bounds=[8864.0,2848.0,32.0,32.0]]
-	[spawn_room=room12]
-	[x=8864.0]
-	[height=32.0]
-	[spawn_type=spawn_room]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@3b9ac754]
-	[id=552]
-	[name=TubeBeamerV2]
-	[y=2848.0]
-	[width=32.0]
-})
-20:56:40 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=down]
-	[bounds=[8672.0,2880.0,32.0,32.0]]
-	[spawn_room=room12]
-	[x=8672.0]
-	[height=32.0]
-	[spawn_type=spawn_room]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@587c5c1]
-	[id=553]
-	[name=TubeBeamerV2]
-	[y=2880.0]
-	[width=32.0]
-})
-20:56:40 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=down]
-	[bounds=[8640.0,2880.0,32.0,32.0]]
-	[spawn_room=room12]
-	[x=8640.0]
-	[height=32.0]
-	[spawn_type=spawn_room]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@587c5c1]
-	[id=554]
-	[name=TubeBeamerV2]
-	[y=2880.0]
-	[width=32.0]
-})
-20:56:40 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=left]
-	[bounds=[8960.0,2720.0,32.0,32.0]]
-	[spawn_room=room12]
-	[x=8960.0]
-	[height=32.0]
-	[spawn_type=spawn_room]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@4a50c746]
-	[id=555]
-	[name=TubeBeamerV2]
-	[y=2720.0]
-	[width=32.0]
-})
-20:56:40 | DEBUG | TubeBeamerV2 | onDestroy()
-20:56:40 | DEBUG | TubeBeamerV2 | onDestroy()
-20:56:40 | DEBUG | TubeBeamerV2 | onDestroy()
-20:56:40 | DEBUG | TubeBeamerV2 | onDestroy()
-20:56:40 | DEBUG | TubeBeamerV2 | onDestroy()
-20:56:52 | DEBUG | TubeBeamerV2 | onDestroy()
-20:56:52 | DEBUG | TubeBeamerV2 | onDestroy()
-20:56:52 | DEBUG | TubeBeamerV2 | onDestroy()
-20:56:52 | DEBUG | TubeBeamerV2 | onDestroy()
-20:57:11 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=left]
-	[bounds=[10848.0,3232.0,32.0,32.0]]
-	[spawn_room=room13]
-	[x=10848.0]
-	[height=32.0]
-	[spawn_type=spawn_room]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@60a01cb]
-	[id=590]
-	[name=TubeBeamerV2]
-	[y=3232.0]
-	[width=32.0]
-})
-20:57:11 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=right]
-	[bounds=[10624.0,3456.0,32.0,32.0]]
-	[spawn_room=room13]
-	[x=10624.0]
-	[height=32.0]
-	[spawn_type=spawn_room]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@d49e8c6]
-	[id=669]
-	[name=TubeBeamerV2]
-	[y=3456.0]
-	[width=32.0]
-})
-20:57:11 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=left]
-	[bounds=[10848.0,3712.0,32.0,32.0]]
-	[spawn_room=room13]
-	[x=10848.0]
-	[height=32.0]
-	[spawn_type=spawn_room]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@485deee1]
-	[id=671]
-	[name=TubeBeamerV2]
-	[y=3712.0]
-	[width=32.0]
-})
-20:57:31 | DEBUG | TubeBeamerV2 | onDestroy()
-20:57:31 | DEBUG | TubeBeamerV2 | onDestroy()
-20:57:31 | DEBUG | TubeBeamerV2 | onDestroy()
-20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=down]
-	[bounds=[11552.0,4000.0,32.0,32.0]]
-	[spawn_room=boss_room]
-	[x=11552.0]
-	[height=32.0]
-	[delay=1.0]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
-	[id=680]
-	[name=Beamer]
-	[y=4000.0]
-	[width=32.0]
-})
-20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=down]
-	[bounds=[11584.0,4000.0,32.0,32.0]]
-	[spawn_room=boss_room]
-	[x=11584.0]
-	[height=32.0]
-	[delay=1.0]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
-	[id=681]
-	[name=Beamer]
-	[y=4000.0]
-	[width=32.0]
-})
-20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=down]
-	[bounds=[11616.0,4000.0,32.0,32.0]]
-	[spawn_room=boss_room]
-	[x=11616.0]
-	[height=32.0]
-	[delay=1.0]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
-	[id=683]
-	[name=Beamer]
-	[y=4000.0]
-	[width=32.0]
-})
-20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=down]
-	[bounds=[11648.0,4000.0,32.0,32.0]]
-	[spawn_room=boss_room]
-	[x=11648.0]
-	[height=32.0]
-	[delay=1.0]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
-	[id=684]
-	[name=Beamer]
-	[y=4000.0]
-	[width=32.0]
-})
-20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=down]
-	[bounds=[11680.0,4000.0,32.0,32.0]]
-	[spawn_room=boss_room]
-	[x=11680.0]
-	[height=32.0]
-	[delay=1.0]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
-	[id=685]
-	[name=Beamer]
-	[y=4000.0]
-	[width=32.0]
-})
-20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=down]
-	[bounds=[11712.0,4000.0,32.0,32.0]]
-	[spawn_room=boss_room]
-	[x=11712.0]
-	[height=32.0]
-	[delay=1.0]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
-	[id=686]
-	[name=Beamer]
-	[y=4000.0]
-	[width=32.0]
-})
-20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=down]
-	[bounds=[11744.0,4000.0,32.0,32.0]]
-	[spawn_room=boss_room]
-	[x=11744.0]
-	[height=32.0]
-	[delay=1.0]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
-	[id=687]
-	[name=Beamer]
-	[y=4000.0]
-	[width=32.0]
-})
-20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=down]
-	[bounds=[11776.0,4000.0,32.0,32.0]]
-	[spawn_room=boss_room]
-	[x=11776.0]
-	[height=32.0]
-	[delay=1.0]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
-	[id=688]
-	[name=Beamer]
-	[y=4000.0]
-	[width=32.0]
-})
-20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=down]
-	[bounds=[11808.0,4000.0,32.0,32.0]]
-	[spawn_room=boss_room]
-	[x=11808.0]
-	[height=32.0]
-	[delay=1.0]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
-	[id=689]
-	[name=Beamer]
-	[y=4000.0]
-	[width=32.0]
-})
-20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=down]
-	[bounds=[11840.0,4000.0,32.0,32.0]]
-	[spawn_room=boss_room]
-	[x=11840.0]
-	[height=32.0]
-	[delay=1.0]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
-	[id=690]
-	[name=Beamer]
-	[y=4000.0]
-	[width=32.0]
-})
-20:57:36 | DEBUG | TubeBeamerV2 | init()
-20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=down]
-	[bounds=[11872.0,4000.0,32.0,32.0]]
-	[spawn_room=boss_room]
-	[x=11872.0]
-	[height=32.0]
-	[delay=1.0]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
-	[id=691]
-	[name=Beamer]
-	[y=4000.0]
-	[width=32.0]
-})
-20:57:36 | DEBUG | TubeBeamerV2 | init()
-20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=down]
-	[bounds=[11904.0,4000.0,32.0,32.0]]
-	[spawn_room=boss_room]
-	[x=11904.0]
-	[height=32.0]
-	[delay=1.0]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
-	[id=692]
-	[name=Beamer]
-	[y=4000.0]
-	[width=32.0]
-})
-20:57:36 | DEBUG | TubeBeamerV2 | init()
-20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=down]
-	[bounds=[11936.0,4000.0,32.0,32.0]]
-	[spawn_room=boss_room]
-	[x=11936.0]
-	[height=32.0]
-	[delay=1.0]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
-	[id=693]
-	[name=Beamer]
-	[y=4000.0]
-	[width=32.0]
-})
-20:57:36 | DEBUG | TubeBeamerV2 | init()
-20:57:36 | DEBUG | TubeBeamerV2 | onSpawn(): spawnProps=Properties({
-	[direction=down]
-	[bounds=[11968.0,4000.0,32.0,32.0]]
-	[spawn_room=boss_room]
-	[x=11968.0]
-	[height=32.0]
-	[delay=1.0]
-	[ignore=com.badlogic.gdx.maps.objects.RectangleMapObject@1131aead]
-	[id=682]
-	[name=Beamer]
-	[y=4000.0]
-	[width=32.0]
-})
-20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:31 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
-20:58:34 | DEBUG | TubeBeamerV2 | onDestroy()
+===== SESSION STARTED: 2025-07-28T14:13:04.282095001 =====
+14:13:05 | DEBUG | PlayerStatsHandler | init()
+14:13:20 | DEBUG | PlayerStatsHandler | addHealth(): healthMegamanNeeds=0, value=8
+14:13:20 | DEBUG | PlayerStatsHandler | addHealth(): value greater than what Megaman needs, try to add to health tanks
+14:13:20 | DEBUG | PlayerStatsHandler | addHealth(): megaman has no health tanks
+14:13:20 | DEBUG | PlayerStatsHandler | addHealth(): add timer to queue: queue.size=1
+14:13:20 | DEBUG | PlayerStatsHandler | addHealth(): shut off all systems expect sprites system
+14:13:20 | DEBUG | PlayerStatsHandler | update(): timer just finished: pop timer from queue: queue.size=0
+14:13:20 | DEBUG | PlayerStatsHandler | update(): timer queue just emptied: turn on all systems
+14:13:34 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): ammo=8
+14:13:34 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): no weapons to add energy to
+14:13:43 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): ammo=4
+14:13:43 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon=PRECIOUS_GUARD, ammoToAdd=4, currentAmmo=20, maxAmmo=30
+14:13:43 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon energy now: 24, remaining=0
+14:13:43 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): added ammo to current weapon PRECIOUS_GUARD: remainingAmmo=0
+14:13:43 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): remaining ammo depleted
+14:13:43 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): finish processing: remainingAmmo=0
+14:13:49 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): ammo=4
+14:13:49 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): megaman does not have weapon FRIGID_SHOT
+14:13:49 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon=INFERNAL_BARRAGE, ammoToAdd=4, currentAmmo=27, maxAmmo=30
+14:13:49 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon energy now: 30, remaining=1
+14:13:49 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): added ammo to weapon INFERNAL_BARRAGE: remainingAmmo=1
+14:13:49 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): megaman does not have weapon MOON_SCYTHES
+14:13:49 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon=PRECIOUS_GUARD, ammoToAdd=1, currentAmmo=24, maxAmmo=30
+14:13:49 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon energy now: 25, remaining=0
+14:13:49 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): added ammo to weapon PRECIOUS_GUARD: remainingAmmo=0
+14:13:49 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): remaining ammo depleted
+14:13:49 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): finish processing: remainingAmmo=0
+14:13:57 | DEBUG | PlayerStatsHandler | addHealth(): healthMegamanNeeds=0, value=4
+14:13:57 | DEBUG | PlayerStatsHandler | addHealth(): value greater than what Megaman needs, try to add to health tanks
+14:13:57 | DEBUG | PlayerStatsHandler | addHealth(): megaman has no health tanks
+14:13:57 | DEBUG | PlayerStatsHandler | addHealth(): add timer to queue: queue.size=1
+14:13:57 | DEBUG | PlayerStatsHandler | addHealth(): shut off all systems expect sprites system
+14:13:57 | DEBUG | PlayerStatsHandler | update(): timer just finished: pop timer from queue: queue.size=0
+14:13:57 | DEBUG | PlayerStatsHandler | update(): timer queue just emptied: turn on all systems
+14:14:03 | DEBUG | PlayerStatsHandler | addHealth(): healthMegamanNeeds=0, value=4
+14:14:03 | DEBUG | PlayerStatsHandler | addHealth(): value greater than what Megaman needs, try to add to health tanks
+14:14:03 | DEBUG | PlayerStatsHandler | addHealth(): megaman has no health tanks
+14:14:03 | DEBUG | PlayerStatsHandler | addHealth(): add timer to queue: queue.size=1
+14:14:03 | DEBUG | PlayerStatsHandler | addHealth(): shut off all systems expect sprites system
+14:14:03 | DEBUG | PlayerStatsHandler | update(): timer just finished: pop timer from queue: queue.size=0
+14:14:03 | DEBUG | PlayerStatsHandler | update(): timer queue just emptied: turn on all systems
+14:14:06 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): ammo=4
+14:14:06 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): megaman does not have weapon FRIGID_SHOT
+14:14:06 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon=INFERNAL_BARRAGE, ammoToAdd=4, currentAmmo=30, maxAmmo=30
+14:14:06 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): current ammo is greater than max-allowed ammo
+14:14:06 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): added ammo to weapon INFERNAL_BARRAGE: remainingAmmo=4
+14:14:06 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): megaman does not have weapon MOON_SCYTHES
+14:14:06 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon=PRECIOUS_GUARD, ammoToAdd=4, currentAmmo=25, maxAmmo=30
+14:14:06 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon energy now: 29, remaining=0
+14:14:06 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): added ammo to weapon PRECIOUS_GUARD: remainingAmmo=0
+14:14:06 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): remaining ammo depleted
+14:14:06 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): finish processing: remainingAmmo=0
+14:14:14 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): ammo=4
+14:14:14 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): megaman does not have weapon FRIGID_SHOT
+14:14:14 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon=INFERNAL_BARRAGE, ammoToAdd=4, currentAmmo=30, maxAmmo=30
+14:14:14 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): current ammo is greater than max-allowed ammo
+14:14:14 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): added ammo to weapon INFERNAL_BARRAGE: remainingAmmo=4
+14:14:14 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): megaman does not have weapon MOON_SCYTHES
+14:14:14 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon=PRECIOUS_GUARD, ammoToAdd=4, currentAmmo=29, maxAmmo=30
+14:14:14 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon energy now: 30, remaining=3
+14:14:14 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): added ammo to weapon PRECIOUS_GUARD: remainingAmmo=3
+14:14:14 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon=AXE_SWINGER, ammoToAdd=3, currentAmmo=30, maxAmmo=30
+14:14:14 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): current ammo is greater than max-allowed ammo
+14:14:14 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): added ammo to weapon AXE_SWINGER: remainingAmmo=3
+14:14:14 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon=NEEDLE_SPIN, ammoToAdd=3, currentAmmo=30, maxAmmo=30
+14:14:14 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): current ammo is greater than max-allowed ammo
+14:14:14 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): added ammo to weapon NEEDLE_SPIN: remainingAmmo=3
+14:14:14 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): megaman does not have weapon RUSH_JET
+14:14:14 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): finish processing: remainingAmmo=3
+14:14:21 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): ammo=4
+14:14:21 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): no weapons to add energy to
+14:14:28 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): ammo=4
+14:14:28 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon=PRECIOUS_GUARD, ammoToAdd=4, currentAmmo=20, maxAmmo=30
+14:14:28 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon energy now: 24, remaining=0
+14:14:28 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): added ammo to current weapon PRECIOUS_GUARD: remainingAmmo=0
+14:14:28 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): remaining ammo depleted
+14:14:28 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): finish processing: remainingAmmo=0
+14:14:32 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): ammo=4
+14:14:32 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon=PRECIOUS_GUARD, ammoToAdd=4, currentAmmo=24, maxAmmo=30
+14:14:32 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon energy now: 28, remaining=0
+14:14:32 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): added ammo to current weapon PRECIOUS_GUARD: remainingAmmo=0
+14:14:32 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): remaining ammo depleted
+14:14:32 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): finish processing: remainingAmmo=0
+14:14:41 | DEBUG | PlayerStatsHandler | addHealth(): healthMegamanNeeds=0, value=4
+14:14:41 | DEBUG | PlayerStatsHandler | addHealth(): value greater than what Megaman needs, try to add to health tanks
+14:14:41 | DEBUG | PlayerStatsHandler | addHealth(): megaman has no health tanks
+14:14:41 | DEBUG | PlayerStatsHandler | addHealth(): add timer to queue: queue.size=1
+14:14:41 | DEBUG | PlayerStatsHandler | addHealth(): shut off all systems expect sprites system
+14:14:41 | DEBUG | PlayerStatsHandler | update(): timer just finished: pop timer from queue: queue.size=0
+14:14:41 | DEBUG | PlayerStatsHandler | update(): timer queue just emptied: turn on all systems
+14:14:46 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): ammo=4
+14:14:46 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon=PRECIOUS_GUARD, ammoToAdd=4, currentAmmo=18, maxAmmo=30
+14:14:46 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon energy now: 22, remaining=0
+14:14:46 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): added ammo to current weapon PRECIOUS_GUARD: remainingAmmo=0
+14:14:46 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): remaining ammo depleted
+14:14:46 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): finish processing: remainingAmmo=0
+14:14:49 | DEBUG | PlayerStatsHandler | addHealth(): healthMegamanNeeds=0, value=8
+14:14:49 | DEBUG | PlayerStatsHandler | addHealth(): value greater than what Megaman needs, try to add to health tanks
+14:14:49 | DEBUG | PlayerStatsHandler | addHealth(): megaman has no health tanks
+14:14:49 | DEBUG | PlayerStatsHandler | addHealth(): add timer to queue: queue.size=1
+14:14:49 | DEBUG | PlayerStatsHandler | addHealth(): shut off all systems expect sprites system
+14:14:49 | DEBUG | PlayerStatsHandler | update(): timer just finished: pop timer from queue: queue.size=0
+14:14:49 | DEBUG | PlayerStatsHandler | update(): timer queue just emptied: turn on all systems
+14:14:57 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): ammo=4
+14:14:57 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon=PRECIOUS_GUARD, ammoToAdd=4, currentAmmo=22, maxAmmo=30
+14:14:57 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon energy now: 26, remaining=0
+14:14:57 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): added ammo to current weapon PRECIOUS_GUARD: remainingAmmo=0
+14:14:57 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): remaining ammo depleted
+14:14:57 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): finish processing: remainingAmmo=0
+14:15:01 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): ammo=4
+14:15:01 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon=PRECIOUS_GUARD, ammoToAdd=4, currentAmmo=26, maxAmmo=30
+14:15:01 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon energy now: 30, remaining=0
+14:15:01 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): added ammo to current weapon PRECIOUS_GUARD: remainingAmmo=0
+14:15:01 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): remaining ammo depleted
+14:15:01 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): finish processing: remainingAmmo=0
+14:15:24 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): ammo=8
+14:15:24 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon=AXE_SWINGER, ammoToAdd=8, currentAmmo=28, maxAmmo=30
+14:15:24 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon energy now: 30, remaining=6
+14:15:24 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): added ammo to current weapon AXE_SWINGER: remainingAmmo=6
+14:15:24 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): megaman does not have weapon FRIGID_SHOT
+14:15:24 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon=INFERNAL_BARRAGE, ammoToAdd=6, currentAmmo=30, maxAmmo=30
+14:15:24 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): current ammo is greater than max-allowed ammo
+14:15:24 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): added ammo to weapon INFERNAL_BARRAGE: remainingAmmo=6
+14:15:24 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): megaman does not have weapon MOON_SCYTHES
+14:15:24 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon=PRECIOUS_GUARD, ammoToAdd=6, currentAmmo=30, maxAmmo=30
+14:15:24 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): current ammo is greater than max-allowed ammo
+14:15:24 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): added ammo to weapon PRECIOUS_GUARD: remainingAmmo=6
+14:15:24 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon=NEEDLE_SPIN, ammoToAdd=6, currentAmmo=28, maxAmmo=30
+14:15:24 | DEBUG | PlayerStatsHandler | addWeaponEnergyTo(): weapon energy now: 30, remaining=4
+14:15:24 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): added ammo to weapon NEEDLE_SPIN: remainingAmmo=4
+14:15:24 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): megaman does not have weapon RUSH_JET
+14:15:24 | DEBUG | PlayerStatsHandler | addWeaponEnergy(): finish processing: remainingAmmo=4
+14:15:32 | DEBUG | PlayerStatsHandler | addHealth(): healthMegamanNeeds=0, value=8
+14:15:32 | DEBUG | PlayerStatsHandler | addHealth(): value greater than what Megaman needs, try to add to health tanks
+14:15:32 | DEBUG | PlayerStatsHandler | addHealth(): megaman has no health tanks
+14:15:32 | DEBUG | PlayerStatsHandler | addHealth(): add timer to queue: queue.size=1
+14:15:32 | DEBUG | PlayerStatsHandler | addHealth(): shut off all systems expect sprites system
+14:15:32 | DEBUG | PlayerStatsHandler | update(): timer just finished: pop timer from queue: queue.size=0
+14:15:32 | DEBUG | PlayerStatsHandler | update(): timer queue just emptied: turn on all systems
+14:15:34 | DEBUG | PlayerStatsHandler | addHealth(): healthMegamanNeeds=0, value=4
+14:15:34 | DEBUG | PlayerStatsHandler | addHealth(): value greater than what Megaman needs, try to add to health tanks
+14:15:34 | DEBUG | PlayerStatsHandler | addHealth(): megaman has no health tanks
+14:15:34 | DEBUG | PlayerStatsHandler | addHealth(): add timer to queue: queue.size=1
+14:15:34 | DEBUG | PlayerStatsHandler | addHealth(): shut off all systems expect sprites system
+14:15:34 | DEBUG | PlayerStatsHandler | update(): timer just finished: pop timer from queue: queue.size=0
+14:15:34 | DEBUG | PlayerStatsHandler | update(): timer queue just emptied: turn on all systems

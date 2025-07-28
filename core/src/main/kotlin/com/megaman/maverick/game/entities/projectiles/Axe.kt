@@ -41,6 +41,8 @@ class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity
         private var region: TextureRegion? = null
     }
 
+    private var gravityScalar = 1f
+
     override fun init() {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, "$TAG/spin")
@@ -58,6 +60,8 @@ class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity
 
         val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)!!
         body.physics.velocity.set(impulse)
+
+        gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
     }
 
     override fun onDestroy() {
@@ -65,29 +69,18 @@ class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity
         super.onDestroy()
     }
 
-    /*
-    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        GameLogger.debug(TAG, "hitBlock()")
-
-        destroy()
-
-        val direction = UtilMethods.getOverlapPushDirection(thisShape, otherShape) ?: Direction.UP
-        val position = thisShape.getCenter().add(0.5f * ConstVals.PPM, direction.getOpposite())
-        BreakableBlock.breakApart(position, BlockPieceColor.BROWN)
-
-        playSoundNow(SoundAsset.THUMP_SOUND, false)
-    }
-     */
-
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(ConstVals.PPM.toFloat())
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
-        body.physics.gravity.y = GRAVITY * ConstVals.PPM
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
+
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            body.physics.gravity.y = GRAVITY * gravityScalar * ConstVals.PPM
+        }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

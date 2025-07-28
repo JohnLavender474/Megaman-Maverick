@@ -708,7 +708,9 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
                 timers["tornado_punch"].reset()
                 timers["tornado_start"].reset()
                 timers["tornado_sand"].reset()
+
                 requestToPlaySound(SoundAsset.WIND_1_SOUND, false)
+
                 GameLogger.debug(
                     TAG,
                     "onChangeState(): setting up TORNADO state: " +

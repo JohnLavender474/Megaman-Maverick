@@ -74,7 +74,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.drawingColor = Color.GRAY
 
     val debugShapes = Array<() -> IDrawableShape?>()
-    debugShapes.add { body.getBounds() }
+    // debugShapes.add { body.getBounds() }
 
     val playerFixture = Fixture(body, FixtureType.PLAYER, GameRectangle())
     body.addFixture(playerFixture)
@@ -103,7 +103,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     feetFixture.setShouldStickToBlock { _, _ -> !body.isSensing(BodySense.IN_WATER) }
     body.addFixture(feetFixture)
     feetFixture.drawingColor = Color.GREEN
-    debugShapes.add { feetFixture }
+    // debugShapes.add { feetFixture }
     body.putProperty(ConstKeys.FEET, feetFixture)
 
     // The feet gravity fixture is a consumer that checks for overlap with blocks. If there is a contact with a block,
@@ -140,7 +140,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     headFixture.setRunnable(onBounce)
     body.addFixture(headFixture)
     headFixture.drawingColor = Color.ORANGE
-    debugShapes.add { headFixture }
+    // debugShapes.add { headFixture }
     body.putProperty(ConstKeys.HEAD, headFixture)
 
     val leftFixture =
@@ -153,7 +153,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         return@shouldStick owner !is GutsTank
     }
     body.addFixture(leftFixture)
-    debugShapes.add { leftFixture }
+    // debugShapes.add { leftFixture }
     body.putProperty("${ConstKeys.LEFT}_${ConstKeys.SIDE}", leftFixture)
 
     val rightFixture =
@@ -166,7 +166,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         return@shouldStick owner !is GutsTank
     }
     body.addFixture(rightFixture)
-    debugShapes.add { rightFixture }
+    // debugShapes.add { rightFixture }
     body.putProperty("${ConstKeys.RIGHT}_${ConstKeys.SIDE}", rightFixture)
 
     val damagableRect = GameRectangle()
@@ -186,12 +186,22 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     val needleSpinDamagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(ConstVals.PPM.toFloat()))
     body.addFixture(needleSpinDamagerFixture)
     needleSpinDamagerFixture.drawingColor = Color.ORANGE
-    debugShapes.add { needleSpinDamagerFixture }
+    // debugShapes.add { needleSpinDamagerFixture }
 
     val needleSpinShieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(ConstVals.PPM.toFloat()))
     body.addFixture(needleSpinShieldFixture)
     needleSpinShieldFixture.drawingColor = Color.PURPLE
-    debugShapes.add { needleSpinShieldFixture }
+    // debugShapes.add { needleSpinShieldFixture }
+
+    val axeShieldFixture = Fixture(
+        body,
+        FixtureType.SHIELD,
+        GameRectangle().setHeight(ConstVals.PPM.toFloat())
+    )
+    axeShieldFixture.offsetFromBodyAttachment.y = -0.1f * ConstVals.PPM
+    body.addFixture(axeShieldFixture)
+    axeShieldFixture.drawingColor = Color.GREEN
+    debugShapes.add { if (axeShieldFixture.isActive()) axeShieldFixture else null }
 
     val fixturesToSizeToBody = gdxArrayOf(
         bodyFixture, playerFixture, waterListenerFixture, teleporterListenerFixture
@@ -215,6 +225,16 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
             val bounds = fixture.rawShape as GameRectangle
             bounds.set(body)
         }
+
+        axeShieldFixture.setActive(currentWeapon == MegamanWeapon.AXE_SWINGER)
+        val axeShieldWidth = if (isBehaviorActive(BehaviorType.CLIMBING)) 0.75f else 0.5f
+        (axeShieldFixture.rawShape as GameRectangle).setWidth(axeShieldWidth * ConstVals.PPM)
+        val axeShieldOffsetX = when {
+            isBehaviorActive(BehaviorType.CLIMBING) -> 0f
+            slipSliding -> 0.5f
+            else -> 0.75f
+        }
+        axeShieldFixture.offsetFromBodyAttachment.x = axeShieldOffsetX * ConstVals.PPM * facing.value
 
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         feetGravityFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f

@@ -9,6 +9,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
@@ -49,13 +50,16 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
+import com.megaman.maverick.game.entities.projectiles.FirePellet
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
-import com.megaman.maverick.game.world.body.*
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodyFixtureDef
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getPositionPoint
 import java.util.*
 
 class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable {
@@ -101,6 +105,7 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     private var exploded = false
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         damageOverrides.put(Fireball::class, null)
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
@@ -115,6 +120,7 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
@@ -252,8 +258,8 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
         sprite.setSize(2f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { delta, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { delta, _ ->
             sprite.setCenter(body.getCenter())
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.hidden = damageBlink
@@ -263,7 +269,7 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
             } else 1f
             sprite.setAlpha(alpha)
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
@@ -289,7 +295,7 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
             val spawn = body.getPositionPoint(Position.BOTTOM_CENTER)
                 .add(0.1f * ConstVals.PPM * facing.value, 0.25f * ConstVals.PPM)
 
-            val firePellet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIRE_PELLET)!!
+            val firePellet = MegaEntityFactory.fetch(FirePellet::class)!!
             firePellet.spawn(
                 props(
                     ConstKeys.POSITION pairTo spawn,

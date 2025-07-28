@@ -28,6 +28,7 @@ import com.mega.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
@@ -39,7 +40,6 @@ import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getCenter
 
 class MagmaPellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
@@ -50,11 +50,13 @@ class MagmaPellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
     }
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -97,6 +99,14 @@ class MagmaPellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         val explosion = MegaEntityFactory.fetch(MagmaFlame::class)!!
         explosion.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.DIRECTION pairTo direction))
+    }
+
+    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        val velocity = body.physics.velocity
+        velocity.x *= -1f
+        velocity.y = 5f * ConstVals.PPM
+
+        requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
 
     override fun defineBodyComponent(): BodyComponent {

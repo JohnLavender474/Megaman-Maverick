@@ -220,9 +220,13 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             if (!failedKeys.isEmpty) throw IllegalStateException("Failed to fetch regions for keys: $failedKeys")
         }
         super.init()
+
         addComponent(defineAnimationsComponent())
+
         stateMachine = buildStateMachine()
+
         damageOverrides.put(Axe::class, dmgNeg(4))
+        damageOverrides.put(ReactorManProjectile::class, dmgNeg(3))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -272,8 +276,12 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         reusableFloatArray.clear()
     }
 
-    override fun canBeDamagedBy(damager: IDamager) =
-        super.canBeDamagedBy(damager) && (damager is Axe || !isShielded())
+    override fun canBeDamagedBy(damager: IDamager): Boolean {
+        if (!super.canBeDamagedBy(damager)) return false
+        if (damager is ReactorManProjectile && damager.owner != megaman) return false
+        if (damager is Axe) return true
+        return !isShielded()
+    }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)

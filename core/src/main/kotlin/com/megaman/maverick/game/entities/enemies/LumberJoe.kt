@@ -191,6 +191,8 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     }
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
+        GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
+
         val damaged = super.takeDamageFrom(damager)
 
         if (damaged && damager is IFireEntity) {

@@ -214,11 +214,6 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         debugShapes.add { if (damageableFixture.isActive()) damageableFixture.getShape() else null }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            val damageable = loop.getCurrent() == PopupCanonState.SHOOT ||
-                (loop.getCurrent() == PopupCanonState.RISE && timers["rise"].getRatio() > TRANS_DAMAGEABLE_CUTOFF) ||
-                (loop.getCurrent() == PopupCanonState.FALL && timers["fall"].getRatio() < TRANS_DAMAGEABLE_CUTOFF)
-            damageableFixture.setActive(damageable)
-
             (damagerFixture.rawShape as GameRectangle).setHeight(
                 when (transState) {
                     Size.LARGE -> 1.5f

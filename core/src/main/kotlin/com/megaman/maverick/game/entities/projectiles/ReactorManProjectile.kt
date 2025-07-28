@@ -139,6 +139,18 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
         body.physics.velocity.set(trajectory)
     }
 
+    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        if (!active || shieldFixture.getEntity() == owner) return
+
+        val velocity = body.physics.velocity
+        velocity.x *= -1f
+        velocity.y = 5f * ConstVals.PPM
+
+        owner = shieldFixture.getEntity()
+
+        requestToPlaySound(SoundAsset.DINK_SOUND, false)
+    }
+
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (!active) return
         if (big) shatter(blockFixture.getShape())

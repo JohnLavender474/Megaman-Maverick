@@ -36,6 +36,7 @@ class MagmaOrb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
     }
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
@@ -44,8 +45,10 @@ class MagmaOrb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
+
         val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
         body.physics.velocity.set(trajectory)
     }
@@ -55,9 +58,12 @@ class MagmaOrb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         body.setSize(1.75f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
+
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
+
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
+
         return BodyComponentCreator.create(
             this,
             body,
@@ -68,9 +74,9 @@ class MagmaOrb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
         sprite.setSize(1.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
-        return spritesComponent
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

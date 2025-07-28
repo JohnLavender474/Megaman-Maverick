@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.Queue
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.extensions.toOrderedSet
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.pairTo
@@ -157,17 +158,79 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
         timerQueue.addLast(timer)
     }
 
-    fun addWeaponEnergy(energy: Int) {
-        val currentAmmo = megaman.ammo
-        val maxAmmo = MegamanValues.MAX_WEAPON_AMMO
+    fun addWeaponEnergy(ammo: Int) {
+        GameLogger.debug(TAG, "addWeaponEnergy(): ammo=$ammo")
 
-        GameLogger.debug(TAG, "addWeaponEnergy(): currentAmmo=$currentAmmo, maxAmmo=$maxAmmo")
+        if (!MegamanWeapon.entries.any { canAddWeaponEnergyTo(it) }) {
+            GameLogger.debug(TAG, "addWeaponEnergy(): no weapons to add energy to")
+            return
+        }
 
-        if (currentAmmo >= maxAmmo) return
+        val currentWeapon = megaman.currentWeapon
+        var remainingAmmo = ammo
 
-        megaman.translateAmmo(energy)
+        if (currentWeapon != MegamanWeapon.MEGA_BUSTER) {
+            remainingAmmo = addWeaponEnergyTo(currentWeapon, ammo)
+
+            GameLogger.debug(
+                TAG, "addWeaponEnergy(): " +
+                    "added ammo to current weapon $currentWeapon: remainingAmmo=$remainingAmmo"
+            )
+        }
+
+        val weapons = MegamanWeapon.entries.toOrderedSet()
+        weapons.remove(MegamanWeapon.MEGA_BUSTER)
+        weapons.remove(megaman.currentWeapon)
+
+        for (weapon in weapons) {
+            if (remainingAmmo <= 0) {
+                GameLogger.debug(TAG, "addWeaponEnergy(): remaining ammo depleted")
+                break
+            }
+
+            if (!megaman.hasWeapon(weapon)) {
+                GameLogger.debug(TAG, "addWeaponEnergy(): megaman does not have weapon $weapon")
+                continue
+            }
+
+            remainingAmmo = addWeaponEnergyTo(weapon, remainingAmmo)
+
+            GameLogger.debug(
+                TAG, "addWeaponEnergy(): added ammo to weapon $weapon: remainingAmmo=$remainingAmmo"
+            )
+        }
+
+        GameLogger.debug(TAG, "addWeaponEnergy(): finish processing: remainingAmmo=$remainingAmmo")
 
         audioMan.playSound(SoundAsset.ENERGY_FILL_SOUND, false)
+    }
+
+    private fun canAddWeaponEnergyTo(weapon: MegamanWeapon) =
+        weapon != MegamanWeapon.MEGA_BUSTER &&
+            megaman.weaponsHandler.hasWeapon(weapon) &&
+            megaman.weaponsHandler.getAmmo(weapon) < MegamanValues.MAX_WEAPON_AMMO
+
+    private fun addWeaponEnergyTo(weapon: MegamanWeapon, ammoToAdd: Int): Int {
+        val currentAmmo = megaman.weaponsHandler.getAmmo(weapon)
+        val maxAmmo = MegamanValues.MAX_WEAPON_AMMO
+
+        GameLogger.debug(
+            TAG,
+            "addWeaponEnergyTo(): " +
+                "weapon=$weapon, ammoToAdd=$ammoToAdd, currentAmmo=$currentAmmo, maxAmmo=$maxAmmo"
+        )
+
+        if (currentAmmo >= maxAmmo) {
+            GameLogger.debug(TAG, "addWeaponEnergyTo(): current ammo is greater than max-allowed ammo")
+            return ammoToAdd
+        }
+
+        val remaining = megaman.translateAmmo(ammoToAdd, weapon)
+        GameLogger.debug(
+            TAG, "addWeaponEnergyTo(): " +
+                "weapon energy now: ${megaman.weaponsHandler.getAmmo(weapon)}, remaining=$remaining"
+        )
+        return remaining
     }
 
     fun addHealth(value: Int) {

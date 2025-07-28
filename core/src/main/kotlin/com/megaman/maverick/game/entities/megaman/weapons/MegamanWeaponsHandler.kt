@@ -379,14 +379,15 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         )
         MegamanWeapon.AXE_SWINGER -> MegaWeaponHandler(
             cooldown = Timer(0.5f),
-            normalCost = { 1 },
+            normalCost = { 2 },
             chargeable = { false },
             canFireWeapon = { _, _ -> megaman.body.isSensing(BodySense.FEET_ON_GROUND) }
         )
         MegamanWeapon.NEEDLE_SPIN -> object : MegaWeaponHandler(
             cooldown = Timer(0.25f),
-            normalCost = { 1 },
-            chargeable = { false }
+            normalCost = { 2 },
+            chargeable = { false },
+            onShoot = { game.audioMan.playSound(SoundAsset.WHOOSH_SOUND, false) }
         ) {
 
             private var canSpin = true
@@ -417,6 +418,9 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
     fun onChangeWeapon(current: MegamanWeapon, previous: MegamanWeapon?) {
         GameLogger.debug(TAG, "onChangeWeapon(): current=$current, previous=$previous")
+
+        if (previous == MegamanWeapon.AXE_SWINGER) megaman.shooting = false
+
         if (previous == MegamanWeapon.PRECIOUS_GUARD) {
             val all = weaponHandlers[MegamanWeapon.PRECIOUS_GUARD]?.getSpawned()
             all?.values()?.forEach { entities ->
@@ -437,16 +441,25 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
     fun isChargeable(weapon: MegamanWeapon) = hasWeapon(weapon) && weaponHandlers[weapon].let { it.chargeable(it) }
 
-    fun translateAmmo(weapon: MegamanWeapon, delta: Int) {
-        if (!hasWeapon(weapon)) return
+    fun translateAmmo(weapon: MegamanWeapon, delta: Int): Int {
+        if (!hasWeapon(weapon)) return delta
 
         val weaponEntry = weaponHandlers[weapon]
         weaponEntry.ammo += delta
 
         when {
-            weaponEntry.ammo >= MegamanValues.MAX_WEAPON_AMMO -> weaponEntry.ammo = MegamanValues.MAX_WEAPON_AMMO
-            weaponEntry.ammo < 0 -> weaponEntry.ammo = 0
+            weaponEntry.ammo > MegamanValues.MAX_WEAPON_AMMO -> {
+                val diff = weaponEntry.ammo - MegamanValues.MAX_WEAPON_AMMO
+                weaponEntry.ammo = MegamanValues.MAX_WEAPON_AMMO
+                return diff
+            }
+            weaponEntry.ammo < 0 -> {
+                weaponEntry.ammo = 0
+                return 0
+            }
         }
+
+        return 0
     }
 
     fun setAllToMaxAmmo() = weaponHandlers.keys().forEach { setToMaxAmmo(it) }
@@ -807,7 +820,9 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             props(
                 ConstKeys.OWNER pairTo megaman,
                 ConstKeys.POSITION pairTo spawn,
-                ConstKeys.IMPULSE pairTo impulse
+                ConstKeys.IMPULSE pairTo impulse,
+                "${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}" pairTo megaman.gravityScalar,
+                "${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}" pairTo megaman.movementScalar
             )
         )
     }
@@ -839,7 +854,8 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
         val vel = megaman.body.physics.velocity
 
-        var impulse = MegamanValues.NEEDLE_SPIN_MEGAMAN_IMPULSE_Y * ConstVals.PPM * megaman.movementScalar
+        var impulse =
+            ((MegamanValues.NEEDLE_SPIN_MEGAMAN_IMPULSE_Y * ConstVals.PPM) / megaman.movementScalar) / megaman.gravityScalar
         if (megaman.isBehaviorActive(BehaviorType.SWIMMING)) impulse *= MegamanValues.NEEDLE_SPIN_WATER_SCALAR
 
         when (megaman.direction) {

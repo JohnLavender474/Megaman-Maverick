@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.projectiles
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
@@ -24,15 +25,14 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
-
+import com.megaman.maverick.game.entities.explosions.Disintegration
 import com.megaman.maverick.game.world.body.*
 
-class FirePellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
+class
+FirePellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     companion object {
         const val TAG = "FirePellet"
@@ -40,11 +40,13 @@ class FirePellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
     }
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -56,10 +58,16 @@ class FirePellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
+    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
+
     override fun explodeAndDie(vararg params: Any?) {
+        GameLogger.debug(TAG, "explodeAndDie()")
+
         destroy()
+
         if (overlapsGameCamera()) playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
-        val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)!!
+
+        val disintegration = MegaEntityFactory.fetch(Disintegration::class)!!
         disintegration.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
@@ -75,12 +83,12 @@ class FirePellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 0))
         sprite.setSize(ConstVals.PPM.toFloat())
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = body.physics.velocity.angleDeg() - 90f
             sprite.setCenter(body.getCenter())
         }
-        return spritesComponent
+        return component
     }
 }
