@@ -203,8 +203,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
                 override fun onSelect(delta: Float): Boolean {
                     game.state.reset()
-                    game.setCurrentLevel(LevelDefinition.INTRO_STAGE)
-                    game.startLevel()
+                    game.setCurrentScreen(ScreenEnum.SELECT_DIFFICULTY_SCREEN.name)
                     return true
                 }
 

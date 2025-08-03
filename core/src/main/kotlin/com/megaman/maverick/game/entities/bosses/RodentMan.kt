@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
+import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
@@ -43,13 +44,13 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.SlashDissipation
 import com.megaman.maverick.game.entities.enemies.RatRobot
-import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.entities.projectiles.Needle
 import com.megaman.maverick.game.entities.projectiles.SlashWave
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -78,7 +79,8 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
         private const val SPAWN_RATS_TIME = 0.75f
         private const val STUN_DUR = 0.5f
 
-        private const val SLASH_DELAY = 0.75f
+        private const val SLASH_DELAY_NORMAL = 0.75f
+        private const val SLASH_DELAY_HARD = 0.35f
 
         private const val JUMP_SLASH_DUR = 0.5f
         private const val JUMP_SLASH_TIME = 0.1f
@@ -182,21 +184,13 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
     private val stunned: Boolean
         get() = !stunTimer.isFinished()
 
-    private val standSlashTimer = Timer(STAND_SLASH_DUR).also { timer ->
-        STAND_SLASH_DEFS.forEach { (time, slashType) ->
-            val slashRunnable = TimeMarkedRunnable(time) {
-                FacingUtils.setFacingOf(this)
-                spawnSlashWaves(slashType)
-            }
-            timer.addRunnable(slashRunnable)
-        }
-    }
+    private lateinit var standSlashTimer: Timer
     private val jumpSlashTimer = Timer(JUMP_SLASH_DUR)
         .addRunnable(TimeMarkedRunnable(JUMP_SLASH_TIME) {
             FacingUtils.setFacingOf(this)
             spawnSlashWaves(RodentManSlashType.BOTH)
         })
-    private val slashDelay = Timer(SLASH_DELAY)
+    private val slashDelay = Timer()
     private val slashing: Boolean
         get() = !standSlashTimer.isFinished() || !jumpSlashTimer.isFinished()
 
@@ -237,6 +231,40 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
 
         stateMachine.reset()
         stateTimers.values().forEach { it.reset() }
+
+        when (game.state.getDifficultyMode()) {
+            DifficultyMode.NORMAL -> {
+                standSlashTimer = Timer(STAND_SLASH_DUR).also { timer ->
+                    STAND_SLASH_DEFS.forEach { (time, slashType) ->
+                        val slashRunnable = TimeMarkedRunnable(time) {
+                            FacingUtils.setFacingOf(this)
+                            spawnSlashWaves(slashType)
+                        }
+                        timer.addRunnable(slashRunnable)
+                    }
+                }
+            }
+            DifficultyMode.HARD -> {
+                standSlashTimer = Timer(STAND_SLASH_DUR * 2).also { timer ->
+                    for (i in 0..1) {
+                        val offset = i * STAND_SLASH_DUR
+
+                        STAND_SLASH_DEFS.forEach { (time, slashType) ->
+                            val slashRunnable = TimeMarkedRunnable(offset + time) {
+                                FacingUtils.setFacingOf(this)
+                                spawnSlashWaves(slashType)
+                            }
+                            timer.addRunnable(slashRunnable)
+                        }
+
+                        val resetAnimRunnable = TimeMarkedRunnable(STAND_SLASH_DUR) {
+                            (animators[TAG] as Animator).animations["stand_slash_combo"].reset()
+                        }
+                        timer.addRunnable(resetAnimRunnable)
+                    }
+                }
+            }
+        }
 
         standSlashTimer.setToEnd()
         jumpSlashTimer.setToEnd()
@@ -289,7 +317,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
         val damaged = super.takeDamageFrom(damager)
-        if (damaged && damager is MoonScythe) stunTimer.reset()
+        if (damaged && damager is Needle) stunTimer.reset()
         return damaged
     }
 
@@ -421,6 +449,18 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
                     slashDelay.update(delta)
                     if (slashDelay.isJustFinished()) jumpSlashTimer.reset()
                     jumpSlashTimer.update(delta)
+
+                    /*
+                    if (jumpSlashTimer.isJustFinished() &&
+                        game.state.getDifficultyMode() == DifficultyMode.HARD
+                    ) {
+                        val slashDelayDur = when (game.state.getDifficultyMode()) {
+                            DifficultyMode.NORMAL -> SLASH_DELAY_NORMAL
+                            DifficultyMode.HARD -> SLASH_DELAY_HARD
+                        }
+                        slashDelay.resetDuration(slashDelayDur)
+                    }
+                     */
 
                     if (!slashing) FacingUtils.setFacingOf(this)
 
@@ -594,34 +634,28 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
                                     slashing -> "stand_slash_combo"
                                     else -> "stand"
                                 }
-
                                 else -> when {
                                     slashing -> "jump_slash"
                                     else -> "jump_down_look_straight"
                                 }
                             }
-
                             RodentManState.JUMP -> when {
                                 slashing -> when {
                                     body.isSensing(BodySense.FEET_ON_GROUND) -> when {
                                         jumpSlashTimer.time < JUMP_SLASH_TIME -> "stand_slash_single1"
                                         else -> "stand_slash_single2"
                                     }
-
                                     else -> "jump_slash"
                                 }
-
                                 body.physics.velocity.y > 0f -> when {
                                     megaman.body.getCenter().y > body.getCenter().y -> "jump_up_look_up"
                                     else -> "jump_up_look_down"
                                 }
-
                                 else -> when {
                                     megaman.body.getCenter().y > body.getCenter().y -> "jump_down_look_straight"
                                     else -> "jump_down_look_down"
                                 }
                             }
-
                             else -> currentState.name.lowercase()
                         }
                     }
@@ -667,30 +701,54 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
         when (current) {
             RodentManState.JUMP -> {
                 jump()
-                slashDelay.reset()
-            }
 
+                val slashDelayDur = when (game.state.getDifficultyMode()) {
+                    DifficultyMode.NORMAL -> SLASH_DELAY_NORMAL
+                    DifficultyMode.HARD -> SLASH_DELAY_HARD
+                }
+                slashDelay.resetDuration(slashDelayDur)
+            }
             RodentManState.STAND -> {
                 FacingUtils.setFacingOf(this)
+
                 timesAtStandState++
-                if (timesAtStandState % STAND_SLASH == 0) slashDelay.reset()
+                if (timesAtStandState % STAND_SLASH == 0) {
+                    val slashDelayDur = when (game.state.getDifficultyMode()) {
+                        DifficultyMode.NORMAL -> SLASH_DELAY_NORMAL
+                        DifficultyMode.HARD -> SLASH_DELAY_HARD
+                    }
+                    slashDelay.resetDuration(slashDelayDur)
+                }
             }
-
             RodentManState.RUN -> FacingUtils.setFacingOf(this)
-
             else -> {}
         }
 
         if (previous != RodentManState.INIT) stateTimers[previous]?.reset()
 
         when (previous) {
-            RodentManState.STAND -> standSlashTimer.setToEnd()
-            RodentManState.JUMP -> jumpSlashTimer.setToEnd()
+            RodentManState.STAND -> {
+                val slashDelayDur = when (game.state.getDifficultyMode()) {
+                    DifficultyMode.NORMAL -> SLASH_DELAY_NORMAL
+                    DifficultyMode.HARD -> SLASH_DELAY_HARD
+                }
+                slashDelay.resetDuration(slashDelayDur)
+
+                standSlashTimer.setToEnd()
+            }
+            RodentManState.JUMP -> {
+                val slashDelayDur = when (game.state.getDifficultyMode()) {
+                    DifficultyMode.NORMAL -> SLASH_DELAY_NORMAL
+                    DifficultyMode.HARD -> SLASH_DELAY_HARD
+                }
+                slashDelay.resetDuration(slashDelayDur)
+
+                jumpSlashTimer.setToEnd()
+            }
             RodentManState.RUN -> {
                 onEndRunning()
                 FacingUtils.setFacingOf(this)
             }
-
             else -> {}
         }
     }

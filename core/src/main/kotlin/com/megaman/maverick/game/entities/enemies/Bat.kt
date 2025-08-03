@@ -40,6 +40,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.blocks.Block
@@ -68,6 +69,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         private const val FROZEN_DURATION = 0.5f
         private const val RELEASE_FROM_PERCH_DURATION = 0.25f
         private const val DEFAULT_FLY_TO_ATTACK_SPEED = 3f
+        private const val HARD_MODE_FLY_SCALAR = 1.5f
         private const val DEFAULT_FLY_TO_RETREAT_SPEED = 8f
         private const val PATHFINDING_UPDATE_INTERVAL = 0.05f
     }
@@ -147,8 +149,13 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         val frameDuration = spawnProps.getOrDefault(ConstKeys.FRAME, 0.1f, Float::class)
         gdxArrayOf(animations.get("Fly"), animations.get("SnowFly")).forEach { it.setFrameDuration(frameDuration) }
 
-        flyToAttackSpeed =
-            spawnProps.getOrDefault("${ConstKeys.ATTACK}_${ConstKeys.SPEED}", DEFAULT_FLY_TO_ATTACK_SPEED, Float::class)
+        flyToAttackSpeed = spawnProps.getOrDefault(
+            "${ConstKeys.ATTACK}_${ConstKeys.SPEED}",
+            DEFAULT_FLY_TO_ATTACK_SPEED,
+            Float::class
+        )
+        if (game.state.getDifficultyMode() == DifficultyMode.HARD) flyToAttackSpeed *= HARD_MODE_FLY_SCALAR
+
         flyToRetreatSpeed = spawnProps.getOrDefault(
             "${ConstKeys.RETREAT}_${ConstKeys.SPEED}",
             DEFAULT_FLY_TO_RETREAT_SPEED,

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="350" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="18" nextobjectid="419">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="350" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="18" nextobjectid="435">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/PunkCityTileset.tsx"/>
  <layer id="14" name="tiles2" width="350" height="100">
@@ -631,6 +631,8 @@
   <object id="402" name="Target" x="3968" y="1904" width="32" height="32"/>
   <object id="405" name="RainSpawn" x="3776" y="1680" width="192" height="24"/>
   <object id="406" name="RainSpawn" x="4000" y="1680" width="128" height="24"/>
+  <object id="422" name="Target1" x="1792" y="2752" width="32" height="32"/>
+  <object id="423" name="Target2" x="1920" y="2752" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="11" name="specials">
   <object id="55" name="Ladder" x="4800" y="2848" width="32" height="128"/>
@@ -991,6 +993,76 @@
   <object id="401" name="HeliMet" x="3824" y="1776" width="32" height="32">
    <properties>
     <property name="target" type="object" value="402"/>
+   </properties>
+  </object>
+  <object id="419" name="SniperJoe" x="1064" y="2864" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="420" name="SniperJoe" x="1640" y="2800" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="421" name="HeliMet" x="1856" y="2688" width="32" height="32">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+    <property name="target_1" type="object" value="422"/>
+    <property name="target_2" type="object" value="423"/>
+   </properties>
+  </object>
+  <object id="424" name="ShieldAttacker" x="2136" y="2840" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+    <property name="value" type="float" value="-6"/>
+   </properties>
+  </object>
+  <object id="425" name="SniperJoe" x="3704" y="2864" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="426" name="SniperJoe" x="4600" y="2480" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="427" name="SniperJoe" x="3800" y="1904" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="429" name="SpikeCopter" x="8056" y="2232" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="430" name="DuoBallCanon" x="8584" y="2384" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="431" name="DuoBallCanon" x="9016" y="2416" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="432" name="ShieldAttacker" x="9400" y="1544" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+    <property name="value" type="float" value="-6"/>
+   </properties>
+  </object>
+  <object id="433" name="ShieldAttacker" x="9400" y="1112" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+    <property name="value" type="float" value="-6"/>
+   </properties>
+  </object>
+  <object id="434" name="SniperJoe" x="6168" y="2448" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
   </object>
  </objectgroup>

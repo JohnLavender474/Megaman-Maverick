@@ -52,6 +52,7 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.*
@@ -63,6 +64,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.getRandomPositionInBounds
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.StunType
 import com.megaman.maverick.game.world.body.*
@@ -111,7 +113,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         private const val STAND_SWING_GROUND_BURST_TIME = 0.35f
         private val STAND_POUND_GROUND_BURST_TIMES = gdxArrayOf(0.35f, 0.95f, 1.55f)
 
-        private val GROUND_PEBBLE_IMPULSES = gdxArrayOf(
+        private val GROUND_PEBBLE_IMPULSES_NORMAL = gdxArrayOf(
             // Vector2(-18f, 5f),
             Vector2(-15f, 10f),
             Vector2(-9f, 18f),
@@ -121,6 +123,17 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
             Vector2(9f, 18f),
             Vector2(15f, 10f),
             // Vector2(18f, 5f),
+        )
+        private val GROUND_PEBBLE_IMPULSES_HARD = gdxArrayOf(
+            Vector2(-18f, 5f),
+            Vector2(-15f, 10f),
+            Vector2(-9f, 18f),
+            Vector2(-3f, 26f),
+            Vector2(0f, 30f),
+            Vector2(3f, 26f),
+            Vector2(9f, 18f),
+            Vector2(15f, 10f),
+            Vector2(18f, 5f),
         )
         private const val GROUND_PEBBLES_AXE_SWING_OFFSET_X = 2f
         private const val GROUND_PEBBLES_OFFSET_Y = 0.35f
@@ -181,6 +194,8 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
 
         private const val SECOND_LEAF_OFFSET = 1.5f
 
+        private const val HARD_MODE_LEAF_SPAWN_DELAY = 2.5f
+
         private val DESTROY_TAGS = orderedSetOf(GroundPebble.TAG, DeadlyLeaf.TAG)
 
         private val regions = ObjectMap<String, TextureRegion>()
@@ -235,6 +250,9 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
 
     // Used to collect entities that should be destroyed when Timber Woman is destroyed.
     private val outSet = OrderedSet<MegaGameEntity>()
+
+    // Delay for spawning random leaves while in hard mode
+    private val hardModeLeafSpawnDelay = Timer(HARD_MODE_LEAF_SPAWN_DELAY)
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -320,13 +338,14 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         }
         otherTimers.values().forEach { it.reset() }
 
+        if (game.state.getDifficultyMode() == DifficultyMode.HARD) hardModeLeafSpawnDelay.reset()
+
         spawnProps.forEach { key, value ->
             when {
                 key.toString().contains(LEAF_SPAWN) -> {
                     val bounds = (value as RectangleMapObject).rectangle
                     leafSpawnBounds.set(bounds)
                 }
-
                 key.toString().contains(ConstKeys.WALL) -> {
                     val bounds = (value as RectangleMapObject).rectangle.toGameRectangle(false)
                     walls.add(bounds)
@@ -334,9 +353,9 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
             }
         }
 
-        updateFacing()
-
         putProperty(ConstKeys.ENTITY_KILLED_BY_DEATH_FIXTURE, false)
+
+        updateFacing()
 
         cyclesSinceLastJump = 0
 
@@ -655,6 +674,16 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
                     }
                 }
             }
+
+            if (ready && game.state.getDifficultyMode() == DifficultyMode.HARD) {
+                hardModeLeafSpawnDelay.update(delta)
+                if (hardModeLeafSpawnDelay.isFinished()) {
+                    val spawn = leafSpawnBounds.getRandomPositionInBounds()
+                    spawnDeadlyLeaves(spawn, true)
+
+                    hardModeLeafSpawnDelay.reset()
+                }
+            }
         }
     }
 
@@ -715,17 +744,22 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         }
     }
 
-    private fun spawnDeadlyLeaves(spawn1: Vector2) {
-        val spawn2 = GameObjectPools.fetch(Vector2::class).set(spawn1).add(SECOND_LEAF_OFFSET * ConstVals.PPM, 0f)
-        if (walls.any { it.contains(spawn2) }) spawn2.sub(2f * SECOND_LEAF_OFFSET * ConstVals.PPM, 0f)
-
-        GameLogger.debug(TAG, "spawnDeadlyLeaf(): spawn1=$spawn1, spawn2=$spawn2")
-
+    private fun spawnDeadlyLeaves(spawn1: Vector2, spawnOnly1: Boolean = false) {
         val leaf1 = MegaEntityFactory.fetch(DeadlyLeaf::class)!!
         leaf1.spawn(props(ConstKeys.POSITION pairTo spawn1))
 
+        if (spawnOnly1) {
+            GameLogger.debug(TAG, "spawnDeadlyLeaf(): spawn1=$spawn1")
+            return
+        }
+
+        val spawn2 = GameObjectPools.fetch(Vector2::class).set(spawn1).add(SECOND_LEAF_OFFSET * ConstVals.PPM, 0f)
+        if (walls.any { it.contains(spawn2) }) spawn2.sub(2f * SECOND_LEAF_OFFSET * ConstVals.PPM, 0f)
+
         val leaf2 = MegaEntityFactory.fetch(DeadlyLeaf::class)!!
         leaf2.spawn(props(ConstKeys.POSITION pairTo spawn2))
+
+        GameLogger.debug(TAG, "spawnDeadlyLeaf(): spawn1=$spawn1, spawn2=$spawn2")
     }
 
     private fun spawnGroundPebbles() {
@@ -737,16 +771,33 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         if (currentState == TimberWomanState.STAND_SWING)
             spawn.add(GROUND_PEBBLES_AXE_SWING_OFFSET_X * ConstVals.PPM * facing.value, 0f)
 
-        for (i in 0 until GROUND_PEBBLE_IMPULSES.size) {
-            val impulse = GROUND_PEBBLE_IMPULSES[i].cpy().scl(ConstVals.PPM.toFloat())
+        when (game.state.getDifficultyMode()) {
+            DifficultyMode.NORMAL -> {
+                for (i in 0 until GROUND_PEBBLE_IMPULSES_NORMAL.size) {
+                    val impulse = GROUND_PEBBLE_IMPULSES_NORMAL[i].cpy().scl(ConstVals.PPM.toFloat())
 
-            val pebble = MegaEntityFactory.fetch(GroundPebble::class)!!
-            pebble.spawn(
-                props(
-                    ConstKeys.POSITION pairTo spawn,
-                    ConstKeys.IMPULSE pairTo impulse
-                )
-            )
+                    val pebble = MegaEntityFactory.fetch(GroundPebble::class)!!
+                    pebble.spawn(
+                        props(
+                            ConstKeys.POSITION pairTo spawn,
+                            ConstKeys.IMPULSE pairTo impulse
+                        )
+                    )
+                }
+            }
+            DifficultyMode.HARD -> {
+                for (i in 0 until GROUND_PEBBLE_IMPULSES_HARD.size) {
+                    val impulse = GROUND_PEBBLE_IMPULSES_HARD[i].cpy().scl(ConstVals.PPM.toFloat())
+
+                    val pebble = MegaEntityFactory.fetch(GroundPebble::class)!!
+                    pebble.spawn(
+                        props(
+                            ConstKeys.POSITION pairTo spawn,
+                            ConstKeys.IMPULSE pairTo impulse
+                        )
+                    )
+                }
+            }
         }
     }
 
@@ -761,7 +812,8 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
 
         game.eventsMan.submitEvent(
             Event(
-                EventType.STUN_PLAYER, props(ConstKeys.TYPE pairTo StunType.STUN_BOUNCE_IF_ON_SURFACE)
+                EventType.STUN_PLAYER,
+                props(ConstKeys.TYPE pairTo StunType.STUN_BOUNCE_IF_ON_SURFACE)
             )
         )
 

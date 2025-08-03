@@ -39,6 +39,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
@@ -65,7 +66,8 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         private const val SQUEEZE_TIME = 0.5f
 
         private const val MAX_BEES = 8
-        private const val BEE_CYCLE_DELAY = 2f
+        private const val BEE_CYCLE_DELAY_NORMAL = 2f
+        private const val BEE_CYCLE_DELAY_HARD = 1f
         private const val MIN_BEES_TO_CYCLE = 1
         private const val MAX_BEES_TO_CYCLE = 3
 
@@ -98,7 +100,7 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     private val scanners = Array<IGameShape2D>()
 
-    private val beeCycleDelay = Timer(BEE_CYCLE_DELAY)
+    private val beeCycleDelay = Timer()
     private val reusableBeeArray = Array<Beezee>()
 
     override fun init() {
@@ -127,7 +129,11 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         putCullable(ConstKeys.CUSTOM_CULL, this)
         cullTimer.reset()
 
-        beeCycleDelay.reset()
+        val beeCycleDur = when (game.state.getDifficultyMode()) {
+            DifficultyMode.NORMAL -> BEE_CYCLE_DELAY_NORMAL
+            DifficultyMode.HARD -> BEE_CYCLE_DELAY_HARD
+        }
+        beeCycleDelay.resetDuration(beeCycleDur)
 
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.SCANNER)) {
@@ -192,9 +198,15 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
             if (scanners.any { megaman.body.getBounds().overlaps(it) }) {
                 beeCycleDelay.update(delta)
+
                 if (beeCycleDelay.isFinished()) {
                     cycleBees()
-                    beeCycleDelay.reset()
+
+                    val beeCycleDur = when (game.state.getDifficultyMode()) {
+                        DifficultyMode.NORMAL -> BEE_CYCLE_DELAY_NORMAL
+                        DifficultyMode.HARD -> BEE_CYCLE_DELAY_HARD
+                    }
+                    beeCycleDelay.resetDuration(beeCycleDur)
                 }
             } else beeCycleDelay.setToEnd()
         }

@@ -40,6 +40,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
+import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.bosses.RodentMan
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
@@ -57,9 +58,14 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
     companion object {
         const val TAG = "RatRobot"
-        private const val SPEED = 4f
+
+        private const val NORMAL_SPEED = 4f
+        private const val HARD_SPEED = 6f
+
         private const val GRAVITY = 0.375f
+
         private const val FROZEN_DUR = 0.5f
+
         private val animDefs = orderedMapOf(
             "run" pairTo AnimationDef(3, 1, 0.1f, true),
             "still" pairTo AnimationDef(),
@@ -226,11 +232,13 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
             body.physics.gravity.y = if (body.isSensing(BodySense.FEET_ON_GROUND)) 0f else -GRAVITY * ConstVals.PPM
             body.physics.gravityOn = triggered
 
-            body.physics.velocity.x =
-                when {
-                    frozen || !body.isSensing(BodySense.FEET_ON_GROUND) -> 0f
-                    else -> SPEED * ConstVals.PPM * facing.value
-                }
+            body.physics.velocity.x = when {
+                frozen || !body.isSensing(BodySense.FEET_ON_GROUND) -> 0f
+                else -> when (game.state.getDifficultyMode()) {
+                    DifficultyMode.NORMAL -> NORMAL_SPEED
+                    DifficultyMode.HARD -> HARD_SPEED
+                } * ConstVals.PPM * facing.value
+            }
 
             body.forEachFixture { it.setActive(triggered) }
         }
