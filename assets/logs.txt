@@ -1,1 +1,44 @@
-===== SESSION STARTED: 2025-08-02T22:22:51.560807819 =====
+===== SESSION STARTED: 2025-08-02T22:32:26.930974703 =====
+22:32:51 | DEBUG | NuttGlider | init()
+22:32:51 | DEBUG | NuttGlider | onSpawn(): spawnProps=Properties({
+	[bounds=[2040.0,1024.0,16.0,16.0]]
+	[x=2040.0]
+	[height=16.0]
+	[cull_time=2.0]
+	[id=39]
+	[name=NuttGlider]
+	[y=1024.0]
+	[width=16.0]
+})
+22:32:51 | DEBUG | NuttGlider | onChangeKey(): oldKey=null, nextKey=jump_nutt
+22:32:51 | DEBUG | NuttGlider | onChangeKey(): oldKey=jump_nutt, nextKey=stand_nutt
+22:32:52 | DEBUG | NuttGlider | jump()
+22:32:52 | DEBUG | NuttGlider | onChangeKey(): oldKey=stand_nutt, nextKey=jump_nutt
+22:32:53 | DEBUG | NuttGlider | onChangeKey(): oldKey=jump_nutt, nextKey=glide_nutt
+22:32:53 | DEBUG | NuttGlider | dropNutt()
+22:32:53 | DEBUG | NuttGlider | onChangeKey(): oldKey=glide_nutt, nextKey=glide
+22:32:54 | DEBUG | NuttGlider | onChangeKey(): oldKey=glide, nextKey=stand
+22:32:55 | DEBUG | NuttGlider | jump()
+22:32:55 | DEBUG | NuttGlider | onChangeKey(): oldKey=stand, nextKey=jump
+22:32:56 | DEBUG | NuttGlider | onChangeKey(): oldKey=jump, nextKey=glide
+22:33:07 | DEBUG | NuttGlider | onSpawn(): spawnProps=Properties({
+	[bounds=[3376.0,1088.0,32.0,32.0]]
+	[x=3376.0]
+	[height=32.0]
+	[cull_time=2.0]
+	[id=56]
+	[name=NuttGlider]
+	[y=1088.0]
+	[width=32.0]
+})
+22:33:07 | DEBUG | NuttGlider | onChangeKey(): oldKey=null, nextKey=jump_nutt
+22:33:07 | DEBUG | NuttGlider | onChangeKey(): oldKey=jump_nutt, nextKey=stand_nutt
+22:33:08 | DEBUG | NuttGlider | jump()
+22:33:08 | DEBUG | NuttGlider | onChangeKey(): oldKey=stand_nutt, nextKey=jump_nutt
+22:33:08 | DEBUG | NuttGlider | onChangeKey(): oldKey=jump_nutt, nextKey=glide_nutt
+22:33:09 | DEBUG | NuttGlider | dropNutt()
+22:33:09 | DEBUG | NuttGlider | onChangeKey(): oldKey=glide_nutt, nextKey=glide
+22:33:10 | DEBUG | NuttGlider | onChangeKey(): oldKey=glide, nextKey=stand
+22:33:11 | DEBUG | NuttGlider | jump()
+22:33:11 | DEBUG | NuttGlider | onChangeKey(): oldKey=stand, nextKey=jump
+22:33:12 | DEBUG | NuttGlider | onChangeKey(): oldKey=jump, nextKey=glide
