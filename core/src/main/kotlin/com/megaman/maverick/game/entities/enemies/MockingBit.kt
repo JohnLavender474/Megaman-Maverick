@@ -11,6 +11,7 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -29,6 +30,7 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
+import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.world.body.*
 
 class MockingBit(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
@@ -61,6 +63,9 @@ class MockingBit(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
         facing = if (trajectory.x <= 0f) Facing.LEFT else Facing.RIGHT
     }
+
+    override fun canBeDamagedBy(damager: IDamager) =
+        damager is Axe || super.canBeDamagedBy(damager)
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")

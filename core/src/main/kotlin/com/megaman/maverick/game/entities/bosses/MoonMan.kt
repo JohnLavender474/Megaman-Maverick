@@ -64,6 +64,8 @@ import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
+// In game, Moon Man's name has been changed to Lunar Man. Keeping his class name here as Moon Man to avoid having to
+// make many changes throughout existing code & maps.
 class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IScalableGravityEntity, IFaceable,
     IDirectional {
 

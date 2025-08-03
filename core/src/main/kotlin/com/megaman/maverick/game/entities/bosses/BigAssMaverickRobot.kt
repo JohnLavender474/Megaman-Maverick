@@ -48,6 +48,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.StandardDamageNegotiator
 import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.BreakableBlock
 import com.megaman.maverick.game.entities.bosses.BigAssMaverickRobotHand.BigAssMaverickRobotHandState
@@ -102,13 +103,27 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         private const val ORB_MIN_SPEED = 6f
         private const val ORB_MAX_SPEED = 10f
 
+        private const val SHOOT_ORBS_DELAY_HARD = 2f
+        private const val SHOOT_ORBS_DUR_HARD = 2f
+        private const val DELAY_BETWEEN_ORBS_HARD = 0.5f
+        private const val ORB_MAX_MOVE_DELAY_HARD = 0.5f
+        private const val ORB_MIN_MOVE_DELAY_HARD = 0.1f
+        private const val ORBS_COUNT_HARD = 4
+        private const val ORB_MIN_SPEED_HARD = 8f
+        private const val ORB_MAX_SPEED_HARD = 12f
+
         private const val LAUNCH_HAND_DELAY = 3f
+        private const val LAUNCH_HAND_DELAY_HARD = 1f
+
         private const val HAND_RADIUS = 2f
         private const val HAND_ROTATION_MIN_SPEED = 5f
         private const val HAND_ROTATION_MAX_SPEED = 8f
         private const val HAND_LAUNCH_MIN_SPEED = 8f
         private const val HAND_LAUNCH_MAX_SPEED = 12f
         private const val CLOSEST_HAND_CHANCE = 75
+
+        private const val HAND_LAUNCH_MIN_SPEED_HARD = 10f
+        private const val HAND_LAUNCH_MAX_SPEED_HARD = 15f
 
         private const val FALL_GRAVITY = 0.1f
         private const val FALL_IMPULSE = 10f
@@ -161,15 +176,10 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
     private val stunned: Boolean
         get() = !stunnedTimer.isFinished()
 
-    private val shootOrbsDelay = Timer(SHOOT_ORBS_DELAY)
-    private val shootOrbsTimer = Timer(SHOOT_ORBS_DUR).also { timer ->
-        for (i in 1..ORBS_COUNT) {
-            val time = i * DELAY_BETWEEN_ORBS
-            val runnable = TimeMarkedRunnable(time) { shootOrb() }
-            timer.addRunnable(runnable)
-        }
-    }
-    private val launchHandDelay = Timer(LAUNCH_HAND_DELAY)
+    private val shootOrbsDelay = Timer()
+    private lateinit var shootOrbsTimer: Timer
+
+    private val launchHandDelay = Timer()
 
     private val turnHeadDelay = Timer(TURN_HEAD_DELAY)
     private val headAngleIndicesSorted = PriorityQueue<Int> comparator@{ index1, index2 ->
@@ -227,12 +237,40 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
 
         initTimer.reset()
         shakeTimer.reset()
-        shootOrbsDelay.reset()
-        launchHandDelay.reset()
+
+        val shootOrbsDelayDur = when (game.state.getDifficultyMode()) {
+            DifficultyMode.HARD -> SHOOT_ORBS_DELAY_HARD
+            else -> SHOOT_ORBS_DELAY
+        }
+        shootOrbsDelay.resetDuration(shootOrbsDelayDur)
+
+        val launchHandDelayDur = when (game.state.getDifficultyMode()) {
+            DifficultyMode.NORMAL -> LAUNCH_HAND_DELAY
+            DifficultyMode.HARD -> LAUNCH_HAND_DELAY_HARD
+        }
+        launchHandDelay.resetDuration(launchHandDelayDur)
+
+        if (game.state.getDifficultyMode() == DifficultyMode.NORMAL) {
+            shootOrbsTimer = Timer(SHOOT_ORBS_DUR).also { timer ->
+                for (i in 1..ORBS_COUNT) {
+                    val time = i * DELAY_BETWEEN_ORBS
+                    val runnable = TimeMarkedRunnable(time) { shootOrb() }
+                    timer.addRunnable(runnable)
+                }
+            }
+        } else {
+            shootOrbsTimer = Timer(SHOOT_ORBS_DUR_HARD).also { timer ->
+                for (i in 1..ORBS_COUNT_HARD) {
+                    val time = i * DELAY_BETWEEN_ORBS_HARD
+                    val runnable = TimeMarkedRunnable(time) { shootOrb() }
+                    timer.addRunnable(runnable)
+                }
+            }
+        }
+        shootOrbsTimer.setToEnd()
 
         stunnedTimer.setToEnd()
         turnHeadDelay.setToEnd()
-        shootOrbsTimer.setToEnd()
 
         facing = if (megaman.body.getCenter().x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
 
@@ -292,9 +330,17 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
             "${ConstKeys.LEFT}_${ConstKeys.ARM}_${ConstKeys.ORIGIN}", RectangleMapObject::class
         )!!.rectangle.getCenter()
         val leftLaunchSpeedSupplier: () -> Float = speed@{
-            return@speed ConstVals.PPM * UtilMethods.interpolate(
-                HAND_LAUNCH_MIN_SPEED, HAND_LAUNCH_MAX_SPEED, 1f - getHealthRatio()
-            )
+            val minSpeed: Float
+            val maxSpeed: Float
+            if (game.state.getDifficultyMode() == DifficultyMode.NORMAL) {
+                minSpeed = HAND_LAUNCH_MIN_SPEED
+                maxSpeed = HAND_LAUNCH_MAX_SPEED
+            } else {
+                minSpeed = HAND_LAUNCH_MIN_SPEED_HARD
+                maxSpeed = HAND_LAUNCH_MAX_SPEED_HARD
+            }
+
+            return@speed ConstVals.PPM * UtilMethods.interpolate(minSpeed, maxSpeed, 1f - getHealthRatio())
         }
         val leftRotationSpeedSupplier: () -> Float = speed@{
             return@speed ConstVals.PPM * UtilMethods.interpolate(
@@ -319,9 +365,17 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
             "${ConstKeys.RIGHT}_${ConstKeys.ARM}_${ConstKeys.ORIGIN}", RectangleMapObject::class
         )!!.rectangle.getCenter()
         val rightLaunchSpeedSupplier: () -> Float = speed@{
-            return@speed ConstVals.PPM * UtilMethods.interpolate(
-                HAND_LAUNCH_MIN_SPEED, HAND_LAUNCH_MAX_SPEED, 1f - getHealthRatio()
-            )
+            val minSpeed: Float
+            val maxSpeed: Float
+            if (game.state.getDifficultyMode() == DifficultyMode.NORMAL) {
+                minSpeed = HAND_LAUNCH_MIN_SPEED
+                maxSpeed = HAND_LAUNCH_MAX_SPEED
+            } else {
+                minSpeed = HAND_LAUNCH_MIN_SPEED_HARD
+                maxSpeed = HAND_LAUNCH_MAX_SPEED_HARD
+            }
+
+            return@speed ConstVals.PPM * UtilMethods.interpolate(minSpeed, maxSpeed, 1f - getHealthRatio())
         }
         val rightRotationSpeedSupplier: () -> Float = speed@{
             return@speed ConstVals.PPM * UtilMethods.interpolate(
@@ -561,10 +615,29 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
 
         val spawn = body.getPositionPoint(Position.TOP_CENTER).sub(0f, 1.25f * ConstVals.PPM)
 
-        val speed = UtilMethods.interpolate(ORB_MIN_SPEED, ORB_MAX_SPEED, 1f - getHealthRatio())
+        val minSpeed: Float
+        val maxSpeed: Float
+        if (game.state.getDifficultyMode() == DifficultyMode.NORMAL) {
+            minSpeed = ORB_MIN_SPEED
+            maxSpeed = ORB_MAX_SPEED
+        } else {
+            minSpeed = ORB_MIN_SPEED_HARD
+            maxSpeed = ORB_MAX_SPEED_HARD
+        }
+
+        val speed = UtilMethods.interpolate(minSpeed, maxSpeed, 1f - getHealthRatio())
         val trajectory = megaman.body.getCenter().sub(spawn).nor().scl(speed * ConstVals.PPM)
 
-        val delay = UtilMethods.interpolate(ORB_MIN_MOVE_DELAY, ORB_MAX_MOVE_DELAY, 1f - getHealthRatio())
+        val minDelay: Float
+        val maxDelay: Float
+        if (game.state.getDifficultyMode() == DifficultyMode.NORMAL) {
+            minDelay = ORB_MIN_MOVE_DELAY
+            maxDelay = ORB_MAX_MOVE_DELAY
+        } else {
+            minDelay = ORB_MIN_MOVE_DELAY_HARD
+            maxDelay = ORB_MAX_MOVE_DELAY_HARD
+        }
+        val delay = UtilMethods.interpolate(minDelay, maxDelay, 1f - getHealthRatio())
 
         val orb = MegaEntityFactory.fetch(BigAssMaverickRobotOrb::class)!!
         orb.spawn(

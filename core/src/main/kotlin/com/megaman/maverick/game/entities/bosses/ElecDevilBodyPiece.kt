@@ -37,7 +37,6 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.ILightSource
 import com.megaman.maverick.game.entities.explosions.ElecExplosion
-import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.pooledCopy
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.*
@@ -51,6 +50,10 @@ class ElecDevilBodyPiece(game: MegamanMaverickGame) : AbstractProjectile(game), 
 
         private const val LIGHT_SOURCE_RADIUS = 3
         private const val LIGHT_SOURCE_RADIANCE = 1.25f
+
+        // if the life of a body piece exceeds this max TTL, then clearly something wrong has happened, i.e. the body
+        // piece has not been culled properly
+        private const val MAX_TTL = 5f
 
         private var region: TextureRegion? = null
     }
@@ -69,6 +72,7 @@ class ElecDevilBodyPiece(game: MegamanMaverickGame) : AbstractProjectile(game), 
     private val target = Vector2()
 
     private val beginTimer = Timer(BEGIN_DUR)
+    private val ttlTimer = Timer(MAX_TTL)
 
     private lateinit var onEnd: () -> Unit
 
@@ -90,17 +94,15 @@ class ElecDevilBodyPiece(game: MegamanMaverickGame) : AbstractProjectile(game), 
         val start = spawnProps.get(ConstKeys.START, Vector2::class)!!
         body.setCenter(start)
         this.start.set(start)
-        // start Vector2 from spawnProps can be freed now since it's no longer used
-        GameObjectPools.free(start)
 
         val target = spawnProps.get(ConstKeys.TARGET, Vector2::class)!!
         this.target.set(target)
-        // target Vector2 from spawnProps can be freed now since it's no longer used
-        GameObjectPools.free(target)
 
         onEnd = spawnProps.get(ConstKeys.END) as () -> Unit
         processState = ProcessState.BEGIN
+
         beginTimer.reset()
+        ttlTimer.reset()
 
         speed = spawnProps.get(ConstKeys.SPEED, Float::class)!!
 
@@ -116,7 +118,25 @@ class ElecDevilBodyPiece(game: MegamanMaverickGame) : AbstractProjectile(game), 
         lightSourceKeys.clear()
     }
 
+    override fun explodeAndDie(vararg params: Any?) {
+        GameLogger.debug(TAG, "explodeAndDie()")
+        body.setCenter(target)
+        spawnExplosion()
+        onEnd.invoke()
+        destroy()
+    }
+
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        ttlTimer.update(delta)
+        // Ideally, this should never happened. However, one time while playing against the elec devil, I ran into an
+        // instance where a body piece floated at its target destination indefinitely, causing the boss fight to be
+        // soft locked. While I could not figure out the source of the bug, I've implemented this TTL timer to avoid
+        // any indefinite soft lock caused by this issue.
+        if (ttlTimer.isFinished()) {
+            explodeAndDie()
+            return@UpdatablesComponent
+        }
+
         lightSourceSendEventDelay.update(delta)
         if (lightSourceSendEventDelay.isFinished()) {
             LightSourceUtils.sendLightSourceEvent(game, this)
@@ -137,10 +157,7 @@ class ElecDevilBodyPiece(game: MegamanMaverickGame) : AbstractProjectile(game), 
                     "body.getCenter=${body.getCenter()}, start=$start, target=$target"
             )
             processState = ProcessState.END
-            body.setCenter(target)
-            spawnExplosion()
-            onEnd.invoke()
-            destroy()
+            explodeAndDie()
         }
     })
 
@@ -186,9 +203,9 @@ class ElecDevilBodyPiece(game: MegamanMaverickGame) : AbstractProjectile(game), 
         val explosion = MegaEntityFactory.fetch(ElecExplosion::class)!!
         explosion.spawn(
             props(
+                ConstKeys.SOUND pairTo true,
                 ConstKeys.OWNER pairTo owner,
-                ConstKeys.POSITION pairTo target,
-                ConstKeys.SOUND pairTo true
+                ConstKeys.POSITION pairTo body.getCenter(),
             )
         )
     }

@@ -22,6 +22,7 @@ import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.ICullable
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -44,6 +45,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.hazards.HoneyDrip
+import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.utils.StateLoopHandler
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -66,8 +68,8 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         private const val SQUEEZE_TIME = 0.5f
 
         private const val MAX_BEES = 8
-        private const val BEE_CYCLE_DELAY_NORMAL = 2f
-        private const val BEE_CYCLE_DELAY_HARD = 1f
+        private const val BEE_CYCLE_DELAY_NORMAL = 3f
+        private const val BEE_CYCLE_DELAY_HARD = 2f
         private const val MIN_BEES_TO_CYCLE = 1
         private const val MAX_BEES_TO_CYCLE = 3
 
@@ -144,6 +146,9 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             }
         }
     }
+
+    override fun canBeDamagedBy(damager: IDamager) =
+        damager is Axe || super.canBeDamagedBy(damager)
 
     override fun onHealthDepleted() {
         GameLogger.debug(TAG, "onHealthDepleted()")

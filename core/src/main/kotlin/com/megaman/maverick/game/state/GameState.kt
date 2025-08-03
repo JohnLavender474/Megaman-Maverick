@@ -340,7 +340,8 @@ class GameState : Resettable {
                 val difficultyMode = DifficultyMode.valueOf(lines[5][0].uppercase())
                 this.difficultyMode = difficultyMode
             } catch (e: Exception) {
-                GameLogger.debug(TAG, "fromString(): failed to load difficulty mode", e)
+                GameLogger.debug(TAG, "fromString(): failed to load difficulty mode, default to NORMAL", e)
+                this.difficultyMode = DifficultyMode.NORMAL
             }
         }
     }

@@ -49,6 +49,7 @@ object ConstVals {
 
 object ConstKeys {
     const val HARD_MODE_ONLY = "hard_mode_only"
+    const val NORMAL_MODE_ONLY = "normal_mode_only"
     const val DIFFICULTY = "difficulty"
     const val WEAPON = "weapon"
     const val WEAPONS_ATTAINED = "weapons_attained"

@@ -31,6 +31,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.megaman
@@ -52,23 +53,24 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
         const val TAG = "ElecDevil"
 
         internal const val INIT_DUR = 1f
-
         internal const val APPEAR_DUR = 0.5f
-
         internal const val STAND_DUR = 0.5f
-
         internal const val CHARGE_DUR = 1f
-
         internal const val HAND_DUR = 1.5f
-        internal const val HAND_SHOT_DELAY = 0.5f
 
-        // TODO: mins and maxes are equal, but can be configured to be different
-        // internal const val MIN_LAUNCH_DELAY = 0.4f
-        // internal const val MAX_LAUNCH_DELAY = 0.9f
-        internal const val MIN_LAUNCH_DELAY = 0.5f
-        internal const val MAX_LAUNCH_DELAY = 0.5f
-        internal const val MAX_RANDOM_LAUNCH_DELAY = 0.5f
-        internal const val MIN_RANDOM_LAUNCH_DELAY = 0.5f
+        internal const val EYE_SHOT_DELAY_NORMAL = 0.5f
+        internal const val EYE_SHOT_DELAY_HARD = 0.3f
+
+        internal const val MAX_LAUNCH_DELAY_NORMAL = 0.6f
+        internal const val MIN_LAUNCH_DELAY_NORMAL = 0.5f
+        internal const val MAX_LAUNCH_DELAY_HARD = 0.5f
+        internal const val MIN_LAUNCH_DELAY_HARD = 0.4f
+
+        internal const val MAX_RANDOM_LAUNCH_DELAY_NORMAL = 0.75f
+        internal const val MIN_RANDOM_LAUNCH_DELAY_NORMAL = 0.6f
+        internal const val MAX_RANDOM_LAUNCH_DELAY_HARD = 0.5f
+        internal const val MIN_RANDOM_LAUNCH_DELAY_HARD = 0.5f
+
         internal const val MIN_HEALTH_FOR_LAUNCH_OFFSET = 5f
 
         internal const val TURN_TO_PIECES_DUR = 1f
@@ -103,25 +105,13 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
         ElecDevilState.STAND,
         ElecDevilState.TURN_TO_PIECES
     )
-    private val stateTimers = orderedMapOf(
-        ElecDevilState.APPEAR pairTo Timer(APPEAR_DUR),
-        ElecDevilState.STAND pairTo Timer(STAND_DUR),
-        ElecDevilState.CHARGE pairTo Timer(CHARGE_DUR).setRunOnFinished { shootFromEye() },
-        ElecDevilState.HAND pairTo Timer(HAND_DUR).also { timer ->
-            val shots = HAND_DUR.div(HAND_SHOT_DELAY).toInt()
-            for (i in 1..shots) {
-                val time = i * HAND_SHOT_DELAY
-                val runnable = TimeMarkedRunnable(time) { shootFromEye() }
-                timer.addRunnable(runnable)
-            }
-        },
-        ElecDevilState.TURN_TO_PIECES pairTo Timer(TURN_TO_PIECES_DUR)
-    )
+    private lateinit var stateTimers: OrderedMap<ElecDevilState, Timer>
+
     private val initTimer = Timer(INIT_DUR)
 
-    private val launchDelayTimer = Timer(MAX_LAUNCH_DELAY)
-    private val launchedPieces = Array<ElecDevilBodyPiece>()
     private val launchQueue = Queue<ElecDevilLaunchQueueElement>()
+    private val launchedPieces = Array<ElecDevilBodyPiece>()
+    private val launchDelayTimer = Timer()
     private var launches = 0
 
     private lateinit var lightSourceKeys: ObjectSet<Int>
@@ -150,7 +140,25 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
         body.set(room)
 
         loop.reset()
-        stateTimers.values().forEach { it.reset() }
+
+        stateTimers = orderedMapOf(
+            ElecDevilState.APPEAR pairTo Timer(APPEAR_DUR),
+            ElecDevilState.STAND pairTo Timer(STAND_DUR),
+            ElecDevilState.CHARGE pairTo Timer(CHARGE_DUR).setRunOnFinished { shootFromEye() },
+            ElecDevilState.HAND pairTo Timer(HAND_DUR).also { timer ->
+                val delay = if (game.state.getDifficultyMode() == DifficultyMode.HARD)
+                    EYE_SHOT_DELAY_HARD else EYE_SHOT_DELAY_NORMAL
+
+                val shots = HAND_DUR.div(delay).toInt()
+
+                for (i in 1..shots) {
+                    val time = i * delay
+                    val runnable = TimeMarkedRunnable(time) { shootFromEye() }
+                    timer.addRunnable(runnable)
+                }
+            },
+            ElecDevilState.TURN_TO_PIECES pairTo Timer(TURN_TO_PIECES_DUR)
+        )
 
         lightSourceKeys = spawnProps.get("${ConstKeys.LIGHT}_${ConstKeys.SOURCE}_${ConstKeys.KEYS}", String::class)!!
             .replace("\\s+", "")
@@ -524,14 +532,16 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
         val numerator = max(0f, getCurrentHealth() - MIN_HEALTH_FOR_LAUNCH_OFFSET)
         val ratio = min(1f, numerator / ConstVals.MAX_HEALTH)
 
+        val hard = game.state.getDifficultyMode() == DifficultyMode.HARD
+
         val min: Float
         val max: Float
         if (shouldRandomizeLaunchTargets()) {
-            min = MIN_RANDOM_LAUNCH_DELAY
-            max = MAX_RANDOM_LAUNCH_DELAY
+            min = if (hard) MIN_RANDOM_LAUNCH_DELAY_HARD else MIN_RANDOM_LAUNCH_DELAY_NORMAL
+            max = if (hard) MAX_RANDOM_LAUNCH_DELAY_HARD else MAX_RANDOM_LAUNCH_DELAY_NORMAL
         } else {
-            min = MIN_LAUNCH_DELAY
-            max = MAX_LAUNCH_DELAY
+            min = if (hard) MIN_LAUNCH_DELAY_HARD else MIN_LAUNCH_DELAY_NORMAL
+            max = if (hard) MAX_LAUNCH_DELAY_HARD else MAX_LAUNCH_DELAY_NORMAL
         }
 
         val duration = UtilMethods.interpolate(min, max, ratio)

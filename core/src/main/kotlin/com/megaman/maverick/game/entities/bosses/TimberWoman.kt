@@ -114,7 +114,6 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         private val STAND_POUND_GROUND_BURST_TIMES = gdxArrayOf(0.35f, 0.95f, 1.55f)
 
         private val GROUND_PEBBLE_IMPULSES_NORMAL = gdxArrayOf(
-            // Vector2(-18f, 5f),
             Vector2(-15f, 10f),
             Vector2(-9f, 18f),
             Vector2(-3f, 26f),
@@ -122,18 +121,6 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
             Vector2(3f, 26f),
             Vector2(9f, 18f),
             Vector2(15f, 10f),
-            // Vector2(18f, 5f),
-        )
-        private val GROUND_PEBBLE_IMPULSES_HARD = gdxArrayOf(
-            Vector2(-18f, 5f),
-            Vector2(-15f, 10f),
-            Vector2(-9f, 18f),
-            Vector2(-3f, 26f),
-            Vector2(0f, 30f),
-            Vector2(3f, 26f),
-            Vector2(9f, 18f),
-            Vector2(15f, 10f),
-            Vector2(18f, 5f),
         )
         private const val GROUND_PEBBLES_AXE_SWING_OFFSET_X = 2f
         private const val GROUND_PEBBLES_OFFSET_Y = 0.35f
@@ -194,7 +181,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
 
         private const val SECOND_LEAF_OFFSET = 1.5f
 
-        private const val HARD_MODE_LEAF_SPAWN_DELAY = 2.5f
+        private const val HARD_MODE_LEAF_SPAWN_DELAY = 3f
 
         private val DESTROY_TAGS = orderedSetOf(GroundPebble.TAG, DeadlyLeaf.TAG)
 
@@ -771,33 +758,16 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         if (currentState == TimberWomanState.STAND_SWING)
             spawn.add(GROUND_PEBBLES_AXE_SWING_OFFSET_X * ConstVals.PPM * facing.value, 0f)
 
-        when (game.state.getDifficultyMode()) {
-            DifficultyMode.NORMAL -> {
-                for (i in 0 until GROUND_PEBBLE_IMPULSES_NORMAL.size) {
-                    val impulse = GROUND_PEBBLE_IMPULSES_NORMAL[i].cpy().scl(ConstVals.PPM.toFloat())
+        for (i in 0 until GROUND_PEBBLE_IMPULSES_NORMAL.size) {
+            val impulse = GROUND_PEBBLE_IMPULSES_NORMAL[i].cpy().scl(ConstVals.PPM.toFloat())
 
-                    val pebble = MegaEntityFactory.fetch(GroundPebble::class)!!
-                    pebble.spawn(
-                        props(
-                            ConstKeys.POSITION pairTo spawn,
-                            ConstKeys.IMPULSE pairTo impulse
-                        )
-                    )
-                }
-            }
-            DifficultyMode.HARD -> {
-                for (i in 0 until GROUND_PEBBLE_IMPULSES_HARD.size) {
-                    val impulse = GROUND_PEBBLE_IMPULSES_HARD[i].cpy().scl(ConstVals.PPM.toFloat())
-
-                    val pebble = MegaEntityFactory.fetch(GroundPebble::class)!!
-                    pebble.spawn(
-                        props(
-                            ConstKeys.POSITION pairTo spawn,
-                            ConstKeys.IMPULSE pairTo impulse
-                        )
-                    )
-                }
-            }
+            val pebble = MegaEntityFactory.fetch(GroundPebble::class)!!
+            pebble.spawn(
+                props(
+                    ConstKeys.POSITION pairTo spawn,
+                    ConstKeys.IMPULSE pairTo impulse
+                )
+            )
         }
     }
 

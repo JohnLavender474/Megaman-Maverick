@@ -80,14 +80,14 @@ class SelectDifficultyScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, N
             }
 
             override fun onSelect(delta: Float): Boolean {
-                game.state.setDifficultyMode(DifficultyMode.HARD)
+                game.state.setDifficultyMode(DifficultyMode.NORMAL)
 
                 game.setCurrentLevel(LevelDefinition.INTRO_STAGE)
                 game.startLevel()
 
                 game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
 
-                return false
+                return true
             }
         })
 
@@ -134,7 +134,7 @@ class SelectDifficultyScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, N
 
         backgroundSprite.draw(batch)
         fontHandles.values().forEach { it.draw(batch) }
-        arrow.draw(batch)
+        if (!selectionMade) arrow.draw(batch)
 
         batch.end()
     }

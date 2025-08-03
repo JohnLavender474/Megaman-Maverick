@@ -4,4 +4,4 @@
 # - in `gradle.properties`, set `projectVersion` to the correct version
 # - run `./gradlew lwjgl3:dist` to create the JAR corresponding to the name below
 
-./build-game.sh windows64 Megaman-Maverick-alpha-1.11.0
+./build-game.sh windows64 Megaman-Maverick-alpha-1.12.0

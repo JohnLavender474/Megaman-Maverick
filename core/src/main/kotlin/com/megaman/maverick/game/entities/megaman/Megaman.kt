@@ -31,7 +31,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
-import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.*
@@ -664,17 +663,11 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         return true
     }
 
-    override fun editDamageFrom(damager: IDamager, baseDamage: Int): Int {
-        var damage = when {
-            hasEnhancement(MegaEnhancement.DAMAGE_INCREASE) -> MegaEnhancement.scaleDamage(
-                baseDamage, MegaEnhancement.MEGAMAN_DAMAGE_INCREASE_SCALAR
-            )
-            else -> baseDamage
-        }
-
-        if (game.state.getDifficultyMode() == DifficultyMode.HARD) damage += 1
-
-        return damage
+    override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when {
+        hasEnhancement(MegaEnhancement.DAMAGE_INCREASE) -> MegaEnhancement.scaleDamage(
+            baseDamage, MegaEnhancement.MEGAMAN_DAMAGE_INCREASE_SCALAR
+        )
+        else -> baseDamage
     }
 
     override fun definePointsComponent(): PointsComponent {

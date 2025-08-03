@@ -1313,7 +1313,7 @@
     <property name="impulse_x" type="float" value="5"/>
    </properties>
   </object>
-  <object id="117" name="CannoHoney" x="5120" y="704" width="32" height="32">
+  <object id="117" name="CannoHoney" x="5120" y="736" width="32" height="32">
    <properties>
     <property name="scanner" type="object" value="118"/>
    </properties>
@@ -1343,12 +1343,12 @@
   <object id="178" name="Bat" x="1504" y="2016" width="32" height="32"/>
   <object id="179" name="Bat" x="1248" y="2048" width="32" height="32"/>
   <object id="180" name="Bat" x="3056" y="2032" width="32" height="32"/>
-  <object id="208" name="CannoHoney" x="8496" y="1248" width="32" height="32">
+  <object id="208" name="CannoHoney" x="8496" y="1280" width="32" height="32">
    <properties>
     <property name="scanner" type="object" value="210"/>
    </properties>
   </object>
-  <object id="217" name="CannoHoney" x="9200" y="1248" width="32" height="32">
+  <object id="217" name="CannoHoney" x="9200" y="1280" width="32" height="32">
    <properties>
     <property name="scanner" type="object" value="218"/>
    </properties>
