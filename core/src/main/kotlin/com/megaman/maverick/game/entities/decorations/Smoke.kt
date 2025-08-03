@@ -56,7 +56,8 @@ class Smoke(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, I
         addComponent(defineCullablesComponent())
     }
 
-    override fun canSpawn(spawnProps: Properties) = !LevelUtils.isInfernoManLevelFrozen(game.state)
+    override fun canSpawn(spawnProps: Properties) = super.canSpawn(spawnProps) &&
+        !LevelUtils.isInfernoManLevelFrozen(game.state)
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")

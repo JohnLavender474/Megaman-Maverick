@@ -94,6 +94,8 @@ class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     }
 
     override fun canSpawn(spawnProps: Properties): Boolean {
+        if (!super.canSpawn(spawnProps)) return false
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         val left = megaman.body.getCenter().x <= spawn.x
 
@@ -106,7 +108,8 @@ class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
         if (left && !canSpawnLeft) return false
         if (!left && !canSpawnRight) return false
-        return super.canSpawn(spawnProps)
+
+        return true
     }
 
     override fun onSpawn(spawnProps: Properties) {

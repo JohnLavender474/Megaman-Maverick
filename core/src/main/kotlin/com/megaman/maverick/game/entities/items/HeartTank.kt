@@ -82,6 +82,8 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
     }
 
     override fun canSpawn(spawnProps: Properties): Boolean {
+        if (!super.canSpawn(spawnProps)) return false
+
         val value = spawnProps.get(ConstKeys.VALUE)!!
 
         this.heartTank = when (value) {

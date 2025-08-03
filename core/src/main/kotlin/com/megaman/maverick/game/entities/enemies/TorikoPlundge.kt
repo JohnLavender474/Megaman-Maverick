@@ -102,11 +102,15 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
     }
 
     override fun canSpawn(spawnProps: Properties): Boolean {
+        if (!super.canSpawn(spawnProps)) return false
+
         val canSpawn = spawnProps
             .collectValues<RectangleMapObject> { key, value -> key.toString().contains(ConstKeys.BLOCK) }
             .map { obj -> obj.properties.get(ConstKeys.ID, Int::class.java) }
             .any { id -> MegaGameEntities.existsAnyOfMapObjectId(id) }
+
         GameLogger.debug(TAG, "canSpawn(): canSpawn=$canSpawn, spawnProps=$spawnProps")
+
         return canSpawn
     }
 

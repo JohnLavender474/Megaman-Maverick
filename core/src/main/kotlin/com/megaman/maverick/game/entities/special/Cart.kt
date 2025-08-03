@@ -77,6 +77,8 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     }
 
     override fun canSpawn(spawnProps: Properties): Boolean {
+        if (!super.canSpawn(spawnProps)) return false
+
         val specials = MegaGameEntities.getOfType(getType())
         val otherCart = specials.find { it is Cart && it != this }
 

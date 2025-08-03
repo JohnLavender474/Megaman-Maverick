@@ -57,7 +57,8 @@ class LavaFall(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ polygon }), debug = true))
     }
 
-    override fun canSpawn(spawnProps: Properties) = !LevelUtils.isInfernoManLevelFrozen(game.state)
+    override fun canSpawn(spawnProps: Properties) = super.canSpawn(spawnProps) &&
+        !LevelUtils.isInfernoManLevelFrozen(game.state)
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")

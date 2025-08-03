@@ -137,6 +137,7 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
     override fun canSpawn(spawnProps: Properties): Boolean {
         if (!super.canSpawn(spawnProps)) return false
+
         val id = spawnProps.get(ConstKeys.ID, Int::class)!!
         return !ALIVE.contains(id)
     }

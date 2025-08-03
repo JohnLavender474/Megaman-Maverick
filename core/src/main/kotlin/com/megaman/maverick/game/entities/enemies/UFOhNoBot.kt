@@ -100,7 +100,8 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         addComponent(defineAnimationsComponent())
     }
 
-    override fun canSpawn(spawnProps: Properties) = MegaGameEntities.getOfTag(TAG).size < MAX_SPAWNED
+    override fun canSpawn(spawnProps: Properties) = super.canSpawn(spawnProps) &&
+        MegaGameEntities.getOfTag(TAG).size < MAX_SPAWNED
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "spawn(): spawnProps=$spawnProps")

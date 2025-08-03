@@ -131,6 +131,8 @@ class SteamRollerMan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
     }
 
     override fun canSpawn(spawnProps: Properties): Boolean {
+        if (!super.canSpawn(spawnProps)) return false
+
         val id = spawnProps.get(ConstKeys.ID, Int::class)!!
         return MegaGameEntities.getOfTag(SteamRoller.TAG).none { it.mapObjectId == id }
     }

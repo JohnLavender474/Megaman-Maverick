@@ -8,6 +8,7 @@ import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.points.Points
 import com.megaman.maverick.game.ConstVals
+import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
@@ -26,6 +27,7 @@ class GameState : Resettable {
     private val enhancementsAttained = ObjectSet<MegaEnhancement>()
     private val healthTanksCollected = ObjectMap<MegaHealthTank, Points>()
     private var currency = Points(ConstVals.MIN_CURRENCY, ConstVals.MAX_CURRENCY, ConstVals.MIN_CURRENCY)
+    private var difficultyMode = DifficultyMode.NORMAL
 
     private val listeners = OrderedSet<IGameStateListener>()
 
@@ -201,6 +203,12 @@ class GameState : Resettable {
 
     fun getMaxCurrency() = currency.max
 
+    fun setDifficultyMode(difficultyMode: DifficultyMode) {
+        this.difficultyMode = difficultyMode
+    }
+
+    fun getDifficultyMode() = difficultyMode
+
     override fun reset() {
         GameLogger.debug(TAG, "reset()")
 
@@ -246,6 +254,8 @@ class GameState : Resettable {
                 throw Exception("Failed to remove enhancement: ${enhancement}. Levels defeated: $enhancement", e)
             }
         }
+
+        difficultyMode = DifficultyMode.NORMAL
     }
 
     override fun toString(): String {
@@ -263,10 +273,14 @@ class GameState : Resettable {
         val enhancements = enhancementsAttained.joinToString(",") { it.name }
         builder.append("$enhancements;")
 
-        builder.append(currency.current)
+        builder.append("${currency.current};")
+
+        builder.append(difficultyMode.name)
 
         val s = builder.toString()
+
         GameLogger.debug(TAG, "toString(): s=$s")
+
         return s
     }
 
@@ -312,11 +326,22 @@ class GameState : Resettable {
             }
         }
 
-        try {
-            val currency = lines[4][0].toInt()
-            this.currency.set(currency)
-        } catch (e: Exception) {
-            GameLogger.error(TAG, "fromString(): failed to load currency", e)
+        if (lines.size >= 5 && !lines[4].isEmpty()) {
+            try {
+                val currency = lines[4][0].toInt()
+                this.currency.set(currency)
+            } catch (e: Exception) {
+                GameLogger.error(TAG, "fromString(): failed to load currency", e)
+            }
+        }
+
+        if (lines.size >= 6 && !lines[5].isEmpty()) {
+            try {
+                val difficultyMode = DifficultyMode.valueOf(lines[5][0].uppercase())
+                this.difficultyMode = difficultyMode
+            } catch (e: Exception) {
+                GameLogger.debug(TAG, "fromString(): failed to load difficulty mode", e)
+            }
         }
     }
 }

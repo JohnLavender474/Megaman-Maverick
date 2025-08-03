@@ -51,7 +51,10 @@ class HealthTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity
     }
 
     override fun canSpawn(spawnProps: Properties): Boolean {
+        if (!super.canSpawn(spawnProps)) return false
+
         GameLogger.debug(TAG, "canSpawn(): spawnProps=$spawnProps")
+
         healthTank = MegaHealthTank.valueOf(spawnProps.get(ConstKeys.VALUE, String::class)!!.uppercase())
         return !megaman.hasHealthTank(healthTank)
     }

@@ -92,6 +92,8 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IFireEntity,
     }
 
     override fun canSpawn(spawnProps: Properties): Boolean {
+        if (!super.canSpawn(spawnProps)) return false
+
         val bounds = GameObjectPools.fetch(GameRectangle::class)
             .setSize(BODY_SIZE * ConstVals.PPM)
             .also {

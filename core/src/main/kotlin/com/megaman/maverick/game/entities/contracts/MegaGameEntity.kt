@@ -6,6 +6,7 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.entities.GameEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaGameEntities
 
 abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEntity(game.engine), IMegaGameEntity {
@@ -20,6 +21,13 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
     var dead = false
     var mapObjectId = 0
         private set
+
+    override fun canSpawn(spawnProps: Properties): Boolean {
+        if (!super.canSpawn(spawnProps)) return false
+
+        val hardModeOnly = spawnProps.getOrDefault(ConstKeys.HARD_MODE_ONLY, false, Boolean::class)
+        return !(hardModeOnly && game.state.getDifficultyMode() != DifficultyMode.HARD)
+    }
 
     override fun onSpawn(spawnProps: Properties) {
         mapObjectId = spawnProps.getOrDefault(ConstKeys.ID, -1, Int::class)

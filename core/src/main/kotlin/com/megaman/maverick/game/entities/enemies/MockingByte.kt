@@ -162,7 +162,7 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         addComponent(defineAnimationsComponent())
     }
 
-    override fun canSpawn(spawnProps: Properties) =
+    override fun canSpawn(spawnProps: Properties) = super.canSpawn(spawnProps) &&
         MegaGameEntities.getOfTag(TAG).size < MAX_SPAWNED
 
     override fun onSpawn(spawnProps: Properties) {

@@ -10,7 +10,8 @@ class InfernoDeath(game: MegamanMaverickGame): Death(game) {
         const val TAG = "InfernoDeath"
     }
 
-    override fun canSpawn(spawnProps: Properties) = !game.state.isLevelDefeated(LevelDefinition.GLACIER_MAN)
+    override fun canSpawn(spawnProps: Properties) = super.canSpawn(spawnProps) &&
+        !game.state.isLevelDefeated(LevelDefinition.GLACIER_MAN)
 
     override fun getTag() = TAG
 }

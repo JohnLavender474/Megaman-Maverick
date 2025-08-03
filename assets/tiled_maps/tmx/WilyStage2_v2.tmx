@@ -1502,7 +1502,7 @@
  <objectgroup id="10" name="temp">
   <object id="494" name="0" x="8000" y="3424" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="6" name="temp">
+ <objectgroup id="6" name="player">
   <object id="12" name="0" x="96" y="3904" width="32" height="32"/>
   <object id="84" name="1" x="2208" y="3040" width="32" height="32"/>
   <object id="142" name="3" x="3056" y="3360" width="32" height="32"/>

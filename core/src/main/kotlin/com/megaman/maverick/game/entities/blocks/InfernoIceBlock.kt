@@ -6,5 +6,6 @@ import com.megaman.maverick.game.levels.LevelUtils
 
 class InfernoIceBlock(game: MegamanMaverickGame) : IceBlock(game) {
 
-    override fun canSpawn(spawnProps: Properties) = LevelUtils.isInfernoManLevelFrozen(game.state)
+    override fun canSpawn(spawnProps: Properties) = super.canSpawn(spawnProps) &&
+        LevelUtils.isInfernoManLevelFrozen(game.state)
 }

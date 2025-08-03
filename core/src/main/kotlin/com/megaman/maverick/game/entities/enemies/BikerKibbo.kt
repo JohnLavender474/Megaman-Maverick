@@ -95,6 +95,8 @@ class BikerKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     }
 
     override fun canSpawn(spawnProps: Properties): Boolean {
+        if (!super.canSpawn(spawnProps)) return false
+
         val id = spawnProps.get(ConstKeys.ID, Int::class)!!
 
         val canSpawn = !isNextPossibleSpawnDelayed(game, TAG, id)
