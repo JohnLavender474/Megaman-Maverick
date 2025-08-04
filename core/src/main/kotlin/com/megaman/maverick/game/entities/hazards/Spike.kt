@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.animations.Animation
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
@@ -63,20 +64,28 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
     override var parent: IGameEntity? = null
 
     private val offset = Vector2()
+
     private var block: Block? = null
+
+    private var allowInstantDeath = true
+    private var collisionOn = true
+
     private var spriteWidth: Float? = null
     private var spriteHeight: Float? = null
     private var animation: Animation? = null
     private lateinit var region: TextureRegion
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+        super.init()
         addComponent(CullablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
@@ -121,7 +130,6 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
                 }
                 putCullable(ConstKeys.CULL_EVENTS, cullOnEvents)
             }
-
             else -> removeCullable(ConstKeys.CULL_EVENTS)
         }
 
@@ -129,13 +137,20 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
         val blockProps = spawnProps.copy()
         blockProps.putAll(ConstKeys.BLOCK_FILTERS pairTo TAG, ConstKeys.DRAW pairTo false)
         block!!.spawn(blockProps)
+
+        allowInstantDeath = spawnProps.getOrDefault(ConstKeys.INSTANT, true, Boolean::class)
+        collisionOn = spawnProps.getOrDefault("${ConstKeys.COLLIDE}_${ConstKeys.ON}", true, Boolean::class)
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+
         block?.destroy()
         block = null
+
         parent = null
+
         offset.setZero()
     }
 
@@ -159,10 +174,12 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
         debugShapes.add { deathFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
+            body.physics.collisionOn = collisionOn
+
             feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
             (deathFixture.rawShape as GameRectangle).set(body)
 
-            val instant = !body.isSensing(BodySense.FEET_ON_GROUND)
+            val instant = if (allowInstantDeath) !body.isSensing(BodySense.FEET_ON_GROUND) else false
             deathFixture.putProperty(ConstKeys.INSTANT, instant)
 
             block!!.body.setCenter(body.getCenter())
@@ -196,8 +213,8 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { delta, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { delta, _ ->
             sprite.setRegion(animation?.let {
                 it.update(delta)
                 it.getCurrentRegion()
@@ -212,7 +229,7 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
         }
-        return spritesComponent
+        return component
     }
 
     override fun getType() = EntityType.HAZARD

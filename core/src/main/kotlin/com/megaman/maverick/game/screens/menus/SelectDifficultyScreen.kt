@@ -17,6 +17,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.levels.LevelDefinition
+import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
 import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
 
@@ -24,6 +25,8 @@ class SelectDifficultyScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, N
 
     companion object {
         const val TAG = "SelectDifficultyScreen"
+
+        private const val BACK = "BACK"
 
         private const val NORMAL = "NORMAL"
         private const val HARD = "HARD"
@@ -53,7 +56,7 @@ class SelectDifficultyScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, N
         backgroundSprite.setRegion(backgroundRegion)
 
         var row = TEXT_ROW_START
-        gdxArrayOf(NORMAL, HARD).forEach { text ->
+        gdxArrayOf(NORMAL, HARD, BACK).forEach { text ->
             val fontHandle = MegaFontHandle(
                 text = text,
                 positionX = TEXT_X * ConstVals.PPM,
@@ -67,6 +70,7 @@ class SelectDifficultyScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, N
                 TEXT_X + ARROW_OFFSET_X,
                 row - ConstVals.ARROW_CENTER_ROW_DECREMENT
             ).scl(ConstVals.PPM.toFloat())
+
             arrows.put(text, BlinkingArrow(game.assMan, arrowCenter))
 
             row -= ConstVals.TEXT_ROW_DECREMENT * ConstVals.PPM
@@ -75,7 +79,8 @@ class SelectDifficultyScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, N
         buttons.put(NORMAL, object : IMenuButton {
 
             override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                Direction.UP, Direction.DOWN -> HARD
+                Direction.UP -> BACK
+                Direction.DOWN -> HARD
                 else -> getCurrentButtonKey()
             }
 
@@ -94,7 +99,8 @@ class SelectDifficultyScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, N
         buttons.put(HARD, object : IMenuButton {
 
             override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                Direction.UP, Direction.DOWN -> NORMAL
+                Direction.UP -> NORMAL
+                Direction.DOWN -> BACK
                 else -> getCurrentButtonKey()
             }
 
@@ -106,6 +112,20 @@ class SelectDifficultyScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, N
 
                 game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
 
+                return true
+            }
+        })
+
+        buttons.put(BACK, object : IMenuButton {
+
+            override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
+                Direction.UP -> HARD
+                Direction.DOWN -> NORMAL
+                else -> getCurrentButtonKey()
+            }
+
+            override fun onSelect(delta: Float): Boolean {
+                game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
                 return true
             }
         })

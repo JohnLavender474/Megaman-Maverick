@@ -68,8 +68,8 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         private const val SQUEEZE_TIME = 0.5f
 
         private const val MAX_BEES = 8
-        private const val BEE_CYCLE_DELAY_NORMAL = 3f
-        private const val BEE_CYCLE_DELAY_HARD = 2f
+        private const val BEE_CYCLE_DELAY_NORMAL = 2f
+        private const val BEE_CYCLE_DELAY_HARD = 1.5f
         private const val MIN_BEES_TO_CYCLE = 1
         private const val MAX_BEES_TO_CYCLE = 3
 
