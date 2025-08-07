@@ -40,6 +40,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Disintegration
+import com.megaman.maverick.game.entities.hazards.DeadlyLeaf
 import com.megaman.maverick.game.world.body.*
 
 class GroundPebble(game: MegamanMaverickGame) : AbstractHealthEntity(game, dmgDuration = DAMAGE_DUR), IProjectileEntity,
@@ -114,14 +115,10 @@ class GroundPebble(game: MegamanMaverickGame) : AbstractHealthEntity(game, dmgDu
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
-    /*
-    override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        val entity = projectileFixture.getEntity() as IProjectileEntity
-        if (entity.owner == megaman) explodeAndDie()
+    override fun onDamageInflictedTo(damageable: IDamageable) {
+        if (damageable is DeadlyLeaf) return
+        explodeAndDie()
     }
-     */
-
-    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
         GameLogger.debug(TAG, "explodeAndDie()")
