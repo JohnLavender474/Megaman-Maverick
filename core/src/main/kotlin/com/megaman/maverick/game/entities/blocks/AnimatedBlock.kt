@@ -39,6 +39,7 @@ open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntit
     var hidden = false
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         super.init()
         addComponent(AnimationsComponent())
         addComponent(defineSpritesComponent())
@@ -128,6 +129,10 @@ object AnimatedBlockAnimators {
             }
             "Platform1_64x8" -> {
                 val region = assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "Platform1_64x8")
+                Animation(region)
+            }
+            "FireballBlock" -> {
+                val region = assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "FireballBlock")
                 Animation(region)
             }
             else -> throw IllegalArgumentException("$TAG: Illegal key = $key")

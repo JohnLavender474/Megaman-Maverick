@@ -48,6 +48,8 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val DROP = "drp"
+    const val FLAME = "flame"
     const val HARD_MODE_ONLY = "hard_mode_only"
     const val NORMAL_MODE_ONLY = "normal_mode_only"
     const val DIFFICULTY = "difficulty"

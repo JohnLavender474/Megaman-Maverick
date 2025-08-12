@@ -11,6 +11,7 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
@@ -51,6 +52,7 @@ import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
+import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.*
 
 class LampeonBandito(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDrawableShapesEntity,
@@ -74,20 +76,10 @@ class LampeonBandito(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         private const val STAND_SHOOT_SCANNER_WIDTH = 12f
         private const val STAND_SHOOT_SCANNER_HEIGHT = 4f
 
-        /*
-        private const val JUMP_SHOOT_SCANNER_WIDTH = 10f
-        private const val JUMP_SHOOT_SCANNER_HEIGHT = 1f
-        private const val JUMP_SHOOT_SCANNER_OFFSET_Y = 0.25f
-
-        private const val JUMP_HIT_SCANNER_WIDTH = 1f
-        private const val JUMP_HIT_SCANNER_HEIGHT = 2f
-
-        private const val JUMP_DELAY = 1f
-
-        private const val JUMP_IMPULSE = 15f
-         */
-
         private const val FRICTION_Y = 1.05f
+
+        private const val LIGHT_RADIUS = 5
+        private const val LIGHT_RADIANCE = 1.025f
 
         private val animDefs = orderedMapOf(
             "stand" pairTo AnimationDef(2, 1, gdxArrayOf(0.9f, 0.1f), true),
@@ -349,5 +341,13 @@ class LampeonBandito(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         }
 
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.BLAST_2_SOUND, false)
+
+        LightSourceUtils.sendLightSourceEvent(
+            game,
+            objectSetOf(1, 2, 3),
+            body.getCenter(),
+            LIGHT_RADIANCE,
+            LIGHT_RADIUS
+        )
     }
 }

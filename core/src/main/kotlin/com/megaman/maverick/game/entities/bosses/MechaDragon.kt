@@ -51,6 +51,7 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
@@ -101,9 +102,13 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IFreezableEnt
         private const val CHARGE_CHANCE_DELTA = 35
 
         private const val FIRE_DUR = 2.5f
+        private const val FIRE_DUR_HARD = 1.5f
         private const val FIRE_TIME = 1.6f
+        private const val FIRE_TIME_HARD = 0.75f
         private const val FIRE_MIN_DELAY = 0.5f
+        private const val FIRE_MIN_DELAY_HARD = 0.25f
         private const val FIRE_MAX_DELAY = 1f
+        private const val FIRE_MAX_DELAY_HARD = 0.5f
         private const val FIRE_SPEED = 10f
         private const val FIRE_ANGLE_DELTA = 75f
 
@@ -167,8 +172,7 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IFreezableEnt
     private val endChargeDelay = Timer(CHARGE_END_DELAY)
 
     private val fireDelay = Timer()
-    private val fireTimer = Timer(FIRE_DUR)
-        .addRunnable(TimeMarkedRunnable(FIRE_TIME) { spitFireballs() }.setToRunOnlyWhenJustPassedTime(true))
+    private lateinit var fireTimer: Timer
     private val firing: Boolean
         get() = !fireTimer.isFinished()
 
@@ -239,7 +243,24 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IFreezableEnt
         chargeChance = 0
         endChargeDelay.reset()
 
-        fireDelay.resetDuration(FIRE_MAX_DELAY)
+        val fireDur: Float
+        val fireTime: Float
+        val fireDelayDur: Float
+
+        if (game.state.getDifficultyMode() == DifficultyMode.HARD) {
+            fireDur = FIRE_DUR_HARD
+            fireTime = FIRE_TIME_HARD
+            fireDelayDur = FIRE_MAX_DELAY_HARD
+        } else {
+            fireDur = FIRE_DUR
+            fireTime = FIRE_TIME
+            fireDelayDur = FIRE_MAX_DELAY
+        }
+
+        fireDelay.resetDuration(fireDelayDur)
+
+        fireTimer = Timer(fireDur)
+            .addRunnable(TimeMarkedRunnable(fireTime) { spitFireballs() }.setToRunOnlyWhenJustPassedTime(true))
         fireTimer.setToEnd()
 
         hoverScalar.reset()
@@ -342,8 +363,19 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IFreezableEnt
                     if (!stateTimer.isFinished() && fireDelay.isFinished()) {
                         fireTimer.reset()
 
-                        val fireDelayDur =
-                            UtilMethods.interpolate(FIRE_MIN_DELAY, FIRE_MAX_DELAY, 1f - getHealthRatio())
+                        val fireMinDelay: Float
+                        val fireMaxDelay: Float
+                        if (game.state.getDifficultyMode() == DifficultyMode.HARD) {
+                            fireMinDelay = FIRE_MIN_DELAY_HARD
+                            fireMaxDelay = FIRE_MAX_DELAY_HARD
+                        } else {
+                            fireMinDelay = FIRE_MIN_DELAY
+                            fireMaxDelay = FIRE_MAX_DELAY
+                        }
+
+                        val fireDelayDur = UtilMethods.interpolate(
+                            fireMinDelay, fireMaxDelay, getHealthRatio()
+                        )
                         fireDelay.resetDuration(fireDelayDur)
                     }
 

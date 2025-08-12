@@ -49,6 +49,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
+        super.init()
 
         debugShapeSuppliers.add { if (draw) body.getBounds() else null }
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapeSuppliers, debug = true))

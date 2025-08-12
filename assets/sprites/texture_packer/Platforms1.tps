@@ -238,6 +238,7 @@
             <key type="filename">../frames/Platforms1/ConveyorBelt/RightPart-MoveLeft-Green.png</key>
             <key type="filename">../frames/Platforms1/ConveyorBelt/RightPart-MoveRight-Green.png</key>
             <key type="filename">../frames/Platforms1/CrumblingBlock.png</key>
+            <key type="filename">../frames/Platforms1/FireballBlock.png</key>
             <key type="filename">../frames/Platforms1/FrozenBlock.png</key>
             <key type="filename">../frames/Platforms1/InfernoChainPlatform/chain.png</key>
             <key type="filename">../frames/Platforms1/InfernoChainPlatform/platform.png</key>

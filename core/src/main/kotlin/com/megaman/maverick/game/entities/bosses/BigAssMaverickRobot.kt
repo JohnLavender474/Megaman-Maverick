@@ -637,7 +637,7 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
             minDelay = ORB_MIN_MOVE_DELAY_HARD
             maxDelay = ORB_MAX_MOVE_DELAY_HARD
         }
-        val delay = UtilMethods.interpolate(minDelay, maxDelay, 1f - getHealthRatio())
+        val delay = UtilMethods.interpolate(minDelay, maxDelay, getHealthRatio())
 
         val orb = MegaEntityFactory.fetch(BigAssMaverickRobotOrb::class)!!
         orb.spawn(

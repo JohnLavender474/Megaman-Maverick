@@ -213,6 +213,13 @@ DropperLift/Opening
   orig: 96, 64
   offset: 0, 0
   index: -1
+FireballBlock
+  rotate: false
+  xy: 168, 102
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 FlipperPlatform/FlipToLeft
   rotate: false
   xy: 0, 270
@@ -257,14 +264,14 @@ FlipperPlatform/RightDelay
   index: -1
 FrozenBlock
   rotate: false
-  xy: 168, 102
+  xy: 202, 102
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GearTrolleyPlatform
   rotate: false
-  xy: 202, 102
+  xy: 236, 102
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
@@ -278,14 +285,14 @@ GoldBlock
   index: -1
 InfernoChainPlatform/chain
   rotate: false
-  xy: 268, 102
+  xy: 302, 102
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 InfernoChainPlatform/platform
   rotate: false
-  xy: 302, 102
+  xy: 336, 102
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -320,7 +327,7 @@ Platform1_64x8
   index: -1
 Platform2
   rotate: false
-  xy: 336, 102
+  xy: 370, 102
   size: 99, 32
   orig: 99, 32
   offset: 0, 0

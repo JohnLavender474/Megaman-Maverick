@@ -1973,6 +1973,7 @@ sprites/frames/Platforms1/PropellerPlatform_OLD.png
 sprites/frames/Platforms1/RocketPlatform_v2.png
 sprites/frames/Platforms1/GearTrolleyPlatform.png
 sprites/frames/Platforms1/GoldBlock.png
+sprites/frames/Platforms1/FireballBlock.png
 sprites/frames/Platforms1/PropellerPlatform.png
 sprites/frames/Platforms1/MoonCrate.png
 sprites/frames/Platforms1/Platform1_64x8.png

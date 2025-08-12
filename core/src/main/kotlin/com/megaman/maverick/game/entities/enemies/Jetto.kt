@@ -113,12 +113,10 @@ class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
     }
 
     override fun canSpawn(spawnProps: Properties): Boolean {
-        if (!canSpawn(spawnProps)) return false
-
+        if (!super.canSpawn(spawnProps)) return false
         if (!MegaGameEntities.getOfTag(TAG).isEmpty) return false
 
         val id = spawnProps.get(ConstKeys.ID, Int::class)!!
-
         val canSpawn = !isNextPossibleSpawnDelayed(game, TAG, id)
         GameLogger.debug(TAG, "canSpawn(): canSpawn=$canSpawn")
 

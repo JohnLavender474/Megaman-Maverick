@@ -43,6 +43,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.blocks.Block
@@ -69,15 +70,23 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         const val SPRITE_SIZE = 3.5f
 
         private const val INIT_DUR = 1f
+
         private const val STAND_DUR = 1.5f
+        private const val STAND_DUR_HARD = 1f
+
         private const val WALL_SLIDE_DUR = 1f
+
         private const val SHOOT_DUR = 0.25f
         private const val SHOOT_DELAY = 0.5f
+        private const val SHOOT_DELAY_HARD = 0.25f
         private const val SHOOT_COOLDOWN_DUR = 0.75f
+        private const val SHOOT_COOLDOWN_DUR_HARD = 0.25f
+
         private const val MEGA_SHOOT_DUR = 1f
         private const val MEGA_SHOOT_TIME = 0.5f
 
         private const val FLAME_HEAD_DUR = 3f
+        private const val FLAME_HEAD_DUR_HARD = 2f
         private const val FLAME_HEAD_SHOTS = 4
         private const val FLAME_HEAD_SHOOT_DELAY = 0.2f
 
@@ -85,13 +94,17 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
         private const val BODY_WIDTH = 1.5f
         private const val BODY_HEIGHT = 1.75f
+
         private const val VEL_CLAMP_X = 50f
         private const val VEL_CLAMP_Y = 25f
+
         private const val GRAVITY = -0.15f
-        private const val WALL_SLIDE_GRAVITY = -0.075f
         private const val GROUND_GRAVITY = -0.01f
+        private const val WALL_SLIDE_GRAVITY = -0.075f
+
         private const val DEFAULT_FRICTION_X = 6f
         private const val DEFAULT_FRICTION_Y = 1f
+
         private const val WALL_SLIDE_FRICTION_Y = 6f
 
         private const val JUMP_MAX_IMPULSE_X = 10f
@@ -450,17 +463,20 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     }
 
     private fun buildTimers() {
+        val hardMode = game.state.getDifficultyMode() == DifficultyMode.HARD
+
         timers.put("init", Timer(INIT_DUR))
-        timers.put("stand", Timer(STAND_DUR))
+        timers.put("stand", Timer(if (hardMode) STAND_DUR_HARD else STAND_DUR))
         timers.put("wallslide", Timer(WALL_SLIDE_DUR))
         timers.put("shoot", Timer())
-        timers.put("shoot_cooldown", Timer(SHOOT_COOLDOWN_DUR))
-        timers.put("shoot_delay", Timer(SHOOT_DELAY))
+        timers.put("shoot_cooldown", Timer(if (hardMode) SHOOT_COOLDOWN_DUR_HARD else SHOOT_COOLDOWN_DUR))
+        timers.put("shoot_delay", Timer(if (hardMode) SHOOT_DELAY_HARD else SHOOT_DELAY))
         timers.put("frozen", Timer(FROZEN_DUR))
 
-        val flameHeadTimer = Timer(FLAME_HEAD_DUR)
+        val flameHeadDur = if (hardMode) FLAME_HEAD_DUR_HARD else FLAME_HEAD_DUR
+        val flameHeadTimer = Timer(flameHeadDur)
         val flameHeadRunnables = Array<TimeMarkedRunnable>()
-        val flameHeadOffsetTime = FLAME_HEAD_DUR / FLAME_HEAD_SHOTS
+        val flameHeadOffsetTime = flameHeadDur / FLAME_HEAD_SHOTS
         val randomIndex = getRandom(0, FLAME_HEAD_SHOTS - 1)
         for (i in 0 until FLAME_HEAD_SHOTS) {
             val time = FLAME_HEAD_SHOOT_DELAY + flameHeadOffsetTime * i
@@ -563,18 +579,15 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                     random <= 0.75f || !timers["shoot"].isFinished() -> ShootMethod.STRAIGHT
                     else -> ShootMethod.MEGA
                 }
-
                 random <= 0.25f -> ShootMethod.MEGA
                 else -> ShootMethod.UP
             }
         }
-
         InfernoManState.JUMP -> when {
             megaman.body.getMaxY() < body.getY() -> ShootMethod.DOWN
             isMegamanStraightAhead() -> ShootMethod.STRAIGHT
             else -> ShootMethod.UP
         }
-
         else -> ShootMethod.STRAIGHT
     }
 
@@ -600,14 +613,20 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     private fun shootWave() {
         val spawn = body.getPositionPoint(Position.BOTTOM_CENTER).add(0.75f * ConstVals.PPM * facing.value, 0f)
+        val trajectory = GameObjectPools.fetch(Vector2::class)
+            .set(WAVE_SPEED * ConstVals.PPM * facing.value, 0f)
 
         val wave = MegaEntityFactory.fetch(MagmaWave::class)!!
-        wave.spawn(
-            props(
-                ConstKeys.POSITION pairTo spawn,
-                ConstKeys.TRAJECTORY pairTo Vector2(WAVE_SPEED * ConstVals.PPM * facing.value, 0f)
-            )
+
+        val props = props(
+            ConstKeys.POSITION pairTo spawn,
+            ConstKeys.TRAJECTORY pairTo trajectory
         )
+
+        if (game.state.getDifficultyMode() == DifficultyMode.HARD)
+            props.put("${ConstKeys.DROP}_${ConstKeys.FLAME}_${ConstKeys.DELAY}", 0.1f)
+
+        wave.spawn(props)
 
         requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
     }
@@ -674,7 +693,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     }
 
     private fun spawnMeteor(targetMegaman: Boolean) {
-        var x = when {
+        val x = when {
             targetMegaman -> megaman.body.getCenter().x
             else -> {
                 val poppedKey = randomMeteorKeys.pop()

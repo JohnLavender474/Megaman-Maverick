@@ -48,13 +48,13 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     companion object {
         const val TAG = "MagmaWave"
         private const val DISINTEGRATE_TIME = 0.3f
-        private const val DROP_FLAME_DELAY = 0.25f
+        private const val DEFAULT_DROP_FLAME_DELAY = 0.25f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
     override lateinit var facing: Facing
 
-    private val dropFlameDelay = Timer(DROP_FLAME_DELAY)
+    private val dropFlameDelay = Timer()
 
     private val disintegrationTimer = Timer(DISINTEGRATE_TIME)
     private var disintegrating = false
@@ -82,7 +82,12 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
         facing = if (trajectory.x < 0f) Facing.LEFT else Facing.RIGHT
 
-        dropFlameDelay.reset()
+        val dropFlameDelayDur = spawnProps.getOrDefault(
+            "${ConstKeys.DROP}_${ConstKeys.FLAME}_${ConstKeys.DELAY}",
+            DEFAULT_DROP_FLAME_DELAY,
+            Float::class
+        )
+        dropFlameDelay.resetDuration(dropFlameDelayDur)
 
         disintegrating = false
         disintegrationTimer.reset()

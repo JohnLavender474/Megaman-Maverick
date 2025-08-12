@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="750" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="20" nextobjectid="672">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="750" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="20" nextobjectid="712">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/tomahawk_man_stage_tileset.tsx"/>
  <layer id="18" name="tiles3" width="750" height="100">
@@ -1074,6 +1074,7 @@
   <object id="103" name="Cactus" x="2976" y="2880" width="32" height="32">
    <properties>
     <property name="big" type="bool" value="true"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
   </object>
   <object id="104" name="Cactus" x="2368" y="2784" width="32" height="32">
@@ -1645,6 +1646,18 @@
   <object id="662" x="21504" y="544" width="64" height="352"/>
   <object id="668" x="19648" y="704" width="32" height="160"/>
   <object id="669" x="20096" y="544" width="32" height="320"/>
+  <object id="710" name="Cactus" x="2608" y="2880" width="32" height="32">
+   <properties>
+    <property name="big" type="bool" value="true"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="711" name="Cactus" x="1104" y="2880" width="32" height="32">
+   <properties>
+    <property name="big" type="bool" value="true"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="12" name="children">
   <object id="665" name="DesertMan" x="21952" y="608" width="32" height="32">
@@ -2098,6 +2111,183 @@
   <object id="618" name="LampeonBandito" x="5584" y="2752" width="32" height="32"/>
   <object id="639" name="Cokeyro" x="19472" y="704" width="32" height="32"/>
   <object id="643" name="Cokeyro" x="19920" y="704" width="32" height="32"/>
+  <object id="674" name="LampeonBandito" x="4688" y="2752" width="32" height="32">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="675" name="LampeonBandito" x="6512" y="2464" width="32" height="32">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="676" name="LampeonBandito" x="7360" y="1984" width="32" height="32">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="677" name="LampeonBandito" x="8624" y="1408" width="32" height="32">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="678" name="LampeonBandito" x="16192" y="2752" width="32" height="32">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="679" name="LampeonBandito" x="16320" y="1600" width="32" height="32">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="680" name="LampeonBandito" x="16464" y="1120" width="32" height="32">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="681" name="LampeonBandito" x="20832" y="832" width="32" height="32">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="682" name="LampeonBandito" x="20304" y="608" width="32" height="32">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="683" name="Cokeyro" x="20160" y="704" width="32" height="32">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="685" name="Arigock" x="20512" y="848" width="32" height="32">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="686" name="Cactus" x="3232" y="2816" width="32" height="32">
+   <properties>
+    <property name="big" type="bool" value="true"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="687" name="Cactus" x="4032" y="2784" width="32" height="32">
+   <properties>
+    <property name="big" type="bool" value="true"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="688" name="Bat" x="10936" y="2848" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="689" name="Bat" x="11288" y="2848" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="690" name="Bat" x="11576" y="2784" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="691" name="Bat" x="12632" y="2848" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="692" name="Bat" x="15288" y="2816" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="693" name="Bat" x="15624" y="2848" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="694" name="Bat" x="16200" y="2816" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="695" name="Bat" x="16344" y="2816" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="696" name="Bat" x="16464" y="1248" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="697" name="Bat" x="16360" y="960" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="698" name="Bat" x="17720" y="512" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="699" name="Bat" x="16760" y="512" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="700" name="Bat" x="8408" y="1280" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="701" name="CarriCarry" x="7160" y="2064" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="703" name="Cactus" x="6576" y="2912" width="32" height="32">
+   <properties>
+    <property name="big" type="bool" value="false"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="704" name="Cactus" x="6416" y="2400" width="32" height="32">
+   <properties>
+    <property name="big" type="bool" value="false"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="705" name="Cactus" x="6400" y="2016" width="32" height="32">
+   <properties>
+    <property name="big" type="bool" value="false"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="706" name="Bat" x="8112" y="1728" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="707" name="YellowTiggerSquirt" x="19544" y="840" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+    <property name="left" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="708" name="YellowTiggerSquirt" x="20024" y="840" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+    <property name="left" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="709" name="DarkSerket" x="20912" y="608" width="32" height="32">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="5" name="temp">
   <object id="636" name="0" x="18720" y="832" width="32" height="32"/>
