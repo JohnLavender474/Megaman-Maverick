@@ -801,11 +801,6 @@
     <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="702" name="FireballBlock" x="4288" y="2432" width="32" height="32">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
   <object id="703" name="FireballBlock" x="1056" y="2688" width="32" height="32">
    <properties>
     <property name="hard_mode_only" type="bool" value="true"/>
@@ -1620,13 +1615,6 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="684" name="FireballBar" x="4288" y="2432" width="32" height="32">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-    <property name="spawn_room" value="room2"/>
-    <property name="spawn_type" value="spawn_room"/>
-   </properties>
-  </object>
   <object id="685" name="FireballBar" x="4128" y="1792" width="32" height="32">
    <properties>
     <property name="hard_mode_only" type="bool" value="true"/>
@@ -1855,10 +1843,10 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="9" name="temp">
+ <objectgroup id="9" name="player">
   <object id="650" name="0" x="11520" y="608" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="8" name="player">
+ <objectgroup id="8" name="temp">
   <object id="10" name="0" x="128" y="2912" width="32" height="32"/>
   <object id="236" name="1" x="4496" y="1984" width="32" height="32">
    <properties>

@@ -81,7 +81,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
         private const val SHIELD_OFFSET = 0.675f
 
-        private const val IDLE_DUR = 2f
+        private const val IDLE_DUR = 1f
         private const val SHOOT_DUR = 2f
         private const val TURN_DUR = 0.5f
         private const val FROZEN_DUR = 1f

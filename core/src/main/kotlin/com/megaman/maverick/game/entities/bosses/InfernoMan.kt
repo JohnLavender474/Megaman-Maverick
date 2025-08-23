@@ -78,15 +78,12 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
         private const val SHOOT_DUR = 0.25f
         private const val SHOOT_DELAY = 0.5f
-        private const val SHOOT_DELAY_HARD = 0.25f
         private const val SHOOT_COOLDOWN_DUR = 0.75f
-        private const val SHOOT_COOLDOWN_DUR_HARD = 0.25f
 
         private const val MEGA_SHOOT_DUR = 1f
         private const val MEGA_SHOOT_TIME = 0.5f
 
         private const val FLAME_HEAD_DUR = 3f
-        private const val FLAME_HEAD_DUR_HARD = 2f
         private const val FLAME_HEAD_SHOTS = 4
         private const val FLAME_HEAD_SHOOT_DELAY = 0.2f
 
@@ -115,8 +112,12 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val MEGAMAN_STRAIGHT_Y_THRESHOLD = 1f
 
         private const val ORB_SPEED = 15f
+
         private const val GOOP_SPEED = 10f
+
         private const val WAVE_SPEED = 12f
+        private const val WAVE_DROP_FLAME_HARD = 0.15f
+
         private const val SPAWN_METEOR_DELAY = 1f
 
         private val regions = ObjectMap<String, TextureRegion>()
@@ -469,11 +470,11 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         timers.put("stand", Timer(if (hardMode) STAND_DUR_HARD else STAND_DUR))
         timers.put("wallslide", Timer(WALL_SLIDE_DUR))
         timers.put("shoot", Timer())
-        timers.put("shoot_cooldown", Timer(if (hardMode) SHOOT_COOLDOWN_DUR_HARD else SHOOT_COOLDOWN_DUR))
-        timers.put("shoot_delay", Timer(if (hardMode) SHOOT_DELAY_HARD else SHOOT_DELAY))
+        timers.put("shoot_cooldown", Timer(SHOOT_COOLDOWN_DUR))
+        timers.put("shoot_delay", Timer(SHOOT_DELAY))
         timers.put("frozen", Timer(FROZEN_DUR))
 
-        val flameHeadDur = if (hardMode) FLAME_HEAD_DUR_HARD else FLAME_HEAD_DUR
+        val flameHeadDur = FLAME_HEAD_DUR
         val flameHeadTimer = Timer(flameHeadDur)
         val flameHeadRunnables = Array<TimeMarkedRunnable>()
         val flameHeadOffsetTime = flameHeadDur / FLAME_HEAD_SHOTS
@@ -612,7 +613,8 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     }
 
     private fun shootWave() {
-        val spawn = body.getPositionPoint(Position.BOTTOM_CENTER).add(0.75f * ConstVals.PPM * facing.value, 0f)
+        val spawn = body.getPositionPoint(Position.BOTTOM_CENTER)
+            .add(0.75f * ConstVals.PPM * facing.value, 0f)
         val trajectory = GameObjectPools.fetch(Vector2::class)
             .set(WAVE_SPEED * ConstVals.PPM * facing.value, 0f)
 
@@ -624,7 +626,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         )
 
         if (game.state.getDifficultyMode() == DifficultyMode.HARD)
-            props.put("${ConstKeys.DROP}_${ConstKeys.FLAME}_${ConstKeys.DELAY}", 0.1f)
+            props.put("${ConstKeys.DROP}_${ConstKeys.FLAME}_${ConstKeys.DELAY}", WAVE_DROP_FLAME_HARD)
 
         wave.spawn(props)
 

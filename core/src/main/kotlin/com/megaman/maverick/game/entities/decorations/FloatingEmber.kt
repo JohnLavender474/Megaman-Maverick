@@ -11,6 +11,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.extensions.swapped
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -24,6 +25,7 @@ import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.motion.SineWave
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -38,13 +40,16 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.entities.utils.onMaxSpawnedByTag
+import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.max
 
-class FloatingEmber(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity {
+class FloatingEmber(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+    ICullableEntity {
 
     companion object {
         const val TAG = "FloatingEmber"
@@ -128,7 +133,13 @@ class FloatingEmber(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     }
 
     private fun defineCullablesComponent() = CullablesComponent(
-        objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(this, CULL_TIME))
+        objectMapOf(
+            ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(this, CULL_TIME),
+            ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
+                this,
+                objectSetOf(EventType.PLAYER_SPAWN)
+            )
+        )
     )
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -157,7 +168,7 @@ class FloatingEmber(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(
             TAG, GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 5))
-            .also { sprite -> sprite.setSize(0.25f * ConstVals.PPM) }
+                .also { sprite -> sprite.setSize(0.25f * ConstVals.PPM) }
         )
         .updatable { _, sprite ->
             sprite.setCenter(body.getCenter())
