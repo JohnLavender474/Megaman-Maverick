@@ -40,6 +40,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFireEntity
@@ -55,14 +56,20 @@ class IceFox(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
     companion object {
         const val TAG = "IceFox"
+
         private const val STAND_DUR = 1.5f
+        private const val STAND_DUR_HARD = 0.75f
+
         private const val SHOOT_DUR = 2f
+        private const val SHOOT_DUR_HARD = 3f
         private const val SHOTS = 3
+        private const val SHOTS_HARD = 6
         private const val SHOOT_DELAY = 0.5f
         private const val SHOOT_OFFSET_X = 1f
         private const val SHOOT_OFFSET_Y = 0.75f
         private const val SHOOT_X_VEL = 8f
         private const val SHOOT_Y_VEL = 5f
+
         private val animDefs = orderedMapOf(
             "stand" pairTo AnimationDef(2, 1, gdxArrayOf(1f, 0.5f), false),
             "shoot" pairTo AnimationDef()
@@ -78,16 +85,7 @@ class IceFox(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     private val currentState: IceFoxState
         get() = loop.getCurrent()
 
-    private val timers = orderedMapOf(
-        IceFoxState.STAND pairTo Timer(STAND_DUR),
-        IceFoxState.SHOOT pairTo Timer(SHOOT_DUR).also { timer ->
-            for (i in 1..SHOTS) {
-                val time = i * SHOOT_DELAY
-                val runnable = TimeMarkedRunnable(time) { shoot() }
-                timer.addRunnable(runnable)
-            }
-        }
-    )
+    private lateinit var timers: ObjectMap<IceFoxState, Timer>
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -109,7 +107,23 @@ class IceFox(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         FacingUtils.setFacingOf(this)
 
         loop.reset()
-        timers.values().forEach { it.reset() }
+
+        timers = orderedMapOf(
+            IceFoxState.STAND pairTo Timer(
+                if (game.state.getDifficultyMode() == DifficultyMode.HARD) STAND_DUR_HARD else STAND_DUR
+            ),
+            IceFoxState.SHOOT pairTo Timer(
+                if (game.state.getDifficultyMode() == DifficultyMode.HARD) SHOOT_DUR_HARD else SHOOT_DUR
+            ).also { timer ->
+                val shots = if (game.state.getDifficultyMode() == DifficultyMode.HARD) SHOTS_HARD else SHOTS
+
+                for (i in 1..shots) {
+                    val time = i * SHOOT_DELAY
+                    val runnable = TimeMarkedRunnable(time) { shoot() }
+                    timer.addRunnable(runnable)
+                }
+            }
+        )
     }
 
     override fun onDestroy() {

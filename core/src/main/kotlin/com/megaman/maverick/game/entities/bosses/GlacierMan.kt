@@ -44,6 +44,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IFireEntity
@@ -67,9 +68,6 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
         const val SPRITE_WIDTH = 3.5f
         const val SPRITE_HEIGHT = 2.625f
-        /*
-        3.5f * ConstVals.PPM, 2.625f * ConstVals.PPM
-         */
 
         private const val INIT_DUR = 1f
         private const val STAND_DUR = 1f
@@ -84,6 +82,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
         private const val ICE_BLAST_ATTACK_DUR = 4f
         private const val ICE_BLAST_ATTACK_COUNT = 6
+        private const val ICE_BLAST_ATTACK_COUNT_HARD = 12
         private const val ICE_BLAST_VEL = 10f
         private const val CHUNK_ICE_BLAST_VEL_Y = 10f
 
@@ -159,7 +158,6 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         super.init()
         addComponent(defineAnimationsComponent())
         stateMachine = buildStateMachine()
-        buildTimers()
         damageOverrides.put(Fireball::class, dmgNeg(4))
         damageOverrides.put(MagmaWave::class, dmgNeg(4))
         damageOverrides.put(MagmaFlame::class, dmgNeg(4))
@@ -168,6 +166,8 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        buildTimers()
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
@@ -533,10 +533,16 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
         val iceBlastAttackTimer = Timer(ICE_BLAST_ATTACK_DUR)
         val iceBlastAttackTimerRunnables = Array<TimeMarkedRunnable>()
-        for (i in 0 until ICE_BLAST_ATTACK_COUNT) {
-            val increment = ICE_BLAST_ATTACK_DUR / ICE_BLAST_ATTACK_COUNT
+
+        val count = if (game.state.getDifficultyMode() == DifficultyMode.HARD)
+            ICE_BLAST_ATTACK_COUNT_HARD else ICE_BLAST_ATTACK_COUNT
+
+        for (i in 0 until count) {
+            val increment = ICE_BLAST_ATTACK_DUR / count
+
             val time = increment + i * increment
             val iceBlastAttackRunnable = TimeMarkedRunnable(time) { iceBlast() }
+
             iceBlastAttackTimerRunnables.add(iceBlastAttackRunnable)
         }
         iceBlastAttackTimer.addRunnables(iceBlastAttackTimerRunnables)

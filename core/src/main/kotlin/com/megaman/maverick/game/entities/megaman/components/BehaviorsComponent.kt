@@ -345,7 +345,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         }
 
         override fun init() {
-            body.physics.velocity.setZero()
+            if (direction.isVertical()) body.physics.velocity.x = 0f else body.physics.velocity.y = 0f
 
             when (direction) {
                 Direction.UP -> {}
@@ -353,10 +353,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 Direction.LEFT -> body.translate(0.75f * ConstVals.PPM, 0f)
                 Direction.RIGHT -> body.translate(-0.75f * ConstVals.PPM, 0f)
             }
-        }
-
-        override fun act(delta: Float) {
-            body.physics.velocity.x = 0f
         }
     }
 

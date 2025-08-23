@@ -9,6 +9,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -41,12 +42,13 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -58,9 +60,16 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
 
     companion object {
         const val TAG = "SeaMine"
+
         private const val SENSOR_RADIUS = 2f
+        private const val SENSOR_RADIUS_HARD = 3f
+
         private const val TIME_TO_BLOW = 1f
+        private const val TIME_TO_BLOW_HARD = 1.5f
+
         private const val SPEED = 1.5f
+        private const val SPEED_HARD = 2f
+
         private val animDefs = orderedMapOf(
             "wait" pairTo AnimationDef(1, 3, 0.2f, true),
             "blow" pairTo AnimationDef(1, 2, 0.1f, true)
@@ -68,15 +77,17 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private val blowTimer = Timer(TIME_TO_BLOW)
-    private val sensor = GameCircle().setRadius(SENSOR_RADIUS * ConstVals.PPM)
+    private val sensor = GameCircle()
+    private val blowTimer = Timer()
     private var triggered = false
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
+        super.init()
         addComponent(defineBodyComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineCullablesComponent())
@@ -86,20 +97,34 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
-        blowTimer.reset()
+
+        val blowDur = if (game.state.getDifficultyMode() == DifficultyMode.HARD)
+            TIME_TO_BLOW_HARD else TIME_TO_BLOW
+        blowTimer.resetDuration(blowDur)
+
         triggered = false
+
+        val sensorRadius = if (game.state.getDifficultyMode() == DifficultyMode.HARD)
+            SENSOR_RADIUS_HARD else SENSOR_RADIUS
+        sensor.setRadius(sensorRadius * ConstVals.PPM)
     }
 
     private fun trigger() {
+        GameLogger.debug(TAG, "trigger()")
         triggered = true
     }
 
     private fun explodeAndDie() {
+        GameLogger.debug(TAG, "explodeAndDie()")
+
         destroy()
-        val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
+
+        val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
@@ -111,13 +136,18 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         sensor.setCenter(body.getCenter())
+
         if (!triggered && megaman.body.getBounds().overlaps(sensor)) trigger()
+
         if (triggered) {
+            val speed = if (game.state.getDifficultyMode() == DifficultyMode.HARD)
+                SPEED_HARD else SPEED
+
             val velocity = GameObjectPools.fetch(Vector2::class)
                 .set(megaman.body.getCenter())
                 .sub(body.getCenter())
                 .nor()
-                .scl(SPEED * ConstVals.PPM)
+                .scl(speed * ConstVals.PPM)
             body.physics.velocity.set(velocity)
 
             blowTimer.update(delta)
@@ -156,10 +186,13 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
         val cullOnEvents = CullableOnEvent({ cullEvents.contains(it) }, cullEvents)
         runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
         runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
+
         val cullOutOfBounds = getGameCameraCullingLogic(this)
+
         return CullablesComponent(
             objectMapOf(
-                ConstKeys.CULL_EVENTS pairTo cullOnEvents, ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOutOfBounds
+                ConstKeys.CULL_EVENTS pairTo cullOnEvents,
+                ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOutOfBounds
             )
         )
     }

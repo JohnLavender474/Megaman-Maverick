@@ -34,6 +34,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -49,16 +50,21 @@ class IceCubeMaker(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     companion object {
         const val TAG = "IceCubeMaker"
+
         private const val DELAY_TIME = 2f
+        private const val DELAY_TIME_HARD = 1.5f
+
         private var region: TextureRegion? = null
     }
 
-    private val delayTimer = Timer(DELAY_TIME)
     private var runBounds: GameRectangle? = null
     private var blockIds = ObjectSet<Int>()
+    private val delayTimer = Timer()
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
+        super.init()
         addComponent(defineUpdatablesComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineBodyComponent())
@@ -84,7 +90,8 @@ class IceCubeMaker(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             }
         }
 
-        delayTimer.reset()
+        val delay = if (game.state.getDifficultyMode() == DifficultyMode.HARD) DELAY_TIME_HARD else DELAY_TIME
+        delayTimer.resetDuration(delay)
     }
 
     override fun onDestroy() {
@@ -125,11 +132,11 @@ class IceCubeMaker(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, -1))
         sprite.setSize(5f * ConstVals.PPM, 3.125f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.TOP_CENTER), Position.TOP_CENTER)
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineBodyComponent(): BodyComponent {
