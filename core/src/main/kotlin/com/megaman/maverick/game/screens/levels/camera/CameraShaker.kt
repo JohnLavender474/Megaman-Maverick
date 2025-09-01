@@ -28,6 +28,11 @@ class CameraShaker(private val cam: Camera) : Updatable, Resettable {
         intervalTimer.resetDuration(interval)
     }
 
+    fun stop() {
+        durTimer.setToEnd()
+        intervalTimer.setToEnd()
+    }
+
     override fun update(delta: Float) {
         durTimer.update(delta)
         if (isFinished) return

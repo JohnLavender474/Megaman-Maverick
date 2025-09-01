@@ -560,9 +560,13 @@ sprites/frames/Decorations1/JetpackFlame.png
 sprites/frames/Decorations1/BlinkingArrow.png
 sprites/frames/Decorations1/FullChargedShotResidual.png
 sprites/frames/Decorations1/WhiteArrow.png
+sprites/frames/Decorations1/Smoke/1_gray.png
+sprites/frames/Decorations1/Smoke/0_gray.png
+sprites/frames/Decorations1/Smoke/3_gray.png
 sprites/frames/Decorations1/Smoke/3.png
 sprites/frames/Decorations1/Smoke/0.png
 sprites/frames/Decorations1/Smoke/1.png
+sprites/frames/Decorations1/Smoke/2_gray.png
 sprites/frames/Decorations1/Smoke/2.png
 sprites/frames/Decorations1/DesertTornado.png
 sprites/frames/Decorations1/DrippingToxicGoop.png
@@ -800,6 +804,7 @@ sprites/frames/Bosses_old/SphinxMiniBoss/open.png
 sprites/frames/Bosses_old/SphinxMiniBoss/wait.png
 sprites/frames/Bosses_old/SphinxMiniBoss/laugh.png
 sprites/frames/Bosses_old/SphinxMiniBoss/defeated.png
+sprites/frames/Megaman_v2_Rat/stand.png
 sprites/frames/Megaman_v2_Ice/climb_still_shoot.png
 sprites/frames/Megaman_v2_Ice/crouch_charge_half.png
 sprites/frames/Megaman_v2_Ice/run_trans.png

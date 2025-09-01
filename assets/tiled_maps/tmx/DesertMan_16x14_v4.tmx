@@ -2271,18 +2271,6 @@
     <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="707" name="YellowTiggerSquirt" x="19544" y="840" width="16" height="16">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-    <property name="left" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="708" name="YellowTiggerSquirt" x="20024" y="840" width="16" height="16">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-    <property name="left" type="bool" value="true"/>
-   </properties>
-  </object>
   <object id="709" name="DarkSerket" x="20912" y="608" width="32" height="32">
    <properties>
     <property name="hard_mode_only" type="bool" value="true"/>

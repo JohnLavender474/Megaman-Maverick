@@ -61,9 +61,9 @@ CrystalConveyorBKG
   index: -1
 DesertTornado
   rotate: false
-  xy: 0, 202
-  size: 64, 128
-  orig: 64, 128
+  xy: 298, 90
+  size: 48, 96
+  orig: 48, 96
   offset: 0, 0
   index: -1
 DrippingToxicGoop
@@ -152,7 +152,7 @@ Lantern
   index: -1
 LavaFall
   rotate: false
-  xy: 298, 90
+  xy: 346, 90
   size: 16, 96
   orig: 16, 96
   offset: 0, 0
@@ -180,14 +180,14 @@ MuzzleFlash
   index: -1
 PunkCityLampPost/alight
   rotate: false
-  xy: 128, 202
+  xy: 304, 202
   size: 192, 150
   orig: 192, 150
   offset: 0, 0
   index: -1
 PunkCityLampPost/broken
   rotate: false
-  xy: 320, 202
+  xy: 0, 352
   size: 64, 150
   orig: 64, 150
   offset: 0, 0
@@ -222,7 +222,7 @@ SandSplash
   index: -1
 SlashDissipation
   rotate: false
-  xy: 64, 202
+  xy: 240, 202
   size: 64, 144
   orig: 64, 144
   offset: 0, 0
@@ -243,28 +243,56 @@ SmallGrass/still
   index: -1
 Smoke/0
   rotate: false
-  xy: 314, 90
-  size: 48, 112
-  orig: 48, 112
-  offset: 0, 0
-  index: -1
-Smoke/1
-  rotate: false
   xy: 362, 90
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
   index: -1
-Smoke/2
+Smoke/0_gray
   rotate: false
   xy: 410, 90
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
   index: -1
-Smoke/3
+Smoke/1
   rotate: false
   xy: 458, 90
+  size: 48, 112
+  orig: 48, 112
+  offset: 0, 0
+  index: -1
+Smoke/1_gray
+  rotate: false
+  xy: 0, 202
+  size: 48, 112
+  orig: 48, 112
+  offset: 0, 0
+  index: -1
+Smoke/2
+  rotate: false
+  xy: 48, 202
+  size: 48, 112
+  orig: 48, 112
+  offset: 0, 0
+  index: -1
+Smoke/2_gray
+  rotate: false
+  xy: 96, 202
+  size: 48, 112
+  orig: 48, 112
+  offset: 0, 0
+  index: -1
+Smoke/3
+  rotate: false
+  xy: 144, 202
+  size: 48, 112
+  orig: 48, 112
+  offset: 0, 0
+  index: -1
+Smoke/3_gray
+  rotate: false
+  xy: 192, 202
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
@@ -278,7 +306,7 @@ Snow
   index: -1
 SpaceSatellite
   rotate: false
-  xy: 0, 352
+  xy: 64, 352
   size: 400, 200
   orig: 400, 200
   offset: 0, 0

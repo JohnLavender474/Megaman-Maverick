@@ -474,10 +474,10 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
                 val spawnProps = playerSpawnsMan.currentSpawnProps
                 if (spawnProps == null) throw IllegalStateException("Megaman spawn props are null")
-
                 GameLogger.debug(TAG, "onEvent(): player spawn --> spawn Megaman: $spawnProps")
-
                 megaman.spawn(spawnProps)
+
+                if (!gameCameraShaker.isFinished) gameCameraShaker.stop()
             }
 
             EventType.PLAYER_READY -> {

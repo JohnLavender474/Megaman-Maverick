@@ -1573,6 +1573,7 @@
   <object id="229" name="IceFox" x="7288" y="912" width="16" height="16"/>
   <object id="232" name="ShieldAttacker" x="7000" y="904" width="16" height="16">
    <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
     <property name="value" type="float" value="-5"/>
    </properties>
   </object>
@@ -1747,6 +1748,7 @@
   </object>
   <object id="879" name="Bat" x="11640" y="768" width="16" height="16">
    <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
     <property name="type" value="Snow"/>
    </properties>
   </object>
@@ -1837,12 +1839,6 @@
   <object id="925" name="Bat" x="14424" y="768" width="16" height="16">
    <properties>
     <property name="type" value="Snow"/>
-   </properties>
-  </object>
-  <object id="931" name="ShieldAttacker" x="4856" y="728" width="16" height="16">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-    <property name="value" type="float" value="-5"/>
    </properties>
   </object>
   <object id="933" name="SpikeBot" x="7640" y="2192" width="16" height="16">

@@ -67,7 +67,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     companion object {
         const val TAG = "InfernoMan"
 
-        const val SPRITE_SIZE = 3.5f
+        const val SPRITE_SIZE = 4f
 
         private const val INIT_DUR = 1f
 

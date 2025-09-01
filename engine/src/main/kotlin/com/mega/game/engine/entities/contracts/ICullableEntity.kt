@@ -19,5 +19,7 @@ interface ICullableEntity : IGameEntity {
     fun removeCullable(key: String) {
         this.cullablesComponent.remove(key)
     }
+
+    fun getCullable(key: String) = cullablesComponent.cullables.get(key)
 }
 

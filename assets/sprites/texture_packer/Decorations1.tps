@@ -518,9 +518,13 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Decorations1/Smoke/0.png</key>
+            <key type="filename">../frames/Decorations1/Smoke/0_gray.png</key>
             <key type="filename">../frames/Decorations1/Smoke/1.png</key>
+            <key type="filename">../frames/Decorations1/Smoke/1_gray.png</key>
             <key type="filename">../frames/Decorations1/Smoke/2.png</key>
+            <key type="filename">../frames/Decorations1/Smoke/2_gray.png</key>
             <key type="filename">../frames/Decorations1/Smoke/3.png</key>
+            <key type="filename">../frames/Decorations1/Smoke/3_gray.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

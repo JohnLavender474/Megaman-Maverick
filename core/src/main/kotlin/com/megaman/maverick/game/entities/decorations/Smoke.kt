@@ -36,16 +36,18 @@ class Smoke(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, I
         private const val SPRITE_WIDTH = 3f
         private const val SPRITE_HEIGHT = 7f
         private const val REGION_COUNT = 4
+        private const val REGION_SUFFIX = "_gray"
         private val regions = Array<TextureRegion>()
     }
 
     private val bounds = GameRectangle()
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
             for (i in 0 until REGION_COUNT) {
-                val key = "$TAG/$i"
+                val key = "$TAG/$i$REGION_SUFFIX"
                 val region = atlas.findRegion(key)
                 regions.add(region)
             }

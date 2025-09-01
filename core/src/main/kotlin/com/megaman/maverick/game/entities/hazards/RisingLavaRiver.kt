@@ -10,9 +10,8 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.extensions.orderedMapOf
+import com.mega.game.engine.common.UtilMethods
+import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.objects.Matrix
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -41,10 +40,15 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.decorations.FloatingEmber
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelUtils
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPosition
+import com.megaman.maverick.game.utils.extensions.getRandomPositionInBounds
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -77,6 +81,12 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
         private const val TOP = "top"
         private const val INNER = "inner"
+
+        private const val EMBER_MIN_DELAY = 0.1f
+        private const val EMBER_MAX_DELAY = 0.25f
+        private const val EMBER_SPAWN_X_BUFFER = ConstVals.VIEW_WIDTH + 6
+        private const val EMBER_SPAWN_Y_BUFFER = ConstVals.VIEW_HEIGHT + 12
+        private const val EMBER_CULL_TIME = 3f
 
         private val animDefs = orderedMapOf(
             TOP pairTo AnimationDef(3, 1, 0.1f, true),
@@ -113,6 +123,8 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
     private var hidden = true
 
     private val out = Matrix<GameRectangle>()
+
+    private val emberDelay = Timer()
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -245,6 +257,25 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
                     shakeDelay.reset()
                 }
+
+                emberDelay.update(delta)
+                if (emberDelay.isFinished()) {
+                    val position = GameObjectPools.fetch(Vector2::class)
+                        .setX(body.getBounds().getRandomPositionInBounds().x)
+                        .setY(body.getBounds().getMaxY())
+
+                    val canSpawnBounds = GameObjectPools.fetch(GameRectangle::class)
+                        .setWidth(EMBER_SPAWN_X_BUFFER * ConstVals.PPM)
+                        .setHeight(EMBER_SPAWN_Y_BUFFER * ConstVals.PPM)
+                        .setCenter(game.getGameCamera().getRotatedBounds().getCenter())
+
+                    if (canSpawnBounds.contains(position)) {
+                        val ember = MegaEntityFactory.fetch(FloatingEmber::class)!!
+                        ember.spawn(props(ConstKeys.POSITION pairTo position, ConstKeys.CULL_TIME pairTo EMBER_CULL_TIME))
+
+                        resetEmberDelay()
+                    }
+                }
             }
 
             RisingLavaRiverState.STOPPED -> {
@@ -359,6 +390,11 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         deathFixture.setActive(false)
 
         hidden = true
+    }
+
+    private fun resetEmberDelay() {
+        val duration = UtilMethods.getRandom(EMBER_MIN_DELAY, EMBER_MAX_DELAY)
+        emberDelay.resetDuration(duration)
     }
 
     override fun getType() = EntityType.HAZARD

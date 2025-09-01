@@ -39,12 +39,12 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
-import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.entities.utils.onMaxSpawnedByTag
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.max
 
@@ -54,11 +54,11 @@ class FloatingEmber(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     companion object {
         const val TAG = "FloatingEmber"
 
-        private const val CULL_TIME = 1f
+        private const val DEFAULT_CULL_TIME = 1f
 
-        private const val MAX_SPAWNED_ALLOWED = 50
+        private const val MAX_SPAWNED_ALLOWED = 10
 
-        private const val FADE_DUR = 0.5f
+        private const val FADE_DUR = 0.25f
 
         private const val MIN_FREQUENCY = 0.05f
         private const val MAX_FREQUENCY = 0.15f
@@ -76,6 +76,8 @@ class FloatingEmber(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
     private val fadeTimer = Timer(FADE_DUR)
     private var fading = false
+
+    private val outOfBoundsTimer = Timer(DEFAULT_CULL_TIME)
 
     private var maxY = 0f
 
@@ -109,6 +111,8 @@ class FloatingEmber(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         fading = false
         fadeTimer.reset()
 
+        outOfBoundsTimer.reset()
+
         val speed = UtilMethods.getRandom(MIN_RISE_SPEED, MAX_RISE_SPEED) * ConstVals.PPM
         val amplitude = UtilMethods.getRandom(MIN_AMPLITUDE, MAX_AMPLITUDE) * ConstVals.PPM
         val frequency = UtilMethods.getRandom(MIN_FREQUENCY, MAX_FREQUENCY) * ConstVals.PPM
@@ -134,7 +138,6 @@ class FloatingEmber(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
-            ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(this, CULL_TIME),
             ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
                 this,
                 objectSetOf(EventType.PLAYER_SPAWN)
@@ -146,12 +149,17 @@ class FloatingEmber(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         sine.update(delta)
         sine.getMotionValue(out).swapped().let { body.setCenter(it) }
 
+        if (!game.getGameCamera().getRotatedBounds().overlaps(body.getBounds())) {
+            outOfBoundsTimer.update(delta)
+            if (outOfBoundsTimer.isFinished()) fading = true
+        } else if (!fading) outOfBoundsTimer.reset()
+
+        if (!fading && body.getY() > maxY) fading = true
+
         if (fading) {
             fadeTimer.update(delta)
             if (fadeTimer.isFinished()) destroy()
         }
-
-        if (body.getY() > maxY) destroy()
     })
 
     private fun defineBodyComponent(): BodyComponent {
