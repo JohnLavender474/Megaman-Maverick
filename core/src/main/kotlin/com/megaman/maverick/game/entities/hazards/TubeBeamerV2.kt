@@ -42,6 +42,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.Block
@@ -69,6 +70,7 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         private const val BODY_SIZE = 1f
 
         private const val BEAM_DELAY = 1.5f
+        private const val BEAM_DELAY_HARD = 1f
         private const val BEAM_DUR = 1f
 
         private const val SPAWN_EXPLOSION_DELAY = 0.2f
@@ -76,6 +78,7 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         private const val BEAM_WIDTH = 0.125f
         private const val BEAM_HEIGHT = 1f
         private const val BEAM_GROWTH_RATE = 18f
+        private const val BEAM_GROWTH_RATE_HARD = 24f
         private const val BEAM_REGION_KEY = "TubeBeam_short"
         private const val BEAM_DELAY_FLASH_RATIO = 0.5f
 
@@ -102,7 +105,7 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private var spawnRoom: String? = null
 
-    private val beamDelay = Timer(BEAM_DELAY)
+    private val beamDelay = Timer()
     private val beamTimer = Timer(BEAM_DUR)
 
     private val spawnExplosionDelay = Timer(SPAWN_EXPLOSION_DELAY)
@@ -157,7 +160,11 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)
 
-        val delayDur = spawnProps.getOrDefault(ConstKeys.DELAY, BEAM_DELAY, Float::class)
+        val delayDur = spawnProps.getOrDefault(
+            ConstKeys.DELAY,
+            if (game.state.getDifficultyMode() == DifficultyMode.HARD) BEAM_DELAY_HARD else BEAM_DELAY,
+            Float::class
+        )
         beamDelay.resetDuration(delayDur)
 
         beamTimer.setToEnd()
@@ -189,8 +196,12 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
                 when {
                     actualLine.getLength() < maxLine.getLength() -> {
+                        val growthRate = if (game.state.getDifficultyMode() == DifficultyMode.HARD)
+                            BEAM_GROWTH_RATE_HARD else BEAM_GROWTH_RATE
+
                         val nextEndPoint = actualLine.getSecondLocalPoint()
-                            .add(BEAM_GROWTH_RATE * delta * ConstVals.PPM, direction)
+                            .add(growthRate * delta * ConstVals.PPM, direction)
+
                         actualLine.setSecondLocalPoint(nextEndPoint)
                     }
 

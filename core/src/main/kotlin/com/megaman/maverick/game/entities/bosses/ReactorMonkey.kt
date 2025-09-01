@@ -8,6 +8,7 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
@@ -39,6 +40,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.megaman
@@ -63,6 +65,9 @@ class ReactorMonkey(game: MegamanMaverickGame) :
 
         private const val MIN_THROW_DELAY = 1.25f
         private const val MAX_THROW_DELAY = 2.5f
+
+        private const val MIN_THROW_DELAY_HARD = 0.75f
+        private const val MAX_THROW_DELAY_HARD = 1.5f
 
         private const val THROW_DUR = 0.3f
 
@@ -214,8 +219,20 @@ class ReactorMonkey(game: MegamanMaverickGame) :
                         ballCatchArea.contains(monkeyBall!!.body.getCenter()) ||
                             monkeyBall!!.body.getY() < ballCatchArea.getY() -> {
                             catchMonkeyBall()
+
                             state = ReactorMonkeyState.THROW
-                            throwDelayTimer.resetDuration(MIN_THROW_DELAY + (MAX_THROW_DELAY - MIN_THROW_DELAY) * getHealthRatio())
+
+                            val minDelay: Float
+                            val maxDelay: Float
+                            if (game.state.getDifficultyMode() == DifficultyMode.HARD) {
+                                minDelay = MIN_THROW_DELAY_HARD
+                                maxDelay = MAX_THROW_DELAY_HARD
+                            } else {
+                                minDelay = MIN_THROW_DELAY
+                                maxDelay = MAX_THROW_DELAY
+                            }
+                            val delay = UtilMethods.interpolate(minDelay, maxDelay, getHealthRatio())
+                            throwDelayTimer.resetDuration(delay)
                         }
                     }
                 }
@@ -272,7 +289,6 @@ class ReactorMonkey(game: MegamanMaverickGame) :
             sprite.setFlip(isFacing(Facing.RIGHT), false)
 
             sprite.hidden = damageBlink || !ready
-
             sprite.setAlpha(if (defeated) 1f - defeatTimer.getRatio() else 1f)
         }
         return component

@@ -46,6 +46,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.megaman
@@ -106,6 +107,8 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
         private const val GIGA_DELAY_BETWEEN_BEAMS_MIN = 0.5f
         private const val GIGA_DELAY_BETWEEN_BEAMS_MAX = 0.75f
+        private const val GIGA_DELAY_BETWEEN_BEAMS_MIN_HARD = 0.45f
+        private const val GIGA_DELAY_BETWEEN_BEAMS_MAX_HARD = 0.65f
         private const val GIGA_DELAY_BETWEEN_BEAMS_KEY = "giga_delay_between_beams"
         private const val GIGA_LASER_BEAMER_COUNT = 14
         private val GIGA_LASER_BEAMS_ARRAYS = gdxArrayOf<Array<Int>>(
@@ -376,11 +379,16 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                                     else -> GameLogger.error(TAG, "update(): failed to find beamer to beam")
                                 }
 
-                                val duration = UtilMethods.interpolate(
-                                    GIGA_DELAY_BETWEEN_BEAMS_MIN,
-                                    GIGA_DELAY_BETWEEN_BEAMS_MAX,
-                                    getHealthRatio()
-                                )
+                                val minDelay: Float
+                                val maxDelay: Float
+                                if (game.state.getDifficultyMode() == DifficultyMode.HARD) {
+                                    minDelay = GIGA_DELAY_BETWEEN_BEAMS_MIN_HARD
+                                    maxDelay = GIGA_DELAY_BETWEEN_BEAMS_MAX_HARD
+                                } else {
+                                    minDelay = GIGA_DELAY_BETWEEN_BEAMS_MIN
+                                    maxDelay = GIGA_DELAY_BETWEEN_BEAMS_MAX
+                                }
+                                val duration = UtilMethods.interpolate(minDelay, maxDelay, getHealthRatio())
                                 delay.resetDuration(duration)
                             }
 

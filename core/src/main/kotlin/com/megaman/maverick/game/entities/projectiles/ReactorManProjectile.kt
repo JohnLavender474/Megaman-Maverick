@@ -37,6 +37,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.world.body.*
@@ -55,7 +56,7 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
         private const val BIG_SIZE = 1f
         private const val SMALL_SIZE = 0.5f
 
-        private val shatterTrajectories = objectMapOf(
+        private val SHATTER_TRAJS = objectMapOf(
             Direction.UP pairTo gdxArrayOf(
                 Vector2(5f, 9f),
                 Vector2(0f, 9f),
@@ -75,6 +76,36 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
                 Vector2(9f, 5f),
                 Vector2(9f, 0f),
                 Vector2(9f, -5f)
+            )
+        )
+        private val SHATTER_TRAJS_HARD = objectMapOf(
+            Direction.UP pairTo gdxArrayOf(
+                Vector2(8f, 5f),
+                Vector2(5f, 9f),
+                Vector2(0f, 9f),
+                Vector2(-5f, 9f),
+                Vector2(-8f, 5f)
+            ),
+            Direction.DOWN pairTo gdxArrayOf(
+                Vector2(8f, -5f),
+                Vector2(5f, -9f),
+                Vector2(0f, -9f),
+                Vector2(-5f, -9f),
+                Vector2(-8f, -5f)
+            ),
+            Direction.LEFT pairTo gdxArrayOf(
+                Vector2(-5f, 8f),
+                Vector2(-9f, 5f),
+                Vector2(-9f, 0f),
+                Vector2(-9f, -5f),
+                Vector2(-5f, 8f)
+            ),
+            Direction.RIGHT pairTo gdxArrayOf(
+                Vector2(5f, 8f),
+                Vector2(9f, 5f),
+                Vector2(9f, 0f),
+                Vector2(9f, -5f),
+                Vector2(5f, -8f)
             )
         )
 
@@ -173,7 +204,10 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
 
         val direction = getOverlapPushDirection(body.getBounds(), shape) ?: Direction.UP
 
-        shatterTrajectories.get(direction).forEach { trajectory ->
+        val trajectories = if (game.state.getDifficultyMode() == DifficultyMode.HARD)
+            SHATTER_TRAJS_HARD else SHATTER_TRAJS
+
+        trajectories.get(direction).forEach { trajectory ->
             val projectile = MegaEntityFactory.fetch(ReactorManProjectile::class)!!
             projectile.spawn(
                 props(
