@@ -152,10 +152,17 @@ private fun Megaman.setToNextWeapon() {
 }
 
 private fun Megaman.runLeft(poller: IControllerPoller, delta: Float) {
-    if (!canMove || !ready || damaged || poller.isPressed(MegaControllerButton.RIGHT) || teleporting ||
-        isBehaviorActive(BehaviorType.GROUND_SLIDING)
+    if (!ready || !canMove || damaged || teleporting ||
+        poller.isPressed(MegaControllerButton.RIGHT) ||
+        isBehaviorActive(BehaviorType.GROUND_SLIDING) ||
+        (currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting && feetOnGround)
     ) {
-        if (!poller.isPressed(MegaControllerButton.RIGHT)) running = false
+        if (!poller.isPressed(MegaControllerButton.RIGHT)) {
+            running = false
+
+            if (currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting)
+                facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.RIGHT else Facing.LEFT
+        }
         return
     }
 
@@ -190,10 +197,16 @@ private fun Megaman.runLeft(poller: IControllerPoller, delta: Float) {
 }
 
 private fun Megaman.runRight(poller: IControllerPoller, delta: Float) {
-    if (!canMove || !ready || damaged || poller.isPressed(MegaControllerButton.LEFT) || teleporting ||
-        isBehaviorActive(BehaviorType.GROUND_SLIDING)
+    if (!ready || !canMove || damaged || teleporting ||
+        poller.isPressed(MegaControllerButton.LEFT) ||
+        isBehaviorActive(BehaviorType.GROUND_SLIDING) ||
+        (currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting && feetOnGround)
     ) {
         if (!poller.isPressed(MegaControllerButton.LEFT)) running = false
+
+        if (currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting)
+            facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.LEFT else Facing.RIGHT
+
         return
     }
 

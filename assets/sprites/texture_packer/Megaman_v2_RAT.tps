@@ -198,6 +198,31 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Megaman_v2_Rat/airdash_slash1.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/crouch_slash1.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/damaged.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/groundslide_slash1.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/jump_slash1.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/slip_slash1.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/stand_slash1.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/stand_slash2.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/stand_slash3.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/swim_slash1.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/wallslide_slash1.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,36,24,72</rect>
+                <key>scale9Paddings</key>
+                <rect>12,36,24,72</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Megaman_v2_Rat/climb.png</key>
             <key type="filename">../frames/Megaman_v2_Rat/stand.png</key>
             <key type="filename">../frames/Megaman_v2_Rat/stunned.png</key>
@@ -212,24 +237,6 @@
                 <rect>12,24,24,48</rect>
                 <key>scale9Paddings</key>
                 <rect>12,24,24,48</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Megaman_v2_Rat/damaged.png</key>
-            <key type="filename">../frames/Megaman_v2_Rat/stand_slash1.png</key>
-            <key type="filename">../frames/Megaman_v2_Rat/stand_slash2.png</key>
-            <key type="filename">../frames/Megaman_v2_Rat/stand_slash3.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>12,36,24,72</rect>
-                <key>scale9Paddings</key>
-                <rect>12,36,24,72</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

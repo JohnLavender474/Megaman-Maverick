@@ -12,6 +12,7 @@ object MegamanAnimationDefs {
     const val DEFAULT_FRAME_DUR = 0.125f
     const val CHARGING_FRAME_DUR = 0.0625f
     const val CROUCH_FRAME_DUR = 0.05f
+    const val DEFAULT_SLASH_FRAME_DUR = 0.075f
 
     private val defs = orderedMapOf(
         "jetpack" pairTo AnimationDef(2, 1, JETPACK_FRAME_DUR),
@@ -143,9 +144,15 @@ object MegamanAnimationDefs {
 
         "frozen" pairTo AnimationDef(),
 
-        "stand_slash1" pairTo AnimationDef(3, 1, 0.1f, false),
-        "stand_slash2" pairTo AnimationDef(3, 1, 0.1f, false),
-        "stand_slash3" pairTo AnimationDef(3, 1, 0.1f, false)
+        "stand_slash1" pairTo AnimationDef(3, 1, DEFAULT_SLASH_FRAME_DUR, false),
+        "stand_slash2" pairTo AnimationDef(3, 1, DEFAULT_SLASH_FRAME_DUR, false),
+        "stand_slash3" pairTo AnimationDef(3, 1, DEFAULT_SLASH_FRAME_DUR, false),
+        "wallslide_slash1" pairTo AnimationDef(3, 1, DEFAULT_SLASH_FRAME_DUR, false),
+        "groundslide_slash1" pairTo AnimationDef(3, 1, DEFAULT_SLASH_FRAME_DUR, false),
+        "crouch_slash1" pairTo AnimationDef(3, 1, DEFAULT_SLASH_FRAME_DUR, false),
+        "swim_slash1" pairTo AnimationDef(3, 1, DEFAULT_SLASH_FRAME_DUR, false),
+        "jump_slash1" pairTo AnimationDef(3, 1, DEFAULT_SLASH_FRAME_DUR, false),
+        "airdash_slash1" pairTo AnimationDef(3, 1, DEFAULT_SLASH_FRAME_DUR, false),
     )
 
     fun get() = defs

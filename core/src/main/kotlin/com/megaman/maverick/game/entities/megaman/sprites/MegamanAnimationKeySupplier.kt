@@ -1,7 +1,11 @@
 package com.megaman.maverick.game.entities.megaman.sprites
 
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.extensions.equalsAny
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.drawables.sprites.containsRegion
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.feetOnGround
@@ -77,8 +81,17 @@ fun Megaman.amendKey(baseKey: String) = when {
         MegamanWeapon.RODENT_CLAWS -> {
             val slashIndex = getOrDefaultProperty("slash_index", 1, Int::class)
             GameLogger.debug(MEGAMAN_ANIM_KEY_SUPPLIER_TAG, "slashIndex=$slashIndex")
-            // TODO: shouldn't always be "stand" animation
-            "stand_slash$slashIndex"
+
+            // Should not animate slashes for "slip" or "run", so default to "stand"
+            val newBaseKey = if (baseKey.equalsAny("slip", "run")) "stand" else baseKey
+
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.MEGAMAN_RATTY_CLAWS.source)
+
+            if (atlas.containsRegion("${newBaseKey}_slash$slashIndex"))
+                "${newBaseKey}_slash$slashIndex"
+            else if (atlas.containsRegion("${newBaseKey}_slash1"))
+                "${newBaseKey}_slash1"
+            else "stand_slash1"
         }
         else -> "${baseKey}_shoot"
     }

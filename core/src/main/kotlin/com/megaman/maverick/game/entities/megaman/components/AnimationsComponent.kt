@@ -7,7 +7,9 @@ import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.objects.pairTo
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
 import com.megaman.maverick.game.entities.megaman.sprites.getAnimationKey
@@ -21,6 +23,9 @@ var Megaman.currentAnimKey: String?
 internal fun Megaman.defineAnimationsComponent(animations: OrderedMap<String, IAnimation>): AnimationsComponent {
     val megamanAnimKeySupplier: (String?) -> String? = supplier@{
         val key = getAnimationKey(currentAnimKey)
+
+        game.setDebugText(key ?: "")
+
         return@supplier when {
             key != null -> {
                 currentAnimKey = key
@@ -33,7 +38,8 @@ internal fun Megaman.defineAnimationsComponent(animations: OrderedMap<String, IA
         keySupplier = megamanAnimKeySupplier,
         animations = animations,
         onChangeKey = { animator, currentKey, nextKey -> onChangeAnimationKey(currentKey, nextKey, animations) },
-        postProcessKey = { animator, currentKey, nextKey -> postProcessAnimationKey(currentKey, nextKey) }
+        postProcessKey = { animator, currentKey, nextKey -> postProcessAnimationKey(currentKey, nextKey) },
+        shouldEqualKeysTriggerChange = this::shouldEqualAnimKeysTriggerChange
     )
 
     val decorationsAtlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
@@ -68,6 +74,18 @@ internal fun Megaman.onChangeAnimationKey(
         val time = animations[currentKey]?.getCurrentTime()
         time?.let { t -> animations[nextKey]?.setCurrentTime(t) }
     }
+}
+
+internal fun Megaman.shouldEqualAnimKeysTriggerChange(key: String?): Boolean {
+    // When the player is equipped with the Rodent Claws, then the animation should be
+    // reset each time the player presses the SHOOT button EXCEPT when the player is
+    // standing. This is because every slash sequence besides the STAND animation uses
+    // the same animation repeatedly. Without this check, then Mega Man will appear to
+    // be frozen still if the player rapid fires the SHOOT button.
+    return key != null && currentWeapon == MegamanWeapon.RODENT_CLAWS &&
+        weaponsHandler.canFireWeapon(currentWeapon, MegaChargeStatus.NOT_CHARGED) &&
+        game.controllerPoller.isPressed(MegaControllerButton.B) &&
+        key.contains("slash") && !key.contains("stand")
 }
 
 internal fun Megaman.postProcessAnimationKey(currentKey: String?, nextKey: String?): String? {

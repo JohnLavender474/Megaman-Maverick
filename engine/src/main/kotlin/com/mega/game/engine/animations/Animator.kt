@@ -12,7 +12,8 @@ open class Animator(
     var updateScalar: Float = 1f,
     var onChangeKey: ((Animator, String?, String?) -> Unit)? = null,
     var shouldAnimatePredicate: (Float) -> Boolean = { true },
-    var postProcessKey: ((Animator, String?, String?) -> String?)? = null
+    var postProcessKey: ((Animator, String?, String?) -> String?)? = null,
+    var shouldEqualKeysTriggerChange: (String?) -> Boolean = { false }
 ) : IAnimator {
 
     companion object {
@@ -32,7 +33,7 @@ open class Animator(
     override fun animate(sprite: GameSprite, delta: Float) {
         val nextKey = keySupplier(currentKey)
 
-        if (currentKey != nextKey) {
+        if (currentKey != nextKey || shouldEqualKeysTriggerChange.invoke(currentKey)) {
             onChangeKey?.invoke(this, currentKey, nextKey)
             // The "current" animation will become the "old" animation after the "currentKey" value
             // is changed. Before changing the key, reset the "old" animation. Do not reset the new

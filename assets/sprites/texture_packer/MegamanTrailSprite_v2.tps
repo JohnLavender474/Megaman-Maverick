@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.6.2</string>
+        <string>7.9.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -199,6 +199,14 @@
             <key type="filename">../frames/MegamanTrailSprite_v2/precious_guard/airdash_shoot.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/precious_guard/groundslide.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/precious_guard/groundslide_shoot.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/rodent_claws/airdash.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/rodent_claws/airdash_slash1-1.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/rodent_claws/airdash_slash1-2.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/rodent_claws/airdash_slash1-3.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/rodent_claws/groundslide.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/rodent_claws/groundslide_slash1-1.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/rodent_claws/groundslide_slash1-2.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/rodent_claws/groundslide_slash1-3.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/rush_jet/airdash.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/rush_jet/airdash_shoot.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/rush_jet/groundslide.png</key>
@@ -249,6 +257,12 @@
         <key>normalMapSheetFileName</key>
         <filename></filename>
         <key>exporterProperties</key>
-        <map type="ExporterProperties"/>
+        <map type="ExporterProperties">
+            <key>libgdx::legacy-output</key>
+            <struct type="ExporterProperty">
+                <key>value</key>
+                <string>true</string>
+            </struct>
+        </map>
     </struct>
 </data>

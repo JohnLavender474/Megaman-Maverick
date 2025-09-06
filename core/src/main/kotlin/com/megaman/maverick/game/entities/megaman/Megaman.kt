@@ -768,7 +768,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
                 var key = "groundslide"
                 if (shooting) {
                     if (currentWeapon == MegamanWeapon.NEEDLE_SPIN) return false
-                    key += "_shoot"
+                    else if (currentWeapon != MegamanWeapon.RODENT_CLAWS) key += "_shoot"
                 }
                 animKey = key
             }
@@ -776,7 +776,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
                 var key = "airdash"
                 if (shooting) {
                     if (currentWeapon == MegamanWeapon.NEEDLE_SPIN) return false
-                    key += "_shoot"
+                    else if (currentWeapon != MegamanWeapon.RODENT_CLAWS) key += "_shoot"
                 }
                 animKey = key
             }

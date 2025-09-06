@@ -103,7 +103,7 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             Axe::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             Needle::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             Megaman::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-            SlashWave::class pairTo dmgNeg(15)
+            SlashWave::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
         )
 
         // damage is determined by the damageable's size instead of the damager's size

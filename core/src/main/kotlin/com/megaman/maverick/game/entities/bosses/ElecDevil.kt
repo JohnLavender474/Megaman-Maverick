@@ -547,7 +547,7 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
         val duration = UtilMethods.interpolate(min, max, ratio)
         launchDelayTimer.resetDuration(duration)
 
-        game.setDebugText(UtilMethods.roundFloat(duration, 2).toString())
+        // game.setDebugText(UtilMethods.roundFloat(duration, 2).toString())
     }
 
     private fun shouldRandomizeLaunchTargets() = launches % 3 == 0

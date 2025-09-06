@@ -98,7 +98,8 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
             MoonScythe::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             SmallGreenMissile::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-            SmallIceCube::class pairTo dmgNeg(5)
+            SmallIceCube::class pairTo dmgNeg(5),
+            SlashWave::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
         )
 
         private val animDefs = orderedMapOf(

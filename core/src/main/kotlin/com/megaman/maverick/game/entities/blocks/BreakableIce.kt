@@ -25,10 +25,7 @@ import com.megaman.maverick.game.entities.contracts.IFireEntity
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.IceShard
-import com.megaman.maverick.game.entities.projectiles.Bullet
-import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.entities.projectiles.MoonScythe
-import com.megaman.maverick.game.entities.projectiles.TeardropBlast
+import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
 
@@ -82,7 +79,7 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
         val projectile = projectileFixture.getEntity() as IProjectileEntity
         when (projectile) {
             is Bullet, is TeardropBlast -> hit()
-            is MoonScythe, is IFireEntity -> explodeAndDie()
+            is MoonScythe, is SlashWave, is IFireEntity -> explodeAndDie()
             is ChargedShot -> if (projectile.fullyCharged) explodeAndDie() else hit(2)
         }
     }

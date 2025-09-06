@@ -773,11 +773,13 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         (game.selectButtonAction == SelectButtonAction.START && controllerPoller.isJustPressed(MegaControllerButton.SELECT))
 
     override fun render(delta: Float) {
+        /*
         game.setDebugText(
             "${cameraManagerForRooms.transitioning} / " +
                 "${cameraManagerForRooms.currentGameRoom?.name} / " +
                 "${cameraManagerForRooms.priorGameRoom?.name}"
         )
+         */
 
         // do not allow pausing if Megaman is dead
         if (!game.paused && !megaman.dead && megaman.ready && isPauseButtonRequested()) {

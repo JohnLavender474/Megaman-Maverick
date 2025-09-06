@@ -416,19 +416,34 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             }
         }
         MegamanWeapon.RODENT_CLAWS -> object : MegaWeaponHandler(
-            cooldown = Timer(0.25f),
-            normalCost = { 0 },
+            cooldown = Timer(0.2f),
+            normalCost = { 5 },
             chargeable = { false }
         ) {
 
             private val resetTimer = Timer(0.75f)
+            private val refillTimer = Timer(0.1f)
+            private val refillDelay = Timer(0.25f).setToEnd()
 
             init {
                 onShoot = {
                     resetTimer.reset()
+                    refillDelay.reset()
 
                     val slashIndex = megaman.getOrDefaultProperty("slash_index", 0, Int::class)
-                    val nextSlashIndex = if (slashIndex >= 3) 1 else slashIndex + 1
+
+                    val nextSlashIndex = when {
+                        !megaman.body.isSensing(BodySense.FEET_ON_GROUND) ||
+                            megaman.isAnyBehaviorActive(
+                                BehaviorType.CROUCHING,
+                                BehaviorType.WALL_SLIDING,
+                                BehaviorType.GROUND_SLIDING,
+                                BehaviorType.AIR_DASHING
+                            ) -> 1
+                        slashIndex >= 3 -> 1
+                        else -> slashIndex + 1
+                    }
+
                     megaman.putProperty("slash_index", nextSlashIndex)
 
                     megaman.requestToPlaySound(SoundAsset.WHIP_V2_SOUND, false)
@@ -440,6 +455,16 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
                 resetTimer.update(delta)
                 if (resetTimer.isFinished()) megaman.putProperty("slash_index", 0)
+
+                refillDelay.update(delta)
+
+                if (refillDelay.isFinished() && ammo < MegamanValues.MAX_WEAPON_AMMO) {
+                    refillTimer.update(delta)
+                    if (refillTimer.isFinished()) {
+                        ammo += 1
+                        refillTimer.reset()
+                    }
+                }
             }
         }
     }
@@ -915,7 +940,10 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
             val center = GameObjectPools.fetch(Vector2::class)
                 .set(megaman.body.getCenter())
-                .add(ConstVals.PPM.toFloat() * megaman.facing.value, 0f)
+                .add(
+                    ConstVals.PPM.toFloat() * megaman.facing.value,
+                    ConstVals.PPM * if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.5f else 0f
+                )
 
             val slashWave = MegaEntityFactory.fetch(SlashWave::class)!!
             slashWave.spawn(
@@ -930,7 +958,10 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
         val center = GameObjectPools.fetch(Vector2::class)
             .set(megaman.body.getCenter())
-            .add(ConstVals.PPM.toFloat() * megaman.facing.value, 0f)
+            .add(
+                ConstVals.PPM.toFloat() * megaman.facing.value,
+                ConstVals.PPM * if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.5f else 0f
+            )
 
         val slashDissipation = MegaEntityFactory.fetch(SlashDissipation::class)!!
         slashDissipation.spawn(props(ConstKeys.POSITION pairTo center, ConstKeys.FACING pairTo megaman.facing))
