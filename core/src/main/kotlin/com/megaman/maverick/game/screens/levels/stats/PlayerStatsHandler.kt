@@ -34,6 +34,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
         private const val PRECIOUS = "precious"
         private const val AXE = "axe"
         private const val NEEDLE = "needle"
+        private const val RAT = "rat"
         private const val SPECIAL_ITEM_DUR = 0.5f
     }
 
@@ -79,6 +80,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
                 MegamanWeapon.PRECIOUS_GUARD -> PRECIOUS
                 MegamanWeapon.AXE_SWINGER -> AXE
                 MegamanWeapon.NEEDLE_SPIN -> NEEDLE
+                MegamanWeapon.RODENT_CLAWS -> RAT
                 else -> throw IllegalStateException("No bit source for weapon $it")
             }
 
@@ -88,7 +90,8 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
                 ConstVals.WEAPON_BAR_X * ConstVals.PPM,
                 ConstVals.STATS_BAR_Y * ConstVals.PPM,
                 { megaman.ammo },
-                { MegamanValues.MAX_WEAPON_AMMO })
+                { MegamanValues.MAX_WEAPON_AMMO }
+            )
 
             weaponBar.init()
             weaponBars.put(it, weaponBar)

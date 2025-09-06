@@ -88,10 +88,21 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 direction.isVertical() -> body.physics.frictionOnSelf.y = friction
                 else -> body.physics.frictionOnSelf.x = friction
             }
+
+            if (currentWeapon == MegamanWeapon.RODENT_CLAWS) {
+                when {
+                    direction.isVertical() -> body.physics.velocity.y = 0f
+                    else -> body.physics.velocity.x = 0f
+                }
+
+                body.physics.gravityOn = false
+            }
         },
         end = {
             if (!body.isSensing(BodySense.IN_WATER)) aButtonTask = AButtonTask.AIR_DASH
             GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "end()")
+
+            if (currentWeapon == MegamanWeapon.RODENT_CLAWS) body.physics.gravityOn = true
         })
 
     val swim = object : AbstractBehaviorImpl() {

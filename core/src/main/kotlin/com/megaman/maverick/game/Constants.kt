@@ -48,6 +48,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val DISSIPATE = "dissipate"
     const val DROP = "drp"
     const val FLAME = "flame"
     const val HARD_MODE_ONLY = "hard_mode_only"

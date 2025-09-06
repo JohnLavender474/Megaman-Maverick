@@ -1,0 +1,46 @@
+Megaman_v2_RAT.png
+size: 100, 934
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+pma: false
+airdash
+  bounds: 1, 1, 48, 48
+climb
+  bounds: 51, 251, 48, 96
+climb_finish
+  bounds: 51, 1, 48, 48
+climb_still
+  bounds: 1, 51, 48, 48
+crouch
+  bounds: 51, 51, 48, 48
+damaged
+  bounds: 1, 643, 48, 144
+frozen
+  bounds: 1, 101, 48, 48
+frozen_push
+  bounds: 1, 349, 96, 96
+groundslide
+  bounds: 51, 101, 48, 48
+jump
+  bounds: 1, 151, 48, 48
+run
+  bounds: 1, 447, 96, 96
+run_trans
+  bounds: 51, 151, 48, 48
+slip
+  bounds: 1, 201, 48, 48
+stand
+  bounds: 1, 545, 48, 96
+stand_slash1
+  bounds: 51, 643, 48, 144
+stand_slash2
+  bounds: 1, 789, 48, 144
+stand_slash3
+  bounds: 51, 789, 48, 144
+stunned
+  bounds: 51, 545, 48, 96
+swim
+  bounds: 51, 201, 48, 48
+wallslide
+  bounds: 1, 251, 48, 48

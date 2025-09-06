@@ -1,7 +1,7 @@
 Bits.png
-size: 14, 62
+size: 14, 68
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Nearest, Nearest
 repeat: none
 axe
   rotate: false
@@ -45,23 +45,30 @@ precious
   orig: 8, 2
   offset: 0, 0
   index: -1
-rush_jet
+rat
   rotate: false
   xy: 3, 39
   size: 8, 2
   orig: 8, 2
   offset: 0, 0
   index: -1
-standard
+rush_jet
   rotate: false
   xy: 3, 45
   size: 8, 2
   orig: 8, 2
   offset: 0, 0
   index: -1
-standard_rotated
+standard
   rotate: false
   xy: 3, 51
+  size: 8, 2
+  orig: 8, 2
+  offset: 0, 0
+  index: -1
+standard_rotated
+  rotate: false
+  xy: 3, 57
   size: 2, 8
   orig: 2, 8
   offset: 0, 0

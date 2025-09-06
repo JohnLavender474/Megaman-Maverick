@@ -10,6 +10,7 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.equalsAny
+import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.pairTo
@@ -26,7 +27,9 @@ import com.megaman.maverick.game.entities.bosses.PreciousWoman.Companion.GEM_COL
 import com.megaman.maverick.game.entities.bosses.PreciousWoman.Companion.SHIELD_GEMS_ANGLES
 import com.megaman.maverick.game.entities.bosses.PreciousWoman.Companion.SHIELD_GEM_START_OFFSET
 import com.megaman.maverick.game.entities.bosses.PreciousWoman.ShieldGemDef
+import com.megaman.maverick.game.entities.bosses.RodentMan.Companion.SLASH_WAVE_SPEED
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.decorations.SlashDissipation
 import com.megaman.maverick.game.entities.explosions.MagmaExplosion
 import com.megaman.maverick.game.entities.explosions.SmokePuff
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
@@ -52,7 +55,7 @@ open class MegaWeaponHandler(
     var halfChargedCost: (MegaWeaponHandler) -> Int = { 0 },
     var fullyChargedCost: (MegaWeaponHandler) -> Int = { 0 },
     var chargeable: (MegaWeaponHandler) -> Boolean = { true },
-    var updateFunction: ((MegaGameEntity, MegaChargeStatus, Float) -> Unit)? = null,
+    var spawnedUpdateFunc: ((MegaGameEntity, MegaChargeStatus, Float) -> Unit)? = null,
     var canFireWeapon: (MegaWeaponHandler, MegaChargeStatus) -> Boolean = { _, _ -> true },
     var onShoot: (() -> Unit)? = null
 ) : Updatable {
@@ -101,10 +104,10 @@ open class MegaWeaponHandler(
 
         cooldown.update(delta)
 
-        if (updateFunction != null) spawned.forEach { entry ->
+        if (spawnedUpdateFunc != null) spawned.forEach { entry ->
             val chargeStatus = entry.key
             val entities = entry.value
-            entities.forEach { entity -> updateFunction?.invoke(entity, chargeStatus, delta) }
+            entities.forEach { entity -> spawnedUpdateFunc?.invoke(entity, chargeStatus, delta) }
         }
     }
 
@@ -367,7 +370,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 }
                 return@canFireWeapon it.getSpawnedCount(MegaChargeStatus.entries) == 0
             },
-            updateFunction = updateFunction@{ cluster, _, delta ->
+            spawnedUpdateFunc = updateFunction@{ cluster, _, delta ->
                 if (!cluster.spawned) return@updateFunction
                 cluster as PreciousGemCluster
                 cluster.origin.lerp(
@@ -410,6 +413,33 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                     megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)
                 ) canSpin = true
                  */
+            }
+        }
+        MegamanWeapon.RODENT_CLAWS -> object : MegaWeaponHandler(
+            cooldown = Timer(0.25f),
+            normalCost = { 0 },
+            chargeable = { false }
+        ) {
+
+            private val resetTimer = Timer(0.75f)
+
+            init {
+                onShoot = {
+                    resetTimer.reset()
+
+                    val slashIndex = megaman.getOrDefaultProperty("slash_index", 0, Int::class)
+                    val nextSlashIndex = if (slashIndex >= 3) 1 else slashIndex + 1
+                    megaman.putProperty("slash_index", nextSlashIndex)
+
+                    megaman.requestToPlaySound(SoundAsset.WHIP_V2_SOUND, false)
+                }
+            }
+
+            override fun update(delta: Float) {
+                super.update(delta)
+
+                resetTimer.update(delta)
+                if (resetTimer.isFinished()) megaman.putProperty("slash_index", 0)
             }
         }
     }
@@ -558,6 +588,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             MegamanWeapon.PRECIOUS_GUARD -> shootPreciousGuard()
             MegamanWeapon.AXE_SWINGER -> MegaUtilMethods.delayRun(game, 0.1f) { throwAxe() }
             MegamanWeapon.NEEDLE_SPIN -> spinNeedles()
+            MegamanWeapon.RODENT_CLAWS -> slashClaws()
         }
 
         handler.cooldown.reset()
@@ -864,5 +895,44 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             Direction.LEFT -> vel.x = -impulse
             Direction.RIGHT -> vel.x = impulse
         }
+    }
+
+    private fun slashClaws() {
+        GameLogger.debug(TAG, "slashClaws()")
+
+        val slashIndex = megaman.getOrDefaultProperty("slash_index", 0, Int::class)
+
+        val slashAngles = when (slashIndex) {
+            1 -> gdxArrayOf(if (megaman.isFacing(Facing.LEFT)) 165f else 15f)
+            2 -> gdxArrayOf(if (megaman.isFacing(Facing.LEFT)) 150f else 30f)
+            else -> if (megaman.isFacing(Facing.LEFT)) gdxArrayOf(135f, 180f) else gdxArrayOf(0f, 45f)
+        }
+
+        slashAngles.forEach { slashAngle ->
+            val trajectory = GameObjectPools.fetch(Vector2::class)
+                .set(0f, SLASH_WAVE_SPEED * ConstVals.PPM)
+                .setAngleDeg(slashAngle)
+
+            val center = GameObjectPools.fetch(Vector2::class)
+                .set(megaman.body.getCenter())
+                .add(ConstVals.PPM.toFloat() * megaman.facing.value, 0f)
+
+            val slashWave = MegaEntityFactory.fetch(SlashWave::class)!!
+            slashWave.spawn(
+                props(
+                    ConstKeys.OWNER pairTo megaman,
+                    ConstKeys.DISSIPATE pairTo true,
+                    ConstKeys.POSITION pairTo center,
+                    ConstKeys.TRAJECTORY pairTo trajectory
+                )
+            )
+        }
+
+        val center = GameObjectPools.fetch(Vector2::class)
+            .set(megaman.body.getCenter())
+            .add(ConstVals.PPM.toFloat() * megaman.facing.value, 0f)
+
+        val slashDissipation = MegaEntityFactory.fetch(SlashDissipation::class)!!
+        slashDissipation.spawn(props(ConstKeys.POSITION pairTo center, ConstKeys.FACING pairTo megaman.facing))
     }
 }

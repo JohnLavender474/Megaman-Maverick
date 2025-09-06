@@ -46,7 +46,8 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             Explosion::class pairTo dmgNeg(5),
             Axe::class pairTo dmgNeg(10),
             Needle::class pairTo dmgNeg(10),
-            Megaman::class pairTo dmgNeg(15)
+            Megaman::class pairTo dmgNeg(15),
+            SlashWave::class pairTo dmgNeg(5)
         )
 
         private val MEDIUM_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -73,7 +74,8 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             Explosion::class pairTo dmgNeg(15),
             Axe::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             Needle::class pairTo dmgNeg(20),
-            Megaman::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
+            Megaman::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            SlashWave::class pairTo dmgNeg(15)
         )
 
         private val SMALL_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -100,7 +102,8 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             Explosion::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             Axe::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             Needle::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-            Megaman::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
+            Megaman::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            SlashWave::class pairTo dmgNeg(15)
         )
 
         // damage is determined by the damageable's size instead of the damager's size

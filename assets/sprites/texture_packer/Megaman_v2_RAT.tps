@@ -64,7 +64,7 @@
             </struct>
         </struct>
         <key>shapePadding</key>
-        <uint>2</uint>
+        <uint>0</uint>
         <key>jpgQuality</key>
         <uint>80</uint>
         <key>pngOptimizationLevel</key>
@@ -76,7 +76,7 @@
         <key>textureFormat</key>
         <enum type="SettingsBase::TextureFormat">png</enum>
         <key>borderPadding</key>
-        <uint>2</uint>
+        <uint>0</uint>
         <key>maxTextureSize</key>
         <QSize>
             <key>width</key>
@@ -124,7 +124,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../sprite_sheets/Bits.txt</filename>
+                <filename>../sprite_sheets/Megaman_v2_RAT.txt</filename>
             </struct>
         </map>
         <key>multiPackMode</key>
@@ -173,15 +173,17 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../frames/Bits/axe.png</key>
-            <key type="filename">../frames/Bits/fire.png</key>
-            <key type="filename">../frames/Bits/ice.png</key>
-            <key type="filename">../frames/Bits/moon.png</key>
-            <key type="filename">../frames/Bits/needle.png</key>
-            <key type="filename">../frames/Bits/precious.png</key>
-            <key type="filename">../frames/Bits/rat.png</key>
-            <key type="filename">../frames/Bits/rush_jet.png</key>
-            <key type="filename">../frames/Bits/standard.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/airdash.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/climb_finish.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/climb_still.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/crouch.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/frozen.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/groundslide.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/jump.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/run_trans.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/slip.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/swim.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/wallslide.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -190,13 +192,15 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>2,1,4,1</rect>
+                <rect>12,12,24,24</rect>
                 <key>scale9Paddings</key>
-                <rect>2,1,4,1</rect>
+                <rect>12,12,24,24</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Bits/standard_rotated.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/climb.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/stand.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/stunned.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -205,9 +209,43 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>1,2,1,4</rect>
+                <rect>12,24,24,48</rect>
                 <key>scale9Paddings</key>
-                <rect>1,2,1,4</rect>
+                <rect>12,24,24,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Megaman_v2_Rat/damaged.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/stand_slash1.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/stand_slash2.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/stand_slash3.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,36,24,72</rect>
+                <key>scale9Paddings</key>
+                <rect>12,36,24,72</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Megaman_v2_Rat/frozen_push.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/run.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>24,24,48,48</rect>
+                <key>scale9Paddings</key>
+                <rect>24,24,48,48</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -218,7 +256,7 @@
             <struct type="SpriteSheet">
                 <key>files</key>
                 <array>
-                    <filename>../frames/Bits</filename>
+                    <filename>../frames/Megaman_v2_Rat</filename>
                 </array>
             </struct>
         </map>
@@ -247,7 +285,7 @@
             <key>libgdx::legacy-output</key>
             <struct type="ExporterProperty">
                 <key>value</key>
-                <string>true</string>
+                <string>false</string>
             </struct>
         </map>
     </struct>

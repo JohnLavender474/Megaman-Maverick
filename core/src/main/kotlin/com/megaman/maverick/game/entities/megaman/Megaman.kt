@@ -43,7 +43,6 @@ import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
 import com.megaman.maverick.game.entities.megaman.contracts.IMegamanDamageListener
-import com.megaman.maverick.game.entities.megaman.extensions.stopCharging
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanTrailSpriteV2
 import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler
@@ -80,6 +79,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
                 LevelDefinition.GLACIER_MAN -> set.add(MegamanWeapon.FRIGID_SHOT)
                 LevelDefinition.TIMBER_WOMAN -> set.add(MegamanWeapon.AXE_SWINGER)
                 LevelDefinition.DESERT_MAN -> set.add(MegamanWeapon.NEEDLE_SPIN)
+                LevelDefinition.RODENT_MAN -> set.add(MegamanWeapon.RODENT_CLAWS)
                 else -> {}
             }
             return set
@@ -909,6 +909,17 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
     fun removeOneLife() = lives.translate(-1)
 
     fun resetLives() = lives.set(ConstVals.START_LIVES)
+
+    fun stopCharging() {
+        stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
+        chargingTimer.reset()
+    }
+
+    fun shoot(): Boolean {
+        val shot = weaponsHandler.fireWeapon(currentWeapon, chargeStatus)
+        if (shot) shootAnimTimer.reset()
+        return shot
+    }
 
     override fun getType() = EntityType.MEGAMAN
 

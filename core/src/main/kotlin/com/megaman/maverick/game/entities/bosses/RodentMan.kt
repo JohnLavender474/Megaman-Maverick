@@ -116,7 +116,8 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
         private const val WALL_RUN_MEGAMAN_X_DIST_THRESHOLD = 3.5f
         private const val WALL_JUMP_CHANCE_SCALAR = 0.5f
 
-        private const val SLASH_WAVE_SPEED = 12f
+        const val SLASH_WAVE_SPEED = 12f
+
         private val IN_AIR_UP_LEFT_SLASH_WAVE_ANGLES = gdxArrayOf(135f, 180f)
         private val IN_AIR_DOWN_LEFT_SLASH_WAVE_ANGLES = gdxArrayOf(180f, 225f)
         private val IN_AIR_UP_RIGHT_SLASH_WAVE_ANGLES = gdxArrayOf(0f, 45f)
@@ -775,7 +776,6 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
                         Facing.LEFT -> slashAngles.addAll(STAND_LEFT_SLASH_WAVE_ANGLES)
                         Facing.RIGHT -> slashAngles.addAll(STAND_RIGHT_SLASH_WAVE_ANGLES)
                     }
-
                     else -> {
                         val up = megaman.body.getCenter().y >= body.getCenter().y
 
@@ -783,7 +783,6 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
                             Facing.LEFT -> slashAngles.addAll(
                                 if (up) IN_AIR_UP_LEFT_SLASH_WAVE_ANGLES else IN_AIR_DOWN_LEFT_SLASH_WAVE_ANGLES
                             )
-
                             Facing.RIGHT -> slashAngles.addAll(
                                 if (up) IN_AIR_UP_RIGHT_SLASH_WAVE_ANGLES else IN_AIR_DOWN_RIGHT_SLASH_WAVE_ANGLES
                             )
@@ -815,6 +814,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
         slashAngles.clear()
 
         spawnSlashDissipation()
+
         requestToPlaySound(SoundAsset.WHIP_V2_SOUND, false)
     }
 

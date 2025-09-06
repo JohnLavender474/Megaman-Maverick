@@ -81,9 +81,9 @@ import com.megaman.maverick.game.controllers.loadControllerButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.enemies.NuttGlider
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.sprites.MEGAMAN_ANIM_KEY_SUPPLIER_TAG
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -137,7 +137,7 @@ class MegamanMaverickGame(
         private const val LOADING = "LOADING"
         private const val LOG_FILE_NAME = "logs.txt"
         private const val SCREENSHOT_KEY = Input.Keys.P
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(NuttGlider.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(MEGAMAN_ANIM_KEY_SUPPLIER_TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.oneFixtureMatches(FixtureType.CONSUMER)
         }

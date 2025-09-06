@@ -11,6 +11,7 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameCircle
+import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -19,6 +20,7 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
@@ -28,6 +30,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.world.body.*
+import kotlin.math.max
 
 class SlashWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
@@ -39,14 +42,20 @@ class SlashWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
         private const val CIRCLE_RADIUS = 0.5f
 
+        private const val DEFAULT_DISSIPATE_DUR = 0.2f
+
         private var region: TextureRegion? = null
     }
+
+    private var dissipate = false
+    private val dissipateTimer = Timer()
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
+        addComponent(defineUpdatablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -58,6 +67,14 @@ class SlashWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
         val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
         body.physics.velocity.set(trajectory)
+
+        dissipate = spawnProps.getOrDefault(ConstKeys.DISSIPATE, false, Boolean::class)
+        val dissipateDur = spawnProps.getOrDefault(
+            "${ConstKeys.DISSIPATE}_${ConstKeys.DURATION}",
+            DEFAULT_DISSIPATE_DUR,
+            Float::class
+        )
+        dissipateTimer.resetDuration(dissipateDur)
     }
 
     override fun onDestroy() {
@@ -96,12 +113,23 @@ class SlashWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         )
         .updatable { _, sprite ->
             sprite.setCenter(body.getCenter())
+
             sprite.setOriginCenter()
             sprite.rotation = body.physics.velocity.angleDeg() + 180f
+
+            val alpha = if (dissipate) max(0f, 1f - dissipateTimer.getRatio()) else 1f
+            sprite.setAlpha(alpha)
         }
         .build()
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
         .key(TAG).animator(Animator(Animation(region!!, 2, 1, 0.1f, true)))
         .build()
+
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        if (dissipate) {
+            dissipateTimer.update(delta)
+            if (dissipateTimer.isFinished()) destroy()
+        } else dissipateTimer.reset()
+    })
 }
