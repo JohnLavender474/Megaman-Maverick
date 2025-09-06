@@ -35,6 +35,7 @@ import com.megaman.maverick.game.entities.explosions.SmokePuff
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.GROUND_SLIDE_SPRITE_OFFSET_Y
+import com.megaman.maverick.game.entities.megaman.components.feetOnGround
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
@@ -57,7 +58,8 @@ open class MegaWeaponHandler(
     var chargeable: (MegaWeaponHandler) -> Boolean = { true },
     var spawnedUpdateFunc: ((MegaGameEntity, MegaChargeStatus, Float) -> Unit)? = null,
     var canFireWeapon: (MegaWeaponHandler, MegaChargeStatus) -> Boolean = { _, _ -> true },
-    var onShoot: (() -> Unit)? = null
+    var preShoot: (() -> Unit)? = null,
+    var postShoot: (() -> Unit)? = null
 ) : Updatable {
 
     companion object {
@@ -390,7 +392,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             cooldown = Timer(0.25f),
             normalCost = { 2 },
             chargeable = { false },
-            onShoot = { game.audioMan.playSound(SoundAsset.WHOOSH_SOUND, false) }
+            preShoot = { game.audioMan.playSound(SoundAsset.WHOOSH_SOUND, false) }
         ) {
 
             private var canSpin = true
@@ -416,37 +418,37 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             }
         }
         MegamanWeapon.RODENT_CLAWS -> object : MegaWeaponHandler(
-            cooldown = Timer(0.2f),
-            normalCost = { 5 },
+            cooldown = Timer(0.1f),
+            normalCost = { 4 },
             chargeable = { false }
         ) {
 
-            private val resetTimer = Timer(0.75f)
-            private val refillTimer = Timer(0.1f)
-            private val refillDelay = Timer(0.25f).setToEnd()
+            private val resetTimer = Timer(0.75f).setToEnd()
+
+            private val refillTimer = Timer(0.125f)
+            private val refillDelay = Timer(0.3f).setToEnd()
 
             init {
-                onShoot = {
-                    resetTimer.reset()
-                    refillDelay.reset()
-
-                    val slashIndex = megaman.getOrDefaultProperty("slash_index", 0, Int::class)
+                preShoot = {
+                    val priorSlashIndex = megaman.getOrDefaultProperty("slash_index", 0, Int::class)
 
                     val nextSlashIndex = when {
-                        !megaman.body.isSensing(BodySense.FEET_ON_GROUND) ||
+                        priorSlashIndex >= 3 ||
+                            resetTimer.isFinished() ||
+                            !megaman.feetOnGround ||
                             megaman.isAnyBehaviorActive(
-                                BehaviorType.CROUCHING,
                                 BehaviorType.WALL_SLIDING,
                                 BehaviorType.GROUND_SLIDING,
-                                BehaviorType.AIR_DASHING
-                            ) -> 1
-                        slashIndex >= 3 -> 1
-                        else -> slashIndex + 1
+                                BehaviorType.AIR_DASHING,
+                                BehaviorType.JUMPING
+                            )  -> 1
+                        else -> priorSlashIndex + 1
                     }
 
                     megaman.putProperty("slash_index", nextSlashIndex)
 
-                    megaman.requestToPlaySound(SoundAsset.WHIP_V2_SOUND, false)
+                    resetTimer.reset()
+                    refillDelay.reset()
                 }
             }
 
@@ -454,12 +456,12 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 super.update(delta)
 
                 resetTimer.update(delta)
-                if (resetTimer.isFinished()) megaman.putProperty("slash_index", 0)
 
                 refillDelay.update(delta)
 
                 if (refillDelay.isFinished() && ammo < MegamanValues.MAX_WEAPON_AMMO) {
                     refillTimer.update(delta)
+
                     if (refillTimer.isFinished()) {
                         ammo += 1
                         refillTimer.reset()
@@ -605,6 +607,10 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             return false
         }
 
+        handler.cooldown.reset()
+
+        handler.preShoot?.invoke()
+
         when (weapon) {
             MegamanWeapon.MEGA_BUSTER, MegamanWeapon.RUSH_JET -> shootMegaBuster(stat)
             MegamanWeapon.FRIGID_SHOT -> shootIceCube(stat)
@@ -616,8 +622,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             MegamanWeapon.RODENT_CLAWS -> slashClaws()
         }
 
-        handler.cooldown.reset()
-        handler.onShoot?.invoke()
+        handler.postShoot?.invoke()
 
         translateAmmo(weapon, -cost)
 
@@ -923,11 +928,19 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
     }
 
     private fun slashClaws() {
-        GameLogger.debug(TAG, "slashClaws()")
+        val slashAnglesKey = if (
+            !megaman.feetOnGround ||
+            megaman.isAnyBehaviorActive(
+                BehaviorType.WALL_SLIDING,
+                BehaviorType.GROUND_SLIDING,
+                BehaviorType.AIR_DASHING,
+                BehaviorType.JUMPING
+            )
+        ) 3 else megaman.getOrDefaultProperty("slash_index", 1, Int::class)
 
-        val slashIndex = megaman.getOrDefaultProperty("slash_index", 0, Int::class)
+        GameLogger.debug(TAG, "slashClaws(): slashIndex=$slashAnglesKey")
 
-        val slashAngles = when (slashIndex) {
+        val slashAngles = when (slashAnglesKey) {
             1 -> gdxArrayOf(if (megaman.isFacing(Facing.LEFT)) 165f else 15f)
             2 -> gdxArrayOf(if (megaman.isFacing(Facing.LEFT)) 150f else 30f)
             else -> if (megaman.isFacing(Facing.LEFT)) gdxArrayOf(135f, 180f) else gdxArrayOf(0f, 45f)
@@ -964,6 +977,13 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             )
 
         val slashDissipation = MegaEntityFactory.fetch(SlashDissipation::class)!!
-        slashDissipation.spawn(props(ConstKeys.POSITION pairTo center, ConstKeys.FACING pairTo megaman.facing))
+        slashDissipation.spawn(
+            props(
+                ConstKeys.POSITION pairTo center,
+                ConstKeys.FACING pairTo megaman.facing
+            )
+        )
+
+        megaman.requestToPlaySound(SoundAsset.WHIP_V2_SOUND, false)
     }
 }

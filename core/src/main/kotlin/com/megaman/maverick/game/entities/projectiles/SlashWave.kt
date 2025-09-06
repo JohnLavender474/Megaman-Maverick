@@ -42,12 +42,14 @@ class SlashWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
         private const val CIRCLE_RADIUS = 0.5f
 
-        private const val DEFAULT_DISSIPATE_DUR = 0.2f
+        private const val DEFAULT_DISSIPATE_DELAY = 0.1f
+        private const val DEFAULT_DISSIPATE_DUR = 0.25f
 
         private var region: TextureRegion? = null
     }
 
     private var dissipate = false
+    private val dissipateDelay = Timer()
     private val dissipateTimer = Timer()
 
     override fun init() {
@@ -69,12 +71,20 @@ class SlashWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         body.physics.velocity.set(trajectory)
 
         dissipate = spawnProps.getOrDefault(ConstKeys.DISSIPATE, false, Boolean::class)
+
         val dissipateDur = spawnProps.getOrDefault(
             "${ConstKeys.DISSIPATE}_${ConstKeys.DURATION}",
             DEFAULT_DISSIPATE_DUR,
             Float::class
         )
         dissipateTimer.resetDuration(dissipateDur)
+
+        val dissipateDelay = spawnProps.getOrDefault(
+            "${ConstKeys.DISSIPATE}_${ConstKeys.DELAY}",
+            DEFAULT_DISSIPATE_DELAY,
+            Float::class
+        )
+        this.dissipateDelay.resetDuration(dissipateDelay)
     }
 
     override fun onDestroy() {
@@ -122,14 +132,22 @@ class SlashWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         }
         .build()
 
+    fun getDissipation() = max(1, (1f - dissipateTimer.getRatio()).times(10).toInt())
+
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
         .key(TAG).animator(Animator(Animation(region!!, 2, 1, 0.1f, true)))
         .build()
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         if (dissipate) {
-            dissipateTimer.update(delta)
-            if (dissipateTimer.isFinished()) destroy()
-        } else dissipateTimer.reset()
+            if (!dissipateDelay.isFinished()) dissipateDelay.update(delta)
+            else {
+                dissipateTimer.update(delta)
+                if (dissipateTimer.isFinished()) destroy()
+            }
+        } else {
+            dissipateDelay.reset()
+            dissipateTimer.reset()
+        }
     })
 }

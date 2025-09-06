@@ -16,6 +16,7 @@ import com.megaman.maverick.game.entities.hazards.Saw
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.*
+import kotlin.math.ceil
 import kotlin.reflect.KClass
 
 class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, DamageNegotiation?> = ObjectMap()) :
@@ -47,7 +48,10 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             Axe::class pairTo dmgNeg(10),
             Needle::class pairTo dmgNeg(10),
             Megaman::class pairTo dmgNeg(15),
-            SlashWave::class pairTo dmgNeg(5)
+            SlashWave::class pairTo dmgNeg damage@{
+                it as SlashWave
+                return@damage ceil(0.5f * it.getDissipation()).toInt()
+            }
         )
 
         private val MEDIUM_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -75,7 +79,10 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             Axe::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             Needle::class pairTo dmgNeg(20),
             Megaman::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-            SlashWave::class pairTo dmgNeg(15)
+            SlashWave::class pairTo dmgNeg damage@{
+                it as SlashWave
+                return@damage 1 * it.getDissipation()
+            }
         )
 
         private val SMALL_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -103,7 +110,10 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             Axe::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             Needle::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             Megaman::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-            SlashWave::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
+            SlashWave::class pairTo dmgNeg damage@{
+                it as SlashWave
+                return@damage 3 * it.getDissipation()
+            }
         )
 
         // damage is determined by the damageable's size instead of the damager's size

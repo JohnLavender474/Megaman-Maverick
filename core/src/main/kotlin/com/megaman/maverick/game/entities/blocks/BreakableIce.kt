@@ -78,8 +78,8 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
     override fun hitByProjectile(projectileFixture: IFixture) {
         val projectile = projectileFixture.getEntity() as IProjectileEntity
         when (projectile) {
-            is Bullet, is TeardropBlast -> hit()
-            is MoonScythe, is SlashWave, is IFireEntity -> explodeAndDie()
+            is Bullet, is TeardropBlast, is SlashWave -> hit()
+            is MoonScythe, is IFireEntity -> explodeAndDie()
             is ChargedShot -> if (projectile.fullyCharged) explodeAndDie() else hit(2)
         }
     }

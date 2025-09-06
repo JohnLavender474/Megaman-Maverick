@@ -91,7 +91,10 @@ class WoodCrate(game: MegamanMaverickGame) : Block(game), IFireableEntity, ISpri
             MoonScythe::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             Saw::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             Axe::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-            SlashWave::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
+            SlashWave::class pairTo dmgNeg damage@{
+                it as SlashWave
+                return@damage 10 * it.getDissipation()
+            }
         )
 
         private val BURN_TAGS = objectSetOf(MagmaFlame.TAG, MagmaWave.TAG)
