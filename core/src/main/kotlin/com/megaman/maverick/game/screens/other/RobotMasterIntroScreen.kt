@@ -23,7 +23,6 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
-import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.backgrounds.ScrollingStars
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
@@ -158,7 +157,7 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
                 val text = fullText.subSequence(0, i + 1).toString()
                 textHandle.setText(text)
 
-                audioMan.playSound(SoundAsset.THUMP_SOUND, false)
+                // audioMan.playSound(SoundAsset.THUMP_SOUND, false)
             }
         }
 

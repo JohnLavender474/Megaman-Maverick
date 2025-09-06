@@ -13,6 +13,7 @@ import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.interfaces.Initializable
+import com.mega.game.engine.common.objects.IntPair
 import com.mega.game.engine.common.objects.table.Table
 import com.mega.game.engine.common.objects.table.TableBuilder
 import com.mega.game.engine.common.objects.table.TableNode
@@ -135,7 +136,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
         val levelPauseScreenAtlas = game.assMan.getTextureAtlas(TextureAsset.LEVEL_PAUSE_SCREEN_V2.source)
 
-        val backgroundRegion = levelPauseScreenAtlas.findRegion(ConstKeys.BACKGROUND)
+        val backgroundRegion = levelPauseScreenAtlas.findRegion(/* ConstKeys.BACKGROUND */ "background_no_screws")
         backgroundSprite.setBounds(0f, 0f, ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         backgroundSprite.setRegion(backgroundRegion)
 
@@ -175,13 +176,16 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                 positionY = LIVES_Y * ConstVals.PPM,
                 centerX = false,
                 centerY = false
-            ), MegaFontHandle(
+            ),
+            /*
+            MegaFontHandle(
                 textSupplier = { state.getCurrency().toString().padStart(3, '0') },
                 positionX = SCREWS_X * ConstVals.PPM,
                 positionY = SCREWS_Y * ConstVals.PPM,
                 centerX = false,
                 centerY = false
             )
+             */
         )
 
         GameLogger.debug(TAG, "init(): buttonRegions=$buttonRegions")
@@ -501,8 +505,15 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                 Direction.UP, Direction.DOWN -> {
                     var nextNode = if (direction == Direction.UP) node.nextRow() else node.previousRow()
 
-                    // Moving from a weapon to the exit button should be intercepted and changed l if there are any
-                    // health tanks. In the case, find the first available health tank and move the selection there.
+                    // If moving up or down from the EXIT button causes the EXIT button to continue to be hovered,
+                    // then force the hover to the MEGA_BUSTER weapon.
+                    if (oldNode.element == ConstKeys.EXIT && nextNode.element == ConstKeys.EXIT) {
+                        val (row, column) = table.findPositionOf(MegamanWeapon.MEGA_BUSTER) ?: IntPair(0, 0)
+                        nextNode = table.get(row, column)
+                    }
+
+                    // Moving from a weapon to the exit button should be intercepted and changed if there are any
+                    // health tanks. In this case, find the first available health tank and move the selection there.
                     if (oldNode.element is MegamanWeapon &&
                         nextNode.element == ConstKeys.EXIT &&
                         megaman.hasAnyHealthTanks

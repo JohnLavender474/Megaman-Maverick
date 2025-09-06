@@ -69,6 +69,7 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
             Bullet::class,
             Megaman::class,
             ChargedShot::class,
+            SlashWave::class
         )
         private val SMOKE_PUFF_ENTITIES = objectSetOf(
             MagmaGoop::class,

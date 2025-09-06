@@ -237,6 +237,7 @@ sprites/frames/LevelPauseScreenV2/health_tanks/d_selected.png
 sprites/frames/LevelPauseScreenV2/health_tanks/a_selected.png
 sprites/frames/LevelPauseScreenV2/health_tanks/b_selected.png
 sprites/frames/LevelPauseScreenV2/background.png
+sprites/frames/LevelPauseScreenV2/background_no_screws.png
 sprites/frames/LevelPauseScreenV2/weapons/moon_scythes_selected.png
 sprites/frames/LevelPauseScreenV2/weapons/infernal_barrage.png
 sprites/frames/LevelPauseScreenV2/weapons/mega_buster_selected.png

@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.6.2</string>
+        <string>7.9.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -174,6 +174,7 @@
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">../frames/LevelPauseScreenV2/background.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/background_no_screws.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/health_tanks/a.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/health_tanks/a_selected.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/health_tanks/b.png</key>
@@ -250,6 +251,12 @@
         <key>normalMapSheetFileName</key>
         <filename></filename>
         <key>exporterProperties</key>
-        <map type="ExporterProperties"/>
+        <map type="ExporterProperties">
+            <key>libgdx::legacy-output</key>
+            <struct type="ExporterProperty">
+                <key>value</key>
+                <string>true</string>
+            </struct>
+        </map>
     </struct>
 </data>

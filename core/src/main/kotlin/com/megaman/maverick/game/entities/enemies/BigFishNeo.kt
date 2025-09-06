@@ -7,6 +7,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -16,6 +17,7 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -31,9 +33,11 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.IDamageNegotiator
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.projectiles.SlashWave
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -50,15 +54,20 @@ class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
+    override val damageNegotiator = object : IDamageNegotiator {
+        override fun get(damager: IDamager) =
+            if (damager is SlashWave) 1 * damager.getDissipation() else 0
+    }
+
     override lateinit var facing: Facing
-    // big fish can never be damaged
-    override val invincible = true
 
     private val laughTimer = Timer(LAUGH_DUR)
+
     private var minX = 0f
     private var maxX = 0f
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             regions.put("swim", atlas.findRegion("$TAG/swim"))
@@ -71,8 +80,10 @@ class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
         super.onSpawn(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
+
         val xValue = spawnProps.get(ConstKeys.VALUE, Float::class)!! * ConstVals.PPM
         if (xValue < 0f) {
             minX = spawn.x + xValue
@@ -81,7 +92,9 @@ class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             minX = spawn.x
             maxX = spawn.x + xValue
         }
+
         facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+
         laughTimer.setToEnd()
     }
 
@@ -97,6 +110,7 @@ class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             if ((isFacing(Facing.LEFT) && body.getCenter().x <= minX) ||
                 (isFacing(Facing.RIGHT) && body.getCenter().x >= maxX)
             ) swapFacing()
+
             body.physics.velocity.x = X_VEL * facing.value * ConstVals.PPM
         }
     }
@@ -117,7 +131,9 @@ class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)
-        debugShapes.add { damagerFixture }
+
+        val damageableFixture = Fixture(body, FixtureType.DAMAGEABLE, GameRectangle(body))
+        body.addFixture(damageableFixture)
 
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameRectangle(body))
         body.addFixture(shieldFixture)
@@ -134,12 +150,13 @@ class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(7f * ConstVals.PPM, 3.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.setFlip(isFacing(Facing.LEFT), false)
+            sprite.hidden = damageBlink
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
