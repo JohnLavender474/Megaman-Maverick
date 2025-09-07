@@ -1,32 +1,427 @@
-===== SESSION STARTED: 2025-09-06T16:10:28.446257387 =====
-16:10:30 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=MEGA_BUSTER, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@63e5e5b4
-16:10:30 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=null
-16:10:40 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=MEGA_BUSTER
-16:10:47 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=MEGA_BUSTER
-16:10:50 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-16:10:50 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-16:10:50 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-16:10:52 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
-16:10:52 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
-16:10:52 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-16:10:52 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
-16:10:54 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-16:10:54 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-16:10:54 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-16:10:54 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
-16:10:54 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
-16:10:54 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-16:10:54 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-16:10:54 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-16:10:54 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
-16:10:54 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
-16:10:54 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
-16:10:54 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-16:10:54 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-16:10:54 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-16:10:54 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
-16:10:54 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
-16:10:54 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
-16:10:58 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
-16:10:58 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
-16:10:58 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+===== SESSION STARTED: 2025-09-07T09:54:52.307987938 =====
+09:54:53 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=MEGA_BUSTER, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@63e5e5b4
+09:54:53 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=null
+09:54:54 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=RODENT_CLAWS, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@421a4ee1
+09:55:04 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=MEGA_BUSTER
+09:55:07 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=RODENT_CLAWS, previous=MEGA_BUSTER
+09:55:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:19 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=1
+09:55:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=28
+09:55:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:21 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=1
+09:55:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=28
+09:55:21 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:21 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:21 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:21 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:21 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:21 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:21 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=2
+09:55:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=26
+09:55:21 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:21 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:21 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:21 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:21 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:21 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:21 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:21 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:21 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:21 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:21 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=3
+09:55:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=24
+09:55:21 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:21 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:21 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:21 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:21 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:22 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:22 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:22 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=1
+09:55:22 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=22
+09:55:22 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:22 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:22 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:22 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:22 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:23 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=2
+09:55:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=26
+09:55:23 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:23 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:23 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:23 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:23 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=2
+09:55:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=24
+09:55:23 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:23 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:23 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:23 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:23 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:24 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=1
+09:55:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=28
+09:55:24 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:24 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:24 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:24 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:24 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:24 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:24 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:24 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:24 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=2
+09:55:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=26
+09:55:25 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:25 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:25 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:25 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:25 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:26 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:26 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:26 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=1
+09:55:26 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=28
+09:55:26 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:26 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:26 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:26 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:26 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:26 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:26 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:26 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:26 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:26 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=2
+09:55:26 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=26
+09:55:26 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:26 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:26 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:26 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:26 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:28 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=1
+09:55:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=28
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:28 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=2
+09:55:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=26
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:28 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=3
+09:55:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=24
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:28 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=1
+09:55:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=22
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:28 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:34 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:34 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:34 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=2
+09:55:34 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=28
+09:55:34 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:34 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:34 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:34 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:34 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:34 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:34 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:34 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=2
+09:55:34 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=26
+09:55:34 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:34 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:34 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:34 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:34 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:34 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:34 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:34 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=3
+09:55:34 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=24
+09:55:34 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:34 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:34 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:34 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:34 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:37 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:37 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:37 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=1
+09:55:37 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=28
+09:55:37 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:37 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:37 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:37 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:37 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:37 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:37 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:37 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:37 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:37 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:37 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:37 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=2
+09:55:37 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=26
+09:55:37 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:37 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:37 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:37 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:37 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:37 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:41 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=RODENT_CLAWS
+09:55:43 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=RODENT_CLAWS, previous=MEGA_BUSTER
+09:55:43 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:43 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:43 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=1
+09:55:43 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=28
+09:55:43 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:43 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:43 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:43 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:43 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:43 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:46 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=1
+09:55:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=28
+09:55:46 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:46 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:46 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:46 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:46 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:46 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:46 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=2
+09:55:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=26
+09:55:46 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:46 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:46 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:46 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:49 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:49 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:49 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=1
+09:55:49 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=28
+09:55:49 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:49 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:49 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:49 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:49 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:49 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:49 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:49 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:49 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=2
+09:55:49 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=26
+09:55:49 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:49 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:49 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:49 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:49 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:49 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:49 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:49 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:49 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:52 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:52 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:52 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=1
+09:55:52 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=28
+09:55:52 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:52 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:52 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:52 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:52 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:52 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:52 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=2
+09:55:52 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=26
+09:55:52 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:52 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:52 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:52 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:52 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:52 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:56 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:56 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:56 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=1
+09:55:56 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=28
+09:55:56 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:56 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:56 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:56 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:56 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:59 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:55:59 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:55:59 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=1
+09:55:59 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=28
+09:55:59 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:59 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:59 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:59 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:55:59 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:02 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:56:02 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:56:02 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=2
+09:56:02 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=28
+09:56:02 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:02 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:02 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:02 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:04 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:56:04 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:56:04 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=2
+09:56:04 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=28
+09:56:04 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:04 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:04 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:04 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:04 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:04 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:04 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:04 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:04 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:56:04 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:56:04 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=2
+09:56:04 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=26
+09:56:04 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:04 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:04 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:04 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:04 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:04 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:05 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:05 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:56:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:56:05 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=3
+09:56:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=24
+09:56:05 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:05 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:05 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:05 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:05 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:05 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:05 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:05 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:05 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=RODENT_CLAWS, statToTry=NOT_CHARGED
+09:56:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+09:56:05 | DEBUG | MegamanWeaponsHandler | slashClaws(): slashIndex=1
+09:56:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=22
+09:56:05 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:05 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:05 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:05 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:05 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:05 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: cooldown is not finished
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:18 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is not ready
+09:56:19 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=PRECIOUS_GUARD, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@421a4ee1

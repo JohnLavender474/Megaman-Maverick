@@ -199,6 +199,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Megaman_v2_Rat/airdash_slash1.png</key>
+            <key type="filename">../frames/Megaman_v2_Rat/climb_still_slash1.png</key>
             <key type="filename">../frames/Megaman_v2_Rat/crouch_slash1.png</key>
             <key type="filename">../frames/Megaman_v2_Rat/damaged.png</key>
             <key type="filename">../frames/Megaman_v2_Rat/groundslide_slash1.png</key>

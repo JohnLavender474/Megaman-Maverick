@@ -50,7 +50,7 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             Megaman::class pairTo dmgNeg(15),
             SlashWave::class pairTo dmgNeg damage@{
                 it as SlashWave
-                return@damage ceil(0.75f * it.getDissipation()).toInt()
+                return@damage ceil(0.5f * it.getDissipation()).toInt()
             }
         )
 
@@ -81,7 +81,7 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             Megaman::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             SlashWave::class pairTo dmgNeg damage@{
                 it as SlashWave
-                return@damage ceil(1.5f * it.getDissipation()).toInt()
+                return@damage it.getDissipation()
             }
         )
 

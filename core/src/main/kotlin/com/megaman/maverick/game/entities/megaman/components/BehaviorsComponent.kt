@@ -345,7 +345,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 !game.controllerPoller.isPressed(MegaControllerButton.DOWN) ||
                 (currentWeapon == MegamanWeapon.AXE_SWINGER && shooting) ||
                 (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting) ||
-                (currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting) ||
                 when {
                     direction.isVertical() -> abs(body.physics.velocity.x)
                     else -> abs(body.physics.velocity.y)

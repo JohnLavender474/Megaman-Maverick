@@ -1,7 +1,7 @@
 WeaponGet.png
-size: 774, 966
+size: 774, 1192
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Nearest, Nearest
 repeat: none
 megaman/axe_swinger
   rotate: false
@@ -52,16 +52,23 @@ megaman/precious_guard
   orig: 256, 320
   offset: 0, 0
   index: -1
-megaman/rush_jet
+megaman/rodent_claws
   rotate: false
   xy: 259, 645
   size: 256, 320
   orig: 256, 320
   offset: 0, 0
   index: -1
-overlay
+megaman/rush_jet
   rotate: false
   xy: 517, 645
+  size: 256, 320
+  orig: 256, 320
+  offset: 0, 0
+  index: -1
+overlay
+  rotate: false
+  xy: 1, 967
   size: 256, 224
   orig: 256, 224
   offset: 0, 0

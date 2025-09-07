@@ -48,10 +48,10 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.entities.projectiles.PreciousGem
 import com.megaman.maverick.game.entities.projectiles.PreciousGem.PreciousGemColor
 import com.megaman.maverick.game.entities.projectiles.PreciousGemCluster
+import com.megaman.maverick.game.entities.projectiles.SlashWave
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -107,7 +107,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private const val SPAWN_SHIELDS_DUR = 1f
         private const val JUMP_UPDATE_FACING_DELAY = 0.5f
 
-        private const val STUNNED_DUR = 0.5f
+        private const val STUNNED_DUR = 0.75f
         private const val STUNNED_IMPULSE_X = 2f
 
         private const val GROUNDSLIDE_CHANCE = 20f
@@ -244,7 +244,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         super.init()
         stateMachine = buildStateMachine()
         addComponent(defineAnimationsComponent())
-        damageOverrides.put(MoonScythe::class, dmgNeg(4))
+        damageOverrides.put(SlashWave::class, dmgNeg(2))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -306,15 +306,16 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         val damaged = super.takeDamageFrom(damager)
 
-        if (damaged && damager is MoonScythe && !stunned) {
+        if (damaged && damager is SlashWave && !stunned) {
             stunned = true
 
+            /*
             if (!body.isSensing(BodySense.FEET_ON_GROUND)) {
                 val damagerX = damager.body.getBounds().getX()
                 val thisX = body.getBounds().getX()
                 val impulseX = if (damagerX < thisX) STUNNED_IMPULSE_X else -STUNNED_IMPULSE_X
                 body.physics.velocity.x = impulseX * ConstVals.PPM
-            } else body.physics.velocity.x = 0f
+            } else */ body.physics.velocity.x = 0f
         }
 
         return damaged

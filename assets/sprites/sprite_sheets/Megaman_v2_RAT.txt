@@ -14,12 +14,14 @@ climb_finish
   bounds: 51, 1, 48, 48
 climb_still
   bounds: 1, 51, 48, 48
+climb_still_slash1
+  bounds: 51, 643, 48, 144
 crouch
   bounds: 51, 51, 48, 48
 crouch_slash1
-  bounds: 51, 643, 48, 144
-damaged
   bounds: 1, 789, 48, 144
+damaged
+  bounds: 51, 789, 48, 144
 frozen
   bounds: 1, 101, 48, 48
 frozen_push
@@ -27,11 +29,11 @@ frozen_push
 groundslide
   bounds: 51, 101, 48, 48
 groundslide_slash1
-  bounds: 51, 789, 48, 144
+  bounds: 1, 935, 48, 144
 jump
   bounds: 1, 151, 48, 48
 jump_slash1
-  bounds: 1, 935, 48, 144
+  bounds: 51, 935, 48, 144
 run
   bounds: 1, 447, 96, 96
 run_trans
@@ -39,22 +41,22 @@ run_trans
 slip
   bounds: 1, 201, 48, 48
 slip_slash1
-  bounds: 51, 935, 48, 144
+  bounds: 1, 1081, 48, 144
 stand
   bounds: 1, 545, 48, 96
 stand_slash1
-  bounds: 1, 1081, 48, 144
-stand_slash2
   bounds: 51, 1081, 48, 144
-stand_slash3
+stand_slash2
   bounds: 1, 1227, 48, 144
+stand_slash3
+  bounds: 51, 1227, 48, 144
 stunned
   bounds: 51, 545, 48, 96
 swim
   bounds: 51, 201, 48, 48
 swim_slash1
-  bounds: 51, 1227, 48, 144
+  bounds: 1, 1373, 48, 144
 wallslide
   bounds: 1, 251, 48, 48
 wallslide_slash1
-  bounds: 1, 1373, 48, 144
+  bounds: 51, 1373, 48, 144

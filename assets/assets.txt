@@ -833,6 +833,7 @@ sprites/frames/Megaman_v2_Rat/climb_still.png
 sprites/frames/Megaman_v2_Rat/slip.png
 sprites/frames/Megaman_v2_Rat/run.png
 sprites/frames/Megaman_v2_Rat/groundslide.png
+sprites/frames/Megaman_v2_Rat/climb_still_slash1.png
 sprites/frames/Megaman_v2_Ice/climb_still_shoot.png
 sprites/frames/Megaman_v2_Ice/crouch_charge_half.png
 sprites/frames/Megaman_v2_Ice/run_trans.png
@@ -1853,6 +1854,7 @@ sprites/frames/Backgrounds3/BKG23.png
 sprites/frames/WeaponGet/megaman/infernal_barrage.png
 sprites/frames/WeaponGet/megaman/needle_spin.png
 sprites/frames/WeaponGet/megaman/mega_buster.png
+sprites/frames/WeaponGet/megaman/rodent_claws.png
 sprites/frames/WeaponGet/megaman/frigid_shot.png
 sprites/frames/WeaponGet/megaman/rush_jet.png
 sprites/frames/WeaponGet/megaman/axe_swinger.png

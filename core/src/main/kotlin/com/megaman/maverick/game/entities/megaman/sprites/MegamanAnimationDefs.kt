@@ -153,6 +153,7 @@ object MegamanAnimationDefs {
         "swim_slash1" pairTo AnimationDef(3, 1, DEFAULT_SLASH_FRAME_DUR, false),
         "jump_slash1" pairTo AnimationDef(3, 1, DEFAULT_SLASH_FRAME_DUR, false),
         "airdash_slash1" pairTo AnimationDef(3, 1, DEFAULT_SLASH_FRAME_DUR, false),
+        "climb_still_slash1" pairTo AnimationDef(3, 1, DEFAULT_SLASH_FRAME_DUR, false),
     )
 
     fun get() = defs

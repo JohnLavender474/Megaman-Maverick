@@ -45,8 +45,8 @@ class SlashWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
         private const val CIRCLE_RADIUS = 0.5f
 
-        private const val DEFAULT_DISSIPATE_DELAY = 0.1f
-        private const val DEFAULT_DISSIPATE_DUR = 0.25f
+        private const val DEFAULT_DISSIPATE_DELAY = 0.2f
+        private const val DEFAULT_DISSIPATE_DUR = 0.15f
 
         private var region: TextureRegion? = null
     }

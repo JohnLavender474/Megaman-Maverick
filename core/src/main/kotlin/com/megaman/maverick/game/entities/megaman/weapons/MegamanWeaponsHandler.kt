@@ -419,7 +419,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         }
         MegamanWeapon.RODENT_CLAWS -> object : MegaWeaponHandler(
             cooldown = Timer(0.1f),
-            normalCost = { 4 },
+            normalCost = { 2 },
             chargeable = { false }
         ) {
 
@@ -440,8 +440,9 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                                 BehaviorType.WALL_SLIDING,
                                 BehaviorType.GROUND_SLIDING,
                                 BehaviorType.AIR_DASHING,
-                                BehaviorType.JUMPING
-                            )  -> 1
+                                BehaviorType.JUMPING,
+                                BehaviorType.CROUCHING
+                            ) -> 1
                         else -> priorSlashIndex + 1
                     }
 
@@ -928,22 +929,33 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
     }
 
     private fun slashClaws() {
-        val slashAnglesKey = if (
+        val slashAnglesKey = when {
             !megaman.feetOnGround ||
-            megaman.isAnyBehaviorActive(
-                BehaviorType.WALL_SLIDING,
-                BehaviorType.GROUND_SLIDING,
-                BehaviorType.AIR_DASHING,
-                BehaviorType.JUMPING
-            )
-        ) 3 else megaman.getOrDefaultProperty("slash_index", 1, Int::class)
+                megaman.isAnyBehaviorActive(
+                    BehaviorType.WALL_SLIDING,
+                    BehaviorType.GROUND_SLIDING,
+                    BehaviorType.AIR_DASHING,
+                    BehaviorType.JUMPING,
+                    BehaviorType.CROUCHING
+                ) -> UtilMethods.getRandom(1, 2)
+            else -> megaman.getOrDefaultProperty("slash_index", 1, Int::class)
+        }
 
         GameLogger.debug(TAG, "slashClaws(): slashIndex=$slashAnglesKey")
 
         val slashAngles = when (slashAnglesKey) {
-            1 -> gdxArrayOf(if (megaman.isFacing(Facing.LEFT)) 165f else 15f)
-            2 -> gdxArrayOf(if (megaman.isFacing(Facing.LEFT)) 150f else 30f)
-            else -> if (megaman.isFacing(Facing.LEFT)) gdxArrayOf(135f, 180f) else gdxArrayOf(0f, 45f)
+            1 -> gdxArrayOf(
+                if (megaman.isFacing(Facing.LEFT)) UtilMethods.getRandom(165f, 180f)
+                else UtilMethods.getRandom(0f, 15f)
+            )
+            2 -> gdxArrayOf(
+                if (megaman.isFacing(Facing.LEFT)) UtilMethods.getRandom(150f, 180f)
+                else UtilMethods.getRandom(30f, 45f)
+            )
+            else -> when (megaman.facing) {
+                Facing.LEFT -> gdxArrayOf(135f, 180f)
+                else -> gdxArrayOf(0f, 45f)
+            }
         }
 
         slashAngles.forEach { slashAngle ->

@@ -463,19 +463,16 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
                 Animation(atlas.findRegion("${PreciousWoman.TAG}/jump")) pairTo Timer(DROP_DUR)
             )
             animQueue.addLast(
-                Animation(atlas.findRegion("${PreciousWoman.TAG}/stand_throw"), 5, 1, 0.1f, true) pairTo Timer(1f)
+                Animation(
+                    atlas.findRegion("${PreciousWoman.TAG}/stand"),
+                    2,
+                    1,
+                    gdxArrayOf(1f, 0.15f),
+                    true
+                ) pairTo Timer(0.5f)
             )
             animQueue.addLast(
-                Animation(atlas.findRegion("${PreciousWoman.TAG}/stand_laugh1"), 2, 1, 0.1f, true) pairTo Timer(0.5f)
-            )
-            animQueue.addLast(
-                Animation(atlas.findRegion("${PreciousWoman.TAG}/stand_laugh2"), 2, 1, 0.1f, true) pairTo Timer(0.5f)
-            )
-            animQueue.addLast(
-                Animation(atlas.findRegion("${PreciousWoman.TAG}/wink"), 3, 3, 0.1f, false) pairTo Timer(1f)
-            )
-            animQueue.addLast(
-                Animation(atlas.findRegion("${PreciousWoman.TAG}/stand"), 2, 1, gdxArrayOf(1f, 0.15f), true) pairTo null
+                Animation(atlas.findRegion("${PreciousWoman.TAG}/wink"), 3, 3, 0.1f, false) pairTo null
             )
 
             RobotMasterAnimDef(
