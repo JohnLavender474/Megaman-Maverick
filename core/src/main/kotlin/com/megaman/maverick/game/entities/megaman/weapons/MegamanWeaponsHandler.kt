@@ -477,7 +477,10 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
     fun onChangeWeapon(current: MegamanWeapon, previous: MegamanWeapon?) {
         GameLogger.debug(TAG, "onChangeWeapon(): current=$current, previous=$previous")
 
-        if (previous == MegamanWeapon.AXE_SWINGER) megaman.shooting = false
+        megaman.shooting = false
+
+        if (previous == MegamanWeapon.RODENT_CLAWS && megaman.isBehaviorActive(BehaviorType.WALL_SLIDING))
+            megaman.body.physics.gravityOn = true
 
         if (previous == MegamanWeapon.PRECIOUS_GUARD) {
             val all = weaponHandlers[MegamanWeapon.PRECIOUS_GUARD]?.getSpawned()

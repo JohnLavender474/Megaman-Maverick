@@ -108,7 +108,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private const val JUMP_UPDATE_FACING_DELAY = 0.5f
 
         private const val STUNNED_DUR = 0.75f
-        private const val STUNNED_IMPULSE_X = 2f
+        private const val STUNNED_DAMAGE_DUR = 2f
 
         private const val GROUNDSLIDE_CHANCE = 20f
         private const val GROUNDSLIDE_VEL_X = 9f
@@ -280,6 +280,8 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         firstUpdate = true
     }
 
+
+
     override fun triggerDefeat() {
         GameLogger.debug(TAG, "triggerDefeat()")
         super.triggerDefeat()
@@ -306,16 +308,12 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         val damaged = super.takeDamageFrom(damager)
 
-        if (damaged && damager is SlashWave && !stunned) {
-            stunned = true
-
-            /*
-            if (!body.isSensing(BodySense.FEET_ON_GROUND)) {
-                val damagerX = damager.body.getBounds().getX()
-                val thisX = body.getBounds().getX()
-                val impulseX = if (damagerX < thisX) STUNNED_IMPULSE_X else -STUNNED_IMPULSE_X
-                body.physics.velocity.x = impulseX * ConstVals.PPM
-            } else */ body.physics.velocity.x = 0f
+        if (damaged) {
+            if (damager is SlashWave && !stunned) {
+                stunned = true
+                body.physics.velocity.x = 0f
+                damageTimer.resetDuration(STUNNED_DAMAGE_DUR)
+            } else damageTimer.resetDuration(DEFAULT_BOSS_DMG_DURATION)
         }
 
         return damaged

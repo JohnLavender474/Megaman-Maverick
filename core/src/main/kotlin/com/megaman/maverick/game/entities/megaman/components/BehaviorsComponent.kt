@@ -100,8 +100,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         end = {
             if (!body.isSensing(BodySense.IN_WATER)) aButtonTask = AButtonTask.AIR_DASH
             GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "end()")
-
-            if (currentWeapon == MegamanWeapon.RODENT_CLAWS) body.physics.gravityOn = true
+            body.physics.gravityOn = true
         })
 
     val swim = object : AbstractBehaviorImpl() {

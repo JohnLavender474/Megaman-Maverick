@@ -94,6 +94,9 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
         hit(thisShape, otherShape)
 
+    override fun hitSand(sandFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
+        hit(thisShape, otherShape)
+
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = shieldFixture.getEntity()
         if (entity.isAny(MoonScythe::class, SharpStar::class, Asteroid::class)) return
@@ -180,8 +183,8 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
         sprite.setSize(3.5f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putUpdateFunction { _, _ ->
             sprite.setCenter(body.getCenter())
 
             sprite.setOriginCenter()
@@ -190,7 +193,7 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
             val alpha = if (fade) 1f - fadeTimer.getRatio() else 1f
             sprite.setAlpha(alpha)
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

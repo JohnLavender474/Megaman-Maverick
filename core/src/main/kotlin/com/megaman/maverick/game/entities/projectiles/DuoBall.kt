@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -30,6 +31,8 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.bosses.GutsTank
+import com.megaman.maverick.game.entities.bosses.GutsTankFist
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.world.body.*
@@ -39,16 +42,21 @@ class DuoBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
     companion object {
         const val TAG = "DuoBall"
         private const val GRAVITY = -0.15f
+        private const val BOUNCE_MAX = 2
         private var region: TextureRegion? = null
     }
 
+    private var bounced = 0
+
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -56,13 +64,31 @@ class DuoBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
 
         val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)!!
         body.physics.velocity.set(impulse)
+
+        bounced = 0
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
+    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        if (owner == shieldFixture.getEntity()) return
+
+        if (shieldFixture.getEntity() is GutsTankFist && owner is GutsTank) return
+
+        bounced++
+        if (bounced > BOUNCE_MAX) {
+            explodeAndDie()
+            return
+        }
+
+        body.physics.velocity.x *= -1f
+    }
+
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
+        GameLogger.debug(TAG, "explodeAndDie()")
+
         destroy()
 
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!

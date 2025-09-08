@@ -62,6 +62,7 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.Axe
+import com.megaman.maverick.game.entities.projectiles.SlashWave
 import com.megaman.maverick.game.entities.projectiles.SpitFireball
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
@@ -195,6 +196,7 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IFreezableEnt
         damageOverrides.put(ChargedShotExplosion::class, dmgNeg(1))
         damageOverrides.put(SmallIceCube::class, dmgNeg(4))
         damageOverrides.put(Axe::class, dmgNeg(3))
+        damageOverrides.put(SlashWave::class, dmgNeg(3))
     }
 
     override fun onSpawn(spawnProps: Properties) {

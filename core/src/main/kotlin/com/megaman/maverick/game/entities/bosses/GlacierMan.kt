@@ -66,8 +66,8 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     companion object {
         const val TAG = "GlacierMan"
 
-        const val SPRITE_WIDTH = 3.5f
-        const val SPRITE_HEIGHT = 2.625f
+        const val SPRITE_WIDTH = 4f
+        const val SPRITE_HEIGHT = 3f
 
         private const val INIT_DUR = 1f
         private const val STAND_DUR = 1f

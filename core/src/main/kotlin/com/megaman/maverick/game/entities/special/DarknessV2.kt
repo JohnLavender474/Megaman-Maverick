@@ -100,7 +100,8 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             ShieldAttacker::class pairTo { BRIGHTER_LIGHT_SOURCE },
             SpreadExplosion::class pairTo { BRIGHTEST_LIGHT_SOURCE },
             PicketJoe::class pairTo { BRIGHTER_LIGHT_SOURCE },
-            GreenPelletBlast::class pairTo { STANDARD_LIGHT_SOURCE }
+            GreenPelletBlast::class pairTo { STANDARD_LIGHT_SOURCE },
+            SlashWave::class pairTo { STANDARD_LIGHT_SOURCE }
         )
         private val LIGHT_UP_ENTITY_TYPES = orderedSetOf(
             EntityType.PROJECTILE, EntityType.EXPLOSION, EntityType.ENEMY, EntityType.HAZARD
