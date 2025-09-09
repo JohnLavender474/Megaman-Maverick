@@ -17,6 +17,7 @@ object AnimationUtils {
     ) = keys.forEach { key ->
         val region = atlas.findRegion("$tag/$key")
         if (region == null) throw IllegalStateException("Region is null: $key")
+
         regions.put(key, region)
     }
 
@@ -26,10 +27,13 @@ object AnimationUtils {
         regions: ObjectMap<String, TextureRegion>
     ) = animDefs.forEach { entry ->
         val key = entry.key
+
         val region = regions[key]
         if (region == null) throw IllegalStateException("Region is null: $key")
-        val (rows, columns, durations, loop) = entry.value
-        animations.put(key, Animation(region, rows, columns, durations, loop))
+
+        val (rows, columns, durations, loop, reverse) = entry.value
+
+        animations.put(key, Animation(region, rows, columns, durations, loop, reverse))
     }
 
     fun loadAnimationDef(
@@ -40,7 +44,9 @@ object AnimationUtils {
     ) = keys.forEach { key ->
         val region = regions[key]
         if (region == null) throw IllegalStateException("Region is null: $key")
+
         val (rows, columns, durations, loop) = animDef
+
         animations.put(key, Animation(region, rows, columns, durations, loop))
     }
 }

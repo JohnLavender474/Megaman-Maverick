@@ -1,7 +1,7 @@
 Hazards1.png
 size: 864, 516
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Nearest, Nearest
 repeat: none
 AcidGoop/falling
   rotate: false

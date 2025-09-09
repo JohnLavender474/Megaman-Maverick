@@ -317,16 +317,24 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
                 Animation(atlas.findRegion("${RodentMan.TAG}/jump_down_look_down")) pairTo Timer(DROP_DUR)
             )
             animQueue.addLast(
-                Animation(atlas.findRegion("${RodentMan.TAG}/shielded"), 2, 1, 0.1f, true) pairTo Timer(0.5f)
+                Animation(
+                    atlas.findRegion("${RodentMan.TAG}/stand"), 2, 1, gdxArrayOf(1f, 0.15f), true
+                ) pairTo Timer(0.5f)
             )
             animQueue.addLast(
-                Animation(atlas.findRegion("${RodentMan.TAG}/jump_slash"), 2, 1, 0.1f, false) pairTo Timer(0.2f)
+                Animation(
+                    atlas.findRegion("${RodentMan.TAG}/stand_slash_combo"), 4, 3, 0.05f, false
+                ) pairTo Timer(0.75f)
             )
             animQueue.addLast(
-                Animation(atlas.findRegion("${RodentMan.TAG}/run"), 1, 5, 0.1f, true) pairTo Timer(1f)
+                Animation(
+                    atlas.findRegion("${RodentMan.TAG}/stand_slash_combo"), 4, 3, 0.05f, false
+                ) pairTo Timer(0.75f)
             )
             animQueue.addLast(
-                Animation(atlas.findRegion("${RodentMan.TAG}/stand"), 2, 1, gdxArrayOf(1f, 0.15f), true) pairTo null
+                Animation(
+                    atlas.findRegion("${RodentMan.TAG}/stand"), 2, 1, gdxArrayOf(1f, 0.15f), true
+                ) pairTo null
             )
 
             RobotMasterAnimDef(
@@ -439,9 +447,6 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
             )
             animQueue.addLast(
                 Animation(atlas.findRegion("${GlacierMan.TAG}/stop"), 3, 3, 0.1f, false) pairTo Timer(1f)
-            )
-            animQueue.addLast(
-                Animation(atlas.findRegion("${GlacierMan.TAG}/ice_blast_attack"), 2, 1, 0.1f, true) pairTo Timer(0.5f)
             )
             animQueue.addLast(
                 Animation(atlas.findRegion("${GlacierMan.TAG}/stand")) pairTo null

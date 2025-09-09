@@ -7,13 +7,15 @@ data class AnimationDef(
     internal val rows: Int,
     internal val cols: Int,
     internal val durations: Array<Float>,
-    internal val loop: Boolean = true
+    internal val loop: Boolean = true,
+    internal val reverse: Boolean = false
 ) {
 
     constructor(
         rows: Int = 1,
         cols: Int = 1,
         duration: Float = 1f,
-        loop: Boolean = true
-    ) : this(rows, cols, gdxFilledArrayOf(rows * cols, duration), loop)
+        loop: Boolean = true,
+        reverse: Boolean = false
+    ) : this(rows, cols, gdxFilledArrayOf(rows * cols, duration), loop, reverse)
 }

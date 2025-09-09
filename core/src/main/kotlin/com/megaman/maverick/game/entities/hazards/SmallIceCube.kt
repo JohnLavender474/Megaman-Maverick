@@ -96,6 +96,7 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
             region1 = atlas.findRegion("${TAG}/1")
             region2 = atlas.findRegion("${TAG}/2")
         }
+        super.init()
         addComponent(defineBodyComponent())
         addComponent(defineCullablesComponent())
         addComponent(defineSpritesComponent())

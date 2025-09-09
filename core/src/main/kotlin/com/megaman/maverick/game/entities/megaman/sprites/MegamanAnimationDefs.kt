@@ -12,7 +12,7 @@ object MegamanAnimationDefs {
     const val DEFAULT_FRAME_DUR = 0.125f
     const val CHARGING_FRAME_DUR = 0.0625f
     const val CROUCH_FRAME_DUR = 0.05f
-    const val DEFAULT_SLASH_FRAME_DUR = 0.075f
+    const val DEFAULT_SLASH_FRAME_DUR = 0.05f
 
     private val defs = orderedMapOf(
         "jetpack" pairTo AnimationDef(2, 1, JETPACK_FRAME_DUR),
@@ -144,16 +144,36 @@ object MegamanAnimationDefs {
 
         "frozen" pairTo AnimationDef(),
 
-        "stand_slash1" pairTo AnimationDef(3, 1, DEFAULT_SLASH_FRAME_DUR, false),
-        "stand_slash2" pairTo AnimationDef(3, 1, DEFAULT_SLASH_FRAME_DUR, false),
-        "stand_slash3" pairTo AnimationDef(3, 1, DEFAULT_SLASH_FRAME_DUR, false),
-        "wallslide_slash1" pairTo AnimationDef(3, 1, DEFAULT_SLASH_FRAME_DUR, false),
-        "groundslide_slash1" pairTo AnimationDef(3, 1, DEFAULT_SLASH_FRAME_DUR, false),
-        "crouch_slash1" pairTo AnimationDef(3, 1, DEFAULT_SLASH_FRAME_DUR, false),
-        "swim_slash1" pairTo AnimationDef(3, 1, DEFAULT_SLASH_FRAME_DUR, false),
-        "jump_slash1" pairTo AnimationDef(3, 1, DEFAULT_SLASH_FRAME_DUR, false),
-        "airdash_slash1" pairTo AnimationDef(3, 1, DEFAULT_SLASH_FRAME_DUR, false),
-        "climb_still_slash1" pairTo AnimationDef(3, 1, DEFAULT_SLASH_FRAME_DUR, false),
+        "stand_slash1" pairTo AnimationDef(
+            3, 1, gdxArrayOf(0.025f, DEFAULT_SLASH_FRAME_DUR, DEFAULT_SLASH_FRAME_DUR), false, true
+        ),
+        "stand_slash2" pairTo AnimationDef(
+            3, 1, gdxArrayOf(0.025f, DEFAULT_SLASH_FRAME_DUR, DEFAULT_SLASH_FRAME_DUR), false, true
+        ),
+        "stand_slash3" pairTo AnimationDef(
+            3, 1, gdxArrayOf(0.025f, DEFAULT_SLASH_FRAME_DUR, DEFAULT_SLASH_FRAME_DUR), false
+        ),
+        "wallslide_slash1" pairTo AnimationDef(
+            3, 1, gdxArrayOf(0.025f, DEFAULT_SLASH_FRAME_DUR, DEFAULT_SLASH_FRAME_DUR), false, true
+        ),
+        "groundslide_slash1" pairTo AnimationDef(
+            3, 1, gdxArrayOf(0.025f, DEFAULT_SLASH_FRAME_DUR, DEFAULT_SLASH_FRAME_DUR), false, true
+        ),
+        "crouch_slash1" pairTo AnimationDef(
+            3, 1, gdxArrayOf(0.025f, DEFAULT_SLASH_FRAME_DUR, DEFAULT_SLASH_FRAME_DUR), false, true
+        ),
+        "swim_slash1" pairTo AnimationDef(
+            3, 1, gdxArrayOf(0.025f, DEFAULT_SLASH_FRAME_DUR, DEFAULT_SLASH_FRAME_DUR), false, true
+        ),
+        "jump_slash1" pairTo AnimationDef(
+            3, 1, gdxArrayOf(0.025f, DEFAULT_SLASH_FRAME_DUR, DEFAULT_SLASH_FRAME_DUR), false, true
+        ),
+        "airdash_slash1" pairTo AnimationDef(
+            3, 1, gdxArrayOf(0.025f, DEFAULT_SLASH_FRAME_DUR, DEFAULT_SLASH_FRAME_DUR), false, true
+        ),
+        "climb_still_slash1" pairTo AnimationDef(
+            3, 1, gdxArrayOf(0.025f, DEFAULT_SLASH_FRAME_DUR, DEFAULT_SLASH_FRAME_DUR), false, true
+        ),
     )
 
     fun get() = defs

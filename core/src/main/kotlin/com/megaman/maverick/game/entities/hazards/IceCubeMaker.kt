@@ -103,7 +103,7 @@ class IceCubeMaker(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private fun dropIceCube() {
         GameLogger.debug(TAG, "dropIceCube()")
 
-        val spawn = body.getPositionPoint(Position.BOTTOM_CENTER).sub(0f, 0.2f * ConstVals.PPM)
+        val spawn = body.getPositionPoint(Position.BOTTOM_CENTER).sub(0f, 0.25f * ConstVals.PPM)
 
         val icecube = MegaEntityFactory.fetch(SmallIceCube::class)!!
         icecube.spawn(
@@ -131,7 +131,7 @@ class IceCubeMaker(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, -1))
-        sprite.setSize(5f * ConstVals.PPM, 3.125f * ConstVals.PPM)
+        sprite.setSize(8f * ConstVals.PPM, 5f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
         component.putUpdateFunction { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.TOP_CENTER), Position.TOP_CENTER)
@@ -141,7 +141,7 @@ class IceCubeMaker(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(1.875f * ConstVals.PPM, 3.125f * ConstVals.PPM)
+        body.setSize(3.5f * ConstVals.PPM, 4.5f * ConstVals.PPM)
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body }), debug = true))
         return BodyComponentCreator.create(this, body)
     }

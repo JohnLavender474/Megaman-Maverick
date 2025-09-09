@@ -129,7 +129,7 @@ class YellowTiggerSquirt(game: MegamanMaverickGame) : AbstractEnemy(game, size =
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(region!!, 1, 2, 0.1f, true)
+        val animation = Animation(region!!, 2, 1, 0.1f, true)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }

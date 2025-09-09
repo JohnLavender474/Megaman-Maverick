@@ -446,8 +446,8 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                     InfernoManState.INIT -> if (body.isSensing(BodySense.FEET_ON_GROUND)) "init" else "jump_down"
 
                     InfernoManState.JUMP -> "jump" + when {
-                        shooting -> "_shoot_${shootMethod.name.lowercase()}"
-                        else -> "_${if (body.physics.velocity.y > 0f) "up" else "down"}"
+                        shooting && timers["shoot_delay"].isFinished() -> "_shoot_${shootMethod.name.lowercase()}"
+                        else -> "_down"
                     }
 
                     InfernoManState.STAND -> "stand" + when {

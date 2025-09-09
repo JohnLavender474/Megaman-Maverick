@@ -48,7 +48,7 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     companion object {
         const val TAG = "MagmaWave"
         private const val DISINTEGRATE_TIME = 0.3f
-        private const val DEFAULT_DROP_FLAME_DELAY = 0.25f
+        private const val DEFAULT_DROP_FLAME_DELAY = 0.15f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 

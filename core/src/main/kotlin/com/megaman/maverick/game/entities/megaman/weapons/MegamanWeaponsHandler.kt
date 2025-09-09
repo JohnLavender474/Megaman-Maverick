@@ -932,7 +932,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
     }
 
     private fun slashClaws() {
-        val slashAnglesKey = when {
+        val slashKey = when {
             !megaman.feetOnGround ||
                 megaman.isAnyBehaviorActive(
                     BehaviorType.WALL_SLIDING,
@@ -940,19 +940,19 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                     BehaviorType.AIR_DASHING,
                     BehaviorType.JUMPING,
                     BehaviorType.CROUCHING
-                ) -> UtilMethods.getRandom(1, 2)
+                ) -> 1
             else -> megaman.getOrDefaultProperty("slash_index", 1, Int::class)
         }
 
-        GameLogger.debug(TAG, "slashClaws(): slashIndex=$slashAnglesKey")
+        GameLogger.debug(TAG, "slashClaws(): slashIndex=$slashKey")
 
-        val slashAngles = when (slashAnglesKey) {
+        val slashAngles = when (slashKey) {
             1 -> gdxArrayOf(
                 if (megaman.isFacing(Facing.LEFT)) UtilMethods.getRandom(165f, 180f)
                 else UtilMethods.getRandom(0f, 15f)
             )
             2 -> gdxArrayOf(
-                if (megaman.isFacing(Facing.LEFT)) UtilMethods.getRandom(150f, 180f)
+                if (megaman.isFacing(Facing.LEFT)) UtilMethods.getRandom(150f, 165f)
                 else UtilMethods.getRandom(30f, 45f)
             )
             else -> when (megaman.facing) {
@@ -961,40 +961,46 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             }
         }
 
+        val slashWaveCenter = GameObjectPools.fetch(Vector2::class)
+            .set(megaman.body.getCenter())
+            .add(
+                0.25f * ConstVals.PPM * megaman.facing.value,
+                ConstVals.PPM * if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.5f else 0f
+            )
+
         slashAngles.forEach { slashAngle ->
             val trajectory = GameObjectPools.fetch(Vector2::class)
                 .set(0f, SLASH_WAVE_SPEED * ConstVals.PPM)
                 .setAngleDeg(slashAngle)
-
-            val center = GameObjectPools.fetch(Vector2::class)
-                .set(megaman.body.getCenter())
-                .add(
-                    ConstVals.PPM.toFloat() * megaman.facing.value,
-                    ConstVals.PPM * if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.5f else 0f
-                )
 
             val slashWave = MegaEntityFactory.fetch(SlashWave::class)!!
             slashWave.spawn(
                 props(
                     ConstKeys.OWNER pairTo megaman,
                     ConstKeys.DISSIPATE pairTo true,
-                    ConstKeys.POSITION pairTo center,
+                    ConstKeys.POSITION pairTo slashWaveCenter,
                     ConstKeys.TRAJECTORY pairTo trajectory
                 )
             )
         }
 
-        val center = GameObjectPools.fetch(Vector2::class)
+        val slashDissipationOffsetX = when (slashKey) {
+            1 -> 1f
+            2 -> 0.5f
+            else -> 0.75f
+        }
+
+        val slashDissipationCenter = GameObjectPools.fetch(Vector2::class)
             .set(megaman.body.getCenter())
             .add(
-                ConstVals.PPM.toFloat() * megaman.facing.value,
+                slashDissipationOffsetX * ConstVals.PPM * megaman.facing.value,
                 ConstVals.PPM * if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.5f else 0f
             )
 
         val slashDissipation = MegaEntityFactory.fetch(SlashDissipation::class)!!
         slashDissipation.spawn(
             props(
-                ConstKeys.POSITION pairTo center,
+                ConstKeys.POSITION pairTo slashDissipationCenter,
                 ConstKeys.FACING pairTo megaman.facing
             )
         )

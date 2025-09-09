@@ -38,39 +38,56 @@ class Animation : IAnimation {
     constructor(region: TextureRegion, loop: Boolean) : this(region, 1, 1, 1f, loop)
 
     constructor(
-        region: TextureRegion, rows: Int, columns: Int, frameDuration: Float, loop: Boolean = true
-    ) : this(region, rows, columns, gdxFilledArrayOf(rows * columns, frameDuration), loop)
+        region: TextureRegion,
+        rows: Int,
+        columns: Int,
+        frameDuration: Float,
+        loop: Boolean = true,
+        reverse: Boolean = false
+    ) : this(region, rows, columns, gdxFilledArrayOf(rows * columns, frameDuration), loop, reverse)
 
     constructor(
-        region: TextureRegion, rows: Int, columns: Int, durations: Array<Float>, loop: Boolean = true
-    ) : this(region.splitAndFlatten(rows, columns, Array()), durations, loop)
+        region: TextureRegion,
+        rows: Int,
+        columns: Int,
+        durations: Array<Float>,
+        loop: Boolean = true,
+        reverse: Boolean = false
+    ) : this(region.splitAndFlatten(rows, columns, Array()), durations, loop, reverse)
 
     constructor(
-        frames: Array<TextureRegion>, duration: Float, loop: Boolean = true
-    ): this(frames, gdxFilledArrayOf(frames.size, duration), loop)
+        frames: Array<TextureRegion>,
+        duration: Float,
+        loop: Boolean = true,
+        reverse: Boolean = false
+    ) : this(frames, gdxFilledArrayOf(frames.size, duration), loop, reverse)
 
     constructor(
-        frames: Array<TextureRegion>, durations: Array<Float>, loop: Boolean = true
+        frames: Array<TextureRegion>,
+        durations: Array<Float>,
+        loop: Boolean = true,
+        reverse: Boolean = false
     ) {
-        if (frames.size != durations.size) throw IllegalArgumentException("Frames and durations must be the same size.")
+        if (frames.size != durations.size) throw IllegalArgumentException(
+            "Frames and durations must be the same size: frames=$frames, durations=$durations"
+        )
+
         this.durations = durations
         this.frames = frames
         this.loop = loop
-    }
 
-    constructor(animation: Animation, reverse: Boolean = false) {
-        this.frames = Array(animation.frames)
-        this.durations = Array(animation.durations)
-        loop = animation.loop
         if (reverse) {
             this.frames.reverse()
             this.durations.reverse()
         }
     }
 
-    fun setStartTime(startTime: Float) {
-        this.startTime = startTime
-    }
+    constructor(animation: Animation, reverse: Boolean = false) : this(
+        Array(animation.frames),
+        Array(animation.durations),
+        animation.loop,
+        reverse
+    )
 
     fun size() = frames.size
 

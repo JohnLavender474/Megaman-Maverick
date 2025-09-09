@@ -78,7 +78,7 @@ class MegamanAnimations(
         "stand_shoot" -> buildStandAnimation(atlas, true, true)
         else -> {
             val region = atlas.findRegion(defKey)
-            var (rows, columns, durations, loop) = MegamanAnimationDefs.get(defKey)
+            var (rows, columns, durations, loop, reverse) = MegamanAnimationDefs.get(defKey)
             val regions = region.splitAndFlatten(rows, columns, Array())
 
             // I'm too lazy to go in and manually add the "uncharged" region to each charging animation, so I'm doing
@@ -118,26 +118,31 @@ class MegamanAnimations(
             if (regionProcessor != null) for (i in 0 until regions.size)
                 regions[i] = regionProcessor.process(regions[i], defKey, fullKey, rows, columns, durations, loop, i)
 
-            Animation(regions, durations, loop)
+            Animation(regions, durations, loop, reverse)
         }
     }
 
-    private fun buildStandAnimation(atlas: TextureAtlas, shoot: Boolean, _loop: Boolean = true): IAnimation {
+    private fun buildStandAnimation(
+        atlas: TextureAtlas,
+        shoot: Boolean,
+        loop: Boolean = true,
+        reverse: Boolean = false
+    ): IAnimation {
         val runTransKey = if (shoot) "run_trans_shoot" else "run_trans"
         val region2 = atlas.findRegion(runTransKey)
         val runTransDef = MegamanAnimationDefs.get(runTransKey)
         val runTransRegs = region2.splitAndFlatten(runTransDef.rows, runTransDef.cols, Array())
-        val runTransAnim = Animation(runTransRegs, runTransDef.durations, false)
+        val runTransAnim = Animation(runTransRegs, runTransDef.durations, false, reverse)
 
         val standKey = if (shoot) "stand_shoot" else "stand"
         val region1 = atlas.findRegion(standKey)
         val standDef = MegamanAnimationDefs.get(standKey)
         val standRegs = region1.splitAndFlatten(standDef.rows, standDef.cols, Array())
-        val standAnim = Animation(standRegs, standDef.durations, _loop)
+        val standAnim = Animation(standRegs, standDef.durations, loop, reverse)
 
         return object : IAnimation {
 
-            private var loop = _loop
+            private var loop = loop
 
             override fun update(delta: Float) = when {
                 !runTransAnim.isFinished() -> runTransAnim.update(delta)
@@ -203,7 +208,7 @@ class MegamanAnimations(
                 else -> runTransAnim.getDuration() + standAnim.getCurrentTime()
             }
 
-            override fun copy() = buildStandAnimation(atlas, shoot, _loop)
+            override fun copy() = buildStandAnimation(atlas, shoot, loop, reverse)
         }
     }
 }
