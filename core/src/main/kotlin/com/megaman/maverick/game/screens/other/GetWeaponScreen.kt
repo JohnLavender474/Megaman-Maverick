@@ -176,7 +176,7 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
 
         resetEventTimer()
 
-        game.audioMan.playMusic(MusicAsset.MM3_NEW_WEAPON_MUSIC, true)
+        game.audioMan.playMusic(MusicAsset.VINNYZ_WEAPON_GET_MUSIC, true)
     }
 
     override fun render(delta: Float) {

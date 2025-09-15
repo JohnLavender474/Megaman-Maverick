@@ -25,7 +25,7 @@ enum class MusicAsset(src: String, val loop: Boolean = true, val onCompletion: (
     MMX5_VOLT_KRAKEN_MUSIC("MMX5_VoltKraken.mp3"),
     MMX5_DARK_DIZZY_MUSIC("MMX5_DarkDizzy.mp3"),
     MMX_CHILL_PENGUIN_MUSIC("MMX_ChillPenguin_Famitard.mp3"),
-    MM2_BOSS_INTRO_MUSIC("MM2_Boss_Intro.mp3"),
+    MM2_BOSS_INTRO_MUSIC("MM2_Boss_Intro.wav"),
     MMZ_ENEMY_HALL_MUSIC("MMZ_EnemyHall.mp3"),
     STAGE_SELECT_MM3_MUSIC("StageSelectMM3.mp3"),
     MMX3_INTRO_STAGE_MUSIC("MMX3_IntroStage.ogg"),
@@ -84,7 +84,10 @@ enum class MusicAsset(src: String, val loop: Boolean = true, val onCompletion: (
     JX_SHADOW_DEVIL_8BIT_REMIX_MUSIC("jx_shadow_devil_8-bit_remix.mp3"),
     VINNYZ_STAGE_SELECT_V1_MUSIC("vinnyz_stage_select_v1.wav"),
     VINNYZ_WILY_STAGE_SELECT_V1_MUSIC("vinnyz_wily_stage_select_v1.wav"),
-    VINNYZ_GLACIER_MUSIC("vinnyz_glacier_track.wav");
+    VINNYZ_GLACIER_MUSIC("vinnyz_glacier_track.wav"),
+    VINNYZ_MAIN_MENU_MUSIC("vinnyz_main_menu.wav"),
+    VINNYZ_PASSWORD_MUSIC("vinnyz_password.wav"),
+    VINNYZ_WEAPON_GET_MUSIC("vinnyz_weapon_get.wav");
 
     companion object {
         fun valuesAsIAssetArray(): Array<IAsset> {

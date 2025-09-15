@@ -959,14 +959,32 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 Facing.LEFT -> gdxArrayOf(135f, 180f)
                 else -> gdxArrayOf(0f, 45f)
             }
-        }
+        }.map { angle -> angle + megaman.direction.rotation }
+
+        // TODO: change depending on megaman direction
 
         val slashWaveCenter = GameObjectPools.fetch(Vector2::class)
             .set(megaman.body.getCenter())
-            .add(
-                0.25f * ConstVals.PPM * megaman.facing.value,
-                ConstVals.PPM * if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.5f else 0f
-            )
+            .also {
+                when (megaman.direction) {
+                    Direction.UP -> it.add(
+                        0.25f * ConstVals.PPM * megaman.facing.value,
+                        ConstVals.PPM * if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.5f else 0f
+                    )
+                    Direction.DOWN -> it.add(
+                        -0.25f * ConstVals.PPM * megaman.facing.value,
+                        -ConstVals.PPM * if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.5f else 0f
+                    )
+                    Direction.LEFT -> it.add(
+                        -ConstVals.PPM * if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.5f else 0f,
+                        -0.25f * ConstVals.PPM * megaman.facing.value
+                    )
+                    Direction.RIGHT -> it.add(
+                        ConstVals.PPM * if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.5f else 0f,
+                        0.25f * ConstVals.PPM * megaman.facing.value
+                    )
+                }
+            }
 
         slashAngles.forEach { slashAngle ->
             val trajectory = GameObjectPools.fetch(Vector2::class)
@@ -978,8 +996,8 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 props(
                     ConstKeys.OWNER pairTo megaman,
                     ConstKeys.DISSIPATE pairTo true,
-                    ConstKeys.POSITION pairTo slashWaveCenter,
-                    ConstKeys.TRAJECTORY pairTo trajectory
+                    ConstKeys.TRAJECTORY pairTo trajectory,
+                    ConstKeys.POSITION pairTo slashWaveCenter
                 )
             )
         }
@@ -992,16 +1010,33 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
         val slashDissipationCenter = GameObjectPools.fetch(Vector2::class)
             .set(megaman.body.getCenter())
-            .add(
-                slashDissipationOffsetX * ConstVals.PPM * megaman.facing.value,
-                ConstVals.PPM * if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.5f else 0f
-            )
+            .also {
+                when (megaman.direction) {
+                    Direction.UP -> it .add(
+                        slashDissipationOffsetX * ConstVals.PPM * megaman.facing.value,
+                        ConstVals.PPM * if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.5f else 0f
+                    )
+                    Direction.DOWN -> it.add(
+                        -slashDissipationOffsetX * ConstVals.PPM * megaman.facing.value,
+                        -ConstVals.PPM * if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.5f else 0f
+                    )
+                    Direction.LEFT -> it.add(
+                        -ConstVals.PPM * if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.5f else 0f,
+                        slashDissipationOffsetX * ConstVals.PPM * megaman.facing.value
+                    )
+                    Direction.RIGHT -> it.add(
+                        ConstVals.PPM * if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.5f else 0f,
+                        slashDissipationOffsetX * ConstVals.PPM * megaman.facing.value
+                    )
+                }
+            }
 
         val slashDissipation = MegaEntityFactory.fetch(SlashDissipation::class)!!
         slashDissipation.spawn(
             props(
+                ConstKeys.FACING pairTo megaman.facing,
                 ConstKeys.POSITION pairTo slashDissipationCenter,
-                ConstKeys.FACING pairTo megaman.facing
+                ConstKeys.ROTATION pairTo megaman.direction.rotation
             )
         )
 

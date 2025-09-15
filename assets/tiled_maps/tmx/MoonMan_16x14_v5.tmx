@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="600" height="125" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="488">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="600" height="125" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="535">
  <tileset firstgid="1" source="../tsx/MoonManTiles.tsx"/>
  <layer id="1" name="tiles1" width="600" height="125">
   <data encoding="csv">
@@ -1279,7 +1279,7 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="343" x="12448" y="1696" width="544" height="384">
+  <object id="343" x="12448" y="1536" width="544" height="544">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
     <property name="cull_room" value="room10"/>
@@ -1517,6 +1517,51 @@
    </properties>
   </object>
   <object id="461" name="Death" x="15456" y="1296" width="288" height="80">
+   <properties>
+    <property name="instant" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="525" name="Death" x="9280" y="2536" width="3200" height="184">
+   <properties>
+    <property name="instant" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="526" name="Death" x="9120" y="2536" width="160" height="1464">
+   <properties>
+    <property name="instant" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="527" name="Death" x="8192" y="2880" width="928" height="96">
+   <properties>
+    <property name="instant" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="528" name="Death" x="8192" y="2976" width="224" height="1024">
+   <properties>
+    <property name="instant" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="529" name="Death" x="8416" y="3744" width="704" height="256">
+   <properties>
+    <property name="instant" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="530" name="Death" x="9280" y="3744" width="3072" height="256">
+   <properties>
+    <property name="instant" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="531" name="Death" x="12352" y="2720" width="128" height="1280">
+   <properties>
+    <property name="instant" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="532" name="Death" x="9088" y="1280" width="3904" height="256">
+   <properties>
+    <property name="instant" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="533" name="Death" x="9088" y="1536" width="96" height="1000">
    <properties>
     <property name="instant" type="bool" value="true"/>
    </properties>
@@ -2002,16 +2047,9 @@
     <property name="type" value="blue"/>
    </properties>
   </object>
-  <object id="410" name="Starkner" x="14416" y="1568" width="32" height="32"/>
   <object id="418" name="Starkner" x="14272" y="1056" width="32" height="32"/>
-  <object id="441" name="Starkner" x="15936" y="880" width="32" height="32"/>
-  <object id="463" name="PopupCanon" x="15280" y="992" width="32" height="32">
-   <properties>
-    <property name="gravity_scalar" type="float" value="0.25"/>
-   </properties>
-  </object>
   <object id="465" name="Starkner" x="15936" y="1120" width="32" height="32"/>
-  <object id="471" name="TellySaucer" x="15640" y="952" width="16" height="16">
+  <object id="471" name="TellySaucer" x="15656" y="952" width="16" height="16">
    <properties>
     <property name="can_spawn_right" type="bool" value="false"/>
    </properties>
@@ -2042,6 +2080,209 @@
   </object>
   <object id="480" name="AstroAssAssaulter" x="14616" y="1456" width="16" height="16"/>
   <object id="487" name="AstroAssAssaulter" x="15816" y="944" width="16" height="16"/>
+  <object id="488" name="PopupCanon" x="856" y="3632" width="16" height="16">
+   <properties>
+    <property name="gravity_scalar" type="float" value="0.25"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="489" name="PopupCanon" x="1560" y="3488" width="16" height="16">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="gravity_scalar" type="float" value="0.25"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="490" name="PopupCanon" x="2120" y="3552" width="16" height="16">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="gravity_scalar" type="float" value="0.25"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="491" name="PopupCanon" x="3288" y="2912" width="16" height="16">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="gravity_scalar" type="float" value="0.25"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="492" name="PopupCanon" x="3832" y="2688" width="16" height="16">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="gravity_scalar" type="float" value="0.25"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="493" name="PopupCanon" x="4888" y="2560" width="16" height="16">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="gravity_scalar" type="float" value="0.25"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="494" name="PopupCanon" x="6264" y="2464" width="16" height="16">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="gravity_scalar" type="float" value="0.25"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="495" name="PopupCanon" x="7288" y="1952" width="16" height="16">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="gravity_scalar" type="float" value="0.25"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="496" name="PopupCanon" x="7288" y="2064" width="16" height="16">
+   <properties>
+    <property name="gravity_scalar" type="float" value="0.25"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="498" name="PopupCanon" x="8696" y="2576" width="16" height="16">
+   <properties>
+    <property name="gravity_scalar" type="float" value="0.25"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="499" name="PopupCanon" x="10568" y="2096" width="16" height="16">
+   <properties>
+    <property name="gravity_scalar" type="float" value="0.25"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="500" name="PopupCanon" x="12120" y="2032" width="16" height="16">
+   <properties>
+    <property name="gravity_scalar" type="float" value="0.25"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="501" name="PopupCanon" x="12536" y="2192" width="16" height="16">
+   <properties>
+    <property name="gravity_scalar" type="float" value="0.25"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="503" name="PopupCanon" x="14280" y="1904" width="16" height="16">
+   <properties>
+    <property name="gravity_scalar" type="float" value="0.25"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="505" name="PopupCanon" x="14616" y="992" width="16" height="16">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="gravity_scalar" type="float" value="0.25"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="506" name="PopupCanon" x="15656" y="832" width="16" height="16">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="gravity_scalar" type="float" value="0.25"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="507" name="Starkner" x="14416" y="1344" width="32" height="32">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="509" name="Starkner" x="15280" y="896" width="32" height="32">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="510" name="Screwie" x="1848" y="3632" width="16" height="16">
+   <properties>
+    <property name="down" type="bool" value="false"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+    <property name="movement_scalar" type="float" value="0.65"/>
+    <property name="type" value="blue"/>
+   </properties>
+  </object>
+  <object id="511" name="Screwie" x="2264" y="3760" width="16" height="16">
+   <properties>
+    <property name="down" type="bool" value="false"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+    <property name="movement_scalar" type="float" value="0.65"/>
+    <property name="type" value="blue"/>
+   </properties>
+  </object>
+  <object id="512" name="Screwie" x="4344" y="2704" width="16" height="16">
+   <properties>
+    <property name="down" type="bool" value="false"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+    <property name="movement_scalar" type="float" value="0.65"/>
+    <property name="type" value="blue"/>
+   </properties>
+  </object>
+  <object id="513" name="Screwie" x="5304" y="2832" width="16" height="16">
+   <properties>
+    <property name="down" type="bool" value="false"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+    <property name="movement_scalar" type="float" value="0.65"/>
+    <property name="type" value="blue"/>
+   </properties>
+  </object>
+  <object id="514" name="Screwie" x="5752" y="2800" width="16" height="16">
+   <properties>
+    <property name="down" type="bool" value="false"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+    <property name="movement_scalar" type="float" value="0.65"/>
+    <property name="type" value="blue"/>
+   </properties>
+  </object>
+  <object id="515" name="Screwie" x="7160" y="2432" width="16" height="16">
+   <properties>
+    <property name="down" type="bool" value="true"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+    <property name="movement_scalar" type="float" value="0.65"/>
+    <property name="type" value="blue"/>
+   </properties>
+  </object>
+  <object id="516" name="Screwie" x="6712" y="2016" width="16" height="16">
+   <properties>
+    <property name="down" type="bool" value="true"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+    <property name="movement_scalar" type="float" value="0.65"/>
+    <property name="type" value="blue"/>
+   </properties>
+  </object>
+  <object id="517" name="Screwie" x="8696" y="2080" width="16" height="16">
+   <properties>
+    <property name="down" type="bool" value="true"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+    <property name="movement_scalar" type="float" value="0.65"/>
+    <property name="type" value="blue"/>
+   </properties>
+  </object>
+  <object id="518" name="Screwie" x="10920" y="3200" width="16" height="16">
+   <properties>
+    <property name="down" type="bool" value="true"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+    <property name="movement_scalar" type="float" value="0.65"/>
+    <property name="type" value="blue"/>
+   </properties>
+  </object>
+  <object id="519" name="Screwie" x="11192" y="2192" width="16" height="16">
+   <properties>
+    <property name="down" type="bool" value="false"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+    <property name="movement_scalar" type="float" value="0.65"/>
+    <property name="type" value="blue"/>
+   </properties>
+  </object>
+  <object id="520" name="Screwie" x="11992" y="2192" width="16" height="16">
+   <properties>
+    <property name="down" type="bool" value="false"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
+    <property name="movement_scalar" type="float" value="0.65"/>
+    <property name="type" value="blue"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="12" name="items">
   <object id="370" name="HeartTank" x="12408" y="2032" width="16" height="16">
@@ -2051,7 +2292,7 @@
   </object>
  </objectgroup>
  <objectgroup id="13" name="temp">
-  <object id="486" name="0" x="14304" y="2080" width="32" height="32">
+  <object id="524" name="0" x="8800" y="2688" width="32" height="32">
    <properties>
     <property name="apply_scalar_to_children" type="bool" value="true"/>
     <property name="gravity_scalar" type="float" value="0.35"/>

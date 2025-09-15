@@ -47,6 +47,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
@@ -72,7 +73,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     companion object {
         const val TAG = "MoonMan"
 
-        const val SPRITE_SIZE = 2.75f
+        const val SPRITE_SIZE = 3f
 
         // if false, Gravity Man's direction rotation will never change
         private const val CHANGE_GRAVITY = false
@@ -104,10 +105,12 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         private const val GRAVITY_CHANGE_END_DUR = ConstVals.GAME_CAM_ROTATE_TIME
 
         private const val GRAVITY_CHANGE_DELAY_DUR = 3f
+        private const val GRAVITY_CHANGE_DELAY_DUR_HARD = 2f
         private const val GRAVITY_CHANGE_START_CHANCE = 0.25f
         private const val GRAVITY_CHANGE_CHANGE_DELTA = 0.25f
 
         private const val ASTEROIDS_TO_SPAWN = 3
+        private const val ASTEROIDS_TO_SPAWN_HARD = 5
         private const val ASTEROID_MIN_SPEED = 8f
         private const val ASTEROID_MAX_SPEED = 8f
 
@@ -328,7 +331,12 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
                 MoonManState.JUMP -> if (shouldGoToStandState()) stateMachine.next()
                 MoonManState.THROW_ASTEROIDS -> {
-                    if (asteroidsSpawned < ASTEROIDS_TO_SPAWN) {
+                    val max = when (game.state.getDifficultyMode()) {
+                        DifficultyMode.HARD -> ASTEROIDS_TO_SPAWN_HARD
+                        else -> ASTEROIDS_TO_SPAWN
+                    }
+
+                    if (asteroidsSpawned < max) {
                         val timer = timers["spawn_asteroid_delay"]
                         timer.update(delta)
                         if (timer.isFinished()) {
@@ -580,7 +588,10 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         timers.put("gravity_change_begin", Timer(GRAVITY_CHANGE_BEGIN_DUR))
         timers.put("gravity_change_continue", Timer(GRAVITY_CHANGE_CONTINUE_DUR))
         timers.put("gravity_change_end", Timer(GRAVITY_CHANGE_END_DUR))
-        timers.put("gravity_change_delay", Timer(GRAVITY_CHANGE_DELAY_DUR))
+        timers.put("gravity_change_delay", Timer(
+            if (game.state.getDifficultyMode() == DifficultyMode.HARD) GRAVITY_CHANGE_DELAY_DUR_HARD
+            else GRAVITY_CHANGE_DELAY_DUR
+        ))
         timers.put("spawn_asteroid_delay", Timer(SPAWN_ASTEROID_MAX_DELAY))
         timers.put("spawn_asteroids_end", Timer(ASTEROIDS_END_DUR))
 

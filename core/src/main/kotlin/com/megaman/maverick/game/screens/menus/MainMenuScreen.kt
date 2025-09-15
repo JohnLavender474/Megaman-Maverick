@@ -64,7 +64,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         private const val SETTINGS_TEXT_START_ROW = 11f
         private const val SETTINGS_TRANS_DUR = 0.5f
         private val SETTINGS_TRAJ = Vector3(15f * ConstVals.PPM, 0f, 0f)
-        private val MAIN_MENU_MUSIC = MusicAsset.MMX3_INTRO_STAGE_MUSIC
+        private val MAIN_MENU_MUSIC = MusicAsset.VINNYZ_MAIN_MENU_MUSIC
     }
 
     private lateinit var background: GameSprite

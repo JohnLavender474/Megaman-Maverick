@@ -359,8 +359,18 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             when (direction) {
                 Direction.UP -> {}
                 Direction.DOWN -> body.translate(0f, 0.75f * ConstVals.PPM)
-                Direction.LEFT -> body.translate(0.75f * ConstVals.PPM, 0f)
-                Direction.RIGHT -> body.translate(-0.75f * ConstVals.PPM, 0f)
+                Direction.LEFT -> body.translate(0.6f * ConstVals.PPM, 0.3f * ConstVals.PPM)
+                Direction.RIGHT -> body.translate(-0.6f * ConstVals.PPM, -0.3f * ConstVals.PPM)
+            }
+        }
+
+        override fun end() {
+            if (!isBehaviorActive(BehaviorType.GROUND_SLIDING)) {
+                when (direction) {
+                    Direction.LEFT -> body.translate(0f, -0.3f * ConstVals.PPM)
+                    Direction.RIGHT -> body.translate(0f, 0.3f * ConstVals.PPM)
+                    else -> {}
+                }
             }
         }
     }
@@ -369,7 +379,9 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
         private val minTimer = Timer(MegamanValues.GROUND_SLIDE_MIN_TIME)
         private val maxTimer = Timer(MegamanValues.GROUND_SLIDE_MAX_TIME)
+
         private val cooldown = Timer(MegamanValues.GROUND_SLIDE_COOLDOWN)
+
         private var directionOnInit: Direction? = null
 
         override fun evaluate(delta: Float): Boolean {
@@ -403,9 +415,9 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             when (direction) {
                 Direction.UP -> {}
-                Direction.DOWN -> body.translate(0f, 0.75f * ConstVals.PPM)
-                Direction.LEFT -> body.translate(0.75f * ConstVals.PPM, 0f)
-                Direction.RIGHT -> body.translate(-0.75f * ConstVals.PPM, 0f)
+                Direction.DOWN -> body.translate(0f, 0.6f * ConstVals.PPM)
+                Direction.LEFT -> body.translate(0.6f * ConstVals.PPM, 0.3f * ConstVals.PPM * facing.value)
+                Direction.RIGHT -> body.translate(-0.6f * ConstVals.PPM, -0.3f * ConstVals.PPM * -facing.value)
             }
 
             directionOnInit = direction
@@ -446,10 +458,20 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         }
 
         override fun end() {
+            GameLogger.debug(MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG, "end()")
+
+            if (!isBehaviorActive(BehaviorType.CROUCHING)) {
+                when (direction) {
+                    Direction.LEFT -> body.translate(0f, -0.3f * ConstVals.PPM)
+                    Direction.RIGHT -> body.translate(0f, 0.3f * ConstVals.PPM)
+                    else -> {}
+                }
+            }
+
             minTimer.reset()
             maxTimer.reset()
+
             cooldown.reset()
-            GameLogger.debug(MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG, "end()")
         }
     }
 
@@ -637,8 +659,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
         override fun end() {
             game.setFocusSnappedAway(false)
+
             body.physics.gravityOn = true
             body.physics.velocity.setZero()
+
             aButtonTask = if (body.isSensing(BodySense.IN_WATER)) AButtonTask.SWIM else AButtonTask.AIR_DASH
         }
     }

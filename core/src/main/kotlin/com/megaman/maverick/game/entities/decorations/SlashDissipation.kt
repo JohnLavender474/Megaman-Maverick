@@ -38,6 +38,7 @@ class SlashDissipation(game: MegamanMaverickGame) : MegaGameEntity(game), ISprit
 
     private val timer = Timer(DUR)
     private val center = Vector2()
+    private var rotation = 0f
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -56,6 +57,8 @@ class SlashDissipation(game: MegamanMaverickGame) : MegaGameEntity(game), ISprit
         this.center.set(center)
 
         facing = spawnProps.get(ConstKeys.FACING, Facing::class)!!
+
+        rotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f, Float::class)
 
         timer.reset()
     }
@@ -77,6 +80,8 @@ class SlashDissipation(game: MegamanMaverickGame) : MegaGameEntity(game), ISprit
         )
         .updatable { _, sprite ->
             sprite.setCenter(center)
+            sprite.setOriginCenter()
+            sprite.rotation = rotation
             sprite.setFlip(isFacing(Facing.RIGHT), false)
         }
         .build()

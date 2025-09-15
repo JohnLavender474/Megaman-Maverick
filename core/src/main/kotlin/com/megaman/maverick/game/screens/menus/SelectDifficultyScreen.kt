@@ -139,7 +139,7 @@ class SelectDifficultyScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, N
 
         game.getUiCamera().setToDefaultPosition()
 
-        game.audioMan.playMusic(MusicAsset.MM2_PASSWORD_SCREEN_MUSIC)
+        game.audioMan.playMusic(MusicAsset.VINNYZ_PASSWORD_MUSIC)
     }
 
     override fun render(delta: Float) {

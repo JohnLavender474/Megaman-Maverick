@@ -126,7 +126,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
         GameLogger.debug(TAG, "show()")
         super.show()
         game.getUiCamera().setToDefaultPosition()
-        game.audioMan.playMusic(MusicAsset.MM2_PASSWORD_SCREEN_MUSIC)
+        game.audioMan.playMusic(MusicAsset.VINNYZ_PASSWORD_MUSIC)
     }
 
     override fun render(delta: Float) {

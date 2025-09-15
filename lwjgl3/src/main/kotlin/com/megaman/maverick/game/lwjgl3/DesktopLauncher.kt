@@ -71,6 +71,7 @@ object DesktopLauncher {
         config.setWindowIcon(WINDOW_ICON_PATH)
         config.setPauseWhenMinimized(false)
         config.setPauseWhenMinimized(false)
+        config.useVsync(false)
         when {
             appArgs.fullScreen -> config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode())
             appArgs.maximized -> config.setMaximized(true)

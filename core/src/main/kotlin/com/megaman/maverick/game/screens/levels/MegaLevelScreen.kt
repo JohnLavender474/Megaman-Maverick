@@ -247,7 +247,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             transDelay = ConstVals.ROOM_TRANS_DELAY_DURATION,
             transDuration = ConstVals.ROOM_TRANS_DURATION,
             shouldInterpolate = { game.isFocusSnappedAway() },
-            interpolationValue = { 10f * Gdx.graphics.deltaTime }
+            interpolationValue = { 20f * Gdx.graphics.deltaTime }
         )
         cameraManagerForRooms.focus = megaman
         cameraManagerForRooms.beginTransition = {

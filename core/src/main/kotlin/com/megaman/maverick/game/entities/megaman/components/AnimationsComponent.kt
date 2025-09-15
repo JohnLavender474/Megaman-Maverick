@@ -24,7 +24,7 @@ internal fun Megaman.defineAnimationsComponent(animations: OrderedMap<String, IA
     val megamanAnimKeySupplier: (String?) -> String? = supplier@{
         val key = getAnimationKey(currentAnimKey)
 
-        game.setDebugText(key ?: "")
+        // game.setDebugText(key ?: "")
 
         return@supplier when {
             key != null -> {

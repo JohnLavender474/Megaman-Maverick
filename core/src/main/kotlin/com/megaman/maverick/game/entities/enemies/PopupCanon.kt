@@ -71,8 +71,6 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         private const val BALL_GRAVITY = 0.15f
         private const val DEFAULT_BALL_GRAVITY_SCALAR = 1f
 
-        private const val TRANS_DAMAGEABLE_CUTOFF = 0.5f
-
         private val regions = ObjectMap<String, TextureRegion>()
     }
 

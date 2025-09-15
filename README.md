@@ -275,13 +275,15 @@ List of creators and the stages in which their artwork is used. Some stages cont
   - Precious Woman Stage - [MMX2 Crystal Snail 8-Bit](https://youtu.be/1qrbYy9qQdE)
   - Robot Master Fight - [MMX6 Boss Fight 8-Bit](https://youtu.be/IeySHEF5U_8)
 - [vinnyz29](https://soundcloud.com/mega-vinnyz279)
+  - Main Menu
   - Intro Stage 
   - Stage Select
+  - Password Get
+  - Weapon Get
   - Wily Stage Select
   - Inferno Man Stage
   - Glacier Man Stage
-- [Cody O'Qu
-- inn](https://www.youtube.com/channel/UC3YB69gazd6mzXMGpPHdyTQ)
+- [Cody O'Quinn](https://www.youtube.com/channel/UC3YB69gazd6mzXMGpPHdyTQ)
   - Desert Man Stage - [8 Bit Music - "Battle Man"](https://youtu.be/zA1SwzvHsZw)
 - [ryanavx](https://ryanavx.itch.io/)
   - Timber Woman Stage - [Mega Quest 2 - Level 1 Music](https://ryanavx.itch.io/mega-quest-2-music-pack)

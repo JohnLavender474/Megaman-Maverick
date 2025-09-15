@@ -3630,6 +3630,7 @@ music/MMX5_DarkDizzy.mp3
 music/MMX2_MorphMoth.mp3
 music/MMX2_IntroStage.mp3
 music/MMZ_EnemyHall.mp3
+music/vinnyz_weapon_get.wav
 music/Cody_O_Quinn_Battle_Man.mp3
 music/MM3_NewWeapon.wav
 music/vinnyz_wily_stage_select_v1.mp3
@@ -3638,9 +3639,12 @@ music/MMX5_StageSelect.mp3
 music/MM6_CapcomLogo.mp3
 music/Mega_Quest_2_Level_2.ogg
 music/StageSelectMM3.mp3
+music/vinnyz_password_theme.mp3
 music/MMX6_Sigma_intro.wav
 music/Mega_Quest_2_Level_1.mp3
 music/MM6_WilyBattle.mp3
+music/vinnyz_weapon_get_theme.mp3
+music/vinnyz_main_menu.wav
 music/MMX5_IzzyGlow.mp3
 music/vinnyz_intro_stage.wav
 music/Cody_O_Quinn_Action_Man.mp3
@@ -3653,6 +3657,7 @@ music/MMX5_IzzyGlow.txt
 music/SnakeManMM3.mp3
 music/Famitard_OC_1.mp3
 music/MMX3_IntroStage.ogg
+music/MM2_Boss_Intro.wav
 music/MMX3_IntroStage.txt
 music/MMX_ChillPenguin_Famitard.rtf
 music/Cody_O_Quinn_Battle_Man_intro.wav
@@ -3667,6 +3672,7 @@ music/MM2_Credits.mp3
 music/vinnyz_inferno_track_OLD.mp3
 music/MMX_Sigma_2_Stage.txt
 music/jx_shadow_devil_8-bit_remix.mp3
+music/vinnyz_password_theme.wav
 music/MM8_FrostMan.mp3
 music/MMX_LevelSelectScreen.mp3
 music/MM2_Boss_Intro.mp3
@@ -3674,6 +3680,7 @@ music/MM8_FrostMan_Alt.txt
 music/Mega_Quest_2_Level_5.ogg
 music/MM9_GalaxyMan.mp3
 music/MMX5_VoltKraken.txt
+music/vinnyz_main_menu_theme.mp3
 music/MM10_Wily1.mp3
 music/MMX6_Sigma.mp3
 music/MM3_Magnet_Man.mp3
@@ -3681,4 +3688,5 @@ music/MMX3_NeonTiger.mp3
 music/MMX8_BurnRooster.txt
 music/vinnyz_inferno_track_v2.mp3
 music/MMX6_BossFight.mp3
+music/vinnyz_password.wav
 notes.txt
