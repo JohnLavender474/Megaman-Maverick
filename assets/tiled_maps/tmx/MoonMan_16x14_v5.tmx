@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="600" height="125" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="535">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="600" height="125" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="536">
  <tileset firstgid="1" source="../tsx/MoonManTiles.tsx"/>
  <layer id="1" name="tiles1" width="600" height="125">
   <data encoding="csv">
@@ -2048,7 +2048,6 @@
    </properties>
   </object>
   <object id="418" name="Starkner" x="14272" y="1056" width="32" height="32"/>
-  <object id="465" name="Starkner" x="15936" y="1120" width="32" height="32"/>
   <object id="471" name="TellySaucer" x="15656" y="952" width="16" height="16">
    <properties>
     <property name="can_spawn_right" type="bool" value="false"/>
@@ -2292,7 +2291,7 @@
   </object>
  </objectgroup>
  <objectgroup id="13" name="temp">
-  <object id="524" name="0" x="8800" y="2688" width="32" height="32">
+  <object id="535" name="0" x="16448" y="1152" width="32" height="32">
    <properties>
     <property name="apply_scalar_to_children" type="bool" value="true"/>
     <property name="gravity_scalar" type="float" value="0.35"/>

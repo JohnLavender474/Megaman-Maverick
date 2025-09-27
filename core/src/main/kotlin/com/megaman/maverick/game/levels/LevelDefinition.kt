@@ -83,7 +83,7 @@ enum class LevelDefinition(
         type = LevelType.ROBOT_MASTER_LEVEL,
         mugshotAtlas = "FACES_1",
         mugshotRegion = "Precious Woman",
-        tmxMapSource = "PreciousWoman.tmx",
+        tmxMapSource = "PreciousWoman_v2.tmx",
         music = MusicAsset.MMX2_CRYSTAL_SNAIL_MUSIC,
         screenOnCompletion = { game -> RobotMasterLevelOnCompletion.invoke(game) }
     ),

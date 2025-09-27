@@ -302,7 +302,7 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
             )
 
             RobotMasterAnimDef(
-                "MOON MAN",
+                "LUNAR MAN",
                 Vector2().set(MoonMan.SPRITE_SIZE * ConstVals.PPM),
                 animQueue,
                 STD_START_POS,

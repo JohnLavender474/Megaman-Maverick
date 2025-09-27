@@ -25,7 +25,6 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.bosses.PreciousWoman.Companion.GEM_COLORS
 import com.megaman.maverick.game.entities.bosses.PreciousWoman.Companion.SHIELD_GEMS_ANGLES
-import com.megaman.maverick.game.entities.bosses.PreciousWoman.Companion.SHIELD_GEM_START_OFFSET
 import com.megaman.maverick.game.entities.bosses.PreciousWoman.ShieldGemDef
 import com.megaman.maverick.game.entities.bosses.RodentMan.Companion.SLASH_WAVE_SPEED
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -66,7 +65,7 @@ open class MegaWeaponHandler(
         const val TAG = "MegaWeaponHandler"
     }
 
-    private val spawned = OrderedMap<MegaChargeStatus, OrderedSet<MegaGameEntity>>()
+    val spawned = OrderedMap<MegaChargeStatus, OrderedSet<MegaGameEntity>>()
 
     init {
         MegaChargeStatus.entries.forEach { spawned.put(it, OrderedSet()) }
@@ -113,8 +112,6 @@ open class MegaWeaponHandler(
         }
     }
 
-    fun getSpawned() = spawned
-
     override fun toString() = "MegaWeaponHandler{" +
         "cooldown=${UtilMethods.roundFloat(cooldown.getRatio() * 100, 2)}%," +
         "ammo=$ammo"
@@ -143,41 +140,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
     override fun update(delta: Float) = weaponHandlers.values().forEach { entry -> entry.update(delta) }
 
-    fun getSpawnPosition(weapon: MegamanWeapon): Vector2 {
-        /*
-        val rawKey = (megaman.animators[MEGAMAN_SPRITE_KEY] as Animator).currentKey
-        if (rawKey != null) {
-            val key = MegamanAnimations.splitFullKey(rawKey)[0]
-            if (weaponSpawns.containsKey(key)) {
-                GameLogger.debug(TAG, "getSpawnPosition(): has magic pixel weapon spawn for key=$key, rawKey=$rawKey")
-
-                val sprite = megaman.sprites[MEGAMAN_SPRITE_KEY]
-
-                val (rawRegionX, rawRegionY) = weaponSpawns[key]
-                GameLogger.debug(TAG, "getSpawnPosition(): rawRegionX=$rawRegionX, rawRegionY=$rawRegionY")
-
-                out.set(
-                    sprite.x + (rawRegionX * MEGAMAN_SPRITE_SIZE * ConstVals.PPM),
-                    sprite.y + (rawRegionY * MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
-                )
-                GameLogger.debug(TAG, "getSpawnPosition(): raw out = $out")
-
-                if (megaman.shouldFlipSpriteX()) out.x -= MEGAMAN_SPRITE_SIZE * ConstVals.PPM / 2f
-                if (megaman.shouldFlipSpriteY()) out.y -= MEGAMAN_SPRITE_SIZE * ConstVals.PPM / 2f
-                GameLogger.debug(TAG, "getSpawnPosition(): out after flip = $out")
-
-                val spriteCenter = sprite.boundingRectangle.getCenter()
-                out.rotateAroundOrigin(megaman.direction.rotation, spriteCenter.x, spriteCenter.y)
-                GameLogger.debug(TAG, "getSpawnPosition(): rotated out = $out")
-
-                GameLogger.debug(TAG, "getSpawnPosition(): final out = $out")
-                return out
-            }
-        }
-
-        GameLogger.debug(TAG, "getSpawnPosition(): no magic pixel weapon spawn for rawKey=$rawKey")
-         */
-
+    fun getSpawnPosition(): Vector2 {
         val out = GameObjectPools.fetch(Vector2::class).set(megaman.body.getCenter())
 
         when (megaman.direction) {
@@ -359,19 +322,10 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 return@canFireWeapon count <= MegamanValues.MAX_MOONS_BEFORE_SHOOT_AGAIN
             }
         )
-        MegamanWeapon.PRECIOUS_GUARD -> MegaWeaponHandler(
+        MegamanWeapon.PRECIOUS_GUARD -> object : MegaWeaponHandler(
             cooldown = Timer(0.1f),
-            normalCost = { if (it.getSpawnedCount(MegaChargeStatus.NOT_CHARGED) > 0) 0 else 10 },
+            normalCost = { if (it.getSpawnedCount(MegaChargeStatus.NOT_CHARGED) > 0) 0 else 6 },
             chargeable = chargeable@{ false },
-            canFireWeapon = canFireWeapon@{ it, _ ->
-                if (it.getSpawnedCount(MegaChargeStatus.NOT_CHARGED) > 0) {
-                    val cluster = it.getSpawned()
-                        .get(MegaChargeStatus.NOT_CHARGED)
-                        .first() as PreciousGemCluster
-                    return@canFireWeapon cluster.gems.values().none { it.released }
-                }
-                return@canFireWeapon it.getSpawnedCount(MegaChargeStatus.entries) == 0
-            },
             spawnedUpdateFunc = updateFunction@{ cluster, _, delta ->
                 if (!cluster.spawned) return@updateFunction
                 cluster as PreciousGemCluster
@@ -381,7 +335,43 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 )
                 if (cluster.gems.values().none { it.released }) cluster.body.setCenter(cluster.origin)
             }
-        )
+        ) {
+
+            private val maxCooldownTimer = Timer(1f).setToEnd()
+
+            init {
+                preShoot = {
+                    maxCooldownTimer.reset()
+                }
+
+                canFireWeapon = canFireWeapon@{ it, _ ->
+                    if (it.getSpawnedCount(MegaChargeStatus.NOT_CHARGED) > 0) {
+                        val cluster = it.spawned
+                            .get(MegaChargeStatus.NOT_CHARGED)
+                            .first() as PreciousGemCluster
+                        return@canFireWeapon cluster.gems.values().none { it.released }
+                    }
+
+                    return@canFireWeapon maxCooldownTimer.isFinished() &&
+                        it.getSpawnedCount(MegaChargeStatus.entries) == 0
+                }
+            }
+
+            override fun update(delta: Float) {
+                super.update(delta)
+
+                maxCooldownTimer.update(delta)
+
+                val spawnedIter = spawned.values().iterator()
+                while (spawnedIter.hasNext) {
+                    val clustersIter = spawnedIter.next().iterator()
+                    while (clustersIter.hasNext) {
+                        val cluster = clustersIter.next() as PreciousGemCluster
+                        if (cluster.gems.values().any { it.released }) clustersIter.remove()
+                    }
+                }
+            }
+        }
         MegamanWeapon.AXE_SWINGER -> MegaWeaponHandler(
             cooldown = Timer(0.5f),
             normalCost = { 2 },
@@ -399,22 +389,6 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
             init {
                 canFireWeapon = { _, _ -> canSpin }
-                // onShoot = { canSpin = false }
-            }
-
-            override fun update(delta: Float) {
-                super.update(delta)
-
-                /*
-                if (megaman.isBehaviorActive(BehaviorType.SWIMMING)) {
-                    canSpin = false
-                    return
-                }
-
-                if (megaman.body.isSensing(BodySense.FEET_ON_GROUND) ||
-                    megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)
-                ) canSpin = true
-                 */
             }
         }
         MegamanWeapon.RODENT_CLAWS -> object : MegaWeaponHandler(
@@ -483,7 +457,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             megaman.body.physics.gravityOn = true
 
         if (previous == MegamanWeapon.PRECIOUS_GUARD) {
-            val all = weaponHandlers[MegamanWeapon.PRECIOUS_GUARD]?.getSpawned()
+            val all = weaponHandlers[MegamanWeapon.PRECIOUS_GUARD]?.spawned
             all?.values()?.forEach { entities ->
                 val iter = entities.iterator()
                 while (iter.hasNext) {
@@ -653,7 +627,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             ConstKeys.OWNER pairTo megaman,
             ConstKeys.TRAJECTORY pairTo trajectory,
             ConstKeys.DIRECTION pairTo megaman.direction,
-            ConstKeys.POSITION pairTo getSpawnPosition(MegamanWeapon.MEGA_BUSTER)
+            ConstKeys.POSITION pairTo getSpawnPosition()
         )
 
         when (stat) {
@@ -682,7 +656,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
     private fun shootIceCube(stat: MegaChargeStatus) {
         GameLogger.debug(TAG, "shootIceCube(): stat=$stat")
 
-        val spawn = getSpawnPosition(MegamanWeapon.FRIGID_SHOT)
+        val spawn = getSpawnPosition()
 
         val trajectory = GameObjectPools.fetch(Vector2::class)
             .set(MegamanValues.ICE_CUBE_VEL * ConstVals.PPM * megaman.facing.value, 0f)
@@ -714,7 +688,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             smoke.spawn(
                 props(
                     ConstKeys.OWNER pairTo megaman,
-                    ConstKeys.POSITION pairTo getSpawnPosition(MegamanWeapon.MEGA_BUSTER)
+                    ConstKeys.POSITION pairTo getSpawnPosition()
                 )
             )
 
@@ -729,7 +703,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 props(
                     ConstKeys.SCALAR pairTo 3f,
                     ConstKeys.OWNER pairTo megaman,
-                    ConstKeys.POSITION pairTo getSpawnPosition(MegamanWeapon.MEGA_BUSTER),
+                    ConstKeys.POSITION pairTo getSpawnPosition(),
                 )
             )
             return
@@ -800,7 +774,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                         ConstKeys.OWNER pairTo megaman,
                         ConstKeys.TRAJECTORY pairTo trajectory,
                         ConstKeys.ROTATION pairTo trajectory.angleDeg(),
-                        ConstKeys.POSITION pairTo getSpawnPosition(MegamanWeapon.MOON_SCYTHES),
+                        ConstKeys.POSITION pairTo getSpawnPosition(),
                         "${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}" pairTo megaman.movementScalar
                     )
                 )
@@ -815,10 +789,12 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
     private fun shootPreciousGuard() {
         val handler = weaponHandlers[MegamanWeapon.PRECIOUS_GUARD]
 
-        val clusters = handler.getSpawned().get(MegaChargeStatus.NOT_CHARGED)
+        val clusters = handler.spawned.get(MegaChargeStatus.NOT_CHARGED)
         if (clusters.size > 0) {
-            val cluster = clusters.first() as PreciousGemCluster
-            cluster.gems.values().forEach { it.released = true }
+            for (cluster in clusters) {
+                cluster as PreciousGemCluster
+                cluster.gems.values().forEach { it.released = true }
+            }
             return
         }
 
@@ -829,7 +805,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
             val spawn = OrbitUtils.calculateOrbitalPosition(
                 angle,
-                SHIELD_GEM_START_OFFSET * ConstVals.PPM,
+                2f * ConstVals.PPM,
                 megaman.body.getCenter(),
                 GameObjectPools.fetch(Vector2::class)
             )
@@ -847,7 +823,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 )
             )
 
-            shieldGems.put(gem, ShieldGemDef(angle, SHIELD_GEM_START_OFFSET * ConstVals.PPM, false))
+            shieldGems.put(gem, ShieldGemDef(angle, 2f * ConstVals.PPM, false))
         }
 
         val cluster = MegaEntityFactory.fetch(PreciousGemCluster::class)!!
@@ -857,6 +833,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 ConstKeys.POSITION pairTo megaman.body.getCenter(),
                 ConstKeys.ORIGIN pairTo megaman.body.getCenter(),
                 PreciousGem.TAG pairTo shieldGems,
+                "${ConstKeys.SPIN}_${ConstKeys.SPEED}" pairTo 0.5f,
                 "${ConstKeys.MAX}_${ConstKeys.DISTANCE}" pairTo
                     MegamanValues.SHIELD_GEM_MAX_DIST * ConstVals.PPM,
                 "${ConstKeys.DISTANCE}_${ConstKeys.DELTA}" pairTo
@@ -960,8 +937,6 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 else -> gdxArrayOf(0f, 45f)
             }
         }.map { angle -> angle + megaman.direction.rotation }
-
-        // TODO: change depending on megaman direction
 
         val slashWaveCenter = GameObjectPools.fetch(Vector2::class)
             .set(megaman.body.getCenter())

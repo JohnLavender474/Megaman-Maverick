@@ -30,6 +30,7 @@ import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.AbstractBlock
@@ -120,6 +121,8 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
             direction.isVertical() -> trajectory.y *= -1f
             else -> trajectory.x *= -1f
         }
+
+        requestToPlaySound(SoundAsset.DINK_SOUND, false)
 
         if (shouldDebug) GameLogger.debug(TAG, "hit(): direction=$direction, trajectory=$trajectory")
     }

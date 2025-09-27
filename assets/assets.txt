@@ -3134,6 +3134,7 @@ tiled_maps/tsx/Reactor_Man_No_Black.tsx
 tiled_maps/tsx/Needleman.tsx
 tiled_maps/tsx/Elecman.tsx
 tiled_maps/tsx/GearTrolley.tsx
+tiled_maps/tsx/precious_woman_foreground_tileset.tsx
 tiled_maps/tsx/ForestTiles.tsx
 tiled_maps/tsx/GlacierManTileset.tsx
 tiled_maps/tsx/generel_block_tiles.tsx
@@ -3148,6 +3149,7 @@ tiled_maps/tsx/MM3Wily4.tsx
 tiled_maps/tsx/pipe forest preview.tsx
 tiled_maps/tsx/mm9plug.tsx
 tiled_maps/tsx/PunkCityTileset.tsx
+tiled_maps/tsx/precious_woman_example.tsx
 tiled_maps/tsx/Magnetman.tsx
 tiled_maps/tsx/mm9endless.tsx
 tiled_maps/tsx/pipe_forest.tsx
@@ -3194,15 +3196,18 @@ tiled_maps/tsx/ReactorManCondensed.tsx
 tiled_maps/tsx/Anokolisa_Swamp_Tileset.tsx
 tiled_maps/tsx/StarManTileset-NoBlack.tsx
 tiled_maps/tsx/MM10Enker.tsx
+tiled_maps/tsx/precious_woman_background_tileset.tsx
 tiled_maps/tsx/pump_man.tsx
 tiled_maps/tsx/Reactor_Man_4.tsx
 tiled_maps/tsx/Hardman.tsx
 tiled_maps/tsx/Blizzardman.tsx
 tiled_maps/tsx/MM10Wily1.tsx
+tiled_maps/tsx/precious_woman_platforms_tileset.tsx
 tiled_maps/tsx/UnderwaterFanPillar_Gray.tsx
 tiled_maps/tsx/mm9concrete.tsx
 tiled_maps/png/tstMM10Wily1.png
 tiled_maps/png/star-man-stage-no-black.png
+tiled_maps/png/precious_woman_platforms_tileset.png
 tiled_maps/png/MMM mega man 11 background/non animated backgrounds/sprBGTorch2.png
 tiled_maps/png/MMM mega man 11 background/non animated backgrounds/sprBGBounce.png
 tiled_maps/png/MMM mega man 11 background/non animated backgrounds/sprBGMM11Wily1.png
@@ -3293,6 +3298,7 @@ tiled_maps/png/sandy_pipes.png
 tiled_maps/png/Anokolisa_Swamp_Tileset.png
 tiled_maps/png/BKG01.png
 tiled_maps/png/ForestTiles 32x32.png
+tiled_maps/png/precious_woman_background tileset.png
 tiled_maps/png/tstNeedleman.png
 tiled_maps/png/tstMM3Wily3.png
 tiled_maps/png/Tileset1_Full_32x32.png
@@ -3342,6 +3348,7 @@ tiled_maps/png/React_Man_1.png
 tiled_maps/png/GearTrolley.png
 tiled_maps/png/tstCave.png
 tiled_maps/png/mm9splash.png
+tiled_maps/png/precious_woman_foreground_tileset.png
 tiled_maps/png/Mega Man 3 Backgrounds/Gemini Man/sprBGGemini.png
 tiled_maps/png/Mega Man 3 Backgrounds/Gemini Man/sprBGGemini2.png
 tiled_maps/png/Mega Man 3 Backgrounds/Gemini Man/sprBGGemini2Alt.png
@@ -3425,6 +3432,7 @@ tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstWilly3_2Alt.png
 tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstAstro_2.png
 tiled_maps/png/MMM MegaMan 8 tille sets/tiles/tstTengu.png
 tiled_maps/png/MMM MegaMan 8 tille sets/credits.txt
+tiled_maps/png/precious_woman_example.png
 tiled_maps/png/MoonManTiles_temp.png
 tiled_maps/png/tstMagnetman.png
 tiled_maps/png/pipe forest preview.png
@@ -3487,6 +3495,7 @@ tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgro
 tiled_maps/png/Mega Man 1 & Powered Up! Backgrounds/Mega Man Powered Up! Backgrounds/sprBGTime.png
 tiled_maps/png/InfernoManTileset.png
 tiled_maps/png/mm9plug.png
+tiled_maps/png/precious_woman_background_tileset.png
 tiled_maps/png/tstBlizzardman.png
 tiled_maps/png/tstMM10Punk.png
 tiled_maps/png/purple_stuff.png
@@ -3552,6 +3561,7 @@ tiled_maps/tmx/MoonMan_16x14_v4.tmx
 tiled_maps/tmx/WilyStage1_v3.tmx
 tiled_maps/tmx/PreciousMan.tmx
 tiled_maps/tmx/InfernoMan_16x12_v2.tmx
+tiled_maps/tmx/PreciousWoman_v2.tmx
 tiled_maps/tmx/TimberWoman_16x14.tmx
 tiled_maps/tmx/MagnetMan_OLD.tmx
 tiled_maps/tmx/MoonMan.tmx

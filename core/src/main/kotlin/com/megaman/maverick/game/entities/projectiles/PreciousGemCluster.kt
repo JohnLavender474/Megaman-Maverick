@@ -22,7 +22,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.bosses.PreciousWoman.Companion.SHIELD_GEM_MAX_DIST_FROM_ORIGIN
-import com.megaman.maverick.game.entities.bosses.PreciousWoman.Companion.SHIELD_GEM_SPIN_SPEED
 import com.megaman.maverick.game.entities.bosses.PreciousWoman.ShieldGemDef
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -39,6 +38,7 @@ class PreciousGemCluster(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
 
     companion object {
         const val TAG = "PreciousGemCluster"
+        const val DEFAULT_SHIELD_GEM_SPIN_SPEED = 0.25f
         private const val DEFAULT_DIST_FROM_CENTER_DELTA = 2f
     }
 
@@ -46,6 +46,7 @@ class PreciousGemCluster(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
     override var owner: IGameEntity? = null
 
     val gems = OrderedMap<PreciousGem, ShieldGemDef>()
+    var spinSpeed = DEFAULT_SHIELD_GEM_SPIN_SPEED
     var distDeltaOnRelease = 0f
     val origin = Vector2()
 
@@ -88,6 +89,9 @@ class PreciousGemCluster(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
             DEFAULT_DIST_FROM_CENTER_DELTA * ConstVals.PPM,
             Float::class
         )
+
+        spinSpeed =
+            spawnProps.getOrDefault("${ConstKeys.SPIN}_${ConstKeys.SPEED}", DEFAULT_SHIELD_GEM_SPIN_SPEED, Float::class)
     }
 
     override fun onDestroy() {
@@ -113,7 +117,8 @@ class PreciousGemCluster(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
 
             if (released) distance += distDeltaOnRelease * delta
 
-            angle += SHIELD_GEM_SPIN_SPEED * 360f * delta
+            angle += spinSpeed * 360f * delta
+
             val center = OrbitUtils.calculateOrbitalPosition(
                 angle,
                 distance,

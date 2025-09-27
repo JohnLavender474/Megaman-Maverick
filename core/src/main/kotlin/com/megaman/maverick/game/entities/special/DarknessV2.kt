@@ -39,6 +39,7 @@ import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.ExplosionOrb
 import com.megaman.maverick.game.entities.explosions.SpreadExplosion
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
+import com.megaman.maverick.game.entities.items.Life
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.events.EventType
@@ -101,7 +102,8 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             SpreadExplosion::class pairTo { BRIGHTEST_LIGHT_SOURCE },
             PicketJoe::class pairTo { BRIGHTER_LIGHT_SOURCE },
             GreenPelletBlast::class pairTo { STANDARD_LIGHT_SOURCE },
-            SlashWave::class pairTo { STANDARD_LIGHT_SOURCE }
+            SlashWave::class pairTo { STANDARD_LIGHT_SOURCE },
+            Life::class pairTo { STANDARD_LIGHT_SOURCE }
         )
         private val LIGHT_UP_ENTITY_TYPES = orderedSetOf(
             EntityType.PROJECTILE, EntityType.EXPLOSION, EntityType.ENEMY, EntityType.HAZARD

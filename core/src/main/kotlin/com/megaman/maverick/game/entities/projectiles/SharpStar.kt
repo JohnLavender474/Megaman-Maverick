@@ -31,10 +31,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.explosions.StarExplosion
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodyFixtureDef
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.*
 
 class SharpStar(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
@@ -64,6 +61,10 @@ class SharpStar(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
         trajectory.set(spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!)
         rotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f, Float::class)
+    }
+
+    override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        if (projectileFixture.getEntity() is PreciousGem) explodeAndDie()
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {

@@ -12,7 +12,6 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -43,9 +42,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.IDamageNegotiator
-import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.PropellerPlatform
 import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
@@ -65,7 +62,9 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         private const val SIZE_INCREASE_DELAY_DUR = 0.1f
         private const val PAUSE_BEFORE_FIRST_TARGET_DUR = 0.5f
         private val BODY_SIZES = gdxArrayOf(0.25f, 0.5f, 0.75f, 1f)
-        private val IGNORE_DMG = objectSetOf<KClass<out IDamager>>(Asteroid::class, PropellerPlatform::class)
+        private val IGNORE_DMG = objectSetOf<KClass<out IDamager>>(
+            MoonScythe::class, Asteroid::class, PropellerPlatform::class
+        )
         private val regions = ObjectMap<PreciousGemColor, TextureRegion>()
     }
 
@@ -73,16 +72,10 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
     override val damageNegotiator = object : IDamageNegotiator {
 
-        private val NON_MEGAMAN_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
-            MoonScythe::class pairTo dmgNeg(4)
-        )
-
         override fun get(damager: IDamager) = when {
             IGNORE_DMG.contains(damager::class) -> 0
-            else -> when (owner) {
-                megaman -> 8
-                else -> NON_MEGAMAN_DMG_NEGS[damager::class]?.get(damager) ?: 0
-            }
+            owner == megaman -> 8
+            else -> 0
         }
     }
     override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_JUST_DIED)
@@ -213,7 +206,6 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
                         GameLogger.debug(TAG, "update(): target reached, stateIndex=$stateIndex")
                     }
                 }
-
                 1 -> {
                     if (sizeIncreaseIndex < BODY_SIZES.size - 1) {
                         sizeIncreaseDelay.update(delta)
@@ -259,7 +251,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         return BodyComponentCreator.create(
             this,
             body,
-            BodyFixtureDef.Companion.of(
+            BodyFixtureDef.of(
                 FixtureType.PROJECTILE,
                 FixtureType.DAMAGEABLE,
                 FixtureType.DAMAGER,
