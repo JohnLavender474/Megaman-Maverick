@@ -15,9 +15,7 @@ object AnimationUtils {
         keys: Iterable<String>,
         regions: ObjectMap<String, TextureRegion>
     ) = keys.forEach { key ->
-        val region = atlas.findRegion("$tag/$key")
-        if (region == null) throw IllegalStateException("Region is null: $key")
-
+        val region = atlas.findRegion("$tag/$key") ?: throw IllegalStateException("Region is null: $key")
         regions.put(key, region)
     }
 
@@ -27,12 +25,8 @@ object AnimationUtils {
         regions: ObjectMap<String, TextureRegion>
     ) = animDefs.forEach { entry ->
         val key = entry.key
-
-        val region = regions[key]
-        if (region == null) throw IllegalStateException("Region is null: $key")
-
+        val region = regions[key] ?: throw IllegalStateException("Region is null: $key")
         val (rows, columns, durations, loop, reverse) = entry.value
-
         animations.put(key, Animation(region, rows, columns, durations, loop, reverse))
     }
 
@@ -42,11 +36,8 @@ object AnimationUtils {
         regions: ObjectMap<String, TextureRegion>,
         keys: Iterable<String>
     ) = keys.forEach { key ->
-        val region = regions[key]
-        if (region == null) throw IllegalStateException("Region is null: $key")
-
+        val region = regions[key] ?: throw IllegalStateException("Region is null: $key")
         val (rows, columns, durations, loop) = animDef
-
         animations.put(key, Animation(region, rows, columns, durations, loop))
     }
 }

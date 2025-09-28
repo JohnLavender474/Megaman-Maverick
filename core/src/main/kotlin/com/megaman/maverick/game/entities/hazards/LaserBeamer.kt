@@ -7,6 +7,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
+import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
@@ -26,10 +27,9 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
-import com.mega.game.engine.entities.contracts.IBodyEntity
-import com.mega.game.engine.entities.contracts.ICullableEntity
-import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
-import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.entities.contracts.*
+import com.mega.game.engine.events.Event
+import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.motion.MotionComponent
 import com.mega.game.engine.motion.RotatingLine
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -40,12 +40,15 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.ILaserEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.special.DarknessV2
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
@@ -59,7 +62,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import java.util.*
 
 class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IBodyEntity, IDrawableShapesEntity,
-    ICullableEntity, ILaserEntity, IDamager {
+    ICullableEntity, ILaserEntity, IAudioEntity, IDamager, IEventListener {
 
     companion object {
         const val TAG = "LaserBeamer"
@@ -82,6 +85,8 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
         private var region: TextureRegion? = null
     }
+
+    override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_DONE_DYIN)
 
     private val contactTimer = Timer(CONTACT_TIME)
     private val switchTimer = Timer(SWITCH_TIME)
@@ -113,8 +118,14 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
     private val lightSourceKeys = ObjectSet<Int>()
 
+    private var beaming = false
+
     override fun init() {
+        GameLogger.debug(TAG, "init()")
+
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
+
+        super.init()
 
         val prodShapeSuppliers: Array<() -> IDrawableShape?> = gdxArrayOf({ contactGlow }, { damagerFixture })
         addComponent(DrawableShapesComponent(prodShapeSuppliers = prodShapeSuppliers, debug = true))
@@ -124,11 +135,14 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         addComponent(defineSpritesComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(MotionComponent())
+        addComponent(AudioComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        game.eventsMan.addListener(this)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
@@ -157,6 +171,8 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
                 .map { it.toInt() }
                 .toObjectSet()
         )
+
+        beaming = false
     }
 
     override fun onDestroy() {
@@ -167,6 +183,11 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         lightSourceKeys.clear()
         laserFixture.setShape(GameLine())
         damagerFixture.setShape(GameLine())
+        game.eventsMan.removeListener(this)
+    }
+
+    override fun onEvent(event: Event) {
+        if (event.key == EventType.PLAYER_DONE_DYIN) beaming = false
     }
 
     override fun isLaserIgnoring(block: Block) = blocksToIgnore.contains(block.mapObjectId)
@@ -207,25 +228,28 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             laserFixture.setShape(rotatingLine.line)
-
             contacts.clear()
         }
 
         body.postProcess.put(ConstKeys.DEFAULT) {
             val laser = damagerFixture.rawShape as GameLine
+            if (beaming) {
+                val origin = rotatingLine.getOrigin()
+                laser.setFirstLocalPoint(origin)
 
-            val origin = rotatingLine.getOrigin()
-            laser.setFirstLocalPoint(origin)
+                val end = if (contacts.isEmpty()) rotatingLine.getEndPoint() else contacts.peek()
+                laser.setSecondLocalPoint(end)
 
-            val end = if (contacts.isEmpty()) rotatingLine.getEndPoint() else contacts.peek()
-            laser.setSecondLocalPoint(end)
+                contactGlow.setCenter(end)
 
-            contactGlow.setCenter(end)
-
-            laser.drawingColor = Color.RED
-            laser.drawingShapeType = ShapeType.Filled
-            laser.drawingThickness = 0.05f * ConstVals.PPM
-            laser.drawingRenderType = GameLineRenderingType.BOTH
+                laser.drawingColor = Color.RED
+                laser.drawingShapeType = ShapeType.Filled
+                laser.drawingThickness = 0.05f * ConstVals.PPM
+                laser.drawingRenderType = GameLineRenderingType.BOTH
+            } else {
+                laser.set(Vector2.Zero, Vector2.Zero)
+                contactGlow.setCenter(Vector2.Zero)
+            }
         }
 
         return BodyComponentCreator.create(this, body)
@@ -240,6 +264,13 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         .build()
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
+        if (!beaming) {
+            if (megaman.spawned && megaman.ready && overlapsGameCamera()) {
+                beaming = true
+                requestToPlaySound(SoundAsset.LASER_BEAM_SOUND, false)
+            } else return@UpdatablesComponent
+        }
+
         if (shouldSendLightSourceEvents()) sendLightSourceEvents()
 
         contactTimer.update(it)
@@ -271,7 +302,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         }
     })
 
-    private fun shouldSendLightSourceEvents() = MegaGameEntities.getOfTag(DarknessV2.TAG).any { it ->
+    private fun shouldSendLightSourceEvents() = MegaGameEntities.getOfTag(DarknessV2.TAG).any {
         (it as DarknessV2).overlaps(damagerFixture.getShape())
     }
 

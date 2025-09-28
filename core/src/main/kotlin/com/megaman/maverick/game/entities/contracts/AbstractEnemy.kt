@@ -12,6 +12,7 @@ import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullableOnEvent
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.damage.IDamageable
@@ -39,6 +40,7 @@ import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportEndProp
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportStartProp
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
@@ -68,7 +70,7 @@ abstract class AbstractEnemy(
         const val LARGE_ITEM_CHANCE = 25
 
         private val DROP_ENTITIES = gdxArrayOf<GamePair<KClass<out MegaGameEntity>, (AbstractEnemy) -> Number>>(
-            Life::class pairTo { it ->
+            Life::class pairTo {
                 when {
                     it.megaman.lives.current < LIVES_THRESHOLD -> HIGH_LIFE_CHANCE
                     else -> LOW_LIFE_CHANCE
@@ -139,7 +141,18 @@ abstract class AbstractEnemy(
         val cullWhenOutOfCamBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         if (cullWhenOutOfCamBounds) {
             val cullTime = spawnProps.getOrDefault(ConstKeys.CULL_TIME, DEFAULT_CULL_TIME, Float::class)
-            val cullOnOutOfBounds = getGameCameraCullingLogic(this, cullTime)
+
+            val cullBoundsSupplier = spawnProps.getOrDefault(
+                "${ConstKeys.CULL}_${ConstKeys.BOUNDS}_${ConstKeys.SUPPLIER}",
+                { body.getBounds() }
+            ) as () -> GameRectangle
+
+            val cullOnOutOfBounds = getGameCameraCullingLogic(
+                game.getGameCamera(),
+                cullBoundsSupplier,
+                cullTime
+            )
+
             putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, cullOnOutOfBounds)
         } else removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
 

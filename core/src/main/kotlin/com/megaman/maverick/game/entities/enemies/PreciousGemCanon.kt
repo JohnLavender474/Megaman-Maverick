@@ -39,31 +39,34 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.projectiles.Bullet
-import com.megaman.maverick.game.entities.projectiles.DuoBall
+import com.megaman.maverick.game.entities.projectiles.PreciousGemBomb
+import com.megaman.maverick.game.entities.projectiles.PreciousGemBomb.PreciousGemBombColor
+import com.megaman.maverick.game.entities.projectiles.PreciousShard
+import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardColor
+import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardSize
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class PreciousGemCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
 
     companion object {
-        const val TAG = "DuoBallCanon"
+        const val TAG = "PreciousGemCanon"
 
         private const val SWITCH_STATE_DELAY = 0.5f
 
-        private const val SHOOT_BULLET_OFFSET_X = 0.5f
-        private const val SHOOT_BULLET_OFFSET_Y = 0.6f
-        private const val BULLETS_TO_SHOOT = 3
-        private const val EACH_BULLET_DUR = 0.25f
-        private const val BULLET_SPEED = 10f
+        private const val SHOOT_GEM_OFFSET_X = 0.5f
+        private const val SHOOT_GEM_OFFSET_Y = 0.6f
+        private const val GEMS_TO_SHOOT = 3
+        private const val EACH_SHOOT_GEM_DUR = 0.25f
+        private const val SHOOT_GEM_SPEED = 10f
 
-        private const val LAUNCH_BALL_OFFSET_X = 0.25f
-        private const val LAUNCH_BALL_OFFSET_Y = 1f
-        private const val BALLS_TO_LAUNCH = 2
-        private const val EACH_BALL_DUR = 0.5f
-        private const val BALL_IMPULSE = 8f
+        private const val LAUNCH_GEM_OFFSET_X = 0.25f
+        private const val LAUNCH_GEM_OFFSET_Y = 1f
+        private const val GEMS_TO_LAUNCH = 2
+        private const val EACH_LAUNCH_GEM_DUR = 0.5f
+        private const val LAUNCH_GEM_IMPULSE = 8f
 
         private const val SHOOT_ANIM_DUR = 0.1f
         private const val SHOOT_SUFFIX = "_shoot"
@@ -71,30 +74,30 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private enum class DuoBallCanonDirection { STRAIGHT, UP }
+    private enum class PreciousGemCanonDirection { STRAIGHT, UP }
 
     override lateinit var facing: Facing
 
-    private val canonDirectionLoop = Loop(DuoBallCanonDirection.entries.toGdxArray())
-    private val canonDirection: DuoBallCanonDirection
+    private val canonDirectionLoop = Loop(PreciousGemCanonDirection.entries.toGdxArray())
+    private val canonDirection: PreciousGemCanonDirection
         get() = canonDirectionLoop.getCurrent()
 
     private val switchStateDelay = Timer(SWITCH_STATE_DELAY)
-    private val bulletsTimer = Timer(BULLETS_TO_SHOOT * EACH_BALL_DUR).also { timer ->
-        for (i in 0 until BULLETS_TO_SHOOT) {
-            val time = i * EACH_BULLET_DUR
+    private val shootGemsTimer = Timer(GEMS_TO_SHOOT * EACH_SHOOT_GEM_DUR).also { timer ->
+        for (i in 0 until GEMS_TO_SHOOT) {
+            val time = i * EACH_SHOOT_GEM_DUR
             val runnable = TimeMarkedRunnable(time) {
-                shootBullet()
+                shootGemPiece()
                 shootAnimTimer.reset()
             }
             timer.addRunnable(runnable)
         }
     }
-    private val ballsTimer = Timer(BALLS_TO_LAUNCH * EACH_BALL_DUR).also { timer ->
-        for (i in 0 until BALLS_TO_LAUNCH) {
-            val time = i * EACH_BALL_DUR
+    private val launchGemsTimer = Timer(GEMS_TO_LAUNCH * EACH_LAUNCH_GEM_DUR).also { timer ->
+        for (i in 0 until GEMS_TO_LAUNCH) {
+            val time = i * EACH_LAUNCH_GEM_DUR
             val runnable = TimeMarkedRunnable(time) {
-                launchBall()
+                launchGemBomb()
                 shootAnimTimer.reset()
             }
             timer.addRunnable(runnable)
@@ -108,7 +111,7 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             val keys = Array<String>()
-            DuoBallCanonDirection.entries.forEach { direction ->
+            PreciousGemCanonDirection.entries.forEach { direction ->
                 val key = direction.name.lowercase()
                 keys.add(key)
                 keys.add("${key}${SHOOT_SUFFIX}")
@@ -131,8 +134,8 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         canonDirectionLoop.reset()
 
         switchStateDelay.reset()
-        ballsTimer.reset()
-        bulletsTimer.reset()
+        launchGemsTimer.reset()
+        shootGemsTimer.reset()
         shootAnimTimer.setToEnd()
     }
 
@@ -147,7 +150,7 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
                 return@add
             }
 
-            val attackTimer = if (canonDirection == DuoBallCanonDirection.UP) ballsTimer else bulletsTimer
+            val attackTimer = if (canonDirection == PreciousGemCanonDirection.UP) launchGemsTimer else shootGemsTimer
             attackTimer.update(delta)
 
             if (attackTimer.isFinished()) {
@@ -184,11 +187,11 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
             val damageableWidth: Float
             val damageableHeight: Float
             when (canonDirection) {
-                DuoBallCanonDirection.STRAIGHT -> {
+                PreciousGemCanonDirection.STRAIGHT -> {
                     damageableWidth = 1.5f
                     damageableHeight = 0.5f
                 }
-                DuoBallCanonDirection.UP -> {
+                PreciousGemCanonDirection.UP -> {
                     damageableWidth = 1.5f
                     damageableHeight = 0.75f
                 }
@@ -222,7 +225,7 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
                     return@keySupplier key
                 }
                 .applyToAnimations { animations ->
-                    DuoBallCanonDirection.entries.forEach { direction ->
+                    PreciousGemCanonDirection.entries.forEach { direction ->
                         val key = direction.name.lowercase()
                         animations.put(key, Animation(regions[key]))
 
@@ -234,40 +237,45 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         )
         .build()
 
-    private fun shootBullet() {
+    private fun shootGemPiece() {
         val spawn = GameObjectPools.fetch(Vector2::class)
             .set(body.getCenter())
-            .add(SHOOT_BULLET_OFFSET_X * facing.value * ConstVals.PPM, SHOOT_BULLET_OFFSET_Y * ConstVals.PPM)
+            .add(SHOOT_GEM_OFFSET_X * facing.value * ConstVals.PPM, SHOOT_GEM_OFFSET_Y * ConstVals.PPM)
 
-        val trajectory = GameObjectPools.fetch(Vector2::class).set(BULLET_SPEED * ConstVals.PPM * facing.value, 0f)
+        val impulse = GameObjectPools.fetch(Vector2::class)
+            .set(SHOOT_GEM_SPEED * ConstVals.PPM * facing.value, 0f)
 
-        val bullet = MegaEntityFactory.fetch(Bullet::class)!!
+        val bullet = MegaEntityFactory.fetch(PreciousShard::class)!!
         bullet.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.POSITION pairTo spawn,
-                ConstKeys.TRAJECTORY pairTo trajectory
+                ConstKeys.IMPULSE pairTo impulse,
+                ConstKeys.GRAVITY_ON pairTo false,
+                ConstKeys.SIZE pairTo PreciousShardSize.entries.random(),
+                ConstKeys.COLOR pairTo PreciousShardColor.entries.random(),
             )
         )
 
         requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
     }
 
-    private fun launchBall() {
+    private fun launchGemBomb() {
         val spawn = GameObjectPools.fetch(Vector2::class)
             .set(body.getCenter())
-            .add(LAUNCH_BALL_OFFSET_X * facing.value * ConstVals.PPM, LAUNCH_BALL_OFFSET_Y * ConstVals.PPM)
+            .add(LAUNCH_GEM_OFFSET_X * facing.value * ConstVals.PPM, LAUNCH_GEM_OFFSET_Y * ConstVals.PPM)
 
-        val impulse = GameObjectPools.fetch(Vector2::class)
-            .set(BALL_IMPULSE * facing.value, BALL_IMPULSE)
+        val trajectory = GameObjectPools.fetch(Vector2::class)
+            .set(LAUNCH_GEM_IMPULSE * facing.value, LAUNCH_GEM_IMPULSE)
             .scl(ConstVals.PPM.toFloat())
 
-        val ball = MegaEntityFactory.fetch(DuoBall::class)!!
-        ball.spawn(
+        val bomb = MegaEntityFactory.fetch(PreciousGemBomb::class)!!
+        bomb.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.POSITION pairTo spawn,
-                ConstKeys.IMPULSE pairTo impulse
+                ConstKeys.TRAJECTORY pairTo trajectory,
+                ConstKeys.COLOR pairTo PreciousGemBombColor.entries.random()
             )
         )
 

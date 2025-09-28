@@ -9,7 +9,6 @@ import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.toObjectSet
 import com.mega.game.engine.common.interfaces.IDirectional
@@ -35,15 +34,15 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
 class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBodyEntity, ISpritesEntity,
@@ -91,7 +90,18 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
 
-        direction = megaman.direction
+        val bodyType = when {
+            spawnProps.containsKey("${ConstKeys.BODY}_${ConstKeys.TYPE}") ->
+                BodyType.valueOf(spawnProps.get("${ConstKeys.BODY}_${ConstKeys.TYPE}", String::class)!!.uppercase())
+            else -> BodyType.DYNAMIC
+        }
+        body.type = bodyType
+
+        direction = when {
+            spawnProps.containsKey(ConstKeys.DIRECTION) ->
+                Direction.valueOf(spawnProps.get(ConstKeys.DIRECTION, String::class)!!.uppercase())
+            else -> megaman.direction
+        }
 
         val gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, false, Boolean::class)
         body.physics.gravityOn = gravityOn
@@ -133,7 +143,7 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
             else -> removeCullable(ConstKeys.CULL_EVENTS)
         }
 
-        block = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD)!! as Block
+        block = MegaEntityFactory.fetch(Block::class)!!
         val blockProps = spawnProps.copy()
         blockProps.putAll(ConstKeys.BLOCK_FILTERS pairTo TAG, ConstKeys.DRAW pairTo false)
         block!!.spawn(blockProps)
@@ -224,7 +234,8 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
             val height = if (spriteHeight != null) spriteHeight!! * ConstVals.PPM else body.getHeight()
             sprite.setSize(width, height)
 
-            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+            val position = DirectionPositionMapper.getPosition(direction).opposite()
+            sprite.setPosition(body.getPositionPoint(position), position)
 
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation

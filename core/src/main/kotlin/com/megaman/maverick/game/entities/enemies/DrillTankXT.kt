@@ -397,7 +397,7 @@ class DrillTankXT(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
     private fun spawnRock(big: Boolean) {
         val drillTip = drillTipFixture.getShape().getBoundingRectangle()
 
-        var position = drillTip.getCenter().add(0.5f * ConstVals.PPM * -facing.value, 0f)
+        val position = drillTip.getCenter().add(0.5f * ConstVals.PPM * -facing.value, 0f)
 
         val impulse = GameObjectPools.fetch(Vector2::class)
             .setX(-facing.value * UtilMethods.getRandom(DRILL_ROCK_MIN_X_IMPULSE, DRILL_ROCK_MAX_X_IMPULSE))

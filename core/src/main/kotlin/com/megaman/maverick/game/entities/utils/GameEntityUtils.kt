@@ -55,7 +55,7 @@ fun getGameCameraCullingLogic(entity: IBodyEntity, timeToCull: Float = 1f) =
     getGameCameraCullingLogic((entity as MegaGameEntity).getGameCamera(), { entity.body.getBounds() }, timeToCull)
 
 fun getGameCameraCullingLogic(camera: RotatableCamera, bounds: () -> GameRectangle, timeToCull: Float = 1f) =
-    CullableOnUncontained<GameRectangle>({ camera.getRotatedBounds() }, { bounds().overlaps(it) }, timeToCull)
+    CullableOnUncontained({ camera.getRotatedBounds() }, { bounds().overlaps(it) }, timeToCull)
 
 fun convertObjectPropsToEntitySuppliers(props: Properties): Array<GamePair<() -> MegaGameEntity, Properties>> {
     val childEntitySuppliers = Array<GamePair<() -> MegaGameEntity, Properties>>()

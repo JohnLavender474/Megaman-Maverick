@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.6.2</string>
+        <string>7.9.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -245,6 +245,14 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Projectiles1/BouncingPebble.png</key>
+            <key type="filename">../frames/Projectiles1/PreciousShard/large_blue.png</key>
+            <key type="filename">../frames/Projectiles1/PreciousShard/large_green.png</key>
+            <key type="filename">../frames/Projectiles1/PreciousShard/large_pink.png</key>
+            <key type="filename">../frames/Projectiles1/PreciousShard/large_purple.png</key>
+            <key type="filename">../frames/Projectiles1/PreciousShard/small_blue.png</key>
+            <key type="filename">../frames/Projectiles1/PreciousShard/small_green.png</key>
+            <key type="filename">../frames/Projectiles1/PreciousShard/small_pink.png</key>
+            <key type="filename">../frames/Projectiles1/PreciousShard/small_purple.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -355,6 +363,9 @@
             </struct>
             <key type="filename">../frames/Projectiles1/DeathBomb.png</key>
             <key type="filename">../frames/Projectiles1/FirePellet.png</key>
+            <key type="filename">../frames/Projectiles1/PreciousGemBomb/blue.png</key>
+            <key type="filename">../frames/Projectiles1/PreciousGemBomb/green.png</key>
+            <key type="filename">../frames/Projectiles1/PreciousGemBomb/pink.png</key>
             <key type="filename">../frames/Projectiles1/Rock/big.png</key>
             <key type="filename">../frames/Projectiles1/Rock/small.png</key>
             <key type="filename">../frames/Projectiles1/Snowball2.png</key>
@@ -758,6 +769,12 @@
         <key>normalMapSheetFileName</key>
         <filename></filename>
         <key>exporterProperties</key>
-        <map type="ExporterProperties"/>
+        <map type="ExporterProperties">
+            <key>libgdx::legacy-output</key>
+            <struct type="ExporterProperty">
+                <key>value</key>
+                <string>true</string>
+            </struct>
+        </map>
     </struct>
 </data>

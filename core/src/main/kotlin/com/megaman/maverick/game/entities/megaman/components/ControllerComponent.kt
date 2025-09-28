@@ -154,7 +154,6 @@ private fun Megaman.setToNextWeapon() {
 private fun Megaman.runLeft(poller: IControllerPoller, delta: Float) {
     if (!ready || !canMove || damaged || teleporting ||
         poller.isPressed(MegaControllerButton.RIGHT) ||
-        isBehaviorActive(BehaviorType.GROUND_SLIDING) ||
         (currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting && feetOnGround)
     ) {
         if (!poller.isPressed(MegaControllerButton.RIGHT)) {
@@ -199,7 +198,6 @@ private fun Megaman.runLeft(poller: IControllerPoller, delta: Float) {
 private fun Megaman.runRight(poller: IControllerPoller, delta: Float) {
     if (!ready || !canMove || damaged || teleporting ||
         poller.isPressed(MegaControllerButton.LEFT) ||
-        isBehaviorActive(BehaviorType.GROUND_SLIDING) ||
         (currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting && feetOnGround)
     ) {
         if (!poller.isPressed(MegaControllerButton.LEFT)) running = false

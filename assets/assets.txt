@@ -182,6 +182,7 @@ sounds/error.mp3
 sounds/quake.wav
 sounds/solar_blaze.wav
 sounds/energy_fill_mm9.wav
+sounds/laser_beam.wav
 sounds/swim.mp3
 sounds/teleport_out.mp3
 sounds/megaman_land.mp3
@@ -942,6 +943,8 @@ sprites/frames/Hazards1/Spike4.png
 sprites/frames/Hazards1/PipePuff.png
 sprites/frames/Hazards1/SwingingAxe.png
 sprites/frames/Hazards1/FlameColumn.png
+sprites/frames/Hazards1/DiamondForger/start.png
+sprites/frames/Hazards1/DiamondForger/forge.png
 sprites/frames/Hazards1/LavaBeam.png
 sprites/frames/Hazards1/LavaDrop/Falling.png
 sprites/frames/Hazards1/LavaDrop/Landed.png
@@ -1733,6 +1736,9 @@ sprites/frames/Projectiles1/Petal.png
 sprites/frames/Projectiles1/RollingBotShot.png
 sprites/frames/Projectiles1/TubeBeam.png
 sprites/frames/Projectiles1/ElecBall.png
+sprites/frames/Projectiles1/PreciousGemBomb/green.png
+sprites/frames/Projectiles1/PreciousGemBomb/pink.png
+sprites/frames/Projectiles1/PreciousGemBomb/blue.png
 sprites/frames/Projectiles1/PurpleBlast/Charge.png
 sprites/frames/Projectiles1/PurpleBlast/Blast.png
 sprites/frames/Projectiles1/SnowJoeball.png
@@ -1795,6 +1801,14 @@ sprites/frames/Projectiles1/PreciousGem/green.png
 sprites/frames/Projectiles1/PreciousGem/pink.png
 sprites/frames/Projectiles1/PreciousGem/blue.png
 sprites/frames/Projectiles1/ElecDevilBodyPiece.png
+sprites/frames/Projectiles1/PreciousShard/small_purple.png
+sprites/frames/Projectiles1/PreciousShard/large_blue.png
+sprites/frames/Projectiles1/PreciousShard/large_pink.png
+sprites/frames/Projectiles1/PreciousShard/large_purple.png
+sprites/frames/Projectiles1/PreciousShard/small_green.png
+sprites/frames/Projectiles1/PreciousShard/small_pink.png
+sprites/frames/Projectiles1/PreciousShard/small_blue.png
+sprites/frames/Projectiles1/PreciousShard/large_green.png
 sprites/frames/Projectiles1/ChargedShot_v2.png
 sprites/frames/Projectiles1/ChargedShot.png
 sprites/frames/Projectiles1/BouncingPebble.png
@@ -2074,6 +2088,10 @@ sprites/frames/Enemies1/CanonHopper/frozen.png
 sprites/frames/Enemies1/CanonHopper/hop.png
 sprites/frames/Enemies1/PicketJoe/throw.png
 sprites/frames/Enemies1/PicketJoe/stand.png
+sprites/frames/Enemies1/DrillHead/hover.png
+sprites/frames/Enemies1/DrillHead/fly.png
+sprites/frames/Enemies1/DrillHead/drill.png
+sprites/frames/Enemies1/DrillHead/idle.png
 sprites/frames/Enemies1/FlyBoy/Stand.png
 sprites/frames/Enemies1/FlyBoy/Fly.png
 sprites/frames/Enemies1/RedScrewie/Down.png
@@ -2107,6 +2125,10 @@ sprites/frames/Enemies1/GreenUziJoe/jump_shoot_start.png
 sprites/frames/Enemies1/DragonFly.png
 sprites/frames/Enemies1/Popoheli/fly.png
 sprites/frames/Enemies1/Popoheli/frozen.png
+sprites/frames/Enemies1/PreciousGemCanon/straight.png
+sprites/frames/Enemies1/PreciousGemCanon/up.png
+sprites/frames/Enemies1/PreciousGemCanon/up_shoot.png
+sprites/frames/Enemies1/PreciousGemCanon/straight_shoot.png
 sprites/frames/Enemies1/GapingFish/Chomping.png
 sprites/frames/Enemies1/GapingFish/Swimming.png
 sprites/frames/Enemies1/GapingFish/Gaping.png

@@ -78,7 +78,8 @@ enum class SoundAsset(src: String, val seconds: Float) : IAsset {
     POUND_SOUND("pound.wav", 1f),
     BLACKHOLE_SOUND("blackhole.wav", 0.35f),
     DIG_SOUND("dig.wav", 0.25f),
-    JET_SOUND("jet.wav", 1f);
+    JET_SOUND("jet.wav", 1f),
+    LASER_BEAM_SOUND("laser_beam.wav", 1f);
 
     companion object {
         fun valuesAsIAssetArray(): Array<IAsset> {

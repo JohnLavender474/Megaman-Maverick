@@ -48,6 +48,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val DRILL = "drill"
     const val DISSIPATE = "dissipate"
     const val DROP = "drp"
     const val FLAME = "flame"

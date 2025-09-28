@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.6.2</string>
+        <string>7.9.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -292,6 +292,7 @@
             <key type="filename">../frames/Enemies1/Darspider/frozen.png</key>
             <key type="filename">../frames/Enemies1/Darspider/jump.png</key>
             <key type="filename">../frames/Enemies1/Darspider/still.png</key>
+            <key type="filename">../frames/Enemies1/DrillHead/idle.png</key>
             <key type="filename">../frames/Enemies1/HeliMet/shield.png</key>
             <key type="filename">../frames/Enemies1/LaserBeamer.png</key>
             <key type="filename">../frames/Enemies1/Met/GetUp.png</key>
@@ -583,6 +584,8 @@
             <key type="filename">../frames/Enemies1/DuoBallCanon/up_shoot.png</key>
             <key type="filename">../frames/Enemies1/GreenUziJoe/jump_shoot_blast.png</key>
             <key type="filename">../frames/Enemies1/GreenUziJoe/stand_shoot_blast.png</key>
+            <key type="filename">../frames/Enemies1/PreciousGemCanon/straight_shoot.png</key>
+            <key type="filename">../frames/Enemies1/PreciousGemCanon/up_shoot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -616,6 +619,7 @@
             </struct>
             <key type="filename">../frames/Enemies1/CryoMet/flash.png</key>
             <key type="filename">../frames/Enemies1/CryoMet/rise.png</key>
+            <key type="filename">../frames/Enemies1/DrillHead/drill.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/fire/shoot.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/orange/shoot.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/snow/shoot.png</key>
@@ -635,6 +639,8 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Enemies1/CryoMet/run.png</key>
+            <key type="filename">../frames/Enemies1/DrillHead/fly.png</key>
+            <key type="filename">../frames/Enemies1/DrillHead/hover.png</key>
             <key type="filename">../frames/Enemies1/ScooperPete/idle.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/fire/idle.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/fire/turn.png</key>
@@ -675,6 +681,8 @@
             <key type="filename">../frames/Enemies1/GreenUziJoe/stand_shoot_start.png</key>
             <key type="filename">../frames/Enemies1/IceFox/shoot.png</key>
             <key type="filename">../frames/Enemies1/IceFox/stand.png</key>
+            <key type="filename">../frames/Enemies1/PreciousGemCanon/straight.png</key>
+            <key type="filename">../frames/Enemies1/PreciousGemCanon/up.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -1325,6 +1333,12 @@
         <key>normalMapSheetFileName</key>
         <filename></filename>
         <key>exporterProperties</key>
-        <map type="ExporterProperties"/>
+        <map type="ExporterProperties">
+            <key>libgdx::legacy-output</key>
+            <struct type="ExporterProperty">
+                <key>value</key>
+                <string>true</string>
+            </struct>
+        </map>
     </struct>
 </data>
