@@ -1,7 +1,7 @@
 LevelSelectScreenV2.png
 size: 1806, 1354
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Nearest, Nearest
 repeat: none
 background_full
   rotate: false
