@@ -1,25 +1,25 @@
 Ui1.png
 size: 404, 616
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Nearest, Nearest
 repeat: none
 arrow
   rotate: false
   xy: 2, 2
-  size: 32, 32
-  orig: 32, 32
+  size: 8, 8
+  orig: 8, 8
   offset: 0, 0
   index: -1
 Bar
   rotate: false
-  xy: 36, 2
+  xy: 12, 2
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 logo
   rotate: false
-  xy: 294, 2
+  xy: 270, 2
   size: 100, 32
   orig: 100, 32
   offset: 0, 0

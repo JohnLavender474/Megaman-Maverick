@@ -25,8 +25,7 @@ class BlinkingArrow(
     rotation: Float = 0f,
     override var drawingColor: Color = Color.RED,
     override var drawingShapeType: ShapeType = ShapeType.Line
-) : Updatable,
-    IDrawable<Batch>, IDrawableShape {
+) : Updatable, IDrawable<Batch>, IDrawableShape {
 
     companion object {
         private const val BLINK_DUR = 0.1f
