@@ -276,6 +276,12 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
         ) out.set(intersection) else null
     }
 
+    fun getScaledLocalPosition(scale: Float, out: Vector2): Vector2 {
+        val scaledX = localPoint1.x + (localPoint2.x - localPoint1.x) * scale
+        val scaledY = localPoint1.y + (localPoint2.y - localPoint1.y) * scale
+        return out.set(scaledX, scaledY)
+    }
+
     override fun contains(point: Vector2): Boolean {
         calculateWorldPoints(reusableVec1, reusableVec2)
         return Intersector.pointLineSide(reusableVec1, reusableVec2, point) == 0 &&

@@ -67,6 +67,8 @@ class PreciousGemBomb(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         private const val GRAVITY = -0.15f
 
+        private const val CULL_TIME = 0.5f
+
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -85,6 +87,26 @@ class PreciousGemBomb(game: MegamanMaverickGame) : AbstractProjectile(game) {
         }
         super.init()
     }
+
+    override fun onSpawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
+        super.onSpawn(spawnProps)
+
+        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        body.setCenter(spawn)
+
+        val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
+        body.physics.velocity.set(trajectory)
+
+        color = spawnProps.get(ConstKeys.COLOR, PreciousGemBombColor::class)!!
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+    }
+
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val shieldEntity = shieldFixture.getEntity()
@@ -130,24 +152,6 @@ class PreciousGemBomb(game: MegamanMaverickGame) : AbstractProjectile(game) {
         destroy()
 
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
-    }
-
-    override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-        super.onSpawn(spawnProps)
-
-        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        body.setCenter(spawn)
-
-        val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
-        body.physics.velocity.set(trajectory)
-
-        color = spawnProps.get(ConstKeys.COLOR, PreciousGemBombColor::class)!!
-    }
-
-    override fun onDestroy() {
-        GameLogger.debug(TAG, "onDestroy()")
-        super.onDestroy()
     }
 
     override fun defineBodyComponent(): BodyComponent {

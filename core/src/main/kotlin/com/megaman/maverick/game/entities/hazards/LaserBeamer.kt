@@ -23,10 +23,7 @@ import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
-import com.mega.game.engine.drawables.sprites.GameSprite
-import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
-import com.mega.game.engine.drawables.sprites.setPosition
-import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.drawables.sprites.*
 import com.mega.game.engine.entities.contracts.*
 import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.IEventListener
@@ -53,6 +50,7 @@ import com.megaman.maverick.game.entities.special.DarknessV2
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.*
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
@@ -70,7 +68,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         private val CONTACT_RADII = floatArrayOf(2f, 5f, 8f)
 
         private const val DEFAULT_SPEED = 2f
-        private const val DEFAULT_RADIUS = 10f
+        private const val DEFAULT_MAX_RADIUS = 10f
 
         private const val CONTACT_TIME = 0.05f
         private const val SWITCH_TIME = 1f
@@ -83,7 +81,10 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         private const val LIGHT_SOURCE_RADIUS = 1
         private const val LIGHT_SOURCE_RADIANCE = 1.5f
 
+        private const val LASER_SPRITE_SIZE = 2f / ConstVals.PPM
+
         private var region: TextureRegion? = null
+        private var redRegion: TextureRegion? = null
     }
 
     override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_DONE_DYIN)
@@ -112,22 +113,22 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
     private var clockwise = false
     private var contactIndex = 0
+    private var beaming = false
     private var speed = 0f
 
     private val blocksToIgnore = ObjectSet<Int>()
-
     private val lightSourceKeys = ObjectSet<Int>()
-
-    private var beaming = false
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
 
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
+        if (redRegion == null) redRegion =
+            game.assMan.getTextureRegion(TextureAsset.COLORS.source, "${ConstKeys.BRIGHT}_${ConstKeys.RED}")
 
         super.init()
 
-        val prodShapeSuppliers: Array<() -> IDrawableShape?> = gdxArrayOf({ contactGlow }, { damagerFixture })
+        val prodShapeSuppliers: Array<() -> IDrawableShape?> = gdxArrayOf({ contactGlow }, /* { damagerFixture } */)
         addComponent(DrawableShapesComponent(prodShapeSuppliers = prodShapeSuppliers, debug = true))
 
         addComponent(defineCullablesComponent())
@@ -147,9 +148,11 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        val radius = spawnProps.getOrDefault(ConstKeys.RADIUS, DEFAULT_RADIUS, Float::class)
+        val maxRadius = spawnProps.getOrDefault(ConstKeys.RADIUS, DEFAULT_MAX_RADIUS, Float::class) * ConstVals.PPM
         speed = spawnProps.getOrDefault(ConstKeys.SPEED, DEFAULT_SPEED, Float::class)
-        rotatingLine = RotatingLine(spawn, radius * ConstVals.PPM, speed * ConstVals.PPM, INIT_DEGREES)
+        rotatingLine = RotatingLine(spawn, maxRadius, speed * ConstVals.PPM, INIT_DEGREES)
+
+        buildLaserSprites(maxRadius)
 
         contactTimer.reset()
         switchTimer.reset()
@@ -237,7 +240,11 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
                 val origin = rotatingLine.getOrigin()
                 laser.setFirstLocalPoint(origin)
 
-                val end = if (contacts.isEmpty()) rotatingLine.getEndPoint() else contacts.peek()
+                val end = when {
+                    contacts.isEmpty() || contacts.peek().dst(origin) > rotatingLine.line.getLength() ->
+                        rotatingLine.getEndPoint()
+                    else -> contacts.peek()
+                }
                 laser.setSecondLocalPoint(end)
 
                 contactGlow.setCenter(end)
@@ -256,12 +263,63 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     }
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
-        .sprite(GameSprite(region!!).also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
+        .sprite(TAG, GameSprite(region!!).also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
         .updatable { _, sprite ->
             sprite.setPosition(rotatingLine.getOrigin(), Position.BOTTOM_CENTER)
             sprite.translateY(-0.1f * ConstVals.PPM)
         }
         .build()
+
+    private fun buildLaserSprites(maxRadius: Float) {
+        val iter = sprites.iterator()
+        while (iter.hasNext) {
+            val next = iter.next()
+            if (next.key.toString().contains(ConstKeys.PIECE)) iter.remove()
+        }
+
+        val count = (maxRadius / (LASER_SPRITE_SIZE * ConstVals.PPM)).toInt()
+
+        GameLogger.debug(TAG, "buildLaserSprites(): maxRadius=$maxRadius, count=$count")
+
+        for (i in 0 until count) {
+            val key = "${ConstKeys.PIECE}_$i"
+
+            val sprite = GameSprite(redRegion!!)
+            sprite.setSize(LASER_SPRITE_SIZE * ConstVals.PPM)
+            sprites.put(key, sprite)
+
+            val renderDelay = Timer(0.1f)
+
+            putSpriteUpdateFunction(key) updateFunc@{ delta, _ ->
+                val laser = damagerFixture.getShape() as GameLine
+
+                if (i * LASER_SPRITE_SIZE * ConstVals.PPM > laser.getLength()) {
+                    sprite.hidden = true
+                    return@updateFunc
+                }
+
+                sprite.hidden = false
+
+                val p1 = GameObjectPools.fetch(Vector2::class)
+                val p2 = GameObjectPools.fetch(Vector2::class)
+                laser.calculateWorldPoints(p1, p2)
+
+                val distance = i * LASER_SPRITE_SIZE * ConstVals.PPM
+
+                val offset = GameObjectPools.fetch(Vector2::class)
+                    .set(p2)
+                    .sub(p1)
+                    .nor()
+                    .scl(distance)
+
+                val center = GameObjectPools.fetch(Vector2::class)
+                    .set(p1)
+                    .add(offset)
+
+                sprite.setCenter(center)
+            }
+        }
+    }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
         if (!beaming) {
