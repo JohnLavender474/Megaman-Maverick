@@ -23,19 +23,15 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
         private set
 
     override fun canSpawn(spawnProps: Properties): Boolean {
-        try {
-            if (!super.canSpawn(spawnProps)) return false
+        if (!super.canSpawn(spawnProps)) return false
 
-            val difficultyMode = game.state.getDifficultyMode()
+        val difficultyMode = game.state.getDifficultyMode()
 
-            val hardModeOnly = spawnProps.getOrDefault(ConstKeys.HARD_MODE_ONLY, false, Boolean::class)
-            if (hardModeOnly && difficultyMode != DifficultyMode.HARD) return false
+        val hardModeOnly = spawnProps.getOrDefault(ConstKeys.HARD_MODE_ONLY, false, Boolean::class)
+        if (hardModeOnly && difficultyMode != DifficultyMode.HARD) return false
 
-            val normalModeOnly = spawnProps.getOrDefault(ConstKeys.NORMAL_MODE_ONLY, false, Boolean::class)
-            return !(normalModeOnly && difficultyMode != DifficultyMode.NORMAL)
-        } catch (e: Exception) {
-            throw Exception("Exception while evaluating 'can spawn' for entity $this", e)
-        }
+        val normalModeOnly = spawnProps.getOrDefault(ConstKeys.NORMAL_MODE_ONLY, false, Boolean::class)
+        return !(normalModeOnly && difficultyMode != DifficultyMode.NORMAL)
     }
 
     override fun onSpawn(spawnProps: Properties) {
