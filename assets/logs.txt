@@ -1,1 +1,50 @@
-===== SESSION STARTED: 2025-10-01T17:36:57.015376234 =====
+===== SESSION STARTED: 2025-10-01T18:19:48.470576590 =====
+18:20:59 | DEBUG | LaserBeamer | init()
+18:20:59 | DEBUG | LaserBeamer | onSpawn(): spawnProps=Properties({
+	[bounds=[3024.0,648.0,32.0,32.0]]
+	[spawn_room=room2]
+	[x=3024.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[id=118]
+	[name=LaserBeamer]
+	[radius=20.0]
+	[y=648.0]
+	[width=32.0]
+	[block1=com.badlogic.gdx.maps.objects.RectangleMapObject@1c26273d]
+})
+18:20:59 | DEBUG | LaserBeamer | buildLaserSprites(): maxRadius=640.0, count=320
+18:20:59 | DEBUG | LaserBeamer | init()
+18:20:59 | DEBUG | LaserBeamer | onSpawn(): spawnProps=Properties({
+	[bounds=[2960.0,960.0,32.0,32.0]]
+	[spawn_room=room2]
+	[x=2960.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[id=125]
+	[name=LaserBeamer]
+	[radius=20.0]
+	[y=960.0]
+	[width=32.0]
+	[block1=com.badlogic.gdx.maps.objects.RectangleMapObject@3e3315d9]
+})
+18:20:59 | DEBUG | LaserBeamer | buildLaserSprites(): maxRadius=640.0, count=320
+18:21:21 | DEBUG | LaserBeamer | init()
+18:21:21 | DEBUG | LaserBeamer | onSpawn(): spawnProps=Properties({
+	[hard_mode_only=true]
+	[bounds=[5136.0,1216.0,32.0,32.0]]
+	[spawn_room=room3]
+	[x=5136.0]
+	[height=32.0]
+	[spawn_type=spawn_room]
+	[id=251]
+	[name=LaserBeamer]
+	[radius=20.0]
+	[y=1216.0]
+	[width=32.0]
+	[block1=com.badlogic.gdx.maps.objects.RectangleMapObject@5875de6a]
+})
+18:21:21 | DEBUG | LaserBeamer | buildLaserSprites(): maxRadius=640.0, count=320
+18:21:21 | DEBUG | LaserBeamer | onDestroy()
+18:21:21 | DEBUG | LaserBeamer | onDestroy()
+18:22:46 | DEBUG | LaserBeamer | onDestroy()

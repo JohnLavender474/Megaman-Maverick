@@ -107,6 +107,11 @@ class PreciousShard(game: MegamanMaverickGame) : AbstractProjectile(game) {
         super.onDestroy()
     }
 
+    override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        val projectile = projectileFixture.getEntity()
+        if (projectile is SlashWave) explodeAndDie()
+    }
+
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (!doNoCollisionOnSpawn || spawnNoCollisionTimer.isFinished()) explodeAndDie()
     }

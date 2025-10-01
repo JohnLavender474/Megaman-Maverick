@@ -35,24 +35,16 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        try {
-            mapObjectId = spawnProps.getOrDefault(ConstKeys.ID, -1, Int::class)
-            runnablesOnSpawn.values().forEach { it.invoke() }
-            MegaGameEntities.add(this)
-            GameLogger.debug(TAG, "${getTag()}: onSpawn(): this=$this, spawnProps=$spawnProps")
-        } catch (e: Exception) {
-            throw Exception("Exception while spawning entity $this", e)
-        }
+        mapObjectId = spawnProps.getOrDefault(ConstKeys.ID, -1, Int::class)
+        runnablesOnSpawn.values().forEach { it.invoke() }
+        MegaGameEntities.add(this)
+        GameLogger.debug(TAG, "${getTag()}: onSpawn(): this=$this, spawnProps=$spawnProps")
     }
 
     override fun onDestroy() {
-        try {
-            MegaGameEntities.remove(this)
-            runnablesOnDestroy.values().forEach { it.invoke() }
-            GameLogger.debug(TAG, "${getTag()}: onDestroy(): this=$this")
-        } catch (e: Exception) {
-            throw Exception("Exception while destroying entity $this", e)
-        }
+        MegaGameEntities.remove(this)
+        runnablesOnDestroy.values().forEach { it.invoke() }
+        GameLogger.debug(TAG, "${getTag()}: onDestroy(): this=$this")
     }
 
     override fun getTag() = this::class.simpleName ?: "?"

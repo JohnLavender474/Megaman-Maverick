@@ -35,6 +35,7 @@ import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShar
 import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardSize
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
 class PreciousGemBomb(game: MegamanMaverickGame) : AbstractProjectile(game) {
@@ -107,23 +108,29 @@ class PreciousGemBomb(game: MegamanMaverickGame) : AbstractProjectile(game) {
         super.onDestroy()
     }
 
-
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val shieldEntity = shieldFixture.getEntity()
         if (shieldEntity.isAny(PreciousGemBomb::class, PreciousShard::class)) return
 
-        explodeAndDie(otherShape)
+        val direction = getOverlapPushDirection(body.getBounds(), otherShape) ?: Direction.UP
+        explodeAndDie(direction)
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        explodeAndDie(otherShape)
+        val direction = getOverlapPushDirection(body.getBounds(), otherShape) ?: Direction.UP
+        explodeAndDie(direction)
+    }
+
+    override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        val projectile = projectileFixture.getEntity()
+        if (projectile is SlashWave) {
+            val direction = if (otherShape.getCenter().x < thisShape.getCenter().x) Direction.RIGHT else Direction.LEFT
+            explodeAndDie(direction)
+        }
     }
 
     override fun explodeAndDie(vararg params: Any?) {
-        val shape = params[0] as IGameShape2D
-
-        val direction = getOverlapPushDirection(body.getBounds(), shape) ?: Direction.UP
-
+        val direction = params[0] as Direction
         SHATTER_IMPULSES.get(direction).forEach { impulse ->
             val shard = MegaEntityFactory.fetch(PreciousShard::class)!!
             shard.spawn(
