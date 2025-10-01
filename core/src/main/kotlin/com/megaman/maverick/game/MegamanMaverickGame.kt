@@ -505,13 +505,40 @@ class MegamanMaverickGame(
 
     override fun dispose() {
         GameLogger.log(TAG, "dispose()")
-        if (this::batch.isInitialized) batch.dispose()
-        if (this::shapeRenderer.isInitialized) shapeRenderer.dispose()
-        if (this::engine.isInitialized) engine.dispose()
-        screens.values().forEach { it.dispose() }
-        disposables.values().forEach { it.dispose() }
-        debugWindow?.dispose()
-        logFileWriter?.dispose()
+
+        val disposeActions = Array<() -> Unit>()
+
+        disposeActions.add { if (this::batch.isInitialized) batch.dispose() }
+        disposeActions.add { if (this::shapeRenderer.isInitialized) shapeRenderer.dispose() }
+        disposeActions.add { if (this::engine.isInitialized) engine.dispose() }
+        disposeActions.add {
+            screens.values().forEach {
+                try {
+                    it.dispose()
+                } catch (e: Exception) {
+                    GameLogger.error(TAG, "dispose(): Failed to dispose screen: ${it::class.simpleName}", e)
+                }
+            }
+        }
+        disposeActions.add {
+            disposables.values().forEach {
+                try {
+                    it.dispose()
+                } catch (e: Exception) {
+                    GameLogger.error(TAG, "dispose(): Failed to run dispose action", e)
+                }
+            }
+        }
+        disposeActions.add { debugWindow?.dispose() }
+        disposeActions.add { logFileWriter?.dispose() }
+
+        disposeActions.forEach {
+            try {
+                it.invoke()
+            } catch (e: Exception) {
+                GameLogger.error(TAG, "dispose(): Exception while running dispose action", e)
+            }
+        }
     }
 
     fun setCurrentLevel(levelDef: LevelDefinition) = putProperty("${ConstKeys.LEVEL}_${ConstKeys.DEF}", levelDef)

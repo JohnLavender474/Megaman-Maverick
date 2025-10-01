@@ -23,28 +23,40 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
         private set
 
     override fun canSpawn(spawnProps: Properties): Boolean {
-        if (!super.canSpawn(spawnProps)) return false
+        try {
+            if (!super.canSpawn(spawnProps)) return false
 
-        val difficultyMode = game.state.getDifficultyMode()
+            val difficultyMode = game.state.getDifficultyMode()
 
-        val hardModeOnly = spawnProps.getOrDefault(ConstKeys.HARD_MODE_ONLY, false, Boolean::class)
-        if (hardModeOnly && difficultyMode != DifficultyMode.HARD) return false
+            val hardModeOnly = spawnProps.getOrDefault(ConstKeys.HARD_MODE_ONLY, false, Boolean::class)
+            if (hardModeOnly && difficultyMode != DifficultyMode.HARD) return false
 
-        val normalModeOnly = spawnProps.getOrDefault(ConstKeys.NORMAL_MODE_ONLY, false, Boolean::class)
-        return !(normalModeOnly && difficultyMode != DifficultyMode.NORMAL)
+            val normalModeOnly = spawnProps.getOrDefault(ConstKeys.NORMAL_MODE_ONLY, false, Boolean::class)
+            return !(normalModeOnly && difficultyMode != DifficultyMode.NORMAL)
+        } catch (e: Exception) {
+            throw Exception("Exception while evaluating 'can spawn' for entity $this", e)
+        }
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        mapObjectId = spawnProps.getOrDefault(ConstKeys.ID, -1, Int::class)
-        runnablesOnSpawn.values().forEach { it.invoke() }
-        MegaGameEntities.add(this)
-        GameLogger.debug(TAG, "${getTag()}: onSpawn(): this=$this, spawnProps=$spawnProps")
+        try {
+            mapObjectId = spawnProps.getOrDefault(ConstKeys.ID, -1, Int::class)
+            runnablesOnSpawn.values().forEach { it.invoke() }
+            MegaGameEntities.add(this)
+            GameLogger.debug(TAG, "${getTag()}: onSpawn(): this=$this, spawnProps=$spawnProps")
+        } catch (e: Exception) {
+            throw Exception("Exception while spawning entity $this", e)
+        }
     }
 
     override fun onDestroy() {
-        MegaGameEntities.remove(this)
-        runnablesOnDestroy.values().forEach { it.invoke() }
-        GameLogger.debug(TAG, "${getTag()}: onDestroy(): this=$this")
+        try {
+            MegaGameEntities.remove(this)
+            runnablesOnDestroy.values().forEach { it.invoke() }
+            GameLogger.debug(TAG, "${getTag()}: onDestroy(): this=$this")
+        } catch (e: Exception) {
+            throw Exception("Exception while destroying entity $this", e)
+        }
     }
 
     override fun getTag() = this::class.simpleName ?: "?"

@@ -35,6 +35,8 @@ open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntit
     var deathPredicate: Predicate<Properties>? = null
 
     val trajectory = Vector2()
+    var followTraj = false
+
     val spriteSize = Vector2()
     var hidden = false
 
@@ -52,7 +54,11 @@ open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntit
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        trajectory.set(spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2.Zero, Vector2::class))
+        if (spawnProps.containsKey(ConstKeys.TRAJECTORY)) {
+            followTraj = true
+            trajectory.set(spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2.Zero, Vector2::class))
+        } else followTraj = false
+
         deathPredicate = spawnProps.get(ConstKeys.DEATH) as Predicate<Properties>?
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
@@ -82,8 +88,10 @@ open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntit
 
     protected open fun defineUpdateablesComponent(updateablesComponent: UpdatablesComponent) {
         updateablesComponent.add {
-            val velocity = GameObjectPools.fetch(Vector2::class).set(trajectory)
-            body.physics.velocity.set(velocity)
+            if (followTraj) {
+                val velocity = GameObjectPools.fetch(Vector2::class).set(trajectory)
+                body.physics.velocity.set(velocity)
+            }
 
             if (deathPredicate != null &&
                 deathPredicate!!.test(props(ConstKeys.DELTA pairTo it, ConstKeys.ENTITY pairTo this))
@@ -134,6 +142,10 @@ object AnimatedBlockAnimators {
             "FireballBlock" -> {
                 val region = assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "FireballBlock")
                 Animation(region)
+            }
+            "PreciousBlock" -> {
+                val region = assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "PreciousBlock")
+                Animation(region, 3, 1, 0.2f, true)
             }
             else -> throw IllegalArgumentException("$TAG: Illegal key = $key")
         }

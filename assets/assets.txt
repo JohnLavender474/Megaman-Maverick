@@ -2064,6 +2064,7 @@ sprites/frames/Platforms1/ConveyorBelt/MiddlePart-MoveRight-Green.png
 sprites/frames/Platforms1/TrackBlock.png
 sprites/frames/Platforms1/FrozenBlock.png
 sprites/frames/Platforms1/AppearingBrick.png
+sprites/frames/Platforms1/PreciousBlock.png
 sprites/frames/Platforms1/Platform2.png
 sprites/frames/Platforms1/8bitBlueBlock.png
 sprites/frames/Platforms1/8bitBlueBlockTransBorder.png
@@ -2940,6 +2941,7 @@ sprites/piskel/PurpleBlast.piskel
 sprites/piskel/Megaman_Cart.piskel
 sprites/piskel/KibboHammer.piskel
 sprites/piskel/Tropish.piskel
+sprites/piskel/PreciousBlock.piskel
 sprites/piskel/BombPotton.piskel
 sprites/piskel/Bulb Blaster.piskel
 sprites/piskel/GlacierBKG_v2.piskel

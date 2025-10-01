@@ -17,7 +17,7 @@ class Trajectory(
             trajectoryDefinitionString
                 .split(";".toRegex())
                 .map {
-                    val values = it.split(",".toRegex())
+                    val values = it.split(",")
                     TrajectoryDefinition(values[0].toFloat(), values[1].toFloat(), values[2].toFloat())
                 }
                 .toGdxArray()

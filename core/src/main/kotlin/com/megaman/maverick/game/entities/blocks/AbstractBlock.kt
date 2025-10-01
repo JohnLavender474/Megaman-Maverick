@@ -8,7 +8,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.world.body.FixtureLabel
 
-class AbstractBlock(game: MegamanMaverickGame) : Block(game) {
+open class AbstractBlock(game: MegamanMaverickGame) : Block(game) {
 
     companion object {
         const val TAG = "AbstractBlock"
