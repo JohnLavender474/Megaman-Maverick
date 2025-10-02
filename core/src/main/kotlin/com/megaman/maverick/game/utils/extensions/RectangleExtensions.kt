@@ -12,6 +12,6 @@ fun Rectangle.toGameRectangle(reclaim: Boolean = true): GameRectangle {
 }
 
 fun Rectangle.getPositionPoint(position: Position, reclaim: Boolean = true) =
-    toGameRectangle(reclaim).getPositionPoint(position)
+    toGameRectangle().getPositionPoint(position, reclaim)
 
 fun Rectangle.getCenter(reclaim: Boolean = true): Vector2 = getCenter(GameObjectPools.fetch(Vector2::class, reclaim))

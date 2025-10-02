@@ -43,7 +43,7 @@ class PreciousGemBomb(game: MegamanMaverickGame) : AbstractProjectile(game) {
     companion object {
         const val TAG = "PreciousGemBomb"
 
-        private val SHATTER_IMPULSES = objectMapOf(
+        val SHATTER_IMPULSES = objectMapOf(
             Direction.UP pairTo gdxArrayOf(
                 Vector2(5f, 9f),
                 Vector2(0f, 9f),

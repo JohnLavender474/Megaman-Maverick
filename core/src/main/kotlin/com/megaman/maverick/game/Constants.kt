@@ -48,6 +48,8 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val SHATTER = "shatter"
+    const val PAUSE = "pause"
     const val BRIGHT = "bright"
     const val DRILL = "drill"
     const val DISSIPATE = "dissipate"

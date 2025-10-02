@@ -603,6 +603,8 @@
             <key type="filename">../frames/Enemies1/Cokeyro/shake.png</key>
             <key type="filename">../frames/Enemies1/DarkSerket/launch_claws.png</key>
             <key type="filename">../frames/Enemies1/PopupCanon/Rise.png</key>
+            <key type="filename">../frames/Enemies1/PreciousTron/appear.png</key>
+            <key type="filename">../frames/Enemies1/PreciousTron/disappear.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -683,6 +685,7 @@
             <key type="filename">../frames/Enemies1/IceFox/stand.png</key>
             <key type="filename">../frames/Enemies1/PreciousGemCanon/straight.png</key>
             <key type="filename">../frames/Enemies1/PreciousGemCanon/up.png</key>
+            <key type="filename">../frames/Enemies1/PreciousTron/shoot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -966,6 +969,8 @@
             <key type="filename">../frames/Enemies1/NuttGlider/stand_nutt.png</key>
             <key type="filename">../frames/Enemies1/PreciousJoe/Shoot.png</key>
             <key type="filename">../frames/Enemies1/PreciousJoe/Stand.png</key>
+            <key type="filename">../frames/Enemies1/PreciousTron/fall.png</key>
+            <key type="filename">../frames/Enemies1/PreciousTron/stand.png</key>
             <key type="filename">../frames/Enemies1/Ratton/frozen.png</key>
             <key type="filename">../frames/Enemies1/SwinginJoe/throw.png</key>
             <key type="filename">../frames/Enemies1/WispyWasp/Nest.png</key>

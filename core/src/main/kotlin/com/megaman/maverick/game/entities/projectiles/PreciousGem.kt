@@ -9,6 +9,9 @@ import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
+import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
@@ -17,6 +20,7 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -33,10 +37,7 @@ import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.body.Body
-import com.mega.game.engine.world.body.BodyComponent
-import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -49,7 +50,12 @@ import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.Disintegration
+import com.megaman.maverick.game.entities.projectiles.PreciousGemBomb.Companion.SHATTER_IMPULSES
+import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardColor
+import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardSize
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
@@ -58,9 +64,9 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
     companion object {
         const val TAG = "PreciousGem"
-        private const val CULL_TIME = 5f
-        private const val SIZE_INCREASE_DELAY_DUR = 0.1f
-        private const val PAUSE_BEFORE_FIRST_TARGET_DUR = 0.5f
+        private const val DEFAULT_CULL_TIME = 5f
+        private const val SIZE_DELAY_DUR = 0.1f
+        private const val DEFAULT_PAUSE_DUR = 0.5f
         private val BODY_SIZES = gdxArrayOf(0.25f, 0.5f, 0.75f, 1f)
         private val IGNORE_DMG = objectSetOf<KClass<out IDamager>>(
             MoonScythe::class, Asteroid::class, PropellerPlatform::class
@@ -94,10 +100,12 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
     lateinit var color: PreciousGemColor
 
-    private val sizeIncreaseDelay = Timer(SIZE_INCREASE_DELAY_DUR)
-    private var sizeIncreaseIndex = 0
+    private val sizeDelay = Timer(SIZE_DELAY_DUR)
+    private var sizeIndex = 0
 
-    private val pauseBeforeFirstTarget = Timer(PAUSE_BEFORE_FIRST_TARGET_DUR)
+    private val pauseDelay = Timer(DEFAULT_PAUSE_DUR)
+
+    private var blockShatter = false
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -118,7 +126,9 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
+        if (!spawnProps.containsKey(ConstKeys.CULL_TIME))
+            spawnProps.put(ConstKeys.CULL_TIME, DEFAULT_CULL_TIME)
+
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
@@ -134,13 +144,17 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
         stateIndex = spawnProps.getOrDefault(ConstKeys.STATE, 0, Int::class)
 
-        sizeIncreaseDelay.reset()
-        sizeIncreaseIndex = 0
+        sizeDelay.reset()
+        sizeIndex = 0
         setSizeByIndex(0)
 
-        pauseBeforeFirstTarget.reset()
+        val pauseDelayDur = spawnProps.getOrDefault(ConstKeys.PAUSE, DEFAULT_PAUSE_DUR, Float::class)
+        pauseDelay.resetDuration(pauseDelayDur)
+
         color = spawnProps.get(ConstKeys.COLOR, PreciousGemColor::class)!!
         speed = spawnProps.getOrDefault(ConstKeys.SPEED, 0f, Float::class)
+
+        blockShatter = spawnProps.getOrDefault("${ConstKeys.BLOCK}_${ConstKeys.SHATTER}", false, Boolean::class)
     }
 
     override fun onDestroy() {
@@ -175,6 +189,46 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         return damaged
     }
 
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        if (blockShatter) {
+            val direction = getOverlapPushDirection(thisShape, otherShape)
+            explodeAndDie(direction)
+        }
+    }
+
+    override fun explodeAndDie(vararg params: Any?) {
+        val direction = params[0] as Direction
+        SHATTER_IMPULSES.get(direction).forEach { impulse ->
+            val shard = MegaEntityFactory.fetch(PreciousShard::class)!!
+            shard.spawn(
+                props(
+                    ConstKeys.OWNER pairTo owner,
+                    ConstKeys.POSITION pairTo when (direction) {
+                        Direction.UP -> body.getPositionPoint(Position.TOP_CENTER)
+                        Direction.DOWN -> body.getPositionPoint(Position.BOTTOM_CENTER)
+                        Direction.LEFT -> body.getPositionPoint(Position.CENTER_LEFT)
+                        Direction.RIGHT -> body.getPositionPoint(Position.CENTER_RIGHT)
+                    },
+                    ConstKeys.IMPULSE pairTo GameObjectPools.fetch(Vector2::class)
+                        .set(impulse)
+                        .scl(ConstVals.PPM.toFloat()),
+                    ConstKeys.COLOR pairTo when (color) {
+                        PreciousGemColor.GREEN -> PreciousShardColor.GREEN
+                        PreciousGemColor.BLUE -> PreciousShardColor.BLUE
+                        PreciousGemColor.PINK -> PreciousShardColor.PINK
+                        PreciousGemColor.PURPLE -> PreciousShardColor.PURPLE
+                    },
+                    "${ConstKeys.COLLIDE}_${ConstKeys.DELAY}" pairTo false,
+                    ConstKeys.SIZE pairTo PreciousShardSize.SMALL
+                )
+            )
+        }
+
+        destroy()
+
+        requestToPlaySound(SoundAsset.DINK_SOUND, false)
+    }
+
     private fun setSizeByIndex(index: Int) {
         val center = body.getCenter()
 
@@ -207,21 +261,21 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
                     }
                 }
                 1 -> {
-                    if (sizeIncreaseIndex < BODY_SIZES.size - 1) {
-                        sizeIncreaseDelay.update(delta)
+                    if (sizeIndex < BODY_SIZES.size - 1) {
+                        sizeDelay.update(delta)
 
-                        if (sizeIncreaseDelay.isFinished()) {
-                            sizeIncreaseIndex++
-                            setSizeByIndex(sizeIncreaseIndex)
+                        if (sizeDelay.isFinished()) {
+                            sizeIndex++
+                            setSizeByIndex(sizeIndex)
 
-                            sizeIncreaseDelay.reset()
+                            sizeDelay.reset()
                         }
                     }
 
                     if (secondTargetSupplier != null) {
-                        pauseBeforeFirstTarget.update(delta)
+                        pauseDelay.update(delta)
 
-                        if (pauseBeforeFirstTarget.isFinished()) {
+                        if (pauseDelay.isFinished()) {
                             stateIndex++
 
                             val trajectory = secondTargetSupplier!!.invoke()

@@ -66,17 +66,13 @@ class GameEngine(
     } else false
 
     private fun spawnNow(entity: IGameEntity, spawnProps: Properties) {
-        try {
-            entities.add(entity)
+        entities.add(entity)
 
-            if (!entity.initialized) initialize(entity)
-            entity.onSpawn(spawnProps)
-            entity.spawned = true
+        if (!entity.initialized) initialize(entity)
+        entity.onSpawn(spawnProps)
+        entity.spawned = true
 
-            updateSystemMembershipsFor(entity)
-        } catch (e: Exception) {
-            throw Exception("Exception while spawning $entity", e)
-        }
+        updateSystemMembershipsFor(entity)
     }
 
     private fun initialize(entity: IGameEntity) {
@@ -91,17 +87,13 @@ class GameEngine(
     }
 
     private fun destroyNow(entity: IGameEntity) {
-        try {
-            entities.remove(entity)
+        entities.remove(entity)
 
-            systems.forEach { s -> s.remove(entity) }
+        systems.forEach { s -> s.remove(entity) }
 
-            entity.components.forEach { it.value.reset() }
-            entity.onDestroy()
-            entity.spawned = false
-        } catch (e: Exception) {
-            throw Exception("Exception while destroying $entity", e)
-        }
+        entity.components.forEach { it.value.reset() }
+        entity.onDestroy()
+        entity.spawned = false
     }
 
     fun updateSystemMembershipsFor(entity: IGameEntity) =
