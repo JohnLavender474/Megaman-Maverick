@@ -2278,6 +2278,11 @@ sprites/frames/Enemies1/Beezee/frozen.png
 sprites/frames/Enemies1/SnowSeal/Stand.png
 sprites/frames/Enemies1/SnowSeal/FormSnowball.png
 sprites/frames/Enemies1/SnowSeal/SlapTail.png
+sprites/frames/Enemies1/PreciousTron/fall.png
+sprites/frames/Enemies1/PreciousTron/appear.png
+sprites/frames/Enemies1/PreciousTron/stand.png
+sprites/frames/Enemies1/PreciousTron/disappear.png
+sprites/frames/Enemies1/PreciousTron/shoot.png
 sprites/frames/Enemies1/SnowMet/LayDown.png
 sprites/frames/Enemies1/SnowMet/GetUp.png
 sprites/frames/Enemies1/SnowMet/Run.png
@@ -3141,6 +3146,7 @@ sprites/piskel/MagmaMeteor.piskel
 sprites/piskel/MegamanMainMenu.piskel
 sprites/piskel/Elecn.piskel
 sprites/piskel/StageSelect.piskel
+sprites/piskel/PreciousTron.piskel
 sprites/piskel/CrystalSpikes.piskel
 sprites/piskel/InfernoMan.piskel
 sprites/piskel/SmokePuff.piskel
