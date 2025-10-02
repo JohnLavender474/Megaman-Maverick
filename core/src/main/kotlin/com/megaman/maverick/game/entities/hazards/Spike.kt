@@ -71,6 +71,8 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
 
     private var spriteWidth: Float? = null
     private var spriteHeight: Float? = null
+    private val spriteOffset = Vector2()
+
     private var animation: Animation? = null
     private lateinit var region: TextureRegion
 
@@ -110,6 +112,9 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
 
         spriteWidth = spawnProps.get(ConstKeys.SPRITE_WIDTH, Float::class)
         spriteHeight = spawnProps.get(ConstKeys.SPRITE_HEIGHT, Float::class)
+
+        spriteOffset.x = spawnProps.getOrDefault("${ConstKeys.SPRITE}_${ConstKeys.OFFSET_X}", 0f, Float::class)
+        spriteOffset.y = spawnProps.getOrDefault("${ConstKeys.SPRITE}_${ConstKeys.OFFSET_Y}", 0f, Float::class)
 
         val regionKey = spawnProps.get(ConstKeys.REGION, String::class)!!
         region = atlas!!.findRegion(regionKey)
@@ -236,6 +241,8 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
 
             val position = DirectionPositionMapper.getPosition(direction).opposite()
             sprite.setPosition(body.getPositionPoint(position), position)
+
+            sprite.translate(spriteOffset.x * ConstVals.PPM, spriteOffset.y * ConstVals.PPM)
 
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
