@@ -12,8 +12,8 @@ interface IAudioEntity : IGameEntity {
             return getComponent(key)!!
         }
 
-    fun requestToPlaySound(source: Any, loop: Boolean) {
-        this.audioComponent.requestToPlaySound(source, loop)
+    fun requestToPlaySound(source: Any, loop: Boolean, allowOverlap: Boolean = true) {
+        this.audioComponent.requestToPlaySound(source, loop, allowOverlap)
     }
 
     fun requestToPlayMusic(source: Any, loop: Boolean, onCompletionListener: ((Music) -> Unit)?) {

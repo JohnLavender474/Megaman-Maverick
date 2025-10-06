@@ -98,8 +98,8 @@ class PreciousTron(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
 
     private lateinit var timers: ObjectMap<PreciousTronState, Timer>
 
-    private val positions = Array<Vector2>()
     private val currentPosition = Vector2()
+    private val positionSuppliers = Array<() -> Vector2>()
     private val positionQueue = PriorityQueue(Comparator<Vector2> compare@{ o1, o2 ->
         val dist1 = o1.dst2(megaman.body.getCenter())
         val dist2 = o2.dst2(megaman.body.getCenter())
@@ -162,22 +162,18 @@ class PreciousTron(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
                 val position = (value as RectangleMapObject)
                     .rectangle
                     .getPositionPoint(Position.BOTTOM_CENTER, false)
-
-                positions.add(position)
+                positionSuppliers.add { position }
             }
         }
 
-        GameLogger.debug(TAG, "onSpawn(): currentPosition=$currentPosition, positions=$positions")
+        GameLogger.debug(TAG, "onSpawn(): currentPosition=$currentPosition, positions=$positionSuppliers")
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-
-        positions.forEach { GameObjectPools.free(it) }
-        positions.clear()
-
         positionQueue.clear()
+        positionSuppliers.clear()
         currentPosition.setZero()
 
         tempVec2Arr.clear()
@@ -321,7 +317,7 @@ class PreciousTron(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
     }
 
     private fun setNextPosition() {
-        positions.forEach { if (it != currentPosition) positionQueue.add(it) }
+        positionSuppliers.forEach { if (it != currentPosition) positionQueue.add(it.invoke()) }
 
         GameLogger.debug(TAG, "setNextPosition(): positionQueue=$positionQueue")
 

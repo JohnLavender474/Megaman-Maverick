@@ -50,6 +50,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.Disintegration
+import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.projectiles.PreciousGemBomb.Companion.SHATTER_IMPULSES
 import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardColor
 import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardSize
@@ -106,6 +107,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
     private val pauseDelay = Timer(DEFAULT_PAUSE_DUR)
 
     private var blockShatter = false
+    private var ratClawShatter = false
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -155,6 +157,9 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         speed = spawnProps.getOrDefault(ConstKeys.SPEED, 0f, Float::class)
 
         blockShatter = spawnProps.getOrDefault("${ConstKeys.BLOCK}_${ConstKeys.SHATTER}", false, Boolean::class)
+        ratClawShatter = spawnProps.getOrDefault(
+            "${MegamanWeapon.RODENT_CLAWS.name.lowercase()}_${ConstKeys.SHATTER}", true, Boolean::class
+        )
     }
 
     override fun onDestroy() {
@@ -189,7 +194,22 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         return damaged
     }
 
+    override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        GameLogger.debug(
+            TAG,
+            "hitProjectile(): projectileFixture=$projectileFixture, thisShape=$thisShape, otherShape=$otherShape"
+        )
+
+        val projectile = projectileFixture.getEntity()
+        if (projectile is SlashWave) {
+            val direction = getOverlapPushDirection(thisShape, otherShape)
+            explodeAndDie(direction)
+        }
+    }
+
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        GameLogger.debug(TAG, "hitBlock(): blockFixture=$blockFixture, thisShape=$thisShape, otherShape=$otherShape")
+
         if (blockShatter) {
             val direction = getOverlapPushDirection(thisShape, otherShape)
             explodeAndDie(direction)
@@ -198,6 +218,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
     override fun explodeAndDie(vararg params: Any?) {
         val direction = params[0] as Direction
+
         SHATTER_IMPULSES.get(direction).forEach { impulse ->
             val shard = MegaEntityFactory.fetch(PreciousShard::class)!!
             shard.spawn(

@@ -19,7 +19,14 @@ class AnimationsComponent() : IGameComponent {
     internal val sprites = ObjectMap<Any, GameSprite>()
     internal val animators = OrderedMap<Any, IAnimator>()
 
+    private var entity: ISpritesEntity? = null
+
+    constructor(entity: ISpritesEntity) : this() {
+        this.entity = entity
+    }
+
     constructor(entity: ISpritesEntity, animator: IAnimator) : this() {
+        this.entity = entity
         val sprite = entity.defaultSprite
         putAnimator(sprite, animator)
     }
@@ -36,6 +43,13 @@ class AnimationsComponent() : IGameComponent {
     constructor(animators: OrderedMap<Any, IAnimator>, sprites: OrderedMap<Any, GameSprite>) : this() {
         this.animators.putAll(animators)
         this.sprites.putAll(sprites)
+    }
+
+    fun putAnimator(key: Any, animator: IAnimator) {
+        if (entity == null)
+            throw Exception("Animations component must be initialized with a SpritesEntity instance containin")
+        val sprite = entity!!.sprites.get(key) ?: throw Exception("No sprite with key $key found")
+        putAnimator(sprite, animator)
     }
 
     fun putAnimator(sprite: GameSprite, animator: IAnimator) = putAnimator(DEFAULT_KEY, sprite, animator)

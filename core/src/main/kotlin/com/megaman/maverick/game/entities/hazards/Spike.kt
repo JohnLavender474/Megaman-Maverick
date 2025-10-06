@@ -148,10 +148,13 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
             else -> removeCullable(ConstKeys.CULL_EVENTS)
         }
 
-        block = MegaEntityFactory.fetch(Block::class)!!
-        val blockProps = spawnProps.copy()
-        blockProps.putAll(ConstKeys.BLOCK_FILTERS pairTo TAG, ConstKeys.DRAW pairTo false)
-        block!!.spawn(blockProps)
+        val hasBlock = spawnProps.getOrDefault("${ConstKeys.HAS}_${ConstKeys.BLOCK}", true, Boolean::class)
+        if (hasBlock) {
+            block = MegaEntityFactory.fetch(Block::class)!!
+            val blockProps = spawnProps.copy()
+            blockProps.putAll(ConstKeys.BLOCK_FILTERS pairTo TAG, ConstKeys.DRAW pairTo false)
+            block!!.spawn(blockProps)
+        }
 
         allowInstantDeath = spawnProps.getOrDefault(ConstKeys.INSTANT, true, Boolean::class)
         collisionOn = spawnProps.getOrDefault("${ConstKeys.COLLIDE}_${ConstKeys.ON}", true, Boolean::class)
@@ -197,8 +200,10 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
             val instant = if (allowInstantDeath) !body.isSensing(BodySense.FEET_ON_GROUND) else false
             deathFixture.putProperty(ConstKeys.INSTANT, instant)
 
-            block!!.body.setCenter(body.getCenter())
-            block!!.body.physics.collisionOn = body.isSensing(BodySense.FEET_ON_GROUND)
+            block?.let {
+                it.body.setCenter(body.getCenter())
+                it.body.physics.collisionOn = body.isSensing(BodySense.FEET_ON_GROUND)
+            }
 
             val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
             val gravityVec = GameObjectPools.fetch(Vector2::class)
@@ -219,7 +224,7 @@ class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBo
             }
         }
 
-        body.postProcess.put(ConstKeys.DEFAULT) { block!!.body.setCenter(body.getCenter()) }
+        body.postProcess.put(ConstKeys.DEFAULT) { block?.body?.setCenter(body.getCenter()) }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
