@@ -48,6 +48,8 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val POINT = "point"
+    const val AUTO = "auto"
     const val HAS = "has"
     const val SHATTER = "shatter"
     const val PAUSE = "pause"
@@ -222,6 +224,7 @@ object ConstKeys {
     const val RISE = "rise"
     const val EDIT = "edit"
     const val FIRST = "first"
+    const val SECOND = "second"
     const val AREA = "area"
     const val CUSTOM_PRE_PROCESS = "custom_pre_process"
     const val CUSTOM_POST_PROCESS = "custom_post_process"

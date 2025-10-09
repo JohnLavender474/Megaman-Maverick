@@ -181,11 +181,16 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+
         contacts.clear()
+
         blocksToIgnore.clear()
+
         lightSourceKeys.clear()
+
         laserFixture.setShape(GameLine())
         damagerFixture.setShape(GameLine())
+
         game.eventsMan.removeListener(this)
     }
 
@@ -288,9 +293,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
             sprite.setSize(LASER_SPRITE_SIZE * ConstVals.PPM)
             sprites.put(key, sprite)
 
-            val renderDelay = Timer(0.1f)
-
-            putSpriteUpdateFunction(key) updateFunc@{ delta, _ ->
+            putSpriteUpdateFunction(key) updateFunc@{ _, _ ->
                 val laser = damagerFixture.getShape() as GameLine
 
                 if (i * LASER_SPRITE_SIZE * ConstVals.PPM > laser.getLength()) {

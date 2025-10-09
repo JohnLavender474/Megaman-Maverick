@@ -23,9 +23,6 @@ var Megaman.currentAnimKey: String?
 internal fun Megaman.defineAnimationsComponent(animations: OrderedMap<String, IAnimation>): AnimationsComponent {
     val megamanAnimKeySupplier: (String?) -> String? = supplier@{
         val key = getAnimationKey(currentAnimKey)
-
-        // game.setDebugText(key ?: "")
-
         return@supplier when {
             key != null -> {
                 currentAnimKey = key
@@ -37,8 +34,8 @@ internal fun Megaman.defineAnimationsComponent(animations: OrderedMap<String, IA
     val megamanAnimator = Animator(
         keySupplier = megamanAnimKeySupplier,
         animations = animations,
-        onChangeKey = { animator, currentKey, nextKey -> onChangeAnimationKey(currentKey, nextKey, animations) },
-        postProcessKey = { animator, currentKey, nextKey -> postProcessAnimationKey(currentKey, nextKey) },
+        onChangeKey = { _, currentKey, nextKey -> onChangeAnimationKey(currentKey, nextKey, animations) },
+        postProcessKey = { _, currentKey, nextKey -> postProcessAnimationKey(currentKey, nextKey) },
         shouldEqualKeysTriggerChange = this::shouldEqualAnimKeysTriggerChange
     )
 

@@ -51,6 +51,7 @@ object MegamanAnimationDefs {
         "climb_still_charge_full_left" pairTo AnimationDef(2, 1, CHARGING_FRAME_DUR),
         "climb_still_charge_half" pairTo AnimationDef(3, 1, CHARGING_FRAME_DUR),
         "climb_still_charge_half_left" pairTo AnimationDef(3, 1, CHARGING_FRAME_DUR),
+        "climb_still_axe_throw" pairTo AnimationDef(2, 1, 0.1f, false),
 
         "stand" pairTo AnimationDef(2, 1, gdxArrayOf(1.5f, 0.15f)),
         "stand_left" pairTo AnimationDef(2, 1, gdxArrayOf(1.5f, 0.15f)),
@@ -88,6 +89,7 @@ object MegamanAnimationDefs {
         "jump_charge_half_left" pairTo AnimationDef(3, 1, CHARGING_FRAME_DUR),
         "jump_shoot" pairTo AnimationDef(),
         "jump_shoot_left" pairTo AnimationDef(),
+        "jump_axe_throw" pairTo AnimationDef(2, 1, 0.1f, false),
 
         "swim" pairTo AnimationDef(),
         "swim_left" pairTo AnimationDef(),
@@ -108,6 +110,7 @@ object MegamanAnimationDefs {
         "wallslide_charge_half_left" pairTo AnimationDef(3, 1, CHARGING_FRAME_DUR),
         "wallslide_shoot" pairTo AnimationDef(),
         "wallslide_shoot_left" pairTo AnimationDef(),
+        "wallslide_axe_throw" pairTo AnimationDef(2, 1, 0.1f, false),
 
         "groundslide" pairTo AnimationDef(),
         "groundslide_left" pairTo AnimationDef(),
@@ -117,6 +120,7 @@ object MegamanAnimationDefs {
         "groundslide_charge_full_left" pairTo AnimationDef(2, 1, CHARGING_FRAME_DUR),
         "groundslide_charge_half" pairTo AnimationDef(3, 1, CHARGING_FRAME_DUR),
         "groundslide_charge_half_left" pairTo AnimationDef(3, 1, CHARGING_FRAME_DUR),
+        "groundslide_axe_throw" pairTo AnimationDef(2, 1, 0.1f, false),
 
         "airdash" pairTo AnimationDef(),
         "airdash_left" pairTo AnimationDef(),
@@ -125,6 +129,7 @@ object MegamanAnimationDefs {
         "airdash_charge_full_left" pairTo AnimationDef(2, 1, CHARGING_FRAME_DUR),
         "airdash_charge_half" pairTo AnimationDef(3, 1, CHARGING_FRAME_DUR),
         "airdash_charge_half_left" pairTo AnimationDef(3, 1, CHARGING_FRAME_DUR),
+        "airdash_axe_throw" pairTo AnimationDef(2, 1, 0.1f, false),
 
         "crouch" pairTo AnimationDef(),
         "crouch_shoot" pairTo AnimationDef(),

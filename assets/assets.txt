@@ -913,14 +913,20 @@ sprites/frames/Megaman_v2_Axe/stand.png
 sprites/frames/Megaman_v2_Axe/jump.png
 sprites/frames/Megaman_v2_Axe/airdash.png
 sprites/frames/Megaman_v2_Axe/swim.png
+sprites/frames/Megaman_v2_Axe/airdash_axe_throw.png
 sprites/frames/Megaman_v2_Axe/stand_axe_throw.png
 sprites/frames/Megaman_v2_Axe/beam.png
 sprites/frames/Megaman_v2_Axe/frozen_push.png
+sprites/frames/Megaman_v2_Axe/airdash_throw_axe.png
 sprites/frames/Megaman_v2_Axe/frozen.png
+sprites/frames/Megaman_v2_Axe/wallslide_axe_throw.png
+sprites/frames/Megaman_v2_Axe/groundslide_axe_throw.png
+sprites/frames/Megaman_v2_Axe/jump_axe_throw.png
 sprites/frames/Megaman_v2_Axe/climb_still.png
 sprites/frames/Megaman_v2_Axe/slip.png
 sprites/frames/Megaman_v2_Axe/run.png
 sprites/frames/Megaman_v2_Axe/spawn.png
+sprites/frames/Megaman_v2_Axe/climb_still_throw_axe.png
 sprites/frames/Megaman_v2_Axe/groundslide.png
 sprites/frames/Projectiles_old/SpitFireball_OLD.png
 sprites/frames/Hazards1/UnderwaterFan/gray.png
@@ -932,7 +938,6 @@ sprites/frames/Hazards1/LavaBeamer/On.png
 sprites/frames/Hazards1/SaucerRay.png
 sprites/frames/Hazards1/IceCubeMaker.png
 sprites/frames/Hazards1/Flame.png
-sprites/frames/Hazards1/CrystalSpikes.png
 sprites/frames/Hazards1/SpikeTeeth.png
 sprites/frames/Hazards1/PreciousCubeChute/bottom.png
 sprites/frames/Hazards1/PreciousCubeChute/top.png
@@ -975,6 +980,7 @@ sprites/frames/Hazards1/LavaRiver/top.png
 sprites/frames/Hazards1/LavaRiver/fall_start.png
 sprites/frames/Hazards1/LavaRiver/top_frozen.png
 sprites/frames/Hazards1/LavaRiver/fall_start_frozen.png
+sprites/frames/Hazards1/PreciousSpike.png
 sprites/frames/Hazards1/CeilingCrusher/Bar.png
 sprites/frames/Hazards1/CeilingCrusher/Crusher.png
 sprites/frames/Hazards1/Spike7.png
@@ -2131,6 +2137,8 @@ sprites/frames/Enemies1/PreciousGemCanon/straight.png
 sprites/frames/Enemies1/PreciousGemCanon/up.png
 sprites/frames/Enemies1/PreciousGemCanon/up_shoot.png
 sprites/frames/Enemies1/PreciousGemCanon/straight_shoot.png
+sprites/frames/Enemies1/Apachelan/fly.png
+sprites/frames/Enemies1/Apachelan/shoot.png
 sprites/frames/Enemies1/GapingFish/Chomping.png
 sprites/frames/Enemies1/GapingFish/Swimming.png
 sprites/frames/Enemies1/GapingFish/Gaping.png
@@ -3123,6 +3131,7 @@ sprites/piskel/SawBeam.piskel
 sprites/piskel/Colors.piskel
 sprites/piskel/TNT.piskel
 sprites/piskel/Shotman.piskel
+sprites/piskel/Apachelan.piskel
 sprites/piskel/CarriCarry.piskel
 sprites/piskel/Gachappan.piskel
 sprites/piskel/LargeSpikes.piskel

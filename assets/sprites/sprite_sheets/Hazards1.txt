@@ -59,13 +59,6 @@ CeilingCrusher/Crusher
   orig: 32, 32
   offset: 0, 0
   index: -1
-CrystalSpikes
-  rotate: false
-  xy: 144, 272
-  size: 64, 128
-  orig: 64, 128
-  offset: 0, 0
-  index: -1
 DeadlyLeaf
   rotate: false
   xy: 320, 112
@@ -400,6 +393,13 @@ PreciousCubeChute/top
   xy: 372, 0
   size: 48, 16
   orig: 48, 16
+  offset: 0, 0
+  index: -1
+PreciousSpike
+  rotate: false
+  xy: 144, 272
+  size: 64, 128
+  orig: 64, 128
   offset: 0, 0
   index: -1
 SaucerRay

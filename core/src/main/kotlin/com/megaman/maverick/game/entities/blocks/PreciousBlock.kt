@@ -57,11 +57,17 @@ class PreciousBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IA
 
         super.onSpawn(spawnProps)
 
+        val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        body.set(bounds)
+
+        val animIndex = spawnProps.getOrDefault("${ConstKeys.ANIMATION}_${ConstKeys.INDEX}", null) as Int?
+
+        val rows = ceil(bounds.getHeight() / ConstVals.PPM).toInt()
+        val cols = ceil(bounds.getWidth() / ConstVals.PPM).toInt()
+        defineDrawables(rows, cols, animIndex)
+
         if (spawnProps.containsKey("${ConstKeys.TRAJECTORY}_${ConstKeys.DEF}")) {
             val trajectoryDefinition = spawnProps.get("${ConstKeys.TRAJECTORY}_${ConstKeys.DEF}", String::class)!!
-
-            val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-            body.set(bounds)
 
             spawn = bounds.getCenter(false)
 
@@ -73,10 +79,6 @@ class PreciousBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IA
                     function = { value, _ -> body.physics.velocity.set(value) }
                 )
             )
-
-            val rows = ceil(bounds.getHeight() / ConstVals.PPM).toInt()
-            val cols = ceil(bounds.getWidth() / ConstVals.PPM).toInt()
-            defineDrawables(rows, cols)
         }
     }
 
@@ -99,7 +101,7 @@ class PreciousBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IA
         body.getBounds().splitByCellSize(ConstVals.PPM.toFloat(), cells)
     })
 
-    private fun defineDrawables(rows: Int, cols: Int) {
+    private fun defineDrawables(rows: Int, cols: Int, animIndex: Int? = null) {
         for (row in 0 until rows) for (col in 0 until cols) {
             val key = "${row}_${col}"
 
@@ -119,7 +121,7 @@ class PreciousBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IA
             }
 
             val animation = Animation(region!!, 3, 1, 0.2f, true)
-            animation.setIndex((row + col) % 3)
+            animation.setIndex(animIndex ?: ((row + col) % 3))
 
             val animator = Animator(animation)
             putAnimator(key, sprite, animator)

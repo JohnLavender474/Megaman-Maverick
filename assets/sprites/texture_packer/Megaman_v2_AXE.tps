@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.6.2</string>
+        <string>7.9.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -199,9 +199,15 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Megaman_v2_Axe/airdash_axe_throw.png</key>
+            <key type="filename">../frames/Megaman_v2_Axe/airdash_throw_axe.png</key>
             <key type="filename">../frames/Megaman_v2_Axe/climb.png</key>
+            <key type="filename">../frames/Megaman_v2_Axe/climb_still_throw_axe.png</key>
+            <key type="filename">../frames/Megaman_v2_Axe/groundslide_axe_throw.png</key>
+            <key type="filename">../frames/Megaman_v2_Axe/jump_axe_throw.png</key>
             <key type="filename">../frames/Megaman_v2_Axe/stand.png</key>
             <key type="filename">../frames/Megaman_v2_Axe/stunned.png</key>
+            <key type="filename">../frames/Megaman_v2_Axe/wallslide_axe_throw.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -297,6 +303,12 @@
         <key>normalMapSheetFileName</key>
         <filename></filename>
         <key>exporterProperties</key>
-        <map type="ExporterProperties"/>
+        <map type="ExporterProperties">
+            <key>libgdx::legacy-output</key>
+            <struct type="ExporterProperty">
+                <key>value</key>
+                <string>true</string>
+            </struct>
+        </map>
     </struct>
 </data>

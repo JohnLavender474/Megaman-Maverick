@@ -1,13 +1,27 @@
 Megaman_v2_AXE.png
-size: 500, 294
+size: 450, 344
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Nearest, Nearest
 repeat: none
 airdash
   rotate: false
   xy: 1, 1
   size: 48, 48
   orig: 48, 48
+  offset: 0, 0
+  index: -1
+airdash_axe_throw
+  rotate: false
+  xy: 51, 101
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+airdash_throw_axe
+  rotate: false
+  xy: 101, 101
+  size: 48, 96
+  orig: 48, 96
   offset: 0, 0
   index: -1
 beam
@@ -19,7 +33,7 @@ beam
   index: -1
 climb
   rotate: false
-  xy: 439, 51
+  xy: 151, 101
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -38,6 +52,13 @@ climb_still
   orig: 48, 48
   offset: 0, 0
   index: -1
+climb_still_throw_axe
+  rotate: false
+  xy: 201, 101
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
 crouch
   rotate: false
   xy: 201, 1
@@ -47,14 +68,14 @@ crouch
   index: -1
 crouch_axe_throw
   rotate: false
-  xy: 1, 149
+  xy: 251, 101
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 damaged
   rotate: false
-  xy: 447, 149
+  xy: 399, 199
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -68,7 +89,7 @@ frozen
   index: -1
 frozen_push
   rotate: false
-  xy: 51, 149
+  xy: 301, 101
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -80,6 +101,13 @@ groundslide
   orig: 48, 48
   offset: 0, 0
   index: -1
+groundslide_axe_throw
+  rotate: false
+  xy: 399, 101
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
 jump
   rotate: false
   xy: 351, 1
@@ -87,9 +115,16 @@ jump
   orig: 48, 48
   offset: 0, 0
   index: -1
+jump_axe_throw
+  rotate: false
+  xy: 1, 199
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
 run
   rotate: false
-  xy: 149, 149
+  xy: 51, 199
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -103,57 +138,64 @@ run_trans
   index: -1
 slip
   rotate: false
-  xy: 451, 1
+  xy: 1, 51
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 slip_axe_throw
   rotate: false
-  xy: 247, 149
+  xy: 149, 199
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 spawn
   rotate: false
-  xy: 1, 51
+  xy: 51, 51
   size: 336, 48
   orig: 336, 48
   offset: 0, 0
   index: -1
 stand
   rotate: false
-  xy: 297, 149
+  xy: 199, 199
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 stand_axe_throw
   rotate: false
-  xy: 347, 149
+  xy: 249, 199
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 stunned
   rotate: false
-  xy: 397, 149
+  xy: 299, 199
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 swim
   rotate: false
-  xy: 339, 51
+  xy: 389, 51
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 wallslide
   rotate: false
-  xy: 389, 51
+  xy: 1, 101
   size: 48, 48
   orig: 48, 48
+  offset: 0, 0
+  index: -1
+wallslide_axe_throw
+  rotate: false
+  xy: 349, 199
+  size: 48, 96
+  orig: 48, 96
   offset: 0, 0
   index: -1

@@ -120,8 +120,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
     internal var frozenPushTimer = Timer(MegamanValues.FROZEN_PUSH_DUR)
 
     var canMove = true
-        get() = field && !stunned && !damaged && !frozen &&
-            (currentWeapon != MegamanWeapon.AXE_SWINGER || !shooting)
+        get() = field && !stunned && !damaged && !frozen
 
     internal val stunTimer = Timer(MegamanValues.STUN_DUR)
     internal val damageRecoveryTimer = Timer(MegamanValues.DAMAGE_RECOVERY_TIME).setToEnd()

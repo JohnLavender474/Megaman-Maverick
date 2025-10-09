@@ -308,7 +308,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             normalCost = { 6 },
             halfChargedCost = { 12 },
             fullyChargedCost = { 12 },
-            chargeable = chargeable@{ it ->
+            chargeable = chargeable@{
                 return@chargeable false
                 // TODO:
                 /*
@@ -376,7 +376,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             cooldown = Timer(0.5f),
             normalCost = { 2 },
             chargeable = { false },
-            canFireWeapon = { _, _ -> megaman.body.isSensing(BodySense.FEET_ON_GROUND) }
+            canFireWeapon = { _, _ -> true }
         )
         MegamanWeapon.NEEDLE_SPIN -> object : MegaWeaponHandler(
             cooldown = Timer(0.25f),

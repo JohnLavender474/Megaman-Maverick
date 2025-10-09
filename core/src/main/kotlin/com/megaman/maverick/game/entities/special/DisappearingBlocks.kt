@@ -42,13 +42,16 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
     private lateinit var loop: Loop<String>
 
     override fun init() {
-        addComponent(defineUpdatablesComponent())
+        GameLogger.debug(TAG, "init()")
+        super.init()
         addComponent(AudioComponent())
         addComponent(defineCullablesComponent())
+        addComponent(defineUpdatablesComponent())
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ bounds }), debug = true))
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
