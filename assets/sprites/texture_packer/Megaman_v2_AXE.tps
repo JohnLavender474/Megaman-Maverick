@@ -207,6 +207,7 @@
             <key type="filename">../frames/Megaman_v2_Axe/jump_axe_throw.png</key>
             <key type="filename">../frames/Megaman_v2_Axe/stand.png</key>
             <key type="filename">../frames/Megaman_v2_Axe/stunned.png</key>
+            <key type="filename">../frames/Megaman_v2_Axe/swim_axe_throw.png</key>
             <key type="filename">../frames/Megaman_v2_Axe/wallslide_axe_throw.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -242,6 +243,7 @@
             </struct>
             <key type="filename">../frames/Megaman_v2_Axe/frozen_push.png</key>
             <key type="filename">../frames/Megaman_v2_Axe/run.png</key>
+            <key type="filename">../frames/Megaman_v2_Axe/run_axe_throw.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

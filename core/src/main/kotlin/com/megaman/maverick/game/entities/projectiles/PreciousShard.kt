@@ -44,7 +44,7 @@ class PreciousShard(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         private const val CULL_TIME = 0.5f
 
-        private const val SPAWN_NO_COLLISION_DUR = 0.1f
+        private const val SPAWN_NO_COLLISION_DUR = 0.05f
 
         private val regions = ObjectMap<String, TextureRegion>()
     }

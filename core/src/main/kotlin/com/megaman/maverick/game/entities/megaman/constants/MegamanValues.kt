@@ -58,7 +58,7 @@ object MegamanValues {
     const val SHIELD_GEM_MAX_DIST = 10f
     const val SHIELD_GEM_LERP = 10f
 
-    const val AXE_IMPULSE_X = 6f
+    const val AXE_IMPULSE_X = 4f
     const val AXE_IMPULSE_Y = 12f
 
     const val GROUND_SLIDE_COOLDOWN = 0.075f

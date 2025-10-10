@@ -31,6 +31,7 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setBounds
 import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.*
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
@@ -45,7 +46,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.ILaserEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -182,7 +182,7 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         actualLine.reset()
     }
 
-    override fun isLaserIgnoring(block: Block) = ignoreIds.contains(block.mapObjectId)
+    override fun isLaserIgnoring(entity: IGameEntity) = ignoreIds.contains((entity as MegaGameEntity).mapObjectId)
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         when {

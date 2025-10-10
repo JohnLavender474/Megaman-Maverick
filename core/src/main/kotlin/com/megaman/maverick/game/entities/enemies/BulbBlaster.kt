@@ -43,7 +43,6 @@ import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
@@ -73,6 +72,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), ILightSource
     private var light = false
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (lightRegion == null || darkRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             lightRegion = atlas.findRegion("$TAG/Light")
@@ -121,8 +121,11 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), ILightSource
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+
         game.eventsMan.removeListener(this)
+
         clearMotionDefinitions()
+
         light = false
         lightSourceKeys.clear()
     }
@@ -158,7 +161,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), ILightSource
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.75f * ConstVals.PPM))
         body.addFixture(damagerFixture)
 
-        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.BODY))
+        return BodyComponentCreator.create(this, body)
     }
 
     override fun defineSpritesComponent(): SpritesComponent {

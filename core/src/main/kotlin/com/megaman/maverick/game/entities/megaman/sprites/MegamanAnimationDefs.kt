@@ -80,6 +80,7 @@ object MegamanAnimationDefs {
         "run_charge_half_left" pairTo AnimationDef(2, 2, DEFAULT_FRAME_DUR),
         "run_shoot" pairTo AnimationDef(2, 2, DEFAULT_FRAME_DUR),
         "run_shoot_left" pairTo AnimationDef(2, 2, DEFAULT_FRAME_DUR),
+        "run_axe_throw" pairTo AnimationDef(2, 2, DEFAULT_FRAME_DUR, false),
 
         "jump" pairTo AnimationDef(),
         "jump_left" pairTo AnimationDef(),
@@ -101,6 +102,7 @@ object MegamanAnimationDefs {
         "swim_charge_half_left" pairTo AnimationDef(3, 1, CHARGING_FRAME_DUR),
         "swim_shoot" pairTo AnimationDef(),
         "swim_shoot_left" pairTo AnimationDef(),
+        "swim_axe_throw" pairTo AnimationDef(2, 1, 0.1f, false),
 
         "wallslide" pairTo AnimationDef(),
         "wallslide_left" pairTo AnimationDef(),

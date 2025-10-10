@@ -572,6 +572,7 @@ sprites/frames/Decorations1/Smoke/1.png
 sprites/frames/Decorations1/Smoke/2_gray.png
 sprites/frames/Decorations1/Smoke/2.png
 sprites/frames/Decorations1/DesertTornado.png
+sprites/frames/Decorations1/WhiteBurst.png
 sprites/frames/Decorations1/DrippingToxicGoop.png
 sprites/frames/Decorations1/MuzzleFlash.png
 sprites/frames/Decorations1/GravitySwitchAura.png
@@ -912,6 +913,7 @@ sprites/frames/Megaman_v2_Axe/stunned.png
 sprites/frames/Megaman_v2_Axe/stand.png
 sprites/frames/Megaman_v2_Axe/jump.png
 sprites/frames/Megaman_v2_Axe/airdash.png
+sprites/frames/Megaman_v2_Axe/run_axe_throw.png
 sprites/frames/Megaman_v2_Axe/swim.png
 sprites/frames/Megaman_v2_Axe/airdash_axe_throw.png
 sprites/frames/Megaman_v2_Axe/stand_axe_throw.png
@@ -924,6 +926,7 @@ sprites/frames/Megaman_v2_Axe/groundslide_axe_throw.png
 sprites/frames/Megaman_v2_Axe/jump_axe_throw.png
 sprites/frames/Megaman_v2_Axe/climb_still.png
 sprites/frames/Megaman_v2_Axe/slip.png
+sprites/frames/Megaman_v2_Axe/swim_axe_throw.png
 sprites/frames/Megaman_v2_Axe/run.png
 sprites/frames/Megaman_v2_Axe/spawn.png
 sprites/frames/Megaman_v2_Axe/climb_still_throw_axe.png

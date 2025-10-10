@@ -10,7 +10,6 @@ class HazardsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
 
     companion object {
         const val SAW = "Saw"
-        const val LASER_BEAMER = "LaserBeamer"
         const val SWINGING_AXE = "SwingingAxe"
         const val SPIKE = "Spike"
         const val BOLT = "Bolt"
@@ -43,7 +42,6 @@ class HazardsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
 
     override fun init() {
         pools.put(SAW, GameEntityPoolCreator.create { Saw(game) })
-        pools.put(LASER_BEAMER, GameEntityPoolCreator.create { LaserBeamer(game) })
         pools.put(SWINGING_AXE, GameEntityPoolCreator.create { SwingingAxe(game) })
         pools.put(SPIKE, GameEntityPoolCreator.create { Spike(game) })
         pools.put(BOLT, GameEntityPoolCreator.create { Bolt(game) })

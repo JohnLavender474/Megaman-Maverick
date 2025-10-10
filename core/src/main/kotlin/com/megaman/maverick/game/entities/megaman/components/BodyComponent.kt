@@ -196,7 +196,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     val axeShieldFixture = Fixture(
         body,
         FixtureType.SHIELD,
-        GameRectangle().setHeight(ConstVals.PPM.toFloat())
+        GameRectangle().setHeight(MEGAMAN_BODY_HEIGHT * ConstVals.PPM)
     )
     axeShieldFixture.offsetFromBodyAttachment.y = -0.1f * ConstVals.PPM
     body.addFixture(axeShieldFixture)

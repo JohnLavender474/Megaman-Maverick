@@ -735,6 +735,7 @@ class MegaContactListener(
         // laser, block
         else if (contact.fixturesMatch(FixtureType.LASER, FixtureType.BLOCK)) {
             printDebugLog(contact, "beginContact(): Laser-Block, contact=$contact")
+
             val (laserFixture, blockFixture) = contact.getFixturesInOrder(FixtureType.LASER, FixtureType.BLOCK, out)!!
 
             val laserEntity = laserFixture.getEntity() as ILaserEntity
@@ -750,6 +751,8 @@ class MegaContactListener(
                     intersections.addAll(tempVec2Set)
 
                 tempVec2Set.clear()
+
+                laserEntity.hitBlock(blockFixture, laserLine, blockRectangle)
             }
         }
 
@@ -759,12 +762,36 @@ class MegaContactListener(
 
             val (laserFixture, bodyFixture) = contact.getFixturesInOrder(FixtureType.LASER, FixtureType.BODY, out)!!
 
-            val laserEntity = laserFixture.getEntity()
+            val laserEntity = laserFixture.getEntity() as ILaserEntity
             val bodyEntity = bodyFixture.getEntity() as IBodyEntity
 
-            if (laserEntity != bodyEntity) {
+            if (laserEntity != bodyEntity && !laserEntity.isLaserIgnoring(bodyEntity)) {
                 if (bodyFixture.hasHitByLaserReceiver()) bodyFixture.getHitByLaser(laserFixture, ProcessState.BEGIN)
                 if (laserFixture.hasHitByBodyReceiver()) laserFixture.getHitByBody(bodyEntity, ProcessState.BEGIN)
+            }
+        }
+
+        // laser, shield
+        else if (contact.fixturesMatch(FixtureType.LASER, FixtureType.SHIELD)) {
+            printDebugLog(contact, "beginContact(): Laser-Shield, contact=$contact")
+
+            val (laserFixture, shieldFixture) = contact.getFixturesInOrder(FixtureType.LASER, FixtureType.SHIELD, out)!!
+
+            val laserEntity = laserFixture.getEntity() as ILaserEntity
+            val shieldEntity = shieldFixture.getEntity()
+
+            if (laserEntity != shieldEntity && !laserEntity.isLaserIgnoring(shieldEntity)) {
+                val shieldRectangle = shieldFixture.getShape().getBoundingRectangle()
+                val laserLine = laserFixture.getShape() as GameLine
+
+                val intersections = laserFixture.getProperty(ConstKeys.COLLECTION) as MutableCollection<Vector2>
+
+                if (ShapeUtils.intersectRectangleAndLine(shieldRectangle, laserLine, tempVec2Set))
+                    intersections.addAll(tempVec2Set)
+
+                tempVec2Set.clear()
+
+                laserEntity.hitShield(shieldFixture, laserLine, shieldRectangle)
             }
         }
     }
@@ -1142,14 +1169,15 @@ class MegaContactListener(
 
         // laser, block
         else if (contact.fixturesMatch(FixtureType.LASER, FixtureType.BLOCK)) {
-            printDebugLog(contact, "continueContact(): Laser-Block, contact=$contact")
+            printDebugLog(contact, "beginContact(): Laser-Block, contact=$contact")
+
             val (laserFixture, blockFixture) = contact.getFixturesInOrder(FixtureType.LASER, FixtureType.BLOCK, out)!!
 
             val laserEntity = laserFixture.getEntity() as ILaserEntity
             val blockEntity = blockFixture.getEntity() as Block
 
             if (laserEntity != blockEntity && !laserEntity.isLaserIgnoring(blockEntity)) {
-                val blockRectangle = blockFixture.getShape() as GameRectangle
+                val blockRectangle = blockFixture.getShape().getBoundingRectangle()
                 val laserLine = laserFixture.getShape() as GameLine
 
                 val intersections = laserFixture.getProperty(ConstKeys.COLLECTION) as MutableCollection<Vector2>
@@ -1158,21 +1186,47 @@ class MegaContactListener(
                     intersections.addAll(tempVec2Set)
 
                 tempVec2Set.clear()
+
+                laserEntity.hitBlock(blockFixture, laserLine, blockRectangle)
             }
         }
 
         // laser, body
         else if (contact.fixturesMatch(FixtureType.LASER, FixtureType.BODY)) {
-            printDebugLog(contact, "continueContact(): Laser-Body, contact=$contact")
+            printDebugLog(contact, "beginContact(): Laser-Body, contact=$contact")
 
             val (laserFixture, bodyFixture) = contact.getFixturesInOrder(FixtureType.LASER, FixtureType.BODY, out)!!
 
-            val laserEntity = laserFixture.getEntity()
+            val laserEntity = laserFixture.getEntity() as ILaserEntity
             val bodyEntity = bodyFixture.getEntity() as IBodyEntity
 
-            if (laserEntity != bodyEntity) {
+            if (laserEntity != bodyEntity && !laserEntity.isLaserIgnoring(bodyEntity)) {
                 if (bodyFixture.hasHitByLaserReceiver()) bodyFixture.getHitByLaser(laserFixture, ProcessState.CONTINUE)
                 if (laserFixture.hasHitByBodyReceiver()) laserFixture.getHitByBody(bodyEntity, ProcessState.CONTINUE)
+            }
+        }
+
+        // laser, shield
+        else if (contact.fixturesMatch(FixtureType.LASER, FixtureType.SHIELD)) {
+            printDebugLog(contact, "beginContact(): Laser-Shield, contact=$contact")
+
+            val (laserFixture, shieldFixture) = contact.getFixturesInOrder(FixtureType.LASER, FixtureType.SHIELD, out)!!
+
+            val laserEntity = laserFixture.getEntity() as ILaserEntity
+            val shieldEntity = shieldFixture.getEntity()
+
+            if (laserEntity != shieldEntity && !laserEntity.isLaserIgnoring(shieldEntity)) {
+                val shieldRectangle = shieldFixture.getShape().getBoundingRectangle()
+                val laserLine = laserFixture.getShape() as GameLine
+
+                val intersections = laserFixture.getProperty(ConstKeys.COLLECTION) as MutableCollection<Vector2>
+
+                if (ShapeUtils.intersectRectangleAndLine(shieldRectangle, laserLine, tempVec2Set))
+                    intersections.addAll(tempVec2Set)
+
+                tempVec2Set.clear()
+
+                laserEntity.hitShield(shieldFixture, laserLine, shieldRectangle)
             }
         }
 
