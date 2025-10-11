@@ -53,6 +53,7 @@ import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.hazards.TubeBeamerV2
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.ReactorManProjectile
+import com.megaman.maverick.game.entities.projectiles.SlashWave
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -195,8 +196,8 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         CHANGE_FACING_DELAY_KEY pairTo Timer(CHANGE_FACING_DELAY)
     )
 
-    private var standCycles = -1
     private var jumpCycles = -1
+    private var standCycles = -1
     private var cyclesSinceRun = -1
 
     private val projectiles = Array<ReactorManProjectile>()
@@ -228,7 +229,8 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
         stateMachine = buildStateMachine()
 
-        damageOverrides.put(Axe::class, dmgNeg(4))
+        damageOverrides.put(Axe::class, dmgNeg(3))
+        damageOverrides.put(SlashWave::class, dmgNeg(3))
         damageOverrides.put(ReactorManProjectile::class, dmgNeg(3))
     }
 
@@ -282,7 +284,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     override fun canBeDamagedBy(damager: IDamager): Boolean {
         if (!super.canBeDamagedBy(damager)) return false
         if (damager is ReactorManProjectile && damager.owner != megaman) return false
-        if (damager is Axe) return true
+        if (damager is SlashWave) return true
         return !isShielded()
     }
 
@@ -592,7 +594,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 otherTimers[STAND_THROW_DELAY_KEY].reset()
             }
             ReactorManState.STAND_THROW_TWO -> {
-                (0 until 2).forEach { spawnProjectile() }
+                (0 until 2).forEach { _ -> spawnProjectile() }
                 otherTimers[STAND_THROW_DELAY_KEY].reset()
             }
             ReactorManState.GIGA_RISE -> {

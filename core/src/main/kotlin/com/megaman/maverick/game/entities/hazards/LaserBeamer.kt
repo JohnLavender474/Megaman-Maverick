@@ -7,10 +7,10 @@ import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -41,6 +41,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -54,20 +55,24 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getFirstLocalPoint
 import com.megaman.maverick.game.utils.extensions.getOrigin
 import com.megaman.maverick.game.utils.extensions.getSecondLocalPoint
+import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 
 class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IBodyEntity,
-    ICullableEntity, IAudioEntity, IEventListener {
+    ICullableEntity, IAudioEntity, IEventListener, IDirectional {
 
     companion object {
         const val TAG = "LaserBeamer"
 
-        private const val DEFAULT_SPEED = 2f
+        private const val DEFAULT_SPEED = 1.75f
+        private const val DEFAULT_HARD_SPEED = 2.25f
+
         private const val DEFAULT_MAX_RADIUS = 20f
 
-        private const val SWITCH_TIME = 1f
+        private const val DEFAULT_SWITCH_TIME = 1f
+        private const val DEFAULT_HARD_SWITCH_TIME = 0.75f
 
         private const val MIN_DEGREES = 200f
         private const val MAX_DEGREES = 340f
@@ -76,11 +81,18 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         private var region: TextureRegion? = null
     }
 
+    override var direction: Direction
+        get() = body.direction
+        set(value) {
+            body.direction = value
+        }
+
     override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_DONE_DYIN)
 
     private var laser: Laser? = null
+    private val switchTimer = Timer()
+
     private lateinit var spawnRoom: String
-    private val switchTimer = Timer(SWITCH_TIME)
     private lateinit var rotatingLine: RotatingLine
 
     private var clockwise = false
@@ -105,17 +117,28 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
         game.eventsMan.addListener(this)
 
+        direction = Direction.valueOf(
+            spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase()
+        )
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
+        val hardMode = game.state.getDifficultyMode() == DifficultyMode.HARD
+
         val maxRadius = spawnProps.getOrDefault(ConstKeys.RADIUS, DEFAULT_MAX_RADIUS, Float::class) * ConstVals.PPM
-        speed = spawnProps.getOrDefault(ConstKeys.SPEED, DEFAULT_SPEED, Float::class)
-        rotatingLine = RotatingLine(spawn, maxRadius, speed * ConstVals.PPM, INIT_DEGREES)
+        speed = spawnProps.getOrDefault(
+            ConstKeys.SPEED, if (hardMode) DEFAULT_HARD_SPEED else DEFAULT_SPEED, Float::class
+        )
+        rotatingLine = RotatingLine(spawn, maxRadius, speed * ConstVals.PPM, INIT_DEGREES + direction.rotation)
         rotatingLine.line.drawingColor = Color.ORANGE
 
         spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
 
-        switchTimer.reset()
+        val switchDur = spawnProps.getOrDefault(
+            ConstKeys.SWITCH, if (hardMode) DEFAULT_HARD_SWITCH_TIME else DEFAULT_SWITCH_TIME, Float::class
+        )
+        switchTimer.resetDuration(switchDur)
 
         beaming = false
 
@@ -184,8 +207,17 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite(region!!).also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
         .updatable { _, sprite ->
-            sprite.setPosition(rotatingLine.getOrigin(), Position.BOTTOM_CENTER)
-            sprite.translateY(-0.1f * ConstVals.PPM)
+            val position = DirectionPositionMapper.getPosition(direction).opposite()
+            sprite.setPosition(rotatingLine.getOrigin(), position)
+
+            when (direction) {
+                Direction.UP -> sprite.translateY(-0.1f * ConstVals.PPM)
+                // Direction.RIGHT -> sprite.translateX(-2f * ConstVals.PPM)
+                else -> {}
+            }
+
+            sprite.setOriginCenter()
+            sprite.rotation = direction.rotation
         }
         .build()
 
@@ -217,11 +249,11 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
         rotatingLine.update(delta)
 
-        if (clockwise && rotatingLine.degrees <= MIN_DEGREES) {
-            rotatingLine.degrees = MIN_DEGREES
+        if (clockwise && rotatingLine.degrees <= MIN_DEGREES + direction.rotation) {
+            rotatingLine.degrees = MIN_DEGREES + direction.rotation
             switchTimer.reset()
-        } else if (!clockwise && rotatingLine.degrees >= MAX_DEGREES) {
-            rotatingLine.degrees = MAX_DEGREES
+        } else if (!clockwise && rotatingLine.degrees >= MAX_DEGREES + direction.rotation) {
+            rotatingLine.degrees = MAX_DEGREES + direction.rotation
             switchTimer.reset()
         }
     })

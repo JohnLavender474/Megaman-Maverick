@@ -39,7 +39,10 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.blocks.PreciousBlock
-import com.megaman.maverick.game.entities.contracts.*
+import com.megaman.maverick.game.entities.contracts.IHazard
+import com.megaman.maverick.game.entities.contracts.ILaserEntity
+import com.megaman.maverick.game.entities.contracts.IOwnable
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.decorations.WhiteBurst
 import com.megaman.maverick.game.entities.enemies.PreciousGemCanon
 import com.megaman.maverick.game.entities.explosions.AsteroidExplosion
@@ -266,11 +269,13 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
                     ConstKeys.SIZE pairTo size,
                     ConstKeys.COLOR pairTo color,
                     ConstKeys.IMPULSE pairTo impulse,
-                    ConstKeys.POSITION pairTo shardsPosition
+                    ConstKeys.POSITION pairTo shardsPosition,
+                    "${ConstKeys.COLLIDE}_${ConstKeys.DELAY}" pairTo false,
                 )
             )
 
-            if (overlapsGameCamera()) requestToPlaySound(SoundAsset.DINK_SOUND, false)
+            if (game.getGameCamera().getRotatedBounds().contains(shardsPosition))
+                requestToPlaySound(SoundAsset.DINK_SOUND, false)
 
             laserShardsTimer.reset()
         }
@@ -317,7 +322,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
             if (on) {
                 val origin = getOrigin()
-                
+
                 damager.setOrigin(origin)
                 damager.setFirstLocalPoint(origin)
 
@@ -504,10 +509,10 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
         if (
             entity.isAny(
-                PreciousGemCanon::class,
+                Axe::class,
                 PreciousShard::class,
                 PreciousGemBomb::class,
-                Axe::class
+                PreciousGemCanon::class,
             )
         ) return true
 

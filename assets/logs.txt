@@ -1,1 +1,41 @@
-===== SESSION STARTED: 2025-10-11T12:19:05.289159462 =====
+===== SESSION STARTED: 2025-10-11T14:13:58.749773048 =====
+14:14:35 | DEBUG | PreciousTron | init()
+14:14:35 | DEBUG | PreciousTron | onSpawn(): spawnProps=Properties({
+	[hard_mode_only=true]
+	[bounds=[5024.0,2464.0,32.0,32.0]]
+	[x=5024.0]
+	[height=32.0]
+	[position4=com.badlogic.gdx.maps.objects.RectangleMapObject@4674d90]
+	[id=654]
+	[position1=com.badlogic.gdx.maps.objects.RectangleMapObject@60783105]
+	[name=PreciousTron]
+	[cull_bounds=com.badlogic.gdx.maps.objects.RectangleMapObject@1292071f]
+	[spawn=com.badlogic.gdx.maps.objects.RectangleMapObject@35d5ac51]
+	[position3=com.badlogic.gdx.maps.objects.RectangleMapObject@b606cb6]
+	[y=2464.0]
+	[width=32.0]
+})
+14:14:35 | DEBUG | PreciousTron | onSpawn(): currentPosition=(5040.0,2528.0), positions=[com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$782/0x00007063c434e298@65bdd558, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$782/0x00007063c434e298@1dba4e06, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$782/0x00007063c434e298@4beaf6bd]
+14:14:36 | DEBUG | PreciousTron | onChangeState(): current=FALL, previous=APPEAR
+14:14:36 | DEBUG | PreciousTron | onChangeState(): current=STAND, previous=FALL
+14:14:37 | DEBUG | PreciousTron | onChangeState(): current=SHOOT, previous=STAND
+14:14:37 | DEBUG | PreciousTron | throwGems(): facing=LEFT
+14:14:38 | DEBUG | PreciousTron | onChangeState(): current=DISAPPEAR, previous=SHOOT
+14:14:38 | DEBUG | PreciousTron | onChangeState(): current=APPEAR, previous=DISAPPEAR
+14:14:38 | DEBUG | PreciousTron | setNextPosition(): positionQueue=[(4848.0,2432.0), (5040.0,2528.0), (4848.0,2592.0)]
+14:14:38 | DEBUG | PreciousTron | setNextPosition(): candidates=[(4848.0,2432.0), (4848.0,2592.0), (5040.0,2528.0)]
+14:14:38 | DEBUG | PreciousTron | setNextPosition(): nextPosition=(5040.0,2528.0)
+14:14:39 | DEBUG | PreciousTron | onChangeState(): current=FALL, previous=APPEAR
+14:14:39 | DEBUG | PreciousTron | onChangeState(): current=STAND, previous=FALL
+14:14:40 | DEBUG | PreciousTron | onChangeState(): current=SHOOT, previous=STAND
+14:14:40 | DEBUG | PreciousTron | throwGems(): facing=LEFT
+14:14:41 | DEBUG | PreciousTron | onChangeState(): current=DISAPPEAR, previous=SHOOT
+14:14:42 | DEBUG | PreciousTron | onChangeState(): current=APPEAR, previous=DISAPPEAR
+14:14:42 | DEBUG | PreciousTron | setNextPosition(): positionQueue=[(4848.0,2432.0), (5040.0,2528.0), (4848.0,2592.0)]
+14:14:42 | DEBUG | PreciousTron | setNextPosition(): candidates=[(4848.0,2432.0), (4848.0,2592.0), (5040.0,2528.0)]
+14:14:42 | DEBUG | PreciousTron | setNextPosition(): nextPosition=(5040.0,2528.0)
+14:14:42 | DEBUG | PreciousTron | onChangeState(): current=FALL, previous=APPEAR
+14:14:42 | DEBUG | PreciousTron | onChangeState(): current=STAND, previous=FALL
+14:14:43 | DEBUG | PreciousTron | onChangeState(): current=SHOOT, previous=STAND
+14:14:43 | DEBUG | PreciousTron | throwGems(): facing=LEFT
+14:14:44 | DEBUG | PreciousTron | onDestroy()

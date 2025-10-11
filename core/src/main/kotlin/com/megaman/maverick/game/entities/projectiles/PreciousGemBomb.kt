@@ -31,6 +31,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardColor
 import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardSize
 import com.megaman.maverick.game.utils.AnimationUtils
@@ -158,7 +159,7 @@ class PreciousGemBomb(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         destroy()
 
-        requestToPlaySound(SoundAsset.DINK_SOUND, false)
+        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
 
     override fun defineBodyComponent(): BodyComponent {

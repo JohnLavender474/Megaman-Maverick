@@ -17,7 +17,6 @@ import com.megaman.maverick.game.entities.bosses.BigAssMaverickRobotHand
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.decorations.WhiteBurst
 import com.megaman.maverick.game.entities.hazards.LaserBeamer
 
 class MegamanDamageNegotiator(private val megaman: Megaman) : IDamageNegotiator {
@@ -29,7 +28,6 @@ class MegamanDamageNegotiator(private val megaman: Megaman) : IDamageNegotiator 
             PropellerPlatform.TAG pairTo dmgNeg(1),
             RocketPlatform.TAG pairTo dmgNeg(1),
             LaserBeamer.TAG pairTo dmgNeg(3),
-            WhiteBurst.TAG pairTo dmgNeg(3)
         )
 
         private val entityTypes = objectSetOf(EntityType.ENEMY, EntityType.EXPLOSION)

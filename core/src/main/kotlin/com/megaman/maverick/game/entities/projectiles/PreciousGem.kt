@@ -47,6 +47,7 @@ import com.megaman.maverick.game.entities.blocks.PropellerPlatform
 import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.Disintegration
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.projectiles.PreciousGemBomb.Companion.SHATTER_IMPULSES
@@ -148,8 +149,8 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
         stateIndex = spawnProps.getOrDefault(ConstKeys.STATE, 0, Int::class)
 
-        sizeDelay.reset()
         sizeIndex = 0
+        sizeDelay.reset()
         setSizeByIndex(0)
 
         val pauseDelayDur = spawnProps.getOrDefault(ConstKeys.PAUSE, DEFAULT_PAUSE_DUR, Float::class)
@@ -261,7 +262,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
         destroy()
 
-        requestToPlaySound(SoundAsset.DINK_SOUND, false)
+        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
 
     private fun setSizeByIndex(index: Int) {

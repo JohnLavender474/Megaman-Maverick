@@ -60,10 +60,10 @@ class PreciousTron(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
 
         private const val APPEAR_DUR = 0.4f
         private const val DISAPPEAR_DUR = 0.4f
-        private const val SHOOT_DUR = 1.5f
-        private const val SHOOT_DUR_HARD = 0.75f
-        private const val STAND_DUR = 0.5f
-        private const val STAND_DUR_HARD = 0.25f
+        private const val SHOOT_DUR = 1.75f
+        private const val SHOOT_DUR_HARD = 1.25f
+        private const val STAND_DUR = 0.75f
+        private const val STAND_DUR_HARD = 0.5f
 
         private const val SHOOT_TIME = 0.25f
 

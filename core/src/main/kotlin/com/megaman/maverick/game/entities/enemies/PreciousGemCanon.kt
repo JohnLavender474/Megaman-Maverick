@@ -54,6 +54,8 @@ class PreciousGemCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimat
     companion object {
         const val TAG = "PreciousGemCanon"
 
+        private const val DEFAULT_SPAWN_DELAY = 0.25f
+
         private const val SWITCH_STATE_DELAY = 0.5f
 
         private const val SHOOT_GEM_OFFSET_X = 0.5f
@@ -107,6 +109,8 @@ class PreciousGemCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimat
     private val shooting: Boolean
         get() = !shootAnimTimer.isFinished()
 
+    private val spawnDelayTimer = Timer()
+
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
@@ -136,13 +140,20 @@ class PreciousGemCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimat
         switchStateDelay.reset()
         launchGemsTimer.reset()
         shootGemsTimer.reset()
+
         shootAnimTimer.setToEnd()
+
+        val spawnDelay = spawnProps.getOrDefault(ConstKeys.DELAY, DEFAULT_SPAWN_DELAY, Float::class)
+        spawnDelayTimer.resetDuration(spawnDelay)
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             shootAnimTimer.update(delta)
+
+            spawnDelayTimer.update(delta)
+            if (!spawnDelayTimer.isFinished()) return@add
 
             switchStateDelay.update(delta)
             if (!switchStateDelay.isFinished()) {
@@ -154,8 +165,8 @@ class PreciousGemCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimat
             attackTimer.update(delta)
 
             if (attackTimer.isFinished()) {
-                switchStateDelay.reset()
                 attackTimer.reset()
+                switchStateDelay.reset()
                 canonDirectionLoop.next()
             }
         }

@@ -48,6 +48,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.PreciousGem
 import com.megaman.maverick.game.entities.projectiles.PreciousGem.PreciousGemColor
 import com.megaman.maverick.game.entities.projectiles.PreciousGemCluster
@@ -244,6 +245,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         super.init()
         stateMachine = buildStateMachine()
         addComponent(defineAnimationsComponent())
+        damageOverrides.put(Axe::class, dmgNeg(4))
         damageOverrides.put(SlashWave::class, dmgNeg(2))
     }
 
@@ -280,8 +282,6 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         firstUpdate = true
     }
 
-
-
     override fun triggerDefeat() {
         GameLogger.debug(TAG, "triggerDefeat()")
         super.triggerDefeat()
@@ -309,7 +309,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         val damaged = super.takeDamageFrom(damager)
 
         if (damaged) {
-            if (damager is SlashWave && !stunned) {
+            if (damager is Axe && !stunned) {
                 stunned = true
                 body.physics.velocity.x = 0f
                 damageTimer.resetDuration(STUNNED_DAMAGE_DUR)
@@ -492,7 +492,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
     }
 
-    private fun updateShieldGems(delta: Float) = shieldGems.forEachIndexed { gem, def, index ->
+    private fun updateShieldGems(delta: Float) = shieldGems.forEachIndexed { gem, def, _ ->
         var (angle, distance, released) = def
 
         angle += SHIELD_GEM_SPIN_SPEED * 360f * delta
