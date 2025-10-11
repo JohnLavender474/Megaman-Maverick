@@ -190,6 +190,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
             reflectingLaser!!.spawn(
                 props(
                     ConstKeys.OWNER pairTo owner,
+                    ConstKeys.ACTIVE pairTo false,
                     ConstKeys.INDEX pairTo reflectionIndex + 1
                 )
             )
@@ -305,19 +306,19 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.forEachFixture { fixture -> fixture.setActive(on) }
 
-            if (on) {
-                body.set(line.getBoundingRectangle())
-                laserFixture.setShape(line)
-            }
+            body.set(line.getBoundingRectangle())
+            laserFixture.setShape(line)
 
             contacts.clear()
         }
 
         body.postProcess.put(ConstKeys.DEFAULT) {
-            if (on) {
-                val damager = damagerFixture.rawShape as GameLine
+            val damager = damagerFixture.rawShape as GameLine
 
+            if (on) {
                 val origin = getOrigin()
+                
+                damager.setOrigin(origin)
                 damager.setFirstLocalPoint(origin)
 
                 val end = when {
@@ -330,8 +331,9 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
                         if (fixture.getType() == FixtureType.SHIELD) {
                             val shieldEntity = fixture.getEntity()
-                            if (!obstaclesToIgnore.contains(shieldEntity.mapObjectId))
-                                hitShieldFixture = fixture
+
+                            if (!obstaclesToIgnore.contains(shieldEntity.mapObjectId)) hitShieldFixture = fixture
+                            else resetReflectingLaserIfAny()
                         }
 
                         endPoint
@@ -341,7 +343,13 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
                 damager.setSecondLocalPoint(end)
                 burst?.body?.setCenter(end)
                 actualEndPoint.set(end)
-            } else burst?.body?.setCenter(Vector2.Zero)
+            } else {
+                damager.setOrigin(Vector2.Zero)
+                damager.setFirstLocalPoint(Vector2.Zero)
+                damager.setSecondLocalPoint(Vector2.Zero)
+
+                burst?.body?.setCenter(Vector2.Zero)
+            }
         }
 
         return BodyComponentCreator.create(this, body)
