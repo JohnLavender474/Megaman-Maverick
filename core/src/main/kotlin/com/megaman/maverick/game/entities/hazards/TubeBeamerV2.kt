@@ -225,7 +225,6 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
                     }
                 }
             }
-
             else -> if (canBeam) {
                 beamDelay.update(delta)
                 if (beamDelay.isFinished()) startBeaming()
@@ -252,18 +251,19 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        val laserFixture = Fixture(body, FixtureType.LASER, rawLine)
-        laserFixture.putProperty(ConstKeys.COLLECTION, contacts)
-        laserFixture.attachedToBody = false
-        body.addFixture(laserFixture)
-        laserFixture.drawingColor = Color.YELLOW
-        debugShapes.add { laserFixture }
-
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         damagerFixture.attachedToBody = false
         body.addFixture(damagerFixture)
         damagerFixture.drawingColor = Color.RED
         debugShapes.add { damagerFixture }
+
+        val laserFixture = Fixture(body, FixtureType.LASER, rawLine)
+        laserFixture.putProperty(ConstKeys.DAMAGER, damagerFixture)
+        laserFixture.putProperty(ConstKeys.COLLECTION, contacts)
+        laserFixture.attachedToBody = false
+        body.addFixture(laserFixture)
+        laserFixture.drawingColor = Color.YELLOW
+        debugShapes.add { laserFixture }
 
         val updateDamager = {
             damagerFixture.setActive(beaming)

@@ -93,8 +93,7 @@ class PreciousCube(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
             animDefs.keys().forEach { state ->
                 PreciousCubeColor.entries.forEach { color ->
                     val key = "${state}_${color.name.lowercase()}"
-                    val region = atlas.findRegion("$TAG/$key")
-                    if (region == null) throw IllegalStateException("Region is null: $key")
+                    val region = atlas.findRegion("$TAG/$key") ?: throw IllegalStateException("Region is null: $key")
                     regions.put(key, region)
                 }
             }

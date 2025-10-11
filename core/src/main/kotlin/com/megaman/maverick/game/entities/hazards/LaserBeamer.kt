@@ -189,7 +189,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         }
         .build()
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+    private fun defineUpdatablesComponent() = UpdatablesComponent(update@{ delta ->
         if (!beaming) {
             if (megaman.spawned && megaman.ready && overlapsGameCamera()) {
                 beaming = true
@@ -197,14 +197,14 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
                 requestToPlaySound(SoundAsset.LASER_BEAM_SOUND, false)
             } else {
                 laser?.on = false
-                return@UpdatablesComponent
+                return@update
             }
         }
 
         laser?.set(rotatingLine.line)
 
         switchTimer.update(delta)
-        if (!switchTimer.isFinished()) return@UpdatablesComponent
+        if (!switchTimer.isFinished()) return@update
 
         if (switchTimer.isJustFinished()) {
             clockwise = !clockwise

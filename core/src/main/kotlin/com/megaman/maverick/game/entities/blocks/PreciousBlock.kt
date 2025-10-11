@@ -31,7 +31,7 @@ import com.megaman.maverick.game.utils.extensions.getPosition
 import com.megaman.maverick.game.world.body.getBounds
 import kotlin.math.ceil
 
-class PreciousBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity, IMotionEntity {
+class PreciousBlock(game: MegamanMaverickGame) : ShieldBlock(game), ISpritesEntity, IAnimatedEntity, IMotionEntity {
 
     companion object {
         const val TAG = "PreciousBlock"
@@ -95,6 +95,8 @@ class PreciousBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IA
             GameObjectPools.free(this.spawn!!)
             this.spawn = null
         }
+
+        removeMotionDefinition(ConstKeys.TRAJECTORY)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({

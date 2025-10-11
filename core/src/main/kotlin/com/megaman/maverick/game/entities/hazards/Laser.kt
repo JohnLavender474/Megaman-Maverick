@@ -19,6 +19,7 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameLine
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
+import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
@@ -74,14 +75,24 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         private const val LIGHT_SOURCE_RADIANCE = 1.5f
 
         private const val LASER_SPRITE_SIZE = 2f / ConstVals.PPM
+        private const val LASER_SPRITE_ON_DELAY = 0.1f
 
-        private const val MAX_REFLECTIONS = 2
+        // This is how many times a "laser" can be reflected. A "laser" is composed of
+        // one or more Laser instances - but to the player, it appears as though just one.
+        private const val MAX_REFLECTIONS = 1
 
         private var region: TextureRegion? = null
     }
 
     override var owner: LaserBeamer? = null
-    override var on = true
+    override var on: Boolean
+        get() = getOrDefaultProperty(ConstKeys.ON, false, Boolean::class)
+        set(value) {
+            if (isProperty(ConstKeys.ON, value)) return
+
+            putProperty(ConstKeys.ON, value)
+            if (!value) spriteOnDelay.reset()
+        }
 
     private val line = GameLine()
 
@@ -107,6 +118,8 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
     private val reflectionShieldFixtures = OrderedSet<IFixture>()
     private var reflectionIndex = 0
+
+    private val spriteOnDelay = Timer(LASER_SPRITE_ON_DELAY)
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -183,8 +196,8 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
         sprites.clear()
         contacts.clear()
-        obstaclesToIgnore.clear()
         lightSourceKeys.clear()
+        obstaclesToIgnore.clear()
         reflectionShieldFixtures.clear()
 
         laserFixture.setShape(GameLine())
@@ -221,14 +234,15 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
 
-        laserFixture = Fixture(body, FixtureType.LASER, GameLine())
-        laserFixture.putProperty(ConstKeys.COLLECTION, contacts)
-        laserFixture.attachedToBody = false
-        body.addFixture(laserFixture)
-
         damagerFixture = Fixture(body, FixtureType.DAMAGER, GameLine())
         damagerFixture.attachedToBody = false
         body.addFixture(damagerFixture)
+
+        laserFixture = Fixture(body, FixtureType.LASER, GameLine())
+        laserFixture.putProperty(ConstKeys.DAMAGER, damagerFixture)
+        laserFixture.putProperty(ConstKeys.COLLECTION, contacts)
+        laserFixture.attachedToBody = false
+        body.addFixture(laserFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.forEachFixture { fixture -> fixture.setActive(on) }
@@ -260,16 +274,16 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
                 burst?.body?.setCenter(end)
 
                 actualEndPoint.set(end)
-            } else {
-                burst?.body?.setCenter(Vector2.Zero)
-            }
+            } else burst?.body?.setCenter(Vector2.Zero)
         }
 
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent({
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         if (shouldSendLightSourceEvents()) sendLightSourceEvents()
+
+        if (on) spriteOnDelay.update(delta)
 
         if (reflectingLaser != null) {
             if (!reflectionShieldFixtures.isEmpty) {
@@ -384,7 +398,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
                     return@updateFunc
                 }
 
-                sprite.hidden = !on
+                sprite.hidden = !on || !spriteOnDelay.isFinished()
 
                 val p1 = GameObjectPools.fetch(Vector2::class)
                 val p2 = GameObjectPools.fetch(Vector2::class)

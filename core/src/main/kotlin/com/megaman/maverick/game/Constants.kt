@@ -48,6 +48,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val OBSTACLE = "obstacle"
     const val POINT = "point"
     const val AUTO = "auto"
     const val HAS = "has"

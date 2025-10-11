@@ -22,6 +22,7 @@ import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.IFixture
 import com.mega.game.engine.world.contacts.Contact
 import com.mega.game.engine.world.contacts.IContactListener
@@ -634,6 +635,12 @@ class MegaContactListener(
             when (otherFixture.getType()) {
                 FixtureType.BLOCK -> {
                     printDebugLog(contact, "beginContact(): Projectile-Block, contact=$contact")
+
+                    // If the body has a "shield" property set to true, then the projectile should ignore
+                    // the block fixture and instead make contact only with the other body's shield fixture.
+                    val shielded = otherFixture.getBody().isProperty(ConstKeys.SHIELD, true)
+                    if (shielded) return
+
                     projectile1.hitBlock(otherFixture, thisShape, otherShape)
                     (otherFixture.getEntity() as Block).hitByProjectile(projectileFixture)
                 }
@@ -737,6 +744,11 @@ class MegaContactListener(
             printDebugLog(contact, "beginContact(): Laser-Block, contact=$contact")
 
             val (laserFixture, blockFixture) = contact.getFixturesInOrder(FixtureType.LASER, FixtureType.BLOCK, out)!!
+
+            val blockBody = blockFixture.getBody() as Body
+            // If the block's body also has a shield fixture, then ignore the block. This assumes that the
+            // block's shield fixture and block fixture are the same size and there is only one shield fixture.
+            if (blockBody.fixtures.containsKey(FixtureType.SHIELD)) return
 
             val laserEntity = laserFixture.getEntity() as ILaserEntity
             val blockEntity = blockFixture.getEntity() as Block
@@ -1172,6 +1184,11 @@ class MegaContactListener(
             printDebugLog(contact, "beginContact(): Laser-Block, contact=$contact")
 
             val (laserFixture, blockFixture) = contact.getFixturesInOrder(FixtureType.LASER, FixtureType.BLOCK, out)!!
+
+            val blockBody = blockFixture.getBody() as Body
+            // If the block's body also has a shield fixture, then ignore the block. This assumes that the
+            // block's shield fixture and block fixture are the same size and there is only one shield fixture.
+            if (blockBody.fixtures.containsKey(FixtureType.SHIELD)) return
 
             val laserEntity = laserFixture.getEntity() as ILaserEntity
             val blockEntity = blockFixture.getEntity() as Block

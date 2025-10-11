@@ -13,9 +13,7 @@ import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
-import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -85,7 +83,11 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
             else -> 0
         }
     }
-    override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_JUST_DIED)
+    override val eventKeyMask = objectSetOf<Any>(
+        EventType.PLAYER_JUST_DIED,
+        EventType.BEGIN_ROOM_TRANS,
+        EventType.BOSS_DEFEATED
+    )
     override var owner: IGameEntity? = null
     override var size = Size.MEDIUM
 
@@ -106,7 +108,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
     private val pauseDelay = Timer(DEFAULT_PAUSE_DUR)
 
-    private var blockShatter = false
+    private var obstacleShatter = false
     private var ratClawShatter = false
 
     override fun init() {
@@ -156,7 +158,9 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         color = spawnProps.get(ConstKeys.COLOR, PreciousGemColor::class)!!
         speed = spawnProps.getOrDefault(ConstKeys.SPEED, 0f, Float::class)
 
-        blockShatter = spawnProps.getOrDefault("${ConstKeys.BLOCK}_${ConstKeys.SHATTER}", false, Boolean::class)
+        obstacleShatter = spawnProps.getOrDefault(
+            "${ConstKeys.OBSTACLE}_${ConstKeys.SHATTER}", false, Boolean::class
+        )
         ratClawShatter = spawnProps.getOrDefault(
             "${MegamanWeapon.RODENT_CLAWS.name.lowercase()}_${ConstKeys.SHATTER}", true, Boolean::class
         )
@@ -186,6 +190,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
     override fun onEvent(event: Event) {
         GameLogger.debug(TAG, "onEvent(): event=$event")
         if (owner == megaman && event.key == EventType.PLAYER_JUST_DIED) destroy()
+        if (owner != megaman && event.key.equalsAny(EventType.BEGIN_ROOM_TRANS, EventType.BOSS_DEFEATED)) destroy()
     }
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
@@ -201,7 +206,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         )
 
         val projectile = projectileFixture.getEntity()
-        if (projectile is SlashWave) {
+        if (projectile.isAny(SlashWave::class, Axe::class)) {
             val direction = getOverlapPushDirection(thisShape, otherShape)
             explodeAndDie(direction)
         }
@@ -210,7 +215,16 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         GameLogger.debug(TAG, "hitBlock(): blockFixture=$blockFixture, thisShape=$thisShape, otherShape=$otherShape")
 
-        if (blockShatter) {
+        if (obstacleShatter) {
+            val direction = getOverlapPushDirection(thisShape, otherShape)
+            explodeAndDie(direction)
+        }
+    }
+
+    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        GameLogger.debug(TAG, "hitShield(): shieldFixture=$shieldFixture, thisShape=$thisShape, otherShape=$otherShape")
+
+        if (obstacleShatter) {
             val direction = getOverlapPushDirection(thisShape, otherShape)
             explodeAndDie(direction)
         }

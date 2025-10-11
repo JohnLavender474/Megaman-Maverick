@@ -308,7 +308,7 @@ class PreciousTron(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.CULL_TIME pairTo GEM_CULL_TIME,
                 "${ConstKeys.FIRST}_${ConstKeys.TARGET}" pairTo target,
-                "${ConstKeys.BLOCK}_${ConstKeys.SHATTER}" pairTo true
+                "${ConstKeys.OBSTACLE}_${ConstKeys.SHATTER}" pairTo true
             )
         )
 

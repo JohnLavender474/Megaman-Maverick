@@ -78,6 +78,7 @@ class PreciousSpike(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+
         sprites.clear()
         animators.clear()
     }
@@ -132,7 +133,7 @@ class PreciousSpike(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
                 (shape as GameRectangle).set(body)
             }
         }
-        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.DEATH))
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.SHIELD, FixtureType.DEATH))
     }
 
     private fun defineCullablesComponent() = CullablesComponent(
