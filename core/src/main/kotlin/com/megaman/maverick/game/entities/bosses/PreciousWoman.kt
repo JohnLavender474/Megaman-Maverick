@@ -138,7 +138,6 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             PreciousWomanState.GROUNDSLIDE,
             PreciousWomanState.WALLSLIDE,
             PreciousWomanState.AIRPUNCH,
-            PreciousWomanState.JUMP
         )
 
         private const val CAN_SPAWN_SHIELD_GEMS_DELAY = 4f
@@ -196,7 +195,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         get() = !laughTimer.isFinished()
 
     private val throwingTimer = Timer(THROW_GEMS_DUR).addRunnables(
-        TimeMarkedRunnable(THROW_TIME) { throwGems() }.setToRunOnlyWhenJustPassedTime(true)
+        TimeMarkedRunnable(THROW_TIME) { throwHomingGems() }.setToRunOnlyWhenJustPassedTime(true)
     )
     private val throwing: Boolean
         get() = !throwingTimer.isFinished()
@@ -313,6 +312,8 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 stunned = true
                 body.physics.velocity.x = 0f
                 damageTimer.resetDuration(STUNNED_DAMAGE_DUR)
+
+                if (!shieldGems.isEmpty) throwShieldGems()
             } else damageTimer.resetDuration(DEFAULT_BOSS_DMG_DURATION)
         }
 
@@ -339,15 +340,19 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 return@add
             }
 
+            val shieldGemIter = shieldGems.iterator()
+            while (shieldGemIter.hasNext) {
+                val shieldGemEntry = shieldGemIter.next()
+                if (shieldGemEntry.key.dead) shieldGemIter.remove()
+            }
+
             if (shieldGems.isEmpty) spawnShieldsDelay.update(delta)
             if (spawnShieldsDelay.isJustFinished()) GameLogger.debug(TAG, "update(): spawn shields delay just finished")
             if (spawnShieldsDelay.isFinished()) {
                 spawnShieldsChance += SPAWN_SHIELD_CHANCE_DELTA * delta
                 if (spawnShieldsChance > 100f) spawnShieldsChance = 100f
             }
-            if (!shieldGems.isEmpty &&
-                shieldGems.keys().all { gem -> gem.isProperty(ConstKeys.SPIN, true) }
-            ) updateShieldGems(delta)
+            if (!shieldGems.isEmpty) spinShieldGems(delta)
 
             airpunchCooldown.update(delta)
 
@@ -444,6 +449,9 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     }
                 }
 
+                PreciousWomanState.THROW_SHIELD_GEMS ->
+                    if (shieldGems.isEmpty || shieldGems.keys().all { it.dead }) stateMachine.next()
+
                 else -> {}
             }
         }
@@ -492,7 +500,9 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
     }
 
-    private fun updateShieldGems(delta: Float) = shieldGems.forEachIndexed { gem, def, _ ->
+    private fun spinShieldGems(delta: Float) = shieldGems.forEachIndexed { gem, def, _ ->
+        if (!gem.isProperty(ConstKeys.SPIN, true)) return@forEachIndexed
+
         var (angle, distance, released) = def
 
         angle += SHIELD_GEM_SPIN_SPEED * 360f * delta
@@ -507,7 +517,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         def.set(angle, distance, released)
     }
 
-    private fun throwGems() {
+    private fun throwHomingGems() {
         FacingUtils.setFacingOf(this)
 
         GameLogger.debug(TAG, "throwGems(): facing=$facing")
@@ -801,37 +811,8 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
             PreciousWomanState.THROW_SHIELD_GEMS -> {
                 GameLogger.debug(TAG, "onChangeState(): setting all shield gems to be released")
-
                 FacingUtils.setFacingOf(this)
-
-                shieldGems.values().forEach { it.released = true }
-
-                val position = body.getCenter()
-
-                val trajectory = megaman.body.getCenter()
-                    .sub(body.getCenter())
-                    .nor()
-                    .scl(SHIELD_GEM_CLUSTER_SPEED * ConstVals.PPM)
-
-                val cluster = MegaEntityFactory.fetch(PreciousGemCluster::class)!!
-                cluster.spawn(
-                    props(
-                        ConstKeys.OWNER pairTo this,
-                        PreciousGem.TAG pairTo shieldGems,
-                        ConstKeys.ORIGIN pairTo roomCenter,
-                        ConstKeys.POSITION pairTo position,
-                        ConstKeys.TRAJECTORY pairTo trajectory,
-                    )
-                )
-
-                // re-initialize to detach this class's ref from the ref passed into the `cluster`
-                shieldGems = OrderedMap()
-
-                throwMinCooldown.reset()
-                statesSinceLastThrow = 0
-
-                spawnShieldsDelay.reset()
-                spawnShieldsChance = SPAWN_SHIELD_START_CHANCE
+                throwShieldGems()
             }
 
             else -> GameLogger.debug(TAG, "onChangeState(): no action when current=$current")
@@ -888,6 +869,43 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         shieldGems.isEmpty && spawnShieldsDelay.isFinished() && getRandom(0f, 100f) <= spawnShieldsChance
 
     private fun shouldThrowShieldGems() = !shieldGems.isEmpty && shouldThrowGems()
+
+    private fun throwShieldGems() {
+        shieldGems.forEach { entry ->
+            val gem = entry.key
+            gem.shieldShatter = true
+
+            val def = entry.value
+            def.released = true
+        }
+
+        val position = body.getCenter()
+
+        val trajectory = megaman.body.getCenter()
+            .sub(body.getCenter())
+            .nor()
+            .scl(SHIELD_GEM_CLUSTER_SPEED * ConstVals.PPM)
+
+        val cluster = MegaEntityFactory.fetch(PreciousGemCluster::class)!!
+        cluster.spawn(
+            props(
+                ConstKeys.OWNER pairTo this,
+                PreciousGem.TAG pairTo shieldGems,
+                ConstKeys.ORIGIN pairTo roomCenter,
+                ConstKeys.POSITION pairTo position,
+                ConstKeys.TRAJECTORY pairTo trajectory,
+            )
+        )
+
+        // re-initialize to detach this class's ref from the ref passed into the `cluster`
+        shieldGems = OrderedMap()
+
+        throwMinCooldown.reset()
+        statesSinceLastThrow = 0
+
+        spawnShieldsDelay.reset()
+        spawnShieldsChance = SPAWN_SHIELD_START_CHANCE
+    }
 
     private fun shouldThrowGems() = throwMinCooldown.isFinished() && statesSinceLastThrow >= STATES_BETWEEN_THROW
 

@@ -200,9 +200,9 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Megaman_v2_Axe/airdash_axe_throw.png</key>
-            <key type="filename">../frames/Megaman_v2_Axe/airdash_throw_axe.png</key>
             <key type="filename">../frames/Megaman_v2_Axe/climb.png</key>
-            <key type="filename">../frames/Megaman_v2_Axe/climb_still_throw_axe.png</key>
+            <key type="filename">../frames/Megaman_v2_Axe/climb_finish_axe_throw.png</key>
+            <key type="filename">../frames/Megaman_v2_Axe/climb_still_axe_throw.png</key>
             <key type="filename">../frames/Megaman_v2_Axe/groundslide_axe_throw.png</key>
             <key type="filename">../frames/Megaman_v2_Axe/jump_axe_throw.png</key>
             <key type="filename">../frames/Megaman_v2_Axe/stand.png</key>

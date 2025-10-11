@@ -37,7 +37,7 @@ class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity
     companion object {
         const val TAG = "Axe"
         private const val CULL_TIME = 1f
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -0.375f
         private var region: TextureRegion? = null
     }
 

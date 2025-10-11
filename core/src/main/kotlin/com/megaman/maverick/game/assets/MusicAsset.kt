@@ -47,7 +47,7 @@ enum class MusicAsset(src: String, val loop: Boolean = true, val onCompletion: (
     MMX_VILE_MUSIC("MMX_Vile.mp3"),
     MM7_SLASH_MAN_MUSIC("MM7_SlashMan.mp3"),
     MMX3_NEON_TIGER_MUSIC("MMX3_NeonTiger.mp3"),
-    MMX2_CRYSTAL_SNAIL_MUSIC("MMX2_CrystalSnail.mp3"),
+    MMX2_CRYSTAL_SNAIL_MUSIC("MMX2_CrystalSnail_looping.wav"),
     INFERNO_MAN_MUSIC_OLD("vinnyz_inferno_track_OLD.mp3"),
     INFERNO_MAN_INTRO_MUSIC(
         src = "vinnyz_inferno_intro_track.wav",

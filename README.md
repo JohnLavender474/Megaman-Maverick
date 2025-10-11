@@ -205,6 +205,7 @@ comprehensive listing of the credits for the artwork used in this game.
     - Iceskate Peng
     - Duo-Ball Cannon
     - Biker Kibbo
+    - Diggy Duggy
   - [Random Enemies Set 8](https://www.deviantart.com/megared225/art/Random-Enemies-Set-8-543327890)
     - Cool Telly
     - Jetto

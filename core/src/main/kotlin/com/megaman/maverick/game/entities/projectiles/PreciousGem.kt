@@ -13,7 +13,10 @@ import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
-import com.mega.game.engine.common.extensions.*
+import com.mega.game.engine.common.extensions.equalsAny
+import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -49,7 +52,6 @@ import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.Disintegration
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.projectiles.PreciousGemBomb.Companion.SHATTER_IMPULSES
 import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardColor
 import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardSize
@@ -104,13 +106,13 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
     lateinit var color: PreciousGemColor
 
+    var blockShatter = false
+    var shieldShatter = false
+
     private val sizeDelay = Timer(SIZE_DELAY_DUR)
     private var sizeIndex = 0
 
     private val pauseDelay = Timer(DEFAULT_PAUSE_DUR)
-
-    private var obstacleShatter = false
-    private var ratClawShatter = false
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -159,11 +161,11 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         color = spawnProps.get(ConstKeys.COLOR, PreciousGemColor::class)!!
         speed = spawnProps.getOrDefault(ConstKeys.SPEED, 0f, Float::class)
 
-        obstacleShatter = spawnProps.getOrDefault(
-            "${ConstKeys.OBSTACLE}_${ConstKeys.SHATTER}", false, Boolean::class
+        blockShatter = spawnProps.getOrDefault(
+            "${ConstKeys.BLOCK}_${ConstKeys.SHATTER}", false, Boolean::class
         )
-        ratClawShatter = spawnProps.getOrDefault(
-            "${MegamanWeapon.RODENT_CLAWS.name.lowercase()}_${ConstKeys.SHATTER}", true, Boolean::class
+        shieldShatter = spawnProps.getOrDefault(
+            "${ConstKeys.SHIELD}_${ConstKeys.SHATTER}", false, Boolean::class
         )
     }
 
@@ -207,7 +209,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         )
 
         val projectile = projectileFixture.getEntity()
-        if (projectile.isAny(SlashWave::class, Axe::class)) {
+        if (projectile is Axe) {
             val direction = getOverlapPushDirection(thisShape, otherShape)
             explodeAndDie(direction)
         }
@@ -216,7 +218,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         GameLogger.debug(TAG, "hitBlock(): blockFixture=$blockFixture, thisShape=$thisShape, otherShape=$otherShape")
 
-        if (obstacleShatter) {
+        if (blockShatter) {
             val direction = getOverlapPushDirection(thisShape, otherShape)
             explodeAndDie(direction)
         }
@@ -225,7 +227,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         GameLogger.debug(TAG, "hitShield(): shieldFixture=$shieldFixture, thisShape=$thisShape, otherShape=$otherShape")
 
-        if (obstacleShatter) {
+        if (shieldShatter) {
             val direction = getOverlapPushDirection(thisShape, otherShape)
             explodeAndDie(direction)
         }

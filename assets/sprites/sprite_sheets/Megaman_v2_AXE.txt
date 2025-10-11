@@ -17,13 +17,6 @@ airdash_axe_throw
   orig: 48, 96
   offset: 0, 0
   index: -1
-airdash_throw_axe
-  rotate: false
-  xy: 1, 149
-  size: 48, 96
-  orig: 48, 96
-  offset: 0, 0
-  index: -1
 beam
   rotate: false
   xy: 51, 1
@@ -33,7 +26,7 @@ beam
   index: -1
 climb
   rotate: false
-  xy: 51, 149
+  xy: 1, 149
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -45,6 +38,13 @@ climb_finish
   orig: 48, 48
   offset: 0, 0
   index: -1
+climb_finish_axe_throw
+  rotate: false
+  xy: 51, 149
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
 climb_still
   rotate: false
   xy: 151, 1
@@ -52,7 +52,7 @@ climb_still
   orig: 48, 48
   offset: 0, 0
   index: -1
-climb_still_throw_axe
+climb_still_axe_throw
   rotate: false
   xy: 101, 149
   size: 48, 96
