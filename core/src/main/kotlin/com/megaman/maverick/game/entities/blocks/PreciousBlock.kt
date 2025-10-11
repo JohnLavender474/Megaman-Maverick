@@ -60,11 +60,13 @@ class PreciousBlock(game: MegamanMaverickGame) : ShieldBlock(game), ISpritesEnti
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
 
-        val animIndex = spawnProps.getOrDefault("${ConstKeys.ANIMATION}_${ConstKeys.INDEX}", null) as Int?
-
-        val rows = ceil(bounds.getHeight() / ConstVals.PPM).toInt()
-        val cols = ceil(bounds.getWidth() / ConstVals.PPM).toInt()
-        defineDrawables(rows, cols, animIndex)
+        val createSprites = spawnProps.getOrDefault("${ConstKeys.CREATE}_${ConstKeys.SPRITE}", true, Boolean::class)
+        if (createSprites) {
+            val animIndex = spawnProps.getOrDefault("${ConstKeys.ANIMATION}_${ConstKeys.INDEX}", null) as Int?
+            val rows = ceil(bounds.getHeight() / ConstVals.PPM).toInt()
+            val cols = ceil(bounds.getWidth() / ConstVals.PPM).toInt()
+            defineDrawables(rows, cols, animIndex)
+        }
 
         if (spawnProps.containsKey("${ConstKeys.TRAJECTORY}_${ConstKeys.DEF}")) {
             val trajectoryDefinition = spawnProps.get("${ConstKeys.TRAJECTORY}_${ConstKeys.DEF}", String::class)!!

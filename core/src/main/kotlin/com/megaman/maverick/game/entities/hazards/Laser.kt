@@ -4,14 +4,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectSet
-import com.badlogic.gdx.utils.OrderedSet
+import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.extensions.getTextureRegion
-import com.mega.game.engine.common.extensions.isAny
-import com.mega.game.engine.common.extensions.toInt
-import com.mega.game.engine.common.extensions.toObjectSet
+import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.IActivatable
 import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
@@ -28,6 +25,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.IGameEntity
+import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -35,19 +33,21 @@ import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
-import com.megaman.maverick.game.entities.contracts.IHazard
-import com.megaman.maverick.game.entities.contracts.ILaserEntity
-import com.megaman.maverick.game.entities.contracts.IOwnable
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.blocks.PreciousBlock
+import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.decorations.WhiteBurst
 import com.megaman.maverick.game.entities.enemies.PreciousGemCanon
+import com.megaman.maverick.game.entities.explosions.AsteroidExplosion
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.PreciousGemBomb
 import com.megaman.maverick.game.entities.projectiles.PreciousShard
+import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardColor
+import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardSize
 import com.megaman.maverick.game.entities.special.DarknessV2
 import com.megaman.maverick.game.entities.utils.spawn
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -63,7 +63,7 @@ import com.megaman.maverick.game.world.body.getEntity
 import java.util.*
 
 class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IHazard, IDamager,
-    ILaserEntity, IActivatable, IOwnable<LaserBeamer> {
+    ILaserEntity, IAudioEntity, IActivatable, IOwnable<LaserBeamer> {
 
     companion object {
         const val TAG = "Laser"
@@ -77,8 +77,13 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         private const val LASER_SPRITE_SIZE = 2f / ConstVals.PPM
         private const val LASER_SPRITE_ON_DELAY = 0.1f
 
+        private const val LASER_PRECIOUS_SHARDS_DELAY = 0.15f
+        private const val LASER_SHARDS_MIN_IMPULSE_X = -3f
+        private const val LASER_SHARDS_MAX_IMPULSE_X = 3f
+        private const val LASER_SHARDS_IMPULSE_Y = 6f
+
         // This is how many times a "laser" can be reflected. A "laser" is composed of
-        // one or more Laser instances - but to the player, it appears as though just one.
+        // one or more Laser instances - but to the player, it appears like just one.
         private const val MAX_REFLECTIONS = 1
 
         private var region: TextureRegion? = null
@@ -116,16 +121,19 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     private var burst: WhiteBurst? = null
     private var reflectingLaser: Laser? = null
 
-    private val reflectionShieldFixtures = OrderedSet<IFixture>()
+    private var hitShieldFixture: IFixture? = null
     private var reflectionIndex = 0
 
     private val spriteOnDelay = Timer(LASER_SPRITE_ON_DELAY)
+
+    private val laserShardsTimer = Timer(LASER_PRECIOUS_SHARDS_DELAY)
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
         if (region == null) region =
             game.assMan.getTextureRegion(TextureAsset.COLORS.source, "${ConstKeys.BRIGHT}_${ConstKeys.RED}")
         super.init()
+        addComponent(AudioComponent())
         addComponent(SpritesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineUpdatablesComponent())
@@ -186,6 +194,8 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
                 )
             )
         }
+
+        laserShardsTimer.reset()
     }
 
     override fun onDestroy() {
@@ -198,7 +208,8 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         contacts.clear()
         lightSourceKeys.clear()
         obstaclesToIgnore.clear()
-        reflectionShieldFixtures.clear()
+
+        hitShieldFixture = null
 
         laserFixture.setShape(GameLine())
         damagerFixture.setShape(GameLine())
@@ -210,11 +221,58 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         reflectingLaser = null
     }
 
-    private fun hitShield(shieldFixture: IFixture) {
-        val shieldEntity = shieldFixture.getEntity()
-        if (obstaclesToIgnore.contains(shieldEntity.mapObjectId)) return
+    private fun hitShield(shieldFixture: IFixture, delta: Float) {
+        val shield = shieldFixture.getEntity()
+        if (shield !is PreciousBlock) return
 
-        reflectionShieldFixtures.add(shieldFixture)
+        laserShardsTimer.update(delta)
+        if (laserShardsTimer.isFinished()) {
+            val explosion = MegaEntityFactory.fetch(AsteroidExplosion::class)!!
+            explosion.spawn(
+                props(
+                    ConstKeys.OWNER pairTo this,
+                    ConstKeys.POSITION pairTo actualEndPoint
+                )
+            )
+
+            val tempRect = GameObjectPools.fetch(GameRectangle::class)
+                .setSize(0.25f * ConstVals.PPM)
+                .setCenter(actualEndPoint)
+
+            val direction = UtilMethods.getOverlapPushDirection(
+                tempRect, shieldFixture.getShape()
+            )
+
+            if (direction == null) return
+
+            val shardsPosition = GameObjectPools.fetch(Vector2::class)
+                .set(actualEndPoint)
+                .add(0.25f * ConstVals.PPM, direction)
+
+            val impulse = GameObjectPools.fetch(Vector2::class)
+                .setX(UtilMethods.getRandom(LASER_SHARDS_MIN_IMPULSE_X, LASER_SHARDS_MAX_IMPULSE_X))
+                .setY(LASER_SHARDS_IMPULSE_Y)
+                .rotateDeg(direction.rotation)
+                .scl(ConstVals.PPM.toFloat())
+
+            val size = PreciousShardSize.entries.random()
+            val color = PreciousShardColor.entries.random()
+
+            val preciousShard = MegaEntityFactory.fetch(PreciousShard::class)!!
+            preciousShard.spawn(
+                props(
+                    ConstKeys.OWNER pairTo this,
+                    ConstKeys.SIZE pairTo size,
+                    ConstKeys.COLOR pairTo color,
+                    ConstKeys.IMPULSE pairTo impulse,
+                    ConstKeys.POSITION pairTo shardsPosition
+                )
+            )
+
+            if (overlapsGameCamera()) requestToPlaySound(SoundAsset.DINK_SOUND, false)
+
+            laserShardsTimer.reset()
+        }
     }
 
     fun getOrigin(reclaim: Boolean = true): Vector2 =
@@ -269,7 +327,13 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
                     }
                     else -> {
                         val (endPoint, fixture) = contacts.poll()
-                        if (fixture.getType() == FixtureType.SHIELD) hitShield(fixture)
+
+                        if (fixture.getType() == FixtureType.SHIELD) {
+                            val shieldEntity = fixture.getEntity()
+                            if (!obstaclesToIgnore.contains(shieldEntity.mapObjectId))
+                                hitShieldFixture = fixture
+                        }
+
                         endPoint
                     }
                 }
@@ -283,80 +347,83 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+    private fun resetReflectingLaserIfAny() {
+        reflectingLaser?.let {
+            it.on = false
+
+            it.setOrigin(Vector2.Zero)
+            it.setMaxEnd(Vector2.Zero)
+
+            it.obstaclesToIgnore.clear()
+            owner?.let { o -> reflectingLaser!!.obstaclesToIgnore.add(o.mapObjectId) }
+        }
+    }
+
+    private fun defineUpdatablesComponent() = UpdatablesComponent(update@{ delta ->
         if (shouldSendLightSourceEvents()) sendLightSourceEvents()
 
         if (on) spriteOnDelay.update(delta)
 
-        if (reflectingLaser != null) {
-            if (!reflectionShieldFixtures.isEmpty) {
-                val actualEndPointBounds = GameObjectPools.fetch(GameRectangle::class)
-                    .setSize(0.25f * ConstVals.PPM)
-                    .setCenter(actualEndPoint)
+        if (hitShieldFixture == null) {
+            resetReflectingLaserIfAny()
+            laserShardsTimer.setToEnd()
+            return@update
+        }
 
-                val reflectionShield = reflectionShieldFixtures.find { it.getShape().overlaps(actualEndPointBounds) }
+        val shieldFixture = hitShieldFixture!!
+        hitShieldFixture = null
 
-                if (reflectionShield != null) {
-                    game.setDebugText("reflect")
+        hitShield(shieldFixture, delta)
 
-                    val tempRect = GameObjectPools.fetch(GameRectangle::class)
-                        .setSize(0.25f * ConstVals.PPM)
-                        .setCenter(actualEndPoint)
+        if (reflectingLaser == null) return@update
 
-                    val direction = UtilMethods.getOverlapPushDirection(
-                        tempRect, reflectionShield.getShape()
-                    )
+        val tempRect = GameObjectPools.fetch(GameRectangle::class)
+            .setSize(0.25f * ConstVals.PPM)
+            .setCenter(actualEndPoint)
 
-                    if (direction != null) {
-                        val firstLocalPoint = line.getFirstLocalPoint()
+        val direction = UtilMethods.getOverlapPushDirection(
+            tempRect, shieldFixture.getShape()
+        )
 
-                        val xDiff = actualEndPoint.x - firstLocalPoint.x
-                        val yDiff = actualEndPoint.y - firstLocalPoint.y
+        if (direction == null) {
+            resetReflectingLaserIfAny()
+            return@update
+        }
 
-                        val newFirstPoint = GameObjectPools.fetch(Vector2::class).set(actualEndPoint)
-                        val newSecondPoint = GameObjectPools.fetch(Vector2::class)
-                        when (direction) {
-                            Direction.UP, Direction.DOWN -> {
-                                newSecondPoint.x = actualEndPoint.x + xDiff
-                                newSecondPoint.y = firstLocalPoint.y
-                            }
-                            Direction.LEFT, Direction.RIGHT -> {
-                                newSecondPoint.x = firstLocalPoint.x
-                                newSecondPoint.y = actualEndPoint.y + yDiff
-                            }
-                        }
+        val firstLocalPoint = line.getFirstLocalPoint()
 
-                        val reflectionDirection = GameObjectPools.fetch(Vector2::class)
-                            .set(newSecondPoint)
-                            .sub(newFirstPoint)
-                            .nor()
-                        newSecondPoint.set(newFirstPoint)
-                            .add(reflectionDirection.scl(DEFAULT_MAX_LENGTH * ConstVals.PPM))
+        val xDiff = actualEndPoint.x - firstLocalPoint.x
+        val yDiff = actualEndPoint.y - firstLocalPoint.y
 
-                        reflectingLaser!!.obstaclesToIgnore.clear()
-                        owner?.let { reflectingLaser!!.obstaclesToIgnore.add(it.mapObjectId) }
-
-                        val reflector = reflectionShield.getEntity()
-                        reflectingLaser!!.obstaclesToIgnore.add(reflector.mapObjectId)
-
-                        reflectingLaser!!.on = true
-                        reflectingLaser!!.setOrigin(newFirstPoint)
-                        reflectingLaser!!.setMaxEnd(newSecondPoint)
-                    }
-                }
-            } else {
-                game.setDebugText("")
-
-                reflectingLaser!!.obstaclesToIgnore.clear()
-                owner?.let { reflectingLaser!!.obstaclesToIgnore.add(it.mapObjectId) }
-
-                reflectingLaser!!.on = false
-                reflectingLaser!!.setOrigin(Vector2.Zero)
-                reflectingLaser!!.setMaxEnd(Vector2.Zero)
+        val newFirstPoint = GameObjectPools.fetch(Vector2::class).set(actualEndPoint)
+        val newSecondPoint = GameObjectPools.fetch(Vector2::class)
+        when (direction) {
+            Direction.UP, Direction.DOWN -> {
+                newSecondPoint.x = actualEndPoint.x + xDiff
+                newSecondPoint.y = firstLocalPoint.y
+            }
+            Direction.LEFT, Direction.RIGHT -> {
+                newSecondPoint.x = firstLocalPoint.x
+                newSecondPoint.y = actualEndPoint.y + yDiff
             }
         }
 
-        reflectionShieldFixtures.clear()
+        val reflectionDirection = GameObjectPools.fetch(Vector2::class)
+            .set(newSecondPoint)
+            .sub(newFirstPoint)
+            .nor()
+        newSecondPoint.set(newFirstPoint)
+            .add(reflectionDirection.scl(DEFAULT_MAX_LENGTH * ConstVals.PPM))
+
+        reflectingLaser!!.obstaclesToIgnore.clear()
+        owner?.let { o -> reflectingLaser!!.obstaclesToIgnore.add(o.mapObjectId) }
+
+        val reflector = shieldFixture.getEntity()
+        reflectingLaser!!.obstaclesToIgnore.add(reflector.mapObjectId)
+
+        reflectingLaser!!.on = true
+        reflectingLaser!!.setOrigin(newFirstPoint)
+        reflectingLaser!!.setMaxEnd(newSecondPoint)
     })
 
     private fun shouldSendLightSourceEvents() = MegaGameEntities.getOfTag(DarknessV2.TAG).any {

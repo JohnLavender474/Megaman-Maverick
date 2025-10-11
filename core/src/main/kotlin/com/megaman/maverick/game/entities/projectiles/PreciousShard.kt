@@ -28,6 +28,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.Disintegration
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.world.body.*
@@ -122,7 +123,7 @@ class PreciousShard(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         explodeAndDie()
 
-        playSoundNow(SoundAsset.DINK_SOUND, false)
+        if (overlapsGameCamera()) playSoundNow(SoundAsset.DINK_SOUND, false)
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
