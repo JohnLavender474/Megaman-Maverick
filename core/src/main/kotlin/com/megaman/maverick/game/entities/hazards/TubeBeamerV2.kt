@@ -15,6 +15,7 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.UpdateFunction
+import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -34,10 +35,7 @@ import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.*
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.body.Body
-import com.mega.game.engine.world.body.BodyComponent
-import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -94,10 +92,10 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private val maxLine = GameLine()
     private val actualLine = GameLine()
 
-    private val contacts = PriorityQueue { p1: Vector2, p2: Vector2 ->
+    private val contacts = PriorityQueue<GamePair<Vector2, IFixture>> { p1, p2 ->
         val (origin, _) = rawLine.getWorldPoints()
-        val d1 = p1.dst2(origin)
-        val d2 = p2.dst2(origin)
+        val d1 = p1.first.dst2(origin)
+        val d2 = p2.first.dst2(origin)
         d1.compareTo(d2)
     }
 
@@ -288,10 +286,12 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         body.postProcess.put(ConstKeys.DEFAULT) {
             val (lineStart, lineEnd) = rawLine.getWorldPoints()
+
             maxLine.setFirstLocalPoint(lineStart)
             actualLine.setFirstLocalPoint(lineStart)
-            val end = if (contacts.isEmpty()) lineEnd else contacts.peek()
-            maxLine.setSecondLocalPoint(end)
+
+            val endPoint = if (contacts.isEmpty()) lineEnd else contacts.peek().first
+            maxLine.setSecondLocalPoint(endPoint)
 
             updateDamager()
         }

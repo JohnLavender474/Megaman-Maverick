@@ -1,68 +1,131 @@
-===== SESSION STARTED: 2025-10-11T01:15:19.186444535 =====
-01:15:43 | DEBUG | PreciousTron | init()
-01:15:43 | DEBUG | PreciousTron | onSpawn(): spawnProps=Properties({
-	[position5=com.badlogic.gdx.maps.objects.RectangleMapObject@7158daf2]
+===== SESSION STARTED: 2025-10-11T01:37:14.935692760 =====
+01:37:41 | DEBUG | PreciousTron | init()
+01:37:41 | DEBUG | PreciousTron | onSpawn(): spawnProps=Properties({
+	[position5=com.badlogic.gdx.maps.objects.RectangleMapObject@75fa1be3]
 	[bounds=[4544.0,2080.0,32.0,32.0]]
-	[position2=com.badlogic.gdx.maps.objects.RectangleMapObject@10f19647]
+	[position2=com.badlogic.gdx.maps.objects.RectangleMapObject@7a389761]
 	[x=4544.0]
-	[position7=com.badlogic.gdx.maps.objects.RectangleMapObject@102efc59]
+	[position7=com.badlogic.gdx.maps.objects.RectangleMapObject@42714a7]
 	[height=32.0]
-	[position10=com.badlogic.gdx.maps.objects.RectangleMapObject@3936df72]
-	[position4=com.badlogic.gdx.maps.objects.RectangleMapObject@e8e0dec]
-	[position9=com.badlogic.gdx.maps.objects.RectangleMapObject@12d1f1d4]
+	[position10=com.badlogic.gdx.maps.objects.RectangleMapObject@19650aa6]
+	[position4=com.badlogic.gdx.maps.objects.RectangleMapObject@3ce53f6a]
+	[position9=com.badlogic.gdx.maps.objects.RectangleMapObject@2d82408]
 	[id=332]
-	[position1=com.badlogic.gdx.maps.objects.RectangleMapObject@75fa1be3]
+	[position1=com.badlogic.gdx.maps.objects.RectangleMapObject@3ee69ad8]
 	[name=PreciousTron]
-	[position12=com.badlogic.gdx.maps.objects.RectangleMapObject@7a389761]
-	[cull_bounds=com.badlogic.gdx.maps.objects.RectangleMapObject@42714a7]
-	[position6=com.badlogic.gdx.maps.objects.RectangleMapObject@19650aa6]
-	[spawn=com.badlogic.gdx.maps.objects.RectangleMapObject@3ce53f6a]
-	[position3=com.badlogic.gdx.maps.objects.RectangleMapObject@2d82408]
+	[position12=com.badlogic.gdx.maps.objects.RectangleMapObject@f679798]
+	[cull_bounds=com.badlogic.gdx.maps.objects.RectangleMapObject@1a6cf771]
+	[position6=com.badlogic.gdx.maps.objects.RectangleMapObject@59d77850]
+	[spawn=com.badlogic.gdx.maps.objects.RectangleMapObject@53ed09e8]
+	[position3=com.badlogic.gdx.maps.objects.RectangleMapObject@60859f5a]
 	[y=2080.0]
 	[width=32.0]
-	[position8=com.badlogic.gdx.maps.objects.RectangleMapObject@3ee69ad8]
-	[position11=com.badlogic.gdx.maps.objects.RectangleMapObject@f679798]
+	[position8=com.badlogic.gdx.maps.objects.RectangleMapObject@1daf3b44]
+	[position11=com.badlogic.gdx.maps.objects.RectangleMapObject@7fd8c559]
 })
-01:15:43 | DEBUG | PreciousTron | onSpawn(): currentPosition=(4664.0,2176.0), positions=[com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x00007d3b64347cd0@19382338, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x00007d3b64347cd0@66420549, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x00007d3b64347cd0@15dc339f, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x00007d3b64347cd0@6cd56321, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x00007d3b64347cd0@34acbc60, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x00007d3b64347cd0@42b28ff1, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x00007d3b64347cd0@36061cf3, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x00007d3b64347cd0@718dbd79, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x00007d3b64347cd0@20134094, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x00007d3b64347cd0@76889e60, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x00007d3b64347cd0@706fe5c6, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x00007d3b64347cd0@6c15e8c7]
-01:15:43 | DEBUG | PreciousTron | onChangeState(): current=FALL, previous=APPEAR
-01:15:44 | DEBUG | PreciousTron | onChangeState(): current=STAND, previous=FALL
-01:15:44 | DEBUG | PreciousTron | onChangeState(): current=SHOOT, previous=STAND
-01:15:44 | DEBUG | PreciousTron | onDestroy()
-01:15:49 | DEBUG | PreciousTron | onSpawn(): spawnProps=Properties({
-	[position5=com.badlogic.gdx.maps.objects.RectangleMapObject@7158daf2]
+01:37:41 | DEBUG | PreciousTron | onSpawn(): currentPosition=(4664.0,2176.0), positions=[com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@36061cf3, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@718dbd79, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@20134094, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@76889e60, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@706fe5c6, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@6c15e8c7, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@56380231, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@64f1fd08, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@6b3f6585, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@282ffbf5, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@3e104d4b, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@55e2fe3c]
+01:37:42 | DEBUG | PreciousTron | onChangeState(): current=FALL, previous=APPEAR
+01:37:42 | DEBUG | PreciousTron | onChangeState(): current=STAND, previous=FALL
+01:37:42 | DEBUG | PreciousTron | onDestroy()
+01:37:47 | DEBUG | PreciousTron | onSpawn(): spawnProps=Properties({
+	[position5=com.badlogic.gdx.maps.objects.RectangleMapObject@75fa1be3]
 	[bounds=[4544.0,2080.0,32.0,32.0]]
-	[position2=com.badlogic.gdx.maps.objects.RectangleMapObject@10f19647]
+	[position2=com.badlogic.gdx.maps.objects.RectangleMapObject@7a389761]
 	[x=4544.0]
-	[position7=com.badlogic.gdx.maps.objects.RectangleMapObject@102efc59]
+	[position7=com.badlogic.gdx.maps.objects.RectangleMapObject@42714a7]
 	[height=32.0]
-	[position10=com.badlogic.gdx.maps.objects.RectangleMapObject@3936df72]
-	[position4=com.badlogic.gdx.maps.objects.RectangleMapObject@e8e0dec]
-	[position9=com.badlogic.gdx.maps.objects.RectangleMapObject@12d1f1d4]
+	[position10=com.badlogic.gdx.maps.objects.RectangleMapObject@19650aa6]
+	[position4=com.badlogic.gdx.maps.objects.RectangleMapObject@3ce53f6a]
+	[position9=com.badlogic.gdx.maps.objects.RectangleMapObject@2d82408]
 	[id=332]
-	[position1=com.badlogic.gdx.maps.objects.RectangleMapObject@75fa1be3]
+	[position1=com.badlogic.gdx.maps.objects.RectangleMapObject@3ee69ad8]
 	[name=PreciousTron]
-	[position12=com.badlogic.gdx.maps.objects.RectangleMapObject@7a389761]
-	[cull_bounds=com.badlogic.gdx.maps.objects.RectangleMapObject@42714a7]
-	[position6=com.badlogic.gdx.maps.objects.RectangleMapObject@19650aa6]
-	[spawn=com.badlogic.gdx.maps.objects.RectangleMapObject@3ce53f6a]
-	[position3=com.badlogic.gdx.maps.objects.RectangleMapObject@2d82408]
+	[position12=com.badlogic.gdx.maps.objects.RectangleMapObject@f679798]
+	[cull_bounds=com.badlogic.gdx.maps.objects.RectangleMapObject@1a6cf771]
+	[position6=com.badlogic.gdx.maps.objects.RectangleMapObject@59d77850]
+	[spawn=com.badlogic.gdx.maps.objects.RectangleMapObject@53ed09e8]
+	[position3=com.badlogic.gdx.maps.objects.RectangleMapObject@60859f5a]
 	[y=2080.0]
 	[width=32.0]
-	[cull_bounds_supplier=com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$785/0x00007d3b64347658@65c86db8]
-	[position8=com.badlogic.gdx.maps.objects.RectangleMapObject@3ee69ad8]
-	[position11=com.badlogic.gdx.maps.objects.RectangleMapObject@f679798]
+	[cull_bounds_supplier=com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$785/0x0000773abc347658@6b8280e6]
+	[position8=com.badlogic.gdx.maps.objects.RectangleMapObject@1daf3b44]
+	[position11=com.badlogic.gdx.maps.objects.RectangleMapObject@7fd8c559]
 })
-01:15:49 | DEBUG | PreciousTron | onSpawn(): currentPosition=(4664.0,2176.0), positions=[com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x00007d3b64347cd0@5555ffcf, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x00007d3b64347cd0@6cfd9a54, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x00007d3b64347cd0@78c1372d, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x00007d3b64347cd0@9aa2002, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x00007d3b64347cd0@73fb1d7f, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x00007d3b64347cd0@73d4066e, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x00007d3b64347cd0@25d2f66, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x00007d3b64347cd0@5a2fa51f, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x00007d3b64347cd0@71945bc0, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x00007d3b64347cd0@22a0d4ea, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x00007d3b64347cd0@49ede9c7, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x00007d3b64347cd0@6ecdbab8]
-01:15:50 | DEBUG | PreciousTron | onChangeState(): current=FALL, previous=APPEAR
-01:15:50 | DEBUG | PreciousTron | onChangeState(): current=STAND, previous=FALL
-01:15:51 | DEBUG | PreciousTron | onChangeState(): current=SHOOT, previous=STAND
-01:15:51 | DEBUG | PreciousTron | throwGems(): facing=LEFT
-01:15:51 | DEBUG | PreciousTron | onChangeState(): current=DISAPPEAR, previous=SHOOT
-01:15:52 | DEBUG | PreciousTron | onChangeState(): current=APPEAR, previous=DISAPPEAR
-01:15:52 | DEBUG | PreciousTron | setNextPosition(): positionQueue=[(4432.0,2096.0), (4480.0,2096.0), (4640.0,2112.0), (4576.0,2176.0), (4528.0,2176.0), (4832.0,2048.0), (4688.0,2112.0), (5008.0,2032.0), (4928.0,2176.0), (4624.0,1984.0), (4800.0,2048.0), (4960.0,2176.0)]
-01:15:52 | DEBUG | PreciousTron | setNextPosition(): candidates=[(4432.0,2096.0), (4480.0,2096.0), (4528.0,2176.0)]
-01:15:52 | DEBUG | PreciousTron | setNextPosition(): nextPosition=(4528.0,2176.0)
-01:15:52 | DEBUG | PreciousTron | onChangeState(): current=FALL, previous=APPEAR
-01:15:53 | DEBUG | PreciousTron | onChangeState(): current=STAND, previous=FALL
-01:15:53 | DEBUG | PreciousTron | onChangeState(): current=SHOOT, previous=STAND
-01:15:53 | DEBUG | PreciousTron | onDestroy()
+01:37:47 | DEBUG | PreciousTron | onSpawn(): currentPosition=(4664.0,2176.0), positions=[com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@49ec6a9f, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@26b95b0b, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@5f7da3d3, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@103082dd, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@3a22bad6, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@56afdf9a, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@64fe9da7, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@70cccd8f, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@5f172d4a, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@77ec6a3d, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@67efd2c2, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@71d9cb05]
+01:37:48 | DEBUG | PreciousTron | onChangeState(): current=FALL, previous=APPEAR
+01:37:48 | DEBUG | PreciousTron | onChangeState(): current=STAND, previous=FALL
+01:37:49 | DEBUG | PreciousTron | onChangeState(): current=SHOOT, previous=STAND
+01:37:49 | DEBUG | PreciousTron | throwGems(): facing=LEFT
+01:37:49 | DEBUG | PreciousTron | onChangeState(): current=DISAPPEAR, previous=SHOOT
+01:37:50 | DEBUG | PreciousTron | onChangeState(): current=APPEAR, previous=DISAPPEAR
+01:37:50 | DEBUG | PreciousTron | setNextPosition(): positionQueue=[(4432.0,2096.0), (4480.0,2096.0), (4640.0,2112.0), (4576.0,2176.0), (4528.0,2176.0), (4832.0,2048.0), (4688.0,2112.0), (5008.0,2032.0), (4928.0,2176.0), (4624.0,1984.0), (4800.0,2048.0), (4960.0,2176.0)]
+01:37:50 | DEBUG | PreciousTron | setNextPosition(): candidates=[(4432.0,2096.0), (4480.0,2096.0), (4528.0,2176.0)]
+01:37:50 | DEBUG | PreciousTron | setNextPosition(): nextPosition=(4480.0,2096.0)
+01:37:50 | DEBUG | PreciousTron | onChangeState(): current=FALL, previous=APPEAR
+01:37:51 | DEBUG | PreciousTron | onChangeState(): current=STAND, previous=FALL
+01:37:51 | DEBUG | PreciousTron | onDestroy()
+01:38:02 | DEBUG | PreciousTron | onSpawn(): spawnProps=Properties({
+	[bounds=[3312.0,1968.0,32.0,32.0]]
+	[x=3312.0]
+	[height=32.0]
+	[position4=com.badlogic.gdx.maps.objects.RectangleMapObject@6cd3ad8a]
+	[id=423]
+	[position1=com.badlogic.gdx.maps.objects.RectangleMapObject@75181b50]
+	[name=PreciousTron]
+	[cull_bounds=com.badlogic.gdx.maps.objects.RectangleMapObject@2d64160c]
+	[spawn=com.badlogic.gdx.maps.objects.RectangleMapObject@5f254608]
+	[position3=com.badlogic.gdx.maps.objects.RectangleMapObject@2eeb0f9b]
+	[y=1968.0]
+	[width=32.0]
+})
+01:38:02 | DEBUG | PreciousTron | onSpawn(): currentPosition=(3392.0,2112.0), positions=[com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@6f70a21b, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@6ae62c7e, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@2e869098]
+01:38:03 | DEBUG | PreciousTron | onChangeState(): current=FALL, previous=APPEAR
+01:38:03 | DEBUG | PreciousTron | onChangeState(): current=STAND, previous=FALL
+01:38:04 | DEBUG | PreciousTron | onChangeState(): current=SHOOT, previous=STAND
+01:38:04 | DEBUG | PreciousTron | throwGems(): facing=RIGHT
+01:38:04 | DEBUG | PreciousTron | onChangeState(): current=DISAPPEAR, previous=SHOOT
+01:38:05 | DEBUG | PreciousTron | onChangeState(): current=APPEAR, previous=DISAPPEAR
+01:38:05 | DEBUG | PreciousTron | setNextPosition(): positionQueue=[(3456.0,2080.0), (3328.0,2080.0), (3392.0,2080.0)]
+01:38:05 | DEBUG | PreciousTron | setNextPosition(): candidates=[(3456.0,2080.0), (3392.0,2080.0), (3328.0,2080.0)]
+01:38:05 | DEBUG | PreciousTron | setNextPosition(): nextPosition=(3456.0,2080.0)
+01:38:05 | DEBUG | PreciousTron | onChangeState(): current=FALL, previous=APPEAR
+01:38:06 | DEBUG | PreciousTron | onChangeState(): current=STAND, previous=FALL
+01:38:06 | DEBUG | PreciousTron | onChangeState(): current=SHOOT, previous=STAND
+01:38:06 | DEBUG | PreciousTron | onDestroy()
+01:38:09 | DEBUG | PreciousTron | onSpawn(): spawnProps=Properties({
+	[bounds=[2976.0,2112.0,32.0,32.0]]
+	[position2=com.badlogic.gdx.maps.objects.RectangleMapObject@6e0e5dec]
+	[x=2976.0]
+	[height=32.0]
+	[position4=com.badlogic.gdx.maps.objects.RectangleMapObject@48a663e9]
+	[id=437]
+	[position1=com.badlogic.gdx.maps.objects.RectangleMapObject@777d0bc3]
+	[name=PreciousTron]
+	[cull_bounds=com.badlogic.gdx.maps.objects.RectangleMapObject@3178219a]
+	[spawn=com.badlogic.gdx.maps.objects.RectangleMapObject@2d85fb64]
+	[position3=com.badlogic.gdx.maps.objects.RectangleMapObject@56476c16]
+	[y=2112.0]
+	[width=32.0]
+})
+01:38:09 | DEBUG | PreciousTron | onSpawn(): currentPosition=(2992.0,2040.0), positions=[com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@7c37f145, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@68699afc, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@273a5a8a, com.megaman.maverick.game.entities.enemies.PreciousTron$$Lambda$788/0x0000773abc347cd0@1823b9c4]
+01:38:09 | DEBUG | PreciousTron | onChangeState(): current=FALL, previous=APPEAR
+01:38:09 | DEBUG | PreciousTron | onChangeState(): current=STAND, previous=FALL
+01:38:10 | DEBUG | PreciousTron | onChangeState(): current=SHOOT, previous=STAND
+01:38:10 | DEBUG | PreciousTron | throwGems(): facing=RIGHT
+01:38:10 | DEBUG | PreciousTron | onChangeState(): current=DISAPPEAR, previous=SHOOT
+01:38:11 | DEBUG | PreciousTron | onChangeState(): current=APPEAR, previous=DISAPPEAR
+01:38:11 | DEBUG | PreciousTron | setNextPosition(): positionQueue=[(3184.0,2144.0), (3120.0,2144.0), (2960.0,2040.0), (3024.0,2040.0)]
+01:38:11 | DEBUG | PreciousTron | setNextPosition(): candidates=[(3184.0,2144.0), (3120.0,2144.0), (3024.0,2040.0)]
+01:38:11 | DEBUG | PreciousTron | setNextPosition(): nextPosition=(3120.0,2144.0)
+01:38:11 | DEBUG | PreciousTron | onChangeState(): current=FALL, previous=APPEAR
+01:38:12 | DEBUG | PreciousTron | onChangeState(): current=STAND, previous=FALL
+01:38:12 | DEBUG | PreciousTron | onChangeState(): current=SHOOT, previous=STAND
+01:38:12 | DEBUG | PreciousTron | throwGems(): facing=LEFT
+01:38:13 | DEBUG | PreciousTron | onChangeState(): current=DISAPPEAR, previous=SHOOT
+01:38:13 | DEBUG | PreciousTron | onChangeState(): current=APPEAR, previous=DISAPPEAR
+01:38:13 | DEBUG | PreciousTron | setNextPosition(): positionQueue=[(2960.0,2040.0), (3120.0,2144.0), (3024.0,2040.0), (3184.0,2144.0)]
+01:38:13 | DEBUG | PreciousTron | setNextPosition(): candidates=[(2960.0,2040.0), (3024.0,2040.0), (3120.0,2144.0)]
+01:38:13 | DEBUG | PreciousTron | setNextPosition(): nextPosition=(2960.0,2040.0)
+01:38:14 | DEBUG | PreciousTron | onChangeState(): current=FALL, previous=APPEAR
+01:38:14 | DEBUG | PreciousTron | onChangeState(): current=STAND, previous=FALL
+01:38:14 | DEBUG | PreciousTron | onDestroy()

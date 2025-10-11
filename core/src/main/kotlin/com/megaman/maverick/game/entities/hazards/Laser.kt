@@ -13,12 +13,12 @@ import com.mega.game.engine.common.extensions.isAny
 import com.mega.game.engine.common.extensions.toInt
 import com.mega.game.engine.common.extensions.toObjectSet
 import com.mega.game.engine.common.interfaces.IActivatable
+import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameLine
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -99,10 +99,10 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     private lateinit var laserFixture: Fixture
     private lateinit var damagerFixture: Fixture
 
-    private val contacts = PriorityQueue { p1: Vector2, p2: Vector2 ->
+    private val contacts = PriorityQueue<GamePair<Vector2, IFixture>> { p1, p2 ->
         val origin = getOrigin()
-        val d1 = p1.dst2(origin)
-        val d2 = p2.dst2(origin)
+        val d1 = p1.first.dst2(origin)
+        val d2 = p2.first.dst2(origin)
         d1.compareTo(d2)
     }
 
@@ -210,7 +210,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         reflectingLaser = null
     }
 
-    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+    private fun hitShield(shieldFixture: IFixture) {
         val shieldEntity = shieldFixture.getEntity()
         if (obstaclesToIgnore.contains(shieldEntity.mapObjectId)) return
 
@@ -263,16 +263,19 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
                 damager.setFirstLocalPoint(origin)
 
                 val end = when {
-                    contacts.isEmpty() || contacts.peek().dst(origin) > line.getLength() -> {
+                    contacts.isEmpty() || contacts.peek().first.dst(origin) > line.getLength() -> {
                         val (_, endPoint) = line.getWorldPoints()
                         endPoint
                     }
-                    else -> contacts.peek()
+                    else -> {
+                        val (endPoint, fixture) = contacts.poll()
+                        if (fixture.getType() == FixtureType.SHIELD) hitShield(fixture)
+                        endPoint
+                    }
                 }
+
                 damager.setSecondLocalPoint(end)
-
                 burst?.body?.setCenter(end)
-
                 actualEndPoint.set(end)
             } else burst?.body?.setCenter(Vector2.Zero)
         }
