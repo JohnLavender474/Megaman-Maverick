@@ -48,6 +48,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val REFLECT = "reflect"
     const val CONNECTED = "connected"
     const val AXE = "axe"
     const val SWITCH = "switch"

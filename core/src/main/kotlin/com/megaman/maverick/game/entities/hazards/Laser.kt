@@ -53,7 +53,10 @@ import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShar
 import com.megaman.maverick.game.entities.special.DarknessV2
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
-import com.megaman.maverick.game.utils.extensions.*
+import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getWorldPoints
+import com.megaman.maverick.game.utils.extensions.toProps
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -157,7 +160,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
         body.set(line.getBoundingRectangle())
 
-        owner = spawnProps.get(ConstKeys.OWNER, LaserBeamer::class)
+        owner = spawnProps.get(ConstKeys.OWNER, MegaGameEntity::class)
         owner?.let { obstaclesToIgnore.add(it.mapObjectId) }
 
         spawnProps.forEach { key, value ->
@@ -237,9 +240,11 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
                 .setSize(0.25f * ConstVals.PPM)
                 .setCenter(actualEndPoint)
 
-            val direction = UtilMethods.getOverlapPushDirection(
-                tempRect, shieldFixture.getShape()
-            )
+            val direction = when {
+                shieldFixture.hasProperty("${ConstKeys.REFLECT}_${ConstKeys.DIRECTION}") ->
+                    shieldFixture.getProperty("${ConstKeys.REFLECT}_${ConstKeys.DIRECTION}", Direction::class)!!
+                else -> UtilMethods.getOverlapPushDirection(tempRect, shieldFixture.getShape())
+            }
 
             if (direction == null) return
 
@@ -327,12 +332,10 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
                     }
                     else -> {
                         val (endPoint, fixture) = contacts.poll()
-
                         if (fixture.getType() == FixtureType.SHIELD) {
                             if (shouldHitShield(fixture)) hitShieldFixture = fixture
                             else resetReflectingLaserIfAny()
                         }
-
                         endPoint
                     }
                 }
@@ -354,8 +357,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
     private fun shouldHitShield(shield: IFixture): Boolean {
         val shieldEntity = shield.getEntity()
-
-        if (obstaclesToIgnore.contains(shieldEntity.mapObjectId)) return false
+        if (isLaserIgnoring(shieldEntity)) return false
 
         // Special case: if the shield is Megaman's axe shield, then the axe shield
         // needs to be facing the origin of the laser. This is to prevent lasers
@@ -396,47 +398,66 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         val shieldFixture = hitShieldFixture!!
         hitShieldFixture = null
 
+        GameLogger.debug(
+            TAG,
+            "defineUpdatablesComponent(): " +
+                "shieldFixture=$shieldFixture, " +
+                "reflectDir=${shieldFixture.getProperty("${ConstKeys.REFLECT}_${ConstKeys.DIRECTION}")}"
+        )
+
         hitShield(shieldFixture, delta)
 
         if (reflectingLaser == null) return@update
 
-        val tempRect = GameObjectPools.fetch(GameRectangle::class)
-            .setSize(0.25f * ConstVals.PPM)
-            .setCenter(actualEndPoint)
+        val direction = when {
+            shieldFixture.hasProperty("${ConstKeys.REFLECT}_${ConstKeys.DIRECTION}") ->
+                shieldFixture.getProperty("${ConstKeys.REFLECT}_${ConstKeys.DIRECTION}", Direction::class)!!
+            else -> {
+                val tempRect = GameObjectPools.fetch(GameRectangle::class)
+                    .setSize(0.25f * ConstVals.PPM)
+                    .setCenter(actualEndPoint)
 
-        val direction = UtilMethods.getOverlapPushDirection(
-            tempRect, shieldFixture.getShape()
-        )
+                UtilMethods.getOverlapPushDirection(tempRect, shieldFixture.getShape())
+            }
+        }
 
         if (direction == null) {
             resetReflectingLaserIfAny()
             return@update
         }
 
-        val firstLocalPoint = line.getFirstLocalPoint()
+        GameLogger.debug(TAG, "defineUpdatablesComponent(): direction=$direction")
 
-        val xDiff = actualEndPoint.x - firstLocalPoint.x
-        val yDiff = actualEndPoint.y - firstLocalPoint.y
+        val origin = getOrigin()
+        val xDiff = actualEndPoint.x - origin.x
+        val yDiff = actualEndPoint.y - origin.y
+
+        GameLogger.debug(
+            TAG,
+            "defineUpdatablesComponent(): origin=$origin, endPoint=$actualEndPoint, xDiff=$xDiff, yDiff=$yDiff"
+        )
 
         val newFirstPoint = GameObjectPools.fetch(Vector2::class).set(actualEndPoint)
+
         val newSecondPoint = GameObjectPools.fetch(Vector2::class)
         when (direction) {
             Direction.UP, Direction.DOWN -> {
                 newSecondPoint.x = actualEndPoint.x + xDiff
-                newSecondPoint.y = firstLocalPoint.y
+                newSecondPoint.y = origin.y
             }
             Direction.LEFT, Direction.RIGHT -> {
-                newSecondPoint.x = firstLocalPoint.x
+                newSecondPoint.x = origin.x
                 newSecondPoint.y = actualEndPoint.y + yDiff
             }
         }
-
         val reflectionDirection = GameObjectPools.fetch(Vector2::class)
             .set(newSecondPoint)
             .sub(newFirstPoint)
             .nor()
         newSecondPoint.set(newFirstPoint)
             .add(reflectionDirection.scl(DEFAULT_MAX_LENGTH * ConstVals.PPM))
+
+        GameLogger.debug(TAG, "defineUpdatablesComponent(): newSecondPoint=$newSecondPoint")
 
         val reflector = shieldFixture.getEntity()
 
@@ -519,8 +540,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     override fun isLaserIgnoring(entity: IGameEntity): Boolean {
         if (obstaclesToIgnore.contains((entity as MegaGameEntity).mapObjectId)) return true
 
-        if (
-            entity.isAny(
+        if (entity.isAny(
                 Axe::class,
                 PreciousShard::class,
                 PreciousGemBomb::class,

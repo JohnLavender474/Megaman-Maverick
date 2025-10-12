@@ -21,11 +21,14 @@ class PinkBlock(game: MegamanMaverickGame) : BreakableBlock(game), IDamageable {
 
     override val invincible = false
 
+    private var heartTankBlock = false
+
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.TYPE, PRECIOUS_TYPE)
         spawnProps.put(ConstKeys.COLOR, BlockPieceColor.PINK.name)
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+        heartTankBlock = spawnProps.getOrDefault(ConstKeys.HEART, false, Boolean::class)
     }
 
     override fun canBeDamagedBy(damager: IDamager) = damager is Laser && damager.owner is Megaman
@@ -46,7 +49,7 @@ class PinkBlock(game: MegamanMaverickGame) : BreakableBlock(game), IDamageable {
         blockFixture.setHitByExplosionReceiver {
             if (it is WhiteBurst &&
                 it.owner is Laser &&
-                (it.owner as Laser).owner is Megaman
+                (!heartTankBlock || (it.owner as Laser).owner is Megaman)
             ) explodeAndDie()
         }
 

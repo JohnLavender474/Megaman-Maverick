@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.shapes.GameCircle
@@ -236,6 +237,13 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
             else -> 0.75f
         }
         axeShieldFixture.offsetFromBodyAttachment.x = axeShieldOffsetX * ConstVals.PPM * facing.value
+        val axeShieldReflectDir = when (direction) {
+            Direction.UP -> if (isFacing(Facing.LEFT)) Direction.LEFT else Direction.RIGHT
+            Direction.DOWN -> if (isFacing(Facing.LEFT)) Direction.RIGHT else Direction.LEFT
+            Direction.LEFT -> if (isFacing(Facing.LEFT)) Direction.DOWN else Direction.UP
+            Direction.RIGHT -> if (isFacing(Facing.LEFT)) Direction.UP else Direction.DOWN
+        }
+        axeShieldFixture.putProperty("${ConstKeys.REFLECT}_${ConstKeys.DIRECTION}", axeShieldReflectDir)
 
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         feetGravityFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
