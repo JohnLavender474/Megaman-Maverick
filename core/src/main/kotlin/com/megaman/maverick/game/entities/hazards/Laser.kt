@@ -8,6 +8,7 @@ import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.IActivatable
 import com.mega.game.engine.common.objects.GamePair
@@ -39,26 +40,20 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.blocks.PreciousBlock
-import com.megaman.maverick.game.entities.contracts.IHazard
-import com.megaman.maverick.game.entities.contracts.ILaserEntity
-import com.megaman.maverick.game.entities.contracts.IOwnable
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.decorations.WhiteBurst
 import com.megaman.maverick.game.entities.enemies.PreciousGemCanon
 import com.megaman.maverick.game.entities.explosions.AsteroidExplosion
+import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.PreciousGemBomb
 import com.megaman.maverick.game.entities.projectiles.PreciousShard
 import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardColor
 import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardSize
 import com.megaman.maverick.game.entities.special.DarknessV2
-import com.megaman.maverick.game.entities.utils.spawn
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
-import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
-import com.megaman.maverick.game.utils.extensions.getFirstLocalPoint
-import com.megaman.maverick.game.utils.extensions.getWorldPoints
-import com.megaman.maverick.game.utils.extensions.toProps
+import com.megaman.maverick.game.utils.extensions.*
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -66,7 +61,7 @@ import com.megaman.maverick.game.world.body.getEntity
 import java.util.*
 
 class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IHazard, IDamager,
-    ILaserEntity, IAudioEntity, IActivatable, IOwnable<LaserBeamer> {
+    ILaserEntity, IAudioEntity, IActivatable, IOwnable<MegaGameEntity> {
 
     companion object {
         const val TAG = "Laser"
@@ -78,7 +73,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         private const val LIGHT_SOURCE_RADIANCE = 1.5f
 
         private const val LASER_SPRITE_SIZE = 2f / ConstVals.PPM
-        private const val LASER_SPRITE_ON_DELAY = 0.1f
+        private const val LASER_SPRITE_ON_DELAY = 0.025f
 
         private const val LASER_PRECIOUS_SHARDS_DELAY = 0.15f
         private const val LASER_SHARDS_MIN_IMPULSE_X = -3f
@@ -87,12 +82,11 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
         // This is how many times a "laser" can be reflected. A "laser" is composed of
         // one or more Laser instances - but to the player, it appears like just one.
-        private const val MAX_REFLECTIONS = 1
+        private const val MAX_REFLECTIONS = 2
 
         private var region: TextureRegion? = null
     }
 
-    override var owner: LaserBeamer? = null
     override var on: Boolean
         get() = getOrDefaultProperty(ConstKeys.ON, false, Boolean::class)
         set(value) {
@@ -101,6 +95,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
             putProperty(ConstKeys.ON, value)
             if (!value) spriteOnDelay.reset()
         }
+    override var owner: MegaGameEntity? = null
 
     private val line = GameLine()
 
@@ -184,7 +179,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         on = spawnProps.getOrDefault(ConstKeys.ACTIVE, true, Boolean::class)
 
         burst = MegaEntityFactory.fetch(WhiteBurst::class)!!
-        burst!!.spawn()
+        burst!!.spawn(props(ConstKeys.OWNER pairTo this))
 
         reflectionIndex = spawnProps.getOrDefault(ConstKeys.INDEX, 0, Int::class)
 
@@ -192,7 +187,6 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
             reflectingLaser = MegaEntityFactory.fetch(Laser::class)!!
             reflectingLaser!!.spawn(
                 props(
-                    ConstKeys.OWNER pairTo owner,
                     ConstKeys.ACTIVE pairTo false,
                     ConstKeys.INDEX pairTo reflectionIndex + 1
                 )
@@ -335,9 +329,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
                         val (endPoint, fixture) = contacts.poll()
 
                         if (fixture.getType() == FixtureType.SHIELD) {
-                            val shieldEntity = fixture.getEntity()
-
-                            if (!obstaclesToIgnore.contains(shieldEntity.mapObjectId)) hitShieldFixture = fixture
+                            if (shouldHitShield(fixture)) hitShieldFixture = fixture
                             else resetReflectingLaserIfAny()
                         }
 
@@ -360,15 +352,33 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         return BodyComponentCreator.create(this, body)
     }
 
+    private fun shouldHitShield(shield: IFixture): Boolean {
+        val shieldEntity = shield.getEntity()
+
+        if (obstaclesToIgnore.contains(shieldEntity.mapObjectId)) return false
+
+        // Special case: if the shield is Megaman's axe shield, then the axe shield
+        // needs to be facing the origin of the laser. This is to prevent lasers
+        // from being reflected when hitting the back of the shield.
+        if (shieldEntity is Megaman && shield.isProperty(ConstKeys.AXE, true)) {
+            val origin = getOrigin()
+
+            if (megaman.isFacing(Facing.LEFT) && origin.x > megaman.body.getCenter().x) return false
+            if (megaman.isFacing(Facing.RIGHT) && origin.x < megaman.body.getCenter().x) return false
+        }
+
+        return true
+    }
+
     private fun resetReflectingLaserIfAny() {
         reflectingLaser?.let {
             it.on = false
+            it.owner = null
 
             it.setOrigin(Vector2.Zero)
             it.setMaxEnd(Vector2.Zero)
 
             it.obstaclesToIgnore.clear()
-            owner?.let { o -> reflectingLaser!!.obstaclesToIgnore.add(o.mapObjectId) }
         }
     }
 
@@ -428,13 +438,15 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         newSecondPoint.set(newFirstPoint)
             .add(reflectionDirection.scl(DEFAULT_MAX_LENGTH * ConstVals.PPM))
 
-        reflectingLaser!!.obstaclesToIgnore.clear()
-        owner?.let { o -> reflectingLaser!!.obstaclesToIgnore.add(o.mapObjectId) }
-
         val reflector = shieldFixture.getEntity()
+
+        GameLogger.debug(TAG, "defineUpdatablesComponent(): reflector=$reflector")
+
+        reflectingLaser!!.obstaclesToIgnore.clear()
         reflectingLaser!!.obstaclesToIgnore.add(reflector.mapObjectId)
 
         reflectingLaser!!.on = true
+        reflectingLaser!!.owner = reflector
         reflectingLaser!!.setOrigin(newFirstPoint)
         reflectingLaser!!.setMaxEnd(newSecondPoint)
     })

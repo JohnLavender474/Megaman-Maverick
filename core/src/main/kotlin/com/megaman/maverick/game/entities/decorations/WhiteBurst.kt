@@ -26,18 +26,22 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodyFixtureDef
+import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
 class WhiteBurst(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    IActivatable {
+    IActivatable, IOwnable<MegaGameEntity> {
 
     companion object {
         const val TAG = "WhiteBurst"
         private var region: TextureRegion? = null
     }
 
+    override var owner: MegaGameEntity? = null
     override var on = true
 
     override fun init() {
@@ -57,6 +61,8 @@ class WhiteBurst(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         body.setCenter(spawn)
 
         on = spawnProps.getOrDefault(ConstKeys.ACTIVE, true, Boolean::class)
+
+        owner = spawnProps.get(ConstKeys.OWNER, MegaGameEntity::class)
     }
 
     override fun onDestroy() {
@@ -66,13 +72,13 @@ class WhiteBurst(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.5f * ConstVals.PPM)
+        body.setSize(0.25f * ConstVals.PPM)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.forEachFixture { it.setActive(on) }
         }
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.EXPLOSION))
     }
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()

@@ -2041,6 +2041,7 @@ sprites/frames/Platforms1/RocketPlatform_v2.png
 sprites/frames/Platforms1/GearTrolleyPlatform.png
 sprites/frames/Platforms1/GoldBlock.png
 sprites/frames/Platforms1/FireballBlock.png
+sprites/frames/Platforms1/PinkBlock.png
 sprites/frames/Platforms1/PropellerPlatform.png
 sprites/frames/Platforms1/MoonCrate.png
 sprites/frames/Platforms1/Platform1_64x8.png
@@ -2086,6 +2087,7 @@ sprites/frames/Platforms1/Boulder/Medium.png
 sprites/frames/Platforms1/Boulder/Large.png
 sprites/frames/Platforms1/BlockPiece/red.png
 sprites/frames/Platforms1/BlockPiece/gold.png
+sprites/frames/Platforms1/BlockPiece/pink.png
 sprites/frames/Platforms1/BlockPiece/brown.png
 sprites/frames/Platforms1/AppearingBrick2.png
 sprites/frames/Platforms1/FlipperPlatform/RightDelay.png

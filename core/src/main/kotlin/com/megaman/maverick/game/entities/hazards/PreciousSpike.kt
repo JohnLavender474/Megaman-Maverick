@@ -133,7 +133,7 @@ class PreciousSpike(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
                 (shape as GameRectangle).set(body)
             }
         }
-        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.SHIELD, FixtureType.DEATH))
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.DEATH))
     }
 
     private fun defineCullablesComponent() = CullablesComponent(

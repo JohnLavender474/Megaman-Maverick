@@ -48,6 +48,8 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val CONNECTED = "connected"
+    const val AXE = "axe"
     const val SWITCH = "switch"
     const val CREATE = "create"
     const val OBSTACLE = "obstacle"
