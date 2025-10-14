@@ -88,7 +88,7 @@ class SpitFireball(game: MegamanMaverickGame) : AbstractProjectile(game), IFireE
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        val id = blockFixture.getEntity().mapObjectId
+        val id = blockFixture.getEntity().id
         if (blockIds.isEmpty || blockIds.contains(id)) {
             GameLogger.debug(TAG, "hitBlock(): id=$id, blockIds=$blockIds")
             explodeAndDie(thisShape, otherShape)

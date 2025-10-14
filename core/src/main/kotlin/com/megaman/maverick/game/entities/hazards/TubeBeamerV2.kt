@@ -180,7 +180,7 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         actualLine.reset()
     }
 
-    override fun isLaserIgnoring(entity: IGameEntity) = ignoreIds.contains((entity as MegaGameEntity).mapObjectId)
+    override fun isLaserIgnoring(entity: IGameEntity) = ignoreIds.contains((entity as MegaGameEntity).id)
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         when {

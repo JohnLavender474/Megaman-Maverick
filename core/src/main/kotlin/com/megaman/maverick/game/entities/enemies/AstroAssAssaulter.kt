@@ -152,7 +152,7 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
         super.onDestroy()
     }
 
-    private fun canThrowFlag() = !FLAGS.containsKey(mapObjectId) &&
+    private fun canThrowFlag() = !FLAGS.containsKey(id) &&
         ((isFacing(Facing.LEFT) && canThrowFlagLeft) || (isFacing(Facing.RIGHT) && canThrowFlagRight))
 
     private fun throwFlag() {
@@ -171,13 +171,13 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
             props(
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.IMPULSE pairTo impulse,
-                "${ConstKeys.PARENT}_${ConstKeys.ID}" pairTo mapObjectId,
+                "${ConstKeys.PARENT}_${ConstKeys.ID}" pairTo id,
                 "${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}" pairTo DEFAULT_FLAG_GRAVITY_SCALAR,
                 "${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}" pairTo DEFAULT_FLAG_MOVEMENT_SCALAR
             )
         )
 
-        FLAGS.put(mapObjectId, flag)
+        FLAGS.put(id, flag)
     }
 
     private fun shootLazer() {

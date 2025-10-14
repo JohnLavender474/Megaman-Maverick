@@ -2,7 +2,6 @@ package com.megaman.maverick.game.entities.hazards
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
@@ -50,7 +49,6 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
-import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getFirstLocalPoint
 import com.megaman.maverick.game.utils.extensions.getOrigin
@@ -67,12 +65,12 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         const val TAG = "LaserBeamer"
 
         private const val DEFAULT_SPEED = 1.75f
-        private const val DEFAULT_HARD_SPEED = 2.25f
+        private const val DEFAULT_HARD_SPEED = 2f
 
         private const val DEFAULT_MAX_RADIUS = 20f
 
-        private const val DEFAULT_SWITCH_TIME = 1f
-        private const val DEFAULT_HARD_SWITCH_TIME = 0.75f
+        private const val DEFAULT_SWITCH_TIME = 1.25f
+        private const val DEFAULT_HARD_SWITCH_TIME = 1f
 
         private const val MIN_DEGREES = 200f
         private const val MAX_DEGREES = 340f
@@ -95,7 +93,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     private lateinit var spawnRoom: String
     private lateinit var rotatingLine: RotatingLine
 
-    private var clockwise = false
+    private var clockwise = true
     private var beaming = false
     private var speed = 0f
 
@@ -140,13 +138,13 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         )
         switchTimer.resetDuration(switchDur)
 
+        clockwise = true
+
         beaming = false
 
         laser = MegaEntityFactory.fetch(Laser::class)
         val laserProps = props(
             ConstKeys.OWNER pairTo this,
-            ConstKeys.ORIGIN pairTo GameObjectPools.fetch(Vector2::class)
-                .set(rotatingLine.line.originX, rotatingLine.line.originY),
             "${ConstKeys.FIRST}_${ConstKeys.POINT}" pairTo rotatingLine.line.getFirstLocalPoint(),
             "${ConstKeys.SECOND}_${ConstKeys.POINT}" pairTo rotatingLine.line.getSecondLocalPoint(),
         )

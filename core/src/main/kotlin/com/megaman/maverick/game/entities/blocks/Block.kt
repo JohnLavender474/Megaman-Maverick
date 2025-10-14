@@ -63,7 +63,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
         GameLogger.debug(
             TAG,
-            "onSpawn(): mapObjectId=$mapObjectId, " +
+            "onSpawn(): mapObjectId=$id, " +
                 "blocks.size=${MegaGameEntities.getOfType(EntityType.BLOCK).size} " +
                 "tag=${getTag()}, " +
                 "spawnProps=$spawnProps"
@@ -239,7 +239,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
         GameLogger.debug(
             TAG,
-            "onDestroy(): mapObjectId=$mapObjectId, blocks.size=${MegaGameEntities.getOfType(EntityType.BLOCK).size}"
+            "onDestroy(): mapObjectId=$id, blocks.size=${MegaGameEntities.getOfType(EntityType.BLOCK).size}"
         )
     }
 

@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.contracts
 
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.objects.Pool
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.entities.GameEntity
 import com.megaman.maverick.game.ConstKeys
@@ -13,13 +14,21 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
 
     companion object {
         const val TAG = "MegaGameEntity"
+
+        // If an entity is not assigned an ID via spawn props, then it will be assigned
+        // a negative id.
+        private var CURRENT_NEW_ID = -1
+        private val RANDOM_ID_POOL = Pool<Int>(
+            supplier = { CURRENT_NEW_ID },
+            onSupplyNew = { --CURRENT_NEW_ID }
+        )
     }
 
     val runnablesOnSpawn = OrderedMap<String, () -> Unit>()
     val runnablesOnDestroy = OrderedMap<String, () -> Unit>()
 
     var dead = false
-    var mapObjectId = 0
+    var id = 0
         private set
 
     override fun canSpawn(spawnProps: Properties): Boolean {
@@ -35,20 +44,21 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        mapObjectId = spawnProps.getOrDefault(ConstKeys.ID, -1, Int::class)
-        runnablesOnSpawn.values().forEach { it.invoke() }
+        id = spawnProps.getOrDefault(ConstKeys.ID, RANDOM_ID_POOL.fetch(), Int::class)
         MegaGameEntities.add(this)
-        GameLogger.debug(TAG, "${getTag()}: onSpawn(): this=$this, spawnProps=$spawnProps")
+        runnablesOnSpawn.values().forEach { it.invoke() }
+        GameLogger.debug(TAG, "${getTag()}: onSpawn(): this=$this")
     }
 
     override fun onDestroy() {
         MegaGameEntities.remove(this)
         runnablesOnDestroy.values().forEach { it.invoke() }
+        if (id < 0) RANDOM_ID_POOL.free(id)
         GameLogger.debug(TAG, "${getTag()}: onDestroy(): this=$this")
     }
 
     override fun getTag() = this::class.simpleName ?: "?"
 
     override fun toString() = "{ ${this::class.simpleName}:[" +
-        "mapObjId=$mapObjectId, dead=$dead, hashCode=${hashCode()}] }"
+        "id=$id, dead=$dead, hashCode=${hashCode()}] }"
 }

@@ -6,6 +6,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
@@ -49,6 +50,7 @@ import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShar
 import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardSize
 import com.megaman.maverick.game.entities.projectiles.Rock
 import com.megaman.maverick.game.entities.projectiles.Rock.RockSize
+import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -62,10 +64,13 @@ class DrillHead(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         const val TAG = "DrillHead"
 
         private const val IDLE_DUR = 0.5f
+        private const val HARD_IDLE_DUR = 0.25f
+
         private const val DRILL_DUR = 2f
 
-        private const val FLY_VEL = 8f
-        private const val HOVER_VEL = 5f
+        private const val FLY_SPEED = 8f
+        private const val HOVER_SPEED = 5f
+        private const val HARD_HOVER_SPEED = 8f
 
         private const val DRILL_DEBRIS_OBJS = 10
         private const val DRILL_EXPLOSIONS = 5
@@ -85,11 +90,11 @@ class DrillHead(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     }
 
     private enum class DrillHeadState {
-        IDLE, FLY, DRILL, HOVER
+        HOVER, IDLE, FLY, DRILL,
     }
 
     private enum class DrillSpawnType {
-        ROCK, PRECIOUS_SHARD
+        ROCK, PRECIOUS_SHARD,
     }
 
     override lateinit var facing: Facing
@@ -97,35 +102,12 @@ class DrillHead(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     private val stateLoop = Loop(DrillHeadState.entries.toGdxArray())
     private val currentState: DrillHeadState
         get() = stateLoop.getCurrent()
-    private val stateTimers = orderedMapOf(
-        DrillHeadState.IDLE pairTo Timer(IDLE_DUR),
-        DrillHeadState.DRILL pairTo Timer(DRILL_DUR).also { drillTimer ->
-            val debrisRunnable: () -> Unit = { spawnDrillDebris() }
-            val drillDebrisDelay = DRILL_DUR / DRILL_DEBRIS_OBJS
-            for (i in 1..DRILL_DEBRIS_OBJS) drillTimer.addRunnable(
-                TimeMarkedRunnable(i * drillDebrisDelay, debrisRunnable)
-            )
-
-            val explosionRunnable: () -> Unit = {
-                val explosion = MegaEntityFactory.fetch(AsteroidExplosion::class)!!
-                explosion.spawn(
-                    props(
-                        ConstKeys.OWNER pairTo this,
-                        ConstKeys.POSITION pairTo body.getPositionPoint(Position.TOP_CENTER)
-                    )
-                )
-            }
-            val drillExplosionDelay = DRILL_DUR / DRILL_EXPLOSIONS
-            for (i in 0 until DRILL_EXPLOSIONS) drillTimer.addRunnable(
-                TimeMarkedRunnable(i * drillExplosionDelay, explosionRunnable)
-            )
-        }
-    )
+    private lateinit var stateTimers: OrderedMap<DrillHeadState, Timer>
 
     private lateinit var drillSpawnType: DrillSpawnType
 
-    private val hoverSpots = Array<Vector2>()
     private val currentHoverSpot = Vector2()
+    private val hoverSpots = Array<Vector2>()
     private val tempVec2Set = OrderedSet<Vector2>()
 
     override fun init() {
@@ -155,6 +137,31 @@ class DrillHead(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
         super.onSpawn(spawnProps)
 
+        stateTimers = orderedMapOf(
+            DrillHeadState.IDLE pairTo Timer(if (game.state.hardMode) HARD_IDLE_DUR else IDLE_DUR),
+            DrillHeadState.DRILL pairTo Timer(DRILL_DUR).also { drillTimer ->
+                val debrisRunnable: () -> Unit = { spawnDrillDebris() }
+                val drillDebrisDelay = DRILL_DUR / DRILL_DEBRIS_OBJS
+                for (i in 1..DRILL_DEBRIS_OBJS) drillTimer.addRunnable(
+                    TimeMarkedRunnable(i * drillDebrisDelay, debrisRunnable)
+                )
+
+                val explosionRunnable: () -> Unit = {
+                    val explosion = MegaEntityFactory.fetch(AsteroidExplosion::class)!!
+                    explosion.spawn(
+                        props(
+                            ConstKeys.OWNER pairTo this,
+                            ConstKeys.POSITION pairTo body.getPositionPoint(Position.TOP_CENTER)
+                        )
+                    )
+                }
+                val drillExplosionDelay = DRILL_DUR / DRILL_EXPLOSIONS
+                for (i in 0 until DRILL_EXPLOSIONS) drillTimer.addRunnable(
+                    TimeMarkedRunnable(i * drillExplosionDelay, explosionRunnable)
+                )
+            }
+        )
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
@@ -170,7 +177,7 @@ class DrillHead(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             }
         }
 
-        currentHoverSpot.setZero()
+        setNextPosition()
 
         drillSpawnType = when {
             spawnProps.containsKey("${ConstKeys.DRILL}_${ConstKeys.SPAWN}_${ConstKeys.TYPE}") ->
@@ -189,6 +196,8 @@ class DrillHead(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
         hoverSpots.forEach { GameObjectPools.free(it) }
         hoverSpots.clear()
+
+        currentHoverSpot.setZero()
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -209,17 +218,18 @@ class DrillHead(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                     FacingUtils.setFacingOf(this)
                 }
                 DrillHeadState.FLY -> {
-                    body.physics.velocity.set(0f, FLY_VEL * ConstVals.PPM)
+                    body.physics.velocity.set(0f, FLY_SPEED * ConstVals.PPM)
                     if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK))
                         nextState()
                 }
                 DrillHeadState.DRILL -> body.physics.velocity.setZero()
                 DrillHeadState.HOVER -> {
+                    val hoverSpeed = if (game.state.hardMode) HARD_HOVER_SPEED else HOVER_SPEED
                     val velocity = GameObjectPools.fetch(Vector2::class)
                         .set(currentHoverSpot)
                         .sub(body.getCenter())
                         .nor()
-                        .scl(HOVER_VEL * ConstVals.PPM)
+                        .scl(hoverSpeed * ConstVals.PPM)
                     body.physics.velocity.set(velocity)
 
                     if (body.getCenter().epsilonEquals(currentHoverSpot, 0.1f * ConstVals.PPM))
@@ -290,16 +300,17 @@ class DrillHead(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     private fun nextState() {
         val next = stateLoop.next()
+        if (next == DrillHeadState.HOVER) setNextPosition()
+    }
 
-        if (next == DrillHeadState.HOVER) {
-            tempVec2Set.addAll(hoverSpots)
-            tempVec2Set.remove(currentHoverSpot)
+    private fun setNextPosition() {
+        tempVec2Set.addAll(hoverSpots)
+        tempVec2Set.remove(currentHoverSpot)
 
-            val nextHoverSpot = tempVec2Set.random()
-            currentHoverSpot.set(nextHoverSpot)
+        val nextHoverSpot = tempVec2Set.random()
+        currentHoverSpot.set(nextHoverSpot)
 
-            tempVec2Set.clear()
-        }
+        tempVec2Set.clear()
     }
 
     private fun spawnDrillDebris() {

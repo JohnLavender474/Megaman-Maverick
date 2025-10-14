@@ -349,7 +349,7 @@ class DarknessV3(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                 lightSourceDef.radiance = it.radiance
                 lightSourceDef.radius = it.radius
             }
-            queuedLightSourcesToAdd.addLast(entity.mapObjectId pairTo lightSourceDef)
+            queuedLightSourcesToAdd.addLast(entity.id pairTo lightSourceDef)
         }
     }
 
@@ -370,7 +370,7 @@ class DarknessV3(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             lightSourceDef.center = megaman.body.getCenter()
             lightSourceDef.radius = MEGAMAN_CHARGING_RADIUS
             lightSourceDef.radiance = MEGAMAN_CHARGING_RADIANCE
-            queuedLightSourcesToAdd.addLast(megaman.mapObjectId pairTo lightSourceDef)
+            queuedLightSourcesToAdd.addLast(megaman.id pairTo lightSourceDef)
         }
 
         while (!queuedLightSourcesToAdd.isEmpty) {

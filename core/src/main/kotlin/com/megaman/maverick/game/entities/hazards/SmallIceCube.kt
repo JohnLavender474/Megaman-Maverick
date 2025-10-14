@@ -179,7 +179,7 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
             return
         }
 
-        val id = (entity as MegaGameEntity).mapObjectId
+        val id = (entity as MegaGameEntity).id
         if (ignoreHitsFromIds.contains(id)) {
             GameLogger.debug(TAG, "getHit(): ignoring hit from id=$id")
             return

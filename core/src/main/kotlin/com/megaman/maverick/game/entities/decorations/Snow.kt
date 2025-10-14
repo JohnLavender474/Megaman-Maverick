@@ -184,7 +184,7 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
         val bodyRect = GameRectangle()
         val bodyFixture = Fixture(body, FixtureType.BODY, bodyRect)
         bodyFixture.setHitByBlockReceiver(ProcessState.BEGIN) { block, _ ->
-            GameLogger.debug(TAG, "hitByBlock(): background=$background, mapObjId=${block.mapObjectId}")
+            GameLogger.debug(TAG, "hitByBlock(): background=$background, mapObjId=${block.id}")
             handleHit()
         }
         bodyFixture.setHitByBodyReceiver receiver@{ entity, processState ->

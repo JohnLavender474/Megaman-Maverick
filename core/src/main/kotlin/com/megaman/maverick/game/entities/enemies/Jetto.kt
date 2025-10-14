@@ -164,7 +164,7 @@ class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
 
         if (overlapsGameCamera() && isHealthDepleted()) explode()
 
-        delayNextPossibleSpawn(game, TAG, mapObjectId, NEXT_POSSIBLE_SPAWN_DELAY)
+        delayNextPossibleSpawn(game, TAG, id, NEXT_POSSIBLE_SPAWN_DELAY)
     }
 
     override fun shouldBeCulled(delta: Float) = cullTimer.isFinished() &&

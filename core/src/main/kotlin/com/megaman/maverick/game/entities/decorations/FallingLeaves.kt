@@ -60,7 +60,7 @@ class FallingLeaves(game: MegamanMaverickGame) : MegaGameEntity(game), ICullable
                 try {
                     CullBoundsType.valueOf(key!!.uppercase())
                 } catch (e: Exception) {
-                    throw Exception("Exception in tag=$TAG mapObjectId=$mapObjectId key=$key", e)
+                    throw Exception("Exception in tag=$TAG mapObjectId=$id key=$key", e)
                 }
             }
             else -> CullBoundsType.BODY

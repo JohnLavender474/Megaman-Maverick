@@ -178,13 +178,13 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
         FacingUtils.setFacingOf(this)
 
-        ALIVE.add(mapObjectId)
-        GameLogger.debug(TAG, "destroy(): added mapObjectId=$mapObjectId from ALIVE: $ALIVE")
+        ALIVE.add(id)
+        GameLogger.debug(TAG, "destroy(): added mapObjectId=$id from ALIVE: $ALIVE")
     }
 
     override fun destroy(): Boolean {
-        ALIVE.remove(mapObjectId)
-        GameLogger.debug(TAG, "destroy(): removed mapObjectId=$mapObjectId from ALIVE: $ALIVE")
+        ALIVE.remove(id)
+        GameLogger.debug(TAG, "destroy(): removed mapObjectId=$id from ALIVE: $ALIVE")
         return super.destroy()
     }
 
@@ -210,7 +210,7 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                 val yellowStar = MegaEntityFactory.fetch(Starkner::class)!!
                 yellowStar.spawn(
                     props(
-                        ConstKeys.ID pairTo mapObjectId,
+                        ConstKeys.ID pairTo id,
                         ConstKeys.POSITION pairTo body.getCenter(),
                         ConstKeys.STATE pairTo StarknerState.YELLOW
                     )
@@ -229,7 +229,7 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                 val redStar = MegaEntityFactory.fetch(Starkner::class)!!
                 redStar.spawn(
                     props(
-                        ConstKeys.ID pairTo mapObjectId,
+                        ConstKeys.ID pairTo id,
                         ConstKeys.STATE pairTo StarknerState.RED,
                         ConstKeys.POSITION pairTo body.getCenter()
                     )
@@ -248,7 +248,7 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                 val blackhole = MegaEntityFactory.fetch(Starkner::class)!!
                 blackhole.spawn(
                     props(
-                        ConstKeys.ID pairTo mapObjectId,
+                        ConstKeys.ID pairTo id,
                         ConstKeys.POSITION pairTo body.getCenter(),
                         ConstKeys.STATE pairTo StarknerState.BLACKHOLE
                     )

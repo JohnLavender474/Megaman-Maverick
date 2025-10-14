@@ -9,25 +9,25 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 object MegaGameEntities {
 
     private val entities = OrderedSet<MegaGameEntity>()
-    private val entityTypeToEntities = OrderedMap<EntityType, OrderedSet<MegaGameEntity>>()
-    private val mapObjectIdToEntities = OrderedMap<Int, OrderedSet<MegaGameEntity>>()
+    private val idToEntities = OrderedMap<Int, OrderedSet<MegaGameEntity>>()
     private val entityTagToEntities = OrderedMap<String, OrderedSet<MegaGameEntity>>()
+    private val entityTypeToEntities = OrderedMap<EntityType, OrderedSet<MegaGameEntity>>()
 
     fun add(entity: MegaGameEntity) {
         entities.add(entity)
-        entityTypeToEntities.putIfAbsentAndGet(entity.getType()) { OrderedSet() }.add(entity)
-        mapObjectIdToEntities.putIfAbsentAndGet(entity.mapObjectId) { OrderedSet() }.add(entity)
+        idToEntities.putIfAbsentAndGet(entity.id) { OrderedSet() }.add(entity)
         entityTagToEntities.putIfAbsentAndGet(entity.getTag()) { OrderedSet() }.add(entity)
+        entityTypeToEntities.putIfAbsentAndGet(entity.getType()) { OrderedSet() }.add(entity)
     }
 
     fun remove(entity: MegaGameEntity) {
         entities.remove(entity)
-        entityTypeToEntities.get(entity.getType())?.remove(entity)
         entityTagToEntities.get(entity.getTag())?.remove(entity)
-        if (mapObjectIdToEntities.containsKey(entity.mapObjectId)) {
-            val set = mapObjectIdToEntities.get(entity.mapObjectId)
+        entityTypeToEntities.get(entity.getType())?.remove(entity)
+        if (idToEntities.containsKey(entity.id)) {
+            val set = idToEntities.get(entity.id)
             set.remove(entity)
-            if (set.isEmpty) mapObjectIdToEntities.remove(entity.mapObjectId)
+            if (set.isEmpty) idToEntities.remove(entity.id)
         }
     }
 
@@ -60,7 +60,7 @@ object MegaGameEntities {
     fun existsAnyOfMapObjectId(mapObjectId: Int) = !getOfMapObjectId(mapObjectId).isEmpty
 
     fun getOfMapObjectId(mapObjectId: Int): OrderedSet<MegaGameEntity> =
-        mapObjectIdToEntities.get(mapObjectId, OrderedSet())
+        idToEntities.get(mapObjectId, OrderedSet())
 
     fun forEach(action: (MegaGameEntity) -> Unit) = entities.forEach { action.invoke(it) }
 }

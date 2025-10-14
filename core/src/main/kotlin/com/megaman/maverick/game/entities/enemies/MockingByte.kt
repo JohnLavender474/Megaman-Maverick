@@ -548,7 +548,7 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
 
                 GameLogger.debug(
                     TAG,
-                    "onChangeState(): startPos=$startPosition, targetPos=$targetPosition, nest=${nest.mapObjectId}"
+                    "onChangeState(): startPos=$startPosition, targetPos=$targetPosition, nest=${nest.id}"
                 )
             }
             else -> {}
@@ -583,7 +583,7 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         sortedNests.sort { a, b ->
             (a.position.dst2(megaman.body.getCenter()) - b.position.dst2(megaman.body.getCenter())).toInt()
         }
-        nestId = sortedNests[0].mapObjectId
+        nestId = sortedNests[0].id
 
         return true
     }

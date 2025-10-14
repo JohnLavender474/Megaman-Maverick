@@ -128,7 +128,7 @@ class BikerKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
         if (overlapsGameCamera() && isHealthDepleted()) explode()
 
-        delayNextPossibleSpawn(game, TAG, mapObjectId, NEXT_POSSIBLE_SPAWN_DELAY)
+        delayNextPossibleSpawn(game, TAG, id, NEXT_POSSIBLE_SPAWN_DELAY)
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

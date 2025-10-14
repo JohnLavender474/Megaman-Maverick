@@ -96,7 +96,7 @@ class FireWall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = blockFixture.getEntity() as Block
-        if (ignoreBlockSet.contains(entity.mapObjectId)) return
+        if (ignoreBlockSet.contains(entity.id)) return
         explodeAndDie()
     }
 

@@ -134,7 +134,7 @@ class SteamRollerMan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         if (!super.canSpawn(spawnProps)) return false
 
         val id = spawnProps.get(ConstKeys.ID, Int::class)!!
-        return MegaGameEntities.getOfTag(SteamRoller.TAG).none { it.mapObjectId == id }
+        return MegaGameEntities.getOfTag(SteamRoller.TAG).none { it.id == id }
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -184,7 +184,7 @@ class SteamRollerMan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         steamRoller.spawn(
             props(
                 ConstKeys.FACING pairTo facing,
-                ConstKeys.ID pairTo mapObjectId,
+                ConstKeys.ID pairTo id,
                 ConstKeys.STATE pairTo steamRollerState,
                 ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER),
                 ConstKeys.BLOCKS pairTo gdxArrayOf(smashAreaBlockBound, shieldAreaBlockBound)

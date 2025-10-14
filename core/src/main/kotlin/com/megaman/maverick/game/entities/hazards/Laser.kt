@@ -1,8 +1,10 @@
 package com.megaman.maverick.game.entities.hazards
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
@@ -19,6 +21,8 @@ import com.mega.game.engine.common.shapes.GameLine
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
+import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
+import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -28,6 +32,7 @@ import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.entities.contracts.IChildEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.*
@@ -53,18 +58,16 @@ import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShar
 import com.megaman.maverick.game.entities.special.DarknessV2
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
-import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
-import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.utils.extensions.getWorldPoints
-import com.megaman.maverick.game.utils.extensions.toProps
+import com.megaman.maverick.game.utils.extensions.*
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getEntity
 import java.util.*
 
 class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IHazard, IDamager,
-    ILaserEntity, IAudioEntity, IActivatable, IOwnable<MegaGameEntity> {
+    ILaserEntity, IAudioEntity, IActivatable, IOwnable<MegaGameEntity>, IChildEntity {
 
     companion object {
         const val TAG = "Laser"
@@ -98,7 +101,12 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
             putProperty(ConstKeys.ON, value)
             if (!value) spriteOnDelay.reset()
         }
+    // The "owner" is the entity that spawns this laser (or causes it to be spawned), e.g.
+    // a laser beamer, a shield, etc.
     override var owner: MegaGameEntity? = null
+    // The "parent" is the parent laser. This is null except if this laser is spawned from
+    // another laser.
+    override var parent: IGameEntity? = null
 
     private val line = GameLine()
 
@@ -106,7 +114,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     private lateinit var damagerFixture: Fixture
 
     private val contacts = PriorityQueue<GamePair<Vector2, IFixture>> { p1, p2 ->
-        val origin = getOrigin()
+        val origin = getFirstLocalPoint()
         val d1 = p1.first.dst2(origin)
         val d2 = p2.first.dst2(origin)
         d1.compareTo(d2)
@@ -155,13 +163,13 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
         actualEndPoint.set(secondPoint)
 
-        val origin = spawnProps.getOrDefault(ConstKeys.ORIGIN, Vector2.Zero, Vector2::class)
-        line.setOrigin(origin)
-
         body.set(line.getBoundingRectangle())
 
         owner = spawnProps.get(ConstKeys.OWNER, MegaGameEntity::class)
-        owner?.let { obstaclesToIgnore.add(it.mapObjectId) }
+        owner?.let { obstaclesToIgnore.add(it.id) }
+
+        // cast to "Laser" here to enforce strict type for "parent"
+        parent = spawnProps.get(ConstKeys.PARENT, Laser::class)
 
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.IGNORE)) {
@@ -190,6 +198,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
             reflectingLaser = MegaEntityFactory.fetch(Laser::class)!!
             reflectingLaser!!.spawn(
                 props(
+                    ConstKeys.PARENT pairTo this,
                     ConstKeys.ACTIVE pairTo false,
                     ConstKeys.INDEX pairTo reflectionIndex + 1
                 )
@@ -204,6 +213,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         super.onDestroy()
 
         owner = null
+        parent = null
 
         sprites.clear()
         contacts.clear()
@@ -212,6 +222,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
         hitShieldFixture = null
 
+        line.reset()
         laserFixture.setShape(GameLine())
         damagerFixture.setShape(GameLine())
 
@@ -280,32 +291,43 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         }
     }
 
-    fun getOrigin(reclaim: Boolean = true): Vector2 =
-        GameObjectPools.fetch(Vector2::class, reclaim).set(line.originX, line.originY)
+    fun getFirstLocalPoint() = line.getFirstLocalPoint()
 
-    fun setOrigin(origin: Vector2) {
-        line.setFirstLocalPoint(origin)
-        line.setOrigin(origin)
+    fun setFirstLocalPoint(p1: Vector2) {
+        line.setFirstLocalPoint(p1)
+        GameLogger.debug(TAG, "setFirstLocalPoint(): line=$line, owner=$owner, parent=$parent")
     }
 
-    fun setMaxEnd(maxEnd: Vector2) {
-        line.setSecondLocalPoint(maxEnd)
+    fun setSecondLocalPoint(p2: Vector2) {
+        line.setSecondLocalPoint(p2)
+        GameLogger.debug(TAG, "setSecondLocalPoint(): line=$line, owner=$owner, parent=$parent")
     }
 
-    fun set(line: GameLine) = this.line.set(line)
+    fun set(other: GameLine) {
+        line.set(other)
+        GameLogger.debug(TAG, "set(): line=$line, other=$other, owner=$owner, parent=$parent")
+    }
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
+        body.drawingColor = Color.GRAY
+
+        val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getBounds() }
 
         damagerFixture = Fixture(body, FixtureType.DAMAGER, GameLine())
         damagerFixture.attachedToBody = false
         body.addFixture(damagerFixture)
+        damagerFixture.drawingColor = Color.RED
+        debugShapes.add { damagerFixture }
 
         laserFixture = Fixture(body, FixtureType.LASER, GameLine())
         laserFixture.putProperty(ConstKeys.DAMAGER, damagerFixture)
         laserFixture.putProperty(ConstKeys.COLLECTION, contacts)
         laserFixture.attachedToBody = false
         body.addFixture(laserFixture)
+        laserFixture.drawingColor = Color.ORANGE
+        debugShapes.add { laserFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.forEachFixture { fixture -> fixture.setActive(on) }
@@ -320,37 +342,41 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
             val damager = damagerFixture.rawShape as GameLine
 
             if (on) {
-                val origin = getOrigin()
+                val p1 = getFirstLocalPoint()
+                damager.setFirstLocalPoint(p1)
 
-                damager.setOrigin(origin)
-                damager.setFirstLocalPoint(origin)
-
-                val end = when {
-                    contacts.isEmpty() || contacts.peek().first.dst(origin) > line.getLength() -> {
+                val p2 = when {
+                    contacts.isEmpty() || contacts.peek().first.dst(p1) > line.getLength() -> {
                         val (_, endPoint) = line.getWorldPoints()
                         endPoint
                     }
                     else -> {
                         val (endPoint, fixture) = contacts.poll()
                         if (fixture.getType() == FixtureType.SHIELD) {
-                            if (shouldHitShield(fixture)) hitShieldFixture = fixture
-                            else resetReflectingLaserIfAny()
+                            if (shouldHitShield(fixture)) {
+                                GameLogger.debug(TAG, "body.postProcess(): hit shield: $fixture")
+                                hitShieldFixture = fixture
+                            } else {
+                                GameLogger.debug(TAG, "body.postProcess(): ignore shield: $fixture")
+                                resetReflectingLaserIfAny()
+                            }
                         }
                         endPoint
                     }
                 }
 
-                damager.setSecondLocalPoint(end)
-                burst?.body?.setCenter(end)
-                actualEndPoint.set(end)
+                damager.setSecondLocalPoint(p2)
+                burst?.body?.setCenter(p2)
+                actualEndPoint.set(p2)
             } else {
-                damager.setOrigin(Vector2.Zero)
                 damager.setFirstLocalPoint(Vector2.Zero)
                 damager.setSecondLocalPoint(Vector2.Zero)
 
                 burst?.body?.setCenter(Vector2.Zero)
             }
         }
+
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
@@ -363,7 +389,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         // needs to be facing the origin of the laser. This is to prevent lasers
         // from being reflected when hitting the back of the shield.
         if (shieldEntity is Megaman && shield.isProperty(ConstKeys.AXE, true)) {
-            val origin = getOrigin()
+            val origin = getFirstLocalPoint()
 
             if (megaman.isFacing(Facing.LEFT) && origin.x > megaman.body.getCenter().x) return false
             if (megaman.isFacing(Facing.RIGHT) && origin.x < megaman.body.getCenter().x) return false
@@ -377,8 +403,8 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
             it.on = false
             it.owner = null
 
-            it.setOrigin(Vector2.Zero)
-            it.setMaxEnd(Vector2.Zero)
+            it.setFirstLocalPoint(Vector2.Zero)
+            it.setSecondLocalPoint(Vector2.Zero)
 
             it.obstaclesToIgnore.clear()
         }
@@ -428,13 +454,13 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
         GameLogger.debug(TAG, "defineUpdatablesComponent(): direction=$direction")
 
-        val origin = getOrigin()
+        val origin = getFirstLocalPoint()
         val xDiff = actualEndPoint.x - origin.x
         val yDiff = actualEndPoint.y - origin.y
 
         GameLogger.debug(
             TAG,
-            "defineUpdatablesComponent(): origin=$origin, endPoint=$actualEndPoint, xDiff=$xDiff, yDiff=$yDiff"
+            "defineUpdatablesComponent(): this.origin=$origin, this.endPoint=$actualEndPoint, xDiff=$xDiff, yDiff=$yDiff"
         )
 
         val newFirstPoint = GameObjectPools.fetch(Vector2::class).set(actualEndPoint)
@@ -457,19 +483,22 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         newSecondPoint.set(newFirstPoint)
             .add(reflectionDirection.scl(DEFAULT_MAX_LENGTH * ConstVals.PPM))
 
-        GameLogger.debug(TAG, "defineUpdatablesComponent(): newSecondPoint=$newSecondPoint")
+        GameLogger.debug(
+            TAG,
+            "defineUpdatablesComponent(): newFirstPoint=$newFirstPoint, newSecondPoint=$newSecondPoint"
+        )
 
         val reflector = shieldFixture.getEntity()
 
         GameLogger.debug(TAG, "defineUpdatablesComponent(): reflector=$reflector")
 
         reflectingLaser!!.obstaclesToIgnore.clear()
-        reflectingLaser!!.obstaclesToIgnore.add(reflector.mapObjectId)
+        reflectingLaser!!.obstaclesToIgnore.add(reflector.id)
 
         reflectingLaser!!.on = true
         reflectingLaser!!.owner = reflector
-        reflectingLaser!!.setOrigin(newFirstPoint)
-        reflectingLaser!!.setMaxEnd(newSecondPoint)
+        reflectingLaser!!.setFirstLocalPoint(newFirstPoint)
+        reflectingLaser!!.setSecondLocalPoint(newSecondPoint)
     })
 
     private fun shouldSendLightSourceEvents() = MegaGameEntities.getOfTag(DarknessV2.TAG).any {
@@ -538,7 +567,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     }
 
     override fun isLaserIgnoring(entity: IGameEntity): Boolean {
-        if (obstaclesToIgnore.contains((entity as MegaGameEntity).mapObjectId)) return true
+        if (obstaclesToIgnore.contains((entity as MegaGameEntity).id)) return true
 
         if (entity.isAny(
                 Axe::class,

@@ -200,7 +200,6 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         GameRectangle().setHeight(MEGAMAN_BODY_HEIGHT * ConstVals.PPM)
     )
     axeShieldFixture.putProperty(ConstKeys.AXE, true)
-    axeShieldFixture.offsetFromBodyAttachment.y = -0.1f * ConstVals.PPM
     body.addFixture(axeShieldFixture)
     axeShieldFixture.drawingColor = Color.GREEN
     debugShapes.add { if (axeShieldFixture.isActive()) axeShieldFixture else null }

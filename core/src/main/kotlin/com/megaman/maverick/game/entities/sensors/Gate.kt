@@ -161,7 +161,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
     }
 
     override fun onDestroy() {
-        GameLogger.debug(TAG, "onDestroy(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId")
+        GameLogger.debug(TAG, "onDestroy(): nextRoomKey=$nextRoomKey, mapObjectId=$id")
         super.onDestroy()
         game.eventsMan.removeListener(this)
     }
@@ -169,7 +169,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
     override fun onEvent(event: Event) {
         when (event.key) {
             EventType.PLAYER_SPAWN -> {
-                GameLogger.debug(TAG, "onEvent(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId, PLAYER_SPAWN")
+                GameLogger.debug(TAG, "onEvent(): nextRoomKey=$nextRoomKey, mapObjectId=$id, PLAYER_SPAWN")
                 if (resettable) reset()
             }
 
@@ -179,7 +179,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
                 if (nextRoomKey == room.name) {
                     GameLogger.debug(
                         TAG,
-                        "onEvent(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId, nextRoomKey=$nextRoomKey: END_ROOM_TRANS"
+                        "onEvent(): nextRoomKey=$nextRoomKey, mapObjectId=$id, nextRoomKey=$nextRoomKey: END_ROOM_TRANS"
                     )
 
                     transitionFinished = true
@@ -193,7 +193,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
                     if (it == boss.bossKey) {
                         GameLogger.debug(
                             TAG,
-                            "onEvent(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId, INTERMEDIATE_BOSS_DEAD: " +
+                            "onEvent(): nextRoomKey=$nextRoomKey, mapObjectId=$id, INTERMEDIATE_BOSS_DEAD: " +
                                 "this_boss_key=$thisBossKey, other_boss_key=${boss.bossKey}"
                         )
 
@@ -205,7 +205,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
     }
 
     override fun reset() {
-        GameLogger.debug(TAG, "reset(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId")
+        GameLogger.debug(TAG, "reset(): nextRoomKey=$nextRoomKey, mapObjectId=$id")
 
         timer.reset()
         state = GateState.OPENABLE
@@ -218,7 +218,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
     fun trigger() {
         if (!triggerable) return
 
-        GameLogger.debug(TAG, "trigger(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId")
+        GameLogger.debug(TAG, "trigger(): nextRoomKey=$nextRoomKey, mapObjectId=$id")
 
         state = GateState.OPENING
         playSoundNow(SoundAsset.BOSS_DOOR_SOUND, false)
@@ -229,7 +229,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
         if (state == GateState.OPENING) {
             timer.update(it)
             if (timer.isFinished()) {
-                GameLogger.debug(TAG, "update(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId, OPEN")
+                GameLogger.debug(TAG, "update(): nextRoomKey=$nextRoomKey, mapObjectId=$id, OPEN")
 
                 timer.reset()
                 state = GateState.OPEN
@@ -247,7 +247,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
 
         if (state == GateState.OPEN) {
             if (transitionFinished) {
-                GameLogger.debug(TAG, "update(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId, CLOSING")
+                GameLogger.debug(TAG, "update(): nextRoomKey=$nextRoomKey, mapObjectId=$id, CLOSING")
 
                 transitionFinished = false
                 state = GateState.CLOSING
@@ -259,7 +259,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
         if (state == GateState.CLOSING) {
             timer.update(it)
             if (timer.isFinished()) {
-                GameLogger.debug(TAG, "update(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId, CLOSED")
+                GameLogger.debug(TAG, "update(): nextRoomKey=$nextRoomKey, mapObjectId=$id, CLOSED")
 
                 timer.reset()
                 state = GateState.CLOSED

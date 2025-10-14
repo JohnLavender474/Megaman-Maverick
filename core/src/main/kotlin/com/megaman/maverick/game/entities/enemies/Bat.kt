@@ -257,7 +257,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         val hitHeadOnBlock: (Block) -> Unit = hit@{ block ->
             if (state != BatState.FLYING_TO_RETREAT) return@hit
 
-            val id = block.mapObjectId
+            val id = block.id
             if (blocksToIgnore.contains(id)) return@hit
 
             state = BatState.HANGING
