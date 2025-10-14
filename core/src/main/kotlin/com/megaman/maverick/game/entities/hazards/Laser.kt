@@ -81,7 +81,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         private const val LASER_SPRITE_SIZE = 2f / ConstVals.PPM
         private const val LASER_SPRITE_ON_DELAY = 0.025f
 
-        private const val LASER_PRECIOUS_SHARDS_DELAY = 0.15f
+        private const val LASER_PRECIOUS_SHARDS_DELAY = 0.25f
         private const val LASER_SHARDS_MIN_IMPULSE_X = -3f
         private const val LASER_SHARDS_MAX_IMPULSE_X = 3f
         private const val LASER_SHARDS_IMPULSE_Y = 6f
