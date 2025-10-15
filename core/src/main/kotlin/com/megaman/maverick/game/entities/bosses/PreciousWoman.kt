@@ -310,10 +310,18 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         if (damaged) {
             if (damager is Axe && !stunned) {
                 stunned = true
-                body.physics.velocity.x = 0f
+
+                laughTimer.setToEnd()
+
+                body.physics.velocity.setZero()
+
                 damageTimer.resetDuration(STUNNED_DAMAGE_DUR)
 
-                if (!shieldGems.isEmpty) throwShieldGems()
+                if (!shieldGems.isEmpty) {
+                    throwShieldGems()
+                    stateMachine.next()
+                } else if (currentState.equalsAny(PreciousWomanState.GROUNDSLIDE, PreciousWomanState.AIRPUNCH))
+                    stateMachine.next()
             } else damageTimer.resetDuration(DEFAULT_BOSS_DMG_DURATION)
         }
 
@@ -710,10 +718,12 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     private fun buildStateMachine() = StateMachineBuilder<PreciousWomanState>()
         .states { states -> PreciousWomanState.entries.forEach { state -> states.put(state.name, state) } }
         .initialState(PreciousWomanState.INIT.name)
+        .setTriggerChangeWhenSameElement(true)
         .setOnChangeState(this::onChangeState)
         // init
         .transition(PreciousWomanState.INIT.name, PreciousWomanState.STAND.name) { true }
         // stand
+        .transition(PreciousWomanState.STAND.name, PreciousWomanState.STAND.name) { stunned }
         .transition(PreciousWomanState.STAND.name, PreciousWomanState.JUMP.name) { shouldJump() }
         .transition(PreciousWomanState.STAND.name, PreciousWomanState.GROUNDSLIDE.name) { shouldGroundslide() }
         .transition(PreciousWomanState.STAND.name, PreciousWomanState.RUN.name) { shouldStartRunning() }
@@ -734,29 +744,34 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
         .transition(PreciousWomanState.STAND.name, PreciousWomanState.RUN.name) { true }
         // run
+        .transition(PreciousWomanState.RUN.name, PreciousWomanState.STAND.name) { stunned }
         .transition(PreciousWomanState.RUN.name, PreciousWomanState.JUMP.name) { true }
         // ground slide
+        .transition(PreciousWomanState.GROUNDSLIDE.name, PreciousWomanState.STAND.name) { stunned }
         .transition(PreciousWomanState.GROUNDSLIDE.name, PreciousWomanState.JUMP.name) { true }
         // jump
+        .transition(PreciousWomanState.JUMP.name, PreciousWomanState.STAND.name) { stunned }
         .transition(PreciousWomanState.JUMP.name, PreciousWomanState.WALLSLIDE.name) { shouldStartWallSliding() }
         .transition(PreciousWomanState.JUMP.name, PreciousWomanState.AIRPUNCH.name) { shouldAirPunch() }
         .transition(PreciousWomanState.JUMP.name, PreciousWomanState.STAND.name) { shouldStand() }
         .transition(PreciousWomanState.JUMP.name, PreciousWomanState.SPAWN_SHIELD_GEMS.name) { shouldSpawnShieldGems() }
         // wallslide
+        .transition(PreciousWomanState.WALLSLIDE.name, PreciousWomanState.STAND.name) { stunned }
         .transition(PreciousWomanState.WALLSLIDE.name, PreciousWomanState.JUMP.name) {
             !body.isSensing(BodySense.FEET_ON_GROUND)
         }
         .transition(PreciousWomanState.WALLSLIDE.name, PreciousWomanState.STAND.name) { true }
         // air punch
+        .transition(PreciousWomanState.AIRPUNCH.name, PreciousWomanState.STAND.name) { stunned }
         .transition(PreciousWomanState.AIRPUNCH.name, PreciousWomanState.JUMP.name) {
             !body.isSensing(BodySense.FEET_ON_GROUND)
         }
         .transition(PreciousWomanState.AIRPUNCH.name, PreciousWomanState.STAND.name) { true }
         // spawn shield gems
-        .transition(PreciousWomanState.SPAWN_SHIELD_GEMS.name, PreciousWomanState.STAND.name) { shouldStand() }
+        .transition(PreciousWomanState.SPAWN_SHIELD_GEMS.name, PreciousWomanState.STAND.name) { stunned || shouldStand() }
         .transition(PreciousWomanState.SPAWN_SHIELD_GEMS.name, PreciousWomanState.JUMP.name) { true }
         // throw shield gems
-        .transition(PreciousWomanState.THROW_SHIELD_GEMS.name, PreciousWomanState.STAND.name) { shouldStand() }
+        .transition(PreciousWomanState.THROW_SHIELD_GEMS.name, PreciousWomanState.STAND.name) { stunned || shouldStand() }
         .transition(PreciousWomanState.THROW_SHIELD_GEMS.name, PreciousWomanState.JUMP.name) { true }
         // build
         .build()
