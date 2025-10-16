@@ -6,7 +6,6 @@ import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.ISizable
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.damage.IDamager
-import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.IDamageNegotiator
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
@@ -18,20 +17,20 @@ import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.hazards.Laser
+import com.megaman.maverick.game.entities.utils.hardMode
 
 class MegamanDamageNegotiator(private val megaman: Megaman) : IDamageNegotiator {
 
-    companion object {
-        private val custom = objectMapOf<String, DamageNegotiation>(
-            BigAssMaverickRobotHand.TAG pairTo dmgNeg(2),
-            BigAssMaverickRobot.TAG pairTo dmgNeg(2),
-            PropellerPlatform.TAG pairTo dmgNeg(1),
-            RocketPlatform.TAG pairTo dmgNeg(1),
-            Laser.TAG pairTo dmgNeg(6),
-        )
+    private val game = megaman.game
 
-        private val entityTypes = objectSetOf(EntityType.ENEMY, EntityType.EXPLOSION)
-    }
+    private val custom = objectMapOf(
+        BigAssMaverickRobotHand.TAG pairTo dmgNeg(2),
+        BigAssMaverickRobot.TAG pairTo dmgNeg(2),
+        PropellerPlatform.TAG pairTo dmgNeg(1),
+        RocketPlatform.TAG pairTo dmgNeg(1),
+        Laser.TAG pairTo dmgNeg { if (game.state.hardMode) 15 else 8 },
+    )
+    private val entityTypes = objectSetOf(EntityType.ENEMY, EntityType.EXPLOSION)
 
     override fun get(damager: IDamager): Int {
         val entity = damager as MegaGameEntity

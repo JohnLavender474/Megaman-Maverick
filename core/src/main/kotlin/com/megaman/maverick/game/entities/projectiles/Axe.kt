@@ -9,6 +9,7 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -21,16 +22,16 @@ import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodyFixtureDef
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.*
 
 class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
@@ -67,6 +68,18 @@ class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+    }
+
+    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        val shieldEntity = shieldFixture.getEntity()
+        if (shieldEntity == owner) return
+
+        GameLogger.debug(TAG, "hitShield()")
+
+        if (megaman.direction.isVertical()) body.physics.velocity.x *= -1
+        else body.physics.velocity.y *= -1
+
+        requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
 
     override fun defineBodyComponent(): BodyComponent {

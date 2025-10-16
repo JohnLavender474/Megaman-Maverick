@@ -14,10 +14,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.extensions.equalsAny
-import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.orderedMapOf
+import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -284,7 +281,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     override fun canBeDamagedBy(damager: IDamager): Boolean {
         if (!super.canBeDamagedBy(damager)) return false
         if (damager is ReactorManProjectile && damager.owner != megaman) return false
-        if (damager is SlashWave) return true
+        if (damager.isAny(SlashWave::class, Axe::class)) return true
         return !isShielded()
     }
 

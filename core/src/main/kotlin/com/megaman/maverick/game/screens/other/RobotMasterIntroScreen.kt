@@ -353,16 +353,13 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
                 Animation(atlas.findRegion("${DesertMan.TAG}/jump")) pairTo Timer(DROP_DUR)
             )
             animQueue.addLast(
-                Animation(atlas.findRegion("${DesertMan.TAG}/dance"), 2, 1, 0.1f, true) pairTo Timer(0.5f)
-            )
-            animQueue.addLast(
-                Animation(atlas.findRegion("${DesertMan.TAG}/dance_flash"), 2, 2, 0.1f, true) pairTo Timer(0.5f)
-            )
-            animQueue.addLast(
                 Animation(atlas.findRegion("${DesertMan.TAG}/tornado"), 2, 1, 0.1f, true) pairTo Timer(0.5f)
             )
             animQueue.addLast(
-                Animation(atlas.findRegion("${DesertMan.TAG}/tornado_punch"), 2, 2, 0.1f, true) pairTo Timer(1f)
+                Animation(atlas.findRegion("${DesertMan.TAG}/tornado_punch"), 2, 2, 0.1f, true) pairTo Timer(0.5f)
+            )
+            animQueue.addLast(
+                Animation(atlas.findRegion("${DesertMan.TAG}/jump")) pairTo Timer(0.1f)
             )
             animQueue.addLast(
                 Animation(atlas.findRegion("${DesertMan.TAG}/stand"), 2, 1, gdxArrayOf(1f, 0.15f), true) pairTo null
@@ -409,13 +406,10 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
                 Animation(atlas.findRegion("${ReactorMan.TAG}/jump")) pairTo Timer(DROP_DUR)
             )
             animQueue.addLast(
-                Animation(atlas.findRegion("${ReactorMan.TAG}/jump_throw"), 3, 2, 0.1f, false) pairTo Timer(0.6f)
-            )
-            animQueue.addLast(
-                Animation(atlas.findRegion("${ReactorMan.TAG}/stand_throw_two"), 3, 1, 0.1f, false) pairTo Timer(0.3f)
-            )
-            animQueue.addLast(
                 Animation(atlas.findRegion("${ReactorMan.TAG}/giga_stand"), 2, 1, 0.1f, true) pairTo Timer(1f)
+            )
+            animQueue.addLast(
+                Animation(atlas.findRegion("${ReactorMan.TAG}/stand_throw_two"), 3, 1, 0.1f, false) pairTo Timer(0.5f)
             )
             animQueue.addLast(
                 Animation(
