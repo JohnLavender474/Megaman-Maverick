@@ -195,8 +195,8 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IFreezableEnt
         stateMachine = buildStateMachine()
         damageOverrides.put(ChargedShotExplosion::class, dmgNeg(1))
         damageOverrides.put(SmallIceCube::class, dmgNeg(4))
-        damageOverrides.put(Axe::class, dmgNeg(3))
         damageOverrides.put(SlashWave::class, dmgNeg(3))
+        damageOverrides.put(Axe::class, dmgNeg(3))
     }
 
     override fun onSpawn(spawnProps: Properties) {

@@ -327,12 +327,21 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             normalCost = { if (it.getSpawnedCount(MegaChargeStatus.NOT_CHARGED) > 0) 0 else 6 },
             chargeable = chargeable@{ false },
             spawnedUpdateFunc = updateFunction@{ cluster, _, delta ->
-                if (!cluster.spawned) return@updateFunction
                 cluster as PreciousGemCluster
+
+                val iter = cluster.gems.keys().iterator()
+                while (iter.hasNext) {
+                    val gem = iter.next()
+                    if (gem.dead) iter.remove()
+                }
+
+                if (!cluster.spawned) return@updateFunction
+
                 cluster.origin.lerp(
                     megaman.getFocusPosition(),
                     min(1f, MegamanValues.SHIELD_GEM_LERP * ConstVals.PPM * delta)
                 )
+
                 if (cluster.gems.values().none { it.released }) cluster.body.setCenter(cluster.origin)
             }
         ) {
@@ -795,6 +804,11 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 cluster as PreciousGemCluster
                 cluster.gems.values().forEach { it.released = true }
             }
+
+            handler.clearAllSpawned()
+
+            GameLogger.debug(TAG, "shootPreciousGuard(): release gems, clear all spawned")
+
             return
         }
 
@@ -823,8 +837,12 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 )
             )
 
+            GameLogger.debug(TAG, "shootPreciousGuard(): create gem: hashCode=${gem.hashCode()}")
+
             shieldGems.put(gem, ShieldGemDef(angle, 2f * ConstVals.PPM, false))
         }
+
+        GameLogger.debug(TAG, "shootPreciousGuard(): create cluster: shieldGems.size=${shieldGems.size}")
 
         val cluster = MegaEntityFactory.fetch(PreciousGemCluster::class)!!
         cluster.spawn(
@@ -841,6 +859,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             )
         )
 
+        handler.clearAllSpawned()
         handler.addSpawned(MegaChargeStatus.NOT_CHARGED, cluster)
     }
 
@@ -848,14 +867,36 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         GameLogger.debug(TAG, "throwAxe()")
 
         val impulse = GameObjectPools.fetch(Vector2::class)
-            .set(
+        when (megaman.direction) {
+            Direction.UP -> impulse.set(
                 MegamanValues.AXE_IMPULSE_X * megaman.facing.value,
                 MegamanValues.AXE_IMPULSE_Y
             )
-            .scl(ConstVals.PPM.toFloat())
+            Direction.DOWN -> impulse.set(
+                MegamanValues.AXE_IMPULSE_X * -megaman.facing.value,
+                -MegamanValues.AXE_IMPULSE_Y
+            )
+            Direction.LEFT -> impulse.set(
+                -MegamanValues.AXE_IMPULSE_Y,
+                MegamanValues.AXE_IMPULSE_X * megaman.facing.value
+            )
+            Direction.RIGHT -> impulse.set(
+                MegamanValues.AXE_IMPULSE_Y,
+                MegamanValues.AXE_IMPULSE_X * -megaman.facing.value,
+            )
+        }
+        impulse.scl(ConstVals.PPM.toFloat())
+
+        if (game.getCurrentLevel() == LevelDefinition.MOON_MAN || megaman.body.isSensing(BodySense.IN_WATER))
+            impulse.scl(MegamanValues.AXE_SLOW_SCALAR)
 
         val spawn = megaman.body.getCenter()
-            .add(-0.1f * ConstVals.PPM * megaman.facing.value, 0.75f * ConstVals.PPM)
+        when (megaman.direction) {
+            Direction.UP -> spawn.add(-0.1f * ConstVals.PPM * megaman.facing.value, 0.75f * ConstVals.PPM)
+            Direction.DOWN -> spawn.add(0.1f * ConstVals.PPM * megaman.facing.value, -0.75f * ConstVals.PPM)
+            Direction.LEFT -> spawn.add(-0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM * megaman.facing.value)
+            Direction.RIGHT -> spawn.add(0.75f * ConstVals.PPM, -0.1f * ConstVals.PPM * megaman.facing.value)
+        }
 
         val axe = MegaEntityFactory.fetch(Axe::class)!!
         axe.spawn(
@@ -863,6 +904,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 ConstKeys.OWNER pairTo megaman,
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.IMPULSE pairTo impulse,
+                ConstKeys.DIRECTION pairTo megaman.direction,
                 "${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}" pairTo megaman.gravityScalar,
                 "${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}" pairTo megaman.movementScalar
             )
@@ -987,7 +1029,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             .set(megaman.body.getCenter())
             .also {
                 when (megaman.direction) {
-                    Direction.UP -> it .add(
+                    Direction.UP -> it.add(
                         slashDissipationOffsetX * ConstVals.PPM * megaman.facing.value,
                         ConstVals.PPM * if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.5f else 0f
                     )

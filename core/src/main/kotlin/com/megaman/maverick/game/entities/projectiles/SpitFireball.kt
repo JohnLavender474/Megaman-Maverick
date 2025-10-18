@@ -39,6 +39,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IFireEntity
 import com.megaman.maverick.game.entities.explosions.MagmaExplosion
+import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
@@ -59,18 +60,14 @@ class SpitFireball(game: MegamanMaverickGame) : AbstractProjectile(game), IFireE
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
-
         if (angles.isEmpty) {
             angles.put(Direction.UP, gdxArrayOf(45f, 315f))
             angles.put(Direction.LEFT, gdxArrayOf(45f, 135f))
             angles.put(Direction.DOWN, gdxArrayOf(135f, 225f))
             angles.put(Direction.RIGHT, gdxArrayOf(225f, 315f))
         }
-
         super.init()
-
         addComponent(defineAnimationsComponent())
     }
 
@@ -95,13 +92,28 @@ class SpitFireball(game: MegamanMaverickGame) : AbstractProjectile(game), IFireE
         } else GameLogger.debug(TAG, "hitBlock(): ignore hit by block: id=$id, blockIds=$blockIds")
     }
 
+    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        val shieldEntity = shieldFixture.getEntity()
+        if (shieldEntity is Axe) return
+
+        val explosionDamager = shieldEntity !is Megaman
+
+        explodeAndDie(thisShape, otherShape, explosionDamager)
+    }
+
     override fun explodeAndDie(vararg params: Any?) {
         GameLogger.debug(TAG, "explodeAndDie(): params=$params")
 
         destroy()
 
         val explosion = MegaEntityFactory.fetch(MagmaExplosion::class)!!
-        explosion.spawn(props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo body.getCenter()))
+        explosion.spawn(
+            props(
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.POSITION pairTo body.getCenter(),
+                ConstKeys.ACTIVE pairTo if (params.size >= 3) params[2] as Boolean else true,
+            )
+        )
 
         val thisShape = params[0] as IGameShape2D
         val otherShape = params[1] as IGameShape2D

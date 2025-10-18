@@ -60,6 +60,7 @@ object MegamanValues {
 
     const val AXE_IMPULSE_X = 8f
     const val AXE_IMPULSE_Y = 20f
+    const val AXE_SLOW_SCALAR = 0.5f
 
     const val GROUND_SLIDE_COOLDOWN = 0.075f
     const val GROUND_SLIDE_MIN_TIME = 0.2f

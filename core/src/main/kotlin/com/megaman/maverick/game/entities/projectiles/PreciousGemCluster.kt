@@ -105,7 +105,7 @@ class PreciousGemCluster(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
     }
 
     override fun onEvent(event: Event) {
-        GameLogger.debug(PreciousGem.Companion.TAG, "onEvent(): event=$event")
+        GameLogger.debug(TAG, "onEvent(): event=$event")
         if (owner == megaman && event.key == EventType.PLAYER_JUST_DIED) destroy()
     }
 
@@ -134,16 +134,20 @@ class PreciousGemCluster(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
         while (iter.hasNext) {
             val gem = iter.next().key
             when {
-                gem.dead -> iter.remove()
+                gem.dead -> {
+                    GameLogger.debug(TAG, "defineUpdatablesComponent(): gem dead, removing: $gem")
+                    iter.remove()
+                }
                 !game.getGameCamera().overlaps(gem.body.getBounds()) &&
                     gem.body.getCenter().dst(origin) > maxDistFromOrigin -> {
+                    GameLogger.debug(TAG, "defineUpdatablesComponent(): gem out of cam bounds: $gem")
                     gem.destroy()
                     iter.remove()
                 }
             }
         }
 
-        if (gems.isEmpty) destroy()
+        if (gems.isEmpty && !dead) destroy()
     })
 
     private fun defineBodyComponent(): BodyComponent {

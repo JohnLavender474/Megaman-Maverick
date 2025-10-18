@@ -1,1 +1,1269 @@
-===== SESSION STARTED: 2025-10-15T22:41:46.554267985 =====
+===== SESSION STARTED: 2025-10-17T23:54:57.370090899 =====
+23:54:59 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=MEGA_BUSTER, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@b558294
+23:54:59 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=null
+23:55:00 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=PRECIOUS_GUARD, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@44de0113
+23:55:00 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=AXE_SWINGER, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@b558294
+23:55:00 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=RODENT_CLAWS, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@44de0113
+23:55:00 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=NEEDLE_SPIN, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@b558294
+23:55:09 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=MEGA_BUSTER
+23:55:11 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=PRECIOUS_GUARD, previous=MEGA_BUSTER
+23:55:11 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=AXE_SWINGER, previous=PRECIOUS_GUARD
+23:55:12 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:55:12 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:55:12 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=28
+23:55:12 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:55:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:55:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:55:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=26
+23:55:14 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:55:17 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:55:17 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:55:17 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=24
+23:55:17 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:55:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:55:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:55:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=22
+23:55:19 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:55:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:55:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:55:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=20
+23:55:20 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:55:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:55:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:55:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=18
+23:55:21 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:55:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:55:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:55:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=16
+23:55:24 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:55:26 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:55:26 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:55:26 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=14
+23:55:26 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:55:27 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:55:27 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:55:27 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=12
+23:55:27 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:55:32 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:55:32 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:55:32 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=18
+23:55:32 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:55:35 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:55:35 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:55:35 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=20
+23:55:36 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:55:37 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:55:37 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:55:37 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=18
+23:55:37 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:55:38 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:55:38 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:55:38 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=16
+23:55:38 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:55:42 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:55:42 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:55:42 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=14
+23:55:42 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:55:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:55:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:55:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=16
+23:55:46 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:55:46 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire AXE_SWINGER: cooldown is not finished
+23:55:46 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire AXE_SWINGER: cooldown is not finished
+23:55:46 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire AXE_SWINGER: cooldown is not finished
+23:55:46 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire AXE_SWINGER: cooldown is not finished
+23:55:46 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire AXE_SWINGER: cooldown is not finished
+23:55:46 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire AXE_SWINGER: cooldown is not finished
+23:55:46 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire AXE_SWINGER: cooldown is not finished
+23:55:46 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire AXE_SWINGER: cooldown is not finished
+23:55:47 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:55:47 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:55:47 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=14
+23:55:47 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:55:48 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire AXE_SWINGER: cooldown is not finished
+23:55:48 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire AXE_SWINGER: cooldown is not finished
+23:55:48 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire AXE_SWINGER: cooldown is not finished
+23:55:48 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:55:48 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:55:48 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=12
+23:55:48 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:55:48 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire AXE_SWINGER: cooldown is not finished
+23:55:48 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire AXE_SWINGER: cooldown is not finished
+23:55:48 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire AXE_SWINGER: cooldown is not finished
+23:55:48 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire AXE_SWINGER: cooldown is not finished
+23:55:48 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire AXE_SWINGER: cooldown is not finished
+23:55:48 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire AXE_SWINGER: cooldown is not finished
+23:55:52 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:55:52 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:55:52 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=18
+23:55:52 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:55:56 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:55:56 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:55:56 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=16
+23:55:56 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:55:59 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:55:59 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:55:59 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=22
+23:55:59 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:56:01 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:56:01 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:56:01 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=20
+23:56:01 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:56:04 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:56:04 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:56:04 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=26
+23:56:04 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:56:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:56:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:56:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=24
+23:56:05 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:56:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:56:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:56:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=22
+23:56:07 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:56:08 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:56:08 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:56:08 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=20
+23:56:08 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:56:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:56:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:56:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=18
+23:56:11 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:56:12 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:56:12 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:56:12 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=16
+23:56:12 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:56:15 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:56:15 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:56:15 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=14
+23:56:15 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:56:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:56:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:56:21 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=16
+23:56:21 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:56:22 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:56:22 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:56:22 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=14
+23:56:22 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:56:27 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:56:27 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:56:27 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=20
+23:56:27 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:56:34 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:56:34 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:56:34 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=22
+23:56:34 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:56:36 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:56:36 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:56:36 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=20
+23:56:36 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:56:43 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:56:43 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:56:43 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=18
+23:56:43 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:56:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:56:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:56:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=16
+23:56:46 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:56:48 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:56:48 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:56:48 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=14
+23:56:48 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:56:54 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:56:54 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:56:54 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=12
+23:56:55 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:56:55 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:56:55 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:56:55 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=10
+23:56:56 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:57:00 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:57:00 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:57:00 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=8
+23:57:00 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:57:01 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:57:01 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:57:01 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=6
+23:57:01 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:57:01 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:57:01 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:57:01 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=4
+23:57:01 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:57:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:57:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:57:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=6
+23:57:07 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:57:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:57:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:57:11 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=12
+23:57:11 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:57:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:57:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:57:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=10
+23:57:14 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:57:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:57:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:57:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=8
+23:57:19 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:57:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:57:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:57:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=10
+23:57:23 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:57:25 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=NEEDLE_SPIN, previous=AXE_SWINGER
+23:57:26 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=RODENT_CLAWS, previous=NEEDLE_SPIN
+23:57:29 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=RODENT_CLAWS
+23:57:31 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+23:57:31 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+23:57:31 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+23:57:33 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+23:57:33 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+23:57:33 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+23:57:33 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+23:57:33 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+23:57:33 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+23:57:33 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+23:57:33 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+23:57:33 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+23:57:33 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+23:57:33 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+23:57:33 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+23:57:33 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+23:57:33 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+23:57:33 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+23:57:33 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+23:57:33 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+23:57:34 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+23:57:34 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+23:57:34 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+23:57:34 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+23:57:37 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+23:57:37 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+23:57:37 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+23:57:37 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+23:57:37 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+23:57:40 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+23:57:40 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+23:57:40 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+23:57:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=HALF_CHARGED
+23:57:41 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=HALF_CHARGED
+23:57:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+23:57:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+23:57:41 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+23:57:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+23:57:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+23:57:41 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+23:57:41 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+23:57:41 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+23:57:41 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+23:57:42 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+23:57:42 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+23:57:42 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+23:57:42 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+23:57:42 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+23:57:42 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+23:57:42 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+23:57:42 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+23:57:42 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+23:57:42 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+23:57:42 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+23:57:42 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+23:57:42 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+23:57:42 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+23:57:42 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+23:57:42 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+23:57:44 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+23:57:44 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+23:57:44 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+23:57:44 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+23:57:44 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+23:57:44 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+23:57:44 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+23:57:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+23:57:46 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+23:57:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+23:57:46 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+23:57:46 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: cooldown is not finished
+23:57:49 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=FULLY_CHARGED
+23:57:49 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=FULLY_CHARGED
+23:57:49 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+23:57:49 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MEGA_BUSTER, statToTry=NOT_CHARGED
+23:57:49 | DEBUG | MegamanWeaponsHandler | fireMegaBuster(): stat=NOT_CHARGED
+23:57:49 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+23:57:55 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=PRECIOUS_GUARD, previous=MEGA_BUSTER
+23:57:56 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=PRECIOUS_GUARD, statToTry=NOT_CHARGED
+23:57:56 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:57:56 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=351676313
+23:57:56 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=1661829272
+23:57:56 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=1083292142
+23:57:56 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=2002514832
+23:57:56 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create cluster: shieldGems.size=4
+23:57:56 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=24
+23:57:56 | DEBUG | PreciousGem | init()
+23:57:56 | DEBUG | PreciousGem | onSpawn(): hashCode=351676313, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=PURPLE]
+	[cull_out_of_bounds=false]
+	[position=(14427.281,1912.0)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:57:56 | DEBUG | PreciousGem | init()
+23:57:56 | DEBUG | PreciousGem | onSpawn(): hashCode=1661829272, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=BLUE]
+	[cull_out_of_bounds=false]
+	[position=(14363.281,1976.0)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:57:56 | DEBUG | PreciousGem | init()
+23:57:56 | DEBUG | PreciousGem | onSpawn(): hashCode=1083292142, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=PINK]
+	[cull_out_of_bounds=false]
+	[position=(14299.281,1912.0)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:57:56 | DEBUG | PreciousGem | init()
+23:57:56 | DEBUG | PreciousGem | onSpawn(): hashCode=2002514832, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=GREEN]
+	[cull_out_of_bounds=false]
+	[position=(14363.281,1848.0)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:57:56 | DEBUG | PreciousGemCluster | init()
+23:57:56 | DEBUG | PreciousGemCluster | onSpawn(): spawnProps=Properties({
+	[origin=(14363.281,1912.0)]
+	[max_distance=320.0]
+	[distance_delta=160.0]
+	[spin_speed=0.5]
+	[PreciousGem={{ PreciousGem:[id=-238, dead=false, hashCode=351676313] }=ShieldGemDef(angle=0.0, distance=64.0, released=false), { PreciousGem:[id=-232, dead=false, hashCode=1661829272] }=ShieldGemDef(angle=90.0, distance=64.0, released=false), { PreciousGem:[id=-227, dead=false, hashCode=1083292142] }=ShieldGemDef(angle=180.0, distance=64.0, released=false), { PreciousGem:[id=-226, dead=false, hashCode=2002514832] }=ShieldGemDef(angle=270.0, distance=64.0, released=false)}]
+	[position=(14363.281,1912.0)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:58:01 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[14536.789,2560.0,8.0,3.1999512], raw_shape=[0.0,0.0,8.0,3.2]), thisShape=[14530.863,2528.6404,32.0,32.0], otherShape=[14536.789,2560.0,8.0,3.1999512]
+23:58:02 | DEBUG | PreciousGem | onHealthDepleted()
+23:58:02 | DEBUG | PreciousGem | onDestroy(): hashCode=351676313
+23:58:03 | DEBUG | PreciousGem | onHealthDepleted()
+23:58:03 | DEBUG | PreciousGem | onDestroy(): hashCode=2002514832
+23:58:03 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[14602.906,2527.9084,8.0,8.0], raw_shape=[14601.84,2528.5806,8.0,8.0]), thisShape=[14582.518,2505.423,32.0,32.0], otherShape=[14602.906,2527.9084,8.0,8.0]
+23:58:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=PRECIOUS_GUARD, statToTry=NOT_CHARGED
+23:58:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:58:05 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): release gems, clear all spawned
+23:58:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=30
+23:58:07 | DEBUG | PreciousGemCluster | defineUpdatablesComponent(): gem out of cam bounds: { PreciousGem:[id=-232, dead=false, hashCode=1661829272] }
+23:58:07 | DEBUG | PreciousGem | onDestroy(): hashCode=1661829272
+23:58:08 | DEBUG | PreciousGemCluster | defineUpdatablesComponent(): gem out of cam bounds: { PreciousGem:[id=-227, dead=false, hashCode=1083292142] }
+23:58:08 | DEBUG | PreciousGem | onDestroy(): hashCode=1083292142
+23:58:08 | DEBUG | PreciousGemCluster | onDestroy()
+23:58:08 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=PRECIOUS_GUARD, statToTry=NOT_CHARGED
+23:58:08 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:58:08 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=1083292142
+23:58:08 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=1661829272
+23:58:08 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=2002514832
+23:58:08 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=351676313
+23:58:08 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create cluster: shieldGems.size=4
+23:58:08 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=24
+23:58:08 | DEBUG | PreciousGem | onSpawn(): hashCode=1083292142, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=PURPLE]
+	[cull_out_of_bounds=false]
+	[position=(14480.0,2798.742)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:58:08 | DEBUG | PreciousGem | onSpawn(): hashCode=1661829272, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=BLUE]
+	[cull_out_of_bounds=false]
+	[position=(14416.0,2862.742)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:58:08 | DEBUG | PreciousGem | onSpawn(): hashCode=2002514832, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=PINK]
+	[cull_out_of_bounds=false]
+	[position=(14352.0,2798.742)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:58:08 | DEBUG | PreciousGem | onSpawn(): hashCode=351676313, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=GREEN]
+	[cull_out_of_bounds=false]
+	[position=(14416.0,2734.742)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:58:08 | DEBUG | PreciousGemCluster | onSpawn(): spawnProps=Properties({
+	[origin=(14416.0,2798.742)]
+	[max_distance=320.0]
+	[distance_delta=160.0]
+	[spin_speed=0.5]
+	[PreciousGem={{ PreciousGem:[id=-248, dead=false, hashCode=1083292142] }=ShieldGemDef(angle=0.0, distance=64.0, released=false), { PreciousGem:[id=-232, dead=false, hashCode=1661829272] }=ShieldGemDef(angle=90.0, distance=64.0, released=false), { PreciousGem:[id=-227, dead=false, hashCode=2002514832] }=ShieldGemDef(angle=180.0, distance=64.0, released=false), { PreciousGem:[id=-181, dead=false, hashCode=351676313] }=ShieldGemDef(angle=270.0, distance=64.0, released=false)}]
+	[position=(14416.0,2798.742)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:58:10 | DEBUG | PreciousGem | onHealthDepleted()
+23:58:10 | DEBUG | PreciousGem | onDestroy(): hashCode=1083292142
+23:58:11 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[14524.599,2742.887,8.0,8.0], raw_shape=[14522.679,2743.9429,8.0,8.0]), thisShape=[14530.785,2737.4768,32.0,32.0], otherShape=[14524.599,2742.887,8.0,8.0]
+23:58:11 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[14616.755,2740.9668,8.0,8.0], raw_shape=[14614.835,2742.4922,8.0,8.0]), thisShape=[14585.954,2723.5225,32.0,32.0], otherShape=[14616.755,2740.9668,8.0,8.0]
+23:58:11 | DEBUG | PreciousGem | onHealthDepleted()
+23:58:11 | DEBUG | PreciousGem | onDestroy(): hashCode=351676313
+23:58:12 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[14405.278,2825.7563,8.0,8.0], raw_shape=[14406.345,2824.5083,8.0,8.0]), thisShape=[14378.94,2831.6814,32.0,32.0], otherShape=[14405.278,2825.7563,8.0,8.0]
+23:58:17 | DEBUG | PreciousGem | onEvent(): event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@161911d2]
+	[name=room13]
+	[prior_name=room12]
+	[position=(14705.054,3130.1692)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@2bdc1cc]
+}))
+23:58:17 | DEBUG | PreciousGem | onEvent(): event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@161911d2]
+	[name=room13]
+	[prior_name=room12]
+	[position=(14705.054,3130.1692)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@2bdc1cc]
+}))
+23:58:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=PRECIOUS_GUARD, statToTry=NOT_CHARGED
+23:58:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:58:18 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): release gems, clear all spawned
+23:58:18 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=28
+23:58:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=PRECIOUS_GUARD, statToTry=NOT_CHARGED
+23:58:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:58:19 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=351676313
+23:58:19 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=1083292142
+23:58:19 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=909574646
+23:58:19 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=152683851
+23:58:19 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create cluster: shieldGems.size=4
+23:58:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=22
+23:58:19 | DEBUG | PreciousGem | onSpawn(): hashCode=351676313, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=PURPLE]
+	[cull_out_of_bounds=false]
+	[position=(15048.137,2998.4558)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:58:19 | DEBUG | PreciousGem | onSpawn(): hashCode=1083292142, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=BLUE]
+	[cull_out_of_bounds=false]
+	[position=(14984.137,3062.4558)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:58:19 | DEBUG | PreciousGem | init()
+23:58:19 | DEBUG | PreciousGem | onSpawn(): hashCode=909574646, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=PINK]
+	[cull_out_of_bounds=false]
+	[position=(14920.137,2998.4558)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:58:19 | DEBUG | PreciousGem | init()
+23:58:19 | DEBUG | PreciousGem | onSpawn(): hashCode=152683851, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=GREEN]
+	[cull_out_of_bounds=false]
+	[position=(14984.137,2934.4558)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:58:19 | DEBUG | PreciousGemCluster | init()
+23:58:19 | DEBUG | PreciousGemCluster | onSpawn(): spawnProps=Properties({
+	[origin=(14984.137,2998.4558)]
+	[max_distance=320.0]
+	[distance_delta=160.0]
+	[spin_speed=0.5]
+	[PreciousGem={{ PreciousGem:[id=-266, dead=false, hashCode=351676313] }=ShieldGemDef(angle=0.0, distance=64.0, released=false), { PreciousGem:[id=-263, dead=false, hashCode=1083292142] }=ShieldGemDef(angle=90.0, distance=64.0, released=false), { PreciousGem:[id=-268, dead=false, hashCode=909574646] }=ShieldGemDef(angle=180.0, distance=64.0, released=false), { PreciousGem:[id=-269, dead=false, hashCode=152683851] }=ShieldGemDef(angle=270.0, distance=64.0, released=false)}]
+	[position=(14984.137,2998.4558)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:58:20 | DEBUG | PreciousGemCluster | defineUpdatablesComponent(): gem out of cam bounds: { PreciousGem:[id=-232, dead=false, hashCode=1661829272] }
+23:58:20 | DEBUG | PreciousGemCluster | defineUpdatablesComponent(): gem out of cam bounds: { PreciousGem:[id=-227, dead=false, hashCode=2002514832] }
+23:58:20 | DEBUG | PreciousGem | onDestroy(): hashCode=1661829272
+23:58:20 | DEBUG | PreciousGem | onDestroy(): hashCode=2002514832
+23:58:20 | DEBUG | PreciousGemCluster | onDestroy()
+23:58:23 | DEBUG | PreciousGem | onHealthDepleted()
+23:58:23 | DEBUG | PreciousGem | onDestroy(): hashCode=1083292142
+23:58:23 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[14989.345,2914.7136,8.0,8.0], raw_shape=[14991.265,2917.4763,8.0,8.0]), thisShape=[14959.217,2896.6904,32.0,32.0], otherShape=[14989.345,2914.7136,8.0,8.0]
+23:58:24 | DEBUG | PreciousGem | onHealthDepleted()
+23:58:24 | DEBUG | PreciousGem | onDestroy(): hashCode=909574646
+23:58:25 | DEBUG | PreciousGem | onHealthDepleted()
+23:58:25 | DEBUG | PreciousGem | onDestroy(): hashCode=152683851
+23:58:26 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=PRECIOUS_GUARD, statToTry=NOT_CHARGED
+23:58:26 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:58:26 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): release gems, clear all spawned
+23:58:26 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=22
+23:58:27 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=AXE_SWINGER, previous=PRECIOUS_GUARD
+23:58:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:58:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:58:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=10
+23:58:28 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:58:28 | DEBUG | PreciousGemCluster | defineUpdatablesComponent(): gem out of cam bounds: { PreciousGem:[id=-266, dead=false, hashCode=351676313] }
+23:58:28 | DEBUG | PreciousGem | onDestroy(): hashCode=351676313
+23:58:28 | DEBUG | PreciousGemCluster | onDestroy()
+23:58:31 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:58:31 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:58:31 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=16
+23:58:31 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:58:32 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+23:58:32 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:58:32 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=14
+23:58:32 | DEBUG | MegamanWeaponsHandler | throwAxe()
+23:58:35 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=NEEDLE_SPIN, previous=AXE_SWINGER
+23:58:38 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=RODENT_CLAWS, previous=NEEDLE_SPIN
+23:58:39 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=RODENT_CLAWS
+23:58:39 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=PRECIOUS_GUARD, previous=MEGA_BUSTER
+23:58:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=PRECIOUS_GUARD, statToTry=NOT_CHARGED
+23:58:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:58:46 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=351676313
+23:58:46 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=152683851
+23:58:46 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=909574646
+23:58:46 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=1083292142
+23:58:46 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create cluster: shieldGems.size=4
+23:58:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=16
+23:58:46 | DEBUG | PreciousGem | onSpawn(): hashCode=351676313, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=PURPLE]
+	[cull_out_of_bounds=false]
+	[position=(16683.215,2840.0)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:58:46 | DEBUG | PreciousGem | onSpawn(): hashCode=152683851, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=BLUE]
+	[cull_out_of_bounds=false]
+	[position=(16619.215,2904.0)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:58:46 | DEBUG | PreciousGem | onSpawn(): hashCode=909574646, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=PINK]
+	[cull_out_of_bounds=false]
+	[position=(16555.215,2840.0)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:58:46 | DEBUG | PreciousGem | onSpawn(): hashCode=1083292142, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=GREEN]
+	[cull_out_of_bounds=false]
+	[position=(16619.215,2776.0)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:58:46 | DEBUG | PreciousGemCluster | onSpawn(): spawnProps=Properties({
+	[origin=(16619.215,2840.0)]
+	[max_distance=320.0]
+	[distance_delta=160.0]
+	[spin_speed=0.5]
+	[PreciousGem={{ PreciousGem:[id=-274, dead=false, hashCode=351676313] }=ShieldGemDef(angle=0.0, distance=64.0, released=false), { PreciousGem:[id=-289, dead=false, hashCode=152683851] }=ShieldGemDef(angle=90.0, distance=64.0, released=false), { PreciousGem:[id=-282, dead=false, hashCode=909574646] }=ShieldGemDef(angle=180.0, distance=64.0, released=false), { PreciousGem:[id=-285, dead=false, hashCode=1083292142] }=ShieldGemDef(angle=270.0, distance=64.0, released=false)}]
+	[position=(16619.215,2840.0)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:58:48 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16815.805,2850.607,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16784.168,2843.7842,32.0,32.0], otherShape=[16815.805,2850.607,32.0,32.0]
+23:58:50 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16738.986,2841.7146,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16707.125,2830.7004,32.0,32.0], otherShape=[16738.986,2841.7146,32.0,32.0]
+23:58:52 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16720.111,2830.2554,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16692.11,2801.0698,32.0,32.0], otherShape=[16720.111,2830.2554,32.0,32.0]
+23:58:52 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16719.38,2832.2603,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16693.223,2804.2158,32.0,32.0], otherShape=[16719.38,2832.2603,32.0,32.0]
+23:58:52 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16724.86,2843.287,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16695.57,2813.9907,32.0,32.0], otherShape=[16724.86,2843.287,32.0,32.0]
+23:58:52 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16713.172,2849.3018,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16696.27,2827.3486,32.0,32.0], otherShape=[16713.172,2849.3018,32.0,32.0]
+23:58:52 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16706.598,2867.3457,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16690.822,2850.0364,32.0,32.0], otherShape=[16706.598,2867.3457,32.0,32.0]
+23:58:52 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16701.12,2882.3823,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16679.918,2866.825,32.0,32.0], otherShape=[16701.12,2882.3823,32.0,32.0]
+23:58:55 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16585.705,3073.8486,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16616.44,3042.2832,32.0,32.0], otherShape=[16585.705,3073.8486,32.0,32.0]
+23:58:55 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16580.227,3058.812,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16610.934,3044.1013,32.0,32.0], otherShape=[16580.227,3058.812,32.0,32.0]
+23:58:55 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16577.826,3041.7705,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16608.883,3044.1648,32.0,32.0], otherShape=[16577.826,3041.7705,32.0,32.0]
+23:58:55 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16578.191,3040.768,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16608.883,3044.1648,32.0,32.0], otherShape=[16578.191,3040.768,32.0,32.0]
+23:58:56 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16879.566,3048.325,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16852.941,3064.1094,32.0,32.0], otherShape=[16879.566,3048.325,32.0,32.0]
+23:58:56 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16893.227,3045.916,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16865.08,3064.0684,32.0,32.0], otherShape=[16893.227,3045.916,32.0,32.0]
+23:58:59 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16763.18,3114.6982,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16784.656,3144.8447,32.0,32.0], otherShape=[16763.18,3114.6982,32.0,32.0]
+23:58:59 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16764.275,3111.691,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16783.857,3141.579,32.0,32.0], otherShape=[16764.275,3111.691,32.0,32.0]
+23:58:59 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16760.988,3108.6836,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16783.234,3138.3003,32.0,32.0], otherShape=[16760.988,3108.6836,32.0,32.0]
+23:58:59 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16767.562,3120.713,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16782.4,3128.2822,32.0,32.0], otherShape=[16767.562,3120.713,32.0,32.0]
+23:58:59 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16755.51,3093.647,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16782.473,3124.9456,32.0,32.0], otherShape=[16755.51,3093.647,32.0,32.0]
+23:58:59 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16773.041,3135.7495,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16785.527,3108.2393,32.0,32.0], otherShape=[16773.041,3135.7495,32.0,32.0]
+23:58:59 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16773.041,3135.7495,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16790.346,3165.7195,32.0,32.0], otherShape=[16773.041,3135.7495,32.0,32.0]
+23:59:00 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16785.824,3101.917,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16804.385,3072.712,32.0,32.0], otherShape=[16785.824,3101.917,32.0,32.0]
+23:59:00 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16779.25,3119.961,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16766.127,3151.2048,32.0,32.0], otherShape=[16779.25,3119.961,32.0,32.0]
+23:59:00 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16791.303,3086.8804,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16806.03,3063.4072,32.0,32.0], otherShape=[16791.303,3086.8804,32.0,32.0]
+23:59:00 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16785.824,3101.917,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16762.781,3131.5342,32.0,32.0], otherShape=[16785.824,3101.917,32.0,32.0]
+23:59:00 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16832.473,3030.4934,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16819.432,3060.946,32.0,32.0], otherShape=[16832.473,3030.4934,32.0,32.0]
+23:59:00 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16791.303,3086.8804,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16769.947,3117.4565,32.0,32.0], otherShape=[16791.303,3086.8804,32.0,32.0]
+23:59:00 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16797.512,3069.8389,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16782.283,3099.8442,32.0,32.0], otherShape=[16797.512,3069.8389,32.0,32.0]
+23:59:00 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16802.99,3054.8022,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16800.352,3085.7266,32.0,32.0], otherShape=[16802.99,3054.8022,32.0,32.0]
+23:59:00 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16809.564,3036.7583,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16830.729,3068.355,32.0,32.0], otherShape=[16809.564,3036.7583,32.0,32.0]
+23:59:01 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16866.273,3058.5332,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16834.666,3084.271,32.0,32.0], otherShape=[16866.273,3058.5332,32.0,32.0]
+23:59:01 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16867.906,3057.162,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16838.121,3086.654,32.0,32.0], otherShape=[16867.906,3057.162,32.0,32.0]
+23:59:01 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16867.09,3057.8477,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16838.121,3086.654,32.0,32.0], otherShape=[16867.09,3057.8477,32.0,32.0]
+23:59:01 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16877.703,3068.1309,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16849.543,3094.8137,32.0,32.0], otherShape=[16877.703,3068.1309,32.0,32.0]
+23:59:01 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16841.781,3035.2246,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16812.043,3064.0151,32.0,32.0], otherShape=[16841.781,3035.2246,32.0,32.0]
+23:59:01 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16840.965,3034.539,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16812.043,3064.0151,32.0,32.0], otherShape=[16840.965,3034.539,32.0,32.0]
+23:59:01 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16854.027,3045.5078,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16822.566,3064.2205,32.0,32.0], otherShape=[16854.027,3045.5078,32.0,32.0]
+23:59:07 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=com.mega.game.engine.common.shapes.GameCircle@7bf4a805, raw_shape=com.mega.game.engine.common.shapes.GameCircle@eba10d39), thisShape=[16833.781,3064.4768,32.0,32.0], otherShape=com.mega.game.engine.common.shapes.GameCircle@7bf4a805
+23:59:07 | DEBUG | PreciousGem | onDestroy(): hashCode=152683851
+23:59:07 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16826.586,3121.5647,8.0,8.0], raw_shape=[16827.652,3120.2207,8.0,8.0]), thisShape=[16796.45,3109.2927,32.0,32.0], otherShape=[16826.586,3121.5647,8.0,8.0]
+23:59:07 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16845.781,3149.085,8.0,8.0], raw_shape=[16845.781,3149.021,8.0,8.0]), thisShape=[16831.084,3155.0415,32.0,32.0], otherShape=[16845.781,3149.085,8.0,8.0]
+23:59:07 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16964.152,3106.6848,8.0,8.0], raw_shape=[16963.086,3108.317,8.0,8.0]), thisShape=[16969.572,3077.5686,32.0,32.0], otherShape=[16964.152,3106.6848,8.0,8.0]
+23:59:12 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=PRECIOUS_GUARD, statToTry=NOT_CHARGED
+23:59:12 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:59:12 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): release gems, clear all spawned
+23:59:12 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=16
+23:59:12 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16799.96,2946.5996,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16775.176,2975.6426,32.0,32.0], otherShape=[16799.96,2946.5996,32.0,32.0]
+23:59:12 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16717.16,2988.3906,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16746.17,2960.336,32.0,32.0], otherShape=[16717.16,2988.3906,32.0,32.0]
+23:59:12 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16711.682,2973.354,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16738.078,2954.8296,32.0,32.0], otherShape=[16711.682,2973.354,32.0,32.0]
+23:59:13 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16735.422,3038.5127,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16765.76,3055.2866,32.0,32.0], otherShape=[16735.422,3038.5127,32.0,32.0]
+23:59:13 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16741.63,3055.5542,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16765.76,3055.2866,32.0,32.0], otherShape=[16741.63,3055.5542,32.0,32.0]
+23:59:13 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16746.744,3069.5884,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16765.76,3055.2866,32.0,32.0], otherShape=[16746.744,3069.5884,32.0,32.0]
+23:59:13 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16746.014,3071.5933,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16751.408,3050.2146,32.0,32.0], otherShape=[16746.014,3071.5933,32.0,32.0]
+23:59:13 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=PRECIOUS_GUARD, statToTry=NOT_CHARGED
+23:59:13 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:59:13 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=152683851
+23:59:13 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=2002514832
+23:59:13 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=1661829272
+23:59:13 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=726609999
+23:59:13 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create cluster: shieldGems.size=4
+23:59:13 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=10
+23:59:13 | DEBUG | PreciousGem | onSpawn(): hashCode=152683851, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=PURPLE]
+	[cull_out_of_bounds=false]
+	[position=(17030.057,2830.4)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:59:13 | DEBUG | PreciousGem | onSpawn(): hashCode=2002514832, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=BLUE]
+	[cull_out_of_bounds=false]
+	[position=(16966.057,2894.4)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:59:13 | DEBUG | PreciousGem | onSpawn(): hashCode=1661829272, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=PINK]
+	[cull_out_of_bounds=false]
+	[position=(16902.057,2830.4)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:59:13 | DEBUG | PreciousGem | init()
+23:59:13 | DEBUG | PreciousGem | onSpawn(): hashCode=726609999, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=GREEN]
+	[cull_out_of_bounds=false]
+	[position=(16966.057,2766.4)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:59:13 | DEBUG | PreciousGemCluster | onSpawn(): spawnProps=Properties({
+	[origin=(16966.057,2830.4)]
+	[max_distance=320.0]
+	[distance_delta=160.0]
+	[spin_speed=0.5]
+	[PreciousGem={{ PreciousGem:[id=-304, dead=false, hashCode=152683851] }=ShieldGemDef(angle=0.0, distance=64.0, released=false), { PreciousGem:[id=-303, dead=false, hashCode=2002514832] }=ShieldGemDef(angle=90.0, distance=64.0, released=false), { PreciousGem:[id=-297, dead=false, hashCode=1661829272] }=ShieldGemDef(angle=180.0, distance=64.0, released=false), { PreciousGem:[id=-306, dead=false, hashCode=726609999] }=ShieldGemDef(angle=270.0, distance=64.0, released=false)}]
+	[position=(16966.057,2830.4)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:59:13 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16966.602,2882.2937,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16962.057,2890.4,8.0,8.0], otherShape=[16966.602,2882.2937,32.0,32.0]
+23:59:13 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16931.926,2876.1787,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16962.057,2890.4,8.0,8.0], otherShape=[16931.926,2876.1787,32.0,32.0]
+23:59:13 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16947.688,2878.9583,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16962.057,2890.4,8.0,8.0], otherShape=[16947.688,2878.9583,32.0,32.0]
+23:59:13 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16965.55,2882.1084,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16962.057,2890.4,8.0,8.0], otherShape=[16965.55,2882.1084,32.0,32.0]
+23:59:13 | DEBUG | PreciousGemCluster | defineUpdatablesComponent(): gem out of cam bounds: { PreciousGem:[id=-274, dead=false, hashCode=351676313] }
+23:59:13 | DEBUG | PreciousGem | onDestroy(): hashCode=351676313
+23:59:13 | DEBUG | PreciousGemCluster | defineUpdatablesComponent(): gem out of cam bounds: { PreciousGem:[id=-285, dead=false, hashCode=1083292142] }
+23:59:13 | DEBUG | PreciousGem | onDestroy(): hashCode=1083292142
+23:59:13 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16949.79,2885.2585,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16936.646,2892.3125,16.0,16.0], otherShape=[16949.79,2885.2585,32.0,32.0]
+23:59:13 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16721.908,3134.9976,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16735.832,3128.4597,32.0,32.0], otherShape=[16721.908,3134.9976,32.0,32.0]
+23:59:13 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16719.717,3128.983,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16735.832,3128.4597,32.0,32.0], otherShape=[16719.717,3128.983,32.0,32.0]
+23:59:13 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16728.117,3120.713,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16735.832,3128.4597,32.0,32.0], otherShape=[16728.117,3120.713,32.0,32.0]
+23:59:13 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16897.113,2865.0195,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16926.309,2887.5703,16.0,16.0], otherShape=[16897.113,2865.0195,32.0,32.0]
+23:59:13 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16910.992,2853.3652,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16921.58,2882.6199,24.0,24.0], otherShape=[16910.992,2853.3652,32.0,32.0]
+23:59:13 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16932.977,2888.2234,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16921.58,2882.6199,24.0,24.0], otherShape=[16932.977,2888.2234,32.0,32.0]
+23:59:14 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16924.055,2842.3965,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16919.57,2869.8838,32.0,32.0], otherShape=[16924.055,2842.3965,32.0,32.0]
+23:59:14 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16917.215,2891.003,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16919.57,2869.8838,32.0,32.0], otherShape=[16917.215,2891.003,32.0,32.0]
+23:59:14 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16949.79,2885.2585,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16919.57,2869.8838,32.0,32.0], otherShape=[16949.79,2885.2585,32.0,32.0]
+23:59:14 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16936.3,2832.1133,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16919.602,2863.95,32.0,32.0], otherShape=[16936.3,2832.1133,32.0,32.0]
+23:59:14 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16896.793,2828.6055,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16919.639,2856.828,32.0,32.0], otherShape=[16896.793,2828.6055,32.0,32.0]
+23:59:14 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16946.914,2823.2012,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16919.47,2853.0396,32.0,32.0], otherShape=[16946.914,2823.2012,32.0,32.0]
+23:59:14 | DEBUG | PreciousGemCluster | defineUpdatablesComponent(): gem out of cam bounds: { PreciousGem:[id=-282, dead=false, hashCode=909574646] }
+23:59:14 | DEBUG | PreciousGem | onDestroy(): hashCode=909574646
+23:59:14 | DEBUG | PreciousGemCluster | onDestroy()
+23:59:14 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16950.18,2825.9434,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16919.814,2844.527,32.0,32.0], otherShape=[16950.18,2825.9434,32.0,32.0]
+23:59:14 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16977.938,2849.252,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16960.047,2881.15,32.0,32.0], otherShape=[16977.938,2849.252,32.0,32.0]
+23:59:14 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16979.57,2847.8809,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16957.24,2879.5703,32.0,32.0], otherShape=[16979.57,2847.8809,32.0,32.0]
+23:59:14 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16977.121,2848.5664,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16957.24,2879.5703,32.0,32.0], otherShape=[16977.121,2848.5664,32.0,32.0]
+23:59:14 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16962.426,2836.2266,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16941.281,2867.0251,32.0,32.0], otherShape=[16962.426,2836.2266,32.0,32.0]
+23:59:14 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16992.0,2858.8496,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[17021.59,2877.5188,32.0,32.0], otherShape=[16992.0,2858.8496,32.0,32.0]
+23:59:14 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16991.0,2857.4785,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[17021.59,2877.5188,32.0,32.0], otherShape=[16991.0,2857.4785,32.0,32.0]
+23:59:15 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16801.164,2905.4385,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16828.746,2882.5837,32.0,32.0], otherShape=[16801.164,2905.4385,32.0,32.0]
+23:59:15 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16799.703,2901.4287,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16815.053,2879.5703,32.0,32.0], otherShape=[16799.703,2901.4287,32.0,32.0]
+23:59:15 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16794.225,2886.392,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16776.674,2866.916,32.0,32.0], otherShape=[16794.225,2886.392,32.0,32.0]
+23:59:15 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16799.703,2901.4287,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16830.918,2883.645,32.0,32.0], otherShape=[16799.703,2901.4287,32.0,32.0]
+23:59:15 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16794.225,2886.392,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16826.107,2884.7812,32.0,32.0], otherShape=[16794.225,2886.392,32.0,32.0]
+23:59:15 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16784.729,2860.3286,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16815.49,2886.543,32.0,32.0], otherShape=[16784.729,2860.3286,32.0,32.0]
+23:59:15 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16787.65,2868.3481,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16815.49,2886.543,32.0,32.0], otherShape=[16787.65,2868.3481,32.0,32.0]
+23:59:17 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16683.18,2970.1272,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16710.783,2938.9727,32.0,32.0], otherShape=[16683.18,2970.1272,32.0,32.0]
+23:59:18 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16780.902,2987.3604,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16811.646,2966.1902,32.0,32.0], otherShape=[16780.902,2987.3604,32.0,32.0]
+23:59:18 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16773.547,2988.6575,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16804.992,2977.1638,32.0,32.0], otherShape=[16773.547,2988.6575,32.0,32.0]
+23:59:18 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16769.344,2985.322,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16800.754,2979.9211,32.0,32.0], otherShape=[16769.344,2985.322,32.0,32.0]
+23:59:18 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16757.785,2991.437,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16789.6,2984.108,32.0,32.0], otherShape=[16757.785,2991.437,32.0,32.0]
+23:59:18 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16739.922,2994.5872,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16770.215,2987.5432,32.0,32.0], otherShape=[16739.922,2994.5872,32.0,32.0]
+23:59:18 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16724.16,2997.3667,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16754.182,2989.1992,32.0,32.0], otherShape=[16724.16,2997.3667,32.0,32.0]
+23:59:18 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16705.246,3000.7021,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16736.865,2988.8386,32.0,32.0], otherShape=[16705.246,3000.7021,32.0,32.0]
+23:59:20 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=com.mega.game.engine.common.shapes.GameCircle@7bf8f6ca, raw_shape=com.mega.game.engine.common.shapes.GameCircle@eba10d39), thisShape=[16796.633,3090.1616,32.0,32.0], otherShape=com.mega.game.engine.common.shapes.GameCircle@7bf8f6ca
+23:59:20 | DEBUG | PreciousGem | onDestroy(): hashCode=726609999
+23:59:20 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16722.059,3049.4368,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16743.396,3080.5051,32.0,32.0], otherShape=[16722.059,3049.4368,32.0,32.0]
+23:59:20 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=com.mega.game.engine.common.shapes.GameCircle@7c04a7bd, raw_shape=com.mega.game.engine.common.shapes.GameCircle@eba10d39), thisShape=[16840.002,3064.0007,32.0,32.0], otherShape=com.mega.game.engine.common.shapes.GameCircle@7c04a7bd
+23:59:20 | DEBUG | PreciousGem | onDestroy(): hashCode=2002514832
+23:59:20 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16834.94,3118.3687,8.0,8.0], raw_shape=[16836.006,3116.9607,8.0,8.0]), thisShape=[16808.152,3105.322,32.0,32.0], otherShape=[16834.94,3118.3687,8.0,8.0]
+23:59:20 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16852.002,3127.3289,8.0,8.0], raw_shape=[16852.002,3126.1448,8.0,8.0]), thisShape=[16823.28,3096.252,32.0,32.0], otherShape=[16852.002,3127.3289,8.0,8.0]
+23:59:22 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=PRECIOUS_GUARD, statToTry=NOT_CHARGED
+23:59:22 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:59:22 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): release gems, clear all spawned
+23:59:22 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=10
+23:59:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=PRECIOUS_GUARD, statToTry=NOT_CHARGED
+23:59:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+23:59:23 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=2002514832
+23:59:23 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=726609999
+23:59:23 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=909574646
+23:59:23 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=1083292142
+23:59:23 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create cluster: shieldGems.size=4
+23:59:23 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=4
+23:59:23 | DEBUG | PreciousGem | onSpawn(): hashCode=2002514832, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=PURPLE]
+	[cull_out_of_bounds=false]
+	[position=(16685.113,3009.3086)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:59:23 | DEBUG | PreciousGem | onSpawn(): hashCode=726609999, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=BLUE]
+	[cull_out_of_bounds=false]
+	[position=(16621.113,3073.3086)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:59:23 | DEBUG | PreciousGem | onSpawn(): hashCode=909574646, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=PINK]
+	[cull_out_of_bounds=false]
+	[position=(16557.113,3009.3086)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:59:23 | DEBUG | PreciousGem | onSpawn(): hashCode=1083292142, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=GREEN]
+	[cull_out_of_bounds=false]
+	[position=(16621.113,2945.3086)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:59:23 | DEBUG | PreciousGemCluster | onSpawn(): spawnProps=Properties({
+	[origin=(16621.113,3009.3086)]
+	[max_distance=320.0]
+	[distance_delta=160.0]
+	[spin_speed=0.5]
+	[PreciousGem={{ PreciousGem:[id=-306, dead=false, hashCode=2002514832] }=ShieldGemDef(angle=0.0, distance=64.0, released=false), { PreciousGem:[id=-301, dead=false, hashCode=726609999] }=ShieldGemDef(angle=90.0, distance=64.0, released=false), { PreciousGem:[id=-299, dead=false, hashCode=909574646] }=ShieldGemDef(angle=180.0, distance=64.0, released=false), { PreciousGem:[id=-294, dead=false, hashCode=1083292142] }=ShieldGemDef(angle=270.0, distance=64.0, released=false)}]
+	[position=(16621.113,3009.3086)]
+	[owner={ Megaman:[id=536, dead=false, hashCode=2065730373] }]
+})
+23:59:23 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16529.15,2981.0964,16.0,16.0], raw_shape=[16532.314,2989.0186,16.0,16.0]), thisShape=[16515.152,2991.2822,32.0,32.0], otherShape=[16529.15,2981.0964,16.0,16.0]
+23:59:23 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16515.152,2991.2822,32.0,32.0], raw_shape=[16933.072,2782.6348,32.0,32.0]), thisShape=[16529.15,2981.0964,16.0,16.0], otherShape=[16515.152,2991.2822,32.0,32.0]
+23:59:23 | DEBUG | PreciousGemCluster | defineUpdatablesComponent(): gem out of cam bounds: { PreciousGem:[id=-304, dead=false, hashCode=152683851] }
+23:59:23 | DEBUG | PreciousGem | onDestroy(): hashCode=152683851
+23:59:24 | DEBUG | PreciousGemCluster | defineUpdatablesComponent(): gem out of cam bounds: { PreciousGem:[id=-297, dead=false, hashCode=1661829272] }
+23:59:24 | DEBUG | PreciousGem | onDestroy(): hashCode=1661829272
+23:59:24 | DEBUG | PreciousGemCluster | onDestroy()
+23:59:24 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=com.mega.game.engine.common.shapes.GameCircle@7baf7481, raw_shape=com.mega.game.engine.common.shapes.GameCircle@eba10d39), thisShape=[16586.21,2996.8328,32.0,32.0], otherShape=com.mega.game.engine.common.shapes.GameCircle@7baf7481
+23:59:24 | DEBUG | PreciousGem | onDestroy(): hashCode=1083292142
+23:59:25 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16709.117,3049.7927,8.0,8.0], raw_shape=[16708.05,3051.2007,8.0,8.0]), thisShape=[16699.33,3020.4282,32.0,32.0], otherShape=[16709.117,3049.7927,8.0,8.0]
+23:59:27 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16750.396,3079.6128,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16780.777,3086.6917,32.0,32.0], otherShape=[16750.396,3079.6128,32.0,32.0]
+23:59:27 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16748.205,3085.6274,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16779.41,3094.8347,32.0,32.0], otherShape=[16748.205,3085.6274,32.0,32.0]
+23:59:27 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16747.11,3070.5908,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16778.453,3097.755,32.0,32.0], otherShape=[16747.11,3070.5908,32.0,32.0]
+23:59:27 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16746.744,3089.6372,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16778.453,3097.755,32.0,32.0], otherShape=[16746.744,3089.6372,32.0,32.0]
+23:59:27 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16750.762,3100.664,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16774.225,3113.3677,32.0,32.0], otherShape=[16750.762,3100.664,32.0,32.0]
+23:59:27 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16756.97,3117.7056,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16759.402,3135.3347,32.0,32.0], otherShape=[16756.97,3117.7056,32.0,32.0]
+23:59:27 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16762.814,3133.7446,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16737.8,3156.5007,32.0,32.0], otherShape=[16762.814,3133.7446,32.0,32.0]
+23:59:32 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16701.043,2982.3572,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16724.947,3009.08,32.0,32.0], otherShape=[16701.043,2982.3572,32.0,32.0]
+23:59:32 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16697.89,2981.8013,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16724.947,3009.08,32.0,32.0], otherShape=[16697.89,2981.8013,32.0,32.0]
+23:59:32 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16713.652,2980.1335,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16734.723,2974.2068,32.0,32.0], otherShape=[16713.652,2980.1335,32.0,32.0]
+23:59:32 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16758.836,2972.1655,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16789.63,2955.7825,32.0,32.0], otherShape=[16758.836,2972.1655,32.0,32.0]
+23:59:33 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[16682.133,2906.4922,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[16713.74,2926.0774,32.0,32.0], otherShape=[16682.133,2906.4922,32.0,32.0]
+23:59:33 | DEBUG | PreciousGem | onHealthDepleted()
+23:59:33 | DEBUG | PreciousGem | onDestroy(): hashCode=726609999
+23:59:34 | DEBUG | PreciousGem | onEvent(): event=Event(key=BOSS_DEFEATED, properties=Properties({
+	[boss={ MoonMan:[id=449, dead=false, hashCode=1114908644] }]
+}))
+23:59:34 | DEBUG | PreciousGem | onEvent(): event=Event(key=BOSS_DEFEATED, properties=Properties({
+	[boss={ MoonMan:[id=449, dead=false, hashCode=1114908644] }]
+}))
+23:59:36 | DEBUG | PreciousGem | onHealthDepleted()
+23:59:36 | DEBUG | PreciousGem | onDestroy(): hashCode=2002514832
+23:59:49 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=MOON_SCYTHES, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@b558294
+23:59:49 | DEBUG | MegamanWeaponsHandler | putWeapon(): weapon=RUSH_JET, entry=MegaWeaponHandler{cooldown=0.0%,ammo=30, weapons=com.badlogic.gdx.utils.ObjectMap$Keys@44de0113
+23:59:49 | DEBUG | PreciousGem | onDestroy(): hashCode=909574646
+23:59:49 | DEBUG | PreciousGemCluster | onDestroy()
+00:00:10 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=PRECIOUS_GUARD
+00:00:10 | DEBUG | PreciousGemCluster | onDestroy()
+00:00:12 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MOON_SCYTHES, previous=MEGA_BUSTER
+00:00:12 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=PRECIOUS_GUARD, previous=MOON_SCYTHES
+00:00:13 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=PRECIOUS_GUARD, statToTry=NOT_CHARGED
+00:00:13 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:13 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=909574646
+00:00:13 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=2002514832
+00:00:13 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=726609999
+00:00:13 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=1083292142
+00:00:13 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create cluster: shieldGems.size=4
+00:00:13 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=24
+00:00:13 | DEBUG | PreciousGem | onSpawn(): hashCode=909574646, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=PURPLE]
+	[cull_out_of_bounds=false]
+	[position=(239.43881,264.0)]
+	[owner={ Megaman:[id=169, dead=false, hashCode=2065730373] }]
+})
+00:00:13 | DEBUG | PreciousGem | onSpawn(): hashCode=2002514832, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=BLUE]
+	[cull_out_of_bounds=false]
+	[position=(175.43881,328.0)]
+	[owner={ Megaman:[id=169, dead=false, hashCode=2065730373] }]
+})
+00:00:13 | DEBUG | PreciousGem | onSpawn(): hashCode=726609999, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=PINK]
+	[cull_out_of_bounds=false]
+	[position=(111.43881,264.0)]
+	[owner={ Megaman:[id=169, dead=false, hashCode=2065730373] }]
+})
+00:00:13 | DEBUG | PreciousGem | onSpawn(): hashCode=1083292142, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=GREEN]
+	[cull_out_of_bounds=false]
+	[position=(175.43881,200.0)]
+	[owner={ Megaman:[id=169, dead=false, hashCode=2065730373] }]
+})
+00:00:13 | DEBUG | PreciousGemCluster | onSpawn(): spawnProps=Properties({
+	[origin=(175.43881,264.0)]
+	[max_distance=320.0]
+	[distance_delta=160.0]
+	[spin_speed=0.5]
+	[PreciousGem={{ PreciousGem:[id=-389, dead=false, hashCode=909574646] }=ShieldGemDef(angle=0.0, distance=64.0, released=false), { PreciousGem:[id=-388, dead=false, hashCode=2002514832] }=ShieldGemDef(angle=90.0, distance=64.0, released=false), { PreciousGem:[id=-396, dead=false, hashCode=726609999] }=ShieldGemDef(angle=180.0, distance=64.0, released=false), { PreciousGem:[id=-397, dead=false, hashCode=1083292142] }=ShieldGemDef(angle=270.0, distance=64.0, released=false)}]
+	[position=(175.43881,264.0)]
+	[owner={ Megaman:[id=169, dead=false, hashCode=2065730373] }]
+})
+00:00:15 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=PRECIOUS_GUARD, statToTry=NOT_CHARGED
+00:00:15 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:15 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): release gems, clear all spawned
+00:00:15 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=24
+00:00:15 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=AXE_SWINGER, previous=PRECIOUS_GUARD
+00:00:16 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+00:00:16 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:16 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=28
+00:00:16 | DEBUG | PreciousGemCluster | defineUpdatablesComponent(): gem out of cam bounds: { PreciousGem:[id=-389, dead=false, hashCode=909574646] }
+00:00:16 | DEBUG | PreciousGemCluster | defineUpdatablesComponent(): gem out of cam bounds: { PreciousGem:[id=-396, dead=false, hashCode=726609999] }
+00:00:16 | DEBUG | PreciousGemCluster | defineUpdatablesComponent(): gem out of cam bounds: { PreciousGem:[id=-397, dead=false, hashCode=1083292142] }
+00:00:16 | DEBUG | PreciousGem | onDestroy(): hashCode=909574646
+00:00:16 | DEBUG | PreciousGem | onDestroy(): hashCode=726609999
+00:00:16 | DEBUG | PreciousGem | onDestroy(): hashCode=1083292142
+00:00:16 | DEBUG | MegamanWeaponsHandler | throwAxe()
+00:00:17 | DEBUG | PreciousGemCluster | defineUpdatablesComponent(): gem out of cam bounds: { PreciousGem:[id=-388, dead=false, hashCode=2002514832] }
+00:00:17 | DEBUG | PreciousGem | onDestroy(): hashCode=2002514832
+00:00:17 | DEBUG | PreciousGemCluster | onDestroy()
+00:00:19 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=NEEDLE_SPIN, previous=AXE_SWINGER
+00:00:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:00:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:19 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:00:19 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=28
+00:00:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: cooldown is not finished
+00:00:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: cooldown is not finished
+00:00:19 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: cooldown is not finished
+00:00:22 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:00:22 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:22 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:00:22 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=26
+00:00:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:00:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:24 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:00:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=24
+00:00:25 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:00:25 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:25 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:00:25 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=26
+00:00:26 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:00:26 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:26 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:00:26 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=24
+00:00:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:00:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:28 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:00:28 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=22
+00:00:29 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:00:29 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:29 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:00:29 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=20
+00:00:30 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:00:30 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:30 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:00:30 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=18
+00:00:32 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:00:32 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:32 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:00:32 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=16
+00:00:33 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:00:33 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:33 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:00:33 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=18
+00:00:37 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:00:37 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:37 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:00:38 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=24
+00:00:39 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:00:39 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:39 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:00:39 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=22
+00:00:42 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:00:42 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:42 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:00:42 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=24
+00:00:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:00:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:45 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:00:45 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=28
+00:00:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:00:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:46 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:00:46 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=26
+00:00:47 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:00:47 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:47 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:00:47 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=24
+00:00:48 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:00:48 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:48 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:00:48 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=22
+00:00:49 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:00:49 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:49 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:00:49 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=20
+00:00:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:00:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:51 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:00:51 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=22
+00:00:54 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:00:54 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:54 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:00:54 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=20
+00:00:55 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:00:55 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:55 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:00:55 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=18
+00:00:57 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:00:57 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:57 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:00:57 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=16
+00:00:59 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:00:59 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:00:59 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:00:59 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=18
+00:01:00 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:01:00 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:01:00 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:01:00 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=16
+00:01:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:01:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:01:07 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:01:07 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=14
+00:01:08 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:01:08 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:01:08 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:01:08 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=12
+00:01:09 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:09 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:09 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:09 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:09 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:09 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:09 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:09 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:09 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:09 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:09 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:09 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:09 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:09 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:09 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:09 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:09 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:09 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:09 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:09 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:09 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:09 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:10 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:10 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:10 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:10 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:10 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:10 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire NEEDLE_SPIN: megaman is frozen
+00:01:10 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=NEEDLE_SPIN, statToTry=NOT_CHARGED
+00:01:10 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:01:10 | DEBUG | MegamanWeaponsHandler | spinNeedles()
+00:01:10 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=10
+00:01:11 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=RODENT_CLAWS, previous=NEEDLE_SPIN
+00:01:11 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is frozen
+00:01:11 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is frozen
+00:01:11 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is frozen
+00:01:11 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is frozen
+00:01:11 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is frozen
+00:01:11 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is frozen
+00:01:11 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is frozen
+00:01:11 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is frozen
+00:01:11 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is frozen
+00:01:11 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire RODENT_CLAWS: megaman is frozen
+00:01:11 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=RUSH_JET, previous=RODENT_CLAWS
+00:01:12 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MEGA_BUSTER, previous=RUSH_JET
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:12 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:13 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:13 | DEBUG | MegamanWeaponsHandler | canFireWeapon(): cannot fire MEGA_BUSTER: megaman is frozen
+00:01:13 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=MOON_SCYTHES, previous=MEGA_BUSTER
+00:01:14 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:14 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:14 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:14 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:14 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:14 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:14 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MOON_SCYTHES, statToTry=NOT_CHARGED
+00:01:14 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:01:14 | DEBUG | MegamanWeaponsHandler | fireMoonScythes(): stat=NOT_CHARGED
+00:01:14 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=24
+00:01:20 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:20 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:20 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:20 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:20 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:20 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:20 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MOON_SCYTHES, statToTry=NOT_CHARGED
+00:01:20 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:01:20 | DEBUG | MegamanWeaponsHandler | fireMoonScythes(): stat=NOT_CHARGED
+00:01:20 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=18
+00:01:24 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:24 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:24 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MOON_SCYTHES, statToTry=NOT_CHARGED
+00:01:24 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:01:24 | DEBUG | MegamanWeaponsHandler | fireMoonScythes(): stat=NOT_CHARGED
+00:01:24 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=12
+00:01:31 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:31 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:31 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:31 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:31 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:31 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:31 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:31 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:31 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:31 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MOON_SCYTHES, statToTry=NOT_CHARGED
+00:01:31 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:31 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:01:31 | DEBUG | MegamanWeaponsHandler | fireMoonScythes(): stat=NOT_CHARGED
+00:01:31 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=6
+00:01:36 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:36 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:36 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:36 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:36 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:36 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:36 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:36 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=MOON_SCYTHES, statToTry=NOT_CHARGED
+00:01:36 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:36 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:01:36 | DEBUG | MegamanWeaponsHandler | fireMoonScythes(): stat=NOT_CHARGED
+00:01:36 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=4
+00:01:42 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:42 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:42 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:42 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:42 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:42 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:42 | DEBUG | MegamanWeaponsHandler | MOON_SCYTHE: canFireWeapon(): count=0
+00:01:43 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=PRECIOUS_GUARD, previous=MOON_SCYTHES
+00:01:43 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=PRECIOUS_GUARD, statToTry=NOT_CHARGED
+00:01:43 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:01:43 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=2002514832
+00:01:43 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=1083292142
+00:01:43 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=726609999
+00:01:43 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create gem: hashCode=909574646
+00:01:43 | DEBUG | MegamanWeaponsHandler | shootPreciousGuard(): create cluster: shieldGems.size=4
+00:01:43 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=20
+00:01:43 | DEBUG | PreciousGem | onSpawn(): hashCode=2002514832, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=PURPLE]
+	[cull_out_of_bounds=false]
+	[position=(5576.3364,1624.0)]
+	[owner={ Megaman:[id=169, dead=false, hashCode=2065730373] }]
+})
+00:01:43 | DEBUG | PreciousGem | onSpawn(): hashCode=1083292142, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=BLUE]
+	[cull_out_of_bounds=false]
+	[position=(5512.3364,1688.0)]
+	[owner={ Megaman:[id=169, dead=false, hashCode=2065730373] }]
+})
+00:01:43 | DEBUG | PreciousGem | onSpawn(): hashCode=726609999, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=PINK]
+	[cull_out_of_bounds=false]
+	[position=(5448.3364,1624.0)]
+	[owner={ Megaman:[id=169, dead=false, hashCode=2065730373] }]
+})
+00:01:43 | DEBUG | PreciousGem | onSpawn(): hashCode=909574646, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=GREEN]
+	[cull_out_of_bounds=false]
+	[position=(5512.3364,1560.0)]
+	[owner={ Megaman:[id=169, dead=false, hashCode=2065730373] }]
+})
+00:01:43 | DEBUG | PreciousGemCluster | onSpawn(): spawnProps=Properties({
+	[origin=(5512.3364,1624.0)]
+	[max_distance=320.0]
+	[distance_delta=160.0]
+	[spin_speed=0.5]
+	[PreciousGem={{ PreciousGem:[id=-408, dead=false, hashCode=2002514832] }=ShieldGemDef(angle=0.0, distance=64.0, released=false), { PreciousGem:[id=-499, dead=false, hashCode=1083292142] }=ShieldGemDef(angle=90.0, distance=64.0, released=false), { PreciousGem:[id=-400, dead=false, hashCode=726609999] }=ShieldGemDef(angle=180.0, distance=64.0, released=false), { PreciousGem:[id=-474, dead=false, hashCode=909574646] }=ShieldGemDef(angle=270.0, distance=64.0, released=false)}]
+	[position=(5512.3364,1624.0)]
+	[owner={ Megaman:[id=169, dead=false, hashCode=2065730373] }]
+})
+00:01:45 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[5828.0,1691.968,24.0,24.0], raw_shape=[0.0,0.0,24.0,24.0]), thisShape=[5824.5625,1677.8943,32.0,32.0], otherShape=[5828.0,1691.968,24.0,24.0]
+00:01:51 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6692.0,1668.2827,24.0,24.0], raw_shape=[0.0,0.0,24.0,24.0]), thisShape=[6699.007,1636.6514,32.0,32.0], otherShape=[6692.0,1668.2827,24.0,24.0]
+00:01:53 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6692.0,1687.3674,24.0,24.0], raw_shape=[0.0,0.0,24.0,24.0]), thisShape=[6715.4106,1678.7625,32.0,32.0], otherShape=[6692.0,1687.3674,24.0,24.0]
+00:01:58 | DEBUG | PreciousGem | onEvent(): event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@4a38dcaa]
+	[name=room7]
+	[prior_name=room6]
+	[position=(7374.1675,1491.7527)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@7935f514]
+}))
+00:01:58 | DEBUG | PreciousGem | onEvent(): event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@4a38dcaa]
+	[name=room7]
+	[prior_name=room6]
+	[position=(7374.1675,1491.7527)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@7935f514]
+}))
+00:01:58 | DEBUG | PreciousGem | onEvent(): event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@4a38dcaa]
+	[name=room7]
+	[prior_name=room6]
+	[position=(7374.1675,1491.7527)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@7935f514]
+}))
+00:01:58 | DEBUG | PreciousGem | onEvent(): event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@4a38dcaa]
+	[name=room7]
+	[prior_name=room6]
+	[position=(7374.1675,1491.7527)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@7935f514]
+}))
+00:02:01 | DEBUG | PreciousGem | onEvent(): event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@696269f6]
+	[name=room8]
+	[prior_name=room7]
+	[position=(7155.648,1046.7771)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@4a38dcaa]
+}))
+00:02:01 | DEBUG | PreciousGem | onEvent(): event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@696269f6]
+	[name=room8]
+	[prior_name=room7]
+	[position=(7155.648,1046.7771)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@4a38dcaa]
+}))
+00:02:01 | DEBUG | PreciousGem | onEvent(): event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@696269f6]
+	[name=room8]
+	[prior_name=room7]
+	[position=(7155.648,1046.7771)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@4a38dcaa]
+}))
+00:02:01 | DEBUG | PreciousGem | onEvent(): event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@696269f6]
+	[name=room8]
+	[prior_name=room7]
+	[position=(7155.648,1046.7771)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@4a38dcaa]
+}))
+00:02:02 | DEBUG | MegamanWeaponsHandler | onChangeWeapon(): current=AXE_SWINGER, previous=PRECIOUS_GUARD
+00:02:02 | DEBUG | PreciousGem | onDestroy(): hashCode=2002514832
+00:02:02 | DEBUG | PreciousGem | onDestroy(): hashCode=1083292142
+00:02:02 | DEBUG | PreciousGem | onDestroy(): hashCode=726609999
+00:02:02 | DEBUG | PreciousGem | onDestroy(): hashCode=909574646
+00:02:02 | DEBUG | PreciousGemCluster | onDestroy()
+00:02:03 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+00:02:03 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:02:03 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=26
+00:02:03 | DEBUG | MegamanWeaponsHandler | throwAxe()
+00:02:04 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+00:02:04 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:02:04 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=24
+00:02:04 | DEBUG | MegamanWeaponsHandler | throwAxe()
+00:02:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon=AXE_SWINGER, statToTry=NOT_CHARGED
+00:02:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon not chargeable
+00:02:05 | DEBUG | MegamanWeaponsHandler | fireWeapon(): weapon fired: weaponEntry=MegaWeaponHandler{cooldown=0.0%,ammo=22
+00:02:05 | DEBUG | MegamanWeaponsHandler | throwAxe()

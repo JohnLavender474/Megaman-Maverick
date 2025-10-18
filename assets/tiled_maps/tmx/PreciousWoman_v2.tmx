@@ -315,21 +315,39 @@
   <object id="8" x="608" y="2496" width="64" height="288"/>
   <object id="9" name="AbstractBlock" x="0" y="2624" width="168" height="192"/>
   <object id="16" x="832" y="2496" width="32" height="256"/>
-  <object id="17" x="864" y="2496" width="192" height="224"/>
-  <object id="18" x="1056" y="2496" width="64" height="192"/>
-  <object id="19" x="1120" y="2496" width="64" height="224"/>
-  <object id="20" x="1184" y="2496" width="256" height="192"/>
-  <object id="21" x="1504" y="2496" width="256" height="256"/>
-  <object id="11" x="960" y="2976" width="128" height="224">
+  <object id="17" name="PreciousBlock" x="864" y="2496" width="192" height="224">
    <properties>
+    <property name="create_sprite" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="18" name="PreciousBlock" x="1056" y="2496" width="64" height="192">
+   <properties>
+    <property name="create_sprite" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="19" name="PreciousBlock" x="1120" y="2496" width="64" height="224">
+   <properties>
+    <property name="create_sprite" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="20" name="PreciousBlock" x="1184" y="2496" width="256" height="192">
+   <properties>
+    <property name="create_sprite" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="21" x="1504" y="2496" width="256" height="256"/>
+  <object id="11" name="PreciousBlock" x="960" y="2976" width="128" height="224">
+   <properties>
+    <property name="create_sprite" type="bool" value="false"/>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
     <property name="cull_room" value="room1"/>
     <property name="spawn_room" value="room1"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="12" x="1088" y="2944" width="192" height="256">
+  <object id="12" name="PreciousBlock" x="1088" y="2944" width="192" height="256">
    <properties>
+    <property name="create_sprite" type="bool" value="false"/>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
     <property name="cull_room" value="room1"/>
     <property name="spawn_room" value="room1"/>
@@ -367,18 +385,46 @@
   <object id="57" x="1440" y="2880" width="96" height="32"/>
   <object id="62" x="1440" y="2496" width="64" height="288"/>
   <object id="71" x="1856" y="3008" width="96" height="32"/>
-  <object id="72" x="1760" y="2496" width="64" height="288"/>
-  <object id="74" x="1824" y="2496" width="256" height="224"/>
-  <object id="77" x="2144" y="2496" width="192" height="224"/>
+  <object id="72" name="PreciousBlock" x="1760" y="2496" width="64" height="288">
+   <properties>
+    <property name="create_sprite" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="74" name="PreciousBlock" x="1824" y="2496" width="256" height="224">
+   <properties>
+    <property name="create_sprite" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="77" name="PreciousBlock" x="2144" y="2496" width="192" height="224">
+   <properties>
+    <property name="create_sprite" type="bool" value="false"/>
+   </properties>
+  </object>
   <object id="88" x="2048" y="3008" width="256" height="192"/>
-  <object id="91" x="2336" y="2496" width="128" height="256"/>
+  <object id="91" name="PreciousBlock" x="2336" y="2496" width="128" height="256">
+   <properties>
+    <property name="create_sprite" type="bool" value="false"/>
+   </properties>
+  </object>
   <object id="92" x="2528" y="1728" width="256" height="1152"/>
-  <object id="95" x="2080" y="2496" width="64" height="288"/>
+  <object id="95" name="PreciousBlock" x="2080" y="2496" width="64" height="288">
+   <properties>
+    <property name="create_sprite" type="bool" value="false"/>
+   </properties>
+  </object>
   <object id="96" x="1824" y="2880" width="96" height="16"/>
   <object id="97" x="2304" y="2944" width="800" height="256"/>
   <object id="106" x="1648" y="2848" width="72" height="24"/>
-  <object id="107" x="1280" y="2880" width="64" height="320"/>
-  <object id="110" x="2464" y="2496" width="64" height="288"/>
+  <object id="107" name="PreciousBlock" x="1280" y="2880" width="64" height="320">
+   <properties>
+    <property name="create_sprite" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="110" name="PreciousBlock" x="2464" y="2496" width="64" height="288">
+   <properties>
+    <property name="create_sprite" type="bool" value="false"/>
+   </properties>
+  </object>
   <object id="111" x="3104" y="2080" width="96" height="1120"/>
   <object id="113" x="2784" y="2784" width="288" height="32">
    <properties>

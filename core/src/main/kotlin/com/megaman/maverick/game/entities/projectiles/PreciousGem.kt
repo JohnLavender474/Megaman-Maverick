@@ -34,6 +34,7 @@ import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.IEventListener
@@ -82,7 +83,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
         override fun get(damager: IDamager) = when {
             IGNORE_DMG.contains(damager::class) -> 0
-            owner == megaman -> 8
+            owner == megaman -> 5
             else -> 0
         }
     }
@@ -136,7 +137,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         if (!spawnProps.containsKey(ConstKeys.CULL_TIME))
             spawnProps.put(ConstKeys.CULL_TIME, DEFAULT_CULL_TIME)
 
-        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
+        GameLogger.debug(TAG, "onSpawn(): hashCode=${hashCode()}, spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         game.eventsMan.addListener(this)
@@ -170,7 +171,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
     }
 
     override fun onDestroy() {
-        GameLogger.debug(TAG, "onDestroy()")
+        GameLogger.debug(TAG, "onDestroy(): hashCode=${hashCode()}")
         super.onDestroy()
 
         game.eventsMan.removeListener(this)
@@ -199,6 +200,11 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
     override fun takeDamageFrom(damager: IDamager): Boolean {
         val damaged = super.takeDamageFrom(damager)
         if (damaged) requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+        if (isHealthDepleted()) {
+            val direction =
+                getOverlapPushDirection(body.getBounds(), (damager as IBodyEntity).body.getBounds()) ?: Direction.UP
+            explodeAndDie(direction)
+        }
         return damaged
     }
 
@@ -210,31 +216,35 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
         val projectile = projectileFixture.getEntity()
         if (projectile is Axe) {
-            val direction = getOverlapPushDirection(thisShape, otherShape)
+            val direction = getOverlapPushDirection(thisShape, otherShape) ?: Direction.UP
             explodeAndDie(direction)
         }
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        GameLogger.debug(TAG, "hitBlock(): blockFixture=$blockFixture, thisShape=$thisShape, otherShape=$otherShape")
-
         if (blockShatter) {
-            val direction = getOverlapPushDirection(thisShape, otherShape)
+            GameLogger.debug(
+                TAG,
+                "hitBlock(): blockFixture=$blockFixture, thisShape=$thisShape, otherShape=$otherShape"
+            )
+            val direction = getOverlapPushDirection(thisShape, otherShape) ?: Direction.UP
             explodeAndDie(direction)
         }
     }
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        GameLogger.debug(TAG, "hitShield(): shieldFixture=$shieldFixture, thisShape=$thisShape, otherShape=$otherShape")
-
         if (shieldShatter) {
-            val direction = getOverlapPushDirection(thisShape, otherShape)
+            GameLogger.debug(
+                TAG,
+                "hitShield(): shieldFixture=$shieldFixture, thisShape=$thisShape, otherShape=$otherShape"
+            )
+            val direction = getOverlapPushDirection(thisShape, otherShape) ?: Direction.UP
             explodeAndDie(direction)
         }
     }
 
     override fun explodeAndDie(vararg params: Any?) {
-        val direction = params[0] as Direction
+        val direction = if (params.isNotEmpty()) params[0] as Direction else Direction.UP
 
         SHATTER_IMPULSES.get(direction).forEach { impulse ->
             val shard = MegaEntityFactory.fetch(PreciousShard::class)!!

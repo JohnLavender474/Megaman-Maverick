@@ -7,7 +7,11 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods
+import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.isAny
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -29,20 +33,29 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
+import kotlin.math.abs
 
-class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
+class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IDirectional {
 
     companion object {
         const val TAG = "Axe"
         private const val CULL_TIME = 1f
-        private const val GRAVITY = -0.375f
+        private const val GRAVITY = 0.375f
+        private const val MAX_BOUNCES = 2
+        private const val SLOW_DOWN_SCALAR = 0.75f
         private var region: TextureRegion? = null
     }
 
+    override var direction: Direction
+        get() = body.direction
+        set(value) {
+            body.direction = value
+        }
+
     private var gravityScalar = 1f
+    private var bounces = 0
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -63,6 +76,10 @@ class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity
         body.physics.velocity.set(impulse)
 
         gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
+
+        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+
+        bounces = 0
     }
 
     override fun onDestroy() {
@@ -71,13 +88,40 @@ class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity
     }
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        if (bounces >= MAX_BOUNCES) return
+
         val shieldEntity = shieldFixture.getEntity()
-        if (shieldEntity == owner) return
+        if (shieldEntity == owner ||
+            shieldEntity.isAny(
+                PreciousGem::class,
+                PreciousShard::class,
+                PreciousGemBomb::class,
+            )
+        ) return
 
-        GameLogger.debug(TAG, "hitShield()")
+        bounces++
 
-        if (megaman.direction.isVertical()) body.physics.velocity.x *= -1
-        else body.physics.velocity.y *= -1
+        val direction = UtilMethods.getOverlapPushDirection(thisShape, otherShape) ?: Direction.UP
+        when (direction) {
+            Direction.UP -> {
+                body.physics.velocity.y = abs(body.physics.velocity.y) * SLOW_DOWN_SCALAR
+                body.physics.velocity.x *= SLOW_DOWN_SCALAR
+            }
+            Direction.DOWN -> {
+                body.physics.velocity.y = -abs(body.physics.velocity.y) * SLOW_DOWN_SCALAR
+                body.physics.velocity.x *= SLOW_DOWN_SCALAR
+            }
+            Direction.LEFT -> {
+                body.physics.velocity.x = -abs(body.physics.velocity.x) * SLOW_DOWN_SCALAR
+                body.physics.velocity.y *= SLOW_DOWN_SCALAR
+            }
+            Direction.RIGHT -> {
+                body.physics.velocity.x = abs(body.physics.velocity.x) * SLOW_DOWN_SCALAR
+                body.physics.velocity.y *= SLOW_DOWN_SCALAR
+            }
+        }
+
+        GameLogger.debug(TAG, "hitShield(): direction=$direction")
 
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
@@ -92,7 +136,12 @@ class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity
         debugShapes.add { body.getBounds() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.physics.gravity.y = GRAVITY * gravityScalar * ConstVals.PPM
+            when (direction) {
+                Direction.UP -> body.physics.gravity.set(0f, -GRAVITY * gravityScalar * ConstVals.PPM)
+                Direction.DOWN -> body.physics.gravity.set(0f, GRAVITY * gravityScalar * ConstVals.PPM)
+                Direction.LEFT -> body.physics.gravity.set(GRAVITY * gravityScalar * ConstVals.PPM, 0f)
+                Direction.RIGHT -> body.physics.gravity.set(GRAVITY * gravityScalar * ConstVals.PPM, 0f)
+            }
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -110,6 +159,8 @@ class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity
         .updatable { _, sprite ->
             sprite.setCenter(body.getCenter())
             sprite.setFlip(body.physics.velocity.x > 0f, false)
+            sprite.setOriginCenter()
+            sprite.rotation = direction.rotation
         }
         .build()
 
