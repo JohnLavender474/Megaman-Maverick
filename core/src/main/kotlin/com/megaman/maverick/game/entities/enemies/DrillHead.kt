@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
@@ -80,6 +81,9 @@ class DrillHead(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         private const val DRILL_ROCK_MIN_Y_IMPULSE = -12f
         private const val DRILL_ROCK_MAX_Y_IMPULSE = -4f
 
+        // Avoid spawning debris if the FPS dips below this guard
+        private const val FPS_GUARD = 50
+
         private val animDefs = orderedMapOf(
             "idle" pairTo AnimationDef(),
             "fly" pairTo AnimationDef(2, 1, 0.05f, true),
@@ -140,7 +144,9 @@ class DrillHead(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         stateTimers = orderedMapOf(
             DrillHeadState.IDLE pairTo Timer(if (game.state.hardMode) HARD_IDLE_DUR else IDLE_DUR),
             DrillHeadState.DRILL pairTo Timer(DRILL_DUR).also { drillTimer ->
-                val debrisRunnable: () -> Unit = { spawnDrillDebris() }
+                val debrisRunnable: () -> Unit = {
+                    if (Gdx.graphics.framesPerSecond >= FPS_GUARD) spawnDrillDebris()
+                }
                 val drillDebrisDelay = DRILL_DUR / DRILL_DEBRIS_OBJS
                 for (i in 1..DRILL_DEBRIS_OBJS) drillTimer.addRunnable(
                     TimeMarkedRunnable(i * drillDebrisDelay, debrisRunnable)

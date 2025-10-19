@@ -116,14 +116,14 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         private const val AIRPUNCH_DELAY = 0.25f
         private const val AIRPUNCH_MAX_DUR = 1f
-        private const val AIRPUNCH_COOLDOWN = 4f
-        private const val AIRPUNCH_VEL_X = 10f
+        private const val AIRPUNCH_COOLDOWN = 3f
+        private const val AIRPUNCH_VEL_X = 12f
         private const val AIRPUNCH_CHANCE = 50f
 
         private const val JUMP_CHANCE_FIRST_CHECK = 20f
         private const val JUMP_CHANCE_SECOND_CHECK = 75f
         private const val JUMP_MAX_IMPULSE_X = 10f
-        private const val JUMP_IMPULSE_Y = 10f
+        private const val JUMP_IMPULSE_Y = 16f
         private const val WALL_JUMP_IMPULSE_X = 5f
 
         private const val GEMS_TO_THROW = 3
@@ -198,9 +198,10 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         TimeMarkedRunnable(THROW_TIME) { throwHomingGems() }.setToRunOnlyWhenJustPassedTime(true)
     )
     private val throwing: Boolean
-        get() = !throwingTimer.isFinished()
+        get() = !throwingTimer.isFinished() || !throwShieldGemsTimer.isFinished()
     private val throwMinCooldown = Timer(MIN_THROW_COOLDOWN)
     private var statesSinceLastThrow = 0
+    private val throwShieldGemsTimer = Timer(THROW_GEMS_DUR)
 
     private val stunnedTimer = Timer(STUNNED_DUR)
     private var stunned: Boolean
@@ -266,6 +267,8 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         stunnedTimer.setToEnd()
 
         throwMinCooldown.reset()
+        throwShieldGemsTimer.setToEnd()
+
         airpunchCooldown.reset()
         jumpUpdateFacingDelay.reset()
 
@@ -361,6 +364,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 if (spawnShieldsChance > 100f) spawnShieldsChance = 100f
             }
             if (!shieldGems.isEmpty) spinShieldGems(delta)
+            throwShieldGemsTimer.update(delta)
 
             airpunchCooldown.update(delta)
 
@@ -475,13 +479,11 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         GameLogger.debug(TAG, "spawnShieldGems()")
 
         for (i in 0 until SHIELD_GEMS_ANGLES.size) {
-            val spawn = body.getCenter().add(ConstVals.PPM.toFloat() * facing.value, 0f)
+            val spawn = body.getCenter()
 
             val angle = SHIELD_GEMS_ANGLES[i]
             val target = OrbitUtils.calculateOrbitalPosition(
-                angle,
-                SHIELD_GEM_START_OFFSET * ConstVals.PPM,
-                body.getCenter(),
+                angle, SHIELD_GEM_START_OFFSET * ConstVals.PPM, spawn,
                 GameObjectPools.fetch(Vector2::class)
             )
 
@@ -768,10 +770,16 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
         .transition(PreciousWomanState.AIRPUNCH.name, PreciousWomanState.STAND.name) { true }
         // spawn shield gems
-        .transition(PreciousWomanState.SPAWN_SHIELD_GEMS.name, PreciousWomanState.STAND.name) { stunned || shouldStand() }
+        .transition(
+            PreciousWomanState.SPAWN_SHIELD_GEMS.name,
+            PreciousWomanState.STAND.name
+        ) { stunned || shouldStand() }
         .transition(PreciousWomanState.SPAWN_SHIELD_GEMS.name, PreciousWomanState.JUMP.name) { true }
         // throw shield gems
-        .transition(PreciousWomanState.THROW_SHIELD_GEMS.name, PreciousWomanState.STAND.name) { stunned || shouldStand() }
+        .transition(
+            PreciousWomanState.THROW_SHIELD_GEMS.name,
+            PreciousWomanState.STAND.name
+        ) { stunned || shouldStand() }
         .transition(PreciousWomanState.THROW_SHIELD_GEMS.name, PreciousWomanState.JUMP.name) { true }
         // build
         .build()
@@ -914,6 +922,8 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         // re-initialize to detach this class's ref from the ref passed into the `cluster`
         shieldGems = OrderedMap()
+
+        throwShieldGemsTimer.reset()
 
         throwMinCooldown.reset()
         statesSinceLastThrow = 0

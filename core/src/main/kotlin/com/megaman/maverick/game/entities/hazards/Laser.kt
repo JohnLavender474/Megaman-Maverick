@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.hazards
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
@@ -13,10 +14,9 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.IActivatable
-import com.mega.game.engine.common.objects.GamePair
+import com.mega.game.engine.common.interfaces.Updatable
+import com.mega.game.engine.common.objects.*
 import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameLine
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
@@ -78,8 +78,9 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         private const val LIGHT_SOURCE_RADIUS = 1
         private const val LIGHT_SOURCE_RADIANCE = 1.5f
 
-        private const val LASER_SPRITE_SIZE = 2f / ConstVals.PPM
+        private const val LASER_SPRITE_SIZE = 4f / ConstVals.PPM
         private const val LASER_SPRITE_ON_DELAY = 0.025f
+        private const val LASER_SPRITE_UPDATERS_STEP = 2
 
         private const val LASER_PRECIOUS_SHARDS_DELAY = 0.25f
         private const val LASER_SHARDS_MIN_IMPULSE_X = -3f
@@ -89,6 +90,9 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         // This is how many times a "laser" can be reflected. A "laser" is composed of
         // one or more Laser instances - but to the player, it appears like just one.
         private const val MAX_REFLECTIONS = 2
+
+        // Avoid spawning debris if the FPS dips below this guard
+        private const val FPS_GUARD = 50
 
         private var region: TextureRegion? = null
     }
@@ -101,9 +105,11 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
             putProperty(ConstKeys.ON, value)
             if (!value) spriteOnDelay.reset()
         }
+
     // The "owner" is the entity that spawns this laser (or causes it to be spawned), e.g.
     // a laser beamer, a shield, etc.
     override var owner: MegaGameEntity? = null
+
     // The "parent" is the parent laser. This is null except if this laser is spawned from
     // another laser.
     override var parent: IGameEntity? = null
@@ -133,9 +139,15 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     private var hitShieldFixture: IFixture? = null
     private var reflectionIndex = 0
 
-    private val spriteOnDelay = Timer(LASER_SPRITE_ON_DELAY)
-
     private val laserShardsTimer = Timer(LASER_PRECIOUS_SHARDS_DELAY)
+
+    // Instead of using the built-in updater logic in SpritesComponent,
+    // use a custom update setup in order to optimize the rendering of
+    // many small "laser" sprites.
+    private val spriteUpdaters = Array<Updatable>()
+    private var spriteUpdaterStartIndexLoop = Loop(0, 1)
+    private val spriteOnDelay = Timer(LASER_SPRITE_ON_DELAY)
+    private var spritesHidden = false
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -206,6 +218,8 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         }
 
         laserShardsTimer.reset()
+
+        spriteUpdaterStartIndexLoop.reset()
     }
 
     override fun onDestroy() {
@@ -216,6 +230,8 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         parent = null
 
         sprites.clear()
+        spriteUpdaters.clear()
+
         contacts.clear()
         lightSourceKeys.clear()
         obstaclesToIgnore.clear()
@@ -247,45 +263,47 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
                 )
             )
 
-            val tempRect = GameObjectPools.fetch(GameRectangle::class)
-                .setSize(0.25f * ConstVals.PPM)
-                .setCenter(actualEndPoint)
+            if (Gdx.graphics.framesPerSecond >= FPS_GUARD) {
+                val tempRect = GameObjectPools.fetch(GameRectangle::class)
+                    .setSize(0.25f * ConstVals.PPM)
+                    .setCenter(actualEndPoint)
 
-            val direction = when {
-                shieldFixture.hasProperty("${ConstKeys.REFLECT}_${ConstKeys.DIRECTION}") ->
-                    shieldFixture.getProperty("${ConstKeys.REFLECT}_${ConstKeys.DIRECTION}", Direction::class)!!
-                else -> UtilMethods.getOverlapPushDirection(tempRect, shieldFixture.getShape())
-            }
+                val direction = when {
+                    shieldFixture.hasProperty("${ConstKeys.REFLECT}_${ConstKeys.DIRECTION}") ->
+                        shieldFixture.getProperty("${ConstKeys.REFLECT}_${ConstKeys.DIRECTION}", Direction::class)!!
+                    else -> UtilMethods.getOverlapPushDirection(tempRect, shieldFixture.getShape())
+                }
 
-            if (direction == null) return
+                if (direction == null) return
 
-            val shardsPosition = GameObjectPools.fetch(Vector2::class)
-                .set(actualEndPoint)
-                .add(0.25f * ConstVals.PPM, direction)
+                val shardsPosition = GameObjectPools.fetch(Vector2::class)
+                    .set(actualEndPoint)
+                    .add(0.25f * ConstVals.PPM, direction)
 
-            val impulse = GameObjectPools.fetch(Vector2::class)
-                .setX(UtilMethods.getRandom(LASER_SHARDS_MIN_IMPULSE_X, LASER_SHARDS_MAX_IMPULSE_X))
-                .setY(LASER_SHARDS_IMPULSE_Y)
-                .rotateDeg(direction.rotation)
-                .scl(ConstVals.PPM.toFloat())
+                val impulse = GameObjectPools.fetch(Vector2::class)
+                    .setX(UtilMethods.getRandom(LASER_SHARDS_MIN_IMPULSE_X, LASER_SHARDS_MAX_IMPULSE_X))
+                    .setY(LASER_SHARDS_IMPULSE_Y)
+                    .rotateDeg(direction.rotation)
+                    .scl(ConstVals.PPM.toFloat())
 
-            val size = PreciousShardSize.entries.random()
-            val color = PreciousShardColor.entries.random()
+                val size = PreciousShardSize.entries.random()
+                val color = PreciousShardColor.entries.random()
 
-            val preciousShard = MegaEntityFactory.fetch(PreciousShard::class)!!
-            preciousShard.spawn(
-                props(
-                    ConstKeys.OWNER pairTo this,
-                    ConstKeys.SIZE pairTo size,
-                    ConstKeys.COLOR pairTo color,
-                    ConstKeys.IMPULSE pairTo impulse,
-                    ConstKeys.POSITION pairTo shardsPosition,
-                    "${ConstKeys.COLLIDE}_${ConstKeys.DELAY}" pairTo false,
+                val preciousShard = MegaEntityFactory.fetch(PreciousShard::class)!!
+                preciousShard.spawn(
+                    props(
+                        ConstKeys.OWNER pairTo this,
+                        ConstKeys.SIZE pairTo size,
+                        ConstKeys.COLOR pairTo color,
+                        ConstKeys.IMPULSE pairTo impulse,
+                        ConstKeys.POSITION pairTo shardsPosition,
+                        "${ConstKeys.COLLIDE}_${ConstKeys.DELAY}" pairTo false,
+                    )
                 )
-            )
 
-            if (game.getGameCamera().getRotatedBounds().contains(shardsPosition))
-                requestToPlaySound(SoundAsset.DINK_SOUND, false)
+                if (game.getGameCamera().getRotatedBounds().contains(shardsPosition))
+                    requestToPlaySound(SoundAsset.DINK_SOUND, false)
+            }
 
             laserShardsTimer.reset()
         }
@@ -413,7 +431,24 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     private fun defineUpdatablesComponent() = UpdatablesComponent(update@{ delta ->
         if (shouldSendLightSourceEvents()) sendLightSourceEvents()
 
-        if (on) spriteOnDelay.update(delta)
+        if (on) {
+            spriteOnDelay.update(delta)
+            if (spriteOnDelay.isFinished()) {
+                spritesHidden = false
+                renderLaserSprites(delta)
+                spriteUpdaterStartIndexLoop.next()
+            } else if (!spritesHidden) {
+                spritesHidden = true
+                sprites.values().forEach { it.hidden = true }
+            }
+        } else {
+            if (!spritesHidden) {
+                spritesHidden = true
+                sprites.values().forEach { it.hidden = true }
+            }
+            spriteOnDelay.reset()
+            return@update
+        }
 
         if (hitShieldFixture == null) {
             resetReflectingLaserIfAny()
@@ -535,12 +570,12 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
             sprite.setSize(LASER_SPRITE_SIZE * ConstVals.PPM)
             sprites.put(key, sprite)
 
-            putSpriteUpdateFunction(key) updateFunc@{ _, _ ->
+            spriteUpdaters.add update@{ _ ->
                 val laser = damagerFixture.getShape() as GameLine
 
                 if (i * LASER_SPRITE_SIZE * ConstVals.PPM > laser.getLength()) {
                     sprite.hidden = true
-                    return@updateFunc
+                    return@update
                 }
 
                 sprite.hidden = !on || !spriteOnDelay.isFinished()
@@ -563,6 +598,14 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
                 sprite.setCenter(center)
             }
+        }
+    }
+
+    private fun renderLaserSprites(delta: Float) {
+        var index = spriteUpdaterStartIndexLoop.getCurrent()
+        while (index < spriteUpdaters.size) {
+            spriteUpdaters[index].update(delta)
+            index += LASER_SPRITE_UPDATERS_STEP
         }
     }
 

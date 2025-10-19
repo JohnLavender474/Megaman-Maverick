@@ -39,7 +39,7 @@ class PreciousGemCluster(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
     companion object {
         const val TAG = "PreciousGemCluster"
         const val DEFAULT_SHIELD_GEM_SPIN_SPEED = 0.25f
-        private const val DEFAULT_DIST_FROM_CENTER_DELTA = 2f
+        private const val DEFAULT_DIST_FROM_CENTER_DELTA = 3f
     }
 
     override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_JUST_DIED)
