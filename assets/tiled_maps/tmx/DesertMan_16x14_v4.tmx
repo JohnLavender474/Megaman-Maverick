@@ -2182,11 +2182,6 @@
     <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="682" name="LampeonBandito" x="20304" y="608" width="32" height="32">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
   <object id="683" name="Cokeyro" x="20160" y="704" width="32" height="32">
    <properties>
     <property name="hard_mode_only" type="bool" value="true"/>
@@ -2298,11 +2293,6 @@
    </properties>
   </object>
   <object id="706" name="Bat" x="8112" y="1728" width="16" height="16">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="709" name="DarkSerket" x="20912" y="608" width="32" height="32">
    <properties>
     <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
