@@ -625,7 +625,6 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                     0.75f * facing.value * ConstVals.PPM,
                     0.1f * ConstVals.PPM
                 )
-
                 shootUp -> spawn.add(0.4f * facing.value * ConstVals.PPM, 0.1f * ConstVals.PPM)
                 else -> spawn.add(0.5f * facing.value * ConstVals.PPM, 0f)
             }

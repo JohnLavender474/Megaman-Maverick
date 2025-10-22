@@ -82,8 +82,8 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         private const val GROUND_FRICTION_X = 5f
         private const val AIR_FRICTION_X = 1f
 
-        private const val AXE_MAX_IMPULSE_X = 10f
-        private const val AXE_IMPULSE_Y = 12f
+        private const val AXE_MAX_IMPULSE_X = 30f
+        private const val AXE_IMPULSE_Y = 20f
 
         private const val SHIELD_OFFSET = 0.5f
 
@@ -442,7 +442,8 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         val impulse = MegaUtilMethods.calculateJumpImpulse(
             body.getPositionPoint(Position.TOP_CENTER),
             megaman.body.getPositionPoint(Position.BOTTOM_CENTER),
-            AXE_IMPULSE_Y * ConstVals.PPM
+            AXE_IMPULSE_Y * ConstVals.PPM,
+            horizontalScalar = 1.25f,
         )
         impulse.x = impulse.x.coerceIn(-AXE_MAX_IMPULSE_X * ConstVals.PPM, AXE_MAX_IMPULSE_X * ConstVals.PPM)
 

@@ -57,12 +57,12 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         private val bodySizes = objectMapOf(
             ConstKeys.DEFAULT pairTo 1f,
             ConstKeys.ATTACHED pairTo 1f,
-            ConstKeys.BLANK pairTo 0.5f
+            ConstKeys.BLANK pairTo 0.75f
         )
         private val spriteSizes = objectMapOf(
             ConstKeys.DEFAULT pairTo Vector2(2f, 1f),
             ConstKeys.ATTACHED pairTo Vector2(2f, 1f),
-            ConstKeys.BLANK pairTo Vector2(1f, 0.5f)
+            ConstKeys.BLANK pairTo Vector2(1.5f, 0.75f)
         )
         private val animDefs = orderedMapOf(
             ConstKeys.ATTACHED pairTo AnimationDef(3, 1, 0.1f, false),

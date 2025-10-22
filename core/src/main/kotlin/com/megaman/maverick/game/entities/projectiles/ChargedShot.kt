@@ -140,7 +140,9 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
             explodeAndDie()
             return
         }
-        bounce(otherShape)
+
+        val pushDir = UtilMethods.getOverlapPushDirection(thisShape, otherShape) ?: Direction.UP
+        bounce(pushDir)
     }
 
     override fun hitSand(sandFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
@@ -149,10 +151,16 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val shieldEntity = shieldFixture.getEntity()
         if (shieldEntity == owner || (shieldEntity is IOwnable<*> && shieldEntity.owner == owner)) return
-        bounce(otherShape)
+
+        val pushDir = shieldFixture.getOrDefaultProperty(
+            ConstKeys.DIRECTION,
+            UtilMethods.getOverlapPushDirection(thisShape, otherShape) ?: Direction.UP,
+            Direction::class
+        )
+        bounce(pushDir)
     }
 
-    private fun bounce(shape: IGameShape2D) {
+    private fun bounce(pushDir: Direction) {
         bounced++
 
         if (bounced > BOUNCE_MAX) {
@@ -161,7 +169,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         }
 
         val temp = GameObjectPools.fetch(Vector2::class).set(trajectory)
-        val pushDir = UtilMethods.getOverlapPushDirection(body.getBounds(), shape) ?: Direction.UP
+
         when (megaman.direction) {
             Direction.UP -> when (pushDir) {
                 Direction.UP, Direction.DOWN -> temp.y = -trajectory.y

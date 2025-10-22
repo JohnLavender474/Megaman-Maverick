@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.decorations
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.common.GameLogger
@@ -109,6 +110,9 @@ class Snowfall(game: MegamanMaverickGame) : MegaGameEntity(game) {
     })
 
     private fun spawnSnow(position: Vector2? = null) {
+        // Avoid spawning new snow flurries if the FPS drops below 50
+        if (Gdx.graphics.framesPerSecond < 50) return
+
         val spawnPos = position ?: GameObjectPools.fetch(Vector2::class).set(
             UtilMethods.getRandom(bounds.getX(), bounds.getMaxX()),
             bounds.getMaxY()

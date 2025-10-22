@@ -547,7 +547,6 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
                     val offset = abs(bodyX - adjustedX)
                     body.setX(wallX - offset)
                 }
-
                 else -> {
                     val wallX = rightWall.getX()
                     val bodyX = body.getMaxX() // gets the raw max x (before rotation)

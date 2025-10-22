@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.hazards
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
@@ -102,12 +103,10 @@ class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
     private lateinit var spawnRoom: String
 
-    private val positionSorter = PriorityQueue(object : Comparator<Vector2> {
-        override fun compare(o1: Vector2, o2: Vector2): Int {
-            val dist1 = o1.dst2(forceOrigin)
-            val dist2 = o2.dst2(forceOrigin)
-            return dist1.compareTo(dist2)
-        }
+    private val positionSorter = PriorityQueue(Comparator<Vector2> { o1, o2 ->
+        val dist1 = o1.dst2(forceOrigin)
+        val dist2 = o2.dst2(forceOrigin)
+        dist1.compareTo(dist2)
     })
 
     override fun init() {
@@ -161,8 +160,11 @@ class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     }
 
     private fun spawnBubbles() {
+        // Avoid spawning new bubbles if the FPS has hit below 50.
+        if (Gdx.graphics.framesPerSecond < 50) return
+
         val random = UtilMethods.getRandom(MIN_BUBBLES_TO_SPAWN, MAX_BUBBLES_TO_SPAWN)
-        (0 until random).forEach {
+        (0 until random).forEach { _ ->
             val x = when (direction) {
                 Direction.UP, Direction.DOWN -> UtilMethods.getRandom(forceBounds.getX(), forceBounds.getMaxX())
                 Direction.LEFT -> forceBounds.getMaxX() - 0.5f * ConstVals.PPM
