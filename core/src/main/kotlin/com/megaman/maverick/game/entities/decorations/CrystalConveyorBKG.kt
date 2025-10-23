@@ -48,7 +48,7 @@ class CrystalConveyorBKG(game: MegamanMaverickGame) : MegaGameEntity(game), ISpr
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite(DrawingPriority(DrawingSection.BACKGROUND)))
-        .updatable { _, sprite -> sprite.setBounds(bounds) }
+        .preProcess { _, sprite -> sprite.setBounds(bounds) }
         .build()
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)

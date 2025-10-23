@@ -286,7 +286,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM, 2.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             sprite.x += 0.1f * ConstVals.PPM * facing.value

@@ -60,7 +60,7 @@ class ForceDecoration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 2))
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = rotation
             sprite.setCenter(bounds.getCenter())

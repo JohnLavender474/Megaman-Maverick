@@ -84,7 +84,7 @@ class DustPuff(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
                 .also { sprite -> sprite.setSize(1.5f * ConstVals.PPM, ConstVals.PPM.toFloat()) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setPosition(position, DirectionPositionMapper.getInvertedPosition(direction))
         }
         .build()

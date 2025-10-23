@@ -178,7 +178,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = megaman.direction.rotation
             sprite.setCenter(body.getCenter())

@@ -98,7 +98,7 @@ class Picket(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEnt
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(GameSprite().also { sprite -> sprite.setSize(2.5f * ConstVals.PPM) })
-        .updatable { _, sprite -> sprite.setCenter(body.getCenter()) }
+        .preProcess { _, sprite -> sprite.setCenter(body.getCenter()) }
         .build()
 
     private fun defineAnimationsComponent(): AnimationsComponent {

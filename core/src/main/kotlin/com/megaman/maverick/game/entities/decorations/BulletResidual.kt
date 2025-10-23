@@ -64,7 +64,7 @@ class BulletResidual(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
                 .also { sprite -> sprite.setSize(0.75f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setCenter(center)
             sprite.setOriginCenter()
             sprite.rotation = rotation

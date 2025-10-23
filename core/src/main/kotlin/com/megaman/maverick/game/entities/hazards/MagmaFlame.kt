@@ -188,7 +188,7 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IFireEntity,
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(ConstVals.PPM.toFloat())
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             val position = DirectionPositionMapper.getInvertedPosition(direction)
             sprite.setPosition(body.getPositionPoint(position), position)
             sprite.setOriginCenter()

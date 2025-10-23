@@ -233,7 +233,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { delta, sprite ->
+        component.putPreProcess { delta, sprite ->
             val size = if (burst) 1f else 2f
             sprite.setSize(size * ConstVals.PPM)
 

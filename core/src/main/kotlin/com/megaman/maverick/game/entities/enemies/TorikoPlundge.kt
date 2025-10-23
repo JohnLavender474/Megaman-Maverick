@@ -331,7 +331,7 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val position = DirectionPositionMapper.getInvertedPosition(direction)
             sprite.setPosition(body.getPositionPoint(position), position)
 

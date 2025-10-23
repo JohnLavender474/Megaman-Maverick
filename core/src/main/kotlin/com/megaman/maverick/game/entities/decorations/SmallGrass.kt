@@ -84,7 +84,7 @@ class SmallGrass(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5)))
-        .updatable { delta, sprite ->
+        .preProcess { delta, sprite ->
             brushTimer.update(delta)
             val brush = !brushTimer.isFinished()
             val regionKey = if (brush) "brush" else "still"

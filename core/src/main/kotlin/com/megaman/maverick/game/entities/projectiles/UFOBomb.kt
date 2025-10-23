@@ -101,7 +101,7 @@ class UFOBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
         sprite.setSize(1.05f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
+        spritesComponent.putPreProcess { _, _ -> sprite.setCenter(body.getCenter()) }
         return spritesComponent
     }
 

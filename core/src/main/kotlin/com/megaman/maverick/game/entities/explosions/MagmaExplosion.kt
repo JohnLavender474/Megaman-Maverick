@@ -120,7 +120,7 @@ class MagmaExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 15))
         sprite.setSize(4.5f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
+        component.putPreProcess { _, _ -> sprite.setCenter(body.getCenter()) }
         return component
     }
 

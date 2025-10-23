@@ -189,7 +189,7 @@ class BuilderKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(4f * ConstVals.PPM, 3f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.hidden = if (invincible) damageBlink else false
             val position = Position.BOTTOM_CENTER

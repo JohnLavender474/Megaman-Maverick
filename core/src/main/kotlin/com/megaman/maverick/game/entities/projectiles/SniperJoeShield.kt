@@ -163,7 +163,7 @@ class SniperJoeShield(game: MegamanMaverickGame) : AbstractProjectile(game), IFa
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setRegion(
                 when (type) {
                     ORANGE_TYPE -> orangeRegion!!

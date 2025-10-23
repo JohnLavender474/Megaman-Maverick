@@ -186,7 +186,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             val position = if (upsideDown) Position.TOP_CENTER else Position.BOTTOM_CENTER
             val bodyPosition = body.getPositionPoint(position)
             sprite.setPosition(bodyPosition, position)

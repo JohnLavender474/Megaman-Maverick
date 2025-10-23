@@ -129,7 +129,7 @@ open class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEnti
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             val bounds = body.getBounds()
             sprite.setBounds(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight())
         }

@@ -85,7 +85,7 @@ class ChargedShotResidual(game: MegamanMaverickGame) : MegaGameEntity(game), ISp
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = rotation
             sprite.setCenter(spawn)

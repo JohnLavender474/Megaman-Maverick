@@ -358,7 +358,7 @@ class GreenUziJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGra
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(3f * ConstVals.PPM, 2f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.hidden = damageBlink
 
             sprite.setFlip(isFacing(Facing.RIGHT), direction == Direction.DOWN)

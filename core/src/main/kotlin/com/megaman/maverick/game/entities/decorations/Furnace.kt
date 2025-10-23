@@ -56,7 +56,7 @@ class Furnace(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity,
     )
 
     private fun defineSpritesComponent() =
-        SpritesComponentBuilder().sprite(TAG, GameSprite()).updatable { _, sprite -> sprite.setBounds(bounds) }.build()
+        SpritesComponentBuilder().sprite(TAG, GameSprite()).preProcess { _, sprite -> sprite.setBounds(bounds) }.build()
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
         .key(TAG)

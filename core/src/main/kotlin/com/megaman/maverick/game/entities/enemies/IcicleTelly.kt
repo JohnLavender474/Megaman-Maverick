@@ -240,7 +240,7 @@ class IcicleTelly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 2))
                 .also { sprite -> sprite.setSize(2f * ConstVals.PPM, 3f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
             sprite.translateY(-0.3f * ConstVals.PPM)
             sprite.setFlip(isFacing(Facing.RIGHT), false)

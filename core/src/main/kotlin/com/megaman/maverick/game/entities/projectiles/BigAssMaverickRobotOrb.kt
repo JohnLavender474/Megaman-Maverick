@@ -189,7 +189,7 @@ class BigAssMaverickRobotOrb(game: MegamanMaverickGame) : AbstractProjectile(gam
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5)))
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val size = if (hit) 4f else 2f
             sprite.setSize(size * ConstVals.PPM)
             sprite.setCenter(body.getCenter())

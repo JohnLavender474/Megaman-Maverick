@@ -1,1 +1,69 @@
-===== SESSION STARTED: 2025-10-22T17:13:46.720075603 =====
+===== SESSION STARTED: 2025-10-23T17:03:58.519691280 =====
+17:04:56 | DEBUG | PreciousGem | init()
+17:04:56 | DEBUG | PreciousGem | onSpawn(): hashCode=1171037147, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=PURPLE]
+	[cull_out_of_bounds=false]
+	[position=(4199.2266,572.0)]
+	[owner={ Megaman:[id=10, dead=false, hashCode=1919555524] }]
+})
+17:04:56 | DEBUG | PreciousGem | init()
+17:04:56 | DEBUG | PreciousGem | onSpawn(): hashCode=580588726, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=BLUE]
+	[cull_out_of_bounds=false]
+	[position=(4135.2266,636.0)]
+	[owner={ Megaman:[id=10, dead=false, hashCode=1919555524] }]
+})
+17:04:56 | DEBUG | PreciousGem | init()
+17:04:56 | DEBUG | PreciousGem | onSpawn(): hashCode=1375997306, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=PINK]
+	[cull_out_of_bounds=false]
+	[position=(4071.2266,572.0)]
+	[owner={ Megaman:[id=10, dead=false, hashCode=1919555524] }]
+})
+17:04:56 | DEBUG | PreciousGem | init()
+17:04:56 | DEBUG | PreciousGem | onSpawn(): hashCode=1668176862, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=GREEN]
+	[cull_out_of_bounds=false]
+	[position=(4135.2266,508.0)]
+	[owner={ Megaman:[id=10, dead=false, hashCode=1919555524] }]
+})
+17:05:10 | DEBUG | PreciousGem | onEvent(): event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@207be667]
+	[name=room3]
+	[prior_name=room2]
+	[position=(5202.3423,846.4)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@7e01bedd]
+}))
+17:05:10 | DEBUG | PreciousGem | onEvent(): event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@207be667]
+	[name=room3]
+	[prior_name=room2]
+	[position=(5202.3423,846.4)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@7e01bedd]
+}))
+17:05:10 | DEBUG | PreciousGem | onEvent(): event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@207be667]
+	[name=room3]
+	[prior_name=room2]
+	[position=(5202.3423,846.4)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@7e01bedd]
+}))
+17:05:10 | DEBUG | PreciousGem | onEvent(): event=Event(key=BEGIN_ROOM_TRANS, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@207be667]
+	[name=room3]
+	[prior_name=room2]
+	[position=(5202.3423,846.4)]
+	[prior=com.badlogic.gdx.maps.objects.RectangleMapObject@7e01bedd]
+}))
+17:05:16 | DEBUG | PreciousGem | onDestroy(): hashCode=580588726
+17:05:16 | DEBUG | PreciousGem | onDestroy(): hashCode=1375997306
+17:05:16 | DEBUG | PreciousGem | onDestroy(): hashCode=1171037147
+17:05:16 | DEBUG | PreciousGem | onDestroy(): hashCode=1668176862

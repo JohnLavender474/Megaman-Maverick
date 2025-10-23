@@ -238,7 +238,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
                 it.setAlpha(ARROW_ALPHA)
             }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
             sprite.rotation = direction.getOpposite().rotation
@@ -248,7 +248,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
             GameSprite(regions[ConstKeys.AURA], DrawingPriority(DrawingSection.FOREGROUND, 2))
                 .also { it.setSize(AURA_SPRITE_SIZE * ConstVals.PPM) }
         )
-        .updatable { delta, sprite ->
+        .preProcess { delta, sprite ->
             sprite.setCenter(body.getCenter())
             auraBlink.update(if (megaman.direction == direction) delta / 2f else delta)
             val alpha = auraBlink.getValue()

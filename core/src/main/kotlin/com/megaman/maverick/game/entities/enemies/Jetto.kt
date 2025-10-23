@@ -298,7 +298,7 @@ class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(4f * ConstVals.PPM, 2f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val position = if (isFacing(Facing.LEFT)) Position.CENTER_LEFT else Position.CENTER_RIGHT
             sprite.setPosition(body.getPositionPoint(position), position)
             sprite.translateX(0.5f * ConstVals.PPM * facing.value)

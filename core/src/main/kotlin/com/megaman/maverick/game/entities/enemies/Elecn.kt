@@ -180,7 +180,7 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM)
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.hidden = damageBlink
             sprite.setCenter(body.getCenter())
             sprite.setFlip(isFacing(Facing.LEFT), false)

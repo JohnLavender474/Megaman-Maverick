@@ -270,7 +270,7 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
 

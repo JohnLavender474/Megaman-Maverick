@@ -105,7 +105,7 @@ class MockingByteEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
             TAG, GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, 5))
                 .also { sprite -> sprite.setSize(1.5f * ConstVals.PPM) }
         )
-        .updatable { _, sprite -> sprite.setCenter(body.getCenter()) }
+        .preProcess { _, sprite -> sprite.setCenter(body.getCenter()) }
         .build()
 
     private fun spawnMockingBit() {
@@ -187,7 +187,7 @@ class MockingByteEggShatter(game: MegamanMaverickGame) : MegaGameEntity(game), I
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
                 .also { sprite -> sprite.setSize(1.5f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setRegion(regions[index])
             sprite.setCenter(body.getCenter())
         }

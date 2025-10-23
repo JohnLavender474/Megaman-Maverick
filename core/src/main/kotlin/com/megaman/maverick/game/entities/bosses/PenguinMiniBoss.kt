@@ -233,7 +233,7 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
         val sprite = GameSprite()
         sprite.setSize(2.5f * ConstVals.PPM, 3f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             sprite.hidden = damageBlink
         }

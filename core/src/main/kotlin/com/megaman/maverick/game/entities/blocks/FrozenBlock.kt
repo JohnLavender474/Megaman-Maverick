@@ -96,6 +96,6 @@ class FrozenBlock(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity {
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite(region!!).also { sprite -> sprite.setSize(ConstVals.PPM.toFloat()) })
-        .updatable { _, sprite -> sprite.setCenter(body.getCenter()) }
+        .preProcess { _, sprite -> sprite.setCenter(body.getCenter()) }
         .build()
 }

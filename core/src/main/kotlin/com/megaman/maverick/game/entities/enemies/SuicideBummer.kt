@@ -163,7 +163,7 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.hidden = damageBlink
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             sprite.setFlip(isFacing(Facing.LEFT), false)

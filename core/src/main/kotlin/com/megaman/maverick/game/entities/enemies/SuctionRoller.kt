@@ -180,7 +180,7 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setFlip(facing == Facing.RIGHT, false)
             sprite.hidden = damageBlink
 

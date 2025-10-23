@@ -188,7 +188,7 @@ class PreciousGemBomb(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { it.setSize(ConstVals.PPM.toFloat()) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val region = regions[color.name.lowercase()]
             sprite.setRegion(region)
 

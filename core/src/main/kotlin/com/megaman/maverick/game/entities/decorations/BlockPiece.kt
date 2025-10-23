@@ -97,7 +97,7 @@ class BlockPiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
             TAG, GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
                 .also { sprite -> sprite.setSize(0.5f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setRegion(regions[color.name.lowercase()])
             sprite.setCenter(body.getCenter())
             sprite.setAlpha(ALPHA)

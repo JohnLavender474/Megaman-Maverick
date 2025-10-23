@@ -156,7 +156,7 @@ class HoneyDrip(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
                 .also { sprite -> sprite.setSize(1.5f * ConstVals.PPM, ConstVals.PPM.toFloat()) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
         }

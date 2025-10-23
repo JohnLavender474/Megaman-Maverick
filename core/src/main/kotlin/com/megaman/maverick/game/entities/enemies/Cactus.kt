@@ -271,7 +271,7 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
                 .also { sprite -> sprite.setSize(2f * ConstVals.PPM, 3f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
 

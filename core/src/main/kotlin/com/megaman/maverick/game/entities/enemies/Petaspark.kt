@@ -233,7 +233,7 @@ class Petaspark(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(4f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val position = when {
                 onWall -> if (facing == Facing.LEFT) Position.CENTER_LEFT else Position.CENTER_RIGHT
                 else -> Position.BOTTOM_CENTER

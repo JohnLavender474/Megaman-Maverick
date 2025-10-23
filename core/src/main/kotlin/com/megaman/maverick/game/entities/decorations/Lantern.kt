@@ -50,7 +50,7 @@ class Lantern(game: MegamanMaverickGame) : LightSourceEntity(game), ISpritesEnti
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
         sprite.setSize(2f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ -> sprite.setPosition(bounds.getPositionPoint(spritePos), spritePos) }
+        component.putPreProcess { _, _ -> sprite.setPosition(bounds.getPositionPoint(spritePos), spritePos) }
         return component
     }
 

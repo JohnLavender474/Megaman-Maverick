@@ -254,7 +254,7 @@ class Cokeyro(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(3f * ConstVals.PPM, 2f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.hidden = damageBlink
 
             val position = Position.BOTTOM_CENTER

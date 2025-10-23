@@ -198,7 +198,7 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         val sprite = GameSprite()
         sprite.setSize(5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             sprite.hidden = damageBlink
             sprite.setFlip(isFacing(Facing.RIGHT), false)

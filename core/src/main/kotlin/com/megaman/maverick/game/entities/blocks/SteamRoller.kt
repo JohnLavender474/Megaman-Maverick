@@ -290,7 +290,7 @@ class SteamRoller(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(7f * ConstVals.PPM, 6f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setFlip(isFacing(Facing.LEFT), false)
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)

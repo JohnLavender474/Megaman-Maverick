@@ -204,7 +204,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite(region!!).also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val position = DirectionPositionMapper.getPosition(direction).opposite()
             sprite.setPosition(rotatingLine.getOrigin(), position)
 

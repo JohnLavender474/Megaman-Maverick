@@ -94,7 +94,7 @@ class TeardropBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         sprite.setSize(0.5f * ConstVals.PPM)
         sprite.setOriginCenter()
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.rotation = rotation
         }

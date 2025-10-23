@@ -256,7 +256,7 @@ class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), ISpritesEntity
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(GameSprite().also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val position = body.getPositionPoint(Position.TOP_CENTER)
             sprite.setPosition(position, Position.TOP_CENTER)
         }

@@ -286,7 +286,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
         sprite.setSize(2f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.hidden = damageBlink
 
             val flipX = facing == Facing.LEFT

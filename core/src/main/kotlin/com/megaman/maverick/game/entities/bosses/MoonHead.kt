@@ -124,7 +124,7 @@ class MoonHead(game: MegamanMaverickGame) : AbstractBoss(game, dmgDuration = DAM
         }
         super.init()
         addComponent(defineAnimationsComponent())
-        damageOverrides.put(PreciousGem::class, dmgNeg(3))
+        damageOverrides.put(PreciousGem::class, dmgNeg(4))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -370,7 +370,7 @@ class MoonHead(game: MegamanMaverickGame) : AbstractBoss(game, dmgDuration = DAM
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
         sprite.setSize(3.5f * ConstVals.PPM, 3f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.hidden = damageBlink || loop.getCurrent() == MoonHeadState.DELAY
             val alpha = if (defeated) 1f - defeatTimer.getRatio() else 1f

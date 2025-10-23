@@ -352,7 +352,7 @@ class JetpackBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
         val sprite = GameSprite()
         sprite.setSize(2.5f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.hidden = damageBlink
             sprite.setCenter(body.getCenter())
             sprite.setFlip(isFacing(Facing.LEFT), false)

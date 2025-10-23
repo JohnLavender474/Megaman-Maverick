@@ -156,7 +156,7 @@ class LampeonBullet(game: MegamanMaverickGame) : AbstractProjectile(game), IFace
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
                 .also { sprite -> sprite.setSize(0.5f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
             sprite.setFlip(isFacing(Facing.RIGHT), true)
         }

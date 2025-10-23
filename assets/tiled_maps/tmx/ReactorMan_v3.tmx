@@ -1355,16 +1355,6 @@
     <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="732" name="SwinginJoe" x="7944" y="3312" width="16" height="16">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="733" name="SwinginJoe" x="8216" y="3472" width="16" height="16">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
   <object id="734" name="SwinginJoe" x="10768" y="3344" width="16" height="16">
    <properties>
     <property name="hard_mode_only" type="bool" value="true"/>
@@ -1376,10 +1366,10 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="13" name="player">
+ <objectgroup id="13" name="temp">
   <object id="714" name="0" x="11328" y="2688" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="10" name="temp">
+ <objectgroup id="10" name="player">
   <object id="42" name="0" x="64" y="5792" width="32" height="32"/>
   <object id="103" name="2" x="2816" y="4640" width="32" height="32"/>
   <object id="199" name="3" x="5440" y="4832" width="32" height="32"/>

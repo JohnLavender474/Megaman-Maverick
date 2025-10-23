@@ -91,7 +91,7 @@ class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
         val sprite = GameSprite()
         sprite.setSize(2.5f * ConstVals.PPM)
         val spriteComponent = SpritesComponent(sprite)
-        spriteComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
+        spriteComponent.putPreProcess { _, _ -> sprite.setCenter(body.getCenter()) }
         return spriteComponent
     }
 

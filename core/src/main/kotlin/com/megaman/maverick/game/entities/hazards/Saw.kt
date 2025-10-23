@@ -128,7 +128,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
             ConstKeys.PENDULUM, MotionDefinition(motion = pendulum, function = { value, _ -> body.setCenter(value) })
         )
 
-        for (i in 0..RING_COUNT) putSpriteUpdateFunction("ring_$i") { _, sprite ->
+        for (i in 0..RING_COUNT) putSpritePreProcess("ring_$i") { _, sprite ->
             val distance = (i.toFloat() / RING_COUNT.toFloat()) * pendulum.length
             val center = pendulum.getPointFromAnchor(distance)
             sprite.setCenter(center)
@@ -169,7 +169,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
             ConstKeys.ROTATION, MotionDefinition(motion = rotation, function = { value, _ -> body.setCenter(value) })
         )
 
-        for (i in 0..RING_COUNT) putSpriteUpdateFunction("ring_$i") { _, sprite ->
+        for (i in 0..RING_COUNT) putSpritePreProcess("ring_$i") { _, sprite ->
             val scale = i.toFloat() / RING_COUNT.toFloat()
             val center = rotation.getScaledPosition(scale, GameObjectPools.fetch(Vector2::class))
             sprite.setCenter(center)
@@ -212,7 +212,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
                 onReset = { body.setCenter(spawn) })
         )
 
-        for (i in 0..RING_COUNT) putSpriteUpdateFunction("ring_$i") { _, sprite -> sprite.hidden = true }
+        for (i in 0..RING_COUNT) putSpritePreProcess("ring_$i") { _, sprite -> sprite.hidden = true }
     }
 
     private fun defineCullablesComponent() = CullablesComponent(
@@ -248,7 +248,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         val sawSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         sawSprite.setSize(2.5f * ConstVals.PPM)
         spritesComponent.sprites.put("saw", sawSprite)
-        spritesComponent.putUpdateFunction("saw") { _, sprite ->
+        spritesComponent.putPreProcess("saw") { _, sprite ->
             sprite.setPosition(body.getCenter(), Position.CENTER)
             sprite.setFlip(isFacing(Facing.LEFT), false)
         }

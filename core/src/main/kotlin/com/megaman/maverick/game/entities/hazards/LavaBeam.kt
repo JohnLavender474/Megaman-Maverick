@@ -96,7 +96,7 @@ class LavaBeam(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
         sprite.setSize(2f * ConstVals.PPM, 5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation

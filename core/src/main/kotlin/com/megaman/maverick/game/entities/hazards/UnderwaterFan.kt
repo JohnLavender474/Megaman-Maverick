@@ -280,7 +280,7 @@ class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(2.5f * ConstVals.PPM, 0.875f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
             val position = DirectionPositionMapper.getInvertedPosition(direction)

@@ -216,13 +216,13 @@ class FlameThrower(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         sprites.put("flameColumn", flameColumnSprite)
 
         val spritesComponent = SpritesComponent(sprites)
-        spritesComponent.putUpdateFunction("thrower") { _, sprite ->
+        spritesComponent.putPreProcess("thrower") { _, sprite ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
             val position = DirectionPositionMapper.getInvertedPosition(direction)
             sprite.setPosition(body.getPositionPoint(position), position)
         }
-        spritesComponent.putUpdateFunction("flameColumn") { _, sprite ->
+        spritesComponent.putPreProcess("flameColumn") { _, sprite ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
             var position = DirectionPositionMapper.getInvertedPosition(direction)

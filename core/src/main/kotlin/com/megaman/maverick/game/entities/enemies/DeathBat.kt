@@ -239,7 +239,7 @@ class DeathBat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
                 .also { sprite -> sprite.setSize(3f * ConstVals.PPM, 2f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.hidden = damageBlink
             sprite.setPosition(body.getCenter(), Position.CENTER)
         }

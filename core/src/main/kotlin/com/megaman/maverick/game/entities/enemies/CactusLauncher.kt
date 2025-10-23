@@ -151,7 +151,7 @@ class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             val bodyPosition = body.getPositionPoint(Position.BOTTOM_CENTER)
             sprite.setPosition(bodyPosition, Position.BOTTOM_CENTER)
 

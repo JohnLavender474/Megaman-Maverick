@@ -120,7 +120,7 @@ class YellowTiggerSquirt(game: MegamanMaverickGame) : AbstractEnemy(game, size =
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.setFlip(isFacing(Facing.LEFT), false)
             sprite.hidden = damageBlink

@@ -266,7 +266,7 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
         sprite.setSize(BODY_SIZE * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             val region = if (hitTimes == 0) region1 else region2
             sprite.setRegion(region)
 

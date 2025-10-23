@@ -167,7 +167,7 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         val sprite = GameSprite()
         sprite.setSize(4f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
 

@@ -76,7 +76,7 @@ class StarknerTrailSprite(game: MegamanMaverickGame) : MegaGameEntity(game), ISp
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(2.5f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setCenter(position)
             sprite.setOriginCenter()
             sprite.rotation = rotation

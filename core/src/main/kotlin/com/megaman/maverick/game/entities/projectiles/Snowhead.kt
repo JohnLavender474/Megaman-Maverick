@@ -195,7 +195,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5)))
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val size = GameObjectPools.fetch(Vector2::class)
                 .set(spriteSizes[type]!!)
                 .scl(ConstVals.PPM.toFloat())

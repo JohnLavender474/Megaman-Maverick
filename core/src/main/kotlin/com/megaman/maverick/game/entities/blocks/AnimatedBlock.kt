@@ -102,7 +102,7 @@ open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntit
     protected open fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setSize(spriteSize.x, spriteSize.y)
             sprite.setCenter(body.getCenter())
             sprite.hidden = hidden

@@ -161,7 +161,7 @@ class DeadlyLeaf(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyE
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
                 .also { sprite -> sprite.setSize(5f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
             sprite.hidden = damageBlink
         }

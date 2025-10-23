@@ -137,7 +137,7 @@ class DarkSerketClaw(game: MegamanMaverickGame) : AbstractHealthEntity(game), IP
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
                 .also { sprite -> sprite.setSize(3f * ConstVals.PPM, 2f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
             sprite.setFlip(isFacing(Facing.RIGHT), false)
         }

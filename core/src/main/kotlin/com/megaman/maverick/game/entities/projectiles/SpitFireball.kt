@@ -169,7 +169,7 @@ class SpitFireball(game: MegamanMaverickGame) : AbstractProjectile(game), IFireE
         .sprite(
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
                 .also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
             sprite.rotation = body.physics.velocity.angleDeg()

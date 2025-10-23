@@ -421,7 +421,7 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
                 .also { sprite -> sprite.setSize(1.5f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
 

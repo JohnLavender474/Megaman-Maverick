@@ -98,7 +98,7 @@ class MegamanTrailSprite(game: MegamanMaverickGame) : MegaGameEntity(game), ISpr
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
         sprite.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ -> sprite.setAlpha(1f - fadeTimer.getRatio()) }
+        spritesComponent.putPreProcess { _, _ -> sprite.setAlpha(1f - fadeTimer.getRatio()) }
         return spritesComponent
     }
 

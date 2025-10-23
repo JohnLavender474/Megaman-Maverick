@@ -223,7 +223,7 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
         val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 1))
         sprite.setSize(4f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setCenter(currentPosition)
             val alpha = when {
                 fading -> 1f - fadeTimer.getRatio()

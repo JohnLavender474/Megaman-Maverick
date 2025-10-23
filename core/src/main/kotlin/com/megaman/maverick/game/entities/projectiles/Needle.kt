@@ -184,7 +184,7 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             val region = regions[type.name.lowercase()]
             sprite.setRegion(region)
             sprite.setCenter(body.getCenter())

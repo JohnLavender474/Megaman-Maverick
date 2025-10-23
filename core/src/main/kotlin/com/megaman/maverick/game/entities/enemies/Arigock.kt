@@ -144,7 +144,7 @@ class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.hidden = damageBlink
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)

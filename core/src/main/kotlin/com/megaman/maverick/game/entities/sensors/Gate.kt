@@ -326,7 +326,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
                 .also { sprite -> sprite.setSize(2f * ConstVals.PPM, 3f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val hidden = state == GateState.OPEN ||
                 (!showCloseEvent && state.equalsAny(GateState.CLOSING, GateState.CLOSED))
             sprite.hidden = hidden

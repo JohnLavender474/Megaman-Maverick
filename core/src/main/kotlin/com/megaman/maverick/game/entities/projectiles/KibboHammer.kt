@@ -79,7 +79,7 @@ class KibboHammer(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(GameSprite().also { sprite -> sprite.setSize(ConstVals.PPM.toFloat()) })
-        .updatable { _, sprite -> sprite.setCenter(body.getCenter()) }
+        .preProcess { _, sprite -> sprite.setCenter(body.getCenter()) }
         .build()
 
     private fun defineAnimationsComponent(): AnimationsComponent {

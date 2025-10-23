@@ -133,7 +133,7 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM),
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.hidden = damageBlink
             sprite.setFlip(isFacing(Facing.RIGHT), false)

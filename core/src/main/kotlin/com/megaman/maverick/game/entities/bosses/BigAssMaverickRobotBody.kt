@@ -67,7 +67,7 @@ class BigAssMaverickRobotBody(game: MegamanMaverickGame) : MegaGameEntity(game),
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite(region!!, DrawingPriority(DrawingSection.BACKGROUND, 1)))
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setSize(bounds.getSize())
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(bounds.getPositionPoint(position), position)

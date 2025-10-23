@@ -89,7 +89,7 @@ class WoodCratePiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
             TAG, GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
                 .also { sprite -> sprite.setSize(0.1875f * ConstVals.PPM) }
         )
-        .updatable { delta, sprite ->
+        .preProcess { delta, sprite ->
             sprite.setCenter(body.getCenter())
 
             val region = regions[index]

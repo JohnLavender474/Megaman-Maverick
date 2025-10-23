@@ -90,7 +90,7 @@ class SpikeBall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
 
             val chainDistance = tempDistance * ConstVals.PPM
 
-            putSpriteUpdateFunction(key) { _, sprite ->
+            putSpritePreProcess(key) { _, sprite ->
                 val center = pendulum.getPointFromAnchor(chainDistance)
                 sprite.setCenter(center)
             }
@@ -131,7 +131,7 @@ class SpikeBall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         spikeSprite.setSize(2f * ConstVals.PPM)
         spikeSprite.setRegion(spikeRegion!!)
         val spritesComponent = SpritesComponent(spikeSprite)
-        spritesComponent.putUpdateFunction { _, sprite -> sprite.setCenter(body.getCenter()) }
+        spritesComponent.putPreProcess { _, sprite -> sprite.setCenter(body.getCenter()) }
         return spritesComponent
     }
 

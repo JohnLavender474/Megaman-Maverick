@@ -120,7 +120,7 @@ class BabyPenguin(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(ConstVals.PPM.toFloat(), 0.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.hidden = damageBlink

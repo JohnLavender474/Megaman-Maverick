@@ -553,7 +553,7 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         .sprite(
             HEAD, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -2))
                 .also { sprite -> sprite.setSize(HEAD_SPRITE_SIZE * ConstVals.PPM) }
-        ).updatable { _, sprite ->
+        ).preProcess { _, sprite ->
             val position = Position.TOP_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
             sprite.hidden = damageBlink && !defeated && !stunned

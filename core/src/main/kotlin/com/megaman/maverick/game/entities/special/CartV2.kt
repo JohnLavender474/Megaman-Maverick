@@ -196,7 +196,7 @@ class CartV2(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimated
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(3f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val position = body.getPositionPoint(Position.BOTTOM_CENTER)
             sprite.setPosition(position, Position.BOTTOM_CENTER)
         }

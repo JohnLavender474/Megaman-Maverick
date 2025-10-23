@@ -92,7 +92,7 @@ class GearTrolley(game: MegamanMaverickGame) : Block(game), IMotionEntity, ISpri
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setPosition(body.getCenter(), Position.CENTER)
             sprite.translateY(-ConstVals.PPM / 16f)
         }

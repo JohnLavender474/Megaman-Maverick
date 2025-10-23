@@ -246,7 +246,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
             val position = DirectionPositionMapper.getPosition(direction).opposite()

@@ -147,7 +147,7 @@ class BombPotton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.hidden = damageBlink

@@ -120,7 +120,7 @@ class StarExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(4f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
+        component.putPreProcess { _, _ -> sprite.setCenter(body.getCenter()) }
         return component
     }
 

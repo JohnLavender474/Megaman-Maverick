@@ -215,7 +215,7 @@ class SpreadExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
                 .also { sprite -> sprite.setSize(6f * ConstVals.PPM, 3f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
 

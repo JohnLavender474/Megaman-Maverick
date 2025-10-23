@@ -120,7 +120,7 @@ class DropperLift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAni
         sprite.setSize(ConstVals.PPM * 1.5f, ConstVals.PPM.toFloat())
 
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.TOP_CENTER), Position.TOP_CENTER)
         }
 

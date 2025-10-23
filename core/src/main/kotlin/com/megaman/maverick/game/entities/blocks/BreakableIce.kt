@@ -108,7 +108,7 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.setRegion(
                 when (index) {

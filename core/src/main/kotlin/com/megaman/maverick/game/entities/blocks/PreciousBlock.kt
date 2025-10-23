@@ -114,7 +114,7 @@ class PreciousBlock(game: MegamanMaverickGame) : ShieldBlock(game), ISpritesEnti
 
             sprites.put(key, sprite)
 
-            putSpriteUpdateFunction(key) { _, _ ->
+            putSpritePreProcess(key) { _, _ ->
                 val position = body.getBounds()
                     .translate(
                         col * ConstVals.PPM.toFloat(),

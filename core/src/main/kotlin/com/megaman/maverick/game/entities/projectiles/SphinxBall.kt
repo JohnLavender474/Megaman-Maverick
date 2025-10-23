@@ -166,7 +166,7 @@ class SphinxBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         sprite.setSize(2.15f * ConstVals.PPM)
         sprite.setRegion(region!!)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { delta, _ ->
+        spritesComponent.putPreProcess { delta, _ ->
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
             if (spinning) {

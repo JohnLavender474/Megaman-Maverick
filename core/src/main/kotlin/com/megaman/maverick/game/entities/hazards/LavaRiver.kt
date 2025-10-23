@@ -178,7 +178,7 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite())
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.hidden = hidden
 
             sprite.setFlip(left, false)

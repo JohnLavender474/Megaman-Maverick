@@ -225,7 +225,7 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(3f * ConstVals.PPM, 1.875f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             sprite.hidden = damageBlink
             when {

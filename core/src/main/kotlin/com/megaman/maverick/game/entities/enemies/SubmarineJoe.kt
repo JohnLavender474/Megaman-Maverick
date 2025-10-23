@@ -290,7 +290,7 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(3f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.hidden = damageBlink
             sprite.setCenter(body.getCenter())
             sprite.setFlip(isFacing(Facing.RIGHT), false)

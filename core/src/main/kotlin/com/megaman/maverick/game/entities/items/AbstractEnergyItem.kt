@@ -105,7 +105,7 @@ abstract class AbstractEnergyItem(game: MegamanMaverickGame) : AbstractItem(game
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(2f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
 

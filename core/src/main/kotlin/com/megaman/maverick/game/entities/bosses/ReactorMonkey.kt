@@ -281,7 +281,7 @@ class ReactorMonkey(game: MegamanMaverickGame) :
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
         sprite.setSize(10f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
             sprite.translateX(0.5f * ConstVals.PPM * -facing.value)

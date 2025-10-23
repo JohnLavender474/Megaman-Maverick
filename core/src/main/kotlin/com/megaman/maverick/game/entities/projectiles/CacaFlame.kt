@@ -100,7 +100,7 @@ class CacaFlame(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
             TAG, GameSprite()
                 .also { sprite -> sprite.setSize(3f * ConstVals.PPM, 2f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
         }
         .build()

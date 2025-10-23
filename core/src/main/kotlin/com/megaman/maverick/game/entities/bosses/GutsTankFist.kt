@@ -282,7 +282,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
         sprite.setSize(6f * ConstVals.PPM, 3f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.hidden = damageBlink
             sprite.setCenter(body.getCenter())
             sprite.setFlip(isFacing(Facing.LEFT), false)

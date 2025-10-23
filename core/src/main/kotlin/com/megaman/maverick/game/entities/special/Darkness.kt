@@ -167,7 +167,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
                 val key = "[$x][$y]"
                 sprites.put(key, sprite)
-                putSpriteUpdateFunction(key) { delta, _ ->
+                putSpritePreProcess(key) { delta, _ ->
                     if (tile.startAlpha < 0f) tile.startAlpha = 0f
                     else if (tile.startAlpha > 1f) tile.startAlpha = 1f
 

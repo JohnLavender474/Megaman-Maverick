@@ -111,7 +111,7 @@ class ElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
+        spritesComponent.putPreProcess { _, _ -> sprite.setCenter(body.getCenter()) }
         return spritesComponent
     }
 

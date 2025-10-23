@@ -181,7 +181,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.hidden = damageBlink
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
@@ -309,7 +309,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game, size = Si
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = megaman.direction.rotation
             sprite.hidden = damageBlink

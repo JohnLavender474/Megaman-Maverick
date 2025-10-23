@@ -203,7 +203,7 @@ class PipePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 15))
                 .also { sprite -> sprite.setSize(ConstVals.PPM.toFloat(), 1.5f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
 

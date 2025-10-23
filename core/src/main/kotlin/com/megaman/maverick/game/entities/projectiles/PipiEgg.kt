@@ -147,7 +147,7 @@ class PipiEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val sprite = GameSprite(regions.get("egg"))
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
+        spritesComponent.putPreProcess { _, _ -> sprite.setCenter(body.getCenter()) }
         return spritesComponent
     }
 }

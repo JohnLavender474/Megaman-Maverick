@@ -138,7 +138,7 @@ class MagmaGoopExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 15))
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             val position = DirectionPositionMapper.getInvertedPosition(direction)
             sprite.setPosition(body.getPositionPoint(position), position)
             sprite.setOriginCenter()

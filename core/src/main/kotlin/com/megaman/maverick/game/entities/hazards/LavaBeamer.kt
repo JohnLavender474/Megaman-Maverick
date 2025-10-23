@@ -167,7 +167,7 @@ class LavaBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
         sprite.setSize(3f * ConstVals.PPM, 2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
             sprite.setCenter(body.getCenter())

@@ -136,7 +136,7 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(ConstVals.PPM.toFloat())
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
             sprite.rotation = START_ROTATION + rotation

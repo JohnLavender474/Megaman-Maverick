@@ -259,7 +259,7 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
         sprite.setSize(2f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { delta, _ ->
+        component.putPreProcess { delta, _ ->
             sprite.setCenter(body.getCenter())
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.hidden = damageBlink

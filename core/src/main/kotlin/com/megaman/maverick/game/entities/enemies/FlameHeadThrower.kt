@@ -141,7 +141,7 @@ class FlameHeadThrower(game: MegamanMaverickGame) : AbstractEnemy(game, size = S
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             sprite.hidden = damageBlink
             sprite.setFlip(isFacing(Facing.LEFT), false)

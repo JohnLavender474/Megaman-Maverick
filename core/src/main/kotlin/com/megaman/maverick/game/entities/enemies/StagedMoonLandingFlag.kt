@@ -346,7 +346,7 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         // flag
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(2.5f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.hidden = damageBlink
@@ -357,7 +357,7 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
             GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
                 .also { sprite -> sprite.setSize(2f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.hidden = shield1Timer.isFinished() || shield1Blink || currentState != FlagState.STAND
             sprite.setCenter(shieldDamager1.getShape().getCenter())
         }
@@ -367,7 +367,7 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
             GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
                 .also { sprite -> sprite.setSize(2f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.hidden = shield2Timer.isFinished() || shield2Blink || currentState != FlagState.STAND
             sprite.setCenter(shieldDamager2.getShape().getCenter())
             sprite.setFlip(true, false)

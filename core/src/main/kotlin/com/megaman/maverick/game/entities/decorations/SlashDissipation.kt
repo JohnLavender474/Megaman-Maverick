@@ -78,7 +78,7 @@ class SlashDissipation(game: MegamanMaverickGame) : MegaGameEntity(game), ISprit
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
                 .also { sprite -> sprite.setSize(2f * ConstVals.PPM, 1.5f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setCenter(center)
             sprite.setOriginCenter()
             sprite.rotation = rotation

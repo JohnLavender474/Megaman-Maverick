@@ -97,7 +97,7 @@ class MegamanTrailSpriteV2(game: MegamanMaverickGame) : MegaGameEntity(game), IS
         val sprite = GameSprite()
         sprite.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             val alpha = 1f - fadeTimer.getRatio()
             sprite.setAlpha(alpha)
             sprite.setFlip(flipX, flipY)

@@ -248,7 +248,7 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
             TAG,
             GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10)).also { sprite -> sprite.setSize(SPRITE_SIZE) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
             sprite.rotation = body.physics.velocity.angleDeg()

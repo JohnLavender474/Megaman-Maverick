@@ -87,6 +87,6 @@ class DeathBomb(game: MegamanMaverickGame) : AbstractProjectile(game) {
             TAG, GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, 1))
                 .also { sprite -> sprite.setSize(ConstVals.PPM.toFloat()) }
         )
-        .updatable { _, sprite -> sprite.setCenter(body.getCenter()) }
+        .preProcess { _, sprite -> sprite.setCenter(body.getCenter()) }
         .build()
 }

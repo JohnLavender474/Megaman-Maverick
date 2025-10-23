@@ -234,7 +234,7 @@ open class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { delta, _ ->
+        component.putPreProcess { delta, _ ->
             sprite.setRegion(animation?.let {
                 it.update(delta)
                 it.getCurrentRegion()

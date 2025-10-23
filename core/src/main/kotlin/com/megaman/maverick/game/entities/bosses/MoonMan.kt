@@ -458,7 +458,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         val sprite = GameSprite()
         sprite.setSize(SPRITE_SIZE * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
 

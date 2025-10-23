@@ -174,7 +174,7 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -2))
                 .also { sprite -> sprite.setSize(2f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.hidden = damageBlink
             sprite.setCenter(body.getCenter())
             sprite.setFlip(false, comingDown)

@@ -208,7 +208,7 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             val position = Position.TOP_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
             sprite.setFlip(isFacing(Facing.RIGHT), false)

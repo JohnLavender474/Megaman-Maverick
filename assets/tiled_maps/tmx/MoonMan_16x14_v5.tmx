@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="600" height="125" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="537">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="600" height="125" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="538">
  <tileset firstgid="1" source="../tsx/MoonManTiles.tsx"/>
  <layer id="1" name="tiles1" width="600" height="125">
   <data encoding="csv">
@@ -308,14 +308,14 @@
   </object>
   <object id="70" name="RocketPlatform" x="4456" y="2832" width="16" height="16">
    <properties>
-    <property name="spawn_room" value="room3"/>
+    <property name="spawn_room" value="room4"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="trajectory" value="2,0,2;0,0,1;-2,0,2;0,0,1"/>
    </properties>
   </object>
   <object id="71" name="RocketPlatform" x="4808" y="2832" width="16" height="16">
    <properties>
-    <property name="spawn_room" value="room3"/>
+    <property name="spawn_room" value="room4"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="trajectory" value="-2,0,2;0,0,1;2,0,2;0,0,1"/>
    </properties>
@@ -2048,13 +2048,14 @@
    </properties>
   </object>
   <object id="418" name="Starkner" x="14272" y="1056" width="32" height="32"/>
-  <object id="471" name="TellySaucer" x="15656" y="952" width="16" height="16">
+  <object id="471" name="TellySaucer" x="15416" y="920" width="16" height="16">
    <properties>
     <property name="can_spawn_right" type="bool" value="false"/>
    </properties>
   </object>
   <object id="482" name="Eyee" x="15976" y="992" width="24" height="24">
    <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
     <property name="movement_scalar" type="float" value="0.5"/>
     <property name="x" type="float" value="-4.25"/>
     <property name="y" type="float" value="0"/>
@@ -2062,6 +2063,7 @@
   </object>
   <object id="483" name="Eyee" x="15976" y="1024" width="24" height="24">
    <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
     <property name="movement_scalar" type="float" value="0.5"/>
     <property name="x" type="float" value="-4.25"/>
     <property name="y" type="float" value="0"/>
@@ -2070,15 +2072,25 @@
   <object id="484" name="PopupCanon" x="14544" y="1312" width="32" height="32">
    <properties>
     <property name="gravity_scalar" type="float" value="0.25"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
   </object>
   <object id="485" name="PopupCanon" x="14416" y="1728" width="32" height="32">
    <properties>
     <property name="gravity_scalar" type="float" value="0.25"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="480" name="AstroAssAssaulter" x="14616" y="1456" width="16" height="16"/>
-  <object id="487" name="AstroAssAssaulter" x="15816" y="944" width="16" height="16"/>
+  <object id="480" name="AstroAssAssaulter" x="14616" y="1456" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="487" name="AstroAssAssaulter" x="15816" y="944" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
   <object id="488" name="PopupCanon" x="856" y="3632" width="16" height="16">
    <properties>
     <property name="gravity_scalar" type="float" value="0.25"/>
@@ -2184,16 +2196,8 @@
     <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="507" name="Starkner" x="14416" y="1344" width="32" height="32">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="509" name="Starkner" x="15280" y="896" width="32" height="32">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
+  <object id="507" name="Starkner" x="14416" y="1344" width="32" height="32"/>
+  <object id="509" name="Starkner" x="15648" y="896" width="32" height="32"/>
   <object id="510" name="Screwie" x="1848" y="3632" width="16" height="16">
    <properties>
     <property name="down" type="bool" value="false"/>
@@ -2291,7 +2295,7 @@
   </object>
  </objectgroup>
  <objectgroup id="13" name="temp">
-  <object id="536" name="0" x="8776" y="2688" width="32" height="32">
+  <object id="537" name="0" x="3536" y="2624" width="32" height="32">
    <properties>
     <property name="apply_scalar_to_children" type="bool" value="true"/>
     <property name="gravity_scalar" type="float" value="0.35"/>

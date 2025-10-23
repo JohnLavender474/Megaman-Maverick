@@ -101,7 +101,7 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
         sprite.setSize(2.75f * ConstVals.PPM)
         sprite.setRegion(rockRegion!!)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
+        spritesComponent.putPreProcess { _, _ -> sprite.setCenter(body.getCenter()) }
         return spritesComponent
     }
 

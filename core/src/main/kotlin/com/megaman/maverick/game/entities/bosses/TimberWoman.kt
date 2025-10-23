@@ -1004,7 +1004,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
             GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
                 .also { sprite -> sprite.setSize(SPRITE_SIZE * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
 
             val flipX = when (currentState) {
@@ -1023,7 +1023,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
             GameSprite(regions[AXE_WALLSLIDE_REGION], DrawingPriority(DrawingSection.PLAYGROUND, 2))
                 .also { sprite -> sprite.setSize(SPRITE_SIZE * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val show = currentState == TimberWomanState.WALLSLIDE
             sprite.hidden = !show
 
@@ -1039,7 +1039,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
             GameSprite(regions[AXE_SWING_REGION_1], DrawingPriority(DrawingSection.PLAYGROUND, 2))
                 .also { sprite -> sprite.setSize(SPRITE_SIZE * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val show = when {
                 currentState != TimberWomanState.STAND_SWING -> false
                 else -> {
@@ -1064,7 +1064,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
             GameSprite(regions[AXE_SWING_REGION_2], DrawingPriority(DrawingSection.PLAYGROUND, 2))
                 .also { sprite -> sprite.setSize(SPRITE_SIZE * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val show = when {
                 currentState != TimberWomanState.STAND_SWING -> false
                 else -> {
@@ -1089,7 +1089,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
             GameSprite(regions[AXE_POUND_REGION_1], DrawingPriority(DrawingSection.PLAYGROUND, 10))
                 .also { sprite -> sprite.setSize(SPRITE_SIZE * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val show = when {
                 currentState != TimberWomanState.STAND_POUND -> false
                 else -> {
@@ -1114,7 +1114,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
             GameSprite(regions[AXE_POUND_REGION_2], DrawingPriority(DrawingSection.PLAYGROUND, 10))
                 .also { sprite -> sprite.setSize(SPRITE_SIZE * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val show = when {
                 currentState != TimberWomanState.STAND_POUND -> false
                 else -> {

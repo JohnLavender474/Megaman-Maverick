@@ -508,7 +508,7 @@ class MechaDragon_OLD(game: MegamanMaverickGame) : AbstractBoss(game, size = Siz
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
                 .also { sprite -> sprite.setSize(8f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
             sprite.hidden = damageBlink || !ready
             sprite.setFlip(isFacing(Facing.LEFT), false)

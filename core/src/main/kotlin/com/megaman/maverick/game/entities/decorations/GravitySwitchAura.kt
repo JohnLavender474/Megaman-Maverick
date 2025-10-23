@@ -80,7 +80,7 @@ class GravitySwitchAura(game: MegamanMaverickGame) : MegaGameEntity(game), ISpri
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite())
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setSize(size * ConstVals.PPM)
             sprite.setCenter(center)
             val alpha = max(0f, 1f - ((1f / SCALE_TIMES) * deltaIndex))

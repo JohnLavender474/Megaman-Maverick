@@ -315,7 +315,7 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(1.5f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
             sprite.setCenter(body.getCenter())

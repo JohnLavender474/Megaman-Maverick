@@ -259,7 +259,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(1.5f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.hidden = damageBlink
             sprite.setFlip(isFacing(Facing.LEFT), false)
             val position = Position.BOTTOM_CENTER

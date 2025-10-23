@@ -53,7 +53,10 @@ import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
-import com.megaman.maverick.game.entities.projectiles.*
+import com.megaman.maverick.game.entities.projectiles.MagmaGoop
+import com.megaman.maverick.game.entities.projectiles.MagmaMeteor
+import com.megaman.maverick.game.entities.projectiles.MagmaOrb
+import com.megaman.maverick.game.entities.projectiles.MagmaWave
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -177,8 +180,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         super.init()
         addComponent(defineAnimationsComponent())
         stateMachine = buildStateMachine()
-        damageOverrides.put(SmallIceCube::class, dmgNeg(5))
-        damageOverrides.put(Axe::class, dmgNeg(4))
+        damageOverrides.put(SmallIceCube::class, dmgNeg(6))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -407,7 +409,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(SPRITE_SIZE * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             val flipX = when (currentState) {
                 InfernoManState.WALLSLIDE -> body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)

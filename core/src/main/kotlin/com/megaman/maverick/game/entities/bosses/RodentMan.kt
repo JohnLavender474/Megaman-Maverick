@@ -601,7 +601,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
             TAG, GameSprite().also { sprite ->
                 sprite.setSize(SPRITE_WIDTH * ConstVals.PPM, SPRITE_HEIGHT * ConstVals.PPM)
             }
-        ).updatable { _, sprite ->
+        ).preProcess { _, sprite ->
             val position = DirectionPositionMapper.getInvertedPosition(direction)
             sprite.setPosition(body.getPositionPoint(position), position)
             when (direction) {

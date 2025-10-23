@@ -218,7 +218,7 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1)))
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setRegion(regions[regionKey])
             sprite.setBounds(body.getBounds())
         }

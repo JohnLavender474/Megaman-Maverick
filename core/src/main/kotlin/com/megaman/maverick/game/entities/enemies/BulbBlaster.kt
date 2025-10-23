@@ -168,7 +168,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), ILightSource
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.hidden = damageBlink
             sprite.setCenter(body.getCenter())
         }

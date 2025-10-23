@@ -97,7 +97,7 @@ class Cokonut(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
                 .also { sprite -> sprite.setSize(ConstVals.PPM.toFloat()) }
         )
-        .updatable { _, sprite -> sprite.setCenter(body.getCenter()) }
+        .preProcess { _, sprite -> sprite.setCenter(body.getCenter()) }
         .build()
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)

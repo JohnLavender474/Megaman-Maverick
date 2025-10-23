@@ -119,7 +119,7 @@ class DuoBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(0.5f * ConstVals.PPM) })
-        .updatable { _, sprite -> sprite.setCenter(body.getCenter()) }
+        .preProcess { _, sprite -> sprite.setCenter(body.getCenter()) }
         .build()
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)

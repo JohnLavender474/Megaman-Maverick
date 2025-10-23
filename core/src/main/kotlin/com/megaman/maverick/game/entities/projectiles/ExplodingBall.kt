@@ -110,7 +110,7 @@ class ExplodingBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(2f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
+        component.putPreProcess { _, _ -> sprite.setCenter(body.getCenter()) }
         return component
     }
 

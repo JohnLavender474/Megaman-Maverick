@@ -160,7 +160,7 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectiona
         sprite.setSize(0.75f * ConstVals.PPM)
         sprite.setRegion(region!!)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
             sprite.setCenter(body.getCenter())

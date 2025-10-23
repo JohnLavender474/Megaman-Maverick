@@ -395,7 +395,7 @@ class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(3f * ConstVals.PPM, 2f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
             sprite.translateX(0.2f * ConstVals.PPM * facing.value)

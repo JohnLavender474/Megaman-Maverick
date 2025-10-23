@@ -133,7 +133,7 @@ class IceCubeMaker(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, -1))
         sprite.setSize(8f * ConstVals.PPM, 5f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.TOP_CENTER), Position.TOP_CENTER)
         }
         return component

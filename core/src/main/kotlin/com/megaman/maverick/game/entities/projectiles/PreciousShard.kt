@@ -5,8 +5,10 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -28,12 +30,14 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.Disintegration
 import com.megaman.maverick.game.utils.AnimationUtils
+import com.megaman.maverick.game.utils.misc.GravityUtils
 import com.megaman.maverick.game.world.body.*
 
-class PreciousShard(game: MegamanMaverickGame) : AbstractProjectile(game) {
+class PreciousShard(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional {
 
     companion object {
         const val TAG = "PreciousShard"
@@ -41,7 +45,7 @@ class PreciousShard(game: MegamanMaverickGame) : AbstractProjectile(game) {
         private const val BIG_SIZE = 0.5f
         private const val SMALL_SIZE = 0.25f
 
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = 0.15f
 
         private const val CULL_TIME = 0.5f
 
@@ -52,6 +56,12 @@ class PreciousShard(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     enum class PreciousShardSize { LARGE, SMALL }
     enum class PreciousShardColor { GREEN, PURPLE, PINK, BLUE }
+
+    override var direction: Direction
+        get() = body.direction
+        set(value) {
+            body.direction = value
+        }
 
     private lateinit var shardSize: PreciousShardSize
     private lateinit var shardColor: PreciousShardColor
@@ -78,9 +88,16 @@ class PreciousShard(game: MegamanMaverickGame) : AbstractProjectile(game) {
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
         super.onSpawn(spawnProps)
+
+        direction = spawnProps.getOrDefault(
+            ConstKeys.DIRECTION,
+            if (owner is IDirectional) (owner as IDirectional).direction else megaman.direction,
+            Direction::class
+        )
+
+        GameLogger.debug(TAG, "onSpawn(): direction=$direction, spawnProps=$spawnProps")
 
         shardSize = spawnProps.get(ConstKeys.SIZE, PreciousShardSize::class)!!
         shardColor = spawnProps.get(ConstKeys.COLOR, PreciousShardColor::class)!!
@@ -141,9 +158,10 @@ class PreciousShard(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val body = Body(BodyType.ABSTRACT)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
-        body.physics.gravity.y = GRAVITY * ConstVals.PPM
 
         body.preProcess.put(ConstKeys.DEFAULT) {
+            GravityUtils.setGravity(body, GRAVITY * ConstVals.PPM)
+
             body.forEachFixture { fixture ->
                 val bounds = (fixture as Fixture).rawShape as GameRectangle
                 bounds.set(body)
@@ -161,7 +179,7 @@ class PreciousShard(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { it.setSize(0.5f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val key = "${shardSize.name.lowercase()}_${shardColor.name.lowercase()}"
 
             val region = regions[key]
@@ -170,6 +188,9 @@ class PreciousShard(game: MegamanMaverickGame) : AbstractProjectile(game) {
             sprite.setRegion(region)
 
             sprite.setCenter(body.getCenter())
+
+            sprite.setOriginCenter()
+            sprite.rotation = direction.rotation
         }
         .build()
 

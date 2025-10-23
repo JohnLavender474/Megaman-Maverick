@@ -86,7 +86,7 @@ class PipiEggShatter(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 15))
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.setFlip(type > 2, type % 2 != 0)
             sprite.setAlpha(1f - fadeTimer.getRatio())

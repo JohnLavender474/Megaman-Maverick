@@ -136,7 +136,7 @@ class BombChute(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.hidden = damageBlink
             sprite.setCenter(body.getCenter())
         }

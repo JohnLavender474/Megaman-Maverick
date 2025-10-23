@@ -151,7 +151,7 @@ class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val sprite = GameSprite()
         sprite.setSize(7f * ConstVals.PPM, 3.5f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.setFlip(isFacing(Facing.LEFT), false)
             sprite.hidden = damageBlink

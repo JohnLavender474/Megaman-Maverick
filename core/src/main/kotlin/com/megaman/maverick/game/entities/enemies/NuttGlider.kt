@@ -335,7 +335,7 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1)))
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setSize(3f * ConstVals.PPM)
 
             val position = Position.BOTTOM_CENTER

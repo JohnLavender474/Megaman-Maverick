@@ -114,7 +114,7 @@ class WhiteArrow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 5))
         sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
             sprite.setCenter(position)

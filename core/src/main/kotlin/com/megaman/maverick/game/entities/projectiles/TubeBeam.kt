@@ -124,7 +124,7 @@ class TubeBeam(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 0))
         sprite.setSize(2f * ConstVals.PPM, 0.75f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = if (direction.isHorizontal()) 0f else 90f
             sprite.setCenter(body.getCenter())

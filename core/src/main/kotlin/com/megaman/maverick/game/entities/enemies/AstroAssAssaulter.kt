@@ -251,7 +251,7 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(3f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             sprite.hidden = damageBlink

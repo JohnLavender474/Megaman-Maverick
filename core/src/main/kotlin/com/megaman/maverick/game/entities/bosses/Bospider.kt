@@ -412,7 +412,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(5f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.hidden = (damageBlink || !initTimer.isFinished()) && !frozen && !burning
         }

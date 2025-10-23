@@ -105,7 +105,7 @@ private fun Megaman.defineMegamanSprite(component: SpritesComponent) {
     val priority = DrawingPriority()
     val sprite = GameSprite(getSpritePriority(priority))
     component.putSprite(MEGAMAN_SPRITE_KEY, sprite)
-    component.putUpdateFunction(MEGAMAN_SPRITE_KEY) { delta, player ->
+    component.putPreProcess(MEGAMAN_SPRITE_KEY) { delta, player ->
         player.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
         val direction = getSpriteDirection()
         player.setFlip(shouldFlipSpriteX(), shouldFlipSpriteY())
@@ -123,12 +123,12 @@ private fun Megaman.defineMegamanSprite(component: SpritesComponent) {
 private fun Megaman.defineJetpackFlameSprite(component: SpritesComponent) {
     val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0), false)
     component.putSprite(JETPACK_FLAME_SPRITE_KEY, sprite)
-    component.putUpdateFunction(JETPACK_FLAME_SPRITE_KEY) { _, flame ->
+    component.putPreProcess(JETPACK_FLAME_SPRITE_KEY) { _, flame ->
         flame.setSize(JETPACK_FLAME_SPRITE_SIZE * ConstVals.PPM)
 
         val hidden = !isBehaviorActive(BehaviorType.JETPACKING)
         flame.hidden = hidden
-        if (hidden) return@putUpdateFunction
+        if (hidden) return@putPreProcess
 
         flame.setOriginCenter()
         flame.rotation = direction.rotation
@@ -151,7 +151,7 @@ private fun Megaman.defineDamagedBurstSprite(component: SpritesComponent) {
     val priority = getSpritePriority(DrawingPriority())
     val sprite = GameSprite(region, DrawingPriority(priority.section, priority.value - 1))
     component.putSprite(DAMAGE_BURST_SPRITE_KEY, sprite)
-    component.putUpdateFunction(DAMAGE_BURST_SPRITE_KEY) { _, burst ->
+    component.putPreProcess(DAMAGE_BURST_SPRITE_KEY) { _, burst ->
         burst.setSize(DAMAGE_BURST_SPRITE_SIZE * ConstVals.PPM)
 
         val center = body.getCenter()
@@ -170,20 +170,20 @@ private fun Megaman.defineDamagedBurstSprite(component: SpritesComponent) {
 
         if (!damaged) {
             burst.hidden = true
-            return@putUpdateFunction
+            return@putPreProcess
         }
 
         val animator = getAnimator(MEGAMAN_SPRITE_KEY) as Animator
         val animation = animator.currentAnimation
         if (animation == null) {
             burst.hidden = true
-            return@putUpdateFunction
+            return@putPreProcess
         }
 
         val index = animation.getIndex()
         if (index == 0) {
             burst.hidden = true
-            return@putUpdateFunction
+            return@putPreProcess
         }
 
         burst.hidden = false
@@ -195,7 +195,7 @@ private fun Megaman.defineDesertTornatoSprite(component: SpritesComponent) {
     val priority = getSpritePriority(DrawingPriority())
     val sprite = GameSprite(region, DrawingPriority(priority.section, priority.value + 1))
     component.putSprite(DESERT_TORNADO_SPRITE_KEY, sprite)
-    component.putUpdateFunction(DESERT_TORNADO_SPRITE_KEY) { _, tornado ->
+    component.putPreProcess(DESERT_TORNADO_SPRITE_KEY) { _, tornado ->
         tornado.setSize(DESERT_TORNADO_SPRITE_SIZE * ConstVals.PPM)
 
         val center = body.getCenter()
@@ -214,7 +214,7 @@ private fun Megaman.defineDesertTornatoSprite(component: SpritesComponent) {
 
         if (currentWeapon != MegamanWeapon.NEEDLE_SPIN || !shooting) {
             tornado.hidden = true
-            return@putUpdateFunction
+            return@putPreProcess
         }
 
         tornado.hidden = false

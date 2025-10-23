@@ -150,7 +150,7 @@ class SmallGreenMissile(game: MegamanMaverickGame) : AbstractProjectile(game), I
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = body.physics.velocity.angleDeg() + 270f
             sprite.setCenter(body.getCenter())

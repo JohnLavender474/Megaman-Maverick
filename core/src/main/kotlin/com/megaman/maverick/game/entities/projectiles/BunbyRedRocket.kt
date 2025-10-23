@@ -116,7 +116,7 @@ class BunbyRedRocket(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         sprite.setSize(ConstVals.PPM.toFloat())
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setFlip(isFacing(Facing.LEFT), false)
 
             sprite.setOriginCenter()

@@ -148,7 +148,7 @@ class Imorm(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL),
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.hidden = damageBlink
             sprite.setFlip(isFacing(Facing.LEFT), false)
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)

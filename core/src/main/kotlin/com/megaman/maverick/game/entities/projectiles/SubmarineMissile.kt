@@ -98,7 +98,7 @@ class SubmarineMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IA
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(2f * ConstVals.PPM, 0.5f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
             sprite.setFlip(isFacing(Facing.RIGHT), false)
         }

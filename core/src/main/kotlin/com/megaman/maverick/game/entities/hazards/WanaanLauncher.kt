@@ -166,7 +166,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
         sprite.setSize(2f * ConstVals.PPM, ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             val bust = this.isHealthDepleted()
             val region = if (bust) regions["bust"] else regions["launcher"]
             sprite.setRegion(region)

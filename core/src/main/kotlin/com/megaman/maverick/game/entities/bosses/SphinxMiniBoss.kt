@@ -287,7 +287,7 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, size = Size
         val sprite = GameSprite()
         sprite.setSize(10f * ConstVals.PPM, 9f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             sprite.hidden = damageBlink
             sprite.setAlpha(if (defeated) 1f - defeatTimer.getRatio() else 1f)

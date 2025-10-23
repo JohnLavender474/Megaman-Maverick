@@ -121,7 +121,7 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         sprite.setSize(ConstVals.PPM.toFloat())
         sprite.setAlpha(0.75f)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
+        component.putPreProcess { _, _ -> sprite.setCenter(body.getCenter()) }
         return component
     }
 

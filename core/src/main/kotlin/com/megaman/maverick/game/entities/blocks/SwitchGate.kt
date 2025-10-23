@@ -165,7 +165,7 @@ class SwitchGate(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnim
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(2f * ConstVals.PPM, 3f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
             sprite.setCenter(body.getCenter())

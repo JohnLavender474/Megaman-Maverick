@@ -171,7 +171,7 @@ class ElecDevilBody(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
                 ElecDevilConstants.BODY_SPRITE_HEIGHT * ConstVals.PPM
             )
         })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.hidden = !on || owner!!.isDamageBlinking()
 
             sprite.setFlip(isFacing(Facing.LEFT), false)

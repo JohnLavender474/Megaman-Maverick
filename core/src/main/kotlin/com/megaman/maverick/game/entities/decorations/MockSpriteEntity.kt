@@ -82,7 +82,7 @@ class MockSpriteEntity(game: MegamanMaverickGame) : MegaGameEntity(game), ISprit
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(8f * ConstVals.PPM, 6f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setPosition(position, Position.BOTTOM_CENTER)
             sprite.translateX(0.15f * facing.value * ConstVals.PPM)
             sprite.setFlip(isFacing(Facing.RIGHT), false)

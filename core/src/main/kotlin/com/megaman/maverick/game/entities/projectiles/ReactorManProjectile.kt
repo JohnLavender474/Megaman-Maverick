@@ -265,7 +265,7 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
                 .also { sprite -> sprite.setSize(ConstVals.PPM.toFloat()) }
         )
-        .updatable { _, sprite -> sprite.setCenter(body.getCenter()) }
+        .preProcess { _, sprite -> sprite.setCenter(body.getCenter()) }
         .build()
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)

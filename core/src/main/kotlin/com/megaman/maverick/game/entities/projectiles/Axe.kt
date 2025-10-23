@@ -11,6 +11,7 @@ import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.isAny
+import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.IGameShape2D
@@ -23,6 +24,8 @@ import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.events.Event
+import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
@@ -33,11 +36,12 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IDirectional {
+class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IDirectional, IEventListener {
 
     companion object {
         const val TAG = "Axe"
@@ -47,6 +51,8 @@ class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity
         private const val SLOW_DOWN_SCALAR = 0.75f
         private var region: TextureRegion? = null
     }
+
+    override val eventKeyMask = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS)
 
     override var direction: Direction
         get() = body.direction
@@ -69,6 +75,8 @@ class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
+        game.eventsMan.addListener(this)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
 
@@ -85,6 +93,12 @@ class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        game.eventsMan.removeListener(this)
+    }
+
+    override fun onEvent(event: Event) {
+        GameLogger.debug(TAG, "onEvent(): event=$event")
+        if (event.key == EventType.BEGIN_ROOM_TRANS) destroy()
     }
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
@@ -156,7 +170,7 @@ class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
                 .also { sprite -> sprite.setSize(1.25f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
             sprite.setFlip(body.physics.velocity.x > 0f, false)
             sprite.setOriginCenter()

@@ -169,7 +169,7 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game, size
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM, 0.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setFlip(isFacing(Facing.LEFT), false)
             val position = if (isFacing(Facing.LEFT)) Position.CENTER_LEFT else Position.CENTER_RIGHT
             sprite.setPosition(body.getPositionPoint(position), position)

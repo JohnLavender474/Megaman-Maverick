@@ -335,7 +335,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(2.5f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             val position = Position.TOP_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
             sprite.setFlip(isFacing(Facing.RIGHT), false)

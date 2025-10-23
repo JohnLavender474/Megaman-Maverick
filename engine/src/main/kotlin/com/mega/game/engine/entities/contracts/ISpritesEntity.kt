@@ -13,8 +13,11 @@ interface ISpritesEntity : IGameEntity {
             val key = SpritesComponent::class
             return getComponent(key)!!
         }
-    val sprites: OrderedMap<Any, GameSprite>
+    var sprites: OrderedMap<Any, GameSprite>
         get() = this.spritesComponent.sprites
+        set(value) {
+            this.spritesComponent.sprites = value
+        }
     val defaultSprite: GameSprite
         get() = this.sprites[SpritesComponent.DEFAULT_KEY]
 
@@ -26,12 +29,21 @@ interface ISpritesEntity : IGameEntity {
 
     fun removeSprite(key: Any): GameSprite? = spritesComponent.removeSprite(key)
 
-    fun putSpriteUpdateFunction(function: UpdateFunction<GameSprite>) = spritesComponent.putUpdateFunction(function)
+    fun putSpritePreProcess(function: UpdateFunction<GameSprite>) = spritesComponent.putPreProcess(function)
 
-    fun putSpriteUpdateFunction(key: String, updateFunction: UpdateFunction<GameSprite>) =
-        spritesComponent.putUpdateFunction(key, updateFunction)
+    fun putSpritePreProcess(key: String, updateFunction: UpdateFunction<GameSprite>) =
+        spritesComponent.putPreProcess(key, updateFunction)
 
-    fun clearSpriteUpdateFunctions() = spritesComponent.clearUpdateFunctions()
+    fun clearSpritePreProcess() = spritesComponent.clearPreProcess()
 
-    fun removeSpriteUpdateFunction(key: Any) = spritesComponent.removeUpdateFunction(key)
+    fun removeSpritePreProcess(key: Any) = spritesComponent.removePreProcess(key)
+
+    fun putSpritePostProcess(function: UpdateFunction<GameSprite>) = spritesComponent.putPostProcess(function)
+
+    fun putSpritePostProcess(key: String, updateFunction: UpdateFunction<GameSprite>) =
+        spritesComponent.putPostProcess(key, updateFunction)
+
+    fun clearSpritePostProcess() = spritesComponent.clearPostProcess()
+
+    fun removeSpritePostProcess(key: Any) = spritesComponent.removePostProcess(key)
 }

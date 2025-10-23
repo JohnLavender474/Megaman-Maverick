@@ -81,7 +81,7 @@ class Copipi(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
         sprite.setSize(0.5f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.hidden = damageBlink
             sprite.setFlip(isFacing(Facing.RIGHT), false)

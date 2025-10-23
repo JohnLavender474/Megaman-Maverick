@@ -24,6 +24,7 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
@@ -118,6 +119,8 @@ class WoodCrate(game: MegamanMaverickGame) : Block(game), IFireableEntity, ISpri
     private val burnTimer = Timer(BURN_DUR)
     private val spawnFlameDelay = Timer(SPAWN_FLAME_DELAY)
 
+    private var burnOwner: IGameEntity? = null
+
     private val iTimer = Timer(I_DUR)
 
     private val reusableEntitySet = ObjectSet<MegaGameEntity>()
@@ -160,12 +163,14 @@ class WoodCrate(game: MegamanMaverickGame) : Block(game), IFireableEntity, ISpri
             spawnPieces()
             if (overlapsGameCamera()) playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         }
+
+        burnOwner = null
     }
 
     private fun spawnPieces() {
         GameLogger.debug(TAG, "spawnPieces()")
 
-        (0 until PIECES_ON_DESTROY).forEach {
+        (0 until PIECES_ON_DESTROY).forEach { _ ->
             val position = body.getBounds().getRandomPositionInBounds()
 
             val impulse = GameObjectPools.fetch(Vector2::class)
@@ -256,6 +261,8 @@ class WoodCrate(game: MegamanMaverickGame) : Block(game), IFireableEntity, ISpri
         if (projectile is IFireEntity && !burning) {
             GameLogger.debug(TAG, "hitByProjectile(): set to burning")
             burning = true
+
+            burnOwner = projectile.owner
         } else if (projectile.owner == megaman) {
             val damage = DAMAGERS[projectile::class]?.get(projectile) ?: 0
             if (damage > 0) {
@@ -312,7 +319,7 @@ class WoodCrate(game: MegamanMaverickGame) : Block(game), IFireableEntity, ISpri
                 val flame = MegaEntityFactory.fetch(MagmaFlame::class)!!
                 flame.spawn(
                     props(
-                        ConstKeys.OWNER pairTo this,
+                        ConstKeys.OWNER pairTo burnOwner,
                         ConstKeys.IMPULSE pairTo impulse,
                         ConstKeys.POSITION pairTo position,
                         "${ConstKeys.BODY}_${ConstKeys.TYPE}" pairTo BodyType.ABSTRACT
@@ -320,8 +327,6 @@ class WoodCrate(game: MegamanMaverickGame) : Block(game), IFireableEntity, ISpri
                 )
 
                 spawnFlameDelay.reset()
-
-                // if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
             }
         }
 
@@ -330,7 +335,7 @@ class WoodCrate(game: MegamanMaverickGame) : Block(game), IFireableEntity, ISpri
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
             sprite.hidden = !iTimer.isFinished()
         }

@@ -17,6 +17,7 @@ import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -63,7 +64,7 @@ import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProjectileEntity, ISpritesEntity,
-    IAnimatedEntity, IEventListener {
+    IAnimatedEntity, IEventListener, IDirectional {
 
     companion object {
         const val TAG = "PreciousGem"
@@ -78,6 +79,12 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
     }
 
     enum class PreciousGemColor { PURPLE, BLUE, PINK, GREEN }
+
+    override var direction: Direction
+        get() = body.direction
+        set(value) {
+            body.direction = value
+        }
 
     override val damageNegotiator = object : IDamageNegotiator {
 
@@ -143,6 +150,12 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         game.eventsMan.addListener(this)
 
         owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
+
+        direction = spawnProps.getOrDefault(
+            ConstKeys.DIRECTION,
+            if (owner is IDirectional) (owner as IDirectional).direction else megaman.direction,
+            Direction::class
+        )
 
         val position = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(position)
@@ -292,6 +305,8 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            owner?.let { if (it is IDirectional) direction = it.direction }
+
             when (stateIndex) {
                 0 -> {
                     val trajectory = firstTarget.cpy().sub(body.getCenter()).nor().scl(speed)
@@ -367,7 +382,9 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
                 .also { sprite -> sprite.setSize(2f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
+            sprite.setOriginCenter()
+            sprite.rotation = direction.rotation
             sprite.setCenter(body.getCenter())
             sprite.hidden = damageBlink || (owner == megaman && megaman.teleporting)
         }

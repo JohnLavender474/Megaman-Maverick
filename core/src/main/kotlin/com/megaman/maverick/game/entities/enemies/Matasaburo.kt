@@ -100,7 +100,7 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.hidden = damageBlink
             val position = body.getPositionPoint(Position.BOTTOM_CENTER)
             sprite.setPosition(position, Position.BOTTOM_CENTER)

@@ -186,7 +186,7 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
         val sprite = GameSprite()
         sprite.setSize(2.75f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.hidden = damageBlink
             sprite.setFlip(isFacing(Facing.LEFT), false)
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)

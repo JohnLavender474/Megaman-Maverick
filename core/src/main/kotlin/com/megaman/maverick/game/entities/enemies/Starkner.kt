@@ -369,7 +369,7 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5)))
-        .updatable { delta, sprite ->
+        .preProcess { delta, sprite ->
             val size = when (state) {
                 StarknerState.BLACKHOLE -> 5f
                 else -> 2.5f

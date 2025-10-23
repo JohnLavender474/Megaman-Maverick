@@ -172,7 +172,7 @@ class ScooperPete(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.hidden = if (invincible) damageBlink else false
 

@@ -151,7 +151,7 @@ class GroundPebble(game: MegamanMaverickGame) : AbstractHealthEntity(game, dmgDu
                     sprite.setOriginCenter()
                 }
         )
-        .updatable { delta, sprite ->
+        .preProcess { delta, sprite ->
             sprite.setCenter(body.getCenter())
 
             sprite.hidden = damageBlink

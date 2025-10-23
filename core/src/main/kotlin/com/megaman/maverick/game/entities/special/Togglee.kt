@@ -278,7 +278,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { delta, _ ->
+        spritesComponent.putPreProcess { delta, _ ->
             val size = GameObjectPools.fetch(Vector2::class)
             when (type) {
                 LEVER_TYPE -> size.set(0.75f, 0.75f)

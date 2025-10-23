@@ -92,7 +92,7 @@ class PreciousSpike(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
             sprites.put(key, sprite)
 
-            putSpriteUpdateFunction(key) { _, _ ->
+            putSpritePreProcess(key) { _, _ ->
                 val position = body.getBounds()
                     .translate(
                         col * ConstVals.PPM.toFloat(),

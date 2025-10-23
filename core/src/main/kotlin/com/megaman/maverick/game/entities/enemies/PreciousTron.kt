@@ -239,7 +239,7 @@ class PreciousTron(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { it.setSize(3f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
             sprite.setFlip(isFacing(Facing.RIGHT), false)

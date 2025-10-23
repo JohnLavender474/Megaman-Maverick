@@ -1100,7 +1100,7 @@
   </object>
   <object id="110" name="LaserBeamer" x="5824" y="2200" width="32" height="32">
    <properties>
-    <property name="block1" type="object" value="112"/>
+    <property name="ignore1" type="object" value="112"/>
     <property name="radius" type="float" value="20"/>
     <property name="spawn_room" value="room3"/>
     <property name="spawn_type" value="spawn_room"/>
@@ -1108,7 +1108,7 @@
   </object>
   <object id="126" name="LaserBeamer" x="6464" y="2192" width="32" height="32">
    <properties>
-    <property name="block1" type="object" value="127"/>
+    <property name="ignore1" type="object" value="127"/>
     <property name="radius" type="float" value="20"/>
     <property name="spawn_room" value="room3"/>
     <property name="spawn_type" value="spawn_room"/>
@@ -1116,7 +1116,7 @@
   </object>
   <object id="141" name="LaserBeamer" x="7336" y="1808" width="32" height="32">
    <properties>
-    <property name="block1" type="object" value="142"/>
+    <property name="ignore1" type="object" value="142"/>
     <property name="radius" type="float" value="20"/>
     <property name="spawn_room" value="room4"/>
     <property name="spawn_type" value="spawn_room"/>
@@ -1139,7 +1139,7 @@
   </object>
   <object id="179" name="LaserBeamer" x="7312" y="2336" width="32" height="32">
    <properties>
-    <property name="block1" type="object" value="180"/>
+    <property name="ignore1" type="object" value="180"/>
     <property name="radius" type="float" value="20"/>
     <property name="spawn_room" value="room4"/>
     <property name="spawn_type" value="spawn_room"/>
@@ -1152,7 +1152,7 @@
   </object>
   <object id="211" name="LaserBeamer" x="8160" y="1504" width="32" height="32">
    <properties>
-    <property name="block1" type="object" value="212"/>
+    <property name="ignore1" type="object" value="212"/>
     <property name="radius" type="float" value="20"/>
     <property name="spawn_room" value="room5"/>
     <property name="spawn_type" value="spawn_room"/>
@@ -1175,7 +1175,7 @@
   </object>
   <object id="381" name="LaserBeamer" x="15632" y="1504" width="32" height="32">
    <properties>
-    <property name="block1" type="object" value="382"/>
+    <property name="ignore1" type="object" value="382"/>
     <property name="light_keys" value="1"/>
     <property name="radius" type="float" value="20"/>
     <property name="spawn_room" value="room8"/>
@@ -1311,10 +1311,10 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="11" name="player">
+ <objectgroup id="11" name="temp">
   <object id="496" name="0" x="16544" y="1728" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="4" name="temp">
+ <objectgroup id="4" name="player">
   <object id="10" name="0" x="96" y="2944" width="32" height="32"/>
   <object id="115" name="2" x="5280" y="2336" width="32" height="32"/>
   <object id="116" name="1" x="3424" y="2816" width="32" height="32"/>

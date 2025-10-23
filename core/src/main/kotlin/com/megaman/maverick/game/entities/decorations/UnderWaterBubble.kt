@@ -124,7 +124,7 @@ class UnderWaterBubble(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyE
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 2))
         sprite.setSize(0.25f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
             sprite.setCenter(body.getCenter())

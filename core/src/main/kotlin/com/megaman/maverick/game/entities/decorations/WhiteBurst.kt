@@ -86,7 +86,7 @@ class WhiteBurst(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 15))
                 .also { it.setSize(ConstVals.PPM.toFloat()) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
             sprite.hidden = !on
         }

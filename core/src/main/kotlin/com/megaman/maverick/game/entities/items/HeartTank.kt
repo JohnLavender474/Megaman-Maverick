@@ -159,7 +159,7 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(2f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             val position = DirectionPositionMapper.getInvertedPosition(direction)
             val bodyPosition = body.getPositionPoint(position)
             sprite.setPosition(bodyPosition, position)

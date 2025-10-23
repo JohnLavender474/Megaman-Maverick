@@ -141,7 +141,7 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             val position = DirectionPositionMapper.getPosition(direction)
             val bodyPosition = body.getPositionPoint(position)
             sprite.setPosition(bodyPosition, position)

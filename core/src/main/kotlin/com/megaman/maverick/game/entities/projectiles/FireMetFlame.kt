@@ -122,7 +122,7 @@ class FireMetFlame(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             sprite.setFlip(isFacing(Facing.LEFT), false)
         }

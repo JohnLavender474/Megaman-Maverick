@@ -206,7 +206,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(2f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
             sprite.rotation = body.physics.velocity.angleDeg()

@@ -92,12 +92,12 @@ class PreciousCubeChute(game: MegamanMaverickGame) : MegaGameEntity(game), ISpri
             "top", GameSprite(regions["top"], DrawingPriority(DrawingSection.PLAYGROUND, 5))
                 .also { sprite -> sprite.setSize(3f * ConstVals.PPM, ConstVals.PPM.toFloat()) }
         )
-        .updatable { _, sprite -> sprite.setPosition(chutePosition, Position.TOP_CENTER) }
+        .preProcess { _, sprite -> sprite.setPosition(chutePosition, Position.TOP_CENTER) }
         .sprite(
             "bottom", GameSprite(regions["bottom"], DrawingPriority(DrawingSection.PLAYGROUND, -1))
                 .also { sprite -> sprite.setSize(3f * ConstVals.PPM, ConstVals.PPM.toFloat()) }
         )
-        .updatable { _, sprite -> sprite.setPosition(chutePosition, Position.TOP_CENTER) }
+        .preProcess { _, sprite -> sprite.setPosition(chutePosition, Position.TOP_CENTER) }
         .build()
 
     override fun getType() = EntityType.HAZARD

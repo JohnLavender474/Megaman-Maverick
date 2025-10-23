@@ -130,7 +130,7 @@ class MagmaPellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 1))
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
+        spritesComponent.putPreProcess { _, _ -> sprite.setCenter(body.getCenter()) }
         return spritesComponent
     }
 }

@@ -116,7 +116,7 @@ class RocketBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         val sprite = GameSprite()
         sprite.setSize(1.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation

@@ -230,7 +230,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.hidden = damageBlink
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.setOriginCenter()

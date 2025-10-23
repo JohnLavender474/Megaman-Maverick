@@ -108,7 +108,7 @@ class SaucerRay(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(3f * ConstVals.PPM, 4f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation

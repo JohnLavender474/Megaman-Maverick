@@ -2,17 +2,16 @@ package com.mega.game.engine.drawables.sprites
 
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
-import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.interfaces.UpdateFunction
 import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.components.IGameComponent
 
 class SpritesComponent(
-    val sprites: OrderedMap<Any, GameSprite> = OrderedMap(),
-    val updatables: ObjectMap<Any, UpdateFunction<GameSprite>> = ObjectMap()
-) :
-    IGameComponent, Updatable {
+    var sprites: OrderedMap<Any, GameSprite> = OrderedMap(),
+    var preProcessFuncs: ObjectMap<Any, UpdateFunction<GameSprite>> = ObjectMap(),
+    var postProcessFuncs: ObjectMap<Any, UpdateFunction<GameSprite>> = ObjectMap()
+) : IGameComponent {
 
     companion object {
         const val DEFAULT_KEY = "default_key"
@@ -24,8 +23,16 @@ class SpritesComponent(
 
     constructor(sprite: GameSprite) : this(DEFAULT_KEY pairTo sprite)
 
-    override fun update(delta: Float) {
-        updatables.forEach { e ->
+    fun preProcess(delta: Float) {
+        preProcessFuncs.forEach { e ->
+            val name = e.key
+            val function = e.value
+            sprites[name]?.let { function.update(delta, it) }
+        }
+    }
+
+    fun postProcess(delta: Float) {
+        postProcessFuncs.forEach { e ->
             val name = e.key
             val function = e.value
             sprites[name]?.let { function.update(delta, it) }
@@ -40,25 +47,40 @@ class SpritesComponent(
 
     fun removeSprite(key: Any): GameSprite? = sprites.remove(key)
 
-    fun putUpdateFunction(function: UpdateFunction<GameSprite>) {
-        putUpdateFunction(DEFAULT_KEY, function)
+    fun putPreProcess(function: UpdateFunction<GameSprite>) {
+        putPreProcess(DEFAULT_KEY, function)
     }
 
-    fun putUpdateFunction(key: Any, function: UpdateFunction<GameSprite>) {
-        updatables.put(key, function)
+    fun putPreProcess(key: Any, function: UpdateFunction<GameSprite>) {
+        preProcessFuncs.put(key, function)
     }
 
-    fun removeUpdateFunction(key: Any) {
-        updatables.remove(key)
+    fun removePreProcess(key: Any) {
+        preProcessFuncs.remove(key)
     }
 
-    fun clearUpdateFunctions() = updatables.clear()
+    fun clearPreProcess() = preProcessFuncs.clear()
+
+    fun putPostProcess(function: UpdateFunction<GameSprite>) {
+        putPostProcess(DEFAULT_KEY, function)
+    }
+
+    fun putPostProcess(key: Any, function: UpdateFunction<GameSprite>) {
+        postProcessFuncs.put(key, function)
+    }
+
+    fun removePostProcess(key: Any) {
+        postProcessFuncs.remove(key)
+    }
+
+    fun clearPostProcess() = postProcessFuncs.clear()
 }
 
 class SpritesComponentBuilder {
 
     private val sprites: OrderedMap<Any, GameSprite> = OrderedMap()
-    private val updatables: ObjectMap<Any, UpdateFunction<GameSprite>> = ObjectMap()
+    private val preProcess: ObjectMap<Any, UpdateFunction<GameSprite>> = ObjectMap()
+    private val postProcess: ObjectMap<Any, UpdateFunction<GameSprite>> = ObjectMap()
 
     private var currentKey: Any = SpritesComponent.DEFAULT_KEY
 
@@ -70,10 +92,15 @@ class SpritesComponentBuilder {
         return this
     }
 
-    fun updatable(updatable: UpdateFunction<GameSprite>): SpritesComponentBuilder {
-        updatables.put(currentKey, updatable)
+    fun preProcess(updatable: UpdateFunction<GameSprite>): SpritesComponentBuilder {
+        preProcess.put(currentKey, updatable)
         return this
     }
 
-    fun build() = SpritesComponent(sprites, updatables)
+    fun postProcess(updatable: UpdateFunction<GameSprite>): SpritesComponentBuilder {
+        postProcess.put(currentKey, updatable)
+        return this
+    }
+
+    fun build() = SpritesComponent(sprites, preProcess, postProcess)
 }

@@ -67,8 +67,8 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         private const val MAX_LENGTH = 20f
         private const val BODY_SIZE = 1f
 
-        private const val BEAM_DELAY = 1.5f
-        private const val BEAM_DELAY_HARD = 1f
+        private const val BEAM_DELAY = 1.75f
+        private const val BEAM_DELAY_HARD = 1.25f
         private const val BEAM_DUR = 1f
 
         private const val SPAWN_EXPLOSION_DELAY = 0.2f

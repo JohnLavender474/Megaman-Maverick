@@ -146,7 +146,7 @@ class InfernoChainPlatform(game: MegamanMaverickGame) : FeetRiseSinkBlock(game),
         val platform = GameSprite(regions[PLATFORM])
         sprites.put(PLATFORM, platform)
 
-        putSpriteUpdateFunction(PLATFORM) { _, sprite -> platform.setBounds(body.getBounds()) }
+        putSpritePreProcess(PLATFORM) { _, sprite -> platform.setBounds(body.getBounds()) }
 
         for (i in 0 until chainCount) {
             val key = "${CHAIN}_$i"
@@ -156,7 +156,7 @@ class InfernoChainPlatform(game: MegamanMaverickGame) : FeetRiseSinkBlock(game),
 
             sprites.put(key, chain)
 
-            putSpriteUpdateFunction(key) { _, sprite ->
+            putSpritePreProcess(key) { _, sprite ->
                 val x = body.getX()
                 val y = body.getMaxY() + i * CHAIN_HEIGHT * ConstVals.PPM
                 sprite.setPosition(x, y)

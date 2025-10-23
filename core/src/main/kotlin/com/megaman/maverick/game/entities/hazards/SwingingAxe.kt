@@ -106,7 +106,7 @@ class SwingingAxe(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         sprite.setSize(8f * ConstVals.PPM)
         sprite.setRegion(textureRegion!!)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { delta, _ ->
+        spritesComponent.putPreProcess { delta, _ ->
             val center = pendulum.anchor
             sprite.setCenter(center)
             sprite.setOriginCenter()

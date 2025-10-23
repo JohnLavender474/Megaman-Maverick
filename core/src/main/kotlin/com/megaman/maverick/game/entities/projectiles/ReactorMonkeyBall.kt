@@ -189,7 +189,7 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
         sprite.setSize(4f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.hidden = hidden
             sprite.setCenter(body.getCenter())
             sprite.setAlpha(if (exploding) EXPLODING_ALPHA else 1f)

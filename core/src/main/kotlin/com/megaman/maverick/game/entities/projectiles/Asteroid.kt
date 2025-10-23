@@ -254,7 +254,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(2f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { delta, _ ->
+        component.putPreProcess { delta, _ ->
             val region = regions.get(type)
             sprite.setRegion(region)
 

@@ -150,7 +150,7 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 3))
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
+        spritesComponent.putPreProcess { _, _ -> sprite.setCenter(body.getCenter()) }
         return spritesComponent
     }
 

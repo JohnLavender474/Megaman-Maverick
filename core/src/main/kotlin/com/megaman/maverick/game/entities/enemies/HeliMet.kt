@@ -268,7 +268,7 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
                 .also { sprite -> sprite.setSize(2f * ConstVals.PPM) }
         )
-        .updatable { delta, sprite ->
+        .preProcess { delta, sprite ->
             sprite.setCenter(body.getCenter())
 
             when {

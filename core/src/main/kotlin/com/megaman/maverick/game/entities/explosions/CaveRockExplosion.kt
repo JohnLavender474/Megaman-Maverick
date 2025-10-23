@@ -95,7 +95,7 @@ class CaveRockExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IDama
         val sprite = GameSprite()
         sprite.setSize(2.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
+        spritesComponent.putPreProcess { _, _ -> sprite.setCenter(body.getCenter()) }
         return spritesComponent
     }
 

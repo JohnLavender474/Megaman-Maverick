@@ -63,10 +63,10 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     companion object {
         const val TAG = "LumberJoe"
 
-        private const val STAND_DUR = 0.75f
+        private const val STAND_DUR = 1f
         private const val THROW_DUR = 0.5f
         private const val THROW_TIME = 0.125f
-        private const val COOLDOWN_DUR = 1.5f
+        private const val COOLDOWN_DUR = 1.75f
         private const val BURN_DUR = 0.5f
 
         private const val AXES_BEFORE_COOLDOWN = 3
@@ -318,7 +318,7 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(2.5f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
             sprite.setFlip(isFacing(Facing.RIGHT), false)

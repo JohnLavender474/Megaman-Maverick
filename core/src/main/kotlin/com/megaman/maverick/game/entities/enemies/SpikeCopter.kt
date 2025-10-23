@@ -213,7 +213,7 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setFlip(isFacing(Facing.LEFT), false)
             sprite.setCenter(body.getCenter())
             sprite.hidden = damageBlink

@@ -130,7 +130,7 @@ class Rock(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(ConstVals.PPM.toFloat()) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val region = regions[rockSize.name.lowercase()]
             if (region == null) throw IllegalStateException("Region is null: $region")
             sprite.setRegion(region)

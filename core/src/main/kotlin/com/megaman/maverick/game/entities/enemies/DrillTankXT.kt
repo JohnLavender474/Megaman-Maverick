@@ -374,7 +374,7 @@ class DrillTankXT(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(3f * ConstVals.PPM, 2f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val position = if (isFacing(Facing.LEFT)) Position.BOTTOM_RIGHT else Position.BOTTOM_LEFT
             sprite.setPosition(body.getPositionPoint(position), position)
             sprite.setFlip(isFacing(Facing.RIGHT), false)

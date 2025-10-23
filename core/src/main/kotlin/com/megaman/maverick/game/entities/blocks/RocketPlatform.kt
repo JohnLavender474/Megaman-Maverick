@@ -167,7 +167,7 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity<Meg
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, -1))
         sprite.setSize(1.6875f * ConstVals.PPM, 4.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.hidden = hidden
 
             sprite.setOriginCenter()

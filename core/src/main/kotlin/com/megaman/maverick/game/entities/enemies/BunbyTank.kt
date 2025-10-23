@@ -323,7 +323,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         val sprite = GameSprite()
         sprite.setSize(2.5f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setFlip(isFacing(Facing.LEFT), false)
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation

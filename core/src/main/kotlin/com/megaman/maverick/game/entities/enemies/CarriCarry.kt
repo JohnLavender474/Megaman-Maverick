@@ -210,7 +210,7 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(GameSprite().also { sprite -> sprite.setSize(3f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
 

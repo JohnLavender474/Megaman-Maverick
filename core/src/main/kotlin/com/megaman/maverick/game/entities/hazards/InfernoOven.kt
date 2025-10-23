@@ -229,12 +229,12 @@ class InfernoOven(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
                      */
                 }
         )
-        .updatable { _, sprite -> rotateAndPositionSprite(sprite) }
+        .preProcess { _, sprite -> rotateAndPositionSprite(sprite) }
         .sprite(
             FLAME, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
                 .also { sprite -> sprite.setSize(SPRITE_WIDTH * ConstVals.PPM, SPRITE_HEIGHT * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             rotateAndPositionSprite(sprite)
             sprite.hidden = currentState != InfernoOvenState.HOT
         }

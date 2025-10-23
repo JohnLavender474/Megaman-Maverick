@@ -311,7 +311,7 @@ class ShieldGuardBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
         sprite.setSize(2f * ConstVals.PPM, 1.5f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.hidden = damageBlink
             sprite.setFlip(turning != switch, flipY)
             sprite.setCenter(body.getCenter())

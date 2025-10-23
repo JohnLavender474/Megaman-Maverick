@@ -74,7 +74,7 @@ class Nutt(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(GameSprite(region!!))
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setSize(ConstVals.PPM.toFloat())
             sprite.setCenter(body.getCenter())
         }

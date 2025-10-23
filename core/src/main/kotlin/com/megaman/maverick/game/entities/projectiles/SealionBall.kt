@@ -141,7 +141,7 @@ class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         val sprite = GameSprite(region!!)
         sprite.setSize(3f * ConstVals.PPM, 1.875f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.hidden = damageBlink || ballInHand
         }

@@ -183,7 +183,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(GameSprite().also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setFlip(isFacing(Facing.LEFT), false)
             sprite.hidden = if (invincible) damageBlink else false
 

@@ -111,7 +111,7 @@ class PurpleBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 15))
         sprite.setSize(2f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.setFlip(isFacing(Facing.LEFT), false)
             val angle = body.physics.velocity.angleDeg()

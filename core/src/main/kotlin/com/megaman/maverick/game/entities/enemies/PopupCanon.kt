@@ -235,7 +235,7 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
 

@@ -193,7 +193,7 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
         sprite.setSize(ConstVals.PPM.toFloat())
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             val region = regions[type.name.lowercase()]
             sprite.setRegion(region)
 

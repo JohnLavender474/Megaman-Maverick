@@ -199,7 +199,7 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setRegion(regions[METAL_CRATE])
             sprite.setBounds(body.getBounds())
         }

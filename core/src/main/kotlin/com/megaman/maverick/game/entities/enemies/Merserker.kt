@@ -129,7 +129,7 @@ class Merserker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { it.setSize(SPRITE_SIZE * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.hidden = damageBlink
             sprite.setCenter(body.getCenter())
             sprite.setFlip(isFacing(Facing.LEFT), false)

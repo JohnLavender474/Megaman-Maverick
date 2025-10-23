@@ -187,7 +187,7 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
         sprite.setSize(3.5f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setCenter(body.getCenter())
 
             sprite.setOriginCenter()

@@ -179,7 +179,7 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
         sprites.clear()
         animators.clear()
-        clearSpriteUpdateFunctions()
+        clearSpritePreProcess()
     }
 
     override fun onEvent(event: Event) {
@@ -220,7 +220,7 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
             val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
             sprite.setSize(2f * ConstVals.PPM, ConstVals.PPM.toFloat())
             sprites.put(key, sprite)
-            putSpriteUpdateFunction(key) { _, _ ->
+            putSpritePreProcess(key) { _, _ ->
                 val bodyPos = body.getPosition()
                 val spriteX = bodyPos.x + column * 2f * ConstVals.PPM
                 val spriteY = bodyPos.y + row * ConstVals.PPM

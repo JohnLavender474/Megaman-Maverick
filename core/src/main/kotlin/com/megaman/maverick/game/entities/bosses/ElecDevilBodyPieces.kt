@@ -256,7 +256,7 @@ class ElecDevilBodyPieces(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
 
                 builder.sprite(key, sprite)
 
-                builder.updatable { _, sprite ->
+                builder.preProcess { _, sprite ->
                     val visible = on && (activePieces.contains(row pairTo column) ||
                         (standByPieces.contains(row pairTo column) && standByBlink))
                     sprite.hidden = !visible

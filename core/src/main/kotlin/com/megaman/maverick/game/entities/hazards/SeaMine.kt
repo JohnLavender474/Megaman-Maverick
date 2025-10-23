@@ -201,7 +201,7 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
+        component.putPreProcess { _, _ -> sprite.setCenter(body.getCenter()) }
         return component
     }
 

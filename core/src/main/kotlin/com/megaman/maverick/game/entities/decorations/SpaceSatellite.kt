@@ -46,7 +46,7 @@ class SpaceSatellite(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.BACKGROUND, 10))
         sprite.setSize(12.5f * ConstVals.PPM, 6.25f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setPosition(position, Position.BOTTOM_CENTER)
             sprite.setFlip(left, false)
         }

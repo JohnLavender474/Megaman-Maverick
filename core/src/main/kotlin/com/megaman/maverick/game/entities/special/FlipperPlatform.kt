@@ -208,7 +208,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         val sprite = GameSprite()
         sprite.setSize(6f * ConstVals.PPM, 4f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             val position = Position.TOP_CENTER
             sprite.setPosition(bounds.getPositionPoint(position), position)
         }

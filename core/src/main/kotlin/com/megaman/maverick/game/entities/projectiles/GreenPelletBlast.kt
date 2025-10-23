@@ -133,7 +133,7 @@ class GreenPelletBlast(game: MegamanMaverickGame) : AbstractProjectile(game, siz
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
 
             sprite.setOriginCenter()

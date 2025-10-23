@@ -185,7 +185,7 @@ class ElecDevilBodyPiece(game: MegamanMaverickGame) : AbstractProjectile(game), 
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
                 .also { sprite -> sprite.setSize(1.5f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
 
             sprite.setOriginCenter()

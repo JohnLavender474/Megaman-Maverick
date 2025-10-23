@@ -84,7 +84,7 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
 
         sprites.clear()
         animators.clear()
-        clearSpriteUpdateFunctions()
+        clearSpritePreProcess()
     }
 
     private fun defineBodyComponent(): BodyComponent {
@@ -110,7 +110,7 @@ class QuickSand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
             val key = "${x}_${y}"
             sprites.put(key, sprite)
 
-            putSpriteUpdateFunction(key) { _, _ -> sprite.setCenter(bounds!!.getCenter()) }
+            putSpritePreProcess(key) { _, _ -> sprite.setCenter(bounds!!.getCenter()) }
 
             val regionKey = when (x) {
                 0 -> when (y) {

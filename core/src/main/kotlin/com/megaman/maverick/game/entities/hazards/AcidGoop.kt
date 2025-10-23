@@ -151,7 +151,7 @@ class AcidGoop(game: MegamanMaverickGame) : MegaGameEntity(game), IDamager, IHaz
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(2f * ConstVals.PPM, ConstVals.PPM.toFloat())
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
         }

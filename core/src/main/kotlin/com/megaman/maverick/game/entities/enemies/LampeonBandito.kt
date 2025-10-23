@@ -240,7 +240,7 @@ class LampeonBandito(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(4f * ConstVals.PPM, 3f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.hidden = damageBlink
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             val position = Position.BOTTOM_CENTER

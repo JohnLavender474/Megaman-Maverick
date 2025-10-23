@@ -79,7 +79,7 @@ class LavaFall(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
         sprites.clear()
         animators.clear()
-        clearSpriteUpdateFunctions()
+        clearSpritePreProcess()
     }
 
     private fun defineDrawables(cells: Matrix<GameRectangle>) = cells.forEach { x, y, bounds ->

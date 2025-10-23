@@ -113,7 +113,7 @@ class Bolt(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IHaza
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setSize(ConstVals.PPM.toFloat() * scale)
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation

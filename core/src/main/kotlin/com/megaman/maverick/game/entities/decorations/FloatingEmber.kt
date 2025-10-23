@@ -178,7 +178,7 @@ class FloatingEmber(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
             TAG, GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 5))
                 .also { sprite -> sprite.setSize(0.25f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
             sprite.setAlpha(if (fading) max(0f, 1f - fadeTimer.getRatio()) else 1f)
         }

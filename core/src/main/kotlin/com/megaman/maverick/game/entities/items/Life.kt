@@ -54,7 +54,7 @@ class Life(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity, IAni
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val position = DirectionPositionMapper.getInvertedPosition(direction)
             val bodyPosition = body.getPositionPoint(position)
             sprite.setPosition(bodyPosition, position)

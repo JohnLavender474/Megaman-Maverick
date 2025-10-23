@@ -111,7 +111,7 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 3))
         sprite.setSize(2f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
 

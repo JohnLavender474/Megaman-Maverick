@@ -129,7 +129,7 @@ class PunkCityLampPost(game: MegamanMaverickGame) : MegaGameEntity(game), ISprit
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(2f * ConstVals.PPM, 4.6875f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setBounds(bounds)
             sprite.setFlip(isFacing(Facing.LEFT), false)
         }

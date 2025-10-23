@@ -220,14 +220,14 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity<M
             GameSprite(regions[ConstKeys.PLATFORM], DrawingPriority(DrawingSection.PLAYGROUND, 8))
                 .also { sprite -> sprite.setSize(BODY_WIDTH * ConstVals.PPM, BODY_HEIGHT * ConstVals.PPM) }
         )
-        .updatable { _, sprite -> sprite.setCenter(body.getCenter()) }
+        .preProcess { _, sprite -> sprite.setCenter(body.getCenter()) }
         .also { builder ->
             for (i in 0..RING_COUNT) {
                 val ring = GameSprite(regions[ConstKeys.RING], DrawingPriority(DrawingSection.BACKGROUND, 0))
                 ring.setSize(0.5f * ConstVals.PPM)
 
                 val key = "${ConstKeys.RING}_$i"
-                builder.sprite(key, ring).updatable { _, sprite ->
+                builder.sprite(key, ring).preProcess { _, sprite ->
                     val distance = (i.toFloat() / RING_COUNT.toFloat()) * pendulum.length
                     val center = pendulum.getPointFromAnchor(distance)
                     sprite.setPosition(center, Position.BOTTOM_CENTER)

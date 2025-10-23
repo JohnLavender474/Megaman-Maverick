@@ -305,7 +305,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             sprite.hidden = damageBlink
             sprite.setOriginCenter()
             sprite.rotation = megaman.direction.rotation

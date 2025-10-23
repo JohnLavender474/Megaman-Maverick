@@ -100,7 +100,7 @@ class Flame(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             val position = when (direction) {
                 Direction.UP -> Position.BOTTOM_CENTER
                 Direction.DOWN -> Position.TOP_CENTER

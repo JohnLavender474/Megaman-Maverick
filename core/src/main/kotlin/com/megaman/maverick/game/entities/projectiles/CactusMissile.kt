@@ -223,7 +223,7 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = body.physics.velocity.angleDeg() - 90f
 

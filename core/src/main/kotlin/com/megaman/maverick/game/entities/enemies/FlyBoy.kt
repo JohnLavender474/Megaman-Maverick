@@ -133,7 +133,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _sprite ->
+        spritesComponent.putPreProcess { _, _sprite ->
             _sprite.hidden = damageBlink
             _sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             _sprite.setFlip(facing == Facing.LEFT, false)

@@ -91,7 +91,7 @@ class SnowFluff(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 1))
         sprite.setSize(0.1f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ -> sprite.setCenter(body.getCenter()) }
+        component.putPreProcess { _, _ -> sprite.setCenter(body.getCenter()) }
         return component
     }
 

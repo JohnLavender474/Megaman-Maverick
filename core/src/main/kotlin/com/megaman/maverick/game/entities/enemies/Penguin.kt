@@ -133,7 +133,7 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
         val sprite = GameSprite()
         sprite.setSize(1.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.hidden = damageBlink
             sprite.setFlip(facing == Facing.LEFT, false)
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)

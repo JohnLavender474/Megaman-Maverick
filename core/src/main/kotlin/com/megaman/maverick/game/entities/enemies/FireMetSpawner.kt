@@ -151,7 +151,7 @@ class FireMetSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentE
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.TOP_CENTER), Position.TOP_CENTER)
         }
         return spritesComponent

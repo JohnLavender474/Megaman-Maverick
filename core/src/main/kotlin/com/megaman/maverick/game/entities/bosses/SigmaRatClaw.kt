@@ -329,7 +329,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(2.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.TOP_CENTER), Position.TOP_CENTER)
             sprite.translateY(0.35f * ConstVals.PPM)
             sprite.hidden = damageBlink || !(parent as SigmaRat).ready

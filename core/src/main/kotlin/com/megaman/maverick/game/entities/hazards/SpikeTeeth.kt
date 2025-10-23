@@ -142,7 +142,7 @@ class SpikeTeeth(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
             TAG, GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, 15))
                 .also { sprite -> sprite.setSize(2f * ConstVals.PPM, 0.5f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
             sprite.setFlip(false, body.isSensing(BodySense.FEET_ON_GROUND))
         }

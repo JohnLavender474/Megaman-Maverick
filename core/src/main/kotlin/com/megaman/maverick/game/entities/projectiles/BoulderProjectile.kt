@@ -259,7 +259,7 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { delta, _ ->
+        spritesComponent.putPreProcess { delta, _ ->
             val region = when (size) {
                 Size.LARGE -> largeRegion
                 Size.MEDIUM -> mediumRegion

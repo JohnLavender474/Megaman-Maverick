@@ -103,7 +103,7 @@ class MockingByteNest(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
             TAG, GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, 1))
                 .also { sprite -> sprite.setSize(1.5f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setPosition(position, Position.BOTTOM_CENTER)
             sprite.hidden = hidden
         }

@@ -210,7 +210,7 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
         val sprite = GameSprite()
         sprite.setSize(1.75f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.hidden = damageBlink || (!waitTimer.isFinished() && waitBlink)
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()

@@ -120,7 +120,7 @@ class AngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
         val sprite = GameSprite()
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.hidden = damageBlink

@@ -221,7 +221,7 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(GameSprite(region!!))
-        .updatable { delta, sprite ->
+        .preProcess { delta, sprite ->
             sprite.setBounds(body.getBounds())
 
             val alpha = if (fadingOut) 1f - fadeTimer.getRatio() else 1f

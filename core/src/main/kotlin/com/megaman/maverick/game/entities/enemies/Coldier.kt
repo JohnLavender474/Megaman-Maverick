@@ -245,7 +245,7 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite().also { sprite -> sprite.setSize(3.5f * ConstVals.PPM, 2.625f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             sprite.hidden = damageBlink

@@ -177,7 +177,7 @@ class BouncingPebble(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(GameSprite(region!!).also { sprite -> sprite.setSize(0.5f * ConstVals.PPM) })
-        .updatable { delta, sprite ->
+        .preProcess { delta, sprite ->
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
             spriteRotDelay.update(delta)

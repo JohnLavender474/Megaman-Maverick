@@ -129,7 +129,7 @@ class LavaDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IDamager, IHaz
         val sprite = GameSprite()
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
         }
         return spritesComponent

@@ -610,7 +610,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
         sprite.setSize(12f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             val position = Position.BOTTOM_LEFT
             sprite.setPosition(body.getPositionPoint(position), position)
             sprite.hidden = damageBlink

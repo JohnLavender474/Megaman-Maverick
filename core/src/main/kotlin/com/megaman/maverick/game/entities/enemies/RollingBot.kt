@@ -266,7 +266,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         val sprite = GameSprite()
         sprite.setSize(3f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putUpdateFunction { _, _ ->
+        component.putPreProcess { _, _ ->
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
             sprite.setFlip(isFacing(Facing.RIGHT), false)

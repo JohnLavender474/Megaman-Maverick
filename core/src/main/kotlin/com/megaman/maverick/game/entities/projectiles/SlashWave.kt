@@ -45,8 +45,8 @@ class SlashWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
         private const val CIRCLE_RADIUS = 0.5f
 
-        private const val DEFAULT_DISSIPATE_DELAY = 0.2f
-        private const val DEFAULT_DISSIPATE_DUR = 0.15f
+        private const val DEFAULT_DISSIPATE_DELAY = 0.25f
+        private const val DEFAULT_DISSIPATE_DUR = 0.2f
 
         private var region: TextureRegion? = null
     }
@@ -128,7 +128,7 @@ class SlashWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
                 .also { sprite -> sprite.setSize(2f * ConstVals.PPM, 1.5f * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
 
             sprite.setOriginCenter()

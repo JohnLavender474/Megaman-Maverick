@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
+import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
@@ -81,6 +83,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         private const val LASER_SPRITE_SIZE = 4f / ConstVals.PPM
         private const val LASER_SPRITE_ON_DELAY = 0.025f
         private const val LASER_SPRITE_UPDATERS_STEP = 2
+        private const val LASER_SPRITE_LOOP_DUR = 0.05f
 
         private const val LASER_PRECIOUS_SHARDS_DELAY = 0.25f
         private const val LASER_SHARDS_MIN_IMPULSE_X = -3f
@@ -144,9 +147,11 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     // Instead of using the built-in updater logic in SpritesComponent,
     // use a custom update setup in order to optimize the rendering of
     // many small "laser" sprites.
-    private val spriteUpdaters = Array<Updatable>()
-    private var spriteUpdaterStartIndexLoop = Loop(0, 1)
+    private val allSprites = ObjectMap<Any, GameSprite>()
+    private val spriteUpdaters = ObjectMap<Any, Updatable>()
     private val spriteOnDelay = Timer(LASER_SPRITE_ON_DELAY)
+    private val spriteIndexLoop = Loop(0, 1)
+    private val spriteIndexLoopTimer = Timer(LASER_SPRITE_LOOP_DUR)
     private var spritesHidden = false
 
     override fun init() {
@@ -206,20 +211,10 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
         reflectionIndex = spawnProps.getOrDefault(ConstKeys.INDEX, 0, Int::class)
 
-        if (reflectionIndex < MAX_REFLECTIONS) {
-            reflectingLaser = MegaEntityFactory.fetch(Laser::class)!!
-            reflectingLaser!!.spawn(
-                props(
-                    ConstKeys.PARENT pairTo this,
-                    ConstKeys.ACTIVE pairTo false,
-                    ConstKeys.INDEX pairTo reflectionIndex + 1
-                )
-            )
-        }
-
         laserShardsTimer.reset()
 
-        spriteUpdaterStartIndexLoop.reset()
+        spriteIndexLoop.reset()
+        spriteIndexLoopTimer.reset()
     }
 
     override fun onDestroy() {
@@ -229,8 +224,9 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         owner = null
         parent = null
 
-        sprites.clear()
+        allSprites.clear()
         spriteUpdaters.clear()
+        sprites = OrderedMap<Any, GameSprite>()
 
         contacts.clear()
         lightSourceKeys.clear()
@@ -435,16 +431,22 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
             spriteOnDelay.update(delta)
             if (spriteOnDelay.isFinished()) {
                 spritesHidden = false
+
                 renderLaserSprites(delta)
-                spriteUpdaterStartIndexLoop.next()
+
+                spriteIndexLoopTimer.update(delta)
+                if (spriteIndexLoopTimer.isFinished()) {
+                    spriteIndexLoop.next()
+                    spriteIndexLoopTimer.reset()
+                }
             } else if (!spritesHidden) {
                 spritesHidden = true
-                sprites.values().forEach { it.hidden = true }
+                allSprites.values().forEach { it.hidden = true }
             }
         } else {
             if (!spritesHidden) {
                 spritesHidden = true
-                sprites.values().forEach { it.hidden = true }
+                allSprites.values().forEach { it.hidden = true }
             }
             spriteOnDelay.reset()
             return@update
@@ -468,7 +470,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
         hitShield(shieldFixture, delta)
 
-        if (reflectingLaser == null) return@update
+        if (reflectionIndex >= MAX_REFLECTIONS) return@update
 
         val direction = when {
             shieldFixture.hasProperty("${ConstKeys.REFLECT}_${ConstKeys.DIRECTION}") ->
@@ -527,6 +529,17 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
         GameLogger.debug(TAG, "defineUpdatablesComponent(): reflector=$reflector")
 
+        if (reflectingLaser == null) {
+            reflectingLaser = MegaEntityFactory.fetch(Laser::class)!!
+            reflectingLaser!!.spawn(
+                props(
+                    ConstKeys.PARENT pairTo this,
+                    ConstKeys.ACTIVE pairTo false,
+                    ConstKeys.INDEX pairTo reflectionIndex + 1
+                )
+            )
+        }
+
         reflectingLaser!!.obstaclesToIgnore.clear()
         reflectingLaser!!.obstaclesToIgnore.add(reflector.id)
 
@@ -568,9 +581,9 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
             val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, 10))
             sprite.setSize(LASER_SPRITE_SIZE * ConstVals.PPM)
-            sprites.put(key, sprite)
+            allSprites.put(key, sprite)
 
-            spriteUpdaters.add update@{ _ ->
+            spriteUpdaters.put(key) update@{ _ ->
                 val laser = damagerFixture.getShape() as GameLine
 
                 if (i * LASER_SPRITE_SIZE * ConstVals.PPM > laser.getLength()) {
@@ -602,10 +615,18 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     }
 
     private fun renderLaserSprites(delta: Float) {
-        var index = spriteUpdaterStartIndexLoop.getCurrent()
-        while (index < spriteUpdaters.size) {
-            spriteUpdaters[index].update(delta)
-            index += LASER_SPRITE_UPDATERS_STEP
+        sprites.clear()
+
+        val laser = damagerFixture.getShape() as GameLine
+        val laserLength = laser.getLength()
+
+        var i = spriteIndexLoop.getCurrent()
+
+        while (i < allSprites.size && i * LASER_SPRITE_SIZE * ConstVals.PPM <= laserLength) {
+            val key = "${ConstKeys.PIECE}_$i"
+            sprites.put(key, allSprites[key])
+            spriteUpdaters[key].update(delta)
+            i += LASER_SPRITE_UPDATERS_STEP
         }
     }
 

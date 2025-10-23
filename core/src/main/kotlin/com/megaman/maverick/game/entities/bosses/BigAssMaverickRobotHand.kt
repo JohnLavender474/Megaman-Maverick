@@ -344,7 +344,7 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
             TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
                 .also { sprite -> sprite.setSize(SPRITE_SIZE * ConstVals.PPM) }
         )
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             val position = Position.TOP_CENTER
             val point = when (block) {
                 null -> body.getPositionPoint(position)

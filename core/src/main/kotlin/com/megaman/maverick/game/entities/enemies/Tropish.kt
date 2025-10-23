@@ -166,7 +166,7 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
         val sprite = GameSprite()
         sprite.setSize(3f * ConstVals.PPM, 2.4f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putUpdateFunction { _, _ ->
+        spritesComponent.putPreProcess { _, _ ->
             sprite.setFlip(isFacing(Facing.RIGHT), false)
             val position = if (isFacing(Facing.LEFT)) Position.CENTER_LEFT else Position.CENTER_RIGHT
             sprite.setPosition(body.getPositionPoint(position), position)

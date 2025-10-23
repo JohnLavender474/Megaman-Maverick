@@ -268,13 +268,13 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite("portal", GameSprite().also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
-        .updatable { _, sprite ->
+        .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
             sprite.rotation = if (rotation < 0f) megaman.direction.rotation else rotation
         }
         .sprite("moon", GameSprite(regions["moon"]).also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
-        .updatable { delta, sprite ->
+        .preProcess { delta, sprite ->
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
             moonRotationTimer.update(delta)
