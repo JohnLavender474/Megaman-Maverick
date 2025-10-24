@@ -53,6 +53,7 @@ import com.megaman.maverick.game.entities.enemies.PreciousGemCanon
 import com.megaman.maverick.game.entities.explosions.AsteroidExplosion
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.Axe
+import com.megaman.maverick.game.entities.projectiles.PreciousGem
 import com.megaman.maverick.game.entities.projectiles.PreciousGemBomb
 import com.megaman.maverick.game.entities.projectiles.PreciousShard
 import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardColor
@@ -130,6 +131,8 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     }
 
     private val obstaclesToIgnore = ObjectSet<Int>()
+
+    private var lightSourceKeyString = ""
     private val lightSourceKeys = ObjectSet<Int>()
 
     // This is the "actual" end point after accounting for any blocks or other entities
@@ -195,8 +198,9 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
             }
         }
 
+        lightSourceKeyString = spawnProps.getOrDefault("${ConstKeys.LIGHT}_${ConstKeys.KEYS}", "", String::class)
         lightSourceKeys.addAll(
-            spawnProps.getOrDefault("${ConstKeys.LIGHT}_${ConstKeys.KEYS}", "", String::class)
+            lightSourceKeyString
                 .replace("\\s+", "")
                 .split(",")
                 .filter { it.isNotBlank() }
@@ -535,7 +539,8 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
                 props(
                     ConstKeys.PARENT pairTo this,
                     ConstKeys.ACTIVE pairTo false,
-                    ConstKeys.INDEX pairTo reflectionIndex + 1
+                    ConstKeys.INDEX pairTo reflectionIndex + 1,
+                    "${ConstKeys.LIGHT}_${ConstKeys.KEYS}" pairTo lightSourceKeyString
                 )
             )
         }
@@ -635,6 +640,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
         if (entity.isAny(
                 Axe::class,
+                PreciousGem::class,
                 PreciousShard::class,
                 PreciousGemBomb::class,
                 PreciousGemCanon::class,

@@ -44,6 +44,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.bosses.ReactorMan
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.ILaserEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -180,7 +181,8 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         actualLine.reset()
     }
 
-    override fun isLaserIgnoring(entity: IGameEntity) = ignoreIds.contains((entity as MegaGameEntity).id)
+    override fun isLaserIgnoring(entity: IGameEntity) =
+        entity is ReactorMan || ignoreIds.contains((entity as MegaGameEntity).id)
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         when {
@@ -202,7 +204,6 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
                         actualLine.setSecondLocalPoint(nextEndPoint)
                     }
-
                     else -> {
                         actualLine.set(maxLine)
 

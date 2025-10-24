@@ -151,6 +151,8 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.IGNORE)) laserProps.put(key, value)
         }
+        if (spawnProps.containsKey("${ConstKeys.LIGHT}_${ConstKeys.KEYS}"))
+            laserProps.put("${ConstKeys.LIGHT}_${ConstKeys.KEYS}", spawnProps.get("${ConstKeys.LIGHT}_${ConstKeys.KEYS}"))
         laser!!.spawn(laserProps)
     }
 
