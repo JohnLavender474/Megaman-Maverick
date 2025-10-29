@@ -6,6 +6,8 @@ import com.mega.game.engine.common.time.Timer
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import java.util.*
+import kotlin.math.ceil
+import kotlin.math.floor
 import kotlin.math.roundToInt
 
 object MegaUtilMethods {
@@ -69,4 +71,10 @@ object MegaUtilMethods {
 
     fun interpolate(start: Vector2, target: Vector2, delta: Float) =
         UtilMethods.interpolate(start, target, delta, GameObjectPools.fetch(Vector2::class))
+
+    fun snapToNearest90(rotation: Float) = ((rotation / 90f).roundToInt() * 90f) % 360f
+
+    fun snapToFloor90(rotation: Float) = (floor(rotation / 90f).toInt() * 90f) % 360f
+
+    fun snapToCeil90(rotation: Float) = (ceil(rotation / 90f).toInt() * 90f) % 360f
 }

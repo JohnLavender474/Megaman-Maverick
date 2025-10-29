@@ -209,11 +209,20 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
 
+        var rotation = megaman.direction.rotation
+        val flipRotation = when (megaman.direction) {
+            Direction.UP -> body.physics.velocity.x < 0f
+            Direction.DOWN -> body.physics.velocity.x > 0f
+            Direction.LEFT -> body.physics.velocity.y < 0f
+            Direction.RIGHT -> body.physics.velocity.y > 0f
+        }
+        if (flipRotation) rotation = (rotation + 180f) % 360f
+
         val props = props(
             ConstKeys.OWNER pairTo owner,
+            ConstKeys.ROTATION pairTo rotation,
             ConstKeys.BOOLEAN pairTo fullyCharged,
             ConstKeys.POSITION pairTo body.getCenter(),
-            ConstKeys.ROTATION pairTo body.physics.velocity.angleDeg()
         )
 
         val explosion = MegaEntityFactory.fetch(ChargedShotExplosion::class)!!
@@ -246,12 +255,20 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(
             TAG,
-            GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10)).also { sprite -> sprite.setSize(SPRITE_SIZE) }
+            GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
+                .also { sprite -> sprite.setSize(SPRITE_SIZE) }
         )
         .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
+            val flipX = when (megaman.direction) {
+                Direction.UP -> body.physics.velocity.x < 0f
+                Direction.DOWN -> body.physics.velocity.x > 0f
+                Direction.LEFT -> body.physics.velocity.y < 0f
+                Direction.RIGHT -> body.physics.velocity.y > 0f
+            }
+            sprite.setFlip(flipX, false)
             sprite.setOriginCenter()
-            sprite.rotation = body.physics.velocity.angleDeg()
+            sprite.rotation = megaman.direction.rotation
         }
         .build()
 

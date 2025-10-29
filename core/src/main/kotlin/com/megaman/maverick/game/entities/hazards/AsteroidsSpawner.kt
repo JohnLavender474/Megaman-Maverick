@@ -55,7 +55,7 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
 
         private const val MAX_CHILDREN = 3
 
-        private const val DEFAULT_MIN_Y = -100000f * ConstVals.PPM
+        private const val DEFAULT_MIN_Y = -10f * ConstVals.PPM
     }
 
     override var children = Array<Asteroid>()
@@ -121,6 +121,7 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
 
     private fun resetSpawnTimer() {
         GameLogger.debug(TAG, "resetSpawnTimer()")
+
         val newDuration = getRandom(MIN_SPAWN_DELAY, MAX_SPAWN_DELAY)
         spawnTimer.resetDuration(newDuration)
     }

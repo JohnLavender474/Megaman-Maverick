@@ -57,10 +57,9 @@ object MegaGameEntities {
         return out
     }
 
-    fun existsAnyOfMapObjectId(mapObjectId: Int) = !getOfMapObjectId(mapObjectId).isEmpty
+    fun existsAnyOfId(id: Int) = !getOfId(id).isEmpty
 
-    fun getOfMapObjectId(mapObjectId: Int): OrderedSet<MegaGameEntity> =
-        idToEntities.get(mapObjectId, OrderedSet())
+    fun getOfId(id: Int): OrderedSet<MegaGameEntity> = idToEntities.get(id, OrderedSet())
 
     fun forEach(action: (MegaGameEntity) -> Unit) = entities.forEach { action.invoke(it) }
 }

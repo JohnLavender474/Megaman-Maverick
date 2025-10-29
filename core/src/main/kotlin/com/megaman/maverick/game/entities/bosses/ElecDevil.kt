@@ -36,14 +36,14 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.Explosion
+import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.ElecBall
-import com.megaman.maverick.game.entities.projectiles.MoonScythe
-import com.megaman.maverick.game.entities.projectiles.SlashWave
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.max
 import kotlin.math.min
@@ -63,14 +63,14 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
         internal const val EYE_SHOT_DELAY_HARD = 0.3f
 
         internal const val MAX_LAUNCH_DELAY_NORMAL = 0.6f
-        internal const val MIN_LAUNCH_DELAY_NORMAL = 0.5f
+        internal const val MIN_LAUNCH_DELAY_NORMAL = 0.45f
         internal const val MAX_LAUNCH_DELAY_HARD = 0.5f
-        internal const val MIN_LAUNCH_DELAY_HARD = 0.4f
+        internal const val MIN_LAUNCH_DELAY_HARD = 0.375f
 
-        internal const val MAX_RANDOM_LAUNCH_DELAY_NORMAL = 0.75f
-        internal const val MIN_RANDOM_LAUNCH_DELAY_NORMAL = 0.6f
-        internal const val MAX_RANDOM_LAUNCH_DELAY_HARD = 0.5f
-        internal const val MIN_RANDOM_LAUNCH_DELAY_HARD = 0.5f
+        internal const val MAX_RANDOM_LAUNCH_DELAY_NORMAL = 0.7f
+        internal const val MIN_RANDOM_LAUNCH_DELAY_NORMAL = 0.55f
+        internal const val MAX_RANDOM_LAUNCH_DELAY_HARD = 0.6f
+        internal const val MIN_RANDOM_LAUNCH_DELAY_HARD = 0.475f
 
         internal const val MIN_HEALTH_FOR_LAUNCH_OFFSET = 5f
 
@@ -96,7 +96,7 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
     private var fromLeft = true
 
     // LAUNCH, APPEAR, STAND, CHARGE, HAND, TURN_TO_PIECES
-    private val loop = Loop<ElecDevilState>(
+    private val loop = Loop(
         ElecDevilState.LAUNCH,
         ElecDevilState.APPEAR,
         ElecDevilState.STAND,
@@ -127,8 +127,7 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
     override fun init() {
         GameLogger.debug(TAG, "init()")
         super.init()
-        damageOverrides.put(MoonScythe::class, dmgNeg(3))
-        damageOverrides.put(SlashWave::class, dmgNeg(3))
+        damageOverrides.put(Axe::class, dmgNeg(2))
     }
 
     // On spawn, both bodies should be inactive, all body pieces should be inactive, and body pieces should be queued
@@ -663,12 +662,17 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
     private fun shootFromEye() {
         GameLogger.debug(TAG, "shootFromEye()")
 
+        val target = megaman.body.getCenter()
+        val targetXDelta = UtilMethods.getRandom(-0.5f, 0.5f) * ConstVals.PPM
+        val targetYDelta = UtilMethods.getRandom(-0.5f, 0.5f) * ConstVals.PPM
+        target.add(targetXDelta, targetYDelta)
+
         val elecBall = MegaEntityFactory.fetch(ElecBall::class)!!
         elecBall.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
+                ConstKeys.TARGET pairTo target,
                 ConstKeys.POSITION pairTo eye.getCenter(),
-                ConstKeys.TARGET pairTo megaman.body.getCenter(),
                 "${ConstKeys.LIGHT}_${ConstKeys.SOURCE}_${ConstKeys.KEYS}" pairTo lightSourceKeys
             )
         )

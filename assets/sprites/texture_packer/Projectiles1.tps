@@ -404,7 +404,22 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Projectiles1/ElecBall.png</key>
+            <key type="filename">../frames/Projectiles1/ElecBall/hit.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>48,48,96,96</rect>
+                <key>scale9Paddings</key>
+                <rect>48,48,96,96</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Projectiles1/ElecBall/orb.png</key>
             <key type="filename">../frames/Projectiles1/GreenPelletBlast/burst.png</key>
             <key type="filename">../frames/Projectiles1/HoneyDrip/splash.png</key>
             <struct type="IndividualSpriteSettings">

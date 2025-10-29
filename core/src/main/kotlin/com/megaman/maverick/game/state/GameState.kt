@@ -261,16 +261,16 @@ class GameState : Resettable {
     override fun toString(): String {
         val builder = StringBuilder()
 
-        val levelDefs = levelsDefeated.joinToString(",") { it.name }
+        val levelDefs = levelsDefeated.sorted().joinToString(",") { it.name }
         builder.append("$levelDefs;")
 
-        val heartTanks = heartTanksCollected.joinToString(",") { it.name }
+        val heartTanks = heartTanksCollected.sorted().joinToString(",") { it.name }
         builder.append("$heartTanks;")
 
-        val healthTanks = healthTanksCollected.keys().joinToString(",") { it.name }
+        val healthTanks = healthTanksCollected.keys().sorted().joinToString(",") { it.name }
         builder.append("$healthTanks;")
 
-        val enhancements = enhancementsAttained.joinToString(",") { it.name }
+        val enhancements = enhancementsAttained.sorted().joinToString(",") { it.name }
         builder.append("$enhancements;")
 
         builder.append("${currency.current};")

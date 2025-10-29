@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.UtilMethods.getRandom
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.isAny
 import com.mega.game.engine.common.extensions.objectSetOf
@@ -34,6 +33,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.bosses.MoonHead
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IOwnable
@@ -52,14 +52,9 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
         const val REGULAR = "Regular"
         const val BLUE = "Blue"
 
-        const val MIN_ROTATION_SPEED = 0.5f
-        const val MAX_ROTATION_SPEED = 1.5f
-
         private const val BLINK_DUR = 0.01f
-
         private const val CULL_TIME = 3f
-
-        private const val DEFAULT_MIN_Y = -100000f * ConstVals.PPM
+        private const val DEFAULT_MIN_Y = -10f * ConstVals.PPM
 
         private val HIT_PROJS = objectSetOf<KClass<out IProjectileEntity>>(
             Bullet::class,
@@ -73,6 +68,18 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
             BunbyRedRocket::class
         )
 
+        private const val MAX_ASTEROIDS = 8
+
+        private fun cullExcessAsteroids(game: MegamanMaverickGame) {
+            val set = MegaGameEntities.getOfTag(TAG)
+            val iter = set.iterator()
+            while (iter.hasNext) {
+                val asteroid = iter.next() as Asteroid
+                if (!game.getGameCamera().getRotatedBounds().overlaps(asteroid.body.getBounds()))
+                    asteroid.destroy()
+            }
+        }
+
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -82,9 +89,6 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
     var hard = false
 
     private lateinit var type: String
-
-    private var rotation = 0f
-    private var rotationSpeed = 0f
 
     private var delayTimer: Timer? = null
 
@@ -119,10 +123,6 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
         val impulse = spawnProps.getOrDefault(ConstKeys.IMPULSE, Vector2.Zero, Vector2::class)
         this.impulse.set(impulse)
 
-        rotationSpeed = spawnProps.getOrDefault(
-            "${ConstKeys.ROTATION}_${ConstKeys.SPEED}",
-            getRandom(MIN_ROTATION_SPEED, MAX_ROTATION_SPEED), Float::class
-        )
         type = spawnProps.getOrDefault(ConstKeys.TYPE, REGULAR, String::class)
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
 
@@ -139,6 +139,8 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
         hard = spawnProps.getOrDefault(ConstKeys.HARD, false, Boolean::class)
 
         minY = spawnProps.getOrDefault("${ConstKeys.MIN}_${ConstKeys.Y}", DEFAULT_MIN_Y, Float::class)
+
+        if (MegaGameEntities.getOfTag(TAG).size > MAX_ASTEROIDS) cullExcessAsteroids(game)
     }
 
     override fun onDestroy() {
@@ -254,16 +256,10 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(2f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
-        component.putPreProcess { delta, _ ->
+        component.putPreProcess { _, _ ->
             val region = regions.get(type)
             sprite.setRegion(region)
-
             sprite.setCenter(body.getCenter())
-
-            rotation += rotationSpeed * ConstVals.PPM * delta
-            sprite.setOriginCenter()
-            sprite.rotation = rotation
-
             sprite.hidden = blink
         }
         return component

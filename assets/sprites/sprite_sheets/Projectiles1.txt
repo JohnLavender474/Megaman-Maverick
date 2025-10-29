@@ -1,5 +1,5 @@
 Projectiles1.png
-size: 512, 804
+size: 512, 948
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
@@ -33,7 +33,7 @@ BigAssMaverickRobotOrb/ball
   index: -1
 BigAssMaverickRobotOrb/hit
   rotate: false
-  xy: 240, 612
+  xy: 0, 756
   size: 192, 192
   orig: 192, 192
   offset: 0, 0
@@ -136,11 +136,18 @@ DuoBall
   orig: 8, 16
   offset: 0, 0
   index: -1
-ElecBall
+ElecBall/hit
   rotate: false
-  xy: 160, 388
-  size: 32, 96
-  orig: 32, 96
+  xy: 0, 612
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ElecBall/orb
+  rotate: false
+  xy: 192, 756
+  size: 64, 192
+  orig: 64, 192
   offset: 0, 0
   index: -1
 ElecDevilBodyPiece
@@ -201,14 +208,14 @@ FirePellet
   index: -1
 FireWall/disintegrate
   rotate: false
-  xy: 192, 388
+  xy: 160, 388
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 FireWall/fire
   rotate: false
-  xy: 192, 612
+  xy: 320, 612
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -229,7 +236,7 @@ GreenPelletBlast/blast
   index: -1
 GreenPelletBlast/burst
   rotate: false
-  xy: 288, 388
+  xy: 256, 388
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
@@ -250,7 +257,7 @@ HoneyDrip/drip
   index: -1
 HoneyDrip/splash
   rotate: false
-  xy: 320, 388
+  xy: 288, 388
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
@@ -313,7 +320,7 @@ LampeonBullet/4
   index: -1
 MeanTorpedo
   rotate: false
-  xy: 352, 388
+  xy: 320, 388
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -558,21 +565,21 @@ ReactorMonkeyBall/0
   index: -1
 ReactorMonkeyBall/1
   rotate: false
-  xy: 0, 612
+  xy: 128, 612
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 ReactorMonkeyBall/2
   rotate: false
-  xy: 64, 612
+  xy: 192, 612
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 ReactorMonkeyBall/3
   rotate: false
-  xy: 128, 612
+  xy: 256, 612
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
@@ -614,7 +621,7 @@ SealionBall
   index: -1
 SlashWave
   rotate: false
-  xy: 448, 388
+  xy: 416, 388
   size: 64, 96
   orig: 64, 96
   offset: 0, 0

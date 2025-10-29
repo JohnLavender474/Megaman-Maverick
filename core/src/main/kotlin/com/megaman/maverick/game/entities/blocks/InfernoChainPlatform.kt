@@ -26,6 +26,8 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.behaviors.BehaviorType
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
@@ -62,6 +64,7 @@ class InfernoChainPlatform(game: MegamanMaverickGame) : FeetRiseSinkBlock(game),
     private val spawnPropsCopy = Properties()
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             gdxArrayOf(PLATFORM, CHAIN).forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
@@ -107,7 +110,15 @@ class InfernoChainPlatform(game: MegamanMaverickGame) : FeetRiseSinkBlock(game),
         sprites.clear()
     }
 
-    override fun shouldMoveDown() = super.shouldMoveDown() && !body.isSensing(BodySense.FEET_ON_GROUND)
+    override fun shouldMoveDown() =
+        (super.shouldMoveDown() || isMegamanWallSlidingOnMe()) &&
+        !body.isSensing(BodySense.FEET_ON_GROUND)
+
+    private fun isMegamanWallSlidingOnMe(): Boolean {
+        if (!megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) return false
+        val sides = megaman.body.fixtures.get(FixtureType.SIDE)
+        return sides.any { it.getShape().overlaps(body.getBounds()) }
+    }
 
     override fun defineBodyComponent(): BodyComponent {
         val component = super.defineBodyComponent()

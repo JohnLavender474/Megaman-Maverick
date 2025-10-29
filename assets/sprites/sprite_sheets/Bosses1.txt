@@ -1,7 +1,7 @@
 Bosses1-0.png
-size: 1744, 1436
+size: 1780, 1436
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Nearest, Nearest
 repeat: none
 Bospider/burn
   rotate: false
@@ -178,6 +178,13 @@ GlacierMan/stop
   orig: 192, 144
   offset: 0, 0
   index: -1
+GutsTank/defeated
+  rotate: false
+  xy: 1456, 214
+  size: 192, 192
+  orig: 192, 192
+  offset: 0, 0
+  index: -1
 GutsTank/fist
   rotate: false
   xy: 598, 2
@@ -194,49 +201,49 @@ GutsTank/fist_launched
   index: -1
 GutsTank/laughing
   rotate: false
-  xy: 616, 408
+  xy: 810, 408
   size: 192, 384
   orig: 192, 384
   offset: 0, 0
   index: -1
 GutsTank/laughing_moving
   rotate: false
-  xy: 810, 408
+  xy: 1004, 408
   size: 192, 384
   orig: 192, 384
   offset: 0, 0
   index: -1
 GutsTank/mouth_closed
   rotate: false
-  xy: 1456, 214
+  xy: 2, 408
   size: 192, 192
   orig: 192, 192
   offset: 0, 0
   index: -1
 GutsTank/mouth_open
   rotate: false
-  xy: 2, 408
+  xy: 196, 408
   size: 192, 192
   orig: 192, 192
   offset: 0, 0
   index: -1
 GutsTank/moving_laughing
   rotate: false
-  xy: 1004, 408
+  xy: 1198, 408
   size: 192, 384
   orig: 192, 384
   offset: 0, 0
   index: -1
 GutsTank/moving_mouth_closed
   rotate: false
-  xy: 1198, 408
+  xy: 1392, 408
   size: 192, 384
   orig: 192, 384
   offset: 0, 0
   index: -1
 GutsTank/moving_mouth_open
   rotate: false
-  xy: 1392, 408
+  xy: 1586, 408
   size: 192, 384
   orig: 192, 384
   offset: 0, 0
@@ -250,7 +257,7 @@ MechaDragon/charging
   index: -1
 MechaDragon/defeated
   rotate: false
-  xy: 196, 408
+  xy: 390, 408
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
@@ -425,7 +432,7 @@ ReactorMan/throw
   index: -1
 ReactorMonkey/stand
   rotate: false
-  xy: 454, 408
+  xy: 648, 408
   size: 160, 320
   orig: 160, 320
   offset: 0, 0

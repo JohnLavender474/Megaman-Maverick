@@ -94,12 +94,12 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         private const val TANK_BLOCK_HEIGHT = 3f
 
         private const val MIN_X_VEL = 2f
-        private const val MAX_X_VEL = 4f
+        private const val MAX_X_VEL = 5f
         private const val MOVEMENT_PAUSE_DUR = 1f
 
         private const val INIT_DUR = 0.5f
 
-        private const val ATTACK_DELAY_MIN = 0.75f
+        private const val ATTACK_DELAY_MIN = 0.5f
         private const val ATTACK_DELAY_MAX = 1.25f
 
         private const val BULLETS_TO_CHUNK = 4
@@ -110,7 +110,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         private const val BLASTS_TO_SHOOT = 5
         private const val BLAST_SHOOT_MAX_DELAY = 0.75f
         private const val BLAST_SHOOT_MIN_DELAY = 0.5f
-        private const val BLAST_VELOCITY = 8f
+        private const val BLAST_VELOCITY = 9f
         private val BLAST_ANGLES = gdxArrayOf(180f, 190f, 200f, 210f, 220f)
 
         private const val RUNNING_METS_TO_LAUNCH = 3
@@ -119,7 +119,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         private const val HELI_METS_TO_LAUNCH = 2
         private const val HELI_MET_DELAY = 1f
 
-        private const val LAUNCH_FIST_DELAY = 10f
+        private const val LAUNCH_FIST_DELAY = 8f
         private const val LAUGH_DUR = 1f
 
         private val FIXTURE_LABELS = objectSetOf(FixtureLabel.NO_PROJECTILE_COLLISION)
@@ -132,7 +132,8 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
             "mouth_closed" pairTo AnimationDef(),
             "mouth_open" pairTo AnimationDef(),
             "moving_mouth_closed" pairTo AnimationDef(2, 1, 0.1f, true),
-            "moving_mouth_open" pairTo AnimationDef(2, 1, 0.1f, true)
+            "moving_mouth_open" pairTo AnimationDef(2, 1, 0.1f, true),
+            "defeated" pairTo AnimationDef()
         )
     }
 
@@ -178,11 +179,9 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
     private val killerWall = GameRectangle()
 
     private lateinit var moveState: GutsTankMoveState
-
     private lateinit var blastAngles: OrderedSet<Float>
 
     private var attackState: GutsTankAttackState? = null
-
     private var fist: GutsTankFist? = null
 
     private var reachedFrontFirstTime = false
@@ -644,7 +643,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: (String?) -> String? = {
             when {
-                defeated -> "laughing"
+                defeated -> "defeated"
                 laughing -> when (moveState) {
                     GutsTankMoveState.MOVE -> "moving_laughing"
                     else -> "laughing"

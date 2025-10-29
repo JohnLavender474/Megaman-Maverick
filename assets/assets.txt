@@ -1668,6 +1668,7 @@ sprites/frames/Bosses1/GutsTank/laughing.png
 sprites/frames/Bosses1/GutsTank/fist_launched.png
 sprites/frames/Bosses1/GutsTank/moving_mouth_open.png
 sprites/frames/Bosses1/GutsTank/mouth_closed.png
+sprites/frames/Bosses1/GutsTank/defeated.png
 sprites/frames/Bosses1/MoonHead/dark.png
 sprites/frames/Bosses1/MoonHead/damaged.png
 sprites/frames/Bosses1/MoonHead/angry.png
@@ -1731,6 +1732,8 @@ sprites/frames/Backgrounds2/BKG04.png
 sprites/frames/Backgrounds2/BKG10.png
 sprites/frames/Projectiles1/Asteroid/Regular.png
 sprites/frames/Projectiles1/Asteroid/Blue.png
+sprites/frames/Projectiles1/ElecBall/orb.png
+sprites/frames/Projectiles1/ElecBall/hit.png
 sprites/frames/Projectiles1/KibboHammer.png
 sprites/frames/Projectiles1/Snowball.png
 sprites/frames/Projectiles1/SmallIceCube/1.png
@@ -1745,7 +1748,6 @@ sprites/frames/Projectiles1/Cokonut.png
 sprites/frames/Projectiles1/Petal.png
 sprites/frames/Projectiles1/RollingBotShot.png
 sprites/frames/Projectiles1/TubeBeam.png
-sprites/frames/Projectiles1/ElecBall.png
 sprites/frames/Projectiles1/PreciousGemBomb/green.png
 sprites/frames/Projectiles1/PreciousGemBomb/pink.png
 sprites/frames/Projectiles1/PreciousGemBomb/blue.png

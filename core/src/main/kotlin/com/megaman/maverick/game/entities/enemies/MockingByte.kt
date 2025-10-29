@@ -563,7 +563,7 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         }
     }
 
-    private fun getNest() = MegaGameEntities.getOfMapObjectId(nestId).firstOrNull() as MockingByteNest?
+    private fun getNest() = MegaGameEntities.getOfId(nestId).firstOrNull() as MockingByteNest?
 
     private fun hasNest() = getNest() != null
 

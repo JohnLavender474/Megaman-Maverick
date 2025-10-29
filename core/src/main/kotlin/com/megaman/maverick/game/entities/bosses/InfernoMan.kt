@@ -708,7 +708,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         }
         val spawn = GameObjectPools.fetch(Vector2::class).set(x, meteorSpawnBounds.getY())
 
-        val floor = MegaGameEntities.getOfMapObjectId(meteorCollideBlockId).first() as Block
+        val floor = MegaGameEntities.getOfId(meteorCollideBlockId).first() as Block
 
         val meteor = MegaEntityFactory.fetch(MagmaMeteor::class)!!
         meteor.spawn(

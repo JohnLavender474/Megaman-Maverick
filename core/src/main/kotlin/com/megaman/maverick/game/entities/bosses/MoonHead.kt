@@ -197,7 +197,6 @@ class MoonHead(game: MegamanMaverickGame) : AbstractBoss(game, dmgDuration = DAM
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.IMPULSE pairTo impulse,
                 ConstKeys.TYPE pairTo Asteroid.BLUE,
-                "${ConstKeys.ROTATION}_${ConstKeys.SPEED}" pairTo Asteroid.MAX_ROTATION_SPEED
             )
         )
     }

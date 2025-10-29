@@ -73,7 +73,8 @@ open class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEnti
     private lateinit var type: String
     private lateinit var color: BlockPieceColor
 
-    private val connectedBlocks = OrderedSet<Int>()
+    private val connectedBlockIds = OrderedSet<Int>()
+    private val connectedBlocks = OrderedSet<BreakableBlock>()
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -96,7 +97,7 @@ open class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEnti
         )
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.CONNECTED))
-                connectedBlocks.add((value as RectangleMapObject).properties.get(ConstKeys.ID, Int::class.java))
+                connectedBlockIds.add((value as RectangleMapObject).properties.get(ConstKeys.ID, Int::class.java))
         }
     }
 
@@ -104,11 +105,19 @@ open class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEnti
         GameLogger.debug(TAG, "explodeAndDie()")
         destroy()
         breakApart(body.getCenter(), color)
-        game.audioMan.playSound(SoundAsset.THUMP_SOUND, false)
-        connectedBlocks.forEach {
-            val block = MegaGameEntities.getOfMapObjectId(it).first() as BreakableBlock
-            if (!block.dead) block.explodeAndDie()
+        connectedBlockIds.forEach { id ->
+            val set = MegaGameEntities.getOfId(id)
+            if (set.isEmpty) return@forEach
+            set.forEach { block ->
+                block as BreakableBlock
+                if (block.dead) return@forEach
+                connectedBlocks.add(block)
+            }
         }
+        connectedBlockIds.clear()
+        connectedBlocks.forEach { block -> block.explodeAndDie() }
+        connectedBlocks.clear()
+        game.audioMan.playSound(SoundAsset.THUMP_SOUND, false)
     }
 
     override fun hitByProjectile(projectileFixture: IFixture) {
@@ -118,7 +127,6 @@ open class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEnti
 
     override fun hitByHead(processState: ProcessState, headFixture: IFixture) {
         if (processState != ProcessState.BEGIN) return
-
         val entity = headFixture.getEntity()
         when (type) {
             BRICK_TYPE -> if (entity is Wanaan) explodeAndDie()
