@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
@@ -115,7 +116,8 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
     lateinit var color: PreciousGemColor
 
     var blockShatter = false
-    var shieldShatter = false
+
+    lateinit var shieldShatterClasses: ObjectSet<KClass<out IGameEntity>>
 
     private val sizeDelay = Timer(SIZE_DELAY_DUR)
     private var sizeIndex = 0
@@ -178,9 +180,9 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         blockShatter = spawnProps.getOrDefault(
             "${ConstKeys.BLOCK}_${ConstKeys.SHATTER}", false, Boolean::class
         )
-        shieldShatter = spawnProps.getOrDefault(
-            "${ConstKeys.SHIELD}_${ConstKeys.SHATTER}", false, Boolean::class
-        )
+        shieldShatterClasses = spawnProps.getOrDefault(
+            "${ConstKeys.SHIELD}_${ConstKeys.SHATTER}", ObjectSet<KClass<out IGameEntity>>(), ObjectSet::class
+        ) as ObjectSet<KClass<out IGameEntity>>
     }
 
     override fun onDestroy() {
@@ -240,17 +242,21 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
                 TAG,
                 "hitBlock(): blockFixture=$blockFixture, thisShape=$thisShape, otherShape=$otherShape"
             )
+
             val direction = getOverlapPushDirection(thisShape, otherShape) ?: Direction.UP
             explodeAndDie(direction)
         }
     }
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        if (shieldShatter) {
+        val shieldEntity = shieldFixture.getEntity()
+
+        if (shieldShatterClasses.contains(shieldEntity::class)) {
             GameLogger.debug(
                 TAG,
                 "hitShield(): shieldFixture=$shieldFixture, thisShape=$thisShape, otherShape=$otherShape"
             )
+
             val direction = getOverlapPushDirection(thisShape, otherShape) ?: Direction.UP
             explodeAndDie(direction)
         }

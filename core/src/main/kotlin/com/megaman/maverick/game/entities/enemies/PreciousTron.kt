@@ -11,6 +11,7 @@ import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
@@ -40,8 +41,11 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.blocks.PreciousBlock
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.PreciousGem
 import com.megaman.maverick.game.entities.projectiles.PreciousGem.PreciousGemColor
 import com.megaman.maverick.game.utils.AnimationUtils
@@ -53,21 +57,22 @@ import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 import java.util.*
 
-class PreciousTron(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+// This isn't a "big" enemy, but his size is set to "LARGE" so that he is more powerful against weapons
+class PreciousTron(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.LARGE), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "PreciousTron"
 
         private const val APPEAR_DUR = 0.4f
         private const val DISAPPEAR_DUR = 0.4f
-        private const val SHOOT_DUR = 1.75f
-        private const val SHOOT_DUR_HARD = 1.25f
-        private const val STAND_DUR = 0.75f
-        private const val STAND_DUR_HARD = 0.5f
+        private const val SHOOT_DUR = 1.25f
+        private const val SHOOT_DUR_HARD = 0.75f
+        private const val STAND_DUR = 0.5f
+        private const val STAND_DUR_HARD = 0.35f
 
         private const val SHOOT_TIME = 0.25f
 
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -0.25f
         private const val GROUND_GRAV = -0.01f
 
         private const val MAX_RAND_POS_CANDIDATES = 3
@@ -309,7 +314,11 @@ class PreciousTron(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
                 ConstKeys.CULL_TIME pairTo GEM_CULL_TIME,
                 "${ConstKeys.FIRST}_${ConstKeys.TARGET}" pairTo target,
                 "${ConstKeys.BLOCK}_${ConstKeys.SHATTER}" pairTo true,
-                "${ConstKeys.SHIELD}_${ConstKeys.SHATTER}" pairTo true
+                "${ConstKeys.SHIELD}_${ConstKeys.SHATTER}" pairTo objectSetOf(
+                    Axe::class,
+                    Megaman::class,
+                    PreciousBlock::class
+                )
             )
         )
 

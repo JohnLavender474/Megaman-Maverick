@@ -45,6 +45,7 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.blocks.PreciousBlock
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -500,6 +501,11 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     ConstKeys.POSITION pairTo spawn,
                     ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
                     "${ConstKeys.FIRST}_${ConstKeys.TARGET}" pairTo target,
+                    "${ConstKeys.SHIELD}_${ConstKeys.SHATTER}" pairTo objectSetOf(
+                        Axe::class,
+                        Megaman::class,
+                        PreciousBlock::class
+                    )
                 )
             )
             gem.putProperty(ConstKeys.SPIN, false)
@@ -554,6 +560,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     ConstKeys.SPEED pairTo speed,
                     ConstKeys.POSITION pairTo spawn,
                     "${ConstKeys.FIRST}_${ConstKeys.TARGET}" pairTo target,
+                    "${ConstKeys.SHIELD}_${ConstKeys.SHATTER}" pairTo objectSetOf(Axe::class, Megaman::class)
                 )
             )
             gem.putProperty(ConstKeys.SPIN, false)
@@ -896,7 +903,11 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     private fun throwShieldGems() {
         shieldGems.forEach { entry ->
             val gem = entry.key
-            gem.shieldShatter = true
+            gem.shieldShatterClasses = objectSetOf(
+                Axe::class,
+                Megaman::class,
+                PreciousBlock::class
+            )
 
             val def = entry.value
             def.released = true
