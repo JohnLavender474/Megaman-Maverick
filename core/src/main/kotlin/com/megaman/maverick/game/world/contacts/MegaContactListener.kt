@@ -472,6 +472,11 @@ class MegaContactListener(
                 ) entity.aButtonTask = AButtonTask.SWIM
 
                 entity.gravityScalar = MegamanValues.WATER_GRAVITY_SCALAR
+
+                if (!wasInWater) {
+                    if (entity.direction.isVertical()) body.physics.velocity.y = 0f
+                    else body.physics.velocity.x = 0f
+                }
             }
         }
 

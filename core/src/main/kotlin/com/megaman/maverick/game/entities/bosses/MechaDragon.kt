@@ -88,7 +88,7 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IFreezableEnt
 
         private const val INIT_DUR = 0.5f
 
-        private const val HOVER_IN_PLACE_DUR = 5f
+        private const val HOVER_IN_PLACE_DUR = 2f
         private const val HOVER_SWAY_DUR = 2f
         private const val HOVER_SWAY_X = 1f
 
@@ -102,9 +102,9 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IFreezableEnt
         private const val CHARGE_END_DELAY = 0.1f
         private const val CHARGE_CHANCE_DELTA = 35
 
-        private const val FIRE_DUR = 2.5f
+        private const val FIRE_DUR = 2f
         private const val FIRE_DUR_HARD = 1.5f
-        private const val FIRE_TIME = 1.6f
+        private const val FIRE_TIME = 1f
         private const val FIRE_TIME_HARD = 0.75f
         private const val FIRE_MIN_DELAY = 0.5f
         private const val FIRE_MIN_DELAY_HARD = 0.25f

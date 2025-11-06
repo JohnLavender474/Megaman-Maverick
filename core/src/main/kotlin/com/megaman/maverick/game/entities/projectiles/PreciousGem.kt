@@ -391,8 +391,10 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         .preProcess { _, sprite ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
-            sprite.setCenter(body.getCenter())
+
             sprite.hidden = damageBlink || (owner == megaman && megaman.teleporting)
+
+            sprite.setCenter(body.getCenter())
         }
         .build()
 

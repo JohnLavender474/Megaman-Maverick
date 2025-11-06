@@ -7,10 +7,7 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -35,6 +32,9 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.components.leftSideFixture
 import com.megaman.maverick.game.entities.megaman.components.rightSideFixture
+import com.megaman.maverick.game.entities.projectiles.Axe
+import com.megaman.maverick.game.entities.projectiles.PreciousGem
+import com.megaman.maverick.game.entities.projectiles.PreciousShard
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
@@ -64,9 +64,12 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private inner class InnerBlock(game: MegamanMaverickGame, private val pushableBody: Body) : Block(game) {
+    private class InnerBlock(game: MegamanMaverickGame, private val pushableBody: Body) : Block(game) {
 
         override fun hitByProjectile(projectileFixture: IFixture) {
+            val projectile = projectileFixture.getEntity()
+            if (projectile.isAny(PreciousGem::class, PreciousShard::class, Axe::class)) return
+
             val projectileX = projectileFixture.getShape().getBoundingRectangle().getX()
 
             var impulse = PROJECTILE_IMPULSE * ConstVals.PPM

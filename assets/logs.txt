@@ -1,1214 +1,417 @@
-===== SESSION STARTED: 2025-11-04T18:23:26.606317051 =====
-18:23:49 | DEBUG | PreciousGem | init()
-18:23:49 | DEBUG | PreciousGem | onSpawn(): hashCode=365557853, spawnProps=Properties({
-	[speed=320.0]
-	[first_target=(6144.0,2370.0356)]
+===== SESSION STARTED: 2025-11-05T21:54:14.160232140 =====
+21:55:52 | DEBUG | PreciousGem | init()
+21:55:52 | DEBUG | PreciousGem | onSpawn(): hashCode=1392580974, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
 	[color=PURPLE]
-	[cull_time=5.0]
 	[cull_out_of_bounds=false]
-	[shield_shatter={class com.megaman.maverick.game.entities.blocks.PreciousBlock, class com.megaman.maverick.game.entities.megaman.Megaman, class com.megaman.maverick.game.entities.projectiles.Axe}]
-	[position=(6096.0,2370.0356)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
+	[position=(9060.279,1656.0)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
 })
-18:23:49 | DEBUG | PreciousGem | init()
-18:23:49 | DEBUG | PreciousGem | onSpawn(): hashCode=1432976342, spawnProps=Properties({
-	[speed=320.0]
-	[first_target=(6096.0,2418.0356)]
+21:55:52 | DEBUG | PreciousGem | init()
+21:55:52 | DEBUG | PreciousGem | onSpawn(): hashCode=1735014031, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
 	[color=BLUE]
-	[cull_time=5.0]
 	[cull_out_of_bounds=false]
-	[shield_shatter={class com.megaman.maverick.game.entities.blocks.PreciousBlock, class com.megaman.maverick.game.entities.megaman.Megaman, class com.megaman.maverick.game.entities.projectiles.Axe}]
-	[position=(6096.0,2370.0356)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
+	[position=(8996.279,1720.0)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
 })
-18:23:49 | DEBUG | PreciousGem | init()
-18:23:49 | DEBUG | PreciousGem | onSpawn(): hashCode=848508986, spawnProps=Properties({
-	[speed=320.0]
-	[first_target=(6048.0,2370.0356)]
+21:55:52 | DEBUG | PreciousGem | init()
+21:55:52 | DEBUG | PreciousGem | onSpawn(): hashCode=2094852396, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
 	[color=PINK]
-	[cull_time=5.0]
 	[cull_out_of_bounds=false]
-	[shield_shatter={class com.megaman.maverick.game.entities.blocks.PreciousBlock, class com.megaman.maverick.game.entities.megaman.Megaman, class com.megaman.maverick.game.entities.projectiles.Axe}]
-	[position=(6096.0,2370.0356)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
+	[position=(8932.279,1656.0)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
 })
-18:23:49 | DEBUG | PreciousGem | init()
-18:23:49 | DEBUG | PreciousGem | onSpawn(): hashCode=127684341, spawnProps=Properties({
-	[speed=320.0]
-	[first_target=(6096.0,2322.0356)]
+21:55:52 | DEBUG | PreciousGem | init()
+21:55:52 | DEBUG | PreciousGem | onSpawn(): hashCode=333731636, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
 	[color=GREEN]
-	[cull_time=5.0]
 	[cull_out_of_bounds=false]
-	[shield_shatter={class com.megaman.maverick.game.entities.blocks.PreciousBlock, class com.megaman.maverick.game.entities.megaman.Megaman, class com.megaman.maverick.game.entities.projectiles.Axe}]
-	[position=(6096.0,2370.0356)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
+	[position=(8996.279,1592.0)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
 })
-18:23:49 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6092.0,2366.0356,8.0,8.0], raw_shape=[6092.0,2366.0356,8.0,8.0]), thisShape=[6092.0,2366.0356,8.0,8.0], otherShape=[6092.0,2366.0356,8.0,8.0]
-18:23:49 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6092.0,2366.0356,8.0,8.0], raw_shape=[6092.0,2366.0356,8.0,8.0]), thisShape=[6092.0,2366.0356,8.0,8.0], otherShape=[6092.0,2366.0356,8.0,8.0]
-18:23:49 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6092.0,2366.0356,8.0,8.0], raw_shape=[6092.0,2366.0356,8.0,8.0]), thisShape=[6092.0,2366.0356,8.0,8.0], otherShape=[6092.0,2366.0356,8.0,8.0]
-18:23:49 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6092.0,2366.0356,8.0,8.0], raw_shape=[6092.0,2366.0356,8.0,8.0]), thisShape=[6092.0,2366.0356,8.0,8.0], otherShape=[6092.0,2366.0356,8.0,8.0]
-18:23:49 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6092.0,2366.0356,8.0,8.0], raw_shape=[6092.0,2366.0356,8.0,8.0]), thisShape=[6092.0,2366.0356,8.0,8.0], otherShape=[6092.0,2366.0356,8.0,8.0]
-18:23:49 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6092.0,2366.0356,8.0,8.0], raw_shape=[6092.0,2366.0356,8.0,8.0]), thisShape=[6092.0,2366.0356,8.0,8.0], otherShape=[6092.0,2366.0356,8.0,8.0]
-18:23:49 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6092.0,2366.0356,8.0,8.0], raw_shape=[6092.0,2366.0356,8.0,8.0]), thisShape=[6092.0,2366.0356,8.0,8.0], otherShape=[6092.0,2366.0356,8.0,8.0]
-18:23:49 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6092.0,2366.0356,8.0,8.0], raw_shape=[6092.0,2366.0356,8.0,8.0]), thisShape=[6092.0,2366.0356,8.0,8.0], otherShape=[6092.0,2366.0356,8.0,8.0]
-18:23:49 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6092.0,2366.0356,8.0,8.0], raw_shape=[6092.0,2366.0356,8.0,8.0]), thisShape=[6092.0,2366.0356,8.0,8.0], otherShape=[6092.0,2366.0356,8.0,8.0]
-18:23:49 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6092.0,2366.0356,8.0,8.0], raw_shape=[6092.0,2366.0356,8.0,8.0]), thisShape=[6092.0,2366.0356,8.0,8.0], otherShape=[6092.0,2366.0356,8.0,8.0]
-18:23:49 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6092.0,2366.0356,8.0,8.0], raw_shape=[6092.0,2366.0356,8.0,8.0]), thisShape=[6092.0,2366.0356,8.0,8.0], otherShape=[6092.0,2366.0356,8.0,8.0]
-18:23:49 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6092.0,2366.0356,8.0,8.0], raw_shape=[6092.0,2366.0356,8.0,8.0]), thisShape=[6092.0,2366.0356,8.0,8.0], otherShape=[6092.0,2366.0356,8.0,8.0]
-18:23:50 | DEBUG | PreciousGem | update(): target reached, stateIndex=1
-18:23:50 | DEBUG | PreciousGem | update(): target reached, stateIndex=1
-18:23:50 | DEBUG | PreciousGem | update(): target reached, stateIndex=1
-18:23:50 | DEBUG | PreciousGem | update(): target reached, stateIndex=1
-18:23:51 | DEBUG | PreciousGem | hitShield(): shieldFixture=Fixture(type=SHIELD, active=true, shape=[6156.7827,2303.9878,16.0,48.0], raw_shape=[0.0,0.0,16.0,48.0]), thisShape=[6125.649,2305.1619,32.0,32.0], otherShape=[6156.7827,2303.9878,16.0,48.0]
-18:23:51 | DEBUG | PreciousShard | init()
-18:23:51 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
+21:55:54 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[8982.197,1714.8712,40.0,32.0], raw_shape=[0.0,0.0,40.0,32.0]), thisShape=[8993.308,1684.0012,32.0,32.0], otherShape=[8982.197,1714.8712,40.0,32.0]
+21:55:54 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[8998.197,1726.8712,8.0,8.0], raw_shape=[8998.197,1726.8712,8.0,8.0]), thisShape=[8992.18,1695.6748,32.0,32.0], otherShape=[8998.197,1726.8712,8.0,8.0]
+21:55:54 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[8998.197,1726.8712,8.0,8.0], raw_shape=[8998.197,1726.8712,8.0,8.0]), thisShape=[8992.18,1695.6748,32.0,32.0], otherShape=[8998.197,1726.8712,8.0,8.0]
+21:55:54 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[8998.649,1728.0369,8.0,8.0], raw_shape=[8998.649,1728.0369,8.0,8.0]), thisShape=[8990.481,1710.4359,32.0,32.0], otherShape=[8998.649,1728.0369,8.0,8.0]
+21:55:54 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[8997.745,1728.0369,8.0,8.0], raw_shape=[8997.745,1728.0369,8.0,8.0]), thisShape=[8990.481,1710.4359,32.0,32.0], otherShape=[8997.745,1728.0369,8.0,8.0]
+21:55:54 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[8992.319,1729.3898,8.0,8.0], raw_shape=[8992.319,1729.3898,8.0,8.0]), thisShape=[8960.71,1715.87,32.0,32.0], otherShape=[8992.319,1729.3898,8.0,8.0]
+21:55:54 | DEBUG | PreciousGem | onHealthDepleted()
+21:55:54 | DEBUG | PreciousShard | init()
+21:55:54 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
 	[collide_delay=false]
 	[size=SMALL]
 	[cull_time=0.5]
-	[color=PINK]
-	[position=(6125.649,2321.1619)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
+	[color=PURPLE]
+	[position=(8943.204,1723.819)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
 	[impulse=(-288.0,160.0)]
 })
-18:23:51 | DEBUG | PreciousShard | init()
-18:23:51 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
+21:55:54 | DEBUG | PreciousShard | init()
+21:55:54 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
 	[collide_delay=false]
 	[size=SMALL]
 	[cull_time=0.5]
-	[color=PINK]
-	[position=(6125.649,2321.1619)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
+	[color=PURPLE]
+	[position=(8943.204,1723.819)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
 	[impulse=(-288.0,0.0)]
 })
-18:23:51 | DEBUG | PreciousShard | init()
-18:23:51 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
+21:55:54 | DEBUG | PreciousShard | init()
+21:55:54 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
 	[collide_delay=false]
 	[size=SMALL]
 	[cull_time=0.5]
+	[color=PURPLE]
+	[position=(8943.204,1723.819)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
+	[impulse=(-288.0,-160.0)]
+})
+21:55:54 | DEBUG | PreciousGem | onDestroy(): hashCode=1392580974
+21:55:55 | DEBUG | PreciousGem | onEvent(): event=Event(key=PLAYER_JUST_DIED, properties=Properties({
+}))
+21:55:55 | DEBUG | PreciousGem | onEvent(): event=Event(key=PLAYER_JUST_DIED, properties=Properties({
+}))
+21:55:55 | DEBUG | PreciousGem | onEvent(): event=Event(key=PLAYER_JUST_DIED, properties=Properties({
+}))
+21:55:55 | DEBUG | PreciousGem | onDestroy(): hashCode=1735014031
+21:55:55 | DEBUG | PreciousGem | onDestroy(): hashCode=2094852396
+21:55:55 | DEBUG | PreciousGem | onDestroy(): hashCode=333731636
+21:55:55 | DEBUG | PreciousGem | onDestroy(): hashCode=1735014031
+21:55:55 | DEBUG | PreciousGem | onDestroy(): hashCode=2094852396
+21:55:55 | DEBUG | PreciousGem | onDestroy(): hashCode=333731636
+21:55:55 | DEBUG | PreciousShard | explodeAndDie()
+21:55:55 | DEBUG | PreciousShard | onDestroy()
+21:55:55 | DEBUG | PreciousShard | explodeAndDie()
+21:55:55 | DEBUG | PreciousShard | explodeAndDie()
+21:55:55 | DEBUG | PreciousShard | onDestroy()
+21:55:55 | DEBUG | PreciousShard | onDestroy()
+21:56:05 | DEBUG | PreciousGem | onSpawn(): hashCode=333731636, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=PURPLE]
+	[cull_out_of_bounds=false]
+	[position=(9053.366,1656.0)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
+})
+21:56:05 | DEBUG | PreciousGem | onSpawn(): hashCode=2094852396, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=BLUE]
+	[cull_out_of_bounds=false]
+	[position=(8989.366,1720.0)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
+})
+21:56:05 | DEBUG | PreciousGem | onSpawn(): hashCode=1735014031, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
 	[color=PINK]
-	[position=(6125.649,2321.1619)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-288.0,-160.0)]
+	[cull_out_of_bounds=false]
+	[position=(8925.366,1656.0)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
 })
-18:23:51 | DEBUG | PreciousGem | onDestroy(): hashCode=848508986
-18:23:51 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6100.53,2303.3167,8.0,8.0], raw_shape=[6102.4497,2304.7354,8.0,8.0]), thisShape=[6070.0137,2273.0503,32.0,32.0], otherShape=[6100.53,2303.3167,8.0,8.0]
-18:23:51 | DEBUG | PreciousShard | explodeAndDie()
-18:23:51 | DEBUG | PreciousShard | explodeAndDie()
-18:23:51 | DEBUG | PreciousShard | onDestroy()
-18:23:51 | DEBUG | PreciousShard | explodeAndDie()
-18:23:51 | DEBUG | PreciousShard | explodeAndDie()
-18:23:51 | DEBUG | PreciousShard | onDestroy()
-18:23:51 | DEBUG | PreciousShard | onDestroy()
-18:23:52 | DEBUG | PreciousGem | hitShield(): shieldFixture=Fixture(type=SHIELD, active=true, shape=[6307.246,2303.992,16.0,48.0], raw_shape=[0.0,0.0,16.0,48.0]), thisShape=[6275.8145,2316.2395,32.0,32.0], otherShape=[6307.246,2303.992,16.0,48.0]
-18:23:52 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=BLUE]
-	[position=(6275.8145,2332.2395)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-288.0,160.0)]
+21:56:05 | DEBUG | PreciousGem | onSpawn(): hashCode=1392580974, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=GREEN]
+	[cull_out_of_bounds=false]
+	[position=(8989.366,1592.0)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
 })
-18:23:52 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=BLUE]
-	[position=(6275.8145,2332.2395)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-288.0,0.0)]
-})
-18:23:52 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=BLUE]
-	[position=(6275.8145,2332.2395)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-288.0,-160.0)]
-})
-18:23:52 | DEBUG | PreciousGem | onDestroy(): hashCode=1432976342
-18:23:53 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6239.176,2323.3435,8.0,8.0], raw_shape=[6241.0957,2323.8875,8.0,8.0]), thisShape=[6207.8213,2314.9746,32.0,32.0], otherShape=[6239.176,2323.3435,8.0,8.0]
-18:23:53 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6239.176,2341.4768,8.0,8.0], raw_shape=[6241.0957,2340.954,8.0,8.0]), thisShape=[6207.8213,2314.9746,32.0,32.0], otherShape=[6239.176,2341.4768,8.0,8.0]
-18:23:53 | DEBUG | PreciousShard | explodeAndDie()
-18:23:53 | DEBUG | PreciousShard | explodeAndDie()
-18:23:53 | DEBUG | PreciousShard | onDestroy()
-18:23:53 | DEBUG | PreciousShard | onDestroy()
-18:23:53 | DEBUG | PreciousShard | explodeAndDie()
-18:23:53 | DEBUG | PreciousShard | onDestroy()
-18:23:53 | DEBUG | PreciousGem | hitShield(): shieldFixture=Fixture(type=SHIELD, active=true, shape=[6316.552,2304.2808,16.0,48.0], raw_shape=[0.0,0.0,16.0,48.0]), thisShape=[6325.34,2276.6755,32.0,32.0], otherShape=[6316.552,2304.2808,16.0,48.0]
-18:23:53 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PURPLE]
-	[position=(6341.34,2276.6755)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(160.0,-288.0)]
-})
-18:23:53 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PURPLE]
-	[position=(6341.34,2276.6755)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(0.0,-288.0)]
-})
-18:23:53 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PURPLE]
-	[position=(6341.34,2276.6755)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-160.0,-288.0)]
-})
-18:23:53 | DEBUG | PreciousGem | onDestroy(): hashCode=365557853
-18:23:53 | DEBUG | PreciousShard | explodeAndDie()
-18:23:53 | DEBUG | PreciousShard | explodeAndDie()
-18:23:53 | DEBUG | PreciousShard | explodeAndDie()
-18:23:53 | DEBUG | PreciousShard | onDestroy()
-18:23:53 | DEBUG | PreciousShard | onDestroy()
-18:23:53 | DEBUG | PreciousShard | onDestroy()
-18:23:53 | DEBUG | PreciousGem | hitShield(): shieldFixture=Fixture(type=SHIELD, active=true, shape=[6322.8022,2302.6748,16.0,48.0], raw_shape=[0.0,0.0,16.0,48.0]), thisShape=[6293.44,2291.785,32.0,32.0], otherShape=[6322.8022,2302.6748,16.0,48.0]
-18:23:53 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
+21:56:08 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[8892.353,1743.9839,40.0,32.0], raw_shape=[0.0,0.0,40.0,32.0]), thisShape=[8860.865,1745.7125,32.0,32.0], otherShape=[8892.353,1743.9839,40.0,32.0]
+21:56:10 | DEBUG | PreciousGem | onHealthDepleted()
+21:56:10 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
 	[collide_delay=false]
 	[size=SMALL]
 	[cull_time=0.5]
 	[color=GREEN]
-	[position=(6293.44,2307.785)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-288.0,160.0)]
+	[position=(9141.415,1776.6309)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
+	[impulse=(160.0,288.0)]
 })
-18:23:53 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
+21:56:10 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
 	[collide_delay=false]
 	[size=SMALL]
 	[cull_time=0.5]
 	[color=GREEN]
-	[position=(6293.44,2307.785)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-288.0,0.0)]
+	[position=(9141.415,1776.6309)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
+	[impulse=(0.0,288.0)]
 })
-18:23:53 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
+21:56:10 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
 	[collide_delay=false]
 	[size=SMALL]
 	[cull_time=0.5]
 	[color=GREEN]
-	[position=(6293.44,2307.785)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-288.0,-160.0)]
+	[position=(9141.415,1776.6309)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
+	[impulse=(-160.0,288.0)]
 })
-18:23:53 | DEBUG | PreciousGem | onDestroy(): hashCode=127684341
-18:23:53 | DEBUG | PreciousShard | explodeAndDie()
-18:23:53 | DEBUG | PreciousShard | explodeAndDie()
-18:23:53 | DEBUG | PreciousShard | onDestroy()
-18:23:53 | DEBUG | PreciousShard | onDestroy()
-18:23:53 | DEBUG | PreciousGem | onSpawn(): hashCode=127684341, spawnProps=Properties({
-	[speed=320.0]
-	[first_target=(6284.524,2384.0)]
+21:56:10 | DEBUG | PreciousGem | onDestroy(): hashCode=1392580974
+21:56:10 | DEBUG | PreciousShard | explodeAndDie()
+21:56:10 | DEBUG | PreciousShard | onDestroy()
+21:56:11 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[9013.712,1778.1987,8.0,8.0], raw_shape=[9014.778,1779.9907,8.0,8.0]), thisShape=[9002.213,1752.8263,32.0,32.0], otherShape=[9013.712,1778.1987,8.0,8.0]
+21:56:11 | DEBUG | PreciousShard | explodeAndDie()
+21:56:11 | DEBUG | PreciousShard | onDestroy()
+21:56:11 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[9000.099,1762.5483,40.0,32.0], raw_shape=[0.0,0.0,40.0,32.0]), thisShape=[8984.865,1730.9805,32.0,32.0], otherShape=[9000.099,1762.5483,40.0,32.0]
+21:56:11 | DEBUG | PreciousShard | explodeAndDie()
+21:56:11 | DEBUG | PreciousShard | onDestroy()
+21:56:13 | DEBUG | PreciousGem | onHealthDepleted()
+21:56:13 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
+	[collide_delay=false]
+	[size=SMALL]
+	[cull_time=0.5]
+	[color=BLUE]
+	[position=(9066.557,1704.0035)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
+	[impulse=(160.0,288.0)]
+})
+21:56:13 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
+	[collide_delay=false]
+	[size=SMALL]
+	[cull_time=0.5]
+	[color=BLUE]
+	[position=(9066.557,1704.0035)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
+	[impulse=(0.0,288.0)]
+})
+21:56:13 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
+	[collide_delay=false]
+	[size=SMALL]
+	[cull_time=0.5]
+	[color=BLUE]
+	[position=(9066.557,1704.0035)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
+	[impulse=(-160.0,288.0)]
+})
+21:56:13 | DEBUG | PreciousGem | onDestroy(): hashCode=2094852396
+21:56:14 | DEBUG | PreciousShard | explodeAndDie()
+21:56:14 | DEBUG | PreciousShard | onDestroy()
+21:56:14 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[8940.986,1709.1234,8.0,8.0], raw_shape=[8942.053,1710.8514,8.0,8.0]), thisShape=[8915.872,1677.7736,32.0,32.0], otherShape=[8940.986,1709.1234,8.0,8.0]
+21:56:14 | DEBUG | PreciousShard | explodeAndDie()
+21:56:14 | DEBUG | PreciousShard | onDestroy()
+21:56:15 | DEBUG | PreciousGem | onHealthDepleted()
+21:56:15 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
+	[collide_delay=false]
+	[size=SMALL]
+	[cull_time=0.5]
 	[color=PURPLE]
-	[cull_time=5.0]
-	[shield_shatter={class com.megaman.maverick.game.entities.megaman.Megaman, class com.megaman.maverick.game.entities.projectiles.Axe}]
-	[position=(6380.524,2336.0)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
+	[position=(8781.315,1727.1997)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
+	[impulse=(160.0,288.0)]
 })
-18:23:53 | DEBUG | PreciousGem | onSpawn(): hashCode=365557853, spawnProps=Properties({
-	[speed=320.0]
-	[first_target=(6284.524,2336.0)]
-	[color=BLUE]
-	[cull_time=5.0]
-	[shield_shatter={class com.megaman.maverick.game.entities.megaman.Megaman, class com.megaman.maverick.game.entities.projectiles.Axe}]
-	[position=(6380.524,2336.0)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-})
-18:23:53 | DEBUG | PreciousGem | onSpawn(): hashCode=1432976342, spawnProps=Properties({
-	[speed=320.0]
-	[first_target=(6284.524,2288.0)]
-	[color=PINK]
-	[cull_time=5.0]
-	[shield_shatter={class com.megaman.maverick.game.entities.megaman.Megaman, class com.megaman.maverick.game.entities.projectiles.Axe}]
-	[position=(6380.524,2336.0)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-})
-18:23:53 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6376.524,2332.0,8.0,8.0], raw_shape=[6376.524,2332.0,8.0,8.0]), thisShape=[6376.524,2332.0,8.0,8.0], otherShape=[6376.524,2332.0,8.0,8.0]
-18:23:53 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6376.524,2332.0,8.0,8.0], raw_shape=[6376.524,2332.0,8.0,8.0]), thisShape=[6376.524,2332.0,8.0,8.0], otherShape=[6376.524,2332.0,8.0,8.0]
-18:23:53 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6376.524,2332.0,8.0,8.0], raw_shape=[6376.524,2332.0,8.0,8.0]), thisShape=[6376.524,2332.0,8.0,8.0], otherShape=[6376.524,2332.0,8.0,8.0]
-18:23:53 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6376.524,2332.0,8.0,8.0], raw_shape=[6376.524,2332.0,8.0,8.0]), thisShape=[6376.524,2332.0,8.0,8.0], otherShape=[6376.524,2332.0,8.0,8.0]
-18:23:53 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6376.524,2332.0,8.0,8.0], raw_shape=[6376.524,2332.0,8.0,8.0]), thisShape=[6376.524,2332.0,8.0,8.0], otherShape=[6376.524,2332.0,8.0,8.0]
-18:23:53 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6376.524,2332.0,8.0,8.0], raw_shape=[6376.524,2332.0,8.0,8.0]), thisShape=[6376.524,2332.0,8.0,8.0], otherShape=[6376.524,2332.0,8.0,8.0]
-18:23:53 | DEBUG | PreciousShard | explodeAndDie()
-18:23:53 | DEBUG | PreciousShard | onDestroy()
-18:23:54 | DEBUG | PreciousGem | hitShield(): shieldFixture=Fixture(type=SHIELD, active=true, shape=[6290.8003,2303.8691,16.0,48.0], raw_shape=[0.0,0.0,16.0,48.0]), thisShape=[6306.125,2332.0,8.0,8.0], otherShape=[6290.8003,2303.8691,16.0,48.0]
-18:23:54 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
+21:56:15 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
 	[collide_delay=false]
 	[size=SMALL]
 	[cull_time=0.5]
+	[color=PURPLE]
+	[position=(8781.315,1727.1997)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
+	[impulse=(0.0,288.0)]
+})
+21:56:15 | DEBUG | PreciousShard | init()
+21:56:15 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
+	[collide_delay=false]
+	[size=SMALL]
+	[cull_time=0.5]
+	[color=PURPLE]
+	[position=(8781.315,1727.1997)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
+	[impulse=(-160.0,288.0)]
+})
+21:56:15 | DEBUG | PreciousGem | onDestroy(): hashCode=333731636
+21:56:15 | DEBUG | PreciousShard | explodeAndDie()
+21:56:15 | DEBUG | PreciousShard | explodeAndDie()
+21:56:15 | DEBUG | PreciousShard | explodeAndDie()
+21:56:15 | DEBUG | PreciousShard | onDestroy()
+21:56:15 | DEBUG | PreciousShard | onDestroy()
+21:56:15 | DEBUG | PreciousShard | onDestroy()
+21:56:15 | DEBUG | PreciousShard | onDestroy()
+21:56:15 | DEBUG | PreciousGem | onHealthDepleted()
+21:56:15 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
+	[collide_delay=false]
+	[size=SMALL]
+	[cull_time=0.5]
+	[color=PINK]
+	[position=(8771.881,1680.1155)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
+	[impulse=(160.0,288.0)]
+})
+21:56:15 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
+	[collide_delay=false]
+	[size=SMALL]
+	[cull_time=0.5]
+	[color=PINK]
+	[position=(8771.881,1680.1155)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
+	[impulse=(0.0,288.0)]
+})
+21:56:15 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
+	[collide_delay=false]
+	[size=SMALL]
+	[cull_time=0.5]
+	[color=PINK]
+	[position=(8771.881,1680.1155)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
+	[impulse=(-160.0,288.0)]
+})
+21:56:15 | DEBUG | PreciousGem | onDestroy(): hashCode=1735014031
+21:56:15 | DEBUG | PreciousShard | explodeAndDie()
+21:56:15 | DEBUG | PreciousShard | explodeAndDie()
+21:56:15 | DEBUG | PreciousShard | explodeAndDie()
+21:56:15 | DEBUG | PreciousShard | onDestroy()
+21:56:15 | DEBUG | PreciousShard | onDestroy()
+21:56:15 | DEBUG | PreciousShard | onDestroy()
+21:56:16 | DEBUG | PreciousGem | onSpawn(): hashCode=1735014031, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=PURPLE]
+	[cull_out_of_bounds=false]
+	[position=(9046.244,1695.1942)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
+})
+21:56:16 | DEBUG | PreciousGem | onSpawn(): hashCode=333731636, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
 	[color=BLUE]
-	[position=(6314.125,2336.0)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
+	[cull_out_of_bounds=false]
+	[position=(8982.244,1759.1942)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
+})
+21:56:16 | DEBUG | PreciousGem | onSpawn(): hashCode=2094852396, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=PINK]
+	[cull_out_of_bounds=false]
+	[position=(8918.244,1695.1942)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
+})
+21:56:16 | DEBUG | PreciousGem | onSpawn(): hashCode=1392580974, spawnProps=Properties({
+	[state=1]
+	[cull_time=5.0]
+	[color=GREEN]
+	[cull_out_of_bounds=false]
+	[position=(8982.244,1631.1942)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
+})
+21:56:19 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[9120.525,1691.9066,8.0,8.0], raw_shape=[9120.525,1691.9066,8.0,8.0]), thisShape=[9126.494,1666.4646,32.0,32.0], otherShape=[9120.525,1691.9066,8.0,8.0]
+21:56:19 | DEBUG | PreciousGem | onHealthDepleted()
+21:56:19 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
+	[collide_delay=false]
+	[size=SMALL]
+	[cull_time=0.5]
+	[color=GREEN]
+	[position=(9158.494,1682.4646)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
 	[impulse=(288.0,160.0)]
 })
-18:23:54 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
+21:56:19 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
 	[collide_delay=false]
 	[size=SMALL]
 	[cull_time=0.5]
-	[color=BLUE]
-	[position=(6314.125,2336.0)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
+	[color=GREEN]
+	[position=(9158.494,1682.4646)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
 	[impulse=(288.0,0.0)]
 })
-18:23:54 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
+21:56:19 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
 	[collide_delay=false]
 	[size=SMALL]
 	[cull_time=0.5]
-	[color=BLUE]
-	[position=(6314.125,2336.0)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
+	[color=GREEN]
+	[position=(9158.494,1682.4646)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
 	[impulse=(288.0,-160.0)]
 })
-18:23:54 | DEBUG | PreciousGem | onDestroy(): hashCode=365557853
-18:23:54 | DEBUG | PreciousGem | update(): target reached, stateIndex=1
-18:23:54 | DEBUG | PreciousGem | update(): target reached, stateIndex=1
-18:23:54 | DEBUG | PreciousShard | explodeAndDie()
-18:23:54 | DEBUG | PreciousShard | onDestroy()
-18:23:54 | DEBUG | PreciousShard | explodeAndDie()
-18:23:54 | DEBUG | PreciousShard | onDestroy()
-18:23:54 | DEBUG | PreciousShard | explodeAndDie()
-18:23:54 | DEBUG | PreciousShard | onDestroy()
-18:23:54 | DEBUG | PreciousGem | update(): stateIndex=2, trajectory=(-260.2867,-186.14731)
-18:23:54 | DEBUG | PreciousGem | update(): stateIndex=2, trajectory=(-303.753,100.668365)
-18:23:54 | DEBUG | PreciousGem | hitShield(): shieldFixture=Fixture(type=SHIELD, active=true, shape=[6190.657,2303.9873,16.0,48.0], raw_shape=[0.0,0.0,16.0,48.0]), thisShape=[6205.752,2292.8054,32.0,32.0], otherShape=[6190.657,2303.9873,16.0,48.0]
-18:23:54 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PINK]
-	[position=(6237.752,2308.8054)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(288.0,160.0)]
-})
-18:23:54 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PINK]
-	[position=(6237.752,2308.8054)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(288.0,0.0)]
-})
-18:23:54 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PINK]
-	[position=(6237.752,2308.8054)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(288.0,-160.0)]
-})
-18:23:54 | DEBUG | PreciousGem | onDestroy(): hashCode=1432976342
-18:23:54 | DEBUG | PreciousShard | explodeAndDie()
-18:23:54 | DEBUG | PreciousShard | onDestroy()
-18:23:54 | DEBUG | PreciousGem | hitShield(): shieldFixture=Fixture(type=SHIELD, active=true, shape=[6190.674,2303.9878,16.0,48.0], raw_shape=[0.0,0.0,16.0,48.0]), thisShape=[6206.0513,2323.3252,32.0,32.0], otherShape=[6190.674,2303.9878,16.0,48.0]
-18:23:54 | DEBUG | PreciousShard | explodeAndDie()
-18:23:54 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
+21:56:19 | DEBUG | PreciousGem | onDestroy(): hashCode=1392580974
+21:56:19 | DEBUG | PreciousShard | explodeAndDie()
+21:56:19 | DEBUG | PreciousShard | onDestroy()
+21:56:19 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[9190.973,1652.1179,8.0,8.0], raw_shape=[9189.053,1653.7926,8.0,8.0]), thisShape=[9195.355,1655.5607,32.0,32.0], otherShape=[9190.973,1652.1179,8.0,8.0]
+21:56:19 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[9190.973,1672.3846,8.0,8.0], raw_shape=[9189.053,1672.9927,8.0,8.0]), thisShape=[9195.355,1655.5607,32.0,32.0], otherShape=[9190.973,1672.3846,8.0,8.0]
+21:56:19 | DEBUG | PreciousShard | explodeAndDie()
+21:56:19 | DEBUG | PreciousShard | explodeAndDie()
+21:56:19 | DEBUG | PreciousShard | onDestroy()
+21:56:19 | DEBUG | PreciousShard | onDestroy()
+21:56:21 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[8927.936,1726.1002,40.0,32.0], raw_shape=[0.0,0.0,40.0,32.0]), thisShape=[8961.16,1722.7302,32.0,32.0], otherShape=[8927.936,1726.1002,40.0,32.0]
+21:56:21 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[8942.579,1739.2659,8.0,8.0], raw_shape=[8942.579,1739.2659,8.0,8.0]), thisShape=[8949.127,1714.7163,32.0,32.0], otherShape=[8942.579,1739.2659,8.0,8.0]
+21:56:21 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[8942.579,1736.5505,8.0,8.0], raw_shape=[8942.579,1736.5505,8.0,8.0]), thisShape=[8949.127,1714.7163,32.0,32.0], otherShape=[8942.579,1736.5505,8.0,8.0]
+21:56:21 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[8945.744,1730.1736,8.0,8.0], raw_shape=[8945.744,1730.1736,8.0,8.0]), thisShape=[8936.453,1698.7272,32.0,32.0], otherShape=[8945.744,1730.1736,8.0,8.0]
+21:56:21 | DEBUG | PreciousGem | onHealthDepleted()
+21:56:21 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
 	[collide_delay=false]
 	[size=SMALL]
 	[cull_time=0.5]
 	[color=PURPLE]
-	[position=(6238.0513,2339.3252)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(288.0,160.0)]
-})
-18:23:54 | DEBUG | PreciousShard | init()
-18:23:54 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PURPLE]
-	[position=(6238.0513,2339.3252)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(288.0,0.0)]
-})
-18:23:54 | DEBUG | PreciousShard | init()
-18:23:54 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PURPLE]
-	[position=(6238.0513,2339.3252)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(288.0,-160.0)]
-})
-18:23:54 | DEBUG | PreciousGem | onDestroy(): hashCode=127684341
-18:23:54 | DEBUG | PreciousShard | onDestroy()
-18:23:55 | DEBUG | PreciousShard | explodeAndDie()
-18:23:55 | DEBUG | PreciousShard | onDestroy()
-18:23:55 | DEBUG | PreciousShard | explodeAndDie()
-18:23:55 | DEBUG | PreciousShard | onDestroy()
-18:23:55 | DEBUG | PreciousShard | explodeAndDie()
-18:23:55 | DEBUG | PreciousShard | onDestroy()
-18:23:55 | DEBUG | PreciousShard | explodeAndDie()
-18:23:55 | DEBUG | PreciousShard | onDestroy()
-18:23:57 | DEBUG | PreciousGem | onSpawn(): hashCode=127684341, spawnProps=Properties({
-	[speed=320.0]
-	[first_target=(6378.954,2336.0)]
-	[color=PURPLE]
-	[cull_time=5.0]
-	[cull_out_of_bounds=false]
-	[shield_shatter={class com.megaman.maverick.game.entities.blocks.PreciousBlock, class com.megaman.maverick.game.entities.megaman.Megaman, class com.megaman.maverick.game.entities.projectiles.Axe}]
-	[position=(6330.954,2336.0)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-})
-18:23:57 | DEBUG | PreciousGem | onSpawn(): hashCode=1432976342, spawnProps=Properties({
-	[speed=320.0]
-	[first_target=(6330.954,2384.0)]
-	[color=BLUE]
-	[cull_time=5.0]
-	[cull_out_of_bounds=false]
-	[shield_shatter={class com.megaman.maverick.game.entities.blocks.PreciousBlock, class com.megaman.maverick.game.entities.megaman.Megaman, class com.megaman.maverick.game.entities.projectiles.Axe}]
-	[position=(6330.954,2336.0)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-})
-18:23:57 | DEBUG | PreciousGem | onSpawn(): hashCode=365557853, spawnProps=Properties({
-	[speed=320.0]
-	[first_target=(6282.954,2336.0)]
-	[color=PINK]
-	[cull_time=5.0]
-	[cull_out_of_bounds=false]
-	[shield_shatter={class com.megaman.maverick.game.entities.blocks.PreciousBlock, class com.megaman.maverick.game.entities.megaman.Megaman, class com.megaman.maverick.game.entities.projectiles.Axe}]
-	[position=(6330.954,2336.0)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-})
-18:23:57 | DEBUG | PreciousGem | onSpawn(): hashCode=848508986, spawnProps=Properties({
-	[speed=320.0]
-	[first_target=(6330.954,2288.0)]
-	[color=GREEN]
-	[cull_time=5.0]
-	[cull_out_of_bounds=false]
-	[shield_shatter={class com.megaman.maverick.game.entities.blocks.PreciousBlock, class com.megaman.maverick.game.entities.megaman.Megaman, class com.megaman.maverick.game.entities.projectiles.Axe}]
-	[position=(6330.954,2336.0)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-})
-18:23:57 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6326.954,2332.0,8.0,8.0], raw_shape=[6326.954,2332.0,8.0,8.0]), thisShape=[6326.954,2332.0,8.0,8.0], otherShape=[6326.954,2332.0,8.0,8.0]
-18:23:57 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6326.954,2332.0,8.0,8.0], raw_shape=[6326.954,2332.0,8.0,8.0]), thisShape=[6326.954,2332.0,8.0,8.0], otherShape=[6326.954,2332.0,8.0,8.0]
-18:23:57 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6326.954,2332.0,8.0,8.0], raw_shape=[6326.954,2332.0,8.0,8.0]), thisShape=[6326.954,2332.0,8.0,8.0], otherShape=[6326.954,2332.0,8.0,8.0]
-18:23:57 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6326.954,2332.0,8.0,8.0], raw_shape=[6326.954,2332.0,8.0,8.0]), thisShape=[6326.954,2332.0,8.0,8.0], otherShape=[6326.954,2332.0,8.0,8.0]
-18:23:57 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6326.954,2332.0,8.0,8.0], raw_shape=[6326.954,2332.0,8.0,8.0]), thisShape=[6326.954,2332.0,8.0,8.0], otherShape=[6326.954,2332.0,8.0,8.0]
-18:23:57 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6326.954,2332.0,8.0,8.0], raw_shape=[6326.954,2332.0,8.0,8.0]), thisShape=[6326.954,2332.0,8.0,8.0], otherShape=[6326.954,2332.0,8.0,8.0]
-18:23:57 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6326.954,2332.0,8.0,8.0], raw_shape=[6326.954,2332.0,8.0,8.0]), thisShape=[6326.954,2332.0,8.0,8.0], otherShape=[6326.954,2332.0,8.0,8.0]
-18:23:57 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6326.954,2332.0,8.0,8.0], raw_shape=[6326.954,2332.0,8.0,8.0]), thisShape=[6326.954,2332.0,8.0,8.0], otherShape=[6326.954,2332.0,8.0,8.0]
-18:23:57 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6326.954,2332.0,8.0,8.0], raw_shape=[6326.954,2332.0,8.0,8.0]), thisShape=[6326.954,2332.0,8.0,8.0], otherShape=[6326.954,2332.0,8.0,8.0]
-18:23:57 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6326.954,2332.0,8.0,8.0], raw_shape=[6326.954,2332.0,8.0,8.0]), thisShape=[6326.954,2332.0,8.0,8.0], otherShape=[6326.954,2332.0,8.0,8.0]
-18:23:57 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6326.954,2332.0,8.0,8.0], raw_shape=[6326.954,2332.0,8.0,8.0]), thisShape=[6326.954,2332.0,8.0,8.0], otherShape=[6326.954,2332.0,8.0,8.0]
-18:23:57 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6326.954,2332.0,8.0,8.0], raw_shape=[6326.954,2332.0,8.0,8.0]), thisShape=[6326.954,2332.0,8.0,8.0], otherShape=[6326.954,2332.0,8.0,8.0]
-18:23:58 | DEBUG | PreciousGem | update(): target reached, stateIndex=1
-18:23:58 | DEBUG | PreciousGem | update(): target reached, stateIndex=1
-18:23:58 | DEBUG | PreciousGem | update(): target reached, stateIndex=1
-18:23:58 | DEBUG | PreciousGem | update(): target reached, stateIndex=1
-18:23:58 | DEBUG | PreciousGem | update(): stateIndex=2, trajectory=(-315.261,54.868004)
-18:23:58 | DEBUG | PreciousGem | update(): stateIndex=2, trajectory=(-311.66037,72.57976)
-18:23:58 | DEBUG | PreciousGem | update(): stateIndex=2, trajectory=(-277.9456,158.57567)
-18:23:59 | DEBUG | PreciousGem | hitShield(): shieldFixture=Fixture(type=SHIELD, active=true, shape=[6258.8096,2365.0513,16.0,48.0], raw_shape=[0.0,0.0,16.0,48.0]), thisShape=[6272.979,2353.2158,32.0,32.0], otherShape=[6258.8096,2365.0513,16.0,48.0]
-18:23:59 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PURPLE]
-	[position=(6304.979,2369.2158)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(288.0,160.0)]
-})
-18:23:59 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PURPLE]
-	[position=(6304.979,2369.2158)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(288.0,0.0)]
-})
-18:23:59 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PURPLE]
-	[position=(6304.979,2369.2158)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(288.0,-160.0)]
-})
-18:23:59 | DEBUG | PreciousGem | onDestroy(): hashCode=127684341
-18:23:59 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6333.6177,2360.3198,8.0,8.0], raw_shape=[6331.6978,2360.8638,8.0,8.0]), thisShape=[6340.032,2360.9277,32.0,32.0], otherShape=[6333.6177,2360.3198,8.0,8.0]
-18:23:59 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6333.6177,2378.4531,8.0,8.0], raw_shape=[6331.6978,2377.9304,8.0,8.0]), thisShape=[6340.032,2360.9277,32.0,32.0], otherShape=[6333.6177,2378.4531,8.0,8.0]
-18:23:59 | DEBUG | PreciousShard | explodeAndDie()
-18:23:59 | DEBUG | PreciousShard | explodeAndDie()
-18:23:59 | DEBUG | PreciousShard | onDestroy()
-18:23:59 | DEBUG | PreciousShard | onDestroy()
-18:23:59 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6347.057,2330.0159,8.0,8.0], raw_shape=[6345.137,2331.8506,8.0,8.0]), thisShape=[6354.019,2300.3276,32.0,32.0], otherShape=[6347.057,2330.0159,8.0,8.0]
-18:23:59 | DEBUG | PreciousShard | explodeAndDie()
-18:23:59 | DEBUG | PreciousShard | onDestroy()
-18:24:05 | DEBUG | PreciousGem | hitShield(): shieldFixture=Fixture(type=SHIELD, active=true, shape=[6087.6,2304.6294,16.0,48.0], raw_shape=[0.0,0.0,16.0,48.0]), thisShape=[6103.014,2296.235,32.0,32.0], otherShape=[6087.6,2304.6294,16.0,48.0]
-18:24:05 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=GREEN]
-	[position=(6135.014,2312.235)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(288.0,160.0)]
-})
-18:24:05 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=GREEN]
-	[position=(6135.014,2312.235)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(288.0,0.0)]
-})
-18:24:05 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=GREEN]
-	[position=(6135.014,2312.235)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(288.0,-160.0)]
-})
-18:24:05 | DEBUG | PreciousGem | onDestroy(): hashCode=848508986
-18:24:05 | DEBUG | PreciousShard | explodeAndDie()
-18:24:05 | DEBUG | PreciousShard | onDestroy()
-18:24:05 | DEBUG | PreciousShard | explodeAndDie()
-18:24:05 | DEBUG | PreciousShard | onDestroy()
-18:24:05 | DEBUG | PreciousShard | explodeAndDie()
-18:24:05 | DEBUG | PreciousShard | onDestroy()
-18:24:06 | DEBUG | PreciousGem | onDestroy(): hashCode=365557853
-18:24:06 | DEBUG | PreciousGem | onDestroy(): hashCode=1432976342
-18:24:09 | DEBUG | PreciousGem | onSpawn(): hashCode=1432976342, spawnProps=Properties({
-	[speed=320.0]
-	[first_target=(6144.0,2339.3074)]
-	[color=PURPLE]
-	[cull_time=5.0]
-	[cull_out_of_bounds=false]
-	[shield_shatter={class com.megaman.maverick.game.entities.blocks.PreciousBlock, class com.megaman.maverick.game.entities.megaman.Megaman, class com.megaman.maverick.game.entities.projectiles.Axe}]
-	[position=(6096.0,2339.3074)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-})
-18:24:09 | DEBUG | PreciousGem | onSpawn(): hashCode=365557853, spawnProps=Properties({
-	[speed=320.0]
-	[first_target=(6096.0,2387.3074)]
-	[color=BLUE]
-	[cull_time=5.0]
-	[cull_out_of_bounds=false]
-	[shield_shatter={class com.megaman.maverick.game.entities.blocks.PreciousBlock, class com.megaman.maverick.game.entities.megaman.Megaman, class com.megaman.maverick.game.entities.projectiles.Axe}]
-	[position=(6096.0,2339.3074)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-})
-18:24:09 | DEBUG | PreciousGem | onSpawn(): hashCode=848508986, spawnProps=Properties({
-	[speed=320.0]
-	[first_target=(6048.0,2339.3074)]
-	[color=PINK]
-	[cull_time=5.0]
-	[cull_out_of_bounds=false]
-	[shield_shatter={class com.megaman.maverick.game.entities.blocks.PreciousBlock, class com.megaman.maverick.game.entities.megaman.Megaman, class com.megaman.maverick.game.entities.projectiles.Axe}]
-	[position=(6096.0,2339.3074)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-})
-18:24:09 | DEBUG | PreciousGem | onSpawn(): hashCode=127684341, spawnProps=Properties({
-	[speed=320.0]
-	[first_target=(6096.0,2291.3074)]
-	[color=GREEN]
-	[cull_time=5.0]
-	[cull_out_of_bounds=false]
-	[shield_shatter={class com.megaman.maverick.game.entities.blocks.PreciousBlock, class com.megaman.maverick.game.entities.megaman.Megaman, class com.megaman.maverick.game.entities.projectiles.Axe}]
-	[position=(6096.0,2339.3074)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-})
-18:24:09 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6092.0,2335.3074,8.0,8.0], raw_shape=[6092.0,2335.3074,8.0,8.0]), thisShape=[6092.0,2335.3074,8.0,8.0], otherShape=[6092.0,2335.3074,8.0,8.0]
-18:24:09 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6092.0,2335.3074,8.0,8.0], raw_shape=[6092.0,2335.3074,8.0,8.0]), thisShape=[6092.0,2335.3074,8.0,8.0], otherShape=[6092.0,2335.3074,8.0,8.0]
-18:24:09 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6092.0,2335.3074,8.0,8.0], raw_shape=[6092.0,2335.3074,8.0,8.0]), thisShape=[6092.0,2335.3074,8.0,8.0], otherShape=[6092.0,2335.3074,8.0,8.0]
-18:24:09 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6092.0,2335.3074,8.0,8.0], raw_shape=[6092.0,2335.3074,8.0,8.0]), thisShape=[6092.0,2335.3074,8.0,8.0], otherShape=[6092.0,2335.3074,8.0,8.0]
-18:24:09 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6092.0,2335.3074,8.0,8.0], raw_shape=[6092.0,2335.3074,8.0,8.0]), thisShape=[6092.0,2335.3074,8.0,8.0], otherShape=[6092.0,2335.3074,8.0,8.0]
-18:24:09 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6092.0,2335.3074,8.0,8.0], raw_shape=[6092.0,2335.3074,8.0,8.0]), thisShape=[6092.0,2335.3074,8.0,8.0], otherShape=[6092.0,2335.3074,8.0,8.0]
-18:24:09 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6092.0,2335.3074,8.0,8.0], raw_shape=[6092.0,2335.3074,8.0,8.0]), thisShape=[6092.0,2335.3074,8.0,8.0], otherShape=[6092.0,2335.3074,8.0,8.0]
-18:24:09 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6092.0,2335.3074,8.0,8.0], raw_shape=[6092.0,2335.3074,8.0,8.0]), thisShape=[6092.0,2335.3074,8.0,8.0], otherShape=[6092.0,2335.3074,8.0,8.0]
-18:24:09 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6092.0,2335.3074,8.0,8.0], raw_shape=[6092.0,2335.3074,8.0,8.0]), thisShape=[6092.0,2335.3074,8.0,8.0], otherShape=[6092.0,2335.3074,8.0,8.0]
-18:24:09 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6092.0,2335.3074,8.0,8.0], raw_shape=[6092.0,2335.3074,8.0,8.0]), thisShape=[6092.0,2335.3074,8.0,8.0], otherShape=[6092.0,2335.3074,8.0,8.0]
-18:24:09 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6092.0,2335.3074,8.0,8.0], raw_shape=[6092.0,2335.3074,8.0,8.0]), thisShape=[6092.0,2335.3074,8.0,8.0], otherShape=[6092.0,2335.3074,8.0,8.0]
-18:24:09 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6092.0,2335.3074,8.0,8.0], raw_shape=[6092.0,2335.3074,8.0,8.0]), thisShape=[6092.0,2335.3074,8.0,8.0], otherShape=[6092.0,2335.3074,8.0,8.0]
-18:24:09 | DEBUG | PreciousGem | update(): target reached, stateIndex=1
-18:24:09 | DEBUG | PreciousGem | update(): target reached, stateIndex=1
-18:24:09 | DEBUG | PreciousGem | update(): target reached, stateIndex=1
-18:24:09 | DEBUG | PreciousGem | update(): target reached, stateIndex=1
-18:24:10 | DEBUG | PreciousGem | update(): stateIndex=2, trajectory=(318.17374,34.139103)
-18:24:10 | DEBUG | PreciousGem | update(): stateIndex=2, trajectory=(319.09778,24.012936)
-18:24:10 | DEBUG | PreciousGem | update(): stateIndex=2, trajectory=(282.24585,150.78885)
-18:24:10 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6119.391,2376.5337,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[6124.0234,2348.1477,32.0,32.0], otherShape=[6119.391,2376.5337,32.0,32.0]
-18:24:10 | DEBUG | PreciousGem | hitShield(): shieldFixture=Fixture(type=SHIELD, active=true, shape=[6119.391,2376.5337,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[6124.0234,2348.1477,32.0,32.0], otherShape=[6119.391,2376.5337,32.0,32.0]
-18:24:11 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=GREEN]
-	[position=(6140.0234,2348.1477)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
+	[position=(8945.8125,1685.3575)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
 	[impulse=(160.0,-288.0)]
 })
-18:24:11 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
+21:56:21 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
 	[collide_delay=false]
 	[size=SMALL]
 	[cull_time=0.5]
-	[color=GREEN]
-	[position=(6140.0234,2348.1477)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
+	[color=PURPLE]
+	[position=(8945.8125,1685.3575)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
 	[impulse=(0.0,-288.0)]
 })
-18:24:11 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
+21:56:21 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
 	[collide_delay=false]
 	[size=SMALL]
 	[cull_time=0.5]
-	[color=GREEN]
-	[position=(6140.0234,2348.1477)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
+	[color=PURPLE]
+	[position=(8945.8125,1685.3575)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
 	[impulse=(-160.0,-288.0)]
 })
-18:24:11 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=GREEN]
-	[position=(6140.0234,2348.1477)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(160.0,-288.0)]
-})
-18:24:11 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=GREEN]
-	[position=(6140.0234,2348.1477)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(0.0,-288.0)]
-})
-18:24:11 | DEBUG | PreciousShard | init()
-18:24:11 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=GREEN]
-	[position=(6140.0234,2348.1477)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-160.0,-288.0)]
-})
-18:24:11 | DEBUG | PreciousGem | onDestroy(): hashCode=127684341
-18:24:11 | DEBUG | PreciousShard | explodeAndDie()
-18:24:11 | DEBUG | PreciousShard | explodeAndDie()
-18:24:11 | DEBUG | PreciousShard | onDestroy()
-18:24:11 | DEBUG | PreciousShard | onDestroy()
-18:24:11 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6136.0234,2309.076,8.0,8.0], raw_shape=[6136.0234,2311.5078,8.0,8.0]), thisShape=[6131.5347,2278.666,32.0,32.0], otherShape=[6136.0234,2309.076,8.0,8.0]
-18:24:11 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6136.0234,2309.076,8.0,8.0], raw_shape=[6136.0234,2311.5078,8.0,8.0]), thisShape=[6131.5347,2278.666,32.0,32.0], otherShape=[6136.0234,2309.076,8.0,8.0]
-18:24:11 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6153.0938,2309.076,8.0,8.0], raw_shape=[6152.027,2311.5078,8.0,8.0]), thisShape=[6131.5347,2278.666,32.0,32.0], otherShape=[6153.0938,2309.076,8.0,8.0]
-18:24:11 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6153.0938,2309.076,8.0,8.0], raw_shape=[6152.027,2311.5078,8.0,8.0]), thisShape=[6131.5347,2278.666,32.0,32.0], otherShape=[6153.0938,2309.076,8.0,8.0]
-18:24:11 | DEBUG | PreciousShard | explodeAndDie()
-18:24:11 | DEBUG | PreciousShard | explodeAndDie()
-18:24:11 | DEBUG | PreciousShard | explodeAndDie()
-18:24:11 | DEBUG | PreciousShard | explodeAndDie()
-18:24:11 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6090.38,2307.6272,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[6059.1924,2283.2058,32.0,32.0], otherShape=[6090.38,2307.6272,32.0,32.0]
-18:24:11 | DEBUG | PreciousGem | hitShield(): shieldFixture=Fixture(type=SHIELD, active=true, shape=[6090.38,2307.6272,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[6059.1924,2283.2058,32.0,32.0], otherShape=[6090.38,2307.6272,32.0,32.0]
-18:24:11 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=BLUE]
-	[position=(6059.1924,2299.2058)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-288.0,160.0)]
-})
-18:24:11 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=BLUE]
-	[position=(6059.1924,2299.2058)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-288.0,0.0)]
-})
-18:24:11 | DEBUG | PreciousShard | init()
-18:24:11 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=BLUE]
-	[position=(6059.1924,2299.2058)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-288.0,-160.0)]
-})
-18:24:11 | DEBUG | PreciousShard | init()
-18:24:11 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=BLUE]
-	[position=(6059.1924,2299.2058)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-288.0,160.0)]
-})
-18:24:11 | DEBUG | PreciousShard | init()
-18:24:11 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=BLUE]
-	[position=(6059.1924,2299.2058)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-288.0,0.0)]
-})
-18:24:11 | DEBUG | PreciousShard | init()
-18:24:11 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=BLUE]
-	[position=(6059.1924,2299.2058)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-288.0,-160.0)]
-})
-18:24:11 | DEBUG | PreciousShard | onDestroy()
-18:24:11 | DEBUG | PreciousShard | onDestroy()
-18:24:11 | DEBUG | PreciousShard | onDestroy()
-18:24:11 | DEBUG | PreciousShard | onDestroy()
-18:24:11 | DEBUG | PreciousGem | onDestroy(): hashCode=365557853
-18:24:11 | DEBUG | PreciousShard | explodeAndDie()
-18:24:11 | DEBUG | PreciousShard | explodeAndDie()
-18:24:11 | DEBUG | PreciousShard | explodeAndDie()
-18:24:11 | DEBUG | PreciousShard | explodeAndDie()
-18:24:11 | DEBUG | PreciousShard | explodeAndDie()
-18:24:11 | DEBUG | PreciousShard | explodeAndDie()
-18:24:11 | DEBUG | PreciousShard | explodeAndDie()
-18:24:11 | DEBUG | PreciousShard | explodeAndDie()
-18:24:11 | DEBUG | PreciousShard | onDestroy()
-18:24:11 | DEBUG | PreciousShard | onDestroy()
-18:24:11 | DEBUG | PreciousShard | onDestroy()
-18:24:11 | DEBUG | PreciousShard | onDestroy()
-18:24:11 | DEBUG | PreciousShard | onDestroy()
-18:24:11 | DEBUG | PreciousShard | onDestroy()
-18:24:11 | DEBUG | PreciousGem | hitShield(): shieldFixture=Fixture(type=SHIELD, active=true, shape=[6328.241,2306.2778,16.0,48.0], raw_shape=[0.0,0.0,16.0,48.0]), thisShape=[6297.635,2297.8835,32.0,32.0], otherShape=[6328.241,2306.2778,16.0,48.0]
-18:24:11 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
+21:56:21 | DEBUG | PreciousGem | onDestroy(): hashCode=1735014031
+21:56:21 | DEBUG | PreciousShard | explodeAndDie()
+21:56:21 | DEBUG | PreciousShard | explodeAndDie()
+21:56:21 | DEBUG | PreciousShard | onDestroy()
+21:56:21 | DEBUG | PreciousShard | onDestroy()
+21:56:21 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[8969.708,1698.876,8.0,8.0], raw_shape=[8969.708,1698.876,8.0,8.0]), thisShape=[8974.893,1697.0277,32.0,32.0], otherShape=[8969.708,1698.876,8.0,8.0]
+21:56:22 | DEBUG | PreciousShard | explodeAndDie()
+21:56:22 | DEBUG | PreciousShard | onDestroy()
+21:56:23 | DEBUG | PreciousGem | onHealthDepleted()
+21:56:23 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
 	[collide_delay=false]
 	[size=SMALL]
 	[cull_time=0.5]
 	[color=PINK]
-	[position=(6297.635,2313.8835)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-288.0,160.0)]
+	[position=(8949.032,1842.0668)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
+	[impulse=(160.0,288.0)]
 })
-18:24:11 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
+21:56:23 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
 	[collide_delay=false]
 	[size=SMALL]
 	[cull_time=0.5]
 	[color=PINK]
-	[position=(6297.635,2313.8835)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-288.0,0.0)]
+	[position=(8949.032,1842.0668)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
+	[impulse=(0.0,288.0)]
 })
-18:24:11 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
+21:56:23 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
 	[collide_delay=false]
 	[size=SMALL]
 	[cull_time=0.5]
 	[color=PINK]
-	[position=(6297.635,2313.8835)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-288.0,-160.0)]
+	[position=(8949.032,1842.0668)]
+	[owner={ Megaman:[id=766, dead=false, hashCode=1919555524] }]
+	[impulse=(-160.0,288.0)]
 })
-18:24:11 | DEBUG | PreciousGem | onDestroy(): hashCode=848508986
-18:24:11 | DEBUG | PreciousShard | explodeAndDie()
-18:24:11 | DEBUG | PreciousShard | onDestroy()
-18:24:11 | DEBUG | PreciousShard | explodeAndDie()
-18:24:11 | DEBUG | PreciousShard | onDestroy()
-18:24:12 | DEBUG | PreciousShard | explodeAndDie()
-18:24:12 | DEBUG | PreciousShard | onDestroy()
-18:24:13 | DEBUG | PreciousGem | onDestroy(): hashCode=1432976342
-18:24:16 | DEBUG | PreciousGem | onSpawn(): hashCode=1432976342, spawnProps=Properties({
-	[speed=320.0]
-	[first_target=(6457.0522,2344.1191)]
-	[color=PURPLE]
-	[cull_time=5.0]
-	[cull_out_of_bounds=false]
-	[shield_shatter={class com.megaman.maverick.game.entities.blocks.PreciousBlock, class com.megaman.maverick.game.entities.megaman.Megaman, class com.megaman.maverick.game.entities.projectiles.Axe}]
-	[position=(6409.0522,2344.1191)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-})
-18:24:16 | DEBUG | PreciousGem | onSpawn(): hashCode=848508986, spawnProps=Properties({
-	[speed=320.0]
-	[first_target=(6409.0522,2392.1191)]
-	[color=BLUE]
-	[cull_time=5.0]
-	[cull_out_of_bounds=false]
-	[shield_shatter={class com.megaman.maverick.game.entities.blocks.PreciousBlock, class com.megaman.maverick.game.entities.megaman.Megaman, class com.megaman.maverick.game.entities.projectiles.Axe}]
-	[position=(6409.0522,2344.1191)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-})
-18:24:16 | DEBUG | PreciousGem | onSpawn(): hashCode=365557853, spawnProps=Properties({
-	[speed=320.0]
-	[first_target=(6361.0522,2344.1191)]
-	[color=PINK]
-	[cull_time=5.0]
-	[cull_out_of_bounds=false]
-	[shield_shatter={class com.megaman.maverick.game.entities.blocks.PreciousBlock, class com.megaman.maverick.game.entities.megaman.Megaman, class com.megaman.maverick.game.entities.projectiles.Axe}]
-	[position=(6409.0522,2344.1191)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-})
-18:24:16 | DEBUG | PreciousGem | onSpawn(): hashCode=127684341, spawnProps=Properties({
-	[speed=320.0]
-	[first_target=(6409.0522,2296.1191)]
-	[color=GREEN]
-	[cull_time=5.0]
-	[cull_out_of_bounds=false]
-	[shield_shatter={class com.megaman.maverick.game.entities.blocks.PreciousBlock, class com.megaman.maverick.game.entities.megaman.Megaman, class com.megaman.maverick.game.entities.projectiles.Axe}]
-	[position=(6409.0522,2344.1191)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-})
-18:24:16 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6405.0522,2340.1191,8.0,8.0], raw_shape=[6405.0522,2340.1191,8.0,8.0]), thisShape=[6405.0522,2340.1191,8.0,8.0], otherShape=[6405.0522,2340.1191,8.0,8.0]
-18:24:16 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6405.0522,2340.1191,8.0,8.0], raw_shape=[6405.0522,2340.1191,8.0,8.0]), thisShape=[6405.0522,2340.1191,8.0,8.0], otherShape=[6405.0522,2340.1191,8.0,8.0]
-18:24:16 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6405.0522,2340.1191,8.0,8.0], raw_shape=[6405.0522,2340.1191,8.0,8.0]), thisShape=[6405.0522,2340.1191,8.0,8.0], otherShape=[6405.0522,2340.1191,8.0,8.0]
-18:24:16 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6405.0522,2340.1191,8.0,8.0], raw_shape=[6405.0522,2340.1191,8.0,8.0]), thisShape=[6405.0522,2340.1191,8.0,8.0], otherShape=[6405.0522,2340.1191,8.0,8.0]
-18:24:16 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6405.0522,2340.1191,8.0,8.0], raw_shape=[6405.0522,2340.1191,8.0,8.0]), thisShape=[6405.0522,2340.1191,8.0,8.0], otherShape=[6405.0522,2340.1191,8.0,8.0]
-18:24:16 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6405.0522,2340.1191,8.0,8.0], raw_shape=[6405.0522,2340.1191,8.0,8.0]), thisShape=[6405.0522,2340.1191,8.0,8.0], otherShape=[6405.0522,2340.1191,8.0,8.0]
-18:24:16 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6405.0522,2340.1191,8.0,8.0], raw_shape=[6405.0522,2340.1191,8.0,8.0]), thisShape=[6405.0522,2340.1191,8.0,8.0], otherShape=[6405.0522,2340.1191,8.0,8.0]
-18:24:16 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6405.0522,2340.1191,8.0,8.0], raw_shape=[6405.0522,2340.1191,8.0,8.0]), thisShape=[6405.0522,2340.1191,8.0,8.0], otherShape=[6405.0522,2340.1191,8.0,8.0]
-18:24:16 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6405.0522,2340.1191,8.0,8.0], raw_shape=[6405.0522,2340.1191,8.0,8.0]), thisShape=[6405.0522,2340.1191,8.0,8.0], otherShape=[6405.0522,2340.1191,8.0,8.0]
-18:24:16 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6405.0522,2340.1191,8.0,8.0], raw_shape=[6405.0522,2340.1191,8.0,8.0]), thisShape=[6405.0522,2340.1191,8.0,8.0], otherShape=[6405.0522,2340.1191,8.0,8.0]
-18:24:16 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6405.0522,2340.1191,8.0,8.0], raw_shape=[6405.0522,2340.1191,8.0,8.0]), thisShape=[6405.0522,2340.1191,8.0,8.0], otherShape=[6405.0522,2340.1191,8.0,8.0]
-18:24:16 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6405.0522,2340.1191,8.0,8.0], raw_shape=[6405.0522,2340.1191,8.0,8.0]), thisShape=[6405.0522,2340.1191,8.0,8.0], otherShape=[6405.0522,2340.1191,8.0,8.0]
-18:24:16 | DEBUG | PreciousGem | update(): target reached, stateIndex=1
-18:24:16 | DEBUG | PreciousGem | update(): target reached, stateIndex=1
-18:24:16 | DEBUG | PreciousGem | update(): target reached, stateIndex=1
-18:24:16 | DEBUG | PreciousGem | update(): target reached, stateIndex=1
-18:24:16 | DEBUG | PreciousGem | update(): stateIndex=2, trajectory=(-264.3753,180.2934)
-18:24:16 | DEBUG | PreciousGem | update(): stateIndex=2, trajectory=(-106.545944,301.74158)
-18:24:16 | DEBUG | PreciousGem | update(): stateIndex=2, trajectory=(-200.59096,249.32564)
-18:24:18 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6341.708,2376.5337,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[6329.8623,2345.08,32.0,32.0], otherShape=[6341.708,2376.5337,32.0,32.0]
-18:24:18 | DEBUG | PreciousGem | hitShield(): shieldFixture=Fixture(type=SHIELD, active=true, shape=[6341.708,2376.5337,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[6329.8623,2345.08,32.0,32.0], otherShape=[6341.708,2376.5337,32.0,32.0]
-18:24:18 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PURPLE]
-	[position=(6345.8623,2345.08)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(160.0,-288.0)]
-})
-18:24:18 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PURPLE]
-	[position=(6345.8623,2345.08)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(0.0,-288.0)]
-})
-18:24:18 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PURPLE]
-	[position=(6345.8623,2345.08)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-160.0,-288.0)]
-})
-18:24:18 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PURPLE]
-	[position=(6345.8623,2345.08)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(160.0,-288.0)]
-})
-18:24:18 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PURPLE]
-	[position=(6345.8623,2345.08)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(0.0,-288.0)]
-})
-18:24:18 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PURPLE]
-	[position=(6345.8623,2345.08)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-160.0,-288.0)]
-})
-18:24:18 | DEBUG | PreciousGem | onDestroy(): hashCode=1432976342
-18:24:18 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6343.4146,2373.1204,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[6373.291,2400.4753,32.0,32.0], otherShape=[6343.4146,2373.1204,32.0,32.0]
-18:24:18 | DEBUG | PreciousGem | hitShield(): shieldFixture=Fixture(type=SHIELD, active=true, shape=[6343.4146,2373.1204,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[6373.291,2400.4753,32.0,32.0], otherShape=[6343.4146,2373.1204,32.0,32.0]
-18:24:18 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=GREEN]
-	[position=(6405.291,2416.4753)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(288.0,160.0)]
-})
-18:24:18 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=GREEN]
-	[position=(6405.291,2416.4753)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(288.0,0.0)]
-})
-18:24:18 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=GREEN]
-	[position=(6405.291,2416.4753)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(288.0,-160.0)]
-})
-18:24:18 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=GREEN]
-	[position=(6405.291,2416.4753)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(288.0,160.0)]
-})
-18:24:18 | DEBUG | PreciousShard | init()
-18:24:18 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=GREEN]
-	[position=(6405.291,2416.4753)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(288.0,0.0)]
-})
-18:24:18 | DEBUG | PreciousShard | init()
-18:24:18 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=GREEN]
-	[position=(6405.291,2416.4753)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(288.0,-160.0)]
-})
-18:24:18 | DEBUG | PreciousGem | onDestroy(): hashCode=127684341
-18:24:18 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6362.1865,2330.294,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[6370.952,2300.7305,32.0,32.0], otherShape=[6362.1865,2330.294,32.0,32.0]
-18:24:18 | DEBUG | PreciousGem | hitShield(): shieldFixture=Fixture(type=SHIELD, active=true, shape=[6362.1865,2330.294,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[6370.952,2300.7305,32.0,32.0], otherShape=[6362.1865,2330.294,32.0,32.0]
-18:24:18 | DEBUG | PreciousShard | init()
-18:24:18 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=BLUE]
-	[position=(6386.952,2300.7305)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(160.0,-288.0)]
-})
-18:24:18 | DEBUG | PreciousShard | init()
-18:24:18 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=BLUE]
-	[position=(6386.952,2300.7305)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(0.0,-288.0)]
-})
-18:24:18 | DEBUG | PreciousShard | init()
-18:24:18 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=BLUE]
-	[position=(6386.952,2300.7305)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-160.0,-288.0)]
-})
-18:24:18 | DEBUG | PreciousShard | init()
-18:24:18 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=BLUE]
-	[position=(6386.952,2300.7305)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(160.0,-288.0)]
-})
-18:24:18 | DEBUG | PreciousShard | init()
-18:24:18 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=BLUE]
-	[position=(6386.952,2300.7305)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(0.0,-288.0)]
-})
-18:24:18 | DEBUG | PreciousShard | init()
-18:24:18 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=BLUE]
-	[position=(6386.952,2300.7305)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-160.0,-288.0)]
-})
-18:24:18 | DEBUG | PreciousGem | onDestroy(): hashCode=848508986
-18:24:18 | DEBUG | PreciousShard | explodeAndDie()
-18:24:18 | DEBUG | PreciousShard | explodeAndDie()
-18:24:18 | DEBUG | PreciousShard | explodeAndDie()
-18:24:18 | DEBUG | PreciousShard | explodeAndDie()
-18:24:18 | DEBUG | PreciousShard | explodeAndDie()
-18:24:18 | DEBUG | PreciousShard | explodeAndDie()
-18:24:18 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6424.33,2397.1794,8.0,8.0], raw_shape=[6422.41,2398.6301,8.0,8.0]), thisShape=[6410.949,2366.4111,32.0,32.0], otherShape=[6424.33,2397.1794,8.0,8.0]
-18:24:18 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6424.33,2397.1794,8.0,8.0], raw_shape=[6422.41,2398.6301,8.0,8.0]), thisShape=[6410.949,2366.4111,32.0,32.0], otherShape=[6424.33,2397.1794,8.0,8.0]
-18:24:18 | DEBUG | PreciousShard | explodeAndDie()
-18:24:18 | DEBUG | PreciousShard | explodeAndDie()
-18:24:18 | DEBUG | PreciousShard | onDestroy()
-18:24:18 | DEBUG | PreciousShard | onDestroy()
-18:24:18 | DEBUG | PreciousShard | onDestroy()
-18:24:18 | DEBUG | PreciousShard | onDestroy()
-18:24:18 | DEBUG | PreciousShard | onDestroy()
-18:24:18 | DEBUG | PreciousShard | onDestroy()
-18:24:18 | DEBUG | PreciousShard | onDestroy()
-18:24:18 | DEBUG | PreciousShard | onDestroy()
-18:24:18 | DEBUG | PreciousShard | explodeAndDie()
-18:24:18 | DEBUG | PreciousShard | explodeAndDie()
-18:24:18 | DEBUG | PreciousShard | explodeAndDie()
-18:24:18 | DEBUG | PreciousShard | explodeAndDie()
-18:24:18 | DEBUG | PreciousShard | explodeAndDie()
-18:24:18 | DEBUG | PreciousShard | explodeAndDie()
-18:24:18 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6435.8496,2407.0034,8.0,8.0], raw_shape=[6433.9297,2407.5793,8.0,8.0]), thisShape=[6406.0757,2375.393,32.0,32.0], otherShape=[6435.8496,2407.0034,8.0,8.0]
-18:24:18 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6435.8496,2407.0034,8.0,8.0], raw_shape=[6433.9297,2407.5793,8.0,8.0]), thisShape=[6406.0757,2375.393,32.0,32.0], otherShape=[6435.8496,2407.0034,8.0,8.0]
-18:24:18 | DEBUG | PreciousShard | explodeAndDie()
-18:24:18 | DEBUG | PreciousShard | explodeAndDie()
-18:24:18 | DEBUG | PreciousShard | onDestroy()
-18:24:18 | DEBUG | PreciousShard | onDestroy()
-18:24:18 | DEBUG | PreciousShard | onDestroy()
-18:24:18 | DEBUG | PreciousShard | onDestroy()
-18:24:18 | DEBUG | PreciousShard | onDestroy()
-18:24:18 | DEBUG | PreciousShard | onDestroy()
-18:24:18 | DEBUG | PreciousShard | onDestroy()
-18:24:18 | DEBUG | PreciousShard | onDestroy()
-18:24:18 | DEBUG | PreciousShard | explodeAndDie()
-18:24:18 | DEBUG | PreciousShard | explodeAndDie()
-18:24:18 | DEBUG | PreciousShard | onDestroy()
-18:24:18 | DEBUG | PreciousShard | onDestroy()
-18:24:20 | DEBUG | PreciousGem | onDestroy(): hashCode=365557853
-18:24:24 | DEBUG | PreciousGem | onSpawn(): hashCode=365557853, spawnProps=Properties({
-	[speed=320.0]
-	[first_target=(6199.2363,2336.0)]
-	[color=PURPLE]
-	[cull_time=5.0]
-	[cull_out_of_bounds=false]
-	[shield_shatter={class com.megaman.maverick.game.entities.blocks.PreciousBlock, class com.megaman.maverick.game.entities.megaman.Megaman, class com.megaman.maverick.game.entities.projectiles.Axe}]
-	[position=(6151.2363,2336.0)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-})
-18:24:24 | DEBUG | PreciousGem | onSpawn(): hashCode=848508986, spawnProps=Properties({
-	[speed=320.0]
-	[first_target=(6151.2363,2384.0)]
-	[color=BLUE]
-	[cull_time=5.0]
-	[cull_out_of_bounds=false]
-	[shield_shatter={class com.megaman.maverick.game.entities.blocks.PreciousBlock, class com.megaman.maverick.game.entities.megaman.Megaman, class com.megaman.maverick.game.entities.projectiles.Axe}]
-	[position=(6151.2363,2336.0)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-})
-18:24:24 | DEBUG | PreciousGem | onSpawn(): hashCode=127684341, spawnProps=Properties({
-	[speed=320.0]
-	[first_target=(6103.2363,2336.0)]
-	[color=PINK]
-	[cull_time=5.0]
-	[cull_out_of_bounds=false]
-	[shield_shatter={class com.megaman.maverick.game.entities.blocks.PreciousBlock, class com.megaman.maverick.game.entities.megaman.Megaman, class com.megaman.maverick.game.entities.projectiles.Axe}]
-	[position=(6151.2363,2336.0)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-})
-18:24:24 | DEBUG | PreciousGem | onSpawn(): hashCode=1432976342, spawnProps=Properties({
-	[speed=320.0]
-	[first_target=(6151.2363,2288.0)]
-	[color=GREEN]
-	[cull_time=5.0]
-	[cull_out_of_bounds=false]
-	[shield_shatter={class com.megaman.maverick.game.entities.blocks.PreciousBlock, class com.megaman.maverick.game.entities.megaman.Megaman, class com.megaman.maverick.game.entities.projectiles.Axe}]
-	[position=(6151.2363,2336.0)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-})
-18:24:24 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6147.2363,2332.0,8.0,8.0], raw_shape=[6147.2363,2332.0,8.0,8.0]), thisShape=[6147.2363,2332.0,8.0,8.0], otherShape=[6147.2363,2332.0,8.0,8.0]
-18:24:24 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6147.2363,2332.0,8.0,8.0], raw_shape=[6147.2363,2332.0,8.0,8.0]), thisShape=[6147.2363,2332.0,8.0,8.0], otherShape=[6147.2363,2332.0,8.0,8.0]
-18:24:24 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6147.2363,2332.0,8.0,8.0], raw_shape=[6147.2363,2332.0,8.0,8.0]), thisShape=[6147.2363,2332.0,8.0,8.0], otherShape=[6147.2363,2332.0,8.0,8.0]
-18:24:24 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6147.2363,2332.0,8.0,8.0], raw_shape=[6147.2363,2332.0,8.0,8.0]), thisShape=[6147.2363,2332.0,8.0,8.0], otherShape=[6147.2363,2332.0,8.0,8.0]
-18:24:24 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6147.2363,2332.0,8.0,8.0], raw_shape=[6147.2363,2332.0,8.0,8.0]), thisShape=[6147.2363,2332.0,8.0,8.0], otherShape=[6147.2363,2332.0,8.0,8.0]
-18:24:24 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6147.2363,2332.0,8.0,8.0], raw_shape=[6147.2363,2332.0,8.0,8.0]), thisShape=[6147.2363,2332.0,8.0,8.0], otherShape=[6147.2363,2332.0,8.0,8.0]
-18:24:24 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6147.2363,2332.0,8.0,8.0], raw_shape=[6147.2363,2332.0,8.0,8.0]), thisShape=[6147.2363,2332.0,8.0,8.0], otherShape=[6147.2363,2332.0,8.0,8.0]
-18:24:24 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6147.2363,2332.0,8.0,8.0], raw_shape=[6147.2363,2332.0,8.0,8.0]), thisShape=[6147.2363,2332.0,8.0,8.0], otherShape=[6147.2363,2332.0,8.0,8.0]
-18:24:24 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6147.2363,2332.0,8.0,8.0], raw_shape=[6147.2363,2332.0,8.0,8.0]), thisShape=[6147.2363,2332.0,8.0,8.0], otherShape=[6147.2363,2332.0,8.0,8.0]
-18:24:24 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6147.2363,2332.0,8.0,8.0], raw_shape=[6147.2363,2332.0,8.0,8.0]), thisShape=[6147.2363,2332.0,8.0,8.0], otherShape=[6147.2363,2332.0,8.0,8.0]
-18:24:24 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6147.2363,2332.0,8.0,8.0], raw_shape=[6147.2363,2332.0,8.0,8.0]), thisShape=[6147.2363,2332.0,8.0,8.0], otherShape=[6147.2363,2332.0,8.0,8.0]
-18:24:24 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6147.2363,2332.0,8.0,8.0], raw_shape=[6147.2363,2332.0,8.0,8.0]), thisShape=[6147.2363,2332.0,8.0,8.0], otherShape=[6147.2363,2332.0,8.0,8.0]
-18:24:24 | DEBUG | PreciousGem | update(): target reached, stateIndex=1
-18:24:24 | DEBUG | PreciousGem | update(): target reached, stateIndex=1
-18:24:24 | DEBUG | PreciousGem | update(): target reached, stateIndex=1
-18:24:24 | DEBUG | PreciousGem | update(): target reached, stateIndex=1
-18:24:25 | DEBUG | PreciousGem | update(): stateIndex=2, trajectory=(307.96588,86.931114)
-18:24:25 | DEBUG | PreciousGem | update(): stateIndex=2, trajectory=(295.89774,121.83815)
-18:24:25 | DEBUG | PreciousGem | update(): stateIndex=2, trajectory=(287.1283,141.27046)
-18:24:26 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6232.276,2362.4004,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[6202.1416,2337.6348,32.0,32.0], otherShape=[6232.276,2362.4004,32.0,32.0]
-18:24:26 | DEBUG | PreciousGem | hitShield(): shieldFixture=Fixture(type=SHIELD, active=true, shape=[6232.276,2362.4004,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[6202.1416,2337.6348,32.0,32.0], otherShape=[6232.276,2362.4004,32.0,32.0]
-18:24:26 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PINK]
-	[position=(6202.1416,2353.6348)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-288.0,160.0)]
-})
-18:24:26 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PINK]
-	[position=(6202.1416,2353.6348)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-288.0,0.0)]
-})
-18:24:26 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PINK]
-	[position=(6202.1416,2353.6348)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-288.0,-160.0)]
-})
-18:24:26 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PINK]
-	[position=(6202.1416,2353.6348)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-288.0,160.0)]
-})
-18:24:26 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PINK]
-	[position=(6202.1416,2353.6348)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-288.0,0.0)]
-})
-18:24:26 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PINK]
-	[position=(6202.1416,2353.6348)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-288.0,-160.0)]
-})
-18:24:26 | DEBUG | PreciousGem | onDestroy(): hashCode=127684341
-18:24:27 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6163.583,2324.9631,8.0,8.0], raw_shape=[6165.503,2326.6057,8.0,8.0]), thisShape=[6153.608,2294.318,32.0,32.0], otherShape=[6163.583,2324.9631,8.0,8.0]
-18:24:27 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6163.583,2324.9631,8.0,8.0], raw_shape=[6165.503,2326.6057,8.0,8.0]), thisShape=[6153.608,2294.318,32.0,32.0], otherShape=[6163.583,2324.9631,8.0,8.0]
-18:24:27 | DEBUG | PreciousShard | explodeAndDie()
-18:24:27 | DEBUG | PreciousShard | explodeAndDie()
-18:24:27 | DEBUG | PreciousShard | onDestroy()
-18:24:27 | DEBUG | PreciousShard | onDestroy()
-18:24:27 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6138.624,2333.7627,8.0,8.0], raw_shape=[6140.544,2334.7546,8.0,8.0]), thisShape=[6107.7114,2333.6128,32.0,32.0], otherShape=[6138.624,2333.7627,8.0,8.0]
-18:24:27 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6138.624,2333.7627,8.0,8.0], raw_shape=[6140.544,2334.7546,8.0,8.0]), thisShape=[6107.7114,2333.6128,32.0,32.0], otherShape=[6138.624,2333.7627,8.0,8.0]
-18:24:27 | DEBUG | PreciousShard | explodeAndDie()
-18:24:27 | DEBUG | PreciousShard | explodeAndDie()
-18:24:27 | DEBUG | PreciousShard | onDestroy()
-18:24:27 | DEBUG | PreciousShard | onDestroy()
-18:24:27 | DEBUG | PreciousShard | explodeAndDie()
-18:24:27 | DEBUG | PreciousShard | explodeAndDie()
-18:24:27 | DEBUG | PreciousShard | onDestroy()
-18:24:27 | DEBUG | PreciousShard | onDestroy()
-18:24:29 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6442.4116,2422.3203,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[6437.932,2392.8188,32.0,32.0], otherShape=[6442.4116,2422.3203,32.0,32.0]
-18:24:29 | DEBUG | PreciousGem | hitShield(): shieldFixture=Fixture(type=SHIELD, active=true, shape=[6442.4116,2422.3203,32.0,32.0], raw_shape=[0.0,0.0,32.0,32.0]), thisShape=[6437.932,2392.8188,32.0,32.0], otherShape=[6442.4116,2422.3203,32.0,32.0]
-18:24:29 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PURPLE]
-	[position=(6453.932,2392.8188)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(160.0,-288.0)]
-})
-18:24:29 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PURPLE]
-	[position=(6453.932,2392.8188)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(0.0,-288.0)]
-})
-18:24:29 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PURPLE]
-	[position=(6453.932,2392.8188)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-160.0,-288.0)]
-})
-18:24:29 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PURPLE]
-	[position=(6453.932,2392.8188)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(160.0,-288.0)]
-})
-18:24:29 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PURPLE]
-	[position=(6453.932,2392.8188)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(0.0,-288.0)]
-})
-18:24:29 | DEBUG | PreciousShard | onSpawn(): direction=UP, spawnProps=Properties({
-	[collide_delay=false]
-	[size=SMALL]
-	[cull_time=0.5]
-	[color=PURPLE]
-	[position=(6453.932,2392.8188)]
-	[owner={ PreciousWoman:[id=684, dead=false, hashCode=344140948] }]
-	[impulse=(-160.0,-288.0)]
-})
-18:24:29 | DEBUG | PreciousGem | onDestroy(): hashCode=365557853
-18:24:29 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6449.932,2316.339,8.0,8.0], raw_shape=[6449.932,2319.219,8.0,8.0]), thisShape=[6442.868,2286.3022,32.0,32.0], otherShape=[6449.932,2316.339,8.0,8.0]
-18:24:29 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[6449.932,2316.339,8.0,8.0], raw_shape=[6449.932,2319.219,8.0,8.0]), thisShape=[6442.868,2286.3022,32.0,32.0], otherShape=[6449.932,2316.339,8.0,8.0]
-18:24:29 | DEBUG | PreciousShard | explodeAndDie()
-18:24:29 | DEBUG | PreciousShard | explodeAndDie()
-18:24:29 | DEBUG | PreciousShard | onDestroy()
-18:24:29 | DEBUG | PreciousShard | onDestroy()
-18:24:29 | DEBUG | PreciousShard | explodeAndDie()
-18:24:29 | DEBUG | PreciousShard | explodeAndDie()
-18:24:29 | DEBUG | PreciousShard | explodeAndDie()
-18:24:29 | DEBUG | PreciousShard | explodeAndDie()
-18:24:29 | DEBUG | PreciousShard | onDestroy()
-18:24:29 | DEBUG | PreciousShard | onDestroy()
-18:24:29 | DEBUG | PreciousShard | onDestroy()
-18:24:29 | DEBUG | PreciousShard | onDestroy()
-18:24:31 | DEBUG | PreciousGem | onDestroy(): hashCode=1432976342
-18:24:32 | DEBUG | PreciousGem | onDestroy(): hashCode=848508986
+21:56:23 | DEBUG | PreciousGem | onDestroy(): hashCode=2094852396
+21:56:24 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[9012.216,1894.5145,8.0,8.0], raw_shape=[9011.149,1894.6105,8.0,8.0]), thisShape=[8982.1,1868.3076,32.0,32.0], otherShape=[9012.216,1894.5145,8.0,8.0]
+21:56:24 | DEBUG | PreciousShard | explodeAndDie()
+21:56:24 | DEBUG | PreciousShard | onDestroy()
+21:56:24 | DEBUG | PreciousGem | hitProjectile(): projectileFixture=Fixture(type=PROJECTILE, active=true, shape=[8945.032,1891.7944,8.0,8.0], raw_shape=[8945.032,1892.2104,8.0,8.0]), thisShape=[8945.544,1889.082,32.0,32.0], otherShape=[8945.032,1891.7944,8.0,8.0]
+21:56:24 | DEBUG | PreciousShard | explodeAndDie()
+21:56:24 | DEBUG | PreciousShard | onDestroy()
+21:56:24 | DEBUG | PreciousShard | explodeAndDie()
+21:56:24 | DEBUG | PreciousShard | onDestroy()
+21:56:25 | DEBUG | PreciousGem | onDestroy(): hashCode=333731636
