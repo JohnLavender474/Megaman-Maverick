@@ -36,6 +36,7 @@ import com.megaman.maverick.game.entities.items.HealthBulb
 import com.megaman.maverick.game.entities.items.Life
 import com.megaman.maverick.game.entities.items.WeaponEnergyBulb
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
+import com.megaman.maverick.game.entities.special.CartV2
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportEndProp
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportStartProp
@@ -101,7 +102,7 @@ abstract class AbstractEnemy(
         addComponent(defineSpritesComponent())
 
         runnablesOnDestroy.put(ConstKeys.ITEMS) {
-            if (isHealthDepleted()) {
+            if (isHealthDepleted() && canSpawnItemOnDeath()) {
                 disintegrate()
 
                 if (dropItemOnDeath) {
@@ -130,6 +131,8 @@ abstract class AbstractEnemy(
         setStandardOnTeleportStartProp(this)
         setStandardOnTeleportEndProp(this)
     }
+
+    private fun canSpawnItemOnDeath() = lastDamager != CartV2
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)

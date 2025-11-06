@@ -1657,7 +1657,6 @@
   </object>
   <object id="724" name="FireballBar" x="2624" y="2720" width="32" height="32">
    <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
     <property name="spawn_room" value="room1"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>

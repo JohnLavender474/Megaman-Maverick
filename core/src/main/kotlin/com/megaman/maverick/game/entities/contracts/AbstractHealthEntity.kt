@@ -35,6 +35,8 @@ abstract class AbstractHealthEntity(
     protected open val damageTimer = Timer(dmgDuration)
     protected open val damageBlinkTimer = Timer(dmgBlinkDur)
 
+    protected var lastDamager: IDamager? = null
+
     open var damageBlink = false
         protected set
 
@@ -58,6 +60,12 @@ abstract class AbstractHealthEntity(
         wasHealthDepleted = false
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        lastDamager = null
+    }
+
     override fun canBeDamagedBy(damager: IDamager) = !invincible &&
         (damageOverrides.containsKey(damager::class) ||
             (damageNegotiator != null && damageNegotiator!!.get(damager) != 0))
@@ -77,6 +85,8 @@ abstract class AbstractHealthEntity(
 
         val dmgDur = getDamageDuration(damager)
         damageTimer.resetDuration(dmgDur)
+
+        lastDamager = damager
 
         return true
     }
