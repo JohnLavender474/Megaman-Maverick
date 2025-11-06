@@ -10,6 +10,7 @@ import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IDirectional
+import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -59,7 +60,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 
 class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IBodyEntity,
-    ICullableEntity, IAudioEntity, IEventListener, IDirectional {
+    ICullableEntity, IAudioEntity, IEventListener, IDirectional, Resettable {
 
     companion object {
         const val TAG = "LaserBeamer"
@@ -98,7 +99,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     private var speed = 0f
 
     override fun init() {
-        GameLogger.debug(TAG, "init()")
+        // GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
         super.init()
         addComponent(AudioComponent())
@@ -110,7 +111,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
+        // GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         game.eventsMan.addListener(this)
@@ -157,7 +158,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     }
 
     override fun onDestroy() {
-        GameLogger.debug(TAG, "onDestroy()")
+        // GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
         game.eventsMan.removeListener(this)
@@ -167,7 +168,21 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     }
 
     override fun onEvent(event: Event) {
-        if (event.key == EventType.PLAYER_DONE_DYIN) beaming = false
+        GameLogger.debug(TAG, "onEvent(): event=$event")
+        if (event.key == EventType.PLAYER_DONE_DYIN) reset()
+    }
+
+    override fun reset() {
+        GameLogger.debug(TAG, "reset()")
+
+        beaming = false
+
+        rotatingLine.reset()
+
+        laser?.on = false
+        laser?.set(rotatingLine.line)
+
+        switchTimer.reset()
     }
 
     private fun defineCullablesComponent() = CullablesComponent(
@@ -227,13 +242,12 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
                 beaming = true
                 laser?.on = true
                 requestToPlaySound(SoundAsset.LASER_BEAM_SOUND, false)
-            } else {
-                laser?.on = false
-                return@update
-            }
+            } else reset()
         }
 
         laser?.set(rotatingLine.line)
+
+        if (!beaming) return@update
 
         switchTimer.update(delta)
         if (!switchTimer.isFinished()) return@update

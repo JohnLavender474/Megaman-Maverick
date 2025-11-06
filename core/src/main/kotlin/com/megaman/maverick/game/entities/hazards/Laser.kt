@@ -107,7 +107,13 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
             if (isProperty(ConstKeys.ON, value)) return
 
             putProperty(ConstKeys.ON, value)
-            if (!value) spriteOnDelay.reset()
+
+            if (value) GameLogger.debug(TAG, "turn on: $line")
+            else {
+                reflectingLaser?.on = false
+                spriteOnDelay.reset()
+                line.reset()
+            }
         }
 
     // The "owner" is the entity that spawns this laser (or causes it to be spawned), e.g.
@@ -158,7 +164,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     private var spritesHidden = false
 
     override fun init() {
-        GameLogger.debug(TAG, "init()")
+        // GameLogger.debug(TAG, "init()")
         if (region == null) region =
             game.assMan.getTextureRegion(TextureAsset.COLORS.source, "${ConstKeys.BRIGHT}_${ConstKeys.RED}")
         super.init()
@@ -169,7 +175,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
+        // GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val maxLength = spawnProps.getOrDefault(ConstKeys.RADIUS, DEFAULT_MAX_LENGTH, Float::class) * ConstVals.PPM
@@ -222,7 +228,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     }
 
     override fun onDestroy() {
-        GameLogger.debug(TAG, "onDestroy()")
+        // GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
         owner = null
@@ -313,17 +319,17 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
     fun setFirstLocalPoint(p1: Vector2) {
         line.setFirstLocalPoint(p1)
-        GameLogger.debug(TAG, "setFirstLocalPoint(): line=$line, owner=$owner, parent=$parent")
+        // GameLogger.debug(TAG, "setFirstLocalPoint(): line=$line, owner=$owner, parent=$parent")
     }
 
     fun setSecondLocalPoint(p2: Vector2) {
         line.setSecondLocalPoint(p2)
-        GameLogger.debug(TAG, "setSecondLocalPoint(): line=$line, owner=$owner, parent=$parent")
+        // GameLogger.debug(TAG, "setSecondLocalPoint(): line=$line, owner=$owner, parent=$parent")
     }
 
     fun set(other: GameLine) {
         line.set(other)
-        GameLogger.debug(TAG, "set(): line=$line, other=$other, owner=$owner, parent=$parent")
+        // GameLogger.debug(TAG, "set(): line=$line, other=$other, owner=$owner, parent=$parent")
     }
 
     private fun defineBodyComponent(): BodyComponent {
@@ -372,10 +378,10 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
                         val (endPoint, fixture) = contacts.poll()
                         if (fixture.getType() == FixtureType.SHIELD) {
                             if (shouldHitShield(fixture)) {
-                                GameLogger.debug(TAG, "body.postProcess(): hit shield: $fixture")
+                                // GameLogger.debug(TAG, "body.postProcess(): hit shield: $fixture")
                                 hitShieldFixture = fixture
                             } else {
-                                GameLogger.debug(TAG, "body.postProcess(): ignore shield: $fixture")
+                                // GameLogger.debug(TAG, "body.postProcess(): ignore shield: $fixture")
                                 resetReflectingLaserIfAny()
                             }
                         }
@@ -465,12 +471,14 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         val shieldFixture = hitShieldFixture!!
         hitShieldFixture = null
 
+        /*
         GameLogger.debug(
             TAG,
             "defineUpdatablesComponent(): " +
                 "shieldFixture=$shieldFixture, " +
                 "reflectDir=${shieldFixture.getProperty("${ConstKeys.REFLECT}_${ConstKeys.DIRECTION}")}"
         )
+         */
 
         hitShield(shieldFixture, delta)
 
@@ -493,16 +501,18 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
             return@update
         }
 
-        GameLogger.debug(TAG, "defineUpdatablesComponent(): direction=$direction")
+        // GameLogger.debug(TAG, "defineUpdatablesComponent(): direction=$direction")
 
         val origin = getFirstLocalPoint()
         val xDiff = actualEndPoint.x - origin.x
         val yDiff = actualEndPoint.y - origin.y
 
+        /*
         GameLogger.debug(
             TAG,
             "defineUpdatablesComponent(): this.origin=$origin, this.endPoint=$actualEndPoint, xDiff=$xDiff, yDiff=$yDiff"
         )
+         */
 
         val newFirstPoint = GameObjectPools.fetch(Vector2::class).set(actualEndPoint)
 
@@ -524,14 +534,16 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         newSecondPoint.set(newFirstPoint)
             .add(reflectionDirection.scl(DEFAULT_MAX_LENGTH * ConstVals.PPM))
 
+        /*
         GameLogger.debug(
             TAG,
             "defineUpdatablesComponent(): newFirstPoint=$newFirstPoint, newSecondPoint=$newSecondPoint"
         )
+         */
 
         val reflector = shieldFixture.getEntity()
 
-        GameLogger.debug(TAG, "defineUpdatablesComponent(): reflector=$reflector")
+        // GameLogger.debug(TAG, "defineUpdatablesComponent(): reflector=$reflector")
 
         if (reflectingLaser == null) {
             reflectingLaser = MegaEntityFactory.fetch(Laser::class)!!
@@ -579,7 +591,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     private fun buildLaserSprites(maxLength: Float) {
         val count = (maxLength / (LASER_SPRITE_SIZE * ConstVals.PPM)).toInt()
 
-        GameLogger.debug(TAG, "buildLaserSprites(): maxRadius=$maxLength, count=$count")
+        // GameLogger.debug(TAG, "buildLaserSprites(): maxRadius=$maxLength, count=$count")
 
         for (i in 0 until count) {
             val key = "${ConstKeys.PIECE}_$i"

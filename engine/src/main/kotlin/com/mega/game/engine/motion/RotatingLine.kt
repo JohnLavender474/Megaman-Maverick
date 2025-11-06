@@ -39,6 +39,7 @@ class RotatingLine(
 
     override fun reset() {
         degrees = degreesOnReset
+        line.rotation = degrees
     }
 
     fun set(origin: Vector2, endPoint: Vector2) {

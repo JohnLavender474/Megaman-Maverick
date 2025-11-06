@@ -1906,10 +1906,10 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="9" name="player">
+ <objectgroup id="9" name="temp">
   <object id="766" name="0" x="8864" y="1120" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="8" name="temp">
+ <objectgroup id="8" name="player">
   <object id="10" name="0" x="128" y="2912" width="32" height="32"/>
   <object id="236" name="1" x="4496" y="1984" width="32" height="32">
    <properties>
