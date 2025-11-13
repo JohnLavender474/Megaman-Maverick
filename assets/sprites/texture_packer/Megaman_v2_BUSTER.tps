@@ -221,6 +221,7 @@
             <key type="filename">../frames/Megaman_v2/damaged.png</key>
             <key type="filename">../frames/Megaman_v2/groundslide_charge_half.png</key>
             <key type="filename">../frames/Megaman_v2/jump_charge_half.png</key>
+            <key type="filename">../frames/Megaman_v2/jump_down_charge_half.png</key>
             <key type="filename">../frames/Megaman_v2/slip_charge_half.png</key>
             <key type="filename">../frames/Megaman_v2/stand_charge_half.png</key>
             <key type="filename">../frames/Megaman_v2/swim_charge_half.png</key>
@@ -249,6 +250,7 @@
             <key type="filename">../frames/Megaman_v2/crouch_charge_full.png</key>
             <key type="filename">../frames/Megaman_v2/groundslide_charge_full.png</key>
             <key type="filename">../frames/Megaman_v2/jump_charge_full.png</key>
+            <key type="filename">../frames/Megaman_v2/jump_down_charge_full.png</key>
             <key type="filename">../frames/Megaman_v2/slip_charge_full.png</key>
             <key type="filename">../frames/Megaman_v2/stand.png</key>
             <key type="filename">../frames/Megaman_v2/stand_charge_full.png</key>

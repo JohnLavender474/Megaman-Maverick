@@ -96,9 +96,13 @@ fun Megaman.amendKey(baseKey: String) = when {
             else "${baseKey}_shoot"
         }
     }
+    baseKey == "jump" && game.controllerPoller.isPressed(MegaControllerButton.DOWN) -> {
+        if (fullyCharged) "jump_down_charge_full"
+        else if (halfCharged) "jump_down_charge_half"
+        else "jump_down"
+    }
     fullyCharged -> "${baseKey}_charge_full"
     halfCharged -> "${baseKey}_charge_half"
-    baseKey == "jump" && game.controllerPoller.isPressed(MegaControllerButton.DOWN) -> "jump_down"
     else -> baseKey
 }
 

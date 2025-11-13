@@ -695,9 +695,9 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
         val position = if (shootingDown)
             GameObjectPools.fetch(Vector2::class)
-                .set(megaman.body.getCenter())
                 .add(0.25f * megaman.facing.value * ConstVals.PPM, -0.75f * ConstVals.PPM)
                 .rotateDeg(megaman.direction.rotation)
+                .add(megaman.body.getCenter())
         else getSpawnPosition()
 
         val direction = if (shootingDown) megaman.direction.getRotatedClockwise() else megaman.direction
@@ -723,6 +723,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 megaman.stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
 
                 props.put(ConstKeys.BOOLEAN, stat == MegaChargeStatus.FULLY_CHARGED)
+                props.put("${ConstKeys.SHOOT}_${ConstKeys.DOWN}", shootingDown)
 
                 val chargedShot = MegaEntityFactory.fetch(ChargedShot::class)!!
                 chargedShot.spawn(props)

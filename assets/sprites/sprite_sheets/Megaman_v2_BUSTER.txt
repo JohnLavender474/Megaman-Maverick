@@ -19,7 +19,7 @@ airdash_charge_full
   index: -1
 airdash_charge_half
   rotate: false
-  xy: 48, 240
+  xy: 96, 240
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -54,14 +54,14 @@ cartin_charge_full
   index: -1
 cartin_charge_half
   rotate: false
-  xy: 96, 240
+  xy: 144, 240
   size: 96, 144
   orig: 96, 144
   offset: 0, 0
   index: -1
 cartin_damaged
   rotate: false
-  xy: 192, 240
+  xy: 240, 240
   size: 96, 144
   orig: 96, 144
   offset: 0, 0
@@ -82,7 +82,7 @@ cartin_jump_charge_full
   index: -1
 cartin_jump_charge_half
   rotate: false
-  xy: 288, 240
+  xy: 336, 240
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -117,7 +117,7 @@ climb_charge_full
   index: -1
 climb_charge_half
   rotate: false
-  xy: 336, 240
+  xy: 384, 240
   size: 96, 144
   orig: 96, 144
   offset: 0, 0
@@ -138,7 +138,7 @@ climb_finish_charge_full
   index: -1
 climb_finish_charge_half
   rotate: false
-  xy: 432, 240
+  xy: 480, 240
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -159,7 +159,7 @@ climb_still_charge_full
   index: -1
 climb_still_charge_half
   rotate: false
-  xy: 480, 240
+  xy: 528, 240
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -187,7 +187,7 @@ crouch_charge_full
   index: -1
 crouch_charge_half
   rotate: false
-  xy: 528, 240
+  xy: 576, 240
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -201,7 +201,7 @@ crouch_shoot
   index: -1
 damaged
   rotate: false
-  xy: 576, 240
+  xy: 624, 240
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -236,7 +236,7 @@ groundslide_charge_full
   index: -1
 groundslide_charge_half
   rotate: false
-  xy: 624, 240
+  xy: 672, 240
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -264,7 +264,7 @@ jump_charge_full
   index: -1
 jump_charge_half
   rotate: false
-  xy: 672, 240
+  xy: 720, 240
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -274,6 +274,20 @@ jump_down
   xy: 672, 0
   size: 48, 48
   orig: 48, 48
+  offset: 0, 0
+  index: -1
+jump_down_charge_full
+  rotate: false
+  xy: 288, 144
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+jump_down_charge_half
+  rotate: false
+  xy: 768, 240
+  size: 48, 144
+  orig: 48, 144
   offset: 0, 0
   index: -1
 jump_shoot
@@ -292,28 +306,28 @@ jump_shoot_down
   index: -1
 run
   rotate: false
-  xy: 288, 144
+  xy: 336, 144
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 run_charge_full
   rotate: false
-  xy: 384, 144
+  xy: 432, 144
   size: 192, 96
   orig: 192, 96
   offset: 0, 0
   index: -1
 run_charge_half
   rotate: false
-  xy: 576, 144
+  xy: 624, 144
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 run_shoot
   rotate: false
-  xy: 672, 144
+  xy: 720, 144
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -341,14 +355,14 @@ slip
   index: -1
 slip_charge_full
   rotate: false
-  xy: 768, 144
+  xy: 816, 144
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 slip_charge_half
   rotate: false
-  xy: 720, 240
+  xy: 816, 240
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -369,21 +383,21 @@ spawn
   index: -1
 stand
   rotate: false
-  xy: 816, 144
+  xy: 864, 144
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 stand_charge_full
   rotate: false
-  xy: 864, 144
+  xy: 912, 144
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 stand_charge_half
   rotate: false
-  xy: 768, 240
+  xy: 864, 240
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -397,7 +411,7 @@ stand_shoot
   index: -1
 stunned
   rotate: false
-  xy: 912, 144
+  xy: 960, 144
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -411,14 +425,14 @@ swim
   index: -1
 swim_charge_full
   rotate: false
-  xy: 960, 144
+  xy: 0, 240
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 swim_charge_half
   rotate: false
-  xy: 816, 240
+  xy: 912, 240
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -439,14 +453,14 @@ wallslide
   index: -1
 wallslide_charge_full
   rotate: false
-  xy: 0, 240
+  xy: 48, 240
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 wallslide_charge_half
   rotate: false
-  xy: 864, 240
+  xy: 960, 240
   size: 48, 144
   orig: 48, 144
   offset: 0, 0

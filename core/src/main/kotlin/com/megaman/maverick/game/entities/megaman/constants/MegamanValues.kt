@@ -84,7 +84,7 @@ object MegamanValues {
 
     const val EXPLOSION_ORB_SPEED = 3.5f
 
-    const val BULLET_VEL = 10f
+    const val BULLET_VEL = 12f
     const val ICE_CUBE_VEL = 12f
     const val MAGMA_WAVE_VEL = 10f
     const val MOON_SCYTHE_SPEED = 8f

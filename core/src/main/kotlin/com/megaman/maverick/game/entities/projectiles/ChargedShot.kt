@@ -11,6 +11,7 @@ import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Direction
+import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.objects.Properties
@@ -73,6 +74,11 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     private val trajectory = Vector2()
     private var bounced = 0
 
+    private var shotDownFromJump = false
+
+    private lateinit var megamanDirOnShoot: Direction
+    private lateinit var megamanFacingOnShoot: Facing
+
     private val noMoveCullTimer = Timer(NO_MOVE_CULL_DUR)
 
     override fun init() {
@@ -102,10 +108,13 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
 
+        shotDownFromJump = spawnProps.getOrDefault("${ConstKeys.SHOOT}_${ConstKeys.DOWN}", false, Boolean::class)
+
+        megamanDirOnShoot = megaman.direction
+        megamanFacingOnShoot = megaman.facing
+
         bounced = 0
-
         spawnResidual()
-
         noMoveCullTimer.reset()
     }
 
@@ -170,16 +179,22 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
         val temp = GameObjectPools.fetch(Vector2::class).set(trajectory)
 
-        when (megaman.direction) {
+        when (megamanDirOnShoot) {
             Direction.UP -> when (pushDir) {
-                Direction.UP, Direction.DOWN -> temp.y = -trajectory.y
+                Direction.UP, Direction.DOWN -> {
+                    temp.y = -trajectory.y
+                    if (shotDownFromJump) temp.x = abs(trajectory.y / 2f) * megamanFacingOnShoot.value
+                }
                 Direction.LEFT, Direction.RIGHT -> {
                     temp.x = -trajectory.x
                     temp.y = abs(trajectory.x / 2f)
                 }
             }
             Direction.DOWN -> when (pushDir) {
-                Direction.UP, Direction.DOWN -> temp.y = -trajectory.y
+                Direction.UP, Direction.DOWN -> {
+                    temp.y = -trajectory.y
+                    if (shotDownFromJump) temp.x = abs(trajectory.y / 2f) * -megamanFacingOnShoot.value
+                }
                 Direction.LEFT, Direction.RIGHT -> {
                     temp.x = -trajectory.x
                     temp.y = -abs(trajectory.x / 2f)
@@ -190,14 +205,20 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
                     temp.y = -trajectory.y
                     temp.x = -abs(trajectory.y / 2f)
                 }
-                Direction.LEFT, Direction.RIGHT -> temp.x = -trajectory.x
+                Direction.LEFT, Direction.RIGHT -> {
+                    temp.x = -trajectory.x
+                    if (shotDownFromJump) temp.y = abs(trajectory.x / 2f) * megamanFacingOnShoot.value
+                }
             }
             Direction.RIGHT -> when (pushDir) {
                 Direction.UP, Direction.DOWN -> {
                     temp.y = -trajectory.y
                     temp.x = abs(trajectory.y / 2f)
                 }
-                Direction.LEFT, Direction.RIGHT -> temp.x = -trajectory.x
+                Direction.LEFT, Direction.RIGHT -> {
+                    temp.x = -trajectory.x
+                    if (shotDownFromJump) temp.y = abs(trajectory.x / 2f) * -megamanFacingOnShoot.value
+                }
             }
         }
         temp.nor().scl(trajectory.len())

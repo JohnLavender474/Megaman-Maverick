@@ -84,6 +84,8 @@ object MegamanAnimationDefs {
 
         "jump" pairTo AnimationDef(),
         "jump_down" pairTo AnimationDef(),
+        "jump_down_charge_full" pairTo AnimationDef(2, 1, CHARGING_FRAME_DUR),
+        "jump_down_charge_half" pairTo AnimationDef(3, 1, CHARGING_FRAME_DUR),
         "jump_left" pairTo AnimationDef(),
         "jump_charge_full" pairTo AnimationDef(2, 1, CHARGING_FRAME_DUR),
         "jump_charge_full_left" pairTo AnimationDef(2, 1, CHARGING_FRAME_DUR),

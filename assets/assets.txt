@@ -623,7 +623,9 @@ sprites/frames/Megaman_v2/airdash.png
 sprites/frames/Megaman_v2/jump_shoot_down.png
 sprites/frames/Megaman_v2/slip_shoot.png
 sprites/frames/Megaman_v2/jump_charge_full.png
+sprites/frames/Megaman_v2/jump_down_charge_full.png
 sprites/frames/Megaman_v2/swim.png
+sprites/frames/Megaman_v2/jump_down_charge_half.png
 sprites/frames/Megaman_v2/groundslide_charge_half.png
 sprites/frames/Megaman_v2/jump_shoot.png
 sprites/frames/Megaman_v2/wallslide_charge_half.png
