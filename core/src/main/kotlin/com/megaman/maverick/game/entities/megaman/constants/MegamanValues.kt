@@ -114,7 +114,7 @@ object MegamanValues {
     const val NEEDLE_SPIN_MEGAMAN_IMPULSE_Y = 20f
     const val NEEDLE_SPIN_WATER_SCALAR = 0.1f
 
-    const val SHOOT_DOWN_IMPULSE_Y = 25f
+    const val SHOOT_DOWN_IMPULSE_Y_CHARGED = 25f
 
     val WEAPON_SPAWN_MAGIC_COLOR: Color = Color.valueOf("dd00ffff")
 }

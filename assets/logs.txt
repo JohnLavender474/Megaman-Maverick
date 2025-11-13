@@ -1,45 +1,143 @@
-===== SESSION STARTED: 2025-11-12T22:47:35.015861045 =====
-22:47:42 | DEBUG | Megaman_shoot_down | shootMegaBuster(): shooting down
-22:47:42 | DEBUG | Megaman_shoot_down | shootMegaBuster(): put shoot down run delay: 05257668-903c-423d-b891-f0caaf3f12ad
-22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:42 | DEBUG | Megaman_shoot_down | shootMegaBuster(): set shoot down to false
-22:47:43 | DEBUG | Megaman_shoot_down | shootMegaBuster(): shooting down
-22:47:43 | DEBUG | Megaman_shoot_down | shootMegaBuster(): removed shoot down id runnable: 05257668-903c-423d-b891-f0caaf3f12ad
-22:47:43 | DEBUG | Megaman_shoot_down | shootMegaBuster(): put shoot down run delay: 30ac01e6-0b5d-4fcb-9f5f-cea679a53dcd
-22:47:43 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:43 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:43 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
-22:47:44 | DEBUG | Megaman_shoot_down | shootMegaBuster(): set shoot down to false
+===== SESSION STARTED: 2025-11-12T22:51:53.855846819 =====
+22:52:01 | DEBUG | Megaman_shoot_down | shootMegaBuster(): shooting down
+22:52:01 | DEBUG | Megaman_shoot_down | shootMegaBuster(): put shoot down run delay: 35bff36b-af30-43aa-bfc1-1a954670f475
+22:52:01 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:01 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:01 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:01 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:01 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:01 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:02 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:02 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:02 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:02 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:02 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:02 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:02 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:02 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:02 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:02 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:02 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:02 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:02 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:02 | DEBUG | Megaman_shoot_down | shootMegaBuster(): set shoot down to false
+22:52:04 | DEBUG | Megaman_shoot_down | shootMegaBuster(): shooting down
+22:52:04 | DEBUG | Megaman_shoot_down | shootMegaBuster(): removed shoot down id runnable: 35bff36b-af30-43aa-bfc1-1a954670f475
+22:52:04 | DEBUG | Megaman_shoot_down | shootMegaBuster(): put shoot down run delay: f3c5c58f-1154-4e2f-abf1-23825b3f7c1a
+22:52:04 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:04 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:04 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:04 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:04 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:04 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:04 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:04 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:04 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:04 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:04 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:04 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:04 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:04 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:04 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:04 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:04 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:04 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:04 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:04 | DEBUG | Megaman_shoot_down | shootMegaBuster(): set shoot down to false
+22:52:06 | DEBUG | Megaman_shoot_down | shootMegaBuster(): shooting down
+22:52:06 | DEBUG | Megaman_shoot_down | shootMegaBuster(): removed shoot down id runnable: f3c5c58f-1154-4e2f-abf1-23825b3f7c1a
+22:52:06 | DEBUG | Megaman_shoot_down | shootMegaBuster(): put shoot down run delay: 56a3e5c9-6b64-4bf7-b087-65fb9bf376e8
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | shootMegaBuster(): shooting down
+22:52:06 | DEBUG | Megaman_shoot_down | shootMegaBuster(): removed shoot down id runnable: 56a3e5c9-6b64-4bf7-b087-65fb9bf376e8
+22:52:06 | DEBUG | Megaman_shoot_down | shootMegaBuster(): put shoot down run delay: fee9debd-0551-4c16-9119-6c6652d86168
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | shootMegaBuster(): shooting down
+22:52:06 | DEBUG | Megaman_shoot_down | shootMegaBuster(): removed shoot down id runnable: fee9debd-0551-4c16-9119-6c6652d86168
+22:52:06 | DEBUG | Megaman_shoot_down | shootMegaBuster(): put shoot down run delay: 17ff2f6a-4174-48ef-a693-83f0c65ba4d0
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | shootMegaBuster(): shooting down
+22:52:06 | DEBUG | Megaman_shoot_down | shootMegaBuster(): removed shoot down id runnable: 17ff2f6a-4174-48ef-a693-83f0c65ba4d0
+22:52:06 | DEBUG | Megaman_shoot_down | shootMegaBuster(): put shoot down run delay: 2fcb5184-764f-48d9-a723-cbdee39fa65d
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:06 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:07 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:07 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:07 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:07 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:07 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:07 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:07 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:07 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:07 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:07 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:07 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:07 | DEBUG | Megaman_shoot_down | shootMegaBuster(): set shoot down to false
+22:52:08 | DEBUG | Megaman_shoot_down | shootMegaBuster(): shooting down
+22:52:08 | DEBUG | Megaman_shoot_down | shootMegaBuster(): removed shoot down id runnable: 2fcb5184-764f-48d9-a723-cbdee39fa65d
+22:52:08 | DEBUG | Megaman_shoot_down | shootMegaBuster(): put shoot down run delay: 06108daa-cf15-42d5-89ee-44ae441d5364
+22:52:08 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:08 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:08 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:08 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:08 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:08 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:08 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:08 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:08 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:08 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:08 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:08 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:08 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:08 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:08 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:08 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:08 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:08 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:08 | DEBUG | Megaman_shoot_down | shootMegaBuster(): set shoot down to false
+22:52:10 | DEBUG | Megaman_shoot_down | shootMegaBuster(): shooting down
+22:52:10 | DEBUG | Megaman_shoot_down | shootMegaBuster(): removed shoot down id runnable: 06108daa-cf15-42d5-89ee-44ae441d5364
+22:52:10 | DEBUG | Megaman_shoot_down | shootMegaBuster(): put shoot down run delay: c4296608-7d28-415c-b2dc-e11f59759f80
+22:52:10 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:10 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:10 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:10 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:10 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:10 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:10 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:10 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:10 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:10 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:10 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:10 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:10 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:10 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:10 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:10 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:10 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:10 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:52:10 | DEBUG | Megaman_shoot_down | shootMegaBuster(): set shoot down to false

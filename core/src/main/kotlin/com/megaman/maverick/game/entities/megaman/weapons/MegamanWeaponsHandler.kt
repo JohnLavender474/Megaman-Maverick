@@ -636,9 +636,15 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         megaman.putProperty("${ConstKeys.SHOOT}_${ConstKeys.DOWN}", shootingDown)
 
         if (shootingDown) {
+            val impulseValue = when (stat) {
+                MegaChargeStatus.NOT_CHARGED -> 0f
+                MegaChargeStatus.HALF_CHARGED, MegaChargeStatus.FULLY_CHARGED ->
+                    MegamanValues.SHOOT_DOWN_IMPULSE_Y_CHARGED
+            }
+
             val impulse = GameObjectPools.fetch(Vector2::class)
                 .setToDirection(megaman.direction)
-                .scl(MegamanValues.SHOOT_DOWN_IMPULSE_Y * ConstVals.PPM.toFloat())
+                .scl(impulseValue * ConstVals.PPM.toFloat())
             megaman.body.physics.velocity.add(impulse)
 
             // If a "shoot_down_id" runnable already exists, then remove it from the update cycle
