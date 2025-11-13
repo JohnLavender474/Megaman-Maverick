@@ -406,7 +406,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 "current=${cameraManagerForRooms.currentGameRoom?.name} / " +
                     "prior=${cameraManagerForRooms.priorGameRoom?.name}"
             }
-            game.setDebugTextSupplier(roomsTextSupplier)
+            // game.setDebugTextSupplier(roomsTextSupplier)
         }
     }
 

@@ -620,6 +620,7 @@ sprites/frames/Megaman_v2/cartin_jump_charge_half.png
 sprites/frames/Megaman_v2/stand.png
 sprites/frames/Megaman_v2/jump.png
 sprites/frames/Megaman_v2/airdash.png
+sprites/frames/Megaman_v2/jump_shoot_down.png
 sprites/frames/Megaman_v2/slip_shoot.png
 sprites/frames/Megaman_v2/jump_charge_full.png
 sprites/frames/Megaman_v2/swim.png
@@ -644,6 +645,7 @@ sprites/frames/Megaman_v2/climb_charge_full.png
 sprites/frames/Megaman_v2/crouch_charge_full.png
 sprites/frames/Megaman_v2/run_shoot.png
 sprites/frames/Megaman_v2/cartin_charge_half.png
+sprites/frames/Megaman_v2/jump_down.png
 sprites/frames/Megaman_v2/climb_finish_charge_full.png
 sprites/frames/Megaman_v2/jump_charge_half.png
 sprites/frames/Megaman_v2/climb_still.png

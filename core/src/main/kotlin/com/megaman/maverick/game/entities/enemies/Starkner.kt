@@ -70,7 +70,7 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         private val ALIVE = ObjectSet<Int>()
         private const val CULL_TIME = 2f
         private const val DMG_DUR = 0.25f
-        private const val ROTS_PER_SEC = 2
+        private const val ROTS_PER_SEC = 4
         private const val MAX_TARGET_TIME = 2f
         private const val TRAIL_SPRITE_DELAY = 0.1f
         private val STATE_DURS = objectMapOf(
@@ -81,9 +81,9 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
             StarknerState.BLACKHOLE pairTo 2f
         )
         private val STATE_SPEEDS = orderedMapOf(
-            StarknerState.BLUE pairTo 4f,
-            StarknerState.YELLOW pairTo 6f,
-            StarknerState.RED pairTo 8f,
+            StarknerState.BLUE pairTo 5f,
+            StarknerState.YELLOW pairTo 7.5f,
+            StarknerState.RED pairTo 10f,
         )
         private val SIZES = objectMapOf(
             StarknerState.SLEEP pairTo 0.75f,
@@ -124,6 +124,8 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     private var moving = false
 
     private val trailSpriteTimer = Timer(TRAIL_SPRITE_DELAY)
+
+    private var rawRotation = 0f
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -180,6 +182,8 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
         ALIVE.add(id)
         GameLogger.debug(TAG, "destroy(): added mapObjectId=$id from ALIVE: $ALIVE")
+
+        rawRotation = 0f
     }
 
     override fun destroy(): Boolean {
@@ -199,6 +203,12 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         }
         GameLogger.debug(TAG, "canBeDamagedBy(): damager=$damager, result=$result")
         return result
+    }
+
+    override fun canSpawnItemOnHealthDepleted(): Boolean {
+        if (!super.canSpawnItemOnHealthDepleted()) return false
+
+        return state == StarknerState.BLACKHOLE
     }
 
     override fun onHealthDepleted() {
@@ -380,9 +390,10 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
             sprite.setOriginCenter()
             if (!game.paused) when {
-                moving && !megaman.dead -> sprite.rotation += ROTS_PER_SEC * 360f * delta * -facing.value
-                else -> sprite.rotation = direction.rotation
+                moving && !megaman.dead -> rawRotation += ROTS_PER_SEC * 360f * delta * -facing.value
+                else -> rawRotation = direction.rotation
             }
+            sprite.rotation = (rawRotation / 90f).toInt() * 90f
 
             sprite.setFlip(isFacing(Facing.RIGHT), false)
 

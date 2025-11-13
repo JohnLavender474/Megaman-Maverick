@@ -1,7 +1,7 @@
 Megaman_v2_BUSTER.png
 size: 1008, 384
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Nearest, Nearest
 repeat: none
 airdash
   rotate: false
@@ -269,9 +269,23 @@ jump_charge_half
   orig: 48, 144
   offset: 0, 0
   index: -1
-jump_shoot
+jump_down
   rotate: false
   xy: 672, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+jump_shoot
+  rotate: false
+  xy: 720, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+jump_shoot_down
+  rotate: false
+  xy: 768, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -306,21 +320,21 @@ run_shoot
   index: -1
 run_trans
   rotate: false
-  xy: 720, 0
+  xy: 816, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 run_trans_shoot
   rotate: false
-  xy: 768, 0
+  xy: 864, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 slip
   rotate: false
-  xy: 816, 0
+  xy: 912, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -341,7 +355,7 @@ slip_charge_half
   index: -1
 slip_shoot
   rotate: false
-  xy: 864, 0
+  xy: 960, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0

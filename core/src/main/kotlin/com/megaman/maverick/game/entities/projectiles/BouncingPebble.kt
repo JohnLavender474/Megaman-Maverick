@@ -13,6 +13,7 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -21,10 +22,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.body.Body
-import com.mega.game.engine.world.body.BodyComponent
-import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -88,6 +86,11 @@ class BouncingPebble(game: MegamanMaverickGame) : AbstractProjectile(game) {
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+    }
+
+    override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        val projectile = projectileFixture.getEntity()
+        if (projectile is MoonScythe) disintegrate()
     }
 
     private fun disintegrate() {

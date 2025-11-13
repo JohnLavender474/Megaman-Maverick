@@ -7,6 +7,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -67,6 +68,7 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
     private var rotation = 0f
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.EXPLOSIONS_1.source)
             regions.put("full", atlas.findRegion("ChargedShotExplosion"))
@@ -78,7 +80,9 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
         soundTimer.reset()
 
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)

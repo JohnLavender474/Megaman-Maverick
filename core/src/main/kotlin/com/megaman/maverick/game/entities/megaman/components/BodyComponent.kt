@@ -104,7 +104,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     feetFixture.setShouldStickToBlock { _, _ -> !body.isSensing(BodySense.IN_WATER) }
     body.addFixture(feetFixture)
     feetFixture.drawingColor = Color.GREEN
-    // debugShapes.add { feetFixture }
+    debugShapes.add { feetFixture }
     body.putProperty(ConstKeys.FEET, feetFixture)
 
     // The feet gravity fixture is a consumer that checks for overlap with blocks. If there is a contact with a block,

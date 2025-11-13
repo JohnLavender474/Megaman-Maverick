@@ -118,7 +118,11 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
-    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
+        explodeAndDie()
+
+    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
+        explodeAndDie()
 
     override fun canBeDamagedBy(damager: IDamager) =
         !invincible && damageNegotiations.containsKey(damager::class)

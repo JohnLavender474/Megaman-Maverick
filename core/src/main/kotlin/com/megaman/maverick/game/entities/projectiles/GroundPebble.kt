@@ -71,6 +71,7 @@ class GroundPebble(game: MegamanMaverickGame) : AbstractHealthEntity(game, dmgDu
                 it as ChargedShotExplosion
                 if (it.fullyCharged) ConstVals.MAX_HEALTH else 15
             },
+            MoonScythe::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             Fireball::class pairTo null
         )
     )

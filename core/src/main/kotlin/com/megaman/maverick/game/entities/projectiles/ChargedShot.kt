@@ -209,20 +209,12 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
 
-        var rotation = megaman.direction.rotation
-        val flipRotation = when (megaman.direction) {
-            Direction.UP -> body.physics.velocity.x < 0f
-            Direction.DOWN -> body.physics.velocity.x > 0f
-            Direction.LEFT -> body.physics.velocity.y < 0f
-            Direction.RIGHT -> body.physics.velocity.y > 0f
-        }
-        if (flipRotation) rotation = (rotation + 180f) % 360f
 
         val props = props(
             ConstKeys.OWNER pairTo owner,
-            ConstKeys.ROTATION pairTo rotation,
             ConstKeys.BOOLEAN pairTo fullyCharged,
             ConstKeys.POSITION pairTo body.getCenter(),
+            ConstKeys.ROTATION pairTo trajectory.angleDeg(),
         )
 
         val explosion = MegaEntityFactory.fetch(ChargedShotExplosion::class)!!
@@ -260,15 +252,8 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         )
         .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
-            val flipX = when (megaman.direction) {
-                Direction.UP -> body.physics.velocity.x < 0f
-                Direction.DOWN -> body.physics.velocity.x > 0f
-                Direction.LEFT -> body.physics.velocity.y < 0f
-                Direction.RIGHT -> body.physics.velocity.y > 0f
-            }
-            sprite.setFlip(flipX, false)
             sprite.setOriginCenter()
-            sprite.rotation = megaman.direction.rotation
+            sprite.rotation = trajectory.angleDeg()
         }
         .build()
 

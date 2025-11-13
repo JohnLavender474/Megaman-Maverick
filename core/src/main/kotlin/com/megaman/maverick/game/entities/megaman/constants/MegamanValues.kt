@@ -89,7 +89,7 @@ object MegamanValues {
     const val MAGMA_WAVE_VEL = 10f
     const val MOON_SCYTHE_SPEED = 8f
     const val MAX_MOONS_BEFORE_SHOOT_AGAIN = 1
-    val MOON_SCYTHE_DEG_OFFSETS = gdxArrayOf(-20f, 40f, 70f)
+    val MOON_SCYTHE_DEG_OFFSETS = gdxArrayOf(10f, 30f, 50f, 70f)
 
     const val SPAWNING_DUR = 0.05f
 
@@ -98,7 +98,7 @@ object MegamanValues {
 
     const val STUN_DUR = 0.25f
     const val STUN_IMPULSE_X = 2.5f
-    const val STUM_IMPULSE_Y = 2f
+    const val STUN_IMPULSE_Y = 2f
 
     const val WALLSLIDE_NOT_ALLOWED_DELAY_ON_BOUNCE = 0.1f
 
@@ -113,6 +113,8 @@ object MegamanValues {
     const val NEEDLE_Y_OFFSET = 1f
     const val NEEDLE_SPIN_MEGAMAN_IMPULSE_Y = 20f
     const val NEEDLE_SPIN_WATER_SCALAR = 0.1f
+
+    const val SHOOT_DOWN_IMPULSE_Y = 25f
 
     val WEAPON_SPAWN_MAGIC_COLOR: Color = Color.valueOf("dd00ffff")
 }

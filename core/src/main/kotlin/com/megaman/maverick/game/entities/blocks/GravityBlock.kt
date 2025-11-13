@@ -57,7 +57,7 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         const val MOON_CRATE = "MoonCrate"
 
-        private const val GRAVITY = 0.25f
+        private const val GRAVITY = 0.15f
         private const val GROUND_GRAVITY = 0.01f
 
         private const val BODY_WIDTH = 2f

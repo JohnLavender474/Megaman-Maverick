@@ -100,7 +100,8 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
             SmallGreenMissile::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             SmallIceCube::class pairTo dmgNeg(5),
             SlashWave::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
-            PreciousGem::class pairTo dmgNeg(15)
+            PreciousGem::class pairTo dmgNeg(15),
+            Axe::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
         )
 
         private val animDefs = orderedMapOf(
@@ -204,9 +205,9 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     override fun takeDamageFrom(damager: IDamager): Boolean {
         GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
         val damaged = super.takeDamageFrom(damager)
-        if (damaged) when {
-            damager is IFreezerEntity && !frozen -> frozen = true
-            damager is IFireEntity && frozen -> frozen = false
+        if (damaged) when (damager) {
+            is IFreezerEntity if !frozen -> frozen = true
+            is IFireEntity if frozen -> frozen = false
         }
         return damaged
     }

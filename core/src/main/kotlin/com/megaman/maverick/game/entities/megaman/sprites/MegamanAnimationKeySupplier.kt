@@ -7,6 +7,7 @@ import com.mega.game.engine.drawables.sprites.containsRegion
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
+import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.feetOnGround
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
@@ -90,10 +91,14 @@ fun Megaman.amendKey(baseKey: String) = when {
                 "${newBaseKey}_slash1"
             else "stand_slash1"
         }
-        else -> "${baseKey}_shoot"
+        else -> {
+            if (baseKey == "jump" && isProperty("${ConstKeys.SHOOT}_${ConstKeys.DOWN}", true)) "jump_shoot_down"
+            else "${baseKey}_shoot"
+        }
     }
     fullyCharged -> "${baseKey}_charge_full"
     halfCharged -> "${baseKey}_charge_half"
+    baseKey == "jump" && game.controllerPoller.isPressed(MegaControllerButton.DOWN) -> "jump_down"
     else -> baseKey
 }
 

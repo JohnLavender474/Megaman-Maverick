@@ -11,7 +11,6 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimator
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
-import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.toGdxArray
@@ -238,10 +237,6 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
                     blinkTextDelay.reset()
                 }
 
-                // Animator with 0f delta so that the sprite stays at the first animation region
-                val animator = megamanAnimators.get(MegamanWeapon.MEGA_BUSTER.name.lowercase())
-                animator.animate(megamanSprite, 0f)
-
                 if (game.controllerPoller.isAnyJustReleased(END_BUTTONS)) {
                     GameLogger.debug(TAG, "render(): end event: go to next screen")
                     game.setCurrentScreen(ScreenEnum.SAVE_GAME_SCREEN.name)
@@ -266,9 +261,14 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
     }
 
     override fun reset() {
+        lettersQ.clear()
         eventQueue.clear()
         textHandle.clearText()
-        lettersQ.clear()
+        megamanAnimators.values().forEach { animator ->
+            (animator as Animator).animations
+                .values()
+                .forEach { animation -> animation.reset() }
+        }
     }
 
     private fun updateEventTimer(delta: Float) {
@@ -297,7 +297,6 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
 
         when (new.type) {
             GetWeaponEventType.MEGAMAN_TRANS -> textHandle.clearText()
-
             GetWeaponEventType.WEAPON_EVENT -> {
                 val weaponName = new.props.get(ConstKeys.WEAPON, MegamanWeapon::class)!!.name.replace("_", " ")
                 for (i in 0 until weaponName.length) {
@@ -306,19 +305,12 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
                     lettersQ.addLast(runnable)
                 }
             }
-
             GetWeaponEventType.END_EVENT -> {
                 textHandle.setText("PRESS START")
                 blinkTextDelay.reset()
                 blinkText = false
             }
-
             else -> {}
-        }
-
-        if (old.type.equalsAny(GetWeaponEventType.MEGAMAN_TRANS, GetWeaponEventType.WEAPON_EVENT)) {
-            val weapon = old.props.get(ConstKeys.WEAPON, MegamanWeapon::class)!!.name.lowercase()
-            megamanAnimators.get(weapon).reset()
         }
     }
 }

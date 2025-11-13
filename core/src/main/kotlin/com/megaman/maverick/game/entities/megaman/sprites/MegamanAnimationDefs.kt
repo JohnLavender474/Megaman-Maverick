@@ -83,12 +83,14 @@ object MegamanAnimationDefs {
         "run_axe_throw" pairTo AnimationDef(2, 2, DEFAULT_FRAME_DUR, false),
 
         "jump" pairTo AnimationDef(),
+        "jump_down" pairTo AnimationDef(),
         "jump_left" pairTo AnimationDef(),
         "jump_charge_full" pairTo AnimationDef(2, 1, CHARGING_FRAME_DUR),
         "jump_charge_full_left" pairTo AnimationDef(2, 1, CHARGING_FRAME_DUR),
         "jump_charge_half" pairTo AnimationDef(3, 1, CHARGING_FRAME_DUR),
         "jump_charge_half_left" pairTo AnimationDef(3, 1, CHARGING_FRAME_DUR),
         "jump_shoot" pairTo AnimationDef(),
+        "jump_shoot_down" pairTo AnimationDef(),
         "jump_shoot_left" pairTo AnimationDef(),
         "jump_axe_throw" pairTo AnimationDef(2, 1, 0.1f, false),
 

@@ -12,7 +12,7 @@ import kotlin.math.roundToInt
 
 object MegaUtilMethods {
 
-    fun delayRun(game: MegamanMaverickGame, delay: Float, action: () -> Unit) {
+    fun delayRun(game: MegamanMaverickGame, delay: Float, action: () -> Unit): String {
         if (delay <= 0f) throw IllegalArgumentException("Delay must be greater than 0: $delay")
 
         val id = UUID.randomUUID().toString()
@@ -27,6 +27,8 @@ object MegaUtilMethods {
                 game.runQueue.addLast { game.updatables.remove(id) }
             }
         }
+
+        return id
     }
 
     fun getSmallFontSize() = (ConstVals.PPM / 3f).roundToInt()

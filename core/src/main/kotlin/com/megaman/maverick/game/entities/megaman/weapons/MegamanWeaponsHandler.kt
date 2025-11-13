@@ -11,6 +11,7 @@ import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.setToDirection
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.pairTo
@@ -22,6 +23,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
+import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.bosses.PreciousWoman.Companion.GEM_COLORS
 import com.megaman.maverick.game.entities.bosses.PreciousWoman.Companion.SHIELD_GEMS_ANGLES
@@ -305,7 +307,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         )
         MegamanWeapon.MOON_SCYTHES -> MegaWeaponHandler(
             cooldown = Timer(0.1f),
-            normalCost = { 6 },
+            normalCost = { 3 },
             halfChargedCost = { 12 },
             fullyChargedCost = { 12 },
             chargeable = chargeable@{
@@ -621,22 +623,84 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
     private fun shootMegaBuster(stat: MegaChargeStatus) {
         GameLogger.debug(TAG, "fireMegaBuster(): stat=$stat")
 
+        // Set Megaman's "shoot_down" property to true/false based on "shootingDown"
+        val shootingDown = (megaman.isBehaviorActive(BehaviorType.JUMPING) || !megaman.feetOnGround) &&
+            !megaman.isAnyBehaviorActive(BehaviorType.AIR_DASHING, BehaviorType.WALL_SLIDING) &&
+            game.controllerPoller.isPressed(MegaControllerButton.DOWN)
+
+        if (shootingDown) GameLogger.debug(
+            "${Megaman.TAG}_${ConstKeys.SHOOT}_${ConstKeys.DOWN}",
+            "shootMegaBuster(): shooting down"
+        )
+
+        megaman.putProperty("${ConstKeys.SHOOT}_${ConstKeys.DOWN}", shootingDown)
+
+        if (shootingDown) {
+            val impulse = GameObjectPools.fetch(Vector2::class)
+                .setToDirection(megaman.direction)
+                .scl(MegamanValues.SHOOT_DOWN_IMPULSE_Y * ConstVals.PPM.toFloat())
+            megaman.body.physics.velocity.add(impulse)
+
+            // If a "shoot_down_id" runnable already exists, then remove it from the update cycle
+            // so that it may be replaced with the newest run id.
+
+            if (megaman.hasProperty("${ConstKeys.SHOOT}_${ConstKeys.DOWN}_${ConstKeys.ID}")) {
+                val id = megaman.removeProperty("${ConstKeys.SHOOT}_${ConstKeys.DOWN}_${ConstKeys.ID}", String::class)!!
+                game.updatables.remove(id)
+
+                GameLogger.debug(
+                    "${Megaman.TAG}_${ConstKeys.SHOOT}_${ConstKeys.DOWN}",
+                    "shootMegaBuster(): removed shoot down id runnable: $id"
+                )
+            }
+
+            val id = MegaUtilMethods.delayRun(game, MegamanValues.SHOOT_ANIM_TIME) {
+                GameLogger.debug(
+                    "${Megaman.TAG}_${ConstKeys.SHOOT}_${ConstKeys.DOWN}",
+                    "shootMegaBuster(): set shoot down to false"
+                )
+                megaman.putProperty("${ConstKeys.SHOOT}_${ConstKeys.DOWN}", false)
+            }
+
+            megaman.putProperty("${ConstKeys.SHOOT}_${ConstKeys.DOWN}_${ConstKeys.ID}", id)
+            GameLogger.debug(
+                "${Megaman.TAG}_${ConstKeys.SHOOT}_${ConstKeys.DOWN}",
+                "shootMegaBuster(): put shoot down run delay: $id"
+            )
+        }
+
         val trajectory = GameObjectPools.fetch(Vector2::class)
-        when (megaman.direction) {
+
+        if (shootingDown) when (megaman.direction) {
+            Direction.UP -> trajectory.y = -MegamanValues.BULLET_VEL
+            Direction.DOWN -> trajectory.y = MegamanValues.BULLET_VEL
+            Direction.LEFT -> trajectory.x = MegamanValues.BULLET_VEL
+            Direction.RIGHT -> trajectory.x = -MegamanValues.BULLET_VEL
+        } else when (megaman.direction) {
             Direction.UP -> trajectory.x = MegamanValues.BULLET_VEL * megaman.facing.value
             Direction.DOWN -> trajectory.x = MegamanValues.BULLET_VEL * -megaman.facing.value
             Direction.LEFT -> trajectory.y = MegamanValues.BULLET_VEL * megaman.facing.value
             Direction.RIGHT -> trajectory.y = MegamanValues.BULLET_VEL * -megaman.facing.value
         }
+
         trajectory.scl(ConstVals.PPM.toFloat())
 
         if (megaman.applyMovementScalarToBullet) trajectory.scl(megaman.movementScalar)
 
+        val position = if (shootingDown)
+            GameObjectPools.fetch(Vector2::class)
+                .set(megaman.body.getCenter())
+                .add(0.25f * megaman.facing.value * ConstVals.PPM, -0.75f * ConstVals.PPM)
+                .rotateDeg(megaman.direction.rotation)
+        else getSpawnPosition()
+
+        val direction = if (shootingDown) megaman.direction.getRotatedClockwise() else megaman.direction
+
         val props = props(
             ConstKeys.OWNER pairTo megaman,
+            ConstKeys.POSITION pairTo position,
+            ConstKeys.DIRECTION pairTo direction,
             ConstKeys.TRAJECTORY pairTo trajectory,
-            ConstKeys.DIRECTION pairTo megaman.direction,
-            ConstKeys.POSITION pairTo getSpawnPosition()
         )
 
         when (stat) {

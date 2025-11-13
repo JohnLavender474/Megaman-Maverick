@@ -102,7 +102,7 @@ abstract class AbstractEnemy(
         addComponent(defineSpritesComponent())
 
         runnablesOnDestroy.put(ConstKeys.ITEMS) {
-            if (isHealthDepleted() && canSpawnItemOnDeath()) {
+            if (isHealthDepleted() && canSpawnItemOnHealthDepleted()) {
                 disintegrate()
 
                 if (dropItemOnDeath) {
@@ -132,7 +132,7 @@ abstract class AbstractEnemy(
         setStandardOnTeleportEndProp(this)
     }
 
-    private fun canSpawnItemOnDeath() = lastDamager != CartV2
+    protected open fun canSpawnItemOnHealthDepleted() = lastDamager != CartV2
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)

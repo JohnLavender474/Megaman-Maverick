@@ -107,10 +107,10 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
         for (i in 0 until NUM_STARS_N_BARS) {
             val bar = GameSprite()
             bar.setBounds(
-                (i * ConstVals.VIEW_WIDTH * ConstVals.PPM / 3f) - 5f,
-                ConstVals.VIEW_HEIGHT * ConstVals.PPM / 3f,
-                (ConstVals.VIEW_WIDTH * ConstVals.PPM / 3f) + 5f,
-                ConstVals.VIEW_HEIGHT * ConstVals.PPM / 3f
+                4f * i * ConstVals.PPM,
+                5f * ConstVals.PPM,
+                4f * ConstVals.PPM,
+                4f * ConstVals.PPM
             )
             bars.add(bar)
         }

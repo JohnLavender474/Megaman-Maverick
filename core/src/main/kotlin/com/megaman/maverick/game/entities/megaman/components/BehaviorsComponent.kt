@@ -152,20 +152,24 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 isAnyBehaviorActive(BehaviorType.SWIMMING, BehaviorType.CLIMBING, BehaviorType.JETPACKING) ||
                 body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) ||
                 !game.controllerPoller.isPressed(MegaControllerButton.A) ||
-                game.controllerPoller.isPressed(MegaControllerButton.DOWN) ||
+                (feetOnGround && game.controllerPoller.isPressed(MegaControllerButton.DOWN)) ||
                 (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting)
             ) return@FunctionalBehaviorImpl false
 
-            return@FunctionalBehaviorImpl if (isBehaviorActive(BehaviorType.JUMPING)) {
-                val velocity = body.physics.velocity
-                when (direction) {
+            val velocity = body.physics.velocity
+
+            if (isBehaviorActive(BehaviorType.JUMPING)) {
+                return@FunctionalBehaviorImpl when (direction) {
                     Direction.UP -> velocity.y > 0f
                     Direction.DOWN -> velocity.y < 0f
                     Direction.LEFT -> velocity.x < 0f
                     Direction.RIGHT -> velocity.x > 0f
                 }
-            } else aButtonTask == AButtonTask.JUMP && game.controllerPoller.isJustPressed(MegaControllerButton.A) &&
-                (body.isSensing(BodySense.FEET_ON_GROUND) || isBehaviorActive(BehaviorType.WALL_SLIDING))
+            }
+
+            return@FunctionalBehaviorImpl aButtonTask == AButtonTask.JUMP &&
+                game.controllerPoller.isJustPressed(MegaControllerButton.A) &&
+                (feetOnGround || isBehaviorActive(BehaviorType.WALL_SLIDING))
         },
         init = {
             val v = GameObjectPools.fetch(Vector2::class)

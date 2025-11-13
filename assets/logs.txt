@@ -1,1 +1,45 @@
-===== SESSION STARTED: 2025-11-05T23:05:55.421737587 =====
+===== SESSION STARTED: 2025-11-12T22:47:35.015861045 =====
+22:47:42 | DEBUG | Megaman_shoot_down | shootMegaBuster(): shooting down
+22:47:42 | DEBUG | Megaman_shoot_down | shootMegaBuster(): put shoot down run delay: 05257668-903c-423d-b891-f0caaf3f12ad
+22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:42 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:42 | DEBUG | Megaman_shoot_down | shootMegaBuster(): set shoot down to false
+22:47:43 | DEBUG | Megaman_shoot_down | shootMegaBuster(): shooting down
+22:47:43 | DEBUG | Megaman_shoot_down | shootMegaBuster(): removed shoot down id runnable: 05257668-903c-423d-b891-f0caaf3f12ad
+22:47:43 | DEBUG | Megaman_shoot_down | shootMegaBuster(): put shoot down run delay: 30ac01e6-0b5d-4fcb-9f5f-cea679a53dcd
+22:47:43 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:43 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:43 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:44 | DEBUG | Megaman_shoot_down | megamanAnimKeySupplier(): key = jump_shoot_down
+22:47:44 | DEBUG | Megaman_shoot_down | shootMegaBuster(): set shoot down to false

@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.megaman.components
 
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.animations.*
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.objects.pairTo
@@ -23,6 +24,14 @@ var Megaman.currentAnimKey: String?
 internal fun Megaman.defineAnimationsComponent(animations: OrderedMap<String, IAnimation>): AnimationsComponent {
     val megamanAnimKeySupplier: (String?) -> String? = supplier@{
         val key = getAnimationKey(currentAnimKey)
+
+        if (key == "jump_shoot_down") GameLogger.debug(
+            "${Megaman.TAG}_${ConstKeys.SHOOT}_${ConstKeys.DOWN}",
+            "megamanAnimKeySupplier(): key = jump_shoot_down"
+        )
+
+        if (key != null) game.setDebugText(key) else game.setDebugText("")
+
         return@supplier when {
             key != null -> {
                 currentAnimKey = key

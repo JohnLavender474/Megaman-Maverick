@@ -58,6 +58,7 @@ import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.entities.projectiles.PreciousGem
 import com.megaman.maverick.game.entities.projectiles.SharpStar
+import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -106,13 +107,13 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         private const val GRAVITY_CHANGE_CONTINUE_DUR = 1.2f
         private const val GRAVITY_CHANGE_END_DUR = ConstVals.GAME_CAM_ROTATE_TIME
 
-        private const val GRAVITY_CHANGE_DELAY_DUR = 3f
-        private const val GRAVITY_CHANGE_DELAY_DUR_HARD = 2f
+        private const val GRAVITY_CHANGE_DELAY_DUR = 2.5f
+        private const val GRAVITY_CHANGE_DELAY_DUR_HARD = 1f
         private const val GRAVITY_CHANGE_START_CHANCE = 0.25f
         private const val GRAVITY_CHANGE_CHANGE_DELTA = 0.25f
 
         private const val ASTEROIDS_TO_SPAWN = 3
-        private const val ASTEROIDS_TO_SPAWN_HARD = 5
+        private const val ASTEROIDS_TO_SPAWN_HARD = 4
         private const val ASTEROID_MIN_SPEED = 8f
         private const val ASTEROID_MAX_SPEED = 8f
 
@@ -120,10 +121,11 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         private const val SHARP_STAR_MAX_SPEED = 12f
         private const val SHARP_STAR_MOVEMENT_SCALAR = 0.75f
 
-        private const val MOON_SCYTHE_MIN_SPEED = 10f
-        private const val MOON_SCYTHE_MAX_SPEED = 10f
+        private const val MOON_SCYTHE_SPEED = 10f
+        private const val MOON_SCYTHE_SPEED_HARD = 12f
         private const val MOON_SCYTHE_MOVEMENT_SCALAR = 0.5f
         private val MOON_SCYTHE_DEG_OFFSETS = gdxArrayOf(10f, 40f, 70f)
+        private val MOON_SCYTHE_DEG_OFFSETS_HARD = gdxArrayOf(10f, 30f, 50f, 70f)
 
         private val STAND_SHOOT_DURS = gdxArrayOf(0.5f, 0.5f, 1f, 0.5f, 1f, 0.5f, 0.6f)
 
@@ -591,10 +593,12 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         timers.put("gravity_change_begin", Timer(GRAVITY_CHANGE_BEGIN_DUR))
         timers.put("gravity_change_continue", Timer(GRAVITY_CHANGE_CONTINUE_DUR))
         timers.put("gravity_change_end", Timer(GRAVITY_CHANGE_END_DUR))
-        timers.put("gravity_change_delay", Timer(
-            if (game.state.getDifficultyMode() == DifficultyMode.HARD) GRAVITY_CHANGE_DELAY_DUR_HARD
-            else GRAVITY_CHANGE_DELAY_DUR
-        ))
+        timers.put(
+            "gravity_change_delay", Timer(
+                if (game.state.getDifficultyMode() == DifficultyMode.HARD) GRAVITY_CHANGE_DELAY_DUR_HARD
+                else GRAVITY_CHANGE_DELAY_DUR
+            )
+        )
         timers.put("spawn_asteroid_delay", Timer(SPAWN_ASTEROID_MAX_DELAY))
         timers.put("spawn_asteroids_end", Timer(ASTEROIDS_END_DUR))
 
@@ -629,12 +633,13 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     private fun canShootInJumpState() = (jumpIndex + 1) % 2 == 0
 
     private fun shootMoonScythe() {
-        for (i in 0 until MOON_SCYTHE_DEG_OFFSETS.size) {
-            val speed = UtilMethods.interpolate(MOON_SCYTHE_MAX_SPEED, MOON_SCYTHE_MIN_SPEED, getHealthRatio())
+        val scytheOffsets = if (game.state.hardMode) MOON_SCYTHE_DEG_OFFSETS_HARD else MOON_SCYTHE_DEG_OFFSETS
+        for (i in 0 until scytheOffsets.size) {
+            val speed = if (game.state.hardMode) MOON_SCYTHE_SPEED_HARD else MOON_SCYTHE_SPEED
 
             val trajectory = GameObjectPools.fetch(Vector2::class).set(0f, speed * ConstVals.PPM)
 
-            var rotOffset = MOON_SCYTHE_DEG_OFFSETS[i] * facing.value
+            var rotOffset = scytheOffsets[i] * facing.value
             if (direction == Direction.DOWN) rotOffset *= -1f
             val rotation = (if (isFacing(Facing.LEFT)) 90f else 270f) + rotOffset
             trajectory.rotateDeg(rotation)
@@ -678,7 +683,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
     private fun spawnAsteroid() {
         val spawn = GameObjectPools.fetch(Vector2::class)
-        spawn.x = getRandom(asteroidSpawnBounds.getMaxX(), asteroidSpawnBounds.getMaxX())
+        spawn.x = getRandom(asteroidSpawnBounds.getX(), asteroidSpawnBounds.getMaxX())
         spawn.y = getRandom(asteroidSpawnBounds.getY(), asteroidSpawnBounds.getMaxY())
 
         val asteroid = MegaEntityFactory.fetch(Asteroid::class)!!

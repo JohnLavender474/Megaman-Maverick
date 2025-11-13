@@ -112,7 +112,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
     private var triggered = false
 
     private val blocksToIgnore = ObjectSet<Int>()
-
     private val reusableBodySet = MutableOrderedSet<IBody>()
 
     override fun init() {
@@ -340,11 +339,9 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
                 game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y, reusableBodySet)
 
                 var passable = true
-                var blockingBody: IBody? = null
 
                 for (otherBody in reusableBodySet) if (otherBody.getEntity().getType() == EntityType.BLOCK) {
                     passable = false
-                    blockingBody = otherBody
                     break
                 }
 

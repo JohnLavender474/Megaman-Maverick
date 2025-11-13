@@ -290,7 +290,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
     var movementScalar = 1f
         set(value) {
             field = value
-            forEachAnimator { key, sprite, animator ->
+            forEachAnimator { _, _, animator ->
                 animator as Animator
                 animator.updateScalar = value
             }
@@ -585,7 +585,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
                 //    Refactor this to support directionally dynamic bouncing.
                 megaman.body.physics.velocity.let {
                     it.x = MegamanValues.STUN_IMPULSE_X * ConstVals.PPM * movementScalar * -facing.value
-                    it.y = MegamanValues.STUM_IMPULSE_Y * ConstVals.PPM
+                    it.y = MegamanValues.STUN_IMPULSE_Y * ConstVals.PPM
                 }
 
                 stunTimer.reset()
