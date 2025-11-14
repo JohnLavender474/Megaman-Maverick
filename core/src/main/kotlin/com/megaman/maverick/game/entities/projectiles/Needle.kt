@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
@@ -39,10 +40,7 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getBounds
-import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity, IDamageable {
@@ -50,6 +48,7 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
     companion object {
         const val TAG = "Needle"
         private const val DAMAGE_DURATION = 0.1f
+        private const val OWNER_COLLISION_DELAY = 0.5f
         private val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>(
             Bullet::class pairTo 15,
             Fireball::class pairTo ConstVals.MAX_HEALTH,
@@ -72,7 +71,10 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
     private val damageTimer = Timer(DAMAGE_DURATION)
     private var blink = false
 
+    private val ownerCollisionDelay = Timer(OWNER_COLLISION_DELAY)
+
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
             gdxArrayOf("default", "ice").forEach { regions.put(it, atlas.findRegion("${TAG}/${it}")) }
@@ -83,6 +85,7 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         setHealth(ConstVals.MAX_HEALTH)
@@ -109,20 +112,31 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
             rawType as? NeedleType ?: if (rawType is String) NeedleType.valueOf(rawType.uppercase())
             else throw IllegalArgumentException("Illegal value for type: $rawType")
         } else NeedleType.DEFAULT
+
+        ownerCollisionDelay.reset()
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         if (isHealthDepleted()) explode()
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
-    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
-        explodeAndDie()
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        val entity = blockFixture.getEntity()
+        if (entity == owner && !ownerCollisionDelay.isFinished()) return
 
-    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
         explodeAndDie()
+    }
+
+    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        val entity = shieldFixture.getEntity()
+        if (entity == owner && !ownerCollisionDelay.isFinished()) return
+
+        explodeAndDie()
+    }
 
     override fun canBeDamagedBy(damager: IDamager) =
         !invincible && damageNegotiations.containsKey(damager::class)
@@ -151,7 +165,10 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
         destroy()
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta -> damageTimer.update(delta) })
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        damageTimer.update(delta)
+        ownerCollisionDelay.update(delta)
+    })
 
     private fun definePointsComponent(): PointsComponent {
         val pointsComponent = PointsComponent()

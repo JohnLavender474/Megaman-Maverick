@@ -2056,7 +2056,7 @@
   </object>
   <object id="482" name="Eyee" x="15976" y="992" width="24" height="24">
    <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
+    <property name="hard_mode_only" type="bool" value="false"/>
     <property name="movement_scalar" type="float" value="0.5"/>
     <property name="x" type="float" value="-4.25"/>
     <property name="y" type="float" value="0"/>
@@ -2064,7 +2064,7 @@
   </object>
   <object id="483" name="Eyee" x="15976" y="1024" width="24" height="24">
    <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
+    <property name="hard_mode_only" type="bool" value="false"/>
     <property name="movement_scalar" type="float" value="0.5"/>
     <property name="x" type="float" value="-4.25"/>
     <property name="y" type="float" value="0"/>
@@ -2198,7 +2198,7 @@
    </properties>
   </object>
   <object id="507" name="Starkner" x="14416" y="1344" width="32" height="32"/>
-  <object id="509" name="Starkner" x="15648" y="896" width="32" height="32"/>
+  <object id="509" name="Starkner" x="15808" y="864" width="32" height="32"/>
   <object id="510" name="Screwie" x="1848" y="3632" width="16" height="16">
    <properties>
     <property name="down" type="bool" value="false"/>

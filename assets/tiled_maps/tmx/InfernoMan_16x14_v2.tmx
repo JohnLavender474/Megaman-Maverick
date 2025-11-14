@@ -839,11 +839,7 @@
     <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="725" name="FireballBlock" x="2624" y="2720" width="32" height="32">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
+  <object id="725" name="FireballBlock" x="2624" y="2720" width="32" height="32"/>
   <object id="727" name="FireballBlock" x="3904" y="1728" width="32" height="32">
    <properties>
     <property name="hard_mode_only" type="bool" value="true"/>

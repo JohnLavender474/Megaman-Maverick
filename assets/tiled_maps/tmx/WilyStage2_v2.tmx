@@ -451,7 +451,7 @@
   <object id="208" name="Trigger" x="1792" y="2960" width="128" height="16"/>
   <object id="210" name="Trigger" x="320" y="2928" width="192" height="16"/>
   <object id="213" name="Trigger" x="192" y="3920" width="160" height="16"/>
-  <object id="222" name="Trigger" x="3104" y="3408" width="256" height="16"/>
+  <object id="222" name="Trigger" x="3168" y="3408" width="192" height="16"/>
   <object id="251" name="Trigger" x="3552" y="2832" width="96" height="16"/>
   <object id="256" name="Trigger" x="512" y="3408" width="160" height="16"/>
   <object id="349" name="RodentMan" x="2240" y="3200" width="32" height="32">
@@ -1375,11 +1375,16 @@
   <object id="120" name="Ratton" x="2376" y="3696" width="16" height="16"/>
   <object id="124" name="ToxicBarrelBot" x="3000" y="3888" width="16" height="16"/>
   <object id="139" name="SwinginJoe" x="3480" y="3312" width="16" height="16"/>
-  <object id="140" name="SwinginJoe" x="3192" y="2960" width="16" height="16"/>
+  <object id="140" name="SwinginJoe" x="3192" y="2960" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
   <object id="161" name="ToxicBarrelBot" x="3704" y="2800" width="16" height="16"/>
   <object id="179" name="ToxicBarrelBot" x="568" y="3760" width="16" height="16"/>
   <object id="180" name="Bat" x="344" y="2720" width="16" height="16">
    <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
     <property name="ignore" type="object" value="28"/>
    </properties>
   </object>
@@ -1398,10 +1403,19 @@
    </properties>
   </object>
   <object id="190" name="SwinginJoe" x="408" y="3344" width="16" height="16"/>
-  <object id="183" name="FloatingCanHole" x="1088" y="2944" width="32" height="32"/>
-  <object id="191" name="FloatingCanHole" x="1920" y="3680" width="32" height="32"/>
+  <object id="183" name="FloatingCanHole" x="1088" y="2944" width="32" height="32">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="191" name="FloatingCanHole" x="1920" y="3680" width="32" height="32">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
   <object id="209" name="RatRobot" x="392" y="2816" width="16" height="16">
    <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
     <property name="trigger" type="object" value="210"/>
    </properties>
   </object>
@@ -1412,12 +1426,17 @@
   </object>
   <object id="206" name="RatRobot" x="1896" y="2816" width="16" height="16">
    <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
     <property name="trigger" type="object" value="208"/>
    </properties>
   </object>
   <object id="216" name="SwinginJoe" x="2184" y="3792" width="16" height="16"/>
   <object id="217" name="SwinginJoe" x="2680" y="3888" width="16" height="16"/>
-  <object id="218" name="SwinginJoe" x="3296" y="2768" width="16" height="16"/>
+  <object id="218" name="SwinginJoe" x="3296" y="2768" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
   <object id="221" name="RatRobot" x="3208" y="3328" width="16" height="16">
    <properties>
     <property name="trigger" type="object" value="222"/>
@@ -1445,17 +1464,27 @@
   </object>
   <object id="250" name="RatRobot" x="3592" y="2720" width="16" height="16">
    <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
     <property name="trigger" type="object" value="251"/>
    </properties>
   </object>
   <object id="255" name="RatRobot" x="584" y="3296" width="16" height="16">
    <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
     <property name="trigger" type="object" value="256"/>
    </properties>
   </object>
   <object id="257" name="FloatingCanHole" x="416" y="2816" width="32" height="32"/>
-  <object id="259" name="FloatingCanHole" x="2272" y="3744" width="32" height="32"/>
-  <object id="263" name="FloatingCanHole" x="3008" y="3776" width="32" height="32"/>
+  <object id="259" name="FloatingCanHole" x="2272" y="3744" width="32" height="32">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="263" name="FloatingCanHole" x="3008" y="3776" width="32" height="32">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
   <object id="267" name="YellowTiggerSquirt" x="4536" y="4216" width="16" height="16">
    <properties>
     <property name="left" type="bool" value="true"/>
@@ -1486,7 +1515,11 @@
   </object>
   <object id="328" name="ToxicBarrelBot" x="4776" y="2832" width="16" height="16"/>
   <object id="375" name="SwinginJoe" x="5240" y="2832" width="16" height="16"/>
-  <object id="443" name="FloatingCanHole" x="5376" y="2848" width="32" height="32"/>
+  <object id="443" name="FloatingCanHole" x="5376" y="2848" width="32" height="32">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
   <object id="444" name="FloatingCanHole" x="7840" y="3168" width="32" height="32"/>
   <object id="445" name="FloatingCanHole" x="7488" y="3168" width="32" height="32"/>
   <object id="446" name="YellowTiggerSquirt" x="6584" y="3960" width="16" height="16">
@@ -1494,10 +1527,22 @@
     <property name="left" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="463" name="FloatingCanHole" x="4928" y="2944" width="32" height="32"/>
-  <object id="464" name="FloatingCanHole" x="4960" y="2944" width="32" height="32"/>
+  <object id="463" name="FloatingCanHole" x="4928" y="2944" width="32" height="32">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="464" name="FloatingCanHole" x="4960" y="2944" width="32" height="32">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
   <object id="466" name="ToxicBarrelBot" x="6344" y="2800" width="16" height="16"/>
-  <object id="471" name="SwinginJoe" x="6520" y="2992" width="16" height="16"/>
+  <object id="471" name="SwinginJoe" x="6520" y="2992" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="10" name="temp">
   <object id="494" name="0" x="8000" y="3424" width="32" height="32"/>

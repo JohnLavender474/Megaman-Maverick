@@ -50,6 +50,7 @@ import com.megaman.maverick.game.entities.blocks.PreciousBlock
 import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.decorations.WhiteBurst
 import com.megaman.maverick.game.entities.enemies.PreciousGemCanon
+import com.megaman.maverick.game.entities.enemies.Wanaan
 import com.megaman.maverick.game.entities.explosions.AsteroidExplosion
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.Axe
@@ -652,6 +653,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
         if (entity.isAny(
                 Axe::class,
+                Wanaan::class,
                 PreciousGem::class,
                 PreciousShard::class,
                 PreciousGemBomb::class,

@@ -248,7 +248,6 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
                         if (timer.isFinished()) stateMachine.next()
                     }
                 }
-
                 DesertManState.DANCE -> {
                     updateFacing()
 
@@ -268,7 +267,6 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
                     danceTimer.update(delta)
                     if (danceTimer.isFinished()) stateMachine.next()
                 }
-
                 DesertManState.STAND -> {
                     updateFacing()
                     if (!body.isSensing(BodySense.FEET_ON_SAND)) return@add
@@ -277,7 +275,6 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
                     timer.update(delta)
                     if (timer.isFinished()) stateMachine.next()
                 }
-
                 DesertManState.PUNCH -> {
                     updateArmExtensions()
 
@@ -313,12 +310,10 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
                         timer.reset()
                     }
                 }
-
                 DesertManState.JUMP -> {
                     facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
                     if (shouldFinishJumping()) stateMachine.next()
                 }
-
                 DesertManState.WALL_SLIDE -> {
                     body.physics.velocity.x = 0f
 
@@ -328,7 +323,6 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
                     timer.update(delta)
                     if (timer.isFinished()) stateMachine.next()
                 }
-
                 DesertManState.TORNADO -> {
                     if (isHittingAgainstLeftWall() || isHittingAgainstRightWall()) stateMachine.next()
 
@@ -424,7 +418,9 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
 
         val dynamicHeightFixtures = gdxArrayOf(bodyFixture, damagerFixture, damageableFixture)
         val armFixtures = gdxArrayOf(armDamageableFixture, armDamagerFixture)
-        body.preProcess.put(ConstKeys.DEFAULT) {
+        body.preProcess.put(ConstKeys.DEFAULT) preProcess@{
+            if (defeated) return@preProcess
+
             val height = if (currentState == DesertManState.TORNADO) TORNADO_HEIGHT else BODY_HEIGHT
             dynamicHeightFixtures.forEach {
                 val shape = it.rawShape as GameRectangle
@@ -449,8 +445,6 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
                             isFacing(Facing.LEFT) -> shape.setCenterRightToPoint(body.getPositionPoint(Position.TOP_LEFT))
                             else -> shape.setCenterLeftToPoint(body.getPositionPoint(Position.TOP_RIGHT))
                         }
-
-
                         else -> {
                             when {
                                 isFacing(Facing.LEFT) -> shape.setCenterRightToPoint(body.getPositionPoint(Position.CENTER_LEFT))
@@ -479,7 +473,6 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
 
                     if (body.physics.velocity.y < 0f) body.physics.velocity.y = 0f
                 }
-
                 else -> {
                     body.physics.gravityOn = true
                     body.physics.defaultFrictionOnSelf.x = DEFAULT_FRICTION_X
