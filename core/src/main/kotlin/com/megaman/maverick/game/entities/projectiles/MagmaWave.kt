@@ -22,6 +22,7 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -40,6 +41,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IFireEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.world.body.*
 
@@ -48,7 +50,7 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     companion object {
         const val TAG = "MagmaWave"
         private const val DISINTEGRATE_TIME = 0.3f
-        private const val DEFAULT_DROP_FLAME_DELAY = 0.15f
+        private const val DEFAULT_DROP_FLAME_DELAY = 0.25f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -93,7 +95,13 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         disintegrationTimer.reset()
     }
 
+    override fun canDamage(damageable: IDamageable) = !disintegrating
+
     override fun hitWater(waterFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        disintegrating = true
+    }
+
+    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         disintegrating = true
     }
 
@@ -115,6 +123,7 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         flame.spawn(
             props(
                 ConstKeys.OWNER pairTo owner,
+                ConstKeys.DIRECTION pairTo megaman.direction,
                 ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)
             )
         )
@@ -140,6 +149,7 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         leftFixture.offsetFromBodyAttachment.x = -0.125f * ConstVals.PPM
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
+        leftFixture.setHitByShield { _, _ -> disintegrating = true }
         body.addFixture(leftFixture)
         debugShapes.add { leftFixture }
 
@@ -147,6 +157,7 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         rightFixture.offsetFromBodyAttachment.x = 0.125f * ConstVals.PPM
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
+        rightFixture.setHitByShield { _, _ -> disintegrating = true }
         body.addFixture(rightFixture)
         debugShapes.add { rightFixture }
 

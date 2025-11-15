@@ -208,3 +208,14 @@ fun IFixture.setShouldStickToBlock(predicate: (ProcessState, IFixture) -> Boolea
 fun IFixture.setShouldStickToBlock(shouldStick: Boolean) {
     setShouldStickToBlock { _, _ -> shouldStick }
 }
+
+fun IFixture.setHitByShield(receiver: (ProcessState, IFixture) -> Unit) {
+    putProperty(ConstKeys.HIT_BY_SHIELD, receiver)
+}
+
+fun IFixture.hasHitByShieldReceiver() = hasProperty(ConstKeys.HIT_BY_SHIELD)
+
+fun IFixture.getHitByShield(processState: ProcessState, shieldFixture: IFixture) {
+    val receiver = getProperty(ConstKeys.HIT_BY_SHIELD) as (ProcessState, IFixture) -> Unit
+    receiver.invoke(processState, shieldFixture)
+}

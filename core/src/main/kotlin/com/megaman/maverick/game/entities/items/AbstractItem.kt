@@ -108,7 +108,7 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
     }
 
     open fun defineBodyComponent(): BodyComponent {
-        val body = Body(BodyType.ABSTRACT)
+        val body = Body(BodyType.DYNAMIC)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         body.drawingColor = Color.GRAY

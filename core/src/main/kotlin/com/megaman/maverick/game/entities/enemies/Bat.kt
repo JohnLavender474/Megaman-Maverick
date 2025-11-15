@@ -16,6 +16,7 @@ import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.isAny
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.MutableOrderedSet
@@ -73,6 +74,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         private const val HARD_MODE_FLY_SCALAR = 1.5f
         private const val DEFAULT_FLY_TO_RETREAT_SPEED = 8f
         private const val PATHFINDING_UPDATE_INTERVAL = 0.05f
+        private const val HANG_AFTER_DAMAGED_INFLICTED = "hang_after_damage_inflicted"
     }
 
     private enum class BatState(val region: String) {
@@ -113,6 +115,8 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
 
     private val blocksToIgnore = ObjectSet<Int>()
     private val reusableBodySet = MutableOrderedSet<IBody>()
+
+    private var hangAfterDamageInflicted = false
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -174,6 +178,10 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
                 blocksToIgnore.add(id)
             }
         }
+
+        hangAfterDamageInflicted = spawnProps.getOrDefault(
+            HANG_AFTER_DAMAGED_INFLICTED, true, Boolean::class
+        )
     }
 
     override fun onDestroy() {
@@ -183,18 +191,26 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
-        damager is Axe || super.canBeDamagedBy(damager)
+        damager.isAny(Axe::class, Wanaan::class) || super.canBeDamagedBy(damager)
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
         GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
+
+        if (damager is Wanaan) {
+            depleteHealth()
+            return true
+        }
+
         val damaged = super.takeDamageFrom(damager)
         if (damaged && type.lowercase() != ConstKeys.SNOW && !frozen && damager is IFreezerEntity) frozen = true
+
         return damaged
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
         GameLogger.debug(TAG, "onDamageInflictedTo(): damageable=$damageable")
-        if (damageable == megaman) state = BatState.FLYING_TO_RETREAT
+        if (damageable == megaman)
+            state = if (hangAfterDamageInflicted) BatState.FLYING_TO_RETREAT else BatState.FLYING_TO_ATTACK
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

@@ -48,6 +48,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val HIT_BY_SHIELD = "hit_by_shield"
     const val REFLECT = "reflect"
     const val CONNECTED = "connected"
     const val AXE = "axe"

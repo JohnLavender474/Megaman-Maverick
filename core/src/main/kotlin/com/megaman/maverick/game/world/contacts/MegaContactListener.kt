@@ -229,6 +229,14 @@ class MegaContactListener(
                 side2Fixture.getHitBySide(side1Fixture, ProcessState.BEGIN)
         }
 
+        // shield, side
+        else if (contact.fixturesMatch(FixtureType.SHIELD, FixtureType.SIDE)) {
+            printDebugLog(contact, "beginContact(): Shield-Side, contact=$contact")
+
+            val (shieldFixture, sideFixture) = contact.getFixturesInOrder(FixtureType.SHIELD, FixtureType.SIDE, out)!!
+            if (sideFixture.hasHitByShieldReceiver()) sideFixture.getHitByShield(ProcessState.BEGIN, shieldFixture)
+        }
+
         // block, side
         else if (contact.fixturesMatch(FixtureType.BLOCK, FixtureType.SIDE)) {
             printDebugLog(contact, "beginContact(): Block-Side, contact=$contact")
@@ -762,7 +770,8 @@ class MegaContactListener(
                 val blockRectangle = blockFixture.getShape() as GameRectangle
                 val laserLine = laserFixture.getShape() as GameLine
 
-                val intersections = laserFixture.getProperty(ConstKeys.COLLECTION) as MutableCollection<GamePair<Vector2, IFixture>>
+                val intersections =
+                    laserFixture.getProperty(ConstKeys.COLLECTION) as MutableCollection<GamePair<Vector2, IFixture>>
 
                 if (ShapeUtils.intersectRectangleAndLine(blockRectangle, laserLine, tempVec2Set))
                     tempVec2Set.forEach { intersections.add(it pairTo blockFixture) }
@@ -799,7 +808,8 @@ class MegaContactListener(
                 val shieldRectangle = shieldFixture.getShape().getBoundingRectangle()
                 val laserLine = laserFixture.getShape() as GameLine
 
-                val intersections = laserFixture.getProperty(ConstKeys.COLLECTION) as MutableCollection<GamePair<Vector2, IFixture>>
+                val intersections =
+                    laserFixture.getProperty(ConstKeys.COLLECTION) as MutableCollection<GamePair<Vector2, IFixture>>
 
                 if (ShapeUtils.intersectRectangleAndLine(shieldRectangle, laserLine, tempVec2Set))
                     tempVec2Set.forEach { intersections.add(it pairTo shieldFixture) }
@@ -1198,7 +1208,8 @@ class MegaContactListener(
                 val blockRectangle = blockFixture.getShape().getBoundingRectangle()
                 val laserLine = laserFixture.getShape() as GameLine
 
-                val intersections = laserFixture.getProperty(ConstKeys.COLLECTION) as MutableCollection<GamePair<Vector2, IFixture>>
+                val intersections =
+                    laserFixture.getProperty(ConstKeys.COLLECTION) as MutableCollection<GamePair<Vector2, IFixture>>
 
                 if (ShapeUtils.intersectRectangleAndLine(blockRectangle, laserLine, tempVec2Set))
                     tempVec2Set.forEach { intersections.add(it pairTo blockFixture) }
@@ -1235,7 +1246,8 @@ class MegaContactListener(
                 val shieldRectangle = shieldFixture.getShape().getBoundingRectangle()
                 val laserLine = laserFixture.getShape() as GameLine
 
-                val intersections = laserFixture.getProperty(ConstKeys.COLLECTION) as MutableCollection<GamePair<Vector2, IFixture>>
+                val intersections =
+                    laserFixture.getProperty(ConstKeys.COLLECTION) as MutableCollection<GamePair<Vector2, IFixture>>
 
 
                 if (ShapeUtils.intersectRectangleAndLine(shieldRectangle, laserLine, tempVec2Set))

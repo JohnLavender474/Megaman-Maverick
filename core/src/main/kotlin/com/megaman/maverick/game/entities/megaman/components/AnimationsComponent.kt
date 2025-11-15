@@ -30,7 +30,7 @@ internal fun Megaman.defineAnimationsComponent(animations: OrderedMap<String, IA
             "megamanAnimKeySupplier(): key = jump_shoot_down"
         )
 
-        if (key != null) game.setDebugText(key) else game.setDebugText("")
+        // if (key != null) game.setDebugText(key) else game.setDebugText("")
 
         return@supplier when {
             key != null -> {

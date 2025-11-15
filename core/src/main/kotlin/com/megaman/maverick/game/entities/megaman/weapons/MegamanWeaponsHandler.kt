@@ -628,14 +628,14 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             !megaman.isAnyBehaviorActive(BehaviorType.AIR_DASHING, BehaviorType.WALL_SLIDING) &&
             game.controllerPoller.isPressed(MegaControllerButton.DOWN)
 
-        if (shootingDown) GameLogger.debug(
-            "${Megaman.TAG}_${ConstKeys.SHOOT}_${ConstKeys.DOWN}",
-            "shootMegaBuster(): shooting down"
-        )
-
         megaman.putProperty("${ConstKeys.SHOOT}_${ConstKeys.DOWN}", shootingDown)
 
         if (shootingDown) {
+            GameLogger.debug(
+                "${Megaman.TAG}_${ConstKeys.SHOOT}_${ConstKeys.DOWN}",
+                "shootMegaBuster(): shooting down"
+            )
+
             val impulseValue = when (stat) {
                 MegaChargeStatus.NOT_CHARGED -> 0f
                 MegaChargeStatus.HALF_CHARGED, MegaChargeStatus.FULLY_CHARGED ->
@@ -789,31 +789,26 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             return
         }
 
-        // TODO: spawned entity should change based on stat
         when (stat) {
             MegaChargeStatus.NOT_CHARGED,
             MegaChargeStatus.HALF_CHARGED,
             MegaChargeStatus.FULLY_CHARGED -> {
-                val spawn = megaman.body.getPositionPoint(Position.BOTTOM_CENTER)
-                    .add(ConstVals.PPM.toFloat() * megaman.facing.value, 0f)
+                val spawn = GameObjectPools.fetch(Vector2::class)
+                when (megaman.direction) {
+                    Direction.UP -> spawn.set(megaman.body.getPositionPoint(Position.BOTTOM_CENTER))
+                        .add(ConstVals.PPM.toFloat() * megaman.facing.value, 0f)
+                    Direction.DOWN -> spawn.set(megaman.body.getPositionPoint(Position.TOP_CENTER))
+                        .add(ConstVals.PPM.toFloat() * -megaman.facing.value, 0f)
+                    Direction.LEFT -> spawn.set(megaman.body.getPositionPoint(Position.CENTER_RIGHT))
+                        .add(0f, ConstVals.PPM.toFloat() * megaman.facing.value)
+                    Direction.RIGHT -> spawn.set(megaman.body.getPositionPoint(Position.CENTER_LEFT))
+                        .add(0f, ConstVals.PPM.toFloat() * -megaman.facing.value)
+                }
 
-                /*
-                val trajectory = GameObjectPools.fetch(Vector2::class)
-                    .set(MegamanValues.FIRE_BALL_X_VEL * megaman.facing.value, MegamanValues.FIRE_BALL_Y_VEL)
-                    .scl(ConstVals.PPM.toFloat())
-                 */
                 val trajectory = GameObjectPools.fetch(Vector2::class)
                     .set(MegamanValues.MAGMA_WAVE_VEL * megaman.facing.value * ConstVals.PPM, 0f)
+                    .rotateAroundDeg(megaman.body.getCenter(), megaman.direction.rotation)
 
-                /*
-                val gravity = GameObjectPools.fetch(Vector2::class)
-                    .set(0f, MegamanValues.FIRE_BALL_GRAVITY * ConstVals.PPM)
-                 */
-
-                /*
-                val fireball = MegaEntityFactory.fetch(Fireball::class)!!
-                fireball.spawn(props)
-                 */
                 val fireWave = MegaEntityFactory.fetch(MagmaWave::class)!!
                 fireWave.spawn(
                     props(

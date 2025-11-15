@@ -603,6 +603,7 @@ sprites/frames/Megaman_v2/wallslide.png
 sprites/frames/Megaman_v2/stand_shoot.png
 sprites/frames/Megaman_v2/wallslide_shoot.png
 sprites/frames/Megaman_v2/airdash_charge_full.png
+sprites/frames/Megaman_v2/jump_up_charge_full.png
 sprites/frames/Megaman_v2/climb_still_charge_full.png
 sprites/frames/Megaman_v2/climb.png
 sprites/frames/Megaman_v2/cartin_jump_shoot.png
@@ -620,6 +621,7 @@ sprites/frames/Megaman_v2/cartin_jump_charge_half.png
 sprites/frames/Megaman_v2/stand.png
 sprites/frames/Megaman_v2/jump.png
 sprites/frames/Megaman_v2/airdash.png
+sprites/frames/Megaman_v2/jump_shoot_up.png
 sprites/frames/Megaman_v2/jump_shoot_down.png
 sprites/frames/Megaman_v2/slip_shoot.png
 sprites/frames/Megaman_v2/jump_charge_full.png
@@ -647,6 +649,7 @@ sprites/frames/Megaman_v2/climb_charge_full.png
 sprites/frames/Megaman_v2/crouch_charge_full.png
 sprites/frames/Megaman_v2/run_shoot.png
 sprites/frames/Megaman_v2/cartin_charge_half.png
+sprites/frames/Megaman_v2/jump_up_charge_half.png
 sprites/frames/Megaman_v2/jump_down.png
 sprites/frames/Megaman_v2/climb_finish_charge_full.png
 sprites/frames/Megaman_v2/jump_charge_half.png
@@ -655,6 +658,7 @@ sprites/frames/Megaman_v2/slip.png
 sprites/frames/Megaman_v2/run.png
 sprites/frames/Megaman_v2/groundslide_shoot.png
 sprites/frames/Megaman_v2/spawn.png
+sprites/frames/Megaman_v2/jump_up.png
 sprites/frames/Megaman_v2/swim_charge_half.png
 sprites/frames/Megaman_v2/cartin_damaged.png
 sprites/frames/Megaman_v2/slip_charge_full.png
@@ -3557,6 +3561,7 @@ tiled_maps/png/GlacierMan_old.png
 tiled_maps/tmx/DesertMan_16x12.tmx
 tiled_maps/tmx/GlacierMan_16x12_test_groundsnow_boss.tmx
 tiled_maps/tmx/IntroStage_v2.tmx
+tiled_maps/tmx/WilyStage3_v4.tmx
 tiled_maps/tmx/PreciousWoman.tmx
 tiled_maps/tmx/ReactMan.tmx
 tiled_maps/tmx/TimberWoman.tmx

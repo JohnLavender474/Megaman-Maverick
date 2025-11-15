@@ -14,6 +14,7 @@ import com.mega.game.engine.common.extensions.toObjectSet
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -25,6 +26,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.*
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
@@ -38,6 +40,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
@@ -69,6 +72,8 @@ open class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity
     private var allowInstantDeath = true
     private var collisionOn = true
 
+    private var followMegamanDir = false
+
     private var spriteWidth: Float? = null
     private var spriteHeight: Float? = null
     private val spriteOffset = Vector2()
@@ -83,6 +88,7 @@ open class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity
         addComponent(CullablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
+        addComponent(defineUpdatablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -151,13 +157,19 @@ open class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity
         val hasBlock = spawnProps.getOrDefault("${ConstKeys.HAS}_${ConstKeys.BLOCK}", true, Boolean::class)
         if (hasBlock) {
             block = MegaEntityFactory.fetch(Block::class)!!
-            val blockProps = spawnProps.copy()
-            blockProps.putAll(ConstKeys.BLOCK_FILTERS pairTo TAG, ConstKeys.DRAW pairTo false)
+            val blockProps = props(
+                ConstKeys.BOUNDS pairTo spawnProps.get(ConstKeys.BOUNDS),
+                ConstKeys.BLOCK_FILTERS pairTo TAG,
+                ConstKeys.DRAW pairTo false
+            )
             block!!.spawn(blockProps)
         }
 
         allowInstantDeath = spawnProps.getOrDefault(ConstKeys.INSTANT, true, Boolean::class)
         collisionOn = spawnProps.getOrDefault("${ConstKeys.COLLIDE}_${ConstKeys.ON}", true, Boolean::class)
+
+        followMegamanDir =
+            spawnProps.getOrDefault("${Megaman.TAG.lowercase()}_${ConstKeys.DIRECTION}", false, Boolean::class)
     }
 
     override fun onDestroy() {
@@ -172,6 +184,10 @@ open class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity
         offset.setZero()
     }
 
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
+        if (followMegamanDir) direction = megaman.direction
+    })
+
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.physics.applyFrictionX = false
@@ -179,7 +195,7 @@ open class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity
         body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBounds() }
+        // debugShapes.add { body.getBounds() }
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
         body.addFixture(feetFixture)
@@ -189,6 +205,7 @@ open class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity
         val deathFixture = Fixture(body, FixtureType.DEATH, GameRectangle())
         deathFixture.putProperty(ConstKeys.INSTANT, false)
         body.addFixture(deathFixture)
+        deathFixture.drawingColor = Color.RED
         debugShapes.add { deathFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {

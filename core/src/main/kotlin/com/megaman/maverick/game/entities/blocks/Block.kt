@@ -189,7 +189,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
                     filters = filters.replace("\\s+", "").split(",")
                     filters.forEach { tag ->
                         body.addBlockFilter { entity, _ ->
-                            entity.getTag().uppercase() == tag.uppercase()
+                            entity.getTag().equals(tag, ignoreCase = true)
                         }
                     }
                 }
@@ -198,7 +198,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
                         filters as Iterable<String>
                         filters.forEach { tag ->
                             body.addBlockFilter { entity, _ ->
-                                entity.getTag().uppercase() == tag.uppercase()
+                                entity.getTag().equals(tag, ignoreCase = true)
                             }
                         }
                     } catch (e: Exception) {
