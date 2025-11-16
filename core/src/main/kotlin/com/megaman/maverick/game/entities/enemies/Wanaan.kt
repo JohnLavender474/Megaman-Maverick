@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.getTextureAtlas
@@ -82,6 +83,7 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
     private val frozenTimer = Timer(FROZEN_DUR)
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             animDefs.keys().forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
@@ -91,6 +93,7 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -205,4 +208,10 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
         .build()
 
     override fun getTag() = TAG
+
+    fun explodeAndDie() {
+        GameLogger.debug(TAG, "explodeAndDie()")
+        explode()
+        destroy()
+    }
 }

@@ -211,8 +211,12 @@ class InfernoOven(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
     private fun rotateAndPositionSprite(sprite: GameSprite) {
         sprite.setOriginCenter()
         sprite.rotation = direction.rotation
+
         val position = DirectionPositionMapper.getInvertedPosition(direction)
         sprite.setPosition(body.getPositionPoint(position), position)
+
+        val translateX = if (direction == Direction.LEFT) -2f * ConstVals.PPM else 0f
+        sprite.translateX(translateX)
     }
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
@@ -220,13 +224,6 @@ class InfernoOven(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
             TAG, GameSprite()
                 .also { sprite ->
                     sprite.setSize(SPRITE_WIDTH * ConstVals.PPM, SPRITE_HEIGHT * ConstVals.PPM)
-
-                    // TODO: need to implement offset for when direction is horizontal since sprite is misplaced
-                    //  otherwise when direction is left or right
-                    /*
-                    val translateX: Float
-                    val translateY: Float
-                     */
                 }
         )
         .preProcess { _, sprite -> rotateAndPositionSprite(sprite) }

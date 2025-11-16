@@ -63,7 +63,9 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
 
     internal enum class RainDropType { BLUE, PURPLE }
 
-    override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.GATE_INIT_OPENING)
+    override val eventKeyMask = objectSetOf<Any>(
+        EventType.PLAYER_SPAWN, EventType.GATE_INIT_OPENING, EventType.BEGIN_ROOM_TRANS
+    )
 
     private lateinit var type: RainDropType
 
@@ -73,6 +75,8 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
     private var splashed = false
 
     private var deathY = 0f
+
+    private var destroyOnRoomChange = false
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -128,16 +132,28 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
             body.getY() + DEFAULT_DEATH_Y_OFFSET * ConstVals.PPM,
             Float::class
         )
+
+        game.eventsMan.addListener(this)
+
+        destroyOnRoomChange = spawnProps.getOrDefault(
+            "${ConstKeys.DESTROY}_${ConstKeys.ON}_${ConstKeys.ROOM}_${ConstKeys.CHANGE}",
+            false,
+            Boolean::class
+        )
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+
         ignoreIds.clear()
+
+        game.eventsMan.removeListener(this)
     }
 
     override fun onEvent(event: Event) {
         if (event.key.equalsAny(EventType.PLAYER_SPAWN, EventType.GATE_INIT_OPENING)) destroy()
+        if (destroyOnRoomChange && event.key == EventType.BEGIN_ROOM_TRANS) destroy()
     }
 
     private fun splash() {

@@ -77,6 +77,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     private var block: Block? = null
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (leftRegion == null || rightRegion == null || flipToRightRegion == null || flipToLeftRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             leftRegion = atlas.findRegion("$TAG/Left")
@@ -94,6 +95,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         switchTimer.reset()
@@ -121,7 +123,9 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+
         block?.destroy()
         block = null
     }
@@ -156,7 +160,6 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
                     switchTimer.reset()
                 }
             }
-
             FlipperPlatformState.FLIP_TO_LEFT -> {
                 block!!.body.setCenterX(-100f * ConstVals.PPM)
 
@@ -166,7 +169,6 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
                     switchTimer.reset()
                 }
             }
-
             FlipperPlatformState.LEFT -> {
                 val position = bounds.getPositionPoint(Position.TOP_CENTER)
                 block!!.body.setTopRightToPoint(position)
@@ -180,8 +182,6 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
                     requestToPlaySound(SoundAsset.BLOOPITY_SOUND, false)
                 }
             }
-
-
             FlipperPlatformState.RIGHT -> {
                 val position = bounds.getPositionPoint(Position.TOP_CENTER)
                 block!!.body.setTopLeftToPoint(position)

@@ -73,6 +73,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
     private var wanaan: Wanaan? = null
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             gdxArrayOf("launcher", "bust").forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
@@ -85,6 +86,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
@@ -98,7 +100,6 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
                 if (direction is String) direction = Direction.valueOf(direction.uppercase())
                 direction as Direction
             }
-
             else -> Direction.UP
         }
 
@@ -107,7 +108,9 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
     }
 
     override fun onHealthDepleted() {
-        wanaan?.destroy()
+        GameLogger.debug(TAG, "onHealthDepleted()")
+
+        wanaan?.explodeAndDie()
         wanaan = null
 
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
@@ -117,12 +120,14 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
     }
 
     override fun onBossDefeated(boss: AbstractBoss) {
+        GameLogger.debug(TAG, "onBossDefeated()")
         depleteHealth()
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+
         wanaan?.destroy()
         wanaan = null
     }
@@ -165,14 +170,14 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
         sprite.setSize(2f * ConstVals.PPM, ConstVals.PPM.toFloat())
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putPreProcess { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putPreProcess { _, _ ->
             val bust = this.isHealthDepleted()
             val region = if (bust) regions["bust"] else regions["launcher"]
             sprite.setRegion(region)
             sprite.setCenter(body.getCenter())
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineCullablesComponent() = CullablesComponent(

@@ -98,6 +98,8 @@ class GreenUziJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGra
 
     private lateinit var state: GreenUziJoeState
 
+    private var canJump = true
+
     private var blasting = false
     private val blastDelay = Timer(BLAST_DELAY)
     private val blastTimer = Timer(BLAST_DUR)
@@ -134,6 +136,7 @@ class GreenUziJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGra
         get() = blastTimer.isFinished()
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             animDefs.forEach { entry ->
@@ -147,7 +150,6 @@ class GreenUziJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGra
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-
         super.onSpawn(spawnProps)
 
         direction =
@@ -174,6 +176,8 @@ class GreenUziJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGra
         blasting = false
         blastDelay.reset()
         blastTimer.setToEnd(false)
+
+        canJump = spawnProps.getOrDefault(ConstKeys.JUMP, true, Boolean::class)
     }
 
     private fun blast() {
@@ -315,8 +319,8 @@ class GreenUziJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGra
         jumpTriggerFixture.offsetFromBodyAttachment.y =
             (JUMP_SENSOR_HEIGHT * ConstVals.PPM / 2f) - (body.getHeight() / 2f)
         jumpTriggerFixture.setFilter { fixture -> fixture.getType() == FixtureType.PLAYER }
-        jumpTriggerFixture.setConsumer { processState, fixture ->
-            if (state == GreenUziJoeState.STAND && processState == ProcessState.BEGIN) jump()
+        jumpTriggerFixture.setConsumer { processState, _ ->
+            if (canJump && state == GreenUziJoeState.STAND && processState == ProcessState.BEGIN) jump()
         }
         body.addFixture(jumpTriggerFixture)
         jumpTriggerFixture.drawingColor = Color.DARK_GRAY
