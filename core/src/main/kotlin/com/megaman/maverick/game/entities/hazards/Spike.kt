@@ -212,7 +212,7 @@ open class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity
             body.physics.collisionOn = collisionOn
 
             feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
-            (deathFixture.rawShape as GameRectangle).set(body)
+            (deathFixture.rawShape as GameRectangle).set(body.getBounds())
 
             val instant = if (allowInstantDeath) !body.isSensing(BodySense.FEET_ON_GROUND) else false
             deathFixture.putProperty(ConstKeys.INSTANT, instant)

@@ -45,6 +45,7 @@ class ChargedShotResidual(game: MegamanMaverickGame) : MegaGameEntity(game), ISp
     private var rotation = 0f
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
             regions.put("full", atlas.findRegion("FullChargedShotResidual"))

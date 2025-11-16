@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.blocks
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -8,7 +9,11 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimator
+import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.interfaces.IDirectional
+import com.mega.game.engine.common.interfaces.UpdateFunction
 import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -20,12 +25,14 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
 import com.megaman.maverick.game.world.body.FixtureType
@@ -33,7 +40,8 @@ import com.megaman.maverick.game.world.body.getBody
 import com.megaman.maverick.game.world.body.setEntity
 import com.megaman.maverick.game.world.body.setVelocityAlteration
 
-class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity, IDrawableShapesEntity {
+class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity, IDrawableShapesEntity,
+    IDirectional {
 
     companion object {
         const val TAG = "ConveyorBelt"
@@ -45,9 +53,16 @@ class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAn
         private val animDefs = ObjectMap<String, AnimationDef>()
     }
 
+    override var direction: Direction
+        get() = body.direction
+        set(value) {
+            body.direction = value
+        }
+
     private var forceFixture: Fixture? = null
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
 
@@ -71,19 +86,28 @@ class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAn
 
         super.init()
 
+        addComponent(defineUpdatablesComponent())
+
         forceFixture = Fixture(body, FixtureType.FORCE, GameRectangle())
         forceFixture!!.offsetFromBodyAttachment.y = ConstVals.PPM / 8f
         forceFixture!!.setEntity(this)
         body.addFixture(forceFixture!!)
-        addDebugShapeSupplier { forceFixture!! }
+        addDebugShapeSupplier debug@{
+            forceFixture!!.drawingColor = if (forceFixture!!.isActive()) Color.BLUE else Color.GRAY
+            return@debug forceFixture!!
+        }
     }
 
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-        (forceFixture!!.rawShape as GameRectangle).setSize(bounds.getWidth() - ConstVals.PPM / 4f, bounds.getHeight())
+        (forceFixture!!.rawShape as GameRectangle).setSize(
+            bounds.getWidth() - ConstVals.PPM / 4f,
+            bounds.getHeight()
+        )
 
         val left = spawnProps.get(ConstKeys.LEFT, Boolean::class)!!
 
@@ -92,17 +116,21 @@ class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAn
 
         forceFixture!!.setVelocityAlteration { fixture, delta, _ ->
             val body = fixture.getBody()
-
-            when {
+            if (direction == Direction.UP) when {
                 (left && body.physics.velocity.x <= -FORCE_MAX * ConstVals.PPM) ||
                     (!left && body.physics.velocity.x >= FORCE_MAX * ConstVals.PPM) -> VelocityAlteration.addNone()
                 else -> VelocityAlteration(forceX = forceX * delta, actionX = VelocityAlterationType.ADD)
+            } else when {
+                (left && body.physics.velocity.x >= FORCE_MAX * ConstVals.PPM) ||
+                    (!left && body.physics.velocity.x <= -FORCE_MAX * ConstVals.PPM) -> VelocityAlteration.addNone()
+                else -> VelocityAlteration(forceX = -forceX * delta, actionX = VelocityAlterationType.ADD)
             }
         }
 
         val type = spawnProps.getOrDefault(ConstKeys.TYPE, DEFAULT_TYPE, String::class)
 
         val sprites = OrderedMap<Any, GameSprite>()
+        val preProcess = OrderedMap<Any, UpdateFunction<GameSprite>>()
         val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
         val numParts = (bounds.getWidth() / ConstVals.PPM).toInt()
         for (i in 0 until numParts) {
@@ -132,10 +160,20 @@ class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAn
             )
 
             sprites.put(part, sprite)
+
+            preProcess.put(part) { _, _ ->
+                sprite.setOriginCenter()
+                sprite.rotation = direction.rotation
+            }
+
             animators.add({ sprite } pairTo Animator(animation))
         }
 
         addComponent(SpritesComponent(sprites))
         addComponent(AnimationsComponent(animators))
     }
+
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
+        direction = megaman.direction
+    })
 }

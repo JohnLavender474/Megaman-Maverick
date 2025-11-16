@@ -57,13 +57,13 @@ class GreenUziJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGra
     companion object {
         const val TAG = "GreenUziJoe"
 
-        private const val BLAST_START_DELAY = 0.125f
+        private const val BLAST_START_DELAY = 0.5f
         private const val BLAST_DUR = 2.5f
         private const val BLAST_END_DELAY = 0.125f
         private const val BLAST_COUNT = 10
         private const val BLAST_SPEED = 10f
 
-        private const val BLAST_DELAY = 2f
+        private const val BLAST_DELAY = 1.5f
 
         private const val GRAVITY = 0.15f
         private const val GROUND_GRAVITY = 0.01f

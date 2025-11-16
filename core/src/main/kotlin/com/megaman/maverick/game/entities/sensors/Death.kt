@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.sensors
 
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.entities.contracts.IBodyEntity
@@ -20,9 +21,13 @@ open class Death(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity 
         const val TAG = "Death"
     }
 
-    override fun init() = addComponent(defineBodyComponent())
+    override fun init() {
+        GameLogger.debug(TAG, "init()")
+        addComponent(defineBodyComponent())
+    }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
@@ -31,9 +36,7 @@ open class Death(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity 
         val instant = spawnProps.getOrDefault(ConstKeys.INSTANT, false, Boolean::class)
         body.forEachFixture { fixture ->
             fixture as Fixture
-
             (fixture.rawShape as GameRectangle).set(bounds)
-
             if (fixture.getType() == FixtureType.DEATH) fixture.putProperty(ConstKeys.INSTANT, instant)
         }
     }

@@ -75,6 +75,7 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
     private var deathY = 0f
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
             RainDropType.entries.forEach { type ->
@@ -95,7 +96,6 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         val spawn = when {
             spawnProps.containsKey(ConstKeys.BOUNDS) ->
                 spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
-
             else -> spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         }
         body.setCenter(spawn)
@@ -181,6 +181,7 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
             val mapObjId = (it as MegaGameEntity).id
             if (state == ProcessState.BEGIN &&
                 !ignoreIds.contains(mapObjId) &&
+                (it != megaman || megaman.ready) &&
                 !it.isAny(RainFall::class, RainDrop::class)
             ) splash()
         }
@@ -246,6 +247,7 @@ class RainFall(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntit
     private var deathY = 0f
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         super.init()
         addComponent(defineUpdatablesComponent())
         addComponent(defineCullablesComponent())

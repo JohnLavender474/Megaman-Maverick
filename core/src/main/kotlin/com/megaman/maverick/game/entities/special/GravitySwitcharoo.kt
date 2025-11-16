@@ -52,7 +52,10 @@ import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.world.body.*
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.isSensing
 
 class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ICullableEntity, IAudioEntity, IDirectional {
@@ -233,7 +236,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(
-            ConstKeys.ARROW, GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1)).also {
+            ConstKeys.ARROW, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5)).also {
                 it.setSize(ARROW_SPRITE_SIZE * ConstVals.PPM)
                 it.setAlpha(ARROW_ALPHA)
             }

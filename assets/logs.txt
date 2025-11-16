@@ -1,1 +1,30 @@
-===== SESSION STARTED: 2025-11-14T21:05:06.602137083 =====
+===== SESSION STARTED: 2025-11-16T16:04:19.769937321 =====
+16:04:27 | DEBUG | RisingLavaRiver | canSpawn(): canSpawn=true
+16:04:27 | DEBUG | RisingLavaRiver | init()
+16:04:27 | DEBUG | RisingLavaRiver | onSpawn(): spawnProps=Properties({
+	[bounds=[3264.0,0.0,3424.0,608.0]]
+	[x=3264.0]
+	[height=608.0]
+	[spawn_type=spawn_now]
+	[rise_room=room3]
+	[id=128]
+	[name=RisingLavaRiver]
+	[y=0.0]
+	[width=3424.0]
+})
+16:04:27 | DEBUG | RisingLavaRiver | setLavaToDormant()
+16:04:29 | DEBUG | RisingLavaRiver | onEvent(): event.key=PLAYER_READY
+16:04:33 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+16:04:34 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+16:04:36 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+16:04:37 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+16:05:05 | DEBUG | RisingLavaRiver | onEvent(): event.key=GATE_INIT_OPENING
+16:05:05 | DEBUG | RisingLavaRiver | setLavaToDormant()
+16:05:05 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+16:05:07 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+16:06:05 | DEBUG | RisingLavaRiver | onEvent(): event.key=GATE_INIT_OPENING
+16:06:05 | DEBUG | RisingLavaRiver | setLavaToDormant()
+16:06:05 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+16:06:07 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+16:06:07 | DEBUG | RisingLavaRiver | setLavaToRising()
+16:06:44 | DEBUG | RisingLavaRiver | onDestroy()

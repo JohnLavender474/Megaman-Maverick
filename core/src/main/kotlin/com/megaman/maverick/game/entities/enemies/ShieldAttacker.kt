@@ -8,6 +8,7 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
@@ -90,6 +91,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
     private var flipY = false
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
@@ -100,6 +102,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
 
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
@@ -114,7 +117,6 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
                         max = targetY
                         switch = false
                     }
-
                     else -> {
                         min = targetY
                         max = spawn.y
@@ -124,7 +126,6 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
                 body.setCenter(spawn)
                 facing = if (megaman.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
             }
-
             else -> {
                 body.setSize(0.75f * ConstVals.PPM, 1.5f * ConstVals.PPM)
                 val targetX = spawn.x + spawnProps.get(ConstKeys.VALUE, Float::class)!! * ConstVals.PPM
@@ -134,7 +135,6 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
                         max = targetX
                         switch = false
                     }
-
                     else -> {
                         min = targetX
                         max = spawn.x
@@ -185,7 +185,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
             when {
                 vertical -> {
                     val centerY = body.getCenter().y
-                    if (centerY < min || centerY > max) {
+                    if (centerY !in min..max) {
                         turnTimer.reset()
                         body.setCenterY(if (centerY < min) min else max)
                         body.physics.velocity.setZero()
@@ -202,7 +202,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
 
                 else -> {
                     val centerX = body.getCenter().x
-                    if (centerX < min || centerX > max) {
+                    if (centerX !in min..max) {
                         turnTimer.reset()
                         body.setCenterX(if (centerX < min) min else max)
                         body.physics.velocity.setZero()
@@ -267,7 +267,6 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
                     damageableRect.setWidth(body.getWidth())
                     shieldRect.setSize(1.75f * ConstVals.PPM, 0.85f * ConstVals.PPM)
                 }
-
                 else -> {
                     body.setSize(ConstVals.PPM.toFloat(), 2f * ConstVals.PPM)
                     damageableRect.setHeight(body.getHeight())
@@ -284,7 +283,6 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
                         else -> damageableRect.setWidth(0.85f * ConstVals.PPM)
                     }
                 }
-
                 else -> {
                     shieldFixture.setActive(true)
                     when {
@@ -292,7 +290,6 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
                             damageableFixture.offsetFromBodyAttachment.y = (if (switch) 0.5f else -0.5f) * ConstVals.PPM
                             damageableRect.setHeight(0.15f * ConstVals.PPM)
                         }
-
                         else -> {
                             damageableFixture.offsetFromBodyAttachment.x = (if (switch) 0.5f else -0.5f) * ConstVals.PPM
                             damageableRect.setWidth(0.15f * ConstVals.PPM)
@@ -311,7 +308,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
         val component = SpritesComponent(sprite)
         component.putPreProcess { _, _ ->
             sprite.hidden = damageBlink
-            sprite.setFlip(turning != switch, flipY)
+            sprite.setFlip(turning != switch, flipY || megaman.direction == Direction.DOWN)
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
             sprite.rotation = if (vertical) 90f else 0f

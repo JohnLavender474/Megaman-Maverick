@@ -37,7 +37,7 @@ class MegaContactFilter : IContactFilter {
             FixtureType.FEET,
             FixtureType.SIDE,
             FixtureType.HEAD,
-            FixtureType.BODY
+            FixtureType.BODY,
         ),
         FixtureType.WATER pairTo objectSetOf(
             FixtureType.WATER_LISTENER

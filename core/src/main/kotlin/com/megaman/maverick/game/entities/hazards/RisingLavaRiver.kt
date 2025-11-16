@@ -44,6 +44,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.decorations.FloatingEmber
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -135,13 +136,20 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         super.init()
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
-        addComponent(SpritesComponent())
         addComponent(AnimationsComponent())
+        addComponent(SpritesComponent())
         addComponent(AudioComponent())
     }
 
-    override fun canSpawn(spawnProps: Properties) = super.canSpawn(spawnProps) &&
-        !LevelUtils.isInfernoManLevelFrozen(game.state)
+    override fun canSpawn(spawnProps: Properties): Boolean {
+        val canSpawn = super.canSpawn(spawnProps) &&
+            (game.getCurrentLevel() != LevelDefinition.INFERNO_MAN ||
+                !LevelUtils.isInfernoManLevelFrozen(game.state))
+
+        GameLogger.debug(TAG, "canSpawn(): canSpawn=$canSpawn")
+
+        return canSpawn
+    }
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
@@ -192,9 +200,7 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
                 val room = game.getCurrentRoom()!!.name
                 if (room == riseRoom) setLavaToRising()
             }
-
             EventType.PLAYER_DONE_DYIN -> setLavaToDormant()
-
             EventType.BEGIN_ROOM_TRANS -> if (state == RisingLavaRiverState.RISING) {
                 val room = game.getCurrentRoom()!!.name
                 if (room != riseRoom) {
@@ -202,12 +208,10 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
                     stopDelay.reset()
                 }
             }
-
             EventType.END_ROOM_TRANS -> {
                 val room = game.getCurrentRoom()!!.name
                 if (room == riseRoom) setLavaToRising()
             }
-
             EventType.GATE_INIT_OPENING -> setLavaToDormant()
         }
     }
@@ -271,13 +275,17 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
                     if (canSpawnBounds.contains(position)) {
                         val ember = MegaEntityFactory.fetch(FloatingEmber::class)!!
-                        ember.spawn(props(ConstKeys.POSITION pairTo position, ConstKeys.CULL_TIME pairTo EMBER_CULL_TIME))
+                        ember.spawn(
+                            props(
+                                ConstKeys.POSITION pairTo position,
+                                ConstKeys.CULL_TIME pairTo EMBER_CULL_TIME
+                            )
+                        )
 
                         resetEmberDelay()
                     }
                 }
             }
-
             RisingLavaRiverState.STOPPED -> {
                 stopDelay.update(delta)
 
@@ -287,7 +295,6 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
                     setLavaToFalling()
                 }
             }
-
             RisingLavaRiverState.FALLING -> {
                 val maxY = body.getMaxY()
                 val camY = game.getGameCamera().toGameRectangle().getY()
@@ -316,7 +323,6 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
                     shakeDelay.reset()
                 }
             }
-
             else -> {}
         }
     })

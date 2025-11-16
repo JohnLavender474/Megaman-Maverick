@@ -231,7 +231,7 @@ class InfernoOven(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
         )
         .preProcess { _, sprite -> rotateAndPositionSprite(sprite) }
         .sprite(
-            FLAME, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
+            FLAME, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
                 .also { sprite -> sprite.setSize(SPRITE_WIDTH * ConstVals.PPM, SPRITE_HEIGHT * ConstVals.PPM) }
         )
         .preProcess { _, sprite ->
