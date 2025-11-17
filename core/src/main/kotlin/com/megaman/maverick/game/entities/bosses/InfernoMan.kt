@@ -273,6 +273,11 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 return@add
             }
 
+            if (game.isCameraRotating()) {
+                body.physics.velocity.setZero()
+                body.physics.gravityOn = false
+            } else body.physics.gravityOn = !frozen
+
             val meteorSpawnIter = meteorSpawnDelays.iterator()
             while (meteorSpawnIter.hasNext()) {
                 val meteorSpawnDelay = meteorSpawnIter.next()
@@ -283,7 +288,6 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             val frozenTimer = timers["frozen"]
             when {
                 isHealthDepleted() -> frozenTimer.setToEnd()
-
                 !frozenTimer.isFinished() -> {
                     body.physics.velocity.setZero()
                     body.physics.gravityOn = false
@@ -648,13 +652,11 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 offsetY = 0.5f * ConstVals.PPM
                 rotation = if (isFacing(Facing.LEFT)) 45f else 315f
             }
-
             ShootMethod.DOWN -> {
                 offsetX = 1.5f * ConstVals.PPM * facing.value
                 offsetY = -0.25f * ConstVals.PPM
                 rotation = if (isFacing(Facing.LEFT)) 135f else 225f
             }
-
             else -> {
                 offsetX = ConstVals.PPM.toFloat() * facing.value
                 offsetY = 0.25f * ConstVals.PPM

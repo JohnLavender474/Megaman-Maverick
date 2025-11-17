@@ -119,10 +119,11 @@ class MagmaPellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(
-            this,
-            body,
-            BodyFixtureDef.of(FixtureType.PROJECTILE, FixtureType.DAMAGER),
-            debugShapes
+            entity = this,
+            body = body,
+            bodyFixtureDefs = BodyFixtureDef.of(FixtureType.PROJECTILE, FixtureType.DAMAGER),
+            debugShapes = debugShapes,
+            doUpdate = { !game.isCameraRotating() }
         )
     }
 

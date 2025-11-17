@@ -75,6 +75,7 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     private var collideBodies: Array<IBodyEntity>? = null
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
@@ -82,9 +83,7 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.putIfAbsent(ConstKeys.CULL_TIME, DEFAULT_CULL_TIME)
-
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -99,8 +98,6 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
                 Direction.LEFT // return left by default on error
             }
         }
-
-        body.physics.velocity.set(0f, METEOR_SPEED * ConstVals.PPM).rotateDeg(rotation)
 
         val rawCollideBounds = spawnProps.get("${ConstKeys.COLLIDE}_${ConstKeys.BODIES}")
         collideBodies = when (rawCollideBounds) {
@@ -159,6 +156,11 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
 
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            if (game.isCameraRotating()) body.physics.velocity.setZero()
+            else body.physics.velocity.set(0f, METEOR_SPEED * ConstVals.PPM).rotateDeg(rotation)
+        }
+
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
@@ -174,8 +176,8 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(2f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putPreProcess { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putPreProcess { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = rotation + SPRITE_ROTATION_OFFSET
 
@@ -187,7 +189,7 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
             }
             sprite.setPosition(body.getPositionPoint(position), position)
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {

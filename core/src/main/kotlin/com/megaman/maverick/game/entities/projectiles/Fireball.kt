@@ -44,7 +44,9 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IFireEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.enemies.ShieldAttacker
 import com.megaman.maverick.game.entities.explosions.SmokePuff
+import com.megaman.maverick.game.entities.hazards.FireballBar
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -136,8 +138,11 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
     }
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        body.physics.velocity.x *= -1f
-        requestToPlaySound(SoundAsset.DINK_SOUND, false)
+        val entity = shieldFixture.getEntity()
+        if (owner != FireballBar || entity !is ShieldAttacker) {
+            body.physics.velocity.x *= -1f
+            requestToPlaySound(SoundAsset.DINK_SOUND, false)
+        }
     }
 
     override fun hitWater(waterFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
@@ -233,7 +238,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
         val component = SpritesComponent(sprite)
-        component.putPreProcess { delta, sprite ->
+        component.putPreProcess { _, sprite ->
             val size = if (burst) 1f else 2f
             sprite.setSize(size * ConstVals.PPM)
 

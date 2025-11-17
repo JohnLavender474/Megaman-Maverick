@@ -35,6 +35,8 @@ class MagmaOrb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         private var region: TextureRegion? = null
     }
 
+    private val trajectory = Vector2()
+
     override fun init() {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
@@ -49,8 +51,7 @@ class MagmaOrb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
 
-        val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
-        body.physics.velocity.set(trajectory)
+        trajectory.set(spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!)
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -58,6 +59,11 @@ class MagmaOrb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         body.setSize(1.75f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
+
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            if (game.isCameraRotating()) body.physics.velocity.setZero()
+            else body.physics.velocity.set(trajectory)
+        }
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }

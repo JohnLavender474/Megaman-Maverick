@@ -192,21 +192,19 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         when (key) {
             EventType.PLAYER_READY -> {
                 val room = game.getCurrentRoom()!!.name
-                if (room == riseRoom) setLavaToRising()
+                if (room == riseRoom) setLavaToRising() else setLavaToDormant()
             }
             EventType.PLAYER_DONE_DYIN -> setLavaToDormant()
-            EventType.BEGIN_ROOM_TRANS -> if (state == RisingLavaRiverState.RISING) {
-                val room = game.getCurrentRoom()!!.name
-                if (room != riseRoom) {
-                    setLavaToStopped()
-                    stopDelay.reset()
+            EventType.BEGIN_ROOM_TRANS ->
+                if (state == RisingLavaRiverState.RISING) {
+                    val room = game.getCurrentRoom()!!.name
+                    if (room != riseRoom) setLavaToStopped()
                 }
-            }
-            EventType.END_ROOM_TRANS -> {
+            EventType.GATE_INIT_OPENING -> setLavaToStopped()
+            EventType.END_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS -> {
                 val room = game.getCurrentRoom()!!.name
-                if (room == riseRoom) setLavaToRising()
+                if (room == riseRoom) setLavaToRising() else setLavaToDormant()
             }
-            EventType.GATE_INIT_OPENING -> setLavaToDormant()
         }
     }
 
@@ -235,6 +233,9 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        if (!game.isProperty(ConstKeys.ROOM_TRANSITION, true) && game.getCurrentRoom()?.name != riseRoom)
+            setLavaToDormant()
+
         when (state) {
             RisingLavaRiverState.RISING -> {
                 shakeDelay.update(delta)
@@ -282,10 +283,8 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
             }
             RisingLavaRiverState.STOPPED -> {
                 stopDelay.update(delta)
-
                 if (stopDelay.isFinished()) {
                     GameLogger.debug(TAG, "update(): stop delay finished")
-
                     setLavaToFalling()
                 }
             }

@@ -81,8 +81,8 @@ class WorldSystem(
         accumulator += delta
         if (accumulator >= fixedStep) {
             entities.forEach {
-                val body = it.getComponent(BodyComponent::class)!!.body
-                reusableBodyArray.add(body)
+                val component = it.getComponent(BodyComponent::class)!!
+                if (component.doUpdate()) reusableBodyArray.add(component.body)
             }
 
             while (accumulator >= fixedStep) {

@@ -10,11 +10,13 @@ import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -41,7 +43,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IFireEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.world.body.*
 
@@ -119,11 +120,14 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     })
 
     private fun dropFlame() {
+        // Replace this with Magma Wave's own "direction" value
+        val direction = if (owner is IDirectional) (owner as IDirectional).direction else Direction.UP
+
         val flame = MegaEntityFactory.fetch(MagmaFlame::class)!!
         flame.spawn(
             props(
                 ConstKeys.OWNER pairTo owner,
-                ConstKeys.DIRECTION pairTo megaman.direction,
+                ConstKeys.DIRECTION pairTo direction,
                 ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)
             )
         )

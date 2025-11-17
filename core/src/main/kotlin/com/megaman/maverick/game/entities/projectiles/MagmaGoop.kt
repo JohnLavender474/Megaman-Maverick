@@ -55,8 +55,8 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         private var region: TextureRegion? = null
     }
 
+    private val trajectory = Vector2()
     private var rotation = 0f
-
     private var bounces = 0
 
     override fun init() {
@@ -67,17 +67,14 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(MagmaMeteor.Companion.TAG, "onSpawn(): spawnProps=$spawnProps")
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
 
-        val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
-        body.physics.velocity.set(trajectory)
-
+        trajectory.set(spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!)
         rotation = spawnProps.get(ConstKeys.ROTATION, Float::class)!!
-
         bounces = 0
     }
 
@@ -106,7 +103,7 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
             otherShape.toGdxRectangle(),
             overlap
         )
-        var spawn = if (overlapping) overlap.getPositionPoint(position) else thisShape.getCenter()
+        val spawn = if (overlapping) overlap.getPositionPoint(position) else thisShape.getCenter()
 
         GameLogger.debug(
             TAG,
@@ -123,6 +120,11 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         body.setSize(0.85f * ConstVals.PPM, 0.65f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
+
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            if (game.isCameraRotating()) body.physics.velocity.setZero()
+            else body.physics.velocity.set(trajectory)
+        }
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }

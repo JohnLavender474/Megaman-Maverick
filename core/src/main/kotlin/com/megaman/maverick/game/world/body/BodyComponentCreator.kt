@@ -24,9 +24,11 @@ object BodyComponentCreator {
         entity: IBodyEntity,
         body: Body,
         bodyFixtureDefs: Array<BodyFixtureDef> = Array(),
-        debugShapes: Array<() -> IDrawableShape?>? = null
+        debugShapes: Array<() -> IDrawableShape?>? = null,
+        doUpdate: (() -> Boolean)? = null
     ): BodyComponent {
         val component = BodyComponent(body)
+        if (doUpdate != null) component.doUpdate = doUpdate
         return amend(entity, component, bodyFixtureDefs, debugShapes)
     }
 

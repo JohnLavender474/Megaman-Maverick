@@ -16,6 +16,7 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.interfaces.IActivatable
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.SmoothOscillationTimer
@@ -23,6 +24,7 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -44,6 +46,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
+import com.megaman.maverick.game.entities.bosses.InfernoMan
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
@@ -58,10 +61,12 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.isSensing
 
 class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    ICullableEntity, IAudioEntity, IDirectional {
+    ICullableEntity, IAudioEntity, IDirectional, IActivatable {
 
     companion object {
         const val TAG = "GravitySwitcharoo"
+
+        private const val ACTIVE_DELAY_DUR = 0.5f
 
         private const val BODY_SIZE = 2f
 
@@ -73,21 +78,8 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         private const val AURA_MAX_ALPHA = 0.5f
         private const val AURA_BLINK_DUR = 0.2f
 
-        // TODO: Tags commented out because allowing other entities to trigger gravity switch makes gameplay unstable
-        private val TRIGGER_ENTITY_TAGS = gdxArrayOf<String>(
-            /*
-            TellySaucer.TAG,
-            Asteroid.TAG,
-            StagedMoonLandingFlag.TAG,
-            ExplodingBall.TAG,
-            Bullet.TAG,
-            ChargedShot.TAG,
-            PreciousGem.TAG,
-            MoonScythe.TAG,
-            MagmaWave.TAG,
-            SmallIceCube.TAG
-             */
-        )
+        // The entities (besides Mega Man) that can trigger a gravity switch
+        private val TRIGGER_ENTITY_TAGS = gdxArrayOf<String>(InfernoMan.TAG)
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -97,6 +89,14 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         set(value) {
             body.direction = value
         }
+
+    override var on: Boolean
+        get() = activeDelayTimer.isFinished()
+        set(value) {
+            if (value) activeDelayTimer.setToEnd() else activeDelayTimer.reset()
+        }
+
+    private val activeDelayTimer = Timer(ACTIVE_DELAY_DUR)
 
     private val triggerArea = GameCircle().setRadius(BODY_SIZE * ConstVals.PPM / 2f)
     private val triggerEntities = ObjectSet<IBodyEntity>()
@@ -135,6 +135,8 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
 
         auraBlink.reset()
+
+        on = true
     }
 
     override fun onDestroy() {
@@ -156,7 +158,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         }
     }
 
-    override fun shouldBeginSwitchToDown(delta: Float) = !game.isCameraRotating() &&
+    override fun shouldBeginSwitchToDown(delta: Float) = on &&
         direction != megaman.direction && isTriggerEntityInBounds() &&
         triggerArea.overlaps(game.getGameCamera().getRotatedBounds())
 
@@ -174,7 +176,8 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         TRIGGER_ENTITY_TAGS.forEach { tag ->
             val entities = MegaGameEntities.getOfTag(tag)
             entities.forEach { entity ->
-                if (entity is IBodyEntity && entity.body.getBounds().overlaps(triggerArea)) triggerEntities.add(entity)
+                if (entity is IBodyEntity && entity.body.getBounds().overlaps(triggerArea))
+                    triggerEntities.add(entity)
             }
         }
 
@@ -193,10 +196,13 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
 
     override fun defineUpdatablesComponent(component: UpdatablesComponent) {
         super.defineUpdatablesComponent(component)
-        component.put(ConstKeys.TRIGGER) update@{
+        component.put(ConstKeys.TRIGGER) update@{ delta ->
             triggerArea.setCenter(body.getCenter())
 
-            if (game.isCameraRotating()) return@update
+            if (game.isCameraRotating()) {
+                on = false
+                return@update
+            }
 
             val iter = triggerEntities.iterator()
             while (iter.hasNext) {
@@ -207,6 +213,8 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
                 }
                 if (!entity.body.getBounds().overlaps(triggerArea)) iter.remove()
             }
+
+            activeDelayTimer.update(delta)
         }
     }
 
@@ -263,7 +271,10 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         .key(ConstKeys.ARROW)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { if (megaman.direction == direction) ConstKeys.DEACTIVATED else ConstKeys.ARROW }
+                .setKeySupplier {
+                    if (!on || megaman.direction == direction) ConstKeys.DEACTIVATED
+                    else ConstKeys.ARROW
+                }
                 .applyToAnimations { animations ->
                     animations.put(ConstKeys.ARROW, Animation(regions[ConstKeys.ARROW], 3, 1, 0.1f, true))
                     animations.put(ConstKeys.DEACTIVATED, Animation(regions[ConstKeys.DEACTIVATED]))

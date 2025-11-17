@@ -12,6 +12,7 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.UpdateFunction
@@ -48,12 +49,13 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.ITeleporterEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
+import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
-import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
 
 class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITeleporterEntity, IBodyEntity,
@@ -65,6 +67,8 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
         private const val BLOCK_HEIGHT = 1f
         private const val SEND_DELAY = 0.25f
         private const val RECEIVE_DELAY = 0.25f
+        private val MEGAMAN_DIR_ON_RECEIVE =
+            "${Megaman.TAG.lowercase()}_${ConstKeys.DIRECTION}_${ConstKeys.ON}_${ConstKeys.RECEIVE}"
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -74,7 +78,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
     private val incomingBodies = OrderedMap<IBodyEntity, Timer>()
     private val ignoredBodies = OrderedSet<IBodyEntity>()
 
-    private val teleporterBounds = GameRectangle()
+    private var teleporterBounds: GameRectangle? = null
 
     private var upperBlock: Block? = null
     private var lowerBlock: Block? = null
@@ -82,20 +86,22 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
     private var thisKey = -1
     private var nextKey = -1
 
-    override fun getType() = EntityType.SPECIAL
+    private var megamanDirOnReceive: Direction? = null
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
             regions.put("frame", atlas.findRegion("$TAG/Frame"))
             regions.put("inactive", atlas.findRegion("$TAG/Inactive"))
             regions.put("active", atlas.findRegion("$TAG/Active"))
         }
-        addComponent(defineUpdatablesComponent())
+        super.init()
+        addComponent(AudioComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
-        addComponent(AudioComponent())
+        addComponent(defineUpdatablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -107,10 +113,12 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
-        teleporterBounds.set(spawnProps.get(ConstKeys.CHILD, RectangleMapObject::class)!!.rectangle.toGameRectangle())
+        teleporterBounds = if (spawnProps.containsKey(ConstKeys.CHILD))
+            GameRectangle(spawnProps.get(ConstKeys.CHILD, RectangleMapObject::class)!!.rectangle)
+        else null
 
         thisKey = spawnProps.get(ConstKeys.KEY, Int::class)!!
-        nextKey = spawnProps.get(ConstKeys.NEXT, Int::class)!!
+        nextKey = spawnProps.getOrDefault(ConstKeys.NEXT, -1, Int::class)
 
         val rect1 = GameObjectPools.fetch(GameRectangle::class)
         upperBlock = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD) as Block
@@ -133,9 +141,17 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
                     .setBottomCenterToPoint(body.getPositionPoint(Position.BOTTOM_CENTER))
             )
         )
+
+        megamanDirOnReceive = when {
+            spawnProps.containsKey(MEGAMAN_DIR_ON_RECEIVE) -> Direction.valueOf(
+                spawnProps.get(MEGAMAN_DIR_ON_RECEIVE, String::class)!!.uppercase()
+            )
+            else -> null
+        }
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
         game.eventsMan.removeListener(this)
@@ -165,6 +181,8 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
     }
 
     override fun onEvent(event: Event) {
+        GameLogger.debug(TAG, "onEvent(): event=$event")
+
         if (event.key == EventType.TELEPORT && event.isProperty(ConstKeys.KEY, thisKey)) {
             val entity = event.getProperty(ConstKeys.ENTITY, IBodyEntity::class)!!
             receiveEntity(entity)
@@ -183,6 +201,8 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
         entity.body.setBottomCenterToPoint(teleportPosition)
 
         incomingBodies.put(entity, Timer(RECEIVE_DELAY))
+
+        if (entity == megaman && megamanDirOnReceive != null) megaman.direction = megamanDirOnReceive!!
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -261,9 +281,12 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
         val teleporterFixture = Fixture(body, FixtureType.TELEPORTER)
         teleporterFixture.attachedToBody = false
         body.addFixture(teleporterFixture)
-        debugShapes.add { teleporterFixture}
+        debugShapes.add { teleporterFixture }
 
-        body.preProcess.put(ConstKeys.DEFAULT) { teleporterFixture.setShape(teleporterBounds) }
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            teleporterFixture.setActive(teleporterBounds != null)
+            if (teleporterBounds != null) teleporterFixture.setShape(teleporterBounds!!)
+        }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -299,4 +322,8 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(gdxArrayOf({ sprites["glass"] } pairTo animator))
     }
+
+    override fun getType() = EntityType.SPECIAL
+
+    override fun getTag() = TAG
 }
