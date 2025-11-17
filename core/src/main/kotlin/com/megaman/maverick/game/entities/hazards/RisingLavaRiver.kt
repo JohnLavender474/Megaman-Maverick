@@ -38,7 +38,6 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -63,7 +62,6 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         const val TAG = "RisingLavaRiver"
 
         private const val DEFAULT_RISE_SPEED = 1.5f
-        private const val DEFAULT_RISE_SPEED_HARD = 1.625f
         private const val DEFAULT_FALL_SPEED = 8f
 
         private const val STOP_DELAY = 0.5f
@@ -165,11 +163,7 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
         riseRoom = spawnProps.get("${ConstKeys.RISE}_${ConstKeys.ROOM}", String::class)!!
 
-        riseSpeed = spawnProps.getOrDefault(
-            "${ConstKeys.RISE}_${ConstKeys.SPEED}",
-            if (game.state.getDifficultyMode() == DifficultyMode.HARD) DEFAULT_RISE_SPEED_HARD else DEFAULT_RISE_SPEED,
-            Float::class
-        )
+        riseSpeed = spawnProps.getOrDefault("${ConstKeys.RISE}_${ConstKeys.SPEED}", DEFAULT_RISE_SPEED, Float::class)
         fallSpeed = spawnProps.getOrDefault("${ConstKeys.FALL}_${ConstKeys.SPEED}", DEFAULT_FALL_SPEED, Float::class)
 
         left = spawnProps.getOrDefault(ConstKeys.LEFT, false, Boolean::class)

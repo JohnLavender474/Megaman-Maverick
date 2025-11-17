@@ -135,7 +135,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (isHealthDepleted()) return@add
+            if (isHealthDepleted() || game.isCameraRotating()) return@add
 
             if (wanaan != null && wanaan!!.comingDown && body.getBounds().contains(wanaan!!.cullPoint)) {
                 wanaan!!.destroy()
@@ -205,7 +205,11 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
     }
 
     private fun launchWanaan() {
-        if (wanaan == null) throw IllegalStateException("Wanaan ref cannot be null when launching the Wanaan")
+        if (wanaan == null) {
+            GameLogger.error(TAG, "launchWanaan(): wanaan ref is null")
+            return
+        }
+
         GameLogger.debug(TAG, "launchWanaan()")
 
         val impulse = GameObjectPools.fetch(Vector2::class)

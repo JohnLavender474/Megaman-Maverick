@@ -47,6 +47,7 @@ import com.megaman.maverick.game.entities.contracts.IFireEntity
 import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.projectiles.IceBomb
+import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
@@ -58,7 +59,6 @@ class IceFox(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         const val TAG = "IceFox"
 
         private const val STAND_DUR = 1.5f
-        private const val STAND_DUR_HARD = 0.75f
 
         private const val SHOOT_DUR = 2f
         private const val SHOOT_DUR_HARD = 3f
@@ -109,14 +109,9 @@ class IceFox(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         loop.reset()
 
         timers = orderedMapOf(
-            IceFoxState.STAND pairTo Timer(
-                if (game.state.getDifficultyMode() == DifficultyMode.HARD) STAND_DUR_HARD else STAND_DUR
-            ),
-            IceFoxState.SHOOT pairTo Timer(
-                if (game.state.getDifficultyMode() == DifficultyMode.HARD) SHOOT_DUR_HARD else SHOOT_DUR
-            ).also { timer ->
+            IceFoxState.STAND pairTo Timer(STAND_DUR),
+            IceFoxState.SHOOT pairTo Timer(if (game.state.hardMode) SHOOT_DUR_HARD else SHOOT_DUR).also { timer ->
                 val shots = if (game.state.getDifficultyMode() == DifficultyMode.HARD) SHOTS_HARD else SHOTS
-
                 for (i in 1..shots) {
                     val time = i * SHOOT_DELAY
                     val runnable = TimeMarkedRunnable(time) { shoot() }
@@ -140,12 +135,15 @@ class IceFox(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            if (game.isCameraRotating()) return@add
+
             val timer = timers[currentState]
             timer.update(delta)
             if (timer.isFinished()) {
                 loop.next()
                 timer.reset()
             }
+
             if (currentState == IceFoxState.STAND) FacingUtils.setFacingOf(this)
         }
     }
@@ -194,6 +192,8 @@ class IceFox(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         .build()
 
     private fun shoot() {
+        GameLogger.debug(TAG, "shoot()")
+
         val spawn = body.getCenter()
             .add(SHOOT_OFFSET_X * facing.value * ConstVals.PPM, SHOOT_OFFSET_Y * ConstVals.PPM)
 

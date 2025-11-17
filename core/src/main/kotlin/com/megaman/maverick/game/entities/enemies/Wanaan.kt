@@ -147,23 +147,23 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
         body.preProcess.put(ConstKeys.DEFAULT) {
             if (frozen) {
                 body.physics.velocity.setZero()
-                return@put
-            }
+                body.physics.gravity.setZero()
+            } else {
+                val velocity = body.physics.velocity
+                if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) when (direction) {
+                    Direction.UP -> if (velocity.y > 0f) velocity.y = 0f
+                    Direction.DOWN -> if (velocity.y < 0f) velocity.y = 0f
+                    Direction.RIGHT -> if (velocity.x > 0f) velocity.x = 0f
+                    Direction.LEFT -> if (velocity.x < 0f) velocity.x = 0f
+                }
 
-            val velocity = body.physics.velocity
-            if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) when (direction) {
-                Direction.UP -> if (velocity.y > 0f) velocity.y = 0f
-                Direction.DOWN -> if (velocity.y < 0f) velocity.y = 0f
-                Direction.RIGHT -> if (velocity.x > 0f) velocity.x = 0f
-                Direction.LEFT -> if (velocity.x < 0f) velocity.x = 0f
-            }
-
-            val gravity = body.physics.gravity
-            when (direction) {
-                Direction.UP -> gravity.y = -GRAVITY * ConstVals.PPM
-                Direction.DOWN -> gravity.y = GRAVITY * ConstVals.PPM
-                Direction.RIGHT -> gravity.x = -GRAVITY * ConstVals.PPM
-                Direction.LEFT -> gravity.x = GRAVITY * ConstVals.PPM
+                val gravity = body.physics.gravity
+                when (direction) {
+                    Direction.UP -> gravity.y = -GRAVITY * ConstVals.PPM
+                    Direction.DOWN -> gravity.y = GRAVITY * ConstVals.PPM
+                    Direction.RIGHT -> gravity.x = -GRAVITY * ConstVals.PPM
+                    Direction.LEFT -> gravity.x = GRAVITY * ConstVals.PPM
+                }
             }
         }
 

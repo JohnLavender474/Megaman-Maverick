@@ -371,18 +371,13 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 Direction.UP -> {}
                 Direction.DOWN -> body.translate(0f, 0.75f * ConstVals.PPM)
                 Direction.LEFT -> body.translate(0.6f * ConstVals.PPM, 0.3f * ConstVals.PPM)
-                Direction.RIGHT -> body.translate(-0.6f * ConstVals.PPM, -0.3f * ConstVals.PPM)
+                Direction.RIGHT -> body.translate(-0.6f * ConstVals.PPM, 0.3f * ConstVals.PPM)
             }
         }
 
         override fun end() {
-            if (!isBehaviorActive(BehaviorType.GROUND_SLIDING)) {
-                when (direction) {
-                    Direction.LEFT -> body.translate(0f, -0.3f * ConstVals.PPM)
-                    Direction.RIGHT -> body.translate(0f, 0.3f * ConstVals.PPM)
-                    else -> {}
-                }
-            }
+            if (!isBehaviorActive(BehaviorType.GROUND_SLIDING) && direction.isHorizontal())
+                body.translate(0f, -0.3f * ConstVals.PPM)
         }
     }
 
@@ -428,7 +423,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 Direction.UP -> {}
                 Direction.DOWN -> body.translate(0f, 0.6f * ConstVals.PPM)
                 Direction.LEFT -> body.translate(0.6f * ConstVals.PPM, 0.3f * ConstVals.PPM * facing.value)
-                Direction.RIGHT -> body.translate(-0.6f * ConstVals.PPM, -0.3f * ConstVals.PPM * -facing.value)
+                Direction.RIGHT -> body.translate(-0.6f * ConstVals.PPM, -0.3f * ConstVals.PPM * facing.value)
             }
 
             directionOnInit = direction
@@ -471,13 +466,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         override fun end() {
             GameLogger.debug(MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG, "end()")
 
-            if (!isBehaviorActive(BehaviorType.CROUCHING)) {
-                when (direction) {
-                    Direction.LEFT -> body.translate(0f, -0.3f * ConstVals.PPM)
-                    Direction.RIGHT -> body.translate(0f, 0.3f * ConstVals.PPM)
-                    else -> {}
-                }
-            }
+            if (!isBehaviorActive(BehaviorType.CROUCHING) && direction.isHorizontal())
+                body.translate(0f, -0.3f * ConstVals.PPM)
 
             minTimer.reset()
             maxTimer.reset()

@@ -101,19 +101,13 @@ enum class LevelDefinition(
     ),
     WILY_STAGE_3(
         type = LevelType.WILY_LEVEL,
-        tmxMapSource = "WilyStage3_v4.tmx",
+        tmxMapSource = "Test8.tmx",
         music = MusicAsset.MMX6_GATE_STAGE_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),
-    TEST_1(
+    TEST(
         type = LevelType.TEST_LEVEL,
-        tmxMapSource = "Test1.tmx",
-        music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
-        screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
-    ),
-    TEST_TILESET_SIZE(
-        type = LevelType.TEST_LEVEL,
-        tmxMapSource = "TilesetSizeTest.tmx",
+        tmxMapSource = "Test8.tmx",
         music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     );
