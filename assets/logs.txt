@@ -1,1 +1,16 @@
-===== SESSION STARTED: 2025-11-17T10:43:00.400715123 =====
+===== SESSION STARTED: 2025-11-17T10:46:21.521128092 =====
+10:46:25 | DEBUG | RisingLavaRiver | canSpawn(): canSpawn=true
+10:46:25 | DEBUG | RisingLavaRiver | init()
+10:46:25 | DEBUG | RisingLavaRiver | onSpawn(): spawnProps=Properties({
+	[bounds=[3264.0,0.0,3424.0,608.0]]
+	[x=3264.0]
+	[height=608.0]
+	[spawn_type=spawn_now]
+	[rise_room=room3]
+	[id=128]
+	[name=RisingLavaRiver]
+	[y=0.0]
+	[width=3424.0]
+})
+10:46:25 | DEBUG | RisingLavaRiver | setLavaToDormant()
+10:46:27 | DEBUG | RisingLavaRiver | onEvent(): event.key=PLAYER_READY

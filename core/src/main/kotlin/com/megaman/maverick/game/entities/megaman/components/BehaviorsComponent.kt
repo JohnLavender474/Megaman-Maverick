@@ -428,6 +428,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             directionOnInit = direction
 
+            // Set the run time to 100 so that when Mega Man finishes ground sliding, it is guaranteed that there
+            // will always be extra momentum pushing him.
             runTime = 100f
         }
 
