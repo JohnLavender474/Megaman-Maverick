@@ -66,7 +66,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
     companion object {
         const val TAG = "GravitySwitcharoo"
 
-        private const val ACTIVE_DELAY_DUR = 0.5f
+        private const val ACTIVE_DELAY_DUR = 1f
 
         private const val BODY_SIZE = 2f
 
@@ -97,6 +97,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         }
 
     private val activeDelayTimer = Timer(ACTIVE_DELAY_DUR)
+    private var hasActiveDelay = false
 
     private val triggerArea = GameCircle().setRadius(BODY_SIZE * ConstVals.PPM / 2f)
     private val triggerEntities = ObjectSet<IBodyEntity>()
@@ -137,6 +138,12 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         auraBlink.reset()
 
         on = true
+
+        hasActiveDelay = spawnProps.getOrDefault(
+            "${ConstKeys.HAS}_${ConstKeys.ACTIVE}_${ConstKeys.DELAY}", false, Boolean::class
+        )
+
+        if (hasActiveDelay) activeDelayTimer.reset() else activeDelayTimer.setToEnd()
     }
 
     override fun onDestroy() {
@@ -200,7 +207,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
             triggerArea.setCenter(body.getCenter())
 
             if (game.isCameraRotating()) {
-                on = false
+                if (hasActiveDelay) on = false
                 return@update
             }
 
