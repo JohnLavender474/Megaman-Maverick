@@ -25,6 +25,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
@@ -56,11 +57,14 @@ class BunbyRedRocket(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
         }
     override lateinit var facing: Facing
 
+    private val trajectory = Vector2()
+
     override fun init() {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
+        addComponent(defineUpdatablesComponent())
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
     }
 
@@ -71,8 +75,7 @@ class BunbyRedRocket(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
 
-        val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
-        body.physics.velocity.set(trajectory)
+        trajectory.set(spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!)
 
         facing = spawnProps.get(ConstKeys.FACING, Facing::class)!!
         direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
@@ -101,6 +104,11 @@ class BunbyRedRocket(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
             )
         )
     }
+
+    private fun defineUpdatablesComponent() = UpdatablesComponent({
+        if (game.isCameraRotating()) body.physics.velocity.setZero()
+        else body.physics.velocity.set(trajectory)
+    })
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)

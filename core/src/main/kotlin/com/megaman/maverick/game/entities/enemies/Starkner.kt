@@ -207,7 +207,6 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
     override fun canSpawnItemOnHealthDepleted(): Boolean {
         if (!super.canSpawnItemOnHealthDepleted()) return false
-
         return state == StarknerState.BLACKHOLE
     }
 
@@ -281,6 +280,11 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add update@{ delta ->
             direction = megaman.direction
+
+            if (game.isCameraRotating()) {
+                body.physics.velocity.setZero()
+                return@update
+            }
 
             when (state) {
                 StarknerState.SLEEP -> {

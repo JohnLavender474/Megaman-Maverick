@@ -127,9 +127,6 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-
-        wanaan?.destroy()
-        wanaan = null
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

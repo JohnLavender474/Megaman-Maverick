@@ -125,6 +125,9 @@ class CameraManagerForRooms(
         )
 
         val nextGameRoom = gameRooms?.first { it.name == roomName } ?: return false
+
+        // Using room centers to calculate the transition direction is a very naive and unreliable way to do this.
+        // Ideally, `transDirection` will always be supplied with a non-null value.
         transitionDirection = transDirection ?: getSingleMostDirectionFromStartToTarget(
             currentGameRoom!!.rectangle.getCenter(), nextGameRoom.rectangle.getCenter()
         )
@@ -288,7 +291,7 @@ class CameraManagerForRooms(
             }
         nextGameRoom = nextGameRoom ?: currentGameRoom
 
-        GameLogger.debug(TAG, "nextGameRoom(): next room = $nextGameRoom")
+        GameLogger.debug(TAG, "nextGameRoom(): nextGameRoom=${nextGameRoom?.name}")
 
         return nextGameRoom
     }

@@ -8,6 +8,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
@@ -82,6 +83,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     private lateinit var animations: ObjectMap<String, IAnimation>
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             regions.put("still", atlas.findRegion("$TAG/Still"))
@@ -95,6 +97,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
@@ -122,6 +125,8 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     }
 
     private fun shoot() {
+        GameLogger.debug(TAG, "shoot()")
+
         val offset = GameObjectPools.fetch(Vector2::class)
         when (direction) {
             Direction.UP -> offset.set(0.5f * facing.value, 0.25f)
@@ -157,6 +162,11 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            if (game.isCameraRotating()) {
+                body.physics.velocity.setZero()
+                return@add
+            }
+
             if (!afterShootDelayTimer.isFinished()) {
                 afterShootDelayTimer.update(delta)
                 return@add
