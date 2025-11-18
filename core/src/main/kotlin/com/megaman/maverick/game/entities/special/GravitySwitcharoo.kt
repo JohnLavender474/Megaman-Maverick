@@ -279,7 +279,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         .animator(
             AnimatorBuilder()
                 .setKeySupplier {
-                    if (!on || megaman.direction == direction) ConstKeys.DEACTIVATED
+                    if (!on || game.isCameraRotating() || megaman.direction == direction) ConstKeys.DEACTIVATED
                     else ConstKeys.ARROW
                 }
                 .applyToAnimations { animations ->
