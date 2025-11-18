@@ -53,7 +53,10 @@ import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
-import com.megaman.maverick.game.entities.projectiles.*
+import com.megaman.maverick.game.entities.projectiles.MagmaGoop
+import com.megaman.maverick.game.entities.projectiles.MagmaMeteor
+import com.megaman.maverick.game.entities.projectiles.MagmaOrb
+import com.megaman.maverick.game.entities.projectiles.MagmaWave
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -178,7 +181,6 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         addComponent(defineAnimationsComponent())
         stateMachine = buildStateMachine()
         damageOverrides.put(SmallIceCube::class, dmgNeg(6))
-        damageOverrides.put(Bullet::class, dmgNeg(ConstVals.MAX_HEALTH))
     }
 
     override fun onSpawn(spawnProps: Properties) {

@@ -3323,11 +3323,11 @@
   <object id="453" name="BunbyTank" x="8376" y="2576" width="16" height="16"/>
   <object id="474" name="Starkner" x="8640" y="1616" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="26" name="player">
+ <objectgroup id="26" name="temp">
   <object id="475" name="0" x="7392" y="4000" width="32" height="32"/>
   <object id="476" name="1" x="8384" y="4000" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="2" name="temp">
+ <objectgroup id="2" name="player">
   <object id="4" name="0" x="288" y="4480" width="32" height="32"/>
   <object id="129" name="1" x="304" y="5664" width="32" height="32"/>
   <object id="327" name="2" x="2304" y="5600" width="32" height="32"/>
