@@ -31,7 +31,7 @@ import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
 const val MEGAMAN_BODY_WIDTH = 1f
-const val MEGAMAN_BODY_HEIGHT = 1.5f
+const val MEGAMAN_BODY_HEIGHT = 1.25f
 
 // slightly less than 1 so that Megaman can slide under spaces that are 1 tile in height
 const val GROUNDSLIDE_CROUCH_HEIGHT = 0.9f

@@ -204,6 +204,8 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            if (game.isCameraRotating()) return@add
+
             if (flag?.dead == true) flag = null
 
             if (currentState == AstroAssState.STAND) FacingUtils.setFacingOf(this)

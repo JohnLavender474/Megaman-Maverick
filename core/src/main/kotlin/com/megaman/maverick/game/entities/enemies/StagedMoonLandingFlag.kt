@@ -45,6 +45,7 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
@@ -273,8 +274,11 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
             if (projectile.owner == megaman) {
                 shield1Timer.reset()
                 if (shield1Invincible.isFinished()) {
-                    shield1Health.translate(-10)
+                    val damage = if (projectile is MoonScythe) 15 else 10
+                    shield1Health.translate(-damage)
+
                     shield1Invincible.reset()
+
                     requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
                 }
             }
@@ -293,8 +297,11 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
             if (projectile.owner == megaman) {
                 shield2Timer.reset()
                 if (shield2Invincible.isFinished()) {
-                    shield2Health.translate(-10)
-                    shield2Invincible.reset()
+                    val damage = if (projectile is MoonScythe) 15 else 10
+                    shield1Health.translate(-damage)
+
+                    shield1Invincible.reset()
+
                     requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
                 }
             }
@@ -345,7 +352,7 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, doUpdate = { !game.isCameraRotating() })
     }
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()

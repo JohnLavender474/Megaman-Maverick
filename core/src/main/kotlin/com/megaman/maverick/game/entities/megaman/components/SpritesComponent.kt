@@ -56,11 +56,12 @@ fun Megaman.getSpriteXTranslation() = when (getSpriteDirection()) {
     Direction.UP, Direction.DOWN -> 0f
     Direction.LEFT -> when {
         isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) -> 0f
-        else -> 0.3f
+        else -> 0.2f
     }
     Direction.RIGHT -> when {
         isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) -> 0f
-        else -> -0.3f
+        !feetOnGround || isBehaviorActive(BehaviorType.JUMPING) -> -0.5f
+        else -> -0.2f
     }
 }
 
@@ -75,11 +76,11 @@ fun Megaman.getSpriteYTranslation() = when (getSpriteDirection()) {
         else -> 0f
     }
     Direction.LEFT -> when {
-        isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) -> 0.2f
+        isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) -> 0f
         else -> 0f
     }
     Direction.RIGHT -> when {
-        isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) -> 0.2f
+        isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) -> 0f
         else -> 0f
     }
 }
@@ -105,7 +106,7 @@ private fun Megaman.defineMegamanSprite(component: SpritesComponent) {
     val priority = DrawingPriority()
     val sprite = GameSprite(getSpritePriority(priority))
     component.putSprite(MEGAMAN_SPRITE_KEY, sprite)
-    component.putPreProcess(MEGAMAN_SPRITE_KEY) { delta, player ->
+    component.putPreProcess(MEGAMAN_SPRITE_KEY) { _, player ->
         player.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
         val direction = getSpriteDirection()
         player.setFlip(shouldFlipSpriteX(), shouldFlipSpriteY())

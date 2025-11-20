@@ -42,6 +42,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.megaman.components.headFixture
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
@@ -105,12 +106,12 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         innerBlock!!.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
+                ConstKeys.DRAW pairTo false,
                 ConstKeys.BOUNDS pairTo bounds,
                 ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
                 ConstKeys.BLOCK_FILTERS pairTo { entity: MegaGameEntity, block: MegaGameEntity ->
                     blockFilter(entity, block)
-                },
-                ConstKeys.DRAW pairTo false
+                }
             )
         )
 
@@ -150,7 +151,7 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBounds() }
+        // debugShapes.add { body.getBounds() }
 
         val feetFixture = Fixture(
             body,
@@ -167,12 +168,6 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         body.addFixture(feetFixture)
         feetFixture.drawingColor = Color.GREEN
         // debugShapes.add { feetFixture }
-
-        val deathFixture = Fixture(body, FixtureType.DEATH)
-        deathFixture.putProperty(ConstKeys.INSTANT, true)
-        deathFixture.attachedToBody = false
-        body.addFixture(deathFixture)
-        debugShapes.add { deathFixture }
 
         body.preProcess.put(ConstKeys.BLOCK) {
             innerBlock!!.let {
@@ -206,9 +201,9 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             }
         }
         body.preProcess.put(ConstKeys.DEATH) {
-            deathFixture.setShape(feetFixture.getShape())
-            deathFixture.setActive(!body.isSensing(BodySense.FEET_ON_GROUND))
-            deathFixture.drawingColor = if (deathFixture.isActive()) Color.RED else Color.YELLOW
+            if (!body.isSensing(BodySense.FEET_ON_GROUND) &&
+                body.getBounds().overlaps(megaman.headFixture.getShape())
+            ) megaman.depleteHealth()
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

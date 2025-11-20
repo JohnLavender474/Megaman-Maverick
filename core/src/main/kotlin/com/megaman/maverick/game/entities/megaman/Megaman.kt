@@ -812,8 +812,14 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         when (direction) {
             Direction.UP -> focus.y += MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
             Direction.DOWN -> focus.y -= MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
-            Direction.LEFT -> focus.x -= MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
-            Direction.RIGHT -> focus.x += MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
+            Direction.LEFT -> {
+                focus.x -= MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
+                if (megaman.isAnyBehaviorActive(BehaviorType.CROUCHING)) focus.y -= 0.125f * ConstVals.PPM
+            }
+            Direction.RIGHT -> {
+                focus.x += MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
+                if (megaman.isAnyBehaviorActive(BehaviorType.CROUCHING)) focus.y -= 0.125f * ConstVals.PPM
+            }
         }
         return focus
     }

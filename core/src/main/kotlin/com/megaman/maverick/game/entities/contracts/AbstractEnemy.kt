@@ -41,8 +41,10 @@ import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportEndProp
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportStartProp
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.isSensing
 import kotlin.reflect.KClass
 
 abstract class AbstractEnemy(
@@ -63,7 +65,7 @@ abstract class AbstractEnemy(
         const val LOW_LIFE_CHANCE = 4
         const val HIGH_LIFE_CHANCE = 8
 
-        const val SCREW_CHANCE = 50
+        // TODO: const val SCREW_CHANCE = 50
 
         const val HEALTH_CHANCE = 25
         const val WEAPON_CHANCE = 50
@@ -105,7 +107,7 @@ abstract class AbstractEnemy(
             if (isHealthDepleted() && canSpawnItemOnHealthDepleted()) {
                 disintegrate()
 
-                if (dropItemOnDeath) {
+                if (dropItemOnDeath && !body.isSensing(BodySense.BODY_TOUCHING_BLOCK)) {
                     DROP_ENTITIES.shuffle()
 
                     DROP_ENTITIES.any { (type, chanceFunction) ->
