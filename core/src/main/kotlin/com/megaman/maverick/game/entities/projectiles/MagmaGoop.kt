@@ -37,15 +37,13 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.explosions.MagmaGoopExplosion
+import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGdxRectangle
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodyFixtureDef
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.*
 
 class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
 
@@ -84,6 +82,19 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         explodeAndDie(thisShape, otherShape)
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
+    }
+
+    override fun hitWater(waterFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        destroy()
+        playSoundNow(SoundAsset.WHOOSH_SOUND, false)
+    }
+
+    override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        val projectile = projectileFixture.getEntity()
+        if (projectile is SmallIceCube) {
+            destroy()
+            playSoundNow(SoundAsset.WHOOSH_SOUND, false)
+        }
     }
 
     override fun explodeAndDie(vararg params: Any?) {

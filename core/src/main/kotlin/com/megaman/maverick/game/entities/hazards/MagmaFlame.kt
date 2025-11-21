@@ -166,17 +166,19 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IFireEntity,
         damagerFixture.drawingColor = Color.BLUE
         debugShapes.add { damagerFixture }
 
+        val waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle(body))
+        waterListenerFixture.setHitByWaterReceiver {
+            destroy()
+            playSoundNow(SoundAsset.WHOOSH_SOUND, false)
+        }
+        body.addFixture(waterListenerFixture)
+
         body.preProcess.put(ConstKeys.DEFAULT) {
             val gravity = when (body.type) {
                 BodyType.DYNAMIC -> if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
                 else -> GRAVITY
             }
             GravityUtils.setGravity(body, gravity * ConstVals.PPM)
-
-            if (body.isSensing(BodySense.IN_WATER)) {
-                destroy()
-                playSoundNow(SoundAsset.WHOOSH_SOUND, false)
-            }
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

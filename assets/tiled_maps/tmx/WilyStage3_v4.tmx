@@ -2904,7 +2904,7 @@
     <property name="spawn_room" value="room3"/>
    </properties>
   </object>
-  <object id="338" name="GravitySwitcharoo" x="6496" y="3904" width="32" height="32">
+  <object id="338" name="GravitySwitcharoo" x="6544" y="3904" width="32" height="32">
    <properties>
     <property name="direction" value="up"/>
     <property name="spawn_room" value="room3"/>

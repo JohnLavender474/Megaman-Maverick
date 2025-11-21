@@ -1,4 +1,228 @@
-===== SESSION STARTED: 2025-11-20T08:58:48.312328175 =====
-08:58:49 | DEBUG | CameraManagerForRooms | set focus to { Megaman:[id=0, dead=false, hashCode=1595188851] }
-14:38:13 | DEBUG | CameraManagerForRooms | update(): reset
-14:38:13 | DEBUG | CameraManagerForRooms | nextGameRoom(): nextGameRoom=room1
+===== SESSION STARTED: 2025-11-21T15:21:03.685480157 =====
+15:21:05 | DEBUG | CameraManagerForRooms | set focus to { Megaman:[id=0, dead=false, hashCode=1573125303] }
+15:21:07 | DEBUG | Gate | init()
+15:21:07 | DEBUG | Gate | onSpawn(): spawnProps=Properties({
+	[bounds=[2208.0,768.0,64.0,96.0]]
+	[x=2208.0]
+	[height=96.0]
+	[room=room2]
+	[id=80]
+	[name=Gate]
+	[y=768.0]
+	[width=64.0]
+})
+15:21:07 | DEBUG | Gate | reset(): nextRoomKey=room2, mapObjectId=80
+15:21:07 | DEBUG | Gate | init()
+15:21:07 | DEBUG | Gate | onSpawn(): spawnProps=Properties({
+	[bounds=[3232.0,768.0,64.0,96.0]]
+	[x=3232.0]
+	[height=96.0]
+	[room=room3]
+	[id=94]
+	[name=Gate]
+	[y=768.0]
+	[width=64.0]
+})
+15:21:07 | DEBUG | Gate | reset(): nextRoomKey=room3, mapObjectId=94
+15:21:07 | DEBUG | Gate | init()
+15:21:07 | DEBUG | Gate | onSpawn(): spawnProps=Properties({
+	[bounds=[7744.0,2368.0,64.0,96.0]]
+	[x=7744.0]
+	[height=96.0]
+	[room=inferno_man_room]
+	[id=355]
+	[name=Gate]
+	[y=2368.0]
+	[width=64.0]
+})
+15:21:07 | DEBUG | Gate | reset(): nextRoomKey=inferno_man_room, mapObjectId=355
+15:21:07 | DEBUG | Gate | init()
+15:21:07 | DEBUG | Gate | onSpawn(): spawnProps=Properties({
+	[boss_key=1]
+	[bounds=[8256.0,2368.0,64.0,96.0]]
+	[trans_direction=right]
+	[x=8256.0]
+	[height=96.0]
+	[room=room5]
+	[id=356]
+	[name=Gate]
+	[y=2368.0]
+	[width=64.0]
+})
+15:21:07 | DEBUG | Gate | reset(): nextRoomKey=room5, mapObjectId=356
+15:21:07 | DEBUG | CameraManagerForRooms | update(): reset
+15:21:07 | DEBUG | CameraManagerForRooms | nextGameRoom(): nextGameRoom=intro_room
+15:21:13 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = DOWN
+15:21:13 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (320.0,1312.0)
+15:21:14 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (320.0,864.0)
+15:21:16 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = RIGHT
+15:21:16 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (320.0,864.0)
+15:21:17 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (832.0,864.0)
+15:21:41 | DEBUG | Gate | trigger(): nextRoomKey=room2, mapObjectId=80
+15:21:41 | DEBUG | Gate | update(): nextRoomKey=room2, mapObjectId=80, OPEN
+15:21:41 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = RIGHT
+15:21:41 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (1984.0,864.0)
+15:21:42 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (2496.0,864.0)
+15:21:42 | DEBUG | Gate | onEvent(): nextRoomKey=room2, mapObjectId=80, nextRoomKey=room2: END_ROOM_TRANS
+15:21:42 | DEBUG | Gate | update(): nextRoomKey=room2, mapObjectId=80, CLOSING
+15:21:43 | DEBUG | Gate | update(): nextRoomKey=room2, mapObjectId=80, CLOSED
+15:21:57 | DEBUG | Gate | onEvent(): nextRoomKey=room2, mapObjectId=80, PLAYER_SPAWN
+15:21:57 | DEBUG | Gate | reset(): nextRoomKey=room2, mapObjectId=80
+15:21:57 | DEBUG | Gate | onEvent(): nextRoomKey=room3, mapObjectId=94, PLAYER_SPAWN
+15:21:57 | DEBUG | Gate | reset(): nextRoomKey=room3, mapObjectId=94
+15:21:57 | DEBUG | Gate | onEvent(): nextRoomKey=inferno_man_room, mapObjectId=355, PLAYER_SPAWN
+15:21:57 | DEBUG | Gate | reset(): nextRoomKey=inferno_man_room, mapObjectId=355
+15:21:57 | DEBUG | Gate | onEvent(): nextRoomKey=room5, mapObjectId=356, PLAYER_SPAWN
+15:21:57 | DEBUG | Gate | reset(): nextRoomKey=room5, mapObjectId=356
+15:21:57 | DEBUG | CameraManagerForRooms | update(): reset
+15:21:57 | DEBUG | CameraManagerForRooms | nextGameRoom(): nextGameRoom=room2
+15:22:17 | DEBUG | Gate | trigger(): nextRoomKey=room3, mapObjectId=94
+15:22:17 | DEBUG | Gate | update(): nextRoomKey=room3, mapObjectId=94, OPEN
+15:22:17 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = RIGHT
+15:22:17 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (3008.0,864.0)
+15:22:19 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (3520.0,864.0)
+15:22:19 | DEBUG | Gate | onEvent(): nextRoomKey=room3, mapObjectId=94, nextRoomKey=room3: END_ROOM_TRANS
+15:22:19 | DEBUG | Gate | update(): nextRoomKey=room3, mapObjectId=94, CLOSING
+15:22:19 | DEBUG | Gate | update(): nextRoomKey=room3, mapObjectId=94, CLOSED
+15:22:57 | DEBUG | CameraManagerForRooms | nextGameRoom(): nextGameRoom=room4
+15:23:00 | DEBUG | Gate | trigger(): nextRoomKey=inferno_man_room, mapObjectId=355
+15:23:01 | DEBUG | Gate | update(): nextRoomKey=inferno_man_room, mapObjectId=355, OPEN
+15:23:01 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = RIGHT
+15:23:01 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (7520.0,2528.0)
+15:23:02 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (8032.0,2528.0)
+15:23:02 | DEBUG | Gate | onEvent(): nextRoomKey=inferno_man_room, mapObjectId=355, nextRoomKey=inferno_man_room: END_ROOM_TRANS
+15:23:02 | DEBUG | Gate | update(): nextRoomKey=inferno_man_room, mapObjectId=355, CLOSING
+15:23:03 | DEBUG | Gate | update(): nextRoomKey=inferno_man_room, mapObjectId=355, CLOSED
+15:23:48 | DEBUG | Gate | onEvent(): nextRoomKey=room5, mapObjectId=356, INTERMEDIATE_BOSS_DEAD: this_boss_key=1, other_boss_key=1
+15:23:52 | DEBUG | Gate | trigger(): nextRoomKey=room5, mapObjectId=356
+15:23:53 | DEBUG | Gate | update(): nextRoomKey=room5, mapObjectId=356, OPEN
+15:23:53 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = RIGHT
+15:23:53 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (8032.0,2528.0)
+15:23:54 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (8544.0,2528.0)
+15:23:54 | DEBUG | Gate | onEvent(): nextRoomKey=room5, mapObjectId=356, nextRoomKey=room5: END_ROOM_TRANS
+15:23:54 | DEBUG | Gate | update(): nextRoomKey=room5, mapObjectId=356, CLOSING
+15:23:55 | DEBUG | Gate | update(): nextRoomKey=room5, mapObjectId=356, CLOSED
+15:24:55 | DEBUG | Gate | onEvent(): nextRoomKey=room2, mapObjectId=80, PLAYER_SPAWN
+15:24:55 | DEBUG | Gate | reset(): nextRoomKey=room2, mapObjectId=80
+15:24:55 | DEBUG | Gate | onEvent(): nextRoomKey=room3, mapObjectId=94, PLAYER_SPAWN
+15:24:55 | DEBUG | Gate | reset(): nextRoomKey=room3, mapObjectId=94
+15:24:55 | DEBUG | Gate | onEvent(): nextRoomKey=inferno_man_room, mapObjectId=355, PLAYER_SPAWN
+15:24:55 | DEBUG | Gate | reset(): nextRoomKey=inferno_man_room, mapObjectId=355
+15:24:55 | DEBUG | Gate | onEvent(): nextRoomKey=room5, mapObjectId=356, PLAYER_SPAWN
+15:24:55 | DEBUG | Gate | reset(): nextRoomKey=room5, mapObjectId=356
+15:24:55 | DEBUG | CameraManagerForRooms | update(): reset
+15:24:55 | DEBUG | CameraManagerForRooms | nextGameRoom(): nextGameRoom=room5
+15:25:04 | DEBUG | Gate | onDestroy(): nextRoomKey=room2, mapObjectId=80
+15:25:04 | DEBUG | Gate | onDestroy(): nextRoomKey=room3, mapObjectId=94
+15:25:04 | DEBUG | Gate | onDestroy(): nextRoomKey=inferno_man_room, mapObjectId=355
+15:25:04 | DEBUG | Gate | onDestroy(): nextRoomKey=room5, mapObjectId=356
+15:25:20 | DEBUG | Gate | onSpawn(): spawnProps=Properties({
+	[bounds=[2208.0,768.0,64.0,96.0]]
+	[x=2208.0]
+	[height=96.0]
+	[room=room2]
+	[id=80]
+	[name=Gate]
+	[y=768.0]
+	[width=64.0]
+})
+15:25:20 | DEBUG | Gate | reset(): nextRoomKey=room2, mapObjectId=80
+15:25:20 | DEBUG | Gate | onSpawn(): spawnProps=Properties({
+	[bounds=[3232.0,768.0,64.0,96.0]]
+	[x=3232.0]
+	[height=96.0]
+	[room=room3]
+	[id=94]
+	[name=Gate]
+	[y=768.0]
+	[width=64.0]
+})
+15:25:20 | DEBUG | Gate | reset(): nextRoomKey=room3, mapObjectId=94
+15:25:20 | DEBUG | Gate | onSpawn(): spawnProps=Properties({
+	[bounds=[7744.0,2368.0,64.0,96.0]]
+	[x=7744.0]
+	[height=96.0]
+	[room=inferno_man_room]
+	[id=355]
+	[name=Gate]
+	[y=2368.0]
+	[width=64.0]
+})
+15:25:20 | DEBUG | Gate | reset(): nextRoomKey=inferno_man_room, mapObjectId=355
+15:25:20 | DEBUG | Gate | onSpawn(): spawnProps=Properties({
+	[boss_key=1]
+	[bounds=[8256.0,2368.0,64.0,96.0]]
+	[trans_direction=right]
+	[x=8256.0]
+	[height=96.0]
+	[room=room5]
+	[id=356]
+	[name=Gate]
+	[y=2368.0]
+	[width=64.0]
+})
+15:25:20 | DEBUG | Gate | reset(): nextRoomKey=room5, mapObjectId=356
+15:25:20 | DEBUG | CameraManagerForRooms | update(): reset
+15:25:20 | DEBUG | CameraManagerForRooms | nextGameRoom(): nextGameRoom=intro_room
+15:25:28 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = DOWN
+15:25:28 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (320.0,1312.0)
+15:25:29 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (320.0,864.0)
+15:25:31 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = RIGHT
+15:25:31 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (320.0,864.0)
+15:25:32 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (832.0,864.0)
+15:25:52 | DEBUG | Gate | trigger(): nextRoomKey=room2, mapObjectId=80
+15:25:53 | DEBUG | Gate | update(): nextRoomKey=room2, mapObjectId=80, OPEN
+15:25:53 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = RIGHT
+15:25:53 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (1984.0,864.0)
+15:25:54 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (2496.0,864.0)
+15:25:54 | DEBUG | Gate | onEvent(): nextRoomKey=room2, mapObjectId=80, nextRoomKey=room2: END_ROOM_TRANS
+15:25:54 | DEBUG | Gate | update(): nextRoomKey=room2, mapObjectId=80, CLOSING
+15:25:55 | DEBUG | Gate | update(): nextRoomKey=room2, mapObjectId=80, CLOSED
+15:26:13 | DEBUG | Gate | trigger(): nextRoomKey=room3, mapObjectId=94
+15:26:13 | DEBUG | Gate | update(): nextRoomKey=room3, mapObjectId=94, OPEN
+15:26:13 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = RIGHT
+15:26:13 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (3008.0,864.0)
+15:26:14 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (3520.0,864.0)
+15:26:14 | DEBUG | Gate | onEvent(): nextRoomKey=room3, mapObjectId=94, nextRoomKey=room3: END_ROOM_TRANS
+15:26:14 | DEBUG | Gate | update(): nextRoomKey=room3, mapObjectId=94, CLOSING
+15:26:15 | DEBUG | Gate | update(): nextRoomKey=room3, mapObjectId=94, CLOSED
+15:26:51 | DEBUG | CameraManagerForRooms | nextGameRoom(): nextGameRoom=room4
+15:26:55 | DEBUG | Gate | trigger(): nextRoomKey=inferno_man_room, mapObjectId=355
+15:26:55 | DEBUG | Gate | update(): nextRoomKey=inferno_man_room, mapObjectId=355, OPEN
+15:26:55 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = RIGHT
+15:26:55 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (7520.0,2528.0)
+15:26:56 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (8032.0,2528.0)
+15:26:56 | DEBUG | Gate | onEvent(): nextRoomKey=inferno_man_room, mapObjectId=355, nextRoomKey=inferno_man_room: END_ROOM_TRANS
+15:26:56 | DEBUG | Gate | update(): nextRoomKey=inferno_man_room, mapObjectId=355, CLOSING
+15:26:57 | DEBUG | Gate | update(): nextRoomKey=inferno_man_room, mapObjectId=355, CLOSED
+15:27:42 | DEBUG | Gate | onEvent(): nextRoomKey=room5, mapObjectId=356, INTERMEDIATE_BOSS_DEAD: this_boss_key=1, other_boss_key=1
+15:27:46 | DEBUG | Gate | trigger(): nextRoomKey=room5, mapObjectId=356
+15:27:46 | DEBUG | Gate | update(): nextRoomKey=room5, mapObjectId=356, OPEN
+15:27:46 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = RIGHT
+15:27:46 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (8032.0,2528.0)
+15:27:48 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (8544.0,2528.0)
+15:27:48 | DEBUG | Gate | onEvent(): nextRoomKey=room5, mapObjectId=356, nextRoomKey=room5: END_ROOM_TRANS
+15:27:48 | DEBUG | Gate | update(): nextRoomKey=room5, mapObjectId=356, CLOSING
+15:27:48 | DEBUG | Gate | update(): nextRoomKey=room5, mapObjectId=356, CLOSED
+15:28:48 | DEBUG | Gate | onEvent(): nextRoomKey=room2, mapObjectId=80, PLAYER_SPAWN
+15:28:48 | DEBUG | Gate | reset(): nextRoomKey=room2, mapObjectId=80
+15:28:48 | DEBUG | Gate | onEvent(): nextRoomKey=room3, mapObjectId=94, PLAYER_SPAWN
+15:28:48 | DEBUG | Gate | reset(): nextRoomKey=room3, mapObjectId=94
+15:28:48 | DEBUG | Gate | onEvent(): nextRoomKey=inferno_man_room, mapObjectId=355, PLAYER_SPAWN
+15:28:48 | DEBUG | Gate | reset(): nextRoomKey=inferno_man_room, mapObjectId=355
+15:28:48 | DEBUG | Gate | onEvent(): nextRoomKey=room5, mapObjectId=356, PLAYER_SPAWN
+15:28:48 | DEBUG | Gate | reset(): nextRoomKey=room5, mapObjectId=356
+15:28:48 | DEBUG | CameraManagerForRooms | update(): reset
+15:28:48 | DEBUG | CameraManagerForRooms | nextGameRoom(): nextGameRoom=room4
+15:28:53 | DEBUG | Gate | trigger(): nextRoomKey=inferno_man_room, mapObjectId=355
+15:28:53 | DEBUG | Gate | update(): nextRoomKey=inferno_man_room, mapObjectId=355, OPEN
+15:28:53 | DEBUG | CameraManagerForRooms | transitionToRoom(): transition direction = RIGHT
+15:28:53 | DEBUG | CameraManagerForRooms | onTransition(): transition start = (7520.0,2528.0)
+15:28:55 | DEBUG | CameraManagerForRooms | onTransition(): transition target = (8032.0,2528.0)
+15:28:55 | DEBUG | Gate | onEvent(): nextRoomKey=inferno_man_room, mapObjectId=355, nextRoomKey=inferno_man_room: END_ROOM_TRANS
+15:28:55 | DEBUG | Gate | update(): nextRoomKey=inferno_man_room, mapObjectId=355, CLOSING
+15:28:55 | DEBUG | Gate | update(): nextRoomKey=inferno_man_room, mapObjectId=355, CLOSED
+15:28:56 | DEBUG | Gate | onDestroy(): nextRoomKey=room2, mapObjectId=80
+15:28:56 | DEBUG | Gate | onDestroy(): nextRoomKey=room3, mapObjectId=94
+15:28:56 | DEBUG | Gate | onDestroy(): nextRoomKey=inferno_man_room, mapObjectId=355
+15:28:56 | DEBUG | Gate | onDestroy(): nextRoomKey=room5, mapObjectId=356
