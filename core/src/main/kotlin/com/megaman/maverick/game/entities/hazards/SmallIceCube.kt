@@ -72,7 +72,6 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
             SlashWave::class
         )
         private val SMOKE_PUFF_ENTITIES = objectSetOf(
-            MagmaGoop::class,
             MagmaWave::class,
             MagmaMeteor::class,
             MagmaFlame::class,
@@ -91,6 +90,7 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
     private var gravity = DEFAULT_GRAVITY
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (region1 == null || region2 == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             region1 = atlas.findRegion("${TAG}/1")

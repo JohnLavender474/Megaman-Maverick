@@ -180,7 +180,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         super.init()
         addComponent(defineAnimationsComponent())
         stateMachine = buildStateMachine()
-        damageOverrides.put(SmallIceCube::class, dmgNeg(6))
+        damageOverrides.put(SmallIceCube::class, dmgNeg(5))
     }
 
     override fun onSpawn(spawnProps: Properties) {
