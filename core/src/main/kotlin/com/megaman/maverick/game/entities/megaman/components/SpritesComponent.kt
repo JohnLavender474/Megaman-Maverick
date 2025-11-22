@@ -67,6 +67,7 @@ fun Megaman.getSpriteXTranslation() = when (getSpriteDirection()) {
 
 fun Megaman.getSpriteYTranslation() = when (getSpriteDirection()) {
     Direction.UP -> when {
+        isBehaviorActive(BehaviorType.AIR_DASHING) -> 0f
         !feetOnGround && !isBehaviorActive(BehaviorType.WALL_SLIDING) -> -0.25f
         isBehaviorActive(BehaviorType.GROUND_SLIDING) -> -GROUND_SLIDE_SPRITE_OFFSET_Y
         else -> 0f

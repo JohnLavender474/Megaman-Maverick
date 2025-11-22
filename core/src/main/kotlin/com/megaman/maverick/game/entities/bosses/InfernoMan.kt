@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.bosses
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
@@ -377,6 +378,13 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         body.addFixture(headFixture)
         debugShapes.add { headFixture }
 
+        val headDamageableFixture =
+            Fixture(body, FixtureType.DAMAGEABLE, GameRectangle().setSize(0.75f * ConstVals.PPM))
+        headDamageableFixture.attachedToBody = false
+        body.addFixture(headDamageableFixture)
+        headDamageableFixture.drawingColor = Color.PURPLE
+        debugShapes.add { headDamageableFixture }
+
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, ConstVals.PPM.toFloat()))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
@@ -400,6 +408,9 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 body.isSensing(BodySense.FEET_ON_GROUND) -> GROUND_GRAVITY * ConstVals.PPM
                 else -> GRAVITY * ConstVals.PPM
             }
+
+            val headDamageable = headDamageableFixture.rawShape as GameRectangle
+            headDamageable.positionOnPoint(body.getPositionPoint(Position.TOP_CENTER), Position.BOTTOM_CENTER)
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

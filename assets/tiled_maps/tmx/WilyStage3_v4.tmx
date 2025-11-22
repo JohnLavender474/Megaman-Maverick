@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="500" height="200" tilewidth="32" tileheight="32" infinite="0" nextlayerid="28" nextobjectid="536">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="500" height="200" tilewidth="32" tileheight="32" infinite="0" nextlayerid="28" nextobjectid="537">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <layer id="13" name="fade_tiles_9" width="500" height="200" opacity="0.1">
   <data encoding="csv">
@@ -2491,7 +2491,7 @@
   <object id="365" x="6080" y="4192" width="32" height="64"/>
   <object id="369" x="6400" y="3840" width="32" height="32"/>
   <object id="370" x="6048" y="3840" width="32" height="32"/>
-  <object id="379" x="8736" y="576" width="96" height="3168">
+  <object id="379" x="8736" y="1536" width="96" height="2208">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
     <property name="cull_room" value="room5"/>
@@ -2794,7 +2794,7 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="484" x="8608" y="1504" width="128" height="32">
+  <object id="484" x="8608" y="1504" width="224" height="32">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
     <property name="cull_room" value="room5"/>
@@ -2906,6 +2906,7 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
+  <object id="536" x="8736" y="576" width="96" height="928"/>
  </objectgroup>
  <objectgroup id="11" name="specials">
   <object id="62" name="GravitySwitcharoo" x="2416" y="5504" width="32" height="32">
@@ -3162,7 +3163,7 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="128" name="RisingLavaRiver" x="3264" y="5792" width="3616" height="608">
+  <object id="128" name="RisingLavaRiver" x="3264" y="5792" width="3616" height="448">
    <properties>
     <property name="rise_room" value="room3"/>
     <property name="spawn_type" value="spawn_now"/>
@@ -3248,7 +3249,7 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="380" name="RisingLavaRiver" x="8288" y="4160" width="512" height="576">
+  <object id="380" name="RisingLavaRiver" x="8288" y="4160" width="512" height="448">
    <properties>
     <property name="rise_room" value="room5"/>
     <property name="spawn_type" value="spawn_now"/>
@@ -3509,17 +3510,7 @@
    </properties>
   </object>
   <object id="485" name="BunbyTank" x="8664" y="2704" width="16" height="16"/>
-  <object id="497" name="AstroAssAssaulter" x="8664" y="2544" width="16" height="16">
-   <properties>
-    <property name="flag_right" type="bool" value="false"/>
-   </properties>
-  </object>
   <object id="498" name="BunbyTank" x="8696" y="2224" width="16" height="16">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="507" name="GreenUziJoe" x="8376" y="1456" width="16" height="16">
    <properties>
     <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
@@ -3536,7 +3527,7 @@
   </object>
  </objectgroup>
  <objectgroup id="26" name="temp">
-  <object id="475" name="0" x="8384" y="4000" width="32" height="32"/>
+  <object id="475" name="0" x="7408" y="4000" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="2" name="player">
   <object id="4" name="0" x="288" y="4480" width="32" height="32"/>

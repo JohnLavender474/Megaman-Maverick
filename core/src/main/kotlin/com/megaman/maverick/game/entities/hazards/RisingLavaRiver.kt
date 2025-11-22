@@ -238,25 +238,6 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
         when (state) {
             RisingLavaRiverState.RISING -> {
-                shakeDelay.update(delta)
-
-                if (shakeDelay.isFinished()) {
-                    game.eventsMan.submitEvent(
-                        Event(
-                            EventType.SHAKE_CAM, props(
-                                ConstKeys.INTERVAL pairTo RISE_SHAKE_INTERVAL,
-                                ConstKeys.DURATION pairTo RISE_SHAKE_DUR,
-                                ConstKeys.X pairTo SHAKE_X * ConstVals.PPM,
-                                ConstKeys.Y pairTo SHAKE_Y * ConstVals.PPM
-                            )
-                        )
-                    )
-
-                    requestToPlaySound(SoundAsset.QUAKE_SOUND, false)
-
-                    shakeDelay.reset()
-                }
-
                 emberDelay.update(delta)
                 if (emberDelay.isFinished()) {
                     val position = GameObjectPools.fetch(Vector2::class)
@@ -280,6 +261,25 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
                         resetEmberDelay()
                     }
                 }
+
+                shakeDelay.update(delta)
+                if (shakeDelay.isFinished()) {
+                    game.eventsMan.submitEvent(
+                        Event(
+                            EventType.SHAKE_CAM, props(
+                                ConstKeys.INTERVAL pairTo RISE_SHAKE_INTERVAL,
+                                ConstKeys.DURATION pairTo RISE_SHAKE_DUR,
+                                ConstKeys.X pairTo SHAKE_X * ConstVals.PPM,
+                                ConstKeys.Y pairTo SHAKE_Y * ConstVals.PPM
+                            )
+                        )
+                    )
+
+                    requestToPlaySound(SoundAsset.QUAKE_SOUND, false)
+
+                    shakeDelay.reset()
+                }
+
             }
             RisingLavaRiverState.STOPPED -> {
                 stopDelay.update(delta)
@@ -298,7 +298,6 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
                 }
 
                 shakeDelay.update(delta)
-
                 if (shakeDelay.isFinished()) {
                     game.eventsMan.submitEvent(
                         Event(
