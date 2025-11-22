@@ -31,7 +31,7 @@ import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
 const val MEGAMAN_BODY_WIDTH = 1f
-const val MEGAMAN_BODY_HEIGHT = 1.25f
+const val MEGAMAN_BODY_HEIGHT = 1.5f
 
 // slightly less than 1 so that Megaman can slide under spaces that are 1 tile in height
 const val GROUNDSLIDE_CROUCH_HEIGHT = 0.9f
@@ -104,7 +104,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     feetFixture.setShouldStickToBlock { _, _ -> !body.isSensing(BodySense.IN_WATER) }
     body.addFixture(feetFixture)
     feetFixture.drawingColor = Color.GREEN
-    debugShapes.add { feetFixture }
+    // debugShapes.add { feetFixture }
     body.putProperty(ConstKeys.FEET, feetFixture)
 
     // The feet gravity fixture is a consumer that checks for overlap with blocks. If there is a contact with a block,

@@ -3021,7 +3021,7 @@
     <property name="spawn_room" value="room5"/>
    </properties>
   </object>
-  <object id="433" name="GravitySwitcharoo" x="8464" y="3280" width="32" height="32">
+  <object id="433" name="GravitySwitcharoo" x="8464" y="3264" width="32" height="32">
    <properties>
     <property name="direction" value="down"/>
     <property name="spawn_room" value="room5"/>
@@ -3338,14 +3338,14 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="532" name="Saw" x="8688" y="704" width="32" height="32">
+  <object id="532" name="Saw" x="8672" y="704" width="32" height="32">
    <properties>
     <property name="spawn_room" value="room5"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="p"/>
    </properties>
   </object>
-  <object id="533" name="Saw" x="8368" y="704" width="32" height="32">
+  <object id="533" name="Saw" x="8384" y="704" width="32" height="32">
    <properties>
     <property name="spawn_room" value="room5"/>
     <property name="spawn_type" value="spawn_room"/>
