@@ -59,6 +59,7 @@ import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.entities.projectiles.PreciousGem
 import com.megaman.maverick.game.entities.projectiles.SharpStar
 import com.megaman.maverick.game.entities.utils.hardMode
+import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -114,16 +115,17 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
         private const val ASTEROIDS_TO_SPAWN = 3
         private const val ASTEROIDS_TO_SPAWN_HARD = 4
-        private const val ASTEROID_MIN_SPEED = 8f
-        private const val ASTEROID_MAX_SPEED = 8f
+        private const val ASTEROID_MIN_SPEED = 10f
+        private const val ASTEROID_MAX_SPEED = 12f
+        private const val ASTEROID_SCALAR = 0.75f
 
-        private const val SHARP_STAR_MIN_SPEED = 12f
-        private const val SHARP_STAR_MAX_SPEED = 12f
+        private const val SHARP_STAR_MIN_SPEED = 8f
+        private const val SHARP_STAR_MAX_SPEED = 10f
         private const val SHARP_STAR_MOVEMENT_SCALAR = 0.75f
 
-        private const val MOON_SCYTHE_SPEED = 10f
-        private const val MOON_SCYTHE_SPEED_HARD = 12f
-        private const val MOON_SCYTHE_MOVEMENT_SCALAR = 0.5f
+        private const val MOON_SCYTHE_SPEED = 8f
+        private const val MOON_SCYTHE_SPEED_HARD = 10f
+        private const val MOON_SCYTHE_MOVEMENT_SCALAR = 0.75f
         private val MOON_SCYTHE_DEG_OFFSETS = gdxArrayOf(10f, 40f, 70f)
         private val MOON_SCYTHE_DEG_OFFSETS_HARD = gdxArrayOf(10f, 30f, 50f, 70f)
 
@@ -158,7 +160,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         set(value) {
             if (CHANGE_GRAVITY) body.direction = value
         }
-    override var gravityScalar = DEFAULT_GRAVITY_SCALAR
+    override var gravityScalar = 1f
 
     private lateinit var stateMachine: StateMachine<MoonManState>
     private val currentState: MoonManState
@@ -239,8 +241,9 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         this.direction = direction
         currentGravityChangeDir = direction
 
-        gravityScalar =
+        gravityScalar = if (game.getCurrentLevel() == LevelDefinition.MOON_MAN)
             spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", DEFAULT_GRAVITY_SCALAR, Float::class)
+        else 1f
 
         body.physics.gravityOn = true
     }
@@ -305,6 +308,9 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                     val impulse = megaman.body.getCenter()
                         .sub(asteroid.body.getCenter())
                         .nor().scl(speed * ConstVals.PPM)
+
+                    if (game.getCurrentLevel() == LevelDefinition.MOON_MAN)
+                        impulse.scl(ASTEROID_SCALAR)
 
                     asteroid.impulse.set(impulse)
 
@@ -492,8 +498,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         ANIM_DEFS.forEach {
             val key = it.key
             val def = it.value
-            val region = regions[key]
-            if (region == null) throw IllegalStateException("Region with key=$key is null")
+            val region = regions[key] ?: throw IllegalStateException("Region with key=$key is null")
             animations.put(key, Animation(region, def.rows, def.cols, def.durations, def.loop))
         }
         val animator = Animator(keySupplier, animations)
@@ -644,11 +649,14 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             val rotation = (if (isFacing(Facing.LEFT)) 90f else 270f) + rotOffset
             trajectory.rotateDeg(rotation)
 
+            val scytheScalar = if (game.getCurrentLevel() == LevelDefinition.MOON_MAN)
+                MOON_SCYTHE_MOVEMENT_SCALAR else 1f
+
             val scythe = MegaEntityFactory.fetch(MoonScythe::class)!!
             scythe.spawn(
                 props(
                     ConstKeys.POSITION pairTo body.getCenter().add(0.5f * ConstVals.PPM * facing.value, 0f),
-                    "${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}" pairTo MOON_SCYTHE_MOVEMENT_SCALAR,
+                    "${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}" pairTo scytheScalar,
                     ConstKeys.TRAJECTORY pairTo trajectory,
                     ConstKeys.ROTATION pairTo rotation,
                     ConstKeys.FADE pairTo false,
@@ -668,11 +676,14 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         val trajectory =
             megaman.body.getPositionPoint(position).sub(body.getCenter()).nor().scl(speed * ConstVals.PPM)
 
+        val starScalar = if (game.getCurrentLevel() == LevelDefinition.MOON_MAN)
+            SHARP_STAR_MOVEMENT_SCALAR else 1f
+
         val sharpStar = MegaEntityFactory.fetch(SharpStar::class)!!
         sharpStar.spawn(
             props(
                 ConstKeys.POSITION pairTo body.getCenter().add(0.5f * ConstVals.PPM * facing.value, 0f),
-                "${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}" pairTo SHARP_STAR_MOVEMENT_SCALAR,
+                "${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}" pairTo starScalar,
                 ConstKeys.ROTATION pairTo trajectory.angleDeg(),
                 ConstKeys.TRAJECTORY pairTo trajectory
             )

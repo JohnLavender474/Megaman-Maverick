@@ -41,6 +41,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.FloatingEmber
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
@@ -62,9 +63,12 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         const val TAG = "RisingLavaRiver"
 
         private const val DEFAULT_RISE_SPEED = 1.5f
-        private const val DEFAULT_FALL_SPEED = 8f
+        private const val DEFAULT_FALL_SPEED = 10f
 
-        private const val STOP_DELAY = 0.5f
+        private const val DIST_TRIGGER_SPEED_UP = 15f
+        private const val RISE_SPEED_UP_SCALAR = 2.5f
+
+        private const val STOP_DELAY = 0.25f
 
         private const val SHAKE_X = 0f
         private const val SHAKE_Y = 0.005f
@@ -118,8 +122,10 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
     private var riseSpeed = 0f
     private var fallSpeed = 0f
+
     private var left = false
     private var hidden = true
+    private var allowSpeedUp = false
 
     private val out = Matrix<GameRectangle>()
 
@@ -167,6 +173,9 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         fallSpeed = spawnProps.getOrDefault("${ConstKeys.FALL}_${ConstKeys.SPEED}", DEFAULT_FALL_SPEED, Float::class)
 
         left = spawnProps.getOrDefault(ConstKeys.LEFT, false, Boolean::class)
+        allowSpeedUp = spawnProps.getOrDefault(
+            "${ConstKeys.ALLOW}_${ConstKeys.SPEED}_${ConstKeys.UP}", true, Boolean::class
+        )
 
         defineDrawables(bounds)
 
@@ -238,6 +247,9 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
         when (state) {
             RisingLavaRiverState.RISING -> {
+                body.physics.velocity.set(0f, riseSpeed * ConstVals.PPM)
+                if (shouldIncreaseRiseSpeed()) body.physics.velocity.y *= RISE_SPEED_UP_SCALAR
+
                 emberDelay.update(delta)
                 if (emberDelay.isFinished()) {
                     val position = GameObjectPools.fetch(Vector2::class)
@@ -279,7 +291,6 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
                     shakeDelay.reset()
                 }
-
             }
             RisingLavaRiverState.STOPPED -> {
                 stopDelay.update(delta)
@@ -339,54 +350,37 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
     private fun setLavaToRising() {
         GameLogger.debug(TAG, "setLavaToRising()")
-
         state = RisingLavaRiverState.RISING
-
-        body.physics.velocity.set(0f, riseSpeed * ConstVals.PPM)
         deathFixture.setActive(true)
-
         hidden = false
-
         shakeDelay.resetDuration(RISE_SHAKE_DELAY)
-
         requestToPlaySound(SoundAsset.QUAKE_SOUND, false)
     }
 
     private fun setLavaToStopped() {
         GameLogger.debug(TAG, "setLavaToStopped()")
-
         state = RisingLavaRiverState.STOPPED
-
         body.physics.velocity.setZero()
         deathFixture.setActive(false)
-
         hidden = false
-
         stopDelay.reset()
     }
 
     private fun setLavaToFalling() {
         GameLogger.debug(TAG, "setLavaToFalling()")
-
         state = RisingLavaRiverState.FALLING
-
         body.physics.velocity.set(0f, -fallSpeed * ConstVals.PPM)
         deathFixture.setActive(false)
-
         hidden = false
-
         shakeDelay.resetDuration(FALL_SHAKE_DELAY)
     }
 
     private fun setLavaToDormant() {
         GameLogger.debug(TAG, "setLavaToDormant()")
-
         state = RisingLavaRiverState.DORMANT
-
         body.setPosition(startPosition)
         body.physics.velocity.setZero()
         deathFixture.setActive(false)
-
         hidden = true
     }
 
@@ -394,6 +388,9 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         val duration = UtilMethods.getRandom(EMBER_MIN_DELAY, EMBER_MAX_DELAY)
         emberDelay.resetDuration(duration)
     }
+
+    private fun shouldIncreaseRiseSpeed() = allowSpeedUp &&
+        megaman.body.getBounds().getY() > body.getBounds().getMaxY() + DIST_TRIGGER_SPEED_UP * ConstVals.PPM
 
     override fun getType() = EntityType.HAZARD
 
