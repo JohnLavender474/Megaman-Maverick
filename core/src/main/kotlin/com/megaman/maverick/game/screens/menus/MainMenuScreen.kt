@@ -442,7 +442,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         screenSlide.reset()
 
         game.getUiCamera().setToDefaultPosition()
-        game.audioMan.playMusic(MAIN_MENU_MUSIC, true)
+        game.audioMan.playMusic(MAIN_MENU_MUSIC, false)
 
         GameLogger.debug(TAG, "current button key: $buttonKey")
         GameLogger.debug(TAG, "blinking arrows keys: ${blinkArrows.keys().toGdxArray()}")

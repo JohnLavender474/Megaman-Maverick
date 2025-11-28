@@ -1,1 +1,273 @@
-===== SESSION STARTED: 2025-11-25T12:10:17.904446345 =====
+===== SESSION STARTED: 2025-11-28T08:17:24.062381948 =====
+08:40:42 | DEBUG | RisingLavaRiver | canSpawn(): canSpawn=true
+08:40:42 | DEBUG | RisingLavaRiver | canSpawn(): canSpawn=true
+08:40:42 | DEBUG | RisingLavaRiver | canSpawn(): canSpawn=true
+08:40:42 | DEBUG | RisingLavaRiver | canSpawn(): canSpawn=true
+08:40:42 | DEBUG | RisingLavaRiver | init()
+08:40:42 | DEBUG | RisingLavaRiver | onSpawn(): spawnProps=Properties({
+	[bounds=[3232.0,64.0,3712.0,512.0]]
+	[x=3232.0]
+	[height=512.0]
+	[spawn_type=spawn_now]
+	[rise_room=room3]
+	[id=128]
+	[type=inner]
+	[name=RisingLavaRiver]
+	[y=64.0]
+	[width=3712.0]
+})
+08:40:42 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:40:42 | DEBUG | RisingLavaRiver | init()
+08:40:42 | DEBUG | RisingLavaRiver | onSpawn(): spawnProps=Properties({
+	[bounds=[8288.0,1664.0,512.0,512.0]]
+	[x=8288.0]
+	[height=512.0]
+	[spawn_type=spawn_now]
+	[rise_room=room5]
+	[id=380]
+	[type=inner]
+	[name=RisingLavaRiver]
+	[y=1664.0]
+	[width=512.0]
+})
+08:40:42 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:40:42 | DEBUG | RisingLavaRiver | init()
+08:40:42 | DEBUG | RisingLavaRiver | onSpawn(): spawnProps=Properties({
+	[bounds=[8288.0,2176.0,512.0,32.0]]
+	[x=8288.0]
+	[height=32.0]
+	[spawn_type=spawn_now]
+	[rise_room=room5]
+	[id=603]
+	[type=top]
+	[name=RisingLavaRiver]
+	[y=2176.0]
+	[width=512.0]
+})
+08:40:42 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:40:42 | DEBUG | RisingLavaRiver | init()
+08:40:42 | DEBUG | RisingLavaRiver | onSpawn(): spawnProps=Properties({
+	[bounds=[3232.0,576.0,3712.0,32.0]]
+	[x=3232.0]
+	[height=32.0]
+	[spawn_type=spawn_now]
+	[rise_room=room3]
+	[id=604]
+	[type=top]
+	[name=RisingLavaRiver]
+	[y=576.0]
+	[width=3712.0]
+})
+08:40:42 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:40:44 | DEBUG | RisingLavaRiver | onEvent(): event.key=PLAYER_READY
+08:40:44 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:40:44 | DEBUG | RisingLavaRiver | onEvent(): event.key=PLAYER_READY
+08:40:44 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:40:44 | DEBUG | RisingLavaRiver | onEvent(): event.key=PLAYER_READY
+08:40:44 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:40:44 | DEBUG | RisingLavaRiver | onEvent(): event.key=PLAYER_READY
+08:40:44 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:40:47 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+08:40:47 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+08:40:47 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+08:40:47 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+08:40:48 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+08:40:48 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:40:48 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+08:40:48 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:40:48 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+08:40:48 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:40:48 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+08:40:48 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:40:50 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+08:40:50 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+08:40:50 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+08:40:50 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+08:40:51 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+08:40:51 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:40:51 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+08:40:51 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:40:51 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+08:40:51 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:40:51 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+08:40:51 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:41:14 | DEBUG | RisingLavaRiver | onEvent(): event.key=GATE_INIT_OPENING
+08:41:14 | DEBUG | RisingLavaRiver | setLavaToStopped()
+08:41:14 | DEBUG | RisingLavaRiver | onEvent(): event.key=GATE_INIT_OPENING
+08:41:14 | DEBUG | RisingLavaRiver | setLavaToStopped()
+08:41:14 | DEBUG | RisingLavaRiver | onEvent(): event.key=GATE_INIT_OPENING
+08:41:14 | DEBUG | RisingLavaRiver | setLavaToStopped()
+08:41:14 | DEBUG | RisingLavaRiver | onEvent(): event.key=GATE_INIT_OPENING
+08:41:14 | DEBUG | RisingLavaRiver | setLavaToStopped()
+08:41:14 | DEBUG | RisingLavaRiver | update(): stop delay finished
+08:41:14 | DEBUG | RisingLavaRiver | setLavaToFalling()
+08:41:14 | DEBUG | RisingLavaRiver | update(): stop delay finished
+08:41:14 | DEBUG | RisingLavaRiver | setLavaToFalling()
+08:41:14 | DEBUG | RisingLavaRiver | update(): stop delay finished
+08:41:14 | DEBUG | RisingLavaRiver | setLavaToFalling()
+08:41:14 | DEBUG | RisingLavaRiver | update(): stop delay finished
+08:41:14 | DEBUG | RisingLavaRiver | setLavaToFalling()
+08:41:14 | DEBUG | RisingLavaRiver | update(): falling: maxY=576.0, camY=640.0
+08:41:14 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:41:14 | DEBUG | RisingLavaRiver | update(): falling: maxY=608.0, camY=640.0
+08:41:14 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:41:14 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+08:41:14 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+08:41:14 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+08:41:14 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+08:41:16 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+08:41:16 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:41:16 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+08:41:16 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:41:16 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+08:41:16 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:41:16 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+08:41:16 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:41:28 | DEBUG | RisingLavaRiver | onEvent(): event.key=PLAYER_DONE_DYIN
+08:41:28 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:41:28 | DEBUG | RisingLavaRiver | onEvent(): event.key=PLAYER_DONE_DYIN
+08:41:28 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:41:28 | DEBUG | RisingLavaRiver | onEvent(): event.key=PLAYER_DONE_DYIN
+08:41:28 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:41:28 | DEBUG | RisingLavaRiver | onEvent(): event.key=PLAYER_DONE_DYIN
+08:41:28 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:41:30 | DEBUG | RisingLavaRiver | onEvent(): event.key=PLAYER_READY
+08:41:30 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:41:30 | DEBUG | RisingLavaRiver | onEvent(): event.key=PLAYER_READY
+08:41:30 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:41:30 | DEBUG | RisingLavaRiver | onEvent(): event.key=PLAYER_READY
+08:41:30 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:41:30 | DEBUG | RisingLavaRiver | onEvent(): event.key=PLAYER_READY
+08:41:30 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:41:47 | DEBUG | RisingLavaRiver | onEvent(): event.key=GATE_INIT_OPENING
+08:41:47 | DEBUG | RisingLavaRiver | setLavaToStopped()
+08:41:47 | DEBUG | RisingLavaRiver | onEvent(): event.key=GATE_INIT_OPENING
+08:41:47 | DEBUG | RisingLavaRiver | setLavaToStopped()
+08:41:47 | DEBUG | RisingLavaRiver | onEvent(): event.key=GATE_INIT_OPENING
+08:41:47 | DEBUG | RisingLavaRiver | setLavaToStopped()
+08:41:47 | DEBUG | RisingLavaRiver | onEvent(): event.key=GATE_INIT_OPENING
+08:41:47 | DEBUG | RisingLavaRiver | setLavaToStopped()
+08:41:48 | DEBUG | RisingLavaRiver | update(): stop delay finished
+08:41:48 | DEBUG | RisingLavaRiver | setLavaToFalling()
+08:41:48 | DEBUG | RisingLavaRiver | update(): stop delay finished
+08:41:48 | DEBUG | RisingLavaRiver | setLavaToFalling()
+08:41:48 | DEBUG | RisingLavaRiver | update(): stop delay finished
+08:41:48 | DEBUG | RisingLavaRiver | setLavaToFalling()
+08:41:48 | DEBUG | RisingLavaRiver | update(): stop delay finished
+08:41:48 | DEBUG | RisingLavaRiver | setLavaToFalling()
+08:41:48 | DEBUG | RisingLavaRiver | update(): falling: maxY=576.0, camY=640.0
+08:41:48 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:41:48 | DEBUG | RisingLavaRiver | update(): falling: maxY=608.0, camY=640.0
+08:41:48 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:41:48 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+08:41:48 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+08:41:48 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+08:41:48 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+08:41:49 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+08:41:49 | DEBUG | RisingLavaRiver | setLavaToRising()
+08:41:49 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+08:41:49 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:41:49 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+08:41:49 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:41:49 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+08:41:49 | DEBUG | RisingLavaRiver | setLavaToRising()
+08:42:24 | DEBUG | RisingLavaRiver | onEvent(): event.key=SET_TO_ROOM_NO_TRANS
+08:42:24 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:42:24 | DEBUG | RisingLavaRiver | onEvent(): event.key=SET_TO_ROOM_NO_TRANS
+08:42:24 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:42:24 | DEBUG | RisingLavaRiver | onEvent(): event.key=SET_TO_ROOM_NO_TRANS
+08:42:24 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:42:24 | DEBUG | RisingLavaRiver | onEvent(): event.key=SET_TO_ROOM_NO_TRANS
+08:42:24 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:42:27 | DEBUG | RisingLavaRiver | onEvent(): event.key=GATE_INIT_OPENING
+08:42:27 | DEBUG | RisingLavaRiver | setLavaToStopped()
+08:42:27 | DEBUG | RisingLavaRiver | onEvent(): event.key=GATE_INIT_OPENING
+08:42:27 | DEBUG | RisingLavaRiver | setLavaToStopped()
+08:42:27 | DEBUG | RisingLavaRiver | onEvent(): event.key=GATE_INIT_OPENING
+08:42:27 | DEBUG | RisingLavaRiver | setLavaToStopped()
+08:42:27 | DEBUG | RisingLavaRiver | onEvent(): event.key=GATE_INIT_OPENING
+08:42:27 | DEBUG | RisingLavaRiver | setLavaToStopped()
+08:42:27 | DEBUG | RisingLavaRiver | update(): stop delay finished
+08:42:27 | DEBUG | RisingLavaRiver | setLavaToFalling()
+08:42:27 | DEBUG | RisingLavaRiver | update(): stop delay finished
+08:42:27 | DEBUG | RisingLavaRiver | setLavaToFalling()
+08:42:27 | DEBUG | RisingLavaRiver | update(): stop delay finished
+08:42:27 | DEBUG | RisingLavaRiver | setLavaToFalling()
+08:42:27 | DEBUG | RisingLavaRiver | update(): stop delay finished
+08:42:27 | DEBUG | RisingLavaRiver | setLavaToFalling()
+08:42:27 | DEBUG | RisingLavaRiver | update(): falling: maxY=576.0, camY=2304.0
+08:42:27 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:42:27 | DEBUG | RisingLavaRiver | update(): falling: maxY=2176.0, camY=2304.0
+08:42:27 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:42:27 | DEBUG | RisingLavaRiver | update(): falling: maxY=2208.0, camY=2304.0
+08:42:27 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:42:27 | DEBUG | RisingLavaRiver | update(): falling: maxY=608.0, camY=2304.0
+08:42:27 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:42:27 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+08:42:27 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+08:42:27 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+08:42:27 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+08:42:29 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+08:42:29 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:42:29 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+08:42:29 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:42:29 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+08:42:29 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:42:29 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+08:42:29 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:42:59 | DEBUG | RisingLavaRiver | onEvent(): event.key=GATE_INIT_OPENING
+08:42:59 | DEBUG | RisingLavaRiver | setLavaToStopped()
+08:42:59 | DEBUG | RisingLavaRiver | onEvent(): event.key=GATE_INIT_OPENING
+08:42:59 | DEBUG | RisingLavaRiver | setLavaToStopped()
+08:42:59 | DEBUG | RisingLavaRiver | onEvent(): event.key=GATE_INIT_OPENING
+08:42:59 | DEBUG | RisingLavaRiver | setLavaToStopped()
+08:42:59 | DEBUG | RisingLavaRiver | onEvent(): event.key=GATE_INIT_OPENING
+08:42:59 | DEBUG | RisingLavaRiver | setLavaToStopped()
+08:42:59 | DEBUG | RisingLavaRiver | update(): stop delay finished
+08:42:59 | DEBUG | RisingLavaRiver | setLavaToFalling()
+08:42:59 | DEBUG | RisingLavaRiver | update(): stop delay finished
+08:42:59 | DEBUG | RisingLavaRiver | setLavaToFalling()
+08:42:59 | DEBUG | RisingLavaRiver | update(): stop delay finished
+08:42:59 | DEBUG | RisingLavaRiver | setLavaToFalling()
+08:42:59 | DEBUG | RisingLavaRiver | update(): stop delay finished
+08:42:59 | DEBUG | RisingLavaRiver | setLavaToFalling()
+08:42:59 | DEBUG | RisingLavaRiver | update(): falling: maxY=576.0, camY=2304.0
+08:42:59 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:42:59 | DEBUG | RisingLavaRiver | update(): falling: maxY=2176.0, camY=2304.0
+08:42:59 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:42:59 | DEBUG | RisingLavaRiver | update(): falling: maxY=2208.0, camY=2304.0
+08:42:59 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:42:59 | DEBUG | RisingLavaRiver | update(): falling: maxY=608.0, camY=2304.0
+08:42:59 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:43:00 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+08:43:00 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+08:43:00 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+08:43:00 | DEBUG | RisingLavaRiver | onEvent(): event.key=BEGIN_ROOM_TRANS
+08:43:01 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+08:43:01 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:43:01 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+08:43:01 | DEBUG | RisingLavaRiver | setLavaToRising()
+08:43:01 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+08:43:01 | DEBUG | RisingLavaRiver | setLavaToRising()
+08:43:01 | DEBUG | RisingLavaRiver | onEvent(): event.key=END_ROOM_TRANS
+08:43:01 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:43:24 | DEBUG | RisingLavaRiver | onEvent(): event.key=PLAYER_DONE_DYIN
+08:43:24 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:43:24 | DEBUG | RisingLavaRiver | onEvent(): event.key=PLAYER_DONE_DYIN
+08:43:24 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:43:24 | DEBUG | RisingLavaRiver | onEvent(): event.key=PLAYER_DONE_DYIN
+08:43:24 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:43:24 | DEBUG | RisingLavaRiver | onEvent(): event.key=PLAYER_DONE_DYIN
+08:43:24 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:43:26 | DEBUG | RisingLavaRiver | onEvent(): event.key=PLAYER_READY
+08:43:26 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:43:26 | DEBUG | RisingLavaRiver | onEvent(): event.key=PLAYER_READY
+08:43:26 | DEBUG | RisingLavaRiver | setLavaToRising()
+08:43:26 | DEBUG | RisingLavaRiver | onEvent(): event.key=PLAYER_READY
+08:43:26 | DEBUG | RisingLavaRiver | setLavaToRising()
+08:43:26 | DEBUG | RisingLavaRiver | onEvent(): event.key=PLAYER_READY
+08:43:26 | DEBUG | RisingLavaRiver | setLavaToDormant()
+08:44:27 | DEBUG | RisingLavaRiver | onDestroy()
+08:44:27 | DEBUG | RisingLavaRiver | onDestroy()
+08:44:27 | DEBUG | RisingLavaRiver | onDestroy()
+08:44:27 | DEBUG | RisingLavaRiver | onDestroy()

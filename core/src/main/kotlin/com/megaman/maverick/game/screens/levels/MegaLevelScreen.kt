@@ -340,7 +340,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
 
             game.getSystem(BehaviorsSystem::class).on = true
-
             game.putProperty(ConstKeys.ROOM_TRANSITION, false)
 
             megaman.running = false

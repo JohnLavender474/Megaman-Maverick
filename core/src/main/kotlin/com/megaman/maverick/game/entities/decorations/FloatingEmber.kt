@@ -56,7 +56,7 @@ class FloatingEmber(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
         private const val DEFAULT_CULL_TIME = 1f
 
-        private const val MAX_SPAWNED_ALLOWED = 10
+        private const val MAX_SPAWNED_ALLOWED = 8
 
         private const val FADE_DUR = 0.25f
 

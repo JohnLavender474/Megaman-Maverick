@@ -207,7 +207,8 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
             if (SMOKE_PUFF_ENTITIES.contains(entity::class)) smokePuff() else shatterAndDie()
         }
         bodyFixture.setHitByBodyReceiver { entity, state ->
-            if (state == ProcessState.BEGIN && entity is SmallIceCube) shatterAndDie()
+            if (state != ProcessState.BEGIN) return@setHitByBodyReceiver
+            if ((entity is IDamageable && entity.invincible) || entity is SmallIceCube) shatterAndDie()
         }
         bodyFixture.setHitByPlayerReceiver { if (!it.canBeDamaged) shatterAndDie() }
         bodyFixture.setHitByProjectileReceiver { getHit(it) }

@@ -11,10 +11,12 @@ class SpritesSystem(private val collector: (GameSprite) -> Unit) :
         if (!on) return
 
         entities.forEach { entity ->
-            val component = entity.getComponent(SpritesComponent::class)
-            component?.preProcess(delta)
-            component?.sprites?.values()?.forEach { sprite -> collector.invoke(sprite) }
-            component?.postProcess(delta)
+            val component = entity.getComponent(SpritesComponent::class)!!
+            if (component.doUpdateAndDraw.invoke(delta)) {
+                component.preProcess(delta)
+                component.sprites.values().forEach { sprite -> collector.invoke(sprite) }
+                component.postProcess(delta)
+            }
         }
     }
 }

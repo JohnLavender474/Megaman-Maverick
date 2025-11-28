@@ -11,6 +11,7 @@ enum class TextureAsset(src: String) : IAsset {
     ENEMIES_2("Enemies2.txt"),
     SPECIALS_1("Specials1.txt"),
     HAZARDS_1("Hazards1.txt"),
+    HAZARDS_2("Hazards2.txt"),
     PROJECTILES_1("Projectiles1.txt"),
     PROJECTILES_2("Projectiles2.txt"),
     MEGAMAN_CHARGED_SHOT("MegamanChargedShot.txt"),

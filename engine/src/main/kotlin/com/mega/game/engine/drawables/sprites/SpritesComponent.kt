@@ -10,7 +10,8 @@ import com.mega.game.engine.components.IGameComponent
 class SpritesComponent(
     var sprites: OrderedMap<Any, GameSprite> = OrderedMap(),
     var preProcessFuncs: ObjectMap<Any, UpdateFunction<GameSprite>> = ObjectMap(),
-    var postProcessFuncs: ObjectMap<Any, UpdateFunction<GameSprite>> = ObjectMap()
+    var postProcessFuncs: ObjectMap<Any, UpdateFunction<GameSprite>> = ObjectMap(),
+    var doUpdateAndDraw: (Float) -> Boolean = { true }
 ) : IGameComponent {
 
     companion object {

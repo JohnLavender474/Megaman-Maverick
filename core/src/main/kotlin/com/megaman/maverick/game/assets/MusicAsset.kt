@@ -85,7 +85,7 @@ enum class MusicAsset(src: String, val loop: Boolean = true, val onCompletion: (
     VINNYZ_STAGE_SELECT_V1_MUSIC("vinnyz_stage_select_v1.wav"),
     VINNYZ_WILY_STAGE_SELECT_V1_MUSIC("vinnyz_wily_stage_select_v1.wav"),
     VINNYZ_GLACIER_MUSIC("vinnyz_glacier_track.wav"),
-    VINNYZ_MAIN_MENU_MUSIC("vinnyz_main_menu.wav"),
+    VINNYZ_MAIN_MENU_MUSIC("vinnyz_main_menu_theme_v2.wav"),
     VINNYZ_PASSWORD_MUSIC("vinnyz_password.wav"),
     VINNYZ_WEAPON_GET_MUSIC("vinnyz_weapon_get.wav");
 

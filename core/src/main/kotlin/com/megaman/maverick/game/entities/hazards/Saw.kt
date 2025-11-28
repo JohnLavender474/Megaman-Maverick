@@ -245,7 +245,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
     private fun defineSpritesCompoent(): SpritesComponent {
         val spritesComponent = SpritesComponent()
 
-        val sawSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
+        val sawSprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sawSprite.setSize(2.5f * ConstVals.PPM)
         spritesComponent.sprites.put("saw", sawSprite)
         spritesComponent.putPreProcess("saw") { _, sprite ->
@@ -254,7 +254,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         }
 
         for (i in 0..RING_COUNT) {
-            val ringSprite = GameSprite(ringRegion!!, DrawingPriority(DrawingSection.FOREGROUND, 2))
+            val ringSprite = GameSprite(ringRegion!!, DrawingPriority(DrawingSection.PLAYGROUND, 12))
             ringSprite.setSize(0.75f * ConstVals.PPM)
             spritesComponent.sprites.put("ring_$i", ringSprite)
         }

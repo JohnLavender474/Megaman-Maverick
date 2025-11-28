@@ -16,6 +16,8 @@ class AnimationsComponent() : IGameComponent {
         const val DEFAULT_KEY = "default_key"
     }
 
+    var shouldAnimate: (Float) -> Boolean = { true }
+
     internal val sprites = ObjectMap<Any, GameSprite>()
     internal val animators = OrderedMap<Any, IAnimator>()
 

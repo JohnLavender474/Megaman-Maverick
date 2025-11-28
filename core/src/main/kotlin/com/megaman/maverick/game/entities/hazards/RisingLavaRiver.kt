@@ -77,26 +77,22 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         private const val FALL_SHAKE_DELAY = 1f
 
         private const val RISE_SHAKE_DUR = 1f
-        private const val FALL_SHAKE_DUR = 0.5f
-
         private const val RISE_SHAKE_INTERVAL = 0.1f
-        private const val FALL_SHAKE_INTERVAL = 0.05f
 
-        private const val TOP = "top"
-        private const val INNER = "inner"
-
-        private const val EMBER_MIN_DELAY = 0.1f
-        private const val EMBER_MAX_DELAY = 0.25f
+        private const val EMBER_MIN_DELAY = 0.5f
+        private const val EMBER_MAX_DELAY = 0.75f
         private const val EMBER_SPAWN_X_BUFFER = ConstVals.VIEW_WIDTH + 6
         private const val EMBER_SPAWN_Y_BUFFER = ConstVals.VIEW_HEIGHT + 12
         private const val EMBER_CULL_TIME = 3f
 
         private val animDefs = orderedMapOf(
-            TOP pairTo AnimationDef(3, 1, 0.1f, true),
-            INNER pairTo AnimationDef(3, 1, 0.1f, true)
+            RisingLavaRiverType.TOP pairTo AnimationDef(3, 1, 0.1f, true),
+            RisingLavaRiverType.INNER pairTo AnimationDef(3, 1, 0.1f, true)
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }
+
+    private enum class RisingLavaRiverType { TOP, INNER }
 
     private enum class RisingLavaRiverState { DORMANT, RISING, STOPPED, FALLING }
 
@@ -105,7 +101,8 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         EventType.PLAYER_DONE_DYIN,
         EventType.BEGIN_ROOM_TRANS,
         EventType.GATE_INIT_OPENING,
-        EventType.END_ROOM_TRANS
+        EventType.END_ROOM_TRANS,
+        EventType.SET_TO_ROOM_NO_TRANS
     )
 
     private val startPosition = Vector2()
@@ -134,14 +131,21 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
     override fun init() {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
-            animDefs.keys().forEach { regions.put(it, atlas.findRegion("${LavaRiver.TAG}/$it")) }
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_2.source)
+            animDefs.keys().forEach {
+                val key = it.name.lowercase()
+                regions.put(key, atlas.findRegion("$TAG/$key"))
+            }
         }
         super.init()
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(AnimationsComponent())
-        addComponent(SpritesComponent())
+        addComponent(SpritesComponent(
+            doUpdateAndDraw = {
+                state.equalsAny(RisingLavaRiverState.RISING, RisingLavaRiverState.FALLING)
+            }
+        ))
         addComponent(AudioComponent())
     }
 
@@ -161,6 +165,8 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
         game.eventsMan.addListener(this)
 
+        state = RisingLavaRiverState.DORMANT
+
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
         deathBounds.set(bounds)
@@ -177,7 +183,10 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
             "${ConstKeys.ALLOW}_${ConstKeys.SPEED}_${ConstKeys.UP}", true, Boolean::class
         )
 
-        defineDrawables(bounds)
+        val type = RisingLavaRiverType.valueOf(
+            spawnProps.get(ConstKeys.TYPE, String::class)!!.uppercase()
+        )
+        defineDrawables(bounds, type)
 
         setLavaToDormant()
     }
@@ -217,34 +226,48 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         }
     }
 
-    private fun defineDrawables(bounds: GameRectangle) = bounds
-        .splitByCellSize(2f * ConstVals.PPM, ConstVals.PPM.toFloat(), out)
+    private fun defineDrawables(bounds: GameRectangle, type: RisingLavaRiverType) = bounds
+        .splitByCellSize(
+            8f * ConstVals.PPM,
+            (if (type == RisingLavaRiverType.TOP) 1f else 8f) * ConstVals.PPM, out
+        )
         .forEach { column, row, _ ->
             val key = "${column}_${row}"
 
             val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
-            sprite.setSize(2f * ConstVals.PPM, ConstVals.PPM.toFloat())
+            sprite.setSize(
+                8f * ConstVals.PPM,
+                (if (type == RisingLavaRiverType.TOP) 1f else 8f) * ConstVals.PPM
+            )
             sprites.put(key, sprite)
             putSpritePreProcess(key) { _, _ ->
                 val bodyPos = body.getPosition()
-                val spriteX = bodyPos.x + column * 2f * ConstVals.PPM
-                val spriteY = bodyPos.y + row * ConstVals.PPM
+                val spriteX = bodyPos.x + column * 8f * ConstVals.PPM
+                val spriteY = bodyPos.y + row * (if (type == RisingLavaRiverType.TOP) 1f else 8f) * ConstVals.PPM
                 sprite.setPosition(spriteX, spriteY)
                 sprite.setFlip(left, false)
                 sprite.hidden = hidden
             }
 
-            val type = if (row == out.rows - 1) TOP else INNER
             val animDef = animDefs[type]
-            val animation = Animation(regions[type], animDef.rows, animDef.cols, animDef.durations, animDef.loop)
+            val animation = Animation(
+                regions[type.name.lowercase()],
+                animDef.rows,
+                animDef.cols,
+                animDef.durations,
+                animDef.loop
+            )
             val animator = Animator(animation)
+            animator.shouldAnimatePredicate = shouldAnimate@{
+                return@shouldAnimate state.equalsAny(
+                    RisingLavaRiverState.RISING,
+                    RisingLavaRiverState.FALLING
+                )
+            }
             putAnimator(key, sprite, animator)
         }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (!game.isProperty(ConstKeys.ROOM_TRANSITION, true) && game.getCurrentRoom()?.name != riseRoom)
-            setLavaToDormant()
-
         when (state) {
             RisingLavaRiverState.RISING -> {
                 body.physics.velocity.set(0f, riseSpeed * ConstVals.PPM)
@@ -274,22 +297,24 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
                     }
                 }
 
-                shakeDelay.update(delta)
-                if (shakeDelay.isFinished()) {
-                    game.eventsMan.submitEvent(
-                        Event(
-                            EventType.SHAKE_CAM, props(
-                                ConstKeys.INTERVAL pairTo RISE_SHAKE_INTERVAL,
-                                ConstKeys.DURATION pairTo RISE_SHAKE_DUR,
-                                ConstKeys.X pairTo SHAKE_X * ConstVals.PPM,
-                                ConstKeys.Y pairTo SHAKE_Y * ConstVals.PPM
+                if (!game.isProperty(ConstKeys.ROOM_TRANSITION, true)) {
+                    shakeDelay.update(delta)
+                    if (shakeDelay.isFinished()) {
+                        game.eventsMan.submitEvent(
+                            Event(
+                                EventType.SHAKE_CAM, props(
+                                    ConstKeys.INTERVAL pairTo RISE_SHAKE_INTERVAL,
+                                    ConstKeys.DURATION pairTo RISE_SHAKE_DUR,
+                                    ConstKeys.X pairTo SHAKE_X * ConstVals.PPM,
+                                    ConstKeys.Y pairTo SHAKE_Y * ConstVals.PPM
+                                )
                             )
                         )
-                    )
 
-                    requestToPlaySound(SoundAsset.QUAKE_SOUND, false)
+                        requestToPlaySound(SoundAsset.QUAKE_SOUND, false)
 
-                    shakeDelay.reset()
+                        shakeDelay.reset()
+                    }
                 }
             }
             RisingLavaRiverState.STOPPED -> {
@@ -307,26 +332,13 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
                     setLavaToDormant()
                     return@UpdatablesComponent
                 }
-
-                shakeDelay.update(delta)
-                if (shakeDelay.isFinished()) {
-                    game.eventsMan.submitEvent(
-                        Event(
-                            EventType.SHAKE_CAM, props(
-                                ConstKeys.INTERVAL pairTo FALL_SHAKE_INTERVAL,
-                                ConstKeys.DURATION pairTo FALL_SHAKE_DUR,
-                                ConstKeys.X pairTo SHAKE_X * ConstVals.PPM,
-                                ConstKeys.Y pairTo SHAKE_Y * ConstVals.PPM
-                            )
-                        )
-                    )
-
-                    requestToPlaySound(SoundAsset.QUAKE_SOUND, false)
-
-                    shakeDelay.reset()
-                }
             }
-            else -> {}
+            RisingLavaRiverState.DORMANT -> {
+                body.physics.velocity.setZero()
+                body.setPosition(startPosition)
+                deathFixture.setActive(false)
+                hidden = true
+            }
         }
     })
 
@@ -345,7 +357,9 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, doUpdate = {
+            state.equalsAny(RisingLavaRiverState.RISING, RisingLavaRiverState.FALLING)
+        })
     }
 
     private fun setLavaToRising() {
@@ -381,6 +395,7 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         body.setPosition(startPosition)
         body.physics.velocity.setZero()
         deathFixture.setActive(false)
+        animators.values().forEach { it.reset() }
         hidden = true
     }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="400" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="767">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="400" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="770">
  <tileset firstgid="1" source="../tsx/InfernoManTileset.tsx"/>
  <tileset firstgid="46" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1070" source="../tsx/MagmaMan.tsx"/>
@@ -1373,10 +1373,11 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="284" name="RisingLavaRiver" x="7712" y="1728" width="1024" height="512">
+  <object id="284" name="RisingLavaRiver" x="7712" y="1760" width="1024" height="512">
    <properties>
     <property name="rise_room" value="room6"/>
     <property name="spawn_type" value="spawn_now"/>
+    <property name="type" value="inner"/>
    </properties>
   </object>
   <object id="297" name="FireballBar" x="8000" y="864" width="32" height="32">
@@ -1569,10 +1570,11 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="543" name="RisingLavaRiver" x="10080" y="1696" width="1152" height="544">
+  <object id="543" name="RisingLavaRiver" x="10080" y="1728" width="1152" height="512">
    <properties>
     <property name="rise_room" value="room10"/>
     <property name="spawn_type" value="spawn_now"/>
+    <property name="type" value="inner"/>
    </properties>
   </object>
   <object id="657" name="InfernoOven" x="4352" y="2176" width="64" height="64">
@@ -1757,6 +1759,20 @@
     <property name="type" value="top"/>
    </properties>
   </object>
+  <object id="767" name="RisingLavaRiver" x="10080" y="1696" width="1152" height="32">
+   <properties>
+    <property name="rise_room" value="room10"/>
+    <property name="spawn_type" value="spawn_now"/>
+    <property name="type" value="top"/>
+   </properties>
+  </object>
+  <object id="768" name="RisingLavaRiver" x="7712" y="1728" width="1024" height="32">
+   <properties>
+    <property name="rise_room" value="room6"/>
+    <property name="spawn_type" value="spawn_now"/>
+    <property name="type" value="top"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="5" name="sensors">
   <object id="17" name="Death" x="800" y="3088" width="128" height="112">
@@ -1902,7 +1918,7 @@
   </object>
  </objectgroup>
  <objectgroup id="9" name="temp">
-  <object id="766" name="0" x="8864" y="1120" width="32" height="32"/>
+  <object id="769" name="0" x="7232" y="1504" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="8" name="player">
   <object id="10" name="0" x="128" y="2912" width="32" height="32"/>

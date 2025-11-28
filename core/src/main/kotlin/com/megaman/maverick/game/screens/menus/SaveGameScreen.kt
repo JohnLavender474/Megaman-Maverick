@@ -145,4 +145,8 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
 
         batch.end()
     }
+
+    override fun onAnyMovement(direction: Direction) {
+        game.audioMan.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND)
+    }
 }

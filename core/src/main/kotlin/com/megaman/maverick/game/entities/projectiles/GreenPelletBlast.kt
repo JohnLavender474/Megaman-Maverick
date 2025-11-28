@@ -74,16 +74,13 @@ class GreenPelletBlast(game: MegamanMaverickGame) : AbstractProjectile(game, siz
         burst = false
     }
 
-    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        owner = shieldFixture.getEntity()
-        body.physics.velocity.x *= -1f
-    }
+    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = burst()
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = burst()
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = bodyFixture.getEntity()
-        if (entity == megaman) burst
+        if (entity == megaman) burst()
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) = burst()

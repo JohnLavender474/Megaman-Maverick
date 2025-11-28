@@ -48,6 +48,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val INNER = "inner"
     const val ALLOW = "allow"
     const val CHANGE = "change"
     const val HIT_BY_SHIELD = "hit_by_shield"

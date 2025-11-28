@@ -1,0 +1,10 @@
+Hazards2.png
+size: 130, 436
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+pma: false
+RisingLavaRiver/inner
+  bounds: 1, 1, 128, 384
+RisingLavaRiver/top
+  bounds: 1, 387, 128, 48

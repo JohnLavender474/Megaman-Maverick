@@ -264,6 +264,8 @@ sprites/frames/LevelPauseScreenV2/options/exit_selected.png
 sprites/frames/MegamanTrailSprite/airdash.png
 sprites/frames/MegamanTrailSprite/groundslide_shoot.png
 sprites/frames/MegamanTrailSprite/groundslide.png
+sprites/frames/Hazards2/RisingLavaRiver/inner.png
+sprites/frames/Hazards2/RisingLavaRiver/top.png
 sprites/frames/Colors/black.png
 sprites/frames/Colors/white.png
 sprites/frames/Colors/pink.png
@@ -2637,6 +2639,7 @@ sprites/sprite_sheets/Bosses3-0.png
 sprites/sprite_sheets/FridgeMan.png
 sprites/sprite_sheets/Gates.png
 sprites/sprite_sheets/MegamanTrailSprite_v2.png
+sprites/sprite_sheets/Hazards2.png
 sprites/sprite_sheets/LevelPauseScreenV2.txt
 sprites/sprite_sheets/LevelSelectScreen.png
 sprites/sprite_sheets/Backgrounds3.txt
@@ -2645,6 +2648,7 @@ sprites/sprite_sheets/Bosses.png
 sprites/sprite_sheets/PreciousMan.txt
 sprites/sprite_sheets/Platforms1.png
 sprites/sprite_sheets/NukeMan.txt
+sprites/sprite_sheets/Hazards2.txt
 sprites/sprite_sheets/LevelSelectScreenV2.png
 sprites/sprite_sheets/Test.txt
 sprites/sprite_sheets/Backgrounds2.png
@@ -2780,6 +2784,7 @@ sprites/texture_packer/Specials1.tps
 sprites/texture_packer/Projectiles1.tps
 sprites/texture_packer/MegamanFire.tps
 sprites/texture_packer/Bosses1.tps
+sprites/texture_packer/Hazards2.tps
 sprites/texture_packer/Backgrounds6.tps
 sprites/texture_packer/Faces1.tps
 sprites/texture_packer/Ui2.tps
@@ -3685,6 +3690,7 @@ music/vinnyz_wip_1.wav
 music/vinnyz_intro_stage.mp3
 music/vinnyz_inferno_intro_track.wav
 music/Mega_Quest_2_Level_5.mp3
+music/vinnyz_main_menu_theme_v2.wav
 music/MM7_Final_Boss_Intro.mp3
 music/Mega_Quest_2_Boss_Battle.ogg
 music/Mega_Quest_2_Level_2.mp3
@@ -3714,6 +3720,7 @@ music/vinnyz_main_menu.wav
 music/MMX5_IzzyGlow.mp3
 music/vinnyz_intro_stage.wav
 music/Cody_O_Quinn_Action_Man.mp3
+music/vinnyz_main_menu_theme_v2.mp3
 music/MMX6_BlazeHeatnix.txt
 music/Cybernetic_Factory.mp3
 music/Mega_Quest_2_Level_6.mp3
