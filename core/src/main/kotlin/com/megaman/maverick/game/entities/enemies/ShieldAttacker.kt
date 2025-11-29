@@ -43,6 +43,7 @@ import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.IceShard
+import com.megaman.maverick.game.entities.projectiles.GreenPelletBlast
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
@@ -154,7 +155,8 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
         frozen = false
     }
 
-    override fun canBeDamagedBy(damager: IDamager) = !frozen && super.canBeDamagedBy(damager)
+    override fun canBeDamagedBy(damager: IDamager) =
+        !frozen && (damager is GreenPelletBlast || super.canBeDamagedBy(damager))
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
         val damaged = super.takeDamageFrom(damager)

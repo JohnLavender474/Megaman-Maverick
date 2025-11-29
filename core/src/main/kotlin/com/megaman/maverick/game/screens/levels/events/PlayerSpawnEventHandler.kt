@@ -131,7 +131,6 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
                 fadein.setSize(bounds.getWidth(), bounds.getHeight())
                 fadein.update(delta)
             }
-
             !preBeamTimer.isFinished() -> preBeam(delta)
             !beamDownTimer.isFinished() -> beamDown(delta)
             !beamTransitionTimer.isFinished() -> beamTrans(delta)

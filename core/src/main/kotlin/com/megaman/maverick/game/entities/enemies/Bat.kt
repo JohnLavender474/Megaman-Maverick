@@ -51,6 +51,7 @@ import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.projectiles.Axe
+import com.megaman.maverick.game.entities.projectiles.GreenPelletBlast
 import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
 import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -191,7 +192,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
-        damager.isAny(Axe::class, Wanaan::class) || super.canBeDamagedBy(damager)
+        damager.isAny(Axe::class, Wanaan::class, GreenPelletBlast::class) || super.canBeDamagedBy(damager)
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
         GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")

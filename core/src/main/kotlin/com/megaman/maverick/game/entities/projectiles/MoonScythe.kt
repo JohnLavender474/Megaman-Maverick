@@ -47,7 +47,6 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         private const val FADE_DUR = 0.25f
         private const val MAX_BOUNCES = 4
         private const val SPAWN_TRAIL_DELAY = 0.1f
-        private const val DEBUG_FADING = false
         private val BLOCK_FILTERS = gdxArrayOf(AbstractBlock::class, LadderTop::class)
         private var region: TextureRegion? = null
     }
@@ -58,7 +57,7 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
     private val trajectory = Vector2()
 
     private val shouldDebug: Boolean
-        get() = !fade || DEBUG_FADING
+        get() = !fade
 
     private var fade = false
     private var rotation = 0f
@@ -100,14 +99,11 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = shieldFixture.getEntity()
-
         if (entity.isAny(MoonScythe::class, SharpStar::class, Asteroid::class)) return
-
         if (entity is PreciousGem) {
-            body.physics.velocity.x *= -1
-            body.physics.velocity.y *= -1
+            fade = true
+            return
         }
-
         hit(thisShape, otherShape)
     }
 

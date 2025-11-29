@@ -2,6 +2,8 @@ package com.megaman.maverick.game.entities.hazards
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Intersector
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -31,7 +33,10 @@ import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.body.*
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -47,14 +52,10 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelUtils
 import com.megaman.maverick.game.utils.GameObjectPools
-import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.utils.extensions.getPosition
-import com.megaman.maverick.game.utils.extensions.getRandomPositionInBounds
-import com.megaman.maverick.game.utils.extensions.toGameRectangle
+import com.megaman.maverick.game.utils.extensions.*
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
-import com.megaman.maverick.game.world.body.getPosition
 
 class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     IAudioEntity, IEventListener {
@@ -105,13 +106,16 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         EventType.SET_TO_ROOM_NO_TRANS
     )
 
+    private val velocity = Vector2()
     private val startPosition = Vector2()
+    private val fullBounds = GameRectangle()
 
-    private val deathBounds = GameRectangle()
-    private lateinit var deathFixture: IFixture
+    private val tempRect = Rectangle()
 
     // the lava rises only for a single room; for all other rooms the lava should be lowered and dormant
     private lateinit var riseRoom: String
+
+    private lateinit var deathFixture: Fixture
     private lateinit var state: RisingLavaRiverState
 
     private val shakeDelay = Timer()
@@ -143,7 +147,11 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         addComponent(AnimationsComponent())
         addComponent(SpritesComponent(
             doUpdateAndDraw = {
-                state.equalsAny(RisingLavaRiverState.RISING, RisingLavaRiverState.FALLING)
+                state.equalsAny(
+                    RisingLavaRiverState.RISING,
+                    RisingLavaRiverState.FALLING,
+                    RisingLavaRiverState.STOPPED
+                )
             }
         ))
         addComponent(AudioComponent())
@@ -169,9 +177,9 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
-        deathBounds.set(bounds)
-
+        fullBounds.set(bounds)
         startPosition.set(bounds.getPosition())
+        velocity.setZero()
 
         riseRoom = spawnProps.get("${ConstKeys.RISE}_${ConstKeys.ROOM}", String::class)!!
 
@@ -241,9 +249,8 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
             )
             sprites.put(key, sprite)
             putSpritePreProcess(key) { _, _ ->
-                val bodyPos = body.getPosition()
-                val spriteX = bodyPos.x + column * 8f * ConstVals.PPM
-                val spriteY = bodyPos.y + row * (if (type == RisingLavaRiverType.TOP) 1f else 8f) * ConstVals.PPM
+                val spriteX = fullBounds.getX() + column * 8f * ConstVals.PPM
+                val spriteY = fullBounds.getY() + row * (if (type == RisingLavaRiverType.TOP) 1f else 8f) * ConstVals.PPM
                 sprite.setPosition(spriteX, spriteY)
                 sprite.setFlip(left, false)
                 sprite.hidden = hidden
@@ -261,7 +268,8 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
             animator.shouldAnimatePredicate = shouldAnimate@{
                 return@shouldAnimate state.equalsAny(
                     RisingLavaRiverState.RISING,
-                    RisingLavaRiverState.FALLING
+                    RisingLavaRiverState.FALLING,
+                    RisingLavaRiverState.STOPPED
                 )
             }
             putAnimator(key, sprite, animator)
@@ -270,14 +278,14 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         when (state) {
             RisingLavaRiverState.RISING -> {
-                body.physics.velocity.set(0f, riseSpeed * ConstVals.PPM)
-                if (shouldIncreaseRiseSpeed()) body.physics.velocity.y *= RISE_SPEED_UP_SCALAR
+                velocity.set(0f, riseSpeed * ConstVals.PPM)
+                if (shouldIncreaseRiseSpeed()) velocity.y *= RISE_SPEED_UP_SCALAR
 
                 emberDelay.update(delta)
                 if (emberDelay.isFinished()) {
                     val position = GameObjectPools.fetch(Vector2::class)
-                        .setX(body.getBounds().getRandomPositionInBounds().x)
-                        .setY(body.getBounds().getMaxY())
+                        .setX(fullBounds.getRandomPositionInBounds().x)
+                        .setY(fullBounds.getMaxY())
 
                     val canSpawnBounds = GameObjectPools.fetch(GameRectangle::class)
                         .setWidth(EMBER_SPAWN_X_BUFFER * ConstVals.PPM)
@@ -318,6 +326,8 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
                 }
             }
             RisingLavaRiverState.STOPPED -> {
+                velocity.setZero()
+
                 stopDelay.update(delta)
                 if (stopDelay.isFinished()) {
                     GameLogger.debug(TAG, "update(): stop delay finished")
@@ -325,6 +335,8 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
                 }
             }
             RisingLavaRiverState.FALLING -> {
+                velocity.set(0f, -fallSpeed * ConstVals.PPM)
+
                 val maxY = body.getMaxY()
                 val camY = game.getGameCamera().toGameRectangle().getY()
                 if (maxY < camY) {
@@ -334,12 +346,25 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
                 }
             }
             RisingLavaRiverState.DORMANT -> {
-                body.physics.velocity.setZero()
-                body.setPosition(startPosition)
+                fullBounds.setPosition(startPosition)
                 deathFixture.setActive(false)
+                velocity.setZero()
                 hidden = true
             }
         }
+
+        fullBounds.translate(
+            velocity.x * delta,
+            velocity.y * delta
+        )
+        val overlap = Intersector.intersectRectangles(
+            getGameCamera().getRotatedBounds().toGdxRectangle(),
+            fullBounds.toGdxRectangle(),
+            tempRect
+        )
+        if (overlap) body.set(tempRect)
+
+        game.setDebugText(body.getBounds().toIntString())
     })
 
     private fun defineBodyComponent(): BodyComponent {
@@ -351,9 +376,13 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        deathFixture = Fixture(body, FixtureType.DEATH, deathBounds)
+        deathFixture = Fixture(body, FixtureType.DEATH, GameRectangle())
         deathFixture.putProperty(ConstKeys.INSTANT, true)
         body.addFixture(deathFixture)
+
+        body.preProcess.put(ConstKeys.DEATH) {
+            (deathFixture.rawShape as GameRectangle).set(body.getBounds())
+        }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -374,7 +403,7 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
     private fun setLavaToStopped() {
         GameLogger.debug(TAG, "setLavaToStopped()")
         state = RisingLavaRiverState.STOPPED
-        body.physics.velocity.setZero()
+        velocity.setZero()
         deathFixture.setActive(false)
         hidden = false
         stopDelay.reset()
@@ -383,7 +412,7 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
     private fun setLavaToFalling() {
         GameLogger.debug(TAG, "setLavaToFalling()")
         state = RisingLavaRiverState.FALLING
-        body.physics.velocity.set(0f, -fallSpeed * ConstVals.PPM)
+        velocity.set(0f, -fallSpeed * ConstVals.PPM)
         deathFixture.setActive(false)
         hidden = false
         shakeDelay.resetDuration(FALL_SHAKE_DELAY)
@@ -392,8 +421,9 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
     private fun setLavaToDormant() {
         GameLogger.debug(TAG, "setLavaToDormant()")
         state = RisingLavaRiverState.DORMANT
-        body.setPosition(startPosition)
-        body.physics.velocity.setZero()
+        fullBounds.setPosition(startPosition)
+        body.set(startPosition.x, startPosition.y, 0f, 0f)
+        velocity.setZero()
         deathFixture.setActive(false)
         animators.values().forEach { it.reset() }
         hidden = true
@@ -405,7 +435,7 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
     }
 
     private fun shouldIncreaseRiseSpeed() = allowSpeedUp &&
-        megaman.body.getBounds().getY() > body.getBounds().getMaxY() + DIST_TRIGGER_SPEED_UP * ConstVals.PPM
+        megaman.body.getBounds().getY() > fullBounds.getMaxY() + DIST_TRIGGER_SPEED_UP * ConstVals.PPM
 
     override fun getType() = EntityType.HAZARD
 

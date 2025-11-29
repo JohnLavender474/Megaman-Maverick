@@ -449,4 +449,12 @@ open class GameRectangle() : IGameShape2D, IRectangle, IRotatableShape {
     override fun hashCode() = rectangle.hashCode()
 
     override fun toString() = rectangle.toString()
+
+    fun toIntString(): String {
+        val intX = rectangle.x.toInt()
+        val intY = rectangle.y.toInt()
+        val intWidth = rectangle.width.toInt()
+        val intHeight = rectangle.height.toInt()
+        return "[$intX, $intY, $intWidth, $intHeight]"
+    }
 }

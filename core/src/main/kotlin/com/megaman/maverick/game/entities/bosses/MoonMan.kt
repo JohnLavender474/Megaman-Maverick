@@ -5,6 +5,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -182,6 +183,8 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     private val asteroidsToThrow = Array<GamePair<Asteroid, Timer>>()
     private var asteroidsSpawned = 0
 
+    private val scythes = OrderedSet<MoonScythe>()
+
     override fun init() {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
@@ -195,7 +198,6 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                         val region = atlas.findRegion(shootKey, index)
                         regions.put(key, region)
                     }
-
                     else -> {
                         val region = atlas.findRegion(atlasKey)
                         regions.put(key, region)
@@ -246,6 +248,8 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         else 1f
 
         body.physics.gravityOn = true
+
+        scythes.clear()
     }
 
     override fun isReady(delta: Float) = timers[ConstKeys.INIT].isFinished()
@@ -274,6 +278,12 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            val scytheIter = scythes.iterator()
+            while (scytheIter.hasNext) {
+                val scythe = scytheIter.next()
+                if (scythe.dead) scytheIter.remove()
+            }
+
             if (betweenReadyAndEndBossSpawnEvent) return@add
 
             if (defeated) {
@@ -322,8 +332,9 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                 MoonManState.INIT, MoonManState.STAND -> {
                     if (!body.isSensing(BodySense.FEET_ON_GROUND)) return@add
 
-                    if (currentState == MoonManState.STAND && canShootInStandState() &&
-                        shootIndex < STAND_SHOOT_DURS.size
+                    if (currentState == MoonManState.STAND &&
+                        shootIndex < STAND_SHOOT_DURS.size &&
+                        canShootInStandState()
                     ) {
                         val timer = timers["shoot_${shootIndex}"]
                         timer.update(delta)
@@ -337,9 +348,12 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                     val timerKey = currentState.name.lowercase()
                     val timer = timers[timerKey]
                     timer.update(delta)
-                    if (timer.isFinished()) stateMachine.next()
-                }
 
+                    if (timer.isFinished() ||
+                        (canShootInStandState() && shootIndex >= STAND_SHOOT_DURS.size && scythes.isEmpty)
+                    )
+                        stateMachine.next()
+                }
                 MoonManState.JUMP -> if (shouldGoToStandState()) stateMachine.next()
                 MoonManState.THROW_ASTEROIDS -> {
                     val max = when (game.state.getDifficultyMode()) {
@@ -364,7 +378,6 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                         }
                     }
                 }
-
                 MoonManState.GRAVITY_CHANGE -> {
                     val timer = timers["gravity_change_${gravityChangeState.name.lowercase()}"]
                     timer.update(delta)
@@ -379,7 +392,6 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                                 val next = stateMachine.next()
                                 GameLogger.debug(TAG, "update(): GRAVITY_CHANGE: end state, go to next=$next")
                             }
-
                             else -> {
                                 GameLogger.debug(TAG, "update(): GRAVITY_CHANGE: current=$gravityChangeState")
                                 val ordinal = gravityChangeState.ordinal + 1
@@ -663,6 +675,8 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                     ConstKeys.OWNER pairTo this
                 )
             )
+
+            scythes.add(scythe)
         }
 
         requestToPlaySound(SoundAsset.WHIP_SOUND, false)

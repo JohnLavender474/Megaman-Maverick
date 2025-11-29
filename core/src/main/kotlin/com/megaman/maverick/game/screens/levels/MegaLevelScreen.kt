@@ -217,7 +217,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         spawnsMan = SpawnsManager(spawns)
         playerSpawnsMan = PlayerSpawnsManager(gameCamera) { current, old ->
-            if (current != null) {
+            if (current != null && megaman.ready) {
                 GameLogger.debug(TAG, "playerSpawnsMan(): onChangeSpawn(): current=${current.name}, old=${old?.name}")
 
                 checkpointText.setText("CHECKPOINT ${current.name}")
@@ -225,6 +225,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
                 val duplicate = current.properties.get(ConstKeys.DUPLICATE, false, Boolean::class.java)
                 if (duplicate) playerSpawnsMan.remove(current.name)
+            } else {
+                checkpointText.setText("")
+                checkpointTimer.setToEnd()
             }
         }
 

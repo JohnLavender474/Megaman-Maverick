@@ -249,6 +249,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         sawSprite.setSize(2.5f * ConstVals.PPM)
         spritesComponent.sprites.put("saw", sawSprite)
         spritesComponent.putPreProcess("saw") { _, sprite ->
+            sprite.hidden = game.isProperty(ConstKeys.ROOM_TRANSITION, true)
             sprite.setPosition(body.getCenter(), Position.CENTER)
             sprite.setFlip(isFacing(Facing.LEFT), false)
         }
@@ -257,6 +258,9 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
             val ringSprite = GameSprite(ringRegion!!, DrawingPriority(DrawingSection.PLAYGROUND, 12))
             ringSprite.setSize(0.75f * ConstVals.PPM)
             spritesComponent.sprites.put("ring_$i", ringSprite)
+            spritesComponent.putPreProcess("ring_$i") { _, sprite ->
+                sprite.hidden = game.isProperty(ConstKeys.ROOM_TRANSITION, true)
+            }
         }
 
         return spritesComponent
