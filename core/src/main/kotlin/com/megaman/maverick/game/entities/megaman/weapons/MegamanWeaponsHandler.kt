@@ -793,25 +793,36 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             MegaChargeStatus.NOT_CHARGED,
             MegaChargeStatus.HALF_CHARGED,
             MegaChargeStatus.FULLY_CHARGED -> {
-                val spawn = megaman.body.getPositionPoint(Position.BOTTOM_CENTER)
-                    .add(ConstVals.PPM.toFloat() * megaman.facing.value, 0f)
-                    .rotateAroundDeg(megaman.body.getCenter(), megaman.direction.rotation)
+                val spawn = when (megaman.direction) {
+                    Direction.UP -> megaman.body.getPositionPoint(Position.BOTTOM_CENTER)
+                        .add(ConstVals.PPM.toFloat() * megaman.facing.value, 0f)
+                    Direction.DOWN -> megaman.body.getPositionPoint(Position.TOP_CENTER)
+                        .add(ConstVals.PPM.toFloat() * -megaman.facing.value, 0f)
+                    Direction.LEFT -> megaman.body.getPositionPoint(Position.CENTER_RIGHT)
+                        .add(-ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat() * megaman.facing.value)
+                    Direction.RIGHT -> megaman.body.getPositionPoint(Position.CENTER_LEFT)
+                        .add(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat() * -megaman.facing.value)
+                }
 
-                /*
-                val trajectory = GameObjectPools.fetch(Vector2::class)
-                    .set(MegamanValues.FIRE_BALL_X_VEL * megaman.facing.value, MegamanValues.FIRE_BALL_Y_VEL)
-                    .scl(ConstVals.PPM.toFloat())
-                 */
-                val trajectory = GameObjectPools.fetch(Vector2::class)
-                    .set(MegamanValues.MAGMA_WAVE_VEL * megaman.facing.value * ConstVals.PPM, 0f)
-                    .rotateAroundDeg(megaman.body.getCenter(), megaman.direction.rotation)
+                val trajectory = when (megaman.direction) {
+                    Direction.UP -> GameObjectPools.fetch(Vector2::class)
+                        .set(MegamanValues.MAGMA_WAVE_VEL * megaman.facing.value * ConstVals.PPM, 0f)
+                    Direction.DOWN -> GameObjectPools.fetch(Vector2::class)
+                        .set(MegamanValues.MAGMA_WAVE_VEL * -megaman.facing.value * ConstVals.PPM, 0f)
+                    Direction.LEFT -> GameObjectPools.fetch(Vector2::class)
+                        .set(0f, MegamanValues.MAGMA_WAVE_VEL * megaman.facing.value * ConstVals.PPM)
+                    Direction.RIGHT -> GameObjectPools.fetch(Vector2::class)
+                        .set(0f, MegamanValues.MAGMA_WAVE_VEL * -megaman.facing.value * ConstVals.PPM)
+                }
 
                 val fireWave = MegaEntityFactory.fetch(MagmaWave::class)!!
                 fireWave.spawn(
                     props(
                         ConstKeys.OWNER pairTo megaman,
                         ConstKeys.POSITION pairTo spawn,
-                        ConstKeys.TRAJECTORY pairTo trajectory
+                        ConstKeys.TRAJECTORY pairTo trajectory,
+                        ConstKeys.FACING pairTo megaman.facing,
+                        ConstKeys.DIRECTION pairTo megaman.direction,
                     )
                 )
 
@@ -825,7 +836,6 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
     private fun shootMoonScythes(stat: MegaChargeStatus) {
         GameLogger.debug(TAG, "fireMoonScythes(): stat=$stat")
 
-        // TODO: spawned entity should change based on stat
         when (stat) {
             MegaChargeStatus.NOT_CHARGED,
             MegaChargeStatus.HALF_CHARGED,

@@ -12,7 +12,6 @@ import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
-import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -44,9 +43,11 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IFireEntity
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
+import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFireEntity, IFaceable {
+class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFireEntity, IFaceable,
+    IDirectional {
 
     companion object {
         const val TAG = "MagmaWave"
@@ -55,6 +56,11 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
+    override var direction: Direction
+        get() = body.direction
+        set(value) {
+            body.direction = value
+        }
     override lateinit var facing: Facing
 
     private val dropFlameDelay = Timer()
@@ -77,13 +83,20 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
+        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        body.setBottomCenterToPoint(spawn)
+        val position = DirectionPositionMapper.getPosition(direction).opposite()
+        body.positionOnPoint(spawn, position)
 
         val trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
         body.physics.velocity.set(trajectory)
 
-        facing = if (trajectory.x < 0f) Facing.LEFT else Facing.RIGHT
+        facing = when {
+            spawnProps.containsKey(ConstKeys.FACING) -> spawnProps.get(ConstKeys.FACING, Facing::class)!!
+            trajectory.x < 0f -> Facing.LEFT
+            else -> Facing.RIGHT
+        }
 
         val dropFlameDelayDur = spawnProps.getOrDefault(
             "${ConstKeys.DROP}_${ConstKeys.FLAME}_${ConstKeys.DELAY}",
@@ -120,15 +133,12 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     })
 
     private fun dropFlame() {
-        // Replace this with Magma Wave's own "direction" value
-        val direction = if (owner is IDirectional) (owner as IDirectional).direction else Direction.UP
-
         val flame = MegaEntityFactory.fetch(MagmaFlame::class)!!
         flame.spawn(
             props(
                 ConstKeys.OWNER pairTo owner,
                 ConstKeys.DIRECTION pairTo direction,
-                ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)
+                ConstKeys.POSITION pairTo body.getCenter(),
             )
         )
     }
@@ -180,12 +190,14 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 15))
         sprite.setSize(3f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
         component.putPreProcess { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.setFlip(isFacing(Facing.LEFT), false)
+            sprite.setOriginCenter()
+            sprite.rotation = direction.rotation
         }
         return component
     }
