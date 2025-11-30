@@ -53,6 +53,7 @@ class PreciousBlock(game: MegamanMaverickGame) : ShieldBlock(game), ISpritesEnti
 
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.ANIMATION, TAG)
+        spawnProps.put("${ConstKeys.FEET}_${ConstKeys.SOUND}", false)
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
 
         super.onSpawn(spawnProps)

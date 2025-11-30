@@ -1338,7 +1338,6 @@
    </properties>
   </object>
   <object id="178" name="Bat" x="1504" y="2016" width="32" height="32"/>
-  <object id="179" name="Bat" x="1248" y="2048" width="32" height="32"/>
   <object id="180" name="Bat" x="3056" y="2032" width="32" height="32"/>
   <object id="208" name="CannoHoney" x="8496" y="1280" width="32" height="32">
    <properties>
@@ -1350,7 +1349,7 @@
     <property name="scanner" type="object" value="218"/>
    </properties>
   </object>
-  <object id="247" name="LumberJoe" x="7504" y="1216" width="32" height="32"/>
+  <object id="247" name="LumberJoe" x="7528" y="1216" width="32" height="32"/>
   <object id="287" name="Bat" x="11488" y="2240" width="32" height="32"/>
   <object id="310" name="Bat" x="11344" y="2240" width="32" height="32"/>
   <object id="311" name="Bat" x="10816" y="2240" width="32" height="32"/>
@@ -1412,11 +1411,6 @@
     <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="475" name="Bat" x="2440" y="1992" width="32" height="32">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
   <object id="476" name="Bat" x="2664" y="2032" width="32" height="32">
    <properties>
     <property name="hard_mode_only" type="bool" value="true"/>
@@ -1447,22 +1441,7 @@
     <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="482" name="Bat" x="7856" y="1200" width="32" height="32">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="483" name="Bat" x="8432" y="1184" width="32" height="32">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
   <object id="484" name="Bat" x="8608" y="1184" width="32" height="32">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="485" name="Bat" x="9120" y="1168" width="32" height="32">
    <properties>
     <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
@@ -1512,11 +1491,6 @@
     <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="495" name="LumberJoe" x="8256" y="1376" width="32" height="32">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
   <object id="496" name="LumberJoe" x="11680" y="2176" width="32" height="32">
    <properties>
     <property name="hard_mode_only" type="bool" value="true"/>
@@ -1533,11 +1507,6 @@
    </properties>
   </object>
   <object id="501" name="LumberJoe" x="6320" y="1312" width="32" height="32">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="502" name="LumberJoe" x="10032" y="1216" width="32" height="32">
    <properties>
     <property name="hard_mode_only" type="bool" value="true"/>
    </properties>

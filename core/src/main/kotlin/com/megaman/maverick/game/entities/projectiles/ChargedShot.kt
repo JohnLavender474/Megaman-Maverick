@@ -137,10 +137,10 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = bodyFixture.getEntity()
-        // If a charged shot projectile hits a damageable entity that is not dead, not invincible, and
-        // cannot be damaged by the projectile, then go ahead and destroy the projectile
-        if (entity != owner && !entity.dead && entity is IDamageable && !entity.canBeDamagedBy(this))
-            explodeAndDie()
+        if (entity != owner &&
+            entity is IDamageable && !entity.canBeDamagedBy(this) &&
+            (entity !is IHealthEntity || !entity.isHealthDepleted())
+        ) explodeAndDie()
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
