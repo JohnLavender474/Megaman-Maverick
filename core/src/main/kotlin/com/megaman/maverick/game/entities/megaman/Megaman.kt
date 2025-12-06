@@ -599,10 +599,10 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         }
     }
 
-    override fun canBeDamagedBy(damager: IDamager) = when {
-        !super.canBeDamagedBy(damager) || dead -> false
-        damager is IProjectileEntity -> damager.owner != this
-        else -> true
+    override fun canBeDamagedBy(damager: IDamager): Boolean {
+        if (dead || !super.canBeDamagedBy(damager)) return false
+        if (damager is IOwnable<*> && damager.owner == this) return false
+        return true
     }
 
     override fun getDamageDuration(damager: IDamager) = MegamanValues.DAMAGE_DURATION

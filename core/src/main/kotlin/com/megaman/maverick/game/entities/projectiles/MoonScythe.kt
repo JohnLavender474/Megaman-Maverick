@@ -51,15 +51,16 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         private var region: TextureRegion? = null
     }
 
+    var fading = false
+
     private val fadeTimer = Timer(FADE_DUR)
     private val spawnTrailDelay = Timer(SPAWN_TRAIL_DELAY)
 
     private val trajectory = Vector2()
 
     private val shouldDebug: Boolean
-        get() = !fade
+        get() = !fading
 
-    private var fade = false
     private var rotation = 0f
     private var bounces = 0
 
@@ -75,7 +76,7 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        fade = spawnProps.getOrDefault(ConstKeys.FADE, false, Boolean::class)
+        fading = spawnProps.getOrDefault(ConstKeys.FADE, false, Boolean::class)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
@@ -101,7 +102,7 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         val entity = shieldFixture.getEntity()
         if (entity.isAny(MoonScythe::class, SharpStar::class, Asteroid::class)) return
         if (entity is PreciousGem) {
-            fade = true
+            fading = true
             return
         }
         hit(thisShape, otherShape)
@@ -113,7 +114,7 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         bounces++
         if (bounces > MAX_BOUNCES) {
             if (shouldDebug) GameLogger.debug(TAG, "hit(): start to fade")
-            fade = true
+            fading = true
         }
 
         if (shouldDebug) GameLogger.debug(TAG, "hit(): old trajectory = $trajectory")
@@ -134,7 +135,7 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         rotation += ROTATIONS_PER_SEC * 360f * delta * movementScalar
 
         when {
-            fade -> {
+            fading -> {
                 fadeTimer.update(delta)
                 if (fadeTimer.isFinished()) destroy()
             }
@@ -169,7 +170,7 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         body.physics.applyFrictionY = false
         body.preProcess.put(ConstKeys.DEFAULT) {
             when {
-                canMove && !fade -> body.physics.velocity.set(trajectory).scl(movementScalar)
+                canMove && !fading -> body.physics.velocity.set(trajectory).scl(movementScalar)
                 else -> body.physics.velocity.setZero()
             }
         }
@@ -196,7 +197,7 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
             sprite.setOriginCenter()
             sprite.rotation = rotation
 
-            val alpha = if (fade) 1f - fadeTimer.getRatio() else 1f
+            val alpha = if (fading) 1f - fadeTimer.getRatio() else 1f
             sprite.setAlpha(alpha)
         }
         return component

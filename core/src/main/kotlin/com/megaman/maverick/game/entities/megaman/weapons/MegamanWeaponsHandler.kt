@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.megaman.weapons
 
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.OrderedSet
@@ -93,6 +94,16 @@ open class MegaWeaponHandler(
                 GameLogger.debug(TAG, "cullAllDead(): culled entity=$entity")
             }
         }
+    }
+
+    fun getAllSpawned(
+        out: Array<MegaGameEntity>,
+        filter: (MegaGameEntity) -> Boolean = { true }
+    ): Array<MegaGameEntity> {
+        spawned.values().forEach { set ->
+            set.forEach { if (filter.invoke(it)) out.add(it) }
+        }
+        return out
     }
 
     fun clearAllSpawned() = spawned.values().forEach { set -> set.clear() }
@@ -305,25 +316,57 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             chargeable = { _ -> false /* TODO: !megaman.body.isSensing(BodySense.IN_WATER) */ },
             canFireWeapon = { _, _ -> true /* TODO: !megaman.body.isSensing(BodySense.IN_WATER) */ }
         )
-        MegamanWeapon.MOON_SCYTHES -> MegaWeaponHandler(
+        MegamanWeapon.MOON_SCYTHES -> object : MegaWeaponHandler(
             cooldown = Timer(0.1f),
             normalCost = { 3 },
-            halfChargedCost = { 12 },
-            fullyChargedCost = { 12 },
-            chargeable = chargeable@{
-                return@chargeable false
-                // TODO:
-                /*
-                val count = it.getSpawnedCount(MegaChargeStatus.entries)
-                return@chargeable count <= MegamanValues.MAX_MOONS_BEFORE_SHOOT_AGAIN
-                 */
-            },
-            canFireWeapon = canFireWeapon@{ it, _ ->
-                val count = it.getSpawnedCount(MegaChargeStatus.entries)
-                GameLogger.debug(TAG, "MOON_SCYTHE: canFireWeapon(): count=${count}")
-                return@canFireWeapon count <= MegamanValues.MAX_MOONS_BEFORE_SHOOT_AGAIN
+            halfChargedCost = { 3 },
+            fullyChargedCost = { 3 },
+            chargeable = chargeable@{ return@chargeable false },
+        ) {
+
+            private val maxWaitTime = Timer(1f)
+            private val outArray = Array<MegaGameEntity>()
+
+            init {
+                maxWaitTime.setToEnd()
+
+                preShoot = preShoot@{
+                    maxWaitTime.reset()
+                }
+                postShoot = postShoot@{
+                    val allMoonScythes = getAllSpawned(outArray)
+                    if (allMoonScythes.size <= 6) return@postShoot
+
+                    allMoonScythes.sort { o1, o2 -> o1.timeSpawned.compareTo(o2.timeSpawned) }
+
+                    var aliveCount = allMoonScythes.size
+
+                    val iter = allMoonScythes.iterator()
+                    while (iter.hasNext() && aliveCount > 6) {
+                        val moonScythe = iter.next() as MoonScythe
+
+                        if (!moonScythe.fading && !moonScythe.dead) {
+                            moonScythe.fading = true
+                            --aliveCount
+                        }
+                    }
+
+                    allMoonScythes.clear()
+                }
+
+                canFireWeapon = canFireWeapon@{ it, _ ->
+                    if (maxWaitTime.isFinished()) return@canFireWeapon true
+                    val count = it.getSpawnedCount(MegaChargeStatus.entries)
+                    GameLogger.debug(TAG, "MOON_SCYTHE: canFireWeapon(): count=${count}")
+                    return@canFireWeapon count <= MegamanValues.MAX_MOONS_BEFORE_SHOOT_AGAIN
+                }
             }
-        )
+
+            override fun update(delta: Float) {
+                super.update(delta)
+                maxWaitTime.update(delta)
+            }
+        }
         MegamanWeapon.PRECIOUS_GUARD -> object : MegaWeaponHandler(
             cooldown = Timer(0.1f),
             normalCost = { if (it.getSpawnedCount(MegaChargeStatus.NOT_CHARGED) > 0) 0 else 6 },

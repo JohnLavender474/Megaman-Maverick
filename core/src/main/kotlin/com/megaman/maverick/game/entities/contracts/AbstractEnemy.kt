@@ -190,6 +190,8 @@ abstract class AbstractEnemy(
         else -> baseDamage
     }
 
+    override fun canDamage(damageable: IDamageable) = !dead
+
     override fun canBeDamagedBy(damager: IDamager): Boolean {
         val canBeDamaged = super.canBeDamagedBy(damager)
         if (!canBeDamaged) return false

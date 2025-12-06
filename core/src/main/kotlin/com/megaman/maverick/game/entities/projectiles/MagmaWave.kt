@@ -14,6 +14,7 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.isAny
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.IFaceable
@@ -42,6 +43,8 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IFireEntity
+import com.megaman.maverick.game.entities.enemies.LumberJoe
+import com.megaman.maverick.game.entities.enemies.ShieldGuardBot
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
@@ -63,10 +66,10 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         }
     override lateinit var facing: Facing
 
-    private val dropFlameDelay = Timer()
+    var disintegrating = false
 
+    private val dropFlameDelay = Timer()
     private val disintegrationTimer = Timer(DISINTEGRATE_TIME)
-    private var disintegrating = false
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -116,6 +119,8 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     }
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        val entity = shieldFixture.getEntity()
+        if (entity.isAny(LumberJoe::class, ShieldGuardBot::class)) return
         disintegrating = true
     }
 

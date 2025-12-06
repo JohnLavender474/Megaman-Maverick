@@ -36,10 +36,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.IFreezerEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
@@ -88,6 +85,7 @@ class ShieldGuardBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
     private var flipY = false
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
@@ -98,6 +96,7 @@ class ShieldGuardBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
 
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
@@ -112,7 +111,6 @@ class ShieldGuardBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
                         max = targetY
                         switch = false
                     }
-
                     else -> {
                         min = targetY
                         max = spawn.y
@@ -122,7 +120,6 @@ class ShieldGuardBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
                 body.setCenter(spawn)
                 facing = if (megaman.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
             }
-
             else -> {
                 body.setSize(0.75f * ConstVals.PPM, 1f * ConstVals.PPM)
                 val targetX = spawn.x + spawnProps.get(ConstKeys.VALUE, Float::class)!! * ConstVals.PPM
@@ -132,7 +129,6 @@ class ShieldGuardBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
                         max = targetX
                         switch = false
                     }
-
                     else -> {
                         min = targetX
                         max = spawn.x
@@ -152,7 +148,8 @@ class ShieldGuardBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
         frozen = false
     }
 
-    override fun canBeDamagedBy(damager: IDamager) = !frozen && super.canBeDamagedBy(damager)
+    override fun canBeDamagedBy(damager: IDamager) =
+        damager is IFireEntity || !frozen && super.canBeDamagedBy(damager)
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
         val damaged = super.takeDamageFrom(damager)

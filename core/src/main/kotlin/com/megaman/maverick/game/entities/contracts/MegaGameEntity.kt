@@ -30,6 +30,8 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
     var dead = false
     var id = 0
         private set
+    var timeSpawned = 0L
+        private set
 
     override fun canSpawn(spawnProps: Properties): Boolean {
         if (!super.canSpawn(spawnProps)) return false
@@ -45,6 +47,7 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
 
     override fun onSpawn(spawnProps: Properties) {
         id = spawnProps.getOrDefault(ConstKeys.ID, RANDOM_ID_POOL.fetch(), Int::class)
+        timeSpawned = System.currentTimeMillis()
         MegaGameEntities.add(this)
         runnablesOnSpawn.values().forEach { it.invoke() }
         GameLogger.debug(TAG, "${getTag()}: onSpawn(): this=$this")

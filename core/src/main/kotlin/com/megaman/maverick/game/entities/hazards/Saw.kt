@@ -129,10 +129,10 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         )
 
         for (i in 0..RING_COUNT) putSpritePreProcess("ring_$i") { _, sprite ->
+            sprite.hidden = game.isProperty(ConstKeys.ROOM_TRANSITION, true)
             val distance = (i.toFloat() / RING_COUNT.toFloat()) * pendulum.length
             val center = pendulum.getPointFromAnchor(distance)
             sprite.setCenter(center)
-            sprite.hidden = false
         }
 
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -170,10 +170,10 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         )
 
         for (i in 0..RING_COUNT) putSpritePreProcess("ring_$i") { _, sprite ->
+            sprite.hidden = game.isProperty(ConstKeys.ROOM_TRANSITION, true)
             val scale = i.toFloat() / RING_COUNT.toFloat()
             val center = rotation.getScaledPosition(scale, GameObjectPools.fetch(Vector2::class))
             sprite.setCenter(center)
-            sprite.hidden = false
         }
 
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -248,19 +248,16 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         val sawSprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sawSprite.setSize(2.5f * ConstVals.PPM)
         spritesComponent.sprites.put("saw", sawSprite)
-        spritesComponent.putPreProcess("saw") { _, sprite ->
-            sprite.hidden = game.isProperty(ConstKeys.ROOM_TRANSITION, true)
-            sprite.setPosition(body.getCenter(), Position.CENTER)
-            sprite.setFlip(isFacing(Facing.LEFT), false)
+        spritesComponent.putPreProcess("saw") { _, _ ->
+            sawSprite.hidden = game.isProperty(ConstKeys.ROOM_TRANSITION, true)
+            sawSprite.setPosition(body.getCenter(), Position.CENTER)
+            sawSprite.setFlip(isFacing(Facing.LEFT), false)
         }
 
         for (i in 0..RING_COUNT) {
             val ringSprite = GameSprite(ringRegion!!, DrawingPriority(DrawingSection.PLAYGROUND, 12))
             ringSprite.setSize(0.75f * ConstVals.PPM)
             spritesComponent.sprites.put("ring_$i", ringSprite)
-            spritesComponent.putPreProcess("ring_$i") { _, sprite ->
-                sprite.hidden = game.isProperty(ConstKeys.ROOM_TRANSITION, true)
-            }
         }
 
         return spritesComponent
@@ -269,7 +266,6 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
     private fun defineAnimationsComponent(): AnimationsComponent {
         val animation = Animation(sawRegion!!, 1, 2, 0.1f)
         val animator = Animator(animation)
-
         val animationsComponent = AnimationsComponent()
         animationsComponent.putAnimator("saw", sprites["saw"], animator)
         return animationsComponent

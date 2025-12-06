@@ -50,7 +50,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.projectiles.Axe
-import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.entities.projectiles.MagmaWave
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -110,7 +110,8 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     override var burning: Boolean
         get() = !stateTimers[LumberJoeState.BURN].isFinished()
         set(value) {
-            if (value) stateTimers[LumberJoeState.BURN].reset() else stateTimers[LumberJoeState.BURN].setToEnd()
+            if (value) stateTimers[LumberJoeState.BURN].reset()
+            else stateTimers[LumberJoeState.BURN].setToEnd()
         }
 
     override var frozen: Boolean
@@ -283,9 +284,10 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             GameRectangle().setSize(0.5f * ConstVals.PPM, ConstVals.PPM.toFloat())
         )
         shieldFixture.setHitByProjectileReceiver { projectile ->
-            if (projectile is Fireball) {
+            if (projectile is IFireEntity) {
                 GameLogger.debug(TAG, "defineBodyComponent(): hit by fireball, start burning")
-                stateTimers[LumberJoeState.BURN].reset()
+                burning = true
+                if (projectile is MagmaWave) projectile.disintegrating = true
             }
         }
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)

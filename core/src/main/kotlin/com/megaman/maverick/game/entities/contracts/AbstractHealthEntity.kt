@@ -66,7 +66,7 @@ abstract class AbstractHealthEntity(
         lastDamager = null
     }
 
-    override fun canBeDamagedBy(damager: IDamager) = !invincible &&
+    override fun canBeDamagedBy(damager: IDamager) = !dead && !invincible &&
         (damageOverrides.containsKey(damager::class) ||
             (damageNegotiator != null && damageNegotiator!!.get(damager) != 0))
 

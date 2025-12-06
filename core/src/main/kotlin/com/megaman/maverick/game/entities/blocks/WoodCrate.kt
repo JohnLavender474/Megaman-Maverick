@@ -261,7 +261,6 @@ class WoodCrate(game: MegamanMaverickGame) : Block(game), IFireableEntity, ISpri
         if (projectile is IFireEntity && !burning) {
             GameLogger.debug(TAG, "hitByProjectile(): set to burning")
             burning = true
-
             burnOwner = projectile.owner
         } else if (projectile.owner == megaman) {
             val damage = DAMAGERS[projectile::class]?.get(projectile) ?: 0

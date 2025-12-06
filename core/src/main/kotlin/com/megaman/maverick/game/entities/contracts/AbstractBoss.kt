@@ -11,6 +11,7 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.IEventListener
@@ -177,10 +178,13 @@ abstract class AbstractBoss(
         }
     }
 
+    override fun canDamage(damageable: IDamageable) = !defeated && super.canDamage(damageable)
+
+    override fun canBeDamagedBy(damager: IDamager) = !defeated && super.canBeDamagedBy(damager)
+
     override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when {
         damager is IOwnable<*> && damager.owner == megaman && megaman.hasEnhancement(MegaEnhancement.DAMAGE_INCREASE) ->
             MegaEnhancement.scaleDamage(baseDamage, MegaEnhancement.BOSS_DAMAGE_INCREASE_SCALAR)
-
         else -> baseDamage
     }
 
