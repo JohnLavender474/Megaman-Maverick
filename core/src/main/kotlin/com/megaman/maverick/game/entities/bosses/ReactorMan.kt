@@ -179,7 +179,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             .setRunOnFirstupdate { spawnProjectile() }
             .addRunnable(TimeMarkedRunnable(JUMP_THROW_TIME) { throwOneProjectile() }),
         ReactorManState.JUMP_THROW_TWO pairTo Timer(JUMP_THROW_TWO_DUR)
-            .setRunOnFirstupdate { (0 until 2).forEach { spawnProjectile() } }
+            .setRunOnFirstupdate { (0 until 2).forEach { _ -> spawnProjectile() } }
             .addRunnable(TimeMarkedRunnable(JUMP_THROW_TWO_TIME) { throwTwoProjectiles() }),
         ReactorManState.GIGA_STAND pairTo Timer(GIGA_STAND_DUR),
         ReactorManState.GIGA_RISE pairTo Timer(GIGA_RISE_DUR)
@@ -649,7 +649,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 "findBeamerOverMegaman(): testing: beamerX=$beamerX, beamerMaxX=$beamerMaxX, beamer=$beamer"
             )
 
-            val inBounds = reusableFloatArray.any { beamerX <= it && beamerMaxX >= it }
+            val inBounds = reusableFloatArray.any { it in beamerX..beamerMaxX }
             if (inBounds) {
                 GameLogger.debug(TAG, "findBeamerOverMegaman(): success: found beamer: $beamer")
                 return i

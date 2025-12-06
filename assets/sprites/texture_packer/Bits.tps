@@ -180,6 +180,7 @@
             <key type="filename">../frames/Bits/needle.png</key>
             <key type="filename">../frames/Bits/precious.png</key>
             <key type="filename">../frames/Bits/rat.png</key>
+            <key type="filename">../frames/Bits/reactor.png</key>
             <key type="filename">../frames/Bits/rush_jet.png</key>
             <key type="filename">../frames/Bits/standard.png</key>
             <struct type="IndividualSpriteSettings">

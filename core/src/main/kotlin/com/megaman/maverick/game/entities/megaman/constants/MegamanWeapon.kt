@@ -9,5 +9,6 @@ enum class MegamanWeapon {
     AXE_SWINGER,
     NEEDLE_SPIN,
     RODENT_CLAWS,
+    REACTOR_SHOT,
     RUSH_JET
 }

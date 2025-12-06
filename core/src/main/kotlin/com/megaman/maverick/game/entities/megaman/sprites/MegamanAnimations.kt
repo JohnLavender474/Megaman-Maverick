@@ -39,13 +39,14 @@ class MegamanAnimations(
             val assetSource = when (weapon) {
                 MegamanWeapon.MEGA_BUSTER -> TextureAsset.MEGAMAN_BUSTER.source
                 MegamanWeapon.FRIGID_SHOT -> TextureAsset.MEGAMAN_ICE_CUBE.source
-                MegamanWeapon.INFERNAL_BARRAGE -> TextureAsset.MEGAMAN_MAGMA_WAVE.source
-                MegamanWeapon.MOON_SCYTHES -> TextureAsset.MEGAMAN_MOON_SCYTHE.source
-                MegamanWeapon.PRECIOUS_GUARD -> TextureAsset.MEGAMAN_PRECIOUS_GUARD.source
                 MegamanWeapon.AXE_SWINGER -> TextureAsset.MEGAMAN_AXE_THROW.source
                 MegamanWeapon.RUSH_JET -> TextureAsset.MEGAMAN_RUSH_JETPACK.source
                 MegamanWeapon.NEEDLE_SPIN -> TextureAsset.MEGAMAN_NEEDLE_SPIN.source
+                MegamanWeapon.MOON_SCYTHES -> TextureAsset.MEGAMAN_MOON_SCYTHE.source
                 MegamanWeapon.RODENT_CLAWS -> TextureAsset.MEGAMAN_RATTY_CLAWS.source
+                MegamanWeapon.REACTOR_SHOT -> TextureAsset.MEGAMAN_REACTOR_SHOT.source
+                MegamanWeapon.INFERNAL_BARRAGE -> TextureAsset.MEGAMAN_MAGMA_WAVE.source
+                MegamanWeapon.PRECIOUS_GUARD -> TextureAsset.MEGAMAN_PRECIOUS_GUARD.source
             }
             val atlas = game.assMan.getTextureAtlas(assetSource)
 
@@ -74,8 +75,8 @@ class MegamanAnimations(
         atlas: TextureAtlas,
         fullKey: String
     ) = when (defKey) {
-        "stand" -> buildStandAnimation(atlas, false, true)
-        "stand_shoot" -> buildStandAnimation(atlas, true, true)
+        "stand" -> buildStandAnimation(atlas, shoot = false, loop = true)
+        "stand_shoot" -> buildStandAnimation(atlas, shoot = true, loop = true)
         else -> {
             val region = atlas.findRegion(defKey)
             var (rows, columns, durations, loop, reverse) = MegamanAnimationDefs.get(defKey)
@@ -83,9 +84,9 @@ class MegamanAnimations(
 
             // I'm too lazy to go in and manually add the "uncharged" region to each charging animation, so I'm doing
             // programatically here. Not the smartest move, but... well, yeah, just not the smartest move lol. This
-            // is SUPER hacky, but... it's kinda fun to be stupid and hacky sometimes. Anyways, if this doesn't work,
-            // then it's easy enough (though time-consuming as fuck) to go through each animation and manually add an
-            // additional frame.
+            // is SUPER hacky, but... it's kinda fun to be stupid and hacky sometimes. Anyway, if this doesn't work,
+            // then it's easy enough (though time-consuming as fuck) to go through each animation and manually add a
+            // frame.
             if (defKey.contains("charge_half") || defKey.contains("charge_full")) {
                 val unchargedKey = defKey.split("_")
                     .filter { keyPart -> !keyPart.equalsAny("charge", "half", "full") }

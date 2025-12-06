@@ -1,5 +1,5 @@
 MegamanTrailSprite_v2.png
-size: 1824, 48
+size: 2016, 48
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
@@ -185,86 +185,114 @@ precious_guard/groundslide_shoot
   orig: 48, 48
   offset: 0, 0
   index: -1
-rodent_claws/airdash
+reactor_shot/airdash
   rotate: false
   xy: 1248, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-rodent_claws/airdash_slash1-1
+reactor_shot/airdash_shoot
   rotate: false
   xy: 1296, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-rodent_claws/airdash_slash1-2
+reactor_shot/groundslide
   rotate: false
   xy: 1344, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-rodent_claws/airdash_slash1-3
+reactor_shot/groundslide_shoot
   rotate: false
   xy: 1392, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-rodent_claws/groundslide
+rodent_claws/airdash
   rotate: false
   xy: 1440, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-rodent_claws/groundslide_slash1-1
+rodent_claws/airdash_slash1-1
   rotate: false
   xy: 1488, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-rodent_claws/groundslide_slash1-2
+rodent_claws/airdash_slash1-2
   rotate: false
   xy: 1536, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-rodent_claws/groundslide_slash1-3
+rodent_claws/airdash_slash1-3
   rotate: false
   xy: 1584, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-rush_jet/airdash
+rodent_claws/groundslide
   rotate: false
   xy: 1632, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-rush_jet/airdash_shoot
+rodent_claws/groundslide_slash1-1
   rotate: false
   xy: 1680, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-rush_jet/groundslide
+rodent_claws/groundslide_slash1-2
   rotate: false
   xy: 1728, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-rush_jet/groundslide_shoot
+rodent_claws/groundslide_slash1-3
   rotate: false
   xy: 1776, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+rush_jet/airdash
+  rotate: false
+  xy: 1824, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+rush_jet/airdash_shoot
+  rotate: false
+  xy: 1872, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+rush_jet/groundslide
+  rotate: false
+  xy: 1920, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+rush_jet/groundslide_shoot
+  rotate: false
+  xy: 1968, 0
   size: 48, 48
   orig: 48, 48
   offset: 0, 0

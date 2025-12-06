@@ -185,8 +185,6 @@
             <key type="filename">../frames/LevelPauseScreenV2/health_tanks/d_selected.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/options/exit.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/options/exit_selected.png</key>
-            <key type="filename">../frames/LevelPauseScreenV2/weapons/atomic_radium.png</key>
-            <key type="filename">../frames/LevelPauseScreenV2/weapons/atomic_radium_selected.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/weapons/axe_swinger.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/weapons/axe_swinger_selected.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/weapons/frigid_shot.png</key>
@@ -201,6 +199,8 @@
             <key type="filename">../frames/LevelPauseScreenV2/weapons/needle_spin_selected.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/weapons/precious_guard.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/weapons/precious_guard_selected.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/weapons/reactor_shot.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/weapons/reactor_shot_selected.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/weapons/rodent_claws.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/weapons/rodent_claws_selected.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/weapons/rush_jet.png</key>

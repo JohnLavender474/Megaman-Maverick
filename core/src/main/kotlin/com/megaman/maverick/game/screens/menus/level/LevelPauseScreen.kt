@@ -54,7 +54,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
         )
 
         private val FULL_TABLE = TableBuilder<Any>()
-            .row(gdxArrayOf(MegamanWeapon.MEGA_BUSTER, null)) // atomic radium
+            .row(gdxArrayOf(MegamanWeapon.MEGA_BUSTER, MegamanWeapon.REACTOR_SHOT))
             .row(gdxArrayOf(MegamanWeapon.NEEDLE_SPIN, MegamanWeapon.RODENT_CLAWS))
             .row(gdxArrayOf(MegamanWeapon.FRIGID_SHOT, MegamanWeapon.AXE_SWINGER))
             .row(gdxArrayOf(MegamanWeapon.INFERNAL_BARRAGE, MegamanWeapon.RUSH_JET))
@@ -211,9 +211,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
             val columnCount = FULL_TABLE.columnCount(i)
 
             for (j in 0 until columnCount) {
-                val element = FULL_TABLE.get(i, j).element
-
-                when (element) {
+                when (val element = FULL_TABLE.get(i, j).element) {
                     is MegamanWeapon -> {
                         if (megaman.hasWeapon(element)) {
                             row.add(element)

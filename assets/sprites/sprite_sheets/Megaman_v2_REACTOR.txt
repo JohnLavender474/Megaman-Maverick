@@ -1,0 +1,66 @@
+Megaman_v2_REACTOR.png
+size: 100, 1186
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+pma: false
+airdash
+  bounds: 1, 1, 48, 48
+airdash_shoot
+  bounds: 51, 1, 48, 48
+climb
+  bounds: 51, 551, 48, 96
+climb_finish
+  bounds: 1, 51, 48, 48
+climb_still
+  bounds: 51, 51, 48, 48
+climb_still_shoot
+  bounds: 1, 101, 48, 48
+crouch
+  bounds: 51, 101, 48, 48
+crouch_shoot
+  bounds: 1, 151, 48, 48
+damaged
+  bounds: 1, 1041, 48, 144
+frozen
+  bounds: 51, 151, 48, 48
+frozen_push
+  bounds: 1, 649, 96, 96
+groundslide
+  bounds: 1, 201, 48, 48
+groundslide_shoot
+  bounds: 51, 201, 48, 48
+jump
+  bounds: 1, 251, 48, 48
+jump_down
+  bounds: 51, 251, 48, 48
+jump_shoot
+  bounds: 1, 301, 48, 48
+jump_shoot_down
+  bounds: 51, 301, 48, 48
+run
+  bounds: 1, 747, 96, 96
+run_shoot
+  bounds: 1, 845, 96, 96
+run_trans
+  bounds: 1, 351, 48, 48
+run_trans_shoot
+  bounds: 51, 351, 48, 48
+slip
+  bounds: 1, 401, 48, 48
+slip_shoot
+  bounds: 51, 401, 48, 48
+stand
+  bounds: 1, 943, 48, 96
+stand_shoot
+  bounds: 1, 451, 48, 48
+stunned
+  bounds: 51, 943, 48, 96
+swim
+  bounds: 51, 451, 48, 48
+swim_shoot
+  bounds: 1, 501, 48, 48
+wallslide
+  bounds: 51, 501, 48, 48
+wallslide_shoot
+  bounds: 1, 551, 48, 48

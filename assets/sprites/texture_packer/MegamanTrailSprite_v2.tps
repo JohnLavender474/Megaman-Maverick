@@ -199,6 +199,10 @@
             <key type="filename">../frames/MegamanTrailSprite_v2/precious_guard/airdash_shoot.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/precious_guard/groundslide.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/precious_guard/groundslide_shoot.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/reactor_shot/airdash.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/reactor_shot/airdash_shoot.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/reactor_shot/groundslide.png</key>
+            <key type="filename">../frames/MegamanTrailSprite_v2/reactor_shot/groundslide_shoot.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/rodent_claws/airdash.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/rodent_claws/airdash_slash1-1.png</key>
             <key type="filename">../frames/MegamanTrailSprite_v2/rodent_claws/airdash_slash1-2.png</key>

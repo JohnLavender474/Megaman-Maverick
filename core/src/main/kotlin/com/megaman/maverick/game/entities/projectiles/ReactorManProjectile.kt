@@ -27,7 +27,6 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
-import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.*
@@ -117,14 +116,15 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
+    var big = false
     var active = false
-
-    private var big = false
 
     private val growTimer = Timer(GROW_DUR)
 
     private val dyingTimer = Timer(DIE_DUR)
     private var dying = false
+
+    private var bounces = 0
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -140,8 +140,6 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
-
-        owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
 
         big = spawnProps.get(ConstKeys.BIG, Boolean::class)!!
 
@@ -164,6 +162,8 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
 
         dyingTimer.reset()
         dying = false
+
+        bounces = 0
     }
 
     fun setTrajectory(trajectory: Vector2) {
@@ -173,9 +173,16 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (!active || shieldFixture.getEntity() == owner) return
 
+        if (bounces >= 3) {
+            explodeAndDie()
+            return
+        }
+
         val velocity = body.physics.velocity
         velocity.x *= -1f
         velocity.y = 5f * ConstVals.PPM
+
+        bounces++
 
         owner = shieldFixture.getEntity()
 

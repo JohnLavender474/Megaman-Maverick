@@ -35,6 +35,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
         private const val AXE = "axe"
         private const val NEEDLE = "needle"
         private const val RAT = "rat"
+        private const val REACTOR = "reactor"
         private const val SPECIAL_ITEM_DUR = 0.5f
     }
 
@@ -81,6 +82,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
                 MegamanWeapon.AXE_SWINGER -> AXE
                 MegamanWeapon.NEEDLE_SPIN -> NEEDLE
                 MegamanWeapon.RODENT_CLAWS -> RAT
+                MegamanWeapon.REACTOR_SHOT -> REACTOR
                 else -> throw IllegalStateException("No bit source for weapon $it")
             }
 

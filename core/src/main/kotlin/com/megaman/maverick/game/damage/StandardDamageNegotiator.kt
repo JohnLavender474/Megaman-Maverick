@@ -53,7 +53,11 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
                 it as SlashWave
                 return@damage ceil(0.5f * it.getDissipation()).toInt()
             },
-            GreenPelletBlast::class pairTo dmgNeg(3)
+            GreenPelletBlast::class pairTo dmgNeg(3),
+            ReactorManProjectile::class pairTo dmgNeg {
+                it as ReactorManProjectile
+                if (it.big) 5 else 3
+            }
         )
 
         private val MEDIUM_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -86,7 +90,11 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
                 it as SlashWave
                 return@damage it.getDissipation()
             },
-            GreenPelletBlast::class pairTo dmgNeg(10)
+            GreenPelletBlast::class pairTo dmgNeg(10),
+            ReactorManProjectile::class pairTo dmgNeg {
+                it as ReactorManProjectile
+                if (it.big) 10 else 5
+            }
         )
 
         private val SMALL_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -119,7 +127,11 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
                 it as SlashWave
                 return@damage 3 * it.getDissipation()
             },
-            GreenPelletBlast::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
+            GreenPelletBlast::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            ReactorManProjectile::class pairTo dmgNeg {
+                it as ReactorManProjectile
+                if (it.big) ConstVals.MAX_HEALTH else 15
+            }
         )
 
         // damage is determined by the damageable's size instead of the damager's size

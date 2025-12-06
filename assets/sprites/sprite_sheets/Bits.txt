@@ -1,5 +1,5 @@
 Bits.png
-size: 14, 68
+size: 14, 74
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
@@ -52,23 +52,30 @@ rat
   orig: 8, 2
   offset: 0, 0
   index: -1
-rush_jet
+reactor
   rotate: false
   xy: 3, 45
   size: 8, 2
   orig: 8, 2
   offset: 0, 0
   index: -1
-standard
+rush_jet
   rotate: false
   xy: 3, 51
   size: 8, 2
   orig: 8, 2
   offset: 0, 0
   index: -1
-standard_rotated
+standard
   rotate: false
   xy: 3, 57
+  size: 8, 2
+  orig: 8, 2
+  offset: 0, 0
+  index: -1
+standard_rotated
+  rotate: false
+  xy: 3, 63
   size: 2, 8
   orig: 2, 8
   offset: 0, 0

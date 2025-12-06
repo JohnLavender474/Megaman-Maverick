@@ -80,6 +80,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
                 LevelDefinition.TIMBER_WOMAN -> set.add(MegamanWeapon.AXE_SWINGER)
                 LevelDefinition.DESERT_MAN -> set.add(MegamanWeapon.NEEDLE_SPIN)
                 LevelDefinition.RODENT_MAN -> set.add(MegamanWeapon.RODENT_CLAWS)
+                LevelDefinition.REACTOR_MAN -> set.add(MegamanWeapon.REACTOR_SHOT)
                 else -> {}
             }
             return set

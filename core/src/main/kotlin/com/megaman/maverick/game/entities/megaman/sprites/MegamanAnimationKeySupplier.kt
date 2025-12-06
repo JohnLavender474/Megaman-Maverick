@@ -99,7 +99,7 @@ fun Megaman.amendKey(baseKey: String) = when {
     }
     baseKey == "jump" &&
         game.controllerPoller.isPressed(MegaControllerButton.DOWN) &&
-        megaman.currentWeapon == MegamanWeapon.MEGA_BUSTER -> {
+        megaman.currentWeapon.equalsAny(MegamanWeapon.MEGA_BUSTER, MegamanWeapon.REACTOR_SHOT) -> {
         if (fullyCharged) "jump_down_charge_full"
         else if (halfCharged) "jump_down_charge_half"
         else "jump_down"
