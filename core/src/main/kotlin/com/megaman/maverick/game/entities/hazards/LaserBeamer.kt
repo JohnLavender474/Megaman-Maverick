@@ -111,7 +111,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        // GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         game.eventsMan.addListener(this)
@@ -158,7 +158,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     }
 
     override fun onDestroy() {
-        // GameLogger.debug(TAG, "onDestroy()")
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
         game.eventsMan.removeListener(this)

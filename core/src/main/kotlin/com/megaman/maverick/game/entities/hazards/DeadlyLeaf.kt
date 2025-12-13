@@ -99,6 +99,8 @@ class DeadlyLeaf(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyE
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
+        body.forEachFixture { fixture -> fixture.putProperty(ConstKeys.DEATH_LISTENER, false) }
+
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
 

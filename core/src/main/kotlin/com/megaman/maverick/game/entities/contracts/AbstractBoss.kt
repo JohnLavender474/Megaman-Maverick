@@ -121,6 +121,9 @@ abstract class AbstractBoss(
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
 
+        // Assume that none of the bosses should die by spikes or other "instant death" contacts
+        body.forEachFixture { fixture -> fixture.putProperty(ConstKeys.DEATH_LISTENER, false) }
+
         game.eventsMan.addListener(this)
         megaman.addDamageListener(this)
 

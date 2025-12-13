@@ -305,9 +305,9 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         jumpSpinScannerCircle.drawingColor = Color.WHITE
         addDebugShapeSupplier { jumpSpinScannerCircle }
 
-        damageOverrides.put(Fireball::class, dmgNeg(4))
-        damageOverrides.put(MagmaWave::class, dmgNeg(4))
-        damageOverrides.put(MagmaFlame::class, dmgNeg(4))
+        damageOverrides.put(Fireball::class, dmgNeg(5))
+        damageOverrides.put(MagmaWave::class, dmgNeg(5))
+        damageOverrides.put(MagmaFlame::class, dmgNeg(5))
     }
 
     override fun onSpawn(spawnProps: Properties) {

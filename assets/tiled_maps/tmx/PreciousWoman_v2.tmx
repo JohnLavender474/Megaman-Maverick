@@ -412,7 +412,7 @@
    </properties>
   </object>
   <object id="96" x="1824" y="2880" width="96" height="16"/>
-  <object id="97" x="2304" y="2944" width="800" height="256"/>
+  <object id="97" x="2304" y="2944" width="896" height="256"/>
   <object id="106" x="1648" y="2848" width="72" height="24"/>
   <object id="107" name="PreciousBlock" x="1280" y="2880" width="64" height="320">
    <properties>
@@ -424,7 +424,7 @@
     <property name="create_sprite" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="111" x="3104" y="2080" width="96" height="1120"/>
+  <object id="111" x="3104" y="2080" width="96" height="864"/>
   <object id="113" x="2784" y="2784" width="288" height="32">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>

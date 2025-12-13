@@ -10,6 +10,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.extensions.toObjectSet
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
@@ -26,6 +27,8 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.*
+import com.mega.game.engine.events.Event
+import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
@@ -49,7 +52,7 @@ import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
 open class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity, IBodyEntity, ISpritesEntity,
-    IAnimatedEntity, ICullableEntity, IDirectional {
+    IAnimatedEntity, ICullableEntity, IDirectional, IEventListener {
 
     companion object {
         const val TAG = "Spike"
@@ -63,6 +66,7 @@ open class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity
         set(value) {
             body.direction = value
         }
+    override val eventKeyMask = objectSetOf<Any>(EventType.BOSS_DEFEATED)
     override var parent: IGameEntity? = null
 
     private val offset = Vector2()
@@ -81,6 +85,10 @@ open class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity
     private var animation: Animation? = null
     private lateinit var region: TextureRegion
 
+    // For some boss fights, there may be spikes present in the boss room. If this is true, then the spikes should
+    // be destroyed when a boss is defeated.
+    private var destroyOnBossDefeated = true
+
     override fun init() {
         GameLogger.debug(TAG, "init()")
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
@@ -94,6 +102,8 @@ open class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        game.eventsMan.addListener(this)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
@@ -170,11 +180,17 @@ open class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity
 
         followMegamanDir =
             spawnProps.getOrDefault("${Megaman.TAG.lowercase()}_${ConstKeys.DIRECTION}", false, Boolean::class)
+
+        destroyOnBossDefeated = spawnProps.getOrDefault(
+            "${ConstKeys.DESTROY}_${ConstKeys.ON}_${ConstKeys.BOSS}_${ConstKeys.DEFEATED}", true, Boolean::class
+        )
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+
+        game.eventsMan.removeListener(this)
 
         block?.destroy()
         block = null
@@ -182,6 +198,11 @@ open class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity
         parent = null
 
         offset.setZero()
+    }
+
+    override fun onEvent(event: Event) {
+        GameLogger.debug(TAG, "onEvent(): event=$event")
+        if (event.key == EventType.BOSS_DEFEATED && destroyOnBossDefeated) destroy()
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({

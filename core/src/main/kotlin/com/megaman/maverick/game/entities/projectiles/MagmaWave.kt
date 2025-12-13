@@ -24,7 +24,6 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -112,7 +111,8 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         disintegrationTimer.reset()
     }
 
-    override fun canDamage(damageable: IDamageable) = !disintegrating
+    // Uncomment the following to make it so that the flame wave does not damage entities when disintegrating
+    // override fun canDamage(damageable: IDamageable) = !disintegrating
 
     override fun hitWater(waterFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         disintegrating = true

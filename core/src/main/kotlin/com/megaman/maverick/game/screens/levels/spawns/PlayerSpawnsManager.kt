@@ -64,7 +64,7 @@ class PlayerSpawnsManager(
         if (spawns.isEmpty) return
 
         val new = popIfInCamera()
-        if (new != null) {
+        if (new != null && new != current) {
             val old = current
             onChangeSpawn?.invoke(new, old)
             current = new

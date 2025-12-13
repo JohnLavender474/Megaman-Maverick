@@ -165,7 +165,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     private var spritesHidden = false
 
     override fun init() {
-        // GameLogger.debug(TAG, "init()")
+        GameLogger.debug(TAG, "init()")
         if (region == null) region =
             game.assMan.getTextureRegion(TextureAsset.COLORS.source, "${ConstKeys.BRIGHT}_${ConstKeys.RED}")
         super.init()
@@ -176,7 +176,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        // GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val maxLength = spawnProps.getOrDefault(ConstKeys.RADIUS, DEFAULT_MAX_LENGTH, Float::class) * ConstVals.PPM
@@ -229,7 +229,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     }
 
     override fun onDestroy() {
-        // GameLogger.debug(TAG, "onDestroy()")
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
         owner = null
