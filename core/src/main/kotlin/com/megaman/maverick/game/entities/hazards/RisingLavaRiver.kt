@@ -363,8 +363,6 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
             tempRect
         )
         if (overlap) body.set(tempRect)
-
-        game.setDebugText(body.getBounds().toIntString())
     })
 
     private fun defineBodyComponent(): BodyComponent {

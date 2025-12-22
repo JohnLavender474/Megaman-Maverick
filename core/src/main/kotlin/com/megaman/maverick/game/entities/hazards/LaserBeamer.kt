@@ -99,7 +99,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     private var speed = 0f
 
     override fun init() {
-        // GameLogger.debug(TAG, "init()")
+        GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
         super.init()
         addComponent(AudioComponent())
@@ -150,10 +150,14 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
             "${ConstKeys.SECOND}_${ConstKeys.POINT}" pairTo rotatingLine.line.getSecondLocalPoint(),
         )
         spawnProps.forEach { key, value ->
-            if (key.toString().contains(ConstKeys.IGNORE)) laserProps.put(key, value)
+            if (key.toString().contains(ConstKeys.IGNORE) || key.toString().contains(ConstKeys.OBSTACLE))
+                laserProps.put(key, value)
         }
         if (spawnProps.containsKey("${ConstKeys.LIGHT}_${ConstKeys.KEYS}"))
-            laserProps.put("${ConstKeys.LIGHT}_${ConstKeys.KEYS}", spawnProps.get("${ConstKeys.LIGHT}_${ConstKeys.KEYS}"))
+            laserProps.put(
+                "${ConstKeys.LIGHT}_${ConstKeys.KEYS}",
+                spawnProps.get("${ConstKeys.LIGHT}_${ConstKeys.KEYS}")
+            )
         laser!!.spawn(laserProps)
     }
 
@@ -173,7 +177,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     }
 
     override fun reset() {
-        GameLogger.debug(TAG, "reset()")
+        // GameLogger.debug(TAG, "reset()")
 
         beaming = false
 
@@ -227,7 +231,6 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
             when (direction) {
                 Direction.UP -> sprite.translateY(-0.1f * ConstVals.PPM)
-                // Direction.RIGHT -> sprite.translateX(-2f * ConstVals.PPM)
                 else -> {}
             }
 

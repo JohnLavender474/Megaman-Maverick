@@ -139,9 +139,8 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.SCANNER)) {
-                val scanner = (value as MapObject).getShape(false)
+                val scanner = (value as MapObject).getShape()
                 scanners.add(scanner)
-
                 addDebugShapeSupplier { scanner }
             }
         }

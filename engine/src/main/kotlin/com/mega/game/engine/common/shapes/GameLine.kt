@@ -367,16 +367,13 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
             is GameRectangle -> Intersector.intersectSegmentRectangle(
                 reusableVec1, reusableVec2, other.get(reusableRect)
             )
-
             is GameCircle -> Intersector.intersectSegmentCircle(
                 reusableVec1, reusableVec2, other.getCenter(reusableVec3), other.getRadius() * other.getRadius()
             )
-
             is GameLine -> {
                 other.calculateWorldPoints(reusableVec3, reusableVec4)
                 Intersector.intersectSegments(reusableVec1, reusableVec2, reusableVec3, reusableVec4, null)
             }
-
             is GamePolygon -> Intersector.intersectLinePolygon(reusableVec1, reusableVec2, other.libgdxPolygon)
             else -> OVERLAP_EXTENSION?.invoke(this, other) == true
         }
@@ -431,6 +428,21 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
     override fun toString(): String {
         calculateWorldPoints(reusableVec1, reusableVec2)
         return "GameLine[worldPoints=($reusableVec1, $reusableVec2), localPoints=($localPoint1, $localPoint2)]"
+    }
+
+    fun localPointsToIntString(): String {
+        return "[(" + localPoint1.x.toInt() + ", " +
+            localPoint1.y.toInt() + "), (" +
+            localPoint2.x.toInt() + ", " +
+            localPoint2.y.toInt() + ")]"
+    }
+
+    fun worldPointsToIntString(): String {
+        calculateWorldPoints(reusableVec1, reusableVec2)
+        return "[(" + reusableVec1.x.toInt() + ", " +
+            reusableVec1.y.toInt() + "), (" +
+            reusableVec2.x.toInt() + ", " +
+            reusableVec2.y.toInt() + ")]"
     }
 
     override fun reset() {

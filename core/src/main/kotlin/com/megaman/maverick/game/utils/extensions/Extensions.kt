@@ -59,11 +59,11 @@ fun MapObject.convertToProps(): Properties = when (this) {
     else -> throw IllegalArgumentException("Unknown map object type: $this")
 }
 
-fun MapObject.getShape(reclaim: Boolean = false): IGameShape2D = when (this) {
-    is RectangleMapObject -> rectangle.toGameRectangle(reclaim)
-    is PolygonMapObject -> polygon.toGamePolygon(reclaim)
-    is CircleMapObject -> circle.toGameCircle(reclaim)
-    // TODO: support polyline map object
+fun MapObject.getShape(): IGameShape2D = when (this) {
+    is RectangleMapObject -> rectangle.toGameRectangle(false)
+    is PolygonMapObject -> polygon.toGamePolygon(false)
+    is CircleMapObject -> circle.toGameCircle(false)
+    is PolylineMapObject -> polyline.toGameLines()[0]
     else -> throw IllegalArgumentException("Unknown map object type: $this")
 }
 

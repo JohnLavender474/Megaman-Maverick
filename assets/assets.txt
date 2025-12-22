@@ -1924,6 +1924,7 @@ sprites/frames/Backgrounds3/BKG17.png
 sprites/frames/Backgrounds3/BKG23.png
 sprites/frames/WeaponGet/megaman/infernal_barrage.png
 sprites/frames/WeaponGet/megaman/needle_spin.png
+sprites/frames/WeaponGet/megaman/reactor_shot.png
 sprites/frames/WeaponGet/megaman/mega_buster.png
 sprites/frames/WeaponGet/megaman/rodent_claws.png
 sprites/frames/WeaponGet/megaman/frigid_shot.png

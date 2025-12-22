@@ -20,6 +20,13 @@ object ShapeUtils {
     private val line4 = GameLine()
     private val outLines = Array<GameLine>()
 
+    fun intersectLines(line1: GameLine, line2: GameLine, out: Vector2): Boolean {
+        line1.calculateWorldPoints(out1, out2)
+        line2.calculateWorldPoints(out3, out4)
+        val intersect = Intersector.intersectLines(out1, out2, out3, out4, out)
+        return intersect
+    }
+
     fun intersectRectangleAndLine(
         rectangle: GameRectangle, line: GameLine, intersections: ObjectSet<Vector2>
     ): Boolean {

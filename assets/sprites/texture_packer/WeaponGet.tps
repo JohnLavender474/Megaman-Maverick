@@ -180,6 +180,7 @@
             <key type="filename">../frames/WeaponGet/megaman/moon_scythes.png</key>
             <key type="filename">../frames/WeaponGet/megaman/needle_spin.png</key>
             <key type="filename">../frames/WeaponGet/megaman/precious_guard.png</key>
+            <key type="filename">../frames/WeaponGet/megaman/reactor_shot.png</key>
             <key type="filename">../frames/WeaponGet/megaman/rodent_claws.png</key>
             <key type="filename">../frames/WeaponGet/megaman/rush_jet.png</key>
             <struct type="IndividualSpriteSettings">
