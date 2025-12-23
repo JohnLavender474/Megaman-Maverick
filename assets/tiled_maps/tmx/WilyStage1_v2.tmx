@@ -214,7 +214,7 @@
 </data>
  </layer>
  <objectgroup id="2" name="backgrounds">
-  <object id="93" name="Background" x="0" y="2624" width="288" height="576">
+  <object id="93" name="Background" x="0" y="2304" width="448" height="896">
    <properties>
     <property name="atlas" value="Backgrounds3.txt"/>
     <property name="columns" type="int" value="25"/>

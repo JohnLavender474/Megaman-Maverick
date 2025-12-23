@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.entities.megaman.weapons
+package com.megaman.maverick.game.entities.megaman.handlers
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -568,6 +568,8 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         weapon == MegamanWeapon.MEGA_BUSTER -> MegamanValues.MAX_WEAPON_AMMO
         else -> weaponHandlers[weapon].ammo
     }
+
+    fun isAtMaxAmmo(weapon: MegamanWeapon) = getAmmo(weapon) >= MegamanValues.MAX_WEAPON_AMMO
 
     fun isDepleted(weapon: MegamanWeapon) = getAmmo(weapon) == 0
 

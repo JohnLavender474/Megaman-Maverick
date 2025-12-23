@@ -17,6 +17,7 @@ object MegamanAnimationDefs {
     private val defs = orderedMapOf(
         "jetpack" pairTo AnimationDef(2, 1, JETPACK_FRAME_DUR),
         "jetpack_shoot" pairTo AnimationDef(2, 1, JETPACK_FRAME_DUR),
+        "jetpack_airdash" pairTo AnimationDef(2, 1, JETPACK_FRAME_DUR),
 
         "cartin" pairTo AnimationDef(2, 1, CHARGING_FRAME_DUR),
         "cartin_charge_full" pairTo AnimationDef(2, 1, CHARGING_FRAME_DUR),

@@ -43,9 +43,10 @@ import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
 import com.megaman.maverick.game.entities.megaman.contracts.IMegamanDamageListener
+import com.megaman.maverick.game.entities.megaman.handlers.MegamanJetpackHandler
+import com.megaman.maverick.game.entities.megaman.handlers.MegamanWeaponsHandler
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanTrailSpriteV2
-import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeaponsHandler
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportContinueProp
 import com.megaman.maverick.game.entities.utils.standardOnTeleportEnd
 import com.megaman.maverick.game.entities.utils.standardOnTeleportStart
@@ -153,6 +154,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
     )
 
     internal lateinit var weaponsHandler: MegamanWeaponsHandler
+    internal lateinit var jetpackHandler: MegamanJetpackHandler
 
     internal val lives = Points(ConstVals.MIN_LIVES, ConstVals.MAX_LIVES, ConstVals.START_LIVES)
 
@@ -392,6 +394,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
         weaponsHandler = MegamanWeaponsHandler(this)
         weaponsHandler.putWeapon(MegamanWeapon.MEGA_BUSTER)
+
+        jetpackHandler = MegamanJetpackHandler(this)
 
         currentWeapon = MegamanWeapon.MEGA_BUSTER
 
@@ -699,6 +703,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
             if (!weaponsHandler.isChargeable(currentWeapon)) stopCharging()
             weaponsHandler.update(delta)
+
+            jetpackHandler.update(delta)
 
             if (body.isSensing(BodySense.FEET_ON_GROUND)) stunTimer.update(delta)
             if (damageTimer.isJustFinished()) damageRecoveryTimer.reset()

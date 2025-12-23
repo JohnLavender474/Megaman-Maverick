@@ -56,7 +56,7 @@ enum class SoundAsset(src: String, val seconds: Float) : IAsset {
     QUAKE_SOUND("quake.mp3", 1f),
     ICE_SHARD_1_SOUND("ice_shard_1.wav", 1f),
     ICE_SHARD_2_SOUND("ice_shard_2.wav", 1f),
-    JETPACK_SOUND("jetpack.mp3", 1f),
+    JETPACK_SOUND("jetpack.mp3", 0.35f),
     MARIO_FIREBALL_SOUND("mario_fireball.mp3", 1f),
     FLAMETHROWER_SOUND("flamethrower.wav", 2f),
     SHAKE_SOUND("shake.wav", 1f),

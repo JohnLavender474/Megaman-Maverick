@@ -54,7 +54,10 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
         }
     }
 
-    isBehaviorActive(BehaviorType.AIR_DASHING) -> amendKey("airdash")
+    isBehaviorActive(BehaviorType.AIR_DASHING) -> when {
+        currentWeapon == MegamanWeapon.RUSH_JET -> amendKey("jetpack_airdash")
+        else -> amendKey("airdash")
+    }
 
     isBehaviorActive(BehaviorType.CROUCHING) -> amendKey("crouch")
 

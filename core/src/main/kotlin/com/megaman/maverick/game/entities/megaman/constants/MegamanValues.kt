@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.megaman.constants
 
-import com.badlogic.gdx.graphics.Color
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.megaman.maverick.game.controllers.MegaControllerButton
 
@@ -46,13 +45,18 @@ object MegamanValues {
 
     const val AIR_DASH_MIN_TIME = 0.1f
     const val AIR_DASH_MAX_TIME = 0.25f
+    const val RUSH_JET_AIR_DASH_MAX_TIME = 0.5f
+
     const val AIR_DASH_VEL = 10f
     const val AIR_DASH_END_BUMP = 2f
     const val WATER_AIR_DASH_VEL = 5f
     const val WATER_AIR_DASH_END_BUMP = 1f
+    const val RUSH_JET_AIR_DASH_SCALAR = 1.25f
 
-    const val JETPACK_Y_IMPULSE = 15f
-    const val JETPACK_TIME_PER_BIT = 0.5f
+    const val JETPACK_Y_IMPULSE = 18f
+    const val JETPACK_TIME_PER_BIT = 0.1f
+    const val JETPACK_BIT_RECOVERY_DELAY = 0.5f
+    const val JETPACK_BIT_RECOVERY_DUR = 0.1f
 
     const val SHIELD_GEM_DISTANCE_DELTA = 5f
     const val SHIELD_GEM_MAX_DIST = 10f
@@ -115,6 +119,4 @@ object MegamanValues {
     const val NEEDLE_SPIN_WATER_SCALAR = 0.1f
 
     const val SHOOT_DOWN_IMPULSE_Y_CHARGED = 25f
-
-    val WEAPON_SPAWN_MAGIC_COLOR: Color = Color.valueOf("dd00ffff")
 }

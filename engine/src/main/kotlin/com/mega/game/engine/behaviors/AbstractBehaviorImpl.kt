@@ -32,16 +32,16 @@ abstract class AbstractBehaviorImpl : IBehavior {
     }
 
     /**
-     * If the behavior is currently active. This method is final and cannot be overridden.
+     * If the behavior is currently active.
      *
      * @return if the behavior is active
      */
-    final override fun isActive() = runningNow
+    override fun isActive() = runningNow
 
     /**
      * If the behavior is currently running, then the behavior is immediately ended, otherwise nothing happens.
      */
-    final override fun reset() {
+    override fun reset() {
         if (runningNow) {
             end()
             runningNow = false
@@ -50,11 +50,11 @@ abstract class AbstractBehaviorImpl : IBehavior {
 
     /**
      * Updates the behavior by evaluating the behavior and then running the process method which corresponds to the
-     * behavior's current state. Final and cannot be overridden.
+     * behavior's current state.
      *
      * @param delta the delta time since the previous frame
      */
-    final override fun update(delta: Float) {
+    override fun update(delta: Float) {
         val runningPrior = runningNow
         runningNow = evaluate(delta)
 

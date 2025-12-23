@@ -1,7 +1,7 @@
 Megaman_v2_RUSH_JET.png
-size: 250, 492
+size: 100, 1184
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Nearest, Nearest
 repeat: none
 airdash
   rotate: false
@@ -19,168 +19,182 @@ airdash_shoot
   index: -1
 climb
   rotate: false
-  xy: 151, 151
+  xy: 1, 451
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 climb_finish
   rotate: false
-  xy: 101, 1
+  xy: 1, 51
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 climb_still_shoot
   rotate: false
-  xy: 151, 1
+  xy: 51, 51
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 damaged
   rotate: false
-  xy: 101, 249
+  xy: 51, 1039
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
   index: -1
 frozen
   rotate: false
-  xy: 201, 1
+  xy: 1, 101
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 frozen_push
   rotate: false
-  xy: 151, 249
+  xy: 1, 549
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 groundslide
   rotate: false
-  xy: 1, 51
+  xy: 51, 101
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 groundslide_shoot
   rotate: false
-  xy: 51, 51
+  xy: 1, 151
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 jetpack
   rotate: false
-  xy: 201, 151
+  xy: 1, 647
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+jetpack_airdash
+  rotate: false
+  xy: 51, 647
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+jetpack_airdash_shoot
+  rotate: false
+  xy: 1, 745
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 jetpack_shoot
   rotate: false
-  xy: 1, 249
+  xy: 51, 745
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 jump
   rotate: false
-  xy: 101, 51
+  xy: 51, 151
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 jump_shoot
   rotate: false
-  xy: 151, 51
+  xy: 1, 201
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 run
   rotate: false
-  xy: 1, 395
+  xy: 1, 843
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 run_shoot
   rotate: false
-  xy: 99, 395
+  xy: 1, 941
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 run_trans
   rotate: false
-  xy: 201, 51
+  xy: 51, 201
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 run_trans_shoot
   rotate: false
-  xy: 1, 101
+  xy: 1, 251
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 slip
   rotate: false
-  xy: 51, 101
+  xy: 51, 251
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 slip_shoot
   rotate: false
-  xy: 101, 101
+  xy: 1, 301
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 stand
   rotate: false
-  xy: 51, 249
+  xy: 1, 1039
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 stand_shoot
   rotate: false
-  xy: 151, 101
+  xy: 51, 301
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 swim
   rotate: false
-  xy: 201, 101
+  xy: 1, 351
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 swim_shoot
   rotate: false
-  xy: 1, 151
+  xy: 51, 351
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 wallslide
   rotate: false
-  xy: 51, 151
+  xy: 1, 401
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 wallslide_shoot
   rotate: false
-  xy: 101, 151
+  xy: 51, 401
   size: 48, 48
   orig: 48, 48
   offset: 0, 0

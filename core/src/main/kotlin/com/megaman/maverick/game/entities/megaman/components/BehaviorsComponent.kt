@@ -16,7 +16,6 @@ import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.controller.buttons.ButtonStatus
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.controllers.SelectButtonAction
@@ -255,6 +254,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
         override fun evaluate(delta: Float): Boolean {
             if (dead || !ready || !canMove || damaged || teleporting || maxTimer.isFinished() ||
+                (currentWeapon != MegamanWeapon.RUSH_JET && maxTimer.time >= MegamanValues.AIR_DASH_MAX_TIME) ||
                 body.isSensingAny(
                     BodySense.FEET_ON_GROUND,
                     BodySense.TELEPORTING
@@ -263,7 +263,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     BehaviorType.CLIMBING,
                     BehaviorType.JETPACKING
                 ) || FacingUtils.isFacingBlock(megaman) ||
-                (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting)
+                (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting) ||
+                (currentWeapon == MegamanWeapon.RUSH_JET && weaponsHandler.isDepleted(MegamanWeapon.RUSH_JET))
             ) return false
 
             if (isBehaviorActive(BehaviorType.AIR_DASHING)) return !minTimer.isFinished() || isAirDashButtonActivated()
@@ -276,7 +277,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             GameLogger.debug(MEGAMAN_AIR_DASH_BEHAVIOR_TAG, "init()")
 
             minTimer.reset()
-            maxTimer.reset()
+            maxTimer.resetDuration(
+                if (currentWeapon == MegamanWeapon.RUSH_JET) Float.MAX_VALUE
+                else MegamanValues.AIR_DASH_MAX_TIME
+            )
 
             body.physics.gravityOn = false
             aButtonTask = AButtonTask.JUMP
@@ -285,7 +289,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             var impulseValue = ConstVals.PPM * movementScalar *
                 (if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_AIR_DASH_VEL else MegamanValues.AIR_DASH_VEL)
-            if (hasEnhancement(MegaEnhancement.AIR_DASH_BOOST)) impulseValue *= MegaEnhancement.AIR_DASH_BOOST_SCALAR
+            if (currentWeapon == MegamanWeapon.RUSH_JET) impulseValue *= MegamanValues.RUSH_JET_AIR_DASH_SCALAR
 
             when (direction) {
                 Direction.UP -> impulse.x = impulseValue * facing.value
@@ -335,6 +339,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     }
                 }
             }
+
+            if (currentWeapon == MegamanWeapon.RUSH_JET) jetpackHandler.reset()
         }
     }
 
@@ -672,8 +678,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
     val jetpacking = object : AbstractBehaviorImpl() {
 
-        private val timePerBitTimer = Timer(MegamanValues.JETPACK_TIME_PER_BIT)
-
         override fun evaluate(delta: Float): Boolean {
             if (dead || !ready || !canMove || damaged || teleporting || currentWeapon != MegamanWeapon.RUSH_JET ||
                 !game.controllerPoller.areAllPressed(gdxArrayOf(MegaControllerButton.A, MegaControllerButton.UP)) ||
@@ -692,9 +696,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         }
 
         override fun init() {
-            requestToPlaySound(SoundAsset.JETPACK_SOUND, true)
             body.physics.gravityOn = false
-            timePerBitTimer.reset()
         }
 
         override fun act(delta: Float) {
@@ -720,18 +722,11 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     body.physics.velocity.x += impulse
                 }
             }
-
-            timePerBitTimer.update(delta)
-
-            if (timePerBitTimer.isFinished()) {
-                weaponsHandler.translateAmmo(MegamanWeapon.RUSH_JET, -1)
-                timePerBitTimer.reset()
-            }
         }
 
         override fun end() {
+            jetpackHandler.reset()
             body.physics.gravityOn = true
-            stopSoundNow(SoundAsset.JETPACK_SOUND)
         }
     }
 
