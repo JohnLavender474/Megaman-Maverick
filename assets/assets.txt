@@ -539,6 +539,7 @@ sprites/frames/Megaman_v2_Reactor/slip.png
 sprites/frames/Megaman_v2_Reactor/run.png
 sprites/frames/Megaman_v2_Reactor/groundslide_shoot.png
 sprites/frames/Megaman_v2_Reactor/groundslide.png
+sprites/frames/Explosions1/ReactorExplosion.png
 sprites/frames/Explosions1/BigAssMaverickRobotOrbExplosion/ElectricDissipate.png
 sprites/frames/Explosions1/BigAssMaverickRobotOrbExplosion/ElectricPulse.png
 sprites/frames/Explosions1/ToxicGoopSplash.png

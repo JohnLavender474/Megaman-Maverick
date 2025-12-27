@@ -155,9 +155,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting)
             ) return@FunctionalBehaviorImpl false
 
-            val velocity = body.physics.velocity
-
             if (isBehaviorActive(BehaviorType.JUMPING)) {
+                val velocity = body.physics.velocity
                 return@FunctionalBehaviorImpl when (direction) {
                     Direction.UP -> velocity.y > 0f
                     Direction.DOWN -> velocity.y < 0f
@@ -254,23 +253,23 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
         override fun evaluate(delta: Float): Boolean {
             if (dead || !ready || !canMove || damaged || teleporting || maxTimer.isFinished() ||
-                (currentWeapon != MegamanWeapon.RUSH_JET && maxTimer.time >= MegamanValues.AIR_DASH_MAX_TIME) ||
-                body.isSensingAny(
-                    BodySense.FEET_ON_GROUND,
-                    BodySense.TELEPORTING
-                ) || isAnyBehaviorActive(
-                    BehaviorType.WALL_SLIDING,
+                (currentWeapon != MegamanWeapon.RUSH_JET && body.isSensing(BodySense.FEET_ON_GROUND)) ||
+                body.isSensing(BodySense.TELEPORTING) ||
+                isAnyBehaviorActive(
                     BehaviorType.CLIMBING,
-                    BehaviorType.JETPACKING
+                    BehaviorType.JETPACKING,
+                    BehaviorType.WALL_SLIDING,
                 ) || FacingUtils.isFacingBlock(megaman) ||
                 (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting) ||
                 (currentWeapon == MegamanWeapon.RUSH_JET && weaponsHandler.isDepleted(MegamanWeapon.RUSH_JET))
             ) return false
 
-            if (isBehaviorActive(BehaviorType.AIR_DASHING)) return !minTimer.isFinished() || isAirDashButtonActivated()
+            if (isBehaviorActive(BehaviorType.AIR_DASHING))
+                return !minTimer.isFinished() || isAirDashButtonActivated()
 
-            return aButtonTask == AButtonTask.AIR_DASH && isAirDashButtonJustActivated() &&
-                (currentWeapon != MegamanWeapon.RUSH_JET || game.controllerPoller.isReleased(MegaControllerButton.UP))
+            return aButtonTask == AButtonTask.AIR_DASH &&
+                isAirDashButtonJustActivated() &&
+                game.controllerPoller.isReleased(MegaControllerButton.UP)
         }
 
         override fun init() {
@@ -278,11 +277,12 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             minTimer.reset()
             maxTimer.resetDuration(
-                if (currentWeapon == MegamanWeapon.RUSH_JET) Float.MAX_VALUE
+                if (currentWeapon == MegamanWeapon.RUSH_JET) MegamanValues.RUSH_JET_AIR_DASH_MAX_TIME
                 else MegamanValues.AIR_DASH_MAX_TIME
             )
 
             body.physics.gravityOn = false
+
             aButtonTask = AButtonTask.JUMP
 
             if (direction.isVertical()) impulse.y = 0f else impulse.x = 0f

@@ -1,7 +1,7 @@
 Explosions1.png
-size: 1008, 584
+size: 1024, 584
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Nearest, Nearest
 repeat: none
 AsteroidExplosion
   rotate: false
@@ -108,6 +108,13 @@ PreciousExplosion
   orig: 96, 32
   offset: 0, 0
   index: -1
+ReactorExplosion
+  rotate: false
+  xy: 640, 104
+  size: 192, 192
+  orig: 192, 192
+  offset: 0, 0
+  index: -1
 SmokePuff
   rotate: false
   xy: 784, 0
@@ -138,7 +145,7 @@ SpreadExplosion/green
   index: -1
 StarExplosion
   rotate: false
-  xy: 640, 104
+  xy: 832, 104
   size: 192, 192
   orig: 192, 192
   offset: 0, 0

@@ -60,6 +60,7 @@ import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.entities.projectiles.PurpleBlast
+import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -100,7 +101,9 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         private const val INIT_DUR = 0.5f
 
         private const val ATTACK_DELAY_MIN = 0.5f
+        private const val ATTACK_DELAY_MIN_HARD = 0.5f
         private const val ATTACK_DELAY_MAX = 1.25f
+        private const val ATTACK_DELAY_MAX_HARD = 0.85f
 
         private const val BULLETS_TO_CHUNK = 4
         private const val CHUNKED_BULLET_GRAVITY = -0.1f
@@ -110,16 +113,20 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         private const val BLASTS_TO_SHOOT = 5
         private const val BLAST_SHOOT_MAX_DELAY = 0.75f
         private const val BLAST_SHOOT_MIN_DELAY = 0.5f
+        private const val BLAST_SHOOT_MAX_DELAY_HARD = 0.5f
+        private const val BLAST_SHOOT_MIN_DELAY_HARD = 0.35f
         private const val BLAST_VELOCITY = 9f
         private val BLAST_ANGLES = gdxArrayOf(180f, 190f, 200f, 210f, 220f)
 
         private const val RUNNING_METS_TO_LAUNCH = 3
         private const val RUNNING_MET_DELAY = 1f
+        private const val RUNNING_MET_DELAY_HARD = 0.75f
 
         private const val HELI_METS_TO_LAUNCH = 2
         private const val HELI_MET_DELAY = 1f
 
         private const val LAUNCH_FIST_DELAY = 8f
+        private const val LAUNCH_FIST_DELAY_HARD = 5f
         private const val LAUGH_DUR = 1f
 
         private val FIXTURE_LABELS = objectSetOf(FixtureLabel.NO_PROJECTILE_COLLISION)
@@ -264,7 +271,9 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         blastShootDelayTimer.resetDuration(BLAST_SHOOT_MAX_DELAY)
         blastsShot = 0
 
-        launchFistDelayTimer.reset()
+        launchFistDelayTimer.resetDuration(
+            if (game.state.hardMode) LAUNCH_FIST_DELAY_HARD else LAUNCH_FIST_DELAY
+        )
         laughTimer.setToEnd()
 
         runningMetsLaunched = 0
@@ -367,7 +376,11 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
 
                     if (attack == GutsTankAttackState.SHOOT_BLASTS) blastAngles = BLAST_ANGLES.toOrderedSet()
 
-                    val newDuration = UtilMethods.interpolate(ATTACK_DELAY_MIN, ATTACK_DELAY_MAX, getHealthRatio())
+                    val newDuration = UtilMethods.interpolate(
+                        if (game.state.hardMode) ATTACK_DELAY_MIN_HARD else ATTACK_DELAY_MIN,
+                        if (game.state.hardMode) ATTACK_DELAY_MAX_HARD else ATTACK_DELAY_MAX,
+                        getHealthRatio()
+                    )
                     attackDelayTimer.resetDuration(newDuration)
                 }
             }
@@ -447,8 +460,11 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
 
                             blastsShot++
 
-                            val duration =
-                                UtilMethods.interpolate(BLAST_SHOOT_MIN_DELAY, BLAST_SHOOT_MAX_DELAY, getHealthRatio())
+                            val duration = UtilMethods.interpolate(
+                                if (game.state.hardMode) BLAST_SHOOT_MIN_DELAY_HARD else BLAST_SHOOT_MIN_DELAY,
+                                if (game.state.hardMode) BLAST_SHOOT_MAX_DELAY_HARD else BLAST_SHOOT_MAX_DELAY,
+                                getHealthRatio()
+                            )
                             blastShootDelayTimer.resetDuration(duration)
                         }
                     }
@@ -478,7 +494,9 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
                             )
                             runningMets.add(runningMet)
                             runningMetsLaunched++
-                            runningMetDelayTimer.reset()
+                            runningMetDelayTimer.resetDuration(
+                                if (game.state.hardMode) RUNNING_MET_DELAY_HARD else RUNNING_MET_DELAY
+                            )
                         }
                     }
                 }

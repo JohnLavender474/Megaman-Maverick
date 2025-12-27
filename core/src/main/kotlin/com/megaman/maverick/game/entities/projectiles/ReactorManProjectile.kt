@@ -39,6 +39,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.explosions.ReactorExplosion
 import com.megaman.maverick.game.world.body.*
 
 class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
@@ -207,7 +208,13 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
     }
 
     private fun shatter(shape: IGameShape2D) {
-        playSoundNow(SoundAsset.BURST_SOUND, false)
+        val explosion = MegaEntityFactory.fetch(ReactorExplosion::class)!!
+        explosion.spawn(
+            props(
+                ConstKeys.OWNER pairTo owner,
+                ConstKeys.POSITION pairTo body.getCenter()
+            )
+        )
 
         val direction = getOverlapPushDirection(body.getBounds(), shape) ?: Direction.UP
 

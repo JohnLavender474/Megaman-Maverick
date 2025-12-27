@@ -36,6 +36,7 @@ import com.megaman.maverick.game.entities.items.HealthBulb
 import com.megaman.maverick.game.entities.items.Life
 import com.megaman.maverick.game.entities.items.WeaponEnergyBulb
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
+import com.megaman.maverick.game.entities.projectiles.ReactorManProjectile
 import com.megaman.maverick.game.entities.special.CartV2
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportEndProp
@@ -196,6 +197,7 @@ abstract class AbstractEnemy(
         val canBeDamaged = super.canBeDamagedBy(damager)
         if (!canBeDamaged) return false
 
+        if (damager is ReactorManProjectile) return damager.owner != this
         if (damager is IOwnable<*>) return damager.owner == megaman || damager.owner == null
 
         return true

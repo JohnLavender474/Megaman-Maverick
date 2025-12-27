@@ -606,7 +606,10 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
     override fun canBeDamagedBy(damager: IDamager): Boolean {
         if (dead || !super.canBeDamagedBy(damager)) return false
-        if (damager is IOwnable<*> && damager.owner == this) return false
+        if (damager is IOwnable<*>) {
+            if (damager.owner == this) return false
+            if (damager.owner is IOwnable<*> && (damager.owner as IOwnable<*>).owner == this) return false
+        }
         return true
     }
 
