@@ -2298,10 +2298,10 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="5" name="player">
+ <objectgroup id="5" name="temp">
   <object id="719" name="0" x="21344" y="864" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="3" name="temp">
+ <objectgroup id="3" name="player">
   <object id="2" name="0" x="128" y="2912" width="32" height="32"/>
   <object id="119" name="1" x="1856" y="2880" width="32" height="32"/>
   <object id="120" name="2" x="5056" y="2720" width="32" height="32"/>

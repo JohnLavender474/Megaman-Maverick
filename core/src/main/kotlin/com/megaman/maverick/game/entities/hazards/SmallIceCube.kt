@@ -208,7 +208,7 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
         }
         bodyFixture.setHitByBodyReceiver { entity, state ->
             if (state != ProcessState.BEGIN) return@setHitByBodyReceiver
-            if (entity is IDamageable && entity.invincible) shatterAndDie()
+            if (entity != owner && entity is IDamageable && entity.invincible) shatterAndDie()
         }
         bodyFixture.setHitByPlayerReceiver { if (!it.canBeDamaged) shatterAndDie() }
         bodyFixture.setHitByProjectileReceiver {

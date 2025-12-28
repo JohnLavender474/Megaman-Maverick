@@ -1404,7 +1404,6 @@
     <property name="spawn_room" value="room10"/>
    </properties>
   </object>
-  <object id="481" name="AstroAssAssaulter" x="14344" y="1200" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="7" name="children">
   <object id="294" name="Room4AsteroidsMinY" x="3712" y="3040" width="32" height="32"/>
@@ -2048,38 +2047,10 @@
     <property name="type" value="blue"/>
    </properties>
   </object>
-  <object id="418" name="Starkner" x="14272" y="1056" width="32" height="32"/>
+  <object id="418" name="Starkner" x="14288" y="864" width="32" height="32"/>
   <object id="471" name="TellySaucer" x="15416" y="920" width="16" height="16">
    <properties>
     <property name="can_spawn_right" type="bool" value="false"/>
-   </properties>
-  </object>
-  <object id="482" name="Eyee" x="15976" y="992" width="24" height="24">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="false"/>
-    <property name="movement_scalar" type="float" value="0.5"/>
-    <property name="x" type="float" value="-4.25"/>
-    <property name="y" type="float" value="0"/>
-   </properties>
-  </object>
-  <object id="483" name="Eyee" x="15976" y="1024" width="24" height="24">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="false"/>
-    <property name="movement_scalar" type="float" value="0.5"/>
-    <property name="x" type="float" value="-4.25"/>
-    <property name="y" type="float" value="0"/>
-   </properties>
-  </object>
-  <object id="484" name="PopupCanon" x="14544" y="1312" width="32" height="32">
-   <properties>
-    <property name="gravity_scalar" type="float" value="0.25"/>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="485" name="PopupCanon" x="14416" y="1728" width="32" height="32">
-   <properties>
-    <property name="gravity_scalar" type="float" value="0.25"/>
-    <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
   </object>
   <object id="480" name="AstroAssAssaulter" x="14616" y="1456" width="16" height="16">
@@ -2177,20 +2148,7 @@
     <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="503" name="PopupCanon" x="14280" y="1904" width="16" height="16">
-   <properties>
-    <property name="gravity_scalar" type="float" value="0.25"/>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
   <object id="505" name="PopupCanon" x="14616" y="992" width="16" height="16">
-   <properties>
-    <property name="direction" value="down"/>
-    <property name="gravity_scalar" type="float" value="0.25"/>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="506" name="PopupCanon" x="15656" y="832" width="16" height="16">
    <properties>
     <property name="direction" value="down"/>
     <property name="gravity_scalar" type="float" value="0.25"/>
