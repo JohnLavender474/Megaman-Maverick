@@ -81,7 +81,7 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
             if (value) frozenTimer.reset() else frozenTimer.setToEnd()
         }
 
-    private val frozenTimer = Timer(FROZEN_DUR)
+    private val frozenTimer = Timer(ConstVals.STANDARD_FROZEN_DUR)
 
     private val triggers = Array<GameRectangle>()
     private var triggered = false

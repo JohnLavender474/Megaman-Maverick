@@ -2394,6 +2394,7 @@ sprites/frames/Enemies1/BlueScrewie/Down.png
 sprites/frames/Enemies1/BlueScrewie/Drop.png
 sprites/frames/Enemies1/BlueScrewie/Shoot.png
 sprites/frames/Enemies1/BlueScrewie/Rise.png
+sprites/frames/Enemies1/Arigock/frozen.png
 sprites/frames/Enemies1/Arigock/shooting.png
 sprites/frames/Enemies1/Arigock/closed.png
 sprites/frames/Enemies1/SpringHead/unleashed.png
@@ -2441,6 +2442,7 @@ sprites/frames/Enemies1/LampeonBandito/stand_shoot.png
 sprites/frames/Enemies1/LampeonBandito/stand.png
 sprites/frames/Enemies1/LampeonBandito/jump.png
 sprites/frames/Enemies1/LampeonBandito/jump_shoot.png
+sprites/frames/Enemies1/LampeonBandito/frozen.png
 sprites/frames/Enemies1/Darspider/jump.png
 sprites/frames/Enemies1/Darspider/still.png
 sprites/frames/Enemies1/Darspider/frozen.png

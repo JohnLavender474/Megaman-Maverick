@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.contracts
 
+import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods.getRandom
@@ -89,6 +90,8 @@ abstract class AbstractEnemy(
             WeaponEnergyBulb::class pairTo { WEAPON_CHANCE }
         )
     }
+
+    val canDamagePredicates = Array<(IDamageable) -> Boolean>()
 
     override val damageNegotiator: IDamageNegotiator = SelfSizeDamageNegotiator(this)
 
@@ -191,7 +194,7 @@ abstract class AbstractEnemy(
         else -> baseDamage
     }
 
-    override fun canDamage(damageable: IDamageable) = !dead
+    override fun canDamage(damageable: IDamageable) = !dead && canDamagePredicates.all { it.invoke(damageable) }
 
     override fun canBeDamagedBy(damager: IDamager): Boolean {
         val canBeDamaged = super.canBeDamagedBy(damager)

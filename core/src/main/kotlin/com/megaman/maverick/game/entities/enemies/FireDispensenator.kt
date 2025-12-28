@@ -84,7 +84,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
         "fire" pairTo Timer(FIRE_DUR, gdxArrayOf(TimeMarkedRunnable(FIRE_TIME) { fire() })),
         "close" pairTo Timer(CLOSE_DUR),
         "sleep" pairTo Timer(SLEEP_DUR),
-        "frozen" pairTo Timer(FROZEN_DUR)
+        "frozen" pairTo Timer(ConstVals.STANDARD_FROZEN_DUR)
     )
     private lateinit var stateMachine: StateMachine<FireDispensenatorState>
     private val currentState: FireDispensenatorState

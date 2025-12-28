@@ -9,6 +9,7 @@ object PreferenceFiles {
 }
 
 object ConstVals {
+    const val STANDARD_FROZEN_DUR = 2f
     const val ONE = 1f
     const val VIEW_WIDTH = 16f
     const val VIEW_HEIGHT = 14f

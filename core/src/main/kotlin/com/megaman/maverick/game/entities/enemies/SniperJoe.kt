@@ -148,7 +148,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     private val stateTimers = orderedMapOf(
         SniperJoeState.IDLE pairTo Timer(IDLE_DUR),
         SniperJoeState.TURN pairTo Timer(TURN_DUR),
-        SniperJoeState.FROZEN pairTo Timer(FROZEN_DUR),
+        SniperJoeState.FROZEN pairTo Timer(ConstVals.STANDARD_FROZEN_DUR),
         SniperJoeState.SHOOT pairTo Timer(SHOOT_DUR).also { timer ->
             TIMES_TO_SHOOT.forEach { time -> timer.addRunnable(TimeMarkedRunnable(time) { shoot() }) }
         },

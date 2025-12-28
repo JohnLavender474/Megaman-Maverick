@@ -80,7 +80,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         get() = state == PopoheliState.ATTACKING && attackDelayTimer.isFinished()
     private val waiting: Boolean
         get() = state == PopoheliState.WAITING
-    private val frozenTimer = Timer(FROZEN_DUR)
+    private val frozenTimer = Timer(ConstVals.STANDARD_FROZEN_DUR)
 
     private lateinit var state: PopoheliState
     private lateinit var stateBeforeFrozen: PopoheliState

@@ -42,13 +42,14 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
-import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.IDamageNegotiator
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.contracts.*
+import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.IceShard
@@ -56,6 +57,7 @@ import com.megaman.maverick.game.entities.explosions.SpreadExplosion
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.*
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
@@ -70,7 +72,6 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         private const val TURN_DUR = 0.3f
         private const val FLASH_DUR = 1f
         private const val FACING_DUR = 1f
-        private const val FROZEN_DUR = 1f
 
         private const val NEEDLES = 5
         private const val NEEDLE_GRAV = -0.1f
@@ -127,20 +128,15 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         override fun get(damager: IDamager) = damagers[damager::class]?.get(damager) ?: 0
     }
 
-    override var frozen: Boolean
-        get() = !stateTimers[CactusState.FROZEN].isFinished()
-        set(value) {
-            GameLogger.debug(TAG, "frozen.set: value=$value")
-
-            if (value) {
-                stateTimers[CactusState.FROZEN].reset()
-                if (currentState != CactusState.FROZEN) stateMachine.next()
-            } else {
-                stateTimers[CactusState.FROZEN].setToEnd()
-                if (currentState == CactusState.FROZEN) stateMachine.next()
-            }
-        }
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private lateinit var stateMachine: StateMachine<CactusState>
     private val currentState: CactusState
@@ -149,7 +145,7 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         CactusState.TURN pairTo Timer(TURN_DUR),
         CactusState.FLASH pairTo Timer(FLASH_DUR),
         CactusState.FACING pairTo Timer(FACING_DUR),
-        CactusState.FROZEN pairTo Timer(FROZEN_DUR)
+        CactusState.FROZEN pairTo Timer(ConstVals.STANDARD_FROZEN_DUR)
     )
 
     private lateinit var type: CactusType
@@ -193,29 +189,20 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         FacingUtils.setFacingOf(this)
     }
 
-    override fun onHealthDepleted() {
-        GameLogger.debug(TAG, "onHealthDepleted()")
-        spawnNeedles()
-        super.onHealthDepleted()
-        playSoundNow(SoundAsset.THUMP_SOUND, false)
-    }
-
     override fun canBeDamagedBy(damager: IDamager) =
         damagers.containsKey(damager::class) || super.canBeDamagedBy(damager)
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
-        GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
-        val damaged = super.takeDamageFrom(damager)
-        if (damaged) when (damager) {
-            is IFreezerEntity if !frozen -> frozen = true
-            is IFireEntity if frozen -> frozen = false
-        }
-        return damaged
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        frozen = false
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
             scanner.setCenter(body.getCenter())
 
             if (stateTimers.containsKey(currentState)) {
@@ -232,12 +219,10 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
                     GameLogger.debug(TAG, "update(): currentState=$currentState, megaman is in scanner")
                     stateMachine.next()
                 }
-
                 CactusState.FACING -> if (!isMegamanInScanner() || shouldTurn()) {
                     GameLogger.debug(TAG, "update(): currentState=$currentState, megaman not in scanner OR should turn")
                     stateMachine.next()
                 }
-
                 else -> {}
             }
         }

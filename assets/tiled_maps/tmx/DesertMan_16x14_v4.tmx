@@ -2259,12 +2259,6 @@
    </properties>
   </object>
   <object id="701" name="CarriCarry" x="7160" y="2064" width="16" height="16"/>
-  <object id="703" name="Cactus" x="6576" y="2912" width="32" height="32">
-   <properties>
-    <property name="big" type="bool" value="false"/>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
   <object id="704" name="Cactus" x="6416" y="2400" width="32" height="32">
    <properties>
     <property name="big" type="bool" value="false"/>

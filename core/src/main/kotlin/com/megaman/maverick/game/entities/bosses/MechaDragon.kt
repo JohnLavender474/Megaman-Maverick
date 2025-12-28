@@ -149,7 +149,7 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IFreezableEnt
         get() = stateMachine.getCurrentElement()
     private val stateTimers = OrderedMap<MechaDragonState, Timer>()
 
-    private val frozenTimer = Timer(FROZEN_DUR)
+    private val frozenTimer = Timer(ConstVals.STANDARD_FROZEN_DUR)
 
     private val hoverScalar = SmoothOscillationTimer(duration = HOVER_SWAY_DUR, start = -1f, end = 1f)
 

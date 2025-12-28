@@ -42,8 +42,10 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.projectiles.DeathBomb
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.utils.delayNextPossibleSpawn
 import com.megaman.maverick.game.entities.utils.isNextPossibleSpawnDelayed
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -52,7 +54,7 @@ import com.megaman.maverick.game.utils.extensions.getRandomPositionInBounds
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable, ICullable {
+class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IFaceable, ICullable {
 
     companion object {
         const val TAG = "Jetto"
@@ -72,7 +74,8 @@ class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
 
         private val animDefs = orderedMapOf(
             "fly" pairTo AnimationDef(3, 1, 0.1f, true),
-            "fall" pairTo AnimationDef()
+            "fall" pairTo AnimationDef(),
+            "frozen" pairTo AnimationDef()
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -85,6 +88,14 @@ class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
         get() = state == JettoState.FALL || super.invincible
 
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private lateinit var state: JettoState
 
@@ -151,6 +162,8 @@ class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
         passes = 1
 
         requestToPlaySound(SoundAsset.JET_SOUND, false)
+
+        frozen = false
     }
 
     override fun onHealthDepleted() {
@@ -165,6 +178,8 @@ class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, I
         if (overlapsGameCamera() && isHealthDepleted()) explode()
 
         delayNextPossibleSpawn(game, TAG, id, NEXT_POSSIBLE_SPAWN_DELAY)
+
+        frozen = false
     }
 
     override fun shouldBeCulled(delta: Float) = cullTimer.isFinished() &&

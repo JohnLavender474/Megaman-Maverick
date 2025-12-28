@@ -218,6 +218,89 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Enemies1/Arigock/frozen.png</key>
+            <key type="filename">../frames/Enemies1/Bat/Hang.png</key>
+            <key type="filename">../frames/Enemies1/Bat/OpenEyes.png</key>
+            <key type="filename">../frames/Enemies1/Bat/OpenWings.png</key>
+            <key type="filename">../frames/Enemies1/Bat/frozen.png</key>
+            <key type="filename">../frames/Enemies1/BlueScrewie/Down.png</key>
+            <key type="filename">../frames/Enemies1/CanonHopper/frozen.png</key>
+            <key type="filename">../frames/Enemies1/CanonHopper/hop.png</key>
+            <key type="filename">../frames/Enemies1/CanonHopper/stand.png</key>
+            <key type="filename">../frames/Enemies1/CryoMet/down.png</key>
+            <key type="filename">../frames/Enemies1/CryoMet/lower.png</key>
+            <key type="filename">../frames/Enemies1/Darspider/frozen.png</key>
+            <key type="filename">../frames/Enemies1/Darspider/jump.png</key>
+            <key type="filename">../frames/Enemies1/Darspider/still.png</key>
+            <key type="filename">../frames/Enemies1/DrillHead/idle.png</key>
+            <key type="filename">../frames/Enemies1/HeliMet/shield.png</key>
+            <key type="filename">../frames/Enemies1/LaserBeamer.png</key>
+            <key type="filename">../frames/Enemies1/Met/GetUp.png</key>
+            <key type="filename">../frames/Enemies1/Met/LayDown.png</key>
+            <key type="filename">../frames/Enemies1/Met/PopUp.png</key>
+            <key type="filename">../frames/Enemies1/Penguin/Jump.png</key>
+            <key type="filename">../frames/Enemies1/Penguin/Slide.png</key>
+            <key type="filename">../frames/Enemies1/Penguin/Slippin.png</key>
+            <key type="filename">../frames/Enemies1/PicketJoe/stand.png</key>
+            <key type="filename">../frames/Enemies1/Popoheli/frozen.png</key>
+            <key type="filename">../frames/Enemies1/PopupCanon/Down.png</key>
+            <key type="filename">../frames/Enemies1/PopupCanon/Up.png</key>
+            <key type="filename">../frames/Enemies1/RedScrewie/Down.png</key>
+            <key type="filename">../frames/Enemies1/ShieldAttacker/frozen.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/fire/frozen.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/fire/jump.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/orange/frozen.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/orange/jump.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/snow/frozen.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe/snow/jump.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Lava/JumpNoShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Lava/JumpWithShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Lava/ShootingNoShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Lava/ShootingWithShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Lava/StandNoShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Lava/StandShielded.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Lava/ThrowShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Orange/JumpNoShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Orange/JumpWithShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Orange/ShootingNoShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Orange/ShootingWithShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Orange/StandNoShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Orange/StandShielded.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Orange/ThrowShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Snow/JumpNoShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Snow/JumpWithShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Snow/ShootingNoShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Snow/ShootingWithShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Snow/StandNoShield.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Snow/StandShielded.png</key>
+            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Snow/ThrowShield.png</key>
+            <key type="filename">../frames/Enemies1/SnowBat/Hang.png</key>
+            <key type="filename">../frames/Enemies1/SnowBat/OpenEyes.png</key>
+            <key type="filename">../frames/Enemies1/SnowBat/OpenWings.png</key>
+            <key type="filename">../frames/Enemies1/SnowMet/GetUp.png</key>
+            <key type="filename">../frames/Enemies1/SnowMet/LayDown.png</key>
+            <key type="filename">../frames/Enemies1/SnowMet/PopUp.png</key>
+            <key type="filename">../frames/Enemies1/SpikeCopter/drop.png</key>
+            <key type="filename">../frames/Enemies1/SpringHead/compressed.png</key>
+            <key type="filename">../frames/Enemies1/SwimmingMet/LayDown.png</key>
+            <key type="filename">../frames/Enemies1/TellySaucer/collapsed.png</key>
+            <key type="filename">../frames/Enemies1/TurnBlaster/base.png</key>
+            <key type="filename">../frames/Enemies1/TurnBlaster/dial.png</key>
+            <key type="filename">../frames/Enemies1/TurnBlaster/tube.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,8,16,16</rect>
+                <key>scale9Paddings</key>
+                <rect>8,8,16,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Enemies1/Arigock/shooting.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -309,88 +392,6 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Enemies1/Bat/Hang.png</key>
-            <key type="filename">../frames/Enemies1/Bat/OpenEyes.png</key>
-            <key type="filename">../frames/Enemies1/Bat/OpenWings.png</key>
-            <key type="filename">../frames/Enemies1/Bat/frozen.png</key>
-            <key type="filename">../frames/Enemies1/BlueScrewie/Down.png</key>
-            <key type="filename">../frames/Enemies1/CanonHopper/frozen.png</key>
-            <key type="filename">../frames/Enemies1/CanonHopper/hop.png</key>
-            <key type="filename">../frames/Enemies1/CanonHopper/stand.png</key>
-            <key type="filename">../frames/Enemies1/CryoMet/down.png</key>
-            <key type="filename">../frames/Enemies1/CryoMet/lower.png</key>
-            <key type="filename">../frames/Enemies1/Darspider/frozen.png</key>
-            <key type="filename">../frames/Enemies1/Darspider/jump.png</key>
-            <key type="filename">../frames/Enemies1/Darspider/still.png</key>
-            <key type="filename">../frames/Enemies1/DrillHead/idle.png</key>
-            <key type="filename">../frames/Enemies1/HeliMet/shield.png</key>
-            <key type="filename">../frames/Enemies1/LaserBeamer.png</key>
-            <key type="filename">../frames/Enemies1/Met/GetUp.png</key>
-            <key type="filename">../frames/Enemies1/Met/LayDown.png</key>
-            <key type="filename">../frames/Enemies1/Met/PopUp.png</key>
-            <key type="filename">../frames/Enemies1/Penguin/Jump.png</key>
-            <key type="filename">../frames/Enemies1/Penguin/Slide.png</key>
-            <key type="filename">../frames/Enemies1/Penguin/Slippin.png</key>
-            <key type="filename">../frames/Enemies1/PicketJoe/stand.png</key>
-            <key type="filename">../frames/Enemies1/Popoheli/frozen.png</key>
-            <key type="filename">../frames/Enemies1/PopupCanon/Down.png</key>
-            <key type="filename">../frames/Enemies1/PopupCanon/Up.png</key>
-            <key type="filename">../frames/Enemies1/RedScrewie/Down.png</key>
-            <key type="filename">../frames/Enemies1/ShieldAttacker/frozen.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe/fire/frozen.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe/fire/jump.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe/orange/frozen.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe/orange/jump.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe/snow/frozen.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe/snow/jump.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Lava/JumpNoShield.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Lava/JumpWithShield.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Lava/ShootingNoShield.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Lava/ShootingWithShield.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Lava/StandNoShield.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Lava/StandShielded.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Lava/ThrowShield.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Orange/JumpNoShield.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Orange/JumpWithShield.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Orange/ShootingNoShield.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Orange/ShootingWithShield.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Orange/StandNoShield.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Orange/StandShielded.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Orange/ThrowShield.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Snow/JumpNoShield.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Snow/JumpWithShield.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Snow/ShootingNoShield.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Snow/ShootingWithShield.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Snow/StandNoShield.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Snow/StandShielded.png</key>
-            <key type="filename">../frames/Enemies1/SniperJoe_OLD/Snow/ThrowShield.png</key>
-            <key type="filename">../frames/Enemies1/SnowBat/Hang.png</key>
-            <key type="filename">../frames/Enemies1/SnowBat/OpenEyes.png</key>
-            <key type="filename">../frames/Enemies1/SnowBat/OpenWings.png</key>
-            <key type="filename">../frames/Enemies1/SnowMet/GetUp.png</key>
-            <key type="filename">../frames/Enemies1/SnowMet/LayDown.png</key>
-            <key type="filename">../frames/Enemies1/SnowMet/PopUp.png</key>
-            <key type="filename">../frames/Enemies1/SpikeCopter/drop.png</key>
-            <key type="filename">../frames/Enemies1/SpringHead/compressed.png</key>
-            <key type="filename">../frames/Enemies1/SwimmingMet/LayDown.png</key>
-            <key type="filename">../frames/Enemies1/TellySaucer/collapsed.png</key>
-            <key type="filename">../frames/Enemies1/TurnBlaster/base.png</key>
-            <key type="filename">../frames/Enemies1/TurnBlaster/dial.png</key>
-            <key type="filename">../frames/Enemies1/TurnBlaster/tube.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>8,8,16,16</rect>
-                <key>scale9Paddings</key>
-                <rect>8,8,16,16</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
             <key type="filename">../frames/Enemies1/Beezee/attack.png</key>
             <key type="filename">../frames/Enemies1/Beezee/hover.png</key>
             <key type="filename">../frames/Enemies1/MockingByte/fall_asleep.png</key>
@@ -477,6 +478,7 @@
             <key type="filename">../frames/Enemies1/BuilderKibbo/jump.png</key>
             <key type="filename">../frames/Enemies1/BuilderKibbo/pre_throw.png</key>
             <key type="filename">../frames/Enemies1/BuilderKibbo/stand.png</key>
+            <key type="filename">../frames/Enemies1/LampeonBandito/frozen.png</key>
             <key type="filename">../frames/Enemies1/LampeonBandito/jump.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

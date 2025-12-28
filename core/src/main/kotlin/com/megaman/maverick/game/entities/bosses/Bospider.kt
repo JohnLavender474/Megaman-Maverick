@@ -135,7 +135,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         }
 
     private val burnTimer = Timer(BURN_DUR)
-    private val frozenTimer = Timer(FROZEN_DUR)
+    private val frozenTimer = Timer(ConstVals.STANDARD_FROZEN_DUR)
 
     private val paths = Array<Array<Vector2>>()
     private val currentPath = Queue<Vector2>()

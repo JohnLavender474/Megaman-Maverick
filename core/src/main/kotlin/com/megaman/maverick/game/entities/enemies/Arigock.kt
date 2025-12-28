@@ -40,13 +40,16 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.projectiles.ArigockBall
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable {
+class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IAnimatedEntity,
+    IFaceable {
 
     companion object {
         const val TAG = "Arigock"
@@ -58,6 +61,14 @@ class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     }
 
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private val shootingTimer = Timer(
         SHOOTING_DUR, gdxArrayOf(
@@ -73,7 +84,9 @@ class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            gdxArrayOf("closed", "shooting").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
+            gdxArrayOf("closed", "shooting", "frozen").forEach { key ->
+                regions.put(key, atlas.findRegion("$TAG/$key"))
+            }
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -88,6 +101,14 @@ class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
 
         shootingTimer.setToEnd()
         closedTimer.reset()
+
+        frozen = false
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        frozen = false
     }
 
     private fun shoot(xImpulseIndex: Int) {
@@ -114,21 +135,28 @@ class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (!closedTimer.isFinished()) {
-                closedTimer.update(delta)
-                if (closedTimer.isFinished()) shootingTimer.reset()
+            freezeHandler.update(delta)
 
-                return@add
+            if (!frozen) {
+                if (!closedTimer.isFinished()) {
+                    closedTimer.update(delta)
+                    if (closedTimer.isFinished()) shootingTimer.reset()
+
+                    return@add
+                }
+
+                shootingTimer.update(delta)
+                if (shootingTimer.isFinished()) closedTimer.reset()
+            } else {
+                closedTimer.reset()
+                shootingTimer.reset()
             }
-
-            shootingTimer.update(delta)
-            if (shootingTimer.isFinished()) closedTimer.reset()
         }
     }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(1.25f * ConstVals.PPM)
+        body.setSize(1.25f * ConstVals.PPM, 1f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
@@ -153,8 +181,11 @@ class Arigock(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = { if (!shootingTimer.isFinished()) "shooting" else "closed" }
+        val keySupplier: (String?) -> String? = {
+            if (frozen) "frozen" else if (!shootingTimer.isFinished()) "shooting" else "closed"
+        }
         val animations = objectMapOf<String, IAnimation>(
+            "frozen" pairTo Animation(regions.get("frozen")),
             "shooting" pairTo Animation(regions.get("shooting"), 2, 1, 0.1f, true),
             "closed" pairTo Animation(regions.get("closed"), 2, 1, gdxArrayOf(0.5f, 0.25f), true)
         )

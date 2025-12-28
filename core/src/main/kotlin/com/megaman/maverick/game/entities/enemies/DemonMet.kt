@@ -87,7 +87,7 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
     private val standTimer = Timer(STAND_DUR)
     private val fireTimer = Timer(FIRE_DELAY)
-    private val frozenTimer = Timer(FROZEN_DUR)
+    private val frozenTimer = Timer(ConstVals.STANDARD_FROZEN_DUR)
 
     private val alphaOscillation = SmoothOscillationTimer(ALPHA_OSCILLATION_DUR, 0.5f, 0.75f)
     private val xOscillation = SmoothOscillationTimer(X_OSCILLATION_DUR, -1f, 1f)

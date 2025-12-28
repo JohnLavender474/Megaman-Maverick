@@ -43,14 +43,16 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.projectiles.SuperCoolActionStarWarsSpaceLazer
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
 class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity,
-    IDrawableShapesEntity, IFaceable {
+    IFreezableEntity, IDrawableShapesEntity, IFaceable {
 
     companion object {
         const val TAG = "AstroAssAssaulter"
@@ -77,6 +79,14 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
     private enum class AstroAssState { STAND, SHOOT, THROW }
 
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private lateinit var stateMachine: StateMachine<AstroAssState>
     private val currentState: AstroAssState
@@ -145,11 +155,14 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
 
         canThrowFlagLeft = spawnProps.getOrDefault("${ConstKeys.FLAG}_${ConstKeys.LEFT}", true, Boolean::class)
         canThrowFlagRight = spawnProps.getOrDefault("${ConstKeys.FLAG}_${ConstKeys.RIGHT}", true, Boolean::class)
+
+        frozen = false
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        frozen = false
     }
 
     private fun canThrowFlag() = !FLAGS.containsKey(id) &&

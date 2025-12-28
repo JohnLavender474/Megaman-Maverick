@@ -80,7 +80,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
     private val turning: Boolean
         get() = !turnTimer.isFinished()
 
-    private val frozenTimer = Timer(FROZEN_DUR)
+    private val frozenTimer = Timer(ConstVals.STANDARD_FROZEN_DUR)
 
     private lateinit var animations: ObjectMap<String, IAnimation>
 

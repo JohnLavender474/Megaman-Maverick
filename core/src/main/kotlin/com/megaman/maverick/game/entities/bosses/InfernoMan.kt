@@ -24,6 +24,7 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -90,8 +91,6 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val FLAME_HEAD_DUR = 3f
         private const val FLAME_HEAD_SHOTS = 4
         private const val FLAME_HEAD_SHOOT_DELAY = 0.2f
-
-        private const val FROZEN_DUR = 0.75f
 
         private const val BODY_WIDTH = 1.5f
         private const val BODY_HEIGHT = 1.75f
@@ -248,6 +247,8 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         super.onReady()
         body.physics.gravityOn = true
     }
+
+    override fun canDamage(damageable: IDamageable) = !frozen && super.canDamage(damageable)
 
     override fun canBeDamagedBy(damager: IDamager) = damager !is IFireEntity && super.canBeDamagedBy(damager)
 
@@ -489,7 +490,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         timers.put("shoot", Timer())
         timers.put("shoot_cooldown", Timer(SHOOT_COOLDOWN_DUR))
         timers.put("shoot_delay", Timer(SHOOT_DELAY))
-        timers.put("frozen", Timer(FROZEN_DUR))
+        timers.put("frozen", Timer(ConstVals.STANDARD_FROZEN_DUR))
 
         val flameHeadDur = FLAME_HEAD_DUR
         val flameHeadTimer = Timer(flameHeadDur)

@@ -80,7 +80,7 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
     val cullPoint: Vector2
         get() = body.getCenter()
 
-    private val frozenTimer = Timer(FROZEN_DUR)
+    private val frozenTimer = Timer(ConstVals.STANDARD_FROZEN_DUR)
 
     override fun init() {
         GameLogger.debug(TAG, "init()")

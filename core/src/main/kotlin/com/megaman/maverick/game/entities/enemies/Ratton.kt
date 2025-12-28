@@ -19,6 +19,7 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -51,7 +52,6 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
         const val TAG = "Ratton"
 
         private const val STAND_DUR = 0.75f
-        private const val FROZEN_DUR = 0.5f
 
         private const val G_GRAV = -0.01f
         private const val GRAV = -0.15f
@@ -78,7 +78,7 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
         }
 
     private val standTimer = Timer(STAND_DUR)
-    private val frozenTimer = Timer(FROZEN_DUR)
+    private val frozenTimer = Timer(ConstVals.STANDARD_FROZEN_DUR)
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -109,6 +109,8 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
         if (damaged && !frozen && damager is IFreezerEntity) frozen = true
         return damaged
     }
+
+    override fun canDamage(damageable: IDamageable) = !frozen && super.canDamage(damageable)
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)

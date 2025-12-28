@@ -47,12 +47,11 @@ import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.GreenPelletBlast
 import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -69,7 +68,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         private const val MAX_ALLOWED = 3
         private const val DEBUG_PATHFINDING = false
         private const val HANG_DURATION = 0.75f
-        private const val FROZEN_DURATION = 0.5f
         private const val RELEASE_FROM_PERCH_DURATION = 0.25f
         private const val DEFAULT_FLY_TO_ATTACK_SPEED = 3f
         private const val HARD_MODE_FLY_SCALAR = 1.5f
@@ -92,13 +90,14 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
             body.direction = value
         }
     override var frozen: Boolean
-        get() = !frozenTimer.isFinished()
+        get() = freezeHandler.isFrozen()
         set(value) {
-            if (value) frozenTimer.reset() else frozenTimer.setToEnd()
+            freezeHandler.setFrozen(value)
         }
 
+    private val freezeHandler = FreezableEntityHandler(this, onJustFinished = { state = BatState.FLYING_TO_RETREAT })
+
     private val hangTimer = Timer(HANG_DURATION)
-    private val frozenTimer = Timer(FROZEN_DURATION)
     private val releasePerchTimer = Timer(RELEASE_FROM_PERCH_DURATION)
 
     private val canMove: Boolean
@@ -189,6 +188,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         blocksToIgnore.clear()
+        frozen = false
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
@@ -196,16 +196,11 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
         GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
-
         if (damager is Wanaan) {
             depleteHealth()
             return true
         }
-
-        val damaged = super.takeDamageFrom(damager)
-        if (damaged && type.lowercase() != ConstKeys.SNOW && !frozen && damager is IFreezerEntity) frozen = true
-
-        return damaged
+        return super.takeDamageFrom(damager)
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
@@ -217,15 +212,9 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (frozen) {
-                frozenTimer.update(delta)
-                if (frozenTimer.isJustFinished()) {
-                    damageTimer.reset()
-                    IceShard.spawn5(body.getCenter())
-                    state = BatState.FLYING_TO_RETREAT
-                }
-                return@add
-            }
+            freezeHandler.update(delta)
+
+            if (frozen) return@add
 
             when (state) {
                 BatState.HANGING -> {
@@ -247,7 +236,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
                         releasePerchTimer.reset()
                     }
                 }
-
                 BatState.OPEN_EYES, BatState.OPEN_WINGS -> {
                     releasePerchTimer.update(delta)
                     if (releasePerchTimer.isFinished()) {
@@ -255,7 +243,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
                         releasePerchTimer.reset()
                     }
                 }
-
                 else -> {}
             }
         }

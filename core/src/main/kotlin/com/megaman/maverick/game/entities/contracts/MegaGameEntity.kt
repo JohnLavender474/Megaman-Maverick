@@ -27,7 +27,7 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
     val runnablesOnSpawn = OrderedMap<String, () -> Unit>()
     val runnablesOnDestroy = OrderedMap<String, () -> Unit>()
 
-    var dead = false
+    var dead = true
     var id = 0
         private set
     var timeSpawned = 0L

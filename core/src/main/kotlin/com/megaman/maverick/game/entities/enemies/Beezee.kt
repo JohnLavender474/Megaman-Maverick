@@ -96,7 +96,7 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         set(value) {
             frozenHandler.setFrozen(value)
         }
-    private val frozenHandler = FreezableEntityHandler(1f)
+    private val frozenHandler = FreezableEntityHandler(this)
 
     private lateinit var state: BeezeeState
 

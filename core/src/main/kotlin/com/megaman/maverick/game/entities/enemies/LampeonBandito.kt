@@ -43,11 +43,13 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.projectiles.DeathBomb
 import com.megaman.maverick.game.entities.projectiles.LampeonBullet
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -55,8 +57,8 @@ import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.*
 
-class LampeonBandito(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDrawableShapesEntity,
-    IFaceable {
+class LampeonBandito(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity,
+    IDrawableShapesEntity, IFaceable {
 
     companion object {
         const val TAG = "LampeonBandito"
@@ -81,20 +83,27 @@ class LampeonBandito(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         private const val LIGHT_RADIUS = 5
         private const val LIGHT_RADIANCE = 1.025f
 
+        private const val FROZEN_DUR = 1f
+
         private val animDefs = orderedMapOf(
+            "frozen" pairTo AnimationDef(),
             "stand" pairTo AnimationDef(2, 1, gdxArrayOf(0.9f, 0.1f), true),
             "stand_shoot" pairTo AnimationDef(2, 2, gdxArrayOf(0.35f, 0.1f, 0.1f, 0.1f), false),
-            /*
-            "jump" pairTo AnimationDef(),
-            "jump_shoot" pairTo AnimationDef(2, 2, 0.1f, false)
-             */
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private enum class LampeonBanditoState { STAND, STAND_SHOOT, /* JUMP, JUMP_SHOOT */ }
+    private enum class LampeonBanditoState { STAND, STAND_SHOOT, FROZEN }
 
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this, onFrozen = { stateMachine.next() })
 
     private lateinit var stateMachine: StateMachine<LampeonBanditoState>
     private val currentState: LampeonBanditoState
@@ -108,28 +117,10 @@ class LampeonBandito(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
 
     private var spray = true
 
-    /*
-    private val jumpDelay = Timer(JUMP_DELAY)
-    private val jumping: Boolean
-        get() = currentState.equalsAny(LampeonBanditoState.JUMP, LampeonBanditoState.JUMP_SHOOT)
-     */
-
     private val standShootScanner = GameRectangle().setSize(
         STAND_SHOOT_SCANNER_WIDTH * ConstVals.PPM,
         STAND_SHOOT_SCANNER_HEIGHT * ConstVals.PPM
     )
-
-    /*
-    private val jumpShootScanner = GameRectangle().setSize(
-        JUMP_SHOOT_SCANNER_WIDTH * ConstVals.PPM,
-        JUMP_SHOOT_SCANNER_HEIGHT * ConstVals.PPM
-    )
-
-    private val jumpHitScanner = GameRectangle().setSize(
-        JUMP_HIT_SCANNER_WIDTH * ConstVals.PPM,
-        JUMP_HIT_SCANNER_HEIGHT * ConstVals.PPM
-    )
-     */
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -141,10 +132,6 @@ class LampeonBandito(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         stateMachine = buildStateMachine()
         addComponent(defineAnimationsComponent())
         addDebugShapeSupplier { standShootScanner }
-        /*
-        addDebugShapeSupplier { jumpShootScanner }
-        addDebugShapeSupplier { jumpHitScanner }
-         */
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -161,12 +148,13 @@ class LampeonBandito(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         shootTimer.setToEnd()
         shootDelay.setToEnd()
 
-        // jumpDelay.setToEnd()
+        frozen = false
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        frozen = false
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
@@ -175,38 +163,31 @@ class LampeonBandito(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (!shooting) {
-                shootDelay.update(delta)
-                FacingUtils.setFacingOf(this)
-            } else shootTimer.update(delta)
+            freezeHandler.update(delta)
 
-            // if (!jumping) jumpDelay.update(delta)
+            if (!frozen) {
+                if (!shooting) {
+                    shootDelay.update(delta)
+                    FacingUtils.setFacingOf(this)
+                } else shootTimer.update(delta)
+            } else {
+                shootDelay.reset()
+                shootTimer.reset()
+            }
 
             updateScannerPositions()
 
             when (currentState) {
-                LampeonBanditoState.STAND -> if (canShoot() /*  || shouldJump() */) stateMachine.next()
+                LampeonBanditoState.STAND -> if (canShoot()) stateMachine.next()
                 LampeonBanditoState.STAND_SHOOT -> if (shootTimer.isFinished()) stateMachine.next()
-                // else -> if (shouldEndJump() || (!shooting && shouldShootWhileJumping())) stateMachine.next()
+                LampeonBanditoState.FROZEN -> if (freezeHandler.isFinished()) stateMachine.next()
             }
         }
     }
 
     private fun updateScannerPositions() {
         val position = if (isFacing(Facing.LEFT)) Position.CENTER_RIGHT else Position.CENTER_LEFT
-
         standShootScanner.positionOnPoint(body.getBounds().getCenter(), position)
-
-        /*
-        jumpShootScanner.positionOnPoint(
-            body.getBounds()
-                .getPositionPoint(Position.TOP_CENTER)
-                .add(0f, JUMP_SHOOT_SCANNER_OFFSET_Y * ConstVals.PPM),
-            position
-        )
-
-        jumpHitScanner.setBottomCenterToPoint(body.getBounds().getPositionPoint(Position.TOP_CENTER))
-         */
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -264,54 +245,28 @@ class LampeonBandito(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         .onChangeState(this::onChangeState)
         .initialState(LampeonBanditoState.STAND)
         // stand
+        .transition(LampeonBanditoState.STAND, LampeonBanditoState.FROZEN) { frozen }
         .transition(LampeonBanditoState.STAND, LampeonBanditoState.STAND_SHOOT) { canShoot() }
-        // .transition(LampeonBanditoState.STAND, LampeonBanditoState.JUMP) { shouldJump() }
         // stand-shoot
+        .transition(LampeonBanditoState.STAND_SHOOT, LampeonBanditoState.FROZEN) { frozen }
         .transition(LampeonBanditoState.STAND_SHOOT, LampeonBanditoState.STAND) { true }
-        /*
-        // jump
-        .transition(LampeonBanditoState.JUMP, LampeonBanditoState.JUMP_SHOOT) { shouldShootWhileJumping() }
-        .transition(LampeonBanditoState.JUMP, LampeonBanditoState.STAND) { true }
-        // jump-shoot
-        .transition(LampeonBanditoState.JUMP_SHOOT, LampeonBanditoState.STAND) { true }
-         */
+        // frozen
+        .transition(LampeonBanditoState.FROZEN, LampeonBanditoState.STAND) { true }
         // build
         .build()
 
     private fun onChangeState(current: LampeonBanditoState, previous: LampeonBanditoState) {
         GameLogger.debug(TAG, "onChangeState(): current=$current, previous=$previous")
-
         when (current) {
-            LampeonBanditoState.STAND_SHOOT /*, LampeonBanditoState.JUMP_SHOOT */ -> {
+            LampeonBanditoState.STAND_SHOOT -> {
                 shootTimer.reset()
                 shootDelay.reset()
             }
-            /*
-            LampeonBanditoState.JUMP -> {
-                jump()
-                jumpDelay.reset()
-            }
-             */
             else -> {}
         }
     }
 
     private fun canShoot() = shootDelay.isFinished() && megaman.body.getBounds().overlaps(standShootScanner)
-
-    /*
-    private fun shouldJump() = jumpDelay.isFinished() &&
-        ((canShoot() && megaman.body.getBounds().overlaps(jumpShootScanner)) ||
-            megaman.body.getBounds().overlaps(jumpHitScanner))
-
-    private fun shouldShootWhileJumping() =
-        body.physics.velocity.y <= 0f && megaman.body.getBounds().overlaps(jumpHitScanner)
-
-    private fun shouldEndJump() = body.physics.velocity.y <= 0f && body.isSensing(BodySense.FEET_ON_GROUND)
-
-    private fun jump() {
-        body.physics.velocity.y = JUMP_IMPULSE * ConstVals.PPM
-    }
-     */
 
     private fun shoot() {
         val position = body.getCenter().add(1.5f * ConstVals.PPM * facing.value, 0.25f * ConstVals.PPM)

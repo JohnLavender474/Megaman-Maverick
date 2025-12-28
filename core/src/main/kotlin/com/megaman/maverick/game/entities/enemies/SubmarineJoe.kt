@@ -107,7 +107,7 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         set(value) {
             if (value) frozenTimer.reset() else frozenTimer.setToEnd()
         }
-    private val frozenTimer = Timer(FROZEN_DUR)
+    private val frozenTimer = Timer(ConstVals.STANDARD_FROZEN_DUR)
 
     private val aimLine = GameLine()
     private val missileSpawnBounds = GameRectangle().setSize(2f * ConstVals.PPM, 0.5f * ConstVals.PPM)

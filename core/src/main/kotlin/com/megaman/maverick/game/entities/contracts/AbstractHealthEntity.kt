@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.contracts
 
+import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.time.Timer
@@ -28,6 +29,8 @@ abstract class AbstractHealthEntity(
 
     override val invincible: Boolean
         get() = !damageTimer.isFinished()
+
+    val onDamagedCallbacks = Array<(IDamager, Int) -> Unit>()
 
     protected abstract val damageNegotiator: IDamageNegotiator?
     protected open val damageOverrides = ObjectMap<KClass<out IDamager>, DamageNegotiation?>()
@@ -88,7 +91,13 @@ abstract class AbstractHealthEntity(
 
         lastDamager = damager
 
+        onDamaged(damager, editedDamage)
+
         return true
+    }
+
+    protected open fun onDamaged(damager: IDamager, damage: Int) {
+        onDamagedCallbacks.forEach { it.invoke(damager, damage) }
     }
 
     protected open fun getDamageDuration(damager: IDamager) = dmgDuration
