@@ -52,6 +52,7 @@ import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.SlashDissipation
 import com.megaman.maverick.game.entities.enemies.RatRobot
 import com.megaman.maverick.game.entities.projectiles.Needle
+import com.megaman.maverick.game.entities.projectiles.ReactorManProjectile
 import com.megaman.maverick.game.entities.projectiles.SlashWave
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -220,6 +221,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
         stateMachine = buildStateMachine()
         addComponent(defineAnimationsComponent())
         damageOverrides.put(Needle::class, dmgNeg(3))
+        damageOverrides.put(ReactorManProjectile::class, dmgNeg(3))
     }
 
     override fun onSpawn(spawnProps: Properties) {
