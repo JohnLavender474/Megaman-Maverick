@@ -1997,6 +1997,7 @@ sprites/frames/Megaman_v2_RushJet/stand_shoot.png
 sprites/frames/Megaman_v2_RushJet/wallslide_shoot.png
 sprites/frames/Megaman_v2_RushJet/climb.png
 sprites/frames/Megaman_v2_RushJet/damaged.png
+sprites/frames/Megaman_v2_RushJet/crouch.png
 sprites/frames/Megaman_v2_RushJet/climb_finish.png
 sprites/frames/Megaman_v2_RushJet/swim_shoot.png
 sprites/frames/Megaman_v2_RushJet/stand.png
@@ -2010,6 +2011,7 @@ sprites/frames/Megaman_v2_RushJet/frozen_push.png
 sprites/frames/Megaman_v2_RushJet/run_trans_shoot.png
 sprites/frames/Megaman_v2_RushJet/jetpack_airdash_shoot.png
 sprites/frames/Megaman_v2_RushJet/frozen.png
+sprites/frames/Megaman_v2_RushJet/crouch_shoot.png
 sprites/frames/Megaman_v2_RushJet/run_shoot.png
 sprites/frames/Megaman_v2_RushJet/slip.png
 sprites/frames/Megaman_v2_RushJet/run.png

@@ -1961,7 +1961,11 @@
     <property name="big" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="89" name="LampeonBandito" x="2480" y="2720" width="32" height="32"/>
+  <object id="89" name="LampeonBandito" x="2480" y="2720" width="32" height="32">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
   <object id="94" name="Jetto" x="2896" y="2608" width="32" height="32"/>
   <object id="96" name="LampeonBandito" x="3344" y="2816" width="32" height="32"/>
   <object id="97" name="Jetto" x="3616" y="2608" width="32" height="32"/>
@@ -2012,7 +2016,11 @@
   <object id="172" name="CarriCarry" x="6472" y="2288" width="16" height="16"/>
   <object id="180" name="Arigock" x="6488" y="1904" width="16" height="16"/>
   <object id="181" name="Arigock" x="632" y="2736" width="16" height="16"/>
-  <object id="186" name="Arigock" x="1464" y="2768" width="16" height="16"/>
+  <object id="186" name="Arigock" x="1464" y="2768" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+   </properties>
+  </object>
   <object id="189" name="TorikoPlundge" x="6352" y="1888" width="32" height="32">
    <properties>
     <property name="block" type="object" value="188"/>
@@ -2033,11 +2041,6 @@
    </properties>
   </object>
   <object id="251" name="ScooperPete" x="8400" y="1376" width="32" height="32">
-   <properties>
-    <property name="keys" value="1"/>
-   </properties>
-  </object>
-  <object id="265" name="ScooperPete" x="8784" y="1504" width="32" height="32">
    <properties>
     <property name="keys" value="1"/>
    </properties>
@@ -2107,6 +2110,7 @@
   </object>
   <object id="405" name="ScooperPete" x="15984" y="2848" width="32" height="32">
    <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
     <property name="keys" value="1"/>
    </properties>
   </object>
@@ -2153,21 +2157,6 @@
    </properties>
   </object>
   <object id="675" name="LampeonBandito" x="6512" y="2464" width="32" height="32">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="676" name="LampeonBandito" x="7360" y="1984" width="32" height="32">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="677" name="LampeonBandito" x="8624" y="1408" width="32" height="32">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="678" name="LampeonBandito" x="16192" y="2752" width="32" height="32">
    <properties>
     <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
@@ -2269,11 +2258,7 @@
     <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="701" name="CarriCarry" x="7160" y="2064" width="16" height="16">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
+  <object id="701" name="CarriCarry" x="7160" y="2064" width="16" height="16"/>
   <object id="703" name="Cactus" x="6576" y="2912" width="32" height="32">
    <properties>
     <property name="big" type="bool" value="false"/>
@@ -2286,10 +2271,9 @@
     <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="705" name="Cactus" x="6400" y="2016" width="32" height="32">
+  <object id="705" name="Cactus" x="6512" y="2016" width="32" height="32">
    <properties>
     <property name="big" type="bool" value="false"/>
-    <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
   </object>
   <object id="706" name="Bat" x="8112" y="1728" width="16" height="16">

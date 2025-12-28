@@ -56,7 +56,7 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             GreenPelletBlast::class pairTo dmgNeg(3),
             ReactorManProjectile::class pairTo dmgNeg {
                 it as ReactorManProjectile
-                if (it.big) 5 else 3
+                if (it.big) 8 else 5
             }
         )
 
@@ -93,7 +93,7 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             GreenPelletBlast::class pairTo dmgNeg(10),
             ReactorManProjectile::class pairTo dmgNeg {
                 it as ReactorManProjectile
-                if (it.big) 10 else 5
+                if (it.big) 15 else 10
             }
         )
 

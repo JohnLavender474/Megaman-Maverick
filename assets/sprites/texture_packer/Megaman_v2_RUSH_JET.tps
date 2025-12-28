@@ -177,6 +177,8 @@
             <key type="filename">../frames/Megaman_v2_RushJet/airdash_shoot.png</key>
             <key type="filename">../frames/Megaman_v2_RushJet/climb_finish.png</key>
             <key type="filename">../frames/Megaman_v2_RushJet/climb_still_shoot.png</key>
+            <key type="filename">../frames/Megaman_v2_RushJet/crouch.png</key>
+            <key type="filename">../frames/Megaman_v2_RushJet/crouch_shoot.png</key>
             <key type="filename">../frames/Megaman_v2_RushJet/groundslide.png</key>
             <key type="filename">../frames/Megaman_v2_RushJet/groundslide_shoot.png</key>
             <key type="filename">../frames/Megaman_v2_RushJet/jump.png</key>

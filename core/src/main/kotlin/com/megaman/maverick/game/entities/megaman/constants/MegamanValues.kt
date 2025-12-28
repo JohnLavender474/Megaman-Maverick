@@ -53,7 +53,7 @@ object MegamanValues {
     const val WATER_AIR_DASH_END_BUMP = 1f
     const val RUSH_JET_AIR_DASH_SCALAR = 1.25f
 
-    const val JETPACK_Y_IMPULSE = 18f
+    const val JETPACK_Y_IMPULSE = 30f
     const val JETPACK_TIME_PER_BIT = 0.1f
     const val JETPACK_BIT_RECOVERY_DELAY = 0.5f
     const val JETPACK_BIT_RECOVERY_DUR = 0.1f
