@@ -253,7 +253,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
         override fun evaluate(delta: Float): Boolean {
             if (dead || !ready || !canMove || damaged || teleporting || maxTimer.isFinished() ||
-                (currentWeapon != MegamanWeapon.RUSH_JET && body.isSensing(BodySense.FEET_ON_GROUND)) ||
                 body.isSensing(BodySense.TELEPORTING) ||
                 isAnyBehaviorActive(
                     BehaviorType.CLIMBING,
@@ -261,15 +260,16 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     BehaviorType.WALL_SLIDING,
                 ) || FacingUtils.isFacingBlock(megaman) ||
                 (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting) ||
-                (currentWeapon == MegamanWeapon.RUSH_JET && weaponsHandler.isDepleted(MegamanWeapon.RUSH_JET))
+                (currentWeapon != MegamanWeapon.RUSH_JET && body.isSensing(BodySense.FEET_ON_GROUND)) ||
+                (currentWeapon == MegamanWeapon.RUSH_JET &&
+                    (weaponsHandler.isDepleted(MegamanWeapon.RUSH_JET) ||
+                        game.controllerPoller.isPressed(MegaControllerButton.UP)))
             ) return false
 
             if (isBehaviorActive(BehaviorType.AIR_DASHING))
                 return !minTimer.isFinished() || isAirDashButtonActivated()
 
-            return aButtonTask == AButtonTask.AIR_DASH &&
-                isAirDashButtonJustActivated() &&
-                game.controllerPoller.isReleased(MegaControllerButton.UP)
+            return aButtonTask == AButtonTask.AIR_DASH && isAirDashButtonJustActivated()
         }
 
         override fun init() {

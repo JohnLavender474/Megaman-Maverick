@@ -84,8 +84,8 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         private const val TORNADO_IMPULSE_X = 50f
         private const val TORNADO_HEIGHT = 2f
 
-        private const val JUMP_MAX_IMPULSE_X = 10f
-        private const val JUMP_IMPULSE_Y = 14f
+        private const val JUMP_MAX_IMPULSE_X = 12f
+        private const val JUMP_IMPULSE_Y = 15f
 
         private const val WALL_JUMP_IMPULSE_X = 5f
 
@@ -101,8 +101,8 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
 
         private const val BODY_WIDTH = 1.5f
         private const val BODY_HEIGHT = 1.75f
-        private const val VEL_CLAMP_X = 50f
-        private const val VEL_CLAMP_Y = 25f
+        private const val VEL_CLAMP_X = 20f
+        private const val VEL_CLAMP_Y = 30f
         private const val DEFAULT_FRICTION_X = 5f
         private const val DEFAULT_FRICTION_Y = 1f
         private const val SAND_FRICTION_X = 10f
@@ -594,7 +594,10 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
             .transition(DesertManState.STAND.name, DesertManState.DANCE.name) {
                 previousAttackState != DesertManState.DANCE && getRandomBool()
             }
-            .transition(DesertManState.STAND.name, DesertManState.JUMP.name) { true }
+            .transition(DesertManState.STAND.name, DesertManState.JUMP.name) {
+                getRandom(0, 100) <= 80
+            }
+            .transition(DesertManState.STAND.name, DesertManState.DANCE.name) { true }
             // PUNCH -> STAND
             .transition(DesertManState.PUNCH.name, DesertManState.STAND.name) { true }
             // JUMP -> WALL_SLIDE, STAND

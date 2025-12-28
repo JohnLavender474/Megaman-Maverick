@@ -97,9 +97,9 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
             region2 = atlas.findRegion("${TAG}/2")
         }
         super.init()
-        addComponent(defineBodyComponent())
         addComponent(defineCullablesComponent())
         addComponent(defineSpritesComponent())
+        addComponent(defineBodyComponent())
         addComponent(AudioComponent())
     }
 
@@ -208,10 +208,12 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
         }
         bodyFixture.setHitByBodyReceiver { entity, state ->
             if (state != ProcessState.BEGIN) return@setHitByBodyReceiver
-            if ((entity is IDamageable && entity.invincible) || entity is SmallIceCube) shatterAndDie()
+            if (entity is IDamageable && entity.invincible) shatterAndDie()
         }
         bodyFixture.setHitByPlayerReceiver { if (!it.canBeDamaged) shatterAndDie() }
-        bodyFixture.setHitByProjectileReceiver { getHit(it) }
+        bodyFixture.setHitByProjectileReceiver {
+            if (it !is SmallIceCube && it.owner != owner) getHit(it)
+        }
         bodyFixture.setHitByBlockReceiver(ProcessState.BEGIN) { block, _ ->
             if (destroyOnHitBlock) shatterAndDie() else getHit(block)
         }
@@ -243,7 +245,6 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
             when {
                 body.physics.velocity.x < -0.1f * ConstVals.PPM && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) ->
                     body.physics.velocity.x = -0.1f * ConstVals.PPM
-
                 body.physics.velocity.x > 0.1f * ConstVals.PPM && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) ->
                     body.physics.velocity.x = 0.1f * ConstVals.PPM
             }
@@ -270,7 +271,6 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
         component.putPreProcess { _, _ ->
             val region = if (hitTimes == 0) region1 else region2
             sprite.setRegion(region)
-
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
         }

@@ -18,7 +18,6 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.controller.ControllerUtils
 import com.mega.game.engine.drawables.sprites.GameSprite
-import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.events.Event
 import com.mega.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstKeys
@@ -194,7 +193,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
         val atlas = game.assMan.getTextureAtlas(TextureAsset.UI_2.source)
         background = GameSprite(atlas.findRegion("TitleScreenBackgroundv3"))
-        background.setSize(ConstVals.VIEW_HEIGHT * ConstVals.PPM)
+        background.setSize(ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         background.setCenter(ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f, ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f)
 
         buttons.put(
