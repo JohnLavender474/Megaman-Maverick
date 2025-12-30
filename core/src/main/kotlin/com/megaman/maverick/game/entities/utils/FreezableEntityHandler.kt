@@ -4,6 +4,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.megaman.maverick.game.ConstKeys
@@ -19,6 +20,10 @@ class FreezableEntityHandler(
     private val onFrozen: () -> Unit = {},
     private val onUnfrozen: () -> Unit = {},
     private val onJustFinished: () -> Unit = {},
+    private val doSpawnFrozenBlock: () -> Boolean = { true },
+    private val frozenBlockBoundsSupplier: (() -> GameRectangle)? = {
+        (entity as IBodyEntity).body.getBounds()
+    },
     duration: Float = ConstVals.STANDARD_FROZEN_DUR
 ) : Updatable {
 
@@ -46,7 +51,8 @@ class FreezableEntityHandler(
     fun setFrozen(value: Boolean) {
         GameLogger.debug(TAG, "setFrozen(): value=$value")
         if (value) {
-            if (frozenEntityBlock.dead) frozenEntityBlock.spawn(props(ConstKeys.ENTITY pairTo entity))
+            if (frozenEntityBlock.dead && doSpawnFrozenBlock.invoke())
+                frozenEntityBlock.spawn(props(ConstKeys.ENTITY pairTo entity))
             timer.reset()
             onFrozen.invoke()
         } else {
@@ -70,10 +76,12 @@ class FreezableEntityHandler(
         }
 
         if (isFrozen() && frozenEntityBlock.spawned) {
-            val bounds = (entity as IBodyEntity).body.getBounds()
-            frozenEntityBlock.body.set(bounds)
-            frozenEntityBlock.body.forEachFixture { fixture ->
-                fixture.setShape(bounds)
+            val bounds = frozenBlockBoundsSupplier?.invoke()
+            if (bounds != null) {
+                frozenEntityBlock.body.set(bounds)
+                frozenEntityBlock.body.forEachFixture { fixture ->
+                    fixture.setShape(bounds)
+                }
             }
         }
 

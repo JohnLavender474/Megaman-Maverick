@@ -41,8 +41,10 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.contracts.*
-import com.megaman.maverick.game.entities.explosions.IceShard
+import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
+import com.megaman.maverick.game.entities.contracts.IOwnable
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.utils.moveTowards
@@ -96,7 +98,10 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         set(value) {
             frozenHandler.setFrozen(value)
         }
-    private val frozenHandler = FreezableEntityHandler(this)
+    private val frozenHandler = FreezableEntityHandler(
+        this,
+        onJustFinished = { setToAttack() }
+    )
 
     private lateinit var state: BeezeeState
 
@@ -141,26 +146,18 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         facing = UtilMethods.getRandom(Facing.LEFT, Facing.RIGHT)
         owner = spawnProps.get(ConstKeys.OWNER, CannoHoney::class)!!
 
-        frozenHandler.setFrozen(false)
+        frozen = false
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy(): hashCode=${hashCode()}")
         super.onDestroy()
         owner = null
+        frozen = false
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
         DAMAGERS.contains(damager::class) || super.canBeDamagedBy(damager)
-
-    override fun takeDamageFrom(damager: IDamager): Boolean {
-        GameLogger.debug(TAG, "takeDamageFrom(): hashCode=${hashCode()}, damager=$damager")
-        val damaged = super.takeDamageFrom(damager)
-        if (damaged) {
-            if (damager is IFreezerEntity) frozen = true else setToAttack()
-        }
-        return damaged
-    }
 
     override fun shouldBeCulled(delta: Float) = cullTimer.isFinished()
 
@@ -175,10 +172,9 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
             owner?.let { hoverArea.setCenter(it.body.getCenter()) }
 
             frozenHandler.update(delta)
-            if (frozen) return@update
-            if (frozenHandler.isJustFinished()) {
-                IceShard.spawn5(body.getCenter())
-                setToAttack()
+            if (frozen) {
+                body.physics.velocity.setZero()
+                return@update
             }
 
             when (state) {

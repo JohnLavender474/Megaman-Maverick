@@ -89,6 +89,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         set(value) {
             body.direction = value
         }
+
     override var frozen: Boolean
         get() = freezeHandler.isFrozen()
         set(value) {
@@ -214,7 +215,10 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         updatablesComponent.add { delta ->
             freezeHandler.update(delta)
 
-            if (frozen) return@add
+            if (frozen) {
+                body.physics.velocity.setZero()
+                return@add
+            }
 
             when (state) {
                 BatState.HANGING -> {
@@ -283,7 +287,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
 
             when {
                 !canMove -> body.physics.velocity.setZero()
-
                 state == BatState.FLYING_TO_RETREAT -> {
                     val velocity = GameObjectPools.fetch(Vector2::class)
                     when (direction) {
@@ -294,7 +297,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
                     }.scl(ConstVals.PPM.toFloat())
                     body.physics.velocity.set(velocity)
                 }
-
                 state != BatState.FLYING_TO_ATTACK -> body.physics.velocity.setZero()
             }
         }

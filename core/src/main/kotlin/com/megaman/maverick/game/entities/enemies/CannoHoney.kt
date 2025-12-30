@@ -93,7 +93,10 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
             freezeHandler.setFrozen(value)
         }
 
-    private val freezeHandler = FreezableEntityHandler(this)
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = { stateLoopHandler.reset() }
+    )
 
     private val stateLoopHandler = StateLoopHandler<CannoHoneyState>(
         CannoHoneyState.entries.toGdxArray(),
