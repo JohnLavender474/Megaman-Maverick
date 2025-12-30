@@ -43,14 +43,17 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.hazards.SpikeTeeth
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable {
+class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity,
+    IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "SpikeCopter"
@@ -69,7 +72,8 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         private val animDefs = orderedMapOf(
             "drop" pairTo AnimationDef(),
             "fly" pairTo AnimationDef(2, 1, 0.1f, true),
-            "drop_teeth" pairTo AnimationDef(3, 1, 0.1f, false)
+            "drop_teeth" pairTo AnimationDef(3, 1, 0.1f, false),
+            "frozen" pairTo AnimationDef()
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -77,6 +81,17 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     private enum class SpikeCopterState { FLY, DROP_TEETH, DROP }
 
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = { state = SpikeCopterState.DROP }
+    )
 
     private lateinit var state: SpikeCopterState
 
@@ -114,11 +129,21 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         dropTeethDelay.reset()
         dropTeethTimer.reset()
         dropDelay.reset()
+
+        frozen = false
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        frozen = false
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
             when (state) {
                 SpikeCopterState.FLY -> {
                     FacingUtils.setFacingOf(this)
@@ -137,7 +162,6 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
                         dropTeeth()
                     }
                 }
-
                 SpikeCopterState.DROP_TEETH -> {
                     body.physics.velocity.setZero()
 
@@ -147,7 +171,6 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
                         dropTeethTimer.reset()
                     }
                 }
-
                 SpikeCopterState.DROP -> {
                     dropDelay.update(delta)
                     if (dropDelay.isJustFinished()) body.physics.velocity.set(0f, DROP_Y * ConstVals.PPM)
@@ -224,7 +247,7 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { state.name.lowercase() }
+                .setKeySupplier { if (frozen) "frozen" else state.name.lowercase() }
                 .applyToAnimations { animations ->
                     animDefs.forEach { entry ->
                         val key = entry.key

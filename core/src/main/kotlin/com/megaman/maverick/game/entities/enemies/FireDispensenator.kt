@@ -26,7 +26,6 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -49,17 +48,17 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IFreezerEntity
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.FireWall
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
 
-class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity,
-    IFaceable {
+class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IFreezableEntity,
+    IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "FireDispensenator"
@@ -68,33 +67,36 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
         private const val FIRE_TIME = 0.4f
         private const val FIRE_DUR = 1f
         private const val SLEEP_DUR = 0.25f
-        private const val FROZEN_DUR = 1f
         private const val FIRE_TRAJ_X = 8f
         private const val GROUND_GRAVITY = -0.01f
         private const val GRAVITY = -0.15f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private enum class FireDispensenatorState { OPEN, CLOSE, FIRE, SLEEP, FROZEN }
+    private enum class FireDispensenatorState { OPEN, CLOSE, FIRE, SLEEP }
 
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private val timers = objectMapOf(
         "open" pairTo Timer(OPEN_DUR),
         "fire" pairTo Timer(FIRE_DUR, gdxArrayOf(TimeMarkedRunnable(FIRE_TIME) { fire() })),
         "close" pairTo Timer(CLOSE_DUR),
-        "sleep" pairTo Timer(SLEEP_DUR),
-        "frozen" pairTo Timer(ConstVals.STANDARD_FROZEN_DUR)
+        "sleep" pairTo Timer(SLEEP_DUR)
     )
     private lateinit var stateMachine: StateMachine<FireDispensenatorState>
-    private val currentState: FireDispensenatorState
-        get() = stateMachine.getCurrentElement()
-    private val shouldBeFrozen: Boolean
-        get() = !timers["frozen"].isFinished()
     private val ignoreBlockSet = ObjectSet<Int>()
     private val scanner = GameRectangle()
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             FireDispensenatorState.entries.forEach {
@@ -110,7 +112,6 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
@@ -120,42 +121,38 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
 
         facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
-        timers.forEach { entry ->
-            val key = entry.key
-            val timer = entry.value
-            if (key == "frozen") timer.setToEnd() else timer.reset()
-        }
+        timers.values().forEach { timer -> timer.reset() }
         stateMachine.reset()
 
         if (spawnProps.containsKey(FireWall.IGNORE_BLOCKS)) {
             val ignoreBlocks = spawnProps.get(FireWall.IGNORE_BLOCKS, String::class)!!.split(",")
             ignoreBlocks.forEach { id -> ignoreBlockSet.add(id.toInt()) }
         }
+
+        frozen = false
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         ignoreBlockSet.clear()
+        frozen = false
     }
-
-    override fun takeDamageFrom(damager: IDamager): Boolean {
-        val damaged = super.takeDamageFrom(damager)
-        if (damaged && currentState != FireDispensenatorState.FROZEN && damager is IFreezerEntity) onFrozen()
-        return damaged
-    }
-
-    private fun onFrozen() = timers["frozen"].reset()
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            val state = stateMachine.getCurrentElement()
+            freezeHandler.update(delta)
 
-            if (shouldBeFrozen && state != FireDispensenatorState.FROZEN) stateMachine.next()
+            if (frozen) {
+                body.physics.velocity.setZero()
+                return@add
+            }
+
+            val state = stateMachine.getCurrentElement()
 
             if (!state.equalsAny(
                     FireDispensenatorState.CLOSE,
-                    FireDispensenatorState.FROZEN,
                     FireDispensenatorState.FIRE
                 )
             ) facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
@@ -211,7 +208,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = { stateMachine.getCurrentElement().name.lowercase() }
+        val keySupplier: (String?) -> String? = { if (frozen) "frozen" else stateMachine.getCurrentElement().name.lowercase() }
         val animations = objectMapOf<String, IAnimation>(
             "sleep" pairTo Animation(regions["sleep"]),
             "open" pairTo Animation(regions["open"], 2, 1, 0.1f, false),
@@ -229,42 +226,24 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
         builder.setOnChangeState(this::onChangeState)
         builder.initialState(FireDispensenatorState.SLEEP.name)
             // sleep
-            .transition(FireDispensenatorState.SLEEP.name, FireDispensenatorState.FROZEN.name) { shouldBeFrozen }
             .transition(FireDispensenatorState.SLEEP.name, FireDispensenatorState.OPEN.name) {
                 megaman.body.getBounds().overlaps(scanner)
             }
             // open
-            .transition(FireDispensenatorState.OPEN.name, FireDispensenatorState.FROZEN.name) { shouldBeFrozen }
             .transition(FireDispensenatorState.OPEN.name, FireDispensenatorState.FIRE.name) { true }
             // fire
-            .transition(FireDispensenatorState.FIRE.name, FireDispensenatorState.FROZEN.name) { shouldBeFrozen }
             .transition(FireDispensenatorState.FIRE.name, FireDispensenatorState.CLOSE.name) { true }
             // close
-            .transition(FireDispensenatorState.CLOSE.name, FireDispensenatorState.FROZEN.name) { shouldBeFrozen }
             .transition(FireDispensenatorState.CLOSE.name, FireDispensenatorState.OPEN.name) {
                 megaman.body.getBounds().overlaps(scanner)
             }
             .transition(FireDispensenatorState.CLOSE.name, FireDispensenatorState.SLEEP.name) { true }
-            // frozen
-            .transition(FireDispensenatorState.FROZEN.name, FireDispensenatorState.OPEN.name) { true }
         return builder.build()
     }
 
     private fun onChangeState(current: FireDispensenatorState, previous: FireDispensenatorState) {
         GameLogger.debug(TAG, "onChangeState(): current=$current, previous=$previous")
-
-        when (previous) {
-            FireDispensenatorState.FROZEN -> {
-                damageTimer.reset()
-
-                for (i in 0 until 5) {
-                    val shard = MegaEntityFactory.fetch(IceShard::class)!!
-                    shard.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.INDEX pairTo i))
-                }
-            }
-
-            else -> timers[previous.name.lowercase()].reset()
-        }
+        timers[previous.name.lowercase()].reset()
     }
 
     private fun fire() {

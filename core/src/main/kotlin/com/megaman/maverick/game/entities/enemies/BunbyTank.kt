@@ -44,13 +44,15 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.projectiles.BunbyRedRocket
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity,
+class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IFreezableEntity, IAnimatedEntity,
     IDrawableShapesEntity, IFaceable, IDirectional {
 
     companion object {
@@ -76,6 +78,14 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         }
     override lateinit var facing: Facing
 
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
+
     private val shootTimer = Timer(SHOOT_DUR, TimeMarkedRunnable(SHOOT_TIME) { shoot() })
     private val afterShootDelayTimer = Timer(AFTER_SHOOT_DELAY)
     private val shootScanner = GameRectangle()
@@ -89,6 +99,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             regions.put("still", atlas.findRegion("$TAG/Still"))
             regions.put("roll", atlas.findRegion("$TAG/Roll"))
             regions.put("shoot", atlas.findRegion("$TAG/Shoot"))
+            regions.put("frozen", atlas.findRegion("$TAG/frozen"))
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -122,6 +133,14 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         val rollFrameDuration =
             spawnProps.getOrDefault("${ConstKeys.ROLL}_${ConstKeys.FRAME}", 0.1f, Float::class)
         animations.get("roll").setFrameDuration(rollFrameDuration)
+
+        frozen = false
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        frozen = false
     }
 
     private fun shoot() {
@@ -162,6 +181,13 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) {
+                body.physics.velocity.setZero()
+                return@add
+            }
+
             if (game.isCameraRotating()) {
                 body.physics.velocity.setZero()
                 return@add
@@ -359,11 +385,13 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: (String?) -> String? = {
-            if (!afterShootDelayTimer.isFinished()) "still"
+            if (frozen) "frozen"
+            else if (!afterShootDelayTimer.isFinished()) "still"
             else if (!shootTimer.isFinished()) "shoot"
             else "roll"
         }
         animations = objectMapOf(
+            "frozen" pairTo Animation(regions.get("frozen")),
             "still" pairTo Animation(regions.get("still")),
             "shoot" pairTo Animation(regions.get("shoot"), 3, 1, 0.15f, false),
             "roll" pairTo Animation(regions.get("roll"), 2, 1, 0.1f, true)

@@ -41,16 +41,18 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.JoeBall
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
-class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IFaceable {
+class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IFreezableEntity, IFaceable {
 
     companion object {
         const val TAG = "SwinginJoe"
@@ -63,6 +65,17 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
     override lateinit var facing: Facing
 
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = { loop.reset() }
+    )
+
     private val loop = Loop(SwinginJoeState.entries.toGdxArray())
     private val currentState: SwinginJoeState
         get() = loop.getCurrent()
@@ -72,7 +85,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            gdxArrayOf("swing1", "swing2", "throw").forEach { key ->
+            gdxArrayOf("swing1", "swing2", "throw", "frozen").forEach { key ->
                 val region = atlas.findRegion("$TAG/$key")
                 regions.put(key, region)
             }
@@ -92,6 +105,8 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         stateTimer.reset()
 
         facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+
+        frozen = false
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
@@ -134,10 +149,13 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
-        updatablesComponent.add {
+        updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+            if (frozen) return@add
+
             facing = if (megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
 
-            stateTimer.update(it)
+            stateTimer.update(delta)
             if (stateTimer.isJustFinished()) {
                 val next = loop.next()
                 if (next == SwinginJoeState.THROWING) throwBall()
@@ -162,7 +180,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: (String?) -> String? = {
-            when (currentState) {
+            if (frozen) "frozen" else when (currentState) {
                 SwinginJoeState.SWING_EYES_CLOSED -> "swing1"
                 SwinginJoeState.SWING_EYES_OPEN -> "swing2"
                 SwinginJoeState.THROWING -> "throw"
@@ -171,7 +189,8 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         val animations = objectMapOf<String, IAnimation>(
             "swing1" pairTo Animation(regions["swing1"], 2, 2, 0.1f, true),
             "swing2" pairTo Animation(regions["swing2"], 2, 2, 0.1f, true),
-            "throw" pairTo Animation(regions["throw"])
+            "throw" pairTo Animation(regions["throw"]),
+            "frozen" pairTo Animation(regions["frozen"]),
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

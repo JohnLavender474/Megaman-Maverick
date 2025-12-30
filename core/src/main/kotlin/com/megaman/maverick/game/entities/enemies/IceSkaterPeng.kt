@@ -39,12 +39,13 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFireEntity
-import com.megaman.maverick.game.entities.contracts.IFreezerEntity
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class IceSkaterPeng(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class IceSkaterPeng(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "IceSkaterPeng"
@@ -73,7 +74,8 @@ class IceSkaterPeng(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
             "jump1" pairTo AnimationDef(2, 1, 0.1f, true),
             "jump2" pairTo AnimationDef(2, 1, 0.1f, true),
             "brake" pairTo AnimationDef(2, 1, 0.1f, true),
-            "skate" pairTo AnimationDef(2, 1, 0.1f, true)
+            "skate" pairTo AnimationDef(2, 1, 0.1f, true),
+            "frozen" pairTo AnimationDef()
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -81,6 +83,14 @@ class IceSkaterPeng(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
     private enum class IceSkaterPengState { SKATE, BRAKE, JUMP }
 
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private lateinit var stateMachine: StateMachine<IceSkaterPengState>
     private val currentState: IceSkaterPengState
@@ -118,22 +128,31 @@ class IceSkaterPeng(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
         facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         body.physics.defaultFrictionOnSelf.x = DEFAULT_FRICTION_X
+
+        frozen = false
     }
 
     override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when (damager) {
         is IFireEntity -> ConstVals.MAX_HEALTH
-        is IFreezerEntity -> 1
         else -> baseDamage
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        frozen = false
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) {
+                body.physics.velocity.x = 0f
+                return@add
+            }
+
             sensor.setBottomCenterToPoint(body.getPositionPoint(Position.TOP_CENTER))
 
             when (currentState) {
@@ -154,7 +173,6 @@ class IceSkaterPeng(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
                         velocity.x = velocity.x.coerceIn(SKATE_MAX_VEL_X * ConstVals.PPM)
                     }
                 }
-
                 IceSkaterPengState.BRAKE -> {
                     brakeTimer.update(delta)
 
@@ -164,7 +182,6 @@ class IceSkaterPeng(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
                         stateMachine.next()
                     }
                 }
-
                 IceSkaterPengState.JUMP -> {
                     jumpDelay.update(delta)
                     if (jumpDelay.isJustFinished()) jump()
@@ -255,7 +272,7 @@ class IceSkaterPeng(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
         .animator(
             AnimatorBuilder()
                 .setKeySupplier {
-                    when (currentState) {
+                    if (frozen) "frozen" else when (currentState) {
                         IceSkaterPengState.JUMP -> if (jumpDelay.isFinished()) "jump2" else "jump1"
                         else -> currentState.name.lowercase()
                     }

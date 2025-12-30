@@ -42,7 +42,9 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.projectiles.Cokonut
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -52,7 +54,7 @@ import com.megaman.maverick.game.utils.extensions.getRandomPositionInBounds
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class Cokeyro(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDrawableShapesEntity, IFaceable {
+class Cokeyro(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IDrawableShapesEntity, IFaceable {
 
     companion object {
         const val TAG = "Cokeyro"
@@ -72,7 +74,8 @@ class Cokeyro(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         private val animDefs = orderedMapOf(
             "idle" pairTo AnimationDef(2, 1, gdxArrayOf(1f, 0.15f), true),
             "shake" pairTo AnimationDef(2, 2, 0.1f, true),
-            "die" pairTo AnimationDef(2, 1, 0.1f, true)
+            "die" pairTo AnimationDef(2, 1, 0.1f, true),
+            "frozen" pairTo AnimationDef()
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -82,6 +85,14 @@ class Cokeyro(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     override val invincible: Boolean
         get() = state == CokeyroState.DIE || super.invincible
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private lateinit var state: CokeyroState
 
@@ -119,11 +130,14 @@ class Cokeyro(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
         dieTimer.reset()
         explodeTimer.reset()
+
+        frozen = false
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        frozen = false
     }
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
@@ -141,6 +155,10 @@ class Cokeyro(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) return@add
+
             when (state) {
                 CokeyroState.IDLE -> {
                     FacingUtils.setFacingOf(this)
@@ -268,7 +286,7 @@ class Cokeyro(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { state.name.lowercase() }
+                .setKeySupplier { if (frozen) "frozen" else state.name.lowercase() }
                 .applyToAnimations { animations -> AnimationUtils.loadAnimationDefs(animDefs, animations, regions) }
                 .build()
         )

@@ -20,7 +20,6 @@ import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -44,9 +43,8 @@ import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.bosses.RodentMan
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.explosions.IceShard
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
@@ -64,8 +62,6 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
         private const val GRAVITY = 0.375f
 
-        private const val FROZEN_DUR = 0.5f
-
         private val animDefs = orderedMapOf(
             "run" pairTo AnimationDef(3, 1, 0.1f, true),
             "still" pairTo AnimationDef(),
@@ -76,12 +72,12 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
     override lateinit var facing: Facing
     override var frozen: Boolean
-        get() = !frozenTimer.isFinished()
+        get() = freezeHandler.isFrozen()
         set(value) {
-            if (value) frozenTimer.reset() else frozenTimer.setToEnd()
+            freezeHandler.setFrozen(value)
         }
 
-    private val frozenTimer = Timer(ConstVals.STANDARD_FROZEN_DUR)
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private val triggers = Array<GameRectangle>()
     private var triggered = false
@@ -125,29 +121,22 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
     override fun canBeDamagedBy(damager: IDamager) = damager !is RodentMan && super.canBeDamagedBy(damager)
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
-        GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
-        val damaged = super.takeDamageFrom(damager)
-        if (damaged && !frozen && damager is IFreezerEntity) frozen = true
-        return damaged
-    }
-
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
         triggers.forEach { GameObjectPools.free(it) }
         triggers.clear()
+
+        frozen = false
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (frozen) {
-                frozenTimer.update(delta)
-                if (frozenTimer.isJustFinished()) IceShard.spawn5(body.getCenter())
-                return@add
-            }
+            freezeHandler.update(delta)
+
+            if (frozen) return@add
 
             if (!triggered &&
                 !megaman.isBehaviorActive(BehaviorType.CLIMBING) &&

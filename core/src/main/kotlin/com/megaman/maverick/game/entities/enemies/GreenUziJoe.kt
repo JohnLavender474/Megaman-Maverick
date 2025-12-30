@@ -43,16 +43,18 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.projectiles.GreenPelletBlast
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class GreenUziJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGravityEntity, IAnimatedEntity, IFaceable,
-    IDirectional {
+class GreenUziJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, IScalableGravityEntity,
+    IAnimatedEntity, IFaceable, IDirectional {
 
     companion object {
         const val TAG = "GreenUziJoe"
@@ -95,6 +97,14 @@ class GreenUziJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGra
         }
     override lateinit var facing: Facing
     override var gravityScalar = 0f
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private lateinit var state: GreenUziJoeState
 
@@ -178,6 +188,13 @@ class GreenUziJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGra
         blastTimer.setToEnd(false)
 
         canJump = spawnProps.getOrDefault(ConstKeys.JUMP, true, Boolean::class)
+
+        frozen = false
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        frozen = false
     }
 
     private fun blast() {
@@ -233,6 +250,13 @@ class GreenUziJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IScalableGra
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) {
+                body.physics.velocity.setZero()
+                return@add
+            }
+
             updateFacing()
 
             if (blastTimer.isFinished()) {

@@ -48,9 +48,9 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.*
-import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.MagmaWave
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -115,11 +115,12 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         }
 
     override var frozen: Boolean
-        get() = !frozenTimer.isFinished()
+        get() = freezeHandler.isFrozen()
         set(value) {
-            if (value) frozenTimer.reset() else frozenTimer.setToEnd()
+            freezeHandler.setFrozen(value)
         }
-    private val frozenTimer = Timer(0.5f)
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private lateinit var stateMachine: StateMachine<LumberJoeState>
     private val currentState: LumberJoeState
@@ -200,32 +201,28 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        frozen = false
     }
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
         GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
-
         val damaged = super.takeDamageFrom(damager)
-
-        if (damaged) {
-            if (damager is IFireEntity) {
-                burning = true
-                requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
-            } else if (damager is IFreezerEntity) frozen = true
+        if (damaged && damager is IFireEntity) {
+            burning = true
+            requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
         }
-
         return damaged
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            frozenTimer.update(delta)
+            freezeHandler.update(delta)
+
             if (frozen) {
                 body.physics.velocity.x = 0f
                 return@add
             }
-            if (frozenTimer.isJustFinished()) IceShard.spawn5(body.getCenter())
 
             jumpSensor.setBottomCenterToPoint(body.getPositionPoint(Position.TOP_CENTER))
 

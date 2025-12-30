@@ -43,15 +43,17 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity, IAnimatedEntity, IFaceable,
+class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, ISpritesEntity, IAnimatedEntity, IFaceable,
     IDirectional {
 
     companion object {
@@ -74,6 +76,14 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
     override lateinit var facing: Facing
     override lateinit var direction: Direction
 
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
+
     val shooting: Boolean
         get() = !shootTimer.isFinished()
 
@@ -84,7 +94,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            gdxArrayOf("move", "shoot").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
+            gdxArrayOf("move", "shoot", "frozen").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -105,6 +115,8 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
 
         direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
+
+        frozen = false
     }
 
     override fun onHealthDepleted() {
@@ -116,11 +128,16 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        frozen = false
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
+            freezeHandler.update(it)
+
+            if (frozen) return@add
+
             shootTimer.update(it)
             if (shootTimer.isJustFinished()) waitTimer.reset()
 
@@ -191,7 +208,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.gravity.y =
                 ConstVals.PPM * if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAV else GRAVITY
-            body.physics.velocity.x = VEL_X * ConstVals.PPM * facing.value
+            body.physics.velocity.x = if (frozen) 0f else VEL_X * ConstVals.PPM * facing.value
         }
 
         body.forEachFixture { it.putProperty(ConstKeys.DEATH_LISTENER, false) }
@@ -215,8 +232,13 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), ISpritesEntity
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = { if (shooting) "shoot" else "move" }
+        val keySupplier: (String?) -> String? = {
+            if (frozen) "frozen"
+            else if (shooting) "shoot"
+            else "move"
+        }
         val animations = objectMapOf<String, IAnimation>(
+            "frozen" pairTo Animation(regions["frozen"]),
             "shoot" pairTo Animation(regions["shoot"], 2, 1, 0.1f, true),
             "move" pairTo Animation(regions["move"], 2, 1, 0.1f, true)
         )

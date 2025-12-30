@@ -43,9 +43,11 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.hazards.HoneyDrip
 import com.megaman.maverick.game.entities.projectiles.Axe
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.utils.StateLoopHandler
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -54,7 +56,7 @@ import com.megaman.maverick.game.utils.extensions.getShape
 import com.megaman.maverick.game.utils.extensions.overlaps
 import com.megaman.maverick.game.world.body.*
 
-class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDrawableShapesEntity,
+class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IDrawableShapesEntity,
     IParentEntity<Beezee>, ICullable {
 
     companion object {
@@ -75,7 +77,8 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
         private val animDefs = orderedMapOf(
             "idle" pairTo AnimationDef(2, 1, 0.1f, false),
-            "squeeze" pairTo AnimationDef(3, 1, gdxArrayOf(0.1f, 0.1f, 0.8f), true)
+            "squeeze" pairTo AnimationDef(3, 1, gdxArrayOf(0.1f, 0.1f, 0.8f), true),
+            "frozen" pairTo AnimationDef()
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -83,6 +86,14 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     private enum class CannoHoneyState { IDLE, SQUEEZE }
 
     override var children = Array<Beezee>()
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private val stateLoopHandler = StateLoopHandler<CannoHoneyState>(
         CannoHoneyState.entries.toGdxArray(),
@@ -126,7 +137,7 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
         stateLoopHandler.reset()
 
-        (0 until MAX_BEES).forEach { spawnBeezee() }
+        (0 until MAX_BEES).forEach { _ -> spawnBeezee() }
 
         putCullable(ConstKeys.CUSTOM_CULL, this)
         cullTimer.reset()
@@ -144,6 +155,8 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                 addDebugShapeSupplier { scanner }
             }
         }
+
+        frozen = false
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
@@ -168,6 +181,8 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         killChildren()
 
         clearDebugShapeSuppliers()
+
+        frozen = false
     }
 
     private fun releaseChildren() {
@@ -187,6 +202,8 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
             val childIter = children.iterator()
             while (childIter.hasNext()) {
                 val child = childIter.next()
@@ -197,6 +214,8 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
             if (!game.getGameCamera().overlaps(cullBounds)) cullTimer.update(delta)
             else cullTimer.reset()
+
+            if (frozen) return@add
 
             stateLoopHandler.update(delta)
 
@@ -245,7 +264,7 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { currentState.name.lowercase() }
+                .setKeySupplier { if (frozen) "frozen" else currentState.name.lowercase() }
                 .applyToAnimations { animations ->
                     AnimationUtils.loadAnimationDefs(animDefs, animations, regions)
                 }
@@ -282,7 +301,7 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             children.removeValue(beeToCycle, false)
         }
 
-        (0 until numBeesToCycle).forEach { spawnBeezee() }
+        (0 until numBeesToCycle).forEach { _ -> spawnBeezee() }
 
         beesToCycle.clear()
     }

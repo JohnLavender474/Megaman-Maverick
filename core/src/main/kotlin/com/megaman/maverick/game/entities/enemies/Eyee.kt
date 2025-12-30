@@ -35,7 +35,9 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -44,7 +46,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.min
 
-class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity {
+class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "Eyee"
@@ -58,7 +60,16 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
 
         private var openRegion: TextureRegion? = null
         private var blinkRegion: TextureRegion? = null
+        private var frozenRegion: TextureRegion? = null
     }
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private enum class EyeeState { MOVING_TO_END, WAITING_AT_END, MOVING_TO_START, WAITING_AT_START }
 
@@ -84,6 +95,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             openRegion = atlas.findRegion("$TAG/Open")
             blinkRegion = atlas.findRegion("$TAG/Blink")
+            frozenRegion = atlas.findRegion("$TAG/frozen")
         }
         addComponent(defineAnimationsComponent())
     }
@@ -107,13 +119,23 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
         speed = 0f
         progress = 0f
 
+        frozen = false
+
         GameLogger.debug(TAG, "Movement scalar = $movementScalar")
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        frozen = false
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (!canMove) {
+            freezeHandler.update(delta)
+
+            if (frozen || !canMove) {
                 body.physics.velocity.setZero()
                 speed = 0f
                 return@add
@@ -129,7 +151,6 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
                         waitTimer.reset()
                     }
                 }
-
                 EyeeState.WAITING_AT_END -> {
                     waitTimer.update(delta)
                     if (waitTimer.isFinished()) {
@@ -138,7 +159,6 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
                         progress = 1f
                     }
                 }
-
                 EyeeState.MOVING_TO_START -> {
                     speed = min(MAX_SPEED, speed + SPEED_DELTA * delta)
                     progress -= speed * movementScalar * ConstVals.PPM * (delta / start.dst(end))
@@ -148,7 +168,6 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
                         waitTimer.reset()
                     }
                 }
-
                 EyeeState.WAITING_AT_START -> {
                     waitTimer.update(delta)
                     if (waitTimer.isFinished()) {
@@ -188,11 +207,15 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? =
-            { if (currentState.equalsAny(EyeeState.MOVING_TO_START, EyeeState.MOVING_TO_END)) "open" else "blink" }
+        val keySupplier: (String?) -> String? = {
+            if (frozen) "frozen"
+            else if (currentState.equalsAny(EyeeState.MOVING_TO_START, EyeeState.MOVING_TO_END)) "open"
+            else "blink"
+        }
         val animations = objectMapOf<String, IAnimation>(
             "open" pairTo Animation(openRegion!!),
-            "blink" pairTo Animation(blinkRegion!!, 1, 5, 0.1f, false)
+            "blink" pairTo Animation(blinkRegion!!, 1, 5, 0.1f, false),
+            "frozen" pairTo Animation(frozenRegion!!)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

@@ -19,7 +19,6 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -39,10 +38,9 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -72,11 +70,12 @@ class CanonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     override lateinit var facing: Facing
 
     override var frozen: Boolean
-        get() = !frozenTimer.isFinished()
+        get() = freezeHandler.isFrozen()
         set(value) {
-            if (value) frozenTimer.reset() else frozenTimer.setToEnd()
+            freezeHandler.setFrozen(value)
         }
-    private val frozenTimer = Timer(1f)
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private val loop = Loop(CanonHopperState.entries.toGdxArray())
     private val currentState: CanonHopperState
@@ -113,12 +112,7 @@ class CanonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-    }
-
-    override fun takeDamageFrom(damager: IDamager): Boolean {
-        val damaged = super.takeDamageFrom(damager)
-        if (damaged && damager is IFreezerEntity) frozen = true
-        return damaged
+        frozen = false
     }
 
     private fun shoot() {
@@ -144,12 +138,12 @@ class CanonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            frozenTimer.update(delta)
+            freezeHandler.update(delta)
+
             if (frozen) {
                 body.physics.velocity.x = 0f
                 return@add
             }
-            if (frozenTimer.isJustFinished()) IceShard.spawn5(body.getCenter())
 
             when (currentState) {
                 CanonHopperState.STAND -> {
@@ -208,7 +202,7 @@ class CanonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         return BodyComponentCreator.create(
             this,
             body,
-            BodyFixtureDef.Companion.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
+            BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGER, FixtureType.DAMAGEABLE)
         )
     }
 

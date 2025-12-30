@@ -52,10 +52,10 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.projectiles.SubmarineMissile
 import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.utils.StateLoopHandler
 import com.megaman.maverick.game.entities.utils.moveTowards
 import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
@@ -76,7 +76,6 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         private const val IDLE_DUR = 0.25f
         private const val SHOOT_DUR = 0.7f
         private const val SHOOT_TIME = 0.5f
-        private const val FROZEN_DUR = 0.5f
         private const val CHANGE_FACING_DELAY = 0.5f
 
         private const val MOVE_SPEED = 3f
@@ -92,7 +91,8 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         private val animDefs = orderedMapOf(
             "move" pairTo AnimationDef(2, 1, 0.1f, true),
             "idle" pairTo AnimationDef(2, 1, 0.1f, true),
-            "shoot" pairTo AnimationDef(1, 7, 0.1f, false)
+            "shoot" pairTo AnimationDef(1, 7, 0.1f, false),
+            "frozen" pairTo AnimationDef()
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -103,11 +103,12 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
     private val changeFacingDelay = Timer(CHANGE_FACING_DELAY)
 
     override var frozen: Boolean
-        get() = !frozenTimer.isFinished()
+        get() = freezeHandler.isFrozen()
         set(value) {
-            if (value) frozenTimer.reset() else frozenTimer.setToEnd()
+            freezeHandler.setFrozen(value)
         }
-    private val frozenTimer = Timer(ConstVals.STANDARD_FROZEN_DUR)
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private val aimLine = GameLine()
     private val missileSpawnBounds = GameRectangle().setSize(2f * ConstVals.PPM, 0.5f * ConstVals.PPM)
@@ -192,12 +193,6 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
 
     override fun canBeDamagedBy(damager: IDamager) = !frozen && super.canBeDamagedBy(damager)
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
-        val damaged = super.takeDamageFrom(damager)
-        if (damaged && damager is IFreezerEntity) frozen = true
-        return damaged
-    }
-
     override fun onHealthDepleted() {
         GameLogger.debug(TAG, "onHealthDepleted()")
         super.onHealthDepleted()
@@ -208,12 +203,19 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         reusableBodySet.clear()
+        frozen = false
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            frozenTimer.update(delta)
+            freezeHandler.update(delta)
+
+            if (frozen) {
+                body.physics.velocity.setZero()
+                return@add
+            }
+
             changeFacingDelay.update(delta)
 
             updateAimLine()
@@ -251,11 +253,9 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
                 game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y, reusableBodySet)
 
                 var passable = true
-                var blockingBody: IBody? = null
 
                 for (otherBody in reusableBodySet) if (otherBody.getEntity().getType() == EntityType.BLOCK) {
                     passable = false
-                    blockingBody = otherBody
                     break
                 }
 
@@ -282,7 +282,11 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
                     shapes = if (DEBUG_PATHFINDING) game.getShapes() else null
                 )
             },
-            { currentState == SubmarineJoeState.MOVE && !body.getBounds().overlaps(megaman.body.getBounds()) },
+            {
+                canMove &&
+                    currentState == SubmarineJoeState.MOVE &&
+                    !body.getBounds().overlaps(megaman.body.getBounds())
+            },
             intervalTimer = Timer(PATHFINDING_UPDATE_INTERVAL)
         )
         return pathfindingComponent
@@ -301,7 +305,7 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { stateLoopHandler.getCurrentState().name.lowercase() }
+                .setKeySupplier { if (frozen) "frozen" else stateLoopHandler.getCurrentState().name.lowercase() }
                 .applyToAnimations { animations ->
                     AnimationUtils.loadAnimationDefs(animDefs, animations, regions)
                 }

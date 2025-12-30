@@ -43,16 +43,19 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.projectiles.FallingIcicle
 import com.megaman.maverick.game.entities.projectiles.FallingIcicle.FallingIcicleState
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class IcicleTelly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable {
+class IcicleTelly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IAnimatedEntity,
+    IFaceable {
 
     companion object {
         const val TAG = "IcicleTelly"
@@ -77,6 +80,14 @@ class IcicleTelly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     private enum class IcicleTellyState { SPIN, DROP_ICICLE, SPAWN_ICICLE }
 
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private lateinit var stateMachine: StateMachine<IcicleTellyState>
     private val currentState: IcicleTellyState
@@ -117,16 +128,26 @@ class IcicleTelly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         canDropDelay.setToEnd()
 
         icicleShattered = false
+
+        frozen = false
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        frozen = false
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) {
+                body.physics.velocity.setZero()
+                return@add
+            }
+
             when (currentState) {
                 IcicleTellyState.SPIN -> {
                     FacingUtils.setFacingOf(this)
@@ -138,7 +159,6 @@ class IcicleTelly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
                     if (canDropIcicle() && shouldDropIcicle()) stateMachine.next()
                 }
-
                 IcicleTellyState.DROP_ICICLE, IcicleTellyState.SPAWN_ICICLE -> {
                     body.physics.velocity.setZero()
 
@@ -252,7 +272,7 @@ class IcicleTelly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { currentState.name.lowercase() }
+                .setKeySupplier { if (frozen) "frozen" else currentState.name.lowercase() }
                 .applyToAnimations { animations ->
                     animDefs.forEach { entry ->
                         val key = entry.key.name.lowercase()

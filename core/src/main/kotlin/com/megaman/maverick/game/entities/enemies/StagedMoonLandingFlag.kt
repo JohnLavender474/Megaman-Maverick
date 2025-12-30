@@ -78,6 +78,7 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
     private enum class FlagState { HIDDEN, RISE, STAND, FALL }
 
     override lateinit var facing: Facing
+
     override var gravityScalar = 1f
 
     private val loop = Loop(FlagState.entries.toGdxArray())

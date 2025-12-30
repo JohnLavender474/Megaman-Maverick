@@ -53,15 +53,20 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.projectiles.Asteroid
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.FacingUtils
-import com.megaman.maverick.game.world.body.*
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodyFixtureDef
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
 
-class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDrawableShapesEntity, IFaceable,
-    IDirectional {
+class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity,
+    IDrawableShapesEntity, IFaceable, IDirectional {
 
     companion object {
         const val TAG = "MoonEyeStone"
@@ -82,6 +87,7 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         private const val MAX_RELEASE_SPEED = 6f
 
         private val animDefs = orderedMapOf(
+            "frozen" pairTo AnimationDef(),
             "sleep" pairTo AnimationDef(),
             "awaken" pairTo AnimationDef(3, 1, 0.1f, false),
             "seek" pairTo AnimationDef(2, 1, gdxArrayOf(1f, 0.1f), true),
@@ -100,6 +106,14 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         set(value) {
             body.direction = value
         }
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private val loop = Loop(MoonEyeStoneState.entries.toGdxArray())
     private val currentState: MoonEyeStoneState
@@ -152,6 +166,8 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         reusableBodySet.clear()
 
         FacingUtils.setFacingOf(this)
+
+        frozen = false
     }
 
     override fun onDestroy() {
@@ -171,6 +187,8 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         }
 
         asteroids.clear()
+
+        frozen = false
     }
 
     override fun canBeDamagedBy(damager: IDamager) = super.canBeDamagedBy(damager) && damager !is Asteroid
@@ -184,6 +202,13 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add update@{ delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) {
+                body.physics.velocity.setZero()
+                return@update
+            }
+
             direction = megaman.body.direction
 
             if (game.isCameraRotating()) return@update
@@ -329,6 +354,8 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         .animator(
             AnimatorBuilder()
                 .setKeySupplier {
+                    if (frozen) return@setKeySupplier "frozen"
+
                     when (currentState) {
                         MoonEyeStoneState.SEEK -> if (throwing) "throw" else "seek"
                         else -> currentState.name.lowercase()

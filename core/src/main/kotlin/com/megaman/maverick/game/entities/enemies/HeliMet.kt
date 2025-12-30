@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Size
@@ -44,11 +45,13 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.bosses.GutsTankFist
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.enemies.HeliMet.HeliMetState.*
 import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.PurpleBlast
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -56,8 +59,8 @@ import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 
-class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IDirectional,
-    IFaceable {
+class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IAnimatedEntity,
+    IDirectional, IFaceable {
 
     companion object {
         const val TAG = "HeliMet"
@@ -80,6 +83,14 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     override lateinit var direction: Direction
     override lateinit var facing: Facing
 
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
+
     private lateinit var state: HeliMetState
 
     private val popUpTimer = Timer(POP_UP_DUR)
@@ -90,12 +101,14 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     private val tempTargetsQueue = Array<Vector2>()
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             HeliMetState.entries.forEach { state ->
                 val key = state.name.lowercase()
                 regions.put(key, atlas.findRegion("$TAG/$key"))
             }
+            regions.put("frozen", atlas.findRegion("$TAG/frozen"))
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -105,6 +118,7 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         when {
@@ -114,7 +128,6 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
 
                 target.set(spawnProps.get(ConstKeys.TARGET, Vector2::class)!!)
             }
-
             else -> {
                 val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
                 body.setCenter(spawn)
@@ -161,6 +174,14 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
         popUpTimer.reset()
         shootDelayTimer.reset()
         sideToSideTimer.reset()
+
+        frozen = false
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        frozen = false
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
@@ -174,6 +195,13 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) {
+                body.physics.velocity.setZero()
+                return@add
+            }
+
             when (state) {
                 SHIELD -> {
                     val velocity = GameObjectPools.fetch(Vector2::class)
@@ -190,14 +218,12 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
                         state = POP_UP
                     }
                 }
-
                 POP_UP -> {
                     body.physics.velocity.setZero()
 
                     popUpTimer.update(delta)
                     if (popUpTimer.isFinished()) state = FLY
                 }
-
                 FLY -> {
                     facing = when (direction) {
                         Direction.UP -> if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
@@ -213,17 +239,14 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
                             val velocityX = SIDE_TO_SIDE_VEL * ConstVals.PPM * sideToSideTimer.getValue()
                             body.physics.velocity.x = velocityX
                         }
-
                         Direction.DOWN -> {
                             val velocityX = SIDE_TO_SIDE_VEL * ConstVals.PPM * sideToSideTimer.getValue()
                             body.physics.velocity.x = -velocityX
                         }
-
                         Direction.LEFT -> {
                             val velocityY = SIDE_TO_SIDE_VEL * ConstVals.PPM * sideToSideTimer.getValue()
                             body.physics.velocity.y = -velocityY
                         }
-
                         Direction.RIGHT -> {
                             val velocityY = SIDE_TO_SIDE_VEL * ConstVals.PPM * sideToSideTimer.getValue()
                             body.physics.velocity.y = velocityY

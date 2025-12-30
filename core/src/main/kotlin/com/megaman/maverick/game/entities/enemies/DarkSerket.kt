@@ -44,8 +44,10 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.projectiles.DarkSerketClaw
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -53,7 +55,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable, ICullable {
+class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IFaceable, ICullable {
 
     companion object {
         const val TAG = "DarkSerket"
@@ -74,7 +76,6 @@ class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         private const val LAUNCH_CLAW_1_TIME = 0.1f
         private const val LAUNCH_CLAW_2_TIME = 0.3f
         private const val LAUNCH_CLAW_X_VEL = 10f
-        // private const val LAUNCH_CLAW_GRAV_Y = 0.1f
 
         private const val GROW_CLAWS_DUR = 0.1f
 
@@ -89,7 +90,8 @@ class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             "scurry" pairTo AnimationDef(2, 1, 0.1f, true),
             "launch_claws" pairTo AnimationDef(2, 2, 0.1f, false),
             "jump" pairTo AnimationDef(),
-            "grow_claws" pairTo AnimationDef()
+            "grow_claws" pairTo AnimationDef(),
+            "frozen" pairTo AnimationDef()
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -97,6 +99,20 @@ class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     private enum class DarkSerkerState { STAND, SCURRY, JUMP, LAUNCH_CLAWS, GROW_CLAWS }
 
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = {
+            stateMachine.reset()
+            stateTimers.values().forEach { it.reset() }
+        }
+    )
 
     private lateinit var stateMachine: StateMachine<DarkSerkerState>
     private val currentState: DarkSerkerState
@@ -149,18 +165,28 @@ class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
         cullTimer.reset()
         putCullable(ConstKeys.CUSTOM_CULL, this)
-    }
 
-    override fun shouldBeCulled(delta: Float) = cullTimer.isFinished()
+        frozen = false
+    }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        frozen = false
     }
+
+    override fun shouldBeCulled(delta: Float) = cullTimer.isFinished()
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) {
+                body.physics.velocity.setZero()
+                return@add
+            }
+
             val fixtures = reusableFixtureArray
             body.getAllFixtures(fixtures)
 
@@ -408,7 +434,7 @@ class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { currentState.name.lowercase() }
+                .setKeySupplier { if (frozen) "frozen" else currentState.name.lowercase() }
                 .applyToAnimations { animations ->
                     AnimationUtils.loadAnimationDefs(animDefs, animations, regions)
                 }

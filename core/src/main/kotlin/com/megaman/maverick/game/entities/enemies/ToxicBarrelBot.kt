@@ -8,6 +8,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods.getRandomBool
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
@@ -39,9 +40,11 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ToxicGoopShot
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -49,7 +52,8 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
+class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IFreezableEntity,
+    IAnimatedEntity, IFaceable {
 
     enum class ToxicBarrelBotState {
         CLOSED, OPENING_TOP, OPEN_TOP, CLOSING_TOP, OPENING_CENTER, OPEN_CENTER, CLOSING_CENTER
@@ -66,9 +70,26 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
         private var closedRegion: TextureRegion? = null
         private var openCenterRegion: TextureRegion? = null
         private var openTopRegion: TextureRegion? = null
+        private var frozenRegion: TextureRegion? = null
     }
 
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = {
+            toxicBarrelBotState = ToxicBarrelBotState.CLOSED
+            closedTimer.reset()
+            transTimer.reset()
+            openTimer.reset()
+        }
+    )
 
     private val closedTimer = Timer(CLOSED_DUR)
     private val transTimer = Timer(TRANS_DUR)
@@ -77,20 +98,24 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
     private lateinit var toxicBarrelBotState: ToxicBarrelBotState
 
     private val position = Vector2()
+
     private var shot = false
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (closedRegion == null || openCenterRegion == null || openTopRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             closedRegion = atlas.findRegion("$TAG/Closed")
             openCenterRegion = atlas.findRegion("$TAG/OpenCenter")
             openTopRegion = atlas.findRegion("$TAG/OpenTop")
+            frozenRegion = atlas.findRegion("$TAG/frozen")
         }
         super.init()
         addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         position.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER))
@@ -103,11 +128,23 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
         toxicBarrelBotState = ToxicBarrelBotState.CLOSED
         facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         shot = false
+
+        frozen = false
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        frozen = false
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) return@add
+
             when (toxicBarrelBotState) {
                 ToxicBarrelBotState.CLOSED -> {
                     facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
@@ -121,7 +158,6 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
                         closedTimer.reset()
                     }
                 }
-
                 ToxicBarrelBotState.OPENING_TOP, ToxicBarrelBotState.OPENING_CENTER -> {
                     transTimer.update(delta)
                     if (transTimer.isFinished()) {
@@ -132,7 +168,6 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
                         transTimer.reset()
                     }
                 }
-
                 ToxicBarrelBotState.OPEN_TOP, ToxicBarrelBotState.OPEN_CENTER -> {
                     openTimer.update(delta)
 
@@ -149,7 +184,6 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
                         openTimer.reset()
                     }
                 }
-
                 ToxicBarrelBotState.CLOSING_TOP, ToxicBarrelBotState.CLOSING_CENTER -> {
                     transTimer.update(delta)
                     if (transTimer.isFinished()) {

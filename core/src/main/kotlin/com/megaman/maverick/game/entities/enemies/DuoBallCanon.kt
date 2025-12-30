@@ -39,14 +39,16 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.DuoBall
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "DuoBallCanon"
@@ -74,6 +76,14 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
     private enum class DuoBallCanonDirection { STRAIGHT, UP }
 
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private val canonDirectionLoop = Loop(DuoBallCanonDirection.entries.toGdxArray())
     private val canonDirection: DuoBallCanonDirection
@@ -105,6 +115,7 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         get() = !shootAnimTimer.isFinished()
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             val keys = Array<String>()
@@ -114,6 +125,7 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
                 keys.add("${key}${SHOOT_SUFFIX}")
             }
             keys.forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
+            regions.put("frozen", atlas.findRegion("$TAG/frozen"))
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -134,11 +146,26 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         ballsTimer.reset()
         bulletsTimer.reset()
         shootAnimTimer.setToEnd()
+
+        frozen = false
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        frozen = false
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) {
+                body.physics.velocity.setZero()
+                return@add
+            }
+
             shootAnimTimer.update(delta)
 
             switchStateDelay.update(delta)
@@ -217,6 +244,7 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         .animator(
             AnimatorBuilder()
                 .setKeySupplier keySupplier@{
+                    if (frozen) return@keySupplier "frozen"
                     var key = canonDirection.name.lowercase()
                     if (shooting) key = "${key}${SHOOT_SUFFIX}"
                     return@keySupplier key
@@ -229,6 +257,7 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
                         val shootingKey = "${key}${SHOOT_SUFFIX}"
                         animations.put(shootingKey, Animation(regions[shootingKey], 2, 1, 0.1f, false))
                     }
+                    animations.put("frozen", Animation(regions["frozen"]))
                 }
                 .build()
         )

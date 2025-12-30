@@ -41,14 +41,16 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.projectiles.SmallGreenMissile
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IDrawableShapesEntity, IFaceable {
+class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IDrawableShapesEntity, IFaceable {
 
     companion object {
         const val TAG = "ColtonJoe"
@@ -62,6 +64,14 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
     override lateinit var facing: Facing
 
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
+
     private val shootTimer = Timer(SHOOT_DUR)
     private val shootDelayTimer = Timer(SHOOT_DELAY)
     private lateinit var scanner: GameRectangle
@@ -69,7 +79,7 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     override fun init() {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            gdxArrayOf("stand", "shoot").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
+            gdxArrayOf("stand", "shoot", "frozen").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -88,6 +98,13 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         shootDelayTimer.setToEnd()
 
         facing = if (body.getX() < megaman.body.getX()) Facing.RIGHT else Facing.LEFT
+
+        frozen = false
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        frozen = false
     }
 
     private fun shoot() {
@@ -112,6 +129,10 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) return@add
+
             if (!shootTimer.isFinished()) {
                 shootTimer.update(delta)
                 return@add
@@ -179,8 +200,13 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = { if (shootTimer.isFinished()) "stand" else "shoot" }
+        val keySupplier: (String?) -> String? = {
+            if (frozen) "frozen"
+            else if (shootTimer.isFinished()) "stand"
+            else "shoot"
+        }
         val animations = objectMapOf<String, IAnimation>(
+            "frozen" pairTo Animation(regions.get("frozen")),
             "stand" pairTo Animation(regions.get("stand"), 2, 1, gdxArrayOf(0.75f, 0.15f), true),
             "shoot" pairTo Animation(regions.get("shoot"), 5, 1, 0.1f, false)
         )

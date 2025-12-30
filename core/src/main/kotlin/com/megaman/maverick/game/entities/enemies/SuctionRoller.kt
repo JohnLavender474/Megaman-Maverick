@@ -3,16 +3,18 @@ package com.megaman.maverick.game.entities.enemies
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
-import com.mega.game.engine.animations.Animation
-import com.mega.game.engine.animations.AnimationsComponent
-import com.mega.game.engine.animations.Animator
+import com.badlogic.gdx.utils.ObjectMap
+import com.mega.game.engine.animations.AnimationsComponentBuilder
+import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
-import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -28,14 +30,18 @@ import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
+import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFaceable {
+class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IFaceable {
 
     companion object {
         const val TAG = "SuctionRoller"
@@ -44,17 +50,32 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
         private const val VEL_X = 2.5f
         private const val VEL_Y = 2.5f
 
-        private var region: TextureRegion? = null
+        private val regions = ObjectMap<String, TextureRegion>()
+        private val animDefs = objectMapOf(
+            "walk" pairTo AnimationDef(1, 5, 0.1f, true),
+            "frozen" pairTo AnimationDef()
+        )
     }
 
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private var onWall = false
     private var wasOnWall = false
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, TAG)
+        if (regions.isEmpty) {
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
+        }
         super.init()
         addComponent(defineAnimationsComponent())
     }
@@ -70,11 +91,26 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
 
         onWall = false
         wasOnWall = false
+
+        frozen = false
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        frozen = false
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
-        updatablesComponent.add {
+        updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) {
+                body.physics.velocity.x = 0f
+                return@add
+            }
+
             wasOnWall = onWall
             onWall = FacingUtils.isFacingBlock(this)
 
@@ -158,12 +194,11 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
             body.physics.gravity.y =
                 if (body.isSensing(BodySense.FEET_ON_GROUND)) 0f else GRAVITY * ConstVals.PPM
 
-            when {
+            if (!frozen) when {
                 onWall -> {
                     if (!wasOnWall) body.physics.velocity.x = 0f
                     body.physics.velocity.y = VEL_Y * ConstVals.PPM
                 }
-
                 else -> {
                     if (wasOnWall) body.translate(0f, ConstVals.PPM / 10f)
                     body.physics.velocity.x = VEL_X * ConstVals.PPM * facing.value
@@ -194,7 +229,6 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
                     Position.CENTER_LEFT -> body.getPositionPoint(Position.CENTER_LEFT)
                     else -> body.getPositionPoint(Position.CENTER_RIGHT)
                 }
-
                 else -> body.getPositionPoint(Position.BOTTOM_CENTER)
             }
 
@@ -209,9 +243,15 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
         return component
     }
 
-    private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(region!!, 1, 5, 0.1f, true)
-        val animator = Animator(animation)
-        return AnimationsComponent(this, animator)
-    }
+    private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
+        .key(TAG)
+        .animator(
+            AnimatorBuilder()
+                .setKeySupplier { if (frozen) "frozen" else "walk" }
+                .applyToAnimations { animations ->
+                    AnimationUtils.loadAnimationDefs(animDefs, animations, regions)
+                }
+                .build()
+        )
+        .build()
 }

@@ -43,11 +43,13 @@ import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.PreciousBlock
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.PreciousGem
 import com.megaman.maverick.game.entities.projectiles.PreciousGem.PreciousGemColor
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -58,7 +60,8 @@ import com.megaman.maverick.game.world.body.*
 import java.util.*
 
 // This isn't a "big" enemy, but his size is set to "LARGE" so that he is more powerful against weapons
-class PreciousTron(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.LARGE), IAnimatedEntity, IFaceable {
+class PreciousTron(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.LARGE), IFreezableEntity, IAnimatedEntity,
+    IFaceable {
 
     companion object {
         const val TAG = "PreciousTron"
@@ -84,6 +87,7 @@ class PreciousTron(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.
         private val GEM_COLORS = PreciousGemColor.entries.toGdxArray()
 
         private val animDefs = objectMapOf<String, AnimationDef>(
+            "frozen" pairTo AnimationDef(),
             "disappear" pairTo AnimationDef(2, 2, 0.1f, false),
             "appear" pairTo AnimationDef(2, 2, 0.1f, false),
             "shoot" pairTo AnimationDef(3, 2, 0.05f, false),
@@ -96,6 +100,14 @@ class PreciousTron(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.
     private enum class PreciousTronState { APPEAR, STAND, SHOOT, DISAPPEAR, FALL }
 
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private lateinit var stateMachine: StateMachine<PreciousTronState>
     private val currentState: PreciousTronState
@@ -172,6 +184,8 @@ class PreciousTron(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.
         }
 
         GameLogger.debug(TAG, "onSpawn(): currentPosition=$currentPosition, positions=$positionSuppliers")
+
+        frozen = false
     }
 
     override fun onDestroy() {
@@ -182,11 +196,17 @@ class PreciousTron(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.
         currentPosition.setZero()
 
         tempVec2Arr.clear()
+
+        frozen = false
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) return@add
+
             when (currentState) {
                 PreciousTronState.FALL ->
                     if (body.physics.velocity.y <= 0f && body.isSensing(BodySense.FEET_ON_GROUND))
@@ -256,7 +276,7 @@ class PreciousTron(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { currentState.name.lowercase() }
+                .setKeySupplier { if (frozen) "frozen" else currentState.name.lowercase() }
                 .applyToAnimations { animations ->
                     AnimationUtils.loadAnimationDefs(animDefs, animations, regions)
                 }

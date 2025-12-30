@@ -147,6 +147,11 @@ class PreciousGemCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimat
         spawnDelayTimer.resetDuration(spawnDelay)
     }
 
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+    }
+
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
@@ -236,6 +241,8 @@ class PreciousGemCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimat
                     return@keySupplier key
                 }
                 .applyToAnimations { animations ->
+                    animations.put("frozen", Animation(regions["straight"]))
+
                     PreciousGemCanonDirection.entries.forEach { direction ->
                         val key = direction.name.lowercase()
                         animations.put(key, Animation(regions[key]))

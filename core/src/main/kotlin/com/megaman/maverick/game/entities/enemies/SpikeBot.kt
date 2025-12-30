@@ -46,16 +46,19 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.projectiles.Needle
 import com.megaman.maverick.game.entities.projectiles.Needle.NeedleType
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable {
+class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IAnimatedEntity,
+    IFaceable {
 
     companion object {
         const val TAG = "SpikeBot"
@@ -88,6 +91,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         private val X_OFFSETS = gdxArrayOf(-0.1f, 0f, 0.1f)
 
         private val animDefs = orderedMapOf(
+            SpikeBotState.FROZEN pairTo AnimationDef(),
             SpikeBotState.JUMP pairTo AnimationDef(),
             SpikeBotState.STAND pairTo AnimationDef(),
             SpikeBotState.WALK pairTo AnimationDef(2, 2, 0.1f, true),
@@ -97,9 +101,17 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     }
 
     private enum class SpikeBotType { CACTUS, SNOW }
-    private enum class SpikeBotState { STAND, WALK, SHOOT, JUMP }
+    private enum class SpikeBotState { STAND, WALK, SHOOT, JUMP, FROZEN }
 
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private lateinit var stateMachine: StateMachine<SpikeBotState>
     private val currentState: SpikeBotState
@@ -124,8 +136,9 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             SpikeBotType.entries.map { it.name.lowercase() }.forEach { type ->
-                animDefs.keys().map { it.name.lowercase() }.forEach { key ->
-                    regions.put("$type/$key", atlas.findRegion("$TAG/$type/$key"))
+                animDefs.keys().forEach { key ->
+                    val keyName = if (key is SpikeBotState) key.name.lowercase() else key as String
+                    regions.put("$type/$keyName", atlas.findRegion("$TAG/$type/$keyName"))
                 }
             }
         }
@@ -157,11 +170,21 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         }
 
         FacingUtils.setFacingOf(this)
+
+        frozen = false
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        frozen = false
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
             movementScalar = if (body.isSensing(BodySense.IN_WATER)) WATER_MOVEMENT_SCALAR else NORMAL_MOVEMENT_SCALAR
             animator.updateScalar = movementScalar
 
@@ -172,6 +195,10 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
             }
 
             when (currentState) {
+                SpikeBotState.FROZEN -> {
+                    body.physics.velocity.x = 0f
+                    if (freezeHandler.isFinished()) stateMachine.next()
+                }
                 SpikeBotState.STAND, SpikeBotState.SHOOT -> body.physics.velocity.x = 0f
                 SpikeBotState.JUMP -> if (shouldEndJump()) stateMachine.next()
                 SpikeBotState.WALK -> {
@@ -223,7 +250,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
         val leftFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFootFixture.setFilter { fixture -> fixture.getType() == FixtureType.BLOCK }
-        leftFootFixture.setConsumer { _, fixture -> body.putProperty(LEFT_FOOT, true) }
+        leftFootFixture.setConsumer { _, _ -> body.putProperty(LEFT_FOOT, true) }
         leftFootFixture.offsetFromBodyAttachment.set(-body.getWidth() / 2f, -body.getHeight() / 2f)
         body.addFixture(leftFootFixture)
         leftFootFixture.drawingColor = Color.ORANGE
@@ -231,7 +258,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
         val rightFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFootFixture.setFilter { fixture -> fixture.getType() == FixtureType.BLOCK }
-        rightFootFixture.setConsumer { _, fixture -> body.putProperty(RIGHT_FOOT, true) }
+        rightFootFixture.setConsumer { _, _ -> body.putProperty(RIGHT_FOOT, true) }
         rightFootFixture.offsetFromBodyAttachment.set(body.getWidth() / 2f, -body.getHeight() / 2f)
         body.addFixture(rightFootFixture)
         rightFootFixture.drawingColor = Color.ORANGE
@@ -288,11 +315,20 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     private fun buildStateMachine() = EnumStateMachineBuilder.create<SpikeBotState>()
         .initialState(SpikeBotState.STAND)
         .onChangeState(this::onChangeState)
+        // stand
+        .transition(SpikeBotState.STAND, SpikeBotState.FROZEN) { frozen }
         .transition(SpikeBotState.STAND, SpikeBotState.WALK) { true }
+        // walk
+        .transition(SpikeBotState.WALK, SpikeBotState.FROZEN) { frozen }
         .transition(SpikeBotState.WALK, SpikeBotState.JUMP) { shouldJump() }
         .transition(SpikeBotState.WALK, SpikeBotState.SHOOT) { true }
+        // jump
+        .transition(SpikeBotState.JUMP, SpikeBotState.FROZEN) { frozen }
         .transition(SpikeBotState.JUMP, SpikeBotState.WALK) { true }
+        // shoot
+        .transition(SpikeBotState.SHOOT, SpikeBotState.FROZEN) { frozen }
         .transition(SpikeBotState.SHOOT, SpikeBotState.WALK) { true }
+        // build
         .build()
 
     private fun onChangeState(current: SpikeBotState, previous: SpikeBotState) {

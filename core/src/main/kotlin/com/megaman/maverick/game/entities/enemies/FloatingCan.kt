@@ -4,12 +4,15 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.MutableOrderedSet
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -36,32 +39,48 @@ import com.mega.game.engine.world.body.IBody
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IBossListener
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGridCoordinate
 import com.megaman.maverick.game.world.body.*
 
 // implements `IBossListener` to ensure is destroyed after each Reactor Monkey is defeated
-class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IBossListener, IAnimatedEntity {
+class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IBossListener,
+    IAnimatedEntity {
 
     companion object {
         const val TAG = "FloatingCan"
-        private var region: TextureRegion? = null
         private const val SPAWN_DELAY = 1f
         private const val SPAWN_DELAY_HARD = 0.75f
         private const val SPAWN_BLINK = 0.1f
         private const val FLY_SPEED = 1.5f
         private const val FLY_SPEED_HARD = 2.25f
         private const val MAX_SPAWNED = 6
+        private val regions = ObjectMap<String, TextureRegion>()
+        private val animDefs = objectMapOf<String, AnimationDef>(
+            "spin" pairTo AnimationDef(1, 4, 0.15f, true),
+            "frozen" pairTo AnimationDef()
+        )
     }
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private val spawningBlinkTimer = Timer(SPAWN_BLINK)
     private var spawnDelayBlink = false
@@ -72,7 +91,10 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source).findRegion(TAG)
+        if (regions.isEmpty) {
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
+        }
         super.init()
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
@@ -100,6 +122,14 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
         spawningBlinkTimer.reset()
         spawnDelayBlink = false
+
+        frozen = false
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        frozen = false
     }
 
     override fun canDamage(damageable: IDamageable) = spawnDelayTimer.isFinished() && super.canDamage(damageable)
@@ -107,6 +137,13 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) {
+                body.physics.velocity.setZero()
+                return@add
+            }
+
             spawnDelayTimer.update(delta)
             if (!spawnDelayTimer.isFinished()) {
                 spawningBlinkTimer.update(delta)
@@ -149,8 +186,16 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(region!!, 1, 4, 0.15f, true)
-        val animator = Animator(animation)
+        val keySuppler: (String?) -> String = {
+            if (frozen) "frozen" else "spin"
+        }
+        val animations = ObjectMap<String, IAnimation>()
+        animDefs.forEach { entry ->
+            val key = entry.key
+            val (rows, columns, durations, loop) = entry.value
+            animations.put(key, Animation(regions[key], rows, columns, durations, loop))
+        }
+        val animator = Animator(keySuppler, animations)
         return AnimationsComponent(this, animator)
     }
 
@@ -161,12 +206,11 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
             allowDiagonal = { true },
             filter = filter@{ coordinate ->
                 game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y, reusableBodySet)
+
                 var passable = true
-                var blockingBody: IBody? = null
 
                 for (otherBody in reusableBodySet) if (otherBody.getEntity().getType() == EntityType.BLOCK) {
                     passable = false
-                    blockingBody = otherBody
                     break
                 }
 
@@ -179,7 +223,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
         val pathfindingComponent = PathfindingComponent(params, {
             when {
-                spawnDelayTimer.isFinished() -> StandardPathfinderResultConsumer.consume(
+                !frozen && spawnDelayTimer.isFinished() -> StandardPathfinderResultConsumer.consume(
                     result = it,
                     body = body,
                     start = body.getCenter(),
@@ -191,10 +235,9 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
                     stopOnTargetReached = false,
                     stopOnTargetNull = false
                 )
-
                 else -> body.physics.velocity.setZero()
             }
-        }, { spawnDelayTimer.isFinished() })
+        }, { !frozen && spawnDelayTimer.isFinished() })
 
         return pathfindingComponent
     }

@@ -19,8 +19,6 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamageable
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -39,9 +37,8 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.explosions.IceShard
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.HeadUtils
 import com.megaman.maverick.game.world.body.*
@@ -72,13 +69,14 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
 
     override lateinit var facing: Facing
     override var frozen: Boolean
-        get() = !frozenTimer.isFinished()
+        get() = freezeHandler.isFrozen()
         set(value) {
-            if (value) frozenTimer.reset() else frozenTimer.setToEnd()
+            freezeHandler.setFrozen(value)
         }
 
+    private val freezeHandler = FreezableEntityHandler(this)
+
     private val standTimer = Timer(STAND_DUR)
-    private val frozenTimer = Timer(ConstVals.STANDARD_FROZEN_DUR)
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -100,17 +98,15 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
         standTimer.reset()
 
         frozen = false
+
         facing = if (megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
     }
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
-        GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
-        val damaged = super.takeDamageFrom(damager)
-        if (damaged && !frozen && damager is IFreezerEntity) frozen = true
-        return damaged
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        frozen = false
     }
-
-    override fun canDamage(damageable: IDamageable) = !frozen && super.canDamage(damageable)
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
@@ -135,9 +131,6 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
         body.addFixture(feetFixture)
         debugShapes.add { feetFixture }
 
-        val frozenFixture = Fixture(body, FixtureType.SHIELD, GameRectangle(body))
-        body.addFixture(frozenFixture)
-
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         body.preProcess.put(ConstKeys.DEFAULT) {
@@ -147,8 +140,6 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
             body.physics.defaultFrictionOnSelf.x = frictionX
 
             HeadUtils.stopJumpingIfHitHead(body)
-
-            frozenFixture.setActive(frozen)
         }
 
         return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.DAMAGEABLE, FixtureType.DAMAGER))
@@ -157,15 +148,10 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
             if (frozen) {
                 body.physics.velocity.x = 0f
-
-                frozenTimer.update(delta)
-                if (frozenTimer.isFinished()) {
-                    damageTimer.reset()
-                    IceShard.spawn5(body.getCenter())
-                }
-
                 return@add
             }
 

@@ -10,6 +10,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.ProcessState
@@ -38,12 +39,15 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable {
+class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IAnimatedEntity,
+    IFaceable {
 
     companion object {
         const val TAG = "Tropish"
@@ -56,22 +60,33 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
 
     override lateinit var facing: Facing
 
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
+
     private lateinit var state: TropishState
 
     private val startPosition = Vector2()
     private val triggerBox = GameRectangle()
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             regions.put("swim", atlas.findRegion("$TAG/swim"))
             regions.put("bent", atlas.findRegion("$TAG/bent"))
+            regions.put("frozen", atlas.findRegion("$TAG/frozen"))
         }
         super.init()
         addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
@@ -86,6 +101,8 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
         body.forEachFixture { it.setActive(false) }
 
         facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+
+        frozen = false
     }
 
     override fun canDamage(damageable: IDamageable) = state != TropishState.WAIT
@@ -116,8 +133,11 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
-        updatablesComponent.add {
+        updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
             when {
+                frozen -> body.physics.velocity.setZero()
                 state == TropishState.WAIT && megaman.body.getBounds().overlaps(triggerBox) -> startSwim()
                 state == TropishState.BENT && body.isSensing(BodySense.FEET_ON_GROUND) -> explodeAndDie()
             }
@@ -136,7 +156,7 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
 
         val noseFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
         noseFixture.setFilter { fixture -> fixture.getType() == FixtureType.BLOCK }
-        noseFixture.setConsumer { processState, fixture ->
+        noseFixture.setConsumer { processState, _ ->
             if (state == TropishState.SWIM && processState == ProcessState.BEGIN) hitNose()
         }
         body.addFixture(noseFixture)
@@ -176,9 +196,13 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? =
-            { if (state == TropishState.WAIT) null else state.name.lowercase() }
+        val keySupplier: (String?) -> String? = {
+            if (frozen) "frozen"
+            else if (state == TropishState.WAIT) null
+            else state.name.lowercase()
+        }
         val animations = objectMapOf<String, IAnimation>(
+            "frozen" pairTo Animation(regions["frozen"]),
             "swim" pairTo Animation(regions["swim"], 2, 1, 0.1f, true),
             "bent" pairTo Animation(regions["bent"], 2, 1, 0.25f, true)
         )

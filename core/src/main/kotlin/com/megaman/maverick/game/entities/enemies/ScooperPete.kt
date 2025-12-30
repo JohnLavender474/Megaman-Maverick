@@ -41,15 +41,17 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.ILightSource
 import com.megaman.maverick.game.entities.projectiles.GroundPebble
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.*
 
-class ScooperPete(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable, ILightSource {
+class ScooperPete(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IFaceable, ILightSource {
 
     companion object {
         const val TAG = "ScooperPete"
@@ -75,6 +77,7 @@ class ScooperPete(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         private const val RADIANCE = 2f
 
         private val animDefs = orderedMapOf(
+            "frozen" pairTo AnimationDef(),
             "idle" pairTo AnimationDef(2, 1, 0.05f, true),
             "dig" pairTo AnimationDef(2, 2, 0.1f, false)
         )
@@ -84,6 +87,14 @@ class ScooperPete(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
     private enum class ProspectorJoeState { IDLE, DIG }
 
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     override val lightSourceKeys = ObjectSet<Int>()
     override val lightSourceCenter: Vector2
@@ -130,17 +141,24 @@ class ScooperPete(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         FacingUtils.setFacingOf(this)
 
         LightSourceUtils.loadLightSourceKeysFromProps(this, spawnProps)
+
+        frozen = false
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         lightSourceKeys.clear()
+        frozen = false
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) return@add
+
             if (currentState == ProspectorJoeState.IDLE) FacingUtils.setFacingOf(this)
 
             currentStateTimer.update(delta)
@@ -192,7 +210,7 @@ class ScooperPete(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { currentState.name.lowercase() }
+                .setKeySupplier { if (frozen) "frozen" else currentState.name.lowercase() }
                 .applyToAnimations { animations ->
                     animDefs.forEach { entry ->
                         val key = entry.key

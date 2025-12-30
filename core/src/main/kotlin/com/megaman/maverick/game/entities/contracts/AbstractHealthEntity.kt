@@ -28,9 +28,11 @@ abstract class AbstractHealthEntity(
     }
 
     override val invincible: Boolean
-        get() = !damageTimer.isFinished()
+        get() = !damageTimer.isFinished() || invinciblePredicates.any { it.invoke() }
 
     val onDamagedCallbacks = Array<(IDamager, Int) -> Unit>()
+
+    val invinciblePredicates: Array<() -> Boolean> = Array()
 
     protected abstract val damageNegotiator: IDamageNegotiator?
     protected open val damageOverrides = ObjectMap<KClass<out IDamager>, DamageNegotiation?>()
@@ -65,7 +67,6 @@ abstract class AbstractHealthEntity(
 
     override fun onDestroy() {
         super.onDestroy()
-
         lastDamager = null
     }
 

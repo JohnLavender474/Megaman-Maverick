@@ -22,7 +22,6 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -51,6 +50,7 @@ import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.MagmaGoop
 import com.megaman.maverick.game.entities.projectiles.Snowball
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
@@ -84,7 +84,6 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         private const val IDLE_DUR = 1f
         private const val SHOOT_DUR = 2f
         private const val TURN_DUR = 0.5f
-        private const val FROZEN_DUR = 1f
 
         private const val GROUND_GRAVITY = 0.001f
         private const val GRAVITY = 0.375f
@@ -97,12 +96,14 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 "shoot" pairTo AnimationDef(3, 1, 0.1f, false),
                 "turn" pairTo AnimationDef(2, 1, 0.1f, false),
                 "jump" pairTo AnimationDef(),
+                "frozen" pairTo AnimationDef()
             ),
             SniperJoeType.SNOW pairTo orderedMapOf(
                 "idle" pairTo AnimationDef(2, 1, gdxArrayOf(1f, 0.15f), true),
                 "shoot" pairTo AnimationDef(3, 1, 0.1f, false),
                 "turn" pairTo AnimationDef(2, 1, 0.1f, false),
                 "jump" pairTo AnimationDef(),
+                "frozen" pairTo AnimationDef()
             ),
             SniperJoeType.FIRE pairTo orderedMapOf(
                 "idle" pairTo AnimationDef(2, 1, gdxArrayOf(1f, 0.15f), true),
@@ -124,23 +125,27 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         set(value) {
             body.direction = value
         }
-    override var frozen: Boolean
-        get() = !stateTimers[SniperJoeState.FROZEN].isFinished()
-        set(value) {
-            GameLogger.debug(TAG, "frozen.set: value=$value")
 
-            if (value) {
-                stateTimers[SniperJoeState.FROZEN].reset()
-                if (currentState != SniperJoeState.FROZEN) stateMachine.next()
-            } else {
-                stateTimers[SniperJoeState.FROZEN].setToEnd()
-                if (currentState == SniperJoeState.FROZEN) stateMachine.next()
-            }
-        }
     override val invincible: Boolean
         get() = super.invincible || frozen
+
     override lateinit var facing: Facing
+
     override var gravityScalar = 1f
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = {
+            stateMachine.reset()
+            stateTimers.values().forEach { it.reset() }
+        }
+    )
 
     private lateinit var stateMachine: StateMachine<SniperJoeState>
     private val currentState: SniperJoeState
@@ -218,25 +223,19 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         canJump = spawnProps.getOrDefault(ConstKeys.JUMP, true, Boolean::class)
     }
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
-        GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
-        val damaged = super.takeDamageFrom(damager)
-        if (damaged) when {
-            damager is IFreezerEntity && !frozen -> frozen = true
-            damager is IFireEntity && frozen -> frozen = false
-        }
-        return damaged
-    }
-
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        frozen = false
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             if (!shouldUpdate) return@add
+
+            freezeHandler.update(delta)
+            if (frozen) return@add
 
             val timer = stateTimers[currentState]
             timer?.let {
@@ -293,9 +292,6 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         body.addFixture(shieldFixture)
         shapes.add { shieldFixture }
 
-        val frozenFixture = Fixture(body, FixtureType.SHIELD, GameRectangle(body))
-        body.addFixture(frozenFixture)
-
         body.preProcess.put(ConstKeys.DEFAULT) {
             when (direction) {
                 Direction.UP, Direction.DOWN -> body.physics.velocity.x = 0f
@@ -313,8 +309,6 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             }
 
             HeadUtils.stopJumpingIfHitHead(body)
-
-            frozenFixture.setActive(frozen)
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = shapes, debug = true))

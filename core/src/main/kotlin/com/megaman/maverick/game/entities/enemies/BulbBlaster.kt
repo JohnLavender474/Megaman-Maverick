@@ -37,7 +37,9 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IBossListener
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.ILightSource
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -47,7 +49,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
 // implements `IBossListener` to ensure is destroyed after 2nd Desert Man fight
-class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), ILightSource, IAnimatedEntity, IMotionEntity,
+class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, ILightSource, IAnimatedEntity, IMotionEntity,
     IBossListener, IEventListener {
 
     companion object {
@@ -57,10 +59,20 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), ILightSource
         private const val RADIANCE = 2f
         private var lightRegion: TextureRegion? = null
         private var darkRegion: TextureRegion? = null
+        private var frozenRegion: TextureRegion? = null
     }
 
     override val eventKeyMask = objectSetOf<Any>(EventType.END_ROOM_TRANS)
     override var invincible = false // bulb blaster can never be damaged
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
+
     override val lightSourceKeys = ObjectSet<Int>()
     override var lightSourceRadius = RADIUS
     override var lightSourceRadiance = RADIANCE
@@ -77,6 +89,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), ILightSource
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             lightRegion = atlas.findRegion("$TAG/Light")
             darkRegion = atlas.findRegion("$TAG/Dark")
+            frozenRegion = atlas.findRegion("$TAG/frozen")
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -110,12 +123,15 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), ILightSource
             val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY) as String, ConstVals.PPM)
             val motionDefinition = MotionDefinition(
                 motion = trajectory,
-                function = { value, _ -> body.physics.velocity.set(value) },
+                function = { value, _ -> if (!frozen) body.physics.velocity.set(value) },
+                doUpdate = { !frozen },
                 onReset = { body.setCenter(spawn) })
             putMotionDefinition(ConstKeys.TRAJECTORY, motionDefinition)
         }
 
         spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
+
+        frozen = false
     }
 
     override fun onDestroy() {
@@ -128,6 +144,8 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), ILightSource
 
         light = false
         lightSourceKeys.clear()
+
+        frozen = false
     }
 
     override fun onEvent(event: Event) {
@@ -142,11 +160,19 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), ILightSource
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
+            freezeHandler.update(it)
+
+            if (frozen) {
+                body.physics.velocity.setZero()
+                return@add
+            }
+
             timer.update(it)
             if (timer.isFinished()) {
                 light = !light
                 timer.reset()
             }
+
             if (light) LightSourceUtils.sendLightSourceEvent(game, this)
         }
     }
@@ -176,8 +202,15 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), ILightSource
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = { if (light) "light" else "dark" }
+        val keySupplier: (String?) -> String? = {
+            when {
+                frozen -> "frozen"
+                light -> "light"
+                else -> "dark"
+            }
+        }
         val animations = objectMapOf<String, IAnimation>(
+            "frozen" pairTo Animation(darkRegion!!),
             "light" pairTo Animation(lightRegion!!, 1, 4, 0.1f, true),
             "dark" pairTo Animation(darkRegion!!, 1, 4, 0.1f, true)
         )

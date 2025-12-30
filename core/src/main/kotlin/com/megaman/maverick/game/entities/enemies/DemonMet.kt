@@ -22,7 +22,6 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -45,14 +44,15 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.FirePellet
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -62,13 +62,12 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
 import java.util.*
 
-class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable {
+class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "DemonMet"
         private const val STAND_DUR = 0.25f
         private const val FIRE_DELAY = 1.5f
-        private const val FROZEN_DUR = 1f
         private const val FLY_SPEED = 5f
         private const val FIRE_PELLET_COUNT = 3
         private const val FIRE_PELLET_ANGLE_OFFSET = 5f
@@ -81,19 +80,30 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private enum class DemonMetState { STAND, FLY, ANGEL, FROZEN }
+    private enum class DemonMetState { STAND, FLY, ANGEL }
 
     override lateinit var facing: Facing
 
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = {
+            state = DemonMetState.FLY
+        }
+    )
+
     private val standTimer = Timer(STAND_DUR)
     private val fireTimer = Timer(FIRE_DELAY)
-    private val frozenTimer = Timer(ConstVals.STANDARD_FROZEN_DUR)
 
     private val alphaOscillation = SmoothOscillationTimer(ALPHA_OSCILLATION_DUR, 0.5f, 0.75f)
     private val xOscillation = SmoothOscillationTimer(X_OSCILLATION_DUR, -1f, 1f)
 
     private lateinit var state: DemonMetState
-    private lateinit var stateBeforeFrozen: DemonMetState
 
     private val target = Vector2()
     private val targetsPQ = PriorityQueue { o1: Vector2, o2: Vector2 ->
@@ -113,6 +123,7 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                 val key = it.name.lowercase()
                 regions.put(key, atlas.findRegion("$TAG/$key"))
             }
+            regions.put("frozen", atlas.findRegion("$TAG/frozen"))
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -143,6 +154,14 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         alphaOscillation.reset()
 
         exploded = false
+
+        frozen = false
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        frozen = false
     }
 
     override fun onHealthDepleted() {
@@ -154,21 +173,6 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         }
     }
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
-        val damaged = super.takeDamageFrom(damager)
-        if (damaged && state != DemonMetState.FROZEN && damager is SmallIceCube) onFrozen()
-        return damaged
-    }
-
-    private fun onFrozen() {
-        stateBeforeFrozen = state
-        state = DemonMetState.FROZEN
-
-        frozenTimer.reset()
-
-        requestToPlaySound(SoundAsset.ICE_SHARD_1_SOUND, false)
-    }
-
     private fun explode() {
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.MAGMA_EXPLOSION)!!
         explosion.spawn(props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo body.getCenter()))
@@ -177,6 +181,13 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) {
+                body.physics.velocity.setZero()
+                return@add
+            }
+
             if (state != DemonMetState.ANGEL) {
                 fireTimer.update(delta)
                 if (fireTimer.isFinished()) {
@@ -192,7 +203,6 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                     standTimer.update(delta)
                     if (standTimer.isFinished()) state = DemonMetState.FLY
                 }
-
                 DemonMetState.FLY -> {
                     facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
@@ -214,27 +224,10 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                         body.physics.velocity.set(trajectory)
                     }
                 }
-
                 DemonMetState.ANGEL -> {
                     if (body.physics.velocity.y < ANGEL_FLY_Y_MAX_SPEED * ConstVals.PPM)
                         body.physics.velocity.y += ANGEL_FLY_Y_IMPULSE * ConstVals.PPM * delta
                     else body.physics.velocity.y = ANGEL_FLY_Y_MAX_SPEED * ConstVals.PPM
-                }
-
-                DemonMetState.FROZEN -> {
-                    body.physics.velocity.setZero()
-
-                    frozenTimer.update(delta)
-                    if (frozenTimer.isFinished()) {
-                        state = stateBeforeFrozen
-
-                        damageTimer.reset()
-
-                        for (i in 0 until 5) {
-                            val shard = MegaEntityFactory.fetch(IceShard::class)!!
-                            shard.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.INDEX pairTo i))
-                        }
-                    }
                 }
             }
         }
@@ -273,7 +266,7 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = { state.name.lowercase() }
+        val keySupplier: (String?) -> String? = { if (frozen) "frozen" else state.name.lowercase() }
         val animations = objectMapOf<String, IAnimation>(
             "frozen" pairTo Animation(regions["frozen"]),
             "stand" pairTo Animation(regions["stand"]),

@@ -9,6 +9,7 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
@@ -35,16 +36,18 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.IDamageNegotiator
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.SlashWave
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "BigFishNeo"
@@ -61,6 +64,14 @@ class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     override lateinit var facing: Facing
 
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
+
     private val laughTimer = Timer(LAUGH_DUR)
 
     private var minX = 0f
@@ -70,8 +81,9 @@ class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            regions.put("swim", atlas.findRegion("$TAG/swim"))
-            regions.put("laugh", atlas.findRegion("$TAG/laugh"))
+            gdxArrayOf("swim", "laugh", "frozen").forEach { key ->
+                regions.put(key, atlas.findRegion("$TAG/$key"))
+            }
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -96,11 +108,26 @@ class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         laughTimer.setToEnd()
+
+        frozen = false
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        frozen = false
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) {
+                body.physics.velocity.setZero()
+                return@add
+            }
+
             if (!laughTimer.isFinished()) {
                 laughTimer.update(delta)
                 body.physics.velocity.setZero()
@@ -160,8 +187,13 @@ class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = { if (!laughTimer.isFinished()) "laugh" else "swim" }
+        val keySupplier: (String?) -> String? = {
+            if (frozen) "frozen"
+            else if (!laughTimer.isFinished()) "laugh"
+            else "swim"
+        }
         val animations = objectMapOf<String, IAnimation>(
+            "frozen" pairTo Animation(regions["frozen"]!!),
             "swim" pairTo Animation(regions["swim"]!!, 2, 2, 0.2f, true),
             "laugh" pairTo Animation(regions["laugh"]!!, 2, 2, 0.1f, true)
         )

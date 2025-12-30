@@ -40,7 +40,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.IFreezerEntity
-import com.megaman.maverick.game.entities.explosions.IceShard
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.world.body.*
 
 class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFreezableEntity,
@@ -49,23 +49,26 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
     companion object {
         const val TAG = "Wanaan"
         private const val GRAVITY = 0.15f
-        private const val FROZEN_DUR = 0.5f
         private val animDefs =
             orderedMapOf("frozen" pairTo AnimationDef(), "chomp" pairTo AnimationDef(2, 1, 0.1f, true))
         private val regions = ObjectMap<String, TextureRegion>()
     }
+
+    override var invincible = true // Wanaan cannot be damaged
 
     override var direction: Direction
         get() = body.direction
         set(value) {
             body.direction = value
         }
+
     override var frozen: Boolean
-        get() = !frozenTimer.isFinished()
+        get() = freezeHandler.isFrozen()
         set(value) {
-            if (value) frozenTimer.reset() else frozenTimer.setToEnd()
+            freezeHandler.setFrozen(value)
         }
-    override var invincible = true // wanaan cannot be damaged
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     val comingDown: Boolean
         get() {
@@ -107,17 +110,15 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
         frozen = false
     }
 
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        frozen = false
+    }
+
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
-        updatablesComponent.add { delta ->
-            if (frozen) {
-                frozenTimer.update(delta)
-                if (frozenTimer.isJustFinished()) {
-                    damageTimer.reset()
-                    IceShard.spawn5(body.getCenter())
-                }
-            }
-        }
+        updatablesComponent.add { delta -> freezeHandler.update(delta) }
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -146,6 +147,15 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             val velocity = body.physics.velocity
+
+            val gravity = body.physics.gravity
+
+            if (frozen) {
+                velocity.setZero()
+                gravity.setZero()
+                return@put
+            }
+
             if (body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)) when (direction) {
                 Direction.UP -> if (velocity.y > 0f) velocity.y = 0f
                 Direction.DOWN -> if (velocity.y < 0f) velocity.y = 0f
@@ -153,7 +163,6 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
                 Direction.LEFT -> if (velocity.x < 0f) velocity.x = 0f
             }
 
-            val gravity = body.physics.gravity
             when (direction) {
                 Direction.UP -> gravity.y = -GRAVITY * ConstVals.PPM
                 Direction.DOWN -> gravity.y = GRAVITY * ConstVals.PPM

@@ -42,15 +42,17 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.hazards.DrippingToxicGoop
 import com.megaman.maverick.game.entities.projectiles.PreciousGem
 import com.megaman.maverick.game.entities.projectiles.RollingBotShot
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
+class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IFreezableEntity, IAnimatedEntity, IFaceable {
 
     enum class RollingBotState { ROLL, OPEN, SHOOT, CLOSE }
 
@@ -71,6 +73,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         private const val SHORT_DMG_DUR = 0.25f
 
         private val animDefs = orderedMapOf(
+            "frozen" pairTo AnimationDef(),
             "roll" pairTo AnimationDef(2, 4, 0.1f, true),
             "shoot" pairTo AnimationDef(),
             "open" pairTo AnimationDef(3, 1, 0.1f, false),
@@ -80,6 +83,14 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     }
 
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private lateinit var state: RollingBotState
 
@@ -93,6 +104,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     private var bulletsShot = 0
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
@@ -117,6 +129,8 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         state = RollingBotState.ROLL
 
         bulletsShot = 0
+
+        frozen = false
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
@@ -125,6 +139,12 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     override fun getDamageDuration(damager: IDamager) = when (damager) {
         is DrippingToxicGoop, is PreciousGem -> SHORT_DMG_DUR
         else -> super.getDamageDuration(damager)
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        frozen = false
     }
 
     override fun onHealthDepleted() {
@@ -162,6 +182,13 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) {
+                body.physics.velocity.x = 0f
+                return@add
+            }
+
             when (state) {
                 RollingBotState.ROLL -> {
                     body.physics.velocity.x = X_VEL * facing.value * ConstVals.PPM
@@ -172,7 +199,6 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
                         state = RollingBotState.OPEN
                     }
                 }
-
                 RollingBotState.OPEN -> {
                     body.physics.velocity.x = 0f
 
@@ -182,7 +208,6 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
                         state = RollingBotState.SHOOT
                     }
                 }
-
                 RollingBotState.SHOOT -> {
                     body.physics.velocity.x = 0f
 
@@ -200,7 +225,6 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
                         }
                     }
                 }
-
                 RollingBotState.CLOSE -> {
                     body.physics.velocity.x = 0f
 
@@ -276,7 +300,7 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = { state.name.lowercase() }
+        val keySupplier: (String?) -> String? = { if (frozen) "frozen" else state.name.lowercase() }
         val animations = ObjectMap<String, IAnimation>()
         animDefs.forEach { entry ->
             val key = entry.key

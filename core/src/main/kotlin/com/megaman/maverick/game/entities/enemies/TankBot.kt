@@ -43,16 +43,19 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.hazards.DrippingToxicGoop
 import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
+class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IFreezableEntity, IAnimatedEntity,
+    IFaceable {
 
     companion object {
         const val TAG = "TankBot"
@@ -75,6 +78,14 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
 
     override lateinit var facing: Facing
 
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
+
     private val shootDelayTimer = Timer(SHOOT_DELAY)
     private val turnDelayTimer = Timer(TURN_DELAY)
     private val turnTimer = Timer(TURN_DUR)
@@ -85,7 +96,12 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            gdxArrayOf("roll", "stop", "turn").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
+            gdxArrayOf("roll", "stop", "turn", "frozen").forEach { key ->
+                regions.put(
+                    key,
+                    atlas.findRegion("$TAG/$key")
+                )
+            }
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -112,6 +128,14 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
         turnTimer.setToEnd()
 
         stopped = false
+
+        frozen = false
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        frozen = false
     }
 
     private fun shoot() {
@@ -156,6 +180,13 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) {
+                body.physics.velocity.x = 0f
+                return@add
+            }
+
             if (!turnDelayTimer.isFinished()) {
                 turnDelayTimer.update(delta)
                 when {
@@ -301,12 +332,14 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: (String?) -> String? = {
             when {
+                frozen -> "frozen"
                 !turnTimer.isFinished() -> "turn"
                 !turnDelayTimer.isFinished() || stopped -> "stop"
                 else -> "roll"
             }
         }
         val animations = objectMapOf<String, IAnimation>(
+            "frozen" pairTo Animation(regions["frozen"]),
             "stop" pairTo Animation(regions["stop"]),
             "turn" pairTo Animation(regions["turn"], 2, 2, 0.1f, true),
             "roll" pairTo Animation(regions["roll"], 2, 2, 0.1f, true)

@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
@@ -39,6 +40,7 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -48,12 +50,11 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.MockingByteNest
-import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.MockingByteEgg
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -94,6 +95,7 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         private const val DIVE_OUT_OF_BOUNDS_DUR = 1f
 
         private val animDefs = orderedMapOf(
+            "frozen" pairTo AnimationDef(),
             "sleep" pairTo AnimationDef(),
             "awaken" pairTo AnimationDef(2, 2, 0.1f, false),
             "fall_asleep" pairTo AnimationDef(3, 1, 0.1f, false),
@@ -113,11 +115,12 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
     override lateinit var facing: Facing
 
     override var frozen: Boolean
-        get() = !frozenTimer.isFinished()
+        get() = freezeHandler.isFrozen()
         set(value) {
-            if (value) frozenTimer.reset() else frozenTimer.setToEnd()
+            freezeHandler.setFrozen(value)
         }
-    private val frozenTimer = Timer(1f)
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private lateinit var stateMachine: StateMachine<MockingByteState>
     private val stateTimers = orderedMapOf(
@@ -206,26 +209,22 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
             nest.owner = null
             nest.hidden = false
         }
+
+        frozen = false
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
         damager is Axe || super.canBeDamagedBy(damager)
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
-        val damaged = super.takeDamageFrom(damager)
-        if (damaged && damager is IFreezerEntity) frozen = true
-        return damaged
-    }
-
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add update@{ delta ->
-            frozenTimer.update(delta)
+            freezeHandler.update(delta)
+
             if (frozen) {
-                body.physics.velocity.set(0f, -10f * ConstVals.PPM)
+                body.physics.velocity.setZero()
                 return@update
             }
-            if (frozenTimer.isJustFinished()) IceShard.spawn5(body.getCenter())
 
             val stateTimer = stateTimers[currentState]
             if (stateTimer != null) {
@@ -236,7 +235,7 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
                 }
             }
 
-            var nest = getNest()
+            val nest = getNest()
             if (nest != null) {
                 when (currentState) {
                     MockingByteState.SLEEP,
@@ -406,6 +405,13 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
+
+        val feetFixture =
+            Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM))
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight()
+        body.addFixture(feetFixture)
+        feetFixture.drawingColor = Color.GREEN
+        debugShapes.add { feetFixture }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

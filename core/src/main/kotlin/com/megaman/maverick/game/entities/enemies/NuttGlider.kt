@@ -19,7 +19,6 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -40,7 +39,6 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.projectiles.Nutt
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.AnimationUtils
@@ -142,15 +140,18 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
         }
 
         FacingUtils.setFacingOf(this)
+
         hasNutt = spawnProps.getOrDefault(HAS_NUTT, DEFAULT_HAS_NUTT, Boolean::class)
+
         timers.values().forEach { it.reset() }
-        frozenHandler.setFrozen(false)
+
+        frozen = false
     }
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
-        val damaged = super.takeDamageFrom(damager)
-        if (damaged && frozenHandler.canBeFrozenBy(damager)) frozenHandler.setFrozen(true)
-        return damaged
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        frozen = false
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -161,10 +162,9 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
             body.physics.gravityOn = frozen || state != NuttGliderState.GLIDE
 
             frozenHandler.update(delta)
-            if (frozen) return@update
-            if (frozenHandler.isJustFinished()) {
-                IceShard.spawn5(body.getCenter())
-                state = NuttGliderState.STAND
+            if (frozen) {
+                body.physics.velocity.x = 0f
+                return@update
             }
 
             when (state) {
@@ -187,7 +187,7 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
                     }
 
                     body.physics.velocity.let { velocity ->
-                        var impulseX = GLIDE_IMPULSE_X * ConstVals.PPM * delta * facing.value
+                        val impulseX = GLIDE_IMPULSE_X * ConstVals.PPM * delta * facing.value
                         velocity.x += impulseX
 
                         velocity.x =
@@ -201,7 +201,6 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
                     when {
                         body.physics.velocity.y < 0f && !body.isSensing(BodySense.FEET_ON_GROUND) ->
                             state = NuttGliderState.GLIDE
-
                         body.physics.velocity.y <= 0f && body.isSensing(BodySense.FEET_ON_GROUND) ->
                             state = NuttGliderState.STAND
                     }
@@ -329,7 +328,7 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(
-            this, body, BodyFixtureDef.Companion.of(FixtureType.DAMAGER, FixtureType.DAMAGEABLE, FixtureType.BODY)
+            this, body, BodyFixtureDef.of(FixtureType.DAMAGER, FixtureType.DAMAGEABLE, FixtureType.BODY)
         )
     }
 

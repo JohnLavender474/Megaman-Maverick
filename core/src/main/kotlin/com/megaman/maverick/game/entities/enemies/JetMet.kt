@@ -9,6 +9,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
@@ -43,14 +44,17 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import java.util.*
 
-class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IDirectional, IFaceable {
+class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IAnimatedEntity,
+    IDirectional, IFaceable {
 
     companion object {
         const val TAG = "JetMet"
@@ -66,6 +70,14 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
 
     override lateinit var direction: Direction
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private val standTimer = Timer(STAND_DUR)
     private val liftoffTimer = Timer(LIFTOFF_DUR)
@@ -88,17 +100,20 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
     private var targetReached = false
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             regions.put("stand", atlas.findRegion("$TAG/Stand"))
             regions.put("take_off", atlas.findRegion("$TAG/TakeOff"))
             regions.put("jet", atlas.findRegion("$TAG/Jet"))
+            regions.put("frozen", atlas.findRegion("frozen"))
         }
         super.init()
         addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
@@ -131,11 +146,26 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
 
         val animDuration = spawnProps.getOrDefault("${ConstKeys.ANIMATION}_${ConstKeys.DURATION}", 0.1f, Float::class)
         animations["jet"].setFrameDuration(animDuration)
+
+        frozen = false
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        frozen = false
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) {
+                body.physics.velocity.setZero()
+                return@add
+            }
+
             direction = megaman.direction
 
             if (!canMove) {
@@ -148,12 +178,10 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
                     standTimer.update(delta)
                     if (standTimer.isFinished()) jetMetState = JetMetState.LIFT_OFF
                 }
-
                 JetMetState.LIFT_OFF -> {
                     liftoffTimer.update(delta)
                     if (liftoffTimer.isFinished()) jetMetState = JetMetState.JET
                 }
-
                 JetMetState.JET -> {
                     facing = when (megaman.direction) {
                         Direction.UP -> if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
@@ -250,6 +278,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: (String?) -> String? = {
             when {
+                frozen -> "frozen"
                 !body.isSensing(BodySense.FEET_ON_GROUND) -> "jet"
                 else -> when (jetMetState) {
                     JetMetState.STAND -> "stand"
@@ -259,6 +288,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
             }
         }
         animations = objectMapOf(
+            "frozen" pairTo Animation(regions.get("frozen")),
             "stand" pairTo Animation(regions.get("stand")),
             "take_off" pairTo Animation(regions.get("take_off")),
             "jet" pairTo Animation(regions.get("jet"), 2, 2, 0.1f, true)

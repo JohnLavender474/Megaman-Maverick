@@ -5,7 +5,6 @@ import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -21,26 +20,28 @@ class FreezableEntityHandler(
     private val onUnfrozen: () -> Unit = {},
     private val onJustFinished: () -> Unit = {},
     duration: Float = ConstVals.STANDARD_FROZEN_DUR
-) :
-    Updatable {
+) : Updatable {
 
     companion object {
         const val TAG = "FreezableEntityHandler"
     }
 
     init {
-        if (entity is AbstractHealthEntity) entity.onDamagedCallbacks.add { damager, _ ->
-            if (!entity.frozen && damager is IFreezerEntity) entity.frozen = true
-            if (entity.frozen && damager is IFireEntity) entity.frozen = false
+        if (entity is AbstractHealthEntity) {
+            entity.invinciblePredicates.add { isFrozen() }
+
+            entity.onDamagedCallbacks.add { damager, _ ->
+                if (!entity.frozen && damager is IFreezerEntity) entity.frozen = true
+                if (entity.frozen && damager is IFireEntity) entity.frozen = false
+            }
         }
+
         if (entity is AbstractEnemy) entity.canDamagePredicates.add { !entity.frozen }
     }
 
     private val frozenEntityBlock = FrozenEntityBlock((entity as MegaGameEntity).game)
 
     val timer = Timer(duration).setToEnd()
-
-    fun canBeFrozenBy(damager: IDamager) = damager is IFreezerEntity && !isFrozen()
 
     fun setFrozen(value: Boolean) {
         GameLogger.debug(TAG, "setFrozen(): value=$value")

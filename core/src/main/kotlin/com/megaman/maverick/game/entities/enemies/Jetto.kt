@@ -188,6 +188,13 @@ class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) {
+                body.physics.velocity.x = 0f
+                return@add
+            }
+
             body.physics.velocity.x = SPEED * ConstVals.PPM * facing.value
 
             if (!body.getBounds().overlaps(game.getGameCamera().getRotatedBounds())) cullTimer.update(delta)

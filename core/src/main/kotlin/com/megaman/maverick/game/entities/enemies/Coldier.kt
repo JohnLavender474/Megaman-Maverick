@@ -40,17 +40,15 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.IFireEntity
-import com.megaman.maverick.game.entities.contracts.IFreezerEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "Coldier"
@@ -76,6 +74,7 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             "before_big_blow" pairTo AnimationDef(2, 1, 0.1f, false),
             "before_small_blow" pairTo AnimationDef(2, 1, 0.1f, false),
             "cooldown" pairTo AnimationDef(2, 1, gdxArrayOf(0.5f, 0.25f), true),
+            "frozen" pairTo AnimationDef()
         )
 
         private val regions = ObjectMap<String, TextureRegion>()
@@ -84,6 +83,20 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     private enum class ColdierState { STAND, SMALL_BLOW, BIG_BLOW, COOLDOWN }
 
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = {
+            loop.reset()
+            timers.values().forEach { it.reset() }
+        }
+    )
 
     private val loop = Loop(ColdierState.entries.toGdxArray())
     private val currentState: ColdierState
@@ -105,8 +118,8 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            val keys = Array<String>().also { it ->
-                it.addAll("before_big_blow", "before_small_blow")
+            val keys = Array<String>().also {
+                it.addAll("before_big_blow", "before_small_blow", "frozen")
                 ColdierState.entries.forEach { state -> it.add(state.name.lowercase()) }
             }
             keys.forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
@@ -145,6 +158,14 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
 
         loop.reset()
         timers.values().forEach { it.reset() }
+
+        frozen = false
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        frozen = false
     }
 
     override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when (damager) {
@@ -156,6 +177,10 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) return@add
+
             facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
             val timer = timers[currentState.name.lowercase()]
@@ -165,12 +190,10 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
                     beforeSmallBlow -> timers["before_small_blow"].update(delta)
                     else -> timer.update(delta)
                 }
-
                 ColdierState.BIG_BLOW -> when {
                     beforeBigBlow -> timers["before_big_blow"].update(delta)
                     else -> timer.update(delta)
                 }
-
                 else -> timer.update(delta)
             }
 
@@ -257,7 +280,8 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         .animator(
             AnimatorBuilder()
                 .setKeySupplier {
-                    when (currentState) {
+                    if (frozen) "frozen"
+                    else when (currentState) {
                         ColdierState.BIG_BLOW -> if (beforeBigBlow) "before_big_blow" else "big_blow"
                         ColdierState.SMALL_BLOW -> if (beforeSmallBlow) "before_small_blow" else "small_blow"
                         else -> currentState.name.lowercase()

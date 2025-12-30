@@ -8,6 +8,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.gdxArrayOf
@@ -37,15 +38,17 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL) {
+class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity {
 
     companion object {
         const val TAG = "Screwie"
@@ -62,6 +65,14 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
             Vector2(BULLET_VEL, 0f),
         )
     }
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private val downTimer = Timer(DOWN_DUR)
     private val riseTimer = Timer(RISE_DROP_DUR)
@@ -81,6 +92,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
         get() = !riseTimer.isFinished()
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         super.init()
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
         shootTimer.addRunnables(
@@ -94,6 +106,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         type = spawnProps.getOrDefault(ConstKeys.TYPE, ConstKeys.RED, String::class)
@@ -113,6 +126,14 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
             Float::class
         )
         animations.values().forEach { it.setFrameDuration(animationDuration) }
+
+        frozen = false
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        frozen = false
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -140,7 +161,6 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
                     damageableBounds.setHeight(0.5f * ConstVals.PPM)
                     damageableFixture.offsetFromBodyAttachment.y = (if (upsideDown) 0.15f else -0.15f) * ConstVals.PPM
                 }
-
                 else -> {
                     damageableBounds.setHeight(0.75f * ConstVals.PPM)
                     damageableFixture.offsetFromBodyAttachment.y = 0f
@@ -156,24 +176,23 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            if (game.isCameraRotating()) return@add
+            freezeHandler.update(it)
+
+            if (frozen || game.isCameraRotating()) return@add
 
             when {
                 !downTimer.isFinished() -> {
                     downTimer.update(it)
                     if (downTimer.isFinished()) riseTimer.reset()
                 }
-
                 !riseTimer.isFinished() -> {
                     riseTimer.update(it)
                     if (riseTimer.isFinished()) shootTimer.reset()
                 }
-
                 !shootTimer.isFinished() -> {
                     shootTimer.update(it)
                     if (shootTimer.isFinished()) dropTimer.reset()
                 }
-
                 !dropTimer.isFinished() -> {
                     dropTimer.update(it)
                     if (dropTimer.isFinished()) downTimer.reset()
@@ -200,6 +219,8 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: (String?) -> String? = key@{
+            if (frozen) return@key "frozen"
+
             val key = when {
                 down -> "down"
                 shooting -> "shoot"
@@ -209,6 +230,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
             return@key "$type-$key"
         }
         animations = objectMapOf(
+            "frozen" pairTo Animation(atlas!!.findRegion("frozen")),
             "red-down" pairTo Animation(atlas!!.findRegion("RedScrewie/Down")),
             "red-rise" pairTo Animation(atlas!!.findRegion("RedScrewie/Rise"), 3, 1, 0.1f, false),
             "red-drop" pairTo Animation(atlas!!.findRegion("RedScrewie/Drop"), 3, 1, 0.1f, false),

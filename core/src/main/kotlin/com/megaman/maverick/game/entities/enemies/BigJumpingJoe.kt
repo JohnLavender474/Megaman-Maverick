@@ -8,6 +8,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
@@ -41,15 +42,17 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.LARGE), IScalableGravityEntity,
+class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.LARGE), IFreezableEntity, IScalableGravityEntity,
     IFaceable, IAnimatedEntity {
 
     companion object {
@@ -72,10 +75,19 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
 
         private var standRegion: TextureRegion? = null
         private var jumpRegion: TextureRegion? = null
+        private var frozenRegion: TextureRegion? = null
     }
 
     override lateinit var facing: Facing
     override var gravityScalar = 1f
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private val waitTimer = Timer(WAIT_DURATION)
     private val jumpDelayTimer = Timer(JUMP_DELAY)
@@ -91,11 +103,13 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
     private var scaleBullet = true
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         super.init()
         if (standRegion == null || jumpRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             standRegion = atlas.findRegion("$TAG/Stand")
             jumpRegion = atlas.findRegion("$TAG/Jump")
+            frozenRegion = atlas.findRegion("$TAG/frozen")
         }
         addComponent(defineAnimationsComponent())
         runnablesOnDestroy.put(ConstKeys.CHILD) {
@@ -112,6 +126,7 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
@@ -131,11 +146,26 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
 
         val frameDuration = spawnProps.getOrDefault(ConstKeys.FRAME, 0.2f, Float::class)
         animations["jump"].setFrameDuration(frameDuration)
+
+        frozen = false
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        frozen = false
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
+            freezeHandler.update(it)
+
+            if (frozen) {
+                body.physics.velocity.x = 0f
+                return@add
+            }
+
             if (body.physics.velocity.y > 0f &&
                 body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) &&
                 !body.isSensing(BodySense.FEET_ON_GROUND)
@@ -223,8 +253,15 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = { if (!waitTimer.isFinished()) "stand" else "jump" }
+        val keySupplier: (String?) -> String? = {
+            when {
+                frozen -> "frozen"
+                !waitTimer.isFinished() -> "stand"
+                else -> "jump"
+            }
+        }
         animations = objectMapOf(
+            "frozen" pairTo Animation(standRegion!!),
             "stand" pairTo Animation(standRegion!!),
             "jump" pairTo Animation(jumpRegion!!, 1, 2, 0.2f, false)
         )

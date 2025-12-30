@@ -37,15 +37,17 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.SealionBall
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
 class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity,
-    IDrawableShapesEntity {
+    IFreezableEntity, IDrawableShapesEntity {
 
     companion object {
         const val TAG = "Sealion"
@@ -61,6 +63,22 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
 
     private enum class SealionState { WAIT, THROW, TAUNT, POUT }
 
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = {
+            sealionBall?.explodeAndDie()
+            sealionBall = null
+
+            sealionState = SealionState.WAIT
+        }
+    )
+
     private val timers = objectMapOf(
         "wait" pairTo Timer(WAIT_DUR),
         "taunt" pairTo Timer(TAUNT_DUR),
@@ -75,6 +93,7 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
     private var fadingOut = false
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             regions.put("wait_with_ball", atlas.findRegion("$TAG/wait_with_ball"))
@@ -84,12 +103,14 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
             regions.put("pout", atlas.findRegion("$TAG/pout"))
             regions.put("before_throw_ball", atlas.findRegion("$TAG/before_throw_ball"))
             regions.put("after_throw_ball", atlas.findRegion("$TAG/after_throw_ball"))
+            regions.put("frozen", atlas.findRegion("$TAG/frozen"))
         }
         super.init()
         addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
@@ -105,12 +126,19 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
         sealionState = SealionState.WAIT
 
         timers.values().forEach { it.reset() }
+
+        frozen = false
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+
         super.onDestroy()
+
         sealionBall?.explodeAndDie()
         sealionBall = null
+
+        frozen = false
     }
 
     override fun canDamage(damageable: IDamageable) = sealionState != SealionState.POUT
@@ -147,6 +175,10 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) return@add
+
             when (sealionState) {
                 SealionState.WAIT -> {
                     val timer = timers["wait"]
@@ -157,7 +189,6 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
                         GameLogger.debug(TAG, "update(): wait timer finished, set state pairTo THROW")
                     }
                 }
-
                 SealionState.THROW -> {
                     if (ballInHands) {
                         val beforeThrowBallDelayTimer = timers["before_throw_ball_delay"]
@@ -173,7 +204,6 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
                         GameLogger.debug(TAG, "update(): catch ball, set state pairTo WAIT")
                     }
                 }
-
                 SealionState.TAUNT -> {
                     val timer = timers["taunt"]
                     timer.update(delta)
@@ -184,7 +214,6 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
                         GameLogger.debug(TAG, "update(); taunt finished, setting state pairTo $sealionState")
                     }
                 }
-
                 SealionState.POUT -> {
                     val delayTimer = timers["pout_sink_delay"]
                     delayTimer.update(delta)
@@ -242,7 +271,7 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: (String?) -> String? = {
-            when (sealionState) {
+            if (frozen) "frozen" else when (sealionState) {
                 SealionState.THROW -> if (ballInHands) "before_throw_ball" else "after_throw_ball"
                 else -> when (sealionState) {
                     SealionState.WAIT -> "wait_${if (ballInHands) "with_ball" else "no_ball"}"
@@ -258,7 +287,8 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
             "taunt_no_ball" pairTo Animation(regions["taunt_no_ball"], 2, 2, 0.05f, true),
             "before_throw_ball" pairTo Animation(regions["before_throw_ball"], 2, 1, 0.1f, true),
             "after_throw_ball" pairTo Animation(regions["after_throw_ball"], 2, 1, 0.1f, true),
-            "pout" pairTo Animation(regions["pout"], 2, 2, 0.2f, true)
+            "pout" pairTo Animation(regions["pout"], 2, 2, 0.2f, true),
+            "frozen" pairTo Animation(regions["frozen"])
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

@@ -44,15 +44,17 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.bosses.GutsTankFist
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.PurpleBlast
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFaceable, IDirectional {
+class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IFaceable, IDirectional {
 
     enum class MetBehavior { SHIELDING, POP_UP, RUNNING }
 
@@ -81,11 +83,20 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
     }
 
     override lateinit var facing: Facing
+
     override var direction: Direction
         get() = body.direction
         set(value) {
             body.direction = value
         }
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private val metBehaviorTimers = objectMapOf(
         MetBehavior.SHIELDING pairTo Timer(SHIELDING_DURATION),
@@ -134,11 +145,14 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         facing = if (right) Facing.RIGHT else Facing.LEFT
 
         direction = Direction.UP
+
+        frozen = false
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        frozen = false
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
@@ -174,6 +188,10 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
+            freezeHandler.update(it)
+
+            if (frozen) behavior = MetBehavior.SHIELDING
+
             if (runOnly) behavior = MetBehavior.RUNNING
 
             when (behavior) {
@@ -182,11 +200,13 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
                         Direction.UP, Direction.DOWN -> body.physics.velocity.x = 0f
                         Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y = 0f
                     }
-                    val shieldTimer = metBehaviorTimers.get(MetBehavior.SHIELDING)
-                    if (!isMegamanShootingAtMe() && body.isSensing(BodySense.FEET_ON_GROUND)) shieldTimer.update(it)
-                    if (shieldTimer.isFinished()) behavior = MetBehavior.POP_UP
-                }
 
+                    if (!frozen) {
+                        val shieldTimer = metBehaviorTimers.get(MetBehavior.SHIELDING)
+                        if (!isMegamanShootingAtMe() && body.isSensing(BodySense.FEET_ON_GROUND)) shieldTimer.update(it)
+                        if (shieldTimer.isFinished()) behavior = MetBehavior.POP_UP
+                    }
+                }
                 MetBehavior.POP_UP -> {
                     if (!body.isSensing(BodySense.FEET_ON_GROUND)) {
                         behavior = MetBehavior.SHIELDING
@@ -204,7 +224,6 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
                     if (popUpTimer.isFinished()) behavior =
                         if (runningAllowed) MetBehavior.RUNNING else MetBehavior.SHIELDING
                 }
-
                 MetBehavior.RUNNING -> {
                     if (!body.isSensing(BodySense.FEET_ON_GROUND)) {
                         behavior = MetBehavior.SHIELDING
@@ -316,7 +335,8 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: (String?) -> String? = {
-            "$type${
+            if (frozen) "frozen"
+            else "$type${
                 when (behavior) {
                     MetBehavior.SHIELDING -> "LayDown"
                     MetBehavior.POP_UP -> "PopUp"
@@ -326,6 +346,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         }
         val animator = Animator(
             keySupplier, objectMapOf(
+                "frozen" pairTo Animation(atlas!!.findRegion("Met/frozen"), false),
                 "Run" pairTo Animation(atlas!!.findRegion("Met/Run"), 1, 2, 0.125f, true),
                 "PopUp" pairTo Animation(atlas!!.findRegion("Met/PopUp"), false),
                 "LayDown" pairTo Animation(atlas!!.findRegion("Met/LayDown"), false),

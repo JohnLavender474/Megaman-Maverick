@@ -40,10 +40,9 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.projectiles.GreenPelletBlast
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
@@ -56,7 +55,6 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
 
         private const val CULL_TIME = 5f
         private const val TURN_DUR = 0.5f
-        private const val FROZEN_DUR = 0.5f
 
         private val animDefs = orderedMapOf(
             "frozen" pairTo AnimationDef(),
@@ -67,10 +65,13 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
     }
 
     override var frozen: Boolean
-        get() = !frozenTimer.isFinished()
+        get() = freezeHandler.isFrozen()
         set(value) {
-            if (value) frozenTimer.reset() else frozenTimer.setToEnd()
+            freezeHandler.setFrozen(value)
         }
+
+    private val freezeHandler = FreezableEntityHandler(this)
+
     override lateinit var facing: Facing
 
     private val canMove: Boolean
@@ -79,8 +80,6 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
     private val turnTimer = Timer(TURN_DUR)
     private val turning: Boolean
         get() = !turnTimer.isFinished()
-
-    private val frozenTimer = Timer(ConstVals.STANDARD_FROZEN_DUR)
 
     private lateinit var animations: ObjectMap<String, IAnimation>
 
@@ -151,36 +150,28 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
         animations.forEach { it.value.setFrameDuration(frameDuration) }
 
         flipY = spawnProps.getOrDefault("${ConstKeys.FLIP}_${ConstKeys.Y}", false, Boolean::class)
+
         turnTimer.reset()
+
         frozen = false
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
-        !frozen && (damager is GreenPelletBlast || super.canBeDamagedBy(damager))
+        damager is GreenPelletBlast || super.canBeDamagedBy(damager)
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
-        val damaged = super.takeDamageFrom(damager)
-        if (damaged && damager is IFreezerEntity) frozen = true
-        return damaged
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        frozen = false
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (!canMove) {
+            freezeHandler.update(delta)
+
+            if (!canMove || frozen) {
                 body.physics.velocity.setZero()
-                return@add
-            }
-
-            if (frozen) {
-                body.physics.velocity.setZero()
-
-                frozenTimer.update(delta)
-                if (frozenTimer.isJustFinished()) {
-                    damageTimer.reset()
-                    IceShard.spawn5(body.getCenter())
-                }
-
                 return@add
             }
 
@@ -201,7 +192,6 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
                         GameLogger.debug(TAG, "Turning around. New y vel: $y")
                     }
                 }
-
                 else -> {
                     val centerX = body.getCenter().x
                     if (centerX !in min..max) {

@@ -51,8 +51,8 @@ import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFaceable,
-    IDirectional {
+class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity,
+    IFaceable, IDirectional {
 
     companion object {
         const val TAG = "PopupCanon"
@@ -102,6 +102,7 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     private lateinit var transState: Size
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             regions.put("rest", atlas.findRegion("$TAG/Down"))
@@ -255,6 +256,7 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: (String?) -> String? = { loop.getCurrent().name.lowercase() }
         val animations = objectMapOf<String, IAnimation>(
+            "frozen" pairTo Animation(regions.get("rest")),
             "rest" pairTo Animation(regions.get("rest")),
             "rise" pairTo Animation(regions.get("trans"), 2, 3, 0.1f, false),
             "shoot" pairTo Animation(regions.get("shoot")),

@@ -3,14 +3,16 @@ package com.megaman.maverick.game.entities.enemies
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.mega.game.engine.animations.Animation
+import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.AnimationsComponentBuilder
-import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
-import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -19,36 +21,53 @@ import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.Axe
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
+import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.world.body.*
 
-class MockingBit(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class MockingBit(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "MockingBit"
         private const val SPEED = 8f
-        private var region: TextureRegion? = null
+        private val regions = ObjectMap<String, TextureRegion>()
+        private val animDefs = objectMapOf(
+            "spin" pairTo AnimationDef(2, 1, 0.1f, true),
+            "frozen" pairTo AnimationDef()
+        )
     }
 
     override lateinit var facing: Facing
 
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
+
     override fun init() {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, TAG)
+        if (regions.isEmpty) {
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
+        }
         super.init()
         addComponent(defineAnimationsComponent())
-        damageOverrides.put(SmallIceCube::class, dmgNeg(ConstVals.MAX_HEALTH))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -62,6 +81,8 @@ class MockingBit(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         body.physics.velocity.set(trajectory)
 
         facing = if (trajectory.x <= 0f) Facing.LEFT else Facing.RIGHT
+
+        frozen = false
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
@@ -70,6 +91,15 @@ class MockingBit(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        frozen = false
+    }
+
+    override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
+        super.defineUpdatablesComponent(updatablesComponent)
+        updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+            if (frozen) body.physics.velocity.setZero()
+        }
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -100,6 +130,14 @@ class MockingBit(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         .build()
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
-        .key(TAG).animator(Animator(Animation(region!!, 2, 1, 0.1f, true)))
+        .key(TAG)
+        .animator(
+            AnimatorBuilder()
+                .setKeySupplier { if (frozen) "frozen" else "spin" }
+                .applyToAnimations { animations ->
+                    AnimationUtils.loadAnimationDefs(animDefs, animations, regions)
+                }
+                .build()
+        )
         .build()
 }
