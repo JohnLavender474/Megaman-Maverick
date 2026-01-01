@@ -39,6 +39,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ReactorExplosion
 import com.megaman.maverick.game.world.body.*
 
@@ -185,7 +186,7 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
 
         bounces++
 
-        owner = shieldFixture.getEntity()
+        if (owner != megaman) owner = shieldFixture.getEntity()
 
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }

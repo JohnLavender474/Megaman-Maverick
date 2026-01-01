@@ -74,6 +74,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnti
     }
 
     override lateinit var facing: Facing
+
     override lateinit var direction: Direction
 
     override var frozen: Boolean
@@ -82,7 +83,13 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnti
             freezeHandler.setFrozen(value)
         }
 
-    private val freezeHandler = FreezableEntityHandler(this)
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = {
+            waitTimer.reset()
+            shootTimer.setToEnd()
+        }
+    )
 
     val shooting: Boolean
         get() = !shootTimer.isFinished()
@@ -135,7 +142,6 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnti
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
             freezeHandler.update(it)
-
             if (frozen) return@add
 
             shootTimer.update(it)

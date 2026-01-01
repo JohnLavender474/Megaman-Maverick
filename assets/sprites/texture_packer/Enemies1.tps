@@ -232,12 +232,16 @@
             <key type="filename">../frames/Enemies1/Darspider/frozen.png</key>
             <key type="filename">../frames/Enemies1/Darspider/jump.png</key>
             <key type="filename">../frames/Enemies1/Darspider/still.png</key>
+            <key type="filename">../frames/Enemies1/DragonFly/frozen.png</key>
+            <key type="filename">../frames/Enemies1/DrillHead/frozen.png</key>
             <key type="filename">../frames/Enemies1/DrillHead/idle.png</key>
+            <key type="filename">../frames/Enemies1/HeliMet/frozen.png</key>
             <key type="filename">../frames/Enemies1/HeliMet/shield.png</key>
             <key type="filename">../frames/Enemies1/LaserBeamer.png</key>
             <key type="filename">../frames/Enemies1/Met/GetUp.png</key>
             <key type="filename">../frames/Enemies1/Met/LayDown.png</key>
             <key type="filename">../frames/Enemies1/Met/PopUp.png</key>
+            <key type="filename">../frames/Enemies1/Met/frozen.png</key>
             <key type="filename">../frames/Enemies1/Penguin/Jump.png</key>
             <key type="filename">../frames/Enemies1/Penguin/Slide.png</key>
             <key type="filename">../frames/Enemies1/Penguin/Slippin.png</key>
@@ -246,6 +250,7 @@
             <key type="filename">../frames/Enemies1/PopupCanon/Down.png</key>
             <key type="filename">../frames/Enemies1/PopupCanon/Up.png</key>
             <key type="filename">../frames/Enemies1/RedScrewie/Down.png</key>
+            <key type="filename">../frames/Enemies1/ScooperPete/frozen.png</key>
             <key type="filename">../frames/Enemies1/ShieldAttacker/frozen.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/fire/frozen.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/fire/jump.png</key>
@@ -317,7 +322,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Enemies1/BabyMockingByte.png</key>
-            <key type="filename">../frames/Enemies1/MockingBit.png</key>
+            <key type="filename">../frames/Enemies1/MockingBit/spin.png</key>
             <key type="filename">../frames/Enemies1/MockingByte/enter_nest.png</key>
             <key type="filename">../frames/Enemies1/MockingByte/hover.png</key>
             <key type="filename">../frames/Enemies1/MockingByte/leave_nest.png</key>
@@ -360,6 +365,7 @@
             <key type="filename">../frames/Enemies1/CloudedTorpedo/TorpedoFire.png</key>
             <key type="filename">../frames/Enemies1/CloudedTorpedo/UncloudedTorpedo.png</key>
             <key type="filename">../frames/Enemies1/DragonFly.png</key>
+            <key type="filename">../frames/Enemies1/DragonFly/DragonFly.png</key>
             <key type="filename">../frames/Enemies1/FlyPincher/Open.png</key>
             <key type="filename">../frames/Enemies1/FlyPincher/Pinch.png</key>
             <key type="filename">../frames/Enemies1/GapingFish/Chomping.png</key>
@@ -367,7 +373,9 @@
             <key type="filename">../frames/Enemies1/GapingFish/Swimming.png</key>
             <key type="filename">../frames/Enemies1/HeliMet/fly.png</key>
             <key type="filename">../frames/Enemies1/Jetto/bronze/fall.png</key>
+            <key type="filename">../frames/Enemies1/Jetto/bronze/frozen.png</key>
             <key type="filename">../frames/Enemies1/Jetto/gray/fall.png</key>
+            <key type="filename">../frames/Enemies1/Jetto/gray/frozen.png</key>
             <key type="filename">../frames/Enemies1/MagFly.png</key>
             <key type="filename">../frames/Enemies1/Met/Run.png</key>
             <key type="filename">../frames/Enemies1/Penguin/Stand.png</key>
@@ -411,11 +419,13 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Enemies1/Beezee/frozen.png</key>
+            <key type="filename">../frames/Enemies1/MockingBit/frozen.png</key>
             <key type="filename">../frames/Enemies1/MockingByte/dive1.png</key>
             <key type="filename">../frames/Enemies1/MockingByte/dive2.png</key>
             <key type="filename">../frames/Enemies1/MockingByte/frozen.png</key>
             <key type="filename">../frames/Enemies1/MockingByte/nest.png</key>
             <key type="filename">../frames/Enemies1/MockingByte/sleep.png</key>
+            <key type="filename">../frames/Enemies1/MoonEyeStone/frozen.png</key>
             <key type="filename">../frames/Enemies1/MoonEyeStone/nude.png</key>
             <key type="filename">../frames/Enemies1/MoonEyeStone/piece.png</key>
             <key type="filename">../frames/Enemies1/MoonEyeStone/sleep.png</key>
@@ -577,6 +587,21 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Enemies1/CannoHoney/frozen.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,14,16,28</rect>
+                <key>scale9Paddings</key>
+                <rect>8,14,16,28</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Enemies1/CannoHoney/idle.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -629,6 +654,44 @@
                 <rect>12,16,24,32</rect>
                 <key>scale9Paddings</key>
                 <rect>12,16,24,32</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/Cokeyro/frozen.png</key>
+            <key type="filename">../frames/Enemies1/DarkSerket/frozen.png</key>
+            <key type="filename">../frames/Enemies1/DarkSerket/grow_claws.png</key>
+            <key type="filename">../frames/Enemies1/DarkSerket/jump.png</key>
+            <key type="filename">../frames/Enemies1/DarkSerket/stand.png</key>
+            <key type="filename">../frames/Enemies1/DeathBat/hang.png</key>
+            <key type="filename">../frames/Enemies1/DrillTankXT/die.png</key>
+            <key type="filename">../frames/Enemies1/DrillTankXT/sleep.png</key>
+            <key type="filename">../frames/Enemies1/DrillTankXT/surprised.png</key>
+            <key type="filename">../frames/Enemies1/DuoBallCanon/frozen.png</key>
+            <key type="filename">../frames/Enemies1/DuoBallCanon/straight.png</key>
+            <key type="filename">../frames/Enemies1/DuoBallCanon/up.png</key>
+            <key type="filename">../frames/Enemies1/GreenUziJoe/jump.png</key>
+            <key type="filename">../frames/Enemies1/GreenUziJoe/jump_shoot.png</key>
+            <key type="filename">../frames/Enemies1/GreenUziJoe/jump_shoot_start.png</key>
+            <key type="filename">../frames/Enemies1/GreenUziJoe/stand.png</key>
+            <key type="filename">../frames/Enemies1/GreenUziJoe/stand_shoot.png</key>
+            <key type="filename">../frames/Enemies1/GreenUziJoe/stand_shoot_start.png</key>
+            <key type="filename">../frames/Enemies1/IceFox/shoot.png</key>
+            <key type="filename">../frames/Enemies1/IceFox/stand.png</key>
+            <key type="filename">../frames/Enemies1/PreciousGemCanon/frozen.png</key>
+            <key type="filename">../frames/Enemies1/PreciousGemCanon/straight.png</key>
+            <key type="filename">../frames/Enemies1/PreciousGemCanon/up.png</key>
+            <key type="filename">../frames/Enemies1/PreciousTron/shoot.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,8,24,16</rect>
+                <key>scale9Paddings</key>
+                <rect>12,8,24,16</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -695,40 +758,6 @@
                 <rect>8,16,16,32</rect>
                 <key>scale9Paddings</key>
                 <rect>8,16,16,32</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies1/DarkSerket/grow_claws.png</key>
-            <key type="filename">../frames/Enemies1/DarkSerket/jump.png</key>
-            <key type="filename">../frames/Enemies1/DarkSerket/stand.png</key>
-            <key type="filename">../frames/Enemies1/DeathBat/hang.png</key>
-            <key type="filename">../frames/Enemies1/DrillTankXT/die.png</key>
-            <key type="filename">../frames/Enemies1/DrillTankXT/sleep.png</key>
-            <key type="filename">../frames/Enemies1/DrillTankXT/surprised.png</key>
-            <key type="filename">../frames/Enemies1/DuoBallCanon/straight.png</key>
-            <key type="filename">../frames/Enemies1/DuoBallCanon/up.png</key>
-            <key type="filename">../frames/Enemies1/GreenUziJoe/jump.png</key>
-            <key type="filename">../frames/Enemies1/GreenUziJoe/jump_shoot.png</key>
-            <key type="filename">../frames/Enemies1/GreenUziJoe/jump_shoot_start.png</key>
-            <key type="filename">../frames/Enemies1/GreenUziJoe/stand.png</key>
-            <key type="filename">../frames/Enemies1/GreenUziJoe/stand_shoot.png</key>
-            <key type="filename">../frames/Enemies1/GreenUziJoe/stand_shoot_start.png</key>
-            <key type="filename">../frames/Enemies1/IceFox/shoot.png</key>
-            <key type="filename">../frames/Enemies1/IceFox/stand.png</key>
-            <key type="filename">../frames/Enemies1/PreciousGemCanon/straight.png</key>
-            <key type="filename">../frames/Enemies1/PreciousGemCanon/up.png</key>
-            <key type="filename">../frames/Enemies1/PreciousTron/shoot.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>12,8,24,16</rect>
-                <key>scale9Paddings</key>
-                <rect>12,8,24,16</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -885,6 +914,8 @@
             <key type="filename">../frames/Enemies1/LumberJoe/jump_shielded.png</key>
             <key type="filename">../frames/Enemies1/Starkner/blue.png</key>
             <key type="filename">../frames/Enemies1/Starkner/sleep.png</key>
+            <key type="filename">../frames/Enemies1/UFOhNoBot/no_bomb_frozen.png</key>
+            <key type="filename">../frames/Enemies1/UFOhNoBot/with_bomb_frozen.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -1002,8 +1033,12 @@
             <key type="filename">../frames/Enemies1/PreciousJoe/Shoot.png</key>
             <key type="filename">../frames/Enemies1/PreciousJoe/Stand.png</key>
             <key type="filename">../frames/Enemies1/PreciousTron/fall.png</key>
+            <key type="filename">../frames/Enemies1/PreciousTron/frozen.png</key>
             <key type="filename">../frames/Enemies1/PreciousTron/stand.png</key>
             <key type="filename">../frames/Enemies1/Ratton/frozen.png</key>
+            <key type="filename">../frames/Enemies1/RollingBot/frozen.png</key>
+            <key type="filename">../frames/Enemies1/SubmarineJoe/frozen.png</key>
+            <key type="filename">../frames/Enemies1/SwinginJoe/frozen.png</key>
             <key type="filename">../frames/Enemies1/SwinginJoe/throw.png</key>
             <key type="filename">../frames/Enemies1/WispyWasp/Nest.png</key>
             <struct type="IndividualSpriteSettings">
@@ -1163,6 +1198,21 @@
                 <rect>12,15,24,30</rect>
                 <key>scale9Paddings</key>
                 <rect>12,15,24,30</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Enemies1/Sealion/frozen.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,8,24,15</rect>
+                <key>scale9Paddings</key>
+                <rect>12,8,24,15</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

@@ -9,6 +9,7 @@ import com.mega.game.engine.damage.IDamager
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
+import com.megaman.maverick.game.entities.explosions.IceBombExplosion
 import com.megaman.maverick.game.entities.explosions.MagmaExplosion
 import com.megaman.maverick.game.entities.hazards.DrippingToxicGoop
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
@@ -40,6 +41,7 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             Saw::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             MoonScythe::class pairTo dmgNeg(5),
             SmallIceCube::class pairTo dmgNeg(3),
+            IceBombExplosion::class pairTo dmgNeg(3),
             DrippingToxicGoop::class pairTo dmgNeg(1),
             Asteroid::class pairTo dmgNeg(10),
             PreciousGem::class pairTo dmgNeg(10),
@@ -77,6 +79,7 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             Saw::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             MoonScythe::class pairTo dmgNeg(15),
             SmallIceCube::class pairTo dmgNeg(5),
+            IceBombExplosion::class pairTo dmgNeg(5),
             DrippingToxicGoop::class pairTo dmgNeg(1),
             Asteroid::class pairTo dmgNeg(20),
             PreciousGem::class pairTo dmgNeg(20),
@@ -114,6 +117,7 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             Saw::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             MoonScythe::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             SmallIceCube::class pairTo dmgNeg(15),
+            IceBombExplosion::class pairTo dmgNeg(15),
             DrippingToxicGoop::class pairTo dmgNeg(1),
             Asteroid::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             PreciousGem::class pairTo dmgNeg(ConstVals.MAX_HEALTH),

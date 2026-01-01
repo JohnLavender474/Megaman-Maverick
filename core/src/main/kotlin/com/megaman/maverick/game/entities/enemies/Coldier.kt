@@ -40,15 +40,17 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.contracts.*
+import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFireEntity
+import com.megaman.maverick.game.entities.contracts.IFreezerEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
-import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IFaceable {
+class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "Coldier"
@@ -83,20 +85,6 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity
     private enum class ColdierState { STAND, SMALL_BLOW, BIG_BLOW, COOLDOWN }
 
     override lateinit var facing: Facing
-
-    override var frozen: Boolean
-        get() = freezeHandler.isFrozen()
-        set(value) {
-            freezeHandler.setFrozen(value)
-        }
-
-    private val freezeHandler = FreezableEntityHandler(
-        this,
-        onFrozen = {
-            loop.reset()
-            timers.values().forEach { it.reset() }
-        }
-    )
 
     private val loop = Loop(ColdierState.entries.toGdxArray())
     private val currentState: ColdierState
@@ -158,14 +146,11 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity
 
         loop.reset()
         timers.values().forEach { it.reset() }
-
-        frozen = false
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        frozen = false
     }
 
     override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when (damager) {
@@ -177,10 +162,6 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            freezeHandler.update(delta)
-
-            if (frozen) return@add
-
             facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
             val timer = timers[currentState.name.lowercase()]
@@ -280,8 +261,7 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity
         .animator(
             AnimatorBuilder()
                 .setKeySupplier {
-                    if (frozen) "frozen"
-                    else when (currentState) {
+                    when (currentState) {
                         ColdierState.BIG_BLOW -> if (beforeBigBlow) "before_big_blow" else "big_blow"
                         ColdierState.SMALL_BLOW -> if (beforeSmallBlow) "before_small_blow" else "small_blow"
                         else -> currentState.name.lowercase()

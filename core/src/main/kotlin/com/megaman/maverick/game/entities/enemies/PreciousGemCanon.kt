@@ -11,6 +11,7 @@ import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.interfaces.IFaceable
@@ -39,17 +40,19 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.projectiles.PreciousGemBomb
 import com.megaman.maverick.game.entities.projectiles.PreciousGemBomb.PreciousGemBombColor
 import com.megaman.maverick.game.entities.projectiles.PreciousShard
 import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardColor
 import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardSize
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class PreciousGemCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class PreciousGemCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "PreciousGemCanon"
@@ -79,6 +82,23 @@ class PreciousGemCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimat
     private enum class PreciousGemCanonDirection { STRAIGHT, UP }
 
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = {
+            canonDirectionLoop.reset()
+            switchStateDelay.reset()
+            shootGemsTimer.reset()
+            launchGemsTimer.reset()
+            shootAnimTimer.setToEnd()
+        }
+    )
 
     private val canonDirectionLoop = Loop(PreciousGemCanonDirection.entries.toGdxArray())
     private val canonDirection: PreciousGemCanonDirection
@@ -112,9 +132,10 @@ class PreciousGemCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimat
     private val spawnDelayTimer = Timer()
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            val keys = Array<String>()
+            val keys = gdxArrayOf("frozen")
             PreciousGemCanonDirection.entries.forEach { direction ->
                 val key = direction.name.lowercase()
                 keys.add(key)
@@ -145,16 +166,22 @@ class PreciousGemCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimat
 
         val spawnDelay = spawnProps.getOrDefault(ConstKeys.DELAY, DEFAULT_SPAWN_DELAY, Float::class)
         spawnDelayTimer.resetDuration(spawnDelay)
+
+        frozen = false
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        frozen = false
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+            if (frozen) return@add
+
             shootAnimTimer.update(delta)
 
             spawnDelayTimer.update(delta)
@@ -236,12 +263,14 @@ class PreciousGemCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimat
         .animator(
             AnimatorBuilder()
                 .setKeySupplier keySupplier@{
+                    if (frozen) return@keySupplier "frozen"
+
                     var key = canonDirection.name.lowercase()
                     if (shooting) key = "${key}${SHOOT_SUFFIX}"
                     return@keySupplier key
                 }
                 .applyToAnimations { animations ->
-                    animations.put("frozen", Animation(regions["straight"]))
+                    animations.put("frozen", Animation(regions["frozen"]))
 
                     PreciousGemCanonDirection.entries.forEach { direction ->
                         val key = direction.name.lowercase()

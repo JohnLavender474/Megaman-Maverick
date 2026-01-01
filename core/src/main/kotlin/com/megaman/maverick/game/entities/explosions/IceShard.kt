@@ -4,13 +4,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.Queue
 import com.mega.game.engine.audio.AudioComponent
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
@@ -18,6 +21,7 @@ import com.mega.game.engine.drawables.sprites.*
 import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
@@ -42,8 +46,15 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
     companion object {
         const val TAG = "IceShard"
 
+        private const val MAX_SHARDS = 5
+        private val SPAWNED_QUEUE = Queue<IceShard>()
+
+        private const val FADE_OUT_DUR = 0.25f
+
         private const val GRAVITY = -0.15f
+
         private val SCALARS = ObjectMap<String, Float>()
+
         private val TRAJECTORIES = gdxArrayOf(
             Vector2(-7f, 5f),
             Vector2(-3f, 7f),
@@ -62,7 +73,11 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         }
     }
 
+    private val fadeOutTimer = Timer(FADE_OUT_DUR)
+    private var fadeOut = false
+
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (TEXTURES.isEmpty) {
             val region1 = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "BreakableIce/Shards")
             val array1 = Array<TextureRegion>()
@@ -76,13 +91,16 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
             TEXTURES.put(FallingIcicle.TAG, out2)
             SCALARS.put(FallingIcicle.TAG, 0.5f)
         }
-        addComponent(defineBodyComponent())
-        addComponent(defineCullablesComponent())
-        addComponent(defineSpritesComponent())
+        super.init()
         addComponent(AudioComponent())
+        addComponent(defineBodyComponent())
+        addComponent(defineSpritesComponent())
+        addComponent(defineCullablesComponent())
+        addComponent(defineUpdatablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -102,7 +120,33 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         defaultSprite.setSize(scalar * ConstVals.PPM)
 
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ICE_SHARD_2_SOUND, false)
+
+        fadeOutTimer.reset()
+        fadeOut = false
+
+        SPAWNED_QUEUE.addLast(this)
+        if (SPAWNED_QUEUE.size > MAX_SHARDS) {
+            val shardToFadeOut = SPAWNED_QUEUE.removeFirst()
+            shardToFadeOut.setToFadeOut()
+        }
     }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        SPAWNED_QUEUE.removeValue(this, false)
+    }
+
+    private fun setToFadeOut() {
+        fadeOut = true
+    }
+
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        if (fadeOut) {
+            fadeOutTimer.update(delta)
+            if (fadeOutTimer.isFinished()) destroy()
+        }
+    })
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
@@ -119,9 +163,11 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(ConstVals.PPM.toFloat())
-        sprite.setAlpha(0.75f)
         val component = SpritesComponent(sprite)
-        component.putPreProcess { _, _ -> sprite.setCenter(body.getCenter()) }
+        component.putPreProcess { _, _ ->
+            sprite.setCenter(body.getCenter())
+            sprite.setAlpha(if (fadeOut) 1f - fadeOutTimer.getRatio() else 1f)
+        }
         return component
     }
 

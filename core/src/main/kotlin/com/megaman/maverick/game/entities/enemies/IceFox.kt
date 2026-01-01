@@ -44,14 +44,13 @@ import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.projectiles.IceBomb
-import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class IceFox(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IFaceable {
+class IceFox(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "IceFox"
@@ -78,14 +77,6 @@ class IceFox(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity,
     private enum class IceFoxState { STAND, SHOOT }
 
     override lateinit var facing: Facing
-
-    override var frozen: Boolean
-        get() = freezeHandler.isFrozen()
-        set(value) {
-            freezeHandler.setFrozen(value)
-        }
-
-    private val freezeHandler = FreezableEntityHandler(this)
 
     private val loop = Loop(IceFoxState.entries.toGdxArray())
     private val currentState: IceFoxState
@@ -125,14 +116,11 @@ class IceFox(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity,
                 }
             }
         )
-
-        frozen = false
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        frozen = false
     }
 
     override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when (damager) {
@@ -144,13 +132,6 @@ class IceFox(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity,
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            freezeHandler.update(delta)
-
-            if (frozen) {
-                body.physics.velocity.setZero()
-                return@add
-            }
-
             if (game.isCameraRotating() || !megaman.ready) return@add
 
             val timer = timers[currentState]

@@ -80,7 +80,7 @@ class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, 
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private enum class JettoState { FLY, FALL }
+    private enum class JettoState { FLY, FALL, FROZEN }
 
     private enum class JettoColor { GRAY, BRONZE }
 
@@ -95,7 +95,11 @@ class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, 
             freezeHandler.setFrozen(value)
         }
 
-    private val freezeHandler = FreezableEntityHandler(this)
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = { state = JettoState.FROZEN },
+        onJustFinished = { state = JettoState.FALL }
+    )
 
     private lateinit var state: JettoState
 
@@ -230,6 +234,8 @@ class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, 
                 }
             } else {
                 body.physics.velocity.x = 0f
+
+                if (state != JettoState.FALL) return@add
 
                 fallBlinkTimer.update(delta)
                 if (fallBlinkTimer.isFinished()) {

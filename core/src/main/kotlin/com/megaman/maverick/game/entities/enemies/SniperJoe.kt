@@ -357,7 +357,8 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         .animator(
             AnimatorBuilder()
                 .setKeySupplier keySupplier@{
-                    val key = "${type.name.lowercase()}/${currentState.name.lowercase()}"
+                    val suffix = if (frozen) "frozen" else currentState.name.lowercase()
+                    val key = "${type.name.lowercase()}/$suffix"
                     return@keySupplier key
                 }
                 .setOnChangeKeyListener { _, oldKey, currentKey ->

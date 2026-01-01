@@ -100,6 +100,7 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
     private enum class SubmarineJoeState { MOVE, IDLE, SHOOT }
 
     override lateinit var facing: Facing
+
     private val changeFacingDelay = Timer(CHANGE_FACING_DELAY)
 
     override var frozen: Boolean
@@ -108,7 +109,10 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
             freezeHandler.setFrozen(value)
         }
 
-    private val freezeHandler = FreezableEntityHandler(this)
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = { stateLoopHandler.reset() }
+    )
 
     private val aimLine = GameLine()
     private val missileSpawnBounds = GameRectangle().setSize(2f * ConstVals.PPM, 0.5f * ConstVals.PPM)

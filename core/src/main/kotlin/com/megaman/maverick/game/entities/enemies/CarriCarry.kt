@@ -89,7 +89,10 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
             freezeHandler.setFrozen(value)
         }
 
-    private val freezeHandler = FreezableEntityHandler(this)
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = { shakeTimer.setToEnd() }
+    )
 
     private val shakeTimer = Timer(SHAKE_DUR)
     private var centerX = 0f
@@ -191,7 +194,6 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             freezeHandler.update(delta)
-
             if (frozen) return@add
 
             facing = if (megaman.body.getCenter().x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
@@ -231,9 +233,7 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         .preProcess { _, sprite ->
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
-
             sprite.setFlip(isFacing(Facing.LEFT), false)
-
             sprite.hidden = damageBlink
         }
         .build()

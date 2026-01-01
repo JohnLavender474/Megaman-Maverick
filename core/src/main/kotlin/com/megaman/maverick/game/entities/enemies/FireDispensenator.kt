@@ -83,7 +83,13 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
             freezeHandler.setFrozen(value)
         }
 
-    private val freezeHandler = FreezableEntityHandler(this)
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = {
+            stateMachine.reset()
+            timers.values().forEach { it.reset() }
+        }
+    )
 
     private val timers = objectMapOf(
         "open" pairTo Timer(OPEN_DUR),
@@ -103,6 +109,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
                 val key = it.name.lowercase()
                 regions.put(key, atlas.findRegion("$TAG/$key"))
             }
+            regions.put("frozen", atlas.findRegion("$TAG/frozen"))
         }
         super.init()
         addComponent(defineAnimationsComponent())

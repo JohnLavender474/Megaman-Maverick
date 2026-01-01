@@ -125,6 +125,7 @@ class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
 
             if (frozen) {
                 body.physics.velocity.setZero()
+                laughTimer.setToEnd()
                 return@add
             }
 

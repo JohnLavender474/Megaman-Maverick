@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="400" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="770">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="400" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="772">
  <tileset firstgid="1" source="../tsx/InfernoManTileset.tsx"/>
  <tileset firstgid="46" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1070" source="../tsx/MagmaMan.tsx"/>
@@ -383,6 +383,7 @@
   <object id="681" name="Scanner" x="10400" y="528" width="448" height="64"/>
   <object id="739" name="Scanner" x="1088" y="2720" width="576" height="64"/>
   <object id="741" name="Scanner" x="1536" y="2840" width="448" height="40"/>
+  <object id="771" name="Scanner" x="5568" y="1352" width="384" height="64"/>
  </objectgroup>
  <objectgroup id="11" name="blocks">
   <object id="4" x="480" y="2848" width="320" height="352"/>
@@ -988,12 +989,6 @@
     <property name="type" value="fire"/>
    </properties>
   </object>
-  <object id="731" name="SniperJoe" x="5688" y="1392" width="16" height="16">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-    <property name="type" value="fire"/>
-   </properties>
-  </object>
   <object id="738" name="FireDispensenator" x="1368" y="2768" width="16" height="16">
    <properties>
     <property name="hard_mode_only" type="bool" value="true"/>
@@ -1006,6 +1001,13 @@
     <property name="hard_mode_only" type="bool" value="true"/>
     <property name="ignore_blocks" value="30"/>
     <property name="scanner" type="object" value="741"/>
+   </properties>
+  </object>
+  <object id="770" name="FireDispensenator" x="5688" y="1392" width="16" height="16">
+   <properties>
+    <property name="hard_mode_only" type="bool" value="true"/>
+    <property name="ignore_blocks" value="327"/>
+    <property name="scanner" type="object" value="771"/>
    </properties>
   </object>
  </objectgroup>

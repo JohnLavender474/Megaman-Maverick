@@ -38,9 +38,9 @@ abstract class AbstractEnergyItem(game: MegamanMaverickGame) : AbstractItem(game
         private const val LARGE_WIDTH = 1f
         private const val LARGE_HEIGHT = 0.75f
 
-        private const val TIME_TO_BLINK = 2f
+        private const val TIME_TO_BLINK = 3f
         private const val BLINK_DUR = 0.01f
-        private const val CULL_DUR = 3.5f
+        private const val CULL_DUR = 4f
 
         private const val LIGHT_SOURCE_RADIUS = 3
         private const val LIGHT_SOURCE_RADIANCE = 1.25f

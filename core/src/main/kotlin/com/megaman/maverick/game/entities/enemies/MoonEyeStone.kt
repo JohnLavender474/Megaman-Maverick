@@ -82,6 +82,7 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableE
         private const val THROW_DUR = 1f
         private const val THROW_TIME = 0.25f
         private const val THROW_SPEED = 8f
+        private const val AIMLESS_RELEASE_SPEED = 3f
 
         private const val MIN_RELEASE_SPEED = 3f
         private const val MAX_RELEASE_SPEED = 6f
@@ -113,7 +114,13 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableE
             freezeHandler.setFrozen(value)
         }
 
-    private val freezeHandler = FreezableEntityHandler(this)
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = {
+            loop.reset()
+            throwAsteroids(false)
+        }
+    )
 
     private val loop = Loop(MoonEyeStoneState.entries.toGdxArray())
     private val currentState: MoonEyeStoneState
@@ -295,15 +302,26 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableE
         }
     }
 
-    private fun throwAsteroids() {
+    private fun throwAsteroids(targetMegaman: Boolean = true) {
         val iter = asteroids.keys().iterator()
         while (iter.hasNext) {
             val asteroid = iter.next()
 
-            val impulse = megaman.body.getBounds().getCenter()
+            val target =
+                if (targetMegaman) megaman.body.getCenter()
+                else GameObjectPools.fetch(Vector2::class)
+                    .set(asteroid.body.getCenter())
+                    .add(
+                        UtilMethods.getRandom(-1f, 1f) * ConstVals.PPM,
+                        UtilMethods.getRandom(-1f, 1f) * ConstVals.PPM
+                    )
+
+            val speed = if (targetMegaman) THROW_SPEED else UtilMethods.getRandom(MIN_RELEASE_SPEED, MAX_RELEASE_SPEED)
+
+            val impulse = target
                 .sub(asteroid.body.getBounds().getCenter())
                 .nor()
-                .scl(THROW_SPEED * ConstVals.PPM)
+                .scl(speed * ConstVals.PPM)
             asteroid.impulse.set(impulse)
 
             iter.remove()

@@ -38,14 +38,16 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.hazards.UnderwaterFan
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.FallingIcicle
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFaceable {
+class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IFaceable {
 
     companion object {
         const val TAG = "GapingFish"
@@ -57,28 +59,31 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
 
     override lateinit var facing: Facing
 
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
+
     private val chompTimer = Timer(CHOMP_DUR)
     private val chomping: Boolean
         get() = !chompTimer.isFinished()
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
-
         damageOverrides.putAll(
             UnderwaterFan::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             FallingIcicle::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
         )
-
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-
         super.init()
-
         addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
@@ -87,11 +92,14 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
         chompTimer.setToEnd()
 
         facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+
+        frozen = false
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        frozen = false
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
@@ -99,17 +107,24 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
         if (damageable is Megaman) chompTimer.reset()
     }
 
-
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
-        updatablesComponent.add {
+        updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) {
+                body.physics.velocity.setZero()
+                chompTimer.setToEnd()
+                return@add
+            }
+
             GameLogger.debug(
                 TAG,
                 "update(): in water = ${body.isSensing(BodySense.IN_WATER)}, invincible = " +
                     "$invincible, chomping = $chomping, position = ${body.getPosition()}"
             )
 
-            chompTimer.update(it)
+            chompTimer.update(delta)
 
             val megamanBody = megaman.body
 
@@ -206,6 +221,7 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
             if (chomping) "chomp" else if (invincible) "gaping" else "swimming"
         }
         val animations = objectMapOf<String, IAnimation>(
+            "frozen" pairTo Animation(atlas!!.findRegion("GapingFish/frozen"), 1, 1, 1f),
             "chomp" pairTo Animation(atlas!!.findRegion("GapingFish/Chomping"), 1, 2, 0.1f),
             "gaping" pairTo Animation(atlas!!.findRegion("GapingFish/Gaping"), 1, 2, 0.15f),
             "swimming" pairTo Animation(atlas!!.findRegion("GapingFish/Swimming"), 1, 2, 0.15f)

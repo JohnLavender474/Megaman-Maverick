@@ -94,7 +94,13 @@ class ScooperPete(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEn
             freezeHandler.setFrozen(value)
         }
 
-    private val freezeHandler = FreezableEntityHandler(this)
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = {
+            loop.reset()
+            stateTimers.values().forEach { it.reset() }
+        }
+    )
 
     override val lightSourceKeys = ObjectSet<Int>()
     override val lightSourceCenter: Vector2

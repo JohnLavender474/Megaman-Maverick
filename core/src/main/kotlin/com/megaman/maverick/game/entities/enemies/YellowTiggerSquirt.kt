@@ -112,6 +112,8 @@ class YellowTiggerSquirt(game: MegamanMaverickGame) : AbstractEnemy(game, size =
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
             if (frozen) {
                 body.physics.velocity.setZero()
                 return@add

@@ -87,7 +87,19 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
             freezeHandler.setFrozen(value)
         }
 
-    private val freezeHandler = FreezableEntityHandler(this)
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = {
+            body.physics.velocity.x = 0f
+            if (body.physics.velocity.y > 0f) body.physics.velocity.y = 0f
+
+            waitTimer.reset()
+            shootTimer.reset()
+            jumpDelayTimer.reset()
+
+            timesJumped = 0
+        }
+    )
 
     private val waitTimer = Timer(WAIT_DURATION)
     private val jumpDelayTimer = Timer(JUMP_DELAY)

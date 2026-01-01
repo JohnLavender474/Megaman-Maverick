@@ -73,7 +73,10 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
     private val freezeHandler = FreezableEntityHandler(
         this,
-        onFrozen = { loop.reset() }
+        onFrozen = {
+            loop.reset()
+            stateTimer.reset()
+        }
     )
 
     private val loop = Loop(SwinginJoeState.entries.toGdxArray())
@@ -106,6 +109,12 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
         facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
+        frozen = false
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
         frozen = false
     }
 

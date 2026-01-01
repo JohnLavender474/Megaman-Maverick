@@ -35,7 +35,6 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -75,9 +74,6 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         private const val SPLIT_PARENT_BOUNDS_ROWS = 2
         private const val SPLIT_PARENT_BOUNDS_COLS = 2
 
-        private const val FROZEN_GRAVITY = -0.25f
-        private const val FROZEN_GROUND_GRAV = -0.01f
-
         private val DAMAGERS = gdxArrayOf(Axe::class)
 
         private val animDefs = orderedMapOf(
@@ -91,6 +87,7 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
     private enum class BeezeeState { HOVER, ATTACK }
 
     override var owner: CannoHoney? = null
+
     override lateinit var facing: Facing
 
     override var frozen: Boolean
@@ -98,6 +95,7 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         set(value) {
             frozenHandler.setFrozen(value)
         }
+
     private val frozenHandler = FreezableEntityHandler(
         this,
         onJustFinished = { setToAttack() }
@@ -144,6 +142,7 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         cullTimer.reset()
 
         facing = UtilMethods.getRandom(Facing.LEFT, Facing.RIGHT)
+
         owner = spawnProps.get(ConstKeys.OWNER, CannoHoney::class)!!
 
         frozen = false
@@ -243,21 +242,7 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        val feetFixture =
-            Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
-        body.addFixture(feetFixture)
-        feetFixture.drawingColor = Color.GREEN
-        debugShapes.add { feetFixture }
-
         body.preProcess.put(ConstKeys.DEFAULT) {
-            if (frozen) {
-                val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) FROZEN_GROUND_GRAV else FROZEN_GRAVITY
-                body.physics.gravity.y = gravity * ConstVals.PPM
-
-                body.physics.velocity.x = 0f
-            } else body.physics.gravity.y = 0f
-
             body.drawingColor = if (owner == null) Color.RED else Color.BLUE
         }
 

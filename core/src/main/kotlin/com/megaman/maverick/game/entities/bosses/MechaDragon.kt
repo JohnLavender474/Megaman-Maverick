@@ -141,7 +141,11 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IFreezableEnt
         get() = !frozenTimer.isFinished()
         set(value) {
             GameLogger.debug(TAG, "frozen: set=$value")
-            if (value) frozenTimer.reset() else frozenTimer.setToEnd()
+            if (value) {
+                frozenTimer.reset()
+                fireDelay.reset()
+                fireTimer.setToEnd()
+            } else frozenTimer.setToEnd()
         }
 
     private lateinit var stateMachine: StateMachine<MechaDragonState>

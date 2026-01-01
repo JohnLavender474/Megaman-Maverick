@@ -90,7 +90,16 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
             freezeHandler.setFrozen(value)
         }
 
-    private val freezeHandler = FreezableEntityHandler(this)
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = {
+            state = RollingBotState.OPEN
+
+            rollTimer.reset()
+            openTimer.reset()
+            shootTimer.reset()
+        }
+    )
 
     private lateinit var state: RollingBotState
 

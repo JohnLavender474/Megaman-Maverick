@@ -9,7 +9,7 @@ import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.entities.blocks.FrozenEntityBlock
+import com.megaman.maverick.game.entities.blocks.ShieldEntity
 import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.world.body.getBounds
@@ -18,10 +18,9 @@ import com.megaman.maverick.game.world.body.getCenter
 class FreezableEntityHandler(
     private val entity: IFreezableEntity,
     private val onFrozen: () -> Unit = {},
-    private val onUnfrozen: () -> Unit = {},
     private val onJustFinished: () -> Unit = {},
-    private val doSpawnFrozenBlock: () -> Boolean = { true },
-    private val frozenBlockBoundsSupplier: (() -> GameRectangle)? = {
+    private val doSpawnFrozenShield: () -> Boolean = { true },
+    private val frozenShieldBoundsSupplier: (() -> GameRectangle)? = {
         (entity as IBodyEntity).body.getBounds()
     },
     duration: Float = ConstVals.STANDARD_FROZEN_DUR
@@ -35,6 +34,10 @@ class FreezableEntityHandler(
         if (entity is AbstractHealthEntity) {
             entity.invinciblePredicates.add { isFrozen() }
 
+            entity.onHealthDepletedCallbacks.add {
+                if (isFrozen()) IceShard.spawn5((entity as IBodyEntity).body.getCenter())
+            }
+
             entity.onDamagedCallbacks.add { damager, _ ->
                 if (!entity.frozen && damager is IFreezerEntity) entity.frozen = true
                 if (entity.frozen && damager is IFireEntity) entity.frozen = false
@@ -44,21 +47,19 @@ class FreezableEntityHandler(
         if (entity is AbstractEnemy) entity.canDamagePredicates.add { !entity.frozen }
     }
 
-    private val frozenEntityBlock = FrozenEntityBlock((entity as MegaGameEntity).game)
+    private val shieldEntity = ShieldEntity((entity as MegaGameEntity).game)
 
     val timer = Timer(duration).setToEnd()
 
     fun setFrozen(value: Boolean) {
-        GameLogger.debug(TAG, "setFrozen(): value=$value")
         if (value) {
-            if (frozenEntityBlock.dead && doSpawnFrozenBlock.invoke())
-                frozenEntityBlock.spawn(props(ConstKeys.ENTITY pairTo entity))
+            if (shieldEntity.dead && doSpawnFrozenShield.invoke())
+                shieldEntity.spawn(props(ConstKeys.OWNER pairTo entity))
             timer.reset()
             onFrozen.invoke()
         } else {
-            if (frozenEntityBlock.spawned) frozenEntityBlock.destroy()
-            timer.setToEnd()
-            onUnfrozen.invoke()
+            if (shieldEntity.spawned) shieldEntity.destroy()
+            timer.setToEnd(false)
         }
     }
 
@@ -71,15 +72,16 @@ class FreezableEntityHandler(
     override fun update(delta: Float) {
         timer.update(delta)
         if (timer.isJustFinished()) {
+            GameLogger.debug(TAG, "update(): timer just finished")
             onJustFinished.invoke()
             IceShard.spawn5((entity as IBodyEntity).body.getCenter())
         }
 
-        if (isFrozen() && frozenEntityBlock.spawned) {
-            val bounds = frozenBlockBoundsSupplier?.invoke()
+        if (isFrozen() && shieldEntity.spawned) {
+            val bounds = frozenShieldBoundsSupplier?.invoke()
             if (bounds != null) {
-                frozenEntityBlock.body.set(bounds)
-                frozenEntityBlock.body.forEachFixture { fixture ->
+                shieldEntity.body.set(bounds)
+                shieldEntity.body.forEachFixture { fixture ->
                     fixture.setShape(bounds)
                 }
             }

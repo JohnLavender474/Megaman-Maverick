@@ -93,6 +93,28 @@ class MegaContactFilter : IContactFilter {
     override fun filter(fixture1: IFixture, fixture2: IFixture): Boolean {
         if (fixture1 == fixture2 || fixture1.getEntity() == fixture2.getEntity()) return false
 
+        // TODO: The following is very inefficient due to the type checks and casts which
+        //       is being run on every frame. Consider optimizing or reworking this logic
+        //       once frozen blocks are re-enabled.
+        /*
+        val entity1 = fixture1.getEntity()
+        val entity2 = fixture2.getEntity()
+        if (entity1 is FrozenEntityBlock || entity2 is FrozenEntityBlock) {
+            val frozenBlock: FrozenEntityBlock
+            val otherEntity: IGameEntity
+
+            if (entity1 is FrozenEntityBlock) {
+                frozenBlock = entity1
+                otherEntity = entity2
+            } else {
+                frozenBlock = entity2 as FrozenEntityBlock
+                otherEntity = entity1
+            }
+
+            if (otherEntity == frozenBlock.owner) return false
+        }
+         */
+
         if (fixture1.getType() == FixtureType.CONSUMER || fixture2.getType() == FixtureType.CONSUMER) {
             val consumer: IFixture
             val other: IFixture

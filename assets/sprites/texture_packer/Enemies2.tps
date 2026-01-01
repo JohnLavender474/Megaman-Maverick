@@ -210,13 +210,17 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Enemies2/AstroAssAssaulter/frozen.png</key>
             <key type="filename">../frames/Enemies2/AstroAssAssaulter/shoot.png</key>
             <key type="filename">../frames/Enemies2/AstroAssAssaulter/shoot_up.png</key>
             <key type="filename">../frames/Enemies2/AstroAssAssaulter/stand.png</key>
+            <key type="filename">../frames/Enemies2/CarriCarry/frozen.png</key>
+            <key type="filename">../frames/Enemies2/CartinJoe/frozen.png</key>
             <key type="filename">../frames/Enemies2/Coldier/before_big_blow.png</key>
             <key type="filename">../frames/Enemies2/Coldier/before_small_blow.png</key>
             <key type="filename">../frames/Enemies2/FireDispensenator/frozen.png</key>
             <key type="filename">../frames/Enemies2/FireDispensenator/sleep.png</key>
+            <key type="filename">../frames/Enemies2/UFOBombBot/frozen.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -330,6 +334,21 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Enemies2/BigFishNeo/frozen.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>25,13,50,25</rect>
+                <key>scale9Paddings</key>
+                <rect>25,13,50,25</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Enemies2/BigFishNeo/laugh.png</key>
             <key type="filename">../frames/Enemies2/BigFishNeo/swim.png</key>
             <struct type="IndividualSpriteSettings">
@@ -364,6 +383,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Enemies2/BigJumpingJoe/Stand.png</key>
+            <key type="filename">../frames/Enemies2/BigJumpingJoe/frozen.png</key>
             <key type="filename">../frames/Enemies2/DemonMet/angel.png</key>
             <key type="filename">../frames/Enemies2/DemonMet/fly.png</key>
             <key type="filename">../frames/Enemies2/Hanabiran/1PetalStand.png</key>
@@ -396,6 +416,7 @@
             <key type="filename">../frames/Enemies2/TorikoPlundge/plunge2.png</key>
             <key type="filename">../frames/Enemies2/TorikoPlundge/plunge3.png</key>
             <key type="filename">../frames/Enemies2/Wanaan/chomp.png</key>
+            <key type="filename">../frames/Enemies2/YellowTiggerSquirt/swim.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -468,6 +489,7 @@
             </struct>
             <key type="filename">../frames/Enemies2/BunbyTank/Shoot.png</key>
             <key type="filename">../frames/Enemies2/BunbyTank/Still.png</key>
+            <key type="filename">../frames/Enemies2/BunbyTank/frozen.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -497,6 +519,7 @@
             <key type="filename">../frames/Enemies2/WallTeck/angry.png</key>
             <key type="filename">../frames/Enemies2/WallTeck/still.png</key>
             <key type="filename">../frames/Enemies2/Wanaan/frozen.png</key>
+            <key type="filename">../frames/Enemies2/YellowTiggerSquirt/frozen.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -660,6 +683,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Enemies2/Eyee/Open.png</key>
+            <key type="filename">../frames/Enemies2/Eyee/frozen.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -774,8 +798,10 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Enemies2/IceSkaterPeng/frozen.png</key>
             <key type="filename">../frames/Enemies2/IceSkaterPeng/jump1.png</key>
             <key type="filename">../frames/Enemies2/Tropish/bent.png</key>
+            <key type="filename">../frames/Enemies2/Tropish/frozen.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -1098,21 +1124,6 @@
                 <rect>16,10,32,20</rect>
                 <key>scale9Paddings</key>
                 <rect>16,10,32,20</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Enemies2/YellowTiggerSquirt.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>36,18,72,36</rect>
-                <key>scale9Paddings</key>
-                <rect>36,18,72,36</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

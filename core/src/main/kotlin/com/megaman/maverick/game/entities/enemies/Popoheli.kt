@@ -10,6 +10,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimator
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
@@ -20,10 +21,8 @@ import com.mega.game.engine.common.interfaces.UpdateFunction
 import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -41,28 +40,35 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
-import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
-import com.megaman.maverick.game.world.body.*
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getPositionPoint
 import java.util.*
 
-class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable {
+class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IAnimatedEntity,
+    IFaceable {
 
     companion object {
         const val TAG = "Popoheli"
+
         private const val SPEED = 10f
+
         private const val ATTACK_DELAY = 0.25f
         private const val ATTACK_DUR = 1f
+
         private const val FLAMES = 4
         private const val FLAME_PADDING = 0.5f
-        private const val FROZEN_DUR = 1f
+
         private var heliRegion: TextureRegion? = null
         private var frozenRegion: TextureRegion? = null
         private var flameRegion: TextureRegion? = null
@@ -74,16 +80,27 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
     override lateinit var facing: Facing
 
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = { onFrozen() },
+        onJustFinished = { stateBeforeFrozen?.let { state = it } }
+    )
+
     private val attackDelayTimer = Timer(ATTACK_DELAY)
     private val attackTimer = Timer(ATTACK_DUR)
     private val attacking: Boolean
         get() = state == PopoheliState.ATTACKING && attackDelayTimer.isFinished()
     private val waiting: Boolean
         get() = state == PopoheliState.WAITING
-    private val frozenTimer = Timer(ConstVals.STANDARD_FROZEN_DUR)
 
     private lateinit var state: PopoheliState
-    private lateinit var stateBeforeFrozen: PopoheliState
+    private var stateBeforeFrozen: PopoheliState? = null
 
     private lateinit var faceOnEnd: Facing
 
@@ -91,6 +108,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     private val triggers = Array<TriggerDef>()
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         if (heliRegion == null || flameRegion == null) {
             heliRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "${TAG}/fly")
             frozenRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "${TAG}/frozen")
@@ -102,6 +120,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
@@ -123,7 +142,6 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                 }
                 facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
             }
-
             else -> {
                 val center = megaman.body.getCenter()
 
@@ -139,6 +157,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         }
 
         state = if (triggerable) PopoheliState.WAITING else PopoheliState.APPROACHING
+
         faceOnEnd = if (spawnProps.containsKey("${ConstKeys.FACE}_${ConstKeys.ON}_${ConstKeys.END}")) {
             val value =
                 spawnProps.get("${ConstKeys.FACE}_${ConstKeys.ON}_${ConstKeys.END}", String::class)!!.uppercase()
@@ -147,31 +166,29 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
         attackTimer.reset()
         attackDelayTimer.reset()
+
+        frozen = false
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         triggers.clear()
-    }
-
-    override fun takeDamageFrom(damager: IDamager): Boolean {
-        val damaged = super.takeDamageFrom(damager)
-        if (damaged && state != PopoheliState.FROZEN && damager is SmallIceCube) onFrozen()
-        return damaged
+        frozen = false
     }
 
     private fun onFrozen() {
         stateBeforeFrozen = state
         state = PopoheliState.FROZEN
-
-        frozenTimer.reset()
-
         requestToPlaySound(SoundAsset.ICE_SHARD_1_SOUND, false)
+        GameLogger.debug(TAG, "onFrozen(): stateBeforeFrozen=$stateBeforeFrozen")
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
             when (state) {
                 PopoheliState.WAITING -> {
                     body.physics.velocity.setZero()
@@ -183,7 +200,6 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                         }
                     }
                 }
-
                 PopoheliState.APPROACHING -> {
                     val trajectory = GameObjectPools.fetch(Vector2::class)
                         .set(target)
@@ -198,7 +214,6 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                         facing = faceOnEnd
                     }
                 }
-
                 PopoheliState.ATTACKING -> {
                     attackDelayTimer.update(delta)
                     if (!attackDelayTimer.isFinished()) return@add
@@ -208,24 +223,8 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                     attackTimer.update(delta)
                     if (attackTimer.isFinished()) state = PopoheliState.FLEEING
                 }
-
                 PopoheliState.FLEEING -> body.physics.velocity.y = SPEED * ConstVals.PPM
-
-                PopoheliState.FROZEN -> {
-                    body.physics.velocity.setZero()
-
-                    frozenTimer.update(delta)
-                    if (frozenTimer.isFinished()) {
-                        state = stateBeforeFrozen
-
-                        damageTimer.reset()
-
-                        for (i in 0 until 5) {
-                            val shard = MegaEntityFactory.fetch(IceShard::class)!!
-                            shard.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.INDEX pairTo i))
-                        }
-                    }
-                }
+                PopoheliState.FROZEN -> body.physics.velocity.setZero()
             }
         }
     }
@@ -265,9 +264,6 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                 0.35f * ConstVals.PPM, 0.65f * ConstVals.PPM
             )
         )
-        shieldFixture.setHitByProjectileReceiver { projectile ->
-            if (state != PopoheliState.FROZEN && projectile is SmallIceCube) onFrozen()
-        }
         body.addFixture(shieldFixture)
         debugShapes.add { shieldFixture }
 

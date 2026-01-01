@@ -17,7 +17,6 @@ import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -82,8 +81,6 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
         }
     val cullPoint: Vector2
         get() = body.getCenter()
-
-    private val frozenTimer = Timer(ConstVals.STANDARD_FROZEN_DUR)
 
     override fun init() {
         GameLogger.debug(TAG, "init()")

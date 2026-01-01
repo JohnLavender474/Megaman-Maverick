@@ -6,6 +6,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
@@ -77,9 +78,11 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
     private val behaviorTimer = Timer(CHANGE_BEHAV_DUR)
     private lateinit var currentBehavior: DragonFlyBehavior
     private lateinit var previousBehavior: DragonFlyBehavior
+
     private var toLeftBounds = false
 
     override fun init() {
+        GameLogger.debug(TAG, "init()")
         super.init()
         if (textureRegion == null) {
             textureRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "DragonFly")
@@ -90,16 +93,15 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
 
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
-
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         when {
             spawnProps.containsKey(ConstKeys.DIRECTION) -> {
                 var direction = spawnProps.get(ConstKeys.DIRECTION)
                 if (direction is String) direction = Direction.valueOf(direction.uppercase())
-                direction = direction as Direction
+                this.direction = direction as Direction
             }
-
             else -> direction = Direction.UP
         }
 
@@ -117,6 +119,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
     }
 
     override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         frozen = false
     }

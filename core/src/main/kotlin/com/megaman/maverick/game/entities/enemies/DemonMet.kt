@@ -92,9 +92,7 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
     private val freezeHandler = FreezableEntityHandler(
         this,
-        onFrozen = {
-            state = DemonMetState.FLY
-        }
+        onFrozen = { state = DemonMetState.FLY }
     )
 
     private val standTimer = Timer(STAND_DUR)

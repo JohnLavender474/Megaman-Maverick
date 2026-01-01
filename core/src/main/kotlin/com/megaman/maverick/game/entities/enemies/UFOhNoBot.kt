@@ -46,17 +46,20 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.projectiles.UFOBomb
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
+class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IFreezableEntity, IAnimatedEntity,
+    IFaceable {
 
     companion object {
         const val TAG = "UFOhNoBot"
@@ -77,6 +80,14 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     }
 
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private val dropTimer = Timer()
     private val triggers = Array<GameRectangle>()
@@ -135,6 +146,8 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         }
 
         blockBumps = 0
+
+        frozen = false
     }
 
     override fun onDestroy() {
@@ -143,6 +156,8 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
         triggers.forEach { GameObjectPools.free(it) }
         triggers.clear()
+
+        frozen = false
     }
 
     private fun isMegamanUnderMe() = megaman.body.getMaxY() <= body.getY() &&
@@ -174,6 +189,13 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) {
+                body.physics.velocity.setZero()
+                return@add
+            }
+
             if (waiting) when {
                 triggers.any { trigger -> megaman.body.getBounds().overlaps(trigger) } -> {
                     waiting = false
@@ -192,7 +214,6 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
                         else -> Facing.RIGHT
                     }
                 }
-
                 else -> return@add
             }
 
@@ -201,7 +222,6 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
                     rising = false
                     setToHover()
                 }
-
                 else -> return@add
             }
 
@@ -306,7 +326,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            if (!waiting && !rising && FacingUtils.isFacingBlock(this)) {
+            if (!waiting && !rising && !frozen && FacingUtils.isFacingBlock(this)) {
                 blockBumps++
                 if (blockBumps >= BLOCK_BUMPS_BEFORE_EXPLODE) {
                     val explosion = MegaEntityFactory.fetch(Explosion::class)!!
@@ -345,10 +365,16 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = { if (dropped) "no_bomb" else "with_bomb" }
+        val keySupplier: (String?) -> String? = keySupplier@{
+            var key = if (dropped) "no_bomb" else "with_bomb"
+            if (frozen) key += "_frozen"
+            return@keySupplier key
+        }
         val animations = objectMapOf<String, IAnimation>(
             "no_bomb" pairTo Animation(regions["no_bomb"], 2, 2, 0.1f, true),
-            "with_bomb" pairTo Animation(regions["with_bomb"], 2, 2, 0.1f, true)
+            "with_bomb" pairTo Animation(regions["with_bomb"], 2, 2, 0.1f, true),
+            "no_bomb_frozen" pairTo Animation(regions["no_bomb"], 2, 2, 0.1f, true),
+            "with_bomb_frozen" pairTo Animation(regions["with_bomb"], 2, 2, 0.1f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

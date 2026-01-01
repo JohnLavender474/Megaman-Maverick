@@ -36,8 +36,11 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.contracts.*
-import com.megaman.maverick.game.entities.explosions.IceShard
+import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFireEntity
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
+import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
@@ -48,7 +51,6 @@ class ShieldGuardBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
 
         private const val X_VEL = 6f
         private const val CULL_TIME = 5f
-        private const val FROZEN_DUR = 0.5f
         private const val TURN_DUR = 0.3f
 
         private val animDefs = orderedMapOf(
@@ -59,21 +61,22 @@ class ShieldGuardBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override var frozen: Boolean
-        get() = !frozenTimer.isFinished()
-        set(value) {
-            if (value) frozenTimer.reset() else frozenTimer.setToEnd()
-        }
     override lateinit var facing: Facing
 
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
+
     private val canMove: Boolean
-        get() = !game.isCameraRotating()
+        get() = !game.isCameraRotating() && !frozen
 
     private val turnTimer = Timer(TURN_DUR)
     private val turning: Boolean
         get() = !turnTimer.isFinished()
-
-    private val frozenTimer = Timer(ConstVals.STANDARD_FROZEN_DUR)
 
     private lateinit var animations: ObjectMap<String, IAnimation>
 
@@ -144,43 +147,29 @@ class ShieldGuardBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
         animations.forEach { it.value.setFrameDuration(frameDuration) }
 
         flipY = spawnProps.getOrDefault("${ConstKeys.FLIP}_${ConstKeys.Y}", false, Boolean::class)
+
         turnTimer.setToEnd()
+
         frozen = false
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
-        damager is IFireEntity || !frozen && super.canBeDamagedBy(damager)
-
-    override fun takeDamageFrom(damager: IDamager): Boolean {
-        val damaged = super.takeDamageFrom(damager)
-        if (damaged && damager is IFreezerEntity) frozen = true
-        return damaged
-    }
+        damager is IFireEntity || (!frozen && super.canBeDamagedBy(damager))
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
             if (!canMove) {
                 body.physics.velocity.setZero()
-                return@add
-            }
-
-            if (frozen) {
-                body.physics.velocity.setZero()
-
-                frozenTimer.update(delta)
-                if (frozenTimer.isJustFinished()) {
-                    damageTimer.reset()
-                    IceShard.spawn5(body.getCenter())
-                }
-
                 return@add
             }
 
             when {
                 vertical -> {
                     val centerY = body.getCenter().y
-                    if (centerY < min || centerY > max) {
+                    if (centerY !in min..max) {
                         turnTimer.reset()
 
                         body.setCenterY(if (centerY < min) min else max)
@@ -196,10 +185,9 @@ class ShieldGuardBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
                         GameLogger.debug(TAG, "Turning around. New y vel: $y")
                     }
                 }
-
                 else -> {
                     val centerX = body.getCenter().x
-                    if (centerX < min || centerX > max) {
+                    if (centerX !in min..max) {
                         turnTimer.reset()
 
                         body.setCenterX(if (centerX < min) min else max)
@@ -266,7 +254,6 @@ class ShieldGuardBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
                     damageableRect.setWidth(body.getWidth())
                     shieldRect.setSize(1.75f * ConstVals.PPM, 0.85f * ConstVals.PPM)
                 }
-
                 else -> {
                     body.setSize(ConstVals.PPM.toFloat(), 2f * ConstVals.PPM)
                     damageableRect.setHeight(body.getHeight())
@@ -283,7 +270,6 @@ class ShieldGuardBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
                         else -> damageableRect.setWidth(0.85f * ConstVals.PPM)
                     }
                 }
-
                 else -> {
                     shieldFixture.setActive(true)
                     when {
@@ -291,7 +277,6 @@ class ShieldGuardBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
                             damageableFixture.offsetFromBodyAttachment.y = (if (switch) 0.5f else -0.5f) * ConstVals.PPM
                             damageableRect.setHeight(0.15f * ConstVals.PPM)
                         }
-
                         else -> {
                             damageableFixture.offsetFromBodyAttachment.x = (if (switch) 0.5f else -0.5f) * ConstVals.PPM
                             damageableRect.setWidth(0.15f * ConstVals.PPM)

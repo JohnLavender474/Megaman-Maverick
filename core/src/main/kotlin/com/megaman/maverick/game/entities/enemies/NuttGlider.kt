@@ -80,9 +80,6 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
         private const val NUTT_DROP_OFFSET_X = 0.75f
         private const val NUTT_DROP_OFFSET_Y = -0.25f
 
-        private const val FROZEN_GRAVITY = -0.25f
-        private const val FROZEN_GROUND_GRAV = -0.01f
-
         private val ANIM_DEFS = objectMapOf<String, AnimationDef>(
             "glide" pairTo AnimationDef(rows = 2, duration = 0.1f),
             "glide_nutt" pairTo AnimationDef(rows = 2, duration = 0.1f),
@@ -105,7 +102,13 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
         set(value) {
             frozenHandler.setFrozen(value)
         }
-    private val frozenHandler = FreezableEntityHandler(this)
+    private val frozenHandler = FreezableEntityHandler(
+        this,
+        onFrozen = {
+            state = NuttGliderState.STAND
+            timers.values().forEach { it.reset() }
+        }
+    )
 
     private val timers = objectMapOf(
         NuttGliderState.STAND pairTo Timer(STAND_DUR),
@@ -196,7 +199,6 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
                         velocity.y = GLIDE_VEL_Y * ConstVals.PPM
                     }
                 }
-
                 NuttGliderState.JUMP -> {
                     when {
                         body.physics.velocity.y < 0f && !body.isSensing(BodySense.FEET_ON_GROUND) ->
@@ -205,7 +207,6 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
                             state = NuttGliderState.STAND
                     }
                 }
-
                 NuttGliderState.STAND -> {
                     body.physics.velocity.x = 0f
 
@@ -283,15 +284,15 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
             val headWidth: Float
 
             when {
-                frozen || state == NuttGliderState.GLIDE -> {
-                    bodySize.set(1.75f, 0.75f)
-                    feetWidth = 1.5f
-                    headWidth = 0.75f
-                }
-                else -> {
+                state != NuttGliderState.GLIDE || frozen -> {
                     bodySize.set(1f, 1f)
                     feetWidth = 1f
                     headWidth = 0.25f
+                }
+                else -> {
+                    bodySize.set(1.75f, 0.75f)
+                    feetWidth = 1.5f
+                    headWidth = 0.75f
                 }
             }
             body.setSize(bodySize.scl(ConstVals.PPM.toFloat()))
@@ -310,10 +311,7 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
             }
             outFixtures.clear()
 
-            val gravity = when {
-                frozen -> if (body.isSensing(BodySense.FEET_ON_GROUND)) FROZEN_GROUND_GRAV else FROZEN_GRAVITY
-                else -> if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
-            }
+            val gravity = if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAVITY else GRAVITY
             body.physics.gravity.y = gravity * ConstVals.PPM
 
             if (frozen) body.physics.velocity.x = 0f
@@ -340,7 +338,7 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
 
-            if (frozen || state == NuttGliderState.GLIDE) sprite.translateY(-0.5f * ConstVals.PPM)
+            if (!frozen && state == NuttGliderState.GLIDE) sprite.translateY(-0.5f * ConstVals.PPM)
 
             sprite.setFlip(isFacing(Facing.RIGHT), false)
 

@@ -44,6 +44,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.AsteroidExplosion
 import com.megaman.maverick.game.entities.projectiles.PreciousShard
@@ -51,6 +52,7 @@ import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShar
 import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardSize
 import com.megaman.maverick.game.entities.projectiles.Rock
 import com.megaman.maverick.game.entities.projectiles.Rock.RockSize
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -59,7 +61,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class DrillHead(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class DrillHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "DrillHead"
@@ -88,7 +90,8 @@ class DrillHead(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             "idle" pairTo AnimationDef(),
             "fly" pairTo AnimationDef(2, 1, 0.05f, true),
             "hover" pairTo AnimationDef(2, 1, 0.1f, true),
-            "drill" pairTo AnimationDef(3, 1, 0.05f, true)
+            "drill" pairTo AnimationDef(3, 1, 0.05f, true),
+            "frozen" pairTo AnimationDef()
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -102,6 +105,14 @@ class DrillHead(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     }
 
     override lateinit var facing: Facing
+
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
 
     private val stateLoop = Loop(DrillHeadState.entries.toGdxArray())
     private val currentState: DrillHeadState
@@ -194,6 +205,8 @@ class DrillHead(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 )
             else -> DrillSpawnType.ROCK
         }
+
+        frozen = false
     }
 
     override fun onDestroy() {
@@ -204,11 +217,20 @@ class DrillHead(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         hoverSpots.clear()
 
         currentHoverSpot.setZero()
+
+        frozen = false
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+
+            if (frozen) {
+                body.physics.velocity.setZero()
+                return@add
+            }
+
             val timer = stateTimers[currentState]
             if (timer != null) {
                 timer.update(delta)
@@ -296,7 +318,7 @@ class DrillHead(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { currentState.name.lowercase() }
+                .setKeySupplier { if (frozen) "frozen" else currentState.name.lowercase() }
                 .applyToAnimations { animations ->
                     AnimationUtils.loadAnimationDefs(animDefs, animations, regions)
                 }

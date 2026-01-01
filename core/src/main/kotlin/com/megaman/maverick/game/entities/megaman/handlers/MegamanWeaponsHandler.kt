@@ -302,10 +302,10 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         MegamanWeapon.MEGA_BUSTER -> MegaWeaponHandler(cooldown = Timer(0.1f))
         MegamanWeapon.RUSH_JET -> MegaWeaponHandler(cooldown = Timer(0.1f), chargeable = { false })
         MegamanWeapon.FRIGID_SHOT -> MegaWeaponHandler(
-            cooldown = Timer(0.25f),
-            normalCost = { 3 },
-            halfChargedCost = { 5 },
-            fullyChargedCost = { 7 },
+            cooldown = Timer(0.1f),
+            normalCost = { 1 },
+            halfChargedCost = { 2 },
+            fullyChargedCost = { 3 },
             chargeable = { _ -> false /* TODO: true */ }
         )
         MegamanWeapon.INFERNAL_BARRAGE -> MegaWeaponHandler(

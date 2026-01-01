@@ -60,8 +60,8 @@ import com.megaman.maverick.game.world.body.*
 import java.util.*
 
 // This isn't a "big" enemy, but his size is set to "LARGE" so that he is more powerful against weapons
-class PreciousTron(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.LARGE), IFreezableEntity, IAnimatedEntity,
-    IFaceable {
+class PreciousTron(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.LARGE), IFreezableEntity,
+    IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "PreciousTron"
@@ -107,7 +107,10 @@ class PreciousTron(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.
             freezeHandler.setFrozen(value)
         }
 
-    private val freezeHandler = FreezableEntityHandler(this)
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = { stateMachine.reset() }
+    )
 
     private lateinit var stateMachine: StateMachine<PreciousTronState>
     private val currentState: PreciousTronState
@@ -191,8 +194,10 @@ class PreciousTron(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+
         positionQueue.clear()
         positionSuppliers.clear()
+
         currentPosition.setZero()
 
         tempVec2Arr.clear()

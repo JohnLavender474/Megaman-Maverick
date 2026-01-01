@@ -35,10 +35,8 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.IFreezerEntity
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.contracts.*
+import com.megaman.maverick.game.entities.explosions.IceBombExplosion
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.explosions.SmokePuff
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -151,6 +149,10 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
     override fun shatterAndDie() {
         GameLogger.debug(TAG, "shatterAndDie()")
         IceShard.spawn5(body.getCenter())
+        if (owner == megaman) {
+            val explosion = MegaEntityFactory.fetch(IceBombExplosion::class)!!
+            explosion.spawn(props(ConstKeys.OWNER pairTo megaman, ConstKeys.POSITION pairTo body.getCenter()))
+        }
         destroy()
     }
 

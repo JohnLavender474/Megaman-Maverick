@@ -11,6 +11,7 @@ import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
+import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.interfaces.IFaceable
@@ -83,7 +84,16 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableE
             freezeHandler.setFrozen(value)
         }
 
-    private val freezeHandler = FreezableEntityHandler(this)
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = {
+            canonDirectionLoop.reset()
+            switchStateDelay.reset()
+            bulletsTimer.reset()
+            ballsTimer.reset()
+            shootAnimTimer.setToEnd()
+        }
+    )
 
     private val canonDirectionLoop = Loop(DuoBallCanonDirection.entries.toGdxArray())
     private val canonDirection: DuoBallCanonDirection
@@ -118,14 +128,13 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableE
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            val keys = Array<String>()
+            val keys = gdxArrayOf("frozen")
             DuoBallCanonDirection.entries.forEach { direction ->
                 val key = direction.name.lowercase()
                 keys.add(key)
                 keys.add("${key}${SHOOT_SUFFIX}")
             }
             keys.forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
-            regions.put("frozen", atlas.findRegion("$TAG/frozen"))
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -160,11 +169,7 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableE
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             freezeHandler.update(delta)
-
-            if (frozen) {
-                body.physics.velocity.setZero()
-                return@add
-            }
+            if (frozen) return@add
 
             shootAnimTimer.update(delta)
 
@@ -245,11 +250,14 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableE
             AnimatorBuilder()
                 .setKeySupplier keySupplier@{
                     if (frozen) return@keySupplier "frozen"
+
                     var key = canonDirection.name.lowercase()
                     if (shooting) key = "${key}${SHOOT_SUFFIX}"
                     return@keySupplier key
                 }
                 .applyToAnimations { animations ->
+                    animations.put("frozen", Animation(regions["frozen"]))
+
                     DuoBallCanonDirection.entries.forEach { direction ->
                         val key = direction.name.lowercase()
                         animations.put(key, Animation(regions[key]))
@@ -257,7 +265,6 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableE
                         val shootingKey = "${key}${SHOOT_SUFFIX}"
                         animations.put(shootingKey, Animation(regions[shootingKey], 2, 1, 0.1f, false))
                     }
-                    animations.put("frozen", Animation(regions["frozen"]))
                 }
                 .build()
         )

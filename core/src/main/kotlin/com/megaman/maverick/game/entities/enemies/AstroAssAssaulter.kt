@@ -86,7 +86,13 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
             freezeHandler.setFrozen(value)
         }
 
-    private val freezeHandler = FreezableEntityHandler(this)
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = {
+            stateMachine.reset()
+            stateTimers.values().forEach { it.reset() }
+        }
+    )
 
     private lateinit var stateMachine: StateMachine<AstroAssState>
     private val currentState: AstroAssState
@@ -103,7 +109,7 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            gdxArrayOf("stand", "throw", "shoot", "shoot_up").forEach { key ->
+            gdxArrayOf("stand", "throw", "shoot", "shoot_up", "frozen").forEach { key ->
                 regions.put(key, atlas.findRegion("${TAG}/$key"))
             }
         }
@@ -165,7 +171,7 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
         frozen = false
     }
 
-    private fun canThrowFlag() = !FLAGS.containsKey(id) &&
+    private fun canThrowFlag() = !frozen && !FLAGS.containsKey(id) &&
         ((isFacing(Facing.LEFT) && canThrowFlagLeft) || (isFacing(Facing.RIGHT) && canThrowFlagRight))
 
     private fun throwFlag() {
@@ -217,6 +223,9 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
+            freezeHandler.update(delta)
+            if (frozen) return@add
+
             if (game.isCameraRotating()) return@add
 
             if (flag?.dead == true) flag = null
@@ -278,7 +287,7 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
         .animator(
             AnimatorBuilder()
                 .setKeySupplier {
-                    when (currentState) {
+                    if (frozen) "frozen" else when (currentState) {
                         AstroAssState.STAND, AstroAssState.THROW -> currentState.name.lowercase()
                         else -> "shoot${if (shootUp) "_up" else ""}"
                     }
@@ -288,7 +297,8 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
                         "stand" pairTo Animation(regions["stand"], 2, 1, gdxArrayOf(1f, 0.15f), true),
                         "throw" pairTo Animation(regions["throw"], 2, 1, 0.1f, false),
                         "shoot" pairTo Animation(regions["shoot"], 2, 1, 0.125f, true),
-                        "shoot_up" pairTo Animation(regions["shoot_up"], 2, 1, 0.125f, true)
+                        "shoot_up" pairTo Animation(regions["shoot_up"], 2, 1, 0.125f, true),
+                        "frozen" pairTo Animation(regions["frozen"])
                     )
                 }
                 .build()

@@ -81,7 +81,9 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
     private val canMove: Boolean
         get() = !game.isCameraRotating()
+
     private val loop = Loop(PopupCanonState.entries.toGdxArray())
+
     private val timers = objectMapOf(
         "rest" pairTo Timer(REST_DUR),
         "rise" pairTo Timer(
@@ -99,6 +101,7 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         "shoot" pairTo Timer(SHOOT_DUR, gdxArrayOf(TimeMarkedRunnable(0.25f) { shoot() }))
     )
     private var ballGravityScalar = DEFAULT_BALL_GRAVITY_SCALAR
+
     private lateinit var transState: Size
 
     override fun init() {
@@ -182,7 +185,6 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
             if (!canMove) return@add
 
             val state = loop.getCurrent()
-
             if (state != PopupCanonState.SHOOT) FacingUtils.setFacingOf(this)
 
             val timer = timers.get(state.name.lowercase())
@@ -213,18 +215,23 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         debugShapes.add { if (damageableFixture.isActive()) damageableFixture.getShape() else null }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            (damagerFixture.rawShape as GameRectangle).setHeight(
-                when (transState) {
-                    Size.LARGE -> 1.5f
-                    Size.MEDIUM -> 1f
-                    Size.SMALL -> 0.25f
-                } * ConstVals.PPM
-            )
-            damagerFixture.offsetFromBodyAttachment.y = (when (transState) {
+            val height = when (transState) {
+                Size.LARGE -> 1.5f
+                Size.MEDIUM -> 1f
+                Size.SMALL -> 0.25f
+            } * ConstVals.PPM
+
+            val offsetY = when (transState) {
                 Size.LARGE -> 0f
                 Size.MEDIUM -> -0.25f
                 Size.SMALL -> -0.525f
-            }) * ConstVals.PPM
+            } * ConstVals.PPM
+
+            (damagerFixture.rawShape as GameRectangle).setHeight(height)
+            damagerFixture.offsetFromBodyAttachment.y = offsetY
+
+            (damageableFixture.rawShape as GameRectangle).setHeight(height)
+            damageableFixture.offsetFromBodyAttachment.y = offsetY
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

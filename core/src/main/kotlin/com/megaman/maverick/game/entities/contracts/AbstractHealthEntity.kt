@@ -31,7 +31,7 @@ abstract class AbstractHealthEntity(
         get() = !damageTimer.isFinished() || invinciblePredicates.any { it.invoke() }
 
     val onDamagedCallbacks = Array<(IDamager, Int) -> Unit>()
-
+    val onHealthDepletedCallbacks = Array<() -> Unit>()
     val invinciblePredicates: Array<() -> Boolean> = Array()
 
     protected abstract val damageNegotiator: IDamageNegotiator?
@@ -108,6 +108,7 @@ abstract class AbstractHealthEntity(
     protected open fun onDamageFinished() {}
 
     protected open fun onHealthDepleted() {
+        onHealthDepletedCallbacks.forEach { it.invoke() }
         destroy()
     }
 
