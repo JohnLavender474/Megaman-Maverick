@@ -235,6 +235,7 @@
             <key type="filename">../frames/Enemies1/DragonFly/frozen.png</key>
             <key type="filename">../frames/Enemies1/DrillHead/frozen.png</key>
             <key type="filename">../frames/Enemies1/DrillHead/idle.png</key>
+            <key type="filename">../frames/Enemies1/FloatingCan/frozen.png</key>
             <key type="filename">../frames/Enemies1/HeliMet/frozen.png</key>
             <key type="filename">../frames/Enemies1/HeliMet/shield.png</key>
             <key type="filename">../frames/Enemies1/LaserBeamer.png</key>
@@ -762,6 +763,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Enemies1/Darspider/crawl.png</key>
+            <key type="filename">../frames/Enemies1/FloatingCan/spin.png</key>
             <key type="filename">../frames/Enemies1/PreciousCube/blink_in_blue.png</key>
             <key type="filename">../frames/Enemies1/PreciousCube/blink_in_green.png</key>
             <key type="filename">../frames/Enemies1/PreciousCube/blink_in_pink.png</key>

@@ -105,7 +105,9 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            gdxArrayOf("with_bomb", "no_bomb").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
+            gdxArrayOf("with_bomb", "no_bomb", "with_bomb_frozen", "no_bomb_frozen").forEach { key ->
+                regions.put(key, atlas.findRegion("$TAG/$key"))
+            }
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -373,8 +375,8 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         val animations = objectMapOf<String, IAnimation>(
             "no_bomb" pairTo Animation(regions["no_bomb"], 2, 2, 0.1f, true),
             "with_bomb" pairTo Animation(regions["with_bomb"], 2, 2, 0.1f, true),
-            "no_bomb_frozen" pairTo Animation(regions["no_bomb"], 2, 2, 0.1f, true),
-            "with_bomb_frozen" pairTo Animation(regions["with_bomb"], 2, 2, 0.1f, true)
+            "no_bomb_frozen" pairTo Animation(regions["no_bomb_frozen"]),
+            "with_bomb_frozen" pairTo Animation(regions["with_bomb_frozen"])
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

@@ -61,15 +61,19 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
     companion object {
         const val TAG = "FloatingCan"
+
         private const val SPAWN_DELAY = 1f
         private const val SPAWN_DELAY_HARD = 0.75f
         private const val SPAWN_BLINK = 0.1f
+
         private const val FLY_SPEED = 1.5f
         private const val FLY_SPEED_HARD = 2.25f
+
         private const val MAX_SPAWNED = 6
+
         private val regions = ObjectMap<String, TextureRegion>()
         private val animDefs = objectMapOf<String, AnimationDef>(
-            "spin" pairTo AnimationDef(1, 4, 0.15f, true),
+            "spin" pairTo AnimationDef(2, 2, 0.15f, true),
             "frozen" pairTo AnimationDef()
         )
     }

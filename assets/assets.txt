@@ -366,6 +366,9 @@ sprites/frames/Enemies2/SpikeBot/cactus/shoot.png
 sprites/frames/Enemies2/SpikeBot/cactus/walk.png
 sprites/frames/Enemies2/ToxicBarrelBot/OpenTop.png
 sprites/frames/Enemies2/ToxicBarrelBot/Closed.png
+sprites/frames/Enemies2/ToxicBarrelBot/frozen_top.png
+sprites/frames/Enemies2/ToxicBarrelBot/frozen_closed.png
+sprites/frames/Enemies2/ToxicBarrelBot/frozen_center.png
 sprites/frames/Enemies2/ToxicBarrelBot/OpenCenter.png
 sprites/frames/Enemies2/ColtonJoe/stand.png
 sprites/frames/Enemies2/ColtonJoe/shoot.png
@@ -381,6 +384,7 @@ sprites/frames/Enemies2/JetpackBlaster/far_fall.png
 sprites/frames/Enemies2/JetpackBlaster/straight_thrust.png
 sprites/frames/Enemies2/TankBot/roll.png
 sprites/frames/Enemies2/TankBot/stop.png
+sprites/frames/Enemies2/TankBot/frozen.png
 sprites/frames/Enemies2/TankBot/turn.png
 sprites/frames/Enemies2/CarriCarry/shake.png
 sprites/frames/Enemies2/CarriCarry/ride.png
@@ -2371,6 +2375,8 @@ sprites/frames/Enemies1/Beezee/frozen.png
 sprites/frames/Enemies1/SnowSeal/Stand.png
 sprites/frames/Enemies1/SnowSeal/FormSnowball.png
 sprites/frames/Enemies1/SnowSeal/SlapTail.png
+sprites/frames/Enemies1/FloatingCan/frozen.png
+sprites/frames/Enemies1/FloatingCan/spin.png
 sprites/frames/Enemies1/PreciousTron/fall.png
 sprites/frames/Enemies1/PreciousTron/appear.png
 sprites/frames/Enemies1/PreciousTron/stand.png

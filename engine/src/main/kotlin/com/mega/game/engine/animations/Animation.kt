@@ -191,4 +191,9 @@ class Animation : IAnimation {
     }
 
     override fun getCurrentTime() = elapsedTime
+
+    override fun setToEnd() {
+        elapsedTime = getDuration()
+        currentIndex = frames.size - 1
+    }
 }

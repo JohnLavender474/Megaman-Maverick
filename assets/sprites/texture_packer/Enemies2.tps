@@ -220,6 +220,7 @@
             <key type="filename">../frames/Enemies2/Coldier/before_small_blow.png</key>
             <key type="filename">../frames/Enemies2/FireDispensenator/frozen.png</key>
             <key type="filename">../frames/Enemies2/FireDispensenator/sleep.png</key>
+            <key type="filename">../frames/Enemies2/TankBot/frozen.png</key>
             <key type="filename">../frames/Enemies2/UFOBombBot/frozen.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -243,6 +244,9 @@
             <key type="filename">../frames/Enemies2/FireDispensenator/close.png</key>
             <key type="filename">../frames/Enemies2/FireDispensenator/open.png</key>
             <key type="filename">../frames/Enemies2/ToxicBarrelBot/Closed.png</key>
+            <key type="filename">../frames/Enemies2/ToxicBarrelBot/frozen_center.png</key>
+            <key type="filename">../frames/Enemies2/ToxicBarrelBot/frozen_closed.png</key>
+            <key type="filename">../frames/Enemies2/ToxicBarrelBot/frozen_top.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

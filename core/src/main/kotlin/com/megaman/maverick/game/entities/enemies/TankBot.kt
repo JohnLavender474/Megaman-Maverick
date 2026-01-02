@@ -84,7 +84,14 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
             freezeHandler.setFrozen(value)
         }
 
-    private val freezeHandler = FreezableEntityHandler(this)
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = {
+            shootDelayTimer.reset()
+            turnDelayTimer.reset()
+            turnTimer.setToEnd()
+        }
+    )
 
     private val shootDelayTimer = Timer(SHOOT_DELAY)
     private val turnDelayTimer = Timer(TURN_DELAY)

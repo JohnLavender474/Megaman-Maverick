@@ -32,4 +32,6 @@ interface IAnimation : ICopyable<IAnimation>, Updatable, Resettable {
     fun setCurrentTime(time: Float)
 
     fun getCurrentTime(): Float
+
+    fun setToEnd()
 }

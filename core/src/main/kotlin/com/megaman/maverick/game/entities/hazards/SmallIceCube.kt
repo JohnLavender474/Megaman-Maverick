@@ -15,6 +15,7 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -24,10 +25,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.IGameEntity
-import com.mega.game.engine.world.body.Body
-import com.mega.game.engine.world.body.BodyComponent
-import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -145,6 +143,11 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) = shatterAndDie()
+
+    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        playSoundNow(SoundAsset.DINK_SOUND, false)
+        shatterAndDie()
+    }
 
     override fun shatterAndDie() {
         GameLogger.debug(TAG, "shatterAndDie()")

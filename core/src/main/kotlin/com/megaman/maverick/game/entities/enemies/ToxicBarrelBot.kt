@@ -70,7 +70,9 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
         private var closedRegion: TextureRegion? = null
         private var openCenterRegion: TextureRegion? = null
         private var openTopRegion: TextureRegion? = null
-        private var frozenRegion: TextureRegion? = null
+        private var frozenClosedRegion: TextureRegion? = null
+        private var frozenCenterRegion: TextureRegion? = null
+        private var frozenTopRegion: TextureRegion? = null
     }
 
     override lateinit var facing: Facing
@@ -84,10 +86,26 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
     private val freezeHandler = FreezableEntityHandler(
         this,
         onFrozen = {
-            toxicBarrelBotState = ToxicBarrelBotState.CLOSED
-            closedTimer.reset()
-            transTimer.reset()
-            openTimer.reset()
+            when (toxicBarrelBotState) {
+                ToxicBarrelBotState.CLOSING_TOP,
+                ToxicBarrelBotState.CLOSING_CENTER -> {
+                    closedTimer.setToEnd()
+                    toxicBarrelBotState = ToxicBarrelBotState.CLOSED
+                }
+                ToxicBarrelBotState.OPENING_TOP -> {
+                    transTimer.setToEnd()
+                    toxicBarrelBotState = ToxicBarrelBotState.OPEN_TOP
+                }
+                ToxicBarrelBotState.OPENING_CENTER -> {
+                    transTimer.setToEnd()
+                    toxicBarrelBotState = ToxicBarrelBotState.OPEN_CENTER
+                }
+                else -> {
+                    closedTimer.reset()
+                    transTimer.reset()
+                    openTimer.reset()
+                }
+            }
         }
     )
 
@@ -106,9 +124,11 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
         if (closedRegion == null || openCenterRegion == null || openTopRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             closedRegion = atlas.findRegion("$TAG/Closed")
-            openCenterRegion = atlas.findRegion("$TAG/OpenCenter")
             openTopRegion = atlas.findRegion("$TAG/OpenTop")
-            frozenRegion = atlas.findRegion("$TAG/frozen")
+            openCenterRegion = atlas.findRegion("$TAG/OpenCenter")
+            frozenTopRegion = atlas.findRegion("$TAG/frozen_top")
+            frozenClosedRegion = atlas.findRegion("$TAG/frozen_closed")
+            frozenCenterRegion = atlas.findRegion("$TAG/frozen_center")
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -330,8 +350,18 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = {
-            when (toxicBarrelBotState) {
+        val keySupplier: (String?) -> String? = keySupplier@{
+            if (frozen) return@keySupplier when (toxicBarrelBotState) {
+                ToxicBarrelBotState.CLOSED,
+                ToxicBarrelBotState.CLOSING_TOP,
+                ToxicBarrelBotState.CLOSING_CENTER -> "frozen_closed"
+                ToxicBarrelBotState.OPENING_TOP,
+                ToxicBarrelBotState.OPEN_TOP -> "frozen_top"
+                ToxicBarrelBotState.OPENING_CENTER,
+                ToxicBarrelBotState.OPEN_CENTER -> "frozen_center"
+            }
+
+            return@keySupplier when (toxicBarrelBotState) {
                 ToxicBarrelBotState.CLOSED -> "closed"
                 ToxicBarrelBotState.OPENING_TOP, ToxicBarrelBotState.OPEN_TOP -> "open_top"
                 ToxicBarrelBotState.CLOSING_TOP -> "closing_top"
@@ -344,9 +374,18 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
             "open_top" pairTo Animation(openTopRegion!!, 1, 5, 0.1f, false),
             "closing_top" pairTo Animation(openTopRegion!!, 1, 5, 0.1f, false).reversed(),
             "open_center" pairTo Animation(openCenterRegion!!, 2, 2, 0.1f, false),
-            "closing_center" pairTo Animation(openCenterRegion!!, 2, 2, 0.1f, false).reversed()
+            "closing_center" pairTo Animation(openCenterRegion!!, 2, 2, 0.1f, false).reversed(),
+            "frozen_closed" pairTo Animation(frozenClosedRegion!!),
+            "frozen_center" pairTo Animation(frozenCenterRegion!!),
+            "frozen_top" pairTo Animation(frozenTopRegion!!)
         )
-        val animator = Animator(keySupplier, animations)
+        val onChangeKey: (Animator, String?, String?) -> Unit = { _, oldKey, newKey ->
+            if (oldKey?.contains("frozen") == true &&
+                newKey?.contains("frozen") != true &&
+                newKey?.contains("open") == true
+            ) animations[newKey].setToEnd()
+        }
+        val animator = Animator(keySupplier, animations, onChangeKey = onChangeKey)
         return AnimationsComponent(this, animator)
     }
 }
