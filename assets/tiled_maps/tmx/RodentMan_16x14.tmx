@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="200" height="120" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="606">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="200" height="120" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="608">
  <tileset firstgid="1" source="../tsx/sandy_pipes.tsx"/>
  <tileset firstgid="49" source="../tsx/Tileset1.tsx"/>
  <layer id="4" name="tiles2" width="200" height="120">
@@ -1410,6 +1410,7 @@
   </object>
   <object id="338" name="Bat" x="2328" y="1664" width="16" height="16">
    <properties>
+    <property name="hang_after_damage_inflicted" type="bool" value="false"/>
     <property name="trigger" type="object" value="340"/>
    </properties>
   </object>
@@ -1503,7 +1504,7 @@
   </object>
  </objectgroup>
  <objectgroup id="13" name="temp">
-  <object id="598" name="0" x="4032" y="3648" width="32" height="32"/>
+  <object id="607" name="0" x="3296" y="3648" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="11" name="player">
   <object id="14" name="0" x="96" y="1344" width="32" height="32"/>

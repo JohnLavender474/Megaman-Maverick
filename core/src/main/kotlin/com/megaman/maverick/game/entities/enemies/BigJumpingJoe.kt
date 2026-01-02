@@ -69,12 +69,12 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
 
         private const val SHOOT_DURATION = 0.75f
         private const val BULLET_X_VEL = 10f
-        private const val FIRST_BULLET_Y_VEL = -0.25f
-        private const val SECOND_BULLET_Y_VEL = -0.5f
-        private const val THIRD_BULLET_Y_VEL = -0.75f
+        private const val FIRST_BULLET_Y_VEL = 0f
+        private const val SECOND_BULLET_Y_VEL = -2.5f
+        private const val THIRD_BULLET_Y_VEL = -5f
 
-        private var standRegion: TextureRegion? = null
         private var jumpRegion: TextureRegion? = null
+        private var standRegion: TextureRegion? = null
         private var frozenRegion: TextureRegion? = null
     }
 
@@ -273,9 +273,9 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
             }
         }
         animations = objectMapOf(
-            "frozen" pairTo Animation(standRegion!!),
             "stand" pairTo Animation(standRegion!!),
-            "jump" pairTo Animation(jumpRegion!!, 1, 2, 0.2f, false)
+            "frozen" pairTo Animation(frozenRegion!!),
+            "jump" pairTo Animation(jumpRegion!!, 2, 1, 0.2f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

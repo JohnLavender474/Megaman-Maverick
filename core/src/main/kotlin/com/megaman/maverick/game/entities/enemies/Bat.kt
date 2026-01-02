@@ -117,7 +117,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
     private val blocksToIgnore = ObjectSet<Int>()
     private val reusableBodySet = MutableOrderedSet<IBody>()
 
-    private var hangAfterDamageInflicted = false
+    private var hangAfterDamageInflicted = true
 
     override fun init() {
         GameLogger.debug(TAG, "init()")

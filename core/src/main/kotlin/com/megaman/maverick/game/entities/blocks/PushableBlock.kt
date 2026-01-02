@@ -72,14 +72,24 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
             val projectileX = projectileFixture.getShape().getBoundingRectangle().getX()
 
+            val isProjectileRightOfBlock = projectileX > pushableBody.getCenter().x
+
             var impulse = PROJECTILE_IMPULSE * ConstVals.PPM
-            if (projectileX > pushableBody.getCenter().x) impulse *= -1f
+            if (isProjectileRightOfBlock) impulse *= -1f
+
+            if ((impulse > 0f && megaman.leftSideFixture.overlaps(pushableBody.getBounds())) ||
+                (impulse < 0f && megaman.rightSideFixture.overlaps(pushableBody.getBounds()))
+            ) {
+                pushableBody.physics.velocity.x = 0f
+                return
+            }
 
             pushableBody.physics.velocity.x += impulse
         }
     }
 
     private var block: InnerBlock? = null
+
     private lateinit var spawnRoom: String
 
     override fun init() {
@@ -89,10 +99,10 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
             gdxArrayOf(METAL_CRATE).forEach { regions.put(it, atlas.findRegion(it)) }
         }
         super.init()
-        addComponent(defineCullablesComponent())
-        addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
+        addComponent(defineCullablesComponent())
+        addComponent(defineUpdatablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -192,6 +202,11 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
             body.physics.gravity.y = -gravity * ConstVals.PPM
 
             if (game.isProperty(ConstKeys.ROOM_TRANSITION, true)) body.physics.velocity.setZero()
+
+            val velocity = body.physics.velocity
+            if ((velocity.x > 0f && megaman.leftSideFixture.overlaps(body.getBounds())) ||
+                (velocity.x < 0f && megaman.rightSideFixture.overlaps(body.getBounds()))
+            ) velocity.x = 0f
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
