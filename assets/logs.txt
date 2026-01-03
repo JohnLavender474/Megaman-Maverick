@@ -1,15 +1,11 @@
-===== SESSION STARTED: 2026-01-02T21:44:15.754021118 =====
-21:44:42 | DEBUG | FreezableEntityHandler | update(): timer just finished
-21:44:47 | DEBUG | FreezableEntityHandler | update(): timer just finished
-21:44:50 | DEBUG | FreezableEntityHandler | update(): timer just finished
-21:44:52 | DEBUG | FreezableEntityHandler | update(): timer just finished
-21:44:56 | DEBUG | FreezableEntityHandler | update(): timer just finished
-21:44:57 | DEBUG | FreezableEntityHandler | update(): timer just finished
-21:44:59 | DEBUG | FreezableEntityHandler | update(): timer just finished
-21:45:06 | DEBUG | FreezableEntityHandler | update(): timer just finished
-21:45:15 | DEBUG | FreezableEntityHandler | update(): timer just finished
-21:45:24 | DEBUG | FreezableEntityHandler | update(): timer just finished
-21:46:02 | DEBUG | FreezableEntityHandler | update(): timer just finished
-21:46:06 | DEBUG | FreezableEntityHandler | update(): timer just finished
-21:46:11 | DEBUG | FreezableEntityHandler | update(): timer just finished
-21:46:21 | DEBUG | FreezableEntityHandler | update(): timer just finished
+===== SESSION STARTED: 2026-01-02T22:14:48.476758422 =====
+22:15:34 | DEBUG | FreezableEntityHandler | update(): timer just finished
+22:15:35 | DEBUG | FreezableEntityHandler | update(): timer just finished
+22:15:37 | DEBUG | FreezableEntityHandler | update(): timer just finished
+22:15:39 | DEBUG | FreezableEntityHandler | update(): timer just finished
+22:15:48 | DEBUG | FreezableEntityHandler | update(): timer just finished
+22:15:48 | DEBUG | FreezableEntityHandler | update(): timer just finished
+22:15:52 | DEBUG | FreezableEntityHandler | update(): timer just finished
+22:16:06 | DEBUG | FreezableEntityHandler | update(): timer just finished
+22:16:08 | DEBUG | FreezableEntityHandler | update(): timer just finished
+22:16:13 | DEBUG | FreezableEntityHandler | update(): timer just finished

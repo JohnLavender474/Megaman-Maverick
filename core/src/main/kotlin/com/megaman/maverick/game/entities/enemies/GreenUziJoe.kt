@@ -46,8 +46,8 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.projectiles.GreenPelletBlast
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
@@ -83,6 +83,7 @@ class GreenUziJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEn
             "stand_shoot" pairTo AnimationDef(),
             "stand_shoot_start" pairTo AnimationDef(),
             "stand_shoot_blast" pairTo AnimationDef(2, 1, 0.1f, true),
+            "frozen" pairTo AnimationDef()
         )
 
         private val regions = ObjectMap<String, TextureRegion>()
@@ -104,7 +105,13 @@ class GreenUziJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEn
             freezeHandler.setFrozen(value)
         }
 
-    private val freezeHandler = FreezableEntityHandler(this)
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = {
+            blastDelay.reset()
+            blastTimer.setToEnd()
+        }
+    )
 
     private lateinit var state: GreenUziJoeState
 
@@ -374,7 +381,6 @@ class GreenUziJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEn
                     direction.equalsAny(Direction.UP, Direction.LEFT) -> -facing.value
                     else -> facing.value
                 }
-
                 else -> damageableFixture.offsetFromBodyAttachment.x = 0f
             }
         }
@@ -418,6 +424,8 @@ class GreenUziJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEn
         .animator(
             AnimatorBuilder()
                 .setKeySupplier keySupplier@{
+                    if (frozen) return@keySupplier "frozen"
+
                     var key = state.name.lowercase()
 
                     if (!blastTimer.isFinished()) key += when {

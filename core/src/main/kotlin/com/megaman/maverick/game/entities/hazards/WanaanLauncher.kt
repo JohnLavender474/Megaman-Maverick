@@ -151,8 +151,12 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
                 spawnWanaan()
                 launchDelay.reset()
             } else if (wanaan != null) {
-                launchDelay.update(delta)
-                if (launchDelay.isJustFinished()) launchWanaan()
+                if (wanaan!!.body.physics.velocity.y < 0f) wanaan!!.goingUpward = false
+
+                if (!wanaan!!.frozen) {
+                    launchDelay.update(delta)
+                    if (launchDelay.isJustFinished()) launchWanaan()
+                }
             }
         }
     }
@@ -199,6 +203,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
                 ConstKeys.DIRECTION pairTo direction,
             )
         )
+        wanaan!!.goingUpward = true
     }
 
     private fun launchWanaan() {
@@ -221,6 +226,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
             it.gravityOn = true
             it.velocity.set(impulse)
         }
+        wanaan!!.goingUpward = true
 
         requestToPlaySound(SoundAsset.CHOMP_SOUND, false)
     }

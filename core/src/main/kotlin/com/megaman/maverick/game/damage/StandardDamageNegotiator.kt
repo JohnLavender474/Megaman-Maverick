@@ -82,7 +82,7 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             IceBombExplosion::class pairTo dmgNeg(5),
             DrippingToxicGoop::class pairTo dmgNeg(1),
             Asteroid::class pairTo dmgNeg(20),
-            PreciousGem::class pairTo dmgNeg(20),
+            PreciousGem::class pairTo dmgNeg(15),
             PreciousShard::class pairTo dmgNeg(5),
             LampeonBullet::class pairTo dmgNeg(15),
             Explosion::class pairTo dmgNeg(15),

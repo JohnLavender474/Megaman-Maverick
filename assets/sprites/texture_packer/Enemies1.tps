@@ -287,6 +287,7 @@
             <key type="filename">../frames/Enemies1/SnowMet/LayDown.png</key>
             <key type="filename">../frames/Enemies1/SnowMet/PopUp.png</key>
             <key type="filename">../frames/Enemies1/SpikeCopter/drop.png</key>
+            <key type="filename">../frames/Enemies1/SpikeCopter/frozen.png</key>
             <key type="filename">../frames/Enemies1/SpringHead/compressed.png</key>
             <key type="filename">../frames/Enemies1/SuctionRoller/frozen.png</key>
             <key type="filename">../frames/Enemies1/SwimmingMet/LayDown.png</key>
@@ -671,6 +672,7 @@
             <key type="filename">../frames/Enemies1/DuoBallCanon/frozen.png</key>
             <key type="filename">../frames/Enemies1/DuoBallCanon/straight.png</key>
             <key type="filename">../frames/Enemies1/DuoBallCanon/up.png</key>
+            <key type="filename">../frames/Enemies1/GreenUziJoe/frozen.png</key>
             <key type="filename">../frames/Enemies1/GreenUziJoe/jump.png</key>
             <key type="filename">../frames/Enemies1/GreenUziJoe/jump_shoot.png</key>
             <key type="filename">../frames/Enemies1/GreenUziJoe/jump_shoot_start.png</key>

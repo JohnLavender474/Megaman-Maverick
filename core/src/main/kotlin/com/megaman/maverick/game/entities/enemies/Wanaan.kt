@@ -79,6 +79,9 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
                 Direction.RIGHT -> velocity.x < 0f
             }
         }
+
+    var goingUpward = false
+
     val cullPoint: Vector2
         get() = body.getCenter()
 
@@ -181,7 +184,7 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
         .preProcess { _, sprite ->
             sprite.hidden = damageBlink
             sprite.setCenter(body.getCenter())
-            sprite.setFlip(false, comingDown)
+            sprite.setFlip(false, if (frozen) !goingUpward else comingDown)
             sprite.setOriginCenter()
             when (direction) {
                 Direction.UP -> sprite.rotation = 0f

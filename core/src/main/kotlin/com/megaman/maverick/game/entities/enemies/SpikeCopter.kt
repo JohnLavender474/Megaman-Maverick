@@ -14,6 +14,7 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.epsilonEquals
+import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
@@ -90,7 +91,7 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
     private val freezeHandler = FreezableEntityHandler(
         this,
-        onFrozen = { state = SpikeCopterState.DROP }
+        onFrozen = { dropTeethTimer.setToEnd() }
     )
 
     private lateinit var state: SpikeCopterState
@@ -103,10 +104,9 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            SpikeCopterState.entries.forEach { state ->
-                val key = state.name.lowercase()
-                regions.put(key, atlas.findRegion("$TAG/$key"))
-            }
+            val keys = gdxArrayOf("frozen")
+            SpikeCopterState.entries.forEach { keys.add(it.name.lowercase()) }
+            keys.forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -143,6 +143,11 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             freezeHandler.update(delta)
+
+            if (frozen) {
+                body.physics.velocity.setZero()
+                return@add
+            }
 
             when (state) {
                 SpikeCopterState.FLY -> {
@@ -218,9 +223,6 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         debugShapes.add { feetFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.physics.gravity.y =
-                ConstVals.PPM * if (state == SpikeCopterState.DROP && dropDelay.isFinished()) GRAVITY else 0f
-
             val feetWidth = if (state == SpikeCopterState.DROP) body.getWidth() else 0.5f * ConstVals.PPM
             (feetFixture.rawShape as GameRectangle).setWidth(feetWidth)
         }

@@ -2212,6 +2212,7 @@ sprites/frames/Enemies1/GreenUziJoe/stand.png
 sprites/frames/Enemies1/GreenUziJoe/jump.png
 sprites/frames/Enemies1/GreenUziJoe/stand_shoot_blast.png
 sprites/frames/Enemies1/GreenUziJoe/jump_shoot.png
+sprites/frames/Enemies1/GreenUziJoe/frozen.png
 sprites/frames/Enemies1/GreenUziJoe/jump_shoot_blast.png
 sprites/frames/Enemies1/GreenUziJoe/jump_shoot_start.png
 sprites/frames/Enemies1/DragonFly.png
@@ -2400,6 +2401,7 @@ sprites/frames/Enemies1/BikerKibbo/ride.png
 sprites/frames/Enemies1/SpikeCopter/drop_teeth.png
 sprites/frames/Enemies1/SpikeCopter/fly.png
 sprites/frames/Enemies1/SpikeCopter/drop.png
+sprites/frames/Enemies1/SpikeCopter/frozen.png
 sprites/frames/Enemies1/Bat/OpenEyes.png
 sprites/frames/Enemies1/Bat/frozen.png
 sprites/frames/Enemies1/Bat/Hang.png
