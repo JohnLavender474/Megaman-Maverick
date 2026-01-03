@@ -942,8 +942,10 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Enemies2/SpikeBot/cactus/frozen.png</key>
             <key type="filename">../frames/Enemies2/SpikeBot/cactus/jump.png</key>
             <key type="filename">../frames/Enemies2/SpikeBot/cactus/stand.png</key>
+            <key type="filename">../frames/Enemies2/SpikeBot/snow/frozen.png</key>
             <key type="filename">../frames/Enemies2/SpikeBot/snow/jump.png</key>
             <key type="filename">../frames/Enemies2/SpikeBot/snow/stand.png</key>
             <struct type="IndividualSpriteSettings">

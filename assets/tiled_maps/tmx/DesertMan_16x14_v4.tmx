@@ -2265,11 +2265,6 @@
     <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="705" name="Cactus" x="6512" y="2016" width="32" height="32">
-   <properties>
-    <property name="big" type="bool" value="false"/>
-   </properties>
-  </object>
   <object id="706" name="Bat" x="8112" y="1728" width="16" height="16">
    <properties>
     <property name="hard_mode_only" type="bool" value="true"/>

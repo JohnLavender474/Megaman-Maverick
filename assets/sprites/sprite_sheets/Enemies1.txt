@@ -2383,30 +2383,37 @@ SubmarineJoe/shoot
   orig: 336, 48
   offset: 0, 0
   index: -1
-SuctionRoller
+SuctionRoller/frozen
   rotate: false
   xy: 432, 240
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+SuctionRoller/walk
+  rotate: false
+  xy: 466, 240
   size: 160, 32
   orig: 160, 32
   offset: 0, 0
   index: -1
 SuicideBummer/Jump
   rotate: false
-  xy: 594, 240
+  xy: 628, 240
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 SuicideBummer/Run
   rotate: false
-  xy: 660, 240
+  xy: 694, 240
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
   index: -1
 SwimmingMet/LayDown
   rotate: false
-  xy: 790, 240
+  xy: 824, 240
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

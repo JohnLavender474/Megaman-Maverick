@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.6.2</string>
+        <string>7.9.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -184,6 +184,7 @@
             <key type="filename">../frames/Megaman_v2_Ice/climb_still_shoot.png</key>
             <key type="filename">../frames/Megaman_v2_Ice/crouch.png</key>
             <key type="filename">../frames/Megaman_v2_Ice/crouch_shoot.png</key>
+            <key type="filename">../frames/Megaman_v2_Ice/frozen.png</key>
             <key type="filename">../frames/Megaman_v2_Ice/groundslide.png</key>
             <key type="filename">../frames/Megaman_v2_Ice/groundslide_shoot.png</key>
             <key type="filename">../frames/Megaman_v2_Ice/jump.png</key>
@@ -286,6 +287,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Megaman_v2_Ice/climb_charge_full.png</key>
+            <key type="filename">../frames/Megaman_v2_Ice/frozen_push.png</key>
             <key type="filename">../frames/Megaman_v2_Ice/run.png</key>
             <key type="filename">../frames/Megaman_v2_Ice/run_charge_half.png</key>
             <key type="filename">../frames/Megaman_v2_Ice/run_shoot.png</key>
@@ -365,6 +367,12 @@
         <key>normalMapSheetFileName</key>
         <filename></filename>
         <key>exporterProperties</key>
-        <map type="ExporterProperties"/>
+        <map type="ExporterProperties">
+            <key>libgdx::legacy-output</key>
+            <struct type="ExporterProperty">
+                <key>value</key>
+                <string>true</string>
+            </struct>
+        </map>
     </struct>
 </data>

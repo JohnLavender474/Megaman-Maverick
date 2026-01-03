@@ -1,1 +1,15 @@
-===== SESSION STARTED: 2026-01-02T14:03:58.979296528 =====
+===== SESSION STARTED: 2026-01-02T21:44:15.754021118 =====
+21:44:42 | DEBUG | FreezableEntityHandler | update(): timer just finished
+21:44:47 | DEBUG | FreezableEntityHandler | update(): timer just finished
+21:44:50 | DEBUG | FreezableEntityHandler | update(): timer just finished
+21:44:52 | DEBUG | FreezableEntityHandler | update(): timer just finished
+21:44:56 | DEBUG | FreezableEntityHandler | update(): timer just finished
+21:44:57 | DEBUG | FreezableEntityHandler | update(): timer just finished
+21:44:59 | DEBUG | FreezableEntityHandler | update(): timer just finished
+21:45:06 | DEBUG | FreezableEntityHandler | update(): timer just finished
+21:45:15 | DEBUG | FreezableEntityHandler | update(): timer just finished
+21:45:24 | DEBUG | FreezableEntityHandler | update(): timer just finished
+21:46:02 | DEBUG | FreezableEntityHandler | update(): timer just finished
+21:46:06 | DEBUG | FreezableEntityHandler | update(): timer just finished
+21:46:11 | DEBUG | FreezableEntityHandler | update(): timer just finished
+21:46:21 | DEBUG | FreezableEntityHandler | update(): timer just finished

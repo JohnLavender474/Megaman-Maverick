@@ -111,7 +111,11 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
             freezeHandler.setFrozen(value)
         }
 
-    private val freezeHandler = FreezableEntityHandler(this)
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = { stateMachine.next() },
+        onJustFinished = { stateMachine.next() }
+    )
 
     private lateinit var stateMachine: StateMachine<SpikeBotState>
     private val currentState: SpikeBotState
@@ -137,7 +141,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             SpikeBotType.entries.map { it.name.lowercase() }.forEach { type ->
                 animDefs.keys().forEach { key ->
-                    val keyName = if (key is SpikeBotState) key.name.lowercase() else key as String
+                    val keyName = key.name.lowercase()
                     regions.put("$type/$keyName", atlas.findRegion("$TAG/$type/$keyName"))
                 }
             }
@@ -328,6 +332,8 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         // shoot
         .transition(SpikeBotState.SHOOT, SpikeBotState.FROZEN) { frozen }
         .transition(SpikeBotState.SHOOT, SpikeBotState.WALK) { true }
+        // frozen
+        .transition(SpikeBotState.FROZEN, SpikeBotState.STAND) { true }
         // build
         .build()
 

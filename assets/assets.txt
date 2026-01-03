@@ -358,10 +358,12 @@ sprites/frames/Enemies2/AstroAssAssaulter/shoot.png
 sprites/frames/Enemies2/AngryFlameBall.png
 sprites/frames/Enemies2/SpikeBot/snow/stand.png
 sprites/frames/Enemies2/SpikeBot/snow/jump.png
+sprites/frames/Enemies2/SpikeBot/snow/frozen.png
 sprites/frames/Enemies2/SpikeBot/snow/shoot.png
 sprites/frames/Enemies2/SpikeBot/snow/walk.png
 sprites/frames/Enemies2/SpikeBot/cactus/stand.png
 sprites/frames/Enemies2/SpikeBot/cactus/jump.png
+sprites/frames/Enemies2/SpikeBot/cactus/frozen.png
 sprites/frames/Enemies2/SpikeBot/cactus/shoot.png
 sprites/frames/Enemies2/SpikeBot/cactus/walk.png
 sprites/frames/Enemies2/ToxicBarrelBot/OpenTop.png
@@ -931,9 +933,11 @@ sprites/frames/Megaman_v2_Ice/wallslide_charge_half.png
 sprites/frames/Megaman_v2_Ice/beam.png
 sprites/frames/Megaman_v2_Ice/climb_still_charge_half.png
 sprites/frames/Megaman_v2_Ice/wallslide_charge_full.png
+sprites/frames/Megaman_v2_Ice/frozen_push.png
 sprites/frames/Megaman_v2_Ice/run_trans_shoot.png
 sprites/frames/Megaman_v2_Ice/slip_charge_half.png
 sprites/frames/Megaman_v2_Ice/cartin.png
+sprites/frames/Megaman_v2_Ice/frozen.png
 sprites/frames/Megaman_v2_Ice/cartin_jump.png
 sprites/frames/Megaman_v2_Ice/run_charge_half.png
 sprites/frames/Megaman_v2_Ice/crouch_shoot.png
@@ -2359,6 +2363,8 @@ sprites/frames/Enemies1/Sealion/before_throw_ball.png
 sprites/frames/Enemies1/Sealion/taunt_no_ball.png
 sprites/frames/Enemies1/SuicideBummer/Jump.png
 sprites/frames/Enemies1/SuicideBummer/Run.png
+sprites/frames/Enemies1/SuctionRoller/frozen.png
+sprites/frames/Enemies1/SuctionRoller/walk.png
 sprites/frames/Enemies1/MockingBit/frozen.png
 sprites/frames/Enemies1/MockingBit/spin.png
 sprites/frames/Enemies1/PopupCanon/Down.png
@@ -2368,7 +2374,6 @@ sprites/frames/Enemies1/FireMet/Jump.png
 sprites/frames/Enemies1/FireMet/Walk.png
 sprites/frames/Enemies1/FireMet/Shoot.png
 sprites/frames/Enemies1/BabyPenguin.png
-sprites/frames/Enemies1/SuctionRoller.png
 sprites/frames/Enemies1/Beezee/attack.png
 sprites/frames/Enemies1/Beezee/hover.png
 sprites/frames/Enemies1/Beezee/frozen.png

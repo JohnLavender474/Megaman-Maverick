@@ -96,7 +96,11 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
             freezeHandler.setFrozen(value)
         }
 
-    private val freezeHandler = FreezableEntityHandler(this, onJustFinished = { state = BatState.FLYING_TO_RETREAT })
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        canBeFrozen = { type != "SnowBat" },
+        onJustFinished = { state = BatState.FLYING_TO_RETREAT }
+    )
 
     private val hangTimer = Timer(HANG_DURATION)
     private val releasePerchTimer = Timer(RELEASE_FROM_PERCH_DURATION)

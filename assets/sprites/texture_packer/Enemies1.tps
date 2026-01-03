@@ -288,6 +288,7 @@
             <key type="filename">../frames/Enemies1/SnowMet/PopUp.png</key>
             <key type="filename">../frames/Enemies1/SpikeCopter/drop.png</key>
             <key type="filename">../frames/Enemies1/SpringHead/compressed.png</key>
+            <key type="filename">../frames/Enemies1/SuctionRoller/frozen.png</key>
             <key type="filename">../frames/Enemies1/SwimmingMet/LayDown.png</key>
             <key type="filename">../frames/Enemies1/TellySaucer/collapsed.png</key>
             <key type="filename">../frames/Enemies1/TurnBlaster/base.png</key>
@@ -1235,7 +1236,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Enemies1/ShieldAttacker/turn.png</key>
-            <key type="filename">../frames/Enemies1/SuctionRoller.png</key>
+            <key type="filename">../frames/Enemies1/SuctionRoller/walk.png</key>
             <key type="filename">../frames/Enemies1/SwimmingMet/Swim.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

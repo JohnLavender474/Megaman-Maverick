@@ -18,6 +18,7 @@ import com.megaman.maverick.game.world.body.getCenter
 class FreezableEntityHandler(
     private val entity: IFreezableEntity,
     private val onFrozen: () -> Unit = {},
+    private val canBeFrozen: () -> Boolean = { true },
     private val onJustFinished: () -> Unit = {},
     private val doSpawnFrozenShield: () -> Boolean = { true },
     private val frozenShieldBoundsSupplier: (() -> GameRectangle)? = {
@@ -39,7 +40,7 @@ class FreezableEntityHandler(
             }
 
             entity.onDamagedCallbacks.add { damager, _ ->
-                if (!entity.frozen && damager is IFreezerEntity) entity.frozen = true
+                if (!entity.frozen && canBeFrozen.invoke() && damager is IFreezerEntity) entity.frozen = true
                 if (entity.frozen && damager is IFireEntity) entity.frozen = false
             }
         }

@@ -136,7 +136,13 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
             freezeHandler.setFrozen(value)
         }
 
-    private val freezeHandler = FreezableEntityHandler(this)
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        onFrozen = {
+            stateMachine.reset()
+            stateTimers.values().forEach { it.reset() }
+        }
+    )
 
     private lateinit var stateMachine: StateMachine<CactusState>
     private val currentState: CactusState

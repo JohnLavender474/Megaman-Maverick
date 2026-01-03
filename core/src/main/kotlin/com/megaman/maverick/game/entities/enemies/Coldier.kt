@@ -75,8 +75,7 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             "small_blow" pairTo AnimationDef(3, 2, 0.1f, true),
             "before_big_blow" pairTo AnimationDef(2, 1, 0.1f, false),
             "before_small_blow" pairTo AnimationDef(2, 1, 0.1f, false),
-            "cooldown" pairTo AnimationDef(2, 1, gdxArrayOf(0.5f, 0.25f), true),
-            "frozen" pairTo AnimationDef()
+            "cooldown" pairTo AnimationDef(2, 1, gdxArrayOf(0.5f, 0.25f), true)
         )
 
         private val regions = ObjectMap<String, TextureRegion>()

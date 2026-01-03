@@ -1,7 +1,7 @@
 Backgrounds4.png
-size: 2000, 1724
+size: 856, 450
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Nearest, Nearest
 repeat: none
 BGNeedle
   rotate: false
@@ -12,8 +12,8 @@ BGNeedle
   index: -1
 GlacierBKG_v2
   rotate: false
-  xy: 0, 224
-  size: 2000, 1500
-  orig: 2000, 1500
+  xy: 256, 0
+  size: 600, 450
+  orig: 600, 450
   offset: 0, 0
   index: -1

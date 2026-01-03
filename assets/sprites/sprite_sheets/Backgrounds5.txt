@@ -1,12 +1,12 @@
 Backgrounds5.png
-size: 1000, 750
+size: 300, 225
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Nearest, Nearest
 repeat: none
 GlacierCloudsBKG
   rotate: false
   xy: 0, 0
-  size: 1000, 750
-  orig: 1000, 750
+  size: 300, 225
+  orig: 300, 225
   offset: 0, 0
   index: -1
