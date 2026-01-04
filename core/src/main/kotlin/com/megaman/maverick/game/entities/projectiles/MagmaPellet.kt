@@ -9,6 +9,8 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.setToDirection
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -32,6 +34,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -41,13 +44,19 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 
-class MagmaPellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
+class MagmaPellet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional {
 
     companion object {
         const val TAG = "MagmaPellet"
-        private const val GRAVITY = -0.375f
+        private const val GRAVITY = 0.375f
         private var region: TextureRegion? = null
     }
+
+    override var direction: Direction
+        get() = body.direction
+        set(value) {
+            body.direction = value
+        }
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -64,6 +73,8 @@ class MagmaPellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)!!
         body.physics.velocity.set(impulse)
+
+        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, megaman.direction, Direction::class)
     }
 
     override fun hitBlock(
@@ -103,8 +114,25 @@ class MagmaPellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val velocity = body.physics.velocity
-        velocity.x *= -1f
-        velocity.y = 5f * ConstVals.PPM
+
+        when (direction) {
+            Direction.UP -> {
+                velocity.x *= -1f
+                velocity.y = 5f * ConstVals.PPM
+            }
+            Direction.DOWN -> {
+                velocity.x *= -1f
+                velocity.y = -5f * ConstVals.PPM
+            }
+            Direction.LEFT -> {
+                velocity.y *= -1f
+                velocity.x = -5f * ConstVals.PPM
+            }
+            Direction.RIGHT -> {
+                velocity.y *= -1f
+                velocity.x = 5f * ConstVals.PPM
+            }
+        }
 
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
@@ -113,10 +141,13 @@ class MagmaPellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val body = Body(BodyType.ABSTRACT)
         body.setSize(0.5f * ConstVals.PPM)
         body.physics.applyFrictionY = false
-        body.physics.gravity.y = GRAVITY * ConstVals.PPM
 
         val debugShapes = Array<() -> IDrawableShape?>()
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
+
+        body.preProcess.put(ConstKeys.GRAVITY) {
+            body.physics.gravity.setToDirection(direction.getOpposite()).scl(GRAVITY * ConstVals.PPM)
+        }
 
         return BodyComponentCreator.create(
             entity = this,

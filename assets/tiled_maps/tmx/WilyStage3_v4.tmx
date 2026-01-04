@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="500" height="250" tilewidth="32" tileheight="32" infinite="0" nextlayerid="28" nextobjectid="634">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="500" height="250" tilewidth="32" tileheight="32" infinite="0" nextlayerid="28" nextobjectid="635">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <layer id="13" name="fade_tiles_9" width="500" height="250" opacity="0.1">
   <data encoding="csv">
@@ -4303,21 +4303,13 @@
     <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="527" name="IceFox" x="8456" y="2672" width="16" height="16">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
+  <object id="527" name="IceFox" x="8456" y="2672" width="16" height="16"/>
   <object id="528" name="AstroAssAssaulter" x="8648" y="2544" width="16" height="16">
    <properties>
     <property name="flag_right" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="557" name="IceFox" x="8632" y="1520" width="16" height="16">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
+  <object id="557" name="IceFox" x="8632" y="1520" width="16" height="16"/>
   <object id="558" name="BunbyTank" x="8440" y="1712" width="16" height="16">
    <properties>
     <property name="hard_mode_only" type="bool" value="true"/>
@@ -4341,7 +4333,7 @@
   </object>
  </objectgroup>
  <objectgroup id="26" name="temp">
-  <object id="617" name="0" x="8864" y="1568" width="32" height="32"/>
+  <object id="634" name="0" x="7408" y="5600" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="2" name="player">
   <object id="4" name="0" x="288" y="6080" width="32" height="32"/>

@@ -42,6 +42,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IFireEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.enemies.LumberJoe
 import com.megaman.maverick.game.entities.enemies.ShieldGuardBot
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
@@ -85,7 +86,7 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, megaman.direction, Direction::class)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         val position = DirectionPositionMapper.getPosition(direction).opposite()
@@ -96,8 +97,12 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
         facing = when {
             spawnProps.containsKey(ConstKeys.FACING) -> spawnProps.get(ConstKeys.FACING, Facing::class)!!
-            trajectory.x < 0f -> Facing.LEFT
-            else -> Facing.RIGHT
+            else -> when (direction) {
+                Direction.UP -> if (trajectory.x < 0f) Facing.LEFT else Facing.RIGHT
+                Direction.DOWN -> if (trajectory.x < 0f) Facing.RIGHT else Facing.LEFT
+                Direction.LEFT -> if (trajectory.y < 0f) Facing.LEFT else Facing.RIGHT
+                Direction.RIGHT -> if (trajectory.y < 0f) Facing.RIGHT else Facing.LEFT
+            }
         }
 
         val dropFlameDelayDur = spawnProps.getOrDefault(

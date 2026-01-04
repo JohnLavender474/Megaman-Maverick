@@ -122,7 +122,8 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IFireEntity,
         super.onSpawn(spawnProps)
 
         owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
-        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+
+        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, megaman.direction, Direction::class)
 
         val position = DirectionPositionMapper.getPosition(direction).opposite()
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!

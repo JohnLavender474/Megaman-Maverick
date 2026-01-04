@@ -12,6 +12,7 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods.getRandom
+import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
@@ -108,7 +109,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val WALL_SLIDE_FRICTION_Y = 6f
 
         private const val JUMP_MAX_IMPULSE_X = 10f
-        private const val JUMP_IMPULSE_Y = 16f
+        private const val JUMP_IMPULSE_Y = 12.5f
 
         private const val WALL_JUMP_IMPULSE_X = 5f
 
@@ -122,6 +123,8 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val WAVE_DROP_FLAME_HARD = 0.15f
 
         private const val SPAWN_METEOR_DELAY = 1f
+
+        private const val FROZEN_DUR = 0.75f
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -180,7 +183,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         super.init()
         addComponent(defineAnimationsComponent())
         stateMachine = buildStateMachine()
-        damageOverrides.put(SmallIceCube::class, dmgNeg(5))
+        damageOverrides.put(SmallIceCube::class, dmgNeg(3))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -490,7 +493,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         timers.put("shoot", Timer())
         timers.put("shoot_cooldown", Timer(SHOOT_COOLDOWN_DUR))
         timers.put("shoot_delay", Timer(SHOOT_DELAY))
-        timers.put("frozen", Timer(ConstVals.STANDARD_FROZEN_DUR))
+        timers.put("frozen", Timer(FROZEN_DUR))
 
         val flameHeadDur = FLAME_HEAD_DUR
         val flameHeadTimer = Timer(flameHeadDur)
@@ -536,7 +539,6 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 body.physics.applyFrictionX = true
                 timers["shoot_delay"].setToEnd()
             }
-
             InfernoManState.WALLSLIDE -> body.physics.defaultFrictionOnSelf.y = DEFAULT_FRICTION_Y
             InfernoManState.FLAMEHEAD -> {
                 val iter = poppedMeteorSpawners.iterator()
@@ -552,7 +554,6 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                     iter.remove()
                 }
             }
-
             else -> GameLogger.debug(TAG, "onChangeState(): no action when previous=$previous")
         }
 
@@ -562,7 +563,6 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 timers["stand"].reset()
                 resetShootTimer()
             }
-
             InfernoManState.JUMP -> {
                 body.physics.applyFrictionX = false
                 jump(megaman.body.getCenter())
@@ -575,17 +575,14 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
                 resetShootTimer()
             }
-
             InfernoManState.FLAMEHEAD -> {
                 timers["flamehead"].reset()
                 randomMeteorKeys.shuffle()
             }
-
             InfernoManState.WALLSLIDE -> {
                 timers["wallslide"].reset()
                 body.physics.defaultFrictionOnSelf.y = WALL_SLIDE_FRICTION_Y
             }
-
             else -> GameLogger.debug(TAG, "onChangeState(): no action when current=$current")
         }
     }
@@ -622,7 +619,6 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 val runnables = gdxArrayOf(TimeMarkedRunnable(MEGA_SHOOT_TIME) { shootWave() })
                 timer.addRunnables(runnables)
             }
-
             else -> {
                 timer.resetDuration(SHOOT_DUR).setRunOnFirstupdate { shootGoop() }
                 if (currentState == InfernoManState.JUMP) timers["shoot_delay"].reset()
@@ -631,8 +627,19 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     }
 
     private fun shootWave() {
-        val spawn = body.getPositionPoint(Position.BOTTOM_CENTER)
-            .add(0.75f * ConstVals.PPM * facing.value, 0f)
+        // The magma wave's spawn position is dependent on Mega Man's direction. This is for the
+        // fight in Wily Stage 2.
+        val spawn = when (megaman.direction) {
+            Direction.UP -> body.getPositionPoint(Position.BOTTOM_CENTER)
+                .add(ConstVals.PPM.toFloat() * facing.value, 0f)
+            Direction.DOWN -> body.getPositionPoint(Position.TOP_CENTER)
+                .add(ConstVals.PPM.toFloat() * facing.value, 0.5f * ConstVals.PPM)
+            Direction.LEFT -> body.getPositionPoint(Position.CENTER_RIGHT)
+                .add(-ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat() * -facing.value)
+            Direction.RIGHT -> body.getPositionPoint(Position.CENTER_LEFT)
+                .add(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat() * -facing.value)
+        }
+
         val trajectory = GameObjectPools.fetch(Vector2::class)
             .set(WAVE_SPEED * ConstVals.PPM * facing.value, 0f)
 
@@ -660,8 +667,8 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
         when (shootMethod) {
             ShootMethod.UP -> {
-                offsetX = 0.5f * ConstVals.PPM * facing.value
-                offsetY = 0.5f * ConstVals.PPM
+                offsetX = 0.75f * ConstVals.PPM * facing.value
+                offsetY = 0.75f * ConstVals.PPM
                 rotation = if (isFacing(Facing.LEFT)) 45f else 315f
             }
             ShootMethod.DOWN -> {
@@ -677,6 +684,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         }
 
         val trajectory = Vector2(0f, GOOP_SPEED * ConstVals.PPM).rotateDeg(rotation)
+
         val spawn = body.getCenter().add(offsetX, offsetY)
 
         val goop = MegaEntityFactory.fetch(MagmaGoop::class)!!
