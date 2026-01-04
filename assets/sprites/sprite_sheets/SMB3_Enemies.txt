@@ -1,0 +1,10 @@
+SMB3_Enemies.png
+size: 18, 52
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+pma: false
+Goomba/smashed
+  bounds: 1, 1, 16, 16
+Goomba/walk
+  bounds: 1, 19, 16, 32

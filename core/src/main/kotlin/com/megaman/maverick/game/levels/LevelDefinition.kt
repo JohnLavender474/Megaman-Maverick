@@ -110,6 +110,12 @@ enum class LevelDefinition(
         tmxMapSource = "Test8.tmx",
         music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
+    ),
+    SMB3_1(
+        type = LevelType.BONUS_LEVEL,
+        tmxMapSource = "SMB3_1.tmx",
+        music = MusicAsset.MMX2_INTRO_STAGE_MUSIC,
+        screenOnCompletion = { ScreenEnum.LEVEL_SCREEN }
     );
 
     companion object {

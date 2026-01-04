@@ -960,6 +960,8 @@ sprites/frames/Megaman_v2_Ice/airdash_charge_shoot.png
 sprites/frames/Megaman_v2_Ice/cartin_damaged.png
 sprites/frames/Megaman_v2_Ice/slip_charge_full.png
 sprites/frames/Megaman_v2_Ice/groundslide.png
+sprites/frames/SMB3_Enemies/Goomba/smashed.png
+sprites/frames/SMB3_Enemies/Goomba/walk.png
 sprites/frames/Backgrounds4/GlacierBKG_v2.png
 sprites/frames/Backgrounds4/BGNeedle.png
 sprites/frames/Megaman_v2_Axe/run_trans.png
@@ -1275,6 +1277,7 @@ sprites/frames/Bosses3/ElecDevil/stand.png
 sprites/frames/Bosses3/ElecDevil/turn_to_pieces.png
 sprites/frames/Bosses3/ElecDevil/hand.png
 sprites/frames/Bosses3/ElecDevil/defeated.png
+sprites/frames/SMB3_Points/points100.png
 sprites/frames/Faces_old/Distributor Man.png
 sprites/frames/Faces_old/Blunt Man.png
 sprites/frames/Faces_old/Precious Man.png
@@ -2700,6 +2703,7 @@ sprites/sprite_sheets/LevelSelectScreen.txt
 sprites/sprite_sheets/Megaman_v2_RUSH_JET.png
 sprites/sprite_sheets/Megaman_v2_NEEDLE.png
 sprites/sprite_sheets/Buddies.png
+sprites/sprite_sheets/SMB3_Enemies.png
 sprites/sprite_sheets/Enemies2.png
 sprites/sprite_sheets/MisterMan.txt
 sprites/sprite_sheets/Backgrounds3.png
@@ -2780,9 +2784,11 @@ sprites/sprite_sheets/Megaman_BUSTER.png
 sprites/sprite_sheets/RodentMan.txt
 sprites/sprite_sheets/Bosses3.txt
 sprites/sprite_sheets/Environs1.txt
+sprites/sprite_sheets/SMB3_Enemies.txt
 sprites/sprite_sheets/Hazards1.txt
 sprites/sprite_sheets/RoasterMan.png
 sprites/sprite_sheets/MisterMan.png
+sprites/sprite_sheets/SMB3_Points.txt
 sprites/sprite_sheets/Items1.txt
 sprites/sprite_sheets/Decorations1.png
 sprites/sprite_sheets/Bosses1-0.png
@@ -2797,6 +2803,7 @@ sprites/sprite_sheets/MegamanCart.txt
 sprites/sprite_sheets/Megaman_v2_FIREBALL.png
 sprites/sprite_sheets/Platforms1.txt
 sprites/sprite_sheets/Bits.png
+sprites/sprite_sheets/SMB3_Points.png
 sprites/sprite_sheets/Megaman_FLAME_TOSS.txt
 sprites/sprite_sheets/Backgrounds1.txt
 sprites/sprite_sheets/Faces1.txt
@@ -2823,6 +2830,7 @@ sprites/sprite_sheets/Hazards1.png
 sprites/sprite_sheets/Environs1.png
 sprites/sprite_sheets/Specials1.png
 sprites/texture_packer/Platforms1.tps
+sprites/texture_packer/SMB3_Points.tps
 sprites/texture_packer/Enemies2.tps
 sprites/texture_packer/NukeMan.tps
 sprites/texture_packer/MegamanTrailSprite.tps
@@ -2890,6 +2898,7 @@ sprites/texture_packer/Megaman_v2_RUSH_JET.tps
 sprites/texture_packer/AstroPlayer.tps
 sprites/texture_packer/MegamanCart.tps
 sprites/texture_packer/Bits.tps
+sprites/texture_packer/SMB3_Enemies.tps
 sprites/piskel/LavaRiver.piskel
 sprites/piskel/GlacierBKG.piskel
 sprites/piskel/Cannon_Ball.piskel
@@ -3308,6 +3317,7 @@ tiled_maps/tsx/Magnetman.tsx
 tiled_maps/tsx/mm9endless.tsx
 tiled_maps/tsx/pipe_forest.tsx
 tiled_maps/tsx/mm9galaxy.tsx
+tiled_maps/tsx/SuperMarioBros3_World1Stage1.tsx
 tiled_maps/tsx/MM10Lab.tsx
 tiled_maps/tsx/React_Man_2.tsx
 tiled_maps/tsx/SkyMan.tsx
@@ -3473,6 +3483,7 @@ tiled_maps/png/React_Man_2.png
 tiled_maps/png/pipe_forest_bkg.png
 tiled_maps/png/SkyMan.png
 tiled_maps/png/LeafCanopy.png
+tiled_maps/png/super_mario_bros_3_world_1_stage_1.png
 tiled_maps/png/tstElecman.png
 tiled_maps/png/tstMM10Enker.png
 tiled_maps/png/tstChillMan.png
@@ -3669,6 +3680,8 @@ tiled_maps/tmx/TimberWoman_v2.tmx
 tiled_maps/tmx/ReactorMan_v2.tmx
 tiled_maps/tmx/DesertMan_16x14_v2.tmx
 tiled_maps/tmx/ReactorMan_v3.tmx
+tiled_maps/tmx/ExtraLevel_SuperMarioBros3_1.tmx
+tiled_maps/tmx/SMB3_1.tmx
 tiled_maps/tmx/WilyStage3.tmx
 tiled_maps/tmx/MoonMan_16x14_v2.tmx
 tiled_maps/tmx/ReactorMan_16x12.tmx

@@ -353,7 +353,9 @@ class MegamanMaverickGame(
         screens.put(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name, SimpleInitGameScreen(this))
         screens.put(ScreenEnum.CREDITS_SCREEN.name, CreditsScreen(this))
 
-        setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
+        // setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
+        setCurrentLevel(LevelDefinition.SMB3_1)
+        startLevel()
     }
 
     override fun render() {

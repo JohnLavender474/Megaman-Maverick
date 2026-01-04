@@ -209,6 +209,11 @@ class MegamanAnimations(
                 else -> runTransAnim.getDuration() + standAnim.getCurrentTime()
             }
 
+            override fun setToEnd() {
+                runTransAnim.setToEnd()
+                standAnim.setToEnd()
+            }
+
             override fun copy() = buildStandAnimation(atlas, shoot, loop, reverse)
         }
     }

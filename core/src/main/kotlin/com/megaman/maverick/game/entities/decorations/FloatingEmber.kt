@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.decorations
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
@@ -168,7 +167,7 @@ class FloatingEmber(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
 
-        addComponent(DrawableShapesComponentBuilder().debug(body, Color.GRAY).build())
+        addComponent(DrawableShapesComponentBuilder().addDebug { body.getBounds() }.build())
 
         return BodyComponentCreator.create(this, body)
     }

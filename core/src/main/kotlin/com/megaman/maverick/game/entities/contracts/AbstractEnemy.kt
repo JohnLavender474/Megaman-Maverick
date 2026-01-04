@@ -1,9 +1,12 @@
 package com.megaman.maverick.game.entities.contracts
 
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.UtilMethods.getRandom
+import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.gdxArrayOf
@@ -31,6 +34,8 @@ import com.megaman.maverick.game.damage.IDamageNegotiator
 import com.megaman.maverick.game.damage.SelfSizeDamageNegotiator
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.decorations.FloatingPoints
+import com.megaman.maverick.game.entities.decorations.FloatingPoints.FloatingPointsType
 import com.megaman.maverick.game.entities.explosions.Disintegration
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.items.HealthBulb
@@ -43,6 +48,7 @@ import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportEndProp
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportStartProp
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
@@ -237,6 +243,45 @@ abstract class AbstractEnemy(
 
         return body.getX() < megaman.body.getX() && megaman.facing == Facing.LEFT ||
             body.getX() > megaman.body.getX() && megaman.facing == Facing.RIGHT
+    }
+
+    open fun spawnFloatingPoints(pointsType: FloatingPointsType) {
+        val position = when (megaman.direction) {
+            Direction.UP -> GameObjectPools.fetch(Vector2::class)
+                .set(
+                    UtilMethods.getRandom(
+                        body.getBounds().getX(),
+                        body.getBounds().getMaxX()
+                    ),
+                    body.getBounds().getY()
+                )
+            Direction.DOWN -> GameObjectPools.fetch(Vector2::class)
+                .set(
+                    UtilMethods.getRandom(
+                        body.getBounds().getX(),
+                        body.getBounds().getMaxX()
+                    ),
+                    body.getBounds().getMaxY()
+                )
+            Direction.LEFT -> GameObjectPools.fetch(Vector2::class)
+                .set(
+                    body.getBounds().getMaxX(),
+                    UtilMethods.getRandom(
+                        body.getBounds().getY(),
+                        body.getBounds().getMaxY()
+                    ),
+                )
+            Direction.RIGHT -> GameObjectPools.fetch(Vector2::class)
+                .set(
+                    body.getBounds().getX(),
+                    UtilMethods.getRandom(
+                        body.getBounds().getY(),
+                        body.getBounds().getMaxY()
+                    ),
+                )
+        }
+
+        FloatingPoints.spawnFloatingPoints(pointsType, position, megaman.direction)
     }
 
     override fun getType() = EntityType.ENEMY
